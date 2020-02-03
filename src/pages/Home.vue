@@ -11,7 +11,7 @@ export default {
     return {
     }
   }, mounted () {
-    console.log(process.env);
+    console.log(process.env, 1);
   },
 }
 </script>
