@@ -111,11 +111,11 @@
           <div class="page-cell-qr">
             <div class="page-cell-qrtitle">二维码登录</div>
             <div class="page--cell-qrImg">
-              <img :src="qrImgUrl"
-                   alt="二维码">
-              <div class="page-cell-reload-img"></div>
+              <div id="qrcode"></div>
+              <div class="page-cell-reload-img"
+                   @click="remakeQr"></div>
             </div>
-            <div class="page-cell-time">剩余时间:150秒</div>
+            <div class="page-cell-time">剩余时间:{{timeOutText}}秒</div>
           </div>
         </template>
         <!-- 账号 -->
@@ -156,21 +156,32 @@
   </div>
 </template>
 <script>
+import QRCode from 'qrcodejs2';
 export default {
   name: 'home',
   watch: {
     loginType: {
       immediate: true,
       handler: function (val, oldVal) {
-        if (val == 1)
-          this.validateInit();
+
       }
+    }
+  },
+  mounted () {
+    if (this.loginType == 1) {
+      this.validateInit();
+    } else if (this.loginType == 0) {
+      // 和div的id相同 必须是id 
+      this.qrcode();
     }
   },
   data () {
     return {
       loginType: 0, // 0 二维码 ，1 账号
       loginLoadding: false,
+      timeOutText: 150,
+      setIntervalId: null,//定时器ID 
+      qrData: null,
       qrImgUrl: 'https://bkimg.cdn.bcebos.com/pic/2934349b033b5bb571dc8c5133d3d539b600bc12?x-bce-process=image/resize,m_lfit,w_268,limit_1/format,f_jpg',
       loginData: {
         account: '',
@@ -207,6 +218,51 @@ export default {
         }
         this.loginLoadding = false;
       });
+    },
+    //重置二维码
+    remakeQr () {
+      if (this.qrData == null) {
+        this.qrcode();
+      } else {
+        this.qrData.makeCode('http://www.ba3536idu.com');
+        this.setTimeOutText(() => {
+          this.timeOutText = 150;
+        });
+      }
+    },
+    timeOutText () {
+
+    },
+    setTimeOutText (afterFun) {
+      if (afterFun)
+        afterFun();
+      if (this.setIntervalId != null)
+        clearInterval(this.setIntervalId);
+      this.setIntervalId = setInterval(() => {
+        if (this.timeOutText >= 0) {
+          this.timeOutText--;
+        } else {
+          this.timeOutText = 0;
+          clearInterval(this.setIntervalId);
+        }
+      }, 1000)
+    },
+    //生成二维码
+    qrcode () {
+      // 和div的id相同 必须是id  class类名会报错
+      // 第二参数是他的配置项
+      this.$nextTick(() => {
+        this.qrData = new QRCode('qrcode', {
+          width: 200,
+          height: 200,
+          text: 'http://www.baidu.com',
+          colorDark: '#000',
+          colorLight: '#fff'
+        })
+        this.setTimeOutText(() => {
+          this.timeOutText = 150;
+        });
+      })
     }
   },
 }
