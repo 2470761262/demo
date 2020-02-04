@@ -11,4 +11,5 @@ export default {
 </script>
 
 <style>
+@import url(../static/publicLess/public.less);
 </style>
