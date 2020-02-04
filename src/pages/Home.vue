@@ -176,6 +176,12 @@ export default {
   mounted () {
     this.qrcode();
   },
+  //离开页面时清空定时器
+  beforeRouteLeave (to, from, next) {
+    if (this.setIntervalId != null)
+      clearInterval(this.setIntervalId);
+    next();
+  },
   data () {
     return {
       loginType: 0, // 0 二维码 ，1 账号
