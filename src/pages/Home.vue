@@ -178,30 +178,6 @@ export default {
       }
     }
   },
-  created () {
-    // this.$api.post({
-    //   url: 'http://localhost:8080/#/',
-    //   transformResponse: [function (data) {
-    //     return data;
-    //   }]
-    // }).then((e) => {
-    //   console.log(e);
-    // })
-
-    this.$api.post({
-      url: 'info',
-      data: {
-        user: 1,
-        name: 11
-      },
-      token: true,
-      transformResponse: [function (data) {
-        return data;
-      }]
-    }).then((e) => {
-      console.log(e);
-    })
-  },
   methods: {
     //初始化验证
     validateInit () {
@@ -226,7 +202,9 @@ export default {
     loginValidate () {
       this.loginLoadding = true;
       this.$validator.validateAll().then(e => {
-        console.log(e);
+        if (e) {
+          this.$router.push({ path: '/menuFrame' });
+        }
         this.loginLoadding = false;
       });
     }
