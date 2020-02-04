@@ -80,20 +80,20 @@
       <el-col :span="24">
         <div class="page-cell-title">查询表格</div>
         <div class="page-cell-margin">
-          <el-button
-            type="primary"
-            size="small"
-            icon="el-icon-sort"
-            :loading="false"
-            >刷新</el-button
-          >
+          <el-button type="primary"
+                     size="small"
+                     icon="el-icon-sort"
+                     :loading="false">刷新</el-button>
           <div class="page-cell-tips">
             <i class="el-icon-share "></i>
             提示信息: 未知错误,又联系管理员
           </div>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="10" :md="6" :lg="4">
+      <el-col :xs="12"
+              :sm="10"
+              :md="6"
+              :lg="4">
         <div class="page-cell-for-item">
           <div class="for-item-conter">
             <div class="for-item-conter-left">
@@ -126,8 +126,29 @@
 <script>
 export default {
   // name: "details",
-  data() {
+  beforeRouteEnter (to, from, next) {
+    // 在渲染该组件的对应路由被 confirm 前调用
+    // 不能获取组件实例 `this`
+    // 因为当钩子执行前，组件实例还没被创建
+    console.log(to, from, next);
+    next();
+  },
+  beforeRouteUpdate (to, from, next) {
+    // 在当前路由改变，但是该组件被复用时调用
+    // 举例来说，对于一个带有动态参数的路径 /foo/:id，在 /foo/1 和 /foo/2 之间跳转的时候，
+    // 由于会渲染同样的 Foo 组件，因此组件实例会被复用。而这个钩子就会在这个情况下被调用。
+    // 可以访问组件实例 `this`
+    next();
+  },
+  beforeRouteLeave (to, from, next) {
+    // 导航离开该组件的对应路由时调用
+    // 可以访问组件实例 `this`
+    next();
+  },
+  data () {
     return {};
-  }
+  }, mounted () {
+    console.log(this.$router.options.routes);
+  },
 };
 </script>

@@ -69,23 +69,21 @@
   <div class="page-cell">
     <div class="page-cell-middle">
       <div class="page-cell-middle-left">
-        <div class="page-cell-input" :data-msg="errors.first('account')">
-          <input
-            type="text"
-            v-model="account"
-            placeholder="账号"
-            name="account"
-            v-validate="'required'"
-          />
+        <div class="page-cell-input"
+             :data-msg="errors.first('account')">
+          <input type="text"
+                 v-model="account"
+                 placeholder="账号"
+                 name="account"
+                 v-validate="'required'" />
         </div>
-        <div class="page-cell-input" :data-msg="errors.first('password')">
-          <input
-            type="password"
-            v-model="password"
-            placeholder="密码"
-            name="password"
-            v-validate="'required'"
-          />
+        <div class="page-cell-input"
+             :data-msg="errors.first('password')">
+          <input type="password"
+                 v-model="password"
+                 placeholder="密码"
+                 name="password"
+                 v-validate="'required'" />
         </div>
       </div>
       <div class="page-cell-middle-right">
@@ -98,14 +96,20 @@
 <script>
 export default {
   name: "login",
-  data() {
+  data () {
     return {
       account: "",
       password: ""
     };
   },
-  mounted() {},
-  created() {
+  mounted () {
+    console.log(2);
+  },
+  activated () {
+    console.log(3);
+  },
+  created () {
+    console.log(1);
     const dictionary = {
       zh_CN: {
         messages: {
@@ -120,7 +124,7 @@ export default {
     this.$validator.updateDictionary(dictionary);
   },
   methods: {
-    isLogin() {
+    isLogin () {
       //  Validator.updateDictionary(dictionary);
       //console.log(this.$validator.validate("account"));
       this.$validator.validateAll().then(e => {
