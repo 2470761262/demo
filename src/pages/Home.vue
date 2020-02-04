@@ -163,17 +163,18 @@ export default {
     loginType: {
       immediate: true,
       handler: function (val, oldVal) {
-
+        if (this.loginType == 1) {
+          this.validateInit();
+        } else if (this.loginType == 0) {
+          // 和div的id相同 必须是id 
+          if (this.qrData != null)
+            this.qrcode();
+        }
       }
     }
   },
   mounted () {
-    if (this.loginType == 1) {
-      this.validateInit();
-    } else if (this.loginType == 0) {
-      // 和div的id相同 必须是id 
-      this.qrcode();
-    }
+    this.qrcode();
   },
   data () {
     return {
@@ -230,12 +231,12 @@ export default {
         });
       }
     },
-    timeOutText () {
-
-    },
+    //倒计时
     setTimeOutText (afterFun) {
+      //前置回掉
       if (afterFun)
         afterFun();
+      //阻止重复定时器
       if (this.setIntervalId != null)
         clearInterval(this.setIntervalId);
       this.setIntervalId = setInterval(() => {
