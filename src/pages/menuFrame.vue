@@ -1,7 +1,4 @@
 <style lang="less" scoped>
-.sdsd {
-  height: 2000px;
-}
 .page-cell {
   height: 100vh;
   .page-cell-main {
