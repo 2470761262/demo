@@ -188,8 +188,7 @@ export default {
       loginLoadding: false,
       timeOutText: 150,
       setIntervalId: null,//定时器ID 
-      qrData: null,
-      qrImgUrl: 'https://bkimg.cdn.bcebos.com/pic/2934349b033b5bb571dc8c5133d3d539b600bc12?x-bce-process=image/resize,m_lfit,w_268,limit_1/format,f_jpg',
+      qrData: null,//存放二维码实例
       loginData: {
         account: '',
         password: ''
