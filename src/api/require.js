@@ -5,11 +5,10 @@ function initBaseUrl () {
   if (process.env.NODE_ENV != 'development') { // 线上
     return '';
   }
-  return ''; // 本地
+  return 'http://localhost:8086'; // 本地
 }
 axios.defaults.baseURL = initBaseUrl();
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
-
 let http = axios.create({
   withCredentials: true,
   // 用于请求之前对请求数据进行操作
@@ -38,7 +37,7 @@ http.interceptors.request.use(function (config) {
   }
   return config;
 }, function (error) {
-  console.log(response, "响应拦截器");
+  console.log(error, "响应拦截器");
   // Do something with request error
   return Promise.reject(error);
 });
@@ -49,7 +48,7 @@ http.interceptors.response.use(function (response) {
   return response;
 }, function (error) {
   // Do something with response error
-  console.log(response, "响应拦截器");
+  console.log(error, "响应拦截器");
   return Promise.reject(error);
 });
 //请求对象

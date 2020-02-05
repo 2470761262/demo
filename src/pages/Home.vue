@@ -157,6 +157,7 @@
 </template>
 <script>
 import QRCode from 'qrcodejs2';
+//import func from '../../vue-temp/vue-editor-bridge';
 export default {
   name: 'home',
   watch: {
@@ -189,7 +190,6 @@ export default {
       timeOutText: 150,
       setIntervalId: null,//定时器ID 
       qrData: null,
-      qrImgUrl: 'https://bkimg.cdn.bcebos.com/pic/2934349b033b5bb571dc8c5133d3d539b600bc12?x-bce-process=image/resize,m_lfit,w_268,limit_1/format,f_jpg',
       loginData: {
         account: '',
         password: ''
@@ -255,17 +255,33 @@ export default {
       }, 1000)
     },
     //生成二维码
-    qrcode () {
-      // 和div的id相同 必须是id  class类名会报错
-      // 第二参数是他的配置项
+    qrcode () {      
       this.$nextTick(() => {
-        this.qrData = new QRCode('qrcode', {
-          width: 200,
-          height: 200,
-          text: 'http://www.baidu.com',
-          colorDark: '#000',
-          colorLight: '#fff'
-        })
+        this.$api.post({
+          url:'/loginManager/getQrCodeUrl',
+          data:{
+            p:"testParams"
+          },
+          token:false,
+
+        }).then((e)=>{
+          let result=JSON.parse(e.data);
+          console.log(result.message);
+          if(result.code==1){
+            //// 和div的id相同 必须是id  class类名会报错
+            //// 第二参数是他的配置项
+            this.qrData = new QRCode('qrcode', {
+              width: 200,
+              height: 200,
+              text: result.data,
+              colorDark: '#000',
+              colorLight: '#fff'
+            })
+          }
+        }).catch((e)=>{
+          console.log("获取二维码url失败");
+          console.log(e);
+        })        
         this.setTimeOutText(() => {
           this.timeOutText = 150;
         });
