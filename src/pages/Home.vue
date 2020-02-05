@@ -176,11 +176,37 @@ export default {
   },
   mounted () {
     this.qrcode();
+    this.intervalIdForLoginStatus=setInterval(() => {
+       this.$nextTick(() => {
+        this.$api.post({
+          url:'/loginManager/getUserLoginStatus',
+          data:{
+            qrCode:"testParams"
+          },
+          token:false
+        }).then((e)=>{
+          let result=JSON.parse(e.data);
+          if(result.code==1){
+            console.log(result.message);
+            this.$router.push({path:"/menuFrame/houseList"});
+          }else{
+            console.log(result.message);
+          }
+        }).catch((e)=>{
+          console.log("检查扫码登录状态失败");
+          console.log(e);
+        })        
+      });
+    }, 2000);
   },
   //离开页面时清空定时器
   beforeRouteLeave (to, from, next) {
-    if (this.setIntervalId != null)
+    if (this.setIntervalId != null){
       clearInterval(this.setIntervalId);
+    }
+    if(this.intervalIdForLoginStatus!=null){
+      clearInterval(this.intervalIdForLoginStatus);
+    }
     next();
   },
   data () {
@@ -188,7 +214,8 @@ export default {
       loginType: 0, // 0 二维码 ，1 账号
       loginLoadding: false,
       timeOutText: 150,
-      setIntervalId: null,//定时器ID 
+      setIntervalId: null,//定时器ID
+      intervalIdForLoginStatus:null,
       qrData: null,//存放二维码实例
       loginData: {
         account: '',
