@@ -176,12 +176,15 @@ export default {
   },
   mounted () {
     this.qrcode();
+    //开启定时器，验证是否扫码登录成功
     this.intervalIdForLoginStatus=setInterval(() => {
-       this.$nextTick(() => {
-        this.$api.post({
+      if(this.qrcodeFlag==null){
+        return;
+      }
+      this.$api.post({
           url:'/loginManager/getUserLoginStatus',
           data:{
-            qrCode:"testParams"
+            qrCode:this.qrcodeFlag
           },
           token:false
         }).then((e)=>{
@@ -195,8 +198,7 @@ export default {
         }).catch((e)=>{
           console.log("检查扫码登录状态失败");
           console.log(e);
-        })        
-      });
+        }) 
     }, 2000);
   },
   //离开页面时清空定时器
@@ -217,6 +219,7 @@ export default {
       setIntervalId: null,//定时器ID
       intervalIdForLoginStatus:null,
       qrData: null,//存放二维码实例
+      qrcodeFlag:null,//二维码标示
       loginData: {
         account: '',
         password: ''
@@ -254,15 +257,11 @@ export default {
       });
     },
     //重置二维码
-    remakeQr () {
-      if (this.qrData == null) {
-        this.qrcode();
-      } else {
-        this.qrData.makeCode('http://www.ba3536idu.com');
-        this.setTimeOutText(() => {
-          this.timeOutText = 150;
-        });
-      }
+    remakeQr () {    
+      this.qrcode();
+      this.setTimeOutText(() => {
+        this.timeOutText = 150;
+      });      
     },
     //倒计时
     setTimeOutText (afterFun) {
@@ -295,15 +294,20 @@ export default {
           let result=JSON.parse(e.data);
           console.log(result.message);
           if(result.code==1){
-            //// 和div的id相同 必须是id  class类名会报错
-            //// 第二参数是他的配置项
-            this.qrData = new QRCode('qrcode', {
-              width: 200,
-              height: 200,
-              text: result.data,
-              colorDark: '#000',
-              colorLight: '#fff'
-            })
+            this.qrcodeFlag=result.data.split("=")[1];
+            if(this.qrData==null){
+              //// 和div的id相同 必须是id  class类名会报错
+              //// 第二参数是他的配置项
+              this.qrData = new QRCode('qrcode', {
+                width: 200,
+                height: 200,
+                text: result.data,
+                colorDark: '#000',
+                colorLight: '#fff'
+              })
+            }else{
+              this.qrData.makeCode(result.data);
+            }             
           }
         }).catch((e)=>{
           console.log("获取二维码url失败");
