@@ -189,7 +189,7 @@ export default {
       loginLoadding: false,
       timeOutText: 150,
       setIntervalId: null,//定时器ID 
-      qrData: null,
+      qrData: null,//存放二维码实例
       loginData: {
         account: '',
         password: ''
