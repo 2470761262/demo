@@ -49,9 +49,9 @@
         </div>
       </el-col>
     </el-row>
-    <!-- <house-list-type-house>
-    </house-list-type-house> -->
-    <component :is="activeName"></component>
+    <keep-alive>
+      <component :is="activeName"></component>
+    </keep-alive>
   </div>
 </template>
 <script>
