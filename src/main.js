@@ -7,6 +7,7 @@ import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "./validate/validate";
 import Api from '@/api/require';
+import 'babel-polyfill';
 Vue.prototype.$api = Api;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);

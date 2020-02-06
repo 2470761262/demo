@@ -1,4 +1,7 @@
 <style lang="less" scoped>
+/deep/.el-main {
+  min-height: 100%;
+}
 .page-cell {
   height: 100vh;
   .page-cell-main {
@@ -11,7 +14,9 @@
       background-color: rgb(84, 92, 100);
     }
     .children-page {
-      margin-top: 20px;
+      padding-top: 20px;
+      height: calc(100% - 14px);
+      box-sizing: border-box;
     }
   }
 }

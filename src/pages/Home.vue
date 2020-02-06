@@ -168,8 +168,11 @@ export default {
           this.validateInit();
         } else if (this.loginType == 0) {
           // 和div的id相同 必须是id 
-          if (this.qrData != null)
+          this.clearTime();
+          if (this.qrData != null) {
+            this.qrData = null;
             this.qrcode();
+          }
         }
       }
     }
@@ -203,19 +206,14 @@ export default {
   },
   //离开页面时清空定时器
   beforeRouteLeave (to, from, next) {
-    if (this.setIntervalId != null) {
-      clearInterval(this.setIntervalId);
-    }
-    if (this.intervalIdForLoginStatus != null) {
-      clearInterval(this.intervalIdForLoginStatus);
-    }
+    this.clearTime();
     next();
   },
   data () {
     return {
       loginType: 0, // 0 二维码 ，1 账号
       loginLoadding: false,
-      timeOutText: 150,
+      timeOutText: 120,
       setIntervalId: null,//定时器ID
       intervalIdForLoginStatus: null,
       qrData: null,//存放二维码实例
@@ -227,6 +225,14 @@ export default {
     }
   },
   methods: {
+    clearTime () {
+      if (this.setIntervalId != null) {
+        clearInterval(this.setIntervalId);
+      }
+      if (this.intervalIdForLoginStatus != null) {
+        clearInterval(this.intervalIdForLoginStatus);
+      }
+    },
     //初始化验证
     validateInit () {
       const dictionary = {
@@ -261,7 +267,7 @@ export default {
     remakeQr () {
       this.qrcode();
       this.setTimeOutText(() => {
-        this.timeOutText = 150;
+        this.timeOutText = 120;
       });
     },
     //倒计时
@@ -306,6 +312,12 @@ export default {
                 text: result.data,
                 colorDark: '#000',
                 colorLight: '#fff'
+                //容错级别，可设置为：(低到高)
+                //correctLevel： QRCode.CorrectLevel.L
+                // QRCode.CorrectLevel.M
+                // QRCode.CorrectLevel.Q
+                // QRCode.CorrectLevel.H 
+                //qrcode.clear();清除
               })
             } else {
               this.qrData.makeCode(result.data);
@@ -316,7 +328,7 @@ export default {
           console.log(e);
         })
         this.setTimeOutText(() => {
-          this.timeOutText = 150;
+          this.timeOutText = 120;
         });
       })
     }
