@@ -168,8 +168,11 @@ export default {
           this.validateInit();
         } else if (this.loginType == 0) {
           // 和div的id相同 必须是id 
-          if (this.qrData != null)
+          this.clearTime();
+          if (this.qrData != null) {
+            this.qrData = null;
             this.qrcode();
+          }
         }
       }
     }
@@ -203,12 +206,7 @@ export default {
   },
   //离开页面时清空定时器
   beforeRouteLeave (to, from, next) {
-    if (this.setIntervalId != null) {
-      clearInterval(this.setIntervalId);
-    }
-    if (this.intervalIdForLoginStatus != null) {
-      clearInterval(this.intervalIdForLoginStatus);
-    }
+    this.clearTime();
     next();
   },
   data () {
@@ -227,6 +225,14 @@ export default {
     }
   },
   methods: {
+    clearTime () {
+      if (this.setIntervalId != null) {
+        clearInterval(this.setIntervalId);
+      }
+      if (this.intervalIdForLoginStatus != null) {
+        clearInterval(this.intervalIdForLoginStatus);
+      }
+    },
     //初始化验证
     validateInit () {
       const dictionary = {
@@ -262,7 +268,7 @@ export default {
       this.qrcode();
       this.setTimeOutText(() => {
         this.timeOutText = 120;
-      });      
+      });
     },
     //倒计时
     setTimeOutText (afterFun) {
