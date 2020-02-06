@@ -215,7 +215,7 @@ export default {
     return {
       loginType: 0, // 0 二维码 ，1 账号
       loginLoadding: false,
-      timeOutText: 150,
+      timeOutText: 120,
       setIntervalId: null,//定时器ID
       intervalIdForLoginStatus:null,
       qrData: null,//存放二维码实例
@@ -260,7 +260,7 @@ export default {
     remakeQr () {    
       this.qrcode();
       this.setTimeOutText(() => {
-        this.timeOutText = 150;
+        this.timeOutText = 120;
       });      
     },
     //倒计时
@@ -314,7 +314,7 @@ export default {
           console.log(e);
         })        
         this.setTimeOutText(() => {
-          this.timeOutText = 150;
+          this.timeOutText = 120;
         });
       })
     }
