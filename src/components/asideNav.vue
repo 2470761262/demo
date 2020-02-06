@@ -22,6 +22,7 @@
         <!-- <el-menu-item-group> -->
         <!-- <template slot="title">分组一</template> -->
         <el-menu-item index="/menuFrame/houseList">房源列表</el-menu-item>
+        <el-menu-item index="/menuFrame/validateHouseList">验真房源列表</el-menu-item>
         <!-- </el-menu-item-group> -->
       </el-submenu>
     </el-menu>

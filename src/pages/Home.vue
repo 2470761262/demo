@@ -177,36 +177,36 @@ export default {
   mounted () {
     this.qrcode();
     //开启定时器，验证是否扫码登录成功
-    this.intervalIdForLoginStatus=setInterval(() => {
-      if(this.qrcodeFlag==null){
+    this.intervalIdForLoginStatus = setInterval(() => {
+      if (this.qrcodeFlag == null) {
         return;
       }
       this.$api.post({
-          url:'/loginManager/getUserLoginStatus',
-          data:{
-            qrCode:this.qrcodeFlag
-          },
-          token:false
-        }).then((e)=>{
-          let result=JSON.parse(e.data);
-          if(result.code==1){
-            console.log(result.message);
-            this.$router.push({path:"/menuFrame/houseList"});
-          }else{
-            console.log(result.message);
-          }
-        }).catch((e)=>{
-          console.log("检查扫码登录状态失败");
-          console.log(e);
-        }) 
+        url: '/loginManager/getUserLoginStatus',
+        data: {
+          qrCode: this.qrcodeFlag
+        },
+        token: false
+      }).then((e) => {
+        let result = JSON.parse(e.data);
+        if (result.code == 1) {
+          console.log(result.message);
+          this.$router.push({ path: "/menuFrame/houseList" });
+        } else {
+          console.log(result.message);
+        }
+      }).catch((e) => {
+        console.log("检查扫码登录状态失败");
+        console.log(e);
+      })
     }, 2000);
   },
   //离开页面时清空定时器
   beforeRouteLeave (to, from, next) {
-    if (this.setIntervalId != null){
+    if (this.setIntervalId != null) {
       clearInterval(this.setIntervalId);
     }
-    if(this.intervalIdForLoginStatus!=null){
+    if (this.intervalIdForLoginStatus != null) {
       clearInterval(this.intervalIdForLoginStatus);
     }
     next();
@@ -217,9 +217,9 @@ export default {
       loginLoadding: false,
       timeOutText: 150,
       setIntervalId: null,//定时器ID
-      intervalIdForLoginStatus:null,
+      intervalIdForLoginStatus: null,
       qrData: null,//存放二维码实例
-      qrcodeFlag:null,//二维码标示
+      qrcodeFlag: null,//二维码标示
       loginData: {
         account: '',
         password: ''
@@ -258,11 +258,11 @@ export default {
       });
     },
     //重置二维码
-    remakeQr () {    
+    remakeQr () {
       this.qrcode();
       this.setTimeOutText(() => {
         this.timeOutText = 150;
-      });      
+      });
     },
     //倒计时
     setTimeOutText (afterFun) {
@@ -282,38 +282,39 @@ export default {
       }, 1000)
     },
     //生成二维码
-    qrcode () {      
+    qrcode () {
+      let that = this;
       this.$nextTick(() => {
         this.$api.post({
-          url:'/loginManager/getQrCodeUrl',
-          data:{
-            p:"testParams"
+          url: '/loginManager/getQrCodeUrl',
+          data: {
+            p: "testParams"
           },
-          token:false,
+          token: false,
 
-        }).then((e)=>{
-          let result=JSON.parse(e.data);
+        }).then((e) => {
+          let result = JSON.parse(e.data);
           console.log(result.message);
-          if(result.code==1){
-            this.qrcodeFlag=result.data.split("=")[1];
-            if(this.qrData==null){
+          if (result.code == 1) {
+            this.qrcodeFlag = result.data.split("=")[1];
+            if (this.qrData == null) {
               //// 和div的id相同 必须是id  class类名会报错
               //// 第二参数是他的配置项
-              this.qrData = new QRCode('qrcode', {
+              that.qrData = new QRCode('qrcode', {
                 width: 200,
                 height: 200,
                 text: result.data,
                 colorDark: '#000',
                 colorLight: '#fff'
               })
-            }else{
+            } else {
               this.qrData.makeCode(result.data);
-            }             
+            }
           }
-        }).catch((e)=>{
+        }).catch((e) => {
           console.log("获取二维码url失败");
           console.log(e);
-        })        
+        })
         this.setTimeOutText(() => {
           this.timeOutText = 150;
         });

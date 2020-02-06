@@ -23,7 +23,7 @@ export default new Router({
       component: menuFrame,
       redirect: "/menuFrame/houseList",
       children: [
-        {
+        { //房源列表
           path: "/menuFrame/houseList",
           name: "houseList",
           meta: {
@@ -40,6 +40,24 @@ export default new Router({
           },
           component: () =>
             import(/* webpackChunkName: "houseList" */ "@/pages/houseList.vue")
+        },
+        {  //验证房源列表
+          path: "/menuFrame/validateHouseList",
+          name: "validateHouseList",
+          meta: {
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/validateHouseList",
+                name: "验真房源列表"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "validateHouseList" */ "@/pages/validateHouseList.vue")
         },
       ]
     }
