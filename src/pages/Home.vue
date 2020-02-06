@@ -122,16 +122,16 @@
         <template v-if="loginType == 1">
           <div class="page-cell-account">
             <div class="account-cell-title">用户名:</div>
-            <div :class="{'after-tips':errors.has('account')}"
-                 :data-tips="errors.first('account')">
+            <div :class="{'after-tips':errorBags.has('account')}"
+                 :data-tips="errorBags.first('account')">
               <el-input v-model="loginData.account"
                         placeholder="请输入账号"
                         name="account"
                         v-validate="'required'"></el-input>
             </div>
             <div class="account-cell-title">密码:</div>
-            <div :class="{'after-tips':errors.has('password')}"
-                 :data-tips="errors.first('password')">
+            <div :class="{'after-tips':errorBags.has('password')}"
+                 :data-tips="errorBags.first('password')">
               <el-input v-model="loginData.password"
                         type="password"
                         placeholder="请输入密码"
@@ -162,7 +162,7 @@ export default {
   name: 'home',
   watch: {
     loginType: {
-      immediate: true,
+      // immediate: true,
       handler: function (val, oldVal) {
         if (this.loginType == 1) {
           this.validateInit();
@@ -177,36 +177,36 @@ export default {
   mounted () {
     this.qrcode();
     //开启定时器，验证是否扫码登录成功
-    this.intervalIdForLoginStatus=setInterval(() => {
-      if(this.qrcodeFlag==null){
+    this.intervalIdForLoginStatus = setInterval(() => {
+      if (this.qrcodeFlag == null) {
         return;
       }
       this.$api.post({
-          url:'/loginManager/getUserLoginStatus',
-          data:{
-            qrCode:this.qrcodeFlag
-          },
-          token:false
-        }).then((e)=>{
-          let result=JSON.parse(e.data);
-          if(result.code==1){
-            console.log(result.message);
-            this.$router.push({path:"/menuFrame/houseList"});
-          }else{
-            console.log(result.message);
-          }
-        }).catch((e)=>{
-          console.log("检查扫码登录状态失败");
-          console.log(e);
-        }) 
+        url: '/loginManager/getUserLoginStatus',
+        data: {
+          qrCode: this.qrcodeFlag
+        },
+        token: false
+      }).then((e) => {
+        let result = JSON.parse(e.data);
+        if (result.code == 1) {
+          console.log(result.message);
+          this.$router.push({ path: "/menuFrame/houseList" });
+        } else {
+          console.log(result.message);
+        }
+      }).catch((e) => {
+        console.log("检查扫码登录状态失败");
+        console.log(e);
+      })
     }, 2000);
   },
   //离开页面时清空定时器
   beforeRouteLeave (to, from, next) {
-    if (this.setIntervalId != null){
+    if (this.setIntervalId != null) {
       clearInterval(this.setIntervalId);
     }
-    if(this.intervalIdForLoginStatus!=null){
+    if (this.intervalIdForLoginStatus != null) {
       clearInterval(this.intervalIdForLoginStatus);
     }
     next();
@@ -217,9 +217,9 @@ export default {
       loginLoadding: false,
       timeOutText: 120,
       setIntervalId: null,//定时器ID
-      intervalIdForLoginStatus:null,
+      intervalIdForLoginStatus: null,
       qrData: null,//存放二维码实例
-      qrcodeFlag:null,//二维码标示
+      qrcodeFlag: null,//二维码标示
       loginData: {
         account: '',
         password: ''
@@ -245,6 +245,7 @@ export default {
     //切换当前登录类型
     changeLoginType () {
       this.loginType = this.loginType == 0 ? 1 : 0;
+      console.log(this.loginType);
     },
     //登录验证
     loginValidate () {
@@ -257,7 +258,7 @@ export default {
       });
     },
     //重置二维码
-    remakeQr () {    
+    remakeQr () {
       this.qrcode();
       this.setTimeOutText(() => {
         this.timeOutText = 120;
@@ -281,38 +282,39 @@ export default {
       }, 1000)
     },
     //生成二维码
-    qrcode () {      
+    qrcode () {
+      let that = this;
       this.$nextTick(() => {
         this.$api.post({
-          url:'/loginManager/getQrCodeUrl',
-          data:{
-            p:"testParams"
+          url: '/loginManager/getQrCodeUrl',
+          data: {
+            p: "testParams"
           },
-          token:false,
+          token: false,
 
-        }).then((e)=>{
-          let result=JSON.parse(e.data);
+        }).then((e) => {
+          let result = JSON.parse(e.data);
           console.log(result.message);
-          if(result.code==1){
-            this.qrcodeFlag=result.data.split("=")[1];
-            if(this.qrData==null){
+          if (result.code == 1) {
+            this.qrcodeFlag = result.data.split("=")[1];
+            if (this.qrData == null) {
               //// 和div的id相同 必须是id  class类名会报错
               //// 第二参数是他的配置项
-              this.qrData = new QRCode('qrcode', {
+              that.qrData = new QRCode('qrcode', {
                 width: 200,
                 height: 200,
                 text: result.data,
                 colorDark: '#000',
                 colorLight: '#fff'
               })
-            }else{
+            } else {
               this.qrData.makeCode(result.data);
-            }             
+            }
           }
-        }).catch((e)=>{
+        }).catch((e) => {
           console.log("获取二维码url失败");
           console.log(e);
-        })        
+        })
         this.setTimeOutText(() => {
           this.timeOutText = 120;
         });
