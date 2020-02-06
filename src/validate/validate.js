@@ -2,8 +2,8 @@ import Vue from "vue";
 import VeeValidate, { Validator } from "vee-validate";
 import veeMessage from "vee-validate/dist/locale/zh_CN";
 const config = {
-  errorBagName: "errors",
-  fieldsBagName: "fields",
+  errorBagName: "errorBags",
+  fieldsBagName: "fieldBags",
   delay: 100,
   locale: "zh_CN",
   strict: true,

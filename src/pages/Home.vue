@@ -122,16 +122,16 @@
         <template v-if="loginType == 1">
           <div class="page-cell-account">
             <div class="account-cell-title">用户名:</div>
-            <div :class="{'after-tips':errors.has('account')}"
-                 :data-tips="errors.first('account')">
+            <div :class="{'after-tips':errorBags.has('account')}"
+                 :data-tips="errorBags.first('account')">
               <el-input v-model="loginData.account"
                         placeholder="请输入账号"
                         name="account"
                         v-validate="'required'"></el-input>
             </div>
             <div class="account-cell-title">密码:</div>
-            <div :class="{'after-tips':errors.has('password')}"
-                 :data-tips="errors.first('password')">
+            <div :class="{'after-tips':errorBags.has('password')}"
+                 :data-tips="errorBags.first('password')">
               <el-input v-model="loginData.password"
                         type="password"
                         placeholder="请输入密码"
@@ -161,7 +161,7 @@ export default {
   name: 'home',
   watch: {
     loginType: {
-      immediate: true,
+      // immediate: true,
       handler: function (val, oldVal) {
         if (this.loginType == 1) {
           this.validateInit();
@@ -214,6 +214,7 @@ export default {
     //切换当前登录类型
     changeLoginType () {
       this.loginType = this.loginType == 0 ? 1 : 0;
+      console.log(this.loginType);
     },
     //登录验证
     loginValidate () {
