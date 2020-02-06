@@ -312,6 +312,12 @@ export default {
                 text: result.data,
                 colorDark: '#000',
                 colorLight: '#fff'
+                //容错级别，可设置为：(低到高)
+                //correctLevel： QRCode.CorrectLevel.L
+                // QRCode.CorrectLevel.M
+                // QRCode.CorrectLevel.Q
+                // QRCode.CorrectLevel.H 
+                //qrcode.clear();清除
               })
             } else {
               this.qrData.makeCode(result.data);
