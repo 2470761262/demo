@@ -59,6 +59,60 @@ export default new Router({
           component: () =>
             import(/* webpackChunkName: "validateHouseList" */ "@/pages/validateHouseList.vue")
         },
+        {  //验真房源审核
+          path: "/menuFrame/validateHouseExamineList",
+          name: "validateHouseExamineList",
+          meta: {
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/validateHouseExamineList",
+                name: "验真房源审核"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "validateHouseExamineList" */ "@/pages/validateHouseExamineList.vue")
+        },
+        {  //验证房源列表
+          path: "/menuFrame/errorValidateList",
+          name: "errorValidateList",
+          meta: {
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/errorValidateList",
+                name: "异常验真列表"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "errorValidateList" */ "@/pages/errorValidateList.vue")
+        },
+        {  //补充楼盘审核
+          path: "/menuFrame/addFloorList",
+          name: "addFloorList",
+          meta: {
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/addFloorList",
+                name: "补充楼盘审核"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "addFloorList" */ "@/pages/addFloorList.vue")
+        },
       ]
     }
   ]
