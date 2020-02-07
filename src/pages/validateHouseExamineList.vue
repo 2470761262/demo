@@ -32,7 +32,6 @@
                  :highlight-current="true"
                  :filter-node-method="filterNode"
                  @node-click="handleNodeClick"></el-tree>
-        <div @click="getCurrentKey">fgg</div>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
