@@ -1,10 +1,18 @@
+
 <template>
   <list-page :parentData="$data"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template v-slot:tableColumn="cell">
+    <template v-slot:selectTo>
+      <el-input placeholder="手机号"
+                v-model="queryData.inputValue"
+                clearable>
+        <template slot="prepend">手机号</template>
+      </el-input>
+    </template>
+    <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"
@@ -15,7 +23,7 @@
       <el-table-column prop="operation"
                        label="操作"
                        fixed="right"
-                       key="992">
+                       key="operation">
         <template v-slot="scope">
           <div v-if="scope.row.operation!=''">
             <el-button type="info"
@@ -36,85 +44,67 @@ export default {
   },
   data () {
     return {
+      queryData: {
+        houseName: '',
+        taskName: '',
+        inputValue: '',
+        timeSelect: '',
+      },
       pageJson: {
         currentPage: 1,
         total: 50
       },
-      tableDataColumn: [
-        { prop: 'house', label: "房源坐落" },
-        { prop: 'price', label: "售价(万元)" },
-        { prop: 'area', label: "面积(㎡)" },
-        { prop: 'type', label: "户型" },
-        { prop: 'levae', label: "装修程度" },
-        { prop: 'economicPro', label: "经济人" },
-        { prop: 'addTime', label: "录入时间" },
-        { prop: 'cellType', label: "状态" }
-      ],
-      tableData: [{
-        house: '龙腾花园-16栋-604室',
-        price: '234',
-        area: '1252',
-        type: '3室2厅1卫',
-        levae: '精装修',
-        economicPro: '周杰伦',
-        addTime: '2019-01-01 18:00:00',
-        cellType: '待店长验真',
-        operation: '1',
-      }, {
-        house: '龙腾花园-16栋-604室',
-        price: '234',
-        area: '12',
-        type: '3室2厅1卫',
-        levae: '精装修',
-        economicPro: '周杰伦1',
-        addTime: '2019-01-01 18:00:00',
-        cellType: '待店长验真',
-        operation: '3',
-      }],
       elTabs: {
         activeName: "tab1",
         list: [
-          { label: '待验真', name: 'tab1' },
-          { label: '验真通过', name: 'tab2' },
-          { label: '验真未通过', name: 'tab3' },
-          { label: '已过期', name: 'tab4' },
-          { label: '全部', name: 'tab5' },
+          { label: '全部', name: 'tab1' },
+          { label: '待审核', name: 'tab2' },
+          { label: '审核通过', name: 'tab3' },
+          { label: '审核失败', name: 'tab4' }
         ]
       },
-      options: [{
-        value: '选项1',
-        label: '全部'
+      tableDataColumn: [
+        { prop: 'house', label: "房源坐落" },
+        { prop: 'priceArea', label: "售价/面积" },
+        { prop: 'type', label: "户型" },
+        { prop: 'economicPro', label: "经济人" },
+        { prop: 'validateType', label: "验真状态" },
+        { prop: 'cutPro', label: "客户姓名" },
+        { prop: 'addTime', label: "发布时间" },
+        { prop: 'cellType', label: "类型" },
+      ],
+      tableData: [{
+        house: '龙腾花园-16栋-604室',
+        priceArea: '234万/100平',
+        type: '3室2厅1卫',
+        levae: '精装修',
+        economicPro: '周杰伦',
+        validateType: '通过',
+        cutPro: '周杰伦1',
+        addTime: '2019-01-01 18:00:00',
+        cellType: '号码异常',
+        operation: '3',
       }, {
-        value: '选项2',
-        label: '待验真'
-      }, {
-        value: '选项3',
-        label: '客户验真'
-      }, {
-        value: '选项4',
-        label: '店长验真'
-      }, {
-        value: '选项5',
-        label: '验真失败'
-      }, {
-        value: '选项6',
-        label: '已过期'
+        house: '龙腾花园-16栋-604室',
+        priceArea: '234万/100平',
+        type: '3室2厅1卫',
+        levae: '精装修',
+        economicPro: '周杰伦2',
+        validateType: '通过',
+        cutPro: '周杰伦2',
+        addTime: '2019-01-01 18:00:00',
+        cellType: '号码异常',
+        operation: '3',
       }],
-      queryData: {
-        houseName: '',
-        taskName: '',
-        selectValue: '',
-        timeSelect: '',
-      }
     }
   },
   methods: {
-    queryTabData () { },
+    queryTabData () {
+      console.log(this, '111');
+    },
     isForBut (type) {
       let array = [
-        { name: '邀请验真', isType: '2', methosName: '' },
-        { name: '重新提交', isType: '3', methosName: '' },
-        { name: '查看', isType: '1,2,3', methosName: '' }
+        { name: '查看', isType: '3', methosName: '' }
       ]
       return array.filter((item) => {
         return item.isType.includes(type)
@@ -129,6 +119,9 @@ export default {
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
     },
+    handleSizeChange (val) {
+      console.log(`每1页 ${val} 条`);
+    }
   },
 }
-</script>
+</script>  
