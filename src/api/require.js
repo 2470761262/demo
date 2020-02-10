@@ -11,19 +11,6 @@ axios.defaults.baseURL = initBaseUrl();
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 let http = axios.create({
   withCredentials: true,
-  // 用于请求之前对请求数据进行操作
-  // 只用当请求方法为‘PUT’，‘POST’和‘PATCH’时可用
-  // 最后一个函数需return出相应数据
-  // 可以修改headers
-  transformRequest: [function (data) {
-    return data;
-  }],
-  // 用于对相应数据进行处理
-  // 它会通过then或者catch
-  transformResponse: [function (data) {
-    // 可以对data做任何操作
-    return data;
-  }],
   // 请求超时时间（毫秒）
   timeout: 1000,
 });
@@ -57,7 +44,7 @@ let ApiData = {
     if (!arg.method)
       arg.method = 'POST';
     let sendConfig = Object.assign({ token: true }, arg);
-    if (sendConfig.data)
+    if (sendConfig.qs && sendConfig.qs == true) // 格式化表单数据
       sendConfig.data = qs.stringify(sendConfig.data);
     return new Promise((resolve, reject) => {
       http(sendConfig).then((e) => {
