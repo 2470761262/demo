@@ -24,7 +24,9 @@
 <template >
   <section class="page-cell">
     <el-container>
-      <el-header>头部 </el-header>
+      <el-header>
+        <header-content></header-content>
+      </el-header>
     </el-container>
     <el-container class="page-cell-main">
       <el-aside width="200px">
@@ -48,10 +50,12 @@
 <script>
 //左侧菜单
 import asideNav from '@/components/asideNav';
+import headerContent from '@/components/headerContent';
 export default {
   name: "menuFrame",
   components: {
-    asideNav
+    asideNav,
+    headerContent
   },
   computed: {
     resultRouteArray () {

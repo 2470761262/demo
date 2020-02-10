@@ -137,11 +137,9 @@ export default {
       elTabs: {
         activeName: "tab1",
         list: [
-          { label: '待验真', name: 'tab1' },
-          { label: '验真通过', name: 'tab2' },
-          { label: '验真未通过', name: 'tab3' },
-          { label: '已过期', name: 'tab4' },
-          { label: '全部', name: 'tab5' }
+          { label: '委托人审核', name: 'tab1' },
+          { label: '钥匙人审核', name: 'tab2' },
+          { label: '实勘人审核', name: 'tab3' }
         ]
       },
       tableDataColumn: [

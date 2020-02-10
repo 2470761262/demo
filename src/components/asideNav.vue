@@ -24,6 +24,7 @@
         <el-menu-item index="/menuFrame/houseList">房源列表</el-menu-item>
         <el-menu-item index="/menuFrame/validateHouseList">验真房源列表</el-menu-item>
         <el-menu-item index="/menuFrame/validateHouseExamineList">验真房源审核</el-menu-item>
+        <el-menu-item index="/menuFrame/houseTaskExamineList">房源作业方审核</el-menu-item>
         <el-menu-item index="/menuFrame/errorValidateList">异常验真列表</el-menu-item>
         <el-menu-item index="/menuFrame/addFloorList">补充楼盘审核</el-menu-item>
         <!-- </el-menu-item-group> -->
