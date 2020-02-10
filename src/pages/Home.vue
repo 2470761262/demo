@@ -192,11 +192,11 @@ export default {
         token: false
       }).then((e) => {
         let result = JSON.parse(e.data);
-        if (result.code == 1) {
+        if (result.code == "SUCCESS") {
           console.log(result.message);
           console.log(result);
-          this.accountId=result.data.AccountID;
-          this.loginValsidate();
+          this.accountId=result.data.accountID;
+          this.loginValidate();
           //this.$router.push({ path: "/menuFrame/houseList" });
         } else {
           console.log(result.message);
@@ -259,18 +259,48 @@ export default {
     },
     //登录验证
     loginValidate () {
-      this.loginLoadding = true;
+      let that=this;
+      let loginParams={"clientId":0,qrCode:"","userName":"","passWord":"","accountId":0};
       if(this.loginType==1){//账号密码登录
-          this.$validator.validateAll().then(e => {
-            if (e) {
-              this.$router.push({ path: '/menuFrame' });
-            }
-        });
+          this.$validator.validateAll();
+          this.loginLoadding = true;
+          loginParams.userName=this.loginData.account;
+          loginParams.passWord=this.loginData.password;
       }else{
-        
+          loginParams.clientId=4;
+          loginParams.accountId=this.accountId;
+          loginParams.qrCode=this.qrcodeFlag;
       }
-      this.loginLoadding = false;
+      this.loginReal(loginParams,
+        function(){            
+         this.$router.push({ path: '/menuFrame' });                 
+        },
+        function(){
+          that.loginLoadding = false;
+          alert('登录失败');
+        });
+     
       
+    },
+    loginReal(params,successFunc,failFunc){
+        this.$api.post({
+          url: '/loginManager/pcLogin',
+          data: JSON.stringify(params),
+          headers:{ "Content-Type":"application/json"},
+          token: false
+
+        }).then((e) => {
+          let result = JSON.parse(e.data);
+          console.log(result.message);
+          if (result.code == "SUCCESS") {
+            console.log("登录成功");
+            successFunc();
+          }
+        }).catch((e) => {
+          console.log("【【【【uups,登录失败】】】】");
+          console.log(e);
+          failFunc();
+        })
     },
     //重置二维码
     remakeQr () {
@@ -310,7 +340,7 @@ export default {
         }).then((e) => {
           let result = JSON.parse(e.data);
           console.log(result.message);
-          if (result.code == 1) {
+          if (result.code == "SUCCESS") {
             this.qrcodeFlag = result.data.split("=")[1];
             if (this.qrData == null) {
               //// 和div的id相同 必须是id  class类名会报错
