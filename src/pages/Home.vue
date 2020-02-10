@@ -278,7 +278,12 @@ export default {
         },
         function () {
           that.loginLoadding = false;
-          alert('登录失败');
+          that.$notify({
+            title: '警告',
+            message: '登录失败',
+            type: 'warning',
+            offset: 60
+          });
         });
 
 
