@@ -6,11 +6,17 @@ import router from "./router";
 import ElementUI from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
 import "./validate/validate";
-import Api from '@/api/require';
-import 'babel-polyfill';
+import Api from "@/api/require";
+import "babel-polyfill";
 Vue.prototype.$api = Api;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
+
+//全局守卫
+router.beforeEach((to, form, next) => {
+  console.log(to, form);
+  next();
+});
 /* eslint-disable no-new */
 new Vue({
   el: "#app",
