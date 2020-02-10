@@ -5,7 +5,7 @@ import menuFrame from "@/pages/menuFrame";
 Vue.use(Router);
 
 const originalPush = Router.prototype.push;
-Router.prototype.push = function push(location, onResolve, onReject) {
+Router.prototype.push = function push (location, onResolve, onReject) {
   if (onResolve || onReject)
     return originalPush.call(this, location, onResolve, onReject);
   return originalPush.call(this, location).catch(err => err);
@@ -29,6 +29,7 @@ export default new Router({
           path: "/menuFrame/houseList",
           name: "houseList",
           meta: {
+            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -48,6 +49,7 @@ export default new Router({
           path: "/menuFrame/validateHouseList",
           name: "validateHouseList",
           meta: {
+            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -69,6 +71,7 @@ export default new Router({
           path: "/menuFrame/validateHouseExamineList",
           name: "validateHouseExamineList",
           meta: {
+            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -90,6 +93,7 @@ export default new Router({
           path: "/menuFrame/houseTaskExamineList",
           name: "houseTaskExamineList",
           meta: {
+            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -111,6 +115,7 @@ export default new Router({
           path: "/menuFrame/errorValidateList",
           name: "errorValidateList",
           meta: {
+            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -132,6 +137,7 @@ export default new Router({
           path: "/menuFrame/addFloorList",
           name: "addFloorList",
           meta: {
+            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -153,6 +159,7 @@ export default new Router({
           path: "/menuFrame/addHouse",
           name: "addHouse",
           meta: {
+            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",

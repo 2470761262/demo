@@ -157,6 +157,8 @@
 </template>
 <script>
 import QRCode from 'qrcodejs2';
+import { LOGINDATA } from '@/util/constMap';
+import util from '@/util/util';
 //import func from '../../vue-temp/vue-editor-bridge';
 export default {
   name: 'home',
@@ -179,7 +181,7 @@ export default {
   },
   mounted () {
     this.qrcode();
-    let that=this;
+    let that = this;
     //开启定时器，验证是否扫码登录成功
     this.intervalIdForLoginStatus = setInterval(() => {
       if (this.qrcodeFlag == null) {
@@ -190,7 +192,7 @@ export default {
         data: {
           qrCode: that.qrcodeFlag
         },
-        qs:true,
+        qs: true,
         token: false
       }).then((e) => {
         console.log(e.data);
@@ -204,7 +206,7 @@ export default {
           this.loginValidate();
           //this.$router.push({ path: "/menuFrame/houseList" });
         } else {
-          console.log("检查扫码登录结果："+result.message);
+          console.log("检查扫码登录结果：" + result.message);
         }
       }).catch((e) => {
         console.log("检查扫码登录状态失败");
@@ -277,7 +279,9 @@ export default {
         loginParams.qrCode = this.qrcodeFlag;
       }
       this.loginReal(loginParams,
-        function () {
+        function (e) {
+          console.log(e, "eeeeee");
+          util.localStorageSet(LOGINDATA, e);
           that.$router.push({ path: '/menuFrame' });
         },
         function (message) {
@@ -303,8 +307,8 @@ export default {
         console.log(result.message);
         if (result.code == "SUCCESS") {
           console.log("登录成功");
-          successFunc();
-        }else{
+          successFunc(result);
+        } else {
           failFunc(result.message);
         }
       }).catch((e) => {
@@ -346,7 +350,7 @@ export default {
           data: {
             p: "testParams"
           },
-          qs:true,
+          qs: true,
           token: false,
 
         }).then((e) => {
