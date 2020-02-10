@@ -1,4 +1,4 @@
-<style lang="less" scoped >
+<style lang="less" scoped>
 .page-cell-query {
   display: flex;
   justify-content: flex-end;
@@ -25,26 +25,31 @@
   }
 }
 </style>
-<template >
+<template>
   <div>
     <el-row>
       <el-col :sm="8">
-        <el-tabs class="page-tabs"
-                 v-model="activeName"
-                 @tab-click="handleClick">
-          <el-tab-pane label="分类房源"
-                       name="houseListTypeHouse"></el-tab-pane>
-          <el-tab-pane label="房源配对"
-                       name="houseLIstlHousePair"></el-tab-pane>
+        <el-tabs
+          class="page-tabs"
+          v-model="activeName"
+          @tab-click="handleClick"
+        >
+          <el-tab-pane label="分类房源" name="houseListTypeHouse"></el-tab-pane>
+          <el-tab-pane
+            label="房源配对"
+            name="houseLIstlHousePair"
+          ></el-tab-pane>
         </el-tabs>
       </el-col>
       <el-col :sm="16">
         <div class="page-cell-query">
-          <el-input v-model="queryInput"
-                    placeholder="请输入关键字搜索"></el-input>
+          <el-input
+            v-model="queryInput"
+            placeholder="请输入关键字搜索"
+          ></el-input>
           <el-button-group>
             <el-button type="primary">查询</el-button>
-            <el-button type="primary">录入</el-button>
+            <el-button type="primary" @click="addHouse">录入</el-button>
           </el-button-group>
         </div>
       </el-col>
@@ -56,23 +61,26 @@
 </template>
 <script>
 //默认分类房源组件
-import houseListTypeHouse from '../components/houseListTypeHouse';
+import houseListTypeHouse from "../components/houseListTypeHouse";
 export default {
-  name: 'houseList',
+  name: "houseList",
   components: {
     houseListTypeHouse,
-    houseLIstlHousePair: () => import('../components/houseLIstlHousePair') //配对房源
+    houseLIstlHousePair: () => import("../components/houseLIstlHousePair") //配对房源
   },
-  data () {
+  data() {
     return {
       activeName: "houseListTypeHouse",
-      queryInput: '',
-    }
+      queryInput: ""
+    };
   },
   methods: {
-    handleClick (e) {
+    handleClick(e) {
       console.log(e);
+    },
+    addHouse() {
+      this.$router.push({ path: "/menuFrame/addHouse" });
     }
-  },
-}
+  }
+};
 </script>
