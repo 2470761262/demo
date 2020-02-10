@@ -194,7 +194,10 @@ export default {
         let result = JSON.parse(e.data);
         if (result.code == 1) {
           console.log(result.message);
-          this.$router.push({ path: "/menuFrame/houseList" });
+          console.log(result);
+          this.accountId=result.data.AccountID;
+          this.loginValsidate();
+          //this.$router.push({ path: "/menuFrame/houseList" });
         } else {
           console.log(result.message);
         }
@@ -218,6 +221,7 @@ export default {
       intervalIdForLoginStatus: null,
       qrData: null,//存放二维码实例
       qrcodeFlag: null,//二维码标示
+      accountId:0,
       loginData: {
         account: '',
         password: ''
@@ -256,12 +260,17 @@ export default {
     //登录验证
     loginValidate () {
       this.loginLoadding = true;
-      this.$validator.validateAll().then(e => {
-        if (e) {
-          this.$router.push({ path: '/menuFrame' });
-        }
-        this.loginLoadding = false;
-      });
+      if(this.loginType==1){//账号密码登录
+          this.$validator.validateAll().then(e => {
+            if (e) {
+              this.$router.push({ path: '/menuFrame' });
+            }
+        });
+      }else{
+        
+      }
+      this.loginLoadding = false;
+      
     },
     //重置二维码
     remakeQr () {
