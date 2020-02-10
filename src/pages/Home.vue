@@ -179,6 +179,7 @@ export default {
   },
   mounted () {
     this.qrcode();
+    let that=this;
     //开启定时器，验证是否扫码登录成功
     this.intervalIdForLoginStatus = setInterval(() => {
       if (this.qrcodeFlag == null) {
@@ -187,8 +188,9 @@ export default {
       this.$api.post({
         url: '/loginManager/getUserLoginStatus',
         data: {
-          qrCode: this.qrcodeFlag
+          qrCode: that.qrcodeFlag
         },
+        qs:true,
         token: false
       }).then((e) => {
         console.log(e.data);
@@ -197,10 +199,12 @@ export default {
           console.log(result.message);
           console.log(result);
           this.accountId = result.data.accountID;
+          //停止轮询
+          clearInterval(that.intervalIdForLoginStatus);
           this.loginValidate();
           //this.$router.push({ path: "/menuFrame/houseList" });
         } else {
-          console.log(result.message);
+          console.log("检查扫码登录结果："+result.message);
         }
       }).catch((e) => {
         console.log("检查扫码登录状态失败");
@@ -274,13 +278,13 @@ export default {
       }
       this.loginReal(loginParams,
         function () {
-          this.$router.push({ path: '/menuFrame' });
+          that.$router.push({ path: '/menuFrame' });
         },
-        function () {
+        function (message) {
           that.loginLoadding = false;
           that.$notify({
             title: '警告',
-            message: '登录失败',
+            message: message,
             type: 'warning',
             offset: 60
           });
@@ -300,11 +304,13 @@ export default {
         if (result.code == "SUCCESS") {
           console.log("登录成功");
           successFunc();
+        }else{
+          failFunc(result.message);
         }
       }).catch((e) => {
         console.log("【【【【uups,登录失败】】】】");
         console.log(e);
-        failFunc();
+        failFunc('发送异常,登录失败');
       })
     },
     //重置二维码
@@ -340,6 +346,7 @@ export default {
           data: {
             p: "testParams"
           },
+          qs:true,
           token: false,
 
         }).then((e) => {
@@ -347,7 +354,7 @@ export default {
           let result = e.data;
           console.log(result.message);
           if (result.code == "SUCCESS") {
-            this.qrcodeFlag = result.data.split("=")[1];
+            that.qrcodeFlag = result.data.split("=")[1];
             if (this.qrData == null) {
               //// 和div的id相同 必须是id  class类名会报错
               //// 第二参数是他的配置项

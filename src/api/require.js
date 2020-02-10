@@ -12,7 +12,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 let http = axios.create({
   withCredentials: true,
   // 请求超时时间（毫秒）
-  timeout: 1000,
+  timeout: 10000,
 });
 
 // 请求拦截器
