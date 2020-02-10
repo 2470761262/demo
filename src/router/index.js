@@ -77,6 +77,24 @@ export default new Router({
           component: () =>
             import(/* webpackChunkName: "validateHouseExamineList" */ "@/pages/validateHouseExamineList.vue")
         },
+        {  //房源作业方审核
+          path: "/menuFrame/houseTaskExamineList",
+          name: "houseTaskExamineList",
+          meta: {
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/houseTaskExamineList",
+                name: "房源作业方审核"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "errorValidathouseTaskExamineListeList" */ "@/pages/houseTaskExamineList.vue")
+        },
         {  //验证房源列表
           path: "/menuFrame/errorValidateList",
           name: "errorValidateList",
