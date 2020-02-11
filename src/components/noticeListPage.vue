@@ -105,7 +105,7 @@
                      @current-change="handleCurrentChange"
                      :current-page="pageJson.currentPage"
                      :page-sizes="[5, 10, 15, 20]"
-                     :page-size="100"
+                     :page-size="pageJson.pageSize"
                      layout="total, sizes, prev, pager, next, jumper"
                      :total="pageJson.total">
       </el-pagination>

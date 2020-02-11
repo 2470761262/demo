@@ -21,7 +21,7 @@
           <div v-if="scope.row.operation!=''">
             <el-button type="info"
                        size="mini"
-                       v-for="(item,index) in isForBut(scope.row.operation)"
+                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
                        :key="index">{{item.name}}</el-button>
           </div>
         </template>
@@ -38,67 +38,35 @@ export default {
   data () {
     return {
       pageJson: {
-        currentPage: 1,
-        total: 50
+        currentPage: 1,//当前页码
+        total: 9,//总记录数
+        pageSize:5//每页条数
       },
-      options: [{
-        value: '选项1',
-        label: '全部'
-      }, {
-        value: '选项2',
-        label: '待验真'
-      }, {
-        value: '选项3',
-        label: '客户验真'
-      }, {
-        value: '选项4',
-        label: '店长验真'
-      }, {
-        value: '选项5',
-        label: '验真失败'
-      }, {
-        value: '选项6',
-        label: '已过期'
-      }],
       tableDataColumn: [
-        { prop: 'house', label: "编号" },
-        { prop: 'priceArea', label: "公告标题" },
-        { prop: 'type', label: "公告类型" },
-        { prop: 'economicPro', label: "发布人" },
-        { prop: 'validateType', label: "公司" },
+        { prop: 'noticeNo', label: "编号" },
+        { prop: 'noticeTitle', label: "公告标题" },
+        { prop: 'noticeType', label: "公告类型" },
+        { prop: 'publishPerson', label: "发布人" },
+        { prop: 'companyId', label: "公司" },
         { prop: 'addTime', label: "添加时间" },
-        { prop: 'cellType', label: "操作" },
       ],
       tableData: [{
-        house: '龙腾花园-16栋-604室',
-        priceArea: '234万/100平',
-        type: '3室2厅1卫',
-        levae: '精装修',
-        economicPro: '王龙海',
-        validateType: '通过',
-        cutPro: '王龙海1',
+        noticeNo: '龙腾花园-16栋-604室',
+        noticeTitle: '234万/100平',
+        noticeType: '3室2厅1卫',
+        publishPerson: '精装修',
+        companyId: '王龙海1',
         addTime: '2019-01-01 18:00:00',
-        cellType: '号码异常',
-        operation: '3',
-      }, {
-        house: '龙腾花园-16栋-604室',
-        priceArea: '234万/100平',
-        type: '3室2厅1卫',
-        levae: '精装修',
-        economicPro: '王龙海2',
-        validateType: '通过',
-        cutPro: '王龙海2',
-        addTime: '2019-01-01 18:00:00',
-        cellType: '号码异常',
         operation: '3',
       }],
     }
   },
   methods: {
     queryTabData () { },
-    isForBut (type) {
+    getOpeBtns (type) {
       let array = [
-        { name: '查看', isType: '3', methosName: '' }
+        { name: '查看', isType: '3', methosName: '' },
+        { name: '编辑', isType: '3', methosName: '' }
       ]
       return array.filter((item) => {
         return item.isType.includes(type)
