@@ -45,12 +45,12 @@
 <template>
   <div class="page-body">
     <div class="page-steps">
-      <el-steps :active="stepsActiveIndex" align-center finish-status="success">
-        <el-step
-          :title="item.title"
-          v-for="(item, index) in stepsList"
-          :key="index"
-        ></el-step>
+      <el-steps :active="stepsActiveIndex"
+                align-center
+                finish-status="success">
+        <el-step :title="item.title"
+                 v-for="(item, index) in stepsList"
+                 :key="index"></el-step>
       </el-steps>
     </div>
     <div class="page-contenr">
@@ -59,22 +59,18 @@
       </div>
       <div class="page-contenr-but">
         <el-button-group>
-          <el-button type="primary" @click="prevPage" class="page-previous">{{
+          <el-button type="primary"
+                     @click="prevPage"
+                     class="page-previous">{{
             prevText
           }}</el-button>
-          <el-button
-            type="primary"
-            @click="nextPage"
-            class="page-next"
-            :loading="butLoading"
-            >{{ nextText }}</el-button
-          >
-          <el-button
-            v-if="stepsActiveIndex == 2 || stepsActiveIndex == 3"
-            type="info"
-            :loading="butLoading"
-            >跳过</el-button
-          >
+          <el-button type="primary"
+                     @click="nextPage"
+                     class="page-next"
+                     :loading="butLoading">{{ nextText }}</el-button>
+          <el-button v-if="stepsActiveIndex == 2 || stepsActiveIndex == 3"
+                     type="info"
+                     :loading="butLoading">跳过</el-button>
         </el-button-group>
       </div>
     </div>
@@ -83,7 +79,7 @@
 <script>
 export default {
   watch: {
-    stepsActiveIndex(val) {
+    stepsActiveIndex (val) {
       if (val == 1) this.prevText = "重置";
       else this.prevText = "上一步";
 
@@ -91,7 +87,7 @@ export default {
       else this.nextText = "邀请验真";
     }
   },
-  data() {
+  data () {
     return {
       stepsList: [
         { title: "房源坐落", componentName: "" },
@@ -108,12 +104,12 @@ export default {
   },
   methods: {
     //上一步
-    prevPage() {
-      if (this.stepsActiveIndex > 1) --this.stepsActiveIndex;
+    prevPage () {
+      if (this.stepsActiveIndex > 1)--this.stepsActiveIndex;
     },
     //下一步
-    nextPage() {
-      if (this.stepsActiveIndex <= this.stepsList.length)
+    nextPage () {
+      if (this.stepsActiveIndex < this.stepsList.length)
         ++this.stepsActiveIndex;
     }
   }
