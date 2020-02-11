@@ -8,13 +8,13 @@ import "element-ui/lib/theme-chalk/index.css";
 import "./validate/validate";//表单验证
 import Api from "@/api/require"; //请求api
 import guard from '@/router/guard'; // 路由拦截器
-import tremeInit from '@/tremePackers/tremePackers';//主题
+import themePackers from '@/themePackers/themePackers';//主题
 import "babel-polyfill";
 Vue.prototype.$api = Api;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 guard(router);
-tremeInit();
+themePackers.createImport();
 /* eslint-disable no-new */
 new Vue({
   el: "#app",

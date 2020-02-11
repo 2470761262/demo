@@ -1,6 +1,10 @@
 export default {
   localStorageSet (key, value) {
-    localStorage.setItem(key, JSON.stringify(value));
+    if (typeof key == "string") {
+      localStorage.setItem(key, value);
+    } else {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
   },
   localStorageGet (key) {
     if (localStorage.getItem(key) == null || localStorage.getItem(key) == '') {
