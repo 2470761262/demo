@@ -30,7 +30,7 @@
   </list-page>
 </template>
 <script>
-import listPage from '@/components/listPage';
+import listPage from '@/components/noticeListPage';
 export default {
   components: {
     listPage
@@ -60,23 +60,14 @@ export default {
         value: '选项6',
         label: '已过期'
       }],
-      elTabs: {
-        activeName: "tab1",
-        list: [
-          { label: '全部', name: 'tab1' },
-          { label: '业主异常', name: 'tab2' },
-          { label: '客户异常', name: 'tab3' }
-        ]
-      },
       tableDataColumn: [
-        { prop: 'house', label: "房源坐落" },
-        { prop: 'priceArea', label: "售价/面积" },
-        { prop: 'type', label: "户型" },
-        { prop: 'economicPro', label: "经济人" },
-        { prop: 'validateType', label: "验真状态" },
-        { prop: 'cutPro', label: "客户姓名" },
-        { prop: 'addTime', label: "发布时间" },
-        { prop: 'cellType', label: "类型" },
+        { prop: 'house', label: "编号" },
+        { prop: 'priceArea', label: "公告标题" },
+        { prop: 'type', label: "公告类型" },
+        { prop: 'economicPro', label: "发布人" },
+        { prop: 'validateType', label: "公司" },
+        { prop: 'addTime', label: "添加时间" },
+        { prop: 'cellType', label: "操作" },
       ],
       tableData: [{
         house: '龙腾花园-16栋-604室',
