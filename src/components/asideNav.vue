@@ -29,6 +29,13 @@
         <el-menu-item index="/menuFrame/addFloorList">补充楼盘审核</el-menu-item>
         <!-- </el-menu-item-group> -->
       </el-submenu>
+      <el-submenu index="2">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>系统管理</span>
+        </template>
+        <el-menu-item index="/menuFrame/noticeManageList">公告管理</el-menu-item>
+      </el-submenu>
     </el-menu>
   </div>
 </template>

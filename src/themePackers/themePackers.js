@@ -8,8 +8,15 @@ let themeData = {
     let newVal = val;
     if (newVal == undefined) {
       let storeColor = util.localStorageGet(TREMEPACKERS);
-      if (!storeColor) return
+      if (!storeColor) {
+        util.localStorageSet(TREMEPACKERS, TREMEDEFTULTCOLOR);
+        storeColor = TREMEDEFTULTCOLOR;
+      }
       newVal = storeColor;
+    }
+    // 皮肤是基于style内容匹配,打包完之后被压缩成文件
+    if (process.env.NODE_ENV != 'development') {
+      themeData.createStyle(newVal, ordVal);
     }
     themeData.createStyle(newVal, ordVal);
     themeData.init(newVal);

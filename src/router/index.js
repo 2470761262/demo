@@ -177,6 +177,28 @@ export default new Router({
           },
           component: () =>
             import(/* webpackChunkName: "addHouse" */ "@/pages/addHouse.vue")
+        },
+        {
+          //公告管理
+          path: "/menuFrame/noticeManageList",
+          name: "noticeManageList",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统管理"
+              },
+              {
+                path: "/menuFrame/noticeManageList",
+                name: "公告管理"
+              }
+            ]
+          },
+          component: () =>
+            import(
+              "@/pages/noticeManageList.vue"
+            )
         }
       ]
     }
