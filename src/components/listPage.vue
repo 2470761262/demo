@@ -22,23 +22,7 @@
     flex-wrap: wrap;
   }
 }
-.query-center-item {
-  margin-right: 20px;
-  margin-bottom: 10px;
-  @media (max-width: 1152px) {
-    width: 100%;
-    margin-right: 0px;
-    /deep/.el-select {
-      width: 100%;
-    }
-    /deep/.el-input__inner {
-      width: 100%;
-    }
-  }
-  &:last-of-type {
-    margin-right: 0;
-  }
-}
+
 .page-cell-append {
   display: flex;
   // align-items: center;
@@ -76,21 +60,24 @@
       </div>
       <div class="page-body-conter-right">
         <div class="query-center">
-          <div class="query-center-item">
-            <el-input placeholder="楼盘名称"
-                      v-model="queryData.houseName"
-                      clearable>
-              <template slot="prepend">楼盘</template>
-            </el-input>
-          </div>
-          <div class="query-center-item">
-            <el-input placeholder="姓名"
-                      v-model="queryData.taskName"
-                      clearable>
-              <template slot="prepend">任务人</template>
-            </el-input>
-          </div>
-          <div :class="['query-center-item',{'page-cell-append ':$scopedSlots.selectTo ? false : true}]"
+          <slot name="inputTo">
+            <div class="query-center-item">
+              <el-input placeholder="楼盘名称"
+                        v-model="queryData.houseName"
+                        clearable>
+                <template slot="prepend">楼盘</template>
+              </el-input>
+            </div>
+            <div class="query-center-item">
+              <el-input placeholder="姓名"
+                        v-model="queryData.taskName"
+                        clearable>
+                <template slot="prepend">任务人</template>
+              </el-input>
+            </div>
+          </slot>
+          <div v-if="configSet.selectTo"
+               :class="['query-center-item',{'page-cell-append ':$scopedSlots.selectTo ? false : true}]"
                data-before="状态">
             <slot name="selectTo">
               <el-select v-model="queryData.selectValue"
@@ -103,18 +90,20 @@
               </el-select>
             </slot>
           </div>
-          <div class="query-center-item">
-            <el-date-picker v-model="queryData.timeSelect"
-                            type="daterange"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期">
-            </el-date-picker>
-          </div>
-          <div class="query-but">
-            <el-button type="primary"
-                       @click="queryTabData">查询</el-button>
-          </div>
+          <template v-if="configSet.selectToTime">
+            <div class="query-center-item">
+              <el-date-picker v-model="queryData.timeSelect"
+                              type="daterange"
+                              range-separator="至"
+                              start-placeholder="开始日期"
+                              end-placeholder="结束日期">
+              </el-date-picker>
+            </div>
+            <div class="query-but">
+              <el-button type="primary"
+                         @click="queryTabData">查询</el-button>
+            </div>
+          </template>
         </div>
         <el-tabs v-model="elTabs.activeName"
                  @tab-click="handleClick">
@@ -156,6 +145,10 @@ export default {
   },
   data () {
     return {
+      configSet: {
+        selectToTime: true,
+        selectTo: true
+      },
       pageJson: {},
       tableDataColumn: [],
       tableData: [],

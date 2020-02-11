@@ -1,10 +1,28 @@
 
+<style lang="less" scoped>
+.query-cell {
+  display: flex;
+}
+</style>
 <template>
   <list-page :parentData="$data"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
+    <template v-slot:inputTo>
+      <div class="query-cell">
+        <el-input placeholder="楼盘名称"
+                  v-model="queryData.houseName"
+                  clearable>
+          <template slot="prepend">楼盘</template>
+        </el-input>
+        <el-button type="primary"
+                   @click="queryTabData">查询</el-button>
+        <el-button type="primary"
+                   @click="queryTabData">查询</el-button>
+      </div>
+    </template>
     <template v-slot:tableColumn="cell">
       <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
@@ -37,6 +55,16 @@ export default {
   },
   data () {
     return {
+      queryData: {
+        houseName: '',
+        taskName: '',
+        selectValue: '',
+        timeSelect: '',
+      },
+      configSet: {
+        selectToTime: false,
+        selectTo: false
+      },
       pageJson: {
         currentPage: 1,//当前页码
         total: 9,//总记录数
