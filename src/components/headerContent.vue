@@ -9,6 +9,7 @@
     height: 40px;
     border-radius: 50%;
     overflow: hidden;
+    margin-left: 20px;
     img {
       width: 100%;
       height: 100%;
@@ -26,10 +27,20 @@
     cursor: pointer;
   }
 }
+.page-theme {
+  display: flex;
+  align-items: center;
+  &::before {
+    content: "选择主题:";
+    font-size: 14px;
+  }
+}
 </style>
 <template>
   <div class="page-cell-header">
-    <ThemePicker />
+    <div class="page-theme">
+      <ThemePicker />
+    </div>
     <div class="per-img">
       <img src="http://b-ssl.duitang.com/uploads/item/201804/25/20180425000646_fsmLS.thumb.700_0.jpeg"
            alt="头像">
@@ -56,7 +67,6 @@ export default {
     ThemePicker
   },
   created () {
-    console.log(this.$validator);
   },
   methods: {
     handleCommand (command) {
