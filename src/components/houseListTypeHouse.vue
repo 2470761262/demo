@@ -28,7 +28,7 @@
         .item-cell-data-title {
           display: inline-block;
           color: #fff;
-          background: #409eff;
+          background: var(--color--primary);
           width: 30px;
           height: 30px;
           border-radius: 50%;
