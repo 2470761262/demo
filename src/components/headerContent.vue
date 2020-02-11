@@ -29,6 +29,7 @@
 </style>
 <template>
   <div class="page-cell-header">
+    <ThemePicker />
     <div class="per-img">
       <img src="http://b-ssl.duitang.com/uploads/item/201804/25/20180425000646_fsmLS.thumb.700_0.jpeg"
            alt="头像">
@@ -49,7 +50,11 @@
   </div>
 </template>
 <script>
+import ThemePicker from './ThemePicker';
 export default {
+  components: {
+    ThemePicker
+  },
   created () {
     console.log(this.$validator);
   },

@@ -6,7 +6,11 @@ export default {
     if (localStorage.getItem(key) == null || localStorage.getItem(key) == '') {
       return null;
     } else {
-      return JSON.parse(localStorage.getItem(key));
+      try {
+        return JSON.parse(localStorage.getItem(key));
+      } catch (error) {
+        return localStorage.getItem(key);
+      }
     }
   },
   localStorageClear () {

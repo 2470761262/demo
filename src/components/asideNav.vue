@@ -1,7 +1,7 @@
 
 <style lang="less">
 .el-menu {
-  border: none;
+  border: none !important;
 }
 </style>
 <template>
