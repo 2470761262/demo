@@ -11,6 +11,10 @@ let themeData = {
       if (!storeColor) return
       newVal = storeColor;
     }
+    // 皮肤是基于style内容匹配,打包完之后被压缩成文件
+    if (process.env.NODE_ENV != 'development') {
+      themeData.createStyle(newVal, ordVal);
+    }
     themeData.createStyle(newVal, ordVal);
     themeData.init(newVal);
     return Promise.resolve();
