@@ -131,6 +131,24 @@ export default new Router({
           component: () =>
             import(/* webpackChunkName: "addFloorList" */ "@/pages/addFloorList.vue")
         },
+        {  //公告管理
+          path: "/menuFrame/noticeManageList",
+          name: "noticeManageList",
+          meta: {
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统管理"
+              },
+              {
+                path: "/menuFrame/noticeManageList",
+                name: "公告管理类"
+              }
+            ]
+          },
+          component: () =>
+            import("@/pages/noticeManageList.vue")
+        },
       ]
     }
   ]
