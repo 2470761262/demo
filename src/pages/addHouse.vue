@@ -19,10 +19,18 @@
     flex-direction: column;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
-    padding: 0 20px;
+    //padding: 0 20px;
     .page-contenr-com {
       overflow: auto;
       flex: 1;
+      position: relative;
+      .page-contenr-com-posi {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
     }
     .page-contenr-but {
       display: flex;
@@ -45,41 +53,50 @@
 <template>
   <div class="page-body">
     <div class="page-steps">
-      <el-steps :active="stepsActiveIndex"
-                align-center
-                finish-status="success">
-        <el-step :title="item.title"
-                 v-for="(item, index) in stepsList"
-                 :key="index"></el-step>
+      <el-steps :active="stepsActiveIndex" align-center finish-status="success">
+        <el-step
+          :title="item.title"
+          v-for="(item, index) in stepsList"
+          :key="index"
+        ></el-step>
       </el-steps>
     </div>
     <div class="page-contenr">
       <div class="page-contenr-com">
-        {{ stepsActiveIndex }}
+        <div class="page-contenr-com-posi">
+          <component :is="componentName" ref="com"></component>
+        </div>
       </div>
       <div class="page-contenr-but">
         <el-button-group>
-          <el-button type="primary"
-                     @click="prevPage"
-                     class="page-previous">{{
+          <el-button type="primary" @click="prevPage" class="page-previous">{{
             prevText
           }}</el-button>
-          <el-button type="primary"
-                     @click="nextPage"
-                     class="page-next"
-                     :loading="butLoading">{{ nextText }}</el-button>
-          <el-button v-if="stepsActiveIndex == 2 || stepsActiveIndex == 3"
-                     type="info"
-                     :loading="butLoading">跳过</el-button>
+          <el-button
+            type="primary"
+            @click="nextPage"
+            class="page-next"
+            :loading="butLoading"
+            >{{ nextText }}</el-button
+          >
+          <el-button type="info" :loading="butLoading">保存草稿</el-button>
         </el-button-group>
       </div>
     </div>
   </div>
 </template>
 <script>
+import basicInformation from "@/components/addHouse/basicInformation";
+import { mapState } from "vuex";
 export default {
+  components: {
+    basicInformation
+  },
+  mounted() {
+    //console.log(this.$refs.com.$options.name);
+  },
   watch: {
-    stepsActiveIndex (val) {
+    stepsActiveIndex(val) {
       if (val == 1) this.prevText = "重置";
       else this.prevText = "上一步";
 
@@ -87,11 +104,11 @@ export default {
       else this.nextText = "邀请验真";
     }
   },
-  data () {
+  data() {
     return {
+      componentName: "basicInformation",
       stepsList: [
-        { title: "房源坐落", componentName: "" },
-        { title: "基础信息", componentName: "" },
+        { title: "基础信息", componentName: "basicInformation" },
         { title: "补充信息(非必填)", componentName: "" },
         { title: "实勘图片/视频", componentName: "" },
         { title: "房源验真", componentName: "" }
@@ -104,11 +121,11 @@ export default {
   },
   methods: {
     //上一步
-    prevPage () {
-      if (this.stepsActiveIndex > 1)--this.stepsActiveIndex;
+    prevPage() {
+      if (this.stepsActiveIndex > 1) --this.stepsActiveIndex;
     },
     //下一步
-    nextPage () {
+    nextPage() {
       if (this.stepsActiveIndex < this.stepsList.length)
         ++this.stepsActiveIndex;
     }
