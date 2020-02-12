@@ -55,7 +55,7 @@
     </div>
     <div class="page-contenr">
       <div class="page-contenr-com">
-        {{ stepsActiveIndex }}
+        <component :is="componentName"></component>
       </div>
       <div class="page-contenr-but">
         <el-button-group>
@@ -68,16 +68,19 @@
                      @click="nextPage"
                      class="page-next"
                      :loading="butLoading">{{ nextText }}</el-button>
-          <el-button v-if="stepsActiveIndex == 2 || stepsActiveIndex == 3"
-                     type="info"
-                     :loading="butLoading">跳过</el-button>
+          <el-button type="info"
+                     :loading="butLoading">保存草稿</el-button>
         </el-button-group>
       </div>
     </div>
   </div>
 </template>
 <script>
+import basicInformation from '@/components/addHouse/basicInformation';
 export default {
+  components: {
+    basicInformation
+  },
   watch: {
     stepsActiveIndex (val) {
       if (val == 1) this.prevText = "重置";
@@ -89,9 +92,9 @@ export default {
   },
   data () {
     return {
+      componentName: "basicInformation",
       stepsList: [
-        { title: "房源坐落", componentName: "" },
-        { title: "基础信息", componentName: "" },
+        { title: "基础信息", componentName: "basicInformation" },
         { title: "补充信息(非必填)", componentName: "" },
         { title: "实勘图片/视频", componentName: "" },
         { title: "房源验真", componentName: "" }
