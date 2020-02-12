@@ -6,21 +6,21 @@
 </style>
 <template>
   <list-page :parentData="$data"
-             @queryTabData="queryTabData"
-             @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:inputTo>
       <div class="query-cell">
-        <el-input placeholder="楼盘名称"
+        <el-input placeholder="标题名称"
                   v-model="queryData.houseName"
                   clearable>
-          <template slot="prepend">楼盘</template>
+          <template slot="prepend">标题</template>
         </el-input>
         <el-button type="primary"
-                   @click="queryTabData">查询</el-button>
+                   size="mini"
+                   @click="test2">查询</el-button>
         <el-button type="primary"
-                   @click="queryTabData">查询</el-button>
+                   size="mini"
+                   @click="test3">添加公告</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
@@ -39,6 +39,7 @@
           <div v-if="scope.row.operation!=''">
             <el-button type="info"
                        size="mini"
+                       @click="distributeEvent(item.methosName)"
                        v-for="(item,index) in isForBut(scope.row.operation)"
                        :key="index">{{item.name}}</el-button>
           </div>
@@ -48,7 +49,7 @@
   </list-page>
 </template>
 <script>
-import listPage from '@/components/noticeListPage';
+import listPage from '@/components/listPage';
 export default {
   components: {
     listPage
@@ -57,9 +58,6 @@ export default {
     return {
       queryData: {
         houseName: '',
-        taskName: '',
-        selectValue: '',
-        timeSelect: '',
       },
       configSet: {
         selectToTime: false,
@@ -123,17 +121,25 @@ export default {
     }
   },
   methods: {
-    queryTabData () { },
+    distributeEvent (e) {
+      this[e]();
+    },
+    test3 () {
+
+    },
+    test2 () {
+
+    },
+    test1 () {
+      console.log(11111111);
+    },
     isForBut (type) {
       let array = [
-        { name: '查看', isType: '3', methosName: '' }
+        { name: '查看', isType: '3', methosName: 'test1' }
       ]
       return array.filter((item) => {
         return item.isType.includes(type)
       })
-    },
-    handleClick () {
-
     },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
