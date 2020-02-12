@@ -62,11 +62,13 @@
 <script>
 //默认分类房源组件
 import houseListTypeHouse from "../components/houseListTypeHouse";
+//异步组件工厂方法
+import componentsFactory from "@/util/componentsFactory";
 export default {
   name: "houseList",
   components: {
     houseListTypeHouse,
-    houseLIstlHousePair: () => import("../components/houseLIstlHousePair") //配对房源
+    houseLIstlHousePair: () => componentsFactory("houseLIstlHousePair")
   },
   data() {
     return {
