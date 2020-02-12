@@ -16,11 +16,9 @@
           <template slot="prepend">标题</template>
         </el-input>
         <el-button type="primary"
-                   size="mini"
-                   @click="test2">查询</el-button>
+                   size="mini">查询</el-button>
         <el-button type="primary"
-                   size="mini"
-                   @click="test3">添加公告</el-button>
+                   size="mini">添加公告</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
@@ -40,7 +38,7 @@
             <el-button type="info"
                        size="mini"
                        @click="distributeEvent(item.methosName)"
-                       v-for="(item,index) in isForBut(scope.row.operation)"
+                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
                        :key="index">{{item.name}}</el-button>
           </div>
         </template>
@@ -64,78 +62,52 @@ export default {
         selectTo: false
       },
       pageJson: {
-        currentPage: 1,
-        total: 50
+        currentPage: 1,//当前页码
+        total: 9,//总记录数
+        pageSize: 5//每页条数
       },
-      options: [{
-        value: '选项1',
-        label: '全部'
-      }, {
-        value: '选项2',
-        label: '待验真'
-      }, {
-        value: '选项3',
-        label: '客户验真'
-      }, {
-        value: '选项4',
-        label: '店长验真'
-      }, {
-        value: '选项5',
-        label: '验真失败'
-      }, {
-        value: '选项6',
-        label: '已过期'
-      }],
       tableDataColumn: [
-        { prop: 'house', label: "编号" },
-        { prop: 'priceArea', label: "公告标题" },
-        { prop: 'type', label: "公告类型" },
-        { prop: 'economicPro', label: "发布人" },
-        { prop: 'validateType', label: "公司" },
+        { prop: 'noticeNo', label: "编号" },
+        { prop: 'noticeTitle', label: "公告标题" },
+        { prop: 'noticeType', label: "公告类型" },
+        { prop: 'publishPerson', label: "发布人" },
+        { prop: 'companyId', label: "公司" },
         { prop: 'addTime', label: "添加时间" },
-        { prop: 'cellType', label: "操作" },
       ],
       tableData: [{
-        house: '龙腾花园-16栋-604室',
-        priceArea: '234万/100平',
-        type: '3室2厅1卫',
-        levae: '精装修',
-        economicPro: '王龙海',
-        validateType: '通过',
-        cutPro: '王龙海1',
+        noticeNo: '龙腾花园-16栋-604室',
+        noticeTitle: '234万/100平',
+        noticeType: '3室2厅1卫',
+        publishPerson: '精装修',
+        companyId: '王龙海1',
         addTime: '2019-01-01 18:00:00',
-        cellType: '号码异常',
         operation: '3',
-      }, {
-        house: '龙腾花园-16栋-604室',
-        priceArea: '234万/100平',
-        type: '3室2厅1卫',
-        levae: '精装修',
-        economicPro: '王龙海2',
-        validateType: '通过',
-        cutPro: '王龙海2',
+      },
+      {
+        noticeNo: '龙腾花园-16栋-604室',
+        noticeTitle: '234万/100平',
+        noticeType: '3室2厅1卫',
+        publishPerson: '精装修',
+        companyId: '郑然1',
         addTime: '2019-01-01 18:00:00',
-        cellType: '号码异常',
-        operation: '3',
+        operation: '1',
       }],
     }
   },
   methods: {
+    test1 () {
+      console.log(11);
+    },
+    test2 () {
+      console.log(222);
+    },
     distributeEvent (e) {
       this[e]();
     },
-    test3 () {
-
-    },
-    test2 () {
-
-    },
-    test1 () {
-      console.log(11111111);
-    },
-    isForBut (type) {
+    getOpeBtns (type) {
       let array = [
-        { name: '查看', isType: '3', methosName: 'test1' }
+        { name: '查看', isType: '1,3', methosName: 'test2' },
+        { name: '编辑', isType: '1', methosName: 'test1' }
       ]
       return array.filter((item) => {
         return item.isType.includes(type)
