@@ -11,12 +11,12 @@
     <template v-slot:inputTo>
       <div class="query-cell">
         <el-input placeholder="标题名称"
-                  v-model="queryData.houseName"
+                  v-model="queryData.newsTitle"
                   clearable>
           <template slot="prepend">标题</template>
         </el-input>
         <el-button type="primary"
-                   size="mini">查询</el-button>
+                   size="mini" @click="queryNoticeByParams">查询</el-button>
         <el-button type="primary"
                    size="mini">添加公告</el-button>
       </div>
@@ -55,7 +55,7 @@ export default {
   data () {
     return {
       queryData: {
-        houseName: '',
+        newsTitle: '',
       },
       configSet: {
         selectToTime: false,
@@ -67,34 +67,58 @@ export default {
         pageSize: 5//每页条数
       },
       tableDataColumn: [
-        { prop: 'noticeNo', label: "编号" },
-        { prop: 'noticeTitle', label: "公告标题" },
-        { prop: 'noticeType', label: "公告类型" },
-        { prop: 'publishPerson', label: "发布人" },
-        { prop: 'companyId', label: "公司" },
-        { prop: 'addTime', label: "添加时间" },
+        { prop: 'id', label: "编号" },
+        { prop: 'newsTitle', label: "公告标题" },
+        { prop: 'newsType', label: "公告类型" },
+        { prop: 'perName', label: "发布人" },
+        { prop: 'companyName', label: "公司" },
+        { prop: 'addDate', label: "添加时间" },
       ],
       tableData: [{
-        noticeNo: '龙腾花园-16栋-604室',
-        noticeTitle: '234万/100平',
-        noticeType: '3室2厅1卫',
-        publishPerson: '精装修',
-        companyId: '王龙海1',
-        addTime: '2019-01-01 18:00:00',
-        operation: '3',
-      },
-      {
-        noticeNo: '龙腾花园-16栋-604室',
-        noticeTitle: '234万/100平',
-        noticeType: '3室2厅1卫',
-        publishPerson: '精装修',
-        companyId: '郑然1',
-        addTime: '2019-01-01 18:00:00',
-        operation: '1',
-      }],
+        id: '111',
+        newsTitle: 'wwwwww',
+        newsType: 'xx',
+        perName: 'xxx',
+        companyName: 'xxxx',
+        addDate: '2019-01-01 18:00:00'
+      }
+      ],
     }
   },
+  mounted(){
+    this.queryNoticeDatas(1);    
+  },
   methods: {
+    queryNoticeByParams(){
+      this.queryNoticeDatas(1);    
+    },
+    queryNoticeDatas(currentPage){
+      let params={"limit":this.pageJson.pageSize,"page":currentPage};
+      if(this.queryData.newsTitle!=null){
+        params.newsTitle=this.queryData.newsTitle;
+      }
+      this.$api.post({
+        url: '/noticeManage/queryNoticeDatas',
+        data: params,       
+        token: false
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == "SUCCESS") {
+          console.log(result.message);
+          console.log(result.data);
+          this.pageJson.total=result.data.totalCount;
+          this.pageJson.currentPage=result.data.currPage;
+          this.tableData=result.data.list;
+        } else {
+          console.log("查询公告管理列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询公告管理列表失败");
+        console.log(e);
+      })
+    },
     test1 () {
       console.log(11);
     },
@@ -109,18 +133,18 @@ export default {
         { name: '查看', isType: '1,3', methosName: 'test2' },
         { name: '编辑', isType: '1', methosName: 'test1' }
       ]
-      return array.filter((item) => {
-        return item.isType.includes(type)
-      })
+      // return array.filter((item) => {
+      //   return item.isType.includes(type)
+      // })
+      return array;
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
+      console.log(`设置了每页 ${val} 条`);
+      this.pageJson.pageSize= val;
+      this.queryNoticeDatas(1);
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
-    },
-    handleSizeChange (val) {
-      console.log(`每1页 ${val} 条`);
+      this.queryNoticeDatas(val);
     }
   },
 }
