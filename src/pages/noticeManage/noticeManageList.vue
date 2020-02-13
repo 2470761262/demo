@@ -15,9 +15,9 @@
                   clearable>
           <template slot="prepend">标题</template>
         </el-input>
-        <el-button type="primary"
+        <el-button type="primary" style="margin-left:10px"
                    size="mini" @click="queryNoticeByParams">查询</el-button>
-        <el-button type="primary"
+        <el-button type="primary" 
                    size="mini" @click="toAddNoticePage">添加公告</el-button>
       </div>
     </template>
