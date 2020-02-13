@@ -1,11 +1,11 @@
 import axios from 'axios';
 import qs from 'qs';
-
+import base from './baseUrl';
 function initBaseUrl () {
   if (process.env.NODE_ENV != 'development') { // 线上
     return 'http://bweb.yongxinjia.com';
   }
-  return 'http://bweb.ngrok.5fanqie.com'; // 本地
+  return base.baseUrl; // 本地
 }
 axios.defaults.baseURL = initBaseUrl();
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
