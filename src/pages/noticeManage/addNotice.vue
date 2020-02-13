@@ -108,7 +108,7 @@
         </el-header>
         <el-main>
           <div class="editorContainer">
-            <el-upload class="upload-demo" action="http://localhost:8086/draft_house/picture" :on-success="handleAvatarSuccess">
+            <el-upload class="upload-demo" :action="uploadUrl" :on-success="handleAvatarSuccess">
               <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
@@ -154,6 +154,7 @@ export default {
   props: {},
   data() {
     return {
+      uploadUrl:"",
       noticeContent: "",
       editorOption: {
         placeholder: "请输入公告内容",
@@ -276,7 +277,10 @@ export default {
         }
       }
   },
-  created() {},
+  created() {
+    this.uploadUrl=this.$api.baseUrl()+"/draft_house/picture";
+    console.log(this.uploadUrl);
+  },
   mounted() {}
 };
 </script>

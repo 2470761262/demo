@@ -71,6 +71,9 @@ let ApiData = {
     }
     arg.method = 'GET';
     return this.post.call(this, arg);
+  },
+  baseUrl(){
+    return initBaseUrl();
   }
 }
 export default {
