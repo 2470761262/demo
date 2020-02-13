@@ -4,52 +4,42 @@
 }
 </style>
 <template>
-  <list-page
-    :parentData="$data"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
+  <list-page :parentData="$data"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
     <template v-slot:inputTo>
       <div class="query-cell">
-        <el-input
-          placeholder="标题名称"
-          v-model="queryData.newsTitle"
-          clearable
-        >
+        <el-input placeholder="标题名称"
+                  v-model="queryData.newsTitle"
+                  clearable>
           <template slot="prepend">标题</template>
         </el-input>
-        <el-button type="primary" size="mini" @click="queryNoticeByParams"
-          >查询</el-button
-        >
-        <el-button type="primary" size="mini">添加公告</el-button>
+        <el-button type="primary"
+                   size="mini"
+                   @click="queryNoticeByParams">查询</el-button>
+        <el-button type="primary"
+                   size="mini">添加公告</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
       <template v-for="item in cell.tableData">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-          :key="item.prop"
-        >
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop">
         </el-table-column>
       </template>
-      <el-table-column
-        prop="operation"
-        label="操作"
-        fixed="right"
-        key="operation"
-      >
+      <el-table-column prop="operation"
+                       label="操作"
+                       fixed="right"
+                       key="operation">
         <template v-slot="scope">
           <div v-if="scope.row.operation != ''">
-            <el-button
-              type="info"
-              size="mini"
-              @click="distributeEvent(item.methosName)"
-              v-for="(item, index) in getOpeBtns(scope.row.operation)"
-              :key="index"
-              >{{ item.name }}</el-button
-            >
+            <el-button type="info"
+                       size="mini"
+                       @click="distributeEvent(item.methosName)"
+                       v-for="(item, index) in getOpeBtns(scope.row.operation)"
+                       :key="index">{{ item.name }}</el-button>
           </div>
         </template>
       </el-table-column>
@@ -62,9 +52,9 @@ export default {
   components: {
     listPage
   },
-  data() {
+  data () {
     return {
-      loading: true, //控制表格加载动画提示
+      loading: false, //控制表格加载动画提示
       queryData: {
         newsTitle: ""
       },
@@ -97,14 +87,14 @@ export default {
       ]
     };
   },
-  mounted() {
+  mounted () {
     this.queryNoticeDatas(1);
   },
   methods: {
-    queryNoticeByParams() {
+    queryNoticeByParams () {
       this.queryNoticeDatas(1);
     },
-    queryNoticeDatas(currentPage) {
+    queryNoticeDatas (currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.newsTitle != null) {
@@ -136,16 +126,16 @@ export default {
           console.log(e);
         });
     },
-    test1() {
+    test1 () {
       console.log(11);
     },
-    test2() {
+    test2 () {
       console.log(222);
     },
-    distributeEvent(e) {
+    distributeEvent (e) {
       this[e]();
     },
-    getOpeBtns(type) {
+    getOpeBtns (type) {
       let array = [
         { name: "查看", isType: "1,3", methosName: "test2" },
         { name: "编辑", isType: "1", methosName: "test1" }
@@ -155,12 +145,12 @@ export default {
       // })
       return array;
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryNoticeDatas(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.queryNoticeDatas(val);
     }
   }

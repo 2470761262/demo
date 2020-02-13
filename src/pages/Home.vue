@@ -305,7 +305,7 @@ export default {
       }).then((e) => {
         let result = e.data;
         console.log(result.message);
-        if (result.code == "SUCCESS") {
+        if (result.code == "SUCCESS" || result.code == "200") {
           console.log("登录成功");
           successFunc(result);
         } else {

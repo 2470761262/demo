@@ -24,6 +24,9 @@
       overflow: auto;
       flex: 1;
       position: relative;
+      &.page-contenr-com-over {
+        overflow: hidden !important;
+      }
       .page-contenr-com-posi {
         position: absolute;
         top: 0;
@@ -53,33 +56,36 @@
 <template>
   <div class="page-body">
     <div class="page-steps">
-      <el-steps :active="stepsActiveIndex" align-center finish-status="success">
-        <el-step
-          :title="item.title"
-          v-for="(item, index) in stepsList"
-          :key="index"
-        ></el-step>
+      <el-steps :active="stepsActiveIndex"
+                align-center
+                finish-status="success">
+        <el-step :title="item.title"
+                 v-for="(item, index) in stepsList"
+                 :key="index"></el-step>
       </el-steps>
     </div>
     <div class="page-contenr">
-      <div class="page-contenr-com">
+      <div :class="['page-contenr-com',{'page-contenr-com-over':butLoading}]"
+           v-scrollTop="butLoading"
+           v-loading="butLoading">
         <div class="page-contenr-com-posi">
-          <component :is="componentName" ref="com"></component>
+          <component :is="componentName"
+                     ref="com"></component>
         </div>
       </div>
       <div class="page-contenr-but">
         <el-button-group>
-          <el-button type="primary" @click="prevPage" class="page-previous">{{
+          <el-button type="primary"
+                     @click="prevPage"
+                     class="page-previous">{{
             prevText
           }}</el-button>
-          <el-button
-            type="primary"
-            @click="nextPage"
-            class="page-next"
-            :loading="butLoading"
-            >{{ nextText }}</el-button
-          >
-          <el-button type="info" :loading="butLoading">保存草稿</el-button>
+          <el-button type="primary"
+                     @click="nextPage"
+                     class="page-next"
+                     :loading="butLoading">{{ nextText }}</el-button>
+          <el-button type="info"
+                     :loading="butLoading">保存草稿</el-button>
         </el-button-group>
       </div>
     </div>
@@ -92,11 +98,18 @@ export default {
   components: {
     basicInformation
   },
-  mounted() {
+  directives: {
+    scrollTop: {
+      update (el, bind, vnode) {
+        el.scrollTop = 0;
+      }
+    }
+  },
+  mounted () {
     //console.log(this.$refs.com.$options.name);
   },
   watch: {
-    stepsActiveIndex(val) {
+    stepsActiveIndex (val) {
       if (val == 1) this.prevText = "重置";
       else this.prevText = "上一步";
 
@@ -104,7 +117,7 @@ export default {
       else this.nextText = "邀请验真";
     }
   },
-  data() {
+  data () {
     return {
       componentName: "basicInformation",
       stepsList: [
@@ -121,12 +134,21 @@ export default {
   },
   methods: {
     //上一步
-    prevPage() {
-      if (this.stepsActiveIndex > 1) --this.stepsActiveIndex;
+    prevPage () {
+      if (this.stepsActiveIndex > 1)--this.stepsActiveIndex;
     },
     //下一步
-    nextPage() {
-      if (this.stepsActiveIndex < this.stepsList.length)
+    async  nextPage () {
+      let comName = this.$refs.com.$options.name;
+      let flag = false;
+      this.butLoading = true;
+      switch (comName) {
+        case "basicInformation":
+          flag = await this.$refs.com.validateAll();
+          break;
+      }
+      this.butLoading = false;
+      if (this.stepsActiveIndex < this.stepsList.length && flag)
         ++this.stepsActiveIndex;
     }
   }
