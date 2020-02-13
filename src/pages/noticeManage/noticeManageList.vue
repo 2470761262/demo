@@ -18,7 +18,7 @@
         <el-button type="primary"
                    size="mini" @click="queryNoticeByParams">查询</el-button>
         <el-button type="primary"
-                   size="mini">添加公告</el-button>
+                   size="mini" @click="toAddNoticePage">添加公告</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
@@ -119,6 +119,9 @@ export default {
         console.log("查询公告管理列表失败");
         console.log(e);
       })
+    },
+    toAddNoticePage(){
+      this.$router.push({ path: "/menuFrame/addNotice"});
     },
     showNoticeDetail (noticeId) {
       this.$router.push({ path: "/menuFrame/noticeDetail",query:{noticeId:noticeId} });
