@@ -15,10 +15,12 @@
           <template slot="prepend">标题</template>
         </el-input>
         <el-button type="primary"
+                   style="margin-left:10px"
                    size="mini"
                    @click="queryNoticeByParams">查询</el-button>
         <el-button type="primary"
-                   size="mini">添加公告</el-button>
+                   size="mini"
+                   @click="toAddNoticePage">添加公告</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
@@ -34,12 +36,12 @@
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-          <div v-if="scope.row.operation != ''">
+          <div v-if="scope.row.operation!=''">
             <el-button type="info"
                        size="mini"
-                       @click="distributeEvent(item.methosName)"
-                       v-for="(item, index) in getOpeBtns(scope.row.operation)"
-                       :key="index">{{ item.name }}</el-button>
+                       @click="distributeEvent(item.methosName,scope.row.id)"
+                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                       :key="index">{{item.name}}</el-button>
           </div>
         </template>
       </el-table-column>
@@ -76,16 +78,16 @@ export default {
         { prop: "addDate", label: "添加时间" }
       ],
       tableData: [
-        {
-          id: "111",
-          newsTitle: "wwwwww",
-          newsType: "xx",
-          perName: "xxx",
-          companyName: "xxxx",
-          addDate: "2019-01-01 18:00:00"
-        }
-      ]
-    };
+        //   {
+        //   id: '111',
+        //   newsTitle: 'wwwwww',
+        //   newsType: 'xx',
+        //   perName: 'xxx',
+        //   companyName: 'xxxx',
+        //   addDate: '2019-01-01 18:00:00'
+        // }
+      ],
+    }
   },
   mounted () {
     this.queryNoticeDatas(1);
@@ -100,46 +102,42 @@ export default {
       if (this.queryData.newsTitle != null) {
         params.newsTitle = this.queryData.newsTitle;
       }
-      this.$api
-        .post({
-          url: "/noticeManage/queryNoticeDatas",
-          data: params,
-          token: false
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == "SUCCESS") {
-            console.log(result.message);
-            console.log(result.data);
-            this.pageJson.total = result.data.totalCount;
-            this.pageJson.currentPage = result.data.currPage;
-            this.tableData = result.data.list;
-            that.loading = false;
-          } else {
-            console.log("查询公告管理列表结果：" + result.message);
-            alert(result.message);
-          }
-        })
-        .catch(e => {
-          console.log("查询公告管理列表失败");
-          console.log(e);
-        });
+      this.$api.post({
+        url: '/noticeManage/queryNoticeDatas',
+        data: params,
+        token: false
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.pageJson.total = result.data.totalCount;
+          this.pageJson.currentPage = result.data.currPage;
+          this.tableData = result.data.list;
+        } else {
+          console.log("查询公告管理列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询公告管理列表失败");
+        console.log(e);
+      })
     },
-    test1 () {
-      console.log(11);
+    toAddNoticePage () {
+      this.$router.push({ path: "/menuFrame/addNotice" });
     },
-    test2 () {
-      console.log(222);
+    showNoticeDetail (noticeId) {
+      this.$router.push({ path: "/menuFrame/noticeDetail", query: { noticeId: noticeId } });
     },
-    distributeEvent (e) {
-      this[e]();
+    distributeEvent (e, noticeId) {
+      this[e](noticeId);
     },
     getOpeBtns (type) {
       let array = [
-        { name: "查看", isType: "1,3", methosName: "test2" },
-        { name: "编辑", isType: "1", methosName: "test1" }
-      ];
+        { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' }
+        // { name: '编辑', isType: '1', methosName: 'test1' }
+      ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
       // })
