@@ -197,8 +197,56 @@ export default new Router({
           },
           component: () =>
             import(
-              "@/pages/noticeManageList.vue"
+              "@/pages/noticeManage/noticeManageList.vue"
             )
+        },
+        {
+          //查看公告详情
+          path: "/menuFrame/noticeDetail",
+          name: "noticeDetail",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统管理"
+              },
+              {
+                path: "/menuFrame/noticeManageList",
+                name: "公告管理"
+              },
+              {
+                path: "/menuFrame/noticeDetail",
+                name: "公告详情"
+              }
+            ]
+          },
+          component: () =>
+            import( "@/pages/noticeManage/noticeDetail.vue")
+        },
+        {
+          //添加公告
+          path: "/menuFrame/addNotice",
+          name: "addNotice",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统管理"
+              },
+              {
+                path: "/menuFrame/noticeManageList",
+                name: "公告管理"
+              },
+              {
+                path: "/menuFrame/addNotice",
+                name: "添加公告"
+              }
+            ]
+          },
+          component: () =>
+            import( "@/pages/noticeManage/addNotice.vue")
         }
       ]
     }

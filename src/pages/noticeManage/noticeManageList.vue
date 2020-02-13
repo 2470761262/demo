@@ -37,7 +37,7 @@
           <div v-if="scope.row.operation!=''">
             <el-button type="info"
                        size="mini"
-                       @click="distributeEvent(item.methosName)"
+                       @click="distributeEvent(item.methosName,scope.row.id)"
                        v-for="(item,index) in getOpeBtns(scope.row.operation)"
                        :key="index">{{item.name}}</el-button>
           </div>
@@ -74,14 +74,15 @@ export default {
         { prop: 'companyName', label: "公司" },
         { prop: 'addDate', label: "添加时间" },
       ],
-      tableData: [{
-        id: '111',
-        newsTitle: 'wwwwww',
-        newsType: 'xx',
-        perName: 'xxx',
-        companyName: 'xxxx',
-        addDate: '2019-01-01 18:00:00'
-      }
+      tableData: [
+        //   {
+        //   id: '111',
+        //   newsTitle: 'wwwwww',
+        //   newsType: 'xx',
+        //   perName: 'xxx',
+        //   companyName: 'xxxx',
+        //   addDate: '2019-01-01 18:00:00'
+        // }
       ],
     }
   },
@@ -104,7 +105,7 @@ export default {
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
-        if (result.code == "SUCCESS") {
+        if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
           this.pageJson.total=result.data.totalCount;
@@ -119,19 +120,18 @@ export default {
         console.log(e);
       })
     },
-    test1 () {
-      console.log(11);
+    showNoticeDetail (noticeId) {
+      console.log(noticeId);
+      this.$router.push({ path: "/menuFrame/noticeDetail",query:{noticeId:noticeId} });
     },
-    test2 () {
-      console.log(222);
-    },
-    distributeEvent (e) {
-      this[e]();
+    distributeEvent (e,noticeId) {
+      console.log(noticeId);
+      this[e](noticeId);
     },
     getOpeBtns (type) {
       let array = [
-        { name: '查看', isType: '1,3', methosName: 'test2' },
-        { name: '编辑', isType: '1', methosName: 'test1' }
+        { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' }
+        // { name: '编辑', isType: '1', methosName: 'test1' }
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
