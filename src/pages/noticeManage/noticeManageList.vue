@@ -18,10 +18,11 @@
         >
           <template slot="prepend">标题</template>
         </el-input>
-        <el-button type="primary" size="mini" @click="queryNoticeByParams"
-          >查询</el-button
-        >
-        <el-button type="primary" size="mini">添加公告</el-button>
+
+        <el-button type="primary"
+                   size="mini" @click="queryNoticeByParams">查询</el-button>
+        <el-button type="primary"
+                   size="mini" @click="toAddNoticePage">添加公告</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
@@ -129,12 +130,13 @@ export default {
         console.log(e);
       })
     },
+    toAddNoticePage(){
+      this.$router.push({ path: "/menuFrame/addNotice"});
+    },
     showNoticeDetail (noticeId) {
-      console.log(noticeId);
       this.$router.push({ path: "/menuFrame/noticeDetail",query:{noticeId:noticeId} });
     },
     distributeEvent (e,noticeId) {
-      console.log(noticeId);
       this[e](noticeId);
     },
     getOpeBtns(type) {
