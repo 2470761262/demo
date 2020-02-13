@@ -45,6 +45,26 @@ export default new Router({
             import(/* webpackChunkName: "houseList" */ "@/pages/houseList.vue")
         },
         {
+          //房源列表
+          path: "/menuFrame/newAgentHouse",
+          name: "houseList",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/newAgentHouse",
+                name: "房源列表"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "newAgentHouse" */ "@/pages/newAgentHouse.vue")
+        },
+        {
           //验证房源列表
           path: "/menuFrame/validateHouseList",
           name: "validateHouseList",
