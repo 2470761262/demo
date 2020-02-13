@@ -1,4 +1,3 @@
-</script>
 <style lang="less" scoped>
 
 </style>
@@ -20,3 +19,4 @@ export default {
   created() {},
   mounted() {}
 };
+</script>

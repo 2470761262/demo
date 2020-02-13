@@ -121,11 +121,9 @@ export default {
       })
     },
     showNoticeDetail (noticeId) {
-      console.log(noticeId);
       this.$router.push({ path: "/menuFrame/noticeDetail",query:{noticeId:noticeId} });
     },
     distributeEvent (e,noticeId) {
-      console.log(noticeId);
       this[e](noticeId);
     },
     getOpeBtns (type) {
