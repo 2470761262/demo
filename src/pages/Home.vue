@@ -197,7 +197,7 @@ export default {
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
-        if (result.code == "SUCCESS") {
+        if (result.code == 200) {
           console.log(result.message);
           console.log(result);
           this.accountId = result.data.accountID;
@@ -305,7 +305,7 @@ export default {
       }).then((e) => {
         let result = e.data;
         console.log(result.message);
-        if (result.code == "SUCCESS") {
+        if (result.code == 200) {
           console.log("登录成功");
           successFunc(result);
         } else {
@@ -357,7 +357,7 @@ export default {
           console.log(e.data);
           let result = e.data;
           console.log(result.message);
-          if (result.code == "SUCCESS") {
+          if (result.code == 200) {
             that.qrcodeFlag = result.data.split("=")[1];
             if (this.qrData == null) {
               //// 和div的id相同 必须是id  class类名会报错
