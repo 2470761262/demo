@@ -10,7 +10,6 @@
   border: 1px solid red;
 }
 .el-header {
-  height: 100px;
   margin-top: 10px;
 }
 
@@ -26,7 +25,6 @@
   border-right: 1px solid black;
   border-left: 1px solid black;
   border-radius: 0.5rem;
-  width: 50%;
   .el-input {
     width: 80%;
   }
@@ -145,7 +143,7 @@ const toolbarOptions = [
   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
   [{ font: [] }],
   [{ align: [] }],
-  ["image"],
+  ["link","image"],
   ["clean"] // remove formatting button
 ];
 export default {
@@ -154,6 +152,7 @@ export default {
   props: {},
   data() {
     return {
+      quill:null,
       uploadUrl:"",
       noticeContent: "",
       editorOption: {
@@ -168,7 +167,6 @@ export default {
                   console.log(value);
                   document.getElementById('btnUpload').click();
                 } else {
-                  let quill = this.$refs.QuillEditor.quill;
                   this.quill.format("image", false);
                 }
               },
@@ -179,7 +177,9 @@ export default {
               },
               link:function(v){
                 if (v) {
-                  alert("不支持链接");
+                  var href = prompt('Enter the URL');
+                   this.quill.format("link", href);
+
                 } 
               }
             }
@@ -281,6 +281,8 @@ export default {
     this.uploadUrl=this.$api.baseUrl()+"/draft_house/picture";
     console.log(this.uploadUrl);
   },
-  mounted() {}
+  mounted() {
+    this.quill = this.$refs.QuillEditor.quill;
+  }
 };
 </script>
