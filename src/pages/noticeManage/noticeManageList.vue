@@ -1,18 +1,21 @@
-
 <style lang="less" scoped>
 .query-cell {
   display: flex;
 }
 </style>
 <template>
-  <list-page :parentData="$data"
-             @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+  <list-page
+    :parentData="$data"
+    @handleSizeChange="handleSizeChange"
+    @handleCurrentChange="handleCurrentChange"
+  >
     <template v-slot:inputTo>
       <div class="query-cell">
-        <el-input placeholder="标题名称"
-                  v-model="queryData.newsTitle"
-                  clearable>
+        <el-input
+          placeholder="标题名称"
+          v-model="queryData.newsTitle"
+          clearable
+        >
           <template slot="prepend">标题</template>
         </el-input>
         <el-button type="primary" style="margin-left:10px"
@@ -22,17 +25,21 @@
       </div>
     </template>
     <template v-slot:tableColumn="cell">
-      <template v-for="(item) in cell.tableData">
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
-                         :width="item.width"
-                         :key="item.prop">
+      <template v-for="item in cell.tableData">
+        <el-table-column
+          :prop="item.prop"
+          :label="item.label"
+          :width="item.width"
+          :key="item.prop"
+        >
         </el-table-column>
       </template>
-      <el-table-column prop="operation"
-                       label="操作"
-                       fixed="right"
-                       key="operation">
+      <el-table-column
+        prop="operation"
+        label="操作"
+        fixed="right"
+        key="operation"
+      >
         <template v-slot="scope">
           <div v-if="scope.row.operation!=''">
             <el-button type="info"
@@ -47,32 +54,33 @@
   </list-page>
 </template>
 <script>
-import listPage from '@/components/listPage';
+import listPage from "@/components/listPage";
 export default {
   components: {
     listPage
   },
-  data () {
+  data() {
     return {
+      loading: true, //控制表格加载动画提示
       queryData: {
-        newsTitle: '',
+        newsTitle: ""
       },
       configSet: {
         selectToTime: false,
         selectTo: false
       },
       pageJson: {
-        currentPage: 1,//当前页码
-        total: 9,//总记录数
-        pageSize: 5//每页条数
+        currentPage: 1, //当前页码
+        total: 9, //总记录数
+        pageSize: 5 //每页条数
       },
       tableDataColumn: [
-        { prop: 'id', label: "编号" },
-        { prop: 'newsTitle', label: "公告标题" },
-        { prop: 'newsType', label: "公告类型" },
-        { prop: 'perName', label: "发布人" },
-        { prop: 'companyName', label: "公司" },
-        { prop: 'addDate', label: "添加时间" },
+        { prop: "id", label: "编号" },
+        { prop: "newsTitle", label: "公告标题" },
+        { prop: "newsType", label: "公告类型" },
+        { prop: "perName", label: "发布人" },
+        { prop: "companyName", label: "公司" },
+        { prop: "addDate", label: "添加时间" }
       ],
       tableData: [
         //   {
@@ -86,17 +94,18 @@ export default {
       ],
     }
   },
-  mounted(){
-    this.queryNoticeDatas(1);    
+  mounted() {
+    this.queryNoticeDatas(1);
   },
   methods: {
-    queryNoticeByParams(){
-      this.queryNoticeDatas(1);    
+    queryNoticeByParams() {
+      this.queryNoticeDatas(1);
     },
-    queryNoticeDatas(currentPage){
-      let params={"limit":this.pageJson.pageSize,"page":currentPage};
-      if(this.queryData.newsTitle!=null){
-        params.newsTitle=this.queryData.newsTitle;
+    queryNoticeDatas(currentPage) {
+      let params = { limit: this.pageJson.pageSize, page: currentPage };
+      let that = this;
+      if (this.queryData.newsTitle != null) {
+        params.newsTitle = this.queryData.newsTitle;
       }
       this.$api.post({
         url: '/noticeManage/queryNoticeDatas',
@@ -129,7 +138,7 @@ export default {
     distributeEvent (e,noticeId) {
       this[e](noticeId);
     },
-    getOpeBtns (type) {
+    getOpeBtns(type) {
       let array = [
         { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' }
         // { name: '编辑', isType: '1', methosName: 'test1' }
@@ -139,14 +148,14 @@ export default {
       // })
       return array;
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
-      this.pageJson.pageSize= val;
+      this.pageJson.pageSize = val;
       this.queryNoticeDatas(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.queryNoticeDatas(val);
     }
-  },
-}
-</script>  
+  }
+};
+</script>
