@@ -56,7 +56,7 @@
 <template>
   <div class="page-body">
     <div class="page-steps">
-      <el-steps :active="stepsActiveIndex"
+      <el-steps :active="stepsActiveIndex+1"
                 align-center
                 finish-status="success">
         <el-step :title="item.title"
@@ -111,7 +111,7 @@ export default {
   },
   watch: {
     stepsActiveIndex (val) {
-      if (val == 1) this.prevText = "重置";
+      if (val == 0) this.prevText = "重置";
       else this.prevText = "上一步";
 
       if (val != this.stepsList.length) this.nextText = "下一步";
@@ -120,7 +120,7 @@ export default {
   },
   data () {
     return {
-      componentName: "supplement",
+      componentName: "basicInformation",
       stepsList: [
         { title: "基础信息", componentName: "basicInformation" },
         { title: "补充信息(非必填)", componentName: "supplement" },
@@ -129,14 +129,17 @@ export default {
       ],
       prevText: "重置",
       nextText: "下一步",
-      stepsActiveIndex: 1,
+      stepsActiveIndex: 0,
       butLoading: false
     };
   },
   methods: {
     //上一步
     prevPage () {
-      if (this.stepsActiveIndex > 1)--this.stepsActiveIndex;
+      if (this.stepsActiveIndex > 0) {
+        this.componentName = this.stepsList[--this.stepsActiveIndex].componentName;
+      }
+      console.log(this.componentName, this.stepsActiveIndex);
     },
     //下一步
     async  nextPage () {
@@ -151,7 +154,7 @@ export default {
       flag = true;
       this.butLoading = false;
       if (this.stepsActiveIndex < this.stepsList.length && flag) {
-        this.componentName = this.stepsList[this.stepsActiveIndex++].componentName;
+        this.componentName = this.stepsList[++this.stepsActiveIndex].componentName;
       }
     }
   }
