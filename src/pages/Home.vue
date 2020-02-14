@@ -349,7 +349,7 @@ export default {
       let that = this;
       this.$nextTick(() => {
         this.$api.post({
-          url: '/api/loginManager/getQrCodeUrl',
+          url: '/loginManager/getQrCodeUrl',
           data: {
             p: "testParams"
           },
