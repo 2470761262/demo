@@ -161,6 +161,11 @@ import { LOGINDATA } from '@/util/constMap';
 import util from '@/util/util';
 //import func from '../../vue-temp/vue-editor-bridge';
 export default {
+  created () {
+    this.$api.get({ url: "2875800" }).then((e) => {
+      console.log(e);
+    })
+  },
   name: 'home',
   watch: {
     loginType: {
@@ -346,7 +351,7 @@ export default {
       let that = this;
       this.$nextTick(() => {
         this.$api.post({
-          url: '/loginManager/getQrCodeUrl',
+          url: '/api/loginManager/getQrCodeUrl',
           data: {
             p: "testParams"
           },

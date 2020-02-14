@@ -92,11 +92,15 @@
   </div>
 </template>
 <script>
+//默认组件
 import basicInformation from "@/components/addHouse/basicInformation";
+//异步组件工厂方法
+import componentsFactory from "@/util/componentsFactory";
 import { mapState } from "vuex";
 export default {
   components: {
-    basicInformation
+    basicInformation,
+    supplement: () => componentsFactory("addHouse/supplement") //补充信息
   },
   directives: {
     scrollTop: {
@@ -104,9 +108,6 @@ export default {
         el.scrollTop = 0;
       }
     }
-  },
-  mounted () {
-    //console.log(this.$refs.com.$options.name);
   },
   watch: {
     stepsActiveIndex (val) {
@@ -119,10 +120,10 @@ export default {
   },
   data () {
     return {
-      componentName: "basicInformation",
+      componentName: "supplement",
       stepsList: [
         { title: "基础信息", componentName: "basicInformation" },
-        { title: "补充信息(非必填)", componentName: "" },
+        { title: "补充信息(非必填)", componentName: "supplement" },
         { title: "实勘图片/视频", componentName: "" },
         { title: "房源验真", componentName: "" }
       ],
@@ -144,12 +145,14 @@ export default {
       this.butLoading = true;
       switch (comName) {
         case "basicInformation":
-          flag = await this.$refs.com.validateAll();
+          //flag = await this.$refs.com.validateAll();
           break;
       }
+      flag = true;
       this.butLoading = false;
-      if (this.stepsActiveIndex < this.stepsList.length && flag)
-        ++this.stepsActiveIndex;
+      if (this.stepsActiveIndex < this.stepsList.length && flag) {
+        this.componentName = this.stepsList[this.stepsActiveIndex++].componentName;
+      }
     }
   }
 };

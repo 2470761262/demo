@@ -1,16 +1,9 @@
 import axios from 'axios';
 import qs from 'qs';
-import base from './baseUrl';
-function initBaseUrl () {
-  if (process.env.NODE_ENV != 'development') { // 线上
-    return 'http://bweb.yongxinjia.com';
-  }
-  return base.baseUrl; // 本地
-}
-axios.defaults.baseURL = initBaseUrl();
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
 let http = axios.create({
-  withCredentials: true,
+  baseURL: "",// process.env.BASE_API, // api 的 base_url
+  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
   // 请求超时时间（毫秒）
   timeout: 10000,
 });
