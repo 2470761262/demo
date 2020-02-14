@@ -1,0 +1,75 @@
+.page-cell {
+  padding-left: 60px;
+  padding-top: 60px;
+  padding-bottom: 20px;
+  .page-cell-title {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+    margin-top: 20px;
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  .page-cell-item {
+    display: flex;
+    /deep/.el-input-group {
+      width: auto;
+    }
+    /deep/.el-input-group__prepend,
+    /deep/.el-input-group__append {
+      border: none;
+      background: none;
+    }
+    /deep/.el-input-group__prepend {
+      padding: 0;
+    }
+    /deep/.el-input__inner {
+      border-radius: 4px;
+      width: 210px;
+    }
+    .item-after {
+      color: #1c7334;
+      font-size: 14px;
+      cursor: pointer;
+      align-self: center;
+      &.item-before-col {
+        text-align: center;
+        color: #606266;
+      }
+    }
+    .item-before {
+      font-size: 16px;
+      color: #606266;
+      width: 80px;
+      align-self: center;
+      white-space: nowrap;
+      flex-shrink: 0;
+      &:before {
+        content: attr(data-before);
+        color: red;
+      }
+    }
+    .item-input-groud {
+      display: flex;
+      /deep/.el-input__inner {
+        width: 80px;
+      }
+    }
+  }
+}
+.form-error-tips {
+  margin-top: 20px;
+  &.after-tips {
+    &::after {
+      content: attr(data-tips);
+      color: red;
+      font-size: 14px;
+      text-indent: 80px;
+      display: inline-block;
+    }
+  }
+}
+/deep/.el-radio {
+  margin-left: 0 !important;
+}
