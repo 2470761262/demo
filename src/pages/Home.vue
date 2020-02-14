@@ -179,6 +179,9 @@ export default {
       }
     }
   },
+  created () {
+
+  },
   mounted () {
     this.qrcode();
     let that = this;
@@ -346,7 +349,7 @@ export default {
       let that = this;
       this.$nextTick(() => {
         this.$api.post({
-          url: '/loginManager/getQrCodeUrl',
+          url: '/api/loginManager/getQrCodeUrl',
           data: {
             p: "testParams"
           },

@@ -1,114 +1,46 @@
 <style lang="less" scoped>
-.page-cell {
-  padding-left: 60px;
-  padding-top: 60px;
-  padding-bottom: 20px;
-  .page-cell-title {
-    font-size: 24px;
-    color: #333;
-    font-weight: 600;
-    margin-top: 20px;
-    &:first-child {
-      margin-top: 0;
-    }
-  }
-  .page-cell-item {
-    display: flex;
-    /deep/.el-input-group {
-      width: auto;
-    }
-    /deep/.el-input-group__prepend,
-    /deep/.el-input-group__append {
-      border: none;
-      background: none;
-    }
-    /deep/.el-input-group__prepend {
-      padding: 0;
-    }
-    /deep/.el-input__inner {
-      border-radius: 4px;
-      width: 210px;
-    }
-    .item-after {
-      color: #1c7334;
-      font-size: 14px;
-      cursor: pointer;
-      &.item-before-col {
-        text-align: center;
-        color: #606266;
-      }
-    }
-    .item-before {
-      font-size: 16px;
-      color: #606266;
-      width: 80px;
-      align-self: center;
-      white-space: nowrap;
-      flex-shrink: 0;
-      &:before {
-        content: attr(data-before);
-        color: red;
-      }
-    }
-    .item-input-groud {
-      display: flex;
-      /deep/.el-input__inner {
-        width: 80px;
-      }
-    }
-  }
-}
-.form-error-tips {
-  margin-top: 20px;
-  &.after-tips {
-    &::after {
-      content: attr(data-tips);
-      color: red;
-      font-size: 14px;
-      text-indent: 80px;
-      display: inline-block;
-    }
-  }
-}
-/deep/.el-radio {
-  margin-left: 0 !important;
-}
+@import url("../../../static/publicLess/addHouse.less");
 </style>
 <template>
   <div class="page-cell">
     <div class="page-cell-title">房屋坐落</div>
     <!-- 楼盘名称 -->
     <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('floor')}"
-         :data-tips="errorBags.first('floor')">
+         :class="{'after-tips':errorBags.has('communityName')}"
+         :data-tips="errorBags.first('communityName')">
       <div class="page-cell-item">
-        <el-input placeholder="请输入楼盘名称"
-                  v-model="formData.floor"
-                  data-vv-name="floor"
-                  data-vv-as="楼盘"
-                  v-validate="'required'">
-          <div slot="prepend"
-               class="item-before"
-               data-before="*">楼盘</div>
-          <div slot="append"
-               class="item-after">
-            补充楼盘<i class="el-icon-question"></i>
-          </div>
-        </el-input>
+        <div class="item-before"
+             data-before="*">楼盘</div>
+        <el-select filterable
+                   data-vv-name="communityName"
+                   data-vv-as="楼盘"
+                   v-validate="'required'"
+                   v-model="formData.communityName"
+                   placeholder="请选择楼盘">
+          <el-option v-for="item in options"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value">
+          </el-option>
+        </el-select>
+        <div class="item-after">
+          补充楼盘<i class="el-icon-question"></i>
+        </div>
       </div>
     </div>
+
     <!-- 栋座 -->
     <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('tung')}"
-         :data-tips="errorBags.first('tung')">
+         :class="{'after-tips':errorBags.has('buildingNo')}"
+         :data-tips="errorBags.first('buildingNo')">
       <div class="page-cell-item">
         <div class="item-before"
              data-before="*">栋座</div>
         <el-select filterable
-                   data-vv-name="tung"
+                   data-vv-name="buildingNo"
                    data-vv-as="栋座"
                    v-validate="'required'"
-                   v-model="formData.tung"
+                   v-model="formData.buildingNo"
                    placeholder="请选择栋座">
           <el-option v-for="item in options"
                      :key="item.value"
@@ -120,16 +52,16 @@
     </div>
     <!-- 房间号 -->
     <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('room')}"
-         :data-tips="errorBags.first('room')">
+         :class="{'after-tips':errorBags.has('roomNo')}"
+         :data-tips="errorBags.first('roomNo')">
       <div class="page-cell-item">
         <div class="item-before"
              data-before="*">房间号</div>
         <el-select filterable
-                   data-vv-name="room"
+                   data-vv-name="roomNo"
                    data-vv-as="房间号"
                    v-validate="'required'"
-                   v-model="formData.room"
+                   v-model="formData.roomNo"
                    placeholder="请选择房间号">
           <el-option v-for="item in options"
                      :key="item.value"
@@ -142,14 +74,14 @@
     <div class="page-cell-title">业主信息</div>
     <!-- 业主姓名 -->
     <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('perName')}"
-         :data-tips="errorBags.first('perName')">
+         :class="{'after-tips':errorBags.has('customerName')}"
+         :data-tips="errorBags.first('customerName')">
       <div class="page-cell-item">
         <el-input placeholder="请输入业主姓名"
-                  data-vv-name="perName"
+                  data-vv-name="customerName"
                   data-vv-as="业主姓名"
                   v-validate="'required'"
-                  v-model="formData.perName">
+                  v-model="formData.customerName">
           <div slot="prepend"
                class="item-before"
                data-before="*">业主姓名</div>
@@ -169,21 +101,21 @@
                         data-vv-as="称谓"
                         v-validate="'required'"
                         size="mini">
-          <el-radio :label="item"
+          <el-radio :label="item.label"
                     border
                     v-for="(item, index) in sexList"
-                    :key="index">{{ item }}</el-radio>
+                    :key="index">{{ item.title }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <!-- 电话号码 -->
     <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('perTell')}"
-         :data-tips="errorBags.first('perTell')">
+         :class="{'after-tips':errorBags.has('tel')}"
+         :data-tips="errorBags.first('tel')">
       <div class="page-cell-item">
         <el-input placeholder="请输入业主电话号码"
-                  v-model="formData.perTell"
-                  data-vv-name="perTell"
+                  v-model="formData.tel"
+                  data-vv-name="tel"
                   data-vv-as="电话号码"
                   v-validate="'required|phone'">
           <div slot="prepend"
@@ -282,30 +214,30 @@
       <div class="page-cell-item">
         <div class="item-before">房型</div>
         <div class="item-input-groud">
-          <el-input v-model="formData.houseRoom"
+          <el-input v-model="formData.room"
                     v-validate="'numeric|max:2'"
-                    data-vv-name="houseRoom"
+                    data-vv-name="room"
                     data-vv-as="室">
             <div slot="append"
                  class="item-after item-before-col">室</div>
           </el-input>
-          <el-input v-model="formData.houseHall"
+          <el-input v-model="formData.hall"
                     v-validate="'numeric|max:2'"
-                    data-vv-name="houseHall"
+                    data-vv-name="hall"
                     data-vv-as="厅">
             <div slot="append"
                  class="item-after item-before-col">厅</div>
           </el-input>
-          <el-input v-model="formData.houseToilet"
+          <el-input v-model="formData.toilet"
                     v-validate="'numeric|max:2'"
-                    data-vv-name="houseToilet"
+                    data-vv-name="toilet"
                     data-vv-as="卫">
             <div slot="append"
                  class="item-after item-before-col">卫</div>
           </el-input>
-          <el-input v-model="formData.houseBalcony"
+          <el-input v-model="formData.balcony"
                     v-validate="'numeric|max:2'"
-                    data-vv-name="houseBalcony"
+                    data-vv-name="balcony"
                     data-vv-as="阳台">
             <div slot="append"
                  class="item-after item-before-col">阳台</div>
@@ -318,12 +250,12 @@
       <div class="page-cell-item">
         <div slot="prepend"
              class="item-before">朝向</div>
-        <el-radio-group v-model="formData.orientation"
+        <el-radio-group v-model="formData.face"
                         size="mini">
-          <el-radio :label="item"
+          <el-radio :label="item.label"
                     border
                     v-for="(item, index) in orientationList"
-                    :key="index">{{ item }}</el-radio>
+                    :key="index">{{ item.title }}</el-radio>
         </el-radio-group>
       </div>
     </div>
@@ -332,21 +264,39 @@
       <div class="page-cell-item">
         <div slot="prepend"
              class="item-before">装修类型</div>
-        <el-radio-group v-model="formData.renovation"
+        <el-radio-group v-model="formData.decoration"
                         size="mini">
-          <el-radio :label="item"
+          <el-radio :label="item.label"
                     border
                     v-for="(item, index) in renovationList"
-                    :key="index">{{ item }}</el-radio>
+                    :key="index">{{ item.title }}</el-radio>
         </el-radio-group>
       </div>
     </div>
   </div>
 </template>
 <script>
-let sex = ["先生", "女生"];
-let orientation = ["东", "南", "西", "北"];
-let renovation = ["毛胚", "简装", "精装修", "豪华装修"];
+let sex = [
+  { title: "女生", label: 0 },
+  { title: "先生", label: 1 }
+];
+let orientation = [
+  { title: "东", label: 1 },
+  { title: "南", label: 2 },
+  { title: "西", label: 3 },
+  { title: "北", label: 4 },
+  { title: "东南", label: 5 },
+  { title: "东北", label: 6 },
+  { title: "西南", label: 7 },
+  { title: "西北", label: 8 },
+];
+
+let renovation = [
+  { title: "毛胚", label: 1 },
+  { title: "简单装", label: 2 },
+  { title: "精装修", label: 3 },
+  { title: "豪华装修", label: 4 }
+]
 //import { mapState } from "vuex";
 import { Validator } from 'vee-validate';
 export default {
@@ -369,7 +319,18 @@ export default {
       return this.step
     }
   },
+  mounted () {
+    this.setDefaultFrom();
+  },
   methods: {
+    updateField () {
+      //更新字段API 可能终止验证
+      const field = this.$validator.fields.find({ name: 'price' });
+      console.log(field.update({ rules: { decimal: [3] } }));
+    },
+    setDefaultFrom () {
+      this.formData.sex = 0;
+    },
     removeTelToList (index, item) {
       this.addTel.splice(index, 1);
       this.formData['tel' + item] = '';
@@ -418,10 +379,7 @@ export default {
       step: {},
       addTel: [],
       sexList: sex,
-      options: [
-        { value: 1, label: 1 },
-        { value: 2, label: 2 }
-      ],
+      options: [],
       orientationList: orientation,
       renovationList: renovation
     };
