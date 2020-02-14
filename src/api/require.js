@@ -63,7 +63,7 @@ let ApiData = {
     return this.post.call(this, arg);
   },
   baseUrl () {
-    return initBaseUrl();
+    return process.env.VUE_APP_BASE_API;
   }
 }
 export default {
