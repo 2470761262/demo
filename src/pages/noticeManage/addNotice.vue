@@ -118,14 +118,14 @@
             </el-upload>
             <quill-editor
               class="myQuillEditor"
-              v-model="newsContent"
+              v-model="notice.newsContent"
               :options="editorOption"
               ref="QuillEditor"
             ></quill-editor>
           </div>
         </el-main>
         <div class="footerContainer right">
-          <el-button type="primary" v-bind:click="sendNotice">发送</el-button>
+          <el-button type="primary" @click="sendNotice">发送</el-button>
           <el-button>取消</el-button>
         </div>
       </el-container>
@@ -286,6 +286,7 @@ export default {
           message: '公告标题不能为空哟',
           type: 'warning'
         });
+        return;
       }
       if(this.notice.newsContent==null){
         this.$message({
@@ -293,6 +294,7 @@ export default {
           message: '公告内容不能为空空哟',
           type: 'warning'
         });
+        return;
       }
       if(this.notice.newsClass==null){
         this.$message({
@@ -300,6 +302,7 @@ export default {
           message: '公告类型要选择哟',
           type: 'warning'
         });
+        return;
       }
       if(this.notice.newsType==null){
         this.$message({
@@ -307,6 +310,7 @@ export default {
           message: '公告类别要选择哟',
           type: 'warning'
         });
+        return;
       }
       if(this.notice.sendWay==null){
         this.$message({
@@ -314,8 +318,31 @@ export default {
           message: '发送渠道要选择哟',
           type: 'warning'
         });
+        return;
       }
       console.log(this.notice);
+      this.notice.addPer=44430;//发送人
+      this.notice.receiveAcountIds=[44430];//接收人id
+      this.$api.post({
+        url: '/noticeManage/common/sendNoticeReady',
+        data: this.notice,
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.$message({message:result.message});
+        } else {
+          console.log("发送公告结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("发送公告结果");
+        console.log(e);
+      })
     },
     handleAvatarSuccess(res, file) {
         // 如果上传成功
