@@ -61,22 +61,28 @@
         <el-header>
           <div class="left-input-container">
             <span>标题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input type="text" placeholder="请输入内容" v-model="text" maxlength="10" show-word-limit></el-input>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.newsTitle"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
           </div>
           <div class="left-input-container">
             <span>公告类型</span>
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="notice.newsClass" placeholder="请选择">
               <el-option
-                v-for="item in newsClass"
+                v-for="item in newsClassOption"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
             <span>公告类别</span>
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="notice.newsType" placeholder="请选择">
               <el-option
-                v-for="item in newsType"
+                v-for="item in newsTypeOption"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -85,18 +91,18 @@
           </div>
           <div class="left-input-container">
             <span>发送方式</span>
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="notice.sendType" placeholder="请选择">
               <el-option
-                v-for="item in sendType"
+                v-for="item in sendTypeOption"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
             <span>发送渠道</span>
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="notice.sendWay" placeholder="请选择">
               <el-option
-                v-for="item in sendWay"
+                v-for="item in sendWayOption"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -110,11 +116,16 @@
               <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
-            <quill-editor class="myQuillEditor" v-model="noticeContent" :options="editorOption" ref="QuillEditor"></quill-editor>
+            <quill-editor
+              class="myQuillEditor"
+              v-model="newsContent"
+              :options="editorOption"
+              ref="QuillEditor"
+            ></quill-editor>
           </div>
         </el-main>
         <div class="footerContainer right">
-          <el-button type="primary">发送</el-button>
+          <el-button type="primary" v-bind:click="sendNotice">发送</el-button>
           <el-button>取消</el-button>
         </div>
       </el-container>
@@ -154,7 +165,16 @@ export default {
     return {
       quill:null,
       uploadUrl:"",
-      noticeContent: "",
+      notice:{
+        newsTitle: null,
+        newsContent: null,
+        addPer:null,//44430,
+        receiveAcountIds:null,//[44430],
+        sendWay:null,
+        newsClass:null ,
+        newsType:null,
+        sendType:null 
+      },
       editorOption: {
         placeholder: "请输入公告内容",
         readOnly: false,
@@ -186,7 +206,7 @@ export default {
           }
         }        
       },
-      newsClass: [
+      newsClassOption: [
         {
           value: "0",
           label: "公告"
@@ -196,7 +216,7 @@ export default {
           label: "通知"
         }
       ],
-      newsType: [
+      newsTypeOption: [
         {
           value: "系统",
           label: "系统"
@@ -218,7 +238,7 @@ export default {
           label: "企划"
         }
       ],
-      sendType: [
+      sendTypeOption: [
         {
           value: "0",
           label: "单独发送"
@@ -240,7 +260,7 @@ export default {
           label: "按公司发送"
         }
       ],
-      sendWay: [
+      sendWayOption: [
         {
           value: "0",
           label: "PC"
@@ -259,6 +279,44 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    sendNotice(){
+      if(this.notice.newsTitle==null){
+        this.$message({
+          showClose: true,
+          message: '公告标题不能为空哟',
+          type: 'warning'
+        });
+      }
+      if(this.notice.newsContent==null){
+        this.$message({
+          showClose: true,
+          message: '公告内容不能为空空哟',
+          type: 'warning'
+        });
+      }
+      if(this.notice.newsClass==null){
+        this.$message({
+          showClose: true,
+          message: '公告类型要选择哟',
+          type: 'warning'
+        });
+      }
+      if(this.notice.newsType==null){
+        this.$message({
+          showClose: true,
+          message: '公告类别要选择哟',
+          type: 'warning'
+        });
+      }
+      if(this.notice.sendWay==null){
+        this.$message({
+          showClose: true,
+          message: '发送渠道要选择哟',
+          type: 'warning'
+        });
+      }
+      console.log(this.notice);
+    },
     handleAvatarSuccess(res, file) {
         // 如果上传成功
         if (res.code==200) {
