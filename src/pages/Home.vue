@@ -179,6 +179,9 @@ export default {
       }
     }
   },
+  created () {
+
+  },
   mounted () {
     this.qrcode();
     let that = this;
