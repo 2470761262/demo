@@ -67,7 +67,7 @@
             <span>公告类型</span>
             <el-select v-model="value" placeholder="请选择">
               <el-option
-                v-for="item in noticeType"
+                v-for="item in newsClass"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -76,7 +76,7 @@
             <span>公告类别</span>
             <el-select v-model="value" placeholder="请选择">
               <el-option
-                v-for="item in noticeCatagory"
+                v-for="item in newsType"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -87,7 +87,7 @@
             <span>发送方式</span>
             <el-select v-model="value" placeholder="请选择">
               <el-option
-                v-for="item in sendPersonType"
+                v-for="item in sendType"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -186,7 +186,7 @@ export default {
           }
         }        
       },
-      noticeType: [
+      newsClass: [
         {
           value: "0",
           label: "公告"
@@ -196,7 +196,7 @@ export default {
           label: "通知"
         }
       ],
-      noticeCatagory: [
+      newsType: [
         {
           value: "系统",
           label: "系统"
@@ -218,7 +218,7 @@ export default {
           label: "企划"
         }
       ],
-      sendPersonType: [
+      sendType: [
         {
           value: "0",
           label: "单独发送"
