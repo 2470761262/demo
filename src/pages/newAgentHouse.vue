@@ -62,6 +62,7 @@ export default {
   },
   data () {
     return {
+      loading: true,
       queryData: {
         CommunityName: '',
       },
@@ -117,7 +118,8 @@ export default {
         token: false
       }).then((e) => {
         console.log(e.data);
-        let result = e.data;
+        let result = e.data;  
+        this.loading=false;
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);

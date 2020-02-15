@@ -195,10 +195,12 @@ export default {
     getVerifyImg (id) {
       let params = { id: id };
       let that = this;
+      that.loading = true;
       this.$api.post({
         url: '/verifyHouse/invitationToVerify',
         data: params,
-        token: false
+        token: false,
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
@@ -206,16 +208,19 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-          this.$alert('<img src="' + result.data + '"></img>', 'HTML 片段', {
+          this.$alert('<img src="' + result.data + '"></img>', '业主邀请二维码', {
             dangerouslyUseHTMLString: true
           });
+          that.loading = false;
         } else {
           console.log("查询结果：" + result.message);
           alert(result.message);
+          that.loading = false;
         }
       }).catch((e) => {
         console.log("查询失败");
         console.log(e);
+        that.loading = false;
       })
     },
     open () {
