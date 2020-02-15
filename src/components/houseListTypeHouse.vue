@@ -58,7 +58,6 @@
       <el-col :sm="8"
               :md="6"
               :lg="6"
-              :key="index"
               class="page-col">
         <div class="house-type-item">
           <div class="item-cell">
@@ -74,7 +73,6 @@
       <el-col :sm="8"
               :md="6"
               :lg="6"
-              :key="index"
               class="page-col">
         <div class="house-type-item">
           <div class="item-cell">
@@ -90,9 +88,9 @@
       <el-col :sm="8"
               :md="6"
               :lg="6"
-              :key="index"
               class="page-col">
-        <div class="house-type-item" @click="goToNewHouse()">
+        <div class="house-type-item"
+             @click="goToNewHouse()">
           <div class="item-cell">
             <div class="item-cell-title overText">新增房源</div>
             <div class="item-cell-data overText">
@@ -106,7 +104,6 @@
       <el-col :sm="8"
               :md="6"
               :lg="6"
-              :key="index"
               class="page-col">
         <div class="house-type-item">
           <div class="item-cell">
@@ -129,7 +126,7 @@
               v-for="(index) in 4"
               :key="index"
               class="page-col">
-        <div class="house-type-item" >
+        <div class="house-type-item">
           <div class="item-cell">
             <div class="item-cell-title overText">必看房源</div>
             <div class="item-cell-data overText">
@@ -192,8 +189,8 @@ export default {
     }
   },
   methods: {
-    goToNewHouse(){
-       this.$router.push({path:'/menuFrame/newAgentHouse'});
+    goToNewHouse () {
+      this.$router.push({ path: '/menuFrame/newAgentHouse' });
     }
   },
 }

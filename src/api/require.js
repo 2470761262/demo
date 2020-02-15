@@ -1,6 +1,5 @@
 import axios from 'axios';
 import qs from 'qs';
-console.log(process.env.VUE_APP_BASE_API, "process.env.BASE_API");
 let http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -64,7 +63,7 @@ let ApiData = {
     return this.post.call(this, arg);
   },
   baseUrl () {
-    return initBaseUrl();
+    return process.env.VUE_APP_BASE_API;
   }
 }
 export default {

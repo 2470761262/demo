@@ -105,7 +105,8 @@ export default {
       this.$api.post({
         url: '/noticeManage/queryNoticeDatas',
         data: params,
-        token: false
+        token: false,
+        headers: { "Content-Type": "application/json" }
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
