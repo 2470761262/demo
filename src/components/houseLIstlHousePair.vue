@@ -244,6 +244,7 @@ let orientation = ['东', '南', '西', '北', '东南', '西北'];
 let primarySchool = ['实验小学'];
 //中学
 let middleSchool = ['实验中学', '松涛中学'];
+
 export default {
   data () {
     return {
@@ -275,7 +276,7 @@ export default {
       primarySchoolInput: '',
       middleSchoolList: middleSchool,
       middleSchoolInput: '',
-      faceList:face,
+      faceList:[],
       options: [],
       cbIdList:[],
       roomNoList:[],
