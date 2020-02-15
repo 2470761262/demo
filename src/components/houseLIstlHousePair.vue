@@ -50,28 +50,53 @@
       <!-- 楼盘 -->
       <div class="page-form-inline">
         <el-form-item label="楼盘名称">
-          <el-input placeholder="请输入楼盘名称">
-          </el-input>
+          <el-select
+            v-model="form.comId"
+            @change="queryCBId()"
+            filterable
+            remote
+            placeholder="请输入楼盘进行搜索"
+            :remote-method="remoteMethod"
+            :loading="loading">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="栋座">
-          <el-input placeholder="请选择栋座">
-          </el-input>
+          <el-select v-model="form.cbId" filterable placeholder="请选择楼栋" @change="queryRoomNo()">
+          <el-option
+            v-for="item in cbIdList"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value">
+          </el-option>
+        </el-select>
         </el-form-item>
         <el-form-item label="房间号">
-          <el-input placeholder="请选择房间号">
-          </el-input>
+          <el-select v-model="form.roomNo" filterable placeholder="请选择房间号">
+          <el-option
+            v-for="item in roomNoList"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value">
+          </el-option>
+        </el-select>
         </el-form-item>
       </div>
       <!-- 售价 -->
       <div class="page-form-inline"
            data-tips="万元">
         <el-form-item label="售价">
-          <el-input placeholder="请输入售价">
+          <el-input placeholder="请输入售价" v-model="form.minPrice">
           </el-input>
         </el-form-item>
         <div class="dividingLine"></div>
         <el-form-item label-width="0px">
-          <el-input placeholder="请输入售价">
+          <el-input placeholder="请输入售价" v-model="form.maxPrice">
             <!-- <template slot="append">万元</template> -->
           </el-input>
         </el-form-item>
@@ -80,26 +105,26 @@
       <div class="page-form-inline"
            data-tips="平方">
         <el-form-item label="面积">
-          <el-input placeholder="请输入面积">
+          <el-input placeholder="请输入面积" v-model="form.minInArea"> 
           </el-input>
         </el-form-item>
         <div class="dividingLine"></div>
         <el-form-item label-width="0px">
-          <el-input placeholder="请输入面积">
+          <el-input placeholder="请输入面积" v-model="form.maxInArea">
             <!-- <template slot="append">万元</template> -->
           </el-input>
         </el-form-item>
       </div>
       <!-- 楼层 -->
       <div class="page-form-inline"
-           data-tips="平方">
+           data-tips="层">
         <el-form-item label="楼层">
-          <el-input placeholder="请输入楼层">
+          <el-input placeholder="请输入楼层" v-model="form.minFloor">
           </el-input>
         </el-form-item>
         <div class="dividingLine"></div>
         <el-form-item label-width="0px">
-          <el-input placeholder="请输入楼层">
+          <el-input placeholder="请输入楼层" v-model="form.maxFloor">
             <!-- <template slot="append">万元</template> -->
           </el-input>
         </el-form-item>
@@ -144,6 +169,18 @@
                        :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
+
+      <el-form-item label="朝向"
+                    prop="face">
+        <el-checkbox-group v-model="form.face">
+          <el-checkbox :label="item.value"
+                       name="face"
+                       border
+                       v-for="(item,index) in faceList"
+                       :key="index">{{item.name}}</el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+
       <div class="page-form-inline">
         <el-form-item label="小学划片"
                       prop="primarySchool">
@@ -217,7 +254,17 @@ export default {
         purpose: [],
         orientation: [],
         primarySchool: [],
-        middleSchool: []
+        middleSchool: [],
+        comId: '',
+        cbId:'',
+        roomNo:'',
+        minFloor:'',
+        maxFloor:'',
+        minInArea:'',
+        maxInArea:'',
+        minPrice:'',
+        maxPrice:'',
+        face:[]
       },
       businessList: business,
       houseTypeList: houseType,
@@ -227,12 +274,49 @@ export default {
       primarySchoolList: primarySchool,
       primarySchoolInput: '',
       middleSchoolList: middleSchool,
-      middleSchoolInput: ''
+      middleSchoolInput: '',
+      faceList:face,
+      options: [],
+      cbIdList:[],
+      roomNoList:[],
+      loading: false
     }
   },
   mounted () {
-    console.log(this.queryConstant('Region'))
-   this.businessList= this.queryConstant('Region');
+    //商圈
+   this.queryConstant('Region').then((e)=>{ 
+     this.businessList= e;
+   });
+   //朝向
+   this.queryConstant('face').then((e)=>{ 
+     this.faceList= e;
+   });
+   //小学
+   this.queryConstant('PrimarySchool').then((e)=>{ 
+     this.primarySchoolList= e;
+   });
+
+   //中学
+   this.queryConstant('MiddleSchool').then((e)=>{ 
+     this.middleSchoolList= e;
+   });
+
+   //房型
+   this.queryConstant('Rooms').then((e)=>{ 
+     this.houseTypeList= e;
+   });
+
+   //装修
+   this.queryConstant('Renovation').then((e)=>{ 
+     this.renovationList= e;
+   });
+
+   //用途
+   this.queryConstant('Purpose').then((e)=>{ 
+     this.purposeList= e;
+   });
+
+  
   },
   methods: {
     onSubmit () {
@@ -259,9 +343,8 @@ export default {
     },
 
   queryConstant(constant){
-    var json;
     
-    this.$api.get({ 
+    return this.$api.get({ 
       url:"/mateHouse/queryConstant",
       headers: { "Content-Type": "application/json;charset=UTF-8" },
       token: false,
@@ -270,18 +353,70 @@ export default {
           constant: constant
         }
       }).then((e)=>{ 
-        console.log(e.data)
         if(e.data.code==200){
-          this.json=JSON.stringify(e.data.data);
-          console.log(json)
+          return e.data.data;
           
         }
       })
-    console.log(this.json)
-      return json;
   },
+remoteMethod(query) {
+  var that=this
+        if (query !== '') {
+          this.loading = true;
 
-
+        this.$api.get({ 
+          url:"/mateHouse/queryCommunity",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs:true,
+          data: {
+              communityName: query
+            }
+          }).then((e)=>{ 
+            console.log(e.data)
+            if(e.data.code==200){
+              that.loading = false;
+              that.options=e.data.data.list;
+              
+            }
+          })     
+        } else {
+          this.options = [];
+        }
+      },
+queryCBId(){
+  var that =this
+  this.$api.get({ 
+          url:"/mateHouse/queryComBuilding",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs:true,
+          data: {
+              comId: that.form.comId
+            }
+          }).then((e)=>{ 
+            if(e.data.code==200){
+              that.cbIdList=e.data.data.list;
+            }
+          })   
+    },
+queryRoomNo(){
+  var that =this
+  this.$api.get({ 
+          url:"/mateHouse/queryBuildIngHouses",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs:true,
+          data: {
+              comId: that.form.comId,
+              cbId: that.form.cbId
+            }
+          }).then((e)=>{ 
+            if(e.data.code==200){
+              that.roomNoList=e.data.data.list;
+            }
+          })   
+}
   }
 }
 </script>
