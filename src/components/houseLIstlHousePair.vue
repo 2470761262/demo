@@ -193,8 +193,8 @@
           </el-checkbox-group>
         </el-form-item>
         <div class="marLeft20">
-          <el-input placeholder="添加自定义小学(回车添加)"
-                    v-model="form.primarySchoolInput"
+          <el-input placeholder="添加自定义小学("
+                    v-model="primarySchoolInput"
                     clearable
                     @keyup.enter.native="addInputToList('primarySchool','primarySchoolInput')">
           </el-input>
@@ -212,8 +212,8 @@
           </el-checkbox-group>
         </el-form-item>
         <div class="marLeft20">
-          <el-input placeholder="添加自定义中学(回车添加)"
-                    v-model="form.middleSchoolInput"
+          <el-input placeholder="添加自定义中学"
+                    v-model="middleSchoolInput"
                     clearable
                     @keyup.enter.native="addInputToList('middleSchool','middleSchoolInput')">
           </el-input>
@@ -256,8 +256,7 @@ export default {
         orientation: [],
         primarySchool: [],
         middleSchool: [],
-        primarySchoolInput: '',
-        middleSchoolInput: '',
+        
         comId: '',
         cbId:'',
         roomNo:'',
@@ -269,6 +268,8 @@ export default {
         maxPrice:'',
         face:[]
       },
+      primarySchoolInput: '',
+      middleSchoolInput: '',
       businessList: business,
       houseTypeList: houseType,
       renovationList: renovation,
@@ -422,7 +423,7 @@ mateHouse(){
   var that=this
   console.log(that.form);
   console.log(that.form.comId);
-  that.$router.push({path:'/components/mataHouseList',query:{"params":that.form}});
+  that.$router.push({path:'/components/mateHouseList',query:{"params":JSON.stringify(that.form)}});
 }
   }
 }

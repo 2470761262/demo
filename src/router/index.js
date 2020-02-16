@@ -47,7 +47,7 @@ export default new Router({
         
         {
           //房源配对列表
-          path: "/menuFrame/mateHouseList",
+          path: "/components/mateHouseList",
           name: "mateHouseList",
           meta: {
             isLogin: true,
