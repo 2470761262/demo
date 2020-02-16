@@ -35,6 +35,7 @@
           <span>系统管理</span>
         </template>
         <el-menu-item index="/menuFrame/noticeManageList">公告管理</el-menu-item>
+        <el-menu-item index="/menuFrame/systemConfigList">系统参数配置</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>

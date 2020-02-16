@@ -44,6 +44,7 @@ export default new Router({
           component: () =>
             import(/* webpackChunkName: "houseList" */ "@/pages/houseList.vue")
         },
+        
         {
           //房源列表
           path: "/menuFrame/newAgentHouse",
@@ -267,7 +268,52 @@ export default new Router({
           },
           component: () =>
             import( "@/pages/noticeManage/addNotice.vue")
-        }
+        },
+        {
+          //系统参数配置
+          path: "/menuFrame/systemConfigList",
+          name: "systemConfigList",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统配置"
+              },
+              {
+                path: "/menuFrame/houseList",
+                name: "系统参数配置表"
+              },
+              
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "systemConfigList" */ "@/pages/systemConfigList.vue")
+        },
+        {
+          //系统参数配置
+          path: "/menuFrame/addConfig",
+          name: "addConfig",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统配置"
+              },
+              {
+                path: "/menuFrame/systemConfigList",
+                name: "系统参数配置表"
+              },
+              {
+                path: "/menuFrame/addConfig",
+                name: "添加系统配置"
+              },
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "addConfig" */ "@/pages/addConfig.vue")
+        },
       ]
     }
   ]
