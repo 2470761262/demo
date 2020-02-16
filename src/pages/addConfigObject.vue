@@ -56,33 +56,81 @@
         <el-header>
          
           <div class="left-input-container">
-            <span>参数类型</span>
-            <el-select v-model="notice.newsClass" placeholder="请选择">
-              <el-option
-                v-for="item in newsClassOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+            <span>参数编号-参数名称-参数类型</span>
+          <div>
+             {{configId}}-{{configName}}-{{configNo}}
+            </div>
           
           </div>
            <div class="left-input-container">
-            <span>参数名称&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="notice.configName"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
+            <span>公司参数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+           
           </div>
          <div class="left-input-container">
-            <span>参数编号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>参数范围&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <el-input
               type="text"
               placeholder="请输入内容"
               v-model="notice.configNo"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
+          </div>
+           <div class="left-input-container">
+            <span>关联对象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+           <el-select
+            v-model="notice.configObject"
+            >
+            <el-option value="0">
+                默认
+            </el-option>
+             <el-option value="1">
+                人员
+            </el-option>
+             <el-option value="2">
+                部门
+            </el-option>
+             <el-option value="3">
+                岗位
+            </el-option>
+            </el-select>
+          </div>
+           <div class="left-input-container">
+            <span>参数一&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.paraNum1"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
+          </div>
+           <div class="left-input-container">
+            <span>参数二&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.paraNum2"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
+          </div>
+           <div class="left-input-container">
+            <span>参数三&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.paraNum3"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
+          </div>
+           <div class="left-input-container">
+            <span>参数四&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.paraNum4"
               maxlength="10"
               show-word-limit
             ></el-input>
@@ -96,6 +144,22 @@
               maxlength="10"
               show-word-limit
             ></el-input>
+          </div>
+           <div class="left-input-container">
+            <span>时间单位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <el-select
+            v-model="unit"
+            >
+            <el-option value="0">
+                小时
+            </el-option>
+             <el-option value="1">
+                天
+            </el-option>
+             <el-option value="2">
+                月
+            </el-option>
+            </el-select>
           </div>
         </el-header>
       
@@ -139,10 +203,19 @@ export default {
   data() {
     return {
       quill:null,
-      uploadUrl:"",
+     
       notice:{
+           configId:null,
+      paraNum1:null,
+      paraNum2:null,
+      paraNum3:null,
+      comId:"1",
+      configObject:null,
+       paraNum4:null,
         newsTitle: null,
         newsContent: null,
+        addPer:null,//44430,
+        receiveAcountIds:null,//[44430],
         sendWay:null,
         configNo:null,
         configMemo:null,
@@ -214,10 +287,10 @@ export default {
   computed: {},
   methods: {
     sendNotice(){
-      if(this.notice.newsClass==null){
+      if(this.notice.comId==null){
         this.$message({
           showClose: true,
-          message: '参数类型',
+          message: '公司参数',
           type: 'warning'
         });
         return;
@@ -238,18 +311,39 @@ export default {
         });
         return;
       }
-      if(this.notice.configName==null){
+      if(this.notice.paraNum4==null){
         this.$message({
           showClose: true,
-          message: '备注',
+          message: '参数1',
           type: 'warning'
         });
         return;
       }
-
-
+    if(this.notice.paraNum3==null){
+        this.$message({
+          showClose: true,
+          message: '参数2',
+          type: 'warning'
+        });
+        return;
+      } if(this.notice.paraNum2==null){
+        this.$message({
+          showClose: true,
+          message: '参数3',
+          type: 'warning'
+        });
+        return;
+      }
+if(this.notice.paraNum1==null){
+        this.$message({
+          showClose: true,
+          message: '参数4',
+          type: 'warning'
+        });
+        return;
+      }
       this.$api.get({
-        url: '/Set/add',
+        url: '/Set/companyAdd',
         data: {
           sysParType:this.notice.newsClass,
           sysParNo:this.notice.configNo,
@@ -281,12 +375,10 @@ export default {
     },
 
   },
-  created() {
-    this.uploadUrl=this.$api.baseUrl()+"/draft_house/picture";
-    console.log(this.uploadUrl);
+ created() {
+      this.configId=this.$route.query.configId;
+      console.log(this.$route.query.configId);
   },
-  mounted() {
-    this.quill = this.$refs.QuillEditor.quill;
-  }
+ 
 };
 </script>

@@ -197,10 +197,8 @@ export default {
         console.log(e);
       })
     },
-    postConfig () {
-      this.$alert('<div> 参数类型</div><select ><option value="">请选择 </option> <option value="1">买卖房源 </option>  <option value="2">买卖客户 </option><option value="3">租赁房源 </option><option value="4">租赁客户 </option><option value="5">用户管理 </option></select></div><div> 编号</div><input /><div> 规则名</div><input /><div> 备注</div><input />', '请填写信息', {
-            dangerouslyUseHTMLString: true
-          });
+    postConfig (id) {
+      this.$router.push({ path: "/menuFrame/addConfigObject", query: { configId: id } });
     },
         toAddConfig () {
       this.$router.push({ path: "/menuFrame/addConfig" });
