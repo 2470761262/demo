@@ -25,26 +25,62 @@
                          :key="item.prop">
         </el-table-column>
       </template> -->
-      <el-table-column label="编号">
+      <el-table-column label="范围">
         <template v-slot="scope">
-          {{scope.row.sysParNo}}
+          {{scope.row.parRange}}
         </template>
       </el-table-column>
-      <el-table-column label="参数名称">
+      <el-table-column label="关联对象">
         <template v-slot="scope">
-          {{scope.row.sysParName}}
+          {{scope.row.sysParObj}}
         </template>
       </el-table-column>
-      <el-table-column label="类型">
+      <el-table-column label="对象名称">
         <template v-slot="scope" >
           {{scope.row.sysParType}}
         </template>
       </el-table-column>
-      <el-table-column label="是否有效">
+      <el-table-column label="参数1">
         <template v-slot="scope" >
-          {{scope.row.Del==0? "有效":"无效"}}
+          {{scope.row.paraNum}}
         </template>
       </el-table-column>
+       <el-table-column label="参数2">
+        <template v-slot="scope" >
+          {{scope.row.paraTwoNum}}
+        </template>
+      </el-table-column>
+       <el-table-column label="参数3">
+        <template v-slot="scope" >
+          {{scope.row.paraNumStr}}
+        </template>
+      </el-table-column>
+       <el-table-column label="参数4">
+        <template v-slot="scope" >
+          {{scope.row.paraFourNum}}
+        </template>
+      </el-table-column>
+       <el-table-column label="是否允许">
+       <template v-slot="scope" >
+         {{scope.row.paraFourNum}}
+         </template>
+      </el-table-column>
+       <el-table-column label="备注">
+        <template v-slot="scope" >
+          {{scope.row.remark}}
+        </template>
+      </el-table-column>
+       <el-table-column label="是否有效">
+        <template v-slot="scope" >
+          {{scope.row.del==0?"有效":"无效"}}
+        </template>
+      </el-table-column>
+       <el-table-column label="公司">
+        <template v-slot="scope" >
+          {{scope.row.companyName}}
+        </template>
+      </el-table-column>
+
        <el-table-column prop="operation"
                        label="操作"
                        fixed="right"
@@ -84,6 +120,7 @@ export default {
         selectToTime: false,
         selectTo: false
       },
+      configId:null,
       tableDataColumn: [
         { prop: 'communityName', label: "房源坐落" },
         { prop: 'price', label: "售价(万元)" },
@@ -155,13 +192,14 @@ export default {
       this.queryVerifyHouseDatas(1);
     },
     queryVerifyHouseDatas (currentPage) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage };
+      let params = { limit: this.pageJson.pageSize, page: currentPage,sysParId:this.configId };
+      console.log(params);
       let that = this;
       if (this.queryData.newsTitle != null) {
         params.newsTitle = this.queryData.newsTitle;
       }
       this.$api.get({
-        url: '/Set',
+        url: '/Set/list',
         data: params,
         token: false
       }).then((e) => {
@@ -171,30 +209,41 @@ export default {
         if (result.code == 200) {
           console.log(result.data);
           that.tableData ="";
-            for(var i=0;i<result.data.list.length;i++){
+          
+         for(var i=0;i<result.data.list.length;i++){
             
-                 switch(result.data.list[i].sysParType){
+                 switch(result.data.list[i].parRange){
+                     case "0" :
+                         result.data.list[i].parRange="个人";
                      case "1" :
-                         result.data.list[i].sysParType="买卖房源";
+                         result.data.list[i].parRange="部门";
                          break;
                           case "2" :
-                         result.data.list[i].sysParType="买卖客户";
+                         result.data.list[i].parRange="部门名下";
                          break;
                           case "3" :
-                         result.data.list[i].sysParType="租赁房源";
-                         break;
-                          case "4" :
-                         result.data.list[i].sysParType="租赁客户";
-                         break;
-                         case "5" :
-                         result.data.list[i].sysParType="用户管理";
+                         result.data.list[i].parRange="公司";
                          break;
 
 
                  }
-                 
+                 console.log(result.data.list[i].sysParObj);
+                    switch(result.data.list[i].sysParObj){
+                     case "0" :
+                         result.data.list[i].sysParObj="默认";
+                     case "1" :
+                         result.data.list[i].sysParObj="人员";
+                         break;
+                          case "2" :
+                         result.data.list[i].sysParObj="部门";
+                         break;
+                          case "3" :
+                         result.data.list[i].sysParObj="岗位";
+                         break;
+
+
+                 }
             }
-         
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPagecurrPagecurrPage;
           that.tableData = result.data.list;
@@ -209,42 +258,17 @@ export default {
         console.log(e);
       })
     },
-    postConfig (id,sysParNo,sysParName) {
-       console.log(id,sysParNo,sysParName);
-      this.$router.push({ path: "/menuFrame/addConfigObject", 
-      query: { configId:id,
-      sysParNo:sysParNo,
-      sysParName:sysParName } });
-    },
-    updateConfig (id,sysParNo,sysParName,sysParType,memo) {
-       console.log(memo);
-      this.$router.push({ path: "/menuFrame/addConfig", 
-      query: { configId:id,
-      sysParNo:sysParNo,
-      sysParName:sysParName,
-      sysParType:sysParType,
-      memo:memo
-      } });
-    },toList (id,sysParNo,sysParName,sysParType,memo) {
-       console.log(memo);
-      this.$router.push({ path: "/menuFrame/configObjectList", 
-      query: { configId:id,
-      sysParNo:sysParNo,
-      sysParName:sysParName,
-      sysParType:sysParType,
-      memo:memo
-      } });
-    },
+
         toAddConfig () {
       this.$router.push({ path: "/menuFrame/addConfig" });
     },
     
     updateDelRight(id,sysParNo,sysParName,sysParType,memo ){
           this.$api.get({
-        url: '/Set/updateDel',
+        url: '/Set/companyUpdateDel',
         data: {
           del:0,
-          id:id+","
+          id:id
         },
         token: false
       }).then((e) => {
@@ -255,20 +279,20 @@ export default {
             dangerouslyUseHTMLString: false
           });
         } else {
-          console.log("修改失败" + result.message);
+          console.log("查询系统参数配置列表结果：" + result.message);
         
         }
       }).catch((e) => {
-        console.log("修改失败");
+        console.log("查询系统参数配置列表失败");
         console.log(e);
       })
     },
      updateDelLeft(id,sysParNo,sysParName,sysParType,memo ){
           this.$api.get({
-        url: '/Set/updateDel',
+        url: '/Set/companyUpdateDel',
         data: {
           del:1,
-          id:id+","
+          id:id
         },
         token: false
       }).then((e) => {
@@ -278,6 +302,7 @@ export default {
            this.$alert('', '修改成功', {
             dangerouslyUseHTMLString: false
           });
+          
         } else {
           console.log("修改失败" + result.message);
         
@@ -292,9 +317,7 @@ export default {
     },
     isForBut (type) {
       let array = [
-        { name: '修改', isType: '2', methosName: 'updateConfig' },
-        { name: '添加关联对象', isType: '1,2,3', methosName: 'postConfig' },
-        { name: '查看关联对象', isType: '1,2,3', methosName: 'toList' },
+       
         { name: '转有效', isType: '1,2,3', methosName: 'updateDelRight' },
         { name: '转无效', isType: '1,2,3', methosName: 'updateDelLeft' },
       ]
@@ -305,6 +328,11 @@ export default {
     handleClick () {
 
     },
+     created() {
+      this.configId=this.$route.query.configId;
+    
+     
+  },
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;

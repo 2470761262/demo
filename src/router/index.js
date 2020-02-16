@@ -338,6 +338,54 @@ export default new Router({
           component: () =>
             import(/* webpackChunkName: "addConfig" */ "@/pages/addConfig.vue")
         },
+        {
+          //系统参数关联对象录入
+          path: "/menuFrame/addConfigObject",
+          name: "addConfigObject",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统配置"
+              },
+              {
+                path: "/menuFrame/systemConfigList",
+                name: "系统参数配置表"
+              },
+              {
+                path: "/menuFrame/addConfigObject",
+                name: "添加系统配置关联对象"
+              },
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "addConfig" */ "@/pages/addConfigObject.vue")
+        },
+        {
+          //系统参数关联对象录入
+          path: "/menuFrame/configObjectList",
+          name: "configObjectList",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统配置"
+              },
+              {
+                path: "/menuFrame/systemConfigList",
+                name: "系统参数配置表"
+              },
+              {
+                path: "/menuFrame/configObjectList",
+                name: "添加系统配置关联对象"
+              },
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "addConfig" */ "@/pages/configObjectList.vue")
+        },
       ]
     }
   ]
