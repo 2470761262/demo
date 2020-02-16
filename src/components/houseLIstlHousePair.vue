@@ -194,7 +194,7 @@
         </el-form-item>
         <div class="marLeft20">
           <el-input placeholder="添加自定义小学(回车添加)"
-                    v-model="primarySchoolInput"
+                    v-model="form.primarySchoolInput"
                     clearable
                     @keyup.enter.native="addInputToList('primarySchool','primarySchoolInput')">
           </el-input>
@@ -213,7 +213,7 @@
         </el-form-item>
         <div class="marLeft20">
           <el-input placeholder="添加自定义中学(回车添加)"
-                    v-model="middleSchoolInput"
+                    v-model="form.middleSchoolInput"
                     clearable
                     @keyup.enter.native="addInputToList('middleSchool','middleSchoolInput')">
           </el-input>
@@ -224,7 +224,7 @@
       <el-button-group>
         <el-button type="info"
                    @click="resetForm('form')">重置</el-button>
-        <el-button type="primary">配对</el-button>
+        <el-button type="primary" @click="mateHouse()">配对</el-button>
       </el-button-group>
     </el-form>
   </div>
@@ -256,6 +256,8 @@ export default {
         orientation: [],
         primarySchool: [],
         middleSchool: [],
+        primarySchoolInput: '',
+        middleSchoolInput: '',
         comId: '',
         cbId:'',
         roomNo:'',
@@ -273,9 +275,7 @@ export default {
       purposeList: purpose,
       orientationList: orientation,
       primarySchoolList: primarySchool,
-      primarySchoolInput: '',
       middleSchoolList: middleSchool,
-      middleSchoolInput: '',
       faceList:[],
       options: [],
       cbIdList:[],
@@ -417,6 +417,12 @@ queryRoomNo(){
               that.roomNoList=e.data.data.list;
             }
           })   
+    },
+mateHouse(){
+  var that=this
+  console.log(that.form);
+  console.log(that.form.comId);
+  that.$router.push({path:'/components/mataHouseList',query:{"params":that.form}});
 }
   }
 }
