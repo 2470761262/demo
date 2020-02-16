@@ -11,7 +11,13 @@ const config = {
   events: "blur|input",
   inject: true
 };
-
+//手机号码
+Validator.extend('phone', {
+  messages: {
+    zh_CN: (field, args) => field + '必须是11位手机号码',
+  },
+  validate: value => !!/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(value)
+});
 Vue.use(VeeValidate, config);
 // 使用中文提示
 Validator.localize("zh_CN", veeMessage);

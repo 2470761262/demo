@@ -16,6 +16,23 @@
     justify-content: center;
   }
 }
+.query-center-item {
+  margin-right: 20px;
+  margin-bottom: 10px;
+  @media (max-width: 1152px) {
+    width: 100%;
+    margin-right: 0px;
+    /deep/.el-select {
+      width: 100%;
+    }
+    /deep/.el-input__inner {
+      width: 100%;
+    }
+  }
+  &:last-of-type {
+    margin-right: 0;
+  }
+}
 .query-center {
   display: flex;
   @media (max-width: 1300px) {
@@ -77,7 +94,10 @@
             </div>
           </slot>
           <div v-if="configSet.selectTo"
-               :class="['query-center-item',{'page-cell-append ':$scopedSlots.selectTo ? false : true}]"
+               :class="[
+              'query-center-item',
+              { 'page-cell-append ': $scopedSlots.selectTo ? false : true }
+            ]"
                data-before="状态">
             <slot name="selectTo">
               <el-select v-model="queryData.selectValue"
@@ -109,12 +129,13 @@
                  @tab-click="handleClick">
           <el-tab-pane :label="item.label"
                        :name="item.name"
-                       v-for="(item,index) in elTabs.list"
+                       v-for="(item, index) in elTabs.list"
                        :key="index">
           </el-tab-pane>
         </el-tabs>
         <el-table :data="tableData"
-                  border>
+                  border
+                  v-loading="loading">
           <slot name="tableColumn"
                 :tableData="tableDataColumn"></slot>
         </el-table>
@@ -145,6 +166,7 @@ export default {
   },
   data () {
     return {
+      loading: true,
       configSet: {
         selectToTime: true,
         selectTo: true
@@ -155,30 +177,30 @@ export default {
       elTabs: {},
       options: [],
       queryData: {
-        houseName: '',
-        taskName: '',
-        selectValue: '',
-        timeSelect: '',
+        houseName: "",
+        taskName: "",
+        selectValue: "",
+        timeSelect: ""
       }
-    }
+    };
   },
   methods: {
     //查询按钮
     queryTabData () {
-      this.$emit('queryTabData');
+      this.$emit("queryTabData");
     },
     //tab切换
     handleClick (e) {
-      this.$emit('handleClick', e);
+      this.$emit("handleClick", e);
     },
     //每页数据设置事件
     handleSizeChange (e) {
-      this.$emit('handleSizeChange', e);
+      this.$emit("handleSizeChange", e);
     },
     //前往多少页事件
     handleCurrentChange (e) {
-      this.$emit('handleCurrentChange', e);
+      this.$emit("handleCurrentChange", e);
     }
-  },
-}
+  }
+};
 </script>

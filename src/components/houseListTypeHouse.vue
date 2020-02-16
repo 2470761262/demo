@@ -58,8 +58,52 @@
       <el-col :sm="8"
               :md="6"
               :lg="6"
-              v-for="(index) in 4"
-              :key="index"
+              class="page-col">
+        <div class="house-type-item">
+          <div class="item-cell">
+            <div class="item-cell-title overText">我的房源</div>
+            <div class="item-cell-data overText">
+              <div class="item-cell-data-title">33</div>
+              <div class="item-cell-data-tips">套</div>
+            </div>
+          </div>
+          <div class="item-cell-tips overText">我的个人作业房源</div>
+        </div>
+      </el-col>
+      <el-col :sm="8"
+              :md="6"
+              :lg="6"
+              class="page-col">
+        <div class="house-type-item">
+          <div class="item-cell">
+            <div class="item-cell-title overText">我的房源</div>
+            <div class="item-cell-data overText">
+              <div class="item-cell-data-title">33</div>
+              <div class="item-cell-data-tips">套</div>
+            </div>
+          </div>
+          <div class="item-cell-tips overText">我的个人作业房源</div>
+        </div>
+      </el-col>
+      <el-col :sm="8"
+              :md="6"
+              :lg="6"
+              class="page-col">
+        <div class="house-type-item"
+             @click="goToNewHouse()">
+          <div class="item-cell">
+            <div class="item-cell-title overText">新增房源</div>
+            <div class="item-cell-data overText">
+              <div class="item-cell-data-title">8</div>
+              <div class="item-cell-data-tips">套</div>
+            </div>
+          </div>
+          <div class="item-cell-tips overText">三天内的新增房源</div>
+        </div>
+      </el-col>
+      <el-col :sm="8"
+              :md="6"
+              :lg="6"
               class="page-col">
         <div class="house-type-item">
           <div class="item-cell">
@@ -73,6 +117,7 @@
         </div>
       </el-col>
     </el-row>
+
     <div class="house-type-title ">推荐房源</div>
     <el-row :gutter="20">
       <el-col :sm="8"
@@ -144,7 +189,9 @@ export default {
     }
   },
   methods: {
-
+    goToNewHouse () {
+      this.$router.push({ path: '/menuFrame/newAgentHouse' });
+    }
   },
 }
 </script>

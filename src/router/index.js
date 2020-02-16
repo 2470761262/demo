@@ -45,6 +45,26 @@ export default new Router({
             import(/* webpackChunkName: "houseList" */ "@/pages/houseList.vue")
         },
         {
+          //房源列表
+          path: "/menuFrame/newAgentHouse",
+          name: "houseList",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/newAgentHouse",
+                name: "房源列表"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "newAgentHouse" */ "@/pages/newAgentHouse.vue")
+        },
+        {
           //验证房源列表
           path: "/menuFrame/validateHouseList",
           name: "validateHouseList",
@@ -197,8 +217,56 @@ export default new Router({
           },
           component: () =>
             import(
-              "@/pages/noticeManageList.vue"
+              "@/pages/noticeManage/noticeManageList.vue"
             )
+        },
+        {
+          //查看公告详情
+          path: "/menuFrame/noticeDetail",
+          name: "noticeDetail",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统管理"
+              },
+              {
+                path: "/menuFrame/noticeManageList",
+                name: "公告管理"
+              },
+              {
+                path: "/menuFrame/noticeDetail",
+                name: "公告详情"
+              }
+            ]
+          },
+          component: () =>
+            import( "@/pages/noticeManage/noticeDetail.vue")
+        },
+        {
+          //添加公告
+          path: "/menuFrame/addNotice",
+          name: "addNotice",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统管理"
+              },
+              {
+                path: "/menuFrame/noticeManageList",
+                name: "公告管理"
+              },
+              {
+                path: "/menuFrame/addNotice",
+                name: "添加公告"
+              }
+            ]
+          },
+          component: () =>
+            import( "@/pages/noticeManage/addNotice.vue")
         }
       ]
     }

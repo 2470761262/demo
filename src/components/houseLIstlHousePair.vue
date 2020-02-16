@@ -50,28 +50,53 @@
       <!-- 楼盘 -->
       <div class="page-form-inline">
         <el-form-item label="楼盘名称">
-          <el-input placeholder="请输入楼盘名称">
-          </el-input>
+          <el-select
+            v-model="form.comId"
+            @change="queryCBId()"
+            filterable
+            remote
+            placeholder="请输入楼盘进行搜索"
+            :remote-method="remoteMethod"
+            :loading="loading">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="栋座">
-          <el-input placeholder="请选择栋座">
-          </el-input>
+          <el-select v-model="form.cbId" filterable placeholder="请选择楼栋" @change="queryRoomNo()">
+          <el-option
+            v-for="item in cbIdList"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value">
+          </el-option>
+        </el-select>
         </el-form-item>
         <el-form-item label="房间号">
-          <el-input placeholder="请选择房间号">
-          </el-input>
+          <el-select v-model="form.roomNo" filterable placeholder="请选择房间号">
+          <el-option
+            v-for="item in roomNoList"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value">
+          </el-option>
+        </el-select>
         </el-form-item>
       </div>
       <!-- 售价 -->
       <div class="page-form-inline"
            data-tips="万元">
         <el-form-item label="售价">
-          <el-input placeholder="请输入售价">
+          <el-input placeholder="请输入售价" v-model="form.minPrice">
           </el-input>
         </el-form-item>
         <div class="dividingLine"></div>
         <el-form-item label-width="0px">
-          <el-input placeholder="请输入售价">
+          <el-input placeholder="请输入售价" v-model="form.maxPrice">
             <!-- <template slot="append">万元</template> -->
           </el-input>
         </el-form-item>
@@ -80,26 +105,26 @@
       <div class="page-form-inline"
            data-tips="平方">
         <el-form-item label="面积">
-          <el-input placeholder="请输入面积">
+          <el-input placeholder="请输入面积" v-model="form.minInArea"> 
           </el-input>
         </el-form-item>
         <div class="dividingLine"></div>
         <el-form-item label-width="0px">
-          <el-input placeholder="请输入面积">
+          <el-input placeholder="请输入面积" v-model="form.maxInArea">
             <!-- <template slot="append">万元</template> -->
           </el-input>
         </el-form-item>
       </div>
       <!-- 楼层 -->
       <div class="page-form-inline"
-           data-tips="平方">
+           data-tips="层">
         <el-form-item label="楼层">
-          <el-input placeholder="请输入楼层">
+          <el-input placeholder="请输入楼层" v-model="form.minFloor">
           </el-input>
         </el-form-item>
         <div class="dividingLine"></div>
         <el-form-item label-width="0px">
-          <el-input placeholder="请输入楼层">
+          <el-input placeholder="请输入楼层" v-model="form.maxFloor">
             <!-- <template slot="append">万元</template> -->
           </el-input>
         </el-form-item>
@@ -107,52 +132,64 @@
       <el-form-item label="商圈"
                     prop="business">
         <el-checkbox-group v-model="form.business">
-          <el-checkbox :label="item"
+          <el-checkbox :label="item.value"
                        name="business"
                        border
                        v-for="(item,index) in businessList"
-                       :key="index">{{item}}</el-checkbox>
+                       :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="房型"
                     prop="houseType">
         <el-checkbox-group v-model="form.houseType">
-          <el-checkbox :label="item"
+          <el-checkbox :label="item.value"
                        name="houseType"
                        border
                        v-for="(item,index) in houseTypeList"
-                       :key="index">{{item}}</el-checkbox>
+                       :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="装修"
                     prop="renovation">
         <el-checkbox-group v-model="form.renovation">
-          <el-checkbox :label="item"
+          <el-checkbox :label="item.value"
                        name="renovation"
                        border
                        v-for="(item,index) in renovationList"
-                       :key="index">{{item}}</el-checkbox>
+                       :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="房源用途"
                     prop="purpose">
         <el-checkbox-group v-model="form.purpose">
-          <el-checkbox :label="item"
+          <el-checkbox :label="item.value"
                        name="purpose"
                        border
                        v-for="(item,index) in purposeList"
-                       :key="index">{{item}}</el-checkbox>
+                       :key="index">{{item.name}}</el-checkbox>
         </el-checkbox-group>
       </el-form-item>
+
+      <el-form-item label="朝向"
+                    prop="face">
+        <el-checkbox-group v-model="form.face">
+          <el-checkbox :label="item.value"
+                       name="face"
+                       border
+                       v-for="(item,index) in faceList"
+                       :key="index">{{item.name}}</el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+
       <div class="page-form-inline">
         <el-form-item label="小学划片"
                       prop="primarySchool">
           <el-checkbox-group v-model="form.primarySchool">
-            <el-checkbox :label="item"
+            <el-checkbox :label="item.value"
                          name="primarySchool"
                          border
                          v-for="(item,index) in primarySchoolList"
-                         :key="index">{{item}}</el-checkbox>
+                         :key="index">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <div class="marLeft20">
@@ -167,11 +204,11 @@
         <el-form-item label="中学划片"
                       prop="middleSchool">
           <el-checkbox-group v-model="form.middleSchool">
-            <el-checkbox :label="item"
+            <el-checkbox :label="item.value"
                          name="middleSchool"
                          border
                          v-for="(item,index) in middleSchoolList"
-                         :key="index">{{item}}</el-checkbox>
+                         :key="index">{{item.name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <div class="marLeft20">
@@ -182,26 +219,7 @@
           </el-input>
         </div>
       </div>
-      <el-form-item label="特色一"
-                    prop="especially1">
-        <el-checkbox-group v-model="form.especially1">
-          <el-checkbox :label="item"
-                       name="especially1"
-                       border
-                       v-for="(item,index) in especially1List"
-                       :key="index">{{item}}</el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="特色二"
-                    prop="especially2">
-        <el-checkbox-group v-model="form.especially2">
-          <el-checkbox :label="item"
-                       name="especially2"
-                       border
-                       v-for="(item,index) in especially2List"
-                       :key="index">{{item}}</el-checkbox>
-        </el-checkbox-group>
-      </el-form-item>
+      
 
       <el-button-group>
         <el-button type="info"
@@ -213,7 +231,7 @@
 </template>
 <script>
 //商圈
-let business = ['中城', '东城', '南城', '北城', '西城', '曹溪', '东肖', '莲东', '东山'];
+let business =null;
 //房型
 let houseType = ['一室', '二室', '三室', '四室', '四室以上'];
 //装修
@@ -223,13 +241,10 @@ let purpose = ['住宅', '别墅', '商业', '车位'];
 //朝向
 let orientation = ['东', '南', '西', '北', '东南', '西北'];
 //小学
-let primarySchool = ['实验小学', '松涛小学'];
+let primarySchool = ['实验小学'];
 //中学
 let middleSchool = ['实验中学', '松涛中学'];
-//特点1
-let especially1 = ['满2', '满五唯一'];
-//特点2
-let especially2 = ['钥匙房', '实勘房', '委托房'];
+
 export default {
   data () {
     return {
@@ -241,8 +256,16 @@ export default {
         orientation: [],
         primarySchool: [],
         middleSchool: [],
-        especially1: [],
-        especially2: []
+        comId: '',
+        cbId:'',
+        roomNo:'',
+        minFloor:'',
+        maxFloor:'',
+        minInArea:'',
+        maxInArea:'',
+        minPrice:'',
+        maxPrice:'',
+        face:[]
       },
       businessList: business,
       houseTypeList: houseType,
@@ -253,12 +276,48 @@ export default {
       primarySchoolInput: '',
       middleSchoolList: middleSchool,
       middleSchoolInput: '',
-      especially1List: especially1,
-      especially2List: especially2
+      faceList:[],
+      options: [],
+      cbIdList:[],
+      roomNoList:[],
+      loading: false
     }
   },
   mounted () {
+    //商圈
+   this.queryConstant('Region').then((e)=>{ 
+     this.businessList= e;
+   });
+   //朝向
+   this.queryConstant('face').then((e)=>{ 
+     this.faceList= e;
+   });
+   //小学
+   this.queryConstant('PrimarySchool').then((e)=>{ 
+     this.primarySchoolList= e;
+   });
 
+   //中学
+   this.queryConstant('MiddleSchool').then((e)=>{ 
+     this.middleSchoolList= e;
+   });
+
+   //房型
+   this.queryConstant('Rooms').then((e)=>{ 
+     this.houseTypeList= e;
+   });
+
+   //装修
+   this.queryConstant('Renovation').then((e)=>{ 
+     this.renovationList= e;
+   });
+
+   //用途
+   this.queryConstant('Purpose').then((e)=>{ 
+     this.purposeList= e;
+   });
+
+  
   },
   methods: {
     onSubmit () {
@@ -284,6 +343,81 @@ export default {
       }
     },
 
+  queryConstant(constant){
+    
+    return this.$api.get({ 
+      url:"/mateHouse/queryConstant",
+      headers: { "Content-Type": "application/json;charset=UTF-8" },
+      token: false,
+      qs:true,
+      data: {
+          constant: constant
+        }
+      }).then((e)=>{ 
+        if(e.data.code==200){
+          return e.data.data;
+          
+        }
+      })
+  },
+remoteMethod(query) {
+  var that=this
+        if (query !== '') {
+          this.loading = true;
+
+        this.$api.get({ 
+          url:"/mateHouse/queryCommunity",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs:true,
+          data: {
+              communityName: query
+            }
+          }).then((e)=>{ 
+            console.log(e.data)
+            if(e.data.code==200){
+              that.loading = false;
+              that.options=e.data.data.list;
+              
+            }
+          })     
+        } else {
+          this.options = [];
+        }
+      },
+queryCBId(){
+  var that =this
+  this.$api.get({ 
+          url:"/mateHouse/queryComBuilding",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs:true,
+          data: {
+              comId: that.form.comId
+            }
+          }).then((e)=>{ 
+            if(e.data.code==200){
+              that.cbIdList=e.data.data.list;
+            }
+          })   
+    },
+queryRoomNo(){
+  var that =this
+  this.$api.get({ 
+          url:"/mateHouse/queryBuildIngHouses",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs:true,
+          data: {
+              comId: that.form.comId,
+              cbId: that.form.cbId
+            }
+          }).then((e)=>{ 
+            if(e.data.code==200){
+              that.roomNoList=e.data.data.list;
+            }
+          })   
+}
   }
 }
 </script>
