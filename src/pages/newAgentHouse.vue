@@ -156,7 +156,11 @@ export default {
     },
     handleCurrentChange (val) {
       this.queryNoticeDatas(val);
+    },
+    showNoticeDetail(noticeId){
+       this.$router.push({ path: "/menuFrame/houseDetails",query:{houseId:noticeId} });
     }
+
   },
 }
 </script>  

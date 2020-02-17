@@ -22,6 +22,15 @@ export default {
   },
   localStorageRemove (key) {
     localStorage.removeItem(key);
+  },
+  analysisElevator(elevator){
+       if(print(elevator)>0){
+           return "有配套"
+       }
+       else{
+         return "无配套"
+       }
+
   }
 }
 
