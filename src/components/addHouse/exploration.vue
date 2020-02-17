@@ -357,6 +357,11 @@
         </div>
       </div>
     </div>
+    <el-dialog :visible.sync="dialogVisible">
+      <img width="100%"
+           :src="dialogImageUrl"
+           alt="">
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -370,6 +375,8 @@ export default {
   },
   data () {
     return {
+      dialogVisible: false,
+      dialogImageUrl: '',
       fileList: {
         list1: [],
         list2: [],
@@ -456,8 +463,9 @@ export default {
       //  return isJPG && isSize;
       return isJPG;
     },
-    handlePreview (a, b, c) {
-      //  console.log(a, b, c, this);
+    handlePreview (file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
     validateAll () {
       return false;
