@@ -53,7 +53,16 @@
         <el-row>
           <el-col :span="24">
             <div class="treeTitle">人员形式</div>
-            <div class="treeContainer">树</div>
+            <div class="treeContainer">
+              <el-tree
+                node-key="id"
+                ref="treeNotice"
+                :props="propsTreeConfig"
+                show-checkbox
+                :data="treeData"
+                @check-change="handleCheckChange"
+              ></el-tree>
+            </div>
           </el-col>
         </el-row>
       </el-aside>
@@ -91,7 +100,7 @@
           </div>
           <div class="left-input-container">
             <span>发送方式</span>
-            <el-select v-model="notice.sendType" placeholder="请选择">
+            <el-select v-model="notice.sendType" placeholder="请选择" @change="sendTypeSelectChange">
               <el-option
                 v-for="item in sendTypeOption"
                 :key="item.value"
@@ -154,7 +163,7 @@ const toolbarOptions = [
   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
   [{ font: [] }],
   [{ align: [] }],
-  ["link","image"],
+  ["link", "image"],
   ["clean"] // remove formatting button
 ];
 export default {
@@ -163,17 +172,32 @@ export default {
   props: {},
   data() {
     return {
-      quill:null,
-      uploadUrl:"",
-      notice:{
+      propsTreeConfig: {
+        label: "labelName",
+        children: "childrenNodes",
+        isLeaf:""
+      },
+      treeData: [
+          {
+            "id": "1,0",
+            "parentId": "0,0",
+            "labelName": "全员发送",
+            "disabled":true
+           }],
+      quill: null,
+      uploadUrl: "",
+      notice: {
         newsTitle: null,
         newsContent: null,
-        addPer:null,//44430,
-        receiveAcountIds:null,//[44430],
-        sendWay:null,
-        newsClass:null ,
-        newsType:null,
-        sendType:null 
+        addPer: null, //44430,
+        receiveDeptIds:null,//选中的部门
+        receiveCompanyIds:null,//选中的公司
+        receivePositionIds:null,//选中的职位
+        receiveAcountIds: null, //选中的人员
+        sendWay: null,
+        newsClass: null,
+        newsType: null,
+        sendType: '3'
       },
       editorOption: {
         placeholder: "请输入公告内容",
@@ -185,26 +209,25 @@ export default {
               image: function(value) {
                 if (value) {
                   console.log(value);
-                  document.getElementById('btnUpload').click();
+                  document.getElementById("btnUpload").click();
                 } else {
                   this.quill.format("image", false);
                 }
               },
-              video:function(v){
+              video: function(v) {
                 if (v) {
                   alert("不支持上传视频");
-                } 
+                }
               },
-              link:function(v){
+              link: function(v) {
                 if (v) {
-                  var href = prompt('Enter the URL');
-                   this.quill.format("link", href);
-
-                } 
+                  var href = prompt("Enter the URL");
+                  this.quill.format("link", href);
+                }
               }
             }
           }
-        }        
+        }
       },
       newsClassOption: [
         {
@@ -279,95 +302,215 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    sendNotice(){
-      if(this.notice.newsTitle==null){
+    getTreeData(sendType){
+       //读取公司，部门数据
+     this.$api
+        .post({
+          url: "/noticeManage/common/getTreeForNotice/"+sendType,
+          //headers: { "Content-Type": "application/json" },
+          token: false
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.treeData=result.data;
+          } else {
+            console.log("发送公告结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("发送公告结果");
+          console.log(e);
+        });
+    },
+    sendTypeSelectChange(sendType) {
+      console.log(sendType);
+      if(sendType==3){//全员发送
+        this.treeData=[
+          {
+            "id": "1,0",
+            "parentId": "0,0",
+            "labelName": "全员发送",
+            "disabled":true
+           }];
+      }else{
+        this.getTreeData(sendType);
+      }
+    },
+    handleCheckChange(data, checked, indeterminate) {
+      console.log(data, checked, indeterminate);
+    },
+    handleNodeClick(data) {
+      console.log(data);
+    },
+    loadNode(node, resolve) {
+      // if (node.level === 0) {
+      //   return resolve([{ name: "region1" }, { name: "region2" }]);
+      // }
+      // if (node.level > 3) return resolve([]);
+      // var hasChild;
+      // if (node.data.name === "region1") {
+      //   hasChild = true;
+      // } else if (node.data.name === "region2") {
+      //   hasChild = false;
+      // } else {
+      //   hasChild = Math.random() > 0.5;
+      // }
+      // setTimeout(() => {
+      //   var data;
+      //   if (hasChild) {
+      //     data = [
+      //       {
+      //         name: "zone" + this.count++
+      //       },
+      //       {
+      //         name: "zone" + this.count++
+      //       }
+      //     ];
+      //   } else {
+      //     data = [];
+      //   }
+      //   resolve(data);
+      // }, 500);
+    },
+    getCheckedData(){//获取左侧树选中的信息
+       //let checkedData=this.$refs.treeNotice.getCheckedKeys();
+       let data=this.$refs.treeNotice.getCheckedNodes();
+       this.notice.receiveDeptIds=[];//选中的部门
+       this.notice.receiveCompanyIds=[];//选中的公司
+       this.notice.receivePositionIds=[];//选中的职位
+       this.notice.receiveAcountIds=[]; //选中的人员
+       if(data.constructor === Array&&data.length>0){
+          data.forEach((item,index,array)=>{
+            if(this.notice.sendType==0){//按单独发送
+              if(item.type==2){
+                this.notice.receiveAcountIds.push(item.businessId);
+              }
+            }else if(this.notice.sendType==1){//按职位发送
+              if(item.type==3){
+                  this.notice.receivePositionIds.push(item.businessId);
+              }
+            }else if(this.notice.sendType==2){//按部门发送
+              if(item.type==1){
+                  this.notice.receiveDeptIds.push(item.businessId);
+              }
+            }else if(this.notice.sendType==4){//按公司发送
+              if(item.type==0){
+                  this.notice.receiveCompanyIds.push(item.businessId);
+               }
+            }
+          })
+       }
+       if(this.notice.receivePositionIds.length==0&&this.notice.receiveDeptIds.length==0&&this.notice.receiveCompanyIds.length==0&&this.notice.receiveAcountIds.length==0){
+         return false;
+       }else{
+         return true;
+       }
+    },
+    sendNotice() {
+      if (this.notice.newsTitle == null) {
         this.$message({
           showClose: true,
-          message: '公告标题不能为空哟',
-          type: 'warning'
+          message: "公告标题不能为空哟",
+          type: "warning"
         });
         return;
       }
-      if(this.notice.newsContent==null){
+      if (this.notice.newsContent == null) {
         this.$message({
           showClose: true,
-          message: '公告内容不能为空空哟',
-          type: 'warning'
+          message: "公告内容不能为空空哟",
+          type: "warning"
         });
         return;
       }
-      if(this.notice.newsClass==null){
+      if (this.notice.newsClass == null) {
         this.$message({
           showClose: true,
-          message: '公告类型要选择哟',
-          type: 'warning'
+          message: "公告类型要选择哟",
+          type: "warning"
         });
         return;
       }
-      if(this.notice.newsType==null){
+      if (this.notice.newsType == null) {
         this.$message({
           showClose: true,
-          message: '公告类别要选择哟',
-          type: 'warning'
+          message: "公告类别要选择哟",
+          type: "warning"
         });
         return;
       }
-      if(this.notice.sendWay==null){
+      if (this.notice.sendWay == null) {
         this.$message({
           showClose: true,
-          message: '发送渠道要选择哟',
-          type: 'warning'
+          message: "发送渠道要选择哟",
+          type: "warning"
         });
         return;
       }
-      console.log(this.notice);
-      this.notice.addPer=44430;//发送人
-      this.notice.receiveAcountIds=[44430];//接收人id
-      this.$api.post({
-        url: '/noticeManage/common/sendNoticeReady',
-        data: this.notice,
-        token: false,
-        headers: { "Content-Type": "application/json" }
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          this.$message({message:result.message});
-        } else {
-          console.log("发送公告结果：" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("发送公告结果");
-        console.log(e);
-      })
+      console.log("【【【】】】");
+      if(this.notice.sendType!=3&&!this.getCheckedData()){
+          this.$message({
+          showClose: true,
+          message: "请在左侧树中勾选公告接收者",
+          type: "warning"
+        });
+        return;
+      }
+      this.notice.addPer = 44430; //发送人
+      //this.notice.receiveAcountIds = [44430]; //接收人id
+      this.$api
+        .post({
+          url: "/noticeManage/common/sendNoticeReady",
+          data: this.notice,
+          token: false,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.$message({ message: result.message });
+          } else {
+            console.log("发送公告结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("发送公告结果");
+          console.log(e);
+        });
     },
     handleAvatarSuccess(res, file) {
-        // 如果上传成功
-        if (res.code==200) {
-          let imageUrl = res.data.url;
+      // 如果上传成功
+      if (res.code == 200) {
+        let imageUrl = res.data.url;
         // 获取富文本组件实例
         let quill = this.$refs.QuillEditor.quill;
-          // 获取光标所在位置
-          let length = quill.getSelection().index;
-          // 插入图片，imageUrl为服务器返回的图片链接地址
-          quill.insertEmbed(length, "image", imageUrl);
-          // 调整光标到最后
-          quill.setSelection(length + 1);
-        } else {
-          // 提示信息，需引入Message
-          alert("图片插入失败");
-        }
+        // 获取光标所在位置
+        let length = quill.getSelection().index;
+        // 插入图片，imageUrl为服务器返回的图片链接地址
+        quill.insertEmbed(length, "image", imageUrl);
+        // 调整光标到最后
+        quill.setSelection(length + 1);
+      } else {
+        // 提示信息，需引入Message
+        alert("图片插入失败");
       }
+    }
   },
   created() {
-    this.uploadUrl=this.$api.baseUrl()+"/draft_house/picture";
+    this.uploadUrl = this.$api.baseUrl() + "/draft_house/picture";
     console.log(this.uploadUrl);
   },
   mounted() {
-    this.quill = this.$refs.QuillEditor.quill;
+    this.quill = this.$refs.QuillEditor.quill;    
   }
 };
 </script>
