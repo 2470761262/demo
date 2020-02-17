@@ -362,6 +362,30 @@ export default new Router({
           component: () =>
             import(/* webpackChunkName: "addConfig" */ "@/pages/addConfigObject.vue")
         },
+        {
+          //买卖房源详情
+          path: "/menuFrame/houseDetails",
+          name: "houseDetails",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "房源管理"
+              },
+              {
+                path: "/menuFrame/BsAgentHouseTbl",
+                name: "房源列表"
+              },
+              {
+                path: "/menuFrame/houseDetails",
+                name: "房源详情"
+              },
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "addConfig" */ "@/pages/houseDetails.vue")
+        }
       ]
     }
   ]
