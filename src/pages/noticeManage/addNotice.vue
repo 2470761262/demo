@@ -55,6 +55,8 @@
             <div class="treeTitle">人员形式</div>
             <div class="treeContainer">
               <el-tree
+                node-key="id"
+                ref="treeNotice"
                 :props="propsTreeConfig"
                 show-checkbox
                 :data="treeData"
@@ -172,20 +174,30 @@ export default {
     return {
       propsTreeConfig: {
         label: "labelName",
-        children: "childrenNodes"
+        children: "childrenNodes",
+        isLeaf:""
       },
-      treeData: [],
+      treeData: [
+          {
+            "id": "1,0",
+            "parentId": "0,0",
+            "labelName": "全员发送",
+            "disabled":true
+           }],
       quill: null,
       uploadUrl: "",
       notice: {
         newsTitle: null,
         newsContent: null,
         addPer: null, //44430,
-        receiveAcountIds: null, //[44430],
+        receiveDeptIds:null,//选中的部门
+        receiveCompanyIds:null,//选中的公司
+        receivePositionIds:null,//选中的职位
+        receiveAcountIds: null, //选中的人员
         sendWay: null,
         newsClass: null,
         newsType: null,
-        sendType: null
+        sendType: '3'
       },
       editorOption: {
         placeholder: "请输入公告内容",
@@ -317,7 +329,17 @@ export default {
     },
     sendTypeSelectChange(sendType) {
       console.log(sendType);
-      this.getTreeData(sendType);
+      if(sendType==3){//全员发送
+        this.treeData=[
+          {
+            "id": "1,0",
+            "parentId": "0,0",
+            "labelName": "全员发送",
+            "disabled":true
+           }];
+      }else{
+        this.getTreeData(sendType);
+      }
     },
     handleCheckChange(data, checked, indeterminate) {
       console.log(data, checked, indeterminate);
@@ -354,6 +376,40 @@ export default {
       //   }
       //   resolve(data);
       // }, 500);
+    },
+    getCheckedData(){//获取左侧树选中的信息
+       //let checkedData=this.$refs.treeNotice.getCheckedKeys();
+       let data=this.$refs.treeNotice.getCheckedNodes();
+       this.notice.receiveDeptIds=[];//选中的部门
+       this.notice.receiveCompanyIds=[];//选中的公司
+       this.notice.receivePositionIds=[];//选中的职位
+       this.notice.receiveAcountIds=[]; //选中的人员
+       if(data.constructor === Array&&data.length>0){
+          data.forEach((item,index,array)=>{
+            if(this.notice.sendType==0){//按单独发送
+              if(item.type==2){
+                this.notice.receiveAcountIds.push(item.businessId);
+              }
+            }else if(this.notice.sendType==1){//按职位发送
+              if(item.type==3){
+                  this.notice.receivePositionIds.push(item.businessId);
+              }
+            }else if(this.notice.sendType==2){//按部门发送
+              if(item.type==1){
+                  this.notice.receiveDeptIds.push(item.businessId);
+              }
+            }else if(this.notice.sendType==4){//按公司发送
+              if(item.type==0){
+                  this.notice.receiveCompanyIds.push(item.businessId);
+               }
+            }
+          })
+       }
+       if(this.notice.receivePositionIds.length==0&&this.notice.receiveDeptIds.length==0&&this.notice.receiveCompanyIds.length==0&&this.notice.receiveAcountIds.length==0){
+         return false;
+       }else{
+         return true;
+       }
     },
     sendNotice() {
       if (this.notice.newsTitle == null) {
@@ -396,9 +452,17 @@ export default {
         });
         return;
       }
-      console.log(this.notice);
+      console.log("【【【】】】");
+      if(this.notice.sendType!=3&&!this.getCheckedData()){
+          this.$message({
+          showClose: true,
+          message: "请在左侧树中勾选公告接收者",
+          type: "warning"
+        });
+        return;
+      }
       this.notice.addPer = 44430; //发送人
-      this.notice.receiveAcountIds = [44430]; //接收人id
+      //this.notice.receiveAcountIds = [44430]; //接收人id
       this.$api
         .post({
           url: "/noticeManage/common/sendNoticeReady",
