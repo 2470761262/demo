@@ -100,7 +100,8 @@ import { mapState } from "vuex";
 export default {
   components: {
     basicInformation,
-    supplement: () => componentsFactory("addHouse/supplement") //补充信息
+    supplement: () => componentsFactory("addHouse/supplement"), //补充信息
+    exploration: () => componentsFactory("addHouse/exploration") //实勘图片/视频
   },
   directives: {
     scrollTop: {
@@ -120,11 +121,11 @@ export default {
   },
   data () {
     return {
-      componentName: "basicInformation",
+      componentName: "exploration",
       stepsList: [
         { title: "基础信息", componentName: "basicInformation" },
         { title: "补充信息(非必填)", componentName: "supplement" },
-        { title: "实勘图片/视频", componentName: "" },
+        { title: "实勘图片/视频", componentName: "exploration" },
         { title: "房源验真", componentName: "" }
       ],
       prevText: "重置",
@@ -139,7 +140,6 @@ export default {
       if (this.stepsActiveIndex > 0) {
         this.componentName = this.stepsList[--this.stepsActiveIndex].componentName;
       }
-      console.log(this.componentName, this.stepsActiveIndex);
     },
     //下一步
     async  nextPage () {
@@ -148,10 +148,15 @@ export default {
       this.butLoading = true;
       switch (comName) {
         case "basicInformation":
-          //flag = await this.$refs.com.validateAll();
+          flag = await this.$refs.com.validateAll();
+          break;
+        case "supplement":
+          flag = await this.$refs.com.validateAll();
+          break;
+        case "supplement":
+          flag = await this.$refs.com.validateAll();
           break;
       }
-      flag = true;
       this.butLoading = false;
       if (this.stepsActiveIndex < this.stepsList.length && flag) {
         this.componentName = this.stepsList[++this.stepsActiveIndex].componentName;

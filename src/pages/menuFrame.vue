@@ -57,9 +57,9 @@ export default {
     asideNav,
     headerContent
   },
-  computed: {
-    resultRouteArray () {
-      return this.$route.meta.routeArray;
+  data () {
+    return {
+      resultRouteArray: this.$route.meta.routeArray
     }
   },
   created () {

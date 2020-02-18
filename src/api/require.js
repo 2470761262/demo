@@ -34,8 +34,9 @@ http.interceptors.response.use(function (response) {
 //请求对象
 let ApiData = {
   post (arg) {
-    if (!arg.method)
+    if (!arg.method) {
       arg.method = 'POST';
+    }
     let sendConfig = Object.assign({ token: true }, arg);
     if (sendConfig.qs && sendConfig.qs == true) // 格式化表单数据
       sendConfig.data = qs.stringify(sendConfig.data);
@@ -48,11 +49,11 @@ let ApiData = {
     })
   },
   put (arg) {
-    arg.methods = 'PUT';
+    arg.method = 'PUT';
     return this.post.call(this, arg);
   },
-  delete () {
-    arg.methods = 'DELETE';
+  delete (arg) {
+    arg.method = 'DELETE';
     return this.post.call(this, arg);
   },
   get (arg) {

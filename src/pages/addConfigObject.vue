@@ -58,12 +58,17 @@
           <div class="left-input-container">
             <span>参数编号-参数名称-参数类型</span>
           <div>
+<<<<<<< HEAD
              {{configId}}-{{notice.configName}}-{{notice.configNo}}
+=======
+             {{configId}}-{{configName}}-{{configNo}}
+>>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
             </div>
           
           </div>
            <div class="left-input-container">
             <span>公司参数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<<<<<<< HEAD
             <el-select v-model="notice.comId" placeholder="请选择">
               <el-option
                 v-for="item in company"
@@ -93,6 +98,37 @@
                 :label="item.label"
                 :value="item.value"
               ></el-option>
+=======
+           
+          </div>
+         <div class="left-input-container">
+            <span>参数范围&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.configNo"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
+          </div>
+           <div class="left-input-container">
+            <span>关联对象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+           <el-select
+            v-model="notice.configObject"
+            >
+            <el-option value="0">
+                默认
+            </el-option>
+             <el-option value="1">
+                人员
+            </el-option>
+             <el-option value="2">
+                部门
+            </el-option>
+             <el-option value="3">
+                岗位
+            </el-option>
+>>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
             </el-select>
           </div>
            <div class="left-input-container">
@@ -147,6 +183,7 @@
           </div>
            <div class="left-input-container">
             <span>时间单位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<<<<<<< HEAD
            <el-select v-model="notice.unit" placeholder="请选择">
               <el-option
                 v-for="item in unit"
@@ -165,6 +202,20 @@
                 :label="item.label"
                 :value="item.value"
               ></el-option>
+=======
+            <el-select
+            v-model="unit"
+            >
+            <el-option value="0">
+                小时
+            </el-option>
+             <el-option value="1">
+                天
+            </el-option>
+             <el-option value="2">
+                月
+            </el-option>
+>>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
             </el-select>
           </div>
         </el-header>
@@ -215,9 +266,13 @@ export default {
       paraNum1:null,
       paraNum2:null,
       paraNum3:null,
+<<<<<<< HEAD
       unit:null,
       comId:"1",
       paraIsAllowed:null,
+=======
+      comId:"1",
+>>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
       configObject:null,
        paraNum4:null,
         newsTitle: null,
@@ -263,6 +318,7 @@ export default {
           }
         }        
       },
+<<<<<<< HEAD
       unit: [
         {
           value: "0",
@@ -334,10 +390,39 @@ parRange: [
   company:[
 
   ]
+=======
+      newsClassOption: [
+        {
+          value: "1",
+          label: "买卖房源"
+        },
+        {
+          value: "2",
+          label: "买卖客户"
+        }
+        ,
+         {
+          value: "3",
+          label: "租赁房源"
+        },
+         {
+          value: "4",
+          label: "租赁客户"
+        }
+        ,
+         {
+          value: "5",
+          label: "用户管理"
+        }
+      ],
+
+
+>>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
     };
   },
   watch: {},
   computed: {},
+<<<<<<< HEAD
    mounted () {
     this.companyLsit(1);
   },
@@ -346,6 +431,10 @@ parRange: [
     sendNotice(){
       let that= this.notice;
       console.log(this.notice);
+=======
+  methods: {
+    sendNotice(){
+>>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
       if(this.notice.comId==null){
         this.$message({
           showClose: true,
@@ -362,7 +451,18 @@ parRange: [
         });
         return;
       }
+<<<<<<< HEAD
 
+=======
+      if(this.notice.configMemo==null){
+        this.$message({
+          showClose: true,
+          message: '参数编号',
+          type: 'warning'
+        });
+        return;
+      }
+>>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
       if(this.notice.paraNum4==null){
         this.$message({
           showClose: true,
@@ -394,6 +494,7 @@ if(this.notice.paraNum1==null){
         });
         return;
       }
+<<<<<<< HEAD
       if(this.notice.unit==null){
         this.$message({
           showClose: true,
@@ -418,6 +519,16 @@ if(this.notice.paraNum1==null){
           addName:"35491",
           comId:that.comId,
           unit:that.unit
+=======
+      this.$api.get({
+        url: '/Set/companyAdd',
+        data: {
+          sysParType:this.notice.newsClass,
+          sysParNo:this.notice.configNo,
+          sysParName:this.notice.configMemo,
+          memo:this.notice.configName,
+          addName:"35491",
+>>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
         },
         token: false,
         headers: { "Content-Type": "application/json" }
@@ -441,6 +552,7 @@ if(this.notice.paraNum1==null){
         console.log(e);
       })
     },
+<<<<<<< HEAD
     companyLsit(id){
 this.$api.get({
         url: '/newCompany',
@@ -472,6 +584,13 @@ this.$api.get({
       this.notice.configNo=this.$route.query.sysParNo;
       this.notice.configName=this.$route.query.sysParName;
      
+=======
+
+  },
+ created() {
+      this.configId=this.$route.query.configId;
+      console.log(this.$route.query.configId);
+>>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
   },
  
 };
