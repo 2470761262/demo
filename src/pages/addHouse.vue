@@ -73,7 +73,8 @@
                      ref="com"></component>
         </div>
       </div>
-      <div class="page-contenr-but">
+      <div class="page-contenr-but"
+           v-if="stepsActiveIndex!=4">
         <el-button-group>
           <el-button type="primary"
                      @click="prevPage"
@@ -102,7 +103,7 @@ export default {
     basicInformation,
     supplement: () => componentsFactory("addHouse/supplement"), //补充信息
     exploration: () => componentsFactory("addHouse/exploration"), //实勘图片/视频
-    exploration: () => componentsFactory("addHouse/addHouseSuccess") //实勘图片/视频
+    addHouseSuccess: () => componentsFactory("addHouse/addHouseSuccess") //实勘图片/视频
   },
   directives: {
     scrollTop: {
@@ -122,7 +123,7 @@ export default {
   },
   data () {
     return {
-      componentName: "addHouseSuccess",
+      componentName: "basicInformation",
       stepsList: [
         { title: "基础信息", componentName: "basicInformation" },
         { title: "补充信息(非必填)", componentName: "supplement" },
@@ -154,7 +155,7 @@ export default {
         case "supplement":
           flag = await this.$refs.com.validateAll();
           break;
-        case "supplement":
+        case "exploration":
           flag = await this.$refs.com.validateAll();
           break;
       }

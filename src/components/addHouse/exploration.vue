@@ -308,8 +308,8 @@
     <div class="page-cell-title">房源视频</div>
     <!-- 房源视频 -->
     <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+         :class="{'after-tips':errorBags.has('houseVideo')}"
+         :data-tips="errorBags.first('houseVideo')">
       <div class="page-cell-item">
         <div class="item-before item-before-top"
              data-before="*">室内视频</div>
@@ -373,6 +373,9 @@ export default {
       return this.step
     }
   },
+  created () {
+    this.setValidate();
+  },
   data () {
     return {
       dialogVisible: false,
@@ -395,6 +398,20 @@ export default {
     }
   },
   methods: {
+    setValidate () {
+      this.$validator.attach("houseVideo", "required");
+      const dictionary = {
+        zh_CN: {
+          messages: {
+            required: field => field + "不能为空"
+          },
+          attributes: {
+            houseVideo: "房源视频"
+          }
+        }
+      };
+      this.$validator.updateDictionary(dictionary);
+    },
     removeVideo (file) {
       this.fileList.video = this.fileList.video.filter((item) => {
         return item.url != file.url;
@@ -545,7 +562,13 @@ export default {
       this.showFlag = true;
     },
     validateAll () {
-      return false;
+      let that = this;
+      return this.$validator.validateAll({
+        communityDesc: that.fileList.list1,
+        houseVideo: that.fileList.video
+      }).then((e) => {
+        return e;
+      });
     }
   },
 }
