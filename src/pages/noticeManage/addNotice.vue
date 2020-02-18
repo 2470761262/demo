@@ -54,7 +54,6 @@
     margin-left: 5px;
     margin-top: 5px;
     height: 95%;
-    background-color: red;
     width: 90%;
     overflow: auto;
     li {
@@ -614,6 +613,7 @@ export default {
             console.log(result.message);
             console.log(result.data);
             this.$message({ message: result.message });
+            this.$router.push({ path: "/menuFrame/noticeManageList"});
           } else {
             console.log("发送公告结果：" + result.message);
             alert(result.message);
