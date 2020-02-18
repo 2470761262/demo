@@ -16,7 +16,7 @@
                    @click="toAddConfig">添加系统规则</el-button>
       </div>
     </template>
-    <template >
+    <template v-slot:tableColumn="cell">
          
       <!-- <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
@@ -226,7 +226,7 @@ export default {
       memo:memo
       } });
     },toList (id,sysParNo,sysParName,sysParType,memo) {
-       console.log(memo);
+       console.log(id);
       this.$router.push({ path: "/menuFrame/configObjectList", 
       query: { configId:id,
       sysParNo:sysParNo,

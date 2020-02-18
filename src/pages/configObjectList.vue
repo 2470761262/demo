@@ -16,7 +16,7 @@
                    @click="toAddConfig">添加系统规则</el-button>
       </div>
     </template>
-    <template >
+    <template v-slot:tableColumn="cell">
          
       <!-- <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
@@ -192,12 +192,9 @@ export default {
       this.queryVerifyHouseDatas(1);
     },
     queryVerifyHouseDatas (currentPage) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage,sysParId:this.configId };
+      let params = { limit: this.pageJson.pageSize, page: currentPage,sysParId:this.$route.query.configId };
       console.log(params);
       let that = this;
-      if (this.queryData.newsTitle != null) {
-        params.newsTitle = this.queryData.newsTitle;
-      }
       this.$api.get({
         url: '/Set/list',
         data: params,
@@ -208,7 +205,6 @@ export default {
         that.loading = false; 
         if (result.code == 200) {
           console.log(result.data);
-          that.tableData ="";
           
          for(var i=0;i<result.data.list.length;i++){
             
@@ -330,7 +326,8 @@ export default {
     },
      created() {
       this.configId=this.$route.query.configId;
-    
+      queryVerifyHouseDatas();
+    console.log(this.configId);
      
   },
     handleSizeChange (val) {
