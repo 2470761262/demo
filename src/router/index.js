@@ -102,7 +102,7 @@ export default new Router({
               },
               {
                 path: "/menuFrame/myHouseList",
-                name: "房源列表"
+                name: "我的房源列表"
               }
             ]
           },
