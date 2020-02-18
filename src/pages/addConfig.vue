@@ -249,10 +249,6 @@ export default {
 
 if(this.notice.configId==null){
 
-<<<<<<< HEAD
-  console.log( this.notice.configId);
-=======
->>>>>>> 4fceb6a161bb4ae90e067168e72e861a291b5372
       this.$api.get({
         url: '/Set/add',
         data: {
