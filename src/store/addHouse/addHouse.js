@@ -52,7 +52,7 @@ export default {
         buildingTime: ""//竣工时间
       },
       step3: {
-
+        communityDesc: "",//小区介绍
       }
     }
   },

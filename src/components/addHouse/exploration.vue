@@ -24,6 +24,13 @@
   text-align: center;
   margin-top: 20px;
 }
+.videoClass {
+  max-width: 100%;
+  height: 600px;
+  margin: 0 auto;
+  display: block;
+  object-fit: scale-down;
+}
 </style>
 <template>
   <div class="page-cell">
@@ -38,8 +45,11 @@
         <el-input type="textarea"
                   resize="none"
                   maxlength="20"
+                  v-validate="'required|max:20'"
+                  data-vv-name="communityDesc"
+                  data-vv-as="小区介绍"
                   placeholder="请输入小区介绍"
-                  v-model="textarea2">
+                  v-model="formData.communityDesc">
         </el-input>
         <div class="textarea-tips">
           {{textarea2.length}}/{{20}}
@@ -47,9 +57,7 @@
       </div>
     </div>
     <!-- 户型介绍 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div class="form-error-tips">
       <div class="page-cell-item">
         <div class="item-before item-before-top">户型介绍</div>
         <el-input type="textarea"
@@ -64,9 +72,7 @@
       </div>
     </div>
     <!-- 税费解析 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div class="form-error-tips">
       <div class="page-cell-item">
         <div class="item-before item-before-top">税费解析</div>
         <el-input type="textarea"
@@ -81,9 +87,7 @@
       </div>
     </div>
     <!-- 核心卖点 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div class="form-error-tips">
       <div class="page-cell-item">
         <div class="item-before item-before-top">核心卖点</div>
         <el-input type="textarea"
@@ -104,9 +108,7 @@
               show-icon>
     </el-alert>
     <!-- 外景图 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div class="form-error-tips">
       <div class="page-cell-item">
         <div class="item-before item-before-top">外景图</div>
         <div>
@@ -139,9 +141,7 @@
       </div>
     </div>
     <!-- 卧室 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div class="form-error-tips">
       <div class="page-cell-item">
         <div class="item-before item-before-top">卧室</div>
         <div>
@@ -174,9 +174,7 @@
       </div>
     </div>
     <!-- 内景图 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div class="form-error-tips">
       <div class="page-cell-item">
         <div class="item-before item-before-top">内景图</div>
         <div>
@@ -209,9 +207,7 @@
       </div>
     </div>
     <!-- 厨房 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div class="form-error-tips">
       <div class="page-cell-item">
         <div class="item-before item-before-top">厨房</div>
         <div>
@@ -244,9 +240,7 @@
       </div>
     </div>
     <!-- 客厅 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div class="form-error-tips">
       <div class="page-cell-item">
         <div class="item-before item-before-top">客厅</div>
         <div>
@@ -279,9 +273,7 @@
       </div>
     </div>
     <!-- 户型图 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div class="form-error-tips">
       <div class="page-cell-item">
         <div class="item-before item-before-top">户型图</div>
         <div>
@@ -323,26 +315,29 @@
              data-before="*">室内视频</div>
         <div>
           <div class="page-cell-item">
-            <el-upload drag
+            <el-upload ref="videoUpload"
+                       drag
                        name="video"
-                       :on-preview="handlePreview"
-                       :limit="1"
+                       :limit="3"
+                       :on-remove="removeVideo"
+                       :on-preview="handlePreviewVideo"
+                       accept=".mp4"
+                       :file-list="fileList.video"
+                       :auto-upload="false"
                        action="''"
                        multiple>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              <!-- <video v-if="videoForm.showVideoPath !='' && !videoFlag"
-                     v-bind:src="videoForm.showVideoPath"
-                     class="avatar video-avatar"
-                     controls="controls">
-                您的浏览器不支持视频播放
-              </video> -->
-              <!-- <i v-else-if="videoForm.showVideoPath =='' && !videoFlag"
-                 class="el-icon-plus avatar-uploader-icon"></i>
-              <el-progress v-if="videoFlag == true"
-                           type="circle"
-                           v-bind:percentage="videoUploadPercent"
-                           style="margin-top:7px;"></el-progress> -->
+              <template v-if="progressFlag">
+                <el-progress type="circle"
+                             :percentage="progressNum"
+                             status="success"></el-progress>
+              </template>
+              <template v-if="!progressFlag">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+                <el-button type="primary"
+                           size="mini"
+                           @click.stop="uploadSectionFileVideo">提交服务器</el-button>
+              </template>
             </el-upload>
             <div class="phone-upload">
               <div class="Division">or</div>
@@ -360,7 +355,12 @@
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%"
            :src="dialogImageUrl"
-           alt="">
+           alt=""
+           v-if="showFlag">
+      <video :src="dialogImageUrl"
+             v-if="!showFlag"
+             controls="controls"
+             class="videoClass">您的浏览器不支持此视频播放</video>
     </el-dialog>
   </div>
 </template>
@@ -377,6 +377,9 @@ export default {
     return {
       dialogVisible: false,
       dialogImageUrl: '',
+      showFlag: true,
+      progressFlag: false,
+      progressNum: 0,
       fileList: {
         list1: [],
         list2: [],
@@ -384,6 +387,7 @@ export default {
         list4: [],
         list5: [],
         list6: [],
+        video: []
       },
       actionUrl: '',
       step: {},
@@ -391,6 +395,67 @@ export default {
     }
   },
   methods: {
+    removeVideo (file) {
+      this.fileList.video = this.fileList.video.filter((item) => {
+        return item.url != file.url;
+      })
+    },
+    // 上传图片前处理函数
+    uploadSectionFileVideo () {
+      console.log(this.$refs.videoUpload);
+      let that = this;
+      let allSize = 0;
+      this.$refs.videoUpload.uploadFiles.forEach((item, index) => {
+        if (item.size / 1024 / 1024 > 50) {
+          this.$message.error(`${index}号文件超过50M大小.已删除`);
+          this.$refs.videoUpload.uploadFiles.splice(index, 1);
+        } else {
+          allSize + item.size / 1024 / 1024 > 50;
+        }
+      })
+      if (allSize > 100) {
+        this.$message.error(`一次多文件上传最高100M,已超过大小`);
+      }
+      if (this.$refs.videoUpload.uploadFiles.length <= 0) {
+        return;
+      }
+      that.progressFlag = true;
+      let count = 0;
+      this.$refs.videoUpload.uploadFiles.forEach((item, index) => {
+        if (!item.id) {
+          count++;
+          let formData = new FormData();
+          formData.append('draftid', 1)
+          formData.append('file', item.raw)
+          this.$api.post({
+            url: "/draft_house/video",
+            headers: { "Content-Type": "multipart/form-data" },
+            data: formData,
+            onUploadProgress: progressEvent => { //静读条
+              let percent = (progressEvent.loaded / progressEvent.total * 100) | 0
+              that.progressNum = percent == 100 ? 90 : percent;
+            },
+          }).then((json) => {
+            let data = json.data.data;
+            that.fileList.video.push({ name: data.id, url: data.url, id: data.id });
+          }).then(() => {
+            that.progressNum = 100;
+            setTimeout(() => {
+              that.progressFlag = false;
+            }, 200)
+          }).catch(() => {
+            that.$message({
+              message: '不晓得为什么,反正失败了',
+              type: 'warning'
+            })
+            that.progressFlag = false;
+          })
+        }
+      })
+      if (count == 0) {
+        that.progressFlag = false;
+      }
+    },
     removeImg (file, fileList) {
       if (file.id) {
         this.fileList[file.listName] = this.fileList[file.listName].filter((item) => {
@@ -409,7 +474,7 @@ export default {
       let that = this;
       let formData = new FormData();
       formData.append('picClass', uploader.filename)
-      formData.append('draftid', "draftid")
+      formData.append('draftid', 1)
       formData.append('file', uploader.file)
       this.$api.post({
         url: "/draft_house/picture",
@@ -463,9 +528,21 @@ export default {
       //  return isJPG && isSize;
       return isJPG;
     },
-    handlePreview (file) {
-      this.dialogImageUrl = file.url;
+    handlePreviewVideo (file) {
+      if (!file.id) {
+        this.dialogImageUrl = window.URL.createObjectURL(file.raw);// file.url;
+      } else {
+        this.dialogImageUrl = file.url;
+      }
+
       this.dialogVisible = true;
+      this.showFlag = false;
+
+    },
+    handlePreview (file) {
+      this.dialogImageUrl = file.url;// file.url;
+      this.dialogVisible = true;
+      this.showFlag = true;
     },
     validateAll () {
       return false;

@@ -29,7 +29,8 @@
       </el-header>
     </el-container>
     <el-container class="page-cell-main">
-      <el-aside width="200px">
+      <el-aside width="200px"
+                v-if="asideNavFlag">
         <asideNav></asideNav>
       </el-aside>
       <el-main>
@@ -59,11 +60,16 @@ export default {
   },
   data () {
     return {
-      resultRouteArray: this.$route.meta.routeArray
+      resultRouteArray: this.$route.meta.routeArray,
+      asideNavFlag: true
     }
   },
   created () {
-
+    window.addEventListener('message', (e) => {
+      if (e.data.isXinIframe) {
+        this.asideNavFlag = false;
+      }
+    }, false);
   },
 }
 </script>

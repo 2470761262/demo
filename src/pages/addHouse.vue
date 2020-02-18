@@ -101,7 +101,8 @@ export default {
   components: {
     basicInformation,
     supplement: () => componentsFactory("addHouse/supplement"), //补充信息
-    exploration: () => componentsFactory("addHouse/exploration") //实勘图片/视频
+    exploration: () => componentsFactory("addHouse/exploration"), //实勘图片/视频
+    exploration: () => componentsFactory("addHouse/addHouseSuccess") //实勘图片/视频
   },
   directives: {
     scrollTop: {
@@ -121,12 +122,12 @@ export default {
   },
   data () {
     return {
-      componentName: "exploration",
+      componentName: "addHouseSuccess",
       stepsList: [
         { title: "基础信息", componentName: "basicInformation" },
         { title: "补充信息(非必填)", componentName: "supplement" },
         { title: "实勘图片/视频", componentName: "exploration" },
-        { title: "房源验真", componentName: "" }
+        { title: "房源验真", componentName: "addHouseSuccess" }
       ],
       prevText: "重置",
       nextText: "下一步",
