@@ -383,29 +383,29 @@ export default new Router({
             import(/* webpackChunkName: "addConfig" */ "@/pages/addConfigObject.vue")
         },
         {
-          //买卖房源详情
-          path: "/menuFrame/houseDetails",
-          name: "houseDetails",
+          //系统参数关联对象录入
+          path: "/menuFrame/configObjectList",
+          name: "configObjectList",
           meta: {
             isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
-                name: "房源管理"
+                name: "系统配置"
               },
               {
-                path: "/menuFrame/BsAgentHouseTbl",
-                name: "房源列表"
+                path: "/menuFrame/systemConfigList",
+                name: "系统参数配置表"
               },
               {
-                path: "/menuFrame/houseDetails",
-                name: "房源详情"
+                path: "/menuFrame/configObjectList",
+                name: "添加系统配置关联对象"
               },
             ]
           },
           component: () =>
-            import(/* webpackChunkName: "addConfig" */ "@/pages/houseDetails.vue")
-        }
+            import(/* webpackChunkName: "addConfig" */ "@/pages/configObjectList.vue")
+        },
       ]
     }
   ]

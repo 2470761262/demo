@@ -201,6 +201,7 @@ export default {
     },
     //前往多少页事件
     handleCurrentChange (e) {
+      console.log("1");
       this.$emit("handleCurrentChange", e);
     }
   }
