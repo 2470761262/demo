@@ -5,6 +5,7 @@
 .el-aside {
   border: 1px solid black;
   min-height: 600px;
+  overflow: auto;
 }
 .innerContainer {
   border: 1px solid red;
@@ -20,11 +21,15 @@
   background-color: bisque;
 }
 .left-input-container {
-  padding: 10px;
+  width: 50%;
+  float: left;
   font-size: 1rem;
   border-right: 1px solid black;
   border-left: 1px solid black;
   border-radius: 0.5rem;
+  div {
+    margin: 8px;
+  }
   .el-input {
     width: 80%;
   }
@@ -33,7 +38,36 @@
     margin-left: 5px;
   }
 }
-.el-main {
+.right-input-container {
+  position: relative;
+  width: 48%;
+  height: 200px;
+  border: 1px dotted black;
+  .selectedNodeTip {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    color: grey;
+  }
+  ul {
+    list-style: none;
+    margin-left: 5px;
+    margin-top: 5px;
+    height: 95%;
+    background-color: red;
+    width: 90%;
+    overflow: auto;
+    li {
+      border-radius: 3px;
+      background-color: lightgray;
+      border: 1px solid grey;
+      float: left;
+      padding: 2px;
+      margin: 2px;
+    }
+  }
+}
+.treeContainer {
 }
 .editorContainer {
   width: 100%;
@@ -59,9 +93,10 @@
                 ref="treeNotice"
                 :props="propsTreeConfig"
                 show-checkbox
+                :check-strictly="checkStrictly"
                 :data="treeData"
                 @node-expand="handellNodeExpand"
-                @node-click="handelNodeClick"
+                @node-click="handleNodeClick"
                 @check-change="handleCheckChange"
               ></el-tree>
             </div>
@@ -71,54 +106,62 @@
       <el-container class="innerContainer">
         <el-header>
           <div class="left-input-container">
-            <span>标题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="notice.newsTitle"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
+            <div>
+              <span>标题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <el-input
+                type="text"
+                placeholder="请输入内容"
+                v-model="notice.newsTitle"
+                maxlength="10"
+                show-word-limit
+              ></el-input>
+            </div>
+            <div>
+              <span>公告类型</span>
+              <el-select v-model="notice.newsClass" placeholder="请选择">
+                <el-option
+                  v-for="item in newsClassOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <span>公告类别</span>
+              <el-select v-model="notice.newsType" placeholder="请选择">
+                <el-option
+                  v-for="item in newsTypeOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </div>
+            <div>
+              <span>发送方式</span>
+              <el-select v-model="notice.sendType" placeholder="请选择" @change="sendTypeSelectChange">
+                <el-option
+                  v-for="item in sendTypeOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <span>发送渠道</span>
+              <el-select v-model="notice.sendWay" placeholder="请选择">
+                <el-option
+                  v-for="item in sendWayOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </div>
           </div>
-          <div class="left-input-container">
-            <span>公告类型</span>
-            <el-select v-model="notice.newsClass" placeholder="请选择">
-              <el-option
-                v-for="item in newsClassOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-            <span>公告类别</span>
-            <el-select v-model="notice.newsType" placeholder="请选择">
-              <el-option
-                v-for="item in newsTypeOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>
-          <div class="left-input-container">
-            <span>发送方式</span>
-            <el-select v-model="notice.sendType" placeholder="请选择" @change="sendTypeSelectChange">
-              <el-option
-                v-for="item in sendTypeOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-            <span>发送渠道</span>
-            <el-select v-model="notice.sendWay" placeholder="请选择">
-              <el-option
-                v-for="item in sendWayOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+          <div class="right-input-container right">
+            <div class="selectedNodeTip">已选择</div>
+            <ul>
+              <li v-for="item in selectedNodeDatas" :key="item.nodeId">{{item.labelName}}</li>
+            </ul>
           </div>
         </el-header>
         <el-main>
@@ -174,6 +217,7 @@ export default {
   props: {},
   data() {
     return {
+      checkStrictly: false,
       propsTreeConfig: {
         label: "labelName",
         children: "childrenNodes",
@@ -187,6 +231,7 @@ export default {
           disabled: true
         }
       ],
+      selectedNodeDatas: [], //选中的节点数据
       hasQueryAccountNode: [], //存放已经加载过员工的节点，防止二次加载读取
       quill: null,
       uploadUrl: "",
@@ -345,11 +390,34 @@ export default {
         });
     },
     sendTypeSelectChange(sendType) {
-      console.log(sendType);
+      this.checkStrictly = true;
+      this.selectedNodeDatas = [];
       this.getTreeData(sendType);
     },
-    handleCheckChange(data, checked, indeterminate) {
+    handleCheckChange(item, checked, indeterminate) {
       //console.log(data, checked, indeterminate);
+      //去除勾选
+      if(!checked){
+        this.selectedNodeDatas.splice(this.selectedNodeDatas.findIndex(t => t.nodeId === item.nodeId), 1);
+        return;
+      }
+      //已经有了，就不加进去
+      if (this.selectedNodeDatas.find(function(x) {
+          return x.nodeId == item.nodeId;
+        }) == undefined
+      ) {
+            if (this.notice.sendType == 0 && item.type == 2) {
+            //按单独发送， 员工
+            this.selectedNodeDatas.push(item);
+          } else if (this.notice.sendType == 1 && item.type == 3) {
+            this.selectedNodeDatas.push(item);
+          } else if (this.notice.sendType == 2 && item.type == 1) {
+            this.selectedNodeDatas.push(item);
+          } else if (this.notice.sendType == 4 && item.type == 0) {
+            this.selectedNodeDatas.push(item);
+          }
+      }
+      
     },
     getAccountDataByHigher(businessId, type, successFun) {
       //读取公司或部门下面的员工
@@ -382,7 +450,11 @@ export default {
         });
     },
     appendAccountNode(data, node) {
-      if(data.type==2){//员工节点，不要加载
+      if (this.notice.sendType != 0) {//只有单独发送才要
+        return;
+      }
+      if (data.type == 2) {
+        //员工节点，不要加载
         return;
       }
       let that = this;
@@ -404,21 +476,16 @@ export default {
     handellNodeExpand(data, node, nodeComponent) {
       if (data.type == 0) {
         //展开公司节点
-        console.log("展开了公司节点：" + data.labelName);      
-        this.appendAccountNode(data,node);
+        console.log("展开了公司节点：" + data.labelName);
+        this.appendAccountNode(data, node);
       } else if (data.type == 1) {
         //展开部门节点
         console.log("展开了部门节点：" + data.labelName);
       }
     },
-    handelNodeClick(data, node, nodeComponent) {
-      if (this.notice.sendType == 0) {
+    handleNodeClick(data, node, nodeComponent) {
         //单独发送，需要加载员工
-        this.appendAccountNode(data,node);
-      }
-    },
-    handleNodeClick(data) {
-      console.log(data);
+        this.appendAccountNode(data, node);
     },
     loadNode(node, resolve) {
       //只有设置了lazy属性才会生效此方法
@@ -438,16 +505,18 @@ export default {
     getCheckedData() {
       //获取左侧树选中的信息
       //let checkedData=this.$refs.treeNotice.getCheckedKeys();
-      let data = this.$refs.treeNotice.getCheckedNodes();
+      let selectedData = this.$refs.treeNotice.getCheckedNodes();
       this.notice.receiveDeptIds = []; //选中的部门
       this.notice.receiveCompanyIds = []; //选中的公司
       this.notice.receivePositionIds = []; //选中的职位
       this.notice.receiveAcountIds = []; //选中的人员
-      if (data.constructor === Array && data.length > 0) {
-        data.forEach((item, index, array) => {
+      this.selectedNodeDatas = [];
+      if (selectedData.constructor === Array && selectedData.length > 0) {
+        selectedData.forEach((item, index, array) => {
           if (this.notice.sendType == 0) {
             //按单独发送
             if (item.type == 2) {
+              //item.type =2员工，3职位，1部门，0公司
               this.notice.receiveAcountIds.push(item.businessId);
             }
           } else if (this.notice.sendType == 1) {
