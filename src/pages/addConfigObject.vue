@@ -13,7 +13,7 @@
   margin-top: 10px;
 }
 .el-top{
-    margin-top: 500px;
+    margin-top: 600px;
 }
 
 .treeTitle {
@@ -58,41 +58,41 @@
           <div class="left-input-container">
             <span>参数编号-参数名称-参数类型</span>
           <div>
-             {{configId}}-{{configName}}-{{configNo}}
+             {{configId}}-{{notice.configName}}-{{notice.configNo}}
             </div>
           
           </div>
            <div class="left-input-container">
             <span>公司参数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-           
+            <el-select v-model="notice.comId" placeholder="请选择">
+              <el-option
+                v-for="item in company"
+                :key="item.id"
+                :label="item.CompanyName"
+                :value="item.id"
+              ></el-option>
+            </el-select>
           </div>
          <div class="left-input-container">
             <span>参数范围&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="notice.configNo"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
+            <el-select v-model="notice.parRange" placeholder="请选择">
+              <el-option
+                v-for="item in parRange"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
           </div>
            <div class="left-input-container">
             <span>关联对象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-           <el-select
-            v-model="notice.configObject"
-            >
-            <el-option value="0">
-                默认
-            </el-option>
-             <el-option value="1">
-                人员
-            </el-option>
-             <el-option value="2">
-                部门
-            </el-option>
-             <el-option value="3">
-                岗位
-            </el-option>
+         <el-select v-model="notice.configObject" placeholder="请选择">
+              <el-option
+                v-for="item in configObject"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
            <div class="left-input-container">
@@ -147,18 +147,24 @@
           </div>
            <div class="left-input-container">
             <span>时间单位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select
-            v-model="unit"
-            >
-            <el-option value="0">
-                小时
-            </el-option>
-             <el-option value="1">
-                天
-            </el-option>
-             <el-option value="2">
-                月
-            </el-option>
+           <el-select v-model="notice.unit" placeholder="请选择">
+              <el-option
+                v-for="item in unit"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
+          </div>
+            <div class="left-input-container">
+            <span>是否允许&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+           <el-select v-model="notice.paraIsAllowed" placeholder="请选择">
+              <el-option
+                v-for="item in paraIsAllowed"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
         </el-header>
@@ -209,7 +215,9 @@ export default {
       paraNum1:null,
       paraNum2:null,
       paraNum3:null,
+      unit:null,
       comId:"1",
+      paraIsAllowed:null,
       configObject:null,
        paraNum4:null,
         newsTitle: null,
@@ -255,38 +263,89 @@ export default {
           }
         }        
       },
-      newsClassOption: [
+      unit: [
+        {
+          value: "0",
+          label: "小时"
+        },
         {
           value: "1",
-          label: "买卖房源"
-        },
-        {
+          label: "天"
+        }
+        ,
+         {
           value: "2",
-          label: "买卖客户"
-        }
-        ,
-         {
-          value: "3",
-          label: "租赁房源"
-        },
-         {
-          value: "4",
-          label: "租赁客户"
-        }
-        ,
-         {
-          value: "5",
-          label: "用户管理"
+          label: "月"
         }
       ],
+       paraIsAllowed: [
+        {
+          value: "-1",
+          label: "默认"
+        },
+        {
+          value: "1",
+          label: "允许"
+        }
+        ,
+         {
+          value: "0",
+          label: "不予许"
+        }
+      ],
+ configObject: [
+        {
+          value: "0",
+          label: "默认"
+        },
+        {
+          value: "1",
+          label: "人员"
+        }
+        ,
+         {
+          value: "2",
+          label: "部门"
+        } ,
+         {
+          value: "2",
+          label: "岗位"
+        }
+      ],
+parRange: [
+        {
+          value: "0",
+          label: "个人"
+        },
+        {
+          value: "1",
+          label: "部门"
+        }
+        ,
+         {
+          value: "2",
+          label: "部门名下"
+        } ,
+         {
+          value: "3",
+          label: "公司"
+        }
+      ],
+  company:[
 
-
+  ]
     };
   },
   watch: {},
   computed: {},
+   mounted () {
+    this.companyLsit(1);
+  },
   methods: {
+
     sendNotice(){
+      let that= this.notice;
+      console.log(this.notice);
       if(this.notice.comId==null){
         this.$message({
           showClose: true,
@@ -299,14 +358,6 @@ export default {
         this.$message({
           showClose: true,
           message: '参数名称',
-          type: 'warning'
-        });
-        return;
-      }
-      if(this.notice.configMemo==null){
-        this.$message({
-          showClose: true,
-          message: '参数编号',
           type: 'warning'
         });
         return;
@@ -342,14 +393,30 @@ if(this.notice.paraNum1==null){
         });
         return;
       }
+      if(this.notice.unit==null){
+        this.$message({
+          showClose: true,
+          message: '时间单位',
+          type: 'warning'
+        });
+        return;
+      }
       this.$api.get({
         url: '/Set/companyAdd',
         data: {
-          sysParType:this.notice.newsClass,
-          sysParNo:this.notice.configNo,
-          sysParName:this.notice.configMemo,
-          memo:this.notice.configName,
+          SysParObj:that.configObject,
+          sysParID:this.configId,
+          relationId:"0",
+          paraIsAllowed:that.paraIsAllowed,
+          parRange:that.parRange,
+          paraNum:that.paraNum1,
+          paraTwoNum:that.paraNum2,
+          paraNumStr:that.paraNum3,
+          paraNumFour:that.paraNum4,
+          remark:that.configMemo,
           addName:"35491",
+          comId:that.comId,
+          unit:that.unit
         },
         token: false,
         headers: { "Content-Type": "application/json" }
@@ -373,11 +440,37 @@ if(this.notice.paraNum1==null){
         console.log(e);
       })
     },
-
+    companyLsit(id){
+this.$api.get({
+        url: '/newCompany',
+        data: {
+         page:1,
+         offset:10,
+         limit:10000
+        },
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+        this.company=e.data.data.data;
+    console.log(this.company);
+        } else {
+          console.log("获取失败:" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("获取失败");
+        console.log(e);
+      })
+    },
   },
  created() {
       this.configId=this.$route.query.configId;
-      console.log(this.$route.query.configId);
+      this.notice.configNo=this.$route.query.sysParNo;
+      this.notice.configName=this.$route.query.sysParName;
+     
   },
  
 };

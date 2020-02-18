@@ -1,18 +1,29 @@
 <template>
   <list-page :parentData="$data"
-             @queryTabData="queryTabData"
+             
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-             <template v-slot:default>
+  <template v-slot:default>
       <div class="query-center-item">
+        <el-input placeholder="输入房源编号" clearable>
+       <template slot="prepend">房源编号</template>
+     </el-input>
+      </div>
+    <div class="query-center-item">
         <el-input placeholder="姓名"
                   clearable>
           <template slot="prepend">业主</template>
         </el-input>
       </div>
+<div class="query-center-item">
+        <el-input placeholder="业主电话"
+                  clearable>
+          <template slot="prepend">电话</template>
+        </el-input>
+      </div>
     </template>
-    <template v-slot:tableColumn="cell">
+    <template #tableColumn="cell">
       <!-- <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"

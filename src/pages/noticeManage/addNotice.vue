@@ -5,6 +5,7 @@
 .el-aside {
   border: 1px solid black;
   min-height: 600px;
+  overflow: auto;
 }
 .innerContainer {
   border: 1px solid red;
@@ -20,11 +21,15 @@
   background-color: bisque;
 }
 .left-input-container {
-  padding: 10px;
+  width: 50%;
+  float: left;
   font-size: 1rem;
   border-right: 1px solid black;
   border-left: 1px solid black;
   border-radius: 0.5rem;
+  div {
+    margin: 8px;
+  }
   .el-input {
     width: 80%;
   }
@@ -33,7 +38,35 @@
     margin-left: 5px;
   }
 }
-.el-main {
+.right-input-container {
+  position: relative;
+  width: 48%;
+  height: 200px;
+  border: 1px dotted black;
+  .selectedNodeTip {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    color: grey;
+  }
+  ul {
+    list-style: none;
+    margin-left: 5px;
+    margin-top: 5px;
+    height: 95%;
+    width: 90%;
+    overflow: auto;
+    li {
+      border-radius: 3px;
+      background-color: lightgray;
+      border: 1px solid grey;
+      float: left;
+      padding: 2px;
+      margin: 2px;
+    }
+  }
+}
+.treeContainer {
 }
 .editorContainer {
   width: 100%;
@@ -55,11 +88,14 @@
             <div class="treeTitle">人员形式</div>
             <div class="treeContainer">
               <el-tree
-                node-key="id"
+                node-key="nodeId"
                 ref="treeNotice"
                 :props="propsTreeConfig"
                 show-checkbox
+                :check-strictly="checkStrictly"
                 :data="treeData"
+                @node-expand="handellNodeExpand"
+                @node-click="handleNodeClick"
                 @check-change="handleCheckChange"
               ></el-tree>
             </div>
@@ -69,54 +105,62 @@
       <el-container class="innerContainer">
         <el-header>
           <div class="left-input-container">
-            <span>标题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="notice.newsTitle"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
+            <div>
+              <span>标题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+              <el-input
+                type="text"
+                placeholder="请输入内容"
+                v-model="notice.newsTitle"
+                maxlength="10"
+                show-word-limit
+              ></el-input>
+            </div>
+            <div>
+              <span>公告类型</span>
+              <el-select v-model="notice.newsClass" placeholder="请选择">
+                <el-option
+                  v-for="item in newsClassOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <span>公告类别</span>
+              <el-select v-model="notice.newsType" placeholder="请选择">
+                <el-option
+                  v-for="item in newsTypeOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </div>
+            <div>
+              <span>发送方式</span>
+              <el-select v-model="notice.sendType" placeholder="请选择" @change="sendTypeSelectChange">
+                <el-option
+                  v-for="item in sendTypeOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <span>发送渠道</span>
+              <el-select v-model="notice.sendWay" placeholder="请选择">
+                <el-option
+                  v-for="item in sendWayOption"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </div>
           </div>
-          <div class="left-input-container">
-            <span>公告类型</span>
-            <el-select v-model="notice.newsClass" placeholder="请选择">
-              <el-option
-                v-for="item in newsClassOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-            <span>公告类别</span>
-            <el-select v-model="notice.newsType" placeholder="请选择">
-              <el-option
-                v-for="item in newsTypeOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </div>
-          <div class="left-input-container">
-            <span>发送方式</span>
-            <el-select v-model="notice.sendType" placeholder="请选择" @change="sendTypeSelectChange">
-              <el-option
-                v-for="item in sendTypeOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-            <span>发送渠道</span>
-            <el-select v-model="notice.sendWay" placeholder="请选择">
-              <el-option
-                v-for="item in sendWayOption"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
+          <div class="right-input-container right">
+            <div class="selectedNodeTip">已选择</div>
+            <ul>
+              <li v-for="item in selectedNodeDatas" :key="item.nodeId">{{item.labelName}}</li>
+            </ul>
           </div>
         </el-header>
         <el-main>
@@ -172,32 +216,36 @@ export default {
   props: {},
   data() {
     return {
+      checkStrictly: false,
       propsTreeConfig: {
         label: "labelName",
         children: "childrenNodes",
-        isLeaf:""
+        isLeaf: "leafFlag"
       },
       treeData: [
-          {
-            "id": "1,0",
-            "parentId": "0,0",
-            "labelName": "全员发送",
-            "disabled":true
-           }],
+        {
+          id: "1,0",
+          parentId: "0,0",
+          labelName: "全员发送",
+          disabled: true
+        }
+      ],
+      selectedNodeDatas: [], //选中的节点数据
+      hasQueryAccountNode: [], //存放已经加载过员工的节点，防止二次加载读取
       quill: null,
       uploadUrl: "",
       notice: {
         newsTitle: null,
         newsContent: null,
         addPer: null, //44430,
-        receiveDeptIds:null,//选中的部门
-        receiveCompanyIds:null,//选中的公司
-        receivePositionIds:null,//选中的职位
+        receiveDeptIds: null, //选中的部门
+        receiveCompanyIds: null, //选中的公司
+        receivePositionIds: null, //选中的职位
         receiveAcountIds: null, //选中的人员
         sendWay: null,
         newsClass: null,
         newsType: null,
-        sendType: '3'
+        sendType: "3"
       },
       editorOption: {
         placeholder: "请输入公告内容",
@@ -302,11 +350,24 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    getTreeData(sendType){
-       //读取公司，部门数据
-     this.$api
+    getTreeData(sendType) {
+      this.hasQueryAccountNode = [];
+      if (sendType == 3) {
+        //全员发送
+        this.treeData = [
+          {
+            id: "1,0",
+            parentId: "0,0",
+            labelName: "全员发送",
+            disabled: true
+          }
+        ];
+        return this.treeData;
+      }
+      //读取公司，部门数据
+      this.$api
         .post({
-          url: "/noticeManage/common/getTreeForNotice/"+sendType,
+          url: "/noticeManage/common/getTreeForNotice/" + sendType,
           //headers: { "Content-Type": "application/json" },
           token: false
         })
@@ -316,7 +377,7 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            this.treeData=result.data;
+            this.treeData = result.data;
           } else {
             console.log("发送公告结果：" + result.message);
             alert(result.message);
@@ -328,88 +389,163 @@ export default {
         });
     },
     sendTypeSelectChange(sendType) {
-      console.log(sendType);
-      if(sendType==3){//全员发送
-        this.treeData=[
-          {
-            "id": "1,0",
-            "parentId": "0,0",
-            "labelName": "全员发送",
-            "disabled":true
-           }];
-      }else{
-        this.getTreeData(sendType);
+      this.checkStrictly = true;
+      this.selectedNodeDatas = [];
+      this.getTreeData(sendType);
+    },
+    handleCheckChange(item, checked, indeterminate) {
+      //console.log(data, checked, indeterminate);
+      //去除勾选
+      if(!checked){
+        this.selectedNodeDatas.splice(this.selectedNodeDatas.findIndex(t => t.nodeId === item.nodeId), 1);
+        return;
+      }
+      //已经有了，就不加进去
+      if (this.selectedNodeDatas.find(function(x) {
+          return x.nodeId == item.nodeId;
+        }) == undefined
+      ) {
+            if (this.notice.sendType == 0 && item.type == 2) {
+            //按单独发送， 员工
+            this.selectedNodeDatas.push(item);
+          } else if (this.notice.sendType == 1 && item.type == 3) {
+            this.selectedNodeDatas.push(item);
+          } else if (this.notice.sendType == 2 && item.type == 1) {
+            this.selectedNodeDatas.push(item);
+          } else if (this.notice.sendType == 4 && item.type == 0) {
+            this.selectedNodeDatas.push(item);
+          }
+      }
+      
+    },
+    getAccountDataByHigher(businessId, type, successFun) {
+      //读取公司或部门下面的员工
+      this.$api
+        .post({
+          url:
+            "/noticeManage/common/getAccountNodeDataForNotice/" +
+            type +
+            "/" +
+            businessId,
+          //headers: { "Content-Type": "application/json" },
+          token: false
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            successFun(result.data);
+          } else {
+            console.log("获取员工失败：" + result.message);
+            this.$message.error("获取员工失败：" + result.message);
+          }
+        })
+        .catch(e => {
+          console.log("获取员工异常");
+          console.log(e);
+          this.$message.error("获取员工异常" + e);
+        });
+    },
+    appendAccountNode(data, node) {
+      if (this.notice.sendType != 0) {//只有单独发送才要
+        return;
+      }
+      if (data.type == 2) {
+        //员工节点，不要加载
+        return;
+      }
+      let that = this;
+      if (this.hasQueryAccountNode.indexOf(data.nodeId) == -1) {
+        ///没加载过员工，那么加载读取
+        //append(data, parentNode) 接收两个参数，1. 要追加的子节点的 data 2. 子节点的 parent 的 data、key 或者 node
+        console.log("展开了节点远程读取并加载员工节点：" + data.labelName);
+        this.getAccountDataByHigher(data.businessId, data.type, function(r) {
+          if (r.length > 0) {
+            r.forEach((item, index, array) => {
+              //执行代码
+              that.$refs.treeNotice.append(item, node);
+            });
+          }
+        });
+      }
+      this.hasQueryAccountNode.push(data.nodeId);
+    },
+    handellNodeExpand(data, node, nodeComponent) {
+      if (data.type == 0) {
+        //展开公司节点
+        console.log("展开了公司节点：" + data.labelName);
+        this.appendAccountNode(data, node);
+      } else if (data.type == 1) {
+        //展开部门节点
+        console.log("展开了部门节点：" + data.labelName);
       }
     },
-    handleCheckChange(data, checked, indeterminate) {
-      console.log(data, checked, indeterminate);
-    },
-    handleNodeClick(data) {
-      console.log(data);
+    handleNodeClick(data, node, nodeComponent) {
+        //单独发送，需要加载员工
+        this.appendAccountNode(data, node);
     },
     loadNode(node, resolve) {
-      // if (node.level === 0) {
-      //   return resolve([{ name: "region1" }, { name: "region2" }]);
-      // }
-      // if (node.level > 3) return resolve([]);
-      // var hasChild;
-      // if (node.data.name === "region1") {
-      //   hasChild = true;
-      // } else if (node.data.name === "region2") {
-      //   hasChild = false;
-      // } else {
-      //   hasChild = Math.random() > 0.5;
-      // }
-      // setTimeout(() => {
-      //   var data;
-      //   if (hasChild) {
-      //     data = [
-      //       {
-      //         name: "zone" + this.count++
-      //       },
-      //       {
-      //         name: "zone" + this.count++
-      //       }
-      //     ];
-      //   } else {
-      //     data = [];
-      //   }
-      //   resolve(data);
-      // }, 500);
+      //只有设置了lazy属性才会生效此方法
+      if (node.level == 1) return resolve([]);
+      console.log("逐步vfasong");
+      setTimeout(() => {
+        resolve([
+          {
+            id: "1,0",
+            parentId: "0,0",
+            labelName: "全员发送",
+            disabled: true
+          }
+        ]);
+      }, 500);
     },
-    getCheckedData(){//获取左侧树选中的信息
-       //let checkedData=this.$refs.treeNotice.getCheckedKeys();
-       let data=this.$refs.treeNotice.getCheckedNodes();
-       this.notice.receiveDeptIds=[];//选中的部门
-       this.notice.receiveCompanyIds=[];//选中的公司
-       this.notice.receivePositionIds=[];//选中的职位
-       this.notice.receiveAcountIds=[]; //选中的人员
-       if(data.constructor === Array&&data.length>0){
-          data.forEach((item,index,array)=>{
-            if(this.notice.sendType==0){//按单独发送
-              if(item.type==2){
-                this.notice.receiveAcountIds.push(item.businessId);
-              }
-            }else if(this.notice.sendType==1){//按职位发送
-              if(item.type==3){
-                  this.notice.receivePositionIds.push(item.businessId);
-              }
-            }else if(this.notice.sendType==2){//按部门发送
-              if(item.type==1){
-                  this.notice.receiveDeptIds.push(item.businessId);
-              }
-            }else if(this.notice.sendType==4){//按公司发送
-              if(item.type==0){
-                  this.notice.receiveCompanyIds.push(item.businessId);
-               }
+    getCheckedData() {
+      //获取左侧树选中的信息
+      //let checkedData=this.$refs.treeNotice.getCheckedKeys();
+      let selectedData = this.$refs.treeNotice.getCheckedNodes();
+      this.notice.receiveDeptIds = []; //选中的部门
+      this.notice.receiveCompanyIds = []; //选中的公司
+      this.notice.receivePositionIds = []; //选中的职位
+      this.notice.receiveAcountIds = []; //选中的人员
+      this.selectedNodeDatas = [];
+      if (selectedData.constructor === Array && selectedData.length > 0) {
+        selectedData.forEach((item, index, array) => {
+          if (this.notice.sendType == 0) {
+            //按单独发送
+            if (item.type == 2) {
+              //item.type =2员工，3职位，1部门，0公司
+              this.notice.receiveAcountIds.push(item.businessId);
             }
-          })
-       }
-       if(this.notice.receivePositionIds.length==0&&this.notice.receiveDeptIds.length==0&&this.notice.receiveCompanyIds.length==0&&this.notice.receiveAcountIds.length==0){
-         return false;
-       }else{
-         return true;
-       }
+          } else if (this.notice.sendType == 1) {
+            //按职位发送
+            if (item.type == 3) {
+              this.notice.receivePositionIds.push(item.businessId);
+            }
+          } else if (this.notice.sendType == 2) {
+            //按部门发送
+            if (item.type == 1) {
+              this.notice.receiveDeptIds.push(item.businessId);
+            }
+          } else if (this.notice.sendType == 4) {
+            //按公司发送
+            if (item.type == 0) {
+              this.notice.receiveCompanyIds.push(item.businessId);
+            }
+          }
+        });
+      }
+      if (
+        this.notice.receivePositionIds.length == 0 &&
+        this.notice.receiveDeptIds.length == 0 &&
+        this.notice.receiveCompanyIds.length == 0 &&
+        this.notice.receiveAcountIds.length == 0
+      ) {
+        return false;
+      } else {
+        return true;
+      }
     },
     sendNotice() {
       if (this.notice.newsTitle == null) {
@@ -453,8 +589,8 @@ export default {
         return;
       }
       console.log("【【【】】】");
-      if(this.notice.sendType!=3&&!this.getCheckedData()){
-          this.$message({
+      if (this.notice.sendType != 3 && !this.getCheckedData()) {
+        this.$message({
           showClose: true,
           message: "请在左侧树中勾选公告接收者",
           type: "warning"
@@ -477,6 +613,7 @@ export default {
             console.log(result.message);
             console.log(result.data);
             this.$message({ message: result.message });
+            this.$router.push({ path: "/menuFrame/noticeManageList"});
           } else {
             console.log("发送公告结果：" + result.message);
             alert(result.message);
@@ -510,7 +647,7 @@ export default {
     console.log(this.uploadUrl);
   },
   mounted() {
-    this.quill = this.$refs.QuillEditor.quill;    
+    this.quill = this.$refs.QuillEditor.quill;
   }
 };
 </script>
