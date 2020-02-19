@@ -394,6 +394,7 @@ export default new Router({
                 name: "系统配置"
               },
               {
+
                 path: "/menuFrame/systemConfigList",
                 name: "系统参数配置表"
               },
