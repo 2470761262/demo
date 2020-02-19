@@ -16,7 +16,7 @@ export default new Router({
     {
       path: "/",
       name: "Home",
-      component: Home
+      component: Home,
     },
     {
       path: "/menuFrame",
@@ -29,7 +29,6 @@ export default new Router({
           path: "/menuFrame/houseList",
           name: "houseList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -50,7 +49,6 @@ export default new Router({
           path: "/components/mateHouseList",
           name: "mateHouseList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -74,7 +72,6 @@ export default new Router({
           path: "/menuFrame/newAgentHouse",
           name: "houseList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -94,7 +91,6 @@ export default new Router({
           path: "/menuFrame/myHouseList",
           name: "houseList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -114,7 +110,6 @@ export default new Router({
           path: "/menuFrame/validateHouseList",
           name: "validateHouseList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -136,7 +131,6 @@ export default new Router({
           path: "/menuFrame/validateHouseExamineList",
           name: "validateHouseExamineList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -158,7 +152,6 @@ export default new Router({
           path: "/menuFrame/houseTaskExamineList",
           name: "houseTaskExamineList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -180,7 +173,6 @@ export default new Router({
           path: "/menuFrame/errorValidateList",
           name: "errorValidateList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -202,7 +194,6 @@ export default new Router({
           path: "/menuFrame/addFloorList",
           name: "addFloorList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -224,7 +215,6 @@ export default new Router({
           path: "/menuFrame/addHouse",
           name: "addHouse",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -248,7 +238,6 @@ export default new Router({
           path: "/menuFrame/noticeManageList",
           name: "noticeManageList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -270,7 +259,6 @@ export default new Router({
           path: "/menuFrame/noticeDetail",
           name: "noticeDetail",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -287,14 +275,13 @@ export default new Router({
             ]
           },
           component: () =>
-            import( "@/pages/noticeManage/noticeDetail.vue")
+            import("@/pages/noticeManage/noticeDetail.vue")
         },
         {
           //添加公告
           path: "/menuFrame/addNotice",
           name: "addNotice",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -311,14 +298,13 @@ export default new Router({
             ]
           },
           component: () =>
-            import( "@/pages/noticeManage/addNotice.vue")
+            import("@/pages/noticeManage/addNotice.vue")
         },
         {
           //系统参数配置
           path: "/menuFrame/systemConfigList",
           name: "systemConfigList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -339,7 +325,6 @@ export default new Router({
           path: "/menuFrame/addConfig",
           name: "addConfig",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -363,7 +348,6 @@ export default new Router({
           path: "/menuFrame/addConfigObject",
           name: "addConfigObject",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -387,7 +371,6 @@ export default new Router({
           path: "/menuFrame/configObjectList",
           name: "configObjectList",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -412,7 +395,6 @@ export default new Router({
           path: "/menuFrame/passwordReset",
           name: "passwordReset",
           meta: {
-            isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
@@ -427,7 +409,7 @@ export default new Router({
           component: () =>
             import(
               "@/pages/passwordReset.vue"
-              )
+            )
         },
       ]
     }

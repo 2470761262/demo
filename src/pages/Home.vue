@@ -291,7 +291,7 @@ export default {
         function (e) {
           util.localStorageSet(LOGINDATA, e.data);
           //保存token
-          util.localStorageSet("token",e.data.token.token);
+          // util.localStorageSet("token",e.data.token.token);
           that.$router.push({ path: '/menuFrame' });
         },
         function (message) {
