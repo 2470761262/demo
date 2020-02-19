@@ -49,12 +49,14 @@
       </el-table-column>
       <el-table-column label="业主">
         <template v-slot="scope">
-          {{scope.row.createTime}}
+          {{scope.row.customerName}}
         </template>
       </el-table-column>
       <el-table-column label="状态">
         <template v-slot="scope">
+        <el-tag>
           {{scope.row.checkStatus}}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="operation"
@@ -76,6 +78,7 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
+import util from '@/util/util';
 export default {
   components: {
     listPage
@@ -153,13 +156,32 @@ export default {
         taskName: '',
         selectValue: '',
         timeSelect: '',
-      }
+      },
+      checkStatusList:[
+        {key:'1',value:"待客户验真"},
+        {key:'2',value:"待店长验真"},  //客户验真过期
+        {key:'3',value:"店长验真通过"},
+        {key:'4',value:"验真过期"},
+        {key:'5',value:"验真失败"},
+        {key:'6',value:"验真成功"}
+        ]
     }
+  },
+  created(){
+   console.log("==========="+JSON.stringify(this.GetRequest()));
   },
   mounted () {
     this.queryVerifyHouseByParams(1);
   },
   methods: {
+    GetRequest() {
+    var url = location.href; //获取url中"?"符后的字串
+    console.log("$$$$$$$",location);
+    var theRequest=new URLSearchParams(location.hash.substring(location.hash.indexOf('?')));
+    var token=theRequest.get("token");
+    util.localStorageSet("token",token);
+    return token;
+    },
     queryVerifyHouseByParams () {
       this.queryVerifyHouseDatas(1);
     },
@@ -172,7 +194,7 @@ export default {
       this.$api.post({
         url: '/verifyHouse/getVerifyHouseList',
         data: params,
-        token: false
+        token: true
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
@@ -228,7 +250,9 @@ export default {
         dangerouslyUseHTMLString: true
       });
     },
-    queryTabData () { },
+    queryTabData () { 
+      console.log(this.queryData);
+    },
     distributeEvent (e, id) {
       this[e](id);
     },
@@ -242,8 +266,15 @@ export default {
         return item.isType.includes(type)
       })
     },
+    getCheckStatus (key) {
+      let that=this;
+      console.log("key="+key);
+      return that.checkStatusList.filter((item) => {
+        return item.key.includes(key);
+      })
+    },
     handleClick () {
-
+      console.log(this.queryData);
     },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
