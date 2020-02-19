@@ -24,7 +24,9 @@ export default {
         toilet: "", //卫
         balcony: "", //阳台
         face: "", //朝向
-        decoration: "" //装修
+        decoration: "", //装修
+        title: "",//房源标题
+        certificateType: ""//房屋证件类型
       },
       step2: {
         houseUse: "",//房屋用途

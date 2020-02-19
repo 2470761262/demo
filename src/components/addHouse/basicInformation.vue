@@ -6,20 +6,25 @@
     <div class="page-cell-title">房屋坐落</div>
     <!-- 楼盘名称 -->
     <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityName')}"
-         :data-tips="errorBags.first('communityName')">
+         :class="{'after-tips':errorBags.has('communityId')}"
+         :data-tips="errorBags.first('communityId')">
       <div class="page-cell-item">
         <div class="item-before"
              data-before="*">楼盘</div>
         <el-select filterable
-                   data-vv-name="communityName"
-                   data-vv-as="楼盘"
+                   remote
+                   :remote-method="remoteCommunityName"
+                   data-vv-name="communityId"
+                   data-vv-as="楼盘名称"
                    v-validate="'required'"
-                   v-model="formData.communityName"
-                   placeholder="请选择楼盘">
-          <el-option v-for="item in options"
+                   v-model="formData.communityId"
+                   placeholder="请选择楼盘名称"
+                   @focus="remoteCommunityNameInput"
+                   @change="remoteCommunityNameChange"
+                   :loading="selectPageCommunit.loading">
+          <el-option v-for="item in selectPageCommunit.list"
                      :key="item.value"
-                     :label="item.label"
+                     :label="item.name"
                      :value="item.value">
           </el-option>
         </el-select>
@@ -28,23 +33,26 @@
         </div>
       </div>
     </div>
-
     <!-- 栋座 -->
     <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('buildingNo')}"
-         :data-tips="errorBags.first('buildingNo')">
+         :class="{'after-tips':errorBags.has('buildingId')}"
+         :data-tips="errorBags.first('buildingId')">
       <div class="page-cell-item">
         <div class="item-before"
              data-before="*">栋座</div>
         <el-select filterable
-                   data-vv-name="buildingNo"
+                   remote
+                   :remote-method="remoteBuildingNo"
+                   data-vv-name="buildingId"
                    data-vv-as="栋座"
                    v-validate="'required'"
-                   v-model="formData.buildingNo"
+                   v-model="formData.buildingId"
+                   @change="remoteBuildingNoChange"
+                   :loading="selectPageeBuildingNo.loading"
                    placeholder="请选择栋座">
-          <el-option v-for="item in options"
+          <el-option v-for="item in selectPageeBuildingNo.list"
                      :key="item.value"
-                     :label="item.label"
+                     :label="item.name"
                      :value="item.value">
           </el-option>
         </el-select>
@@ -52,20 +60,24 @@
     </div>
     <!-- 房间号 -->
     <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('roomNo')}"
-         :data-tips="errorBags.first('roomNo')">
+         :class="{'after-tips':errorBags.has('roomId')}"
+         :data-tips="errorBags.first('roomId')">
       <div class="page-cell-item">
         <div class="item-before"
              data-before="*">房间号</div>
         <el-select filterable
-                   data-vv-name="roomNo"
+                   remote
+                   :remote-method="remoteRoomNo"
+                   data-vv-name="roomId"
                    data-vv-as="房间号"
                    v-validate="'required'"
-                   v-model="formData.roomNo"
+                   v-model="formData.roomId"
+                   :loading="selectPageRoomNo.loading"
+                   @change="remoteRoomNoChange"
                    placeholder="请选择房间号">
-          <el-option v-for="item in options"
+          <el-option v-for="item in selectPageRoomNo.list"
                      :key="item.value"
-                     :label="item.label"
+                     :label="item.name"
                      :value="item.value">
           </el-option>
         </el-select>
@@ -273,6 +285,38 @@
         </el-radio-group>
       </div>
     </div>
+    <!-- 房屋证件 -->
+    <div class="form-error-tips">
+      <div class="page-cell-item">
+        <div class="item-before">房屋证件</div>
+        <el-select v-model="formData.certificateType"
+                   placeholder="请选择房屋证件">
+          <el-option v-for="item in certificateType"
+                     :key="item.label"
+                     :label="item.title"
+                     :value="item.label">
+          </el-option>
+        </el-select>
+      </div>
+    </div>
+    <div class="page-cell-title">房源标题</div>
+    <!-- 房源标题 -->
+    <div class="form-error-tips"
+         :class="{'after-tips':errorBags.has('title')}"
+         :data-tips="errorBags.first('title')">
+      <div class="page-cell-item">
+        <el-input placeholder="请输入房源标题"
+                  data-vv-name="title"
+                  data-vv-as="房源标题"
+                  :maxlength="20"
+                  v-validate="'required'"
+                  v-model="formData.title">
+          <div slot="prepend"
+               class="item-before"
+               data-before="*">房源标题</div>
+        </el-input>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -290,12 +334,16 @@ let orientation = [
   { title: "西南", label: 7 },
   { title: "西北", label: 8 },
 ];
-
 let renovation = [
   { title: "毛胚", label: 1 },
   { title: "简单装", label: 2 },
   { title: "精装修", label: 3 },
   { title: "豪华装修", label: 4 }
+]
+let certificateType = [
+  { title: "不动产权证", label: 1 },
+  { title: "购房合同", label: 2 },
+  { title: "拆迁安置协议书", label: 3 },
 ]
 //import { mapState } from "vuex";
 import { Validator } from 'vee-validate';
@@ -323,6 +371,127 @@ export default {
     this.setDefaultFrom();
   },
   methods: {
+    //查询楼盘
+    remoteCommunityName (e) {
+      let that = this;
+      that.selectPageCommunit.loading = true;
+      this.$api.post({
+        url: '/mateHouse/queryCommunity',
+        data: {
+          page: 1,
+          limit: 50,
+          communityName: e == undefined ? '' : e.trim(),
+        },
+        qs: true,
+        token: false
+      }).then((e) => {
+        let data = e.data;
+        if (data.code == 200) {
+          that.selectPageCommunit.list = data.data.list;
+          that.selectPageCommunit.loading = false;
+        }
+      }).catch((e) => {
+        console.log(e);
+      })
+    },
+    //楼盘获取焦点
+    remoteCommunityNameInput () {
+      if (this.selectPageCommunit.list.length == 0) {
+        this.remoteCommunityName();
+      }
+    },
+    //楼盘选择更改事件
+    remoteCommunityNameChange (e) {
+      let findResultIndex = this.selectPageCommunit.list.findIndex((item) => {
+        return item.value == e;
+      })
+      this.formData.communityName = this.selectPageCommunit.list[findResultIndex].name;
+      this.formData.buildingId = '';
+      this.formData.roomId = '';
+      this.formData.buildingNo = '';
+      this.formData.roomNo = '';
+      this.selectPageeBuildingNo.list = [];
+      this.selectPageRoomNo.list = [];
+      this.remoteBuildingNo();
+    },
+    //查询栋座
+    remoteBuildingNo (e) {
+      let that = this;
+      //验证楼盘
+      that.$validator.validate("communityId", this.formData.communityId).then((result) => {
+        if (result) {
+          that.selectPageeBuildingNo.loading = true;
+          that.$api.post({
+            url: '/mateHouse/queryComBuilding',
+            data: {
+              page: 1,
+              limit: 50,
+              comBuildingName: e == undefined ? '' : e.trim(),
+              comId: that.formData.communityId
+            },
+            qs: true,
+            token: false
+          }).then((e) => {
+            let data = e.data;
+            if (data.code == 200) {
+              that.selectPageeBuildingNo.list = data.data.list;
+              that.selectPageeBuildingNo.loading = false;
+            }
+          }).catch((e) => {
+            console.log(e);
+          })
+        }
+      })
+    },
+    //栋座选择更改事件
+    remoteBuildingNoChange (e) {
+      let findResultIndex = this.selectPageeBuildingNo.list.findIndex((item) => {
+        return item.value == e;
+      })
+      this.formData.buildingNo = this.selectPageeBuildingNo.list[findResultIndex].name;
+      this.formData.roomNo = '';
+      this.formData.roomId = '';
+      this.selectPageRoomNo.list = [];
+      this.remoteRoomNo();
+    },
+    //查询房间号
+    remoteRoomNo (e) {
+      let that = this;
+      //验证楼栋
+      that.$validator.validate("buildingId", this.formData.buildingId).then((result) => {
+        if (result) {
+          that.selectPageRoomNo.loading = true;
+          that.$api.post({
+            url: '/mateHouse/queryBuildIngHouses',
+            data: {
+              page: 1,
+              limit: 50,
+              comId: that.formData.communityId,
+              cbId: this.formData.buildingId,
+              roomNo: e == undefined ? '' : e.trim(),
+              isNotSale: 1
+            },
+            qs: true,
+            token: false
+          }).then((e) => {
+            let data = e.data;
+            if (data.code == 200) {
+              that.selectPageRoomNo.list = data.data.list;
+              that.selectPageRoomNo.loading = false;
+            }
+          }).catch((e) => {
+            console.log(e);
+          })
+        }
+      })
+    },
+    //房间号选择更改事件
+    remoteRoomNoChange (e) {
+      let findResultIndex = this.selectPageRoomNo.list.findIndex((item) => {
+        return item.value == e;
+      })
+      this.formData.roomNo = this.selectPageRoomNo.list[findResultIndex].name;
+    },
     updateField () {
       //更新字段API 可能终止验证
       const field = this.$validator.fields.find({ name: 'price' });
@@ -367,10 +536,22 @@ export default {
       })
     },
     upLoadData (e) {
-      return new Promise((r) => {
-        setTimeout(() => {
-          r(true);
-        }, 20000);
+      let that = this;
+      console.log(this.formData);
+      return this.$api.post({
+        url: '/draft_house',
+        data: that.formData,
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false
+      }).then((e) => {
+        if (e.data.code == 200) {
+          return Promise.resolve(true);
+        } else {
+          return Promise.resolve(false);
+        }
+      }).catch((e) => {
+        console.log(e);
+        return Promise.resolve(false);
       })
     },
   },
@@ -379,7 +560,20 @@ export default {
       step: {},
       addTel: [],
       sexList: sex,
+      certificateType: certificateType,
       options: [],
+      selectPageCommunit: { // 楼栋
+        list: [],
+        loading: false
+      },
+      selectPageeBuildingNo: {// 栋座
+        list: [],
+        loading: false
+      },
+      selectPageRoomNo: {// 房间号
+        list: [],
+        loading: false
+      },
       orientationList: orientation,
       renovationList: renovation
     };
