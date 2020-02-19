@@ -24,12 +24,13 @@
 <template >
   <section class="page-cell">
     <el-container>
-      <el-header>
+      <el-header v-if="asideNavFlag">
         <header-content></header-content>
       </el-header>
     </el-container>
     <el-container class="page-cell-main">
-      <el-aside width="200px">
+      <el-aside width="200px"
+                v-if="asideNavFlag">
         <asideNav></asideNav>
       </el-aside>
       <el-main>
@@ -57,13 +58,19 @@ export default {
     asideNav,
     headerContent
   },
-  computed: {
-    resultRouteArray () {
-      return this.$route.meta.routeArray;
+  data () {
+    return {
+      resultRouteArray: this.$route.meta.routeArray,
+      asideNavFlag: true
     }
   },
   created () {
-
+    window.addEventListener('message', (e) => {
+      console.log("-------------------",e);
+      if (e.data.isXinIfram) {
+        this.asideNavFlag = false;
+      }
+    }, false);
   },
 }
 </script>

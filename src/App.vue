@@ -10,6 +10,6 @@ export default {
 }
 </script>
 
-<style>
-@import url(../static/publicLess/public.less);
+<style lang="less">
+@import url("./assets/publicLess/public.less");
 </style>

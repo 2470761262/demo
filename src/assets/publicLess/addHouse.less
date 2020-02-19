@@ -28,6 +28,17 @@
       border-radius: 4px;
       width: 210px;
     }
+    /deep/.el-textarea{
+      width: auto;
+      /deep/.el-textarea__inner{
+        width: 415px;
+        height: 160px;
+      }
+    }
+    .textarea-tips{
+      align-self: flex-end;
+      margin-left: 10px;
+    }
     .item-after {
       color: #1c7334;
       font-size: 14px;
@@ -45,6 +56,9 @@
       align-self: center;
       white-space: nowrap;
       flex-shrink: 0;
+      &.item-before-top{
+        align-self: flex-start;
+      }
       &:before {
         content: attr(data-before);
         color: red;

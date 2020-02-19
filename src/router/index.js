@@ -44,7 +44,7 @@ export default new Router({
           component: () =>
             import(/* webpackChunkName: "houseList" */ "@/pages/houseList.vue")
         },
-        
+
         {
           //房源配对列表
           path: "/components/mateHouseList",
@@ -88,6 +88,26 @@ export default new Router({
           },
           component: () =>
             import(/* webpackChunkName: "newAgentHouse" */ "@/pages/newAgentHouse.vue")
+        },
+        {
+          //我的房源列表
+          path: "/menuFrame/myHouseList",
+          name: "houseList",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/myHouseList",
+                name: "我的房源列表"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "newAgentHouse" */ "@/pages/myHouseList.vue")
         },
         {
           //验证房源列表
@@ -308,7 +328,7 @@ export default new Router({
                 path: "/menuFrame/houseList",
                 name: "系统参数配置表"
               },
-              
+
             ]
           },
           component: () =>
@@ -363,29 +383,52 @@ export default new Router({
             import(/* webpackChunkName: "addConfig" */ "@/pages/addConfigObject.vue")
         },
         {
-          //买卖房源详情
-          path: "/menuFrame/houseDetails",
-          name: "houseDetails",
+          //系统参数关联对象录入
+          path: "/menuFrame/configObjectList",
+          name: "configObjectList",
           meta: {
             isLogin: true,
             routeArray: [
               {
                 path: "/menuFrame",
-                name: "房源管理"
+                name: "系统配置"
               },
               {
-                path: "/menuFrame/houseList",
-                name: "房源列表"
+
+                path: "/menuFrame/systemConfigList",
+                name: "系统参数配置表"
               },
               {
-                path: "/menuFrame/houseDetails",
-                name: "房源详情"
+                path: "/menuFrame/configObjectList",
+                name: "添加系统配置关联对象"
               },
             ]
           },
           component: () =>
-            import(/* webpackChunkName: "addConfig" */ "@/pages/houseDetails.vue")
-        }
+            import(/* webpackChunkName: "addConfig" */ "@/pages/configObjectList.vue")
+        },
+        {
+          //用户密码重置
+          path: "/menuFrame/passwordReset",
+          name: "passwordReset",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统管理"
+              },
+              {
+                path: "/menuFrame/passwordReset",
+                name: "用户密码重置"
+              }
+            ]
+          },
+          component: () =>
+            import(
+              "@/pages/passwordReset.vue"
+              )
+        },
       ]
     }
   ]

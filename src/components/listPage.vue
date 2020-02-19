@@ -93,6 +93,7 @@
               </el-input>
             </div>
           </slot>
+           
           <div v-if="configSet.selectTo"
                :class="[
               'query-center-item',
@@ -110,6 +111,7 @@
               </el-select>
             </slot>
           </div>
+          <slot> </slot>
           <template v-if="configSet.selectToTime">
             <div class="query-center-item">
               <el-date-picker v-model="queryData.timeSelect"
@@ -199,6 +201,7 @@ export default {
     },
     //前往多少页事件
     handleCurrentChange (e) {
+      console.log("1");
       this.$emit("handleCurrentChange", e);
     }
   }

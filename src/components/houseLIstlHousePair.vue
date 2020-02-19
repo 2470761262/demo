@@ -37,6 +37,7 @@
 }
 .marLeft20 {
   margin-left: 20px;
+  flex-shrink: 0;
 }
 </style>
 <template >
@@ -50,53 +51,56 @@
       <!-- 楼盘 -->
       <div class="page-form-inline">
         <el-form-item label="楼盘名称">
-          <el-select
-            v-model="form.comId"
-            @change="queryCBId()"
-            filterable
-            remote
-            placeholder="请输入楼盘进行搜索"
-            :remote-method="remoteMethod"
-            :loading="loading">
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value">
+          <el-select v-model="form.comId"
+                     @change="queryCBId()"
+                     filterable
+                     remote
+                     placeholder="请输入楼盘进行搜索"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="栋座">
-          <el-select v-model="form.cbId" filterable placeholder="请选择楼栋" @change="queryRoomNo()">
-          <el-option
-            v-for="item in cbIdList"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value">
-          </el-option>
-        </el-select>
+          <el-select v-model="form.cbId"
+                     filterable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="房间号">
-          <el-select v-model="form.roomNo" filterable placeholder="请选择房间号">
-          <el-option
-            v-for="item in roomNoList"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value">
-          </el-option>
-        </el-select>
+          <el-select v-model="form.roomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
       </div>
       <!-- 售价 -->
       <div class="page-form-inline"
            data-tips="万元">
         <el-form-item label="售价">
-          <el-input placeholder="请输入售价" v-model="form.minPrice">
+          <el-input placeholder="请输入售价"
+                    v-model="form.minPrice">
           </el-input>
         </el-form-item>
         <div class="dividingLine"></div>
         <el-form-item label-width="0px">
-          <el-input placeholder="请输入售价" v-model="form.maxPrice">
+          <el-input placeholder="请输入售价"
+                    v-model="form.maxPrice">
             <!-- <template slot="append">万元</template> -->
           </el-input>
         </el-form-item>
@@ -105,12 +109,14 @@
       <div class="page-form-inline"
            data-tips="平方">
         <el-form-item label="面积">
-          <el-input placeholder="请输入面积" v-model="form.minInArea"> 
+          <el-input placeholder="请输入面积"
+                    v-model="form.minInArea">
           </el-input>
         </el-form-item>
         <div class="dividingLine"></div>
         <el-form-item label-width="0px">
-          <el-input placeholder="请输入面积" v-model="form.maxInArea">
+          <el-input placeholder="请输入面积"
+                    v-model="form.maxInArea">
             <!-- <template slot="append">万元</template> -->
           </el-input>
         </el-form-item>
@@ -119,12 +125,14 @@
       <div class="page-form-inline"
            data-tips="层">
         <el-form-item label="楼层">
-          <el-input placeholder="请输入楼层" v-model="form.minFloor">
+          <el-input placeholder="请输入楼层"
+                    v-model="form.minFloor">
           </el-input>
         </el-form-item>
         <div class="dividingLine"></div>
         <el-form-item label-width="0px">
-          <el-input placeholder="请输入楼层" v-model="form.maxFloor">
+          <el-input placeholder="请输入楼层"
+                    v-model="form.maxFloor">
             <!-- <template slot="append">万元</template> -->
           </el-input>
         </el-form-item>
@@ -219,19 +227,19 @@
           </el-input>
         </div>
       </div>
-      
 
       <el-button-group>
         <el-button type="info"
                    @click="resetForm('form')">重置</el-button>
-        <el-button type="primary" @click="mateHouse()">配对</el-button>
+        <el-button type="primary"
+                   @click="mateHouse()">配对</el-button>
       </el-button-group>
     </el-form>
   </div>
 </template>
 <script>
 //商圈
-let business =null;
+let business = null;
 //房型
 let houseType = ['一室', '二室', '三室', '四室', '四室以上'];
 //装修
@@ -256,17 +264,17 @@ export default {
         orientation: [],
         primarySchool: [],
         middleSchool: [],
-        
+
         comId: '',
-        cbId:'',
-        roomNo:'',
-        minFloor:'',
-        maxFloor:'',
-        minInArea:'',
-        maxInArea:'',
-        minPrice:'',
-        maxPrice:'',
-        face:[]
+        cbId: '',
+        roomNo: '',
+        minFloor: '',
+        maxFloor: '',
+        minInArea: '',
+        maxInArea: '',
+        minPrice: '',
+        maxPrice: '',
+        face: []
       },
       primarySchoolInput: '',
       middleSchoolInput: '',
@@ -277,48 +285,48 @@ export default {
       orientationList: orientation,
       primarySchoolList: primarySchool,
       middleSchoolList: middleSchool,
-      faceList:[],
+      faceList: [],
       options: [],
-      cbIdList:[],
-      roomNoList:[],
+      cbIdList: [],
+      roomNoList: [],
       loading: false
     }
   },
   mounted () {
     //商圈
-   this.queryConstant('Region').then((e)=>{ 
-     this.businessList= e;
-   });
-   //朝向
-   this.queryConstant('face').then((e)=>{ 
-     this.faceList= e;
-   });
-   //小学
-   this.queryConstant('PrimarySchool').then((e)=>{ 
-     this.primarySchoolList= e;
-   });
+    this.queryConstant('Region').then((e) => {
+      this.businessList = e;
+    });
+    //朝向
+    this.queryConstant('face').then((e) => {
+      this.faceList = e;
+    });
+    //小学
+    this.queryConstant('PrimarySchool').then((e) => {
+      this.primarySchoolList = e;
+    });
 
-   //中学
-   this.queryConstant('MiddleSchool').then((e)=>{ 
-     this.middleSchoolList= e;
-   });
+    //中学
+    this.queryConstant('MiddleSchool').then((e) => {
+      this.middleSchoolList = e;
+    });
 
-   //房型
-   this.queryConstant('Rooms').then((e)=>{ 
-     this.houseTypeList= e;
-   });
+    //房型
+    this.queryConstant('Rooms').then((e) => {
+      this.houseTypeList = e;
+    });
 
-   //装修
-   this.queryConstant('Renovation').then((e)=>{ 
-     this.renovationList= e;
-   });
+    //装修
+    this.queryConstant('Renovation').then((e) => {
+      this.renovationList = e;
+    });
 
-   //用途
-   this.queryConstant('Purpose').then((e)=>{ 
-     this.purposeList= e;
-   });
+    //用途
+    this.queryConstant('Purpose').then((e) => {
+      this.purposeList = e;
+    });
 
-  
+
   },
   methods: {
     onSubmit () {
@@ -344,87 +352,87 @@ export default {
       }
     },
 
-  queryConstant(constant){
-    
-    return this.$api.get({ 
-      url:"/mateHouse/queryConstant",
-      headers: { "Content-Type": "application/json;charset=UTF-8" },
-      token: false,
-      qs:true,
-      data: {
+    queryConstant (constant) {
+
+      return this.$api.get({
+        url: "/mateHouse/queryConstant",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
           constant: constant
         }
-      }).then((e)=>{ 
-        if(e.data.code==200){
+      }).then((e) => {
+        if (e.data.code == 200) {
           return e.data.data;
-          
+
         }
       })
-  },
-remoteMethod(query) {
-  var that=this
-        if (query !== '') {
-          this.loading = true;
+    },
+    remoteMethod (query) {
+      var that = this
+      if (query !== '') {
+        this.loading = true;
 
-        this.$api.get({ 
-          url:"/mateHouse/queryCommunity",
+        this.$api.get({
+          url: "/mateHouse/queryCommunity",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
-          qs:true,
+          qs: true,
           data: {
-              communityName: query
-            }
-          }).then((e)=>{ 
-            console.log(e.data)
-            if(e.data.code==200){
-              that.loading = false;
-              that.options=e.data.data.list;
-              
-            }
-          })     
-        } else {
-          this.options = [];
+            communityName: query
+          }
+        }).then((e) => {
+          console.log(e.data)
+          if (e.data.code == 200) {
+            that.loading = false;
+            that.options = e.data.data.list;
+
+          }
+        })
+      } else {
+        this.options = [];
+      }
+    },
+    queryCBId () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryComBuilding",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.form.comId
         }
-      },
-queryCBId(){
-  var that =this
-  this.$api.get({ 
-          url:"/mateHouse/queryComBuilding",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs:true,
-          data: {
-              comId: that.form.comId
-            }
-          }).then((e)=>{ 
-            if(e.data.code==200){
-              that.cbIdList=e.data.data.list;
-            }
-          })   
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.cbIdList = e.data.data.list;
+        }
+      })
     },
-queryRoomNo(){
-  var that =this
-  this.$api.get({ 
-          url:"/mateHouse/queryBuildIngHouses",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs:true,
-          data: {
-              comId: that.form.comId,
-              cbId: that.form.cbId
-            }
-          }).then((e)=>{ 
-            if(e.data.code==200){
-              that.roomNoList=e.data.data.list;
-            }
-          })   
+    queryRoomNo () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryBuildIngHouses",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.form.comId,
+          cbId: that.form.cbId
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.roomNoList = e.data.data.list;
+        }
+      })
     },
-mateHouse(){
-  var that=this
-  console.log(that.form);
-  console.log(that.form.comId);
-  that.$router.push({path:'/components/mateHouseList',query:{"params":JSON.stringify(that.form)}});
-}
+    mateHouse () {
+      var that = this
+      console.log(that.form);
+      console.log(that.form.comId);
+      that.$router.push({ path: '/components/mateHouseList', query: { "params": JSON.stringify(that.form) } });
+    }
   }
 }
 </script>

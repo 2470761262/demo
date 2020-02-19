@@ -75,6 +75,7 @@
               style="width:100%;heigth:100%;"
             ></video>
             <el-image :src="item.url" fit="fill" v-if="item.type==1"></el-image>
+
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -92,7 +93,8 @@
             <span>编辑</span>
           </div>
         </div>
-        <div class="query-cell" style="margin-top:20px;">
+        <div class="query-cell"
+             style="margin-top:20px;">
           <div>
             <span style="font-size:20px;">{{houseDetails.houseType}}</span>
             <br />
@@ -109,7 +111,8 @@
             <span>朝向</span>
           </div>
         </div>
-        <div class="query-cell" style="margin-top:20px;">
+        <div class="query-cell"
+             style="margin-top:20px;">
           <div>
             <span style="font-size:20px;">{{houseDetails.buildtype}}</span>
             <br />
@@ -126,7 +129,8 @@
             <span>电梯</span>
           </div>
         </div>
-        <div class="query-cell" style="margin-top:20px;">
+        <div class="query-cell"
+             style="margin-top:20px;">
           <div class="query-cell">
             <div class="query-cell">
               <div>
@@ -134,6 +138,7 @@
                   style="width:100;height:100px;border-radius:50px;"
                   :src="houseDetails.agentPerHeadImg"
                 ></el-image>
+
               </div>
               <div>
                 <div>{{houseDetails.agentPerName}}</div>
@@ -393,6 +398,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -401,7 +407,7 @@ import { HOUSEBELONGLIST } from "@/util/constMap";
 import util from "@/util/util";
 export default {
   components: {},
-  data() {
+  data () {
     return {
       houseId: 0, //房源id
       houseDetails: "", //房源详情数据
@@ -429,8 +435,8 @@ export default {
       page: 1
     };
   },
-  before() {},
-  mounted() {
+  before () { },
+  mounted () {
     if (this.$route.query.houseId) {
       this.houseId = this.$route.query.houseId;
     }

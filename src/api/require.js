@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
+import util from '@/util/util';
 
 let http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
@@ -12,7 +13,7 @@ let http = axios.create({
 http.interceptors.request.use(function (config) {
   // Do something before request is sent
   if (config.token) {
-    config.headers.token = 1111;
+    config.headers.tk = util.localStorageGet("token");
     console.log(config, "请求拦截器");
   }
   return config;
@@ -34,8 +35,9 @@ http.interceptors.response.use(function (response) {
 //请求对象
 let ApiData = {
   post (arg) {
-    if (!arg.method)
+    if (!arg.method) {
       arg.method = 'POST';
+    }
     let sendConfig = Object.assign({ token: true }, arg);
     if (sendConfig.qs && sendConfig.qs == true) // 格式化表单数据
       sendConfig.data = qs.stringify(sendConfig.data);
@@ -48,11 +50,11 @@ let ApiData = {
     })
   },
   put (arg) {
-    arg.methods = 'PUT';
+    arg.method = 'PUT';
     return this.post.call(this, arg);
   },
-  delete () {
-    arg.methods = 'DELETE';
+  delete (arg) {
+    arg.method = 'DELETE';
     return this.post.call(this, arg);
   },
   get (arg) {

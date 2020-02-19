@@ -133,7 +133,6 @@ const toolbarOptions = [
   ["clean"] // remove formatting button
 ];
 export default {
-  //https://kang-bing-kui.gitbook.io/quill/wen-dang-document/themes 官网帮助文档
   components: { quillEditor },
   props: {},
   data() {
@@ -141,6 +140,7 @@ export default {
       quill:null,
       uploadUrl:"",
       notice:{
+        configId:null,
         newsTitle: null,
         newsContent: null,
         sendWay:null,
@@ -247,14 +247,15 @@ export default {
         return;
       }
 
+if(this.notice.configId==null){
 
       this.$api.get({
         url: '/Set/add',
         data: {
           sysParType:this.notice.newsClass,
           sysParNo:this.notice.configNo,
-          sysParName:this.notice.configMemo,
-          memo:this.notice.configName,
+          sysParName:this.notice.configName,
+          memo:this.notice.configMemo,
           addName:"35491",
         },
         token: false,
@@ -278,15 +279,69 @@ export default {
         console.log("添加失败");
         console.log(e);
       })
+      }else{
+        console.log(this.notice.configId);
+          this.$api.get({
+        url: '/Set/update',
+        data: {
+          sysParid:this.$route.query.configId,
+          sysParType:this.notice.newsClass,
+          sysParNo:this.notice.configNo,
+          sysParName:this.notice.configName,
+          memo:this.notice.configMemo,
+        },
+        token: false,
+       
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+              this.$alert('', '添加成功', {
+            dangerouslyUseHTMLString: false
+          });
+          this.$router.push({ path: "/menuFrame/systemConfigList"});
+          console.log(result.data);
+          this.$message({message:result.message});
+        } else {
+          console.log("添加失败:" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("添加失败");
+        console.log(e);
+      })
+      }
     },
 
   },
   created() {
-    this.uploadUrl=this.$api.baseUrl()+"/draft_house/picture";
-    console.log(this.uploadUrl);
+    console.log(this.$route.query);
+          this.notice.configId=this.$route.query.configId;
+      this.notice.configNo=this.$route.query.sysParNo;
+      this.notice.configName=this.$route.query.sysParName;
+       this.notice.configMemo=this.$route.query.memo;
+ 
+     switch(this.$route.query.sysParType){
+     case"买卖房源":
+      this.notice.newsClass="1";
+      break;
+       case"买卖客户":
+      this.notice.newsClass="2";
+      break;
+       case"租赁房源":
+      this.notice.newsClass="3";
+      break;
+       case"租赁客户":
+      this.notice.newsClass="4";
+      break;
+       case"用户管理":
+      this.notice.newsClass="5";
+      break;
+      }
   },
   mounted() {
-    this.quill = this.$refs.QuillEditor.quill;
+   
   }
 };
 </script>

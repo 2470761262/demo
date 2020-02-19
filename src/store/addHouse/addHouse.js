@@ -25,12 +25,46 @@ export default {
         balcony: "", //阳台
         face: "", //朝向
         decoration: "" //装修
+      },
+      step2: {
+        houseUse: "",//房屋用途
+        houseStruct: "",//房屋结构
+        property: "",//产权性质
+        houseNow: "",//房屋现状
+        houseSource: "",//房屋来源
+        roomType: "",//户型结构
+        sign: "",//户口情况
+        isElevator: "",//电梯
+        houseDelivery: "",//交房时间
+        houseBelong: "",//附属配套
+        landCharacteristic: "",//土地性质
+        primarySchool: "",//划片小学
+        primarySchoolUse: "",//小学学籍占用
+        middleSchool: "",//划片中学
+        middleSchoolUse: "",//中学学籍占用
+        mortgage: "",//抵押情况
+        mortgageBank: "",//抵押银行
+        balance: "",//余贷
+        monthlyMortgage: "",//月供
+        lastSale: "",//上次交易日期
+        lastPayment: "",//上次交易金额
+        paymentMethod: "",//付款方式
+        buildingTime: ""//竣工时间
+      },
+      step3: {
+        communityDesc: "",//小区介绍
       }
     }
   },
   mutations: {
     updateStep1 (state, val) {
       state.formData.step1 = val;
+    },
+    updateStep2 (state, val) {
+      state.formData.step2 = val;
+    },
+    updateStep3 (state, val) {
+      state.formData.step3 = val;
     }
   }
 };

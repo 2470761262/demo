@@ -28,7 +28,8 @@
         bottom: 0;
         right: 0;
         background-color: rgb(68, 125, 6);
-        img {
+        .loginZxj,
+        .Web_login_03 {
           width: 100%;
           height: 100%;
         }
@@ -79,7 +80,7 @@
           .page-cell-reload-img {
             width: 20px;
             height: 20px;
-            background-image: url(../../static/images/channel_current.png);
+            background-image: url(../assets/images/channel_current.png);
             background-color: #007e43;
             background-size: 100%;
             position: absolute;
@@ -98,6 +99,12 @@
   .page-cell-floot {
     height: 11.5%;
   }
+}
+.loginZxj {
+  background-image: url("../assets/images/loginZxj.png");
+}
+.Web_login_03 {
+  background-image: url("../assets/images/Web_login_03.png");
 }
 </style>
 <template>
@@ -147,8 +154,7 @@
         <!-- 切换按钮 -->
         <div class="page-cell-changeBut"
              @click="changeLoginType">
-          <img :src="loginType == 0 ? '../static/images/loginZxj.png' :'../static/images/Web_login_03.png'"
-               alt="切换">
+          <div :class="loginType == 0 ? 'loginZxj':'Web_login_03'"></div>
         </div>
       </div>
     </div>
