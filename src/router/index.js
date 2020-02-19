@@ -374,7 +374,7 @@ export default new Router({
                 name: "房源管理"
               },
               {
-                path: "/menuFrame/BsAgentHouseTbl",
+                path: "/menuFrame/houseList",
                 name: "房源列表"
               },
               {
