@@ -24,7 +24,7 @@
 <template >
   <section class="page-cell">
     <el-container>
-      <el-header>
+      <el-header v-if="asideNavFlag">
         <header-content></header-content>
       </el-header>
     </el-container>
@@ -66,7 +66,8 @@ export default {
   },
   created () {
     window.addEventListener('message', (e) => {
-      if (e.data.isXinIframe) {
+      console.log("-------------------",e);
+      if (e.data.isXinIfram) {
         this.asideNavFlag = false;
       }
     }, false);

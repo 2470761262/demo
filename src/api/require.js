@@ -1,5 +1,6 @@
 import axios from 'axios';
 import qs from 'qs';
+import util from '@/util/util';
 
 let http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
@@ -12,7 +13,7 @@ let http = axios.create({
 http.interceptors.request.use(function (config) {
   // Do something before request is sent
   if (config.token) {
-    config.headers.token = 1111;
+    config.headers.tk = util.localStorageGet("token");
     console.log(config, "请求拦截器");
   }
   return config;

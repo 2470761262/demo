@@ -44,7 +44,7 @@ export default new Router({
           component: () =>
             import(/* webpackChunkName: "houseList" */ "@/pages/houseList.vue")
         },
-        
+
         {
           //房源配对列表
           path: "/components/mateHouseList",
@@ -328,7 +328,7 @@ export default new Router({
                 path: "/menuFrame/houseList",
                 name: "系统参数配置表"
               },
-              
+
             ]
           },
           component: () =>
@@ -394,6 +394,7 @@ export default new Router({
                 name: "系统配置"
               },
               {
+
                 path: "/menuFrame/systemConfigList",
                 name: "系统参数配置表"
               },
@@ -405,6 +406,28 @@ export default new Router({
           },
           component: () =>
             import(/* webpackChunkName: "addConfig" */ "@/pages/configObjectList.vue")
+        },
+        {
+          //用户密码重置
+          path: "/menuFrame/passwordReset",
+          name: "passwordReset",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "系统管理"
+              },
+              {
+                path: "/menuFrame/passwordReset",
+                name: "用户密码重置"
+              }
+            ]
+          },
+          component: () =>
+            import(
+              "@/pages/passwordReset.vue"
+              )
         },
       ]
     }

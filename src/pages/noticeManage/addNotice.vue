@@ -94,10 +94,17 @@
                 show-checkbox
                 :check-strictly="checkStrictly"
                 :data="treeData"
+                :default-checked-keys="defaultCheckedNodeKey"
                 @node-expand="handellNodeExpand"
                 @node-click="handleNodeClick"
                 @check-change="handleCheckChange"
-              ></el-tree>
+              >
+                  <span class="custom-tree-node" slot-scope="{ node, data }">
+                    <span>
+                        <i :class="data.icon"></i>{{ data.labelName }}
+                    </span>              
+                   </span>
+              </el-tree>
             </div>
           </el-col>
         </el-row>
@@ -210,12 +217,20 @@ const toolbarOptions = [
   ["link", "image"],
   ["clean"] // remove formatting button
 ];
+const allPersonNode={nodeId: "1,0",
+          parentNodeId: "0,0",
+          labelName: "全员发送",
+          disabled: true,
+          icon:"el-icon-s-grid",
+          checked:true
+          };
 export default {
   //https://kang-bing-kui.gitbook.io/quill/wen-dang-document/themes 官网帮助文档
   components: { quillEditor },
   props: {},
   data() {
     return {
+      defaultCheckedNodeKey:['1,0'],//默认选中的节点
       checkStrictly: false,
       propsTreeConfig: {
         label: "labelName",
@@ -223,12 +238,7 @@ export default {
         isLeaf: "leafFlag"
       },
       treeData: [
-        {
-          id: "1,0",
-          parentId: "0,0",
-          labelName: "全员发送",
-          disabled: true
-        }
+       allPersonNode
       ],
       selectedNodeDatas: [], //选中的节点数据
       hasQueryAccountNode: [], //存放已经加载过员工的节点，防止二次加载读取
@@ -355,12 +365,7 @@ export default {
       if (sendType == 3) {
         //全员发送
         this.treeData = [
-          {
-            id: "1,0",
-            parentId: "0,0",
-            labelName: "全员发送",
-            disabled: true
-          }
+          allPersonNode
         ];
         return this.treeData;
       }
@@ -391,6 +396,10 @@ export default {
     sendTypeSelectChange(sendType) {
       this.checkStrictly = true;
       this.selectedNodeDatas = [];
+      this.defaultCheckedNodeKey=[];
+      if(sendType==3){
+        this.defaultCheckedNodeKey=['1,0'];
+      }
       this.getTreeData(sendType);
     },
     handleCheckChange(item, checked, indeterminate) {

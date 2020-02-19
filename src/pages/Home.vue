@@ -289,8 +289,9 @@ export default {
       }
       this.loginReal(loginParams,
         function (e) {
-          console.log(e, "eeeeee");
-          util.localStorageSet(LOGINDATA, e);
+          util.localStorageSet(LOGINDATA, e.data);
+          //保存token
+          util.localStorageSet("token",e.data.token.token);
           that.$router.push({ path: '/menuFrame' });
         },
         function (message) {
