@@ -20,6 +20,22 @@
     }
   }
 }
+/deep/.el-aside {
+  background: #e2e2e2 !important;
+  .el-submenu__title {
+    background: #e2e2e2 !important;
+    > span {
+      color: #323234 !important;
+    }
+  }
+  /deep/.el-menu-item {
+    background: #dbdbdb !important;
+    color: #323234 !important;
+  }
+  /deep/.el-submenu__icon-arrow {
+    display: none;
+  }
+}
 </style>
 <template >
   <section class="page-cell">

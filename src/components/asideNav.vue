@@ -1,5 +1,5 @@
 
-<style lang="less">
+<style lang="less" >
 .el-menu {
   border: none !important;
 }
@@ -21,12 +21,12 @@
         </template>
         <!-- <el-menu-item-group> -->
         <!-- <template slot="title">分组一</template> -->
-        <el-menu-item index="/buySellSystem/houseList">房源列表</el-menu-item>
-        <el-menu-item index="/buySellSystem/validateHouseList">验真房源列表</el-menu-item>
-        <el-menu-item index="/buySellSystem/validateHouseExamineList">验真房源审核</el-menu-item>
-        <el-menu-item index="/buySellSystem/houseTaskExamineList">房源作业方审核</el-menu-item>
-        <el-menu-item index="/buySellSystem/errorValidateList">异常验真列表</el-menu-item>
-        <el-menu-item index="/buySellSystem/addFloorList">补充楼盘审核</el-menu-item>
+        <el-menu-item index="/buySellSystem/houseList"><i class="el-icon-location"></i>房源列表</el-menu-item>
+        <el-menu-item index="/buySellSystem/validateHouseList"><i class="el-icon-location"></i>验真房源列表</el-menu-item>
+        <el-menu-item index="/buySellSystem/validateHouseExamineList"><i class="el-icon-location"></i>验真房源审核</el-menu-item>
+        <el-menu-item index="/buySellSystem/houseTaskExamineList"><i class="el-icon-location"></i>房源作业方审核</el-menu-item>
+        <el-menu-item index="/buySellSystem/errorValidateList"><i class="el-icon-location"></i>异常验真列表</el-menu-item>
+        <el-menu-item index="/buySellSystem/addFloorList"><i class="el-icon-location"></i>补充楼盘审核</el-menu-item>
         <!-- </el-menu-item-group> -->
       </el-submenu>
       <el-submenu index="2">
@@ -34,9 +34,9 @@
           <i class="el-icon-location"></i>
           <span>系统管理</span>
         </template>
-        <el-menu-item index="/sys/noticeManageList">公告管理</el-menu-item>
-        <el-menu-item index="/sys/systemConfigList">系统参数配置</el-menu-item>
-        <el-menu-item index="/sys/passwordReset">用户密码重置</el-menu-item>
+        <el-menu-item index="/sys/noticeManageList"><i class="el-icon-location"></i>公告管理</el-menu-item>
+        <el-menu-item index="/sys/systemConfigList"><i class="el-icon-location"></i>系统参数配置</el-menu-item>
+        <el-menu-item index="/sys/passwordReset"><i class="el-icon-location"></i>用户密码重置</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
