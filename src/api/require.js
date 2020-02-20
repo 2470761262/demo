@@ -43,7 +43,7 @@ let ApiData = {
       http(sendConfig).then((e) => {
         if (e.data.code == 401) {
           alert(e.data.message);
-          alert('即将跳转到登录页面');
+          vm.$router.push({"path":"/"});
           return;
         }
         resolve(e)

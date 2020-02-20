@@ -7,7 +7,7 @@
   <list-page :parentData="$data"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template v-slot:inputTo>
+    <template v-slot:top>
       <div class="query-cell">
         <el-input placeholder="标题名称"
                   v-model="queryData.newsTitle"
@@ -126,10 +126,10 @@ export default {
       })
     },
     toAddNoticePage () {
-      this.$router.push({ path: "/menuFrame/addNotice" });
+      this.$router.push({ path: "/sys/addNotice" });
     },
     showNoticeDetail (noticeId) {
-      this.$router.push({ path: "/menuFrame/noticeDetail", query: { noticeId: noticeId } });
+      this.$router.push({ path: "/sys/noticeDetail", query: { noticeId: noticeId } });
     },
     distributeEvent (e, noticeId) {
       this[e](noticeId);
