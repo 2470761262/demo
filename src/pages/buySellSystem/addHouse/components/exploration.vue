@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import url("../../assets/publicLess/addHouse.less");
+@import url("../../../../assets/publicLess/addHouse.less");
 .el-alert--info.is-light {
   width: fit-content;
   margin-top: 20px;

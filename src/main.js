@@ -17,10 +17,12 @@ Vue.use(ElementUI);
 guard(router);
 themePackers.createImport();
 /* eslint-disable no-new */
-new Vue({
+let app = new Vue({
   el: "#app",
   router,
   store,
   components: { App },
   template: "<App/>"
 });
+
+export default app;

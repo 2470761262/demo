@@ -2,7 +2,7 @@ import loadding from "@/components/successLoading";
 export default componentsName => {
   return {
     // 需要加载的组件 (应该是一个 `Promise` 对象)
-    component: import(`@/components/${componentsName}`), //配对房源,
+    component: import(`@/${componentsName}`), //配对房源,
     // 异步组件加载时使用的组件
     loading: loadding,
     // 加载失败时使用的组件

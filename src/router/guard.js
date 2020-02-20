@@ -5,8 +5,12 @@ import { Notification } from 'element-ui';
 export default (router) => {
   //路由拦截
   router.beforeEach((to, form, next) => {
-    if (to.meta.isLogin) {
-      if (util.localStorageGet(LOGINDATA)) {
+    if (to.fullPath === "/") {
+      next();
+    } else {
+      if (to.meta.jumpLogin) {
+        next();
+      } else if (util.localStorageGet(LOGINDATA)) {
         next();
       } else {
         Notification({
@@ -16,8 +20,6 @@ export default (router) => {
         })
         next({ path: '/' })
       }
-    } else {
-      next();
     }
   });
 }

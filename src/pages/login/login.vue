@@ -80,7 +80,7 @@
           .page-cell-reload-img {
             width: 20px;
             height: 20px;
-            background-image: url(../assets/images/channel_current.png);
+            background-image: url(../../assets/images/channel_current.png);
             background-color: #007e43;
             background-size: 100%;
             position: absolute;
@@ -101,10 +101,10 @@
   }
 }
 .loginZxj {
-  background-image: url("../assets/images/loginZxj.png");
+  background-image: url("../../assets/images/loginZxj.png");
 }
 .Web_login_03 {
-  background-image: url("../assets/images/Web_login_03.png");
+  background-image: url("../../assets/images/Web_login_03.png");
 }
 </style>
 <template>
@@ -213,7 +213,7 @@ export default {
           //停止轮询
           clearInterval(that.intervalIdForLoginStatus);
           this.loginValidate();
-          //this.$router.push({ path: "/menuFrame/houseList" });
+          //that.$router.push({ path: '/buySellSystem/houseList' });
         } else {
           console.log("检查扫码登录结果：" + result.message);
         }
@@ -289,9 +289,10 @@ export default {
       }
       this.loginReal(loginParams,
         function (e) {
-          console.log(e, "eeeeee");
-          util.localStorageSet(LOGINDATA, e);
-          that.$router.push({ path: '/menuFrame' });
+          util.localStorageSet(LOGINDATA, e.data);
+          //保存token
+          util.localStorageSet("token",e.data.token.token);
+          that.$router.push({ path: '/buySellSystem/houseList' });
         },
         function (message) {
           that.loginLoadding = false;

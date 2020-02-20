@@ -1,9 +1,9 @@
 export const USERINFO = "userinfo";
 export const LOGINDATA = "logindata";
-export const  HOUSEBELONGLIST=[{id:0,name:"车位"},{id:1,name:"车库"},{id:2,name:"杂物间"},{id:3,name:"无"}];
+export const HOUSEBELONGLIST = [{ id: 0, name: "车位" }, { id: 1, name: "车库" }, { id: 2, name: "杂物间" }, { id: 3, name: "无" }];
 
 export const TREMEPACKERS = "tremePackers";//默认皮肤缓存
-export const TREMEDEFTULTCOLOR = "#409EFF"; //默认皮肤颜色
+export const TREMEDEFTULTCOLOR = "#0d824b"; //默认皮肤颜色
 export const HOUSESOURCE = [ //房屋来源 houseSource
   { key: "上门", value: 1 },
   { key: "转介", value: 2 },

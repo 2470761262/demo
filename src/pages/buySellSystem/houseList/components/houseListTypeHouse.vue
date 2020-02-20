@@ -59,7 +59,8 @@
               :md="6"
               :lg="6"
               class="page-col">
-        <div class="house-type-item" @click="goToMyHouse()">
+        <div class="house-type-item"
+             @click="goToMyHouse()">
           <div class="item-cell">
             <div class="item-cell-title overText">我的房源</div>
             <div class="item-cell-data overText">
@@ -74,15 +75,16 @@
               :md="6"
               :lg="6"
               class="page-col">
-        <div class="house-type-item">
+        <div class="house-type-item"
+             @click="goToMyHouse()">
           <div class="item-cell">
-            <div class="item-cell-title overText">我的房源</div>
+            <div class="item-cell-title overText">七天被带看房源</div>
             <div class="item-cell-data overText">
-              <div class="item-cell-data-title">33</div>
+              <div class="item-cell-data-title">20</div>
               <div class="item-cell-data-tips">套</div>
             </div>
           </div>
-          <div class="item-cell-tips overText">我的个人作业房源</div>
+          <div class="item-cell-tips overText"></div>
         </div>
       </el-col>
       <el-col :sm="8"
@@ -105,15 +107,16 @@
               :md="6"
               :lg="6"
               class="page-col">
-        <div class="house-type-item">
+        <div class="house-type-item"
+             @click="goToMyConcernCommunity()">
           <div class="item-cell">
-            <div class="item-cell-title overText">我的房源</div>
+            <div class="item-cell-title overText">我的核心盘</div>
             <div class="item-cell-data overText">
-              <div class="item-cell-data-title">33</div>
+              <div class="item-cell-data-title">9</div>
               <div class="item-cell-data-tips">套</div>
             </div>
           </div>
-          <div class="item-cell-tips overText">我的个人作业房源</div>
+          <div class="item-cell-tips overText"></div>
         </div>
       </el-col>
     </el-row>
@@ -192,8 +195,8 @@ export default {
     goToNewHouse () {
       this.$router.push({ path: '/menuFrame/newAgentHouse' });
     },
-    goToMyHouse(){
-      this.$router.push({ path: '/menuFrame/myHouseList' });
+    goToMyHouse () {
+      this.$router.push({ path: '/buySellSystem/otherIframe' });
     }
   },
 }
