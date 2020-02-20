@@ -11,11 +11,9 @@ let http = axios.create({
 
 // 请求拦截器
 http.interceptors.request.use(function (config) {
-  // Do something before request is sent
-  if (config.token) {
+  // Do something before request is sent 
     config.headers.tk = util.localStorageGet("token");
-    console.log(config, "请求拦截器");
-  }
+    console.log("设置了token", "请求拦截器"); 
   return config;
 }, function (error) {
   console.log(error, "响应拦截器");
@@ -43,6 +41,11 @@ let ApiData = {
       sendConfig.data = qs.stringify(sendConfig.data);
     return new Promise((resolve, reject) => {
       http(sendConfig).then((e) => {
+        if(e.data.code==401){
+          alert(e.data.message);
+          alert('即将跳转到登录页面');
+          return;
+        }
         resolve(e)
       }).catch((e) => {
         reject(e);
