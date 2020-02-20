@@ -5,7 +5,7 @@
   border: none;
 }
 /deep/.el-tabs__content {
-  padding: 0px;
+  padding: 0px !important;
 }
 .el-parent-tabs {
   /deep/.el-tabs__header {
