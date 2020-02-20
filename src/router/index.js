@@ -429,6 +429,32 @@ export default new Router({
               "@/pages/passwordReset.vue"
               )
         },
+        {
+          //房源详情
+          path: "/menuFrame/houseDetails",
+          name: "houseDetails",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/houseList",
+                name: "房源列表"
+              },
+              {
+                path: "/menuFrame/houseDetails",
+                name: "房源详情"
+              }
+            ]
+          },
+          component: () =>
+            import(
+              "@/pages/houseDetails.vue"
+              )
+        },
       ]
     }
   ]
