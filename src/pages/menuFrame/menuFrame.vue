@@ -20,20 +20,23 @@
     }
   }
 }
-/deep/.el-aside {
+.el-background {
   background: #e2e2e2 !important;
-  .el-submenu__title {
+  /deep/.el-submenu__title {
     background: #e2e2e2 !important;
     > span {
       color: #323234 !important;
     }
+  }
+  /deep/.el-menu--inline {
+    background: none !important;
   }
   /deep/.el-menu-item {
     background: #dbdbdb !important;
     color: #323234 !important;
   }
   /deep/.el-submenu__icon-arrow {
-    display: none;
+    display: none !important;
   }
 }
 </style>
@@ -45,7 +48,8 @@
       </el-header>
     </el-container>
     <el-container class="page-cell-main">
-      <el-aside width="200px"
+      <el-aside class="el-background"
+                width="200px"
                 v-if="asideNavFlag">
         <asideNav></asideNav>
       </el-aside>
