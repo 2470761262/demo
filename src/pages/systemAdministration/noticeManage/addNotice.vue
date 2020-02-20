@@ -17,7 +17,7 @@
   background-color: bisque;
 }
 .left-input-container {
-  width: 50%;
+  width: 53%;
   float: left;
   font-size: 1rem;
   border-right: 1px solid black;
@@ -36,7 +36,7 @@
 }
 .right-input-container {
   position: relative;
-  width: 48%;
+  width: 45%;
   height: 200px;
   border: 1px dotted black;
   .selectedNodeTip {
