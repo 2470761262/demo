@@ -27,14 +27,14 @@ export default [
     path: "/buySellSystem/checkFloorList",
     name: "addHouse",
     component: () =>
-      import(/* checkFloorList: "addHouse" */ "@/pages/checkFloorList.vue")
+      import(/* webpackChunkName: "checkFloorList" */ "@/pages/buySellSystem/addFloorList/checkFloorList.vue")
   },
   {
     //补充楼盘
     path: "/buySellSystem/CommunityReplenish",
     name: "addHouse",
     component: () =>
-      import(/* checkFloorList: "addHouse" */ "@/pages/CommunityReplenish.vue")
+      import(/* webpackChunkName: "CommunityReplenish" */ "@/pages/buySellSystem/addFloorList/checkFloorList.vue")
   },
   {
     //思冲的页面
@@ -56,14 +56,14 @@ export default [
         path: "/buySellSystem/concernCommunity",
         name: "concernCommunity",
         component: () =>
-          import(/* webpackChunkName: "myHouseList" */ "@/pages/buySellSystem/concernCommunity/concernCommunity.vue")
+          import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/concernCommunity/concernCommunity.vue")
       },
       {
         //柯名的页面
         path: "/buySellSystem/newAgentHouse",
         name: "newAgentHouse",
         component: () =>
-          import(/* webpackChunkName: "myHouseList" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
+          import(/* webpackChunkName: "newAgentHouse" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
       },
       {
         //柯名的页面
