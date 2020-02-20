@@ -2,13 +2,9 @@
 .right {
   float: right;
 }
-.el-aside {
-  border: 1px solid black;
-  min-height: 600px;
-  overflow: auto;
-}
 .innerContainer {
-  border: 1px solid red;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
 }
 .el-header {
   margin-top: 10px;
@@ -66,7 +62,16 @@
     }
   }
 }
-.treeContainer {
+.asideInAddNotice{
+  background-color: white !important;
+  min-height: 600px;
+  margin-right: 5px;
+  overflow:auto;
+}
+.treeAndTitleContainer {
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  padding: 15px 15px 15px;
+  border-radius: 10px;
 }
 .editorContainer {
   width: 100%;
@@ -82,29 +87,32 @@
 <template>
   <div class="wrapper">
     <el-container>
-      <el-aside>
+      <el-aside class="asideInAddNotice">
         <el-row>
           <el-col :span="24">
-            <div class="treeTitle">人员形式</div>
-            <div class="treeContainer">
-              <el-tree
-                node-key="nodeId"
-                ref="treeNotice"
-                :props="propsTreeConfig"
-                show-checkbox
-                :check-strictly="checkStrictly"
-                :data="treeData"
-                :default-checked-keys="defaultCheckedNodeKey"
-                @node-expand="handellNodeExpand"
-                @node-click="handleNodeClick"
-                @check-change="handleCheckChange"
-              >
+            <div class="treeAndTitleContainer">
+              <div class="treeTitle">人员形式</div>
+              <div class="treeContainer">
+                <el-tree
+                  node-key="nodeId"
+                  ref="treeNotice"
+                  :props="propsTreeConfig"
+                  show-checkbox
+                  :check-strictly="checkStrictly"
+                  :data="treeData"
+                  :default-checked-keys="defaultCheckedNodeKey"
+                  @node-expand="handellNodeExpand"
+                  @node-click="handleNodeClick"
+                  @check-change="handleCheckChange"
+                >
                   <span class="custom-tree-node" slot-scope="{ node, data }">
                     <span>
-                        <i :class="data.icon"></i>{{ data.labelName }}
-                    </span>              
-                   </span>
-              </el-tree>
+                      <i :class="data.icon"></i>
+                      {{ data.labelName }}
+                    </span>
+                  </span>
+                </el-tree>
+              </div>
             </div>
           </el-col>
         </el-row>
@@ -172,7 +180,12 @@
         </el-header>
         <el-main>
           <div class="editorContainer">
-            <el-upload class="upload-demo" :action="uploadUrl" :headers="myHeader" :on-success="handleAvatarSuccess">
+            <el-upload
+              class="upload-demo"
+              :action="uploadUrl"
+              :headers="myHeader"
+              :on-success="handleAvatarSuccess"
+            >
               <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
@@ -195,7 +208,7 @@
 
 <script>
 import { quillEditor } from "vue-quill-editor";
-import util from '@/util/util';
+import util from "@/util/util";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
@@ -218,34 +231,33 @@ const toolbarOptions = [
   ["link", "image"],
   ["clean"] // remove formatting button
 ];
-const allPersonNode={nodeId: "1,0",
-          parentNodeId: "0,0",
-          labelName: "全员发送",
-          disabled: true,
-          icon:"el-icon-s-grid",
-          checked:true
-          };
+const allPersonNode = {
+  nodeId: "1,0",
+  parentNodeId: "0,0",
+  labelName: "全员发送",
+  disabled: true,
+  icon: "el-icon-s-grid",
+  checked: true
+};
 export default {
   //https://kang-bing-kui.gitbook.io/quill/wen-dang-document/themes 官网帮助文档
   components: { quillEditor },
   props: {},
   data() {
     return {
-      defaultCheckedNodeKey:['1,0'],//默认选中的节点
+      defaultCheckedNodeKey: ["1,0"], //默认选中的节点
       checkStrictly: false,
       propsTreeConfig: {
         label: "labelName",
         children: "childrenNodes",
         isLeaf: "leafFlag"
       },
-      treeData: [
-       allPersonNode
-      ],
+      treeData: [allPersonNode],
       selectedNodeDatas: [], //选中的节点数据
       hasQueryAccountNode: [], //存放已经加载过员工的节点，防止二次加载读取
       quill: null,
       uploadUrl: "",
-      myHeader:"",
+      myHeader: "",
       notice: {
         newsTitle: null,
         newsContent: null,
@@ -366,9 +378,7 @@ export default {
       this.hasQueryAccountNode = [];
       if (sendType == 3) {
         //全员发送
-        this.treeData = [
-          allPersonNode
-        ];
+        this.treeData = [allPersonNode];
         return this.treeData;
       }
       //读取公司，部门数据
@@ -398,36 +408,39 @@ export default {
     sendTypeSelectChange(sendType) {
       this.checkStrictly = true;
       this.selectedNodeDatas = [];
-      this.defaultCheckedNodeKey=[];
-      if(sendType==3){
-        this.defaultCheckedNodeKey=['1,0'];
+      this.defaultCheckedNodeKey = [];
+      if (sendType == 3) {
+        this.defaultCheckedNodeKey = ["1,0"];
       }
       this.getTreeData(sendType);
     },
     handleCheckChange(item, checked, indeterminate) {
       //console.log(data, checked, indeterminate);
       //去除勾选
-      if(!checked){
-        this.selectedNodeDatas.splice(this.selectedNodeDatas.findIndex(t => t.nodeId === item.nodeId), 1);
+      if (!checked) {
+        this.selectedNodeDatas.splice(
+          this.selectedNodeDatas.findIndex(t => t.nodeId === item.nodeId),
+          1
+        );
         return;
       }
       //已经有了，就不加进去
-      if (this.selectedNodeDatas.find(function(x) {
+      if (
+        this.selectedNodeDatas.find(function(x) {
           return x.nodeId == item.nodeId;
         }) == undefined
       ) {
-            if (this.notice.sendType == 0 && item.type == 2) {
-            //按单独发送， 员工
-            this.selectedNodeDatas.push(item);
-          } else if (this.notice.sendType == 1 && item.type == 3) {
-            this.selectedNodeDatas.push(item);
-          } else if (this.notice.sendType == 2 && item.type == 1) {
-            this.selectedNodeDatas.push(item);
-          } else if (this.notice.sendType == 4 && item.type == 0) {
-            this.selectedNodeDatas.push(item);
-          }
+        if (this.notice.sendType == 0 && item.type == 2) {
+          //按单独发送， 员工
+          this.selectedNodeDatas.push(item);
+        } else if (this.notice.sendType == 1 && item.type == 3) {
+          this.selectedNodeDatas.push(item);
+        } else if (this.notice.sendType == 2 && item.type == 1) {
+          this.selectedNodeDatas.push(item);
+        } else if (this.notice.sendType == 4 && item.type == 0) {
+          this.selectedNodeDatas.push(item);
+        }
       }
-      
     },
     getAccountDataByHigher(businessId, type, successFun) {
       //读取公司或部门下面的员工
@@ -460,7 +473,8 @@ export default {
         });
     },
     appendAccountNode(data, node) {
-      if (this.notice.sendType != 0) {//只有单独发送才要
+      if (this.notice.sendType != 0) {
+        //只有单独发送才要
         return;
       }
       if (data.type == 2) {
@@ -494,8 +508,8 @@ export default {
       }
     },
     handleNodeClick(data, node, nodeComponent) {
-        //单独发送，需要加载员工
-        this.appendAccountNode(data, node);
+      //单独发送，需要加载员工
+      this.appendAccountNode(data, node);
     },
     loadNode(node, resolve) {
       //只有设置了lazy属性才会生效此方法
@@ -624,7 +638,7 @@ export default {
             console.log(result.message);
             console.log(result.data);
             this.$message({ message: result.message });
-            this.$router.push({ path: "/sys/noticeManageList"});
+            this.$router.push({ path: "/sys/noticeManageList" });
           } else {
             console.log("发送公告结果：" + result.message);
             alert(result.message);
@@ -655,7 +669,7 @@ export default {
   },
   created() {
     this.uploadUrl = this.$api.baseUrl() + "/draft_house/picture";
-    this.myHeader={"tk":util.localStorageGet("token")};
+    this.myHeader = { tk: util.localStorageGet("token") };
     console.log(this.uploadUrl);
     console.log(this.myHeader);
   },
