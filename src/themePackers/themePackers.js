@@ -2,9 +2,10 @@ import util from '@/util/util';
 import { TREMEPACKERS, TREMEDEFTULTCOLOR } from '@/util/constMap';
 import api from '@/api/require';
 const version = require('element-ui/package.json').version // element-ui version from node_modules
+const defaultColor = "#409EFF"; // 不可修改
 let themeData = {
   chalk: '',
-  createImport (val, ordVal = TREMEDEFTULTCOLOR) {
+  createImport (val, ordVal = defaultColor) {
     let newVal = val;
     if (newVal == undefined) {
       let storeColor = util.localStorageGet(TREMEPACKERS);
@@ -28,7 +29,7 @@ let themeData = {
       if (tremePackers) {
         document.documentElement.style.setProperty('--color--primary', tremePackers);
       } else {
-        document.documentElement.style.setProperty('--color--primary', TREMEDEFTULTCOLOR);
+        document.documentElement.style.setProperty('--color--primary', defaultColor);
       }
     } else {
       document.documentElement.style.setProperty('--color--primary', color);
@@ -43,7 +44,7 @@ let themeData = {
         let styleTag = document.getElementById(id);
         if (styleTag != null && styleTag.innerText)
           this[variable] = styleTag.innerText;
-        const originalCluster = themeData.getThemeCluster(TREMEDEFTULTCOLOR.replace('#', ''))
+        const originalCluster = themeData.getThemeCluster(defaultColor.replace('#', ''))
         const newStyle = themeData.updateStyle(this[variable], originalCluster, themeCluster)
         if (!styleTag) {
           styleTag = document.createElement('style')

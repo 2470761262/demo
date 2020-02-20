@@ -94,16 +94,16 @@
 </template>
 <script>
 //默认组件
-import basicInformation from "@/components/addHouse/basicInformation";
+import basicInformation from "@/pages/buySellSystem/addHouse/components/basicInformation";
 //异步组件工厂方法
 import componentsFactory from "@/util/componentsFactory";
 import { mapState } from "vuex";
 export default {
   components: {
     basicInformation,
-    supplement: () => componentsFactory("addHouse/supplement"), //补充信息
-    exploration: () => componentsFactory("addHouse/exploration"), //实勘图片/视频
-    addHouseSuccess: () => componentsFactory("addHouse/addHouseSuccess") //实勘图片/视频
+    //   supplement: () => componentsFactory("pages/buySellSystem/addHouse/components/supplement"), //补充信息
+    //   exploration: () => componentsFactory("pages/buySellSystem/addHouse/components/exploration"), //实勘图片/视频
+    //  addHouseSuccess: () => componentsFactory("pages/buySellSystem/addHouse/components/addHouseSuccess") //实勘图片/视频
   },
   directives: {
     scrollTop: {

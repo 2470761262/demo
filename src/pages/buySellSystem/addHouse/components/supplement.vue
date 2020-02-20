@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import url("../../assets/publicLess/addHouse.less");
+@import url("../../../../assets/publicLess/addHouse.less");
 .item-before {
   width: 110px !important;
 }

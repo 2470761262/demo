@@ -59,7 +59,8 @@
               :md="6"
               :lg="6"
               class="page-col">
-        <div class="house-type-item" @click="goToMyHouse()">
+        <div class="house-type-item"
+             @click="goToMyHouse()">
           <div class="item-cell">
             <div class="item-cell-title overText">我的房源</div>
             <div class="item-cell-data overText">
@@ -192,8 +193,8 @@ export default {
     goToNewHouse () {
       this.$router.push({ path: '/menuFrame/newAgentHouse' });
     },
-    goToMyHouse(){
-      this.$router.push({ path: '/menuFrame/myHouseList' });
+    goToMyHouse () {
+      this.$router.push({ path: '/buySellSystem/otherIframe' });
     }
   },
 }
