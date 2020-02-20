@@ -22,6 +22,7 @@
         <!-- <el-menu-item-group> -->
         <!-- <template slot="title">分组一</template> -->
         <el-menu-item index="/buySellSystem/houseList"><i class="el-icon-location"></i>房源管理</el-menu-item>
+        <el-menu-item index="/buySellSystem/addFloorList"><i class="el-icon-location"></i>补充楼盘审核</el-menu-item>
         <!-- </el-menu-item-group> -->
       </el-submenu>
       <el-submenu index="2">
