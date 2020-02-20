@@ -69,7 +69,7 @@ export default new Router({
             import(/* webpackChunkName: "mateHouseList" */ "@/components/mateHouseList.vue")
         },
         {
-          //房源列表
+          //新增房源列表
           path: "/menuFrame/newAgentHouse",
           name: "houseList",
           meta: {
@@ -105,6 +105,25 @@ export default new Router({
           },
           component: () =>
             import(/* webpackChunkName: "newAgentHouse" */ "@/pages/myHouseList.vue")
+        },
+        {
+          //我的核心盘
+          path: "/menuFrame/concernCommunity",
+          name: "houseList",
+          meta: {
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/concernCommunity",
+                name: "我的核心盘"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "concernCommunity" */ "@/pages/concernCommunity.vue")
         },
         {
           //验证房源列表
