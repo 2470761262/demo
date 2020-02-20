@@ -23,6 +23,20 @@ export default [
       import(/* webpackChunkName: "otherIframe" */ "@/pages/buySellSystem/otherIframe/otherIframe.vue"),
     children: [
       {
+        //柯名的页面
+        path: "/buySellSystem/newAgentHouse",
+        name: "newAgentHouse",
+        component: () =>
+          import(/* webpackChunkName: "myHouseList" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
+      },
+      {
+        //柯名的页面
+        path: "/buySellSystem/myHouseList",
+        name: "addFloorList",
+        component: () =>
+          import(/* webpackChunkName: "myHouseList" */ "@/pages/buySellSystem/myHouseList/myHouseList.vue")
+      },
+      {
         //楼盘补充
         path: "/buySellSystem/addFloorList",
         name: "addFloorList",
