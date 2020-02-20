@@ -5,7 +5,7 @@ import { Notification } from 'element-ui';
 export default (router) => {
   //路由拦截
   router.beforeEach((to, form, next) => {
-    if (to.fullPath === "/") {
+    if (to.name === "Login") {
       next();
     } else {
       if (to.meta.jumpLogin) {
