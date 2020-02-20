@@ -14,6 +14,21 @@ export default [
     component: () =>
       import(/* webpackChunkName: "addHouse" */ "@/pages/buySellSystem/addHouse/addHouse.vue")
   },
+
+  {
+    //审核补充楼盘
+    path: "/buySellSystem/checkFloorList",
+    name: "addHouse",
+    component: () =>
+      import(/* checkFloorList: "addHouse" */ "@/pages/checkFloorList.vue")
+  },
+  {
+    //补充楼盘
+    path: "/buySellSystem/CommunityReplenish",
+    name: "addHouse",
+    component: () =>
+      import(/* checkFloorList: "addHouse" */ "@/pages/CommunityReplenish.vue")
+  },
   {
     //买卖系统三级路由
     path: "/buySellSystem/otherIframe",
