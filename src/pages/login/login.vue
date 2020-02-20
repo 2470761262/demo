@@ -1,6 +1,6 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
-.page-cell {
+.page-login-home {
   height: 100vh;
   .page-cell-head {
     height: 11.5%;
@@ -108,7 +108,7 @@
 }
 </style>
 <template>
-  <div class="page-cell">
+  <div class="page-login-home">
     <div class="page-cell-head">
     </div>
     <div class="page-cell-content">
