@@ -19,9 +19,35 @@
           <span>{{houseDetails.areaName}}</span>-
           <span>{{houseDetails.CommunityName}}</span>
         </div>
-        <div class="query-cell">
-          <span>房源印象</span>
+        <div class="query-cell" style="width:300px;overflow-x: scroll;">
+          <div
+            v-for="(item,index) in  impressionList"
+            :key="index"
+            class="query-cell"
+            style="margin-left:10px;"
+          >
+            <div>
+              <span style="white-space:nowrap;">{{item.impression}}</span>
+            </div>
+            <span @click="deleteImpression(item.id)">X</span>
+          </div>
         </div>
+      </div>
+      <div>
+        <i class="El-icon-ice-cream-square"></i>
+        <el-popover placement="bottom" width="400" trigger="click" v-model="isShowImpression">
+          <div>
+            <span>仅自己可见</span>
+          </div>
+          <div>
+            <el-input v-model="impression" placeholder="建议输入5个以内"></el-input>
+          </div>
+          <div>
+            <el-button @click="isShowImpression=false">取消</el-button>
+            <el-button @click="insertImpression">添加</el-button>
+          </div>
+          <span slot="reference">房源印象</span>
+        </el-popover>
       </div>
       <div style="margin-left:50px;font-size:30px;">房源二维码</div>
       <div style="margin-left:50px;">
@@ -38,7 +64,7 @@
           style="font-size: 50px;"
           @click="CollectHouseOrCancelCollect"
         ></i>
-        <span style="font-size:30px;">{{isCollectHouse?"取消收藏":"收藏"}}</span>
+        <span style="font-size:30px;">{{isCollectHouse?"已关注":"收藏"}}</span>
         <el-dialog :visible.sync="isShowSendNotice" width="20%">
           <span slot="title" style="font-size:30px;">临时变动通知</span>
           <div>
@@ -75,7 +101,6 @@
               style="width:100%;heigth:100%;"
             ></video>
             <el-image :src="item.url" fit="fill" v-if="item.type==1"></el-image>
-
           </el-carousel-item>
         </el-carousel>
       </div>
@@ -93,8 +118,7 @@
             <span>编辑</span>
           </div>
         </div>
-        <div class="query-cell"
-             style="margin-top:20px;">
+        <div class="query-cell" style="margin-top:20px;">
           <div>
             <span style="font-size:20px;">{{houseDetails.houseType}}</span>
             <br />
@@ -111,8 +135,7 @@
             <span>朝向</span>
           </div>
         </div>
-        <div class="query-cell"
-             style="margin-top:20px;">
+        <div class="query-cell" style="margin-top:20px;">
           <div>
             <span style="font-size:20px;">{{houseDetails.buildtype}}</span>
             <br />
@@ -129,8 +152,7 @@
             <span>电梯</span>
           </div>
         </div>
-        <div class="query-cell"
-             style="margin-top:20px;">
+        <div class="query-cell" style="margin-top:20px;">
           <div class="query-cell">
             <div class="query-cell">
               <div>
@@ -138,7 +160,6 @@
                   style="width:100;height:100px;border-radius:50px;"
                   :src="houseDetails.agentPerHeadImg"
                 ></el-image>
-
               </div>
               <div>
                 <div>{{houseDetails.agentPerName}}</div>
@@ -160,7 +181,6 @@
       <el-button>推荐房源</el-button>
       <el-button>鑫币对赌</el-button>
       <el-button>转房源状态</el-button>
-      <el-button>作业方取代</el-button>
       <el-button>取消作业方法</el-button>
       <el-button>锁定房源</el-button>
       <el-button>修改钥匙存放门店</el-button>
@@ -224,7 +244,56 @@
                   <div>钥匙人</div>
                   <div>
                     <span :data-tel="agentHouseMethod.keyOwnerTel"></span>
-                    <span v-if="agentHouseMethod.keyOwnerName!=null">取代</span>
+
+                    <el-popover placement="top" width="600" trigger="click" v-model="isShowKey">
+                      <div class="query-cell">
+                        <div>
+                          <div>
+                            <span>钥匙类型</span>
+                            <el-radio v-model="keyType" label="27">钥匙</el-radio>
+                            <el-radio v-model="keyType" label="28">指纹锁</el-radio>
+                            <el-radio v-model="keyType" label="11">密码锁</el-radio>
+                          </div>
+                          <div>
+                            <span>委托截止时间</span>
+                            <el-date-picker v-model="expirationDate" type="date" placeholder="选择日期"></el-date-picker>
+                          </div>
+                        </div>
+                        <div>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="1"
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="picList"
+                            :on-remove="removeImg"
+                            multiple
+                          >
+                            <i class="el-icon-plus"></i>
+                            <br />
+                            <el-button>请上传委托图片</el-button>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <el-button @click="isShowKey=false">取消</el-button>
+                        <el-button>添加</el-button>
+                      </div>
+                      <span
+                        v-if="agentHouseMethod.keyOwnerName!=null"
+                        slot="reference"
+                        @click="ShowBox(0)"
+                      >取代</span>
+                    </el-popover>
                   </div>
                 </div>
               </div>
@@ -248,7 +317,53 @@
                   <div>委托人</div>
                   <div>
                     <span :data-tel="agentHouseMethod.onlyOwnerTel"></span>
-                    <span v-if="agentHouseMethod.onlyOwnerName!=null">取代</span>
+
+                    <el-popover placement="top" width="600" trigger="click" v-model="isShowOnly">
+                      <div class="query-cell">
+                        <div>
+                          <div>
+                            <span>委托类型</span>
+                            <el-radio v-model="onlyType" label="27">普通委托</el-radio>
+                            <el-radio v-model="onlyType" label="28">独家委托</el-radio>
+                            <el-radio v-model="onlyType" label="11">限时销售</el-radio>
+                          </div>
+                          <div></div>
+                        </div>
+                        <div>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="1"
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="picList"
+                            :on-remove="removeImg"
+                            multiple
+                          >
+                            <i class="el-icon-plus"></i>
+                            <br />
+                            <el-button>请上传委托图片</el-button>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <el-button @click="isShowOnly=false">取消</el-button>
+                        <el-button>添加</el-button>
+                      </div>
+                      <span
+                        v-if="agentHouseMethod.onlyOwnerName!=null"
+                        slot="reference"
+                        @click="ShowBox(1)"
+                      >取代</span>
+                    </el-popover>
                   </div>
                 </div>
               </div>
@@ -394,11 +509,23 @@
                   </div>
                 </div>
               </div>
+              <div v-if="switchIndex==1">
+                <div v-for="(item,index) in  followPaitList" :key="index" style="height:70px;">
+                  <div>
+                    <span>{{item.FollowTime}}</span>
+                  </div>
+                  <div>
+                    <div>
+                      <span>{{item.lookPerName}}({{item.lookPerNameDepartmentName}}),</span>
+                      <span>{{item.Memo}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -407,7 +534,7 @@ import { HOUSEBELONGLIST } from "@/util/constMap";
 import util from "@/util/util";
 export default {
   components: {},
-  data () {
+  data() {
     return {
       houseId: 0, //房源id
       houseDetails: "", //房源详情数据
@@ -431,12 +558,22 @@ export default {
       followType: "27", //跟进类型
       followMemo: "",
       followList: [], //跟进数组
+      followPaitList: [], //房源被带看数组
       totalPage: 0, //分页的数量
-      page: 1
+      page: 1, //第几页
+      impression: "", //印象
+      isShowImpression: false, //是否显示印象弹窗
+      impressionList: [], //印象数组
+      isShowOnly: false, //是否显示委托弹窗
+      onlyType: -1, //委托类型
+      expirationDate: "", //委托截止日期
+      picList: [], //图片数组
+      isShowKey: false,
+      keyType: -1 //钥匙类型
     };
   },
-  before () { },
-  mounted () {
+  before() {},
+  mounted() {
     if (this.$route.query.houseId) {
       this.houseId = this.$route.query.houseId;
     }
@@ -447,6 +584,7 @@ export default {
     this.getHouseDetails(params);
     this.getisCollectHouse(params);
     this.getHouseFollow();
+    this.getImpressionList();
     this.$nextTick(() => {
       const el = document.querySelector(".act-not");
       console.log(el);
@@ -454,26 +592,104 @@ export default {
       el.onscroll = () => {
         const scrollTop = el.scrollTop;
         const scrollHeight = el.scrollHeight;
-        if (offsetHeight + scrollTop - scrollHeight >= -1) {
+        if (offsetHeight + scrollTop - scrollHeight >= 0) {
           if (this.page < this.totalPage) {
             ++this.page;
-            this.getHouseFollow();
+            this.cutData();
           }
         }
       };
     });
   },
   methods: {
+    ShowBox(type) {
+      this.picList = [];
+      switch (type) {
+        case 0:
+          this.isShowKey = true;
+          break;
+        case 1:
+          this.isShowOnly = true;
+        default:
+          break;
+      }
+    },
+    removeImg(file, fileList) {
+      if (file.id) {
+        this.fileList[file.listName] = this.fileList[file.listName].filter(
+          item => {
+            return item.url != file.url;
+          }
+        );
+        this.$api.delete({
+          url: `/draft_house/picture/${file.id}`,
+          qs: true,
+          data: {
+            url: file.url
+          }
+        });
+      }
+    },
+    uploadFile(uploader) {
+      console.log(uploader);
+      let that = this;
+      let formData = new FormData();
+      // formData.append('picClass', uploader.filename)
+      // formData.append('draftid', 1)
+      formData.append("file", uploader.file);
+      this.$api
+        .post({
+          url: "/draft_house/picture",
+          headers: { "Content-Type": "multipart/form-data" },
+          data: formData,
+          onUploadProgress: progressEvent => {
+            //静读条
+            let percent =
+              ((progressEvent.loaded / progressEvent.total) * 100) | 0;
+            uploader.onProgress({ percent: percent });
+          }
+        })
+        .then(json => {
+          uploader.onSuccess();
+          let data = json.data.data;
+          that.picList.push({ url: data.url });
+        })
+        .catch(() => {
+          that.$message({
+            message: "不晓得为什么,反正失败了",
+            type: "warning"
+          });
+          uploader.onError();
+        });
+    },
+    beforeAvatarUpload(file) {
+      // 上传图片前处理函数
+      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      let that = this;
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是jpg,jpeg 格式!");
+      }
+      that.picList = [];
+      return isJPG;
+    },
     cut(index) {
       this.switchIndex = index;
+      this.reloadList();
     },
     reloadList() {
       this.page = 1;
       this.totalPage = 0;
+      this.followList = [];
+      this.followPaitList = [];
+      this.cutData();
+    },
+    cutData() {
       switch (this.switchIndex) {
         case 0:
-          this.followList = [];
           this.getHouseFollow();
+          break;
+        case 1:
+          this.getHousePairFollowList();
           break;
       }
     },
@@ -563,7 +779,7 @@ export default {
       let that = this;
       this.$api
         .get({
-          url: "/agent_house_Collect/isCollectHouse",
+          url: "/agentHouse/collect/isCollectHouse",
           data: params,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
@@ -586,9 +802,9 @@ export default {
         perId: 35365
       };
       if (that.isCollectHouse) {
-        ajaxurl = "/agent_house_Collect/cancelCollectHouse";
+        ajaxurl = "/agentHouse/collect/cancelCollectHouse";
       } else {
-        ajaxurl = "/agent_house_Collect/collectHouse";
+        ajaxurl = "/agentHouse/collect/collectHouse";
       }
       this.$api
         .post({
@@ -601,7 +817,7 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             that.isCollectHouse = !that.isCollectHouse;
-            if (ajaxurl == "/agent_house_Collect/collectHouse") {
+            if (ajaxurl == "/agentHouse/collect/collectHouse") {
               that.isShowSendNotice = true;
             }
           } else {
@@ -624,7 +840,7 @@ export default {
       };
       this.$api
         .post({
-          url: "/agent_house_Collect/updateSendNotice",
+          url: "/agentHouse/collect/updateSendNotice",
           data: params,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
@@ -643,13 +859,12 @@ export default {
       };
       this.$api
         .get({
-          url: "/agent_house_follow/geteHouseFollowList",
+          url: "/agentHouse/follow/getHouseFollowList",
           data: params,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
         })
         .then(e => {
-          console.log(e);
           let result = e.data;
           result.data.list.forEach(item => {
             if (item.FollowType.includes("电话")) {
@@ -664,12 +879,34 @@ export default {
         })
         .catch();
     },
+    getHousePairFollowList() {
+      let that = this;
+      let params = {
+        page: that.page,
+        limit: 5,
+        perId: 35365,
+        houseId: that.houseId
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/pairFollow/getHousePairFollowList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.followPaitList = [...that.followPaitList, ...result.data.list];
+          that.totalPage = result.data.totalPage;
+        })
+        .catch();
+    },
     deleteFollow(followId) {
       let that = this;
       let params = { followId: followId, houseId: that.houseId, perId: 35365 };
       this.$api
         .post({
-          url: "/agent_house_follow/deleteFollow",
+          url: "/agentHouse/follow/deleteFollow",
           data: params,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
@@ -693,13 +930,73 @@ export default {
       }
       this.$api
         .post({
-          url: "/agent_house_follow/insertFollow",
+          url: "/agentHouse/follow/insertFollow",
           data: params,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
         })
         .then(e => {
           that.reloadList();
+        });
+    },
+    insertImpression() {
+      let that = this;
+      let params = {
+        houseId: that.houseId,
+        creator: 35365,
+        impression: that.impression
+      };
+      if (that.impression.length == 0) {
+        that.$message("印象不能为空");
+        return;
+      }
+      this.$api
+        .post({
+          url: "/agentHouse/impression/insertImpression",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          that.$message(e.data.message);
+          that.isShowImpression = false;
+          that.getImpressionList();
+        });
+    },
+    getImpressionList() {
+      let that = this;
+      let params = {
+        houseId: that.houseId,
+        creator: 35365
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/impression/getImpressionList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.impressionList = result.data;
+        });
+    },
+    deleteImpression(impressionId) {
+      let that = this;
+      let params = {
+        impressionId: impressionId,
+        deleter: 35365
+      };
+      this.$api
+        .post({
+          url: "/agentHouse/impression/deleteImpression",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          that.$message(e.data.message);
+          that.getImpressionList();
         });
     }
   }
