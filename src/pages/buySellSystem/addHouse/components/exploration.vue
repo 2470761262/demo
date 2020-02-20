@@ -33,7 +33,7 @@
 }
 </style>
 <template>
-  <div class="page-cell">
+  <div class="page-cell-addHouse">
     <div class="page-cell-title">房源描述</div>
     <!-- 小区介绍 -->
     <div class="form-error-tips"

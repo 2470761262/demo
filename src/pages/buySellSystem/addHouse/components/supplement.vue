@@ -56,7 +56,7 @@
 }
 </style>
 <template>
-  <div class="page-cell">
+  <div class="page-cell-addHouse">
     <div class="page-cell-title">补充信息</div>
     <!-- 房屋用途 && 房屋结构 -->
     <div class="form-error-tips noMarinTop">

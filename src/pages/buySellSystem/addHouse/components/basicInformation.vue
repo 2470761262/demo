@@ -2,7 +2,7 @@
 @import url("../../../../assets/publicLess/addHouse.less");
 </style>
 <template>
-  <div class="page-cell">
+  <div class="page-cell-addHouse">
     <div class="page-cell-title">房屋坐落</div>
     <!-- 楼盘名称 -->
     <div class="form-error-tips"

@@ -30,7 +30,7 @@
 }
 </style>
 <template>
-  <div class="page-cell">
+  <div class="page-cell-addHouse">
     <div class="page-cell-title max-title title-top"><i class="el-icon-circle-check"></i>房源保存成功</div>
     <div class="page-cell-title title-top">房源录入成功后，需邀请业主对房源进行验真后方可发布房源成功。</div>
     <div class="mindder-step">

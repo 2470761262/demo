@@ -2,7 +2,7 @@
 /deep/.el-main {
   min-height: 100%;
 }
-.page-cell {
+.page-cell-conter {
   height: 100vh;
   .page-cell-main {
     height: calc(100% - 60px);
@@ -41,7 +41,7 @@
 }
 </style>
 <template >
-  <section class="page-cell">
+  <section class="page-cell-conter">
     <el-container>
       <el-header v-if="asideNavFlag">
         <header-content></header-content>
