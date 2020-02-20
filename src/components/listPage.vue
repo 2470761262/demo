@@ -113,32 +113,12 @@ export default {
   data () {
     return {
       loading: true,
-      configSet: {
-        selectToTime: true,
-        selectTo: true
-      },
       pageJson: {},
       tableDataColumn: [],
       tableData: [],
-      elTabs: {},
-      options: [],
-      queryData: {
-        houseName: "",
-        taskName: "",
-        selectValue: "",
-        timeSelect: ""
-      }
     };
   },
   methods: {
-    //查询按钮
-    queryTabData () {
-      this.$emit("queryTabData");
-    },
-    //tab切换
-    handleClick (e) {
-      this.$emit("handleClick", e);
-    },
     //每页数据设置事件
     handleSizeChange (e) {
       this.$emit("handleSizeChange", e);

@@ -291,8 +291,8 @@ export default {
         function (e) {
           util.localStorageSet(LOGINDATA, e.data);
           //保存token
-          util.localStorageSet("token",e.data.token.token);
-          that.$router.push({ path: '/buySellSystem/houseList' });
+          util.localStorageSet("token", e.data.token.token);
+          that.$router.push({ path: '/menuFrame/houseList' });
         },
         function (message) {
           that.loginLoadding = false;
