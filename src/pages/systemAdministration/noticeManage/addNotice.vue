@@ -172,7 +172,7 @@
         </el-header>
         <el-main>
           <div class="editorContainer">
-            <el-upload class="upload-demo" :action="uploadUrl" :on-success="handleAvatarSuccess">
+            <el-upload class="upload-demo" :action="uploadUrl" :headers="myHeader" :on-success="handleAvatarSuccess">
               <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
               <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
@@ -195,6 +195,7 @@
 
 <script>
 import { quillEditor } from "vue-quill-editor";
+import util from '@/util/util';
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
@@ -244,6 +245,7 @@ export default {
       hasQueryAccountNode: [], //存放已经加载过员工的节点，防止二次加载读取
       quill: null,
       uploadUrl: "",
+      myHeader:"",
       notice: {
         newsTitle: null,
         newsContent: null,
@@ -622,7 +624,7 @@ export default {
             console.log(result.message);
             console.log(result.data);
             this.$message({ message: result.message });
-            this.$router.push({ path: "/menuFrame/noticeManageList"});
+            this.$router.push({ path: "/sys/noticeManageList"});
           } else {
             console.log("发送公告结果：" + result.message);
             alert(result.message);
@@ -653,7 +655,9 @@ export default {
   },
   created() {
     this.uploadUrl = this.$api.baseUrl() + "/draft_house/picture";
+    this.myHeader={"tk":util.localStorageGet("token")};
     console.log(this.uploadUrl);
+    console.log(this.myHeader);
   },
   mounted() {
     this.quill = this.$refs.QuillEditor.quill;
