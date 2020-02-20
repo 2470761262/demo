@@ -13,13 +13,17 @@
   }
   /deep/.el-tabs__item {
     margin-right: 10px;
-    background: #52a47c;
+    background: var(--color--primary) !important; // #52a47c;
+    //filter: brightness(150%);
+    filter: opacity(0.7);
     span {
       color: #fff !important;
     }
   }
   /deep/.is-active {
     background: var(--color--primary) !important;
+    //filter: brightness(100%) !important;
+    filter: opacity(1);
   }
 }
 .el-children-tabs {
