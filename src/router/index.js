@@ -26,6 +26,7 @@ export default new Router({
       component: menuFrame,
       //redirect: "/buySellSystem/houseList",
       children: routerResult
+
     }
   ]
 });
