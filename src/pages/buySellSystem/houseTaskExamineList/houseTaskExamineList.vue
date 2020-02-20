@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
 .elTree {
   width: 200px;
   margin-right: 20px;
@@ -11,40 +11,35 @@
 }
 </style>
 <template>
-  <list-page
-    :parentData="$data"
-    @queryTabData="queryTabData"
-    @handleClick="handleClick"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
+  <list-page :parentData="$data"
+             @queryTabData="queryTabData"
+             @handleClick="handleClick"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
     <template v-slot:tree>
       <div class="elTree">
-        <el-input placeholder="输入关键字进行过滤" v-model="filterText">
+        <el-input placeholder="输入关键字进行过滤"
+                  v-model="filterText">
         </el-input>
-        <el-tree
-          ref="tree2"
-          :data="treeData"
-          :default-expanded-keys="[1]"
-          node-key="id"
-          show-checkbox
-          :props="defaultProps"
-          @check-change="checkChange"
-          @check="checkcheck"
-          :highlight-current="true"
-          :filter-node-method="filterNode"
-          @node-click="handleNodeClick"
-        ></el-tree>
+        <el-tree ref="tree2"
+                 :data="treeData"
+                 :default-expanded-keys="[1]"
+                 node-key="id"
+                 show-checkbox
+                 :props="defaultProps"
+                 @check-change="checkChange"
+                 @check="checkcheck"
+                 :highlight-current="true"
+                 :filter-node-method="filterNode"
+                 @node-click="handleNodeClick"></el-tree>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
       <template v-for="item in cell.tableData">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-          :key="item.prop"
-        >
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop">
         </el-table-column>
       </template>
     </template>
@@ -54,14 +49,14 @@
 import listPage from "@/components/listPage";
 export default {
   watch: {
-    filterText(val) {
+    filterText (val) {
       this.$refs.tree2.filter(val);
     }
   },
   components: {
     listPage
   },
-  data() {
+  data () {
     return {
       treeData: [
         {
@@ -211,39 +206,39 @@ export default {
     };
   },
   methods: {
-    checkcheck(e, data) {
+    checkcheck (e, data) {
       console.log(e, data);
       //  console.log(this.$refs.tree2.getNode(44), "getNode");
     },
-    getCurrentKey() {
+    getCurrentKey () {
       console.log(this.$refs.tree2.getCurrentKey(), "getCurrentKey");
       //  this.$refs.tree2.setCurrentKey(44);
     },
-    checkChange(e, data, childData) {
+    checkChange (e, data, childData) {
       //console.log(e, data, childData, "checkChange");
       //console.log(this.$refs.tree2.getCheckedKeys(), "id");
       // console.log(this.$refs.tree2.getCheckedNodes());
       //console.log(this.$refs.tree2.getNode(false, true));
     },
     //树输入筛选
-    filterNode(value, data) {
+    filterNode (value, data) {
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
     //树点击
-    handleNodeClick(e) {
+    handleNodeClick (e) {
       //   console.log(e);
     },
     //筛选查询
-    queryTabData() {},
-    handleClick() {},
-    handleSizeChange(val) {
+    queryTabData () { },
+    handleClick () { },
+    handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
     }
   }

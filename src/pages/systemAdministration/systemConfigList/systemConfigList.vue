@@ -1,23 +1,22 @@
-<style >
-.as{
-  margin-top:10px;
+<style scoped>
+.as {
+  margin-top: 10px;
 }
-</style>
 </style>
 <template>
   <list-page :parentData="$data"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-            <template v-slot:inputTo>
-      <div class="query-cell" >
+    <template v-slot:inputTo>
+      <div class="query-cell">
         <el-button type="primary"
                    size="mini"
                    @click="toAddConfig">添加系统规则</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
-         
+
       <!-- <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"
@@ -36,16 +35,16 @@
         </template>
       </el-table-column>
       <el-table-column label="类型">
-        <template v-slot="scope" >
+        <template v-slot="scope">
           {{scope.row.sysParType}}
         </template>
       </el-table-column>
       <el-table-column label="是否有效">
-        <template v-slot="scope" >
+        <template v-slot="scope">
           {{scope.row.Del==0? "有效":"无效"}}
         </template>
       </el-table-column>
-       <el-table-column prop="operation"
+      <el-table-column prop="operation"
                        label="操作"
                        fixed="right"
                        key="992">
@@ -55,14 +54,12 @@
                      size="mini"
                      @click="distributeEvent(item.methosName,scope.row.id,scope.row.sysParNo,scope.row.sysParName,scope.row.sysParType,scope.row.memo)"
                      v-for="(item,index) in isForBut(2)"
-                     :key="index" class="as">{{item.name}}</el-button>
+                     :key="index"
+                     class="as">{{item.name}}</el-button>
           <!-- </div> -->
         </template>
       </el-table-column>
-     
-     
-    
-    
+
     </template>
   </list-page>
 </template>
@@ -135,7 +132,7 @@ export default {
         value: '选项6',
         label: '已过期'
       }],
-       elTabs: {
+      elTabs: {
         activeName: "tab1",
 
       },
@@ -165,41 +162,41 @@ export default {
         data: params,
         token: false
       }).then((e) => {
-       
+
         let result = e.data;
-        that.loading = false; 
+        that.loading = false;
         if (result.code == 200) {
           console.log(result.data);
-          that.tableData ="";
-            for(var i=0;i<result.data.list.length;i++){
-            
-                 switch(result.data.list[i].sysParType){
-                     case "1" :
-                         result.data.list[i].sysParType="买卖房源";
-                         break;
-                          case "2" :
-                         result.data.list[i].sysParType="买卖客户";
-                         break;
-                          case "3" :
-                         result.data.list[i].sysParType="租赁房源";
-                         break;
-                          case "4" :
-                         result.data.list[i].sysParType="租赁客户";
-                         break;
-                         case "5" :
-                         result.data.list[i].sysParType="用户管理";
-                         break;
+          that.tableData = "";
+          for (var i = 0; i < result.data.list.length; i++) {
+
+            switch (result.data.list[i].sysParType) {
+              case "1":
+                result.data.list[i].sysParType = "买卖房源";
+                break;
+              case "2":
+                result.data.list[i].sysParType = "买卖客户";
+                break;
+              case "3":
+                result.data.list[i].sysParType = "租赁房源";
+                break;
+              case "4":
+                result.data.list[i].sysParType = "租赁客户";
+                break;
+              case "5":
+                result.data.list[i].sysParType = "用户管理";
+                break;
 
 
-                 }
-                 
             }
-         
+
+          }
+
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPagecurrPagecurrPage;
           that.tableData = result.data.list;
           console.log(that.tableData);
-          
+
         } else {
           console.log("查询系统参数配置列表结果：" + result.message);
           alert(result.message);
@@ -209,86 +206,86 @@ export default {
         console.log(e);
       })
     },
-    postConfig (id,sysParNo,sysParName) {
-       console.log(id,sysParNo,sysParName);
-      this.$router.push({ path: "/menuFrame/addConfigObject", 
-      query: { configId:id,
-      sysParNo:sysParNo,
-      sysParName:sysParName } });
+    postConfig (id, sysParNo, sysParName) {
+      console.log(id, sysParNo, sysParName);
+      this.$router.push({        path: "/menuFrame/addConfigObject",
+        query: {          configId: id,
+          sysParNo: sysParNo,
+          sysParName: sysParName        }      });
     },
-    updateConfig (id,sysParNo,sysParName,sysParType,memo) {
-       console.log(memo);
-      this.$router.push({ path: "/menuFrame/addConfig", 
-      query: { configId:id,
-      sysParNo:sysParNo,
-      sysParName:sysParName,
-      sysParType:sysParType,
-      memo:memo
-      } });
-    },toList (id,sysParNo,sysParName,sysParType,memo) {
-       console.log(id);
-      this.$router.push({ path: "/menuFrame/configObjectList", 
-      query: { configId:id,
-      sysParNo:sysParNo,
-      sysParName:sysParName,
-      sysParType:sysParType,
-      memo:memo
-      } });
+    updateConfig (id, sysParNo, sysParName, sysParType, memo) {
+      console.log(memo);
+      this.$router.push({        path: "/menuFrame/addConfig",
+        query: {          configId: id,
+          sysParNo: sysParNo,
+          sysParName: sysParName,
+          sysParType: sysParType,
+          memo: memo
+        }      });
+    }, toList (id, sysParNo, sysParName, sysParType, memo) {
+      console.log(id);
+      this.$router.push({        path: "/menuFrame/configObjectList",
+        query: {          configId: id,
+          sysParNo: sysParNo,
+          sysParName: sysParName,
+          sysParType: sysParType,
+          memo: memo
+        }      });
     },
-        toAddConfig () {
+    toAddConfig () {
       this.$router.push({ path: "/menuFrame/addConfig" });
     },
-    
-    updateDelRight(id,sysParNo,sysParName,sysParType,memo ){
-          this.$api.get({
+
+    updateDelRight (id, sysParNo, sysParName, sysParType, memo) {
+      this.$api.get({
         url: '/Set/updateDel',
         data: {
-          del:0,
-          id:id+","
+          del: 0,
+          id: id + ","
         },
         token: false
       }).then((e) => {
-       
+
         let result = e.data;
-        if (result.code == 200) {  
-           this.$alert('', '修改成功', {
+        if (result.code == 200) {
+          this.$alert('', '修改成功', {
             dangerouslyUseHTMLString: false
           });
         } else {
           console.log("修改失败" + result.message);
-        
+
         }
       }).catch((e) => {
         console.log("修改失败");
         console.log(e);
       })
     },
-     updateDelLeft(id,sysParNo,sysParName,sysParType,memo ){
-          this.$api.get({
+    updateDelLeft (id, sysParNo, sysParName, sysParType, memo) {
+      this.$api.get({
         url: '/Set/updateDel',
         data: {
-          del:1,
-          id:id+","
+          del: 1,
+          id: id + ","
         },
         token: false
       }).then((e) => {
-       
+
         let result = e.data;
-        if (result.code == 200) {  
-           this.$alert('', '修改成功', {
+        if (result.code == 200) {
+          this.$alert('', '修改成功', {
             dangerouslyUseHTMLString: false
           });
         } else {
           console.log("修改失败" + result.message);
-        
+
         }
       }).catch((e) => {
         console.log("修改失败");
         console.log(e);
       })
     },
-    distributeEvent (e, id,sysParNo,sysParName,sysParType,memo) {
-      this[e](id,sysParNo,sysParName,sysParType,memo);
+    distributeEvent (e, id, sysParNo, sysParName, sysParType, memo) {
+      this[e](id, sysParNo, sysParName, sysParType, memo);
     },
     isForBut (type) {
       let array = [
@@ -311,7 +308,7 @@ export default {
       this.queryVerifyHouseDatas(1);
     },
     handleCurrentChange (val) {
-     this.queryVerifyHouseDatas(val);
+      this.queryVerifyHouseDatas(val);
     },
   },
 }

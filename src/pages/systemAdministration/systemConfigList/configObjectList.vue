@@ -1,6 +1,6 @@
-<style >
-.as{
-  margin-top:10px;
+<style scoped>
+.as {
+  margin-top: 10px;
 }
 </style>
 </style>
@@ -9,15 +9,15 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-            <template v-slot:inputTo>
-      <div class="query-cell" >
+    <template v-slot:inputTo>
+      <div class="query-cell">
         <el-button type="primary"
                    size="mini"
                    @click="toAddConfig">添加系统规则</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
-         
+
       <!-- <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"
@@ -36,52 +36,52 @@
         </template>
       </el-table-column>
       <el-table-column label="对象名称">
-        <template v-slot="scope" >
+        <template v-slot="scope">
           {{scope.row.sysParType}}
         </template>
       </el-table-column>
       <el-table-column label="参数1">
-        <template v-slot="scope" >
+        <template v-slot="scope">
           {{scope.row.paraNum}}
         </template>
       </el-table-column>
-       <el-table-column label="参数2">
-        <template v-slot="scope" >
+      <el-table-column label="参数2">
+        <template v-slot="scope">
           {{scope.row.paraTwoNum}}
         </template>
       </el-table-column>
-       <el-table-column label="参数3">
-        <template v-slot="scope" >
+      <el-table-column label="参数3">
+        <template v-slot="scope">
           {{scope.row.paraNumStr}}
         </template>
       </el-table-column>
-       <el-table-column label="参数4">
-        <template v-slot="scope" >
+      <el-table-column label="参数4">
+        <template v-slot="scope">
           {{scope.row.paraFourNum}}
         </template>
       </el-table-column>
-       <el-table-column label="是否允许">
-       <template v-slot="scope" >
-         {{scope.row.paraFourNum}}
-         </template>
+      <el-table-column label="是否允许">
+        <template v-slot="scope">
+          {{scope.row.paraFourNum}}
+        </template>
       </el-table-column>
-       <el-table-column label="备注">
-        <template v-slot="scope" >
+      <el-table-column label="备注">
+        <template v-slot="scope">
           {{scope.row.remark}}
         </template>
       </el-table-column>
-       <el-table-column label="是否有效">
-        <template v-slot="scope" >
+      <el-table-column label="是否有效">
+        <template v-slot="scope">
           {{scope.row.del==0?"有效":"无效"}}
         </template>
       </el-table-column>
-       <el-table-column label="公司">
-        <template v-slot="scope" >
+      <el-table-column label="公司">
+        <template v-slot="scope">
           {{scope.row.companyName}}
         </template>
       </el-table-column>
 
-       <el-table-column prop="operation"
+      <el-table-column prop="operation"
                        label="操作"
                        fixed="right"
                        key="992">
@@ -91,14 +91,12 @@
                      size="mini"
                      @click="distributeEvent(item.methosName,scope.row.id,scope.row.sysParNo,scope.row.sysParName,scope.row.sysParType,scope.row.memo)"
                      v-for="(item,index) in isForBut(2)"
-                     :key="index" class="as">{{item.name}}</el-button>
+                     :key="index"
+                     class="as">{{item.name}}</el-button>
           <!-- </div> -->
         </template>
       </el-table-column>
-     
-     
-    
-    
+
     </template>
   </list-page>
 </template>
@@ -120,7 +118,7 @@ export default {
         selectToTime: false,
         selectTo: false
       },
-      configId:null,
+      configId: null,
       tableDataColumn: [
         { prop: 'communityName', label: "房源坐落" },
         { prop: 'price', label: "售价(万元)" },
@@ -172,7 +170,7 @@ export default {
         value: '选项6',
         label: '已过期'
       }],
-       elTabs: {
+      elTabs: {
         activeName: "tab1",
 
       },
@@ -192,7 +190,7 @@ export default {
       this.queryVerifyHouseDatas(1);
     },
     queryVerifyHouseDatas (currentPage) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage,sysParId:this.$route.query.configId };
+      let params = { limit: this.pageJson.pageSize, page: currentPage, sysParId: this.$route.query.configId };
       console.log(params);
       let that = this;
       this.$api.get({
@@ -200,51 +198,51 @@ export default {
         data: params,
         token: false
       }).then((e) => {
-       
+
         let result = e.data;
-        that.loading = false; 
+        that.loading = false;
         if (result.code == 200) {
           console.log(result.data);
-          
-         for(var i=0;i<result.data.list.length;i++){
-            
-                 switch(result.data.list[i].parRange){
-                     case "0" :
-                         result.data.list[i].parRange="个人";
-                     case "1" :
-                         result.data.list[i].parRange="部门";
-                         break;
-                          case "2" :
-                         result.data.list[i].parRange="部门名下";
-                         break;
-                          case "3" :
-                         result.data.list[i].parRange="公司";
-                         break;
+
+          for (var i = 0; i < result.data.list.length; i++) {
+
+            switch (result.data.list[i].parRange) {
+              case "0":
+                result.data.list[i].parRange = "个人";
+              case "1":
+                result.data.list[i].parRange = "部门";
+                break;
+              case "2":
+                result.data.list[i].parRange = "部门名下";
+                break;
+              case "3":
+                result.data.list[i].parRange = "公司";
+                break;
 
 
-                 }
-                 console.log(result.data.list[i].sysParObj);
-                    switch(result.data.list[i].sysParObj){
-                     case "0" :
-                         result.data.list[i].sysParObj="默认";
-                     case "1" :
-                         result.data.list[i].sysParObj="人员";
-                         break;
-                          case "2" :
-                         result.data.list[i].sysParObj="部门";
-                         break;
-                          case "3" :
-                         result.data.list[i].sysParObj="岗位";
-                         break;
-
-
-                 }
             }
+            console.log(result.data.list[i].sysParObj);
+            switch (result.data.list[i].sysParObj) {
+              case "0":
+                result.data.list[i].sysParObj = "默认";
+              case "1":
+                result.data.list[i].sysParObj = "人员";
+                break;
+              case "2":
+                result.data.list[i].sysParObj = "部门";
+                break;
+              case "3":
+                result.data.list[i].sysParObj = "岗位";
+                break;
+
+
+            }
+          }
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPagecurrPagecurrPage;
           that.tableData = result.data.list;
           console.log(that.tableData);
-          
+
         } else {
           console.log("查询系统参数配置列表结果：" + result.message);
           alert(result.message);
@@ -255,65 +253,65 @@ export default {
       })
     },
 
-        toAddConfig () {
+    toAddConfig () {
       this.$router.push({ path: "/menuFrame/addConfig" });
     },
-    
-    updateDelRight(id,sysParNo,sysParName,sysParType,memo ){
-          this.$api.get({
+
+    updateDelRight (id, sysParNo, sysParName, sysParType, memo) {
+      this.$api.get({
         url: '/Set/companyUpdateDel',
         data: {
-          del:0,
-          id:id
+          del: 0,
+          id: id
         },
         token: false
       }).then((e) => {
-       
+
         let result = e.data;
-        if (result.code == 200) {  
-           this.$alert('', '修改成功', {
+        if (result.code == 200) {
+          this.$alert('', '修改成功', {
             dangerouslyUseHTMLString: false
           });
         } else {
           console.log("查询系统参数配置列表结果：" + result.message);
-        
+
         }
       }).catch((e) => {
         console.log("查询系统参数配置列表失败");
         console.log(e);
       })
     },
-     updateDelLeft(id,sysParNo,sysParName,sysParType,memo ){
-          this.$api.get({
+    updateDelLeft (id, sysParNo, sysParName, sysParType, memo) {
+      this.$api.get({
         url: '/Set/companyUpdateDel',
         data: {
-          del:1,
-          id:id
+          del: 1,
+          id: id
         },
         token: false
       }).then((e) => {
-       
+
         let result = e.data;
-        if (result.code == 200) {  
-           this.$alert('', '修改成功', {
+        if (result.code == 200) {
+          this.$alert('', '修改成功', {
             dangerouslyUseHTMLString: false
           });
-          
+
         } else {
           console.log("修改失败" + result.message);
-        
+
         }
       }).catch((e) => {
         console.log("修改失败");
         console.log(e);
       })
     },
-    distributeEvent (e, id,sysParNo,sysParName,sysParType,memo) {
-      this[e](id,sysParNo,sysParName,sysParType,memo);
+    distributeEvent (e, id, sysParNo, sysParName, sysParType, memo) {
+      this[e](id, sysParNo, sysParName, sysParType, memo);
     },
     isForBut (type) {
       let array = [
-       
+
         { name: '转有效', isType: '1,2,3', methosName: 'updateDelRight' },
         { name: '转无效', isType: '1,2,3', methosName: 'updateDelLeft' },
       ]
@@ -324,19 +322,19 @@ export default {
     handleClick () {
 
     },
-     created() {
-      this.configId=this.$route.query.configId;
+    created () {
+      this.configId = this.$route.query.configId;
       queryVerifyHouseDatas();
-    console.log(this.configId);
-     
-  },
+      console.log(this.configId);
+
+    },
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1);
     },
     handleCurrentChange (val) {
-     this.queryVerifyHouseDatas(val);
+      this.queryVerifyHouseDatas(val);
     },
   },
 }
