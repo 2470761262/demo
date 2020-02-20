@@ -367,9 +367,6 @@ export default {
       return this.step
     }
   },
-  mounted () {
-    this.setDefaultFrom();
-  },
   methods: {
     //查询楼盘
     remoteCommunityName (e) {
@@ -492,18 +489,11 @@ export default {
       })
       this.formData.roomNo = this.selectPageRoomNo.list[findResultIndex].name;
     },
-    updateField () {
-      //更新字段API 可能终止验证
-      const field = this.$validator.fields.find({ name: 'price' });
-      console.log(field.update({ rules: { decimal: [3] } }));
-    },
-    setDefaultFrom () {
-      this.formData.sex = 0;
-    },
     removeTelToList (index, item) {
       this.addTel.splice(index, 1);
       this.formData['tel' + item] = '';
     },
+    //添加电话号码123
     addTelToList () {
       let defaultList = [1, 2, 3];
       if (this.addTel.length < 3) {
@@ -516,6 +506,7 @@ export default {
       }
       this.addTel.sort();
     },
+    //验证
     validateAll () {
       let that = this;
       // return new Promise((r,s)=>{
@@ -535,6 +526,7 @@ export default {
         }
       })
     },
+    //创建
     upLoadData (e) {
       let that = this;
       console.log(this.formData);

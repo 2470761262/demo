@@ -11,7 +11,7 @@ export default {
         roomNo: "", //房间号
         roomId: "",//房间号ID
         customerName: "", //业主姓名
-        sex: "", //业主称谓
+        sex: 0, //业主称谓
         tel: "", //业主电话号码
         tel1: "",//业主号码1
         tel2: "",//业主号码2
