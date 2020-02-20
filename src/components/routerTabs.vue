@@ -45,7 +45,8 @@
   <div class="page-cell">
     <el-tabs type="border-card"
              class="el-parent-tabs"
-             v-model="renderActive">
+             v-model="renderActive"
+             @tab-click="parentChange">
       <el-tab-pane v-for="(item,index) in renderTab"
                    :key="index"
                    :name="item.active">
@@ -91,10 +92,19 @@ export default {
     }
   },
   methods: {
-    childChange (e) {
-      console.log(this.renderChild);
+    childChange () {
       this.$emit('input', this.renderChild);
       this.$emit('change', this.renderChild);
+    },
+    //父级切换
+    parentChange (e) {
+      let resultIndex = this.routerTab.findIndex((item, index) => {
+        return item.active == e.name
+      })
+      if (this.routerTab[resultIndex].children) {
+        this.renderChild = this.routerTab[resultIndex].children[0].active;
+        this.childChange();
+      }
     }
   },
 }
