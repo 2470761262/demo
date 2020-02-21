@@ -42,13 +42,13 @@
       <ThemePicker />
     </div>
     <div class="per-img">
-      <img src="http://b-ssl.duitang.com/uploads/item/201804/25/20180425000646_fsmLS.thumb.700_0.jpeg"
+      <img :src="userInfoData.headImgUrl"
            alt="头像">
     </div>
     <div class="per-name-nav">
       <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link">
-          周杰伦<i class="el-icon-caret-bottom"></i>
+          {{userInfoData.userName}}<i class="el-icon-caret-bottom"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="a">基本资料</el-dropdown-item>
@@ -57,12 +57,16 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <div class="per-exit el-icon-switch-button"></div>
+    <div class="per-exit el-icon-switch-button" @click="exitLogin"></div>
   </div>
 </template>
 <script>
 import ThemePicker from './ThemePicker';
+import util from '@/util/util';
+import { LOGINDATA ,TOKEN} from '@/util/constMap';
 export default {
+  // {"outCode":1,"message":"登录成功","companyId":28,"headImgUrl":"https://wx.qlogo.cn/mmopen/vi_32/PiajxSqBRaEIlkar2ctf962HGNUrrfnicVdCBkLel4aGicIhtdxHTUiaFLq9bCIdy6r4ldHe2XzibsXeBuXhdyicdbaQ/132","empId":null,"accountId":44430,"isLocked":null,"del":null,"deptLocked":null,"type":0,"userName":"13559489067","companyName":null,"deptName":"鑫家房（网络部）","deptId":5387,"token":{"token":"eyJhbGciOiJIUzI1NiJ9.eyJMT0dJTl9VU0VSX0tFWSI6IjY2ODA5NWUzLTNlOTAtNDFkZS1iMDU2LTM2OWQ5YWQyYTdkZiJ9._wYpCbUE3Z0MSa2Ojvcaknurbea7b8UQHsiHr2t5LFs","loginTime":1582252624837,"expireTime":1582259824837}}
+  props:["userInfoData"],//接收父组件传值
   components: {
     ThemePicker
   },
@@ -71,6 +75,29 @@ export default {
   methods: {
     handleCommand (command) {
       this.$message('item ' + command);
+    },
+    exitLogin(){
+         let that=this;
+          this.$confirm('确定推出登录吗？', '友情提醒', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        })
+          .then(() => {
+            util.localStorageRemove(TOKEN);
+            util.localStorageRemove(LOGINDATA);
+            that.$router.push({"path": '/'});
+            this.$message({
+              type: 'info',
+              message: '退出成功'
+            });
+          })
+          .catch(action => {
+            this.$message({
+              type: 'info',
+              message: '取消退出'
+            });
+          });
     }
   },
 }

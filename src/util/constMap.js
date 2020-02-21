@@ -1,5 +1,6 @@
 export const USERINFO = "userinfo";
 export const LOGINDATA = "logindata";
+export const TOKEN = "tk";
 export const HOUSEBELONGLIST = [{ id: 0, name: "车位" }, { id: 1, name: "车库" }, { id: 2, name: "杂物间" }, { id: 3, name: "无" }];
 
 export const TREMEPACKERS = "tremePackers";//默认皮肤缓存
