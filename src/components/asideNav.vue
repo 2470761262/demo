@@ -30,15 +30,12 @@
           <i class="el-icon-location"></i>
           <span>系统管理</span>
         </template>
-<<<<<<< HEAD
+
         <el-menu-item index="/menuFrame/noticeManageList">公告管理</el-menu-item>
         <el-menu-item index="/menuFrame/systemConfigList">系统参数配置</el-menu-item>
          <el-menu-item index="/menuFrame/agentHouseContrast">房源对比</el-menu-item>
-=======
-        <el-menu-item index="/sys/noticeManageList"><i class="el-icon-location"></i>公告管理</el-menu-item>
-        <el-menu-item index="/sys/systemConfigList"><i class="el-icon-location"></i>系统参数配置</el-menu-item>
         <el-menu-item index="/sys/passwordReset"><i class="el-icon-location"></i>用户密码重置</el-menu-item>
->>>>>>> 76deefb05dee2d973c7f78019e5ea752ac754557
+
       </el-submenu>
     </el-menu>
   </div>

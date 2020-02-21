@@ -322,21 +322,12 @@ export default {
     handleClick () {
 
     },
-<<<<<<< HEAD:src/pages/configObjectList.vue
      created() {
       this.configId=this.$route.query.configId;
     
     console.log(this.configId);
      
   },
-=======
-    created () {
-      this.configId = this.$route.query.configId;
-      queryVerifyHouseDatas();
-      console.log(this.configId);
-
-    },
->>>>>>> 76deefb05dee2d973c7f78019e5ea752ac754557:src/pages/systemAdministration/systemConfigList/configObjectList.vue
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
