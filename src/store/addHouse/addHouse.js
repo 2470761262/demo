@@ -11,7 +11,7 @@ export default {
         roomNo: "", //房间号
         roomId: "",//房间号ID
         customerName: "", //业主姓名
-        sex: "", //业主称谓
+        sex: 0, //业主称谓
         tel: "", //业主电话号码
         tel1: "",//业主号码1
         tel2: "",//业主号码2
@@ -24,7 +24,9 @@ export default {
         toilet: "", //卫
         balcony: "", //阳台
         face: "", //朝向
-        decoration: "" //装修
+        decoration: "", //装修
+        title: "",//房源标题
+        certificateType: ""//房屋证件类型
       },
       step2: {
         houseUse: "",//房屋用途
@@ -52,7 +54,7 @@ export default {
         buildingTime: ""//竣工时间
       },
       step3: {
-
+        communityDesc: "",//小区介绍
       }
     }
   },
