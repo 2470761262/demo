@@ -108,7 +108,7 @@
               :lg="6"
               class="page-col">
         <div class="house-type-item"
-             @click="goToMyConcernCommunity()">
+             @click="goToMyCommunity()">
           <div class="item-cell">
             <div class="item-cell-title overText">我的核心盘</div>
             <div class="item-cell-data overText">
@@ -193,11 +193,15 @@ export default {
   },
   methods: {
     goToNewHouse () {
-      this.$router.push({ path: '/menuFrame/newAgentHouse' });
+      this.$router.push({ path: '/buySellSystem/newAgentHouse' });
     },
     goToMyHouse () {
-      this.$router.push({ path: '/buySellSystem/otherIframe' });
+      this.$router.push({ path: '/buySellSystem/myHouseList' });
+    },
+    goToMyCommunity () {
+      this.$router.push({ path: '/buySellSystem/concernCommunity' });
     }
+
   },
 }
 </script>
