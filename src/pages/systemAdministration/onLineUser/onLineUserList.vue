@@ -24,10 +24,20 @@
       <template v-for="item in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"
-                         :width="item.width"
+                         :width="item.width"                         
                          :key="item.prop">
         </el-table-column>
       </template>
+      <el-table-column prop="userInfo.userImage" label="用户头像" width="90" >
+                 <!-- 图片的显示 -->
+                 <template   slot-scope="scope">            
+                    <img :src="scope.row.userInfo.userImage"  width="50" height="50" />
+                 </template>         
+      </el-table-column> 
+      <el-table-column prop="loginTime" :formatter="formatLoginTime"  label="最后登录时间"  >                 
+      </el-table-column> 
+      <el-table-column prop="clientType" :formatter="formatClientType"  label="登录终端" width="90" >                 
+      </el-table-column> 
       <el-table-column prop="operation"
                        label="操作"
                        fixed="right"
@@ -47,6 +57,22 @@
 </template>
 <script>
 import listPage from "@/components/listPage";
+Date.prototype.Format = function (fmt) {
+    var o = {
+            "M+": this.getMonth() + 1, // 月份
+            "d+": this.getDate(), // 日
+            "h+": this.getHours(), // 小时
+            "m+": this.getMinutes(), // 分
+            "s+": this.getSeconds(), // 秒
+            "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+            "S": this.getMilliseconds() // 毫秒
+    };
+    if (/(y+)/.test(fmt))
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + ""));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
 export default {
   components: {
     listPage
@@ -67,12 +93,9 @@ export default {
         pageSize: 5 //每页条数
       },
       tableDataColumn: [
-        { prop: "id", label: "编号" },
-        { prop: "newsTitle", label: "公告标题" },
-        { prop: "newsType", label: "公告类型" },
-        { prop: "perName", label: "发布人" },
-        { prop: "companyName", label: "公司" },
-        { prop: "addDate", label: "添加时间" }
+        { prop: "perId", label: "用户编码" },
+        { prop: "userInfo.name", label: "用户名" },
+        { prop: "userInfo.deptName", label: "所在部门" },
       ],
       tableData: [
         //   {
@@ -87,14 +110,28 @@ export default {
     }
   },
   mounted () {
-    this.queryNoticeDatas(1);
+    this.queryOnLineUserDatas(1);
   },
   methods: {
-    queryNoticeByParams () {
-      this.queryNoticeDatas(1);
+    formatLoginTime(row, column){
+      return new Date(row.loginTime).Format('yy-MM-dd hh:mm:ss');
     },
-    queryNoticeDatas (currentPage) {
-      let params = { pageSize: this.pageJson.pageSize, pageNum: currentPage };
+    formatClientType(row, column){
+      if(row.perType == 0 ){
+        return 'PC端';
+      } else if(row.clientType==3){
+        return '公众号';
+      }else if(row.clientType==4){
+        return '小程序';
+      }else{
+        return '未知';
+      }
+    },
+    queryNoticeByParams () {
+      this.queryOnLineUserDatas(1);
+    },
+    queryOnLineUserDatas (currentPage) {
+      let params = { pageSize: this.pageJson.pageSize, pageNum: currentPage,"clientType":0 };
       let that = this;
       if (this.queryData.newsTitle != null) {
         params.newsTitle = this.queryData.newsTitle;
@@ -123,14 +160,14 @@ export default {
       })
     },
     offLineUser (perId,perType) {
-      alert("强制下线未实现");
+      alert("查看用户详情实现");
     },
     distributeEvent (e, perId,perType) {
       this[e](perId,perType);
     },
     getOpeBtns (type) {
       let array = [
-        { name: '强制下线', isType: '1,3', methosName: 'offLineUser' }
+        { name: '查看用户', isType: '1,3', methosName: 'offLineUser' }
         // { name: '编辑', isType: '1', methosName: 'test1' }
       ]
       // return array.filter((item) => {
@@ -141,10 +178,10 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryNoticeDatas(1);
+      this.queryOnLineUserDatas(1);
     },
     handleCurrentChange (val) {
-      this.queryNoticeDatas(val);
+      this.queryOnLineUserDatas(val);
     }
   }
 };
