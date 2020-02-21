@@ -4,11 +4,18 @@
 }
 .page-cell-conter {
   height: 100vh;
+  .page-cell-header {
+    min-width: 1280px;
+  }
   .page-cell-main {
     height: calc(100% - 60px);
     .el-aside,
     .el-main {
       height: 100%;
+    }
+    .el-main {
+      min-width: 1280px;
+      background: #f4f4f4;
     }
     .el-aside {
       background-color: rgb(84, 92, 100);

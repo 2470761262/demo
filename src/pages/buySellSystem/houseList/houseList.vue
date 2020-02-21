@@ -1,77 +1,212 @@
 <style lang="less" scoped>
-.page-cell-query {
+.page-back-color {
+  min-height: 100%;
   display: flex;
-  justify-content: flex-end;
-  /deep/.el-input {
-    width: 200px;
-  }
-  .el-button-group {
+  flex-direction: column;
+}
+.nav-back {
+  background: #fff;
+  padding-bottom: 20px;
+}
+.page-house-cell {
+  display: flex;
+  .house-left-tips {
+    width: 140px;
+    //  height: 200px;
     display: flex;
+    align-items: center;
+    > span {
+      display: block;
+      writing-mode: vertical-lr;
+      width: fit-content;
+      margin: 0 auto;
+      color: var(--color--primary);
+      font-size: 18px;
+    }
   }
-  @media screen and(max-width: 768px) {
-    justify-content: start;
-    /deep/.el-input {
-      width: 100%;
+  &.for-house-cell {
+    flex-wrap: wrap;
+    flex: 1;
+    margin: 0 -25px;
+    .house-cell-item {
+      flex: 0 0 16.666%;
+      height: 60px;
+      margin-top: 25px;
+      padding: 0 25px;
+      box-sizing: border-box;
+      position: relative;
+      min-width: 0;
+      @media screen and (max-width: 1600px) {
+        flex: 0 0 25% !important;
+      }
+      &.item-hot {
+        &:after {
+          position: absolute;
+          content: "HOT";
+          color: #fff;
+          background: red;
+          padding: 4px 8px;
+          top: 0;
+          left: 25px;
+          transform: translateY(-50%);
+          border-top-left-radius: 8px;
+          border-top-right-radius: 8px;
+          border-bottom-right-radius: 8px;
+          font-weight: 600;
+          font-size: 10px;
+        }
+      }
+      .for-house-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--color--primary);
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        .icon {
+          color: #fff;
+          font-size: 22px;
+        }
+        .for-house-item-title {
+          color: #fff;
+          font-size: 14px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
+    }
+  }
+  &.but-flex-center {
+    align-items: center;
+
+    .house-cell-but {
+      width: 170px;
+      background: var(--color--primary);
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 60px;
+      margin-right: 40px;
+      border-radius: 4px;
+      > i,
+      > span {
+        color: #fff;
+        font-size: 24px;
+      }
+      &:last-child {
+        margin-left: 0px;
+      }
     }
   }
 }
-/deep/.el-tabs__item {
-  font-size: 20px;
-  font-weight: 600;
+.com-flex {
+  display: flex;
+  margin-top: 15px;
+  flex: 1;
+  .com-flex-cell {
+    padding-top: 20px;
+    flex: 1;
+    background: #fff;
+    margin-right: 20px;
+    &.com-cell-posi {
+      position: relative;
+      padding-right: 40px;
+      .hide-query {
+        position: absolute;
+        right: 0;
+        padding-right: 10px;
+        top: 500px;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
 }
-/deep/.el-tabs__nav-wrap {
-  &::after {
+.querySelectFlag {
+  flex: 0 !important;
+  margin-right: 0px !important;
+  .hide-warp {
     display: none;
   }
 }
 </style>
 <template>
-  <div>
-    <el-row>
-      <el-col :sm="8">
-        <el-tabs class="page-tabs"
-                 v-model="activeName"
-                 @tab-click="handleClick">
-          <el-tab-pane label="分类房源"
-                       name="houseListTypeHouse"></el-tab-pane>
-          <el-tab-pane label="房源配对"
-                       name="houseLIstlHousePair"></el-tab-pane>
-        </el-tabs>
-      </el-col>
-      <el-col :sm="16">
-        <div class="page-cell-query">
-          <el-input v-model="queryInput"
-                    placeholder="请输入关键字搜索"></el-input>
-          <el-button-group>
-            <el-button type="primary">查询</el-button>
-            <el-button type="primary"
-                       @click="addHouse">录入</el-button>
-          </el-button-group>
+  <div class="page-back-color">
+    <div class="page-house-cell nav-back">
+      <div class="page-house-cell house-left-tips"><span>为你推荐</span></div>
+      <div class="page-house-cell for-house-cell">
+        <div class="house-cell-item"
+             v-for="(item,index) in houseMenuList"
+             :key="index"
+             :class="{'item-hot':item.hot}">
+          <div class="for-house-item">
+            <i :class="item.icon"
+               class="icon"></i>
+            <div class="for-house-item-title">{{item.title}}</div>
+          </div>
         </div>
-      </el-col>
-    </el-row>
-    <keep-alive>
-      <component :is="activeName"></component>
-    </keep-alive>
+      </div>
+      <div class="page-house-cell but-flex-center">
+        <div class="house-cell-but">
+          <i class="el-icon-plus"></i>
+          <span>录入房源</span>
+        </div>
+        <div class="house-cell-but">
+          <i class="el-icon-plus"></i>
+          <span>管理入口</span>
+        </div>
+      </div>
+    </div>
+    <div class="com-flex">
+      <div class="com-flex-cell com-cell-posi"
+           :class="{'querySelectFlag':querySelectFlag}">
+        <div class="hide-warp">
+          <houselistlhousepair></houselistlhousepair>
+        </div>
+        <div class="hide-query"
+             @click="()=> querySelectFlag = !querySelectFlag "
+             :class="querySelectFlag ? 'el-icon-d-arrow-right': 'el-icon-d-arrow-left'  "></div>
+      </div>
+      <div class="com-flex-cell"></div>
+    </div>
   </div>
 </template>
 <script>
-//默认分类房源组件
-import houseListTypeHouse from "@/pages/buySellSystem/houseList/components/houseListTypeHouse";
-//异步组件工厂方法
-import componentsFactory from "@/util/componentsFactory";
+//筛选
+import houselistlhousepair from "@/pages/buySellSystem/houseList/components/houseLIstlHousePair";
+
+const HosueList = [
+  { title: "我的房源", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "7天被带看", icon: "el-icon-zoom-in", path: "", hot: true },
+  { title: "新增房源", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "成交对赌", icon: "el-icon-zoom-in", path: "", hot: true },
+  { title: "总监推荐", icon: "el-icon-zoom-in", path: "", hot: true },
+  { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "独家房源", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "店公共盘", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "我的关注", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "全部在售", icon: "el-icon-zoom-in", path: "", hot: false },
+];
 import getToken from "@/minxi/getUrlToken";
 export default {
   name: "houseList",
   mixins: [getToken],
   components: {
-    houseListTypeHouse,
-    houseLIstlHousePair: () => componentsFactory("pages/buySellSystem/houseList/components/houseLIstlHousePair")
+    houselistlhousepair,
   },
   data () {
     return {
-      activeName: "houseListTypeHouse",
-      queryInput: ""
+      querySelectFlag: false,
+      houseMenuList: HosueList
     };
   },
   created () {
