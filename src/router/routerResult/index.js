@@ -165,5 +165,12 @@ export default [
     name: "passwordReset",
     component: () =>
       import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/passwordReset/passwordReset.vue")
+  },
+  {
+    //系统管理 在线用户统计
+    path: "/sys/onLineUserList",
+    name: "onLineUserList",
+    component: () =>
+      import("@/pages/systemAdministration/onLineUser/onLineUserList.vue")
   }
 ]
