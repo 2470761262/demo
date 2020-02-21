@@ -323,5 +323,89 @@ export default [
         name: "list",
         component: () =>
             import(/* webpackChunkName: "pcOnlineList" */ "@/pages/systemAdministration/pcOnline/list.vue")
-    }
+    },
+  {
+    //系统管理 岗位管理
+    path: "/sys/roleManagementList",
+    name: "roleManagementList",
+    component: () =>
+      import(/* webpackChunkName: "roleManagementList" */ "@/pages/systemAdministration/roleManagement/roleManagementList.vue")
+  },
+  {
+    //系统管理 岗位管理-添加
+    path: "/sys/addRoleManagementList",
+    name: "addRoleManagementList",
+    component: () =>
+      import(/* webpackChunkName: "addRoleManagementList" */ "@/pages/systemAdministration/roleManagement/addRoleManagementList.vue")
+  },
+  {
+    //系统管理 岗位管理-修改
+    path: "/sys/editRoleDetail",
+    name: "editRoleDetail",
+    component: () =>
+      import(/* webpackChunkName: "editRoleDetail" */ "@/pages/systemAdministration/roleManagement/editRoleDetail.vue")
+  },
+  {
+    //系统管理 公司管理
+    path: "/sys/companyList",
+    name: "companyList",
+    component: () =>
+      import(/* webpackChunkName: "companyList" */ "@/pages/systemAdministration/organization/companyList.vue")
+  },
+  {
+    //系统管理 公司管理-添加
+    path: "/sys/addCompanyManage",
+    name: "addCompanyManage",
+    component: () =>
+      import(/* webpackChunkName: "addCompanyManage" */ "@/pages/systemAdministration/organization/addCompanyManage.vue")
+  },
+  {
+    //系统管理 公司管理-修改
+    path: "/sys/editCompanyDetail",
+    name: "editCompanyDetail",
+    component: () =>
+      import(/* webpackChunkName: "editCompanyDetail" */ "@/pages/systemAdministration/organization/editCompanyDetail.vue")
+  },
+  {
+    //系统管理 部门管理
+    path: "/sys/deptManageList",
+    name: "deptManageList",
+    component: () =>
+      import(/* webpackChunkName: "deptManageList" */ "@/pages/systemAdministration/organization/deptManageList.vue")
+  },
+  {
+    //系统管理 部门管理-添加
+    path: "/sys/addDeptManage",
+    name: "addDeptManage",
+    component: () =>
+      import(/* webpackChunkName: "addDeptManage" */ "@/pages/systemAdministration/organization/addDeptManage.vue")
+  },
+  {
+    //系统管理 部门管理-修改
+    path: "/sys/editDeptDetail",
+    name: "editDeptDetail",
+    component: () =>
+      import(/* webpackChunkName: "editDeptDetail" */ "@/pages/systemAdministration/organization/editDeptDetail.vue")
+  },
+  {
+    //系统管理 员工管理
+    path: "/sys/employeeList",
+    name: "employeeList",
+    component: () =>
+      import(/* webpackChunkName: "deptManageList" */ "@/pages/systemAdministration/employee/employeeList.vue")
+  },
+  {
+    //系统管理 员工管理-添加
+    path: "/sys/addemployee",
+    name: "addemployee",
+    component: () =>
+      import(/* webpackChunkName: "addDeptManage" */ "@/pages/systemAdministration/employee/addemployee.vue")
+  },
+  {
+    //系统管理 员工管理-修改
+    path: "/sys/editemployee",
+    name: "editemployee",
+    component: () =>
+      import(/* webpackChunkName: "editDeptDetail" */ "@/pages/systemAdministration/employee/editemployee.vue")
+  }
 ]
