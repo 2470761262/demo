@@ -3,36 +3,15 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-  <template v-slot:default>
-      <div class="query-center-item">
-        <el-input placeholder="输入房源编号" clearable>
-       <template slot="prepend">房源编号</template>
-     </el-input>
-      </div>
-    <div class="query-center-item">
-        <el-input placeholder="姓名"
-                  clearable>
-          <template slot="prepend">业主</template>
-        </el-input>
-      </div>
-<div class="query-center-item">
-        <el-input placeholder="业主电话"
-                  clearable>
-          <template slot="prepend">电话</template>
-        </el-input>
-      </div>
-    </template>
     <template #tableColumn="cell">
-      <!-- <template v-for="(item) in cell.tableData">
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
-                         :width="item.width"
-                         :key="item.prop">
-        </el-table-column>
-      </template> -->
       <el-table-column label="房源编号">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
+        </template>
+      </el-table-column>
+      <el-table-column label="楼盘名称">
+        <template v-slot="scope">
+          {{scope.row.CommunityName}}
         </template>
       </el-table-column>
       <el-table-column label="售价(万元)">
@@ -47,7 +26,7 @@
       </el-table-column>
       <el-table-column label="均价">
         <template v-slot="scope">
-          {{scope.row.Price*10000/scope.row.InArea}}
+          {{Math.round(scope.row.Price*10000/scope.row.InArea)+"元/m²"}}
         </template>
       </el-table-column>
       <el-table-column label="户型">
@@ -63,6 +42,11 @@
       <el-table-column label="录入时间">
         <template v-slot="scope">
           {{scope.row.AddTime}}
+        </template>
+      </el-table-column>
+       <el-table-column label="跟单人">
+        <template v-slot="scope">
+          {{scope.row.agentPerName}}
         </template>
       </el-table-column>
       <el-table-column prop="operation"
@@ -102,8 +86,9 @@ export default {
         { prop: 'Price', label: "售价(万元)" },
         { prop: 'InArea', label: "面积(m²)" },
         { prop: 'PropertyFee', label: "均价(元/平)" },
-        { prop: 'Decoration', label: "户型" },
+        { prop: 'hall', label: "户型" },
         { prop: 'Decoration', label: "装修程度" },
+        { prop: 'AgentPer', label: "跟单人" },
         { prop: 'AddTime', label: "录入时间" }
       ],
       tableData: [],
