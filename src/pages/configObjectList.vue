@@ -326,7 +326,7 @@ export default {
     },
      created() {
       this.configId=this.$route.query.configId;
-      queryVerifyHouseDatas();
+    
     console.log(this.configId);
      
   },

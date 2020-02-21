@@ -110,6 +110,30 @@ export default new Router({
             import(/* webpackChunkName: "newAgentHouse" */ "@/pages/myHouseList.vue")
         },
         {
+          //房源对比
+          path: "/menuFrame/agentHouseContrast",
+          name: "agentHouseContrast",
+          meta: {
+            isLogin: true,
+            routeArray: [
+              {
+                path: "/menuFrame",
+                name: "买卖系统"
+              },
+              {
+                path: "/menuFrame/newHouse",
+                name: "房源列表"
+              }
+              ,{
+                path: "/menuFrame/agentHouseContrast",
+                name: "房源对比"
+              }
+            ]
+          },
+          component: () =>
+            import(/* webpackChunkName: "agentHouseContrast" */ "@/pages/agentHouseContrast.vue")
+        },
+        {
           //验证房源列表
           path: "/menuFrame/validateHouseList",
           name: "validateHouseList",
