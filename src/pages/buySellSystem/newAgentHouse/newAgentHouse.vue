@@ -158,7 +158,7 @@ export default {
       this.queryNoticeDatas(val);
     },
     showNoticeDetail(noticeId){
-       this.$router.push({ path: "/menuFrame/houseDetails",query:{houseId:noticeId} });
+       this.$router.push({ path: "/buySellSystem/houseDetails",query:{houseId:noticeId} });
     }
 
   },
