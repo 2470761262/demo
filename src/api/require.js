@@ -2,6 +2,7 @@ import axios from 'axios';
 import qs from 'qs';
 import util from '@/util/util';
 import vm from '@/main.js';
+import {TOKEN} from '@/util/constMap';
 let http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
   headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -12,7 +13,7 @@ let http = axios.create({
 // 请求拦截器
 http.interceptors.request.use(function (config) {
   // Do something before request is sent 
-  config.headers.tk = util.localStorageGet("token");
+  config.headers.tk = util.localStorageGet(TOKEN);
   console.log("设置了token", "请求拦截器");
   return config;
 }, function (error) {

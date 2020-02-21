@@ -6,9 +6,6 @@
 .collectHouse {
   color: yellow;
 }
-.el-radio-button__orig-radio:checked + .el-radio-button__inner {
-  background-color: red;
-}
 </style>
 <template>
   <div>
@@ -250,9 +247,9 @@
                         <div>
                           <div>
                             <span>钥匙类型</span>
-                            <el-radio v-model="keyType" label="27">钥匙</el-radio>
-                            <el-radio v-model="keyType" label="28">指纹锁</el-radio>
-                            <el-radio v-model="keyType" label="11">密码锁</el-radio>
+                            <el-radio v-model="keyType" label="0">钥匙</el-radio>
+                            <el-radio v-model="keyType" label="1">指纹锁</el-radio>
+                            <el-radio v-model="keyType" label="2">密码锁</el-radio>
                           </div>
                           <div>
                             <span>委托截止时间</span>
@@ -614,15 +611,20 @@ export default {
           break;
       }
     },
+    handlePreview (file) {
+      this.dialogImageUrl = file.url;// file.url;
+      this.dialogVisible = true;
+      this.showFlag = true;
+    },
     removeImg(file, fileList) {
       if (file.id) {
-        this.fileList[file.listName] = this.fileList[file.listName].filter(
+         this.picList= this.picList.filter(
           item => {
             return item.url != file.url;
           }
         );
         this.$api.delete({
-          url: `/draft_house/picture/${file.id}`,
+          url: `/agentHouse/followPic/delete/${file.id}`,
           qs: true,
           data: {
             url: file.url
@@ -634,12 +636,12 @@ export default {
       console.log(uploader);
       let that = this;
       let formData = new FormData();
-      // formData.append('picClass', uploader.filename)
-      // formData.append('draftid', 1)
+       formData.append('addName', 35365)
+      formData.append('type', 4)
       formData.append("file", uploader.file);
       this.$api
         .post({
-          url: "/draft_house/picture",
+          url: "/agentHouse/followPic/upload",
           headers: { "Content-Type": "multipart/form-data" },
           data: formData,
           onUploadProgress: progressEvent => {
@@ -652,7 +654,7 @@ export default {
         .then(json => {
           uploader.onSuccess();
           let data = json.data.data;
-          that.picList.push({ url: data.url });
+          that.picList.push({id:data.id, name:data.id ,url: data.url });
         })
         .catch(() => {
           that.$message({
@@ -669,7 +671,6 @@ export default {
       if (!isJPG) {
         this.$message.error("上传头像图片只能是jpg,jpeg 格式!");
       }
-      that.picList = [];
       return isJPG;
     },
     cut(index) {

@@ -163,8 +163,8 @@
 </template>
 <script>
 import QRCode from 'qrcodejs2';
-import { LOGINDATA } from '@/util/constMap';
 import util from '@/util/util';
+import { LOGINDATA ,TOKEN} from '@/util/constMap';
 //import func from '../../vue-temp/vue-editor-bridge';
 export default {
   name: 'home',
@@ -291,7 +291,7 @@ export default {
         function (e) {
           util.localStorageSet(LOGINDATA, e.data);
           //保存token
-          util.localStorageSet("token", e.data.token.token);
+          util.localStorageSet(TOKEN, e.data.token.token);
           that.$router.push({ path: '/buySellSystem/houseList' });
         },
         function (message) {

@@ -322,12 +322,12 @@ export default {
     handleClick () {
 
     },
-    created () {
-      this.configId = this.$route.query.configId;
-      queryVerifyHouseDatas();
-      console.log(this.configId);
-
-    },
+     created() {
+      this.configId=this.$route.query.configId;
+    
+    console.log(this.configId);
+     
+  },
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;

@@ -51,7 +51,7 @@
   <section class="page-cell-conter">
     <el-container>
       <el-header v-if="asideNavFlag">
-        <header-content></header-content>
+        <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
     <el-container class="page-cell-main">
@@ -79,6 +79,8 @@
 //左侧菜单
 import asideNav from '@/components/asideNav';
 import headerContent from '@/components/headerContent';
+import util from '@/util/util';
+import { LOGINDATA } from '@/util/constMap';
 export default {
   name: "menuFrame",
   components: {
@@ -88,7 +90,8 @@ export default {
   data () {
     return {
       resultRouteArray: this.$route.meta.routeArray,
-      asideNavFlag: true
+      asideNavFlag: true,
+      loginUserData:{}
     }
   },
   created () {
@@ -98,6 +101,7 @@ export default {
         this.asideNavFlag = false;
       }
     }, false);
+    this.loginUserData=util.localStorageGet(LOGINDATA);    
   },
 }
 </script>
