@@ -7,19 +7,19 @@
   <list-page :parentData="$data"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <!-- <template v-slot:top>
+    <template v-slot:top>
       <div class="query-cell">
-        <el-input placeholder="用户名"
+        <!-- <el-input placeholder="用户名"
                   v-model="queryData.newsTitle"
                   clearable>
           <template slot="prepend">用户名</template>
-        </el-input>
+        </el-input> -->
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
-                   @click="queryNoticeByParams">查询</el-button>
+                   @click="queryOnLineUserDatas(1)">刷新</el-button>
       </div>
-    </template> -->
+    </template>
     <template v-slot:tableColumn="cell">
       <template v-for="item in cell.tableData">
         <el-table-column :prop="item.prop"
@@ -89,8 +89,8 @@ export default {
       },
       pageJson: {
         currentPage: 1, //当前页码
-        total: 9, //总记录数
-        pageSize: 5 //每页条数
+        total: 0, //总记录数
+        pageSize: 1 //每页条数
       },
       tableDataColumn: [
         { prop: "perId", label: "用户编码" },
@@ -107,6 +107,7 @@ export default {
         //   addDate: '2019-01-01 18:00:00'
         // }
       ],
+      tableAllData:[]
     }
   },
   mounted () {
@@ -133,9 +134,12 @@ export default {
     queryOnLineUserDatas (currentPage) {
       let params = { pageSize: this.pageJson.pageSize, pageNum: currentPage,"clientType":0 };
       let that = this;
-      if (this.queryData.newsTitle != null) {
-        params.newsTitle = this.queryData.newsTitle;
-      }
+      if(currentPage!=1){//从第二页开始，不请求，因为第一页的时候数据已经全部请求下来
+          this.pageJson.currentPage = currentPage;
+          //this.pageJson.total = result.data.totalCount;
+        that.tableData=that.getPageData(that.tableAllData,currentPage,this.pageJson.pageSize);
+        return;
+      }      
       this.$api.post({
         url: '/onLineUser/queryOnLineUsers',
         data: params,
@@ -149,7 +153,8 @@ export default {
           console.log(result.data);
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
-          this.tableData = result.data.list;
+          this.tableAllData = result.data.list;
+          this.tableData = that.getPageData(this.tableAllData,currentPage,params.pageSize);
         } else {
           console.log("查询在线用户列表结果：" + result.message);
           alert(result.message);
@@ -158,6 +163,11 @@ export default {
         console.log("查询在线用户列表失败");
         console.log(e);
       })
+    },
+    getPageData(allData,currentPage,pageSize){
+      let start=(currentPage-1)*pageSize;
+      let end=(currentPage-1)*pageSize+pageSize;
+      return allData.slice(start,end);
     },
     offLineUser (perId,perType) {
       alert("查看用户详情实现");

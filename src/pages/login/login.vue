@@ -186,7 +186,7 @@ export default {
     }
   },
   created () {
-
+ 
   },
   mounted () {
     this.qrcode();
@@ -212,8 +212,7 @@ export default {
           this.accountId = result.data.accountID;
           //停止轮询
           clearInterval(that.intervalIdForLoginStatus);
-          this.loginValidate();
-          //that.$router.push({ path: '/buySellSystem/houseList' });
+          this.loginValidate();          
         } else {
           console.log("检查扫码登录结果：" + result.message);
         }
