@@ -28,10 +28,10 @@
                          :key="item.prop">
         </el-table-column>
       </template>
-      <el-table-column prop="userImage" label="用户头像" width="90" >
+      <el-table-column prop="userInfo.userImage" label="用户头像" width="90" >
                  <!-- 图片的显示 -->
                  <template   slot-scope="scope">            
-                    <img :src="scope.row.userImage"  width="50" height="50" />
+                    <img :src="scope.row.userInfo.userImage"  width="50" height="50" />
                  </template>         
       </el-table-column> 
       <el-table-column prop="loginTime" :formatter="formatLoginTime"  label="最后登录时间"  >                 
@@ -94,8 +94,8 @@ export default {
       },
       tableDataColumn: [
         { prop: "perId", label: "用户编码" },
-        { prop: "loginName", label: "登录名" },
-        { prop: "deptName", label: "所在部门" },
+        { prop: "userInfo.loginName", label: "登录名" },
+        { prop: "userInfo.deptName", label: "所在部门" },
       ],
       tableData: [
         //   {
