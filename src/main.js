@@ -11,6 +11,8 @@ import Api from "@/api/require"; //请求api
 import guard from "@/router/guard"; // 路由拦截器
 import themePackers from "@/themePackers/themePackers"; //主题
 import "babel-polyfill";
+import * as socketApi from './util/webSocket'
+Vue.prototype.socketApi = socketApi
 Vue.prototype.$api = Api;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);

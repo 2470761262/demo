@@ -183,44 +183,52 @@ export default {
           }
         }
       }
+    },
+    qrcodeFlag:{
+      handler:function(val,oldVal){
+        //首先移除上一个二维码标识的连接
+        this.socketApi.sendSock({"operation":1,"qrCode":oldVal});
+        console.log("开始接入");
+        this.sendWebsocket(val);
+        console.log("结束接入");
+      }
     }
   },
   created () {
- 
-  },
-  mounted () {
     this.qrcode();
+  },
+  mounted () {   
     let that = this;
-    //开启定时器，验证是否扫码登录成功
-    this.intervalIdForLoginStatus = setInterval(() => {
-      if (this.qrcodeFlag == null) {
-        return;
-      }
-      this.$api.post({
-        url: '/loginManager/getUserLoginStatus',
-        data: {
-          qrCode: that.qrcodeFlag
-        },
-        qs: true,
-        token: false
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result);
-          this.accountId = result.data.accountID;
-          //停止轮询
-          clearInterval(that.intervalIdForLoginStatus);
-          this.loginValidate();          
-        } else {
-          console.log("检查扫码登录结果：" + result.message);
-        }
-      }).catch((e) => {
-        console.log("检查扫码登录状态失败");
-        console.log(e);
-      })
-    }, 2000);
+    // //开启定时器，验证是否扫码登录成功
+    // this.intervalIdForLoginStatus = setInterval(() => {
+    //   if (this.qrcodeFlag == null) {
+    //     return;
+    //   }
+    //   this.$api.post({
+    //     url: '/loginManager/getUserLoginStatus',
+    //     data: {
+    //       qrCode: that.qrcodeFlag
+    //     },
+    //     qs: true,
+    //     token: false
+    //   }).then((e) => {
+    //     console.log(e.data);
+    //     let result = e.data;
+    //     if (result.code == 200) {
+    //       console.log(result.message);
+    //       console.log(result);
+    //       this.accountId = result.data.accountID;
+    //       //停止轮询
+    //       clearInterval(that.intervalIdForLoginStatus);
+    //       this.loginValidate();          
+    //     } else {
+    //       console.log("检查扫码登录结果：" + result.message);
+    //     }
+    //   }).catch((e) => {
+    //     console.log("检查扫码登录状态失败");
+    //     console.log(e);
+    //   })
+    // }, 2000);
   },
   //离开页面时清空定时器
   beforeRouteLeave (to, from, next) {
@@ -244,6 +252,15 @@ export default {
     }
   },
   methods: {
+    qrLoginSuccess(data){
+      console.log(data);
+      this.accountId = data.accountId;
+      this.loginValidate();
+    },
+    sendWebsocket:function(qrCode){
+        this.socketApi.initWebSocket(this.$api.baseUrl().replace("http",""),qrCode,this.qrLoginSuccess);
+				//this.socketApi.sendSock({"operation":-1,"qrCode":"测试向服务器发消息（来自客户端）"})
+			},
     clearTime () {
       if (this.setIntervalId != null) {
         clearInterval(this.setIntervalId);
@@ -351,7 +368,7 @@ export default {
       }, 1000)
     },
     //生成二维码
-    qrcode () {
+    async qrcode () {
       let that = this;
       this.$nextTick(() => {
         this.$api.post({
