@@ -265,9 +265,9 @@
                       :max="sliderMinMax.max">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
-                   :style="style"
-                   v-if="end !=0">
-                <div :class="[
+                   :style="style">
+                <div v-show="end !=0"
+                     :class="[
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
@@ -297,9 +297,9 @@
                       :max="sliderMinMax.max">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
-                   :style="style"
-                   v-if="end !=0">
-                <div :class="[
+                   :style="style">
+                <div v-show="end !=0"
+                     :class="[
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
@@ -329,9 +329,9 @@
                       :max="flootMinMax.max">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
-                   :style="style"
-                   v-if="end !=0">
-                <div :class="[
+                   :style="style">
+                <div v-show="end !=0"
+                     :class="[
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
