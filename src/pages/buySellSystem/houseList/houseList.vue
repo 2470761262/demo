@@ -36,6 +36,7 @@
       box-sizing: border-box;
       position: relative;
       min-width: 0;
+      cursor: pointer;
       @media screen and (max-width: 1600px) {
         flex: 0 0 25% !important;
       }
@@ -92,6 +93,7 @@
       margin-left: 60px;
       margin-right: 40px;
       border-radius: 4px;
+      cursor: pointer;
       > i,
       > span {
         color: #fff;

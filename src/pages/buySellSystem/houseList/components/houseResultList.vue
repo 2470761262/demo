@@ -1,4 +1,7 @@
 <style lang="less" scoped>
+.query-data-pad {
+  padding: 0 20px;
+}
 .page-query-data {
   display: flex;
   .page-query-data-title {
@@ -14,9 +17,63 @@
     }
   }
 }
+.select-tabs {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-top: 1px solid #d7d7d7;
+  border-bottom: 1px solid #d7d7d7;
+  .select-tabs-cell {
+    display: flex;
+    .select-tabs-item {
+      display: flex;
+      align-items: center;
+      margin-right: 80px;
+      cursor: pointer;
+      &:last-child {
+        margin-right: 0;
+      }
+      .tabs-item-title {
+        font-size: 16px;
+      }
+      .el-icon-sort {
+        font-size: 16px;
+      }
+    }
+  }
+}
+.select-checkbox {
+  margin-right: 40px;
+  &:last-child {
+    margin-right: 0;
+  }
+  input {
+    display: none;
+  }
+  span {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    &::after {
+      content: "\2713";
+      border: 1px solid #767676;
+      width: 17px;
+      height: 17px;
+      box-sizing: border-box;
+      margin-left: 10px;
+      line-height: 1;
+      text-align: center;
+    }
+  }
+  input[type="checkbox"]:checked + span {
+    &::after {
+      content: "";
+    }
+  }
+}
 </style>
 <template>
-  <div>
+  <div class="query-data-pad">
     <div class="page-query-data">
       <div class="page-query-data-title">所有房源></div>
       <div class="page-query-data-tag">
@@ -28,6 +85,31 @@
                 @close="handleClose(tag)">
           {{tag.title}}{{tag.value}}
         </el-tag>
+      </div>
+    </div>
+    <div class="select-tabs">
+      <div class="select-tabs-cell">
+        <div class="select-tabs-item">
+          <div class="tabs-item-title">默认排序</div>
+        </div>
+        <div class="select-tabs-item">
+          <div class="tabs-item-title">价格</div>
+          <i class="el-icon-sort"></i>
+        </div>
+        <div class="select-tabs-item">
+          <div class="tabs-item-title">面积</div>
+          <i class="el-icon-sort"></i>
+        </div>
+      </div>
+      <div class="select-tabs-cell">
+        <label class="select-checkbox">
+          <input type="checkbox">
+          <span>钥匙</span>
+        </label>
+        <label class="select-checkbox">
+          <input type="checkbox">
+          <span>独家</span>
+        </label>
       </div>
     </div>
   </div>
