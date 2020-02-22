@@ -94,7 +94,7 @@ export default {
       },
       tableDataColumn: [
         { prop: "perId", label: "用户编码" },
-        { prop: "userInfo.loginName", label: "登录名" },
+        { prop: "userInfo.loginuser", label: "登录名" },
         { prop: "userInfo.deptName", label: "所在部门" },
       ],
       tableData: [
