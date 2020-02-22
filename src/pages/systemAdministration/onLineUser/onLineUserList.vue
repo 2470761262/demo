@@ -34,7 +34,7 @@
                     <img :src="scope.row.userInfo.userImage"  width="50" height="50" />
                  </template>         
       </el-table-column> 
-      <el-table-column prop="loginTime" :formatter="formatLoginTime"  label="最后登录时间"  >                 
+      <el-table-column prop="loginTime" :formatter="formatLoginTime"  label="登录时间"  >                 
       </el-table-column> 
       <el-table-column prop="clientType" :formatter="formatClientType"  label="登录终端" width="90" >                 
       </el-table-column> 
