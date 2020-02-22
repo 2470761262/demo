@@ -174,14 +174,17 @@
              @click="()=> querySelectFlag = !querySelectFlag "
              :class="querySelectFlag ? 'el-icon-d-arrow-right': 'el-icon-d-arrow-left'  "></div>
       </div>
-      <div class="com-flex-cell"></div>
+      <div class="com-flex-cell">
+        <houseresultlist></houseresultlist>
+      </div>
     </div>
   </div>
 </template>
 <script>
 //筛选
 import houselistlhousepair from "@/pages/buySellSystem/houseList/components/houseLIstlHousePair";
-
+//展示列表
+import houseresultlist from '@/pages/buySellSystem/houseList/components/houseResultList';
 const HosueList = [
   { title: "我的房源", icon: "el-icon-zoom-in", path: "", hot: false },
   { title: "7天被带看", icon: "el-icon-zoom-in", path: "", hot: true },
@@ -198,18 +201,50 @@ const HosueList = [
 ];
 import getToken from "@/minxi/getUrlToken";
 export default {
+  provide () {
+    return {
+      form: this.form,
+      Slider: this.Slider
+    }
+  },
   name: "houseList",
   mixins: [getToken],
   components: {
     houselistlhousepair,
+    houseresultlist
   },
   data () {
     return {
       querySelectFlag: false,
-      houseMenuList: HosueList
+      houseMenuList: HosueList,
+      Slider: {
+        priceSlider: [20, 20],
+        areaSlider: [20, 20],
+        flootSlider: [-2, -2],
+      },
+      form: {
+        business: [],
+        houseType: [],
+        renovation: [],
+        purpose: [],
+        orientation: [],
+        primarySchool: [],
+        middleSchool: [],
+        comId: '',
+        cbId: '',
+        roomNo: '',
+        minFloor: '',
+        maxFloor: '',
+        minInArea: '',
+        maxInArea: '',
+        minPrice: '',
+        maxPrice: '',
+        face: []
+      }
     };
   },
   created () {
+
     console.log("===========" + JSON.stringify(this.GetRequest()));
   },
   methods: {

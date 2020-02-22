@@ -202,7 +202,8 @@
                  placeholder="请输入关键字" />
         </div>
         <div class="select-but-sub">开始搜索</div>
-        <div class="select-but-reset">
+        <div class="select-but-reset"
+             @click="resetForm('form')">
           <i class="el-icon-refresh reset-icon"></i>
           <span class="select-but-reset-title">重置</span>
         </div>
@@ -253,11 +254,12 @@
       <!-- 售价 -->
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="售价">
-          <vue-slider v-model="priceSlider"
+          <vue-slider v-model="Slider.priceSlider"
                       :min="sliderMinMax.min"
                       :marks="priceSliderMarks"
                       tooltip="none"
                       :lazy="true"
+                      @change="priceSliderChange"
                       :contained="true"
                       :dot-size="[25,25]"
                       :max="sliderMinMax.max">
@@ -270,7 +272,7 @@
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
             ]">
-                  {{ priceSlider[index] }}￥ - {{ priceSlider[index + 1] }}￥
+                  {{ Slider.priceSlider[index] }}￥ - {{ Slider.priceSlider[index + 1] }}￥
                 </div>
               </div>
             </template>
@@ -284,11 +286,12 @@
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="面积">
           <vue-slider class="vue-slider-index1"
-                      v-model="areaSlider"
+                      v-model="Slider.areaSlider"
                       :min="sliderMinMax.min"
                       :marks="areaSliderMarks"
                       tooltip="none"
                       :lazy="true"
+                      @change="areaSliderChange"
                       :contained="true"
                       :dot-size="[25,25]"
                       :max="sliderMinMax.max">
@@ -301,7 +304,7 @@
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
             ]">
-                  {{ areaSlider[index] }}㎡ - {{ areaSlider[index + 1] }}㎡
+                  {{ Slider.areaSlider[index] }}㎡ - {{ Slider.areaSlider[index + 1] }}㎡
                 </div>
               </div>
             </template>
@@ -315,13 +318,14 @@
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="楼层">
           <vue-slider class="vue-slider-index2"
-                      v-model="flootSlider"
+                      v-model="Slider.flootSlider"
                       :min="flootMinMax.min"
                       :marks="flootSliderMarks"
                       tooltip="none"
                       :lazy="true"
                       :contained="true"
                       :dot-size="[25,25]"
+                      @change="flootSliderChange"
                       :max="flootMinMax.max">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
@@ -332,7 +336,7 @@
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
             ]">
-                  {{ flootSlider[index] }}层 - {{ flootSlider[index + 1] }}层
+                  {{ Slider.flootSlider[index] }}层 - {{ Slider.flootSlider[index + 1] }}层
                 </div>
               </div>
             </template>
@@ -530,33 +534,13 @@ const flootSliderMarks = {
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/default.css';
 export default {
+  name: "houseResultList",
+  inject: ["form", "Slider"],
   components: {
     VueSlider
   },
   data () {
     return {
-      form: {
-        business: [],
-        houseType: [],
-        renovation: [],
-        purpose: [],
-        orientation: [],
-        primarySchool: [],
-        middleSchool: [],
-        comId: '',
-        cbId: '',
-        roomNo: '',
-        minFloor: '',
-        maxFloor: '',
-        minInArea: '',
-        maxInArea: '',
-        minPrice: '',
-        maxPrice: '',
-        face: []
-      },
-      priceSlider: [20, 20],
-      areaSlider: [20, 20],
-      flootSlider: [-2, -2],
       flootMinMax: {
         min: -2,
         max: 40
@@ -622,12 +606,45 @@ export default {
   },
 
   methods: {
-    onSubmit () {
-      console.log('submit!');
+    //面积滑块参数更新
+    flootSliderChange (e) {
+      if (e[0] == -2 && e[1] == -2) {
+        this.form.minFloor = '';
+        this.form.maxFloor = '';
+      } else {
+        this.form.minFloor = e[0];
+        this.form.maxFloor = e[1];
+      }
     },
+    //面积滑块参数更新
+    areaSliderChange (e) {
+      if (e[0] == 20 && e[1] == 20) {
+        this.form.minInArea = '';
+        this.form.maxInArea = '';
+      } else {
+        this.form.minInArea = e[0];
+        this.form.maxInArea = e[1];
+      }
+    },
+    //售价滑块参数更新
+    priceSliderChange (e) {
+      if (e[0] == 20 && e[1] == 20) {
+        this.form.minPrice = '';
+        this.form.maxPrice = '';
+      } else {
+        this.form.minPrice = e[0];
+        this.form.maxPrice = e[1];
+      }
+    },
+    // onSubmit () {
+    //   console.log('submit!');
+    // },
     //重置表单
     resetForm (formName) {
       this.$refs[formName].resetFields();
+      this.Slider.priceSlider = [20, 20];
+      this.Slider.areaSlider = [20, 20];
+      this.Slider.flootSlider = [-2, -2];
     },
     addInputToList (toList, inputName) {
       let findFlag = this.form[toList].some((item) => {
