@@ -101,9 +101,9 @@ import { mapState } from "vuex";
 export default {
   components: {
     basicInformation,
-    //   supplement: () => componentsFactory("pages/buySellSystem/addHouse/components/supplement"), //补充信息
-    //   exploration: () => componentsFactory("pages/buySellSystem/addHouse/components/exploration"), //实勘图片/视频
-    //  addHouseSuccess: () => componentsFactory("pages/buySellSystem/addHouse/components/addHouseSuccess") //实勘图片/视频
+    supplement: () => componentsFactory("pages/buySellSystem/addHouse/components/supplement"), //补充信息
+    exploration: () => componentsFactory("pages/buySellSystem/addHouse/components/exploration"), //实勘图片/视频
+    addHouseSuccess: () => componentsFactory("pages/buySellSystem/addHouse/components/addHouseSuccess") //实勘图片/视频
   },
   directives: {
     scrollTop: {

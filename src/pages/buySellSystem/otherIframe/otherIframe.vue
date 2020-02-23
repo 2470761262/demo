@@ -8,10 +8,10 @@
 <template>
   <div class="page-cell">
     <div class="page-cell-tab">
-      <!-- @change="change" -->
-      <router-tabs :routerTab="routerTab"
-                   :activeParent="activeParent"
-                   v-model="activeChild"></router-tabs>
+      <!-- @change="change" 
+      :activeParent="activeParent"
+       v-model="activeChild"-->
+      <router-tabs :routerTab="routerTab"></router-tabs>
     </div>
     <router-view></router-view>
   </div>
@@ -25,8 +25,8 @@ export default {
   },
   data () {
     return {
-      activeParent: '1',
-      activeChild: '23',
+      activeParent: '1',//默认显示那个一个块tabs父级菜单
+      activeChild: '/buySellSystem/concernCommunity', //默认显示的路径 tabs路径
       routerTab: rouetTabsArray
     }
   },

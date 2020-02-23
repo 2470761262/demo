@@ -77,27 +77,45 @@
 <script>
 export default {
   props: {
-    value: {
-      type: String
-    },
+    //   value: {
+    //    type: String
+    //   },
     routerTab: {
       type: Array
     },
-    activeParent: {
-      type: String,
-      default: '0'
-    },
+    // activeParent: {
+    //    type: String,
+    //    default: '0'
+    // },
+  },
+  created () {
+    this.initUrlTab();
+
   },
   data () {
     return {
       renderTab: this.routerTab,
-      renderActive: this.activeParent,
-      renderChild: this.value
+      renderActive: '1',
+      renderChild: ''
     }
   },
   methods: {
+    initUrlTab () {
+      let routerTab = this.routerTab;
+      for (let i = 0; i < routerTab.length; i++) {
+        for (let y = 0; y < routerTab[i].children.length; y++) {
+          if (routerTab[i].children[y].active === this.$route.path) {
+            this.renderActive = routerTab[i].active;
+            this.renderChild = routerTab[i].children[y].active;
+            return;
+          }
+        }
+      }
+
+    },
     childChange () {
-      this.$emit('input', this.renderChild);
+      this.$router.push({ path: this.renderChild })
+      // this.$emit('input', this.renderChild);
       this.$emit('change', this.renderChild);
     },
     //父级切换
