@@ -187,7 +187,7 @@ export default {
       formData.append('draftid', 1)
       formData.append('file', uploader.file)
       this.$api.post({
-        url: "/draft_house/picture",
+        url: "/draft-house/picture",
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
         onUploadProgress: progressEvent => { //静读条

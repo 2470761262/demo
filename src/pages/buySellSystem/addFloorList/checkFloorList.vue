@@ -171,7 +171,8 @@ export default {
                      if(e.data.data.proveImg.indexOf(",")==-1){ //等于-1表示这个字符串中没有o这个字符
                       that.urls.push(e.data.data.proveImg)
                         }else{
-                        that.urls=e.data.data.proveImg.spilt(",");
+                          console.log(e.data.data.proveImg.split(","))
+                        that.urls=e.data.data.proveImg.split(",");
                         }
                 }
             })
