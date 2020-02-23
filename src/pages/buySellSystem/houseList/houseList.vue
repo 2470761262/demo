@@ -148,7 +148,8 @@
              v-for="(item,index) in houseMenuList"
              :key="index"
              :class="{'item-hot':item.hot}">
-          <div class="for-house-item">
+          <div class="for-house-item"
+               @dblclick="navToPath(item.path)">
             <i :class="item.icon"
                class="icon"></i>
             <div class="for-house-item-title">{{item.title}}</div>
@@ -156,7 +157,8 @@
         </div>
       </div>
       <div class="page-house-cell but-flex-center">
-        <div class="house-cell-but">
+        <div class="house-cell-but"
+             @click="navToPath('/buySellSystem/addHouse')">
           <i class="el-icon-plus"></i>
           <span>录入房源</span>
         </div>
@@ -188,10 +190,10 @@ import houselistlhousepair from "@/pages/buySellSystem/houseList/components/hous
 //展示列表
 import houseresultlist from '@/pages/buySellSystem/houseList/components/houseResultList';
 const HosueList = [
-  { title: "我的房源", icon: "el-icon-zoom-in", path: "", hot: false },
-  { title: "7天被带看", icon: "el-icon-zoom-in", path: "", hot: true },
-  { title: "新增房源", icon: "el-icon-zoom-in", path: "", hot: false },
-  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/myHouseList", hot: false },
+  { title: "7天被带看", icon: "el-icon-zoom-in", path: "/buySellSystem/sevenDaysFollowHouse", hot: true },
+  { title: "新增房源", icon: "el-icon-zoom-in", path: "/buySellSystem/newAgentHouse", hot: false },
+  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false },
   { title: "成交对赌", icon: "el-icon-zoom-in", path: "", hot: true },
   { title: "总监推荐", icon: "el-icon-zoom-in", path: "", hot: true },
   { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false },
@@ -250,6 +252,10 @@ export default {
     console.log("===========" + JSON.stringify(this.GetRequest()));
   },
   methods: {
+    //跳转页面
+    navToPath (path) {
+      this.$router.push({ path: path });
+    },
     GetRequest () {
       var url = location.href; //获取url中"?"符后的字串
       var theRequest = new Object();

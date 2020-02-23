@@ -1,13 +1,13 @@
 export default [
   {
     name: "我的房源", active: '1', children: [
-      { name: "我的核心盘", active: '12' },
+      { name: "我的核心盘", active: '/buySellSystem/myHouseList' },
       { name: "我的跟单", active: '23' },
       { name: "我的相关", active: '335' },
-      { name: "我的数据", active: '455' },
+      { name: "我的数据", active: 'sdfs' },
       { name: "我的关注", active: '56' },
       { name: "成交对赌", active: '63' },
-      { name: "验真列表", active: '746' },
+      { name: "验真列表", active: 'dff' },
       { name: "审核列表", active: '84' },
       { name: "外网房源", active: '95' },
     ]

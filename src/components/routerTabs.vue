@@ -88,6 +88,10 @@ export default {
       default: '0'
     },
   },
+  created () {
+    this.initUrlTab();
+
+  },
   data () {
     return {
       renderTab: this.routerTab,
@@ -96,7 +100,21 @@ export default {
     }
   },
   methods: {
+    initUrlTab () {
+      let routerTab = this.routerTab;
+      for (let i = 0; i < routerTab.length; i++) {
+        for (let y = 0; y < routerTab[i].children.length; y++) {
+          if (routerTab[i].children[y].active === this.$route.path) {
+            this.renderActive = routerTab[i].active;
+            this.renderChild = routerTab[i].children[y].active;
+            return;
+          }
+        }
+      }
+
+    },
     childChange () {
+      this.$router.push({ path: this.renderChild })
       this.$emit('input', this.renderChild);
       this.$emit('change', this.renderChild);
     },
