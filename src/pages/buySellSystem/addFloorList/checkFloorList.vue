@@ -194,7 +194,7 @@ export default {
                 }
             }).then((e) => {
                 if (e.data.code == 200) {
-                that.$router.push({ path: '/menuFrame/addFloorList'});
+                that.$router.push({ path: '/buySellSystem/addFloorList'});
                 }else if(e.data.code == 400){
                   console.log("失败     "+e.data)
                 }

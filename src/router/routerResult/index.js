@@ -30,11 +30,32 @@ export default [
       import(/* webpackChunkName: "checkFloorList" */ "@/pages/buySellSystem/addFloorList/checkFloorList.vue")
   },
   {
+    //独家房源列表
+    path: "/buySellSystem/soleHouse",
+    name: "addHouse",
+    component: () =>
+      import(/* webpackChunkName: "soleHouse" */ "@/pages/buySellSystem/soleHouse/soleHouse.vue")
+  },
+  {
+    //总监推荐房源
+    path: "/buySellSystem/chiefRecommendHouse",
+    name: "addHouse",
+    component: () =>
+      import(/* webpackChunkName: "chiefRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/chiefRecommendHouse.vue")
+  },
+  {
+    //店长推荐房源
+    path: "/buySellSystem/shopownerRecommendHouse",
+    name: "addHouse",
+    component: () =>
+      import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/shopownerRecommendHouse.vue")
+  },
+  {
     //补充楼盘
     path: "/buySellSystem/CommunityReplenish",
     name: "addHouse",
     component: () =>
-      import(/* webpackChunkName: "CommunityReplenish" */ "@/pages/buySellSystem/addFloorList/checkFloorList.vue")
+      import(/* webpackChunkName: "CommunityReplenish" */ "@/pages/buySellSystem/addFloorList/CommunityReplenish.vue")
   },
   {
     //思冲的页面
