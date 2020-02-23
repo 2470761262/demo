@@ -186,16 +186,27 @@ export default {
     },
     qrcodeFlag:{
       handler:function(val,oldVal){
-        //首先移除上一个二维码标识的连接
-        this.socketApi.sendSock({"operation":1,"qrCode":oldVal});
-        console.log("开始接入");
-        this.sendWebsocket(val);
-        console.log("结束接入");
+        let e=this.socketApi.closeSocket();
+        //this.socketApi.sendSock({"operation":"closeUser","user":oldVal});
+        if(e){
+          console.log("关闭了上一个旧的连接，用户为："+oldVal);
+        }
+        console.log("用户【"+val+"】开始接入");
+         this.socketApi.initWebSocket(this.$api.baseUrl().replace("http",""),val);
+				 this.socketApi.initReceiveMessageCallBack(this.qrLoginSuccess);
+        console.log("用户【"+val+"】接入完毕");
       }
     }
   },
   created () {
     this.qrcode();
+  },
+  destroyed(){
+    console.log("页面销毁，主动断开websocket连接");
+    let r=this.socketApi.closeSocket();
+    if(r){
+      console.log("成功断开websocket连接");
+    }
   },
   mounted () {   
     let that = this;
@@ -253,14 +264,13 @@ export default {
   },
   methods: {
     qrLoginSuccess(data){
-      console.log(data);
-      this.accountId = data.accountId;
-      this.loginValidate();
-    },
-    sendWebsocket:function(qrCode){
-        this.socketApi.initWebSocket(this.$api.baseUrl().replace("http",""),qrCode,this.qrLoginSuccess);
-				//this.socketApi.sendSock({"operation":-1,"qrCode":"测试向服务器发消息（来自客户端）"})
-			},
+      if(data&&data.operation=="qrLoginSuccess"){
+         console.log(data,"微信扫码成功，准备执行登录");
+         this.accountId = data.content;
+         this.loginValidate();
+      }
+     
+    },   
     clearTime () {
       if (this.setIntervalId != null) {
         clearInterval(this.setIntervalId);

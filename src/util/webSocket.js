@@ -1,9 +1,7 @@
 var websock = null;
 var global_receiveMessageCallback = null;
-function initWebSocket(domain,code,receiveMessageCallBack){ //初始化weosocket
-    //ws地址
-    global_receiveMessageCallback=receiveMessageCallBack;
-    var wsuri="ws"+domain+"/webSocketHandler?code="+code;
+function initWebSocket(domain,code){ //初始化weosocket
+    var wsuri="ws"+domain+"/webSocketHandler?user="+code;
     websock = new WebSocket(wsuri);
     websock.onmessage = function(e){
     	websocketonmessage(e);
@@ -67,9 +65,21 @@ function websocketOpen(e){
 }
 function closeSocket(){
     if(websock){
-        websock.onclose();
+        try{
+            websock.close();
+            return true;
+        }catch(e){
+            console.log(e,"websocket断开连接失败，异常");
+            return false;
+        }
+    }else{
+        console.log("websocket未初始化,无需断开");
+        return false;
     }
+}
+function initReceiveMessageCallBack(callback){
+    global_receiveMessageCallback=callback;
 }
 //initWebSocket();
  
-export{sendSock,initWebSocket,closeSocket}
+export{sendSock,initWebSocket,closeSocket,initReceiveMessageCallBack}
