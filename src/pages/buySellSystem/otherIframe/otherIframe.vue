@@ -8,10 +8,10 @@
 <template>
   <div class="page-cell">
     <div class="page-cell-tab">
-      <!-- @change="change" -->
-      <router-tabs :routerTab="routerTab"
-                   :activeParent="activeParent"
-                   v-model="activeChild"></router-tabs>
+      <!-- @change="change" 
+      :activeParent="activeParent"
+       v-model="activeChild"-->
+      <router-tabs :routerTab="routerTab"></router-tabs>
     </div>
     <router-view></router-view>
   </div>

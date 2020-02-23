@@ -77,16 +77,16 @@
 <script>
 export default {
   props: {
-    value: {
-      type: String
-    },
+    //   value: {
+    //    type: String
+    //   },
     routerTab: {
       type: Array
     },
-    activeParent: {
-      type: String,
-      default: '0'
-    },
+    // activeParent: {
+    //    type: String,
+    //    default: '0'
+    // },
   },
   created () {
     this.initUrlTab();
@@ -95,8 +95,8 @@ export default {
   data () {
     return {
       renderTab: this.routerTab,
-      renderActive: this.activeParent,
-      renderChild: this.value
+      renderActive: '1',
+      renderChild: ''
     }
   },
   methods: {
@@ -115,7 +115,7 @@ export default {
     },
     childChange () {
       this.$router.push({ path: this.renderChild })
-      this.$emit('input', this.renderChild);
+      // this.$emit('input', this.renderChild);
       this.$emit('change', this.renderChild);
     },
     //父级切换

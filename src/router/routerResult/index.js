@@ -59,6 +59,13 @@ export default [
           import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/concernCommunity/concernCommunity.vue")
       },
       {
+        //正在开发中提示页面
+        path: "/buySellSystem/loadDevelopment",
+        name: "loadDevelopment",
+        component: () =>
+          import(/* webpackChunkName: "loadDevelopment" */ "@/pages/buySellSystem/loadDevelopment/loadDevelopment.vue")
+      },
+      {
         //柯名的页面
         path: "/buySellSystem/newAgentHouse",
         name: "newAgentHouse",
