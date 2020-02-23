@@ -5,14 +5,25 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template v-slot:selectTo>
-      <el-input placeholder="手机号"
-                v-model="queryData.inputValue"
+    <template v-slot:top>
+      <div class="page-form-inline budingMarinSet">
+         <el-input placeholder="楼盘名称"
+                v-model="queryData.houseName"
+                clearable>
+        <template slot="prepend">楼盘名称</template>
+       
+      </el-input>
+
+       <el-input placeholder="手机号"
+                v-model="queryData.brokerPhone"
                 clearable>
         <template slot="prepend">手机号</template>
-      </el-input>
-    </template>
-    <template v-slot:selectTo>
+        </el-input>
+        <el-input placeholder="提交人"
+                v-model="queryData.brokerName"
+                clearable>
+        <template slot="prepend">提交人</template>
+    </el-input>
       <el-select v-model="queryData.isCheck" placeholder="请选择" clearable> 
                 <el-option
                 v-for="item in options"
@@ -22,7 +33,16 @@
                 </el-option>
             </el-select>
         <template slot="prepend">审核状态</template>
+        <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryAddFloorListParams">查询</el-button>
+        </div>
+      
+
+      
     </template>
+    
 
 
 
@@ -78,15 +98,15 @@ export default {
         }],
       queryData: {
         houseName: '',
-        taskName: '',
-        inputValue: '',
+        brokerName: '',
+        brokerPhone: '',
         timeSelect: '',
         isCheck:''
       },
       pageJson: {
-        currentPage: 1,
-        total: 50,
-        pageSize: 20
+         currentPage: 1, //当前页码
+        total: 9, //总记录数
+        pageSize: 5 //每页条数
       },
       elTabs: {
         activeName: "tab1",
@@ -123,23 +143,26 @@ export default {
     }
   },
   mounted(){
-    this.queryAddFloorList(2);
+    this.queryAddFloorList(1);
   },
   methods: {
     queryTabData () {
       console.log(this, '111');
     },
-  queryAddFloorList(info){
+  queryAddFloorListParams(){
+    this.queryAddFloorList(1);
+  },  
+  queryAddFloorList(currentPage){
     var that =this;
-    let params={"limit":that.pageJson.pageSize,"page":that.pageJson.currentPage};
-    if(info !=1){
+     let params={"limit":that.pageJson.pageSize,"page":currentPage};
+ 
         params.communityName=that.queryData.houseName;
-        params.brokerName=that.queryData.taskName;
-        params.brokerPhone=that.queryData.inputValue;
+        params.brokerName=that.queryData.brokerName;
+        params.brokerPhone=that.queryData.brokerPhone;
         params.beginTime=that.queryData.timeSelect[0];
         params.endTime=that.queryData.timeSelect[1];
         params.isCheck=that.queryData.isCheck;
-    }
+   
      
      console.log(params);
     this.$api.get({
@@ -180,17 +203,17 @@ toCheck(id){
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryAddFloorList(2);
-    },
-    handleSizeChange (val) {
-      this.$emit("handleClick", e);
-      console.log(this.$emit("handleClick", e));
+     
+      this.queryAddFloorListParams()
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
+       this.queryAddFloorList(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
+       this.pageJson.pageSize = val;
+       this.queryAddFloorList(1);
     }
   },
 }

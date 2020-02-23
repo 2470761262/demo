@@ -187,11 +187,16 @@ export default {
                 data: {
                 id: that.form.id,
                 isCheck: that.form.isCheck,
+                communityName:that.form.communityName,
+                comBuildingName:that.form.comBuildingName,
+                RoomNo:that.form.buildIngHouses,
                 checkRemark: that.form.checkRemark
                 }
             }).then((e) => {
                 if (e.data.code == 200) {
-                that.$router.push({ path: '/menuFrame/addFloorList'});
+                that.$router.push({ path: '/buySellSystem/addFloorList'});
+                }else if(e.data.code == 400){
+                  console.log("失败     "+e.data)
                 }
             })
       }

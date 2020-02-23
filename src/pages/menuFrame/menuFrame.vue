@@ -4,11 +4,18 @@
 }
 .page-cell-conter {
   height: 100vh;
+  .page-cell-header {
+    min-width: 1280px;
+  }
   .page-cell-main {
     height: calc(100% - 60px);
     .el-aside,
     .el-main {
       height: 100%;
+    }
+    .el-main {
+      min-width: 1280px;
+      background: #f4f4f4;
     }
     .el-aside {
       background-color: rgb(84, 92, 100);
@@ -44,7 +51,7 @@
   <section class="page-cell-conter">
     <el-container>
       <el-header v-if="asideNavFlag">
-        <header-content></header-content>
+        <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
     <el-container class="page-cell-main">
@@ -72,6 +79,8 @@
 //左侧菜单
 import asideNav from '@/components/asideNav';
 import headerContent from '@/components/headerContent';
+import util from '@/util/util';
+import { LOGINDATA } from '@/util/constMap';
 export default {
   name: "menuFrame",
   components: {
@@ -81,7 +90,8 @@ export default {
   data () {
     return {
       resultRouteArray: this.$route.meta.routeArray,
-      asideNavFlag: true
+      asideNavFlag: true,
+      loginUserData:{}
     }
   },
   created () {
@@ -91,6 +101,7 @@ export default {
         this.asideNavFlag = false;
       }
     }, false);
+    this.loginUserData=util.localStorageGet(LOGINDATA);    
   },
 }
 </script>

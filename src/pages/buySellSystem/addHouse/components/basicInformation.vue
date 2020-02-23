@@ -52,8 +52,8 @@
                      :value="item.value">
           </el-option>
         </el-select>
-        <div class="item-after">
-          补充楼盘<i class="el-icon-question"></i>
+        <div class="item-after" @click="toCommunityReplenish()">
+          补充楼盘<i class="el-icon-question" @click="toCommunityReplenish()"></i>
         </div>
       </div>
     </div>
@@ -397,6 +397,10 @@ export default {
     }
   },
   methods: {
+    //跳转到补充楼盘页面
+    toCommunityReplenish(){
+        this.$router.push({ path: '/buySellSystem/CommunityReplenish'});
+    },
     //查询楼盘
     remoteCommunityName (e) {
       let that = this;

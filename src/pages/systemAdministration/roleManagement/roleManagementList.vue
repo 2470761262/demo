@@ -1,0 +1,169 @@
+<style lang="less" scoped>
+.query-cell {
+  display: flex;
+}
+</style>
+<template>
+  <list-page :parentData="$data"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
+    <template v-slot:inputTo>
+      <div class="query-cell">
+        <el-input placeholder="岗位名称"
+                  v-model="queryData.RoleName"
+                  clearable>
+          <template slot="prepend">岗位名</template>
+        </el-input>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="queryRoleByParams">查询</el-button>
+        <el-button type="primary"
+                   size="mini"
+                   @click="toAddRolePage">添加岗位</el-button>
+      </div>
+    </template>
+    <template v-slot:tableColumn="cell">
+      <template v-for="item in cell.tableData">
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop">
+        </el-table-column>
+      </template>
+      <el-table-column prop="operation"
+                       label="操作"
+                       fixed="right"
+                       key="operation">
+        <template v-slot="scope">
+          <div v-if="scope.row.operation!=''">
+            <el-button type="info"
+                       size="mini"
+                       @click="distributeEvent(item.methosName,scope.row.id)"
+                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                       :key="index">{{item.name}}</el-button>
+          </div>
+        </template>
+      </el-table-column>
+    </template>
+  </list-page>
+</template>
+
+<script>
+import listPage from "@/components/listPage";
+export default {
+  components: {
+    listPage
+  },
+  data () {
+    return {
+      loading: false, //控制表格加载动画提示
+      queryData: {
+        RoleName: ""
+      },
+      configSet: {
+        selectToTime: false,
+        selectTo: false
+      },
+      pageJson: {
+        currentPage: 1, //当前页码
+        total: 9, //总记录数
+        pageSize: 5 //每页条数
+      },
+      tableDataColumn: [
+        { prop: "id", label: "岗位id" },
+        { prop: "RoleName", label: "岗位名" },
+        { prop: "ModDate", label: "修改时间" },
+        { prop: "del", label: "有效状态 0有效 1无效" },
+        { prop: "RoleDesc", label: "岗位描述" },
+        { prop: "AddName", label: "添加人" },
+        { prop: "AddTime", label: "添加时间" },
+        { prop: "OldRoleId", label: "OldRoleId" },
+      ],
+      tableData: [],
+    }
+  },
+  mounted () {
+    this.queryRoleDatas(1);
+  },
+  methods: {
+    queryRoleByParams () {
+      this.queryRoleDatas(1);
+    },
+    queryRoleDatas (currentPage) {
+      let params = { limit: this.pageJson.pageSize, page: currentPage };
+      let that = this;
+      if (this.queryData.RoleName != null) {
+        params.RoleName = this.queryData.RoleName;
+      }
+      this.$api.post({
+        url: '/role/list',
+        data: params,
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.pageJson.total = result.data.totalCount;
+          this.pageJson.currentPage = result.data.currPage;
+          this.tableData = result.data.list;
+        } else {
+          console.log("查询岗位管理列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询岗位管理列表失败");
+        console.log(e);
+      })
+    },
+    toAddRolePage () {
+      this.$router.push({ path: "/sys/addRoleManagementList" });
+    },
+    editRoleDetail (RoleId) {
+      this.$router.push({ path: "/sys/editRoleDetail", query: { RoleId: RoleId } });
+    },
+    delRoleDetail (RoleId){
+      this.$api.post({
+        url: '/role/delete/'+RoleId,
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        let result = e.data;
+        if (result.code == 200) {
+          this.$alert('', '删除成功', {
+            dangerouslyUseHTMLString: false
+          });
+          this.$router.push({ path: "/sys/roleManagementList"});
+        }
+      }).catch((e) => {
+        console.log("删除失败");
+        console.log(e);
+      })
+    },
+    distributeEvent (e, RoleId) {
+      this[e](RoleId);
+    },
+    getOpeBtns (type) {
+      let array = [
+         { name: '编辑', isType: '1', methosName: 'editRoleDetail' },
+         { name: '删除', isType: '1', methosName: 'delRoleDetail' }
+      ]
+      // return array.filter((item) => {
+      //   return item.isType.includes(type)
+      // })
+      return array;
+    },
+    handleSizeChange (val) {
+      console.log(`设置了每页 ${val} 条`);
+      this.pageJson.pageSize = val;
+      this.queryRoleDatas(1);
+    },
+    handleCurrentChange (val) {
+      this.queryRoleDatas(val);
+    }
+  }
+};
+</script>

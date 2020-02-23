@@ -82,7 +82,7 @@
       </div>
       <div class="form-error-tips">
       <div class="page-cell-item">
-        <div class="item-before item-before-top">外景图</div>
+        <div class="item-before item-before-top">怎么材料</div>
         <div>
           <div class="page-cell-item">
             <el-upload drag
@@ -243,7 +243,7 @@ export default {
                 }
             }).then((e) => {
                 if (e.data.code == 200) {
-                
+                     this.$router.push({ path: '/buySellSystem/addHouse'});
                 }
             })
       }
