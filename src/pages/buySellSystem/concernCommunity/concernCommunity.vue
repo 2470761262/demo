@@ -5,7 +5,7 @@
              @handleCurrentChange="handleCurrentChange">
     <template #tableColumn="">
       <el-table-column label="房源编号">
-        <template v-slot="top">
+        <template v-slot="scope">
           {{scope.row.HouseNo}}
         </template>
       </el-table-column>

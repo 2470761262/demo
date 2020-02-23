@@ -4,25 +4,6 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-  <template v-slot:default>
-      <div class="query-center-item">
-        <el-input placeholder="输入房源编号" clearable>
-       <template slot="prepend">房源编号</template>
-     </el-input>
-      </div>
-    <div class="query-center-item">
-        <el-input placeholder="姓名"
-                  clearable>
-          <template slot="prepend">业主</template>
-        </el-input>
-      </div>
-<div class="query-center-item">
-        <el-input placeholder="业主电话"
-                  clearable>
-          <template slot="prepend">电话</template>
-        </el-input>
-      </div>
-    </template>
     <template #tableColumn="cell">
       <!-- <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
@@ -154,7 +135,7 @@ export default {
        console.log("参数");
       }
       this.$api.post({
-        url: '/agent_house/listFollowHouse',
+        url: '/agent_house/myHouseList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
        data: params,
         token: false
