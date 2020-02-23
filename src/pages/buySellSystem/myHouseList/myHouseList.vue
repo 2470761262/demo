@@ -111,17 +111,7 @@ export default {
       elTabs: {
         activeName: "tab1",
         list: [
-          { label: '全部房源', name: 'tab1' },
-          { label: '我的录入', name: 'tab2' },
-          { label: '我的跟单', name: 'tab3' },
-          { label: '我的委托', name: 'tab4' },
-          { label: '我的钥匙', name: 'tab5' },
-          { label: '我的实勘', name: 'tab6' },
-          { label: '验真列表', name: 'tab7' },
-          { label: '外网列表', name: 'tab8' },
-          { label: '审核列表', name: 'tab9' },
-          { label: '我的收藏', name: 'tab10' },
-          { label: '草稿房源', name: 'tab11' },
+        
         ]
       },
       options: [{
@@ -209,9 +199,12 @@ export default {
     },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
+       this.queryVerifyHouseDatas(val);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
+       this.pageJson.pageSize = val;
+       this.queryVerifyHouseDatas(1);
     },
   },
 }

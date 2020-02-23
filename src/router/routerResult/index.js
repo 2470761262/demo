@@ -73,12 +73,70 @@ export default [
       import(/* webpackChunkName: "otherIframe" */ "@/pages/buySellSystem/otherIframe/otherIframe.vue"),
     children: [
       {
-        //不知道谁的页面 但是是列表的
+        //我的核心盘
         path: "/buySellSystem/concernCommunity",
         name: "concernCommunity",
         component: () =>
           import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/concernCommunity/concernCommunity.vue")
       },
+
+      {
+        //七天内被带看
+        path: "/buySellSystem/sevenDaysFollowHouse",
+        name: "concernCommunity",
+        component: () =>
+          import(/* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/followHouse/sevenDaysFollowHouse.vue")
+      },
+      {
+        //我的跟单
+        path: "/buySellSystem/myAgent",
+        name: "concernCommunity",
+        component: () =>
+          import(/* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/myHouseList/myAgent.vue")
+      },
+      {
+        //我的相关
+        path: "/buySellSystem/myRelatedHouse",
+        name: "concernCommunity",
+        component: () =>
+          import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/myRelatedHouse.vue")
+      },
+      {
+        //我的数据
+        path: "/buySellSystem/myHouseData",
+        name: "concernCommunity",
+        component: () =>
+          import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/myHouseData.vue")
+      },
+      {
+        //我的关注
+        path: "/buySellSystem/myConcern",
+        name: "concernCommunity",
+        component: () =>
+          import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/myConcern.vue")
+      },
+      {
+        //验真列表
+        path: "/buySellSystem/draftHouse",
+        name: "concernCommunity",
+        component: () =>
+          import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/draftHouse.vue")
+      },
+      {
+        //审核列表
+        path: "/buySellSystem/checkHouseList",
+        name: "concernCommunity",
+        component: () =>
+          import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/checkHouseList.vue")
+      },
+      {
+        //外网房源
+        path: "/buySellSystem/releaseOutsideHouseList",
+        name: "concernCommunity",
+        component: () =>
+          import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/releaseOutsideHouseList.vue")
+      },
+
       {
         //正在开发中提示页面
         path: "/buySellSystem/loadDevelopment",
@@ -87,14 +145,14 @@ export default [
           import(/* webpackChunkName: "loadDevelopment" */ "@/pages/buySellSystem/loadDevelopment/loadDevelopment.vue")
       },
       {
-        //柯名的页面
+        //新增房源
         path: "/buySellSystem/newAgentHouse",
         name: "newAgentHouse",
         component: () =>
           import(/* webpackChunkName: "newAgentHouse" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
       },
       {
-        //柯名的页面
+        //我的房源
         path: "/buySellSystem/myHouseList",
         name: "addFloorList",
         component: () =>
