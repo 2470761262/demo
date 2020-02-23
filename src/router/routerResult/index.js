@@ -107,6 +107,13 @@ export default [
         name: "validateHouseList",
         component: () =>
           import(/* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/validateHouseList/validateHouseList.vue")
+      },
+      {
+        //验真房源审核
+        path: "/buySellSystem/agentHouseContrast",
+        name: "agentHouseContrast",
+        component: () =>
+          import(/* webpackChunkName: "validateHouseExamineList" */ "@/pages/buySellSystem/agentHouseContrast/agentHouseContrast.vue")
       }
     ]
   },
@@ -132,28 +139,28 @@ export default [
       import(/* webpackChunkName: "noticeDetail" */ "@/pages/systemAdministration/noticeManage/noticeDetail.vue")
   },
   {
-    //系统管理 系统参数配置
+    //系统管理 系统参数配置列表
     path: "/sys/systemConfigList",
     name: "systemConfigList",
     component: () =>
       import(/* webpackChunkName: "systemConfigList" */ "@/pages/systemAdministration/systemConfigList/systemConfigList.vue")
   },
   {
-    //系统管理 系统参数配置  不知道谁的页面
+    //系统管理 添加系统参数配置  
     path: "/sys/addConfig",
     name: "addConfig",
     component: () =>
       import(/* webpackChunkName: "addConfig" */ "@/pages/systemAdministration/systemConfigList/addConfig.vue")
   },
   {
-    //系统管理 系统参数配置  不知道谁的页面
+    //系统管理 添加系统参数配置对象  
     path: "/sys/addConfigObject",
     name: "addConfigObject",
     component: () =>
       import(/* webpackChunkName: "addConfigObject" */ "@/pages/systemAdministration/systemConfigList/addConfigObject.vue")
   },
   {
-    //系统管理 系统参数配置  不知道谁的页面
+    //系统管理 系统参数配置对象列表  
     path: "/sys/configObjectList",
     name: "configObjectList",
     component: () =>

@@ -193,7 +193,7 @@ export default {
   },
   methods: {
     goToNewHouse () {
-      this.$router.push({ path: '/menuFrame/newAgentHouse' });
+      this.$router.push({ path: '/buySellSystem/newAgentHouse' });
     },
     goToMyHouse () {
       this.$router.push({ path: '/buySellSystem/otherIframe' });

@@ -125,8 +125,8 @@ export default {
     return {
       componentName: "basicInformation",
       stepsList: [
-        { title: "基础信息", componentName: "basicInformation" },
-        { title: "补充信息(非必填)", componentName: "supplement" },
+        { title: "必填信息", componentName: "basicInformation" },
+        { title: "选填信息", componentName: "supplement" },
         { title: "实勘图片/视频", componentName: "exploration" },
         { title: "房源验真", componentName: "addHouseSuccess" }
       ],
