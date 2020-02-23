@@ -26,7 +26,7 @@ export default {
   data () {
     return {
       activeParent: '1',//默认显示那个一个块tabs父级菜单
-      activeChild: '23', //默认显示的路径 23随便写的
+      activeChild: '/buySellSystem/concernCommunity', //默认显示的路径 tabs路径
       routerTab: rouetTabsArray
     }
   },

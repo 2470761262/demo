@@ -1,7 +1,7 @@
 export default [
   {
     name: "我的房源", active: '1', children: [
-      { name: "我的核心盘", active: '/buySellSystem/myHouseList' },
+      { name: "我的核心盘", active: '/buySellSystem/concernCommunity' },
       { name: "我的跟单", active: '23' },
       { name: "我的相关", active: '335' },
       { name: "我的数据", active: 'sdfs' },
