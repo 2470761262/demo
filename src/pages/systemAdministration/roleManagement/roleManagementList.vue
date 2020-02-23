@@ -7,7 +7,7 @@
   <list-page :parentData="$data"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template v-slot:inputTo>
+    <template v-slot:top>
       <div class="query-cell">
         <el-input placeholder="岗位名称"
                   v-model="queryData.RoleName"

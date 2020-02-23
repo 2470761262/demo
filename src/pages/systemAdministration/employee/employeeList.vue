@@ -33,10 +33,10 @@
           <el-button type="primary"
                      style="margin-left:10px"
                      size="mini"
-                     @click="queryDeptByParams">查询</el-button>
+                     @click="queryEmployeeByParams">查询</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="toAddDeptPage">添加员工</el-button>
+                     @click="toAddEmployeePage">添加员工</el-button>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
@@ -93,8 +93,7 @@ export default {
         { prop: "id", label: "员工id" },
         { prop: "perName", label: "员工名" },
         { prop: "loginUser", label: "登录名" },
-        { prop: "deptName", label: "所在部门名称首拼" },
-        { prop: "loginUser", label: "登录名" },
+        { prop: "EmployeeName", label: "所在部门名称" },
         { prop: "postName", label: "角色权限名" },
         { prop: "companyName", label: "公司名称" },
         { prop: "roleName", label: "岗位名" },
@@ -104,13 +103,13 @@ export default {
     }
   },
   mounted () {
-     this.queryDeptDatas(1);
+     this.queryEmployeeDatas(1);
   },
   methods: {
-    queryDeptByParams () {
-      this.queryDeptDatas(1);
+    queryEmployeeByParams () {
+      this.queryEmployeeDatas(1);
     },
-    queryDeptDatas (currentPage) {
+    queryEmployeeDatas (currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage ,del:0 };
       let that = this;
       if (this.queryData.keyWord != null) {
@@ -129,7 +128,7 @@ export default {
           console.log(result.data);
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
-          this.tableData = result.data.list;
+          this.tableData = result.data.data;
         } else {
           console.log("查询员工管理列表结果：" + result.message);
           alert(result.message);
@@ -139,13 +138,13 @@ export default {
         console.log(e);
       })
     },
-    toAddemployeePage () {
+    toAddEmployeePage () {
       this.$router.push({ path: "/sys/addemployee" });
     },
-    editemployee (id) {
+    editEmployee (id) {
       this.$router.push({ path: "/sys/editemployee", query: { id: id } });
     },
-    delemployee (id){
+    delEmployee (id){
      this.$api.post({
         url: '/employee/del/'+id,
         token: false,
@@ -166,13 +165,13 @@ export default {
     distributeEvent (e, id) {
       this[e](id);
     },
-    // querySubsidiary(DeptId){
-    //   this.queryDeptDatas(1,DeptId);
+    // querySubsidiary(EmployeeId){
+    //   this.queryEmployeeDatas(1,EmployeeId);
     // },
     getOpeBtns (type) {
       let array = [
-         { name: '编辑', isType: '1', methosName: 'editDeptDetail' },
-         { name: '删除', isType: '1', methosName: 'delDeptDetail' },
+         { name: '编辑', isType: '1', methosName: 'editEmployee' },
+         { name: '删除', isType: '1', methosName: 'delEmployee' },
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
@@ -182,10 +181,10 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryDeptDatas(1);
+      this.queryEmployeeDatas(1);
     },
     handleCurrentChange (val) {
-      this.queryDeptDatas(val);
+      this.queryEmployeeDatas(val);
     },
     
   }
