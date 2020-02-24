@@ -6,7 +6,7 @@
 </style>
 <template>
   <div class="page-cell-addHouse">
-    <div class="form-error-tips border"
+    <!-- <div class="form-error-tips border"
          :class="{'after-tips':errorBags.has('onlyOrMany')}"
          :data-tips="errorBags.first('onlyOrMany')">
       <div class="page-cell-item">
@@ -26,7 +26,7 @@
          <div class="tips">(多套录入仅支持同一小区同一业主)</div>
       </div>
      
-    </div>
+    </div> -->
     <!-- 楼盘名称 -->
     <div style="display:flex">
     <div class="form-error-tips"
@@ -564,7 +564,7 @@ export default {
       let that = this;
       console.log(this.formData);
       return this.$api.post({
-        url: '/draft_house',
+        url: '/draft-house',
         data: that.formData,
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         token: false
