@@ -2,7 +2,7 @@
 .flex{
     display: flex;
     width: 100%;
-    height: 100%;
+    height: 92%;
 }
 .width{
     margin-top:120%;
@@ -53,12 +53,26 @@
    border-radius: 5rem;
    font-size:1rem
 }
+.houseName2{
+   background: rgb(242,242,242);
+   display: flex;
+   width: 85%;
+   margin-top: 5%;
+   margin-right: 5%;
+   height: 100%;
+
+   border-radius: 5rem;
+   font-size:1rem
+}
 .image{
     border-radius: 2rem;
     width: 85%;
     height: 18%;
     margin-top:3%;
-    background: bisque;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:#808080 ;
     margin-bottom: 11% ;
 }
 .text{
@@ -79,6 +93,18 @@
 .bottom{
     margin-top:60%;
 }
+.imageText{
+   border-radius: 2rem;
+    width: 85%;
+    height: 18%;
+    margin-top:3%;
+    display: flex;
+    
+ 
+  
+    margin-bottom: 11% ;  
+}
+
 .el-scrollbar__wrap {
   overflow-x: hidden;
 }
@@ -94,29 +120,68 @@
 <template>
 
 <div class="flex">
-    <div class="titleBox">
- <div class="width margin" >
-     基本信息
- </div>
- <div class="width ">
-     划片小学
- </div>
- <div class="width bottom">
-     特色
- </div>
-        </div>
         <div class="msgBox">
-        <el-scrollbar style="height:100%;">
-           
+        <el-scrollbar style="height:100%;width:105rem">
+            <div class="detailBox" style="width:15rem" >
+                <div class="house">
+                    <div class="houseName2 text"> 房源名:</div>
+                    
+                     </div>
+                     
+                         <div class="imageText text">
+                     图片:
+                     
+                     </div>
+                     
+                     <div class="text">
+                    价格:
+                     </div>
+                     <div class="text">
+                     面积:
+                     </div>
+                     <div class="text">
+                     房型:
+                     </div>
+                     <div class="text">
+                     楼层:
+                     </div>
+                     <div class="text">
+                     装修:
+                     </div>
+                      <div class="text">
+                      户数:
+                     </div>
+                     <div class="text">
+                    年代:
+                     </div>
+                     <div class="text">
+                     类型:
+                     </div>
+                     <div class="text interval">
+                      小学:
+                     </div>
+                       <div class="text">
+                    中学:
+                     </div>
+                      <div class="text ">
+                    特色:
+                     </div>
+                </div>
                 <div class="detailBox" v-for="(item,index) in houseList"
                      :key="index">
                 <div class="house">
                     <div class="houseName"> {{item.communityName}}</div>
                      <div class="cancelButton" @click="dele(item.id)">x</div>
                      </div>
-                     <div class="image">
                      
-                     </div> 
+                         <div class="image" v-if="item.picUrl==null">
+                     暂无数据
+                     
+                     </div>
+                     <div v-else>
+                         <img :url="item.picUrl" class="image">
+
+                     </div>
                      <div class="text">
                       {{item.price==null?'暂无':item.price+"万"}}
                      </div>
@@ -127,19 +192,19 @@
                       {{item.inAroomsrea==null?'':item.inAroomsrea+"室"}}{{item.hall==null?'':item.hall+"厅"}}{{item.kitchen==null?'':item.kitchen+"厨"}}{{item.toilet==null?'':item.toilet+"卫"}}
                      </div>
                      <div class="text">
-                      {{item.roomsPFloor}}F
+                      {{item.roomsPFloor==null?'暂无':item.roomsPFloor+'F'}}
                      </div>
                      <div class="text">
-                      中档装修
+                      {{item.Decoration==null?'暂无':item.Decoration}}
                      </div>
                       <div class="text">
-                      {{item.households}}
+                      {{item.households ==null?'暂无':item.households }}
                      </div>
                      <div class="text">
-                      年代： {{item.buildYear}}
+                      {{item.buildYear ==null?'暂无':item.buildYear}}
                      </div>
                      <div class="text">
-                      {{item.Decoration}}
+                      {{item.Decoration ==null?'暂无':item.Decoration}}
                      </div>
                      <div class="text interval">
                      {{item.schoolScribing==null?'暂无':item.schoolScribing}}
@@ -204,17 +269,18 @@ export default {
      window.$cookies.remove("houseId");
       
      }else{
-       
-
       let cookie=houseId.split(',');
       console.log(cookie);
       for(let i=0;i<cookie.length;i++){
          if(i==0&&id!=cookie[i]){
            postId+=cookie[i];
-         }else if(cookie[i]!=id){
-            postId+=','+cookie[i];
+         }else if(cookie[i]!=id&&postId==""){
+            postId+=+cookie[i];
+         }else {
+           postId+=','+cookie[i];
          }
-      }
+     }
+      console.log(postId);
       window.$cookies.set("houseId", postId);
      }
       for(let i=0;i<this.houseList.length;i++){
