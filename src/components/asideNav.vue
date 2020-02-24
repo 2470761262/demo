@@ -41,7 +41,7 @@
         <el-menu-item index="/sys/noticeManageList">公告管理</el-menu-item>
         <el-menu-item index="/sys/onLineUserList">在线用户</el-menu-item>
         <el-menu-item index="/sys/systemConfigList">系统参数配置</el-menu-item>
-        <el-menu-item index="/menuFrame/agentHouseContrast">房源对比</el-menu-item>
+        <el-menu-item index="/buySellSystem/agentHouseContrast">房源对比</el-menu-item>
         <el-menu-item index="/sys/passwordReset">用户密码重置</el-menu-item>
         <el-menu-item index="/sys/pcOnline/list">PC在线管理</el-menu-item>
         <el-menu-item index="/sys/roleManagementList">岗位管理</el-menu-item>
