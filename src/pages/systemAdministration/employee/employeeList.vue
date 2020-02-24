@@ -93,7 +93,7 @@ export default {
         { prop: "id", label: "员工id" },
         { prop: "perName", label: "员工名" },
         { prop: "loginUser", label: "登录名" },
-        { prop: "EmployeeName", label: "所在部门名称" },
+        { prop: "deptName", label: "所在部门名称" },
         { prop: "postName", label: "角色权限名" },
         { prop: "companyName", label: "公司名称" },
         { prop: "roleName", label: "岗位名" },
@@ -128,7 +128,7 @@ export default {
           console.log(result.data);
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
-          this.tableData = result.data.data;
+          this.tableData = result.data.list;
         } else {
           console.log("查询员工管理列表结果：" + result.message);
           alert(result.message);
