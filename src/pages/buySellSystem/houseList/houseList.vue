@@ -37,9 +37,6 @@
       position: relative;
       min-width: 0;
       cursor: pointer;
-      @media screen and (max-width: 1600px) {
-        flex: 0 0 25% !important;
-      }
       &.item-hot {
         &:after {
           position: absolute;
@@ -138,6 +135,9 @@
     display: none;
   }
 }
+.item-opacity {
+  opacity: 0.7;
+}
 </style>
 <template>
   <div class="page-back-color">
@@ -148,7 +148,8 @@
              v-for="(item,index) in houseMenuList"
              :key="index"
              :class="{'item-hot':item.hot}">
-          <div class="for-house-item"
+          <div :class="['for-house-item',{'item-opacity':item.flag}]"
+               @click="setSelectNav(item)"
                @dblclick="navToPath(item.path)">
             <i :class="item.icon"
                class="icon"></i>
@@ -190,26 +191,27 @@ import houselistlhousepair from "@/pages/buySellSystem/houseList/components/hous
 //展示列表
 import houseresultlist from '@/pages/buySellSystem/houseList/components/houseResultList';
 const HosueList = [
-  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/myHouseList", hot: false },
-  { title: "7天被带看", icon: "el-icon-zoom-in", path: "/buySellSystem/sevenDaysFollowHouse", hot: true },
-  { title: "新增房源", icon: "el-icon-zoom-in", path: "/buySellSystem/newAgentHouse", hot: false },
-  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false },
-  { title: "成交对赌", icon: "el-icon-zoom-in", path: "", hot: true },
-  { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true },
-  { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false },
-  { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false },
+  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/myHouseList", hot: false, flag: false },
+  { title: "7天被带看", icon: "el-icon-zoom-in", path: "/buySellSystem/sevenDaysFollowHouse", hot: true, flag: false },
+  { title: "新增房源", icon: "el-icon-zoom-in", path: "/buySellSystem/newAgentHouse", hot: false, flag: false },
+  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false },
+  { title: "成交对赌", icon: "el-icon-zoom-in", path: "", hot: true, flag: false },
+  { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true, flag: false },
+  { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
+  { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false, flag: false },
   { title: "店公共盘", icon: "el-icon-zoom-in", path: "", hot: false },
-  { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false },
-  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "", hot: false },
-  { title: "全部在售", icon: "el-icon-zoom-in", path: "", hot: false },
-  { title: "店长推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/shopownerRecommendHouse", hot: false },
+  { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false, flag: false },
+  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
+  { title: "全部在售", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
+  { title: "店长推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/shopownerRecommendHouse", hot: false, flag: false },
 ];
 import getToken from "@/minxi/getUrlToken";
 export default {
   provide () {
     return {
       form: this.form,
-      Slider: this.Slider
+      Slider: this.Slider,
+      querySelectFlag: this.querySelectFlag
     }
   },
   name: "houseList",
@@ -253,6 +255,9 @@ export default {
     console.log("===========" + JSON.stringify(this.GetRequest()));
   },
   methods: {
+    setSelectNav (item) {
+      item.flag = !item.flag;
+    },
     //跳转页面
     navToPath (path) {
       this.$router.push({ path: path });
