@@ -193,52 +193,57 @@ export default {
     },
     qrcodeFlag: {
       handler: function(val, oldVal) {
-        //this.contactSocket(val);     
+        //this.contactSocket(val);
       }
     }
   },
-  created() {
-    this.qrcode();
-  },
+  created() {},
   destroyed() {
     console.log("页面销毁，主动断开websocket连接");
-    this.websock.close();
+    if (this.websock && this.websock.readyState == 1) {
+      this.websock.close();
+    }
     // let r = this.socketApi.closeSocket();
     // if (r) {
     //   console.log("成功断开websocket连接");
     // }
   },
-  mounted() {
-    let that = this; 
+  async mounted() {
+    await this.judgeSessionId();
+    this.qrcode();
+    let that = this;
     //开启定时器，验证是否扫码登录成功
     this.intervalIdForLoginStatus = setInterval(() => {
       if (this.qrcodeFlag == null) {
         return;
       }
-      this.$api.post({
-        url: '/loginManager/getUserLoginStatus',
-        data: {
-          qrCode: that.qrcodeFlag
-        },
-        qs: true,
-        token: false
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result);
-          this.accountId = result.data.accountID;
-          //停止轮询
-          clearInterval(that.intervalIdForLoginStatus);
-          this.loginValidate();
-        } else {
-          console.log("检查扫码登录结果：" + result.message);
-        }
-      }).catch((e) => {
-        console.log("检查扫码登录状态失败");
-        console.log(e);
-      })
+      this.$api
+        .post({
+          url: "/loginManager/getUserLoginStatus",
+          data: {
+            qrCode: that.qrcodeFlag
+          },
+          qs: true,
+          token: false
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result);
+            this.accountId = result.data.accountID;
+            //停止轮询
+            clearInterval(that.intervalIdForLoginStatus);
+            this.loginValidate();
+          } else {
+            console.log("检查扫码登录结果：" + result.message);
+          }
+        })
+        .catch(e => {
+          console.log("检查扫码登录状态失败");
+          console.log(e);
+        });
     }, 2000);
   },
   //离开页面时清空定时器
@@ -260,44 +265,88 @@ export default {
         account: "",
         password: ""
       },
-      websock: null
+      websock: null,
+      sessionId: null
     };
   },
   methods: {
-    contactSocket(qrCode){
-      //注释，废弃，改用轮询，因为线上无法连接，本地可以。但线上后台日志都接受到了
-      return
-      // let e = this.socketApi.closeSocket();
-        // if (e) {
-        //   console.log("关闭了上一个旧的连接，用户为：" + oldVal);
-        // }
-        if (this.websock) {
-          console.log("sss状态"+this.websock.readyState);
-          this.websock.close();
+    doIlegalTip() {
+      this.$message({
+        type: "info",
+        message: "非法登录"
+      });
+      document.getElementById("app").innerHTML =
+        "<div style='box-shadow:0 0 6px rgba(0, 0, 0, 0.3);text-align:center;padding:5px;margin:10px'><h1>非法登录，O(∩_∩)O</h1></div>";
+    },
+    judgeSessionId() {
+      return new Promise(() => {
+        this.sessionId = this.getQueryVariable("SID");
+        if (!this.sessionId) {
+          this.doIlegalTip();
         }
-        console.log("用户【" + qrCode + "】开始接入");
-        // this.socketApi.initWebSocket(
-        //   this.$api.baseUrl().replace("http", ""),
-        //   val
-        // );
-        //this.socketApi.initReceiveMessageCallBack(this.qrLoginSuccess);
-        this.initWebSocket(this.$api.baseUrl().replace("http", ""), qrCode);
-          console.log("状态"+this.websock.readyState);
+        this.$api
+          .post({
+            url: "/logon/pcMacBySid",
+            data: { sId: this.sessionId },
+            qs: true
+          })
+          .then(e => {
+            console.log(e, "登录检查sessionId");
+            if (e.data.code != 200) {
+              this.doIlegalTip();
+            }
+          })
+          .catch(e => {
+            console.log(e, "登录检查sessionId发生异常");
+            this.doIlegalTip();
+          });
+      });
+    },
+    getQueryVariable(variable) {
+      var query = window.location.search.substring(1);
+      var vars = query.split("&");
+      for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] == variable) {
+          return pair[1];
+        }
+      }
+      return false;
+    },
+    contactSocket(qrCode) {
+      //注释，废弃，改用轮询，因为线上无法连接，本地可以。但线上后台日志都接受到了
+      return;
+      // let e = this.socketApi.closeSocket();
+      // if (e) {
+      //   console.log("关闭了上一个旧的连接，用户为：" + oldVal);
+      // }
+      if (this.websock) {
+        console.log("sss状态" + this.websock.readyState);
+        this.websock.close();
+      }
+      console.log("用户【" + qrCode + "】开始接入");
+      // this.socketApi.initWebSocket(
+      //   this.$api.baseUrl().replace("http", ""),
+      //   val
+      // );
+      //this.socketApi.initReceiveMessageCallBack(this.qrLoginSuccess);
+      this.initWebSocket(this.$api.baseUrl().replace("http", ""), qrCode);
+      console.log("状态" + this.websock.readyState);
 
-        console.log("用户【" + qrCode + "】接入完毕");
+      console.log("用户【" + qrCode + "】接入完毕");
     },
     initWebSocket(domain, user) {
       //初始化weosocket
-    //var wsuri = "ws" + domain + "/webSocketHandler?user=" + user;
+      //var wsuri = "ws" + domain + "/webSocketHandler?user=" + user;
       var wsuri = "ws" + domain + "/webSocketHandlerTomcat/" + user;
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
-      this.websock.onclose = function(e){
-        console.log(e,"WebSocket连接关闭 closed ");
-      }
-      let that=this;
+      this.websock.onclose = function(e) {
+        console.log(e, "WebSocket连接关闭 closed ");
+      };
+      let that = this;
       this.websock.onopen = function(e) {
-        console.log(e,"WebSocket连接成功,状态"+that.websock.readyState);
+        console.log(e, "WebSocket连接成功,状态" + that.websock.readyState);
       };
 
       //连接发生错误的回调方法
@@ -327,7 +376,7 @@ export default {
     },
     websocketonmessage(e) {
       this.qrLoginSuccess(JSON.parse(e.data));
-    },   
+    },
     qrLoginSuccess(data) {
       if (data && data.operation == "qrLoginSuccess") {
         console.log(data, "微信扫码成功，准备执行登录");
@@ -371,7 +420,8 @@ export default {
         qrCode: "",
         userName: "",
         passWord: "",
-        accountId: 0
+        accountId: 0,
+        sessionId: that.sessionId
       };
       if (this.loginType == 1) {
         //账号密码登录
