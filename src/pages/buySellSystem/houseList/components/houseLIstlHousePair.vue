@@ -210,11 +210,13 @@
       </div>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
-        <el-form-item label="楼盘名称">
+        <el-form-item label="楼盘名称"
+                      prop="comId">
           <el-select v-model="form.comId"
                      @change="queryCBId()"
                      filterable
                      remote
+                     clearable
                      placeholder="请输入楼盘进行搜索"
                      :remote-method="remoteMethod"
                      :loading="loading">
@@ -226,9 +228,11 @@
           </el-select>
         </el-form-item>
         <el-form-item label="栋座"
+                      prop="cbId"
                       class="page-label-center">
           <el-select v-model="form.cbId"
                      filterable
+                     clearable
                      placeholder="请选择楼栋"
                      @change="queryRoomNo()">
             <el-option v-for="item in cbIdList"
@@ -239,6 +243,8 @@
           </el-select>
         </el-form-item>
         <el-form-item label="房间号"
+                      prop="roomNo"
+                      clearable
                       class="page-label-center">
           <el-select v-model="form.roomNo"
                      filterable
@@ -636,9 +642,6 @@ export default {
         this.form.maxPrice = e[1];
       }
     },
-    // onSubmit () {
-    //   console.log('submit!');
-    // },
     //重置表单
     resetForm (formName) {
       this.$refs[formName].resetFields();
