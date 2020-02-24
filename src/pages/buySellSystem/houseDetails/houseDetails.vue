@@ -8,7 +8,12 @@
 }
 </style>
 <template>
-  <div>
+  <div
+    v-loading="loading"
+    :element-loading-text="loadingtext"
+    element-loading-spinner="el-icon-loading"
+    element-loading-background="rgba(0, 0, 0, 0.8)"
+  >
     <div class="query-cell">
       <div>
         <div style=" font-size: 20px;font-weight: bold">{{houseDetails.Title}}</div>
@@ -174,7 +179,31 @@
       </div>
     </div>
     <div>
-      <el-button>发布外网房源</el-button>
+      <el-popover placement="top" width="600" trigger="click" v-model="isShowCertificatetype">
+        <div>
+          <div>
+            <span>房源是否已出证</span>
+          </div>
+          <div>
+            <span>不懂产权证</span>
+            <el-radio v-model="isCertificateNo" label="1">有</el-radio>
+            <el-radio v-model="isCertificateNo" label="0">无</el-radio>
+          </div>
+          <div class="query-cell">
+            <span>证号</span>
+            <el-input v-model="certificateNo" placeholder="请输入产权证号" v-if="isCertificateNo=='1'"></el-input>
+          </div>
+          <div>
+            <el-button @click="isShowCertificatetype=false">取消</el-button>
+            <el-button @click="updateCertificateNo">确定</el-button>
+          </div>
+        </div>
+        <el-button
+          v-if="houseDetails.is_release_outside!=1&&houseDetails.AgentPer==35365"
+          slot="reference"
+          @click="certificateType"
+        >发布外网房源</el-button>
+      </el-popover>
       <el-button>推荐房源</el-button>
       <el-button>鑫币对赌</el-button>
       <el-button>转房源状态</el-button>
@@ -566,7 +595,12 @@ export default {
       expirationDate: "", //委托截止日期
       picList: [], //图片数组
       isShowKey: false,
-      keyType: -1 //钥匙类型
+      keyType: -1, //钥匙类型
+      loading: false,
+      loadingtext: "正在发布",
+      isShowCertificatetype: false, //是否显示填写产权证号弹窗
+      certificateNo: "", //产权证号
+      isCertificateNo: "1" //是否有产权证号
     };
   },
   before() {},
@@ -584,7 +618,6 @@ export default {
     this.getImpressionList();
     this.$nextTick(() => {
       const el = document.querySelector(".act-not");
-      console.log(el);
       const offsetHeight = el.offsetHeight;
       el.onscroll = () => {
         const scrollTop = el.scrollTop;
@@ -611,18 +644,11 @@ export default {
           break;
       }
     },
-    handlePreview (file) {
-      this.dialogImageUrl = file.url;// file.url;
-      this.dialogVisible = true;
-      this.showFlag = true;
-    },
     removeImg(file, fileList) {
       if (file.id) {
-         this.picList= this.picList.filter(
-          item => {
-            return item.url != file.url;
-          }
-        );
+        this.picList = this.picList.filter(item => {
+          return item.url != file.url;
+        });
         this.$api.delete({
           url: `/agentHouse/followPic/delete/${file.id}`,
           qs: true,
@@ -636,8 +662,8 @@ export default {
       console.log(uploader);
       let that = this;
       let formData = new FormData();
-       formData.append('addName', 35365)
-      formData.append('type', 4)
+      formData.append("addName", 35365);
+      formData.append("type", 4);
       formData.append("file", uploader.file);
       this.$api
         .post({
@@ -654,7 +680,7 @@ export default {
         .then(json => {
           uploader.onSuccess();
           let data = json.data.data;
-          that.picList.push({id:data.id, name:data.id ,url: data.url });
+          that.picList.push({ id: data.id, name: data.id, url: data.url });
         })
         .catch(() => {
           that.$message({
@@ -937,7 +963,9 @@ export default {
           token: false
         })
         .then(e => {
+          that.$message(e.data.message);
           that.reloadList();
+          that.followMemo = "";
         });
     },
     insertImpression() {
@@ -998,6 +1026,66 @@ export default {
         .then(e => {
           that.$message(e.data.message);
           that.getImpressionList();
+        });
+    },
+    updateCertificateNo() {
+      if (this.isCertificateNo == "0") {
+        this.$message("房屋未出证,无法发布到外网");
+        this.isShowCertificatetype = false;
+      } else {
+        let params = {
+          houseId: this.houseId,
+          houseType: 0,
+          perId: 35365,
+          certificateType: 1,
+          certificateNo: this.certificateNo
+        };
+        if (this.certificateNo.length == 0) {
+          this.$message("产权证号未填");
+          return;
+        }
+         this.isShowCertificatetype = false;
+        this.releaseOutsideHouse(params);
+      }
+    },
+    certificateType() {
+      let params = {
+        houseId: this.houseId,
+        houseType: 0,
+        perId: 35365
+      };
+      if (
+        this.houseDetails.certificate_type == null ||
+        this.houseDetails.certificate_type == ""
+      ) {
+        this.isShowCertificatetype = true;
+      } else {
+        this.releaseOutsideHouse(params);
+      }
+    },
+    releaseOutsideHouse(params) {
+      let that = this;
+
+      that.loading = true;
+      this.$api
+        .post({
+          url: "/outsideHouse/releaseOutsideHouse",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          that.loading = false;
+          that.$message(e.data.message);
+          that.houseDetails.is_release_outside = 1;
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          } else {
+            that.$message("发布失败");
+          }
+          that.loading = false;
         });
     }
   }

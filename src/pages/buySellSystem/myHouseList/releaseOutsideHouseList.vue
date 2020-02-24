@@ -128,7 +128,7 @@ export default {
     },
     queryVerifyHouseDatas (currentPage) {
 
-      let params = { limit: this.pageJson.pageSize+'', page: currentPage+'' };
+      let params = { limit: this.pageJson.pageSize+'', page: currentPage+'',perId:35365 };
       let that = this;
       if (this.queryData.communityName != null) {
        // params.communityName = this.queryData.communityName;
