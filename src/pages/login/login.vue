@@ -210,7 +210,10 @@ export default {
   },
    mounted() {
     let that = this;
-    this.judgeSessionId(this.initPage);   
+    //开启登陆器验证
+    //this.judgeSessionId(this.initPage);
+    this.sessionId="sssss";
+    this.initPage();
   },
   //离开页面时清空定时器
   beforeRouteLeave(to, from, next) {
@@ -232,13 +235,17 @@ export default {
         password: ""
       },
       websock: null,
-      sessionId: null
+      sessionId: null,
+      openWebSocketType:false//true为websocket方式，false为轮询方式
     };
   },
   methods: {
     initPage(){
       let that=this;
        that.qrcode();
+       if(that.openWebSocketType){
+        return;
+       }
         //开启定时器，验证是否扫码登录成功
         that.intervalIdForLoginStatus = setInterval(() => {
           if (that.qrcodeFlag == null) {
@@ -318,8 +325,9 @@ export default {
       return false;
     },
     contactSocket(qrCode) {
-      //注释，废弃，改用轮询，因为线上无法连接，本地可以。但线上后台日志都接受到了
-      return;
+      if(!this.openWebSocketType){
+        return;
+      }
       // let e = this.socketApi.closeSocket();
       // if (e) {
       //   console.log("关闭了上一个旧的连接，用户为：" + oldVal);
@@ -483,8 +491,8 @@ export default {
     },
     //重置二维码
     remakeQr() {
-      //this.sendSock({"operation":"0","user":"ss","content":"testContent"});
-      //return;
+      this.sendSock({"operation":"0","user":this.qrcodeFlag,"content":"testContent"});
+      return;
       this.qrcode();
       this.setTimeOutText(() => {
         this.timeOutText = 120;
