@@ -2,7 +2,7 @@
 .flex{
     display: flex;
     width: 100%;
-    height: 92%;
+    height: 100%;
 }
 .width{
     margin-top:120%;
@@ -88,7 +88,7 @@
     margin-bottom: 250%
 }
 .interval{
-    margin-top: 17%
+    margin-top: 40px
 }
 .bottom{
     margin-top:60%;
@@ -122,9 +122,9 @@
 <div class="flex">
         <div class="msgBox">
         <el-scrollbar style="height:100%;width:105rem">
-            <div class="detailBox" style="width:15rem" >
-                <div class="house">
-                    <div class="houseName2 text"> 房源名:</div>
+            <div class="detailBox" style="width:8rem;margin-top:1rem;loat: left;" >
+                <div class="house" >
+                    <div class="houseName2 text" > 房源名:</div>
                     
                      </div>
                      
@@ -163,7 +163,7 @@
                        <div class="text">
                     中学:
                      </div>
-                      <div class="text ">
+                      <div class="text interval ">
                     特色:
                      </div>
                 </div>
