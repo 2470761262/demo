@@ -1,7 +1,4 @@
 <style lang="less" scoped>
-/deep/.el-main {
-  min-height: 100%;
-}
 .page-cell-conter {
   height: 100vh;
   .page-cell-header {
@@ -9,12 +6,12 @@
   }
   .page-cell-main {
     height: calc(100% - 60px);
+    width: 1920px;
     .el-aside,
     .el-main {
       height: 100%;
     }
     .el-main {
-      min-width: 1280px;
       background: #f4f4f4;
     }
     .el-aside {
@@ -91,7 +88,7 @@ export default {
     return {
       resultRouteArray: this.$route.meta.routeArray,
       asideNavFlag: true,
-      loginUserData:{}
+      loginUserData: {}
     }
   },
   created () {
@@ -101,7 +98,7 @@ export default {
         this.asideNavFlag = false;
       }
     }, false);
-    this.loginUserData=util.localStorageGet(LOGINDATA);    
+    this.loginUserData = util.localStorageGet(LOGINDATA);
   },
 }
 </script>
