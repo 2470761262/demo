@@ -58,7 +58,7 @@
           <el-button type="info"
                      size="mini"
                      @click="distributeEvent(item.methosName,scope.row.id)"
-                     v-for="(item,index) in isForBut(2)"
+                     v-for="(item,index) in isForBut(scope.row.id)"
                      :key="index">{{item.name}}</el-button>
           <!-- </div> -->
         </template>
@@ -68,6 +68,9 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
+import Vue from 'Vue'
+import VueCookies from 'vue-cookies'
+
 export default {
   components: {
     listPage
@@ -161,7 +164,8 @@ export default {
           console.log(result.data);
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPage;
-          that.tableData = result.data.list;
+          this.tableData = result.data.list;
+          console.log(result.data.list);
         } else {
           console.log("查询我的房源列表结果：" + result.message);
           alert(result.message);
@@ -177,17 +181,97 @@ export default {
       });
     },
     queryTabData () { },
-    distributeEvent (e, id) {
-      this[e](id);
+     distributeEvent (e,noticeId) {
+       this[e](noticeId);
+     },
+    addCookie(id){
+      if(window.$cookies.get("houseId")==null){
+         window.$cookies.set("houseId", id);
+   this.queryVerifyHouseDatas(1); 
+      }else{
+         window.$cookies.set("houseId",  window.$cookies.get("houseId")+','+id);
+        
+         this.queryVerifyHouseDatas(1); 
+      }
+     
+   },
+    postUrl(){
+    
+ this.$router.push({ path: "/buySellSystem/agentHouseContrast",query:{houseId:window.$cookies.get("houseId")} });
+   },
+   removeCookie(id){
+     let postId="";
+     let houseId=window.$cookies.get("houseId");
+      if(houseId.split(",")[1]==undefined&&houseId==id){
+     window.$cookies.remove("houseId");
+
+     }else{
+       
+      let cookie=houseId.split(',');
+      console.log(cookie);
+      for(let i=0;i<cookie.length;i++){
+         if(i==0&&id!=cookie[i]){
+           postId+=cookie[i];
+         }else if(cookie[i]!=id){
+            postId+=','+cookie[i];
+         }
+     }
+     window.$cookies.set("houseId", postId);
+     }
+      this.queryAgentHouseDatas(this.pageJson.currentPage); 
     },
-    isForBut (type) {
-      let array = [
-        { name: '查看', isType: '1,2,3', methosName: '' }
-      ]
-      return array.filter((item) => {
-        return item.isType.includes(type)
-      })
-    },
+     isForBut (type) {
+          console.log(type);
+       let typ=type;
+      let array=[
+
+             ];
+             console.log(window.$cookies.get("houseId"));
+            if(window.$cookies.get("houseId")!=null ){
+             if(window.$cookies.get("houseId").split(",")[1]==undefined&&window.$cookies.get("houseId")==typ){
+                array=[
+         { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+       { name: '删除对比', isType: '1,3', methosName: 'removeCookie'},
+       { name: '去对比', isType: '1,3', methosName: 'postUrl'},
+               ]
+             }
+            else if(window.$cookies.get("houseId").split(",")!=""){
+     let houseId=window.$cookies.get("houseId").split(",");
+         for(var i=0;i<houseId.length;i++){
+           if(typ==houseId[i]){
+            array=[
+         { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+        { name: '删除对比', isType: '1,3', methosName: 'removeCookie'},
+        { name: '去对比', isType: '1,3', methosName: 'postUrl'},
+             ];
+            break;
+         }else if(i+1==houseId.length){
+            array=[
+         { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+      
+       { name: '添加对比', isType: '1,3', methosName: 'addCookie'},
+             ];
+             
+         }
+        }
+      } else{
+        array=[
+         { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+     
+        { name: '添加对比', isType: '1,3', methosName: 'addCookie'},
+             ];
+
+      }
+      }else{
+      array=[
+        { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+      
+        { name: '添加对比', isType: '1,3', methosName: 'addCookie'},
+             ];
+              
+      }
+      return array;
+     },
     handleClick () {
 
     },
