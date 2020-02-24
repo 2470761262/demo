@@ -27,12 +27,26 @@
         >
           <template slot="prepend">登录时间</template>
         </el-date-picker>
+        <el-select v-model="selectTag" placeholder="全部" @change="SelectTag">
+          <el-option
+            v-for="item in SelectOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
+        </el-select>
         <el-button type="primary" style="margin-left:10px" size="mini" @click="queryByParams">查询</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
       <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
+        <el-table-column
+          :prop="item.prop"
+          :label="item.label"
+          :width="item.width"
+          :key="item.prop"
+          :formatter="onLineStr"
+        ></el-table-column>
       </template>
       <el-table-column prop="operation" label="操作" fixed="right" key="operation">
         <template v-slot="scope">
@@ -112,7 +126,26 @@ export default {
           }
         ]
       },
-      choiceDate: ""
+      choiceDate: "",
+      selectTag: "",
+      SelectOptions: [
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "0",
+          label: "离线"
+        },
+        {
+          value: "1",
+          label: "在线"
+        },
+        {
+          value: "2",
+          label: "被强制下线"
+        }
+      ]
     };
   },
   mounted() {
@@ -133,6 +166,9 @@ export default {
       }
       if (this.queryData.ip != null) {
         params.ip = this.queryData.ip;
+      }
+      if (this.selectTag != null && this.selectTag != "") {
+        params.selectTag = this.selectTag;
       }
       this.$api
         .post({
@@ -176,7 +212,17 @@ export default {
       let array = [{ name: "下线", isType: "1,3", methosName: "Offline" }];
       return array;
     },
-    Offline(id) {}
+    Offline(id) {},
+    onLineStr(row, column) {
+      if (column.property == "LineTag") {
+        return ["离线", "在线", "被强制下线"][row.LineTag];
+      }
+      return row[column.property];
+    },
+    SelectTag() {
+      console.log(this.selectTag);
+      this.queryPcOnlineDatas(1);
+    }
   }
 };
 </script>
