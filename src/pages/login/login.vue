@@ -208,43 +208,9 @@ export default {
     //   console.log("成功断开websocket连接");
     // }
   },
-  async mounted() {
-    await this.judgeSessionId();
-    this.qrcode();
+   mounted() {
     let that = this;
-    //开启定时器，验证是否扫码登录成功
-    this.intervalIdForLoginStatus = setInterval(() => {
-      if (this.qrcodeFlag == null) {
-        return;
-      }
-      this.$api
-        .post({
-          url: "/loginManager/getUserLoginStatus",
-          data: {
-            qrCode: that.qrcodeFlag
-          },
-          qs: true,
-          token: false
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            console.log(result.message);
-            console.log(result);
-            this.accountId = result.data.accountID;
-            //停止轮询
-            clearInterval(that.intervalIdForLoginStatus);
-            this.loginValidate();
-          } else {
-            console.log("检查扫码登录结果：" + result.message);
-          }
-        })
-        .catch(e => {
-          console.log("检查扫码登录状态失败");
-          console.log(e);
-        });
-    }, 2000);
+    this.judgeSessionId(this.initPage);   
   },
   //离开页面时清空定时器
   beforeRouteLeave(to, from, next) {
@@ -270,6 +236,43 @@ export default {
     };
   },
   methods: {
+    initPage(){
+      let that=this;
+       that.qrcode();
+        //开启定时器，验证是否扫码登录成功
+        that.intervalIdForLoginStatus = setInterval(() => {
+          if (that.qrcodeFlag == null) {
+            return;
+          }
+          that.$api
+            .post({
+              url: "/loginManager/getUserLoginStatus",
+              data: {
+                qrCode: that.qrcodeFlag
+              },
+              qs: true,
+              token: false
+            })
+            .then(e => {
+              console.log(e.data);
+              let result = e.data;
+              if (result.code == 200) {
+                console.log(result.message);
+                console.log(result);
+                that.accountId = result.data.accountID;
+                //停止轮询
+                clearInterval(that.intervalIdForLoginStatus);
+                that.loginValidate();
+              } else {
+                console.log("检查扫码登录结果：" + result.message);
+              }
+            })
+            .catch(e => {
+              console.log("检查扫码登录状态失败");
+              console.log(e);
+            });
+        }, 2000);
+    },
     doIlegalTip() {
       this.$message({
         type: "info",
@@ -278,11 +281,11 @@ export default {
       document.getElementById("app").innerHTML =
         "<div style='box-shadow:0 0 6px rgba(0, 0, 0, 0.3);text-align:center;padding:5px;margin:10px'><h1>非法登录，O(∩_∩)O</h1></div>";
     },
-    judgeSessionId() {
-      return new Promise(() => {
+    judgeSessionId(callback) {
         this.sessionId = this.getQueryVariable("SID");
         if (!this.sessionId) {
           this.doIlegalTip();
+          return;
         }
         this.$api
           .post({
@@ -292,15 +295,16 @@ export default {
           })
           .then(e => {
             console.log(e, "登录检查sessionId");
-            if (e.data.code != 200) {
+            if (e.data.code == 200) {
+              callback();
+            }else{
               this.doIlegalTip();
             }
           })
           .catch(e => {
             console.log(e, "登录检查sessionId发生异常");
             this.doIlegalTip();
-          });
-      });
+          });      
     },
     getQueryVariable(variable) {
       var query = window.location.search.substring(1);
