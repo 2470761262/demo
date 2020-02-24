@@ -208,14 +208,14 @@ export default {
     },
     postConfig (id, sysParNo, sysParName) {
       console.log(id, sysParNo, sysParName);
-      this.$router.push({        path: "/menuFrame/addConfigObject",
+      this.$router.push({        path: "/sys/addConfigObject",
         query: {          configId: id,
           sysParNo: sysParNo,
           sysParName: sysParName        }      });
     },
     updateConfig (id, sysParNo, sysParName, sysParType, memo) {
       console.log(memo);
-      this.$router.push({        path: "/menuFrame/addConfig",
+      this.$router.push({        path: "/sys/addConfig",
         query: {          configId: id,
           sysParNo: sysParNo,
           sysParName: sysParName,
@@ -224,7 +224,7 @@ export default {
         }      });
     }, toList (id, sysParNo, sysParName, sysParType, memo) {
       console.log(id);
-      this.$router.push({        path: "/menuFrame/configObjectList",
+      this.$router.push({        path: "/sys/configObjectList",
         query: {          configId: id,
           sysParNo: sysParNo,
           sysParName: sysParName,
@@ -233,7 +233,7 @@ export default {
         }      });
     },
     toAddConfig () {
-      this.$router.push({ path: "/menuFrame/addConfig" });
+      this.$router.push({ path: "/sys/addConfig" });
     },
 
     updateDelRight (id, sysParNo, sysParName, sysParType, memo) {

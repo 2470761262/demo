@@ -428,7 +428,7 @@ if(this.notice.paraNum1==null){
               this.$alert('', '添加成功', {
             dangerouslyUseHTMLString: false
           });
-          this.$router.push({ path: "/menuFrame/systemConfigList"});
+          this.$router.push({ path: "/sys/systemConfigList"});
           console.log(result.data);
           this.$message({message:result.message});
         } else {
