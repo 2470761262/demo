@@ -265,14 +265,14 @@ export default {
   },
   methods: {
     contactSocket(qrCode){
-      //线上无法连接，本地可以。但线上后台日志都接受到了
-      return;
+      //注释，废弃，改用轮询，因为线上无法连接，本地可以。但线上后台日志都接受到了
+      return
       // let e = this.socketApi.closeSocket();
         // if (e) {
         //   console.log("关闭了上一个旧的连接，用户为：" + oldVal);
         // }
         if (this.websock) {
-           console.log("sss状态"+this.websock.readyState);
+          console.log("sss状态"+this.websock.readyState);
           this.websock.close();
         }
         console.log("用户【" + qrCode + "】开始接入");
@@ -288,7 +288,8 @@ export default {
     },
     initWebSocket(domain, user) {
       //初始化weosocket
-      var wsuri = "ws" + domain + "/webSocketHandler?user=" + user;
+    //var wsuri = "ws" + domain + "/webSocketHandler?user=" + user;
+      var wsuri = "ws" + domain + "/webSocketHandlerTomcat/" + user;
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
       this.websock.onclose = function(e){
@@ -428,6 +429,8 @@ export default {
     },
     //重置二维码
     remakeQr() {
+      //this.sendSock({"operation":"0","user":"ss","content":"testContent"});
+      //return;
       this.qrcode();
       this.setTimeOutText(() => {
         this.timeOutText = 120;
