@@ -500,5 +500,12 @@ export default [
     name: "editemployee",
     component: () =>
       import(/* webpackChunkName: "editDeptDetail" */ "@/pages/systemAdministration/employee/editemployee.vue")
+  },
+  {
+    //系统管理 游客管理
+    path: "/sys/visitorList",
+    name: "visitorList",
+    component: () =>
+      import("@/pages/systemAdministration/visitor/visitorList.vue")
   }
 ]

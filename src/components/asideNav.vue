@@ -39,6 +39,7 @@
 
 
         <el-menu-item index="/sys/noticeManageList">公告管理</el-menu-item>
+        <el-menu-item index="/sys/visitorList">游客管理</el-menu-item>
         <el-menu-item index="/sys/onLineUserList">在线用户</el-menu-item>
         <el-menu-item index="/sys/systemConfigList">系统参数配置</el-menu-item>
         <el-menu-item index="/buySellSystem/agentHouseContrast">房源对比</el-menu-item>
