@@ -14,7 +14,7 @@
       </template> -->
       <el-table-column label="房源坐落">
         <template v-slot="scope">
-          {{scope.row.communityName}}
+          {{scope.row.communityName+'-'+scope.row.buildingNo+'-'+scope.row.roomNo}}
         </template>
       </el-table-column>
       <el-table-column label="售价(万元)">
@@ -34,7 +34,7 @@
       </el-table-column>
       <el-table-column label="装修程度">
         <template v-slot="scope">
-          {{scope.row.price}}
+          {{scope.row.decoration}}
         </template>
       </el-table-column>
       <el-table-column label="经纪人">
@@ -89,7 +89,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
         { prop: 'communityName', label: "房源坐落" },
@@ -192,9 +192,11 @@ export default {
         params.newsTitle = this.queryData.newsTitle;
       }
       this.$api.post({
-        url: '/verifyHouse/getVerifyHouseList',
+        url: '/draft-house/page',
         data: params,
-        token: true
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: true,
+        
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
