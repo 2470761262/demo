@@ -12,32 +12,32 @@
                          :key="item.prop">
         </el-table-column>
       </template> -->
-      <el-table-column label="房源坐落">
+      <el-table-column label="房源坐落" show-overflow-tooltip>
         <template v-slot="scope">
           {{scope.row.communityName+'-'+scope.row.buildingNo+'-'+scope.row.roomNo}}
         </template>
       </el-table-column>
-      <el-table-column label="售价(万元)">
+      <el-table-column label="售价(万元)" width="100px">
         <template v-slot="scope">
           {{scope.row.price}}
         </template>
       </el-table-column>
-      <el-table-column label="面积(㎡)">
+      <el-table-column label="面积(㎡)" width="80px">
         <template v-slot="scope">
           {{scope.row.price}}
         </template>
       </el-table-column>
-      <el-table-column label="户型">
+      <el-table-column label="户型" width="120px">
         <template v-slot="scope">
-          {{scope.row.room+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
+          {{(scope.row.room||0)+"室"+(scope.row.hall||0)+"厅"+(scope.row.toilet||0)+"卫"}}
         </template>
       </el-table-column>
-      <el-table-column label="装修程度">
+      <el-table-column label="装修程度" width="120px">
         <template v-slot="scope">
           {{scope.row.decoration}}
         </template>
       </el-table-column>
-      <el-table-column label="经纪人">
+      <el-table-column label="经纪人" width="100px">
         <template v-slot="scope">
           {{scope.row.creatorName}}
         </template>
@@ -279,10 +279,11 @@ export default {
       console.log(this.queryData);
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
+     this.pageJson.pageSize = val;
+     this.queryVerifyHouseDatas(1);
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
+      this.queryVerifyHouseDatas(val);
     },
   },
 }
