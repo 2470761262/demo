@@ -15,7 +15,7 @@
                    @click="toAddConfig">添加系统规则</el-button>
       </div>
     </template>
-    <template v-slot:tableColumn="cell">
+    <template v-slot:tableColumn="">
 
       <!-- <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"

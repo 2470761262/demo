@@ -69,7 +69,8 @@
 <script>
 import listPage from '@/components/listPage';
 import Vue from 'Vue'
-import VueCookies from 'vue-cookies'
+import VueCookies from 'vue-cookies';
+
 
 export default {
   components: {
@@ -213,9 +214,9 @@ export default {
       for(let i=0;i<cookie.length;i++){
          if(i==0&&id!=cookie[i]){//如果是第一个id并且不是要删除的id
            postId+=cookie[i];
-         }else if(cookie[i]!=id&&postId==""){//如果不是要删除的id
+         }else if(cookie[i]!=id&&postId==""){//如果是第一个id并且不是要删除的id
             postId+=+cookie[i];
-         }else {
+         }else if(cookie[i]!=id) {
            postId+=','+cookie[i];
          }
      }
@@ -224,7 +225,6 @@ export default {
       this.queryVerifyHouseDatas(this.pageJson.currentPage); 
     },
      isForBut (type) {
-          console.log(type);
        let typ=type;
       let array=[
 

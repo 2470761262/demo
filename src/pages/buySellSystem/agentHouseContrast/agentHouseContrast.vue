@@ -276,7 +276,7 @@ export default {
            postId+=cookie[i];
          }else if(cookie[i]!=id&&postId==""){
             postId+=+cookie[i];
-         }else {
+         }else if(cookie[i]!=id) {
            postId+=','+cookie[i];
          }
      }
