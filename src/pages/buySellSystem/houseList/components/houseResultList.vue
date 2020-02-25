@@ -23,22 +23,22 @@
   padding: 15px 0;
   border-top: 1px solid #d7d7d7;
   border-bottom: 1px solid #d7d7d7;
-  .select-tabs-cell {
+}
+.select-tabs-cell {
+  display: flex;
+  .select-tabs-item {
     display: flex;
-    .select-tabs-item {
-      display: flex;
-      align-items: center;
-      margin-right: 80px;
-      cursor: pointer;
-      &:last-child {
-        margin-right: 0;
-      }
-      .tabs-item-title {
-        font-size: 16px;
-      }
-      .el-icon-sort {
-        font-size: 16px;
-      }
+    align-items: center;
+    margin-right: 80px;
+    cursor: pointer;
+    &:last-child {
+      margin-right: 0;
+    }
+    .tabs-item-title {
+      font-size: 16px;
+    }
+    .el-icon-sort {
+      font-size: 16px;
     }
   }
 }
@@ -66,6 +66,11 @@
     }
   }
   input[type="checkbox"]:checked + span {
+    &::after {
+      content: "\2713";
+    }
+  }
+  input[type="radio"]:checked + span {
     &::after {
       content: "\2713";
     }
@@ -161,7 +166,7 @@
 <template>
   <div class="query-data-pad">
     <div class="page-query-data"
-         v-if="dynamicTags.length>0">
+         v-if="dynamicTags.length>0 || querySelectFlag">
       <div class="page-query-data-title">所有房源></div>
       <div class="page-query-data-tag">
         <el-tag :key="index"
@@ -173,8 +178,20 @@
           {{tag.title}}{{tag.value}}
         </el-tag>
       </div>
+      <div class="select-tabs-cell">
+        <label class="select-checkbox">
+          <input type="checkbox">
+          <span>钥匙</span>
+        </label>
+        <label class="select-checkbox">
+          <input type="checkbox">
+          <span>独家</span>
+        </label>
+      </div>
     </div>
-    <div class="select-tabs">
+    <!-- 缩小时不显示 -->
+    <div class="select-tabs"
+         v-if="!querySelectFlag">
       <div class="select-tabs-cell">
         <div class="select-tabs-item">
           <div class="tabs-item-title">默认排序</div>
@@ -202,38 +219,64 @@
     <div class="select-for-warp"
          v-loading="loading"
          element-loading-text="我在去获取数据的路上了~">
-      <template v-if="renderList.length > 0">
-        <div class="select-for-item"
-             v-for="(item,index) in renderList"
-             :key="index">
-          <div class="select-for-item-img">
-            <img :src="item.picUrl">
-          </div>
-          <div class="select-for-item-data">
-            <div class="item-data-top">
-              <div class="item-data-top-no overText">{{item.houseNo}}</div>
-              <div class="item-data-top-tag">
-                <div class="top-tag-item overText">钥匙</div>
+      <template v-if="!querySelectFlag">
+        <template v-if="renderList.length > 0">
+          <div class="select-for-item"
+               v-for="(item,index) in renderList"
+               :key="index">
+            <div class="select-for-item-img">
+              <img :src="item.picUrl">
+            </div>
+            <div class="select-for-item-data">
+              <div class="item-data-top">
+                <div class="item-data-top-no overText">{{item.houseNo}}</div>
+                <div class="item-data-top-tag">
+                  <div class="top-tag-item overText">钥匙</div>
+                </div>
+              </div>
+              <div class="item-data-middle overText">{{item.title}}</div>
+              <div class="item-data-bottom">
+                <div class="item-data-bottom-detali overText">雍华名苑/{{item.inArea}}㎡/{{item.rooms}}房2厅1卫</div>
+                <div class="item-data-bottom-price overText">￥{{item.price}}万</div>
+                <div class="item-data-bottom-avgPirce overText">{{item.unitpaice}}元/平</div>
               </div>
             </div>
-            <div class="item-data-middle overText">{{item.title}}</div>
-            <div class="item-data-bottom">
-              <div class="item-data-bottom-detali overText">雍华名苑/{{item.inArea}}㎡/{{item.rooms}}房2厅1卫</div>
-              <div class="item-data-bottom-price overText">￥{{item.price}}万</div>
-              <div class="item-data-bottom-avgPirce overText">{{item.unitpaice}}元/平</div>
+            <div class="select-for-item-but">
+              <i class="el-icon-document icon"></i>
             </div>
           </div>
-          <div class="select-for-item-but">
-            <i class="el-icon-document icon"></i>
-          </div>
-        </div>
+        </template>
+        <template v-else>
+          <el-alert title="暂无数据"
+                    type="info"
+                    center
+                    show-icon>
+          </el-alert>
+        </template>
       </template>
       <template v-else>
-        <el-alert title="暂无数据"
-                  type="info"
-                  center
-                  show-icon>
-        </el-alert>
+        <el-table :data="renderList"
+                  style="width:100%"
+                  @sort-change="sortMethod"
+                  :default-sort="{prop: 'price', order: 'descending'}"
+                  border>
+          <el-table-column v-for="(item,index) in tableColumn"
+                           :key="index"
+                           :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :sortable="item.order"
+                           :sort-orders="['ascending', 'descending']"
+                           show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button size="mini"
+                         type="primary"
+                         @click="navTabItem(scope.$index, scope.row)">查看</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
       </template>
     </div>
     <div class="select-page-nav">
@@ -248,7 +291,13 @@
 
 <script>
 export default {
-  inject: ["form", "Slider", "querySelectFlag"],
+  inject: ["form", "Slider"],
+  props: {
+    querySelectFlag: {
+      type: Boolean,
+      default: true
+    }
+  },
   watch: {
     form: {
       deep: true,
@@ -267,10 +316,29 @@ export default {
       pageJson: {
         total: 1,
         currentPage: 1
-      }
+      },
+      tableColumn: [
+        { prop: 'houseNo', label: '房源编号', order: false },
+        { prop: '', label: '楼盘名称', order: false },
+        { prop: 'price', label: '售价(万元)', width: '130', order: 'custom' },
+        { prop: '', label: '面积(㎡)', width: '130', order: 'custom', },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '130', order: 'custom', },
+        { prop: '', label: '户型', width: '130', order: false },
+        { prop: '', label: '被看次数', width: '130', order: 'custom' },
+        { prop: '', label: '未跟进天数', width: '130', order: 'custom' },
+        { prop: '', label: '未被看天数', width: '130', order: 'custom' },
+        { prop: '', label: '录入时间', order: 'custom' }
+      ]
     }
   },
   methods: {
+    navTabItem (index, row) {
+      console.log(index, row);
+    },
+    //远程排序
+    sortMethod (item) {
+      console.log(item);
+    },
     InitPageJson () {
       this.pageJson = { total: 1, currentPage: 1 }
     },
