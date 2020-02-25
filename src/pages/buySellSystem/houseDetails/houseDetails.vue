@@ -58,7 +58,29 @@
         <div style="font-size:12px;color:red">微信扫一扫,立即分享房源</div>
       </div>
       <div style="margin-left:50px;font-size:30px;">
-        <a>举报</a>
+        <el-dialog title="!举报" :visible.sync="isShowReport">
+          <div>
+            <div>
+              <div>
+                <el-radio label="1" v-model="reportType">虚假实勘</el-radio>
+                <el-radio label="2" v-model="reportType">虚假委托</el-radio>
+                <el-radio label="3" v-model="reportType">虚假钥匙</el-radio>
+                <el-radio label="4" v-model="reportType">虚假跟进</el-radio>
+                <el-radio label="5" v-model="reportType">房屋已售</el-radio>
+                <el-radio label="6" v-model="reportType">虚假业主号码</el-radio>
+                <el-radio label="7" v-model="reportType">其他</el-radio>
+              </div>
+              <div>
+                <el-input v-model="reportMemo" type="textarea"></el-input>
+              </div>
+              <div>
+                <el-button @click="isShowReport=false">取消</el-button>
+                <el-button @click="insertReport">确定</el-button>
+              </div>
+            </div>
+          </div>
+        </el-dialog>
+        <a @click="isChecking(11,'该房源已被举报，当前正在审核中',0)">举报</a>
       </div>
       <div style="margin-left:50px;">
         <i
@@ -281,8 +303,36 @@
                             <el-radio v-model="keyType" label="2">密码锁</el-radio>
                           </div>
                           <div>
-                            <span>委托截止时间</span>
-                            <el-date-picker v-model="expirationDate" type="date" placeholder="选择日期"></el-date-picker>
+                            <el-input v-if="keyType=='2'" v-model="keyCode" placeholder="请输入密码"></el-input>
+                          </div>
+                          <div>
+                            <span>存放门店</span>
+                            <el-select
+                              v-model="areaname"
+                              @change="getDepartment"
+                              placeholder="请选择区域"
+                              style="width:100px;"
+                            >
+                              <el-option
+                                v-for="(item,index) in areaList"
+                                :key="index"
+                                :label="item.deptName"
+                                :value="item.id"
+                              ></el-option>
+                            </el-select>
+                            <el-select
+                              v-model="departmentName"
+                              @change="getKeyStorageDept"
+                              placeholder="请选择门店"
+                              style="width:100px;"
+                            >
+                              <el-option
+                                v-for="(item,index) in departmentList"
+                                :key="index"
+                                :label="item.deptName"
+                                :value="item.id"
+                              ></el-option>
+                            </el-select>
                           </div>
                         </div>
                         <div>
@@ -312,12 +362,12 @@
                       </div>
                       <div>
                         <el-button @click="isShowKey=false">取消</el-button>
-                        <el-button>添加</el-button>
+                        <el-button @click="insertReplace(3)">添加</el-button>
                       </div>
                       <span
                         v-if="agentHouseMethod.keyOwnerName!=null"
                         slot="reference"
-                        @click="ShowBox(0)"
+                        @click="isChecking(4,'当前正在审核中',3)"
                       >取代</span>
                     </el-popover>
                   </div>
@@ -595,12 +645,21 @@ export default {
       expirationDate: "", //委托截止日期
       picList: [], //图片数组
       isShowKey: false,
-      keyType: -1, //钥匙类型
+      keyType: "", //钥匙类型
+      keyCode: "", //密码锁密码
       loading: false,
       loadingtext: "正在发布",
       isShowCertificatetype: false, //是否显示填写产权证号弹窗
       certificateNo: "", //产权证号
-      isCertificateNo: "1" //是否有产权证号
+      isCertificateNo: "1", //是否有产权证号
+      isShowReport: false, //是否显示举报弹窗
+      reportType: "1", //举报类型
+      reportMemo: "", //举报内容
+      areaList: [], //区域数组
+      areaname: "", //选择的区域
+      departmentList: [], //部门数组
+      departmentName: "", //选择的部门
+      keyStorageDept: "" //存放钥匙的门店
     };
   },
   before() {},
@@ -1044,7 +1103,7 @@ export default {
           this.$message("产权证号未填");
           return;
         }
-         this.isShowCertificatetype = false;
+        this.isShowCertificatetype = false;
         this.releaseOutsideHouse(params);
       }
     },
@@ -1065,7 +1124,6 @@ export default {
     },
     releaseOutsideHouse(params) {
       let that = this;
-
       that.loading = true;
       this.$api
         .post({
@@ -1087,6 +1145,221 @@ export default {
           }
           that.loading = false;
         });
+    },
+    isShowPop(type, replaceType, istrue) {
+      let that = this;
+      switch (type) {
+        case 11:
+          that.isShowReport = istrue;
+          break;
+        case 4:
+          if (replaceType == 3) {
+            that.isShowKey = istrue;
+            if(istrue){
+                that.getArea();
+            }
+            
+          }
+          break;
+        default:
+          break;
+      }
+    },
+    isChecking(type, memo, replaceType) {
+      let that = this;
+      let params = {
+        houseId: that.houseId,
+        type: type,
+        memo: memo
+      };
+      that.picList = [];
+      if (replaceType != 0) {
+        params.replaceType = replaceType;
+      }
+      this.$api
+        .get({
+          url: "/agentHouse/propertyCheck/isChecking",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          that.isShowPop(type, replaceType, true);
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+            that.isShowPop(type, replaceType, false);
+          }
+        });
+    },
+    insertReport() {
+      let that = this;
+      let params = {
+        Eid: that.houseId,
+        Type: 11,
+        AddPer: 35365,
+        OldOwner: 0,
+        NewOwner: 35365,
+        OwnerMemo: that.reportMemo,
+        reportType: that.reportType
+      };
+      if (that.reportMemo.length == 0) {
+        that.$message("举报内容不能为空");
+        return;
+      }
+      that.isShowReport = false;
+      this.$api
+        .post({
+          url: "/agentHouse/propertyCheck/insertReport",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          that.$message(e.data.message);
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
+    getArea() {
+      let that = this;
+      let params = {
+        id: 10
+      };
+      that.keyStorageDept = "";
+      this.$api
+        .get({
+          url: "/department/isArea",
+          data: params,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.areaList = result.data;
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          } else {
+            that.$message("获取失败");
+          }
+        });
+    },
+    getDepartment(value) {
+      let that = this;
+      let params = {
+        id: value
+      };
+      this.$api
+        .get({
+          url: "/department/byParId",
+          data: params,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.keyStorageDept = "";
+          that.departmentList = result.data;
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          } else {
+            that.$message("获取失败");
+          }
+        });
+    },
+    getKeyStorageDept(value) {
+      let that = this;
+      that.keyStorageDept = value;
+    },
+    insertReplace(type) {
+      let that = this;
+      let obj= that.conditionalStatement(type);
+      let arry =obj.conditionList;
+      let params=obj.params;
+      
+      for (var i = 0; i < arry.length; i++) {
+        if (arry[i].condition) {
+          that.$message(arry[i].memo);
+          return;
+        }
+      }
+      that.isShowPop(4,type,false);
+      this.$api
+        .post({
+          url: "/agentHouse/propertyCheck/insertReplace",
+          data: params,
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+          token: false
+        })
+        .then(e => {
+           console.log(e);
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          } else {
+            that.$message("操作失败");
+          }
+        });
+    },
+    conditionalStatement(replaceType) {
+      let that = this;
+      let params = {
+        Eid: that.houseId,
+        Type: 4,
+        AddPer: 35365,
+        NewOwner: 35365,
+        ReplaceType:replaceType,
+        picList:[]
+      };
+      let resultobj={};
+      let conditionList = [];
+      switch (replaceType) {
+        case 3:
+          conditionList.push({
+            condition: util.isNull(that.keyType),
+            memo: "取代的钥匙类型未选择"
+          });
+          if (that.keyType == "2") {
+            conditionList.push({
+              condition: util.isNull(that.keyCode),
+              memo: "钥匙锁密码未填"
+            });
+            params.keyCode=that.keyCode;
+          }
+          conditionList.push({
+            condition: util.isNull(that.keyStorageDept),
+            memo: "存放门店未选择"
+          });
+          conditionList.push({
+            condition: util.isNull(that.picList.join(",")),
+            memo: "委托图片未上传"
+          });
+          params.OldOwner=that.agentHouseMethod.keyOwner;
+          params.keyType=that.keyType;
+          params.KeyStorageDept=that.keyStorageDept;
+          params.picList.push(that.picList[0].id);
+          break;
+        default:
+          break;
+      }
+      resultobj.conditionList=conditionList;
+      resultobj.params=params;
+      return resultobj;
     }
   }
 };

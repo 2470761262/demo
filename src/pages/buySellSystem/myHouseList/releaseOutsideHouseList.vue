@@ -34,7 +34,7 @@
       </el-table-column>
       <el-table-column label="户型">
         <template v-slot="scope">
-          {{scope.row.room+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
+          {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
         </template>
       </el-table-column>
       <el-table-column label="装修程度">
