@@ -48,17 +48,13 @@
           :formatter="onLineStr"
         ></el-table-column>
       </template>
-      <el-table-column prop="operation" label="操作" fixed="right" key="operation">
-        <template v-slot="scope">
-          <div v-if="scope.row.operation!=''">
-            <el-button
-              type="info"
-              size="mini"
-              @click="distributeEvent(item.methosName,scope.row.id)"
-              v-for="(item,index) in getOpeBtns(scope.row.operation)"
-              :key="index"
-            >{{item.name}}</el-button>
-          </div>
+      <el-table-column label="操作">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            @click="Offline(scope.$index, scope.row)"
+            v-if="scope.row.LineTag==1"
+          >下线</el-button>
         </template>
       </el-table-column>
     </template>
@@ -208,11 +204,6 @@ export default {
     queryByParams() {
       this.queryPcOnlineDatas(1);
     },
-    getOpeBtns(type) {
-      let array = [{ name: "下线", isType: "1,3", methosName: "Offline" }];
-      return array;
-    },
-    Offline(id) {},
     onLineStr(row, column) {
       if (column.property == "LineTag") {
         return ["离线", "在线", "被强制下线"][row.LineTag];
@@ -220,8 +211,59 @@ export default {
       return row[column.property];
     },
     SelectTag() {
-      console.log(this.selectTag);
+      //console.log(this.selectTag);
       this.queryPcOnlineDatas(1);
+    },
+    Offline(index, row) {
+      this.$confirm(
+        "注意！ 如果执行该操作，用户将强制下线。",
+        "你确定要该用户下线？",
+        {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }
+      )
+        .then(() => {
+          let id = row.ID;
+          let account = row.LastAccount;
+          if (id == null || account == null) {
+            this.$alert("参数错误");
+            return;
+          }
+          let params = { id: id, account: account };
+          this.$api
+            .post({
+              url: "/PcOnline/offline",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              console.log(e.data);
+              let result = e.data;
+              if (result.code == 200) {
+                this.$message({
+                  type: "success",
+                  message: result.message
+                });
+              } else {
+                this.$message({
+                  type: "info",
+                  message: result.message
+                });
+              }
+            })
+            .catch(e => {
+              console.log("下线操作失败");
+              console.log(e);
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
     }
   }
 };
