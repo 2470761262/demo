@@ -93,7 +93,7 @@ export default {
   },
   created () {
     window.addEventListener('message', (e) => {
-      console.log("-------------------", e);
+      //  console.log("-------------------", e);
       if (e.data.isXinIfram) {
         this.asideNavFlag = false;
       }

@@ -180,7 +180,7 @@
              :class="querySelectFlag ? 'el-icon-d-arrow-right': 'el-icon-d-arrow-left'  "></div>
       </div>
       <div class="com-flex-cell">
-        <houseresultlist></houseresultlist>
+        <houseresultlist :querySelectFlag="querySelectFlag"></houseresultlist>
       </div>
     </div>
   </div>
@@ -210,8 +210,7 @@ export default {
   provide () {
     return {
       form: this.form,
-      Slider: this.Slider,
-      querySelectFlag: this.querySelectFlag
+      Slider: this.Slider
     }
   },
   name: "houseList",
@@ -251,7 +250,6 @@ export default {
     };
   },
   created () {
-
     console.log("===========" + JSON.stringify(this.GetRequest()));
   },
   methods: {
