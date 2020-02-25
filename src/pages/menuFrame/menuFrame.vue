@@ -55,7 +55,7 @@
       <el-aside class="el-background"
                 width="200px"
                 v-if="asideNavFlag">
-        <asideNav></asideNav>
+        <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
         <!-- 面包导航 -->
@@ -99,6 +99,9 @@ export default {
       }
     }, false);
     this.loginUserData = util.localStorageGet(LOGINDATA);
+    if(this.loginUserData.menuNodes){
+      this.menuDatasInParent=this.loginUserData.menuNodes;
+    }
   },
 }
 </script>

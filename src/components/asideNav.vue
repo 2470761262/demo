@@ -36,8 +36,6 @@
           <i class="el-icon-location"></i>
           <span>系统管理</span>
         </template>
-
-
         <el-menu-item index="/sys/noticeManageList">公告管理</el-menu-item>
         <el-menu-item index="/sys/visitorList">游客管理</el-menu-item>
         <el-menu-item index="/sys/onLineUserList">在线用户</el-menu-item>
@@ -49,13 +47,20 @@
         <el-menu-item index="/sys/companyList">公司管理</el-menu-item>
         <el-menu-item index="/sys/deptManageList">部门管理</el-menu-item>
         <el-menu-item index="/sys/employeeList">员工管理</el-menu-item>
-
+      </el-submenu>
+      <el-submenu :key="item.id" v-for="item in menuNodeDatas">
+        <template slot="title">
+          <i class="el-icon-s-flag"></i>
+          <span>{{item.rname}}</span>
+         </template>
+         <el-menu-item :key="subItem.id" v-for="subItem in item.children" :index="subItem.rurl">{{subItem.rname}}</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
 </template>
 <script>
 export default {
+  props: ["menuNodeDatas"], 
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);
