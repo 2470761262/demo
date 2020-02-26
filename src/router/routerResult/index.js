@@ -522,4 +522,11 @@ export default [
       component: () =>
         import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/ruleManager/rule.vue")
     },
+    {
+      //系统管理 
+      path: "/sys/notFoundPage",
+      name: "notFoundPage",
+      component: () =>
+      import("@/pages/systemAdministration/common/notFoundPage.vue")
+    }
 ]
