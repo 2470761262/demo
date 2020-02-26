@@ -3,7 +3,7 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template #tableColumn="cell">
+    <template #tableColumn="">
       <el-table-column label="房源编号">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
@@ -216,7 +216,8 @@ export default {
            postId+=cookie[i];
          }else if(cookie[i]!=id&&postId==""){//如果是第一个id并且不是要删除的id
             postId+=+cookie[i];
-         }else if(ookie[i]!=id) {
+
+}else if(ookie[i]!=id) {
            postId+=','+cookie[i];
          }
      }
