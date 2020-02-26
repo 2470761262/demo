@@ -53,13 +53,10 @@
         </div>
         <div class="left-input-container">
             <span>加入类型   1 直营 2 加盟</span>
-            <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="companyEntity.JoinType"
-              maxlength="100"
-              show-word-limit
-            ></el-input>
+            <el-select type="text" placeholder="请输入内容" v-model="companyEntity.joinType" show-word-limit >
+              <el-option  :value="1" />
+              <el-option  :value="2" />
+            </el-select>
         </div>
         <div class="left-input-container">
             <span>开业时间</span>
@@ -118,6 +115,7 @@
               placeholder="请输入内容"
               v-model="companyEntity.ParentId"
               maxlength="10"
+              disabled="true"
               show-word-limit
             ></el-input>
         </div>
@@ -143,7 +141,9 @@ export default {
                         ComType:null,
                         managerPer:null,
                         Address:null,
-                        CompanyDesc:null}
+                        CompanyDesc:null,
+                        ParentId:null,
+                        deptParentId:null}
     };
   },
   watch: {},
@@ -177,7 +177,12 @@ export default {
       }
   },
   created() {},
-  mounted() {}
+  mounted() {
+    if (this.$route.params.ParentId != null){
+      this.companyEntity.ParentId = this.$route.params.ParentId;
+      this.companyEntity.deptParentId = this.$route.params.ParentId;
+    }
+  }
 
 };
 </script>

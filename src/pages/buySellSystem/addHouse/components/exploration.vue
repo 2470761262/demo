@@ -442,10 +442,11 @@ export default {
         if (!item.id) {
           count++;
           let formData = new FormData();
-          formData.append('draftid', 1)
+          console.log(that.$store.state.addHouse.formData.id, "that.$store.state.addHouse.formData.id");
+          formData.append('draftid', that.$store.state.addHouse.formData.id)
           formData.append('file', item.raw)
           this.$api.post({
-            url: "/draft_house/video",
+            url: "/draft-house/video",
             headers: { "Content-Type": "multipart/form-data" },
             data: formData,
             onUploadProgress: progressEvent => { //静读条
@@ -491,10 +492,10 @@ export default {
       let that = this;
       let formData = new FormData();
       formData.append('picClass', uploader.filename)
-      formData.append('draftid', 1)
+      formData.append('draftid', that.$store.state.addHouse.formData.id)
       formData.append('file', uploader.file)
       this.$api.post({
-        url: "/draft_house/picture",
+        url: "/draft-house/picture",
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
         onUploadProgress: progressEvent => { //静读条
@@ -564,7 +565,6 @@ export default {
     validateAll () {
       let that = this;
       return this.$validator.validateAll({
-        communityDesc: that.fileList.list1,
         houseVideo: that.fileList.video
       }).then((e) => {
         return e;

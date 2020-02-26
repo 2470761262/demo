@@ -26,6 +26,8 @@
 }
 .el-background {
   background: #e2e2e2 !important;
+  width: auto !important;
+  max-width: 200px;
   /deep/.el-submenu__title {
     background: #e2e2e2 !important;
     > span {
@@ -53,9 +55,8 @@
     </el-container>
     <el-container class="page-cell-main">
       <el-aside class="el-background"
-                width="200px"
                 v-if="asideNavFlag">
-        <asideNav></asideNav>
+        <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
         <!-- 面包导航 -->
@@ -99,6 +100,9 @@ export default {
       }
     }, false);
     this.loginUserData = util.localStorageGet(LOGINDATA);
+    if (this.loginUserData.menuNodes) {
+      this.menuDatasInParent = this.loginUserData.menuNodes;
+    }
   },
 }
 </script>

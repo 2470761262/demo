@@ -206,6 +206,7 @@ const HosueList = [
   { title: "店长推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/shopownerRecommendHouse", hot: false, flag: false },
 ];
 import getToken from "@/minxi/getUrlToken";
+import getMenuRid from "@/minxi/getMenuRid"
 export default {
   provide () {
     return {
@@ -214,7 +215,7 @@ export default {
     }
   },
   name: "houseList",
-  mixins: [getToken],
+  mixins: [getToken, getMenuRid],
   components: {
     houselistlhousepair,
     houseresultlist

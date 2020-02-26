@@ -179,11 +179,12 @@ export default {
     loginType: {
       // immediate: true,
       handler: function(val, oldVal) {
+        console.log("切换了登录方式");
+        this.clearTime();
         if (this.loginType == 1) {
           this.validateInit();
         } else if (this.loginType == 0) {
           // 和div的id相同 必须是id
-          this.clearTime();
           if (this.qrData != null) {
             this.qrData = null;
             this.qrcode();
@@ -208,11 +209,11 @@ export default {
     //   console.log("成功断开websocket连接");
     // }
   },
-   mounted() {
+  mounted() {
     let that = this;
     //开启登陆器验证
     //this.judgeSessionId(this.initPage);
-    this.sessionId="sssss";
+    this.sessionId = "sssss";
     this.initPage();
   },
   //离开页面时清空定时器
@@ -236,49 +237,13 @@ export default {
       },
       websock: null,
       sessionId: null,
-      openWebSocketType:false//true为websocket方式，false为轮询方式
+      openWebSocketType: false //true为websocket方式，false为轮询方式
     };
   },
   methods: {
-    initPage(){
-      let that=this;
-       that.qrcode();
-       if(that.openWebSocketType){
-        return;
-       }
-        //开启定时器，验证是否扫码登录成功
-        that.intervalIdForLoginStatus = setInterval(() => {
-          if (that.qrcodeFlag == null) {
-            return;
-          }
-          that.$api
-            .post({
-              url: "/loginManager/getUserLoginStatus",
-              data: {
-                qrCode: that.qrcodeFlag
-              },
-              qs: true,
-              token: false
-            })
-            .then(e => {
-              console.log(e.data);
-              let result = e.data;
-              if (result.code == 200) {
-                console.log(result.message);
-                console.log(result);
-                that.accountId = result.data.accountID;
-                //停止轮询
-                clearInterval(that.intervalIdForLoginStatus);
-                that.loginValidate();
-              } else {
-                console.log("检查扫码登录结果：" + result.message);
-              }
-            })
-            .catch(e => {
-              console.log("检查扫码登录状态失败");
-              console.log(e);
-            });
-        }, 2000);
+    initPage() {
+      let that = this;
+      that.qrcode();
     },
     doIlegalTip() {
       this.$message({
@@ -289,29 +254,29 @@ export default {
         "<div style='box-shadow:0 0 6px rgba(0, 0, 0, 0.3);text-align:center;padding:5px;margin:10px'><h1>非法登录，O(∩_∩)O</h1></div>";
     },
     judgeSessionId(callback) {
-        this.sessionId = this.getQueryVariable("SID");
-        if (!this.sessionId) {
-          this.doIlegalTip();
-          return;
-        }
-        this.$api
-          .post({
-            url: "/logon/pcMacBySid",
-            data: { sId: this.sessionId },
-            qs: true
-          })
-          .then(e => {
-            console.log(e, "登录检查sessionId");
-            if (e.data.code == 200) {
-              callback();
-            }else{
-              this.doIlegalTip();
-            }
-          })
-          .catch(e => {
-            console.log(e, "登录检查sessionId发生异常");
+      this.sessionId = this.getQueryVariable("SID");
+      if (!this.sessionId) {
+        this.doIlegalTip();
+        return;
+      }
+      this.$api
+        .post({
+          url: "/logon/pcMacBySid",
+          data: { sId: this.sessionId },
+          qs: true
+        })
+        .then(e => {
+          console.log(e, "登录检查sessionId");
+          if (e.data.code == 200) {
+            callback();
+          } else {
             this.doIlegalTip();
-          });      
+          }
+        })
+        .catch(e => {
+          console.log(e, "登录检查sessionId发生异常");
+          this.doIlegalTip();
+        });
     },
     getQueryVariable(variable) {
       var query = window.location.search.substring(1);
@@ -325,7 +290,7 @@ export default {
       return false;
     },
     contactSocket(qrCode) {
-      if(!this.openWebSocketType){
+      if (!this.openWebSocketType) {
         return;
       }
       // let e = this.socketApi.closeSocket();
@@ -402,6 +367,47 @@ export default {
       }
       if (this.intervalIdForLoginStatus != null) {
         clearInterval(this.intervalIdForLoginStatus);
+      }
+    },
+    startTimer() {
+      this.setTimeOutText(() => {
+        this.timeOutText = 120;
+      });
+      //非websocket形式才开启定时轮训
+      if (!this.openWebSocketType) {
+        let that=this;
+        //开启定时器，验证是否扫码登录成功
+        this.intervalIdForLoginStatus = setInterval(() => {
+          if (that.qrcodeFlag == null) {
+            return;
+          }
+          that.$api.post({
+              url: "/loginManager/getUserLoginStatus",
+              data: {
+                qrCode: that.qrcodeFlag
+              },
+              qs: true,
+              token: false
+            })
+            .then(e => {
+              console.log(e.data);
+              let result = e.data;
+              if (result.code == 200) {
+                console.log(result.message);
+                console.log(result);
+                that.accountId = result.data.accountID;
+                //停止轮询
+                clearInterval(that.intervalIdForLoginStatus);
+                that.loginValidate();
+              } else {
+                console.log("检查扫码登录结果：" + result.message);
+              }
+            })
+            .catch(e => {
+              console.log("检查扫码登录状态失败");
+              console.log(e);
+            });
+        }, 2000);
       }
     },
     //初始化验证
@@ -491,7 +497,11 @@ export default {
     },
     //重置二维码
     remakeQr() {
-      this.sendSock({"operation":"0","user":this.qrcodeFlag,"content":"testContent"});
+      this.sendSock({
+        operation: "0",
+        user: this.qrcodeFlag,
+        content: "testContent"
+      });
       return;
       this.qrcode();
       this.setTimeOutText(() => {
@@ -558,9 +568,7 @@ export default {
             console.log("获取二维码url失败");
             console.log(e);
           });
-        this.setTimeOutText(() => {
-          this.timeOutText = 120;
-        });
+        this.startTimer();
       });
     }
   }
