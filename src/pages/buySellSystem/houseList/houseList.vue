@@ -207,6 +207,7 @@ const HosueList = [
 ];
 import getToken from "@/minxi/getUrlToken";
 import getMenuRid from "@/minxi/getMenuRid"
+import {  TOKEN } from "@/util/constMap";
 export default {
   provide () {
     return {
@@ -261,17 +262,18 @@ export default {
     navToPath (path) {
       this.$router.push({ path: path });
     },
-    GetRequest () {
+     GetRequest() {
       var url = location.href; //获取url中"?"符后的字串
-      var theRequest = new Object();
-      if (url.indexOf("?") != -1) {
-        var str = url.substr(1);
-        var strs = str.split("&");
-        for (var i = 0; i < strs.length; i++) {
-          theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
-        }
+      console.log("$$$$$$$", location);
+      var theRequest = new URLSearchParams(
+        location.hash.substring(location.hash.indexOf("?"))
+      );
+      var token = theRequest.get(TOKEN);
+      if(token){
+        util.localStorageSet(TOKEN, token);
       }
-      return theRequest;
+      console.log("傻逼傻逼：从地址tk获取到后放到storage:"+token);
+      return token;
     },
     handleClick (e) {
       console.log(e);
