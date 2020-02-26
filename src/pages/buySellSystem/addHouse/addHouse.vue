@@ -136,6 +136,11 @@ export default {
       butLoading: false
     };
   },
+  destroyed () {
+
+    this.$store.commit("resetFormData");
+    console.log(1111111111111111);
+  },
   methods: {
     //上一步
     prevPage () {
