@@ -74,7 +74,7 @@
         </div>
       </div>
       <div class="page-contenr-but"
-           v-if="stepsActiveIndex!=4">
+           v-if="stepsActiveIndex!=3">
         <el-button-group>
           <el-button type="primary"
                      @click="prevPage"
@@ -117,7 +117,7 @@ export default {
       if (val == 0) this.prevText = "重置";
       else this.prevText = "上一步";
 
-      if (val != this.stepsList.length) this.nextText = "下一步";
+      if (val != this.stepsList.length - 1) this.nextText = "下一步";
       else this.nextText = "邀请验真";
     }
   },

@@ -550,7 +550,6 @@ export default {
     //创建
     upLoadData (e) {
       let that = this;
-      console.log(this.formData);
       return this.$api.post({
         url: '/draft-house',
         data: that.formData,
@@ -558,6 +557,8 @@ export default {
         token: false
       }).then((e) => {
         if (e.data.code == 200) {
+          console.log(e.data.data, "e.data.data");
+          that.$store.commit('updateId', e.data.data)
           return Promise.resolve(true);
         } else {
           return Promise.resolve(false);

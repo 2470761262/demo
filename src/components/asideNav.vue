@@ -16,7 +16,7 @@
              :collapse="collapse"
              active-text-color="#ffd04b"
              router>
-      <el-submenu index="0">
+      <el-submenu index="0123">
         <template slot="title">
           <i class="el-icon-location"></i>
           <span>新买卖系统</span>
@@ -46,15 +46,15 @@
         <el-menu-item index="/sys/deptManageList">部门管理</el-menu-item>
         <el-menu-item index="/sys/employeeList">员工管理</el-menu-item>
       </el-submenu> -->
-      <el-submenu :index="numIndex"
+      <el-submenu :index="item.rurl+index"
                   :key="item.id"
-                  v-for="(item,numIndex) in menuNodeDatas">
+                  v-for="(item,index) in menuNodeDatas">
         <template slot="title">
           <i class="el-icon-s-flag"></i>
           <span>{{item.rname}}</span>
         </template>
-        <el-menu-item :key="subItem.id"
-                      v-for="subItem in item.children"
+        <el-menu-item :key="subItem.rurl+index"
+                      v-for="(subItem,index) in item.children"
                       :index="subItem.rurl">{{subItem.rname}}</el-menu-item>
       </el-submenu>
     </el-menu>
