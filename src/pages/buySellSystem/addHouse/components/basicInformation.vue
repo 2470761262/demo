@@ -3,9 +3,7 @@
 </style>
 <template>
   <div class="page-cell-addHouse">
-<<<<<<< HEAD
     <div class="page-cell-title">房屋坐落</div>
-=======
     <!-- <div class="form-error-tips border"
          :class="{'after-tips':errorBags.has('onlyOrMany')}"
          :data-tips="errorBags.first('onlyOrMany')">
@@ -27,7 +25,6 @@
       </div>
      
     </div> -->
->>>>>>> b9d355ac01cdd135ecdc72735b044cd90ceb210c
     <!-- 楼盘名称 -->
     <div class="form-error-tips"
          :class="{'after-tips':errorBags.has('communityId')}"
