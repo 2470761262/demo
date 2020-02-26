@@ -383,21 +383,21 @@ export default [
             import(/* webpackChunkName: "systemConfigList" */ "@/pages/systemAdministration/systemConfigList/systemConfigList.vue")
     },
     {
-        //系统管理 添加系统参数配置  
+        //系统管理 添加系统参数配置
         path: "/sys/addConfig",
         name: "addConfig",
         component: () =>
             import(/* webpackChunkName: "addConfig" */ "@/pages/systemAdministration/systemConfigList/addConfig.vue")
     },
     {
-        //系统管理 添加系统参数配置对象  
+        //系统管理 添加系统参数配置对象
         path: "/sys/addConfigObject",
         name: "addConfigObject",
         component: () =>
             import(/* webpackChunkName: "addConfigObject" */ "@/pages/systemAdministration/systemConfigList/addConfigObject.vue")
     },
     {
-        //系统管理 系统参数配置对象列表  
+        //系统管理 系统参数配置对象列表
         path: "/sys/configObjectList",
         name: "configObjectList",
         component: () =>
@@ -514,5 +514,12 @@ export default [
         name: "visitorList",
         component: () =>
             import("@/pages/systemAdministration/visitor/visitorList.vue")
-    }
+    },
+    {
+      //系统管理 角色管理
+      path: "/sys/ruleManager",
+      name: "rule",
+      component: () =>
+        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/ruleManager/rule.vue")
+    },
 ]
