@@ -8,8 +8,8 @@
             <el-input placeholder="楼盘名称" style="width:280px" v-model="queryData.CommunityName" >
                 <template slot="prepend">楼盘名称 </template>
                </el-input>
-               <el-input placeholder="栋座" v-model="queryData.houseName" style="margin-left:10px;width:100px"></el-input>
-               <el-input placeholder="房间号" v-model="queryData.houseName" style="margin-left:10px;width:100px"></el-input>
+               <el-input placeholder="栋座" v-model="queryData.BuildingName" style="margin-left:10px;width:100px"></el-input>
+               <el-input placeholder="房间号" v-model="queryData.RoomNo" style="margin-left:10px;width:100px"></el-input>
        <el-input placeholder="姓名" style="margin-left:30px;width:240px" v-model="queryData.Customers" clearable>
         <template slot="prepend">业主</template>
         </el-input>
@@ -37,8 +37,8 @@
                 </el-option>
             </el-select>
         <template slot="prepend">房源状态</template>
-        <el-date-picker v-model="value1" type="daterange" range-separator="至"
-      value-format="yyyy-mm-dd" start-placeholder="开始日期" end-placeholder="结束日期">
+        <el-date-picker v-model="queryData.timeSelect" type="daterange" range-separator="至"
+      value-format="yyyy-MM-dd" start-placeholder="开始日期" end-placeholder="结束日期">
     </el-date-picker>
         <el-button type="primary"
                      style="margin-left:30px"
@@ -59,6 +59,17 @@
           {{scope.row.CommunityName}}
         </template>
       </el-table-column>
+<el-table-column label="栋座">
+        <template v-slot="scope">
+          {{scope.row.BuildingName}}
+        </template>
+      </el-table-column>
+      <el-table-column label="房间号">
+        <template v-slot="scope">
+          {{scope.row.RoomNo}}
+        </template>
+      </el-table-column>
+
       <el-table-column label="售价(万元)">
         <template v-slot="scope">
           {{scope.row.Price}}
@@ -102,8 +113,6 @@ export default {
   data () {
     
     return {
-      value1:"",
-      list:[1,2,3,4,5,6],
         input:'',
       loading: true, //控制表格加载动画提示
       pageJson: {
@@ -149,7 +158,8 @@ export default {
         label: '已过期'
       }],
       queryData: {
-        communityName: ''
+        communityName: '',
+        timeSelect:'',
       }
     }
   },
@@ -158,25 +168,28 @@ export default {
   },
   methods: {
     querylistByParams () {
-     
-   console.log(this.value1)  ;
-      this.querylist(1);
+     console.log(this.queryData.timeSelect);
+     this.querylist(1);
     },
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize+'', page: currentPage+'',listType:'myAgent'};
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName;}
+      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName;}
+      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo;}
       if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers;}
       if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel;}
       if (this.queryData.minPrice != null&& this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice;}
       if (this.queryData.maxPrice != null&& this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice;}
       if (this.queryData.minInArea != null&& this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea;}
       if (this.queryData.maxInArea != null&& this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea;}
+      if (this.queryData.timeSelect!=null && this.queryData.timeSelect[0] != null&& this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0];}
+      if (this.queryData.timeSelect!=null &&this.queryData.timeSelect[1] != null&& this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1];}
       this.$api.post({
          url: '/agent_house/myHouseList',
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-       data: params,
-        token: false
+         headers: { "Content-Type": "application/json;charset=UTF-8" },
+         data: params,
+         token: false
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
