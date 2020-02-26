@@ -3,7 +3,7 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template #tableColumn="cell">
+    <template #tableColumn="">
       <el-table-column label="房源编号">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
@@ -69,7 +69,8 @@
 <script>
 import listPage from '@/components/listPage';
 import Vue from 'Vue'
-import VueCookies from 'vue-cookies'
+import VueCookies from 'vue-cookies';
+
 
 export default {
   components: {
@@ -187,11 +188,11 @@ export default {
     addCookie(id){
       if(window.$cookies.get("houseId")==null){
          window.$cookies.set("houseId", id);
-   this.queryVerifyHouseDatas(1); 
+   this.queryVerifyHouseDatas(this.pageJson.currentPage); 
       }else{
          window.$cookies.set("houseId",  window.$cookies.get("houseId")+','+id);
         
-         this.queryVerifyHouseDatas(1); 
+         this.queryVerifyHouseDatas(this.pageJson.currentPage); 
       }
      
    },
@@ -202,26 +203,29 @@ export default {
    removeCookie(id){
      let postId="";
      let houseId=window.$cookies.get("houseId");
-      if(houseId.split(",")[1]==undefined&&houseId==id){
+     console.log(houseId);
+      if(houseId.split(",")[1]==undefined&&houseId==id){//是否单一id
      window.$cookies.remove("houseId");
-
-     }else{
+     
+     }else{//多个id操作
        
       let cookie=houseId.split(',');
       console.log(cookie);
       for(let i=0;i<cookie.length;i++){
-         if(i==0&&id!=cookie[i]){
+         if(i==0&&id!=cookie[i]){//如果是第一个id并且不是要删除的id
            postId+=cookie[i];
-         }else if(cookie[i]!=id){
-            postId+=','+cookie[i];
+         }else if(cookie[i]!=id&&postId==""){//如果是第一个id并且不是要删除的id
+            postId+=+cookie[i];
+
+}else if(ookie[i]!=id) {
+           postId+=','+cookie[i];
          }
      }
      window.$cookies.set("houseId", postId);
      }
-      this.queryAgentHouseDatas(this.pageJson.currentPage); 
+      this.queryVerifyHouseDatas(this.pageJson.currentPage); 
     },
      isForBut (type) {
-          console.log(type);
        let typ=type;
       let array=[
 

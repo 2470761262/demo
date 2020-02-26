@@ -6,7 +6,7 @@
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
-        <!-- 楼盘 -->
+      <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
         
           <el-select v-model="data.comId"
@@ -45,6 +45,10 @@
                        :value="item.value">
             </el-option>
           </el-select>
+            <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable></el-input>
+           <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable></el-input>
+            <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable></el-input>------
+             <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable></el-input>
            <el-date-picker
               v-model="data.timeSelect"
               type="daterange"
@@ -55,7 +59,7 @@
        <el-button type="primary"
                      style="margin-left:10px"
                      size="mini"
-                     @click="queryShopownerHouseParams">查询</el-button>
+                     @click="queryNotSaleParams">查询</el-button>
       </div>
     </template>
    
@@ -71,7 +75,8 @@
                          :key="item.prop">
         </el-table-column>
       </template>
-     <el-table-column
+
+       <el-table-column
         prop=""
         label="户型"
         :formatter="formatHouseType">
@@ -85,7 +90,12 @@
                        size="mini"
                        @click="toLook(scope.row.id)"
                        >查看</el-button>
+                        <el-button type="info"
+                       size="mini"
+                       @click="toSale(scope.row.id)"
+                       >转在售</el-button>
         </template>
+       
       </el-table-column>
 
 
@@ -103,32 +113,35 @@ export default {
     return {
       loading: false,
       
-     data: {
+      data: {
         comId: '',
         cbId: '',
         roomNo: '',
-        timeSelect: ''
+        timeSelect: '',
+        customName:'',
+        tel:'',
+        minInArea:'',
+        maxInArea:'',
       },
       options: [],
       cbIdList: [],
       roomNoList: [],
       pageJson: {
-       currentPage: 1, //当前页码
-        total: 9, //总记录数
+        currentPage: 1, //当前页码
+        total: 0, //总记录数
         pageSize: 5 //每页条数
       },
       tableDataColumn: [
-       { prop: 'houseNo', label: "房源编号" },
+          { prop: 'houseNo', label: "房源编号" },
         { prop: 'communityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
         { prop: 'inArea', label: "面积(m²)"},
-        { prop: 'price', label: "售价(万元)" },
         { prop: 'seenNum', label: "被看次数" },
         { prop: 'outfollow', label: "未跟进天数" },
         { prop: 'notLookNum', label: "未被看天数" },
-        { prop: 'addTime', label: "添加时间" },
-        { prop: 'brokerName', label: "经纪人" }
+        { prop: 'addTime', label: "录入时间" }
+       
       ],
       tableData: [{
         // house: '龙腾花园-16栋-604室',
@@ -146,7 +159,7 @@ export default {
     }
   },
   mounted(){
-    this.queryShopownerRecommendHouse(1);
+    this.queryNotSale(1);
   },
   methods: {
     queryTabData () {
@@ -156,9 +169,13 @@ export default {
       return row.rooms+'室'+row.hall+'厅'+row.toilet+'卫';
     },
 
-    toLook(id){},
-    queryShopownerHouseParams(){
-         this.queryShopownerRecommendHouse(1);
+    toLook(id){
+         var that = this;
+        that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
+    },
+    toSale(id){},
+    queryNotSaleParams(){
+        this.queryNotSale(1);
     },
     remoteMethod (query) {
       var that = this
@@ -200,7 +217,7 @@ queryCBId () {
           that.cbIdList = e.data.data.list;
         }
       })
-    },
+    }, 
     queryRoomNo () {
       var that = this
       this.$api.get({
@@ -218,19 +235,22 @@ queryCBId () {
         }
       })
     },
-  queryShopownerRecommendHouse(currentPage){
+  queryNotSale(currentPage){
     var that =this;
-    let params={"limit":that.pageJson.pageSize,"page":currentPage};
-   
-         params.comId=that.data.comId;
+   let params={"limit":that.pageJson.pageSize,"page":currentPage};
+ 
+        params.comId=that.data.comId;
         params.cbId=that.data.cbId;
         params.roomNo=that.data.roomNo;
         params.beginTime=that.data.timeSelect[0];
         params.endTime=that.data.timeSelect[1];
-
+        params.customName=that.data.customName;
+        params.tel=that.data.tel;
+        params.minInArea=that.data.minInArea;
+        params.maxInArea=that.data.maxInArea;
      console.log(params);
     this.$api.get({
-        url: '/houseRecommend/shopownerRecommendHouse',
+        url: '/houseResource/notSaleList',
         data: params,       
         token: false
       }).then((e) => {
@@ -241,11 +261,11 @@ queryCBId () {
           that.pageJson.currentPage=data.data.currPage;
           that.tableData=data.data.list;
         } else {
-          console.log("查询店长推荐房源列表结果：" + result.message);
+          console.log("查询暂不售列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询店长推荐房源列表失败");
+        console.log("查询暂不售列表失败");
         console.log(e);
       })
   },
@@ -263,16 +283,17 @@ queryCBId () {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryShopownerHouseParams();
+      this.queryNotSale(2);
+      this.queryNotSaleParams(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-       this.queryShopownerRecommendHouse(val);
+      this.queryNotSale(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
        this.pageJson.pageSize = val;
-       this.queryShopownerRecommendHouse(1);
+      this.queryNotSale(1);
     }
   },
 }

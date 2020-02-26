@@ -64,7 +64,7 @@
         <div class="left-input-container">
             <span>开业时间</span>
             <el-input
-              type="text"
+              type="date"
               placeholder="请输入内容"
               v-model="companyEntity.RegDate"
               maxlength="100"
@@ -133,19 +133,10 @@ export default {
   computed: {},
   methods: {
       savecompany() {
+      let  params = this.companyEntity; 
       this.$api.put({
         url: '/company/update',
-        data: {id:this.companyEntity.id,
-                     CompanyName:this.companyEntity.CompanyName,
-                     Header:this.companyEntity.Header,
-                     Tel:this.companyEntity.Tel,
-                     JoinType:this.companyEntity.JoinType,
-                     RegDate:this.companyEntity.RegDate,
-                     ComType:this.companyEntity.ComType,
-                     managerPer:this.companyEntity.managerPer,
-                     Address:this.companyEntity.Address,
-                     CoDesc:this.companyEntity.CompanyDesc
-                     },
+        data: params,
         token: false,
         headers: { "Content-Type": "application/json" }
       }).then((e) =>{
