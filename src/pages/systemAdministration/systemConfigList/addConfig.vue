@@ -73,7 +73,7 @@
               type="text"
               placeholder="请输入内容"
               v-model="notice.configName"
-              maxlength="10"
+              maxlength="30"
               show-word-limit
             ></el-input>
           </div>
@@ -93,7 +93,7 @@
               type="text"
               placeholder="请输入内容"
               v-model="notice.configMemo"
-              maxlength="10"
+              maxlength="100"
               show-word-limit
             ></el-input>
           </div>

@@ -8,11 +8,17 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template v-slot:inputTo>
+   <template v-slot:top>
       <div class="query-cell">
+        <!-- <el-input placeholder="用户名"
+                  v-model="queryData.newsTitle"
+                  clearable>
+          <template slot="prepend">用户名</template>
+        </el-input> -->
         <el-button type="primary"
+                   style="margin-left:10px"
                    size="mini"
-                   @click="toAddConfig">添加系统规则</el-button>
+                   @click="toAddConfig()">添加系统规则</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="">
