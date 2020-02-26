@@ -15,9 +15,9 @@ export default [
   {
     name: "资源库", active: '2', children: [
       { name: "店公共盘", active: '/buySellSystem/loadDevelopment?o=12' },
-      { name: "在销无限单", active: '/buySellSystem/loadDevelopment?o=13' },
-      { name: "暂不售", active: '/buySellSystem/loadDevelopment?o=14' },
-      { name: "无号码", active: '/buySellSystem/loadDevelopment?o=15' },
+      { name: "在售无跟单", active: '/buySellSystem/saleNotTracking' },
+      { name: "暂不售", active: '/buySellSystem/notSale' },
+      { name: "无号码", active: '/buySellSystem/notPhone' },
       { name: "潜在出售", active: '/buySellSystem/loadDevelopment?o=16' }
     ]
   },
