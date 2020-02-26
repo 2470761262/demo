@@ -208,6 +208,7 @@ const HosueList = [
 import getToken from "@/minxi/getUrlToken";
 import getMenuRid from "@/minxi/getMenuRid"
 import {  TOKEN } from "@/util/constMap";
+import util from "@/util/util";
 export default {
   provide () {
     return {
@@ -263,11 +264,12 @@ export default {
       this.$router.push({ path: path });
     },
      GetRequest() {
-      var url = location.href; //获取url中"?"符后的字串
-      console.log("$$$$$$$", location);
-      var theRequest = new URLSearchParams(
-        location.hash.substring(location.hash.indexOf("?"))
-      );
+      var href = window.location.href; //获取url中"?"符后的字串
+      console.log("$$$$$$$", href);
+      var str=href.substring(href.indexOf("?"));
+      console.log("&&&&&", str);
+      var theRequest = new URLSearchParams(str);
+      console.log("*****", theRequest);
       var token = theRequest.get(TOKEN);
       if(token){
         util.localStorageSet(TOKEN, token);
