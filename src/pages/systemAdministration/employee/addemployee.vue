@@ -43,23 +43,19 @@
         </div>
         <div class="left-input-container">
             <span>性别：0男，1女</span>
-            <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="employeeEntity.sex"
-              maxlength="100"
-              show-word-limit
-            ></el-input>
+            <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" show-word-limit >
+              <el-option :label="男" :value="0" />
+              <el-option :label="女" :value="1" />
+            </el-select>
         </div>
         <div class="left-input-container">
             <span>状态：0实习，1试用，2正式，3离职</span>
-            <el-input
-              type="text"
-              placeholder="状态：0实习，1试用，2正式，3离职"
-              v-model="employeeEntity.status"
-              maxlength="100"
-              show-word-limit
-            ></el-input>
+            <el-select type="text" placeholder="0实习，1试用，2正式，3离职" v-model="employeeEntity.status" show-word-limit >
+              <el-option :label="实习" :value="0" />
+              <el-option :label="试用" :value="1" />
+              <el-option :label="正式" :value="2" />
+              <el-option :label="离职" :value="3" />
+            </el-select>
         </div>
         <div class="left-input-container">
             <span>现居住地址</span>
@@ -92,7 +88,7 @@
             ></el-input>
         </div>
         <div class="left-input-container">
-            <span>Email</span>
+            <span>邮箱</span>
             <el-input
               type="text"
               placeholder="请输入内容"
@@ -131,16 +127,15 @@
               show-word-limit
             ></el-input>
         </div>
-        <div class="left-input-container">
+        <!-- <div class="left-input-container">
             <span>是否锁住：0 锁定，1正常，2三天未登录锁定，3三天未带看锁定</span>
-            <el-input
-              type="text"
-              placeholder="是否锁住：0 锁定，1正常，2三天未登录锁定，3三天未带看锁定"
-              v-model="employeeEntity.isLocked"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
-        </div>
+            <el-select type="text" placeholder="是否锁住：0 锁定，1正常，2三天未登录锁定，3三天未带看锁定" v-model="employeeEntity.isLocked" show-word-limit >
+              <el-option :label="锁定" :value="0" />
+              <el-option :label="正常" :value="1" />
+              <el-option :label="三天未登录锁定" :value="2" />
+              <el-option :label="三天未带看锁定" :value="3" />
+            </el-select>
+        </div> -->
         <div class="left-input-container">
             <span>部门id</span>
             <el-input
@@ -315,13 +310,10 @@
         </div>
         <div class="left-input-container">
             <span>是否菁英：0默认，1是</span>
-            <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="employeeEntity.isGold"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
+            <el-select type="text" placeholder="请选择" v-model="employeeEntity.isGold" show-word-limit >
+              <el-option :value="0" />
+              <el-option :value="1" />
+            </el-select>
         </div>
         <div class="left-input-container">
             <span>岗位属性</span>
@@ -476,7 +468,9 @@ export default {
         this.$router.push({ path: "/sys/employeeList"});
       }
   },
-  created() {},
+  created() {
+    this.employeeEntity.isGold = 0;
+  },
   mounted() {}
 
 };

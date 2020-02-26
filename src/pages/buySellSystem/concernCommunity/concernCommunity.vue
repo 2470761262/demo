@@ -27,8 +27,6 @@
              </div>
              <div style="margin-top:20px;width:270px;font-size:20px;border:1px solid #D3D3D3" id="comList">
                   <div style="color:black;margin-left:10px;">搜索结果 </div>
-                  <input style="display:none"  />
-                  <input style="display:none"/>
                 <div  v-for="(item,y) in list" :key="y"  style="height:30px;width:270px;background:white;font-weight:bold;font-size:15px;margin-top:10px;">
                   <div style="color:black;float: left;margin-left:10px;">{{item.communityName}} </div>
                   <div style="cursor:pointer;color:blue;float: right;margin-right:10px;" @click="addCommunity(item.id,item.communityName)">添加 </div>
@@ -37,10 +35,17 @@
 
             <div  v-for="(item,i) in array" :key="i" style="height:40px;width:270px;background:CornflowerBlue;font-weight:bold;margin-top:10px;">
                  <div style="color:white;float: left;margin-left:5px;font-size:15px;">{{item.communityName}}</div>
-                  <div style="color:white;float: right;margin-right:15px;font-size:10px;">
+                 <div style="color:white;float:right;margin-top:5px;font-size:15px;cursor:pointer;" @click="concernOFF(item.id)">
+                     <el-tooltip placement="right">
+                       <div slot="content">取消关注</div>
+                       <i class="el-icon-delete"></i>
+                       </el-tooltip>
+                       </div>
+                         <div style="color:white;float: right;margin-right:15px;font-size:10px;">
                      <div>存量套数</div>
                      <div>{{item.countConcernCommunity}}套</div>
                 </div>
+                
                  <div style="color:white;float: right;margin-right:15px;font-size:10px;">
                      <div>在售套数</div>
                      <div>{{item.effectiveNum}}套</div>
@@ -56,8 +61,8 @@
             <el-input placeholder="楼盘名称" style="width:280px" v-model="queryData.CommunityName" >
                 <template slot="prepend">楼盘名称 </template>
                </el-input>
-               <el-input placeholder="栋座" v-model="queryData.houseName" style="margin-left:10px;width:100px"></el-input>
-               <el-input placeholder="房间号" v-model="queryData.houseName" style="margin-left:10px;width:100px"></el-input>
+               <el-input placeholder="栋座" v-model="queryData.BuildingName" style="margin-left:10px;width:100px"></el-input>
+               <el-input placeholder="房间号" v-model="queryData.RoomNo" style="margin-left:10px;width:100px"></el-input>
        
        <el-input placeholder="姓名" style="margin-left:30px;width:240px" v-model="queryData.Customers" clearable>
         <template slot="prepend">业主</template>
@@ -128,6 +133,11 @@
       <el-table-column label="装修程度">
         <template v-slot="scope">
           {{scope.row.Decoration}}
+        </template>
+      </el-table-column>
+      <el-table-column label="跟单人">
+        <template v-slot="scope">
+          {{scope.row.agentPerName}}
         </template>
       </el-table-column>
       <el-table-column label="录入时间">
@@ -203,6 +213,44 @@ export default {
     this.queryConcernCount();
   },
   methods: {
+    concernOFF(id){    
+        this.$confirm('是否确定取消关注该楼盘?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.deleteConcern(id);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });      
+    },
+    deleteConcern(id){
+      this.$api.post({
+        url: '/concern_community/concernOFF/'+id,
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false
+      }).then((e) => {
+        let result = e.data;
+        if (result.code == 200) {
+          this.$message({
+            type: 'success',
+            message: result.message
+          });
+        } else {
+           this.$message({
+            type: 'success',
+            message: result.message
+          });
+        }
+        this.$router.push({ path: "/buySellSystem/concernCommunity"});
+      }).catch((e) => {
+         alert("取消关注失败");
+        console.log(e);
+      })
+    },
     querylistByParams () {
       this.querylist(1);
     },
@@ -222,16 +270,19 @@ export default {
           console.log("添加关注" + result.message);
           alert(result.message);
         }
+        
       }).catch((e) => {
          alert("添加关注失败");
         console.log(e);
       })
-
+this.$router.push({ path: "/buySellSystem/concernCommunity"});
     },
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize+'', page: currentPage+''};
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName;}
+      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName;}
+      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo;}
       if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers;}
       if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel;}
       if (this.queryData.minPrice != null&& this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice;}

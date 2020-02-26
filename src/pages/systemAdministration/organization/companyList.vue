@@ -53,7 +53,19 @@
                    @click="queryCompanyByParams">查询</el-button>
         <el-button type="primary"
                    size="mini"
-                   @click="toAddCompanyPage">添加公司</el-button>
+                   @click="toAddCompanyPage(0)">添加同级公司</el-button>
+        <el-button type="primary"
+                   size="mini"
+                   @click="toAddCompanyPage(1)">添加子公司</el-button>
+        <el-button type="primary"
+                   size="mini"
+                   @click="toAddDeptPage">添加子级部门</el-button>
+        <el-button type="primary"
+                    size="mini"
+                    @click="queryCompanyByIsLocked(0)">查询锁定公司</el-button>
+        <el-button type="primary"
+                    size="mini"
+                    @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
@@ -101,9 +113,13 @@ export default {
   
   data () {
     return {
+      company:{},
+      department:{},
       loading: false, //控制表格加载动画提示
       queryData: {
-        CompanyName: ""
+        CompanyName: "",
+        isLocked:null,
+        type :null,
       },
       treeData: [],
       filterText: "",
@@ -158,6 +174,7 @@ export default {
   },
   methods: {
     queryCompanyByParams () {
+       this.queryData.isLocked = null;
       this.queryCompanyDatas(1);
     },
     queryCompanyDatas (currentPage) {
@@ -165,6 +182,9 @@ export default {
       let that = this;
       if (this.queryData.CompanyName != null) {
         params.CompanyName = this.queryData.CompanyName;
+      }
+       if (this.queryData.isLocked != null) {
+        params.isLocked = this.queryData.isLocked;
       }
       this.$api.post({
         url: '/company/list',
@@ -189,14 +209,42 @@ export default {
         console.log(e);
       })
     },
-    toAddCompanyPage () {
-      this.$router.push({ path: "/sys/addCompanyManage" });
+     queryCompanyByIsLocked(isLocked){
+      this.queryData.isLocked = isLocked;
+      this.queryCompanyDatas (1);
+    },
+    toAddCompanyPage (saveType) {
+      if(this.queryData.type == null ){
+        this.$alert('', '请选择一个节点', {
+            dangerouslyUseHTMLString: false
+          });
+      }else {
+        if (saveType == 0){
+          this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.ParentId} });
+        }else if(saveType == 1){
+          this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.id}  });
+      }
+      this.company=null;
+      }
+      
+    },
+    toAddDeptPage () {
+      if(this.queryData.type == null){
+        this.$alert('', '请选择一个节点', {
+            dangerouslyUseHTMLString: false
+          });
+      }else{
+        if(this.company != null && this.queryData.type != 1){
+        var coId = this.company.id;
+      this.$router.push({ name: "addDeptManage", params: { coId: coId } });
+      }
+      }
+      
     },
     editCompanyDetail (companyId) {
       this.$router.push({ path: "/sys/editCompanyDetail", query: { companyId: companyId } });
     },
     delCompanyDetail (id){
-    
      this.$api.post({
         url: '/company/del/'+id,
         token: false,
@@ -224,7 +272,7 @@ export default {
       let array = [
          { name: '编辑', isType: '1', methosName: 'editCompanyDetail' },
          { name: '删除', isType: '1', methosName: 'delCompanyDetail' },
-        // { name: '子公司', isType: '1', methosName: 'querySubsidiary' },
+      
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
@@ -240,17 +288,50 @@ export default {
       this.queryCompanyDatas(val);
     },
     checkChange (e, data, childData) {
-      console.log(e, data, childData, "checkChange");
+      console.log(e, "checkChange");
     },
-      treeCheck (e, data) {
-      //判断如果未选中，则清空用户列表；
-      if (data && data.checkedKeys) {
-        if (data.checkedKeys.length < 1) {
-          this.employeeList = [];
-          return;
-        }
+    treeCheck (e, data) {
+      this.queryData.type = e.type;
+      if(e.type == 0 ){
+      this.$api.get({
+        url: '/company/'+e.businessId,
+        token: false
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.company=result.data;
+        } else {
+          console.log("查询公司详情结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询公司详情失败");
+        console.log(e);
+      })    
+      }else if (e.type == 1 ) {
+      this.$api.get({
+        url: '/department/'+e.businessId,
+        token: false
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.department=result.data;
+        } else {
+          console.log("查询部门详情结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询部门详情失败");
+        console.log(e);
+      })    
       }
-      console.log(e, data, "check..");
+     
     },
     //树输入筛选
     filterNode (value, data) {

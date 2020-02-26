@@ -10,16 +10,16 @@
 <template>
   <div>
     <el-menu :default-active="$route.path"
-             :collapse="collapse"
              class="el-menu-vertical-demo"
              background-color="#545c64"
              text-color="#fff"
+             :collapse="collapse"
              active-text-color="#ffd04b"
              router>
-      <el-submenu index="1">
+      <el-submenu index="0">
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span>买卖系统</span>
+          <span>新买卖系统</span>
         </template>
         <el-menu-item index="/buySellSystem/houseList">
           房源管理
@@ -28,7 +28,7 @@
           补充楼盘审核
         </el-menu-item>
       </el-submenu>
-      <el-submenu index="2">
+      <!-- <el-submenu index="2">
         <template slot="title">
           <i class="el-icon-location"></i>
           <span>系统管理</span>
@@ -45,10 +45,10 @@
         <el-menu-item index="/sys/companyList">公司管理</el-menu-item>
         <el-menu-item index="/sys/deptManageList">部门管理</el-menu-item>
         <el-menu-item index="/sys/employeeList">员工管理</el-menu-item>
-      </el-submenu>
-      <el-submenu :index="item.rname"
+      </el-submenu> -->
+      <el-submenu :index="numIndex"
                   :key="item.id"
-                  v-for="item in menuNodeDatas">
+                  v-for="(item,numIndex) in menuNodeDatas">
         <template slot="title">
           <i class="el-icon-s-flag"></i>
           <span>{{item.rname}}</span>

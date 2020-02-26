@@ -62,13 +62,19 @@
         </div>
         <div class="left-input-container">
             <span>部门类型：1综合，2业务，3行政，4联营</span>
-            <el-input
+            <!-- <el-input
               type="text"
               placeholder="部门类型：1综合，2业务，3行政，4联营"
               v-model="DeptEntity.deptType"
               maxlength="100"
               show-word-limit
-            ></el-input>
+            ></el-input> -->
+            <el-select type="text" placeholder="1综合，2业务，3行政，4联营" v-model="DeptEntity.deptType" show-word-limit >
+               <el-option  :value="1" /> <!--:label="综合" -->
+               <el-option  :value="2" /> <!--:label="业务" -->
+               <el-option  :value="3" /> <!--:label="行政" -->
+               <el-option  :value="4" /> <!--:label="联营" -->
+            </el-select>
         </div>
         <div class="left-input-container">
             <span>部门编码</span>
@@ -92,13 +98,17 @@
         </div>
            <div class="left-input-container">
             <span>加入类型   1 直营 2 加盟</span>
-            <el-input
+            <!-- <el-input
               type="text"
               placeholder="请输入内容"
               v-model="DeptEntity.joinType"
               maxlength="100"
               show-word-limit
-            ></el-input>
+            ></el-input> -->
+            <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.joinType" show-word-limit >
+               <el-option  :value="1" /><!--:label="直营" -->
+               <el-option  :value="2" /><!--:label="加盟" -->
+            </el-select>
         </div>
         <div class="left-input-container">
             <span>地址</span>
@@ -127,6 +137,7 @@
               placeholder="请输入内容"
               v-model="DeptEntity.coId"
               maxlength="10"
+              disabled="disabled"
               show-word-limit
             ></el-input>
         </div>
@@ -137,14 +148,15 @@
               placeholder="请输入内容"
               v-model="DeptEntity.deptParentID"
               maxlength="10"
+              disabled="disabled"
               show-word-limit
             ></el-input>
         </div>
         <div class="left-input-container">
-            <span>null</span>
+            <span>是否区域部门</span>
             <el-input
               type="text"
-              placeholder="请输入内容"
+              placeholder="0 否,1 是"
               v-model="DeptEntity.isArea"
               maxlength="10"
               show-word-limit
@@ -184,7 +196,6 @@ export default {
   methods: {
       saveDept() {
         let params = this.DeptEntity;
-        debugger;
         this.$api.post({
           url: '/department/add',
           data: params,
@@ -196,7 +207,7 @@ export default {
                 this.$alert('', '添加成功', {
               dangerouslyUseHTMLString: false
             });
-            this.$router.push({ path: "/sys/DeptManageList"});
+            this.$router.push({ path: "/sys/deptManageList"});
             console.log(result.data);
             this.$message({message:result.message});
           }
@@ -211,7 +222,16 @@ export default {
       }
     },
   created() {},
-  mounted() {}
+  mounted() {
+    if(this.$route.params.coId != null){
+      this.DeptEntity.coId = this.$route.params.coId;
+      this.DeptEntity.deptParentID=0;
+    }
+    if(this.$route.params.deptParentID != null){
+       this.DeptEntity.coId = this.$route.params.coId;
+      this.DeptEntity.deptParentID = this.$route.params.deptParentID;
+    }
+  }
 
 };
 </script>
