@@ -3,7 +3,31 @@
 </style>
 <template>
   <div class="page-cell-addHouse">
+<<<<<<< HEAD
     <div class="page-cell-title">房屋坐落</div>
+=======
+    <!-- <div class="form-error-tips border"
+         :class="{'after-tips':errorBags.has('onlyOrMany')}"
+         :data-tips="errorBags.first('onlyOrMany')">
+      <div class="page-cell-item">
+        <div slot="prepend"
+             class="item-before"
+             data-before="*"></div>
+        <el-radio-group v-model="formData.onlyOrMany"
+                        data-vv-name="onlyOrMany"
+                        data-vv-as="录入"
+                        v-validate="'required'"
+                        size="mini">
+          <el-radio :label="item.label"
+                    border
+                    v-for="(item, index) in onlyList"
+                    :key="index">{{ item.title }}</el-radio>
+        </el-radio-group>
+         <div class="tips">(多套录入仅支持同一小区同一业主)</div>
+      </div>
+     
+    </div> -->
+>>>>>>> b9d355ac01cdd135ecdc72735b044cd90ceb210c
     <!-- 楼盘名称 -->
     <div class="form-error-tips"
          :class="{'after-tips':errorBags.has('communityId')}"
@@ -531,7 +555,7 @@ export default {
       let that = this;
       console.log(this.formData);
       return this.$api.post({
-        url: '/draft_house',
+        url: '/draft-house',
         data: that.formData,
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         token: false

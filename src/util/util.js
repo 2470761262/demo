@@ -61,7 +61,14 @@ export default {
         break;
       default : return "无"
     }
-  }
+  },
+  isNull(value){
+    if(value==""||value==null){
+       return true;
+    }
+    return false;
+  },
+  
 }
 
 

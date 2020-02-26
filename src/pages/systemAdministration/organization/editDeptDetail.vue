@@ -62,13 +62,19 @@
         </div>
         <div class="left-input-container">
             <span>部门类型：1综合，2业务，3行政，4联营</span>
-            <el-input
+            <!-- <el-input
               type="text"
               placeholder="部门类型：1综合，2业务，3行政，4联营"
               v-model="DeptEntity.deptType"
               maxlength="100"
               show-word-limit
-            ></el-input>
+            ></el-input> -->
+            <el-select type="text" placeholder="1综合，2业务，3行政，4联营" v-model="DeptEntity.deptType" show-word-limit >
+              <el-option :label="综合" :value="1" />
+              <el-option :label="业务" :value="2" />
+              <el-option :label="行政" :value="3" />
+              <el-option :label="联营" :value="4" />
+            </el-select>
         </div>
         <div class="left-input-container">
             <span>部门编码</span>
@@ -92,13 +98,17 @@
         </div>
            <div class="left-input-container">
             <span>加入类型   1 直营 2 加盟</span>
-            <el-input
+            <!-- <el-input
               type="text"
               placeholder="请输入内容"
               v-model="DeptEntity.joinType"
               maxlength="100"
               show-word-limit
-            ></el-input>
+            ></el-input> -->
+            <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.joinType" show-word-limit >
+              <el-option :label="直营" :value="1" />
+              <el-option :label="加盟" :value="2" />
+            </el-select>
         </div>
         <div class="left-input-container">
             <span>地址</span>
@@ -141,10 +151,10 @@
             ></el-input>
         </div>
         <div class="left-input-container">
-            <span>null</span>
+            <span>是否区域部门</span>
             <el-input
               type="text"
-              placeholder="请输入内容"
+              placeholder="0 否,1 是"
               v-model="DeptEntity.isArea"
               maxlength="10"
               show-word-limit

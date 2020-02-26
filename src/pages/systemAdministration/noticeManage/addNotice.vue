@@ -5,9 +5,11 @@
 .innerContainer {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
+  width:100%
 }
 .el-header {
   margin-top: 10px;
+  width:100%
 }
 
 .treeTitle {
@@ -477,8 +479,8 @@ export default {
         //只有单独发送才要
         return;
       }
-      if (data.type == 2) {
-        //员工节点，不要加载
+      if (data.type == 2||data.type==0) {
+        //员工节点，和公司节点 下面 都不要加载 员工
         return;
       }
       let that = this;

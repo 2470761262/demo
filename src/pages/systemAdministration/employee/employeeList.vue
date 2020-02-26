@@ -37,6 +37,30 @@
           <el-button type="primary"
                      size="mini"
                      @click="toAddEmployeePage">添加员工</el-button>
+          <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryEmployeeByIsLocked(0)">查询锁定员工</el-button>
+          <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryEmployeeByIsLocked(1)">查询正常员工</el-button>
+          <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryEmployeeByIsLocked(2)">查询异常员工</el-button>
+          <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryEmployeeByDel(0)">查询在职员工</el-button>
+          <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryEmployeeByDel(1)">查询离职员工</el-button>
+          <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryEmployeeByDel(2)">查询待离职员工</el-button>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
@@ -78,7 +102,9 @@ export default {
     return {
       loading: false, //控制表格加载动画提示
       queryData: {
-        keyWord: ""
+        keyWord: "",
+        isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户 
+        del:0 //0 查询在职员工,1 查询离职员工,2 查询待离职员工
       },
       configSet: {
         selectToTime: false,
@@ -93,27 +119,45 @@ export default {
         { prop: "id", label: "员工id" },
         { prop: "perName", label: "员工名" },
         { prop: "loginUser", label: "登录名" },
-        { prop: "EmployeeName", label: "所在部门名称" },
-        { prop: "postName", label: "角色权限名" },
-        { prop: "companyName", label: "公司名称" },
+        { prop: "deptName", label: "所在部门" },
+        { prop: "postName", label: "角色权限" },
+        { prop: "companyName", label: "公司" },
         { prop: "roleName", label: "岗位名" },
-        { prop: "del", label: "是否有效: 0在职,1离职" },
+        { prop: "del", label: "是否有效: 0在职,1离职", },
       ],
       tableData: [],
     }
   },
   mounted () {
+     this.queryData.isLocked = null;
+     this.queryData.del = null;
      this.queryEmployeeDatas(1);
   },
   methods: {
+    queryEmployeeByIsLocked(isLocked){
+      this.queryData.isLocked = isLocked;
+      this.queryData.del = 0;
+      this.queryEmployeeDatas(1)
+    },
+    queryEmployeeByDel(del){
+     this.queryData.isLocked = null;
+     this.queryData.del = del;
+     this.queryEmployeeDatas(1)
+    },
     queryEmployeeByParams () {
       this.queryEmployeeDatas(1);
     },
     queryEmployeeDatas (currentPage) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage ,del:0 };
+      let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.keyWord != null) {
         params.keyWord = this.queryData.keyWord;
+      }
+      if (this.queryData.isLocked != null) {
+        params.isLocked = this.queryData.isLocked;
+      }
+      if (this.queryData.del != null) {
+        params.del = this.queryData.del;
       }
       this.$api.post({
         url: '/employee/list',
@@ -126,9 +170,26 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
+            for (var i = 0; i < result.data.list.length; i++) {
+               switch (result.data.list[i].del) {
+                    case 0:
+                            result.data.list[i].del  = "在职";
+                            break;
+                    case 1:
+                            result.data.list[i].del  = "离职";
+                            break;
+                    case 2:
+                            result.data.list[i].del  = "未带看锁定";
+                            break;
+                    case 3:
+                            result.data.list[i].del  = "未审核";
+                            break;
+               }
+            }
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
-          this.tableData = result.data.data;
+          this.tableData = result.data.list;
+
         } else {
           console.log("查询员工管理列表结果：" + result.message);
           alert(result.message);
