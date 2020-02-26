@@ -216,7 +216,7 @@ export default {
            postId+=cookie[i];
          }else if(cookie[i]!=id&&postId==""){//如果是第一个id并且不是要删除的id
             postId+=+cookie[i];
-         }else if(cookie[i]!=id) {
+         }else if(ookie[i]!=id) {
            postId+=','+cookie[i];
          }
      }

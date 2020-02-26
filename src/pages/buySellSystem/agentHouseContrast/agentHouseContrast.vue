@@ -75,6 +75,17 @@
     background:#808080 ;
     margin-bottom: 11% ;
 }
+.image2{
+    border-radius: 2rem;
+    width: 85%;
+    height: 18%;
+    margin-top:3%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+    margin-bottom: 11% ;
+}
 .text{
     margin-left: 5%;
     font-size: 1.5rem;
@@ -174,12 +185,12 @@
                      <div class="cancelButton" @click="dele(item.id)">x</div>
                      </div>
                      
-                         <div class="image" v-if="item.picUrl==null">
+                         <div class="image" v-if="item.imageList==null">
                      暂无数据
                      
                      </div>
                      <div v-else>
-                         <img :url="item.picUrl" class="image">
+                         <img :src="item.imageList[0].picUrl" class="image2">
 
                      </div>
                      <div class="text">
@@ -231,9 +242,11 @@ export default {
     data(){
         return{
         houseId:null,
-        houseList:[
-
-        ]
+        houseList:{
+            imageList:[]
+        }
+           
+        
         }
     },
    methods: {
@@ -251,6 +264,7 @@ export default {
         if (result.code == 200) {
          
           this.houseList=result.data;
+         console.log(this.houseList);
         } else {
           console.log("查询对比房源列表结果：" + result.message);
           alert(result.message);
@@ -264,7 +278,7 @@ export default {
        
       let postId="";
       let houseId=window.$cookies.get("houseId");
-      console.log(houseId.split(","));
+     
       if(houseId.split(",")[1]==undefined&&houseId==id){
      window.$cookies.remove("houseId");
       
@@ -280,7 +294,7 @@ export default {
            postId+=','+cookie[i];
          }
      }
-      console.log(postId);
+      
       window.$cookies.set("houseId", postId);
      }
       for(let i=0;i<this.houseList.length;i++){
@@ -293,7 +307,7 @@ export default {
 
    },
     created() {
-         console.log(window.$cookies.get("houseId"));
+        
       this.houseId=this.$route.query.houseId;
       this.getList();
    

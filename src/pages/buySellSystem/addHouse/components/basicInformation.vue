@@ -1,34 +1,10 @@
 <style lang="less" scoped>
 @import url("../../../../assets/publicLess/addHouse.less");
-.green{
-  color:#0D824B
-}
 </style>
 <template>
   <div class="page-cell-addHouse">
-    <div class="form-error-tips border"
-         :class="{'after-tips':errorBags.has('onlyOrMany')}"
-         :data-tips="errorBags.first('onlyOrMany')">
-      <div class="page-cell-item">
-        <div slot="prepend"
-             class="item-before"
-             data-before="*"></div>
-        <el-radio-group v-model="formData.onlyOrMany"
-                        data-vv-name="onlyOrMany"
-                        data-vv-as="录入"
-                        v-validate="'required'"
-                        size="mini">
-          <el-radio :label="item.label"
-                    border
-                    v-for="(item, index) in onlyList"
-                    :key="index">{{ item.title }}</el-radio>
-        </el-radio-group>
-         <div class="tips">(多套录入仅支持同一小区同一业主)</div>
-      </div>
-     
-    </div>
+    <div class="page-cell-title">房屋坐落</div>
     <!-- 楼盘名称 -->
-    <div style="display:flex">
     <div class="form-error-tips"
          :class="{'after-tips':errorBags.has('communityId')}"
          :data-tips="errorBags.first('communityId')">
@@ -52,16 +28,16 @@
                      :value="item.value">
           </el-option>
         </el-select>
-        <div class="item-after" @click="toCommunityReplenish()">
-          补充楼盘<i class="el-icon-question" @click="toCommunityReplenish()"></i>
+        <div class="item-after">
+          补充楼盘<i class="el-icon-question"></i>
         </div>
       </div>
     </div>
     <!-- 栋座 -->
-    <div class="form-error-tips "
+    <div class="form-error-tips"
          :class="{'after-tips':errorBags.has('buildingId')}"
          :data-tips="errorBags.first('buildingId')">
-      <div class="page-cell-item interval" >
+      <div class="page-cell-item">
         <div class="item-before"
              data-before="*">栋座</div>
         <el-select filterable
@@ -83,10 +59,10 @@
       </div>
     </div>
     <!-- 房间号 -->
-    <div class="form-error-tips "
+    <div class="form-error-tips"
          :class="{'after-tips':errorBags.has('roomId')}"
          :data-tips="errorBags.first('roomId')">
-      <div class="page-cell-item interval">
+      <div class="page-cell-item">
         <div class="item-before"
              data-before="*">房间号</div>
         <el-select filterable
@@ -107,10 +83,8 @@
         </el-select>
       </div>
     </div>
-    </div>
     <div class="page-cell-title">业主信息</div>
     <!-- 业主姓名 -->
-    <div style="display:flex">
     <div class="form-error-tips"
          :class="{'after-tips':errorBags.has('customerName')}"
          :data-tips="errorBags.first('customerName')">
@@ -131,7 +105,9 @@
          :class="{'after-tips':errorBags.has('sex')}"
          :data-tips="errorBags.first('sex')">
       <div class="page-cell-item">
-
+        <div slot="prepend"
+             class="item-before"
+             data-before="*">称谓</div>
         <el-radio-group v-model="formData.sex"
                         data-vv-name="sex"
                         data-vv-as="称谓"
@@ -143,7 +119,6 @@
                     :key="index">{{ item.title }}</el-radio>
         </el-radio-group>
       </div>
-    </div>
     </div>
     <!-- 电话号码 -->
     <div class="form-error-tips"
@@ -161,7 +136,7 @@
           <div slot="append"
                @click="addTelToList"
                class="item-after item-before-col">
-            <i class="el-icon-circle-plus-outline green" ></i>
+            <i class="el-icon-circle-plus-outline"></i>
             <div>新增</div>
           </div>
         </el-input>
@@ -346,12 +321,8 @@
 </template>
 <script>
 let sex = [
-  { title: "女士", label: 0 },
+  { title: "女生", label: 0 },
   { title: "先生", label: 1 }
-];
-let onlyOrMany= [
-  { title: "单套录入", label: 0 },
-  { title: "多套录入", label: 1 }
 ];
 let orientation = [
   { title: "东", label: 1 },
@@ -397,10 +368,6 @@ export default {
     }
   },
   methods: {
-    //跳转到补充楼盘页面
-    toCommunityReplenish(){
-        this.$router.push({ path: '/buySellSystem/CommunityReplenish'});
-    },
     //查询楼盘
     remoteCommunityName (e) {
       let that = this;
@@ -585,7 +552,6 @@ export default {
       step: {},
       addTel: [],
       sexList: sex,
-      onlyList:onlyOrMany,
       certificateType: certificateType,
       options: [],
       selectPageCommunit: { // 楼栋
