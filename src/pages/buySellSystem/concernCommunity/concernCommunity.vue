@@ -56,8 +56,8 @@
             <el-input placeholder="楼盘名称" style="width:280px" v-model="queryData.CommunityName" >
                 <template slot="prepend">楼盘名称 </template>
                </el-input>
-               <el-input placeholder="栋座" v-model="queryData.houseName" style="margin-left:10px;width:100px"></el-input>
-               <el-input placeholder="房间号" v-model="queryData.houseName" style="margin-left:10px;width:100px"></el-input>
+               <el-input placeholder="栋座" v-model="queryData.BuildingName" style="margin-left:10px;width:100px"></el-input>
+               <el-input placeholder="房间号" v-model="queryData.RoomNo" style="margin-left:10px;width:100px"></el-input>
        
        <el-input placeholder="姓名" style="margin-left:30px;width:240px" v-model="queryData.Customers" clearable>
         <template slot="prepend">业主</template>
@@ -128,6 +128,11 @@
       <el-table-column label="装修程度">
         <template v-slot="scope">
           {{scope.row.Decoration}}
+        </template>
+      </el-table-column>
+      <el-table-column label="跟单人">
+        <template v-slot="scope">
+          {{scope.row.agentPerName}}
         </template>
       </el-table-column>
       <el-table-column label="录入时间">
@@ -232,6 +237,8 @@ export default {
       let params = { limit: this.pageJson.pageSize+'', page: currentPage+''};
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName;}
+      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName;}
+      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo;}
       if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers;}
       if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel;}
       if (this.queryData.minPrice != null&& this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice;}
