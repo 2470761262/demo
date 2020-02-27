@@ -117,7 +117,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 0, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
         { prop: 'houseNo', label: "房源编号" },

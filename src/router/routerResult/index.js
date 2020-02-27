@@ -158,6 +158,20 @@ export default [
                     import(/* webpackChunkName: "notPhone" */ "@/pages/buySellSystem/houseResource/notPhone.vue")
             },
             {
+                //资源库-潜在出售列表
+                path: "/buySellSystem/potentialHouse",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "potentialHouse" */ "@/pages/buySellSystem/houseResource/potentialHouse.vue")
+            },
+            {
+                //资源库-店公盘
+                path: "/buySellSystem/shopDisk",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "shopDisk" */ "@/pages/buySellSystem/houseResource/shopDisk.vue")
+            },
+            {
                 //外网房源
                 path: "/buySellSystem/releaseOutsideHouseList",
                 name: "concernCommunity",
