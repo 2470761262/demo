@@ -80,7 +80,7 @@
             </div>
           </div>
         </el-dialog>
-        <a @click="isChecking(11,'该房源已被举报，当前正在审核中',0)">举报</a>
+        <div @click="isChecking(11,'该房源已被举报，当前正在审核中',0)">举报</div>
       </div>
       <div style="margin-left:50px;">
         <i
@@ -607,11 +607,11 @@
                         <el-button @click="isShowOnly=false">取消</el-button>
                         <el-button @click="insertCheck(4,2)">添加</el-button>
                       </div>
-                      <span
+                      <div
                         v-if="agentHouseMethod.onlyOwnerName!=null"
                         slot="reference"
                         @click="isChecking(4,'当前正在审核中',2)"
-                      >取代</span>
+                      >取代</div>
                     </el-popover>
                   </div>
                 </div>
@@ -1085,7 +1085,7 @@
                         <el-button @click="insertCheck(4,5)">添加</el-button>
                       </div>
                     </div>
-                    <span  slot="reference" @click="isChecking(4,'当前正在审核中',5)">取代</span>
+                    <div  slot="reference" @click="isChecking(4,'当前正在审核中',5)">取代</div>
                   </el-popover>
                     
                   </div>
