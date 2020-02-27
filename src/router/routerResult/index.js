@@ -551,10 +551,25 @@ export default [
         import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/ruleManager/rule.vue")
     },
     {
-      //系统管理 
+      //系统管理
       path: "/sys/notFoundPage",
       name: "notFoundPage",
       component: () =>
-      import("@/pages/systemAdministration/common/notFoundPage.vue")
-    }
+        import("@/pages/systemAdministration/common/notFoundPage.vue")
+    },
+    {
+      //系统管理 角色管理
+      path: "/sys/positionManager",
+      name: "position",
+      component: () =>
+        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/position.vue")
+    },
+  {
+    //系统管理 权限设置
+    path: "/sys/setPosition",
+    name: "setPosition",
+    component: () =>
+      import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/setPosition.vue")
+  },
+
 ]

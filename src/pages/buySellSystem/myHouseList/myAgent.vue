@@ -100,7 +100,15 @@
           {{scope.row.AddTime}}
         </template>
       </el-table-column>
-      
+      <el-table-column 
+                       label="操作"
+                       fixed="right"
+                       key="operation">
+        <template v-slot="scope">
+            <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">查看</el-button>
+            <el-button type="info" size="mini" @click="open">调配</el-button>
+        </template> 
+      </el-table-column>
     </template>
   </list-page>
 </template>
@@ -111,6 +119,7 @@ export default {
     listPage
   },
   data () {
+     
     
     return {
         input:'',
@@ -160,13 +169,36 @@ export default {
       queryData: {
         communityName: '',
         timeSelect:'',
-      }
+       
+      },
+      
     }
   },
   mounted () {
     this.querylist(1);
   },
   methods: {
+    //跳转房源详情页面
+    toHouseDetail(id){
+      this.$router.push({ path: "/buySellSystem/houseDetails",query:{houseId:id} });
+    },
+    //调配
+     open() {
+        this.$prompt('请选择接收人员', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(({ value }) => {
+          this.$message({
+            type: 'success',
+            message: '已将房源跟单人调配为: ' + value
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });       
+        });
+      },
     querylistByParams () {
      console.log(this.queryData.timeSelect);
      this.querylist(1);
