@@ -11,7 +11,6 @@
     <list-page v-show="!showForm"
                :parentData="$data"
                @queryTabData="queryTabData"
-               @handleClick="handleClick"
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
 
