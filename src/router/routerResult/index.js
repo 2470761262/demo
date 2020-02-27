@@ -626,5 +626,20 @@ export default [
         name: "detailsStroe",
         component: () =>
             import(/* webpackChunkName: "detailsStroe" */ "@/pages/systemAdministration/stroe/detailsStroe.vue")
-    }
+    },
+    {
+      //系统管理 权限设置 用户列表
+      path: "/sys/authority/employeeList",
+      name: "employeeList",
+      component: () =>
+        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/employeeList.vue")
+    },
+    {
+      //系统管理 权限设置
+      path: "/sys/authority/setAuthority",
+      name: "setAuthority",
+      component: () =>
+        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/setAuthority.vue")
+    },
+
 ]
