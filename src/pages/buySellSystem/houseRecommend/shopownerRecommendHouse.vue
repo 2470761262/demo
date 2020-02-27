@@ -114,8 +114,8 @@ export default {
       roomNoList: [],
       pageJson: {
        currentPage: 1, //当前页码
-        total: 9, //总记录数
-        pageSize: 5 //每页条数
+        total: 0, //总记录数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
        { prop: 'houseNo', label: "房源编号" },

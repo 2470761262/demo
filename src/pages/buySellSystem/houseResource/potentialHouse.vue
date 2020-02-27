@@ -45,23 +45,20 @@
                        :value="item.value">
             </el-option>
           </el-select>
-            <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable />
-           <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
-            <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
-             <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
-              <el-input placeholder="最低售价" v-model="data.minPrice"  style="margin-left:30px;width:120px" clearable />------
-             <el-input placeholder="最高售价" v-model="data.maxPrice"  style="width:120px" clearable />
-           <el-date-picker
-              v-model="data.timeSelect"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-          </el-date-picker>
+          <el-select v-model="data.type" placeholder="请选择" clearable> 
+                <el-option
+                v-for="item in option"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+                </el-option>
+            </el-select>
+            <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable/>
+           <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable/>
        <el-button type="primary"
                      style="margin-left:10px"
                      size="mini"
-                     @click="querySaleNotTrackingParams">查询</el-button>
+                     @click="queryPotentialHouseParams">查询</el-button>
       </div>
     </template>
    
@@ -78,20 +75,22 @@
         </el-table-column>
       </template>
 
-       <el-table-column
-        prop=""
-        label="户型"
-        :formatter="formatHouseType">
-      </el-table-column>
      <el-table-column 
                        label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
+
             <el-button type="info"
                        size="mini"
                        @click="toLook(scope.row.id)"
+                       v-if="scope.row.type!==1"
                        >查看</el-button>
+
+             <el-button type="info"
+                       size="mini"
+                       @click="toSale(scope.row.id)"
+                       >转在售</el-button>
         </template>
        
       </el-table-column>
@@ -110,18 +109,21 @@ export default {
     
     return {
       loading: false,
-      
+       option: [
+         {
+          value: 'build',
+          label: '楼盘数据'
+        }, {
+          value: 'trade',
+          label: '成交数据'
+        }],
       data: {
         comId: '',
         cbId: '',
         roomNo: '',
-        timeSelect: '',
         customName:'',
         tel:'',
-        minInArea:'',
-        maxInArea:'',
-        minPrice:'',
-        maxPrice:''
+        type:''
       },
       options: [],
       cbIdList: [],
@@ -132,16 +134,12 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-          { prop: 'houseNo', label: "房源编号" },
         { prop: 'communityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
         { prop: 'inArea', label: "面积(m²)"},
-         { prop: 'price', label: "售价(万元)"},
-        { prop: 'seenNum', label: "被看次数" },
-        { prop: 'outfollow', label: "未跟进天数" },
-        { prop: 'notLookNum', label: "未被看天数" },
-        { prop: 'addTime', label: "录入时间" }
+        { prop: 'customers', label: "业主" },
+        { prop: 'tel', label: "业主电话"}
        
       ],
       tableData: [{
@@ -160,23 +158,21 @@ export default {
     }
   },
   mounted(){
-    this.querySaleNotTracking(1);
+     this.data.type='build';
+    this.queryPotentialHouse(1);
   },
   methods: {
     queryTabData () {
       console.log(this, '111');
     },
-     formatHouseType(row, column){
-      return row.rooms+'室'+row.hall+'厅'+row.toilet+'卫';
-    },
-
     toLook(id){
         console.log(id);
          var that = this;
         that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
     },
-    querySaleNotTrackingParams(){
-        this.querySaleNotTracking(1);
+    toSale(id){},
+    queryPotentialHouseParams(){
+        this.queryPotentialHouse(1);
     },
     remoteMethod (query) {
       var that = this
@@ -236,24 +232,19 @@ queryCBId () {
         }
       })
     },
-  querySaleNotTracking(currentPage){
+  queryPotentialHouse(currentPage){
     var that =this;
    let params={"limit":that.pageJson.pageSize,"page":currentPage};
  
         params.comId=that.data.comId;
         params.cbId=that.data.cbId;
         params.roomNo=that.data.roomNo;
-        params.beginTime=that.data.timeSelect[0];
-        params.endTime=that.data.timeSelect[1];
         params.customName=that.data.customName;
         params.tel=that.data.tel;
-        params.minInArea=that.data.minInArea;
-        params.maxInArea=that.data.maxInArea;
-        params.minPrice=that.data.minPrice;
-        params.maxPrice=that.data.maxPrice;
+        params.type=that.data.type;
      console.log(params);
     this.$api.get({
-        url: '/houseResource/saleNotTrackingList',
+        url: '/houseResource/potentialHouseList',
         data: params,       
         token: false
       }).then((e) => {
@@ -264,11 +255,11 @@ queryCBId () {
           that.pageJson.currentPage=data.data.currPage;
           that.tableData=data.data.list;
         } else {
-          console.log("查询在售无跟单列表结果：" + result.message);
+          console.log("查询潜在出售列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询在售无跟单列表失败");
+        console.log("查询潜在出售列表失败");
         console.log(e);
       })
   },
@@ -286,17 +277,17 @@ queryCBId () {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      //this.querySaleNotTracking(2);
-      this.querySaleNotTrackingParams(1);
+      this.querySaleNotTracking(2);
+      this.queryPotentialHouseParams(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.querySaleNotTracking(val);
+      this.queryPotentialHouse(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
        this.pageJson.pageSize = val;
-      this.querySaleNotTracking(1);
+      this.queryPotentialHouse(1);
     }
   },
 }

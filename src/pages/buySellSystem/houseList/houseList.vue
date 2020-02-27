@@ -199,9 +199,9 @@ const HosueList = [
   { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true, flag: false },
   { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
   { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false, flag: false },
-  { title: "店公共盘", icon: "el-icon-zoom-in", path: "", hot: false },
+  { title: "店公共盘", icon: "el-icon-zoom-in", path: "/buySellSystem/shopDisk", hot: false },
   { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false, flag: false },
-  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
+  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "/buySellSystem/saleNotTracking", hot: false, flag: false },
   { title: "全部在售", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
   { title: "店长推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/shopownerRecommendHouse", hot: false, flag: false },
 ];

@@ -45,10 +45,10 @@
                        :value="item.value">
             </el-option>
           </el-select>
-            <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable></el-input>
-           <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable></el-input>
-            <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable></el-input>------
-             <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable></el-input>
+            <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable />
+           <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
+            <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
+             <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
            <el-date-picker
               v-model="data.timeSelect"
               type="daterange"
@@ -129,7 +129,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 0, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
           { prop: 'houseNo', label: "房源编号" },
