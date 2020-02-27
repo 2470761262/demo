@@ -253,7 +253,7 @@ export default {
         },
         {
           prop: "creatorName",
-          label: "经济人",
+          label: "经纪人",
           formart: row => row.creatorName,
           width: "120"
         },
@@ -370,6 +370,7 @@ export default {
     queryVerifyHouseDatas(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
+      that.loading = true;
       if (this.queryData.newsTitle != null) {
         params.newsTitle = this.queryData.newsTitle;
       }
