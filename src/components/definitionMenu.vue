@@ -26,6 +26,11 @@
       }
     }
   }
+  .center-but {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
 }
 </style>
 <template>
@@ -36,19 +41,28 @@
       <div class="definition-flex-warp">
         <div class="definition-flex-cell definition-back">
           <div class="pop-title">自定义菜单设置</div>
-          <div class="el-icon-close"></div>
+          <div class="el-icon-close"
+               @click="visible = false"></div>
         </div>
         <div class="definition-checkBox">
-          <div class="definition-checkBox-item"
-               :class="{'disabled':item.disabled}"
-               v-for="(item,index) in thatRenderList"
-               @click="setListCheck(item)"
-               :key="index">
+          <label class="definition-checkBox-item"
+                 :class="{'disabled':item.disabled}"
+                 v-for="(item,index) in thatRenderList"
+                 :key="index">
             <input type="checkbox"
+                   @click="setListCheck(item)"
                    :checked="item.flag"
                    :disabled="item.disabled">
             <span>{{item.label}}</span>
-          </div>
+          </label>
+        </div>
+        <div class="center-but">
+          <el-button type="primary"
+                     size="mini"
+                     @click="setTabRender">确定</el-button>
+          <el-button type="primary"
+                     size="mini"
+                     @click="resetTabRender">恢复默认</el-button>
         </div>
       </div>
       <el-button slot="reference"
@@ -69,33 +83,54 @@ export default {
       default: () => []
     }
   },
+  watch: {
+    renderList: {
+      immediate: true,
+      deep: true,
+      handler (newValue, oldValue) {
+        this.thatRenderList = JSON.parse(JSON.stringify(newValue));
+      }
+    },
+    tableColumn: {
+      immediate: true,
+      deep: true,
+      handler (newValue, oldValue) {
+        this.thatTableColumn = JSON.parse(JSON.stringify(newValue));
+      }
+    },
+    visible (newVal) {
+      if (newVal) {
+        this.ordThatRenderList = JSON.stringify(this.thatRenderList);
+        this.ordThatTableColumn = JSON.stringify(this.thatTableColumn);
+      } else {
+        if (this.submitFlag == false) {
+          this.thatRenderList = JSON.parse(this.ordThatRenderList);
+          this.thatTableColumn = JSON.parse(this.ordThatTableColumn);
+        }
+      }
+    }
+  },
   data () {
     return {
-      visible: false,
-      thatRenderList: this.renderList,
-      thatTableColumn: []
+      visible: false, //  弹出框开关
+      thatRenderList: [],  //checkbox渲染list
+      thatTableColumn: [], //表格渲染list
+      ordThatRenderList: [], //checkbox渲染list 如果修改了之后没有提交则保存 关闭的时候覆盖给thatRenderList
+      ordThatTableColumn: [],//表格渲染list 如果修改了之后没有提交则保存 关闭的时候覆盖给thatTableColumn
+      submitFlag: true//修改了是否有提交
     }
   },
   created () {
-    this.thatTableColumn = JSON.parse(JSON.stringify(this.tableColumn));
     if (this.thatTableColumn.length == 0) {
-      this.thatRenderList.forEach((parItem, parindex) => {
-        if (parItem.default) {
-          parItem.flag = true;
-          this.thatTableColumn.push(parItem);
-        } else {
-          parItem.flag = false;
-        }
-      })
-      this.$emit("update:tableColumn", this.thatTableColumn);
+      this.resetTabRender();
     }
 
   },
   methods: {
     setListCheck (item) {
-      console.log(1111111);
       if (item.disabled)
         return false;
+      this.submitFlag = false;
       item.flag = !item.flag;
       if (item.flag == true) {
         this.thatTableColumn.push(item);
@@ -106,7 +141,25 @@ export default {
         this.thatTableColumn.splice(Index, 1);
       }
       this.$forceUpdate();
-      this.$emit("update:tableColumn", this.thatTableColumn);
+    },
+    setTabRender () {
+      this.$emit("change", this.thatTableColumn);
+      this.visible = false;
+      this.submitFlag = true;
+    },
+    resetTabRender () {
+      this.thatTableColumn = [];
+      this.thatRenderList.forEach((parItem, parindex) => {
+        parItem.flag = false;
+        if (parItem.default) {
+          parItem.flag = true;
+          this.thatTableColumn.push(parItem);
+        }
+      })
+      this.$forceUpdate();
+      this.$emit("change", this.thatTableColumn);
+      this.visible = false;
+      this.submitFlag = true;
     }
   },
 
