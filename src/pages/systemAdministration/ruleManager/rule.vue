@@ -262,7 +262,7 @@
           isSuper: "0",
           area: "0",
         },
-        type : "0",
+        type : 0,
         node: [],
         showTable: false,
         saveType : "update",
@@ -290,13 +290,14 @@
       loadNode(node, resolve) {
         if (node.level == 0) {
           this.node = node;
+          this.node.id = 0;
           this.resolve = resolve;
         }
         console.log(node, resolve, "load tree node");
         //读取功能点数据
         debugger;
         var pId = node.id;
-        if(node.data && node.data.length > 0){
+        if(node.data ){
           pId = node.data.id;
         }
         this.$api

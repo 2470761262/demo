@@ -65,7 +65,6 @@
                        show-checkbox
                        :load="loadCompanyTreeNode"
                        lazy
-                       check-on-click-node=true
                        node-key="id"
                        ref="companyTree"
                        highlight-current
@@ -110,6 +109,7 @@
     },
     mounted() {
       let id = JSON.parse(this.$route.query.id);
+      this.postId = id;
       console.log(id);
       //读取功能点数据
       this.$api
@@ -176,7 +176,7 @@
         }
         var that = this;
         that.paramsObj.ruleType = 0;
-        that.paramsObj.postId = this.postId;
+        that.paramsObj.postId = that.postId;
         that.paramsObj.ruleType = 0;
         that.paramsObj.type = type;
 
