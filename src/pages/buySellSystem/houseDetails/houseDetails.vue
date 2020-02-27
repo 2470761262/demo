@@ -473,11 +473,11 @@
                         <el-button @click="isShowKey=false">取消</el-button>
                         <el-button @click="insertCheck(4,3)">添加</el-button>
                       </div>
-                      <span
+                      <div
                         v-if="agentHouseMethod.keyOwnerName!=null"
                         slot="reference"
                         @click="isChecking(4,'当前正在审核中',3)"
-                      >取代</span>
+                      >取代</div>
                     </el-popover>
                   </div>
                 </div>
@@ -1085,7 +1085,7 @@
                         <el-button @click="insertCheck(4,5)">添加</el-button>
                       </div>
                     </div>
-                    <div  slot="reference" @click="isChecking(4,'当前正在审核中',5)">取代</div>
+                    <div  slot="reference" v-if="agentHouseMethod.realOwnerName!=null" @click="isChecking(4,'当前正在审核中',5)">取代</div>
                   </el-popover>
                     
                   </div>
