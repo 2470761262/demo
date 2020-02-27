@@ -80,7 +80,7 @@
             </div>
           </div>
         </el-dialog>
-        <div @click="isChecking(11,'该房源已被举报，当前正在审核中',0)">举报</div>
+        <a @click="isChecking(11,'该房源已被举报，当前正在审核中',0)">举报</a>
       </div>
       <div style="margin-left:50px;">
         <i
@@ -230,7 +230,7 @@
       <el-button>鑫币对赌</el-button>
       <el-button>转房源状态</el-button>
       <el-button>取消作业方法</el-button>
-      <el-button>锁定房源</el-button>
+      <el-button  @click="houseLock">{{houseDetails.isLocking==1 ?"解锁房源":"锁定房源"}}</el-button>
            <el-popover placement="top" width="600" trigger="manual" v-model="isShowKeyStorageDept">
                       <div class="query-cell">
                         <span>存放门店</span>
@@ -473,11 +473,11 @@
                         <el-button @click="isShowKey=false">取消</el-button>
                         <el-button @click="insertCheck(4,3)">添加</el-button>
                       </div>
-                      <div
+                      <el-button
                         v-if="agentHouseMethod.keyOwnerName!=null"
                         slot="reference"
                         @click="isChecking(4,'当前正在审核中',3)"
-                      >取代</div>
+                      >取代</el-button>
                     </el-popover>
                   </div>
                 </div>
@@ -607,11 +607,11 @@
                         <el-button @click="isShowOnly=false">取消</el-button>
                         <el-button @click="insertCheck(4,2)">添加</el-button>
                       </div>
-                      <div
+                      <el-button
                         v-if="agentHouseMethod.onlyOwnerName!=null"
                         slot="reference"
                         @click="isChecking(4,'当前正在审核中',2)"
-                      >取代</div>
+                      >取代</el-button>
                     </el-popover>
                   </div>
                 </div>
@@ -1085,7 +1085,7 @@
                         <el-button @click="insertCheck(4,5)">添加</el-button>
                       </div>
                     </div>
-                    <div  slot="reference" v-if="agentHouseMethod.realOwnerName!=null" @click="isChecking(4,'当前正在审核中',5)">取代</div>
+                    <el-button  v-if="agentHouseMethod.realOwnerName!=null" slot="reference" @click="isChecking(4,'当前正在审核中',5)">取代</el-button>
                   </el-popover>
                     
                   </div>
@@ -1341,7 +1341,37 @@ export default {
     });
   },
   methods: {
+    houseLock(){
+       let that=this;
+       let isLocking=this.houseDetails.isLocking==1?0:1
+       console.log(this.houseDetails.isLocking=="");
+      if(this.houseDetails.isLocking==undefined){
+        this.$message("操作失败");
+         return;
+      }
+      let params={
+         Eid:this.houseId,
+         operationPer:35365,
+         Islocking:isLocking
+      }
+        this.$api
+        .post({
+          url: "/agentHouse/property/locking",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+           that.$message(result.message);
+           that.houseDetails.isLocking=isLocking;
+        })
+        .catch(e => {
+            that.$message("请求失败");
+        });
+    },
     updateKeyStorageDept(){
+       let that=this;
       if(this.keyStorageDept==""){
         this.$message("存放门店未选择");
          return;
@@ -1361,7 +1391,7 @@ export default {
         })
         .then(e => {
           let result = e.data;
-           this.$message(result.message);
+           that.$message(result.message);
            
         })
         .catch(e => {

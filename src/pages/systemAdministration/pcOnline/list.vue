@@ -78,7 +78,7 @@ export default {
       },
       pageJson: {
         currentPage: 1,
-        pageSize: 10
+        pageSize: 5
       },
       tableDataColumn: [
         { prop: "ID", label: "PCMID" },
@@ -190,7 +190,6 @@ export default {
             console.log("查询PC在线管理列表结果：" + result.message);
             alert(result.message);
           }
-          this.queryPcOnlineDatas(1);
         })
         .catch(e => {
           console.log("查询PC在线管理列表失败");
@@ -256,6 +255,8 @@ export default {
                   message: result.message
                 });
               }
+
+              this.queryPcOnlineDatas(1);
             })
             .catch(e => {
               console.log("下线操作失败");

@@ -40,6 +40,12 @@ http.interceptors.response.use(function (response) {
   }
   return response;
 }, function (error) {
+  if (error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
+    Message({
+      message: '居然请求超时了~',
+      type: 'error'
+    });
+  }
   return Promise.reject(error);
 });
 //请求对象
