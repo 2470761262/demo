@@ -1,6 +1,6 @@
 
 import util from '@/util/util';
-import { LOGINDATA } from '@/util/constMap';
+import { LOGINDATA,TOKEN } from '@/util/constMap';
 import { Notification } from 'element-ui';
 export default (router) => {
   //路由拦截
@@ -13,12 +13,18 @@ export default (router) => {
       } else if (util.localStorageGet(LOGINDATA)) {
         next();
       } else {
-        Notification({
-          title: '提示',
-          message: '您没有进行登录,将跳转登录页面!',
-          type: "warning"
-        })
-        next({ path: '/' })
+        let tk = new URLSearchParams(to.fullPath).get(TOKEN);
+        if(tk){
+          next();
+        }else{
+
+          Notification({
+            title: '提示',
+            message: '您没有进行登录,将跳转登录页面!',
+            type: "warning"
+          })
+          next({ path: '/' })
+        }
       }
     }
   });

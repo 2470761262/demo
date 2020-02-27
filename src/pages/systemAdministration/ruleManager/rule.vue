@@ -21,9 +21,6 @@
     margin: 10px;
     display: inline-block;
   }
-  .inputItem{
-
-  }
 
 </style>
 <template>
@@ -81,23 +78,23 @@
           <span>人员管理</span>
         </div>
         <div class="text item">
-          <div class="formItem inputItem">
+          <div class="formItem ">
             功能点名称:
             <el-input v-model="ruleObj.rName" style="width: 200px;" placeholder="功能点名称" ></el-input>
           </div>
-          <div class="formItem inputItem">
+          <div class="formItem ">
             链接地址:
             <el-input v-model="ruleObj.rUrl" style="width: 200px;" placeholder="链接地址" ></el-input>
           </div>
-          <div class="formItem inputItem">
+          <div class="formItem ">
             post参数:
             <el-input v-model="ruleObj.postData" style="width: 200px;" placeholder="post参数" ></el-input>
           </div>
-          <div class="formItem inputItem">
+          <div class="formItem ">
             图片地址:
             <el-input v-model="ruleObj.picUrl" style="width: 200px;" placeholder="图片地址"></el-input>
           </div>
-          <div class="formItem inputItem">
+          <div class="formItem ">
             说明:
             <el-input v-model="ruleObj.state" style="width: 200px;" placeholder="说明"></el-input>
           </div>
@@ -299,7 +296,7 @@
         //读取功能点数据
         debugger;
         var pId = node.id;
-        if(node.data){
+        if(node.data && node.data.length > 0){
           pId = node.data.id;
         }
         this.$api

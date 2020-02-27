@@ -28,10 +28,10 @@
           补充楼盘审核
         </el-menu-item>
       </el-submenu>
-      <!-- <el-submenu index="2">
+      <el-submenu index="2">
         <template slot="title">
           <i class="el-icon-location"></i>
-          <span>系统管理</span>
+          <span>新系统管理</span>
         </template>
         <el-menu-item index="/sys/noticeManageList">公告管理</el-menu-item>
         <el-menu-item index="/sys/visitorList">游客管理</el-menu-item>
@@ -45,7 +45,7 @@
         <el-menu-item index="/sys/companyList">公司管理</el-menu-item>
         <el-menu-item index="/sys/deptManageList">部门管理</el-menu-item>
         <el-menu-item index="/sys/employeeList">员工管理</el-menu-item>
-      </el-submenu> -->
+      </el-submenu>
       <el-submenu :index="item.rurl+index"
                   :key="item.id"
                   v-for="(item,index) in menuNodeDatas">

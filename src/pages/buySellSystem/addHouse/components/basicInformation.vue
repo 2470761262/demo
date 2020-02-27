@@ -49,7 +49,7 @@
                      :value="item.value">
           </el-option>
         </el-select>
-        <div class="item-after">
+        <div class="item-after" @click="toHouse()">
           补充楼盘<i class="el-icon-question"></i>
         </div>
       </div>
@@ -389,6 +389,11 @@ export default {
     }
   },
   methods: {
+      //跳转到补充楼盘页面
+    toHouse(){
+      var that=this;
+       that.$router.push({ path: '/buySellSystem/CommunityReplenish'});
+    },
     //查询楼盘
     remoteCommunityName (e) {
       let that = this;
