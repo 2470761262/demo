@@ -45,6 +45,13 @@
                        :value="item.value">
             </el-option>
           </el-select>
+           <el-date-picker
+              v-model="data.timeSelect"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+          </el-date-picker>
        <el-button type="primary"
                      style="margin-left:10px"
                      size="mini"
@@ -65,6 +72,22 @@
         </el-table-column>
       </template>
 
+       <el-table-column
+        prop=""
+        label="户型"
+        :formatter="formatHouseType">
+      </el-table-column>
+     <el-table-column 
+                       label="操作"
+                       fixed="right"
+                       key="operation">
+        <template v-slot="scope">
+            <el-button type="info"
+                       size="mini"
+                       @click="toLook(scope.row.id)"
+                       >查看</el-button>
+        </template>
+      </el-table-column>
 
 
     </template>
@@ -96,13 +119,15 @@ export default {
         pageSize: 5 //每页条数
       },
       tableDataColumn: [
-         { prop: 'houseNo', label: "房源编号" },
+          { prop: 'houseNo', label: "房源编号" },
         { prop: 'communityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)", formatter:''},
+        { prop: 'inArea', label: "面积(m²)"},
         { prop: 'price', label: "售价(万元)" },
-        { prop: 'rooms', label: "户型" },
+        { prop: 'seenNum', label: "被看次数" },
+        { prop: 'outfollow', label: "未跟进天数" },
+        { prop: 'notLookNum', label: "未被看天数" },
         { prop: 'addTime', label: "添加时间" },
         { prop: 'brokerName', label: "经纪人" }
        
@@ -129,6 +154,11 @@ export default {
     queryTabData () {
       console.log(this, '111');
     },
+     formatHouseType(row, column){
+      return row.rooms+'室'+row.hall+'厅'+row.toilet+'卫';
+    },
+
+    toLook(id){},
     queryChiefHouseParams(){
         this.queryChiefRecommendHouse(1);
     },

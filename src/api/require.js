@@ -2,11 +2,18 @@ import axios from 'axios';
 import qs from 'qs';
 import util from '@/util/util';
 import vm from '@/main.js';
-import { TOKEN } from '@/util/constMap';
-import { Message } from 'element-ui';
+import {
+  TOKEN
+} from '@/util/constMap';
+import {
+  Message
+} from 'element-ui';
+import store from '@/store/store';
 let http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
   // 请求超时时间（毫秒）
   timeout: 50000,
 });
@@ -14,6 +21,7 @@ let http = axios.create({
 // 请求拦截器
 http.interceptors.request.use(function (config) {
   config.headers.tk = util.localStorageGet(TOKEN);
+  config.headers.rid = 1; //store.state.menuRid.nowRid; // 设置rid
   return config;
 }, function (error) {
   return Promise.reject(error);
@@ -21,21 +29,34 @@ http.interceptors.request.use(function (config) {
 // 响应拦截器
 http.interceptors.response.use(function (response) {
   if (response.data.code == 401) {
-    Message({ message: response.data.message, type: 'error' });
-    vm.$router.push({ "path": "/" });
+    Message({
+      message: response.data.message,
+      type: 'error'
+    });
+    vm.$router.push({
+      "path": "/"
+    });
     return;
   }
   return response;
 }, function (error) {
+  if (error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
+    Message({
+      message: '居然请求超时了~',
+      type: 'error'
+    });
+  }
   return Promise.reject(error);
 });
 //请求对象
 let ApiData = {
-  post (arg) {
+  post(arg) {
     if (!arg.method) {
       arg.method = 'POST';
     }
-    let sendConfig = Object.assign({ token: true }, arg);
+    let sendConfig = Object.assign({
+      token: true
+    }, arg);
     if (sendConfig.qs && sendConfig.qs == true) // 格式化表单数据
       sendConfig.data = qs.stringify(sendConfig.data);
     return new Promise((resolve, reject) => {
@@ -46,15 +67,15 @@ let ApiData = {
       });
     })
   },
-  put (arg) {
+  put(arg) {
     arg.method = 'PUT';
     return this.post.call(this, arg);
   },
-  delete (arg) {
+  delete(arg) {
     arg.method = 'DELETE';
     return this.post.call(this, arg);
   },
-  get (arg) {
+  get(arg) {
     if (arg.data) {
       arg.params = arg.data;
       arg.data = true; // 设置data为ture 可以为get添加请求头
@@ -62,7 +83,7 @@ let ApiData = {
     arg.method = 'GET';
     return this.post.call(this, arg);
   },
-  baseUrl () {
+  baseUrl() {
     return process.env.VUE_APP_BASE_API;
   }
 }

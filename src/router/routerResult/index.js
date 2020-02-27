@@ -44,6 +44,13 @@ export default [
             import(/* webpackChunkName: "chiefRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/chiefRecommendHouse.vue")
     },
     {
+        //资源库-无号码-录入号码
+        path: "/buySellSystem/updatePhone",
+        name: "addHouse",
+        component: () =>
+            import(/* webpackChunkName: "updatePhone" */ "@/pages/buySellSystem/houseResource/updatePhone.vue")
+    },
+    {
         //店长推荐房源
         path: "/buySellSystem/shopownerRecommendHouse",
         name: "addHouse",
@@ -128,6 +135,27 @@ export default [
                 name: "concernCommunity",
                 component: () =>
                     import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/checkHouseList.vue")
+            },
+            {
+                //资源库-暂不售房源列表
+                path: "/buySellSystem/notSale",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "notSale" */ "@/pages/buySellSystem/houseResource/notSale.vue")
+            },
+            {
+                //资源库-在售无跟单房源列表
+                path: "/buySellSystem/saleNotTracking",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "saleNotTracking" */ "@/pages/buySellSystem/houseResource/saleNotTracking.vue")
+            },
+            {
+                //资源库-无号码
+                path: "/buySellSystem/notPhone",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "notPhone" */ "@/pages/buySellSystem/houseResource/notPhone.vue")
             },
             {
                 //外网房源
@@ -523,10 +551,25 @@ export default [
         import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/ruleManager/rule.vue")
     },
     {
-      //系统管理 
+      //系统管理
       path: "/sys/notFoundPage",
       name: "notFoundPage",
       component: () =>
-      import("@/pages/systemAdministration/common/notFoundPage.vue")
-    }
+        import("@/pages/systemAdministration/common/notFoundPage.vue")
+    },
+    {
+      //系统管理 角色管理
+      path: "/sys/positionManager",
+      name: "position",
+      component: () =>
+        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/position.vue")
+    },
+  {
+    //系统管理 权限设置
+    path: "/sys/setPosition",
+    name: "setPosition",
+    component: () =>
+      import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/setPosition.vue")
+  },
+
 ]

@@ -81,6 +81,7 @@
         </div>
         <el-table :data="tableData"
                   border
+                  v-on="$listeners"
                   v-loading="loading">
           <slot name="tableColumn"
                 :tableData="tableDataColumn"></slot>
@@ -91,8 +92,8 @@
       <el-pagination @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
                      :current-page="pageJson.currentPage"
-                     :page-sizes="[5, 10, 15, 20]"
-                     :page-size="100"
+                     :page-sizes="pageJson.sizes || [5,10,15,20]"
+                     :page-size="pageJson.size || 10"
                      layout="total, sizes, prev, pager, next, jumper"
                      :total="pageJson.total">
       </el-pagination>
@@ -107,13 +108,17 @@ export default {
       immediate: true,
       handler: function (val, oldVal) {
         Object.assign(this.$data, val.parentData);
+        console.log(this);
       }
     }
   },
   data () {
     return {
       loading: true,
-      pageJson: {},
+      pageJson: {
+        sizes:[5,10,15,20],
+        size:10
+      },
       tableDataColumn: [],
       tableData: [],
     };
