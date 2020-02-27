@@ -1,3 +1,27 @@
+<style lang="less" scoped>
+.div-line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 300px;
+}
+.span-width {
+  width: 150px;
+}
+.cus-box {
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 30px;
+}
+.tag-group {
+  display: flex;
+  flex-wrap: wrap;
+  > .el-tag {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+}
+</style>
 <template>
   <div style="height:100%">
     <list-page
@@ -51,7 +75,39 @@
           ></el-step>
         </el-steps>
       </el-card>
-      <el-card class="box-card" style="line-height:40px">
+      <el-card v-if="employeeDiff.show" class="box-card" style="line-height:30px">
+        <div slot="header" class="clearfix">
+          <span>店长异议</span>
+        </div>
+        <div>
+          <div class="tag-group">
+            <el-tag
+              size="small"
+              type="danger"
+              v-for="item in employeeDiff.spanList"
+              :key="item.index"
+            >{{item}}</el-tag>
+          </div>
+          <div>{{employeeDiff.remark}}</div>
+        </div>
+      </el-card>
+      <el-card v-if="customerDiff.show" class="box-card" style="line-height:30px">
+        <div slot="header" class="clearfix">
+          <span>客户异议</span>
+        </div>
+        <div>
+          <div class="tag-group">
+            <el-tag
+              size="small"
+              type="danger"
+              v-for="item in customerDiff.spanList"
+              :key="item.index"
+            >{{item}}</el-tag>
+          </div>
+          <div>{{customerDiff.remark}}</div>
+        </div>
+      </el-card>
+      <el-card class="box-card" style="line-height:30px">
         <div slot="header" class="clearfix">
           <span>房源详情</span>
         </div>
@@ -61,23 +117,54 @@
             class="font-middle-title"
           >{{nowRow.communityName+"-"+nowRow.buildingNo+"-"+nowRow.roomNo}}</span>
         </div>
-        <div >
-          <span>售价：</span>
-          <span>{{nowRow.price}}</span>
-          <span>均价：</span>
-          <span>{{avgPrice}}元</span>
+        <div class="div-line">
+          <div class="span-width">
+            <span class="font-small-title">售价：</span>
+            <span>{{nowRow.price}}万元</span>
+          </div>
+          <div class="span-width">
+            <span class="font-small-title">均价：</span>
+            <span>{{avgPrice}}元/㎡</span>
+          </div>
         </div>
-        <div>
-          <span>面积：</span>
-          <span>{{nowRow.area}}</span>
-          <span>户型：</span>
-          <span>{{(nowRow.room||0)+"室"+(nowRow.hall||0)+"厅"+(nowRow.toilet||0)+"卫"}}</span>
+        <div class="div-line">
+          <div class="span-width">
+            <span class="font-small-title">面积：</span>
+            <span>{{nowRow.area}}/㎡</span>
+          </div>
+          <div class="span-width">
+            <span class="font-small-title">户型：</span>
+            <span>{{(nowRow.room||0)+"室"+(nowRow.hall||0)+"厅"+(nowRow.toilet||0)+"卫"}}</span>
+          </div>
         </div>
-        <div>
-          <span>朝向：</span>
-          <span>{{nowRow.face}}</span>
-          <span>装修：</span>
-          <span>{{nowRow.decoration}}</span>
+        <div class="div-line">
+          <div class="span-width">
+            <span class="font-small-title">朝向：</span>
+            <span>{{nowRow.face}}</span>
+          </div>
+          <div class="span-width">
+            <span class="font-small-title">装修：</span>
+            <span>{{nowRow.decoration}}</span>
+          </div>
+        </div>
+      </el-card>
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>客户信息</span>
+        </div>
+        <div class="cus-box">
+          <img
+            width="55px"
+            height="55px"
+            src="https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83eoBoothYIicibib53FVCgxhBCBYQpa0vL1caT9E1iaFP4bKqA07PZicqInw19IB91icibswy0KmqJGM5QkJQ/132"
+          >
+          <div style="margin-left:20px">
+            <span class="font-small-title">{{nowRow.customerName}}</span>
+            <el-tag type="warning" size="mini">vip</el-tag>
+            <div>
+              <span>{{nowRow.tel}}</span>
+            </div>
+          </div>
         </div>
       </el-card>
     </el-dialog>
@@ -108,6 +195,16 @@ export default {
         total: 9, //总记录数
         pageSize: 10 //每页条数
       },
+      customerDiff: {
+        spanList: [],
+        remark: "",
+        show: false
+      },
+      employeeDiff: {
+        spanList: [],
+        remark: "",
+        show: false
+      },
       steps: [
         { title: "客户验真", description: "" },
         { title: "店长验真", description: "" },
@@ -120,7 +217,9 @@ export default {
         {
           prop: "communityName",
           label: "房源坐落",
-          formart: row => row.communityName,
+          formart: row => {
+            return row.communityName + "-" + row.buildingNo + "-" + row.roomNo;
+          },
           width: ""
         },
         {
@@ -138,8 +237,11 @@ export default {
         {
           prop: "roomType",
           label: "户型",
-          formart: row =>{
-            return  (row.room || 0 + "室-") + (row.hall || 0 + "厅-") + (row.toilet || 0 + "卫")
+          formart: row => {
+            let room = row.room || 0;
+            let hall = row.hall || 0;
+            let toilet = row.toilet || 0;
+            return room + "室-" + hall + "厅-" + toilet + "卫";
           },
           width: "120"
         },
@@ -151,7 +253,7 @@ export default {
         },
         {
           prop: "creatorName",
-          label: "经济人",
+          label: "经纪人",
           formart: row => row.creatorName,
           width: "120"
         },
@@ -268,6 +370,7 @@ export default {
     queryVerifyHouseDatas(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
+      that.loading = true;
       if (this.queryData.newsTitle != null) {
         params.newsTitle = this.queryData.newsTitle;
       }
@@ -386,39 +489,50 @@ export default {
       let that = this;
       that.showVeryfyDetail = true;
       that.nowRow = row;
+      //初始化
+      that.customerDiff.spanList = [];
+      that.customerDiff.remark = "";
+      that.customerDiff.show = false;
+      that.employeeDiff.spanList = [];
+      that.employeeDiff.remark = "";
+      that.employeeDiff.show = false;
       //步骤设置
       that.stepsListNow = that.steps;
-      if(row.checkEmployee){
-        that.stepsListNow[1].description = "店长验真不通过";
-      }
-      if(row.checkCustomer){
-        that.stepsListNow[0].description = "业主验真不通过";
-      }
       switch (row.checkStatus) {
         case "待业主验真":
           break;
         case "待店长验真":
-          that.stepNow=1;
+          that.stepNow = 1;
           that.stepsListNow[0].description = "业主未验真";
           break;
         case "已过期":
-          that.stepNow=2;
-          that.stepStatus='wait';  
+          that.stepNow = 2;
+          that.stepStatus = "wait";
           that.stepsListNow[0].description = "业主未验真";
           that.stepsListNow[1].description = "店长未验真";
           break;
         case "验真失败":
-          that.stepNow=2;
-          that.stepStatus='error';
-          that.stepsListNow[0].description = "业主未验真";
-          that.stepsListNow[0].description = "业主未验真"; 
+          that.stepNow = 2;
+          that.stepStatus = "error";
+          if (row.checkEmployee) {
+            that.stepsListNow[1].description = "店长验真不通过";
+            that.getVerifyDiff(row.id, 0);
+          }
+          if (row.checkCustomer) {
+            that.stepsListNow[0].description = "业主验真不通过";
+            that.getVerifyDiff(row.id, 2);
+          }
           break;
         case "验真成功":
-          that.stepNow=2;
-          that.stepStatus='success';
-          that.stepsListNow[0].description = "业主未验真";
-          that.stepsListNow[0].description = "业主未验真"; 
-          break;      
+          that.stepNow = 2;
+          that.stepStatus = "success";
+          if (row.checkEmployee) {
+            that.stepsListNow[1].description = "店长验真通过";
+          }
+          if (row.checkCustomer) {
+            that.stepsListNow[0].description = "业主验真通过";
+          }
+          break;
       }
     },
     getCheckStatus(key) {
@@ -427,6 +541,33 @@ export default {
       return that.checkStatusList.filter(item => {
         return item.key.includes(key);
       });
+    },
+    getVerifyDiff(id, perType) {
+      this.$api
+        .get({
+          url: "/verifyHouse/diffrent/" + id,
+          data: {
+            perType: perType
+          }
+        })
+        .then(e => {
+          let that = this;
+          let res = e.data;
+          if (perType == 2) {
+            that.customerDiff.spanList = JSON.parse(res.data.dissentType);
+            that.customerDiff.remark = res.data.remark;
+            that.customerDiff.show = true;
+          } else {
+            that.employeeDiff.spanList = JSON.parse(res.data.dissentType);
+            that.employeeDiff.remark = res.data.remark;
+            that.employeeDiff.show = true;
+          }
+          console.log(that.employeeDiff.show);
+        })
+        .catch(e => {
+          console.log("查询失败");
+          console.log(e);
+        });
     },
     handleClick() {
       console.log(this.queryData);

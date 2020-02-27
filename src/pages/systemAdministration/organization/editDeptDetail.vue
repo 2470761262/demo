@@ -70,10 +70,10 @@
               show-word-limit
             ></el-input> -->
             <el-select type="text" placeholder="1综合，2业务，3行政，4联营" v-model="DeptEntity.deptType" show-word-limit >
-              <el-option :label="综合" :value="1" />
-              <el-option :label="业务" :value="2" />
-              <el-option :label="行政" :value="3" />
-              <el-option :label="联营" :value="4" />
+              <el-option label="综合" :value="1" />
+              <el-option label="业务" :value="2" />
+              <el-option label="行政" :value="3" />
+              <el-option label="联营" :value="4" />
             </el-select>
         </div>
         <div class="left-input-container">
@@ -106,8 +106,8 @@
               show-word-limit
             ></el-input> -->
             <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.joinType" show-word-limit >
-              <el-option :label="直营" :value="1" />
-              <el-option :label="加盟" :value="2" />
+              <el-option label="直营" :value="1" />
+              <el-option label="加盟" :value="2" />
             </el-select>
         </div>
         <div class="left-input-container">

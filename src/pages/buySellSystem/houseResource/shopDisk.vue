@@ -61,7 +61,7 @@
        <el-button type="primary"
                      style="margin-left:10px"
                      size="mini"
-                     @click="querySaleNotTrackingParams">查询</el-button>
+                     @click="queryShopDiskParams">查询</el-button>
       </div>
     </template>
    
@@ -160,7 +160,7 @@ export default {
     }
   },
   mounted(){
-    this.querySaleNotTracking(1);
+    this.queryShopDisk(1);
   },
   methods: {
     queryTabData () {
@@ -175,8 +175,8 @@ export default {
          var that = this;
         that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
     },
-    querySaleNotTrackingParams(){
-        this.querySaleNotTracking(1);
+    queryShopDiskParams(){
+        this.queryShopDisk(1);
     },
     remoteMethod (query) {
       var that = this
@@ -236,7 +236,7 @@ queryCBId () {
         }
       })
     },
-  querySaleNotTracking(currentPage){
+  queryShopDisk(currentPage){
     var that =this;
    let params={"limit":that.pageJson.pageSize,"page":currentPage};
  
@@ -253,7 +253,7 @@ queryCBId () {
         params.maxPrice=that.data.maxPrice;
      console.log(params);
     this.$api.get({
-        url: '/houseResource/saleNotTrackingList',
+        url: '/houseResource/shopDiskList',
         data: params,       
         token: false
       }).then((e) => {
@@ -264,11 +264,11 @@ queryCBId () {
           that.pageJson.currentPage=data.data.currPage;
           that.tableData=data.data.list;
         } else {
-          console.log("查询在售无跟单列表结果：" + result.message);
+          console.log("查询店公盘列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询在售无跟单列表失败");
+        console.log("查询店公盘列表失败");
         console.log(e);
       })
   },
@@ -287,16 +287,16 @@ queryCBId () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       //this.querySaleNotTracking(2);
-      this.querySaleNotTrackingParams(1);
+      this.queryShopDiskParams(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.querySaleNotTracking(val);
+      this.queryShopDisk(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
        this.pageJson.pageSize = val;
-      this.querySaleNotTracking(1);
+      this.queryShopDisk(1);
     }
   },
 }

@@ -158,6 +158,20 @@ export default [
                     import(/* webpackChunkName: "notPhone" */ "@/pages/buySellSystem/houseResource/notPhone.vue")
             },
             {
+                //资源库-潜在出售列表
+                path: "/buySellSystem/potentialHouse",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "potentialHouse" */ "@/pages/buySellSystem/houseResource/potentialHouse.vue")
+            },
+            {
+                //资源库-店公盘
+                path: "/buySellSystem/shopDisk",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "shopDisk" */ "@/pages/buySellSystem/houseResource/shopDisk.vue")
+            },
+            {
                 //外网房源
                 path: "/buySellSystem/releaseOutsideHouseList",
                 name: "concernCommunity",
@@ -441,16 +455,30 @@ export default [
     {
         //系统管理 PC在线管理
         path: "/sys/pcOnline/list",
-        name: "list",
+        name: "pcOnlineList",
         component: () =>
             import(/* webpackChunkName: "pcOnlineList" */ "@/pages/systemAdministration/pcOnline/list.vue")
     },
     {
         //系统管理 公司PC管理
         path: "/sys/pcManagement/list",
-        name: "list",
+        name: "pcManagementList",
         component: () =>
             import(/* webpackChunkName: "pcOnlineList" */ "@/pages/systemAdministration/pcManagement/list.vue")
+    },
+    {
+        //系统管理 文档管理
+        path: "/sys/document/list",
+        name: "documentList",
+        component: () =>
+            import(/* webpackChunkName: "documentList" */ "@/pages/systemAdministration/document/list.vue")
+    },
+    {
+        //系统管理 文档管理 编辑
+        path: "/sys/document/edit",
+        name: "documentEdit",
+        component: () =>
+            import(/* webpackChunkName: "documentEdit" */ "@/pages/systemAdministration/document/edit.vue")
     },
     {
         //系统管理 岗位管理
@@ -544,32 +572,59 @@ export default [
             import("@/pages/systemAdministration/visitor/visitorList.vue")
     },
     {
-      //系统管理 角色管理
-      path: "/sys/ruleManager",
-      name: "rule",
-      component: () =>
-        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/ruleManager/rule.vue")
+        //系统管理 角色管理
+        path: "/sys/ruleManager",
+        name: "rule",
+        component: () =>
+            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/ruleManager/rule.vue")
     },
     {
-      //系统管理
-      path: "/sys/notFoundPage",
-      name: "notFoundPage",
-      component: () =>
-        import("@/pages/systemAdministration/common/notFoundPage.vue")
+        //系统管理
+        path: "/sys/notFoundPage",
+        name: "notFoundPage",
+        component: () =>
+            import("@/pages/systemAdministration/common/notFoundPage.vue")
     },
     {
-      //系统管理 角色管理
-      path: "/sys/positionManager",
-      name: "position",
-      component: () =>
-        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/position.vue")
+        //系统管理 角色管理
+        path: "/sys/positionManager",
+        name: "position",
+        component: () =>
+            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/position.vue")
     },
-  {
-    //系统管理 权限设置
-    path: "/sys/setPosition",
-    name: "setPosition",
-    component: () =>
-      import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/setPosition.vue")
-  },
-
+    {
+        //系统管理 权限设置
+        path: "/sys/setPosition",
+        name: "setPosition",
+        component: () =>
+            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/setPosition.vue")
+    },
+    {
+        //系统管理 店面管理
+        path: "/sys/stroeList",
+        name: "stroeList",
+        component: () =>
+            import("@/pages/systemAdministration/stroe/stroeList.vue")
+    },
+    {
+        //系统管理 店面管理-添加
+        path: "/sys/addStroe",
+        name: "addStroe",
+        component: () =>
+            import("@/pages/systemAdministration/stroe/addStroe.vue")
+    },
+    {
+        //系统管理 店面管理-修改
+        path: "/sys/editStroe",
+        name: "editStroe",
+        component: () =>
+            import("@/pages/systemAdministration/stroe/editStroe.vue")
+    },
+    {
+        //系统管理 店面管理-修改
+        path: "/sys/detailsStroe",
+        name: "detailsStroe",
+        component: () =>
+            import(/* webpackChunkName: "detailsStroe" */ "@/pages/systemAdministration/stroe/detailsStroe.vue")
+    }
 ]
