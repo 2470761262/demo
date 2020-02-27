@@ -52,7 +52,7 @@
                   v-model="formData.communityDesc">
         </el-input>
         <div class="textarea-tips">
-          {{textarea2.length}}/{{20}}
+          {{formData.communityDesc.length}}/{{20}}
         </div>
       </div>
     </div>
@@ -64,10 +64,10 @@
                   resize="none"
                   maxlength="300"
                   placeholder="请输入户型介绍"
-                  v-model="textarea2">
+                  v-model="formData.roomDesc">
         </el-input>
         <div class="textarea-tips">
-          {{textarea2.length}}/{{300}}
+          {{formData.roomDesc.length}}/{{300}}
         </div>
       </div>
     </div>
@@ -79,10 +79,10 @@
                   resize="none"
                   maxlength="20"
                   placeholder="请输入税费解析"
-                  v-model="textarea2">
+                  v-model="formData.taxDesc">
         </el-input>
         <div class="textarea-tips">
-          {{textarea2.length}}/{{20}}
+          {{formData.taxDesc.length}}/{{20}}
         </div>
       </div>
     </div>
@@ -94,10 +94,10 @@
                   resize="none"
                   maxlength="20"
                   placeholder="请输入核心卖点"
-                  v-model="textarea2">
+                  v-model="formData.saleDesc">
         </el-input>
         <div class="textarea-tips">
-          {{textarea2.length}}/{{20}}
+          {{formData.saleDesc.length}}/{{20}}
         </div>
       </div>
     </div>
@@ -394,7 +394,6 @@ export default {
       },
       actionUrl: '',
       step: {},
-      textarea2: ''
     }
   },
   methods: {
@@ -442,7 +441,6 @@ export default {
         if (!item.id) {
           count++;
           let formData = new FormData();
-          console.log(that.$store.state.addHouse.formData.id, "that.$store.state.addHouse.formData.id");
           formData.append('draftid', that.$store.state.addHouse.formData.id)
           formData.append('file', item.raw)
           this.$api.post({
@@ -567,8 +565,38 @@ export default {
       return this.$validator.validateAll({
         houseVideo: that.fileList.video
       }).then((e) => {
-        return e;
-      });
+        if (e) {
+          //存入Vuex;
+          that.$store.commit("updateStep3", that.formData);
+          return true;
+        }
+        return false;
+      }).then(() => {
+        return that.setDataToUpdate();
+      })
+    },
+    //修改数据到接口
+    setDataToUpdate () {
+      let that = this;
+      let sendData = {
+        id: that.$store.state.addHouse.formData.id,
+        ...that.formData
+      }
+      return this.$api.put({
+        url: '/draft-house',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: sendData
+      }).then((e) => {
+        console.log(e);
+        if (e.data.code == 200) {
+          return true;
+        } else {
+          return false;
+        }
+
+      }).catch(() => {
+        return false;
+      })
     }
   },
 }
