@@ -80,7 +80,7 @@
             </div>
           </div>
         </el-dialog>
-        <a @click="isChecking(11,'该房源已被举报，当前正在审核中',0)">举报</a>
+        <div @click="isChecking(11,'该房源已被举报，当前正在审核中',0)">举报</div>
       </div>
       <div style="margin-left:50px;">
         <i
@@ -117,7 +117,7 @@
     <div class="query-cell" style="margin-top:30px;">
       <div style="height:400px;width:600px;">
         <el-carousel>
-          <el-carousel-item v-for="(item,index) in fileList" :key="index">
+          <el-carousel-item v-for="(item,index) in houseFileList" :key="index">
             <video
               :src="item.url"
               controls="controls"
@@ -231,7 +231,43 @@
       <el-button>转房源状态</el-button>
       <el-button>取消作业方法</el-button>
       <el-button>锁定房源</el-button>
-      <el-button>修改钥匙存放门店</el-button>
+           <el-popover placement="top" width="600" trigger="manual" v-model="isShowKeyStorageDept">
+                      <div class="query-cell">
+                        <span>存放门店</span>
+                        <el-select
+                            v-model="areaname"
+                            @change="getDepartment"
+                            placeholder="请选择区域"
+                            style="width:100px;"
+                          >
+                            <el-option
+                              v-for="(item,index) in areaList"
+                              :key="index"
+                              :label="item.deptName"
+                              :value="item.id"
+                            ></el-option>
+                          </el-select>
+                          <el-select
+                            v-model="departmentName"
+                            @change="getKeyStorageDept"
+                            placeholder="请选择门店"
+                            style="width:100px;"
+                          >
+                            <el-option
+                              v-for="(item,index) in departmentList"
+                              :key="index"
+                              :label="item.deptName"
+                              :value="item.id"
+                            ></el-option>
+                          </el-select>
+                      </div>                      
+                      <div>
+                        <el-button @click="isShowKeyStorageDept=false">取消</el-button>
+                        <el-button @click="updateKeyStorageDept">添加</el-button>
+                      </div>
+                      <el-button slot="reference"  @click="showKeyStorageDept" v-if="agentHouseMethod.keyOwner==35365">修改钥匙存放门店</el-button>
+                    </el-popover>
+      
     </div>
     <div class="query-cell" style="margin-top:15px;">
       <div>
@@ -268,7 +304,6 @@
                   <div>跟单人</div>
                   <div>
                     <span :data-tel="houseDetails.agentPerTel"></span>
-                    <span>取代</span>
                   </div>
                 </div>
               </div>
@@ -286,14 +321,87 @@
                   </div>
                 </div>
                 <div v-else>
-                  <el-button>申请钥匙人</el-button>
+                  <el-popover placement="top" width="600" trigger="manual" v-model="isShowApplyKey">
+                    <div class="query-cell">
+                      <div>
+                        <div>
+                          <span>钥匙类型</span>
+                          <el-radio v-model="keyType" label="0">钥匙</el-radio>
+                          <el-radio v-model="keyType" label="1">指纹锁</el-radio>
+                          <el-radio v-model="keyType" label="2">密码锁</el-radio>
+                        </div>
+                        <div>
+                          <el-input v-if="keyType=='2'" v-model="keyCode" placeholder="请输入密码"></el-input>
+                        </div>
+                        <div>
+                          <span>存放门店</span>
+                          <el-select
+                            v-model="areaname"
+                            @change="getDepartment"
+                            placeholder="请选择区域"
+                            style="width:100px;"
+                          >
+                            <el-option
+                              v-for="(item,index) in areaList"
+                              :key="index"
+                              :label="item.deptName"
+                              :value="item.id"
+                            ></el-option>
+                          </el-select>
+                          <el-select
+                            v-model="departmentName"
+                            @change="getKeyStorageDept"
+                            placeholder="请选择门店"
+                            style="width:100px;"
+                          >
+                            <el-option
+                              v-for="(item,index) in departmentList"
+                              :key="index"
+                              :label="item.deptName"
+                              :value="item.id"
+                            ></el-option>
+                          </el-select>
+                        </div>
+                      </div>
+                      <div>
+                        <el-upload
+                          :action="''"
+                          list-type="picture"
+                          :limit="1"
+                          name='{"list":7,"type":0}'
+                          :before-upload="beforeAvatarUpload"
+                          :http-request="uploadFile"
+                          :file-list="fileList.list7"
+                          :on-remove="removeImg"
+                          multiple
+                        >
+                          <i class="el-icon-plus"></i>
+                          <br />
+                          <el-button>请上传委托图片</el-button>
+                        </el-upload>
+                      </div>
+                      <div>
+                        <img
+                          class="phone-upload-img"
+                          src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                          alt="手机上传图片二维码"
+                          style="height:100px;"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <el-button @click="isShowApplyKey=false">取消</el-button>
+                      <el-button @click="insertCheck(0,0)">添加</el-button>
+                    </div>
+                    <el-button slot="reference" @click="isChecking(0,'当前正在审核中',0)">申请钥匙人</el-button>
+                  </el-popover>
                 </div>
                 <div style="margin-left:30px;">
                   <div>钥匙人</div>
                   <div>
                     <span :data-tel="agentHouseMethod.keyOwnerTel"></span>
 
-                    <el-popover placement="top" width="600" trigger="click" v-model="isShowKey">
+                    <el-popover placement="top" width="600" trigger="manual" v-model="isShowKey">
                       <div class="query-cell">
                         <div>
                           <div>
@@ -340,9 +448,10 @@
                             :action="''"
                             list-type="picture"
                             :limit="1"
+                            name='{"list":7,"type":4}'
                             :before-upload="beforeAvatarUpload"
                             :http-request="uploadFile"
-                            :file-list="picList"
+                            :file-list="fileList.list7"
                             :on-remove="removeImg"
                             multiple
                           >
@@ -362,13 +471,13 @@
                       </div>
                       <div>
                         <el-button @click="isShowKey=false">取消</el-button>
-                        <el-button @click="insertReplace(3)">添加</el-button>
+                        <el-button @click="insertCheck(4,3)">添加</el-button>
                       </div>
-                      <span
+                      <div
                         v-if="agentHouseMethod.keyOwnerName!=null"
                         slot="reference"
                         @click="isChecking(4,'当前正在审核中',3)"
-                      >取代</span>
+                      >取代</div>
                     </el-popover>
                   </div>
                 </div>
@@ -387,32 +496,96 @@
                   </div>
                 </div>
                 <div v-else>
-                  <el-button>申请委托人</el-button>
+                  <el-popover
+                    placement="top"
+                    width="600"
+                    trigger="manual"
+                    v-model="isShowApplyOnly"
+                  >
+                    <div class="query-cell">
+                      <div>
+                        <div>
+                          <span>委托类型</span>
+                          <el-radio v-model="onlyType" label="2">普通委托</el-radio>
+                          <el-radio v-model="onlyType" label="1">独家委托</el-radio>
+                          <el-radio v-model="onlyType" label="3">限时销售</el-radio>
+                        </div>
+                        <div>
+                          <span>委托截止时间:</span>
+                          <el-date-picker
+                            v-model="proxyMaxTime"
+                            type="datetime"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            placeholder="选择日期"
+                          ></el-date-picker>
+                        </div>
+                      </div>
+                      <div>
+                        <el-upload
+                          :action="''"
+                          list-type="picture"
+                          :limit="1"
+                          name='{"list":7,"type":1}'
+                          :before-upload="beforeAvatarUpload"
+                          :http-request="uploadFile"
+                          :file-list="fileList.list7"
+                          :on-remove="removeImg"
+                          multiple
+                        >
+                          <i class="el-icon-plus"></i>
+                          <br />
+                          <el-button>请上传委托图片</el-button>
+                        </el-upload>
+                      </div>
+                      <div>
+                        <img
+                          class="phone-upload-img"
+                          src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                          alt="手机上传图片二维码"
+                          style="height:100px;"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <el-button @click="isShowApplyOnly=false">取消</el-button>
+                      <el-button @click="insertCheck(1,0)">添加</el-button>
+                    </div>
+                    <el-button slot="reference" @click="isChecking(1,'当前正在审核中',0)">申请委托人</el-button>
+                  </el-popover>
                 </div>
                 <div style="margin-left:30px;">
                   <div>委托人</div>
                   <div>
                     <span :data-tel="agentHouseMethod.onlyOwnerTel"></span>
 
-                    <el-popover placement="top" width="600" trigger="click" v-model="isShowOnly">
+                    <el-popover placement="top" width="600" trigger="manual" v-model="isShowOnly">
                       <div class="query-cell">
                         <div>
                           <div>
                             <span>委托类型</span>
-                            <el-radio v-model="onlyType" label="27">普通委托</el-radio>
-                            <el-radio v-model="onlyType" label="28">独家委托</el-radio>
-                            <el-radio v-model="onlyType" label="11">限时销售</el-radio>
+                            <el-radio v-model="onlyType" label="2">普通委托</el-radio>
+                            <el-radio v-model="onlyType" label="1">独家委托</el-radio>
+                            <el-radio v-model="onlyType" label="3">限时销售</el-radio>
                           </div>
-                          <div></div>
+                          <div>
+                            <span>委托截止时间:</span>
+                            <el-date-picker
+                              v-model="proxyMaxTime"
+                              type="datetime"
+                              value-format="yyyy-MM-dd HH:mm:ss"
+                              placeholder="选择日期"
+                            ></el-date-picker>
+                          </div>
                         </div>
                         <div>
                           <el-upload
                             :action="''"
                             list-type="picture"
                             :limit="1"
+                            name='{"list":7,"type":4}'
                             :before-upload="beforeAvatarUpload"
                             :http-request="uploadFile"
-                            :file-list="picList"
+                            :file-list="fileList.list7"
                             :on-remove="removeImg"
                             multiple
                           >
@@ -432,13 +605,13 @@
                       </div>
                       <div>
                         <el-button @click="isShowOnly=false">取消</el-button>
-                        <el-button>添加</el-button>
+                        <el-button @click="insertCheck(4,2)">添加</el-button>
                       </div>
-                      <span
+                      <div
                         v-if="agentHouseMethod.onlyOwnerName!=null"
                         slot="reference"
-                        @click="ShowBox(1)"
-                      >取代</span>
+                        @click="isChecking(4,'当前正在审核中',2)"
+                      >取代</div>
                     </el-popover>
                   </div>
                 </div>
@@ -447,24 +620,474 @@
               <div
                 style="  width: 300px; height: 150px;border: 1px solid;display:flex;margin-top:20px;"
               >
-                <!-- <div  style="display:flex">
-                <el-image
-                  :src="houseDetails.agentHouseMethod.onlyOwnerHeadImg"
-                  style="width: 80px;border-radius: 40px;border: 1 px solid;border: 1px solid;height: 80px;"
-                ></el-image>
-                <div style="margin-left:30px;">
-                  <div style="font-size:20px;">{{houseDetails.agentHouseMethod.onlyOwnerName}}</div>
-                  <div>{{houseDetails.agentHouseMethod.onlyOwnerDepartmentName}}</div>
+                <div v-if="agentHouseMethod.realOwnerName!=null" style="display:flex">
+                  <el-image
+                    :src="agentHouseMethod.realOwnerHeadImg"
+                    style="width: 80px;border-radius: 40px;border: 1 px solid;border: 1px solid;height: 80px;"
+                  ></el-image>
+                  <div style="margin-left:30px;">
+                    <div style="font-size:20px;">{{agentHouseMethod.realOwnerName}}</div>
+                    <div>{{agentHouseMethod.realOwnerTel}}</div>
+                  </div>
                 </div>
-                </div>-->
-                <div>
-                  <el-button>申请实勘人</el-button>
+                <div v-else>
+                  <el-popover
+                    placement="top"
+                    width="600"
+                    trigger="manual"
+                    v-model="isShowApplyReal"
+                  >
+                    <div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>外景图</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":1,"type":12,"subType":1}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list1"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>客厅</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":4,"type":12,"subType":4}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list4"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>卧室</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":2,"type":12,"subType":2}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list2"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>厨房</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":3,"type":12,"subType":3}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list3"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>卫生间</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":5,"type":12,"subType":5}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list5"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>户型图</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":6,"type":12,"subType":6}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list6"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>视频</span>
+                          <el-upload
+                            :action="''"
+                            ref="videoUpload"
+                            :limit="3"
+                            name='{"list":8,"type":12,"subType":7}'
+                            :before-upload="beforeAvatarUploadVideo"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list8"
+                            :on-remove="removeImg"
+                            :on-preview="handlePreviewVideo"
+                            multiple
+                            accept=".mp4"
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传视频</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <el-button @click="isShowApplyReal=false">取消</el-button>
+                        <el-button @click="insertCheck(12,0)">添加</el-button>
+                      </div>
+                    </div>
+                    <el-button slot="reference" @click="isChecking(12,'当前正在审核中',0)">申请实勘人</el-button>
+                  </el-popover>
                 </div>
                 <div style="margin-left:30px;">
                   <div>实勘人</div>
                   <div>
-                    <span></span>
-                    <!-- <span >取代</span> -->
+                     <el-popover
+                    placement="top"
+                    width="600"
+                    trigger="manual"
+                    v-model="isShowReal"
+                  >
+                    <div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>外景图</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":1,"type":12,"subType":1}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list1"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>客厅</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":4,"type":12,"subType":4}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list4"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>卧室</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":2,"type":12,"subType":2}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list2"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>厨房</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":3,"type":12,"subType":3}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list3"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>卫生间</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":5,"type":12,"subType":5}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list5"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>户型图</span>
+                          <el-upload
+                            :action="''"
+                            list-type="picture"
+                            :limit="9"
+                            name='{"list":6,"type":12,"subType":6}'
+                            :before-upload="beforeAvatarUpload"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list6"
+                            :on-remove="removeImg"
+                            multiple
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传图片</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div style="display:flex">
+                        <div style="display:flex">
+                          <span>视频</span>
+                          <el-upload
+                            :action="''"
+                            ref="videoUpload"
+                            :limit="3"
+                            name='{"list":8,"type":12,"subType":7}'
+                            :before-upload="beforeAvatarUploadVideo"
+                            :http-request="uploadFile"
+                            :file-list="fileList.list8"
+                            :on-remove="removeImg"
+                            :on-preview="handlePreviewVideo"
+                            multiple
+                            accept=".mp4"
+                            style="display:flex"
+                          >
+                            <div>
+                              <i class="el-icon-plus"></i>
+                              <el-button>上传视频</el-button>
+                            </div>
+                          </el-upload>
+                        </div>
+                        <div>
+                          <img
+                            class="phone-upload-img"
+                            src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                            alt="手机上传图片二维码"
+                            style="height:100px;"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <el-button @click="isShowReal=false">取消</el-button>
+                        <el-button @click="insertCheck(4,5)">添加</el-button>
+                      </div>
+                    </div>
+                    <div  slot="reference" v-if="agentHouseMethod.realOwnerName!=null" @click="isChecking(4,'当前正在审核中',5)">取代</div>
+                  </el-popover>
+                    
                   </div>
                 </div>
               </div>
@@ -603,6 +1226,16 @@
         </div>
       </div>
     </div>
+      <el-dialog :visible.sync="dialogVisible">
+      <img width="100%"
+           :src="dialogImageUrl"
+           alt=""
+           v-if="showFlag">
+      <video :src="dialogImageUrl"
+             v-if="!showFlag"
+             controls="controls"
+             class="videoClass">您的浏览器不支持此视频播放</video>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -614,7 +1247,7 @@ export default {
     return {
       houseId: 0, //房源id
       houseDetails: "", //房源详情数据
-      fileList: [], //视频和图片数组
+      houseFileList: [], //视频和图片数组
       elevator: "无配套", //电梯配套
       sign: "未占用", //户口情况
       houseBelong: "无",
@@ -641,10 +1274,21 @@ export default {
       isShowImpression: false, //是否显示印象弹窗
       impressionList: [], //印象数组
       isShowOnly: false, //是否显示委托弹窗
-      onlyType: -1, //委托类型
-      expirationDate: "", //委托截止日期
-      picList: [], //图片数组
-      isShowKey: false,
+      isShowApplyOnly: false, //是否显示申请委托弹窗
+      onlyType: "", //委托类型
+      proxyMaxTime: "", //委托截止日期
+      fileList: {
+        list1: [],
+        list2: [],
+        list3: [],
+        list4: [],
+        list5: [],
+        list6: [],
+        list7: [],
+        list8: []
+      },//取代或者申请的图片和视频数组
+      isShowKey: false,//是否显示申请钥匙弹窗
+      isShowApplyKey: false,//是否显示取代钥匙弹窗
       keyType: "", //钥匙类型
       keyCode: "", //密码锁密码
       loading: false,
@@ -659,7 +1303,13 @@ export default {
       areaname: "", //选择的区域
       departmentList: [], //部门数组
       departmentName: "", //选择的部门
-      keyStorageDept: "" //存放钥匙的门店
+      keyStorageDept: "", //存放钥匙的门店
+      isShowApplyReal: false, //是否显示实勘人弹窗
+      dialogImageUrl:"",//放大的视频或者图片路径
+      showFlag:false,//是显示图片还是视频
+      dialogVisible:false,//是否展示放大的图片或者视频
+      isShowReal:false,//是否显示取代实勘人的弹窗
+      isShowKeyStorageDept:false//是否显示修改钥匙存放门店弹窗
     };
   },
   before() {},
@@ -691,23 +1341,57 @@ export default {
     });
   },
   methods: {
-    ShowBox(type) {
-      this.picList = [];
-      switch (type) {
-        case 0:
-          this.isShowKey = true;
-          break;
-        case 1:
-          this.isShowOnly = true;
-        default:
-          break;
+    updateKeyStorageDept(){
+      if(this.keyStorageDept==""){
+        this.$message("存放门店未选择");
+         return;
       }
+      let params={
+         Eid:this.houseId,
+         operationPer:this.agentHouseMethod.keyOwner,
+         KeyStorageDept:this.keyStorageDept
+      }
+      this.isShowKeyStorageDept=false;
+        this.$api
+        .post({
+          url: "/agentHouse/property/updateKeyStorageDept",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+           this.$message(result.message);
+           
+        })
+        .catch(e => {
+            that.$message("请求失败");
+        });
+    },
+    showKeyStorageDept(){
+        this.isShowKeyStorageDept=true;
+        this.keyStorageDept="";
+        this.areaname="";
+        this.departmentName="";
+        this.getArea();
+    },
+      handlePreviewVideo (file) {
+      if (!file.id) {
+        this.dialogImageUrl = window.URL.createObjectURL(file.raw);// file.url;
+      } else {
+        this.dialogImageUrl = file.url;
+      }
+
+      this.dialogVisible = true;
+      this.showFlag = false;
     },
     removeImg(file, fileList) {
       if (file.id) {
-        this.picList = this.picList.filter(item => {
-          return item.url != file.url;
-        });
+        this.fileList[file.listName] = this.fileList[file.listName].filter(
+          item => {
+            return item.url != file.url;
+          }
+        );
         this.$api.delete({
           url: `/agentHouse/followPic/delete/${file.id}`,
           qs: true,
@@ -718,12 +1402,15 @@ export default {
       }
     },
     uploadFile(uploader) {
-      console.log(uploader);
+      let obj = JSON.parse(uploader.filename);
       let that = this;
       let formData = new FormData();
       formData.append("addName", 35365);
-      formData.append("type", 4);
+      formData.append("type", obj.type);
       formData.append("file", uploader.file);
+      if (obj.subType != undefined) {
+        formData.append("subType", obj.subType);
+      }
       this.$api
         .post({
           url: "/agentHouse/followPic/upload",
@@ -739,7 +1426,12 @@ export default {
         .then(json => {
           uploader.onSuccess();
           let data = json.data.data;
-          that.picList.push({ id: data.id, name: data.id, url: data.url });
+          that.fileList["list" + obj.list].push({
+            id: data.id,
+            name: data.id,
+            url: data.url,
+            listName: "list" + obj.list
+          });
         })
         .catch(() => {
           that.$message({
@@ -748,6 +1440,16 @@ export default {
           });
           uploader.onError();
         });
+    },
+     beforeAvatarUploadVideo(file) {
+      // 上传图片前处理函数
+      console.log("");
+      const isJPG = file.type === "video/mp4";
+      let that = this;
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是mp4 格式!");
+      }
+      return isJPG;
     },
     beforeAvatarUpload(file) {
       // 上传图片前处理函数
@@ -826,7 +1528,6 @@ export default {
                   case "税费解析":
                     that.taxParsing = Arry2[1];
                     break;
-                    picList;
                   case "核心卖点":
                     that.coreSellingPoint = Arry2[1];
                     break;
@@ -839,7 +1540,7 @@ export default {
                 id: element.id,
                 url: element.videoUrl
               };
-              that.fileList.push(video);
+              that.houseFileList.push(video);
             });
             that.houseDetails.saleUploadPicDtoList.forEach(element => {
               var pic = {
@@ -847,7 +1548,7 @@ export default {
                 id: element.id,
                 url: element.picUrl
               };
-              that.fileList.push(pic);
+              that.houseFileList.push(pic);
             });
           } else {
             that.$message(result.message);
@@ -1155,15 +1856,43 @@ export default {
         case 4:
           if (replaceType == 3) {
             that.isShowKey = istrue;
-            if(istrue){
-                that.getArea();
+            if (istrue) {
+              that.getArea();
             }
-            
+          } else if (replaceType == 2) {
+            that.isShowOnly = istrue;
           }
+          else if(replaceType==5){
+            that.isShowReal=istrue;
+          }
+          break;
+        case 0:
+          that.isShowApplyKey = istrue;
+          if (istrue) {
+            that.getArea();
+          }
+          break;
+        case 1:
+          that.isShowApplyOnly = istrue;
+          break;
+        case 12:
+          that.isShowApplyReal = istrue;
           break;
         default:
           break;
       }
+    },
+    clear() {
+      for (var key in this.fileList){
+            this.fileList[key]=[];
+      }
+      this.keyType = "";
+      this.keyStorageDept = "";
+      this.keyCode = "";
+      this.areaname = "";
+      this.departmentName = "";
+      this.onlyType = "";
+      this.proxyMaxTime = "";
     },
     isChecking(type, memo, replaceType) {
       let that = this;
@@ -1172,7 +1901,7 @@ export default {
         type: type,
         memo: memo
       };
-      that.picList = [];
+      that.clear();
       if (replaceType != 0) {
         params.replaceType = replaceType;
       }
@@ -1283,22 +2012,22 @@ export default {
       let that = this;
       that.keyStorageDept = value;
     },
-    insertReplace(type) {
+    insertCheck(type, replaceType) {
       let that = this;
-      let obj= that.conditionalStatement(type);
-      let arry =obj.conditionList;
-      let params=obj.params;
-      
+      let obj = that.getCheckObj(type, replaceType);
+      let url = obj.url;
+      let arry = obj.conditionList;
+      let params = obj.params;
       for (var i = 0; i < arry.length; i++) {
         if (arry[i].condition) {
           that.$message(arry[i].memo);
           return;
         }
       }
-      that.isShowPop(4,type,false);
+      that.isShowPop(type, replaceType, false);
       this.$api
         .post({
-          url: "/agentHouse/propertyCheck/insertReplace",
+          url: url,
           data: params,
           headers: {
             "Content-Type": "application/json;charset=UTF-8"
@@ -1306,7 +2035,7 @@ export default {
           token: false
         })
         .then(e => {
-           console.log(e);
+          that.$message(e.data.message);
         })
         .catch(e => {
           if (e.response != undefined) {
@@ -1316,20 +2045,27 @@ export default {
           }
         });
     },
-    conditionalStatement(replaceType) {
+    getCheckObj(type, replaceType) {
       let that = this;
+      let switchType = type;
+      let url = "/agentHouse/propertyCheck/insertApplyFor";
       let params = {
         Eid: that.houseId,
-        Type: 4,
+        Type: type,
         AddPer: 35365,
         NewOwner: 35365,
-        ReplaceType:replaceType,
-        picList:[]
+        picList: []
       };
-      let resultobj={};
+      let resultobj = {};
       let conditionList = [];
-      switch (replaceType) {
+      if (replaceType != 0) {
+        params.ReplaceType = replaceType;
+        switchType = replaceType;
+        url = "/agentHouse/propertyCheck/insertReplace";
+      }
+      switch (switchType) {
         case 3:
+        case 0:
           conditionList.push({
             condition: util.isNull(that.keyType),
             memo: "取代的钥匙类型未选择"
@@ -1339,26 +2075,93 @@ export default {
               condition: util.isNull(that.keyCode),
               memo: "钥匙锁密码未填"
             });
-            params.keyCode=that.keyCode;
+            params.keyCode = that.keyCode;
           }
           conditionList.push({
             condition: util.isNull(that.keyStorageDept),
             memo: "存放门店未选择"
           });
           conditionList.push({
-            condition: util.isNull(that.picList.join(",")),
+            condition: util.isNull(that.fileList["list7"].join(",")),
             memo: "委托图片未上传"
           });
-          params.OldOwner=that.agentHouseMethod.keyOwner;
-          params.keyType=that.keyType;
-          params.KeyStorageDept=that.keyStorageDept;
-          params.picList.push(that.picList[0].id);
+          params.OldOwner = that.agentHouseMethod.keyOwner;
+          params.keyType = that.keyType;
+          params.KeyStorageDept = that.keyStorageDept;
+          params.followMemo = "提交了钥匙申请";
+          that.fileList["list7"].forEach(element => {
+            params.picList.push(element.id);
+          });
+          break;
+        case 2:
+        case 1:
+          conditionList.push({
+            condition: util.isNull(that.onlyType),
+            memo: "取代的委托类型未选择"
+          });
+          conditionList.push({
+            condition: util.isNull(that.proxyMaxTime),
+            memo: "委托截止未选择"
+          });
+          conditionList.push({
+            condition: util.isNull(that.fileList["list7"].join(",")),
+            memo: "委托图片未上传"
+          });
+          params.OldOwner = that.agentHouseMethod.onlyOwner;
+          params.onlyType = that.onlyType;
+          params.ProxyMaxTime = that.proxyMaxTime;
+          params.followMemo = "提交了委托申请";
+          that.fileList["list7"].forEach(element => {
+            params.picList.push(element.id);
+          });
+          break;
+           case 2:
+        case 12:
+        case 5:
+          conditionList.push({
+            condition: util.isNull(that.fileList["list1"].join(",")),
+            memo: "外景图未上传"
+          });
+          conditionList.push({
+            condition: util.isNull(that.fileList["list4"].join(",")),
+            memo: "客厅未上传"
+          });
+          conditionList.push({
+            condition: util.isNull(that.fileList["list2"].join(",")),
+            memo: "卧室未上传"
+          });
+           conditionList.push({
+            condition: util.isNull(that.fileList["list3"].join(",")),
+            memo: "厨房未上传"
+          });
+           conditionList.push({
+            condition: util.isNull(that.fileList["list5"].join(",")),
+            memo: "卫生间未上传"
+          });
+           conditionList.push({
+            condition: util.isNull(that.fileList["list6"].join(",")),
+            memo: "户型图未上传"
+          });
+           conditionList.push({
+            condition: util.isNull(that.fileList["list8"].join(",")),
+            memo: "视频未上传"
+          });
+          params.OldOwner = that.agentHouseMethod.realOwner;
+          params.followMemo = "提交了实勘申请";
+           for(var key in that.fileList){
+             if(key!="list7"){
+                 that.fileList[key].forEach(element => {
+                 params.picList.push(element.id);
+                });
+             }
+           }
           break;
         default:
           break;
       }
-      resultobj.conditionList=conditionList;
-      resultobj.params=params;
+      resultobj.conditionList = conditionList;
+      resultobj.params = params;
+      resultobj.url = url;
       return resultobj;
     }
   }

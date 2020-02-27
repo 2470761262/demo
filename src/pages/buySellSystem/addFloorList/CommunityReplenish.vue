@@ -82,7 +82,7 @@
       </div>
       <div class="form-error-tips">
       <div class="page-cell-item">
-        <div class="item-before item-before-top">怎么材料</div>
+        <div class="item-before item-before-top">证明材料</div>
         <div>
           <div class="page-cell-item">
             <el-upload drag

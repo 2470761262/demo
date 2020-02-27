@@ -162,6 +162,13 @@
   margin-top: 15px;
   justify-content: center;
 }
+.flex-cell {
+  display: flex;
+  .menuMarin {
+    margin-right: 60px;
+    margin-left: 20px;
+  }
+}
 </style>
 <template>
   <div class="query-data-pad">
@@ -255,28 +262,35 @@
         </template>
       </template>
       <template v-else>
-        <el-table :data="renderList"
-                  style="width:100%"
-                  @sort-change="sortMethod"
-                  :default-sort="{prop: 'price', order: 'descending'}"
-                  border>
-          <el-table-column v-for="(item,index) in tableColumn"
-                           :key="index"
-                           :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :sortable="item.order"
-                           :sort-orders="['ascending', 'descending']"
-                           show-overflow-tooltip>
-          </el-table-column>
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button size="mini"
-                         type="primary"
-                         @click="navTabItem(scope.$index, scope.row)">查看</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+        <div class="flex-cell">
+          <el-table v-if="tableColumn.length >0"
+                    :data="renderList"
+                    style="width:100%"
+                    @sort-change="sortMethod"
+                    :default-sort="{prop: 'price', order: 'descending'}"
+                    border>
+            <el-table-column v-for="(item,index) in tableColumn"
+                             :key="index"
+                             :prop="item.prop"
+                             :label="item.label"
+                             :width="item.width"
+                             :sortable="item.order"
+                             :sort-orders="['ascending', 'descending']"
+                             show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column label="操作"
+                             width="80px">
+              <template slot-scope="scope">
+                <el-button size="mini"
+                           type="primary"
+                           @click="navTabItem(scope.$index, scope.row)">查看</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn.sync="tableColumn"></definitionmenu>
+        </div>
       </template>
     </div>
     <div class="select-page-nav">
@@ -290,8 +304,12 @@
 </template>
 
 <script>
+import definitionmenu from '@/components/definitionMenu';
 export default {
   inject: ["form", "Slider"],
+  components: {
+    definitionmenu,
+  },
   props: {
     querySelectFlag: {
       type: Boolean,
@@ -317,18 +335,21 @@ export default {
         total: 1,
         currentPage: 1
       },
-      tableColumn: [
-        { prop: 'houseNo', label: '房源编号', order: false },
-        { prop: '', label: '楼盘名称', order: false },
-        { prop: 'price', label: '售价(万元)', width: '130', order: 'custom' },
-        { prop: '', label: '面积(㎡)', width: '130', order: 'custom', },
-        { prop: 'unitpaice', label: '单价(元/㎡)', width: '130', order: 'custom', },
-        { prop: '', label: '户型', width: '130', order: false },
-        { prop: '', label: '被看次数', width: '130', order: 'custom' },
-        { prop: '', label: '未跟进天数', width: '130', order: 'custom' },
-        { prop: '', label: '未被看天数', width: '130', order: 'custom' },
-        { prop: '', label: '录入时间', order: 'custom' }
-      ]
+      tableColumnField: [
+        { prop: 'houseNo', label: '房源编号', order: false, disabled: true, default: true },
+        { prop: '1', label: '楼盘名称', order: false, disabled: true, default: true },
+        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '2', label: '面积(㎡)', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '3', label: '户型', width: '120', order: false, disabled: false, default: true },
+        { prop: '4', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '5', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '6', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '7', label: '录入时间', order: 'custom', disabled: false, default: true },
+        { prop: '8', label: '杀杀杀', order: 'custom', disabled: false, default: false },
+        { prop: '9', label: '杀35杀杀', order: 'custom', disabled: false, default: false }
+      ],
+      tableColumn: []
     }
   },
   methods: {
@@ -369,7 +390,6 @@ export default {
     },
     //创建需要渲染的标签
     renderTag (value) {
-      console.log(value);
       let that = this;
       //清空
       this.dynamicTags = [];
