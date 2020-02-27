@@ -101,7 +101,7 @@
       
         <div class="footerContainer el-top">
           <el-button type="primary" @click="sendNotice">发送</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="post">取消</el-button>
         </div>
       </el-container>
     </el-container>
@@ -238,14 +238,7 @@ export default {
         });
         return;
       }
-      if(this.notice.configName==null){
-        this.$message({
-          showClose: true,
-          message: '备注',
-          type: 'warning'
-        });
-        return;
-      }
+
 
 if(this.notice.configId==null){
 
@@ -313,8 +306,13 @@ if(this.notice.configId==null){
       })
       }
     },
-
+post(){
+ this.$router.push({        path: "/sys/systemConfigList"
+       });
+},
+  
   },
+  
   created() {
     console.log(this.$route.query);
           this.notice.configId=this.$route.query.configId;

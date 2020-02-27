@@ -107,7 +107,8 @@ export default {
         addTime: '2019-01-01 18:00:00',
         cellType: '待店长验真',
         operation: '1',
-      }, {
+      },
+      , {
         house: '龙腾花园-16栋-604室',
         price: '234',
         area: '12',
@@ -142,6 +143,7 @@ export default {
         activeName: "tab1",
 
       },
+      tableData2: [{}],
       queryData: {
         houseName: '',
         taskName: '',
@@ -157,6 +159,7 @@ export default {
     queryVerifyHouseByParams () {
       this.queryVerifyHouseDatas(1);
     },
+     
     queryVerifyHouseDatas (currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
@@ -295,7 +298,7 @@ export default {
     },
     isForBut (type) {
       let array = [
-        { name: '修改', isType: '2', methosName: 'updateConfig' },
+      //  { name: '修改', isType: '2', methosName: 'updateConfig' },
         { name: '添加关联对象', isType: '1,2,3', methosName: 'postConfig' },
         { name: '查看关联对象', isType: '1,2,3', methosName: 'toList' },
         { name: '转有效', isType: '1,2,3', methosName: 'updateDelRight' },
