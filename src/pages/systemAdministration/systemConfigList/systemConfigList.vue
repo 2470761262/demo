@@ -16,7 +16,7 @@
           <template slot="prepend">用户名</template>
         </el-input> -->
         <el-button type="primary"
-                   style="margin-left:10px"
+                   style="margin-left:11px"
                    size="mini"
                    @click="toAddConfig()">添加系统规则</el-button>
       </div>
