@@ -44,17 +44,17 @@
         <div class="left-input-container">
             <span>性别：0男，1女</span>
             <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" show-word-limit >
-              <el-option :label="男" :value="0" />
-              <el-option :label="女" :value="1" />
+              <el-option label="男" :value="0" />
+              <el-option label="女" :value="1" />
             </el-select>
         </div>
         <div class="left-input-container">
             <span>状态：0实习，1试用，2正式，3离职</span>
             <el-select type="text" placeholder="0实习，1试用，2正式，3离职" v-model="employeeEntity.status" show-word-limit >
-              <el-option :label="实习" :value="0" />
-              <el-option :label="试用" :value="1" />
-              <el-option :label="正式" :value="2" />
-              <el-option :label="离职" :value="3" />
+              <el-option label="实习" :value="0" />
+              <el-option label="试用" :value="1" />
+              <el-option label="正式" :value="2" />
+              <el-option label="离职" :value="3" />
             </el-select>
         </div>
         <div class="left-input-container">
@@ -130,10 +130,10 @@
         <!-- <div class="left-input-container">
             <span>是否锁住：0 锁定，1正常，2三天未登录锁定，3三天未带看锁定</span>
             <el-select type="text" placeholder="是否锁住：0 锁定，1正常，2三天未登录锁定，3三天未带看锁定" v-model="employeeEntity.isLocked" show-word-limit >
-              <el-option :label="锁定" :value="0" />
-              <el-option :label="正常" :value="1" />
-              <el-option :label="三天未登录锁定" :value="2" />
-              <el-option :label="三天未带看锁定" :value="3" />
+              <el-option label="锁定" :value="0" />
+              <el-option label="正常" :value="1" />
+              <el-option label="三天未登录锁定" :value="2" />
+              <el-option label="三天未带看锁定" :value="3" />
             </el-select>
         </div> -->
         <div class="left-input-container">
@@ -179,9 +179,9 @@
             ></el-input>
         </div>
         <div class="left-input-container">
-            <span>remark</span>
+            <span>备注</span>
             <el-input
-              type="备注"
+              type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.remark"
               maxlength="10"

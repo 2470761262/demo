@@ -44,17 +44,17 @@
        <div class="left-input-container">
             <span>性别：0男，1女</span>
             <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" show-word-limit >
-              <el-option :label="男" :value="0" />
-              <el-option :label="女" :value="1" />
+              <el-option label="男" :value="0" />
+              <el-option label="女" :value="1" />
             </el-select>
         </div>
         <div class="left-input-container">
             <span>状态：0实习，1试用，2正式，3离职</span>
             <el-select type="text" placeholder="0实习，1试用，2正式，3离职" v-model="employeeEntity.status" show-word-limit >
-              <el-option :label="实习" :value="0" />
-              <el-option :label="试用" :value="1" />
-              <el-option :label="正式" :value="2" />
-              <el-option :label="离职" :value="3" />
+              <el-option label="实习" :value="0" />
+              <el-option label="试用" :value="1" />
+              <el-option label="正式" :value="2" />
+              <el-option label="离职" :value="3" />
             </el-select>
         </div>
         <div class="left-input-container">

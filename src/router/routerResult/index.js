@@ -599,5 +599,32 @@ export default [
         component: () =>
             import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/setPosition.vue")
     },
-
+    {
+        //系统管理 店面管理
+        path: "/sys/stroeList",
+        name: "stroeList",
+        component: () =>
+            import("@/pages/systemAdministration/stroe/stroeList.vue")
+    },
+    {
+        //系统管理 店面管理-添加
+        path: "/sys/addStroe",
+        name: "addStroe",
+        component: () =>
+            import("@/pages/systemAdministration/stroe/addStroe.vue")
+    },
+    {
+        //系统管理 店面管理-修改
+        path: "/sys/editStroe",
+        name: "editStroe",
+        component: () =>
+            import("@/pages/systemAdministration/stroe/editStroe.vue")
+    },
+    {
+        //系统管理 店面管理-修改
+        path: "/sys/detailsStroe",
+        name: "detailsStroe",
+        component: () =>
+            import(/* webpackChunkName: "detailsStroe" */ "@/pages/systemAdministration/stroe/detailsStroe.vue")
+    }
 ]
