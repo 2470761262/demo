@@ -235,6 +235,27 @@ export default [
                 name: "validateHouseList",
                 component: () =>
                     import(/* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/validateHouseList/validateHouseList.vue")
+            },
+            {
+                //我司成交
+                path: "/buySellSystem/ourComDeal",
+                name: "ourComDeal",
+                component: () =>
+                    import(/* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/ourComDeal.vue")
+            },
+            {
+                //他司成交
+                path: "/buySellSystem/otherComDeal",
+                name: "otherComDeal",
+                component: () =>
+                    import(/* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/otherComDeal.vue")
+            },
+            {
+                //业主自售
+                path: "/buySellSystem/selfDeal",
+                name: "selfDeal",
+                component: () =>
+                    import(/* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/selfDeal.vue")
             }
         ]
     },
@@ -628,18 +649,18 @@ export default [
             import(/* webpackChunkName: "detailsStroe" */ "@/pages/systemAdministration/stroe/detailsStroe.vue")
     },
     {
-      //系统管理 权限设置 用户列表
-      path: "/sys/authority/employeeList",
-      name: "employeeList",
-      component: () =>
-        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/employeeList.vue")
+        //系统管理 权限设置 用户列表
+        path: "/sys/authority/employeeList",
+        name: "employeeList",
+        component: () =>
+            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/employeeList.vue")
     },
     {
-      //系统管理 权限设置
-      path: "/sys/authority/setAuthority",
-      name: "setAuthority",
-      component: () =>
-        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/setAuthority.vue")
+        //系统管理 权限设置
+        path: "/sys/authority/setAuthority",
+        name: "setAuthority",
+        component: () =>
+            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/setAuthority.vue")
     },
 
 ]
