@@ -1428,8 +1428,7 @@ export default {
             "houseId":that.houseId,
           "houseType":0,
           "housePrice":that.houseDetails.Price,
-          "houseArea":that.houseDetails.InArea,
-          "contactPerName":that.houseDetails.agentPerName,
+          "houseArea":that.houseDetails.InArea,         
           "contactPerType":contactPerType,//电话联系人类型，0为经纪人，1为业主
           "contactPhone":phone,
           "contactPhone1":phone1,
@@ -1439,8 +1438,10 @@ export default {
           if(contactPerType==0){//联系人类型如果是经纪人，才需要联系人id
             dailParams.contactPerId=that.houseDetails.AgentPer;//联系人id
             dailParams.unitName=that.houseDetails.agentPerDepartmentName;
+            dailParams.contactPerName=that.houseDetails.agentPerName;
           }else{
             dailParams.unitName=that.houseDetails.CommunityName;//联系人是业主，名称取小区名
+            dailParams.contactPerName=that.houseDetails.Customers;
           }
           that.$api
             .post({
