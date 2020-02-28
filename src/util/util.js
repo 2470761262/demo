@@ -26,49 +26,60 @@ export default {
   analysisElevator(elevator) {
     if (parseInt(elevator) > 0) {
       return "有配套";
-    }
-    else {
+    } else {
       return "无配套";
     }
   },
   analysisSign(sign) {
-    switch(sign){
+    switch (sign) {
       case 1:
-        return"占用";
+        return "占用";
         break;
       case 0:
         return "未占用";
         break;
-      default : return "无"
+      default:
+        return "无"
     }
   },
-  analysisHouseBelong(houseBelongList,houseBelong) {
-    var str="无"
+  analysisHouseBelong(houseBelongList, houseBelong) {
+    var str = "无"
     houseBelongList.forEach(element => {
-        if(element.id==parseInt(houseBelong)){
-               str=element.name;
-        }
+      if (element.id == parseInt(houseBelong)) {
+        str = element.name;
+      }
     });
     return str;
   },
   analysisLandCharacteristic(landCharacteristic) {
-    switch(landCharacteristic){
+    switch (landCharacteristic) {
       case "0":
-        return"出让";
+        return "出让";
         break;
       case "1":
         return "划拨";
         break;
-      default : return "无"
+      default:
+        return "无"
     }
   },
-  isNull(value){
-    if(value==""||value==null){
-       return true;
+  diffGet(rData, nowData) {
+    var rData = JSON.parse(JSON.stringify(rData));
+    var nowData = JSON.parse(JSON.stringify(nowData));
+    for (let item in rData) {
+      if (nowData[item] != undefined) {
+        if (JSON.stringify(nowData[item]) == JSON.stringify(rData[item])) {
+          delete nowData[item];
+        }
+      }
+    }
+    return nowData;
+  },
+  isNull(value) {
+    if (value == "" || value == null) {
+      return true;
     }
     return false;
   },
-  
+
 }
-
-
