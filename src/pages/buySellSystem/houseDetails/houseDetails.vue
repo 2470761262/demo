@@ -195,7 +195,7 @@
           <div style="margin-left:20px;">
             <span>{{houseDetails.Customers}}</span>
             <br />
-            <el-button :data-tel="houseDetails.Tel">联系业主</el-button>
+            <el-button :data-tel="houseDetails.Tel" @click="dialPhoneToFD">联系业主</el-button>
           </div>
         </div>
       </div>
@@ -1400,6 +1400,9 @@ export default {
     });
   },
   methods: {
+    dialPhoneToFD(){
+      this.dailPhone(1,this.houseDetails.Tel,this.houseDetails.Tel1,this.houseDetails.Tel2,this.houseDetails.Tel3);
+    },
     oneTouchDialPhone(){
       let phone=this.houseDetails.agentPerTel;
       if(!phone){
@@ -1408,9 +1411,10 @@ export default {
         })
         return;
       }
-      this.dailPhone(phone);
+      this.dailPhone(0,phone);
     },
-    dailPhone(phone){
+    ////contactPerType,电话联系人类型，0为经纪人，1为业主
+    dailPhone(contactPerType,phone,phone1,phone2,phone3){
         let that=this;
         //console.log(that.houseDetails);
         this.$confirm("确定一键拨号吗？", "友情提醒", {
@@ -1418,17 +1422,26 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       })
-        .then(() => {
-          let dailParams={"houseId":that.houseDetails.id,
+        .then(() => {     
+          console.log(that.houseDetails);     
+          let dailParams={
+            "houseId":that.houseId,
           "houseType":0,
-          "unitName":that.houseDetails.agentPerDepartmentName,
           "housePrice":that.houseDetails.Price,
           "houseArea":that.houseDetails.InArea,
-          "phonePersonName":that.houseDetails.agentPerName,
-          "phonePersonId":that.houseDetails.AgentPer,
-          "phonePersonType":0,//电话联系人类型，0为经纪人，1为业主
-          "phone":phone,
+          "contactPerName":that.houseDetails.agentPerName,
+          "contactPerType":contactPerType,//电话联系人类型，0为经纪人，1为业主
+          "contactPhone":phone,
+          "contactPhone1":phone1,
+          "contactPhone2":phone2,
+          "contactPhone3":phone3,
           "remark":that.houseDetails.Title};
+          if(contactPerType==0){//联系人类型如果是经纪人，才需要联系人id
+            dailParams.contactPerId=that.houseDetails.AgentPer;//联系人id
+            dailParams.unitName=that.houseDetails.agentPerDepartmentName;
+          }else{
+            dailParams.unitName=that.houseDetails.CommunityName;//联系人是业主，名称取小区名
+          }
           that.$api
             .post({
               url: "/noticeManage/common/OneTouchDialPhone",
@@ -1437,7 +1450,7 @@ export default {
             })
             .then(e => {
               let result = e.data;
-              console.log(result.message);
+              console.log(result);
               if (result.code == 200) {
                this.$message({
                   type: "info",
