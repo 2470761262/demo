@@ -286,7 +286,7 @@ export default {
       console.log(`当前页: ${val}`);
     },
     showNoticeDetail(noticeId){
-       this.$router.push({ path: "/buySellSystem/houseDetails",query:{houseId:noticeId} });
+       this.$router.push({ name: "houseDetails",params:{houseId:noticeId} });
     }
 
 
