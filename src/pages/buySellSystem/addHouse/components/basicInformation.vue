@@ -3,7 +3,6 @@
 </style>
 <template>
   <div class="page-cell-addHouse">
-    <div class="page-cell-title">房屋坐落</div>
     <!-- <div class="form-error-tips border"
          :class="{'after-tips':errorBags.has('onlyOrMany')}"
          :data-tips="errorBags.first('onlyOrMany')">
@@ -49,7 +48,7 @@
                      :value="item.value">
           </el-option>
         </el-select>
-        <div class="item-after" @click="toHouse()">
+        <div class="item-after">
           补充楼盘<i class="el-icon-question"></i>
         </div>
       </div>
@@ -389,11 +388,6 @@ export default {
     }
   },
   methods: {
-      //跳转到补充楼盘页面
-    toHouse(){
-      var that=this;
-       that.$router.push({ path: '/buySellSystem/CommunityReplenish'});
-    },
     //查询楼盘
     remoteCommunityName (e) {
       let that = this;
@@ -555,6 +549,7 @@ export default {
     //创建
     upLoadData (e) {
       let that = this;
+      console.log(this.formData);
       return this.$api.post({
         url: '/draft-house',
         data: that.formData,
@@ -562,8 +557,6 @@ export default {
         token: false
       }).then((e) => {
         if (e.data.code == 200) {
-          console.log(e.data.data, "e.data.data");
-          that.$store.commit('updateId', e.data.data)
           return Promise.resolve(true);
         } else {
           return Promise.resolve(false);
