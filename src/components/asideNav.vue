@@ -44,6 +44,9 @@
         <el-menu-item index="/sys/companyList">公司管理</el-menu-item>
         <el-menu-item index="/sys/deptManageList">部门管理</el-menu-item>
         <el-menu-item index="/sys/employeeList">员工管理</el-menu-item>
+        <el-menu-item index="/sys/stroeList">店面管理</el-menu-item>
+        <el-menu-item index="/sys/positionManager">角色管理</el-menu-item>
+        <el-menu-item index="/sys/ruleManager">功能点管理</el-menu-item>
       </el-submenu>
       <el-submenu :index="item.rurl+index" :key="item.id" v-for="(item,index) in menuNodeDatas">
         <template slot="title">

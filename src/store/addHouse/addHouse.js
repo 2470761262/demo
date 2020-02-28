@@ -54,6 +54,10 @@ let formData = {
   },
   step3: {
     communityDesc: "", //小区介绍
+    roomDesc: '', //户型介绍
+    taxDesc: "", //税费解析
+    saleDesc: "", //核心卖点
+    //saleReson: "", //卖房原因
   }
 }
 export default {

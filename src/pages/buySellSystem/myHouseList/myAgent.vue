@@ -27,10 +27,19 @@
         <template slot="prepend">面积</template>
         </el-input>
         <el-input placeholder="最大值" v-model="queryData.maxInArea" style="margin-left:10px;width:100px" ></el-input>
+
+        <el-select v-model="value" filterable placeholder="请选择">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
        
       <el-select v-model="queryData.houseStates" style="margin-left:10px" placeholder="请选择" clearable> 
                 <el-option
-                v-for="item in options"
+                v-for="item in AgentPerList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -106,7 +115,7 @@
                        key="operation">
         <template v-slot="scope">
             <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">查看</el-button>
-            <el-button type="info" size="mini" @click="open">调配</el-button>
+            <el-button type="info" size="mini" @click="open">调配 </el-button>
         </template> 
       </el-table-column>
     </template>
@@ -119,9 +128,9 @@ export default {
     listPage
   },
   data () {
-     
-    
     return {
+      AgentPerList:[],
+      value: '',
         input:'',
       loading: true, //控制表格加载动画提示
       pageJson: {
@@ -176,6 +185,7 @@ export default {
   },
   mounted () {
     this.querylist(1);
+    this.queryAgentPerList();
   },
   methods: {
     //跳转房源详情页面
@@ -187,7 +197,7 @@ export default {
         this.$prompt('请选择接收人员', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
-        }).then(({ value }) => {
+        }).then(({value}) => {
           this.$message({
             type: 'success',
             message: '已将房源跟单人调配为: ' + value
@@ -253,6 +263,28 @@ export default {
         return item.isType.includes(type)
       })
     },
+
+    queryAgentPerList(){
+       AgentPerList: [{
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }, {
+          value: '选项3',
+          label: '蚵仔煎'
+        }, {
+          value: '选项4',
+          label: '龙须面'
+        }, {
+          value: '选项5',
+          label: '北京烤鸭'
+        }];
+        
+        this.AgentPerList=AgentPerList;
+    },
+
     handleClick () {
 
     },

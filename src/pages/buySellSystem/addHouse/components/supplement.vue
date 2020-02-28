@@ -54,6 +54,10 @@
     }
   }
 }
+.item-avg-3 {
+  flex: 0 0 33% !important;
+  margin-bottom: 10px;
+}
 </style>
 <template>
   <div class="page-cell-addHouse">
@@ -65,9 +69,9 @@
           <div class="item-before">房屋用途</div>
           <el-select v-model="formData.houseUse"
                      placeholder="请选择房屋用途">
-            <el-option v-for="item in options"
+            <el-option v-for="item in houseUseList"
                        :key="item.value"
-                       :label="item.label"
+                       :label="item.key"
                        :value="item.value">
             </el-option>
           </el-select>
@@ -76,9 +80,9 @@
           <div class="item-before">房屋结构</div>
           <el-select v-model="formData.houseStruct"
                      placeholder="请选择房屋结构">
-            <el-option v-for="item in options"
+            <el-option v-for="item in houseStructList"
                        :key="item.value"
-                       :label="item.label"
+                       :label="item.key"
                        :value="item.value">
             </el-option>
           </el-select>
@@ -92,9 +96,9 @@
           <div class="item-before">产权性质</div>
           <el-select v-model="formData.property"
                      placeholder="请选择产权性质">
-            <el-option v-for="item in options"
+            <el-option v-for="item in propertyList"
                        :key="item.value"
-                       :label="item.label"
+                       :label="item.key"
                        :value="item.value">
             </el-option>
           </el-select>
@@ -230,9 +234,9 @@
           <el-select v-model="formData.primarySchool"
                      filterable
                      placeholder="请选择小学">
-            <el-option v-for="item in options"
+            <el-option v-for="item in primaryschoolList"
                        :key="item.value"
-                       :label="item.label"
+                       :label="item.key"
                        :value="item.value">
             </el-option>
           </el-select>
@@ -241,8 +245,8 @@
           <div class="cell-item-cell">
             <div class="item-before">学籍占用</div>
             <div class="item-flex">
-              <el-radio-group v-model="formData.primarySchoolUse"
-                              size="mini">
+              <el-radio-group size="mini"
+                              v-model="primaryRadio">
                 <div v-for="item in primarySchoolUseList"
                      class="item-flex-avg"
                      :key="item.value">
@@ -255,6 +259,31 @@
         </div>
       </div>
     </div>
+    <!-- 小学占用 -->
+    <div v-if="primaryRadio == 1"
+         class="form-error-tips"
+         :class="{'after-tips':errorBags.has('primarySchoolUse')}"
+         :data-tips="errorBags.first('primarySchoolUse')">
+      <div class="page-cell-item">
+        <div class="page-cell-item">
+          <div class="item-before">小学占用</div>
+          <div class="item-flex">
+            <el-radio-group v-validate="{'required':primaryRadio == 1}"
+                            data-vv-name="primarySchoolUse"
+                            data-vv-as="学籍占用"
+                            v-model="formData.primarySchoolUse"
+                            size="mini">
+              <div v-for="item in primarySchoolUseRenderList"
+                   class="item-flex-avg item-avg-3"
+                   :key="item.value">
+                <el-radio :label="item.value"
+                          border>{{ item.key }}</el-radio>
+              </div>
+            </el-radio-group>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- 中学划片 & 学籍占用 -->
     <div class="form-error-tips noMarinTop">
       <div class="page-cell-item">
@@ -263,9 +292,9 @@
           <el-select v-model="formData.middleSchool"
                      filterable
                      placeholder="请选择中学">
-            <el-option v-for="item in options"
+            <el-option v-for="item in middleSchoolList"
                        :key="item.value"
-                       :label="item.label"
+                       :label="item.key"
                        :value="item.value">
             </el-option>
           </el-select>
@@ -274,7 +303,7 @@
           <div class="cell-item-cell">
             <div class="item-before">学籍占用</div>
             <div class="item-flex">
-              <el-radio-group v-model="formData.middleSchoolUse"
+              <el-radio-group v-model="middleRadio"
                               size="mini">
                 <div v-for="item in middleSchoolUseList"
                      class="item-flex-avg"
@@ -284,6 +313,31 @@
                 </div>
               </el-radio-group>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 中学占用 -->
+    <div v-if="middleRadio == 1"
+         class="form-error-tips"
+         :class="{'after-tips':errorBags.has('middleSchoolUse')}"
+         :data-tips="errorBags.first('middleSchoolUse')">
+      <div class="page-cell-item">
+        <div class="page-cell-item">
+          <div class="item-before">中学占用</div>
+          <div class="item-flex">
+            <el-radio-group v-validate="{'required':middleRadio == 1}"
+                            data-vv-name="middleSchoolUse"
+                            data-vv-as="学籍占用"
+                            v-model="formData.middleSchoolUse"
+                            size="mini">
+              <div v-for="item in middleSchoolUseRenderList"
+                   class="item-flex-avg item-avg-3"
+                   :key="item.value">
+                <el-radio :label="item.value"
+                          border>{{ item.key }}</el-radio>
+              </div>
+            </el-radio-group>
           </div>
         </div>
       </div>
@@ -397,6 +451,16 @@
 </template>
 <script>
 import * as formReander from '@/util/constMap';
+const USE = [
+  {
+    key: "未占用",
+    value: 0
+  },
+  {
+    key: "占用",
+    value: 1
+  },
+]
 export default {
   name: "supplement",
   computed: {
@@ -409,12 +473,21 @@ export default {
     return {
       step: {},
       options: [],
+      primaryRadio: '',
+      middleRadio: '',
+      houseUseList: formReander.HOUSEUSE,//房屋用途
+      houseStructList: formReander.HOUSESTRUCT,//房屋结构
+      propertyList: formReander.PROPERTY,//产权性质
+      primaryschoolList: formReander.PRIMARYSCHOOL,//小学划片
+      middleSchoolList: formReander.MIDDLESCHOOL,//中学划片
+      primarySchoolUseRenderList: formReander.PRIMARYSCHOOLUSE,//小学占用
+      middleSchoolUseRenderList: formReander.MIDDLESCHOOLUSE,//中学占用
       houseSourceList: formReander.HOUSESOURCE,//房屋来源
       houseNowList: formReander.HOUSENOW,//房屋现状
       isElevatorList: formReander.ISELEVATOR,//电梯
       landCharacteristicList: formReander.LANDCHARACTERISTIC,//土地性质
-      primarySchoolUseList: formReander.PRIMARYSCHOOLUSE,//小学学籍占用
-      middleSchoolUseList: formReander.MIDDLESCHOOLUSE,//中学学籍占用
+      primarySchoolUseList: USE,//小学学籍占用
+      middleSchoolUseList: USE,//中学学籍占用
       mortgageList: formReander.MORTGAGE,//抵押情况
       paymentMethodList: formReander.PAYMENTMETHOD,//付款方式
       houseBelongList: formReander.HOUSEBELONG,//配套设施
@@ -426,7 +499,6 @@ export default {
   methods: {
     validateAll () {
       let that = this;
-      // return new Promise((r,s)=>{
       return this.$validator.validateAll().then((e) => {
         if (e) {
           //存入Vuex;
@@ -434,8 +506,33 @@ export default {
           return true;
         }
         return false;
+      }).then(() => {
+        return that.setDataToUpdate();
+      })
+    },
+    //修改数据到接口
+    setDataToUpdate () {
+      let that = this;
+      let sendData = {
+        id: that.$store.state.addHouse.formData.id,
+        ...that.formData
+      }
+      return this.$api.put({
+        url: '/draft-house',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: sendData
+      }).then((e) => {
+        console.log(e);
+        if (e.data.code == 200) {
+          return true;
+        } else {
+          return false;
+        }
+
+      }).catch(() => {
+        return false;
       })
     }
-  },
+  }
 }
 </script>

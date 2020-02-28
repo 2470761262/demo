@@ -158,6 +158,20 @@ export default [
                     import(/* webpackChunkName: "notPhone" */ "@/pages/buySellSystem/houseResource/notPhone.vue")
             },
             {
+                //资源库-潜在出售列表
+                path: "/buySellSystem/potentialHouse",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "potentialHouse" */ "@/pages/buySellSystem/houseResource/potentialHouse.vue")
+            },
+            {
+                //资源库-店公盘
+                path: "/buySellSystem/shopDisk",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "shopDisk" */ "@/pages/buySellSystem/houseResource/shopDisk.vue")
+            },
+            {
                 //外网房源
                 path: "/buySellSystem/releaseOutsideHouseList",
                 name: "concernCommunity",
@@ -584,6 +598,48 @@ export default [
         name: "setPosition",
         component: () =>
             import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/setPosition.vue")
+    },
+    {
+        //系统管理 店面管理
+        path: "/sys/stroeList",
+        name: "stroeList",
+        component: () =>
+            import("@/pages/systemAdministration/stroe/stroeList.vue")
+    },
+    {
+        //系统管理 店面管理-添加
+        path: "/sys/addStroe",
+        name: "addStroe",
+        component: () =>
+            import("@/pages/systemAdministration/stroe/addStroe.vue")
+    },
+    {
+        //系统管理 店面管理-修改
+        path: "/sys/editStroe",
+        name: "editStroe",
+        component: () =>
+            import("@/pages/systemAdministration/stroe/editStroe.vue")
+    },
+    {
+        //系统管理 店面管理-修改
+        path: "/sys/detailsStroe",
+        name: "detailsStroe",
+        component: () =>
+            import(/* webpackChunkName: "detailsStroe" */ "@/pages/systemAdministration/stroe/detailsStroe.vue")
+    },
+    {
+      //系统管理 权限设置 用户列表
+      path: "/sys/authority/employeeList",
+      name: "employeeList",
+      component: () =>
+        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/employeeList.vue")
+    },
+    {
+      //系统管理 权限设置
+      path: "/sys/authority/setAuthority",
+      name: "setAuthority",
+      component: () =>
+        import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/setAuthority.vue")
     },
 
 ]
