@@ -57,7 +57,7 @@
          
           <div class="left-input-container">
             <span>参数类型</span>
-            <el-select v-model="notice.newsClass" placeholder="请选择">
+            <el-select v-model="notice.newsClass" placeholder="请选择" @change="getNum(notice.newsClass)">
               <el-option
                 v-for="item in newsClassOption"
                 :key="item.value"
@@ -79,13 +79,7 @@
           </div>
          <div class="left-input-container">
             <span>参数编号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="notice.configNo"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
+           <span> {{notice.configNo!=null? notice.configNo:"选择类型后自动生成编号"}}</span>
           </div>
            <div class="left-input-container">
             <span>备注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -213,6 +207,32 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    getNum(val){
+      let that=this;
+      this.$api.get({
+        url: '/Set/judge',
+        data: {
+         id:val
+        },
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+            that.notice.configNo=result.data
+          
+          console.log(result.data);
+          this.$message({message:result.message});
+        } else {
+          console.log("添加失败:" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("添加失败");
+        console.log(e);
+      })
+    },
     sendNotice(){
       if(this.notice.newsClass==null){
         this.$message({

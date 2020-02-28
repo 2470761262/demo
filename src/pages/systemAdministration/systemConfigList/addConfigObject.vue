@@ -419,7 +419,6 @@ if(this.notice.paraNum1==null){
           paraNumStr:that.paraNum3,
           paraNumFour:that.paraNum4,
           remark:that.configMemo,
-          addName:"35491",
           comId:this.notice.comId,
           unit:that.unit
         },
