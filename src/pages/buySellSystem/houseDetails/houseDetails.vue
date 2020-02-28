@@ -1368,12 +1368,17 @@ export default {
   },
   before() {},
   mounted() {
-    if (this.$route.query.houseId) {
-      this.houseId = this.$route.query.houseId;
+    console.log(this.$route.params.houseId);
+    if (this.$route.params.houseId) {
+      this.houseId = this.$route.params.houseId;
+      util.localStorageSet("houseDetails.vue:houseId",this.houseId);
+    }
+    else{
+      this.houseId = util.localStorageGet("houseDetails.vue:houseId");
     }
     let params = {
-      houseId: this.houseId,
-      perId: 35365
+      houseId: this.houseId
+      //perId: 35365
     };
     this.getHouseDetails();
     this.getisCollectHouse(params);
@@ -1669,11 +1674,11 @@ export default {
           perId: 35365
       }
       this.$api
-        .get({
+        .post({
           url: "/agent_house//getHouseDetail",
           data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false
+          //headers: { "Content-Type": "application/json;charset=UTF-8" },
+          qs: true
         })
         .then(e => {
           let result = e.data;
@@ -1760,9 +1765,10 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             that.isCollectHouse = true;
-          } else {
-            that.$message(result.message);
-          }
+          } 
+          // else {
+          //   that.$message(result.message);
+          // }
         })
         .catch(e => {});
     },
@@ -2316,7 +2322,6 @@ export default {
             params.picList.push(element.id);
           });
           break;
-        case 2:
         case 12:
         case 5:
           conditionList.push({
