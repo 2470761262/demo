@@ -190,7 +190,7 @@ export default {
   methods: {
     //跳转房源详情页面
     toHouseDetail(id){
-      this.$router.push({ path: "/buySellSystem/houseDetails",query:{houseId:id} });
+      this.$router.push({ name: "houseDetails",params:{houseId:id} });
     },
     //调配
      open() {
