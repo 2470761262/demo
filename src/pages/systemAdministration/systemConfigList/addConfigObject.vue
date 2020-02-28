@@ -66,8 +66,8 @@
             <span>公司参数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <el-select v-model="notice.comId" placeholder="请选择">
               <el-option
-                v-for="item in company"
-                :key="item.id"
+                v-for="item in tableData"
+                :key="item.value"
                 :label="item.CompanyName"
                 :value="item.id"
               ></el-option>
@@ -78,7 +78,7 @@
             <el-select v-model="notice.parRange" placeholder="请选择">
               <el-option
                 v-for="item in parRange"
-                :key="item.value"
+                :key="item.id"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
@@ -89,7 +89,7 @@
          <el-select v-model="notice.configObject" placeholder="请选择">
               <el-option
                 v-for="item in configObject"
-                :key="item.value"
+                :key="item.id"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
@@ -141,7 +141,7 @@
               type="text"
               placeholder="请输入内容"
               v-model="notice.configMemo"
-              maxlength="10"
+              maxlength="100"
               show-word-limit
             ></el-input>
           </div>
@@ -171,7 +171,7 @@
       
         <div class="footerContainer el-top">
           <el-button type="primary" @click="sendNotice">发送</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="post">取消</el-button>
         </div>
       </el-container>
     </el-container>
@@ -216,7 +216,7 @@ export default {
       paraNum2:null,
       paraNum3:null,
       unit:null,
-      comId:"1",
+      comId:"",
       paraIsAllowed:null,
       configObject:null,
        paraNum4:null,
@@ -277,6 +277,24 @@ export default {
           value: "2",
           label: "月"
         }
+        ,
+         {
+          value: "3",
+          label: "秒"
+        }
+        ,
+         {
+          value: "4",
+          label: "分"
+        },
+         {
+          value: "5",
+          label: "套"
+        },
+         {
+          value: "6",
+          label: "%"
+        }
       ],
        paraIsAllowed: [
         {
@@ -333,16 +351,42 @@ parRange: [
       ],
   company:[
 
-  ]
+  ],
+  tableData:[]
     };
   },
   watch: {},
   computed: {},
    mounted () {
-    this.companyLsit(1);
+   
   },
   methods: {
+queryCompanyDatas (currentPage) {
+      let params = { limit: 100, page: currentPage  };
+      let that = this;
 
+      this.$api.post({
+        url: '/company/list',
+        data: params,
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+
+          this.tableData = result.data.list;
+        } else {
+          console.log("查询公司管理列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询公司管理列表失败");
+        console.log(e);
+      })
+    },
     sendNotice(){
       let that= this.notice;
       console.log(this.notice);
@@ -362,33 +406,12 @@ parRange: [
         });
         return;
       }
-      if(this.notice.paraNum4==null){
-        this.$message({
-          showClose: true,
-          message: '参数1',
-          type: 'warning'
-        });
-        return;
-      }
-    if(this.notice.paraNum3==null){
-        this.$message({
-          showClose: true,
-          message: '参数2',
-          type: 'warning'
-        });
-        return;
-      } if(this.notice.paraNum2==null){
-        this.$message({
-          showClose: true,
-          message: '参数3',
-          type: 'warning'
-        });
-        return;
-      }
+   
+   
 if(this.notice.paraNum1==null){
         this.$message({
           showClose: true,
-          message: '参数4',
+          message: '参数1',
           type: 'warning'
         });
         return;
@@ -404,7 +427,7 @@ if(this.notice.paraNum1==null){
       this.$api.get({
         url: '/Set/companyAdd',
         data: {
-          SysParObj:that.configObject,
+          sysParObj:that.configObject,
           sysParID:this.configId,
           relationId:"0",
           paraIsAllowed:that.paraIsAllowed,
@@ -414,8 +437,7 @@ if(this.notice.paraNum1==null){
           paraNumStr:that.paraNum3,
           paraNumFour:that.paraNum4,
           remark:that.configMemo,
-          addName:"35491",
-          comId:that.comId,
+          comId:this.notice.comId,
           unit:that.unit
         },
         token: false,
@@ -440,33 +462,13 @@ if(this.notice.paraNum1==null){
         console.log(e);
       })
     },
-    companyLsit(id){
-this.$api.get({
-        url: '/newCompany',
-        data: {
-         page:1,
-         offset:10,
-         limit:10000
-        },
-        token: false,
-        headers: { "Content-Type": "application/json" }
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-        this.company=e.data.data.data;
-    console.log(this.company);
-        } else {
-          console.log("获取失败:" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("获取失败");
-        console.log(e);
-      })
-    },
+post(){
+ this.$router.push({        path: "/sys/systemConfigList"
+       });
+},
   },
  created() {
+    this.queryCompanyDatas(1);
       this.configId=this.$route.query.configId;
       this.notice.configNo=this.$route.query.sysParNo;
       this.notice.configName=this.$route.query.sysParName;

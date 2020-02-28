@@ -3,7 +3,6 @@
 </style>
 <template>
   <div class="page-cell-addHouse">
-    <div class="page-cell-title">房屋坐落</div>
     <!-- <div class="form-error-tips border"
          :class="{'after-tips':errorBags.has('onlyOrMany')}"
          :data-tips="errorBags.first('onlyOrMany')">

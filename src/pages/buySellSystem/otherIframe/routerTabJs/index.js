@@ -23,7 +23,7 @@ export default [
     },
     {
         name: "全部在售", active: '3', children: [
-            { name: "全部在售", active: '/buySellSystem/loadDevelopment?o=17' }
+            { name: "全部在售", active: '/buySellSystem/saleAll' }
         ]
     },
     {
