@@ -172,6 +172,13 @@ export default [
                     import(/* webpackChunkName: "shopDisk" */ "@/pages/buySellSystem/houseResource/shopDisk.vue")
             },
             {
+                //全部在售
+                path: "/buySellSystem/saleAll",
+                name: "addHouse",
+                component: () =>
+                    import(/* webpackChunkName: "saleAll" */ "@/pages/buySellSystem/saleAll/saleAll.vue")
+            },
+            {
                 //外网房源
                 path: "/buySellSystem/releaseOutsideHouseList",
                 name: "concernCommunity",
