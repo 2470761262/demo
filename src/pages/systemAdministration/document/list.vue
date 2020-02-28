@@ -24,7 +24,18 @@
           :formatter="downStr"
         ></el-table-column>
       </template>
-      <el-table-column label="操作"></el-table-column>
+      <el-table-column label="操作">
+        <template v-slot="scope">
+          <div>
+            <el-button
+              size="mini"
+              @click="distributeEvent(item.methosName,scope.row.id)"
+              v-for="(item,index) in getOpeBtns(scope.row.operation)"
+              :key="index"
+            >{{item.name}}</el-button>
+          </div>
+        </template>
+      </el-table-column>
     </template>
   </list-page>
 </template>
@@ -118,7 +129,23 @@ export default {
       return row[column.property];
     },
     addDocument() {
-      this.$router.push({ path: "/sys/document/edit" });
+      this.$router.push({ path: "/sys/document/edit", query: { id: 0 } });
+    },
+    distributeEvent(e, RoleId) {
+      this[e](RoleId);
+    },
+    getOpeBtns(type) {
+      let array = [
+        { name: "编辑", isType: "1", methosName: "editRoleDetail" },
+        { name: "删除", isType: "1", methosName: "delRoleDetail" }
+      ];
+      // return array.filter((item) => {
+      //   return item.isType.includes(type)
+      // })
+      return array;
+    },
+    editRoleDetail(id) {
+      this.$router.push({ path: "/sys/document/edit", query: { id: id } });
     }
   }
 };

@@ -57,7 +57,7 @@
          
           <div class="left-input-container">
             <span>参数类型</span>
-            <el-select v-model="notice.newsClass" placeholder="请选择">
+            <el-select v-model="notice.newsClass" placeholder="请选择" @change="getNum(notice.newsClass)">
               <el-option
                 v-for="item in newsClassOption"
                 :key="item.value"
@@ -73,19 +73,13 @@
               type="text"
               placeholder="请输入内容"
               v-model="notice.configName"
-              maxlength="10"
+              maxlength="30"
               show-word-limit
             ></el-input>
           </div>
          <div class="left-input-container">
             <span>参数编号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="notice.configNo"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
+           <span> {{notice.configNo!=null? notice.configNo:"选择类型后自动生成编号"}}</span>
           </div>
            <div class="left-input-container">
             <span>备注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -93,7 +87,7 @@
               type="text"
               placeholder="请输入内容"
               v-model="notice.configMemo"
-              maxlength="10"
+              maxlength="100"
               show-word-limit
             ></el-input>
           </div>
@@ -101,7 +95,7 @@
       
         <div class="footerContainer el-top">
           <el-button type="primary" @click="sendNotice">发送</el-button>
-          <el-button>取消</el-button>
+          <el-button @click="post">取消</el-button>
         </div>
       </el-container>
     </el-container>
@@ -213,6 +207,32 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    getNum(val){
+      let that=this;
+      this.$api.get({
+        url: '/Set/judge',
+        data: {
+         id:val
+        },
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+            that.notice.configNo=result.data
+          
+          console.log(result.data);
+          this.$message({message:result.message});
+        } else {
+          console.log("添加失败:" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("添加失败");
+        console.log(e);
+      })
+    },
     sendNotice(){
       if(this.notice.newsClass==null){
         this.$message({
@@ -238,14 +258,7 @@ export default {
         });
         return;
       }
-      if(this.notice.configName==null){
-        this.$message({
-          showClose: true,
-          message: '备注',
-          type: 'warning'
-        });
-        return;
-      }
+
 
 if(this.notice.configId==null){
 
@@ -313,8 +326,13 @@ if(this.notice.configId==null){
       })
       }
     },
-
+post(){
+ this.$router.push({        path: "/sys/systemConfigList"
+       });
+},
+  
   },
+  
   created() {
     console.log(this.$route.query);
           this.notice.configId=this.$route.query.configId;

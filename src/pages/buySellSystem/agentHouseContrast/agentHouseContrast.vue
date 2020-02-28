@@ -185,11 +185,11 @@
                      <div class="cancelButton" @click="dele(item.id)">x</div>
                      </div>
                      
-                         <div class="image" v-if="item.imageList==null">
+                         <div class="image" v-if="item.imageList==''">
                      暂无数据
                      
                      </div>
-                     <div v-else>
+                     <div  v-else-if="item.imageList[0].picUrl!=undefined">
                          <img :src="item.imageList[0].picUrl" class="image2">
 
                      </div>
