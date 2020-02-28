@@ -27,15 +27,15 @@
         <template slot="prepend">面积</template>
         </el-input>
         <el-input placeholder="最大值" v-model="queryData.maxInArea" style="margin-left:10px;width:100px" ></el-input>
-       
-      <el-select v-model="queryData.houseStates" style="margin-left:10px" placeholder="请选择" clearable> 
-                <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
+
+        <el-select v-model="value" filterable placeholder="请选择">
+    <el-option
+      v-for="item in options"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+    </el-option>
+  </el-select>
         <template slot="prepend">房源状态</template>
         <el-date-picker v-model="queryData.timeSelect" type="daterange" range-separator="至"
       value-format="yyyy-MM-dd" start-placeholder="开始日期" end-placeholder="结束日期">
@@ -45,7 +45,11 @@
                      size="mini"                   
                      @click="querylistByParams">查询</el-button>
         </div> 
+
+        
     </template>
+
+   
      
     <template #tableColumn="">
         
@@ -100,14 +104,32 @@
           {{scope.row.AddTime}}
         </template>
       </el-table-column>
-      <el-table-column 
-                       label="操作"
+      <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
             <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">查看</el-button>
-            <el-button type="info" size="mini" @click="open">调配</el-button>
-        </template> 
+            <el-button type="info" size="mini" @click="dialogVisible = true">调配</el-button>
+            <el-dialog title="请输入跟单人姓名进行搜索" :visible.sync="dialogVisible" :modal-append-to-body='false' width="20%">
+               <el-select v-model="addPer"
+                     @change="queryAddPerId()"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="请输入楼盘进行搜索"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">  
+            </el-option>
+          </el-select>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="dialogVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                </span>
+                </el-dialog>
+                </template> 
       </el-table-column>
     </template>
   </list-page>
@@ -115,14 +137,16 @@
 <script>
 import listPage from '@/components/listPage';
 export default {
+  
   components: {
     listPage
   },
   data () {
-     
-    
     return {
+       dialogVisible: false,
+      value: '',
         input:'',
+        addPer:'',
       loading: true, //控制表格加载动画提示
       pageJson: {
         currentPage: 1, //当前页码
@@ -178,16 +202,39 @@ export default {
     this.querylist(1);
   },
   methods: {
+     queryAddPerId () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryComBuilding",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.form.comId
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.cbIdList = e.data.data.list;
+        }
+      })
+    },
+    handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
     //跳转房源详情页面
     toHouseDetail(id){
-      this.$router.push({ path: "/buySellSystem/houseDetails",query:{houseId:id} });
+      this.$router.push({ name: "houseDetails",params:{houseId:id} });
     },
     //调配
      open() {
         this.$prompt('请选择接收人员', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
-        }).then(({ value }) => {
+        }).then(({value}) => {
           this.$message({
             type: 'success',
             message: '已将房源跟单人调配为: ' + value

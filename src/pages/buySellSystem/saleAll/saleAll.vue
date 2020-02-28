@@ -45,9 +45,12 @@
                        :value="item.value">
             </el-option>
           </el-select>
-
-            <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable/>------
-             <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable/>
+            <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable />
+           <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
+            <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
+             <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
+              <el-input placeholder="最低售价" v-model="data.minPrice"  style="margin-left:30px;width:120px" clearable />------
+             <el-input placeholder="最高售价" v-model="data.maxPrice"  style="width:120px" clearable />
            <el-date-picker
               v-model="data.timeSelect"
               type="daterange"
@@ -58,7 +61,7 @@
        <el-button type="primary"
                      style="margin-left:10px"
                      size="mini"
-                     @click="queryNotPhoneParams">查询</el-button>
+                     @click="querySaleAllParams">查询</el-button>
       </div>
     </template>
    
@@ -87,12 +90,8 @@
         <template v-slot="scope">
             <el-button type="info"
                        size="mini"
-                       @click="addPhone(scope.row.bhid)"
-                       >录入号码</el-button>
-                        <el-button type="info"
-                       size="mini"
-                       @click="toSale(scope.row.id)"
-                       >转在售</el-button>
+                       @click="toLook(scope.row.id)"
+                       >查看</el-button>
         </template>
        
       </el-table-column>
@@ -121,6 +120,8 @@ export default {
         tel:'',
         minInArea:'',
         maxInArea:'',
+        minPrice:'',
+        maxPrice:''
       },
       options: [],
       cbIdList: [],
@@ -136,11 +137,13 @@ export default {
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
         { prop: 'inArea', label: "面积(m²)"},
+        { prop: 'price', label: "售价(万元)"},
+        { prop: 'unitpaice', label: "单价(元/m²)"},
         { prop: 'seenNum', label: "被看次数" },
         { prop: 'outfollow', label: "未跟进天数" },
         { prop: 'notLookNum', label: "未被看天数" },
-        { prop: 'addTime', label: "录入时间" }
-       
+        { prop: 'addTime', label: "录入时间" },
+        { prop: 'brokerName', label: "跟进人" }
       ],
       tableData: [{
         // house: '龙腾花园-16栋-604室',
@@ -158,7 +161,7 @@ export default {
     }
   },
   mounted(){
-    this.queryNotPhone(1);
+    this.querySaleAll(1);
   },
   methods: {
     queryTabData () {
@@ -168,32 +171,13 @@ export default {
       return row.rooms+'室'+row.hall+'厅'+row.toilet+'卫';
     },
 
-    addPhone(id){
-        console.log(id)
+    toLook(id){
+        console.log(id);
          var that = this;
-        that.$router.push({ path: '/buySellSystem/updatePhone', query: { "id": id } });
+        that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
     },
-    toSale(id){
-      var that = this
-        this.$api.get({
-          url: "/houseResource/turnSale",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            id: id,
-            type: 2
-          }
-        }).then((e) => {
-          console.log(e.data)
-          if (e.data.code == 200) {
-              that.$router.push({ path: '/buySellSystem/addHouse', query: { "id": e.data.code.message } });
-          }
-        })
-      },
-
-    queryNotPhoneParams(){
-        this.queryNotPhone(1);
+    querySaleAllParams(){
+        this.querySaleAll(1);
     },
     remoteMethod (query) {
       var that = this
@@ -253,7 +237,7 @@ queryCBId () {
         }
       })
     },
-  queryNotPhone(currentPage){
+  querySaleAll(currentPage){
     var that =this;
    let params={"limit":that.pageJson.pageSize,"page":currentPage};
  
@@ -266,9 +250,11 @@ queryCBId () {
         params.tel=that.data.tel;
         params.minInArea=that.data.minInArea;
         params.maxInArea=that.data.maxInArea;
+        params.minPrice=that.data.minPrice;
+        params.maxPrice=that.data.maxPrice;
      console.log(params);
     this.$api.get({
-        url: '/houseResource/notPhoneList',
+        url: '/saleAll/querySaleAll',
         data: params,       
         token: false
       }).then((e) => {
@@ -279,11 +265,11 @@ queryCBId () {
           that.pageJson.currentPage=data.data.currPage;
           that.tableData=data.data.list;
         } else {
-          console.log("查询无号码列表结果：" + result.message);
+          console.log("查询全部在售列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询无号码列表失败");
+        console.log("查询全部在售列表失败");
         console.log(e);
       })
   },
@@ -301,16 +287,17 @@ queryCBId () {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryNotPhoneParams(1);
+      //this.querySaleNotTracking(2);
+      this.querySaleAllParams(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryNotPhone(val);
+      this.querySaleAll(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
        this.pageJson.pageSize = val;
-      this.queryNotPhone(1);
+      this.querySaleAll(1);
     }
   },
 }

@@ -173,7 +173,7 @@ export default {
     toLook(id){
         console.log(id);
          var that = this;
-        that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
+        that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
     },
     querySaleNotTrackingParams(){
         this.querySaleNotTracking(1);

@@ -578,6 +578,12 @@ export default {
     },
     handleCurrentChange(val) {
       this.queryVerifyHouseDatas(val);
+    },
+    edit(val){
+      this.$router.push({path:'/buySellSystem/addHouse?method=edit&id='+val.id})
+    },
+    reVerify(val){
+      this.$router.push({path:'/buySellSystem/addHouse?method=reset&id='+val.id})
     }
   }
 };

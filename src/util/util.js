@@ -81,5 +81,12 @@ export default {
     }
     return false;
   },
-
+  isNumber(number) {
+    let flag = true;
+    let myreg = /^((0{1}\.\d+)|([1-9]\d*\.{1}\d+)|([1-9]+\d*)|0)$/;
+    if (myreg.test(number)) {
+      flag = false;
+    }
+    return flag;
+  }
 }
