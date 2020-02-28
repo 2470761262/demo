@@ -277,6 +277,24 @@ export default {
           value: "2",
           label: "月"
         }
+        ,
+         {
+          value: "3",
+          label: "秒"
+        }
+        ,
+         {
+          value: "4",
+          label: "分"
+        },
+         {
+          value: "5",
+          label: "套"
+        },
+         {
+          value: "6",
+          label: "%"
+        }
       ],
        paraIsAllowed: [
         {
