@@ -49,6 +49,8 @@
            <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
             <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
              <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
+              <el-input placeholder="最低售价" v-model="data.minPrice"  style="margin-left:30px;width:120px" clearable />------
+             <el-input placeholder="最高售价" v-model="data.maxPrice"  style="width:120px" clearable />
            <el-date-picker
               v-model="data.timeSelect"
               type="daterange"
@@ -59,7 +61,7 @@
        <el-button type="primary"
                      style="margin-left:10px"
                      size="mini"
-                     @click="queryNotSaleParams">查询</el-button>
+                     @click="queryShopDiskParams">查询</el-button>
       </div>
     </template>
    
@@ -90,10 +92,6 @@
                        size="mini"
                        @click="toLook(scope.row.id)"
                        >查看</el-button>
-                        <el-button type="info"
-                       size="mini"
-                       @click="toSale(scope.row.id)"
-                       >转在售</el-button>
         </template>
        
       </el-table-column>
@@ -122,6 +120,8 @@ export default {
         tel:'',
         minInArea:'',
         maxInArea:'',
+        minPrice:'',
+        maxPrice:''
       },
       options: [],
       cbIdList: [],
@@ -137,6 +137,7 @@ export default {
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
         { prop: 'inArea', label: "面积(m²)"},
+         { prop: 'price', label: "售价(万元)"},
         { prop: 'seenNum', label: "被看次数" },
         { prop: 'outfollow', label: "未跟进天数" },
         { prop: 'notLookNum', label: "未被看天数" },
@@ -159,7 +160,7 @@ export default {
     }
   },
   mounted(){
-    this.queryNotSale(1);
+    this.queryShopDisk(1);
   },
   methods: {
     queryTabData () {
@@ -170,12 +171,12 @@ export default {
     },
 
     toLook(id){
+        console.log(id);
          var that = this;
         that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
     },
-    toSale(id){},
-    queryNotSaleParams(){
-        this.queryNotSale(1);
+    queryShopDiskParams(){
+        this.queryShopDisk(1);
     },
     remoteMethod (query) {
       var that = this
@@ -235,7 +236,7 @@ queryCBId () {
         }
       })
     },
-  queryNotSale(currentPage){
+  queryShopDisk(currentPage){
     var that =this;
    let params={"limit":that.pageJson.pageSize,"page":currentPage};
  
@@ -248,9 +249,11 @@ queryCBId () {
         params.tel=that.data.tel;
         params.minInArea=that.data.minInArea;
         params.maxInArea=that.data.maxInArea;
+        params.minPrice=that.data.minPrice;
+        params.maxPrice=that.data.maxPrice;
      console.log(params);
     this.$api.get({
-        url: '/houseResource/notSaleList',
+        url: '/houseResource/shopDiskList',
         data: params,       
         token: false
       }).then((e) => {
@@ -261,11 +264,11 @@ queryCBId () {
           that.pageJson.currentPage=data.data.currPage;
           that.tableData=data.data.list;
         } else {
-          console.log("查询暂不售列表结果：" + result.message);
+          console.log("查询店公盘列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询暂不售列表失败");
+        console.log("查询店公盘列表失败");
         console.log(e);
       })
   },
@@ -283,17 +286,17 @@ queryCBId () {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryNotSale(2);
-      this.queryNotSaleParams(1);
+      //this.querySaleNotTracking(2);
+      this.queryShopDiskParams(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryNotSale(val);
+      this.queryShopDisk(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
        this.pageJson.pageSize = val;
-      this.queryNotSale(1);
+      this.queryShopDisk(1);
     }
   },
 }

@@ -9,24 +9,22 @@
 </style>
 <template>
   <div>
-    <el-menu :default-active="$route.path"
-             class="el-menu-vertical-demo"
-             background-color="#545c64"
-             text-color="#fff"
-             :collapse="collapse"
-             active-text-color="#ffd04b"
-             router>
+    <el-menu
+      :default-active="$route.path"
+      class="el-menu-vertical-demo"
+      background-color="#545c64"
+      text-color="#fff"
+      :collapse="collapse"
+      active-text-color="#ffd04b"
+      router
+    >
       <el-submenu index="0123">
         <template slot="title">
           <i class="el-icon-location"></i>
           <span>新买卖系统</span>
         </template>
-        <el-menu-item index="/buySellSystem/houseList">
-          房源管理
-        </el-menu-item>
-        <el-menu-item index="/buySellSystem/addFloorList">
-          补充楼盘审核
-        </el-menu-item>
+        <el-menu-item index="/buySellSystem/houseList">房源管理</el-menu-item>
+        <el-menu-item index="/buySellSystem/addFloorList">补充楼盘审核</el-menu-item>
       </el-submenu>
       <el-submenu index="2">
         <template slot="title">
@@ -41,21 +39,25 @@
         <el-menu-item index="/sys/passwordReset">用户密码重置</el-menu-item>
         <el-menu-item index="/sys/pcManagement/list">公司PC管理</el-menu-item>
         <el-menu-item index="/sys/pcOnline/list">公司PC在线管理</el-menu-item>
+        <el-menu-item index="/sys/document/list">文档管理</el-menu-item>
         <el-menu-item index="/sys/roleManagementList">岗位管理</el-menu-item>
         <el-menu-item index="/sys/companyList">公司管理</el-menu-item>
         <el-menu-item index="/sys/deptManageList">部门管理</el-menu-item>
         <el-menu-item index="/sys/employeeList">员工管理</el-menu-item>
+        <el-menu-item index="/sys/stroeList">店面管理</el-menu-item>
+        <el-menu-item index="/sys/positionManager">角色管理</el-menu-item>
+        <el-menu-item index="/sys/ruleManager">功能点管理</el-menu-item>
       </el-submenu>
-      <el-submenu :index="item.rurl+index"
-                  :key="item.id"
-                  v-for="(item,index) in menuNodeDatas">
+      <el-submenu :index="item.rurl+index" :key="item.id" v-for="(item,index) in menuNodeDatas">
         <template slot="title">
           <i class="el-icon-s-flag"></i>
           <span>{{item.rname}}</span>
         </template>
-        <el-menu-item :key="subItem.rurl+index"
-                      v-for="(subItem,index) in item.children"
-                      :index="subItem.rurl">{{subItem.rname}}</el-menu-item>
+        <el-menu-item
+          :key="subItem.rurl+index"
+          v-for="(subItem,index) in item.children"
+          :index="subItem.rurl"
+        >{{subItem.rname}}</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -63,20 +65,20 @@
 <script>
 export default {
   props: ["menuNodeDatas"],
-  data () {
+  data() {
     return {
       collapse: false
-    }
+    };
   },
-  created () {
+  created() {
     let that = this;
-    window.addEventListener("resize", (e) => {
+    window.addEventListener("resize", e => {
       if (window.innerWidth < 1400) {
         that.collapse = true;
       } else {
         that.collapse = false;
       }
-    })
-  },
+    });
+  }
 };
 </script>

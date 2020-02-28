@@ -11,7 +11,6 @@
     <list-page v-show="!showForm"
                :parentData="$data"
                @queryTabData="queryTabData"
-               @handleClick="handleClick"
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
 
@@ -35,8 +34,9 @@
           </el-table-column>
         </template>
 
-        <el-table-column label="操作" fixed="right" key="operation" width="250px">
+        <el-table-column label="操作" fixed="right" key="operation" width="420px">
           <template v-slot="scope">
+            <el-button type="primary" size="mini" @click="setEmployeeAuthority(scope.row)">个人权限设置</el-button>
             <el-button type="warning" size="mini" @click="setPosition(scope.row)">权限设置</el-button>
             <el-button type="primary" size="mini" @click="updatePosition(scope.row)">修改</el-button>
             <el-button type="danger" size="mini" @click="delPosition(scope.row)">删除</el-button>
@@ -156,14 +156,6 @@
         this.positionObj = {};
         this.showForm = false;
       },
-      // isForBut (type) {
-      //   let array = [
-      //     { name: '查看', isType: '3', methosName: '' }
-      //   ]
-      //   return array.filter((item) => {
-      //     return item.isType.includes(type)
-      //   })
-      // },
       queryTabData () {
         this.$emit("queryTabData");
         console.log(this.queryData);
@@ -241,7 +233,6 @@
       },
       //设置权限
       setPosition(e){
-        console.log("del..");
         var that = this;
         //跳转页面
         that.$router.push({ path: '/sys/setPosition', query: { "id": e.id } });
@@ -295,6 +286,12 @@
             console.log(e);
           });
         this.$message.error("删除操作失败异常" + e);
+      },
+      //个人权限设置
+      setEmployeeAuthority(e){
+        let that = this;
+        //跳转页面
+        that.$router.push({path: '/sys/authority/employeeList', query: { "id": e.id } });
       }
     },
   }

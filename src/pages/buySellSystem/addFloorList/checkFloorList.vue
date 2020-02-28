@@ -197,6 +197,7 @@ export default {
                 if (e.data.code == 200) {
                 that.$router.push({ path: '/buySellSystem/addFloorList'});
                 }else if(e.data.code == 400){
+                  alert(e.data.message);
                   console.log("失败     "+e.data)
                 }
             })

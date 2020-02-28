@@ -48,7 +48,8 @@
                      :value="item.value">
           </el-option>
         </el-select>
-        <div class="item-after">
+        <div class="item-after"
+             @click="toHouse()">
           补充楼盘<i class="el-icon-question"></i>
         </div>
       </div>
@@ -388,6 +389,11 @@ export default {
     }
   },
   methods: {
+    //跳转到补充楼盘页面
+    toHouse () {
+      var that = this;
+      that.$router.push({ path: '/buySellSystem/CommunityReplenish' });
+    },
     //查询楼盘
     remoteCommunityName (e) {
       let that = this;
@@ -549,22 +555,42 @@ export default {
     //创建
     upLoadData (e) {
       let that = this;
-      console.log(this.formData);
-      return this.$api.post({
-        url: '/draft-house',
-        data: that.formData,
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false
-      }).then((e) => {
-        if (e.data.code == 200) {
-          return Promise.resolve(true);
-        } else {
+      if (that.$store.state.addHouse.formData.id == '') {
+        return this.$api.post({
+          url: '/draft-house',
+          data: that.formData,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        }).then((e) => {
+          if (e.data.code == 200) {
+            that.$store.commit('updateId', e.data.data)
+            return Promise.resolve(true);
+          } else {
+            return Promise.resolve(false);
+          }
+        }).catch((e) => {
           return Promise.resolve(false);
-        }
-      }).catch((e) => {
-        console.log(e);
-        return Promise.resolve(false);
-      })
+        })
+      } else {
+        return this.$api.put({
+          url: '/draft-house',
+          data: {
+            id: that.$store.state.addHouse.formData.id,
+            ...that.formData
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        }).then((e) => {
+          if (e.data.code == 200) {
+            that.$store.commit('updateId', e.data.data)
+            return Promise.resolve(true);
+          } else {
+            return Promise.resolve(false);
+          }
+        }).catch((e) => {
+          return Promise.resolve(false);
+        })
+      }
     },
   },
   data () {

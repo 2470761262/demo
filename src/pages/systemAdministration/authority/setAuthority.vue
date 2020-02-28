@@ -27,6 +27,7 @@
   <div>
     <template>
       <div class="elTree">
+        <el-button style="margin:10px 45px;" type="primary" size="mini" @click="savePosition">保存</el-button>
         <el-tree :data="ruleTreeData"
                  show-checkbox
                  node-key="id"
@@ -52,15 +53,13 @@
         </div>
         <div class="text item">
           <el-button type="primary" @click="cancel">返回</el-button>
-          <div class="formItem" style="margin-left: 230px;" v-show="showSave">
-            <el-button type="primary" @click="savePosition(0)">应用到角色</el-button>
-            <el-button type="primary" @click="savePosition(1)">应用到个人</el-button>
-            <el-button type="primary" @click="savePosition(2)">应用到公司</el-button>
-          </div>
         </div>
-        <div class="text item" v-show="true">
+        <div class="text item" style="margin-top: 10px;">
           <template>
             <div class="elTree" v-show="showCompanyTree">
+              <div class="formItem" style="margin: 10px 45px;" v-show="showSave">
+                <el-button type="primary" size="mini" @click="saveCompanyRule">保存</el-button>
+              </div>
               <el-tree :data="companyTreeData"
                        show-checkbox
                        :load="loadCompanyTreeNode"
@@ -86,7 +85,6 @@
     components: {},
     data() {
       return {
-        postId: null,
         ruleTreeData: [],
         companyTreeData: [],
         positionObj: {},
@@ -104,18 +102,24 @@
         showSave: false,
         showCompanyTree: false,
         companyGather: [],
+        ruleParamsObj:{
+          postId: null,
+          accountId: null,
+        },
         paramsObj: {},
       }
     },
     mounted() {
-      let id = JSON.parse(this.$route.query.id);
-      this.postId = id;
-      console.log(id);
+      let postId = JSON.parse(this.$route.query.postId);
+      let accountId = JSON.parse(this.$route.query.accountId);
+      this.ruleParamsObj.accountId = accountId;
+      this.ruleParamsObj.postId = postId;
+      this.paramsObj.accountId = accountId;
       //读取功能点数据
       this.$api
         .post({
-          url: "/sys/rule/position/tree/checked",
-          data: {postId: id},
+          url: "/sys/rule/employee/tree/checked",
+          data: {accountId: accountId},
           qs: true,
         })
         .then(e => {
@@ -133,10 +137,8 @@
           console.log("查询树节点");
           console.log(e);
         });
-
     },
     methods: {
-
       operationCompany(node, data) {
         this.showCompanyTree = true;
         this.showSave = true;
@@ -167,22 +169,46 @@
         this.paramsObj.dataType = 1;
         console.log(node, data, "operationDept..");
       },
-
       //应用
-      savePosition(type) {
+      savePosition() {
+        var that = this;
+        debugger;
+        let checkedKeys = that.$refs.tree.getCheckedKeys();
+        let keys = "";
+        checkedKeys.forEach(key =>{
+          keys = keys+","+key;
+        });
+        keys = keys.substr(1,keys.length);
+        console.log(keys,"checkedKeys///");
+        that.ruleParamsObj.ruleIds = keys;
+        this.$api
+          .post({
+            url: "/sys/rule/employee/set",
+            data: that.ruleParamsObj,
+            qs: true
+          })
+          .then(e => {
+            console.log(e.data);
+            let result = e.data;
+            if (result.code == 200) {
+              this.$message.info("操作成功");
+            } else {
+              console.log("保存结果：" + result.message);
+              this.$message.error("保存失败"+result.message);
+            }
+          });
+      },
+      //保存跨部门权限
+      saveCompanyRule(){
         if(!this.paramsObj && !this.paramsObj.rId){
           this.$message.info("请选择节点进行保存");
           return;
         }
         var that = this;
-        that.paramsObj.ruleType = 0;
-        that.paramsObj.postId = that.postId;
-        that.paramsObj.ruleType = 0;
-        that.paramsObj.type = type;
-
+        console.log(that.paramsObj,"save company ...");
         this.$api
           .post({
-            url: "/sys/position/set/rules",
+            url: "/sys/rule/employee/company/set",
             data: that.paramsObj,
             qs: true
           })
@@ -241,12 +267,13 @@
           }
         }
       },
+
       //取消
       cancel() {
         var that = this;
         //跳转页面
-        that.$router.push({path: '/sys/positionManager'});
-      }
+        that.$router.push({path: '/sys/authority/employeeList', query: { "id": this.paramsObj.postId}});
+      },
     }
   }
 </script>
