@@ -171,9 +171,26 @@ export default {
 
     toLook(id){
          var that = this;
-        that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
+        that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
     },
-    toSale(id){},
+    toSale(id){
+      var that = this
+        this.$api.get({
+          url: "/houseResource/turnSale",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            id: id,
+            type: 2
+          }
+        }).then((e) => {
+          console.log(e.data)
+          if (e.data.code == 200) {
+              that.$router.push({ path: '/buySellSystem/addHouse', query: { "id": e.data.code.message } });
+          }
+        })
+    },
     queryNotSaleParams(){
         this.queryNotSale(1);
     },
