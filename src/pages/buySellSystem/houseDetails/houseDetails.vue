@@ -221,12 +221,24 @@
           </div>
         </div>
         <el-button
-          v-if="houseDetails.is_release_outside!=1&&houseDetails.AgentPer==35365"
+          v-if="houseDetails.is_release_outside!=1&&houseDetails.AgentPer==perId"
           slot="reference"
           @click="certificateType"
         >发布外网房源</el-button>
       </el-popover>
-      <el-button>推荐房源</el-button>
+
+      <el-popover placement="top" width="600" trigger="manual" v-model="isShowRecommend">
+        <div>
+          <el-input  v-model="recommendMemo" type="textarea" placeholder="请输入原因"> 
+          </el-input>
+        </div>
+        <div>
+          <el-button @click="isShowRecommend=false">取消</el-button>
+          <el-button @click="insertOrCancleRecommend">添加</el-button>
+        </div>
+          <el-button  slot="reference" @click="isShowRecommend=true">{{isRecommend?'取消推荐':'推荐房源'}}</el-button>
+      </el-popover>
+
       <el-button>鑫币对赌</el-button>
       <el-popover placement="top" width="600" trigger="manual" v-model="isShowChange">
         <div class="query-cell">
@@ -313,7 +325,7 @@
         <el-button
           slot="reference"
           @click="showKeyStorageDept"
-          v-if="agentHouseMethod.keyOwner==35365"
+          v-if="agentHouseMethod.keyOwner==perId"
         >修改钥匙存放门店</el-button>
       </el-popover>
     </div>
@@ -1363,12 +1375,15 @@ export default {
       dealCompany:"",//成交公司
       dealPrice:"",//成交价
       selfSaleType:"",//自售类型
-      invalidType:""//无效类型
+      invalidType:"",//无效类型
+      perId:"",//登录人id
+      isRecommend:false,//是否推荐
+      isShowRecommend:false,//是否展示推荐弹窗
+      recommendMemo:""//推荐的原因
     };
   },
   before() {},
   mounted() {
-    console.log(this.$route.params.houseId);
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       util.localStorageSet("houseDetails.vue:houseId",this.houseId);
@@ -1376,14 +1391,14 @@ export default {
     else{
       this.houseId = util.localStorageGet("houseDetails.vue:houseId");
     }
-    let params = {
-      houseId: this.houseId
-      //perId: 35365
-    };
+    if(util.localStorageGet("logindata")){
+      this.perId=util.localStorageGet("logindata").accountId;
+    }
     this.getHouseDetails();
-    this.getisCollectHouse(params);
+    this.getisCollectHouse();
     this.getHouseFollow();
     this.getImpressionList();
+    this.getisRecommend();
     this.$nextTick(() => {
       const el = document.querySelector(".act-not");
       const offsetHeight = el.offsetHeight;
@@ -1465,6 +1480,65 @@ export default {
             message: "取消拨号"
           });
         });
+    },
+    insertOrCancleRecommend(){
+      let that = this;
+      let url="/agentHouse/recommend/insertRecommend"
+      if(this.isRecommend){
+          url="";
+      }
+      if(this.recommendMemo==""){
+          this.$message("原因未填");
+          return;
+      }
+      that.recommendMemo="";
+      that.isShowRecommend=false;
+      this.$api
+        .post({
+          url: url,
+          data: {
+            Eid:that.houseId,
+            Memo:that.recommendMemo
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+
+          that.isRecommend=!that.isRecommend;
+       
+        })
+        .catch(e => {
+          if(e.response!=undefined){
+              that.$message(e.response.data.message);
+          }
+          else{
+             that.$message("请求失败");
+          }
+          
+        });
+    }, 
+    getisRecommend(){
+      let that = this;
+      this.$api
+        .get({
+          url: "/agentHouse/recommend/isRecommend",
+          data: {
+            houseId:this.houseId
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.isRecommend=false;
+          
+        })
+        .catch(e => {
+          that.isRecommend=true;
+          //that.$message("请求失败");
+        });
     },   
     houseLock() {
       let that = this;
@@ -1475,7 +1549,6 @@ export default {
       }
       let params = {
         Eid: this.houseId,
-        operationPer: 35365,
         Islocking: isLocking
       };
       this.$api
@@ -1502,7 +1575,6 @@ export default {
       }
       let params = {
         Eid: this.houseId,
-        operationPer: 35365,
         cancleType: this.cancelMethodType,
         cancleMemo:this.cancleMemo
       };
@@ -1591,7 +1663,6 @@ export default {
       let obj = JSON.parse(uploader.filename);
       let that = this;
       let formData = new FormData();
-      formData.append("addName", 35365);
       formData.append("type", obj.type);
       formData.append("file", uploader.file);
       if (obj.subType != undefined) {
@@ -1670,8 +1741,7 @@ export default {
     getHouseDetails() {
       let that = this;
       let params={
-          houseId: this.houseId,
-          perId: 35365
+          houseId: this.houseId
       }
       this.$api
         .post({
@@ -1748,16 +1818,18 @@ export default {
           if (e.response != undefined) {
             that.$message(e.response.data.message);
           } else {
-            that.$message("请求失败");
+            //that.$message("请求失败");
           }
         });
     },
-    getisCollectHouse(params) {
+    getisCollectHouse() {
       let that = this;
       this.$api
         .get({
           url: "/agentHouse/collect/isCollectHouse",
-          data: params,
+          data: {
+            houseId:that.houseId
+          },
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
         })
@@ -1766,9 +1838,9 @@ export default {
           if (result.code == 200) {
             that.isCollectHouse = true;
           } 
-          // else {
-          //   that.$message(result.message);
-          // }
+          else {
+            that.$message(result.message);
+          }
         })
         .catch(e => {});
     },
@@ -1776,8 +1848,7 @@ export default {
       let that = this;
       let ajaxurl = "";
       let params = {
-        houseId: that.houseId,
-        perId: 35365
+        houseId: that.houseId
       };
       if (that.isCollectHouse) {
         ajaxurl = "/agentHouse/collect/cancelCollectHouse";
@@ -1813,7 +1884,6 @@ export default {
       let ajaxurl = "";
       let params = {
         houseId: that.houseId,
-        perId: 35365,
         isSendNotice: that.isSendNotice
       };
       this.$api
@@ -1832,7 +1902,6 @@ export default {
       let params = {
         page: that.page,
         limit: 5,
-        perId: 35365,
         houseId: that.houseId
       };
       this.$api
@@ -1862,7 +1931,6 @@ export default {
       let params = {
         page: that.page,
         limit: 5,
-        perId: 35365,
         houseId: that.houseId
       };
       this.$api
@@ -1881,7 +1949,7 @@ export default {
     },
     deleteFollow(followId) {
       let that = this;
-      let params = { followId: followId, houseId: that.houseId, perId: 35365 };
+      let params = { followId: followId, houseId: that.houseId };
       this.$api
         .post({
           url: "/agentHouse/follow/deleteFollow",
@@ -1898,7 +1966,6 @@ export default {
       let params = {
         memo: that.followMemo,
         houseId: that.houseId,
-        followPer: 35365,
         followWay: that.followType,
         followType: "常态跟进"
       };
@@ -1923,7 +1990,6 @@ export default {
       let that = this;
       let params = {
         houseId: that.houseId,
-        creator: 35365,
         impression: that.impression
       };
       let arry=that.impression.split('');
@@ -1960,8 +2026,7 @@ export default {
     getImpressionList() {
       let that = this;
       let params = {
-        houseId: that.houseId,
-        creator: 35365
+        houseId: that.houseId
       };
       this.$api
         .get({
@@ -1978,8 +2043,7 @@ export default {
     deleteImpression(impressionId) {
       let that = this;
       let params = {
-        impressionId: impressionId,
-        deleter: 35365
+        impressionId: impressionId
       };
       this.$api
         .post({
@@ -2001,7 +2065,6 @@ export default {
         let params = {
           houseId: this.houseId,
           houseType: 0,
-          perId: 35365,
           certificateType: 1,
           certificateNo: this.certificateNo
         };
@@ -2016,8 +2079,7 @@ export default {
     certificateType() {
       let params = {
         houseId: this.houseId,
-        houseType: 0,
-        perId: 35365
+        houseType: 0
       };
       if (
         this.houseDetails.certificate_type == null ||
@@ -2134,9 +2196,7 @@ export default {
       let params = {
         Eid: that.houseId,
         Type: 11,
-        AddPer: 35365,
         OldOwner: 0,
-        NewOwner: 35365,
         OwnerMemo: that.reportMemo,
         reportType: that.reportType
       };
@@ -2259,8 +2319,6 @@ export default {
       let params = {
         Eid: that.houseId,
         Type: type,
-        AddPer: 35365,
-        NewOwner: 35365,
         picList: []
       };
       let resultobj = {};
@@ -2375,7 +2433,6 @@ export default {
       let params ={
         Eid: that.houseId,
         Type: 8,
-        AddPer: 35365,
         NewSaleTag:that.changeType
       };
      switch (this.changeType) {
