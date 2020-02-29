@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="float:left;border:1px solid blue;text-align:center;padding : 0px 80px 0px 30px;">
+    <div style="float:left;border:0px solid blue;text-align:center;padding : 0px 80px 0px 30px;">
       <el-form ref="form" :v-model="form" label-width="120px" text-align:cente>
         <!-- <h1 style="text-align :center;">店面信息</h1> -->
         <el-form-item label="店面">
@@ -58,7 +58,7 @@
             placeholder="小组名"
             list="deptNameList"
             v-model="queryData.keyWord"
-            style="width:300px;border:1px solid  red;margin:0px 20px 0px 0px"
+            style="width:300px;border:0px solid  red;margin:0px 20px 0px 0px"
             @focus="findByParams()"
             clearable
           >
@@ -80,7 +80,7 @@
 
     <list-page
       :parentData="$data"
-      style="float:left;border:1px solid red"
+      style="float:left;border:0px solid red"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
@@ -277,14 +277,14 @@ export default {
       this[e](id);
     },
     delDeptDetail(id){
-      debugger;
+
       let params ={ id:this.id,
                     deptId:id};
       this.$api.post({
         url: '/stroe/deptName/del',
         data:params,
-        //token: false,
-        qs:true,
+        token: false,
+        //qs:true,
         headers: { "Content-Type": "application/json;charset=UTF-8" }
       }).then((e) => {
         let result = e.data;
