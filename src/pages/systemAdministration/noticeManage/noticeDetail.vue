@@ -34,7 +34,7 @@
         <el-col :span="24"><div v-html="noticeEntity.newsContent" class="newsContent"></div></el-col>
     </el-row>
      <el-row>
-        <el-col :span="24"><div v-html="'发布人：'+noticeEntity.addPer" class="right"></div></el-col>
+        <el-col :span="24"><div v-html="'发布人：'+noticeEntity.perName" class="right"></div></el-col>
     </el-row>
   </div>
 </template>
