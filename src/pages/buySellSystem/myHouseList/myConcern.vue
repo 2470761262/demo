@@ -110,7 +110,9 @@
                        key="operation">
         <template v-slot="scope">
             <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">查看</el-button>
-             <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">取消关注</el-button>
+            <el-popconfirm confirmButtonText='我要取消' cancelButtonText='还是不了吧' icon="el-icon-info" iconColor="red" title="确定取消关注这个房源吗？">
+              <el-button type="info" slot="reference" @click="concernOFF(scope.row.id)" size="mini">取消关注</el-button>
+              </el-popconfirm>
        </template> 
       </el-table-column>
     </template>
@@ -182,6 +184,16 @@ export default {
     this.querylist(1);
   },
   methods: {
+    concernOFF(id){
+       this.$api.post({
+        url: "/concernHouseOFF/"+id,
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+      }).then((e) => {
+        alert("取消关注成功");
+      })
+
+    },
      queryAddPerId () {
       var that = this
       this.$api.get({
