@@ -21,7 +21,6 @@
       background-color: rgb(84, 92, 100);
     }
     .children-page {
-      padding-top: 20px;
       //height: calc(100% - 14px);
       height: 100%;
       box-sizing: border-box;

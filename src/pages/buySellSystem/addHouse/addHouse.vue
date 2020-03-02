@@ -4,12 +4,15 @@
   flex-direction: column;
   height: 100%;
   .page-steps {
+    padding: 15px 40px !important;
+    border: 1px solid #b4b4b4;
+    border-top: none;
     /deep/.el-step__title {
       line-height: normal;
       margin-top: 10px;
+      text-indent: -14px;
     }
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    background: #fff;
     padding: 10px 0 15px;
   }
   .page-contenr {
@@ -61,9 +64,9 @@
   <div class="page-body">
     <div class="page-steps">
       <el-steps :active="stepsActiveIndex+1"
-                align-center
                 finish-status="success">
         <el-step :title="item.title"
+                 icon="el-icon-edit"
                  v-for="(item, index) in stepsList"
                  :key="index"></el-step>
       </el-steps>
@@ -129,7 +132,7 @@ export default {
   },
   data () {
     return {
-      componentName: "basicInformation",
+      componentName: "exploration",
       stepsList: [
         { title: "必填信息", componentName: "basicInformation" },
         { title: "选填信息", componentName: "supplement" },

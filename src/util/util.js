@@ -34,10 +34,8 @@ export default {
     switch (sign) {
       case 1:
         return "占用";
-        break;
       case 0:
         return "未占用";
-        break;
       default:
         return "无"
     }
@@ -55,10 +53,8 @@ export default {
     switch (landCharacteristic) {
       case "0":
         return "出让";
-        break;
       case "1":
         return "划拨";
-        break;
       default:
         return "无"
     }

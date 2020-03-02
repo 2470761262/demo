@@ -1,368 +1,266 @@
 <style lang="less" scoped>
-@import url("../../../../assets/publicLess/addHouse.less");
-.item-before {
-  width: 110px !important;
-}
-.form-error-tips {
-  &.noMarinTop {
-    margin-top: 0;
-  }
-  .page-cell-item {
-    flex-wrap: wrap;
-    &.el-input-auto {
+.page-cell-addHouse {
+  padding: 0 50px;
+  .cell-item-cell {
+    display: flex;
+    align-items: center;
+    margin-top: 25px;
+    &.no-top {
+      margin-top: 0;
+    }
+    .after-tips {
+      &:after {
+        content: attr(data-tips);
+        display: block;
+        color: red;
+      }
+    }
+    .item-before {
+      line-height: 40px;
+      &.before-text {
+        position: relative;
+        &::before {
+          content: attr(data-before);
+          position: absolute;
+          font-size: 12px;
+          width: 100%;
+          line-height: 1;
+          bottom: -4px;
+          text-align: center;
+        }
+      }
+      &.text-just {
+        text-align: justify;
+        &::after {
+          content: "";
+          display: inline-block;
+          width: 100%;
+          height: 0;
+        }
+      }
+      width: 75px;
+      position: relative;
+      margin-right: 25px;
+      height: 40px;
+      font-size: 15px;
+      box-sizing: border-box;
+      color: #666;
+    }
+    /deep/.el-select {
+      height: 25px;
+      width: 140px;
       .el-input {
-        width: auto;
+        height: 100%;
+        .el-input__icon {
+          line-height: 25px;
+        }
+        .el-input__inner {
+          height: 100%;
+          line-height: 25px;
+          font-size: 12px;
+        }
       }
     }
-    .cell-item-cell {
-      display: flex;
-      margin-top: 20px;
-      margin-right: 60px;
-      width: 320px;
-      align-items: center;
-      &:last-child {
-        margin-right: 0px;
+    .el-textarea {
+      width: 410px;
+      height: 70px;
+      /deep/textarea {
+        height: 100%;
       }
     }
-    &.nowarp {
-      flex-wrap: nowrap !important;
-    }
-    @media screen and(max-width: 933px) {
-      .warp-marin {
-        margin-top: 10px;
+    &.el-input-w {
+      &.el-input-w-280 {
+        /deep/.el-input {
+          width: 280px;
+        }
+      }
+      /deep/.el-input {
+        .other-input;
+        margin-right: 20px;
       }
     }
     .Division {
-      align-self: center;
-      margin: 0 10px;
+      margin: 0 20px;
+      &:first-child {
+        margin-left: 0;
+      }
     }
-  }
-}
-.item-flex {
-  flex: 1;
-  .el-radio-group {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 0 -5px;
-    .item-flex-avg {
-      flex: 0 0 50%;
-      padding: 0 5px;
-      box-sizing: border-box;
-      .el-radio {
-        width: 100%;
+    .other-input {
+      height: 25px;
+      width: 120px;
+      /deep/.el-input__inner {
+        height: 100%;
+        line-height: 25px;
+        font-size: 12px;
+        border: none;
+        border-radius: 0;
+        border-bottom: 1px solid #dcdfe6;
+        padding: 0 15px !important;
+      }
+      /deep/.el-icon-date {
+        display: none;
+      }
+      /deep/.el-input__icon {
+        line-height: 25px;
       }
     }
   }
 }
-.item-avg-3 {
-  flex: 0 0 33% !important;
-  margin-bottom: 10px;
+.flex-cell {
+  display: flex;
+}
+.division-line {
+  height: 1px;
+  background: #dcdfe6;
+  margin-top: 40px;
+}
+.flex-start {
+  align-self: flex-start;
 }
 </style>
 <template>
   <div class="page-cell-addHouse">
-    <div class="page-cell-title">补充信息</div>
-    <!-- 房屋用途 && 房屋结构 -->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">房屋用途</div>
-          <el-select v-model="formData.houseUse"
-                     placeholder="请选择房屋用途">
-            <el-option v-for="item in houseUseList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="cell-item-cell">
-          <div class="item-before">房屋结构</div>
-          <el-select v-model="formData.houseStruct"
-                     placeholder="请选择房屋结构">
-            <el-option v-for="item in houseStructList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
+    <!-- 房屋来源 -->
+    <div class="cell-item-cell">
+      <div class="item-before text-just">房源来源</div>
+      <el-select v-model="formData.houseSource"
+                 placeholder="请选择房源来源">
+        <el-option v-for="item in houseSourceList"
+                   :key="item.value"
+                   :label="item.key"
+                   :value="item.value">
+        </el-option>
+      </el-select>
+    </div>
+    <!-- 房屋现状 -->
+    <div class="cell-item-cell">
+      <div class="item-before text-just">房屋现状</div>
+      <el-radio-group v-model="formData.houseNow"
+                      size="mini">
+        <el-radio :label="item.value"
+                  v-for="item in houseNowList"
+                  :key="item.key">{{ item.key }}</el-radio>
+      </el-radio-group>
+    </div>
+    <!-- 装修类型  -->
+    <div class="cell-item-cell">
+      <div class="item-before text-just">装修类型</div>
+      <el-radio-group v-model="formData.decoration"
+                      size="mini">
+        <el-radio :label="item.value"
+                  v-for="item in decorationList"
+                  :key="item.key">{{ item.key }}</el-radio>
+      </el-radio-group>
+    </div>
+    <!-- 户口情况 -->
+    <div class="cell-item-cell">
+      <div class="item-before text-just">户口情况</div>
+      <el-radio-group v-model="formData.sign"
+                      size="mini">
+        <el-radio v-for="item in signList"
+                  :key="item.key"
+                  :label="item.value">{{ item.key }}</el-radio>
+      </el-radio-group>
+    </div>
+    <!-- 物业费 -->
+    <div class="cell-item-cell el-input-w">
+      <div class="item-before text-just">物业费</div>
+      <el-input type="text"></el-input>
+      <div class="item-after">元/平方</div>
+    </div>
+    <!-- 附属配套 -->
+    <div class="cell-item-cell el-input-w">
+      <div class="item-before text-just">附属配套</div>
+      <el-radio-group v-model="houseBelongSelect"
+                      @change="houseBelongChange"
+                      size="mini">
+        <el-radio v-for="item in houseBelongList"
+                  :key="item.value"
+                  :label="item.key">{{ item.key }}</el-radio>
+      </el-radio-group>
+      <el-input v-if="houseBelongSelect=='其他'"
+                type="text"
+                v-model="formData.houseBelong"></el-input>
+    </div>
+    <!-- 学籍占用 -->
+    <div class="cell-item-cell">
+      <div class="item-before  text-just before-text"
+           data-before="(小学)">学籍占用</div>
+      <el-radio-group size="mini"
+                      @change="primaryRadioChange"
+                      v-model="primaryRadio">
+        <el-radio v-for="item in primarySchoolUseList"
+                  :key="item.value"
+                  :label="item.value">{{ item.key }}</el-radio>
+      </el-radio-group>
+    </div>
+    <!-- 小学占用选择 -->
+    <div class="cell-item-cell no-top"
+         v-if="primaryRadio == 1">
+      <div class="item-before"></div>
+      <div :class="{'after-tips':errorBags.has('primarySchoolUse')}"
+           :data-tips="errorBags.first('primarySchoolUse')">
+        <el-radio-group v-validate="{'required':primaryRadio == 1}"
+                        data-vv-name="primarySchoolUse"
+                        data-vv-as="小学学籍占用"
+                        v-model="formData.primarySchoolUse"
+                        size="mini">
+          <el-radio :label="item.value"
+                    v-for="item in primarySchoolUseRenderList"
+                    :key="item.value"
+                    border>{{ item.key }}</el-radio>
+        </el-radio-group>
       </div>
     </div>
-    <!-- 产权性质 && 房屋现状 -->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">产权性质</div>
-          <el-select v-model="formData.property"
-                     placeholder="请选择产权性质">
-            <el-option v-for="item in propertyList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="cell-item-cell">
-          <div class="item-before">房屋现状</div>
-          <el-select v-model="formData.houseNow"
-                     placeholder="请选择房屋现状">
-            <el-option v-for="item in houseNowList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
+    <!-- 中学籍占用 -->
+    <div class="cell-item-cell ">
+      <div class="item-before  text-just before-text"
+           data-before="(中学)">学籍占用</div>
+      <el-radio-group size="mini"
+                      @change="middleRadioChange"
+                      v-model="middleRadio">
+        <el-radio v-for="item in middleSchoolUseList"
+                  :key="item.value"
+                  :label="item.value">{{ item.key }}</el-radio>
+      </el-radio-group>
+    </div>
+    <!-- 中学占用选择 -->
+    <div class="cell-item-cell no-top"
+         v-if="middleRadio == 1">
+      <div class="item-before"></div>
+      <div :class="{'after-tips':errorBags.has('middleSchoolUse')}"
+           :data-tips="errorBags.first('middleSchoolUse')">
+        <el-radio-group v-validate="{'required':middleRadio == 1}"
+                        data-vv-name="primarySchoolUse"
+                        data-vv-as="中学学籍占用"
+                        v-model="formData.middleSchoolUse"
+                        size="mini">
+          <el-radio :label="item.value"
+                    v-for="item in middleSchoolUseRenderList"
+                    :key="item.value"
+                    border>{{ item.key }}</el-radio>
+        </el-radio-group>
       </div>
     </div>
-    <!-- 房屋来源 && 户型结构 -->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">房屋来源</div>
-          <el-select v-model="formData.houseSource"
-                     placeholder="请选择房屋来源">
-            <el-option v-for="item in houseSourceList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="cell-item-cell">
-          <div class="item-before">户型结构</div>
-          <el-select v-model="formData.roomType"
-                     placeholder="请选择户型结构">
-            <el-option v-for="item in roomTypeList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-      </div>
+    <!-- 抵押情况 -->
+    <div class="cell-item-cell">
+      <div class="item-before text-just">抵押情况</div>
+      <el-radio-group v-model="formData.mortgage"
+                      @change="mortgageChange"
+                      size="mini">
+        <el-radio v-for="item in mortgageList"
+                  class="item-flex-avg"
+                  :key="item.key"
+                  :label="item.value">{{ item.key }}</el-radio>
+      </el-radio-group>
     </div>
-    <!-- 户口情况 && 电梯 -->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">户口情况</div>
-          <div class="item-flex">
-            <el-radio-group v-model="formData.sign"
-                            size="mini">
-              <div v-for="item in signList"
-                   class="item-flex-avg"
-                   :key="item.key">
-                <el-radio :label="item.value"
-                          border>{{ item.key }}</el-radio>
-              </div>
-            </el-radio-group>
-          </div>
-        </div>
-        <div class="cell-item-cell">
-          <div class="item-before">电梯</div>
-          <div class="item-flex">
-            <el-radio-group v-model="formData.isElevator"
-                            size="mini">
-              <div v-for="item in isElevatorList"
-                   class="item-flex-avg"
-                   :key="item.key">
-                <el-radio :label="item.value"
-                          border>{{ item.key }}</el-radio>
-              </div>
-            </el-radio-group>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- 交房时间 && 附属配套-->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">交房时间</div>
-          <div class="item-flex">
-            <el-radio-group v-model="formData.houseDelivery"
-                            size="mini">
-              <div v-for="item in houseDeliveryList"
-                   class="item-flex-avg"
-                   :key="item.value">
-                <el-radio :label="item.value"
-                          border>{{ item.key }}</el-radio>
-              </div>
-            </el-radio-group>
-          </div>
-        </div>
-        <div class="cell-item-cell">
-          <div class="item-before">附属配套</div>
-          <el-select v-model="formData.houseBelong"
-                     placeholder="请选择附属配套">
-            <el-option v-for="item in houseBelongList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-      </div>
-    </div>
-    <!-- 土地性质  -->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">土地性质</div>
-          <div class="item-flex">
-            <el-radio-group v-model="formData.landCharacteristic"
-                            size="mini">
-              <div v-for="item in landCharacteristicList"
-                   class="item-flex-avg"
-                   :key="item.value">
-                <el-radio :label="item.value"
-                          border>{{ item.key }}</el-radio>
-              </div>
-            </el-radio-group>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="page-cell-title">学籍信息</div>
-    <!-- 小学划片 & 学籍占用 -->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">小学划片</div>
-          <el-select v-model="formData.primarySchool"
-                     filterable
-                     placeholder="请选择小学">
-            <el-option v-for="item in primaryschoolList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="page-cell-item">
-          <div class="cell-item-cell">
-            <div class="item-before">学籍占用</div>
-            <div class="item-flex">
-              <el-radio-group size="mini"
-                              v-model="primaryRadio">
-                <div v-for="item in primarySchoolUseList"
-                     class="item-flex-avg"
-                     :key="item.value">
-                  <el-radio :label="item.value"
-                            border>{{ item.key }}</el-radio>
-                </div>
-              </el-radio-group>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- 小学占用 -->
-    <div v-if="primaryRadio == 1"
-         class="form-error-tips"
-         :class="{'after-tips':errorBags.has('primarySchoolUse')}"
-         :data-tips="errorBags.first('primarySchoolUse')">
-      <div class="page-cell-item">
-        <div class="page-cell-item">
-          <div class="item-before">小学占用</div>
-          <div class="item-flex">
-            <el-radio-group v-validate="{'required':primaryRadio == 1}"
-                            data-vv-name="primarySchoolUse"
-                            data-vv-as="学籍占用"
-                            v-model="formData.primarySchoolUse"
-                            size="mini">
-              <div v-for="item in primarySchoolUseRenderList"
-                   class="item-flex-avg item-avg-3"
-                   :key="item.value">
-                <el-radio :label="item.value"
-                          border>{{ item.key }}</el-radio>
-              </div>
-            </el-radio-group>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- 中学划片 & 学籍占用 -->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">中学划片</div>
-          <el-select v-model="formData.middleSchool"
-                     filterable
-                     placeholder="请选择中学">
-            <el-option v-for="item in middleSchoolList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </div>
-        <div class="page-cell-item">
-          <div class="cell-item-cell">
-            <div class="item-before">学籍占用</div>
-            <div class="item-flex">
-              <el-radio-group v-model="middleRadio"
-                              size="mini">
-                <div v-for="item in middleSchoolUseList"
-                     class="item-flex-avg"
-                     :key="item.value">
-                  <el-radio :label="item.value"
-                            border>{{ item.key }}</el-radio>
-                </div>
-              </el-radio-group>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- 中学占用 -->
-    <div v-if="middleRadio == 1"
-         class="form-error-tips"
-         :class="{'after-tips':errorBags.has('middleSchoolUse')}"
-         :data-tips="errorBags.first('middleSchoolUse')">
-      <div class="page-cell-item">
-        <div class="page-cell-item">
-          <div class="item-before">中学占用</div>
-          <div class="item-flex">
-            <el-radio-group v-validate="{'required':middleRadio == 1}"
-                            data-vv-name="middleSchoolUse"
-                            data-vv-as="学籍占用"
-                            v-model="formData.middleSchoolUse"
-                            size="mini">
-              <div v-for="item in middleSchoolUseRenderList"
-                   class="item-flex-avg item-avg-3"
-                   :key="item.value">
-                <el-radio :label="item.value"
-                          border>{{ item.key }}</el-radio>
-              </div>
-            </el-radio-group>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="page-cell-title">抵押/贷款信息</div>
-    <!-- 抵押 && 抵押银行-->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">抵押</div>
-          <div class="item-flex">
-            <el-radio-group v-model="formData.mortgage"
-                            size="mini">
-              <div v-for="item in mortgageList"
-                   class="item-flex-avg"
-                   :key="item.value">
-                <el-radio :label="item.value"
-                          border>{{ item.key }}</el-radio>
-              </div>
-            </el-radio-group>
-          </div>
-        </div>
-        <div class="cell-item-cell">
-          <div class="item-before">抵押银行</div>
-          <el-select v-model="formData.mortgageBank"
+    <div class="cell-item-cell  no-top">
+      <div class="item-before"></div>
+      <div :class="{'after-tips':errorBags.has('balance') ||  errorBags.has('monthlyMortgage')}"
+           :data-tips="errorBags.first('balance') || errorBags.first('monthlyMortgage')">
+        <div class="cell-item-cell  no-top">
+          <el-select v-if="formData.mortgage==1"
+                     v-model="formData.mortgageBank"
                      placeholder="请选择抵押银行">
             <el-option v-for="item in options"
                        :key="item.value"
@@ -370,65 +268,47 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </div>
-      </div>
-    </div>
-    <!-- 余贷/月供 -->
-    <div class="form-error-tips "
-         :class="{'after-tips':errorBags.has('balance') ||  errorBags.has('monthlyMortgage')}"
-         :data-tips="errorBags.first('balance') || errorBags.first('monthlyMortgage')">
-      <div class="page-cell-item el-input-auto">
-        <div class="page-cell-item nowarp">
-          <div class="item-before">余贷/月供</div>
-          <div class="page-cell-item">
-            <div class="page-cell-item nowarp">
-              <el-input v-model="formData.balance"
-                        v-validate="'decimal:2|max:14'"
-                        data-vv-as="余贷"
-                        data-vv-name="balance"
-                        placeholder="请输入余贷金额"></el-input>
-              <div class="Division">万元</div>
-            </div>
-            <div class="page-cell-item nowarp warp-marin">
-              <el-input v-model="formData.monthlyMortgage"
-                        v-validate="'decimal:2|max:14'"
-                        data-vv-as="月供"
-                        data-vv-name="monthlyMortgage"
-                        placeholder="请输入月供"></el-input>
-              <div class="Division">万元</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="page-cell-title">历史交易</div>
-    <!-- 上次交易时间/上次交易金额 -->
-    <div class="form-error-tips noMarinTop"
-         :class="{'after-tips':errorBags.has('lastPayment') }"
-         :data-tips="errorBags.first('lastPayment') ">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">上次交易</div>
-          <el-date-picker v-model="formData.lastSale"
-                          type="date"
-                          placeholder="契税发票时间">
-          </el-date-picker>
-        </div>
-        <div class="cell-item-cell">
-          <div class="item-before">上次交易金额</div>
-          <el-input v-model="formData.lastPayment"
+          <div class="Division">余贷/月供</div>
+          <el-input class="other-input"
+                    v-model="formData.balance"
                     v-validate="'decimal:2|max:14'"
-                    data-vv-as="上次交易金额"
-                    data-vv-name="lastPayment"
-                    placeholder="报税价"></el-input>
+                    data-vv-as="余贷"
+                    data-vv-name="balance"
+                    placeholder="请输入余贷金额"></el-input>
+          <div class="Division">万元</div>
+          <el-input class="other-input"
+                    v-model="formData.monthlyMortgage"
+                    v-validate="'decimal:2|max:14'"
+                    data-vv-as="月供"
+                    data-vv-name="monthlyMortgage"
+                    placeholder="请输入月供"></el-input>
+          <div class="Division">万元</div>
         </div>
       </div>
     </div>
-    <!-- 付款方式/竣工时间 -->
-    <div class="form-error-tips noMarinTop">
-      <div class="page-cell-item">
-        <div class="cell-item-cell">
-          <div class="item-before">付款方式</div>
+    <!-- 上次交易 -->
+    <div class="cell-item-cell ">
+      <div class="item-before  text-just">上次交易</div>
+      <el-date-picker v-model="formData.lastSale"
+                      type="date"
+                      class="other-input"
+                      placeholder="契税发票时间">
+      </el-date-picker>
+      <div class="Division">是否唯一住房</div>
+      <el-radio-group size="mini"
+                      v-model="formData.isOwnerOnly">
+        <el-radio v-for="item in isowneronlyList"
+                  :key="item.value"
+                  :label="item.value">{{ item.key }}</el-radio>
+      </el-radio-group>
+      <div class="Division">满5唯一</div>
+    </div>
+    <!-- 付款方式 -->
+    <div class="cell-item-cell ">
+      <div class="item-before  text-just">付款方式</div>
+      <div :class="{'after-tips':errorBags.has('lastPayment') }"
+           :data-tips="errorBags.first('lastPayment') ">
+        <div class="cell-item-cell  no-top">
           <el-select v-model="formData.paymentMethod"
                      placeholder="付款方式">
             <el-option v-for="item in paymentMethodList"
@@ -437,15 +317,74 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </div>
-        <div class="cell-item-cell">
-          <div class="item-before">竣工时间</div>
-          <el-date-picker v-model="formData.buildingTime"
-                          type="date"
-                          placeholder="付款方式">
-          </el-date-picker>
+          <div class="Division">上次交易金额</div>
+          <el-input class="other-input"
+                    v-model="formData.lastPayment"
+                    v-validate="'decimal:2|max:14'"
+                    data-vv-as="上次交易金额"
+                    data-vv-name="lastPayment"
+                    placeholder="报税价"></el-input>
+          <div class="Division">万</div>
         </div>
       </div>
+    </div>
+    <div class="division-line"></div>
+    <!-- 房源标题 -->
+    <div class="cell-item-cell el-input-w el-input-w-280">
+      <div class="item-before text-just">房源标题</div>
+      <el-input type="text"
+                v-model="formData.title"
+                placeholder="请输入房源标题"
+                maxLength="15"></el-input>
+      <div class="item-after">{{formData.title.length}}/15</div>
+    </div>
+    <!-- 小区介绍 -->
+    <div class="cell-item-cell">
+      <div class="item-before text-just flex-start">小区介绍</div>
+      <el-input class="el-textarea"
+                type="textarea"
+                placeholder="请输入小区介绍"
+                v-model="formData.communityDesc"
+                maxlength="50"
+                resize="none"
+                show-word-limit>
+      </el-input>
+    </div>
+    <!-- 户型介绍 -->
+    <div class="cell-item-cell">
+      <div class="item-before text-just flex-start">户型介绍</div>
+      <el-input class="el-textarea"
+                type="textarea"
+                placeholder="请输入户型介绍"
+                v-model="formData.roomDesc"
+                maxlength="50"
+                resize="none"
+                show-word-limit>
+      </el-input>
+    </div>
+    <!-- 税费解析 -->
+    <div class="cell-item-cell">
+      <div class="item-before text-just flex-start">税费解析</div>
+      <el-input class="el-textarea"
+                type="textarea"
+                placeholder="请输入税费解析"
+                v-model="formData.taxDesc"
+                maxlength="50"
+                resize="none"
+                show-word-limit>
+      </el-input>
+    </div>
+    <!-- 核心卖点 -->
+    <div class="cell-item-cell">
+      <div class="item-before text-just flex-start">核心卖点</div>
+      <el-input class="el-textarea"
+                type="textarea"
+                placeholder="请输入核心卖点"
+                v-model="formData.saleDesc"
+                maxlength="50"
+                resize="none"
+                show-word-limit>
+      </el-input>
     </div>
   </div>
 </template>
@@ -493,30 +432,49 @@ export default {
       step: {},
       options: [],
       deffData: {},
-      primaryRadio: '',
-      middleRadio: '',
-      houseUseList: formReander.HOUSEUSE,//房屋用途
-      houseStructList: formReander.HOUSESTRUCT,//房屋结构
-      propertyList: formReander.PROPERTY,//产权性质
-      primaryschoolList: formReander.PRIMARYSCHOOL,//小学划片
-      middleSchoolList: formReander.MIDDLESCHOOL,//中学划片
+      primaryRadio: 0,
+      middleRadio: 0,
+      houseBelongSelect: "",
       primarySchoolUseRenderList: formReander.PRIMARYSCHOOLUSE,//小学占用
       middleSchoolUseRenderList: formReander.MIDDLESCHOOLUSE,//中学占用
       houseSourceList: formReander.HOUSESOURCE,//房屋来源
       houseNowList: formReander.HOUSENOW,//房屋现状
-      isElevatorList: formReander.ISELEVATOR,//电梯
-      landCharacteristicList: formReander.LANDCHARACTERISTIC,//土地性质
       primarySchoolUseList: USE,//小学学籍占用
       middleSchoolUseList: USE,//中学学籍占用
       mortgageList: formReander.MORTGAGE,//抵押情况
       paymentMethodList: formReander.PAYMENTMETHOD,//付款方式
       houseBelongList: formReander.HOUSEBELONG,//配套设施
-      roomTypeList: formReander.ROOMTYPE,//户型结构
       signList: formReander.SIGN,//户口情况
-      houseDeliveryList: formReander.HOUSEDELIVERY,//交房时间
+      decorationList: formReander.DECORATION,//装修类型
+      isowneronlyList: formReander.ISOWNERONLY //是否唯一住房
     }
   },
   methods: {
+    //抵押情况切换
+    mortgageChange (e) {
+      if (e != 1) {
+        this.formData.mortgageBank = '';
+      }
+    },
+    //中学占用切换
+    middleRadioChange (e) {
+      if (e != 1) {
+        this.formData.middleSchoolUseList = '';
+      }
+    },
+    //小学占用切换
+    primaryRadioChange (e) {
+      if (e != 1) {
+        this.formData.primarySchoolUse = '';
+      }
+    },
+    houseBelongChange (e) {
+      if (e != '其他') {
+        this.formData.houseBelong = e;
+      } else {
+        this.formData.houseBelong = '';
+      }
+    },
     validateAll () {
       let that = this;
       return this.$validator.validateAll().then((e) => {
