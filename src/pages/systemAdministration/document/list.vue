@@ -11,6 +11,10 @@
         </el-input>
         <el-button type="primary" style="margin-left:10px" size="mini" @click="queryByParams">查询</el-button>
         <el-button type="primary" style="margin-left:10px" size="mini" @click="addDocument">添加</el-button>
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+          <el-tab-pane label="文档管理" name="first"></el-tab-pane>
+          <el-tab-pane label="规则管理" name="second"></el-tab-pane>
+        </el-tabs>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
@@ -64,7 +68,8 @@ export default {
         { prop: "remark", label: "备注", show: false },
         { prop: "filePath", label: "文档地址", show: false }
       ],
-      tableData: []
+      tableData: [],
+      activeName: "first"
     };
   },
   mounted() {
@@ -193,6 +198,11 @@ export default {
             message: "已取消"
           });
         });
+    },
+    handleClick(tab, event) {
+      if (this.activeName == "second") {
+        this.$router.push({ path: "/sys/docRules/list" });
+      }
     }
   }
 };
