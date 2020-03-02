@@ -2182,7 +2182,13 @@ export default {
           token: false
         })
         .then(e => {
-          that.isShowPop(type, replaceType, true);
+          if(e.data.code==200){
+                that.isShowPop(type, replaceType, true);
+          }
+          else{
+             that.$message(e.data.message);
+          }
+          
         })
         .catch(e => {
           if (e.response != undefined) {
