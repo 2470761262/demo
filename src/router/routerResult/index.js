@@ -509,6 +509,20 @@ export default [
             import(/* webpackChunkName: "documentEdit" */ "@/pages/systemAdministration/document/edit.vue")
     },
     {
+        //系统管理 规则管理
+        path: "/sys/docRules/list",
+        name: "docRulesList",
+        component: () =>
+            import(/* webpackChunkName: "docRulesList" */ "@/pages/systemAdministration/docRules/list.vue")
+    },
+    {
+        //系统管理 规则管理 编辑
+        path: "/sys/docRules/edit",
+        name: "docRulesEdit",
+        component: () =>
+            import(/* webpackChunkName: "docRulesList" */ "@/pages/systemAdministration/docRules/edit.vue")
+    },
+    {
         //系统管理 岗位管理
         path: "/sys/roleManagementList",
         name: "roleManagementList",
