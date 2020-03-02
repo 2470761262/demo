@@ -89,7 +89,7 @@
 
              <el-button type="info"
                        size="mini"
-                       @click="toSale(scope.row.id,scope.row.type)"
+                       @click="toSale(scope.row.id,scope.row.type,scope.row.comId,scope.row.cbId,scope.row.bhid)"
                        >转在售</el-button>
         </template>
        
@@ -170,7 +170,7 @@ export default {
          var that = this;
         that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
     },
-    toSale(id,type){
+    toSale(id,type,comId,cbId,bhId){
       var that = this
         this.$api.get({
           url: "/houseResource/turnSale",
@@ -179,12 +179,17 @@ export default {
           qs: true,
           data: {
             id: id,
-            type: type
+            type: type,
+            comId:comId,
+            cbId:cbId,
+            bhId:bhId
           }
         }).then((e) => {
           console.log(e.data)
           if (e.data.code == 200) {
                that.$router.push({ path: '/buySellSystem/addHouse', query: { "id": e.data.code.message } });
+          }else{
+             alert(e.data.message);
           }
         })
     },

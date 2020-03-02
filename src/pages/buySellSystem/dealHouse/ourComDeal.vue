@@ -17,6 +17,7 @@
           placeholder="请输入楼盘进行搜索"
           :remote-method="remoteMethod"
           :loading="loading"
+          clearable
         >
           <el-option
             v-for="item in options"
@@ -52,7 +53,13 @@
 
     <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
-        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
+        <el-table-column
+          :prop="item.prop"
+          :label="item.label"
+          :width="item.width"
+          :key="item.prop"
+          :formatter="formatData"
+        ></el-table-column>
       </template>
       <el-table-column label="操作" fixed="right" key="operation">
         <template v-slot="scope">
@@ -150,14 +157,25 @@ export default {
     queryOurComDeal(currentPage) {
       var that = this;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
-
-      params.comId = that.data.comId;
-      params.minDate = that.data.timeSelect[0];
-      params.maxDate = that.data.timeSelect[1];
-      params.minArea = that.data.minArea;
-      params.maxArea = that.data.maxArea;
-      params.minPrice = that.data.minPrice;
-      params.maxPrice = that.data.maxPrice;
+      if (that.data.comId != null && that.data.comId.length > 0) {
+        params.comid = that.data.comId;
+      }
+      if (that.data.timeSelect != null && that.data.timeSelect.length > 0) {
+        params.minDate = that.data.timeSelect[0];
+        params.maxDate = that.data.timeSelect[1];
+      }
+      if (that.data.minArea != null && that.data.minArea.length > 0) {
+        params.minArea = that.data.minArea;
+      }
+      if (that.data.maxArea != null && that.data.maxArea.length > 0) {
+        params.maxArea = that.data.maxArea;
+      }
+      if (that.data.minPrice != null && that.data.minPrice.length > 0) {
+        params.minPrice = that.data.minPrice;
+      }
+      if (that.data.maxPrice != null && that.data.maxPrice.length > 0) {
+        params.maxPrice = that.data.maxPrice;
+      }
       console.log(params);
       this.$api
         .post({
@@ -202,6 +220,31 @@ export default {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryOurComDeal(1);
+    },
+    formatData(row, column) {
+      if (column.property == "unitPrice") {
+        if (
+          row.price == null ||
+          row.area == null ||
+          row.price == 0 ||
+          row.area == 0
+        ) {
+          return "";
+        } else {
+          return parseFloat((row.price / row.area) * 10000).toFixed(2);
+        }
+      }
+      if (column.property == "houseType") {
+        return row.rooms + "室" + row.hall + "厅" + row.toilet + "卫";
+      }
+      if (column.property == "tradeTime") {
+        if (row.tradeTime.length > 19) {
+          return row.tradeTime.substring(0, 19);
+        } else {
+          return row.tradeTime;
+        }
+      }
+      return row[column.property];
     }
   }
 };

@@ -152,6 +152,22 @@
               </el-option>
             </el-select>
           </div>
+
+          <div class="formItem">
+            关联接口:
+
+            <el-select
+              v-model="ruleObj.ruleUrls" multiple filterable allow-create default-first-option placeholder="请选择接口">
+              <el-option
+                v-for="item in ruleUrlList"
+                :key="item.url"
+                :label="item.name"
+                :value="item.tag">
+              </el-option>
+            </el-select>
+
+          </div>
+
         </div>
         <div class="text item">
           <div class="formItem" style="float: right;margin-right: 230px;">
@@ -254,13 +270,14 @@
             type: 1
           }
         ],
+        ruleUrlList:[],
         ruleObj: {},
         defaultRule: {
           rType: "左菜单",
-          rulesType : "PC端",
-          del: "1",
-          isSuper: "0",
-          area: "0",
+          rulesType : 0,
+          del: 1,
+          isSuper: 0,
+          area: 0,
         },
         type : 0,
         node: [],
@@ -378,12 +395,15 @@
       },
       //更新功能点
       updateRule(){
-        if(!this.ruleObj || !this.ruleObj.id){
+        let that = this;
+        if(!that.ruleObj || !that.ruleObj.id){
           alert("请选择节点进行操作");
           return;
         }
-        this.saveType = "update";
-        this.showTable = true;
+        debugger;
+        that.saveType = "update";
+        that.showTable = true;
+        this.selectRuleUrlConfig();
       },
       //删除功能点
       delRule(){
@@ -431,11 +451,13 @@
           alert("请选择节点进行操作");
           return;
         }
+        console.log(this.ruleObj,"rule object。。。")
         this.saveType = "saveSub";
         let pId = this.ruleObj.id;
         this.ruleObj = this.defaultRule;
         this.ruleObj.pId = pId;
         this.showTable = true;
+        this.selectRuleUrlConfig();
       },
       //添加同级功能点
       saveSiblingRule(){
@@ -448,6 +470,7 @@
         this.ruleObj = this.defaultRule;
         this.ruleObj.id = id;
         this.showTable = true;
+        this.selectRuleUrlConfig();
       },
       //取消
       cancel(){
@@ -500,7 +523,36 @@
             console.log(e);
             this.$message.error("保存功能点失败异常" + e);
           });
-      }
+      },
+      //请求url列表
+      selectRuleUrlConfig(){
+        let that = this;
+        //请求功能点URL
+        that.$api
+          .post({
+            url: "/sys/rule/url/list",
+            data : {rId: that.ruleObj.id},
+            qs: true
+          })
+          .then(e => {
+            console.log(e.data);
+            let result = e.data;
+            if (result.code == 200) {
+              console.log(result.message);
+              console.log(result.data);
+              this.ruleUrlList = result.data.ruleUrlConfig;
+              if(result.data.urlList){
+                this.ruleObj.ruleUrls = result.data.urlList;
+              }
+            } else {
+              console.log("获取接口列表失败：" + result.message);
+            }
+          })
+          .catch(e => {
+            console.log("获取接口列表失败异常");
+            console.log(e);
+          });
+      },
     }
   };
 </script>

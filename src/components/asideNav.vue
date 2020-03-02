@@ -40,6 +40,8 @@
         <el-menu-item index="/sys/pcManagement/list">公司PC管理</el-menu-item>
         <el-menu-item index="/sys/pcOnline/list">公司PC在线管理</el-menu-item>
         <el-menu-item index="/sys/document/list">文档管理</el-menu-item>
+        <!-- <el-menu-item index="/sys/docRules/list">规则管理</el-menu-item> -->
+        <el-menu-item index="/sys/hrTree/hrTree">组织结构</el-menu-item>
         <el-menu-item index="/sys/roleManagementList">岗位管理</el-menu-item>
         <el-menu-item index="/sys/companyList">公司管理</el-menu-item>
         <el-menu-item index="/sys/deptManageList">部门管理</el-menu-item>
@@ -47,6 +49,7 @@
         <el-menu-item index="/sys/stroeList">店面管理</el-menu-item>
         <el-menu-item index="/sys/positionManager">角色管理</el-menu-item>
         <el-menu-item index="/sys/ruleManager">功能点管理</el-menu-item>
+        <el-menu-item index="/sys/logonRegPwd/view">授权器密码</el-menu-item>
       </el-submenu>
       <el-submenu :index="item.rurl+index" :key="item.id" v-for="(item,index) in menuNodeDatas">
         <template slot="title">

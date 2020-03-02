@@ -50,12 +50,13 @@
                 @click="queryStroeDeptDatas(1)">行政小组</el-button>
         </div>
       </template>
-      <template v-slot:tableColumn="cell"   >
+      <template v-slot:tableColumn="cell" id="cell"  >
         <template v-for="item in cell.tableData"  >
           <el-table-column :prop="item.prop"
                            :label="item.label"
                            :width="item.width"
-                           :key="item.prop">
+                           :key="item.prop"
+                           >
           </el-table-column>
         </template>
         <el-table-column prop="operation"
@@ -160,6 +161,11 @@ export default {
                             break;
                 
                }
+               switch (result.data.list[i].shoreTel){
+                 case 0:
+                          result.data.list[i].shoreTel  = "暂无电话";
+                          break;
+               }
             }
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
@@ -177,7 +183,9 @@ export default {
     queryStroeDeptDatas (currentPage) {
         this.showList = false ;
         this.tableData = []
-        this.tableDataColumn = [  { prop: "deptName", label: "小组"},
+        this.tableDataColumn = [ 
+                                //{ prop: "id", label: "门店ID" },
+                                { prop: "deptName", label: "小组"},
                                 { prop: "storeName", label: "店面",width:"165px" },
                                 { prop: "shoreAddress", label: "地址" },
                                 { prop: "shoreTel", label: "电话" },
@@ -219,13 +227,12 @@ export default {
                     case 1:
                             result.data.list[i].shoreType  = "直营店";
                             break;
-                
                }
+               
             }
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
           this.tableData = result.data.list;
-
         } else {
           console.log("查询门店管理列表结果：" + result.message);
           alert(result.message);
@@ -287,13 +294,23 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryStroeDatas(1);
+      if(this.showList){
+        this.queryStroeDatas(1);
+      }else{
+        this.queryStroeDeptDatas(1);
+      }
+      
     },
     handleCurrentChange (val) {
-      this.queryStroeDatas(val);
+     if(this.showList){
+        this.queryStroeDatas(val);
+      }else{
+        this.queryStroeDeptDatas(val);
+      }
     },
     openDetails(row){
         console.log(row)
+  
         this.$router.push({ name: "detailsStroe",params:{id:row}});
     }
   }
