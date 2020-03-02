@@ -37,7 +37,7 @@
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.cardId"
-              maxlength="10"
+              maxlength="100"
               show-word-limit
             ></el-input>
         </div>
@@ -113,7 +113,7 @@
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.tel"
-              maxlength="10"
+              maxlength="20"
               show-word-limit
             ></el-input>
         </div>
@@ -180,9 +180,9 @@
             ></el-input>
         </div>
         <div class="left-input-container">
-            <span>remark</span>
+            <span>备注</span>
             <el-input
-              type="备注"
+              type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.remark"
               maxlength="10"
@@ -245,7 +245,7 @@
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.contactTelephone"
-              maxlength="10"
+              maxlength="100"
               show-word-limit
             ></el-input>
         </div>
@@ -295,7 +295,7 @@
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.bankcard"
-              maxlength="10"
+              maxlength="100"
               show-word-limit
             ></el-input>
         </div>

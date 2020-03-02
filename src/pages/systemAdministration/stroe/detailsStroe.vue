@@ -154,7 +154,6 @@ export default {
   },
   created() {
     this.id = this.$route.params.id;
-    
   },
   mounted() {
     this.list();
@@ -183,6 +182,7 @@ export default {
             console.log(result.data);
             this.pageJson.total = result.data.totalCount;
             this.pageJson.currentPage = result.data.currPage;
+
             this.tableData = result.data.list;
           } else {
             console.log("查询实体店详情结果：" + result.message);
@@ -206,24 +206,23 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            for (var i = 0; i < result.data.length; i++) {
-              switch (result.data[i].flagSale) {
-                case "0":
-                  result.data[i].flagSale = "文职";
-                  break;
-                case "1":
-                  result.data[i].flagSale = "职务";
-                  break;
-              }
-              switch (result.data[i].shoreType) {
-                case 0:
-                  result.data[i].shoreType = "加盟店";
-                  break;
-                case 1:
-                  result.data[i].shoreType = "直营店";
-                  break;
-              }
+            switch (result.data.flagSale) {
+              case "0":
+                result.data.flagSale = "文职";
+                break;
+              case "1":
+                result.data.flagSale = "职务";
+                break;
             }
+            switch (result.data.shoreType) {
+              case 0:
+                result.data.shoreType = "加盟店";
+                break;
+              case 1:
+                result.data.shoreType = "直营店";
+                break;
+            }
+            
             this.form = result.data;
           } else {
             console.log("查询实体店详情结果：" + result.message);
@@ -236,7 +235,6 @@ export default {
         });
     },
     onSubmit() {
-    
       console.log(this.queryData.keyWord);
       this.deptNameList.forEach(item => {
         if (item.deptName.indexOf(this.queryData.keyWord) != -1) {
@@ -276,28 +274,29 @@ export default {
     distributeEvent(e, id) {
       this[e](id);
     },
-    delDeptDetail(id){
-
-      let params ={ id:this.id,
-                    deptId:id};
-      this.$api.post({
-        url: '/stroe/deptName/del',
-        data:params,
-        token: false,
-        //qs:true,
-        headers: { "Content-Type": "application/json;charset=UTF-8" }
-      }).then((e) => {
-        let result = e.data;
-        if (result.code == 200) {
-          this.$alert('', '删除成功', {
-            dangerouslyUseHTMLString: false
-          });
-          this.$router.push({ path: "/sys/stroeList"});
-        }
-      }).catch((e) => {
-        console.log("删除失败");
-        console.log(e);
-      })
+    delDeptDetail(id) {
+      let params = { id: this.id, deptId: id };
+      this.$api
+        .post({
+          url: "/stroe/deptName/del",
+          data: params,
+          token: false,
+          //qs:true,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.$alert("", "删除成功", {
+              dangerouslyUseHTMLString: false
+            });
+            this.$router.push({ path: "/sys/stroeList" });
+          }
+        })
+        .catch(e => {
+          console.log("删除失败");
+          console.log(e);
+        });
     },
     getOpeBtns(type) {
       let array = [{ name: "删除", isType: "1", methosName: "delDeptDetail" }];
@@ -313,7 +312,7 @@ export default {
         .post({
           url: "/stroe/deptName",
           data: params,
-         token: false,
+          token: false
         })
         .then(e => {
           let result = e.data;

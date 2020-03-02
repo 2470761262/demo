@@ -161,6 +161,11 @@ export default {
                             break;
                 
                }
+               switch (result.data.list[i].shoreTel){
+                 case 0:
+                          result.data.list[i].shoreTel  = "暂无电话";
+                          break;
+               }
             }
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
@@ -222,8 +227,8 @@ export default {
                     case 1:
                             result.data.list[i].shoreType  = "直营店";
                             break;
-                
                }
+               
             }
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
