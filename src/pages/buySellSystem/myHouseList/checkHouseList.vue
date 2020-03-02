@@ -29,84 +29,59 @@
     </template>
 
     <template #tableColumn="">
-        
-      <el-table-column label="房源编号">
-        <template v-slot="scope">
-          {{scope.row.HouseNo}}
-        </template>
-      </el-table-column>
       <el-table-column label="楼盘名称">
         <template v-slot="scope">
-          {{scope.row.CommunityName}}
+          {{scope.row.communityName}}
         </template>
       </el-table-column>
-<el-table-column label="栋座">
+<el-table-column label="房源坐落">
         <template v-slot="scope">
-          {{scope.row.BuildingName}}
+          {{scope.row.buildingName+"栋-"+scope.row.roomNo+"室"}}
         </template>
       </el-table-column>
-      <el-table-column label="房间号">
+      <el-table-column label="审核项目">
         <template v-slot="scope">
-          {{scope.row.RoomNo}}
+          {{scope.row.TypeString}}
         </template>
       </el-table-column>
 
-      <el-table-column label="售价(万元)">
+      <el-table-column label="审核类型">
         <template v-slot="scope">
-          {{scope.row.Price}}
+          {{scope.row.TypeString}}
         </template>
       </el-table-column>
-      <el-table-column label="面积(㎡)">
+      <el-table-column label="提交人">
         <template v-slot="scope">
-          {{scope.row.InArea}}
+          {{scope.row.AddPerString}}
         </template>
       </el-table-column>
-      <el-table-column label="单价(元/㎡)">
-        <template v-slot="scope">
-          {{Math.round(scope.row.Price*10000/scope.row.InArea)+"元/m²"}}
-        </template>
-      </el-table-column>
-      <el-table-column label="户型">
-        <template v-slot="scope">
-          {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
-        </template>
-      </el-table-column>
-      <el-table-column label="装修程度">
-        <template v-slot="scope">
-          {{scope.row.Decoration}}
-        </template>
-      </el-table-column>
-      <el-table-column label="录入时间">
+      <el-table-column label="提交时间">
         <template v-slot="scope">
           {{scope.row.AddTime}}
+        </template>
+      </el-table-column>
+      <el-table-column label="审核状态">
+        <template v-slot="scope">
+          {{scope.row.TagString}}
+        </template>
+      </el-table-column>
+      <el-table-column label="备注说明">
+        <template v-slot="scope">
+          {{scope.row.CheckMemo}}
+        </template>
+      </el-table-column>
+      <el-table-column label="附件">
+        <template v-slot="scope">
+          {{scope.row.sad}}
         </template>
       </el-table-column>
       <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-            <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">查看</el-button>
-            <el-button type="info" size="mini" @click="dialogVisible = true">调配</el-button>
-            <el-dialog title="请输入跟单人姓名进行搜索" :visible.sync="dialogVisible" :modal-append-to-body='false' width="20%">
-               <el-select v-model="addPer"
-                     @change="queryAddPerId()"
-                     filterable
-                     remote
-                     clearable
-                     placeholder="请输入楼盘进行搜索"
-                     :loading="loading">
-            <el-option v-for="item in options"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">  
-            </el-option>
-          </el-select>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-                </span>
-                </el-dialog>
-                </template> 
+            <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">审核</el-button>
+           <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">查看</el-button>
+         </template> 
       </el-table-column>
     </template>
   </list-page>
