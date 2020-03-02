@@ -365,12 +365,31 @@
   </div>
 </template>
 <script>
+import util from '@/util/util';
 export default {
   name: "exploration",
   computed: {
     formData () {
       this.$set(this.$data, "step", JSON.parse(JSON.stringify(this.$store.state.addHouse.formData.step3)))
       return this.step
+    }
+  },
+  watch: {
+    formData: {
+      deep: true,
+      immediate: true,
+      handler (newValue, oldValue) {
+        //deff 获取到修改的属性
+        let deffData = util.diffGet(this.$store.state.addHouse.formData.step3, this.formData);
+        //判断当前是否有修改，如果有修改则length大于0
+        let flag = Object.keys(deffData).length > 0 ? true : false;
+        //判断store存储的是否与这次相同，相同则不commit
+        if (this.$store.state.addHouse.isformDataNoCommit != flag) {
+          this.$store.commit("updateIsformDataNoCommit", flag);
+        }
+        //把修改的过的值给与deffData用于传送后台，如果在一次进入也可以顺便把这个值清空
+        this.deffData = deffData;
+      }
     }
   },
   created () {
@@ -563,16 +582,19 @@ export default {
     validateAll () {
       let that = this;
       return this.$validator.validateAll({
-        houseVideo: that.fileList.video
+        houseVideo: that.fileList.video,
+        communityDesc: that.formData.communityDesc
       }).then((e) => {
         if (e) {
-          //存入Vuex;
-          that.$store.commit("updateStep3", that.formData);
           return true;
         }
         return false;
-      }).then(() => {
-        return that.setDataToUpdate();
+      }).then((e) => {
+        if (e) {
+          return that.setDataToUpdate();
+        } else {
+          return false;
+        }
       })
     },
     //修改数据到接口
@@ -580,7 +602,10 @@ export default {
       let that = this;
       let sendData = {
         id: that.$store.state.addHouse.formData.id,
-        ...that.formData
+        ...that.deffData
+      }
+      if (Object.keys(this.deffData).length == 0) {//没有做出修改
+        return true;
       }
       return this.$api.put({
         url: '/draft-house',
@@ -589,6 +614,8 @@ export default {
       }).then((e) => {
         console.log(e);
         if (e.data.code == 200) {
+          //存入Vuex;
+          that.$store.commit("updateStep3", that.deffData);
           return true;
         } else {
           return false;

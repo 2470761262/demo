@@ -45,11 +45,7 @@
                      size="mini"                   
                      @click="querylistByParams">查询</el-button>
         </div> 
-
-        
     </template>
-
-   
      
     <template #tableColumn="">
         
@@ -94,14 +90,19 @@
           {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
         </template>
       </el-table-column>
-      <el-table-column label="装修程度">
+      <el-table-column label="被看次数">
         <template v-slot="scope">
-          {{scope.row.Decoration}}
+          {{scope.row.seenNum}}
         </template>
       </el-table-column>
-      <el-table-column label="录入时间">
+      <el-table-column label="未被看天数">
         <template v-slot="scope">
-          {{scope.row.AddTime}}
+          {{scope.row.noSeenDay}}
+        </template>
+      </el-table-column>
+       <el-table-column label="跟单人">
+        <template v-slot="scope">
+          {{scope.row.AgentPerName}}
         </template>
       </el-table-column>
       <el-table-column label="操作"
@@ -109,27 +110,10 @@
                        key="operation">
         <template v-slot="scope">
             <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">查看</el-button>
-            <el-button type="info" size="mini" @click="dialogVisible = true">调配</el-button>
-            <el-dialog title="请输入跟单人姓名进行搜索" :visible.sync="dialogVisible" :modal-append-to-body='false' width="20%">
-               <el-select v-model="addPer"
-                     @change="queryAddPerId()"
-                     filterable
-                     remote
-                     clearable
-                     placeholder="请输入楼盘进行搜索"
-                     :loading="loading">
-            <el-option v-for="item in options"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">  
-            </el-option>
-          </el-select>
-              <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-                </span>
-                </el-dialog>
-                </template> 
+            <el-popconfirm confirmButtonText='我要取消' cancelButtonText='还是不了吧' icon="el-icon-info" iconColor="red" title="确定取消关注这个房源吗？">
+              <el-button type="info" slot="reference" @click="concernOFF(scope.row.id)" size="mini">取消关注</el-button>
+              </el-popconfirm>
+       </template> 
       </el-table-column>
     </template>
   </list-page>
@@ -160,8 +144,6 @@ export default {
         { prop: 'InArea', label: "面积(m²)" },
         { prop: 'PropertyFee', label: "均价(元/平)" },
         { prop: 'hall', label: "户型" },
-        { prop: 'Decoration', label: "装修程度" },
-        { prop: 'AgentPer', label: "跟单人" },
         { prop: 'AddTime', label: "录入时间" }
       ],
       tableData: [],
@@ -202,6 +184,16 @@ export default {
     this.querylist(1);
   },
   methods: {
+    concernOFF(id){
+       this.$api.post({
+        url: "/concernHouseOFF/"+id,
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+      }).then((e) => {
+        alert("取消关注成功");
+      })
+
+    },
      queryAddPerId () {
       var that = this
       this.$api.get({
