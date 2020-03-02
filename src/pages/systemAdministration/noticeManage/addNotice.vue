@@ -9,7 +9,8 @@
 }
 .el-header {
   margin-top: 10px;
-  width:100%
+  width:100%;
+  height: auto !important;
 }
 
 .treeTitle {
@@ -77,7 +78,6 @@
 }
 .editorContainer {
   width: 100%;
-  margin-top: 130px;
 }
 .myQuillEditor {
   height: 500px;
@@ -211,6 +211,7 @@
 <script>
 import { quillEditor } from "vue-quill-editor";
 import util from "@/util/util";
+import {TOKEN} from '@/util/constMap';
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
@@ -670,8 +671,8 @@ export default {
     }
   },
   created() {
-    this.uploadUrl = this.$api.baseUrl() + "/draft_house/picture";
-    this.myHeader = { tk: util.localStorageGet("token") };
+    this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
+    this.myHeader = { tk: util.localStorageGet(TOKEN) };
     console.log(this.uploadUrl);
     console.log(this.myHeader);
   },

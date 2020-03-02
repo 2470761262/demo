@@ -1,5 +1,5 @@
 //选择房源
-let formData = {
+let formDataJson = {
   id: '',
   // 基础信息
   step1: {
@@ -60,25 +60,39 @@ let formData = {
     //saleReson: "", //卖房原因
   }
 }
+
+function forSetStep(state, val, stepName) {
+  if (typeof val == "object") {
+    for (let item in val) {
+      if (state.formData[stepName][item] != undefined) {
+        state.formData[stepName][item] = val[item];
+      }
+    }
+  }
+}
 export default {
   state: {
-    formData: JSON.parse(JSON.stringify(formData))
+    isformDataNoCommit: false, //是否有些表单但是没有提交 false不提示 true 提示
+    formData: JSON.parse(JSON.stringify(formDataJson))
   },
   mutations: {
+    updateIsformDataNoCommit(state, val) {
+      state.isformDataNoCommit = val;
+    },
     resetFormData(state) {
-      state.formData = formData
+      state.formData = formDataJson;
     },
     updateId(state, val) {
       state.formData.id = val;
     },
     updateStep1(state, val) {
-      state.formData.step1 = val;
+      forSetStep(state, val, 'step1');
     },
     updateStep2(state, val) {
-      state.formData.step2 = val;
+      forSetStep(state, val, 'step2');
     },
     updateStep3(state, val) {
-      state.formData.step3 = val;
+      forSetStep(state, val, 'step3');
     }
   }
 };

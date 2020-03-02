@@ -17,7 +17,6 @@
     margin-top: 20px;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     //padding: 0 20px;
     .page-contenr-com {
@@ -29,10 +28,15 @@
       }
       .page-contenr-com-posi {
         position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
+        background: #fff;
+        border-left: 1px solid #999;
+        border-right: 1px solid #999;
+        width: 940px;
+        transform: translateX(-50%);
+        left: 50%;
+        min-height: 100%;
+        // top: 0;
+        //bottom: 0;
       }
     }
     .page-contenr-but {
@@ -69,25 +73,27 @@
            v-scrollTop="butLoading"
            v-loading="butLoading">
         <div class="page-contenr-com-posi">
-          <component :is="componentName"
-                     ref="com"></component>
-        </div>
-      </div>
-      <div class="page-contenr-but"
-           v-if="stepsActiveIndex!=3">
-        <el-button-group>
-          <el-button type="primary"
-                     @click="prevPage"
-                     class="page-previous">{{
+          <keep-alive>
+            <component :is="componentName"
+                       ref="com"></component>
+          </keep-alive>
+          <div class="page-contenr-but"
+               v-if="stepsActiveIndex!=3">
+            <el-button-group>
+              <el-button type="primary"
+                         @click="prevPage"
+                         class="page-previous">{{
             prevText
           }}</el-button>
-          <el-button type="primary"
-                     @click="nextPage"
-                     class="page-next"
-                     :loading="butLoading">{{ nextText }}</el-button>
-          <el-button type="info"
-                     :loading="butLoading">保存草稿</el-button>
-        </el-button-group>
+              <el-button type="primary"
+                         @click="nextPage"
+                         class="page-next"
+                         :loading="butLoading">{{ nextText }}</el-button>
+              <el-button type="info"
+                         :loading="butLoading">保存草稿</el-button>
+            </el-button-group>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -103,7 +109,7 @@ export default {
     basicInformation,
     supplement: () => componentsFactory("pages/buySellSystem/addHouse/components/supplement"), //补充信息
     exploration: () => componentsFactory("pages/buySellSystem/addHouse/components/exploration"), //实勘图片/视频
-    addHouseSuccess: () => componentsFactory("pages/buySellSystem/addHouse/components/addHouseSuccess") //实勘图片/视频
+    addHouseSuccess: () => componentsFactory("pages/buySellSystem/addHouse/components/addHouseSuccess") //邀请验真
   },
   directives: {
     scrollTop: {
@@ -136,8 +142,30 @@ export default {
       butLoading: false
     };
   },
+  beforeRouteLeave (to, from, next) {
+    if (this.$store.state.addHouse.isformDataNoCommit) {
+      this.$confirm('您的表单还未提交,确定离开吗?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'warning',
+          message: '您放弃了表单，将不会被保存~'
+        });
+        next();
+      }).catch(() => {
+        this.$message({
+          type: 'success',
+          message: 'good-boy , 咱们继续填写吧'
+        });
+      })
+    } else {
+      next();
+    }
+  },
   destroyed () {
-
+    this.$store.commit("updateIsformDataNoCommit", false);
     this.$store.commit("resetFormData");
   },
   methods: {
