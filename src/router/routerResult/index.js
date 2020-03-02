@@ -523,6 +523,13 @@ export default [
             import(/* webpackChunkName: "docRulesList" */ "@/pages/systemAdministration/docRules/edit.vue")
     },
     {
+        //系统管理 组织结构
+        path: "/sys/hrTree/hrTree",
+        name: "hrTree",
+        component: () =>
+            import(/* webpackChunkName: "hrTree" */ "@/pages/systemAdministration/hrTree/hrTree.vue")
+    },
+    {
         //系统管理 获取授权器密码
         path: "/sys/logonRegPwd/view",
         name: "getPwd",
