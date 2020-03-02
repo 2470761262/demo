@@ -176,6 +176,13 @@
             <span>电梯</span>
           </div>
         </div>
+        <div class="query-cell">
+          <span>小区名称:</span>
+          <span>{{houseDetails.CommunityName}}</span>
+          <span v-if="!isShowBuilding" @click="getShowBuliding">查看楼栋号</span>
+          <span v-if="isShowBuilding">-{{houseDetails.BuildingName}}</span>
+          <span v-if="isShowBuilding">-{{houseDetails.RoomNo}}</span>
+        </div>
         <div class="query-cell" style="margin-top:20px;">
           <div class="query-cell">
             <div class="query-cell">
@@ -226,6 +233,9 @@
           @click="certificateType"
         >发布外网房源</el-button>
       </el-popover>
+       <el-button v-if="houseDetails.is_release_outside==1&&houseDetails.AgentPer==perId" @click="cancelOutsideHouse">
+         取消发布
+       </el-button>
 
       <el-popover placement="top" width="600" trigger="manual" v-model="isShowRecommend">
         <div>
@@ -234,7 +244,7 @@
         </div>
         <div>
           <el-button @click="isShowRecommend=false">取消</el-button>
-          <el-button @click="insertOrCancleRecommend">添加</el-button>
+          <el-button @click="insertOrCancelRecommend">添加</el-button>
         </div>
           <el-button  slot="reference" @click="isShowRecommend=true">{{isRecommend?'取消推荐':'推荐房源'}}</el-button>
       </el-popover>
@@ -279,11 +289,11 @@
           <el-radio v-model="cancelMethodType" label="2">实勘人</el-radio>
         </div>
         <div>
-          <el-input v-model="cancleMemo" placeholder="请输入取消作业人的原因" type="textarea"></el-input>
+          <el-input v-model="cancelMemo" placeholder="请输入取消作业人的原因" type="textarea"></el-input>
         </div>
         <div>
           <el-button @click="isShowCancelMethod=false">取消</el-button>
-          <el-button @click="cancleMethod">添加</el-button>
+          <el-button @click="cancelMethod">添加</el-button>
         </div>
         <el-button slot="reference" @click="isShowCancelMethod=true" >取消作业方法</el-button>
       </el-popover>
@@ -1191,7 +1201,8 @@
             <span>挂牌时间</span>
             <span style="margin-left:50px;">{{houseDetails.AddTime}}</span>
             <span style="margin-left:50px;">上次交易金额</span>
-            <span style="margin-left:50px;">{{ houseDetails.LastTransactionAmount}}万元</span>
+            <span style="margin-left:50px;">{{ houseDetails.LastTransactionAmount}}</span>
+            <span v-if="houseDetails.LastTransactionAmount!=null&&houseDetails.LastTransactionAmount!=''">万元</span>
           </div>
           <div>
             <span>上次交易</span>
@@ -1203,7 +1214,8 @@
             <span>抵押信息</span>
             <span style="margin-left:50px;">{{houseDetails.mortgage==0?"无":houseDetails.subbranch}}</span>
             <span style="margin-left:50px;">剩余贷款</span>
-            <span style="margin-left:50px;">{{houseDetails.balance}}万元</span>
+            <span style="margin-left:50px;">{{houseDetails.balance}}</span>
+            <span v-if="houseDetails.balance!=null&&houseDetails.balance!=''">万元</span>
           </div>
         </div>
         <div style="margin-top:20px;">
@@ -1267,13 +1279,26 @@
                 </div>
               </div>
               <div v-if="switchIndex==1">
-                <div v-for="(item,index) in  followPaitList" :key="index" style="height:70px;">
+                <div v-for="(item,index) in  followPairList" :key="index" style="height:70px;">
                   <div>
                     <span>{{item.FollowTime}}</span>
                   </div>
                   <div>
                     <div>
                       <span>{{item.lookPerName}}({{item.lookPerNameDepartmentName}}),</span>
+                      <span>{{item.Memo}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div v-for="(item,index) in  followTelList" :key="index" style="height:70px;">
+                  <div>
+                    <span>{{item.FollowTime}}</span>
+                  </div>
+                  <div>
+                    <div>
+                      <span>{{item.followName}}({{item.followDepartment}}),</span>
                       <span>{{item.Memo}}</span>
                     </div>
                   </div>
@@ -1324,7 +1349,8 @@ export default {
       followType: "27", //跟进类型
       followMemo: "",
       followList: [], //跟进数组
-      followPaitList: [], //房源被带看数组
+      followPairList: [], //房源被带看数组
+      followTelList:[],//电话修改记录
       totalPage: 0, //分页的数量
       page: 1, //第几页
       impression: "", //印象
@@ -1369,7 +1395,7 @@ export default {
       isShowKeyStorageDept: false, //是否显示修改钥匙存放门店弹窗
       cancelMethodType:"0",//
       isShowCancelMethod:false,
-      cancleMemo:"",
+      cancelMemo:"",
       changeType:"4",//转换类型
       isShowChange:false,//是否显示转状态弹窗
       dealCompany:"",//成交公司
@@ -1379,7 +1405,8 @@ export default {
       perId:"",//登录人id
       isRecommend:false,//是否推荐
       isShowRecommend:false,//是否展示推荐弹窗
-      recommendMemo:""//推荐的原因
+      recommendMemo:"",//推荐的原因
+      isShowBuilding:false//是否显示楼栋号
     };
   },
   before() {},
@@ -1495,11 +1522,11 @@ export default {
           });
         });
     },
-    insertOrCancleRecommend(){
+    insertOrCancelRecommend(){
       let that = this;
       let url="/agentHouse/recommend/insertRecommend"
       if(this.isRecommend){
-          url="";
+          url="/agentHouse/recommend/cancelRecommend";
       }
       if(this.recommendMemo==""){
           this.$message("原因未填");
@@ -1519,9 +1546,12 @@ export default {
         })
         .then(e => {
           let result = e.data;
-
-          that.isRecommend=!that.isRecommend;
-       
+          if(result.code==200){
+            that.isRecommend=!that.isRecommend;
+          }
+          else{
+            that.$message(result.message);
+          }
         })
         .catch(e => {
           if(e.response!=undefined){
@@ -1530,7 +1560,6 @@ export default {
           else{
              that.$message("请求失败");
           }
-          
         });
     }, 
     getisRecommend(){
@@ -1546,8 +1575,12 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          that.isRecommend=false;
-          
+          if(result.code==200){
+              that.isRecommend=false;
+          }
+          else{
+            that.isRecommend=true;
+          }
         })
         .catch(e => {
           that.isRecommend=true;
@@ -1575,27 +1608,29 @@ export default {
         .then(e => {
           let result = e.data;
           that.$message(result.message);
-          that.houseDetails.isLocking = isLocking;
+          if(result.code==200){
+              that.houseDetails.isLocking = isLocking;
+          }
         })
         .catch(e => {
           that.$message("请求失败");
         });
     },
-     cancleMethod(){
+     cancelMethod(){
       let that = this;
-      if (this.cancleMemo == undefined) {
+      if (this.cancelMemo == undefined) {
         this.$message("取消原因未填");
         return;
       }
       let params = {
         Eid: this.houseId,
-        cancleType: this.cancelMethodType,
-        cancleMemo:this.cancleMemo
+        cancelType: this.cancelMethodType,
+        cancelMemo:this.cancelMemo
       };
       that.isShowCancelMethod=false;
       this.$api
         .post({
-          url: "/agentHouse/property/cancleMethod",
+          url: "/agentHouse/property/cancelMethod",
           data: params,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
@@ -1603,8 +1638,15 @@ export default {
         .then(e => {
           let result = e.data;
           that.$message(result.message);
-          that.getHouseDetails();
-          that.cancleMemo="";
+          if(result.code==200){
+              that.getHouseDetails();
+              that.cancelMemo="";
+          }
+          else
+          {
+             that.$message(result.message);
+          }
+         
         })
         .catch(e => {
           if(e.response!=undefined){
@@ -1739,7 +1781,8 @@ export default {
       this.page = 1;
       this.totalPage = 0;
       this.followList = [];
-      this.followPaitList = [];
+      this.followPairList = [];
+      this.followTelList=[]
       this.cutData();
     },
     cutData() {
@@ -1749,6 +1792,9 @@ export default {
           break;
         case 1:
           this.getHousePairFollowList();
+          break;
+        case 2:
+          this.getTelFollowList();
           break;
       }
     },
@@ -1767,6 +1813,7 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
+           
             that.houseDetails = result.data;
             that.agentHouseMethod = that.houseDetails.agentHouseMethod;
             that.elevator = util.analysisElevator(that.houseDetails.Elevator);
@@ -1778,7 +1825,7 @@ export default {
             that.landCharacteristic = util.analysisLandCharacteristic(
               that.houseDetails.LandCharacteristic
             );
-            if (that.houseDetails.SchoolRool.indexOf(":") != -1) {
+            if (that.houseDetails.SchoolRool!=null&& that.houseDetails.SchoolRool.indexOf(":") != -1) {
               that.primarySchoolRool = that.houseDetails.SchoolRool.substring(
                 that.houseDetails.SchoolRool.indexOf(":") + 1,
                 that.houseDetails.SchoolRool.lastIndexOf("$")
@@ -1788,7 +1835,7 @@ export default {
                 that.houseDetails.SchoolRool.length
               );
             }
-            if (that.houseDetails.remark.indexOf("$") != -1) {
+            if (that.houseDetails.remark!=null&& that.houseDetails.remark.indexOf("$") != -1) {
               var Arry1 = that.houseDetails.remark.split("$");
               for (var i = 0; i < Arry1.length; i++) {
                 var Arry2 = Arry1[i].split("@");
@@ -1808,14 +1855,6 @@ export default {
                 }
               }
             }
-            that.houseDetails.saleUploadVideoDtoList.forEach(element => {
-              var video = {
-                type: 0,
-                id: element.id,
-                url: element.videoUrl
-              };
-              that.houseFileList.push(video);
-            });
             that.houseDetails.saleUploadPicDtoList.forEach(element => {
               var pic = {
                 type: 1,
@@ -1823,6 +1862,15 @@ export default {
                 url: element.picUrl
               };
               that.houseFileList.push(pic);
+            });
+            
+            that.houseDetails.saleUploadVideoDtoList.forEach(element => {
+              var video = {
+                type: 0,
+                id: element.id,
+                url: element.videoUrl
+              };
+              that.houseFileList.push(video);
             });
           } else {
             that.$message(result.message);
@@ -1852,9 +1900,6 @@ export default {
           if (result.code == 200) {
             that.isCollectHouse = true;
           } 
-          else {
-            that.$message(result.message);
-          }
         })
         .catch(e => {});
     },
@@ -1927,6 +1972,7 @@ export default {
         })
         .then(e => {
           let result = e.data;
+          if(result.code==200){
           result.data.list.forEach(item => {
             if (item.FollowType.includes("电话")) {
               item.Memo = item.Memo.replace("voice:", "");
@@ -1937,6 +1983,7 @@ export default {
           });
           that.followList = [...that.followList, ...result.data.list];
           that.totalPage = result.data.totalPage;
+          }
         })
         .catch();
     },
@@ -1956,8 +2003,33 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          that.followPaitList = [...that.followPaitList, ...result.data.list];
+          if(result.code==200){
+          that.followPairList = [...that.followPairList, ...result.data.list];
           that.totalPage = result.data.totalPage;
+           }
+        })
+        .catch();
+    },
+    getTelFollowList(){
+      let that = this;
+      let params = {
+        page: that.page,
+        limit: 5,
+        houseId: that.houseId
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/telUpdate/getTelFollowList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if(result.code==200){
+          that.followTelList = [...that.followTelList, ...result.data.list];
+          that.totalPage = result.data.totalPage;
+           }
         })
         .catch();
     },
@@ -1972,7 +2044,10 @@ export default {
           token: false
         })
         .then(e => {
-          that.reloadList();
+          if(e.data.code==200){
+             that.reloadList();
+          }
+          
         });
     },
     insertFollow() {
@@ -1996,8 +2071,11 @@ export default {
         })
         .then(e => {
           that.$message(e.data.message);
-          that.reloadList();
-          that.followMemo = "";
+          if(e.data.code==200){
+             that.reloadList();
+             that.followMemo = "";
+          }
+         
         });
     },
     insertImpression() {
@@ -2029,8 +2107,11 @@ export default {
         })
         .then(e => {
           that.$message(e.data.message);
-          that.isShowImpression = false;
-          that.getImpressionList();
+          if(e.data.code==200){
+               that.isShowImpression = false;
+               that.getImpressionList();
+          }
+        
         }).catch(e=>{
           if(e.response!=undefined){
              that.$message(e.response.data.message);
@@ -2051,7 +2132,10 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          that.impressionList = result.data;
+          if(result.code==200){
+             that.impressionList = result.data;
+          }
+          
         });
     },
     deleteImpression(impressionId) {
@@ -2068,7 +2152,9 @@ export default {
         })
         .then(e => {
           that.$message(e.data.message);
-          that.getImpressionList();
+          if(e.data.code==200){
+             that.getImpressionList();
+          }
         });
     },
     updateCertificateNo() {
@@ -2117,7 +2203,10 @@ export default {
         .then(e => {
           that.loading = false;
           that.$message(e.data.message);
-          that.houseDetails.is_release_outside = 1;
+          if(e.data.code==200){
+            that.houseDetails.is_release_outside = 1;
+          }
+          
         })
         .catch(e => {
           if (e.response != undefined) {
@@ -2126,6 +2215,33 @@ export default {
             that.$message("发布失败");
           }
           that.loading = false;
+        });
+    },
+    cancelOutsideHouse() {
+      let that = this;
+      let params={
+          HouseNo:that.houseDetails.HouseNo
+      }
+      this.$api
+        .post({
+          url: "/outsideHouse/cancelOutsideHouse",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          that.$message(e.data.message);
+          if(e.data.code==200){
+            that.houseDetails.is_release_outside = 0;
+          }
+          
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          } else {
+            that.$message("发布失败");
+          }
         });
     },
     isShowPop(type, replaceType, istrue) {
@@ -2258,7 +2374,10 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          that.areaList = result.data;
+          if(result.code==200){
+             that.areaList = result.data;
+          }
+          
         })
         .catch(e => {
           if (e.response != undefined) {
@@ -2285,7 +2404,10 @@ export default {
         .then(e => {
           let result = e.data;
           that.keyStorageDept = "";
-          that.departmentList = result.data;
+          if(result.code==200){
+            that.departmentList = result.data;
+          }
+          
         })
         .catch(e => {
           if (e.response != undefined) {
@@ -2513,6 +2635,36 @@ export default {
           }
         });
     },
+    getShowBuliding(){
+      let that=this;
+       this.$api
+        .get({
+          url: "/agent_house/isShowBuilding",
+          data: {
+            houseId:that.houseId
+          },
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+          token: false
+        })
+        .then(e => {
+          if(e.data.code==200){
+             that.isShowBuilding=true;
+          }
+          else{
+              that.isShowBuilding=false;
+              that.$message(e.data.message);
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          } else {
+            that.$message("操作失败");
+          }
+        });
+    }
   }
 };
 </script>  
