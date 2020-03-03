@@ -228,12 +228,12 @@
           </div>
         </div>
         <el-button
-          v-if="houseDetails.is_release_outside!=1&&houseDetails.AgentPer==perId"
+          v-if="houseDetails.isReleaseOutside!=1&&houseDetails.AgentPer==perId"
           slot="reference"
           @click="certificateType"
         >发布外网房源</el-button>
       </el-popover>
-       <el-button v-if="houseDetails.is_release_outside==1&&houseDetails.AgentPer==perId" @click="cancelOutsideHouse">
+       <el-button v-if="houseDetails.isReleaseOutside==1&&houseDetails.AgentPer==perId" @click="cancelOutsideHouse">
          取消发布
        </el-button>
 
@@ -1172,7 +1172,7 @@
           </div>
           <div>
             <span>流通证件</span>
-            <span style="margin-left:50px;">{{houseDetails.certificate_type}}</span>
+            <span style="margin-left:50px;">{{houseDetails.certificateType}}</span>
             <span style="margin-left:50px;">所以权性质</span>
             <span style="margin-left:50px;">{{houseDetails.HouseProperty}}</span>
           </div>
@@ -2182,8 +2182,8 @@ export default {
         houseType: 0
       };
       if (
-        this.houseDetails.certificate_type == null ||
-        this.houseDetails.certificate_type == ""
+        this.houseDetails.certificateType == null ||
+        this.houseDetails.certificateType == ""
       ) {
         this.isShowCertificatetype = true;
       } else {
@@ -2204,7 +2204,7 @@ export default {
           that.loading = false;
           that.$message(e.data.message);
           if(e.data.code==200){
-            that.houseDetails.is_release_outside = 1;
+            that.houseDetails.isReleaseOutside = 1;
           }
           
         })
@@ -2232,7 +2232,7 @@ export default {
         .then(e => {
           that.$message(e.data.message);
           if(e.data.code==200){
-            that.houseDetails.is_release_outside = 0;
+            that.houseDetails.isReleaseOutside = 0;
           }
           
         })
