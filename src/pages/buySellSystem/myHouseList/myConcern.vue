@@ -2,14 +2,18 @@
 .Impression-body{
   width: 300px;
   background-color: white;
-  height: 800px;
+  height: 500px;
 }
 .tag-all{
    margin-top: 8px;
 }
 .Impression-tag{
-  margin-top: 15px;
-  margin-left: 20px
+  margin-top: 12px;
+  margin-left: 12px
+}
+.opset{
+  float: right;
+  margin-right: 10px
 }
 </style>
 <template>
@@ -19,12 +23,16 @@
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:left>
       <div class="Impression-body">
-      <div >
+      <div style="height:30px">
         <el-input placeholder="请输入您添加过的房源印象" clearable></el-input>
       </div>
+      <div style="height:30px">
+      <el-button class="opset" type="text" @click="open">一键清除</el-button>
+        <el-button class="opset" type="text" @click="open">一键还原</el-button></div>
       <div class="tag-all">
-        <span class="Impression-tag"  v-for="item in ImpressionList" :key="item.value" >
-          <el-tag size="mini" type="success" closable>
+        
+        <span  v-for="item in ImpressionList" :key="item.value" >
+          <el-tag class="Impression-tag"  size="mini" type="success" closable>
             {{item.impression}}
             </el-tag>
         </span>
@@ -303,22 +311,23 @@ export default {
     toHouseDetail (id) {
       this.$router.push({ path: "/buySellSystem/houseDetails", query: { houseId: id } });
     },
-    //调配
+    //清除
     open () {
-      this.$prompt('请选择接收人员', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(({ value }) => {
-        this.$message({
-          type: 'success',
-          message: '已将房源跟单人调配为: ' + value
+        this.$confirm('此操作将清除所有印象, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
         });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '取消输入'
-        });
-      });
     },
     querylistByParams () {
       console.log(this.queryData.timeSelect);
