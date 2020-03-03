@@ -481,7 +481,6 @@ parRange: [
   },
   created () {
     this.queryCompanyDatas(1);
-<<<<<<< HEAD
       this.configId=this.$route.query.configId;
       this.notice.configNo=this.$route.query.sysParNo;
       this.notice.configName=this.$route.query.sysParName;
@@ -491,12 +490,6 @@ parRange: [
          this.notice.unit = this.unit[0].value
       this.notice.comId=this.companyDefault[0].value
      console.log(this.notice.comId);
-=======
-    this.configId = this.$route.query.configId;
-    this.notice.configNo = this.$route.query.sysParNo;
-    this.notice.configName = this.$route.query.sysParName;
-
->>>>>>> b38580f3a0b562fdcb6dfc5f733ff76439b401d7
   },
 
 };

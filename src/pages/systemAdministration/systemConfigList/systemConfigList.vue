@@ -83,12 +83,17 @@
                    @click="toAddConfig()">添加系统规则</el-button>
 
       </div>
-    
-  <div v-show="popup" @click="closepopup">
-      <!--这里是要展示的内容层-->
-      <div class="login">
-        <div class="button" >×</div>
-       <iframe style="" class="if" :src="'/sys/configObjectList?configId='+configId"> </iframe>
+
+      <div v-show="popup"
+           @click="closepopup">
+        <!--这里是要展示的内容层-->
+        <div class="login">
+          <iframe style=""
+                  class="if"
+                  :src="'/sys/configObjectList?configId='+configId"> </iframe>
+        </div>
+        <!--这里是半透明背景层-->
+        <div class="over"></div>
       </div>
     </template>
     <template v-slot:tableColumn="">
