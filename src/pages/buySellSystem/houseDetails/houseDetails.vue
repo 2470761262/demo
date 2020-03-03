@@ -224,9 +224,6 @@ input[type=number]::-webkit-outer-spin-button {
               <div style="position:relative;">
                 <el-image style="width:100;height:100px;border-radius:50px;"
                           :src="houseDetails.agentPerHeadImg"></el-image>
-                <div :style="[{position:'absolute'}, {'z-index':2}, {left: '-480px' }, {top:'10px'}]">
-                  <div style="border-radius: 13px; background-color: rgba(255,255,255,.5);width: 248px;"
-                       v-if="betExpireStr">
                 <div  :style="[{position:'absolute'}, {'z-index':2}, {left: '-520px' }, {top:'-40px'}]">
                   <div style="border-radius: 13px; background-color: rgba(255,255,255,.5);width: 248px; " v-if="betExpireStr" >
                     <p style="margin: 0px 48px;padding: 10px 0px;font-size: large;font-weight: bolder">距离房源对赌结束</p>
@@ -306,11 +303,6 @@ input[type=number]::-webkit-outer-spin-button {
                    @click="isShowRecommend=true">{{isRecommend?'取消推荐':'推荐房源'}}</el-button>
       </el-popover>
 
-      <el-button>鑫币对赌</el-button>
-      <el-popover placement="top"
-                  width="600"
-                  trigger="manual"
-                  v-model="isShowChange">
       <el-popover
         placement="top-start"
         width="520"
@@ -1557,8 +1549,6 @@ export default {
         console.log(e);
       })
     },
-    dialPhoneToFD(){
-      this.dailPhone(1,this.houseDetails.Tel,this.houseDetails.Tel1,this.houseDetails.Tel2,this.houseDetails.Tel3);
     dialPhoneToFD () {
       this.dailPhone(1, this.houseDetails.Tel, this.houseDetails.Tel1, this.houseDetails.Tel2, this.houseDetails.Tel3);
     },
