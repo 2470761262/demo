@@ -2,8 +2,44 @@
 .as {
   margin-top: 10px;
 }
+.rule {
+  position: absolute;
+  width: 0.82rem;
+  height: 0.36rem;
+  top: 0.08rem;
+  right: 0rem;
+  background: #111111;
+}
+.login {
+  position: fixed;
+  font-size: 24px;
+  height: 50rem;
+  width: 97%;
+  background-color: #ffffff;
+  border-radius: 0.25rem;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+.over {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  top: 0;
+  left: 0;
+  z-index: 999;
+  background-color: #111111;
+}
+.if {
+  width: 100%;
+  height: 100%;
+}
 </style>
 <template>
+
   <list-page :parentData="$data"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
@@ -38,6 +74,18 @@
                    size="mini"
                    @click="toAddConfig()">添加系统规则</el-button>
 
+      </div>
+
+      <div v-show="popup"
+           @click="closepopup">
+        <!--这里是要展示的内容层-->
+        <div class="login">
+          <iframe style=""
+                  class="if"
+                  :src="'/sys/configObjectList?configId='+configId"> </iframe>
+        </div>
+        <!--这里是半透明背景层-->
+        <div class="over"></div>
       </div>
     </template>
     <template v-slot:tableColumn="">
@@ -98,7 +146,9 @@ export default {
   },
   data () {
     return {
+      configId: null,
       loading: true, //控制表格加载动画提示
+      popup: 0,
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
@@ -280,14 +330,19 @@ export default {
           memo: memo
         }      });
     }, toList (id, sysParNo, sysParName, sysParType, memo) {
+      this.popup = 1;
       console.log(id);
-      this.$router.push({        path: "/sys/configObjectList",
-        query: {          configId: id,
-          sysParNo: sysParNo,
-          sysParName: sysParName,
-          sysParType: sysParType,
-          memo: memo
-        }      });
+      this.configId = id;
+
+      //  this.$router.push({        path: "/sys/configObjectList",
+      // query: {          configId: id,
+      //  sysParNo: sysParNo,
+      //    sysParName: sysParName,
+      //   sysParType: sysParType,
+      //   memo: memo,
+      //  keyWord:this.queryData.keyWord,
+      //   sysType:this.queryData.sysType
+      // }      });
     },
     toAddConfig () {
       this.$router.push({ path: "/sys/addConfig" });
@@ -316,6 +371,13 @@ export default {
         console.log("修改失败");
         console.log(e);
       })
+    },
+    showpopup () {
+      this.popup = 1;
+    },
+    //关闭活动规则页面
+    closepopup () {
+      this.popup = 0;
     },
     updateDelLeft (id, sysParNo, sysParName, sysParType, memo) {
       this.$api.get({
@@ -346,7 +408,7 @@ export default {
     },
     isForBut (type) {
       let array = [
-        //  { name: '修改', isType: '2', methosName: 'updateConfig' },
+        { name: '修改', isType: '2', methosName: 'updateConfig' },
         { name: '添加关联对象', isType: '1,2,3', methosName: 'postConfig' },
         { name: '查看关联对象', isType: '1,2,3', methosName: 'toList' },
         { name: '转有效', isType: '1,2,3', methosName: 'updateDelRight' },
