@@ -147,7 +147,9 @@ export default {
       return row.rooms + '室' + row.hall + '厅' + row.toilet + '卫';
     },
 
-    toLook (id) { },
+    toLook (id) {
+      this.$router.push({ name: 'houseDetails', params: { "houseId": id} });
+    },
     queryShopownerHouseParams () {
       this.queryShopownerRecommendHouse(1);
     },
@@ -267,4 +269,4 @@ export default {
     }
   },
 }
-</script>  
+</script>

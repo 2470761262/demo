@@ -326,9 +326,24 @@ input[type=number]::-webkit-outer-spin-button {
           <button @click="addBetVisible= false" style=" width: 80px;margin-left: 148px;border: 0px ;background-color: #c0c4cc;font-size: medium;border-radius:5px;" >取 消</button>
           <button @click="addBet"  style="width: 80px;margin-left: 20px;border: 0px;background-color: #0d824b;font-size: medium;border-radius:5px;" >确定</button>
         </div>
-        <el-button slot="reference"  @click="addBetView">鑫币对赌</el-button>
+        <el-button slot="reference"  @click="showBetView">鑫币对赌</el-button>
       </el-popover>
-
+      <el-dialog
+        title=""
+        :visible.sync="addBetSuccess"
+        width="240px"
+        top = "300px">
+        <div style="margin-top: -40px">
+          <div v-if="!addBetResult.status" style="margin-right: 13px;">
+            <span>{{addBetResult.err}}</span>
+          </div>
+          <div v-if="addBetResult.status">
+            <p  style="margin-left: 40px;margin-bottom: 10px;">对赌已生效</p>
+            <p style="margin-bottom: 10px;font-size: x-large;color: black;">{{betAmount}}鑫币已扣除</p>
+            <button style="width: 80px;font-size: medium;border: 0px;margin-left: 60px;background-color: #0d824b;border-radius:5px;">加油</button>
+          </div>
+        </div>
+      </el-dialog>
 
       <el-popover placement="top" width="600" trigger="manual" v-model="isShowChange">
         <div class="query-cell">
@@ -1352,6 +1367,10 @@ export default {
       addBetVisible: false, //对赌窗口可见
       addBetSuccess: false, //对赌成功窗口
       betExpireStr: "", //房源id
+      addBetResult: {
+        status: false,
+        err:"",
+      },
       betConf: {
         startHour:0,
         expireDay:0,
@@ -1441,19 +1460,6 @@ export default {
   },
   before () { },
   mounted () {
-    console.log(this.$route.params.houseId);
-    if (this.$route.params.betExpire || util.localStorageGet("houseDetails.vue:betExpire") ){
-      this.betExpire = this.$route.params.betExpire || util.localStorageGet("houseDetails.vue:betExpire");
-      util.localStorageSet("houseDetails.vue:betExpire",this.betExpire);
-      const chatTimer = setInterval(() => {
-        console.log(chatTimer);
-        this.showtime();
-      }, 1000);
-
-      this.$once('hook:beforeDestroy', () => {
-        clearInterval(chatTimer);
-      })
-    }
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       util.localStorageSet("houseDetails.vue:houseId", this.houseId);
@@ -1461,6 +1467,17 @@ export default {
     else {
       this.houseId = util.localStorageGet("houseDetails.vue:houseId");
     }
+    this.getBetInfo()
+    console.log(this.$route.params.houseId);
+    const chatTimer = setInterval(() => {
+      console.log(chatTimer);
+      this.showtime();
+    }, 1000);
+
+    this.$once('hook:beforeDestroy', () => {
+      clearInterval(chatTimer);
+    })
+
     if (util.localStorageGet("logindata")) {
       this.perId = util.localStorageGet("logindata").accountId;
     }
@@ -1486,6 +1503,9 @@ export default {
   },
   methods: {
     showtime () {
+      if(!this.betExpire){
+        return
+      }
       var nowtime = new Date(),  //获取当前时间
         endtime = new Date(this.betExpire);  //定义结束时间
       var lefttime = endtime.getTime() - nowtime.getTime(),  //距离结束时间的毫秒数
@@ -1495,7 +1515,7 @@ export default {
         lefts = Math.floor(lefttime / 1000 % 60);
       this.betExpireStr = leftd + "天" + lefth + "时" + leftm + "分";  //返回倒计时的字符串
     },
-    addBetView(){
+    showBetView(){
       var that =this;
       this.$api.get({
         url: '/house/bet/conf',
@@ -1519,10 +1539,30 @@ export default {
         console.log(e);
       })
     },
+    getBetInfo(){
+      var that =this;
+      this.$api.get({
+        url: '/house/bet/inBet/'+that.houseId,
+        data: null,
+        token: false
+      }).then((e) => {
+        console.log(e.data);
+        let data=e.data
+        if (data.code == 200) {
+          this.betExpire=data.data.EndTime;
+        } else {
+          console.log("查询对赌房源列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询对赌房源列表失败");
+        console.log(e);
+      })
+    },
     addBet(){
       var that =this;
-      if(that.betAmount<100){
-        this.$message.error("100起投！");
+      if(that.betAmount<100||that.betAmount> that.betConf.upper){
+        this.$message.error("100起投！封顶" +  that.betConf.upper);
         return
       }
       let params={"HouseId":that.houseId,"Amount":that.betAmount};
@@ -1534,15 +1574,15 @@ export default {
       }).then((e) => {
         console.log(e.data);
         let data=e.data
-          debugger
+        this.addBetSuccess = true;
         if (data.code == 200) {
-          this.addBetSuccess = true;
-          this.$message({
-            message: '对赌已生效\n'+that.betAmount+'鑫币已扣除\n加油',
-            type: 'success'
-          });
+          this.getBetInfo();
+          this.addBetVisible = false
+          this.addBetResult.status=true;
         } else {
           this.$message.error( data.message);
+          this.addBetResult.status=false;
+          this.addBetResult.err=data.message;
         }
       }).catch((e) => {
         console.log("查询对赌房源列表失败");
