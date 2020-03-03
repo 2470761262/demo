@@ -83,7 +83,8 @@ export default {
         { prop: "CpuID", label: "CPU编号" },
         { prop: "AddTime", label: "添加时间" },
         { prop: "LastLoginTime", label: "最后登录时间" },
-        { prop: "Remark", label: "门店名称" }
+        { prop: "Remark", label: "门店名称" },
+        { prop: "Version", label: "最后登录器版本" }
       ],
       tableData: [],
       pickerOptions2: {

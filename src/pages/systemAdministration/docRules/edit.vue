@@ -15,6 +15,15 @@
   border-radius: 10px;
   float: left;
 }
+.editorContainer {
+  width: 100%;
+}
+.upload-demo {
+  display: none;
+}
+.myQuillEditor {
+  height: 500px;
+}
 </style>
 <template>
   <div>
@@ -23,7 +32,7 @@
         <el-tree
           ref="treeForm"
           :data="treeData"
-          :default-expanded-keys="defaultCheckedKeys"
+          :default-expanded-keys="defaultExpandedKeys"
           :default-checked-keys="defaultCheckedKeys"
           node-key="businessId"
           show-checkbox
@@ -41,23 +50,68 @@
         <template slot="prepend">所属单位</template>
       </el-input>
       <el-input placeholder="请输入标题" v-model="title">
-        <template slot="prepend">标题</template>
+        <template slot="prepend">规则标题</template>
       </el-input>
-      <el-upload class="upload" drag :http-request="uploadFile" :limit="1" :file-list="fileList">
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">
-          将文件拖到此处，或
-          <em>点击上传</em>
+      <el-select v-model="typeValue" placeholder="请选择规则类型">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
+      </el-select>
+      <el-main>
+        <div class="editorContainer">
+          <el-upload
+            class="upload-demo"
+            :action="uploadUrl"
+            :headers="myHeader"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+          <quill-editor
+            class="myQuillEditor"
+            v-model="newsContent"
+            :options="editorOption"
+            ref="QuillEditor"
+          ></quill-editor>
         </div>
-      </el-upload>
-      <el-input type="textarea" autosize placeholder="请输入备注" v-model="remark"></el-input>
+      </el-main>
       <el-button type="success" @click="saveData" plain>确定</el-button>
       <el-button type="info" @click="$router.back(-1)" plain>取消</el-button>
     </div>
   </div>
 </template>
 <script>
+import { quillEditor } from "vue-quill-editor";
+import util from "@/util/util";
+import { TOKEN } from "@/util/constMap";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+const toolbarOptions = [
+  ["bold", "italic", "underline", "strike"], // toggled buttons
+  ["blockquote", "code-block"],
+
+  [{ header: 1 }, { header: 2 }], // custom button values
+  [{ list: "ordered" }, { list: "bullet" }],
+  [{ script: "sub" }, { script: "super" }], // superscript/subscript
+  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+  [{ direction: "rtl" }], // text direction
+
+  [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+  [{ font: [] }],
+  [{ align: [] }],
+  ["link", "image"],
+  ["clean"] // remove formatting button
+];
 export default {
+  components: { quillEditor },
   data() {
     return {
       treeData: [],
@@ -71,11 +125,52 @@ export default {
       title: "",
       remark: "",
       oldId: 0,
-      ipStr: "",
-      fileStr: "",
-      picName: "",
-      fileList: [],
-      defaultCheckedKeys: null
+      newsContent: null,
+      defaultCheckedKeys: null,
+      defaultExpandedKeys: null,
+      uploadUrl: "",
+      myHeader: "",
+      editorOption: {
+        placeholder: "请输入公告内容",
+        readOnly: false,
+        modules: {
+          toolbar: {
+            container: toolbarOptions, // 工具栏
+            handlers: {
+              image: function(value) {
+                if (value) {
+                  console.log(value);
+                  document.getElementById("btnUpload").click();
+                } else {
+                  this.quill.format("image", false);
+                }
+              },
+              video: function(v) {
+                if (v) {
+                  alert("不支持上传视频");
+                }
+              },
+              link: function(v) {
+                if (v) {
+                  var href = prompt("Enter the URL");
+                  this.quill.format("link", href);
+                }
+              }
+            }
+          }
+        }
+      },
+      options: [
+        {
+          value: "0",
+          label: "业务线行程量化考核规则"
+        },
+        {
+          value: "1",
+          label: "鑫家网系统规则"
+        }
+      ],
+      typeValue: ""
     };
   },
   mounted() {
@@ -101,6 +196,8 @@ export default {
         console.log("读取失败");
         console.log(e);
       });
+
+    this.quill = this.$refs.QuillEditor.quill;
   },
   methods: {
     handleCheckChange(data, checked, node) {
@@ -140,13 +237,19 @@ export default {
         });
         return;
       }
+      if (that.newsContent.length <= 0) {
+        that.$message({
+          message: "请输入规则内容",
+          type: "warning"
+        });
+        return;
+      }
       if (
-        that.ipStr.length <= 0 ||
-        that.fileStr.length <= 0 ||
-        that.picName.length <= 0
+        that.typeValue == null ||
+        (that.typeValue != "0" && that.typeValue != "1")
       ) {
         that.$message({
-          message: "请上传文件",
+          message: "请选择规则类型",
           type: "warning"
         });
         return;
@@ -155,16 +258,14 @@ export default {
       let params = {
         id: oldId,
         title: that.title,
-        ipStr: that.ipStr,
-        fileStr: that.fileStr,
-        picName: that.picName,
-        remark: that.remark,
         unitId: that.checkedId,
-        unitType: that.checkedType
+        unitType: that.checkedType,
+        content: that.newsContent,
+        type: that.typeValue
       };
       this.$api
         .post({
-          url: "/document/save",
+          url: "/docRules/save",
           data: params,
           qs: true
         })
@@ -182,47 +283,34 @@ export default {
             type: "info",
             message: result.data
           });
-          this.$router.push({ path: "/sys/document/list" });
+          this.$router.push({ path: "/sys/docRules/list" });
         })
         .catch(e => {
           console.log("保存失败");
           console.log(e);
         });
     },
-    uploadFile(uploader) {
-      let that = this;
-      let formData = new FormData();
-      formData.append("picClass", uploader.filename);
-      formData.append("file", uploader.file);
-      this.$api
-        .post({
-          url: "/document/upload",
-          headers: { "Content-Type": "multipart/form-data" },
-          data: formData,
-          onUploadProgress: progressEvent => {
-            let percent =
-              ((progressEvent.loaded / progressEvent.total) * 100) | 0;
-            uploader.onProgress({ percent: percent });
-          }
-        })
-        .then(json => {
-          uploader.onSuccess();
-          console.log(json.data.data, "json.data.data");
-          let data = json.data.data;
-          that.ipStr = data.ipStr;
-          that.fileStr = data.fileStr;
-          that.picName = data.picName;
-        })
-        .catch(() => {
-          that.$message({
-            message: json.data.message,
-            type: "warning"
-          });
-          uploader.onError();
-        });
+    handleAvatarSuccess(res, file) {
+      // 如果上传成功
+      if (res.code == 200) {
+        let imageUrl = res.data.url;
+        // 获取富文本组件实例
+        let quill = this.$refs.QuillEditor.quill;
+        // 获取光标所在位置
+        let length = quill.getSelection().index;
+        // 插入图片，imageUrl为服务器返回的图片链接地址
+        quill.insertEmbed(length, "image", imageUrl);
+        // 调整光标到最后
+        quill.setSelection(length + 1);
+      } else {
+        // 提示信息，需引入Message
+        alert("图片插入失败");
+      }
     }
   },
   created() {
+    this.uploadUrl = this.$api.baseUrl() + "/docRules/picture";
+    this.myHeader = { tk: util.localStorageGet(TOKEN) };
     this.oldId = this.$route.query.id;
     console.log("传过来的id：" + this.oldId);
     if (typeof this.oldId === "undefined") {
@@ -231,7 +319,7 @@ export default {
       let params = { id: this.oldId };
       this.$api
         .post({
-          url: "/document/detail",
+          url: "/docRules/detail",
           data: params,
           qs: true
         })
@@ -248,24 +336,18 @@ export default {
               this.checkedId = data.Coid;
               this.checkedType = 0;
             }
-            this.remark = data.remark;
-            this.ipStr = data.IpStr;
-            this.fileStr = data.FileStr;
-            this.picName = data.PicName;
-            this.fileList = [
-              {
-                name: this.picName,
-                url: this.ipStr + this.fileStr + this.picName
-              }
-            ];
             this.defaultCheckedKeys = [this.checkedId];
+            this.defaultExpandedKeys = [this.checkedId];
+            this.title = data.RulesTitle;
+            this.newsContent = data.RulesContent;
+            this.typeValue = data.RulesType + "";
           } else {
-            console.log("查询文档详情结果：" + result.message);
+            console.log("查询详情结果：" + result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询文档详情失败");
+          console.log("查询详情失败");
           console.log(e);
         });
     }

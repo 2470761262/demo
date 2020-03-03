@@ -8,11 +8,37 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template v-slot:top>
-      <div class="query-cell">
+   <template v-slot:top>
+      <div class="query-cell" >
+        <!-- <el-input placeholder="用户名"
+                  v-model="queryData.newsTitle"
+                  clearable>
+          <template slot="prepend">用户名</template>
+        </el-input> -->
+          <div class="query-cell" style="display:flex">
+        <el-input placeholder="规则编号或规则名"
+                  v-model="queryData.keyWord"
+                  clearable>
+          <template slot="prepend">搜索</template>
+        </el-input>
+        <el-select v-model="queryData.sysType">
+         <el-option
+                v-for="item in sysType"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+          </el-select>
         <el-button type="primary"
+                   style="margin-left:10px"
                    size="mini"
-                   @click="toAddConfig">添加系统规则</el-button>
+                   @click="queryVerifyHouseByParams">查询</el-button>
+      </div>
+        <el-button type="primary"
+                   style="margin-left:11px"
+                   size="mini"
+                   @click="toAddConfig()">添加系统规则</el-button>
+
       </div>
     </template>
     <template v-slot:tableColumn="">
@@ -75,7 +101,8 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
-        pageSize: 5 //每页条数
+        keyWord:null,
+        pageSize: 10 //每页条数
       },
       configSet: {
         selectToTime: false,
@@ -101,7 +128,8 @@ export default {
         addTime: '2019-01-01 18:00:00',
         cellType: '待店长验真',
         operation: '1',
-      }, {
+      },
+      , {
         house: '龙腾花园-16栋-604室',
         price: '234',
         area: '12',
@@ -112,7 +140,27 @@ export default {
         cellType: '待店长验真',
         operation: '3',
       }],
-
+      sysType:[{
+        label:'买卖房源',
+        value:'1'
+      
+      },{
+        label:'买卖客户',
+        value:'2'
+      
+      },{
+        label:'租赁房源',
+        value:'3'
+      
+      },{
+        label:'租赁客户',
+        value:'4'
+      
+      },{
+        label:'用户管理',
+        value:'5'
+      
+      }],
       options: [{
         value: '选项1',
         label: '全部'
@@ -136,8 +184,11 @@ export default {
         activeName: "tab1",
 
       },
+      tableData2: [{}],
       queryData: {
         houseName: '',
+        keyWord:null,
+        sysType:null,
         taskName: '',
         selectValue: '',
         timeSelect: '',
@@ -151,11 +202,16 @@ export default {
     queryVerifyHouseByParams () {
       this.queryVerifyHouseDatas(1);
     },
+     
     queryVerifyHouseDatas (currentPage) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage };
+      let params = { limit: this.pageJson.pageSize, page: currentPage};
       let that = this;
-      if (this.queryData.newsTitle != null) {
-        params.newsTitle = this.queryData.newsTitle;
+      console.log(that.queryData.keyWord);
+      if (that.queryData.keyWord != null) {
+        params.keyWord = that.queryData.keyWord;
+      }
+      if (that.queryData.sysType != null) {
+        params.sysParType = that.queryData.sysType;
       }
       this.$api.get({
         url: '/Set',
@@ -289,7 +345,7 @@ export default {
     },
     isForBut (type) {
       let array = [
-        { name: '修改', isType: '2', methosName: 'updateConfig' },
+      //  { name: '修改', isType: '2', methosName: 'updateConfig' },
         { name: '添加关联对象', isType: '1,2,3', methosName: 'postConfig' },
         { name: '查看关联对象', isType: '1,2,3', methosName: 'toList' },
         { name: '转有效', isType: '1,2,3', methosName: 'updateDelRight' },

@@ -1,4 +1,7 @@
 <style lang="less" scoped>
+.el-main {
+  padding-bottom: 0;
+}
 .page-cell-conter {
   height: 100vh;
   .page-cell-header {
@@ -18,8 +21,8 @@
       background-color: rgb(84, 92, 100);
     }
     .children-page {
-      padding-top: 20px;
-      height: calc(100% - 14px);
+      //height: calc(100% - 14px);
+      height: 100%;
       box-sizing: border-box;
     }
   }
