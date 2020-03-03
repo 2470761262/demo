@@ -107,7 +107,9 @@ import basicInformation from "@/pages/buySellSystem/addHouse/components/basicInf
 //异步组件工厂方法
 import componentsFactory from "@/util/componentsFactory";
 import { mapState } from "vuex";
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     basicInformation,
     supplement: () => componentsFactory("pages/buySellSystem/addHouse/components/supplement"), //补充信息

@@ -4,51 +4,78 @@
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
-        <div class="page-form-inline ">
-            <el-input placeholder="楼盘名称" style="width:280px" v-model="queryData.CommunityName" >
-                <template slot="prepend">楼盘名称 </template>
-               </el-input>
-               <el-input placeholder="栋座" v-model="queryData.BuildingName" style="margin-left:10px;width:100px"></el-input>
-               <el-input placeholder="房间号" v-model="queryData.RoomNo" style="margin-left:10px;width:100px"></el-input>
-       <el-input placeholder="姓名" style="margin-left:30px;width:240px" v-model="queryData.Customers" clearable>
-        <template slot="prepend">业主</template>
+      <div class="page-form-inline ">
+        <el-input placeholder="楼盘名称"
+                  style="width:280px"
+                  v-model="queryData.CommunityName">
+          <template slot="prepend">楼盘名称 </template>
+        </el-input>
+        <el-input placeholder="栋座"
+                  v-model="queryData.BuildingName"
+                  style="margin-left:10px;width:100px"></el-input>
+        <el-input placeholder="房间号"
+                  v-model="queryData.RoomNo"
+                  style="margin-left:10px;width:100px"></el-input>
+        <el-input placeholder="姓名"
+                  style="margin-left:30px;width:240px"
+                  v-model="queryData.Customers"
+                  clearable>
+          <template slot="prepend">业主</template>
         </el-input>
 
-        <el-input placeholder="业主电话" v-model="queryData.Tel" style="margin-left:30px;width:240px" clearable>
-        <template slot="prepend">电话</template>
+        <el-input placeholder="业主电话"
+                  v-model="queryData.Tel"
+                  style="margin-left:30px;width:240px"
+                  clearable>
+          <template slot="prepend">电话</template>
         </el-input>
 
-        <el-input placeholder="最小值" v-model="queryData.minPrice" style="margin-left:25px;width:160px" clearable>
-        <template slot="prepend">价格</template>
+        <el-input placeholder="最小值"
+                  v-model="queryData.minPrice"
+                  style="margin-left:25px;width:160px"
+                  clearable>
+          <template slot="prepend">价格</template>
         </el-input>
-         <el-input placeholder="最大值" v-model="queryData.maxPrice"  style="margin-left:10px;width:100px"></el-input>
-<br/>
-        <el-input placeholder="最小值" v-model="queryData.minInArea" style="width:160px" clearable>
-        <template slot="prepend">面积</template>
+        <el-input placeholder="最大值"
+                  v-model="queryData.maxPrice"
+                  style="margin-left:10px;width:100px"></el-input>
+        <br />
+        <el-input placeholder="最小值"
+                  v-model="queryData.minInArea"
+                  style="width:160px"
+                  clearable>
+          <template slot="prepend">面积</template>
         </el-input>
-        <el-input placeholder="最大值" v-model="queryData.maxInArea" style="margin-left:10px;width:100px" ></el-input>
+        <el-input placeholder="最大值"
+                  v-model="queryData.maxInArea"
+                  style="margin-left:10px;width:100px"></el-input>
 
-        <el-select v-model="value" filterable placeholder="请选择">
-    <el-option
-      v-for="item in options"
-      :key="item.value"
-      :label="item.label"
-      :value="item.value">
-    </el-option>
-  </el-select>
+        <el-select v-model="value"
+                   filterable
+                   placeholder="请选择">
+          <el-option v-for="item in options"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value">
+          </el-option>
+        </el-select>
         <template slot="prepend">房源状态</template>
-        <el-date-picker v-model="queryData.timeSelect" type="daterange" range-separator="至"
-      value-format="yyyy-MM-dd" start-placeholder="开始日期" end-placeholder="结束日期">
-    </el-date-picker>
+        <el-date-picker v-model="queryData.timeSelect"
+                        type="daterange"
+                        range-separator="至"
+                        value-format="yyyy-MM-dd"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+        </el-date-picker>
         <el-button type="primary"
-                     style="margin-left:30px"
-                     size="mini"                   
-                     @click="querylistByParams">查询</el-button>
-        </div> 
+                   style="margin-left:30px"
+                   size="mini"
+                   @click="querylistByParams">查询</el-button>
+      </div>
     </template>
-     
+
     <template #tableColumn="">
-        
+
       <el-table-column label="房源编号">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
@@ -59,7 +86,7 @@
           {{scope.row.CommunityName}}
         </template>
       </el-table-column>
-<el-table-column label="栋座">
+      <el-table-column label="栋座">
         <template v-slot="scope">
           {{scope.row.BuildingName}}
         </template>
@@ -100,7 +127,7 @@
           {{scope.row.noSeenDay}}
         </template>
       </el-table-column>
-       <el-table-column label="跟单人">
+      <el-table-column label="跟单人">
         <template v-slot="scope">
           {{scope.row.AgentPerName}}
         </template>
@@ -109,28 +136,39 @@
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-            <el-button type="info" @click="toHouseDetail(scope.row.id)" size="mini">查看</el-button>
-            <el-popconfirm confirmButtonText='我要取消' cancelButtonText='还是不了吧' icon="el-icon-info" iconColor="red" title="确定取消关注这个房源吗？">
-              <el-button type="info" slot="reference" @click="concernOFF(scope.row.id)" size="mini">取消关注</el-button>
-              </el-popconfirm>
-       </template> 
+          <el-button type="info"
+                     @click="toHouseDetail(scope.row.id)"
+                     size="mini">查看</el-button>
+          <el-popconfirm confirmButtonText='我要取消'
+                         cancelButtonText='还是不了吧'
+                         icon="el-icon-info"
+                         iconColor="red"
+                         title="确定取消关注这个房源吗？">
+            <el-button type="info"
+                       slot="reference"
+                       @click="concernOFF(scope.row.id)"
+                       size="mini">取消关注</el-button>
+          </el-popconfirm>
+        </template>
       </el-table-column>
     </template>
   </list-page>
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
-  
+  mixins: [getMenuRid],
+
   components: {
     listPage
   },
   data () {
     return {
-       dialogVisible: false,
+      dialogVisible: false,
       value: '',
-        input:'',
-        addPer:'',
+      input: '',
+      addPer: '',
       loading: true, //控制表格加载动画提示
       pageJson: {
         currentPage: 1, //当前页码
@@ -150,8 +188,8 @@ export default {
       elTabs: {
         activeName: "tab1",
         list: [
-       
-        ] 
+
+        ]
       },
       options: [{
         value: '选项1',
@@ -174,19 +212,19 @@ export default {
       }],
       queryData: {
         communityName: '',
-        timeSelect:'',
-       
+        timeSelect: '',
+
       },
-      
+
     }
   },
   mounted () {
     this.querylist(1);
   },
   methods: {
-    concernOFF(id){
-       this.$api.post({
-        url: "/concernHouseOFF/"+id,
+    concernOFF (id) {
+      this.$api.post({
+        url: "/concernHouseOFF/" + id,
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         token: false,
       }).then((e) => {
@@ -194,7 +232,7 @@ export default {
       })
 
     },
-     queryAddPerId () {
+    queryAddPerId () {
       var that = this
       this.$api.get({
         url: "/mateHouse/queryComBuilding",
@@ -210,57 +248,57 @@ export default {
         }
       })
     },
-    handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {});
-      },
+    handleClose (done) {
+      this.$confirm('确认关闭？')
+        .then(_ => {
+          done();
+        })
+        .catch(_ => { });
+    },
     //跳转房源详情页面
-    toHouseDetail(id){
-      this.$router.push({ path: "/buySellSystem/houseDetails",query:{houseId:id} });
+    toHouseDetail (id) {
+      this.$router.push({ path: "/buySellSystem/houseDetails", query: { houseId: id } });
     },
     //调配
-     open() {
-        this.$prompt('请选择接收人员', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        }).then(({value}) => {
-          this.$message({
-            type: 'success',
-            message: '已将房源跟单人调配为: ' + value
-          });
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          });       
+    open () {
+      this.$prompt('请选择接收人员', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        this.$message({
+          type: 'success',
+          message: '已将房源跟单人调配为: ' + value
         });
-      },
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        });
+      });
+    },
     querylistByParams () {
-     console.log(this.queryData.timeSelect);
-     this.querylist(1);
+      console.log(this.queryData.timeSelect);
+      this.querylist(1);
     },
     querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize+'', page: currentPage+'',listType:'myAgent'};
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
       let that = this;
-      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName;}
-      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName;}
-      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo;}
-      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers;}
-      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel;}
-      if (this.queryData.minPrice != null&& this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice;}
-      if (this.queryData.maxPrice != null&& this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice;}
-      if (this.queryData.minInArea != null&& this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea;}
-      if (this.queryData.maxInArea != null&& this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea;}
-      if (this.queryData.timeSelect!=null && this.queryData.timeSelect[0] != null&& this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0];}
-      if (this.queryData.timeSelect!=null &&this.queryData.timeSelect[1] != null&& this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1];}
+      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
+      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
+      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
+      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
+      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
+      if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
+      if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
+      if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
+      if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
+      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
+      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
       this.$api.post({
-         url: '/agent_house/myCollectHouseList',
-         headers: { "Content-Type": "application/json;charset=UTF-8" },
-         data: params,
-         token: false
+        url: '/agent_house/myCollectHouseList',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: params,
+        token: false
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
@@ -298,11 +336,11 @@ export default {
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
-       this.querylist(1);
+      this.querylist(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-       this.querylist(val);
+      this.querylist(val);
     },
   },
 }
