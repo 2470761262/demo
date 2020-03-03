@@ -424,6 +424,7 @@ export default {
     //选中节点
     clickNode (data, node, obj) {
       this.ruleObj = data;
+      this.$forceUpdate();
       console.log(data, node, obj, "selected...");
     },
     //更新功能点
@@ -575,11 +576,13 @@ export default {
             console.log(result.data);
             this.ruleUrlList = result.data.ruleUrlConfig;
             if (result.data.urlList) {
-              this.ruleObj.ruleUrls = result.data.urlList;
+              this.$set(this.ruleObj,'ruleUrls',result.data.urlList);
             }
+            console.log( this.ruleObj);
           } else {
             console.log("获取接口列表失败：" + result.message);
           }
+          this.$forceUpdate();
         })
         .catch(e => {
           console.log("获取接口列表失败异常");

@@ -31,7 +31,9 @@
                  show-checkbox
                  node-key="id"
                  ref="tree"
+                 check-on-click-node
                  highlight-current
+                 :expand-on-click-node=false
                  :props="defaultProps">
           <span class="custom-tree-node"
                 slot-scope="{ node, data }">
@@ -39,13 +41,13 @@
             <span>
               <el-button type="text"
                          size="mini"
-                         @click.stop="() => operationSelf(node,data)"> 自己</el-button>
+                         @click="operationSelf(node,data)"> 自己</el-button>
               <el-button type="text"
                          size="mini"
-                         @click.stop="() => operationDept(node, data)"> 部门权限</el-button>
-              <el-button type="text"
-                         size="mini"
-                         @click.stop="() => operationCompany(node, data)">跨部门权限</el-button>
+                         @click="operationDept(node, data)"> 部门权限</el-button>
+                <el-button type="text"
+                           size="mini"
+                           @click="operationCompany(node, data)">跨部门权限</el-button>
             </span>
           </span>
         </el-tree>
@@ -68,8 +70,10 @@
                        @click="savePosition(0)">应用到角色</el-button>
             <el-button type="primary"
                        @click="savePosition(1)">应用到个人</el-button>
-            <el-button type="primary"
+            <div v-show="showOperationCompany" style="display: inline-block;margin-left: 10px">
+              <el-button type="primary"
                        @click="savePosition(2)">应用到公司</el-button>
+            </div>
           </div>
         </div>
         <div class="text item"
@@ -122,6 +126,7 @@ export default {
       showCompanyTree: false,
       companyGather: [],
       paramsObj: {},
+      showOperationCompany: false
     }
   },
   mounted () {
@@ -157,6 +162,7 @@ export default {
     operationCompany (node, data) {
       this.showCompanyTree = true;
       this.showSave = true;
+      this.showOperationCompany = true;
       console.log(node, data, "operationCompany..");
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 2;
@@ -173,13 +179,16 @@ export default {
     operationSelf (node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
+      this.showOperationCompany = false;
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 0;
+
       console.log(node, data, "operationSelf..");
     },
     operationDept (node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
+      this.showOperationCompany = false;
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 1;
       console.log(node, data, "operationDept..");
