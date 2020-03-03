@@ -105,8 +105,9 @@ export default {
       loading: false, //控制表格加载动画提示
       queryData: {
         keyWord: "",
-        isLocked: null, //0 查询锁定,1 查询未锁定,2 查询异常用户 
-        del: 0 //0 查询在职员工,1 查询离职员工,2 查询待离职员工
+        isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户
+        del:0 ,//0 查询在职员工,1 查询离职员工,2 查询待离职员工
+        type:0 //0 内部  1 游客
       },
       configSet: {
         selectToTime: false,
@@ -131,20 +132,20 @@ export default {
     }
   },
   mounted () {
-    this.queryData.isLocked = null;
-    this.queryData.del = null;
-    this.queryEmployeeDatas(1);
+     this.queryData.isLocked = null;
+     this.queryData.del = null;
+     this.queryEmployeeDatas(1);
   },
   methods: {
-    queryEmployeeByIsLocked (isLocked) {
+    queryEmployeeByIsLocked(isLocked){
       this.queryData.isLocked = isLocked;
       this.queryData.del = 0;
       this.queryEmployeeDatas(1)
     },
-    queryEmployeeByDel (del) {
-      this.queryData.isLocked = null;
-      this.queryData.del = del;
-      this.queryEmployeeDatas(1)
+    queryEmployeeByDel(del){
+     this.queryData.isLocked = null;
+     this.queryData.del = del;
+     this.queryEmployeeDatas(1)
     },
     queryEmployeeByParams () {
       this.queryEmployeeDatas(1);
@@ -161,6 +162,7 @@ export default {
       if (this.queryData.del != null) {
         params.del = this.queryData.del;
       }
+        params.type = this.queryData.type;
       this.$api.post({
         url: '/employee/list',
         data: params,
@@ -228,17 +230,17 @@ export default {
     distributeEvent (e, id) {
       this[e](id);
     },
-    resumeDelEmployee (id) {
-      this.delEmployee(id, 0);
+    resumeDelEmployee(id){
+      this.delEmployee(id,0);
     },
-    leaveDelEmployee (id) {
-      this.delEmployee(id, 1);
+    leaveDelEmployee(id){
+      this.delEmployee(id,1);
     },
     getOpeBtns (type) {
       let array = [
-        { name: '编辑', isType: '1', methosName: 'editEmployee' },
-        { name: '离职', isType: '1', methosName: 'leaveDelEmployee' },
-        { name: '复职', isType: '1', methosName: 'resumeDelEmployee' },
+         { name: '编辑', isType: '1', methosName: 'editEmployee' },
+         { name: '离职', isType: '1', methosName: 'leaveDelEmployee' },
+         { name: '复职', isType: '1', methosName: 'resumeDelEmployee' },
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
