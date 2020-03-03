@@ -179,7 +179,7 @@ export default {
     },
     toLook(row){
       var that = this;
-      that.$router.push({ name: 'houseDetails', params: { "houseId": row.id,"betStatus": row.status,"betExpire": row.endTime} });
+      that.$router.push({ name: 'houseDetails', params: { "houseId": row.id} });
     },
     queryHouseBetParams(){
          this.queryHouseBet(1);
