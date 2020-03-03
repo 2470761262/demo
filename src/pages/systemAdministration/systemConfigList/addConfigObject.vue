@@ -64,12 +64,19 @@
           </div>
           <div class="left-input-container">
             <span>公司参数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select v-model="notice.comId"
-                       placeholder="请选择">
-              <el-option v-for="item in tableData"
-                         :key="item.value"
-                         :label="item.CompanyName"
-                         :value="item.id"></el-option>
+            <el-select v-model="notice.comId" placeholder="请选择">
+                <el-option
+                v-for="item in companyDefault"
+                :key="item.value"
+                :label="item.CompanyName"
+                :value="item.value"
+              ></el-option>
+              <el-option
+                v-for="item in tableData"
+                :key="item.value"
+                :label="item.CompanyName"
+                :value="item.id"
+              ></el-option>
             </el-select>
           </div>
           <div class="left-input-container">
@@ -253,6 +260,10 @@ export default {
       },
       unit: [
         {
+          value: "-1",
+          label: "默认"
+        },
+        {
           value: "0",
           label: "小时"
         },
@@ -312,13 +323,24 @@ export default {
         {
           value: "2",
           label: "部门"
-        },
-        {
-          value: "2",
+        } ,
+         {
+          value: "3",
           label: "岗位"
         }
       ],
-      parRange: [
+      companyDefault: [
+        {
+          value: "0",
+          CompanyName: "默认"
+        },
+
+      ],
+parRange: [
+   {
+          value: "-1",
+          label: "默认"
+        },
         {
           value: "0",
           label: "个人"
@@ -339,8 +361,10 @@ export default {
       ],
       company: [
 
-      ],
-      tableData: []
+  ],
+  tableData:[
+    
+  ]
     };
   },
   watch: {},
@@ -457,10 +481,22 @@ export default {
   },
   created () {
     this.queryCompanyDatas(1);
+<<<<<<< HEAD
+      this.configId=this.$route.query.configId;
+      this.notice.configNo=this.$route.query.sysParNo;
+      this.notice.configName=this.$route.query.sysParName;
+       this.notice.paraIsAllowed = this.paraIsAllowed[0].value
+         this.notice.configObject = this.configObject[0].value
+         this.notice.parRange = this.parRange[0].value
+         this.notice.unit = this.unit[0].value
+      this.notice.comId=this.companyDefault[0].value
+     console.log(this.notice.comId);
+=======
     this.configId = this.$route.query.configId;
     this.notice.configNo = this.$route.query.sysParNo;
     this.notice.configName = this.$route.query.sysParName;
 
+>>>>>>> b38580f3a0b562fdcb6dfc5f733ff76439b401d7
   },
 
 };

@@ -204,8 +204,12 @@ export default {
           for (var i = 0; i < result.data.list.length; i++) {
 
             switch (result.data.list[i].parRange) {
+              case "-1":
+                result.data.list[i].parRange = "默认";
+                break;
               case "0":
                 result.data.list[i].parRange = "个人";
+                break;
               case "1":
                 result.data.list[i].parRange = "部门";
                 break;

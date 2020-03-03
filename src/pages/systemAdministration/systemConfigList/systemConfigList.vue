@@ -22,21 +22,29 @@
   transform: translate(-50%, -50%);
   z-index: 1000;
 }
-.over {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  opacity: 0.7;
-  filter: alpha(opacity=70);
-  top: 0;
-  left: 0;
-  z-index: 999;
-  background-color: #111111;
-}
-.if {
-  width: 100%;
-  height: 100%;
-}
+  .over {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    top: 0;
+    left: 0;
+    z-index: 999;
+    background-color: #111111;
+  }
+  .if{
+    width:100%;
+    height:100%
+  }
+  .button{
+    border-radius: 50%;
+    text-indent: -1rem;
+    text-align: end;
+    padding-right: 20px;
+    font-size: 2rem
+    
+  }
 </style>
 <template>
 
@@ -75,17 +83,12 @@
                    @click="toAddConfig()">添加系统规则</el-button>
 
       </div>
-
-      <div v-show="popup"
-           @click="closepopup">
-        <!--这里是要展示的内容层-->
-        <div class="login">
-          <iframe style=""
-                  class="if"
-                  :src="'/sys/configObjectList?configId='+configId"> </iframe>
-        </div>
-        <!--这里是半透明背景层-->
-        <div class="over"></div>
+    
+  <div v-show="popup" @click="closepopup">
+      <!--这里是要展示的内容层-->
+      <div class="login">
+        <div class="button" >×</div>
+       <iframe style="" class="if" :src="'/sys/configObjectList?configId='+configId"> </iframe>
       </div>
     </template>
     <template v-slot:tableColumn="">
