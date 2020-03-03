@@ -55,9 +55,9 @@
       <el-container>
         <el-header>
          
-          <div class="left-input-container">
+          <div class="left-input-container" >
             <span>参数类型</span>
-            <el-select v-model="notice.newsClass" placeholder="请选择" @change="getNum(notice.newsClass)">
+            <el-select v-model="notice.newsClass" placeholder="请选择" @change="getNum(notice.newsClass)" :disabled="updateState">
               <el-option
                 v-for="item in newsClassOption"
                 :key="item.value"
@@ -81,7 +81,7 @@
             <span>参数编号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
            <span> {{notice.configNo!=null? notice.configNo:"选择类型后自动生成编号"}}</span>
           </div>
-           <div class="left-input-container">
+           <div class="left-input-container" >
             <span>备注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <el-input
               type="text"
@@ -133,6 +133,7 @@ export default {
     return {
       quill:null,
       uploadUrl:"",
+      updateState:false,
       notice:{
         configId:null,
         newsTitle: null,
@@ -234,6 +235,7 @@ export default {
       })
     },
     sendNotice(){
+      let that=this;
       if(this.notice.newsClass==null){
         this.$message({
           showClose: true,
@@ -265,10 +267,10 @@ if(this.notice.configId==null){
       this.$api.get({
         url: '/Set/add',
         data: {
-          sysParType:this.notice.newsClass,
-          sysParNo:this.notice.configNo,
-          sysParName:this.notice.configName,
-          memo:this.notice.configMemo,
+          sysParType:that.notice.newsClass,
+          sysParNo:that.notice.configNo,
+          sysParName:that.notice.configName,
+          memo:that.notice.configMemo,
           addName:"35491",
         },
         token: false,
@@ -297,11 +299,11 @@ if(this.notice.configId==null){
           this.$api.get({
         url: '/Set/update',
         data: {
-          sysParid:this.$route.query.configId,
-          sysParType:this.notice.newsClass,
-          sysParNo:this.notice.configNo,
-          sysParName:this.notice.configName,
-          memo:this.notice.configMemo,
+          sysParID:that.$route.query.configId,
+          sysParType:that.notice.newsClass,
+          sysParNo:that.notice.configNo,
+          sysParName:that.notice.configName,
+          memo:that.notice.configMemo,
         },
         token: false,
        
@@ -310,18 +312,18 @@ if(this.notice.configId==null){
         let result = e.data;
         if (result.code == 200) {
           console.log(result.message);
-              this.$alert('', '添加成功', {
+              this.$alert('', '修改成功', {
             dangerouslyUseHTMLString: false
           });
           this.$router.push({ path: "/sys/systemConfigList"});
           console.log(result.data);
           this.$message({message:result.message});
         } else {
-          console.log("添加失败:" + result.message);
+          console.log("修改失败:" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("添加失败");
+        console.log("修改失败");
         console.log(e);
       })
       }
@@ -335,11 +337,15 @@ post(){
   
   created() {
     console.log(this.$route.query);
+    
           this.notice.configId=this.$route.query.configId;
       this.notice.configNo=this.$route.query.sysParNo;
       this.notice.configName=this.$route.query.sysParName;
        this.notice.configMemo=this.$route.query.memo;
- 
+       if(this.$route.query.configId!=undefined){
+      this.updateState=true;
+    }
+ console.log(this.$route.query.configId);
      switch(this.$route.query.sysParType){
      case"买卖房源":
       this.notice.newsClass="1";

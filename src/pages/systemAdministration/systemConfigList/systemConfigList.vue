@@ -37,6 +37,14 @@
     width:100%;
     height:100%
   }
+  .button{
+    border-radius: 50%;
+    text-indent: -1rem;
+    text-align: end;
+    padding-right: 20px;
+    font-size: 2rem
+    
+  }
 </style>
 <template>
 
@@ -80,6 +88,7 @@
   <div v-show="popup" @click="closepopup">
       <!--这里是要展示的内容层-->
       <div class="login">
+        <div class="button" >×</div>
        <iframe style="" class="if" :src="'/sys/configObjectList?configId='+configId"> </iframe>
       </div>
       <!--这里是半透明背景层-->
