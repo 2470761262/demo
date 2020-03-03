@@ -176,14 +176,27 @@
             <span>电梯</span>
           </div>
         </div>
+        <div class="query-cell">
+          <span>小区名称:</span>
+          <span>{{houseDetails.CommunityName}}</span>
+          <span v-if="!isShowBuilding" @click="getShowBuliding">查看楼栋号</span>
+          <span v-if="isShowBuilding">-{{houseDetails.BuildingName}}</span>
+          <span v-if="isShowBuilding">-{{houseDetails.RoomNo}}</span>
+        </div>
         <div class="query-cell" style="margin-top:20px;">
           <div class="query-cell">
             <div class="query-cell">
-              <div>
+              <div style="position:relative;">
                 <el-image
                   style="width:100;height:100px;border-radius:50px;"
                   :src="houseDetails.agentPerHeadImg"
                 ></el-image>
+                <div  :style="[{position:'absolute'}, {'z-index':2}, {left: '-480px' }, {top:'10px'}]">
+                  <div style="border-radius: 13px; background-color: rgba(255,255,255,.5);width: 248px;" v-if="betExpireStr" >
+                    <p style="margin: 0px 48px;padding: 10px 0px;font-size: large;font-weight: bolder">距离房源对赌结束</p>
+                    <p style="margin: 0px 20px;padding: 0px 0 10px 0;font-size: x-large">还剩 {{ ' ' +  betExpireStr }}</p>
+                  </div>
+                </div>
               </div>
               <div>
                 <div>{{houseDetails.agentPerName}}</div>
@@ -195,7 +208,7 @@
           <div style="margin-left:20px;">
             <span>{{houseDetails.Customers}}</span>
             <br />
-            <el-button :data-tel="houseDetails.Tel">联系业主</el-button>
+            <el-button :data-tel="houseDetails.Tel" @click="dialPhoneToFD">联系业主</el-button>
           </div>
         </div>
       </div>
@@ -221,12 +234,27 @@
           </div>
         </div>
         <el-button
-          v-if="houseDetails.is_release_outside!=1&&houseDetails.AgentPer==35365"
+          v-if="houseDetails.is_release_outside!=1&&houseDetails.AgentPer==perId"
           slot="reference"
           @click="certificateType"
         >发布外网房源</el-button>
       </el-popover>
-      <el-button>推荐房源</el-button>
+       <el-button v-if="houseDetails.is_release_outside==1&&houseDetails.AgentPer==perId" @click="cancelOutsideHouse">
+         取消发布
+       </el-button>
+
+      <el-popover placement="top" width="600" trigger="manual" v-model="isShowRecommend">
+        <div>
+          <el-input  v-model="recommendMemo" type="textarea" placeholder="请输入原因">
+          </el-input>
+        </div>
+        <div>
+          <el-button @click="isShowRecommend=false">取消</el-button>
+          <el-button @click="insertOrCancelRecommend">添加</el-button>
+        </div>
+          <el-button  slot="reference" @click="isShowRecommend=true">{{isRecommend?'取消推荐':'推荐房源'}}</el-button>
+      </el-popover>
+
       <el-button>鑫币对赌</el-button>
       <el-popover placement="top" width="600" trigger="manual" v-model="isShowChange">
         <div class="query-cell">
@@ -259,7 +287,7 @@
         </div>
          <el-button slot="reference" @click="isChecking(8,'当前正在审核',0)">转房源状态</el-button>
       </el-popover>
-     
+
       <el-popover placement="top" width="600" trigger="manual" v-model="isShowCancelMethod">
         <div class="query-cell">
           <el-radio v-model="cancelMethodType" label="0">委托人</el-radio>
@@ -267,11 +295,11 @@
           <el-radio v-model="cancelMethodType" label="2">实勘人</el-radio>
         </div>
         <div>
-          <el-input v-model="cancleMemo" placeholder="请输入取消作业人的原因" type="textarea"></el-input>
+          <el-input v-model="cancelMemo" placeholder="请输入取消作业人的原因" type="textarea"></el-input>
         </div>
         <div>
           <el-button @click="isShowCancelMethod=false">取消</el-button>
-          <el-button @click="cancleMethod">添加</el-button>
+          <el-button @click="cancelMethod">添加</el-button>
         </div>
         <el-button slot="reference" @click="isShowCancelMethod=true" >取消作业方法</el-button>
       </el-popover>
@@ -313,7 +341,7 @@
         <el-button
           slot="reference"
           @click="showKeyStorageDept"
-          v-if="agentHouseMethod.keyOwner==35365"
+          v-if="agentHouseMethod.keyOwner==perId"
         >修改钥匙存放门店</el-button>
       </el-popover>
     </div>
@@ -1179,7 +1207,8 @@
             <span>挂牌时间</span>
             <span style="margin-left:50px;">{{houseDetails.AddTime}}</span>
             <span style="margin-left:50px;">上次交易金额</span>
-            <span style="margin-left:50px;">{{ houseDetails.LastTransactionAmount}}万元</span>
+            <span style="margin-left:50px;">{{ houseDetails.LastTransactionAmount}}</span>
+            <span v-if="houseDetails.LastTransactionAmount!=null&&houseDetails.LastTransactionAmount!=''">万元</span>
           </div>
           <div>
             <span>上次交易</span>
@@ -1191,7 +1220,8 @@
             <span>抵押信息</span>
             <span style="margin-left:50px;">{{houseDetails.mortgage==0?"无":houseDetails.subbranch}}</span>
             <span style="margin-left:50px;">剩余贷款</span>
-            <span style="margin-left:50px;">{{houseDetails.balance}}万元</span>
+            <span style="margin-left:50px;">{{houseDetails.balance}}</span>
+            <span v-if="houseDetails.balance!=null&&houseDetails.balance!=''">万元</span>
           </div>
         </div>
         <div style="margin-top:20px;">
@@ -1255,13 +1285,26 @@
                 </div>
               </div>
               <div v-if="switchIndex==1">
-                <div v-for="(item,index) in  followPaitList" :key="index" style="height:70px;">
+                <div v-for="(item,index) in  followPairList" :key="index" style="height:70px;">
                   <div>
                     <span>{{item.FollowTime}}</span>
                   </div>
                   <div>
                     <div>
                       <span>{{item.lookPerName}}({{item.lookPerNameDepartmentName}}),</span>
+                      <span>{{item.Memo}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div v-for="(item,index) in  followTelList" :key="index" style="height:70px;">
+                  <div>
+                    <span>{{item.FollowTime}}</span>
+                  </div>
+                  <div>
+                    <div>
+                      <span>{{item.followName}}({{item.followDepartment}}),</span>
                       <span>{{item.Memo}}</span>
                     </div>
                   </div>
@@ -1291,6 +1334,8 @@ export default {
   data() {
     return {
       houseId: 0, //房源id
+      betExpire: 0, //对赌过期时间
+      betExpireStr: "", //房源id
       houseDetails: "", //房源详情数据
       houseFileList: [], //视频和图片数组
       elevator: "无配套", //电梯配套
@@ -1312,7 +1357,8 @@ export default {
       followType: "27", //跟进类型
       followMemo: "",
       followList: [], //跟进数组
-      followPaitList: [], //房源被带看数组
+      followPairList: [], //房源被带看数组
+      followTelList:[],//电话修改记录
       totalPage: 0, //分页的数量
       page: 1, //第几页
       impression: "", //印象
@@ -1357,18 +1403,35 @@ export default {
       isShowKeyStorageDept: false, //是否显示修改钥匙存放门店弹窗
       cancelMethodType:"0",//
       isShowCancelMethod:false,
-      cancleMemo:"",
+      cancelMemo:"",
       changeType:"4",//转换类型
       isShowChange:false,//是否显示转状态弹窗
       dealCompany:"",//成交公司
       dealPrice:"",//成交价
       selfSaleType:"",//自售类型
-      invalidType:""//无效类型
+      invalidType:"",//无效类型
+      perId:"",//登录人id
+      isRecommend:false,//是否推荐
+      isShowRecommend:false,//是否展示推荐弹窗
+      recommendMemo:"",//推荐的原因
+      isShowBuilding:false//是否显示楼栋号
     };
   },
   before() {},
   mounted() {
     console.log(this.$route.params.houseId);
+    if (this.$route.params.betExpire) {
+      this.betExpire = this.$route.params.betExpire;
+
+      const chatTimer = setInterval(() => {
+        console.log(chatTimer);
+        this.showtime();
+      }, 1000);
+
+      this.$once('hook:beforeDestroy', () => {
+        clearInterval(chatTimer);
+      })
+    }
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       util.localStorageSet("houseDetails.vue:houseId",this.houseId);
@@ -1376,14 +1439,14 @@ export default {
     else{
       this.houseId = util.localStorageGet("houseDetails.vue:houseId");
     }
-    let params = {
-      houseId: this.houseId
-      //perId: 35365
-    };
+    if(util.localStorageGet("logindata")){
+      this.perId=util.localStorageGet("logindata").accountId;
+    }
     this.getHouseDetails();
-    this.getisCollectHouse(params);
+    this.getisCollectHouse();
     this.getHouseFollow();
     this.getImpressionList();
+    this.getisRecommend();
     this.$nextTick(() => {
       const el = document.querySelector(".act-not");
       const offsetHeight = el.offsetHeight;
@@ -1400,6 +1463,19 @@ export default {
     });
   },
   methods: {
+    showtime() {
+      var nowtime = new Date(),  //获取当前时间
+        endtime = new Date(this.betExpire);  //定义结束时间
+      var lefttime = endtime.getTime() - nowtime.getTime(),  //距离结束时间的毫秒数
+        leftd = Math.floor(lefttime/(1000*60*60*24)),  //计算天数
+        lefth = Math.floor(lefttime/(1000*60*60)%24),  //计算小时数
+        leftm = Math.floor(lefttime/(1000*60)%60), //计算分钟数
+        lefts = Math.floor(lefttime/1000%60);
+      this.betExpireStr =  leftd + "天" + lefth + "时" + leftm + "分";  //返回倒计时的字符串
+    },
+    dialPhoneToFD(){
+      this.dailPhone(1,this.houseDetails.Tel,this.houseDetails.Tel1,this.houseDetails.Tel2,this.houseDetails.Tel3);
+    },
     oneTouchDialPhone(){
       let phone=this.houseDetails.agentPerTel;
       if(!phone){
@@ -1408,9 +1484,10 @@ export default {
         })
         return;
       }
-      this.dailPhone(phone);
+      this.dailPhone(0,phone);
     },
-    dailPhone(phone){
+    ////contactPerType,电话联系人类型，0为经纪人，1为业主
+    dailPhone(contactPerType,phone,phone1,phone2,phone3){
         let that=this;
         //console.log(that.houseDetails);
         this.$confirm("确定一键拨号吗？", "友情提醒", {
@@ -1419,16 +1496,26 @@ export default {
         cancelButtonText: "取消"
       })
         .then(() => {
-          let dailParams={"houseId":that.houseDetails.id,
+          console.log(that.houseDetails);
+          let dailParams={
+            "houseId":that.houseId,
           "houseType":0,
-          "unitName":that.houseDetails.agentPerDepartmentName,
           "housePrice":that.houseDetails.Price,
           "houseArea":that.houseDetails.InArea,
-          "phonePersonName":that.houseDetails.agentPerName,
-          "phonePersonId":that.houseDetails.AgentPer,
-          "phonePersonType":0,//电话联系人类型，0为经纪人，1为业主
-          "phone":phone,
+          "contactPerType":contactPerType,//电话联系人类型，0为经纪人，1为业主
+          "contactPhone":phone,
+          "contactPhone1":phone1,
+          "contactPhone2":phone2,
+          "contactPhone3":phone3,
           "remark":that.houseDetails.Title};
+          if(contactPerType==0){//联系人类型如果是经纪人，才需要联系人id
+            dailParams.contactPerId=that.houseDetails.AgentPer;//联系人id
+            dailParams.unitName=that.houseDetails.agentPerDepartmentName;
+            dailParams.contactPerName=that.houseDetails.agentPerName;
+          }else{
+            dailParams.unitName=that.houseDetails.CommunityName;//联系人是业主，名称取小区名
+            dailParams.contactPerName=that.houseDetails.Customers;
+          }
           that.$api
             .post({
               url: "/noticeManage/common/OneTouchDialPhone",
@@ -1437,7 +1524,7 @@ export default {
             })
             .then(e => {
               let result = e.data;
-              console.log(result.message);
+              console.log(result);
               if (result.code == 200) {
                this.$message({
                   type: "info",
@@ -1465,7 +1552,72 @@ export default {
             message: "取消拨号"
           });
         });
-    },   
+    },
+    insertOrCancelRecommend(){
+      let that = this;
+      let url="/agentHouse/recommend/insertRecommend"
+      if(this.isRecommend){
+          url="/agentHouse/recommend/cancelRecommend";
+      }
+      if(this.recommendMemo==""){
+          this.$message("原因未填");
+          return;
+      }
+      that.recommendMemo="";
+      that.isShowRecommend=false;
+      this.$api
+        .post({
+          url: url,
+          data: {
+            Eid:that.houseId,
+            Memo:that.recommendMemo
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if(result.code==200){
+            that.isRecommend=!that.isRecommend;
+          }
+          else{
+            that.$message(result.message);
+          }
+        })
+        .catch(e => {
+          if(e.response!=undefined){
+              that.$message(e.response.data.message);
+          }
+          else{
+             that.$message("请求失败");
+          }
+        });
+    },
+    getisRecommend(){
+      let that = this;
+      this.$api
+        .get({
+          url: "/agentHouse/recommend/isRecommend",
+          data: {
+            houseId:this.houseId
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if(result.code==200){
+              that.isRecommend=false;
+          }
+          else{
+            that.isRecommend=true;
+          }
+        })
+        .catch(e => {
+          that.isRecommend=true;
+          //that.$message("请求失败");
+        });
+    },
     houseLock() {
       let that = this;
       let isLocking = this.houseDetails.isLocking == 1 ? 0 : 1;
@@ -1475,7 +1627,6 @@ export default {
       }
       let params = {
         Eid: this.houseId,
-        operationPer: 35365,
         Islocking: isLocking
       };
       this.$api
@@ -1488,28 +1639,29 @@ export default {
         .then(e => {
           let result = e.data;
           that.$message(result.message);
-          that.houseDetails.isLocking = isLocking;
+          if(result.code==200){
+              that.houseDetails.isLocking = isLocking;
+          }
         })
         .catch(e => {
           that.$message("请求失败");
         });
     },
-     cancleMethod(){
+     cancelMethod(){
       let that = this;
-      if (this.cancleMemo == undefined) {
+      if (this.cancelMemo == undefined) {
         this.$message("取消原因未填");
         return;
       }
       let params = {
         Eid: this.houseId,
-        operationPer: 35365,
-        cancleType: this.cancelMethodType,
-        cancleMemo:this.cancleMemo
+        cancelType: this.cancelMethodType,
+        cancelMemo:this.cancelMemo
       };
       that.isShowCancelMethod=false;
       this.$api
         .post({
-          url: "/agentHouse/property/cancleMethod",
+          url: "/agentHouse/property/cancelMethod",
           data: params,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
@@ -1517,14 +1669,21 @@ export default {
         .then(e => {
           let result = e.data;
           that.$message(result.message);
-          that.getHouseDetails();
-          that.cancleMemo="";
+          if(result.code==200){
+              that.getHouseDetails();
+              that.cancelMemo="";
+          }
+          else
+          {
+             that.$message(result.message);
+          }
+
         })
         .catch(e => {
           if(e.response!=undefined){
               that.$message(e.response.data.message);
           }
-          
+
         });
     },
     updateKeyStorageDept() {
@@ -1591,7 +1750,6 @@ export default {
       let obj = JSON.parse(uploader.filename);
       let that = this;
       let formData = new FormData();
-      formData.append("addName", 35365);
       formData.append("type", obj.type);
       formData.append("file", uploader.file);
       if (obj.subType != undefined) {
@@ -1654,7 +1812,8 @@ export default {
       this.page = 1;
       this.totalPage = 0;
       this.followList = [];
-      this.followPaitList = [];
+      this.followPairList = [];
+      this.followTelList=[]
       this.cutData();
     },
     cutData() {
@@ -1665,13 +1824,15 @@ export default {
         case 1:
           this.getHousePairFollowList();
           break;
+        case 2:
+          this.getTelFollowList();
+          break;
       }
     },
     getHouseDetails() {
       let that = this;
       let params={
-          houseId: this.houseId,
-          perId: 35365
+          houseId: this.houseId
       }
       this.$api
         .post({
@@ -1683,6 +1844,7 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
+
             that.houseDetails = result.data;
             that.agentHouseMethod = that.houseDetails.agentHouseMethod;
             that.elevator = util.analysisElevator(that.houseDetails.Elevator);
@@ -1694,7 +1856,7 @@ export default {
             that.landCharacteristic = util.analysisLandCharacteristic(
               that.houseDetails.LandCharacteristic
             );
-            if (that.houseDetails.SchoolRool.indexOf(":") != -1) {
+            if (that.houseDetails.SchoolRool!=null&& that.houseDetails.SchoolRool.indexOf(":") != -1) {
               that.primarySchoolRool = that.houseDetails.SchoolRool.substring(
                 that.houseDetails.SchoolRool.indexOf(":") + 1,
                 that.houseDetails.SchoolRool.lastIndexOf("$")
@@ -1704,7 +1866,7 @@ export default {
                 that.houseDetails.SchoolRool.length
               );
             }
-            if (that.houseDetails.remark.indexOf("$") != -1) {
+            if (that.houseDetails.remark!=null&& that.houseDetails.remark.indexOf("$") != -1) {
               var Arry1 = that.houseDetails.remark.split("$");
               for (var i = 0; i < Arry1.length; i++) {
                 var Arry2 = Arry1[i].split("@");
@@ -1724,14 +1886,6 @@ export default {
                 }
               }
             }
-            that.houseDetails.saleUploadVideoDtoList.forEach(element => {
-              var video = {
-                type: 0,
-                id: element.id,
-                url: element.videoUrl
-              };
-              that.houseFileList.push(video);
-            });
             that.houseDetails.saleUploadPicDtoList.forEach(element => {
               var pic = {
                 type: 1,
@@ -1739,6 +1893,15 @@ export default {
                 url: element.picUrl
               };
               that.houseFileList.push(pic);
+            });
+
+            that.houseDetails.saleUploadVideoDtoList.forEach(element => {
+              var video = {
+                type: 0,
+                id: element.id,
+                url: element.videoUrl
+              };
+              that.houseFileList.push(video);
             });
           } else {
             that.$message(result.message);
@@ -1748,16 +1911,18 @@ export default {
           if (e.response != undefined) {
             that.$message(e.response.data.message);
           } else {
-            that.$message("请求失败");
+            //that.$message("请求失败");
           }
         });
     },
-    getisCollectHouse(params) {
+    getisCollectHouse() {
       let that = this;
       this.$api
         .get({
           url: "/agentHouse/collect/isCollectHouse",
-          data: params,
+          data: {
+            houseId:that.houseId
+          },
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
         })
@@ -1765,10 +1930,7 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             that.isCollectHouse = true;
-          } 
-          // else {
-          //   that.$message(result.message);
-          // }
+          }
         })
         .catch(e => {});
     },
@@ -1776,8 +1938,7 @@ export default {
       let that = this;
       let ajaxurl = "";
       let params = {
-        houseId: that.houseId,
-        perId: 35365
+        houseId: that.houseId
       };
       if (that.isCollectHouse) {
         ajaxurl = "/agentHouse/collect/cancelCollectHouse";
@@ -1813,7 +1974,6 @@ export default {
       let ajaxurl = "";
       let params = {
         houseId: that.houseId,
-        perId: 35365,
         isSendNotice: that.isSendNotice
       };
       this.$api
@@ -1832,7 +1992,6 @@ export default {
       let params = {
         page: that.page,
         limit: 5,
-        perId: 35365,
         houseId: that.houseId
       };
       this.$api
@@ -1844,6 +2003,7 @@ export default {
         })
         .then(e => {
           let result = e.data;
+          if(result.code==200){
           result.data.list.forEach(item => {
             if (item.FollowType.includes("电话")) {
               item.Memo = item.Memo.replace("voice:", "");
@@ -1854,6 +2014,7 @@ export default {
           });
           that.followList = [...that.followList, ...result.data.list];
           that.totalPage = result.data.totalPage;
+          }
         })
         .catch();
     },
@@ -1862,7 +2023,6 @@ export default {
       let params = {
         page: that.page,
         limit: 5,
-        perId: 35365,
         houseId: that.houseId
       };
       this.$api
@@ -1874,14 +2034,39 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          that.followPaitList = [...that.followPaitList, ...result.data.list];
+          if(result.code==200){
+          that.followPairList = [...that.followPairList, ...result.data.list];
           that.totalPage = result.data.totalPage;
+           }
+        })
+        .catch();
+    },
+    getTelFollowList(){
+      let that = this;
+      let params = {
+        page: that.page,
+        limit: 5,
+        houseId: that.houseId
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/telUpdate/getTelFollowList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if(result.code==200){
+          that.followTelList = [...that.followTelList, ...result.data.list];
+          that.totalPage = result.data.totalPage;
+           }
         })
         .catch();
     },
     deleteFollow(followId) {
       let that = this;
-      let params = { followId: followId, houseId: that.houseId, perId: 35365 };
+      let params = { followId: followId, houseId: that.houseId };
       this.$api
         .post({
           url: "/agentHouse/follow/deleteFollow",
@@ -1890,7 +2075,10 @@ export default {
           token: false
         })
         .then(e => {
-          that.reloadList();
+          if(e.data.code==200){
+             that.reloadList();
+          }
+
         });
     },
     insertFollow() {
@@ -1898,7 +2086,6 @@ export default {
       let params = {
         memo: that.followMemo,
         houseId: that.houseId,
-        followPer: 35365,
         followWay: that.followType,
         followType: "常态跟进"
       };
@@ -1915,15 +2102,17 @@ export default {
         })
         .then(e => {
           that.$message(e.data.message);
-          that.reloadList();
-          that.followMemo = "";
+          if(e.data.code==200){
+             that.reloadList();
+             that.followMemo = "";
+          }
+
         });
     },
     insertImpression() {
       let that = this;
       let params = {
         houseId: that.houseId,
-        creator: 35365,
         impression: that.impression
       };
       let arry=that.impression.split('');
@@ -1949,8 +2138,11 @@ export default {
         })
         .then(e => {
           that.$message(e.data.message);
-          that.isShowImpression = false;
-          that.getImpressionList();
+          if(e.data.code==200){
+               that.isShowImpression = false;
+               that.getImpressionList();
+          }
+
         }).catch(e=>{
           if(e.response!=undefined){
              that.$message(e.response.data.message);
@@ -1960,8 +2152,7 @@ export default {
     getImpressionList() {
       let that = this;
       let params = {
-        houseId: that.houseId,
-        creator: 35365
+        houseId: that.houseId
       };
       this.$api
         .get({
@@ -1972,14 +2163,16 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          that.impressionList = result.data;
+          if(result.code==200){
+             that.impressionList = result.data;
+          }
+
         });
     },
     deleteImpression(impressionId) {
       let that = this;
       let params = {
-        impressionId: impressionId,
-        deleter: 35365
+        impressionId: impressionId
       };
       this.$api
         .post({
@@ -1990,7 +2183,9 @@ export default {
         })
         .then(e => {
           that.$message(e.data.message);
-          that.getImpressionList();
+          if(e.data.code==200){
+             that.getImpressionList();
+          }
         });
     },
     updateCertificateNo() {
@@ -2001,7 +2196,6 @@ export default {
         let params = {
           houseId: this.houseId,
           houseType: 0,
-          perId: 35365,
           certificateType: 1,
           certificateNo: this.certificateNo
         };
@@ -2016,8 +2210,7 @@ export default {
     certificateType() {
       let params = {
         houseId: this.houseId,
-        houseType: 0,
-        perId: 35365
+        houseType: 0
       };
       if (
         this.houseDetails.certificate_type == null ||
@@ -2041,7 +2234,10 @@ export default {
         .then(e => {
           that.loading = false;
           that.$message(e.data.message);
-          that.houseDetails.is_release_outside = 1;
+          if(e.data.code==200){
+            that.houseDetails.is_release_outside = 1;
+          }
+
         })
         .catch(e => {
           if (e.response != undefined) {
@@ -2050,6 +2246,33 @@ export default {
             that.$message("发布失败");
           }
           that.loading = false;
+        });
+    },
+    cancelOutsideHouse() {
+      let that = this;
+      let params={
+          HouseNo:that.houseDetails.HouseNo
+      }
+      this.$api
+        .post({
+          url: "/outsideHouse/cancelOutsideHouse",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          that.$message(e.data.message);
+          if(e.data.code==200){
+            that.houseDetails.is_release_outside = 0;
+          }
+
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          } else {
+            that.$message("发布失败");
+          }
         });
     },
     isShowPop(type, replaceType, istrue) {
@@ -2120,7 +2343,13 @@ export default {
           token: false
         })
         .then(e => {
-          that.isShowPop(type, replaceType, true);
+          if(e.data.code==200){
+                that.isShowPop(type, replaceType, true);
+          }
+          else{
+             that.$message(e.data.message);
+          }
+
         })
         .catch(e => {
           if (e.response != undefined) {
@@ -2134,9 +2363,7 @@ export default {
       let params = {
         Eid: that.houseId,
         Type: 11,
-        AddPer: 35365,
         OldOwner: 0,
-        NewOwner: 35365,
         OwnerMemo: that.reportMemo,
         reportType: that.reportType
       };
@@ -2178,7 +2405,10 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          that.areaList = result.data;
+          if(result.code==200){
+             that.areaList = result.data;
+          }
+
         })
         .catch(e => {
           if (e.response != undefined) {
@@ -2205,7 +2435,10 @@ export default {
         .then(e => {
           let result = e.data;
           that.keyStorageDept = "";
-          that.departmentList = result.data;
+          if(result.code==200){
+            that.departmentList = result.data;
+          }
+
         })
         .catch(e => {
           if (e.response != undefined) {
@@ -2259,8 +2492,6 @@ export default {
       let params = {
         Eid: that.houseId,
         Type: type,
-        AddPer: 35365,
-        NewOwner: 35365,
         picList: []
       };
       let resultobj = {};
@@ -2375,7 +2606,6 @@ export default {
       let params ={
         Eid: that.houseId,
         Type: 8,
-        AddPer: 35365,
         NewSaleTag:that.changeType
       };
      switch (this.changeType) {
@@ -2412,7 +2642,7 @@ export default {
               params.followMemo="暂不售";
              break;
        default:
-           
+
          break;
      }
       that.isShowPop(8, 0, false);
@@ -2436,6 +2666,36 @@ export default {
           }
         });
     },
+    getShowBuliding(){
+      let that=this;
+       this.$api
+        .get({
+          url: "/agent_house/isShowBuilding",
+          data: {
+            houseId:that.houseId
+          },
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+          token: false
+        })
+        .then(e => {
+          if(e.data.code==200){
+             that.isShowBuilding=true;
+          }
+          else{
+              that.isShowBuilding=false;
+              that.$message(e.data.message);
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          } else {
+            that.$message("操作失败");
+          }
+        });
+    }
   }
 };
-</script>  
+</script>

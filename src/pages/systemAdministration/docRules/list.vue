@@ -64,12 +64,10 @@ export default {
         { prop: "title", label: "标题", show: false },
         { prop: "addPer", label: "添加人", show: false },
         { prop: "unitName", label: "单位", show: false },
-        { prop: "addTime", label: "添加时间", show: false },
-        { prop: "remark", label: "备注", show: false },
-        { prop: "filePath", label: "文档地址", show: false }
+        { prop: "addTime", label: "添加时间", show: false }
       ],
       tableData: [],
-      activeName: "first"
+      activeName: "second"
     };
   },
   mounted() {
@@ -85,7 +83,7 @@ export default {
 
       this.$api
         .post({
-          url: "/document/list",
+          url: "/docRules/list",
           data: params,
           qs: true
         })
@@ -99,12 +97,12 @@ export default {
             this.pageJson.currentPage = result.data.currPage;
             this.tableData = result.data.list;
           } else {
-            console.log("查询文档列表结果：" + result.message);
+            console.log("查询列表结果：" + result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询文档列表失败");
+          console.log("查询列表失败");
           console.log(e);
         });
     },
@@ -120,21 +118,13 @@ export default {
       this.queryDatas(1);
     },
     downStr(row, column) {
-      if (column.property == "filePath") {
-        //return row.filePath;
-        return (
-          <a href={row.filePath} target="_blank">
-            点击下载
-          </a>
-        );
-      }
       if (column.property == "unitName") {
         return row[column.property].trim().replace(/>$/, "");
       }
       return row[column.property];
     },
     addDocument() {
-      this.$router.push({ path: "/sys/document/edit", query: { id: 0 } });
+      this.$router.push({ path: "/sys/docRules/edit", query: { id: 0 } });
     },
     distributeEvent(e, RoleId) {
       this[e](RoleId);
@@ -150,7 +140,7 @@ export default {
       return array;
     },
     editDetail(id) {
-      this.$router.push({ path: "/sys/document/edit", query: { id: id } });
+      this.$router.push({ path: "/sys/docRules/edit", query: { id: id } });
     },
     delDetail(id) {
       this.$confirm("你确定要删除？", "注意！", {
@@ -166,7 +156,7 @@ export default {
           let params = { id: id };
           this.$api
             .post({
-              url: "/document/del",
+              url: "/docRules/del",
               data: params,
               qs: true
             })
@@ -200,8 +190,8 @@ export default {
         });
     },
     handleClick(tab, event) {
-      if (this.activeName == "second") {
-        this.$router.push({ path: "/sys/docRules/list" });
+      if (this.activeName == "first") {
+        this.$router.push({ path: "/sys/document/list" });
       }
     }
   }

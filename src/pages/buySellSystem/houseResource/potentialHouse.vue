@@ -89,7 +89,7 @@
 
              <el-button type="info"
                        size="mini"
-                       @click="toSale(scope.row.id)"
+                       @click="toSale(scope.row.id,scope.row.type,scope.row.comId,scope.row.cbId,scope.row.bhid)"
                        >转在售</el-button>
         </template>
        
@@ -168,9 +168,31 @@ export default {
     toLook(id){
         console.log(id);
          var that = this;
-        that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
+        that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
     },
-    toSale(id){},
+    toSale(id,type,comId,cbId,bhId){
+      var that = this
+        this.$api.get({
+          url: "/houseResource/turnSale",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            id: id,
+            type: type,
+            comId:comId,
+            cbId:cbId,
+            bhId:bhId
+          }
+        }).then((e) => {
+          console.log(e.data)
+          if (e.data.code == 200) {
+               that.$router.push({ path: '/buySellSystem/addHouse', query: { "id": e.data.code.message } });
+          }else{
+             alert(e.data.message);
+          }
+        })
+    },
     queryPotentialHouseParams(){
         this.queryPotentialHouse(1);
     },

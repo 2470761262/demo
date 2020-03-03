@@ -89,7 +89,8 @@ export default {
         { prop: "PCLineTime", label: "PC端在线时间" },
         { prop: "LineTag", label: "登录状态" },
         { prop: "Remark", label: "门店名称" },
-        { prop: "LastAccount", label: "当前登录账号" }
+        { prop: "LastAccount", label: "当前登录账号" },
+        { prop: "Version", label: "登录器版本" }
       ],
       tableData: [],
       pickerOptions2: {
@@ -210,6 +211,13 @@ export default {
     onLineStr(row, column) {
       if (column.property == "LineTag") {
         return ["离线", "在线", "被强制下线"][row.LineTag];
+      }
+      if (column.property == "Version") {
+        if (row["LastAccount"] != null && row["LastAccount"] != "") {
+          return row["Version"];
+        } else {
+          return "";
+        }
       }
       return row[column.property];
     },

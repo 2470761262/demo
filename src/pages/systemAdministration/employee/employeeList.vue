@@ -205,34 +205,38 @@ export default {
     editEmployee (id) {
       this.$router.push({ path: "/sys/editemployee", query: { id: id } });
     },
-    delEmployee (id){
+    delEmployee (id,del){
      this.$api.post({
-        url: '/employee/del/'+id,
+        url: '/employee/del/'+id+'?del='+del,
         token: false,
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
-          this.$alert('', '删除成功', {
+          this.$alert('', '成功', {
             dangerouslyUseHTMLString: false
           });
           this.$router.push({ path: "/sys/employeeList"});
         }
       }).catch((e) => {
-        console.log("删除失败");
+        console.log("失败");
         console.log(e);
       })
     },
     distributeEvent (e, id) {
       this[e](id);
     },
-    // querySubsidiary(EmployeeId){
-    //   this.queryEmployeeDatas(1,EmployeeId);
-    // },
+    resumeDelEmployee(id){
+      this.delEmployee(id,0);
+    },
+    leaveDelEmployee(id){
+      this.delEmployee(id,1);
+    },
     getOpeBtns (type) {
       let array = [
          { name: '编辑', isType: '1', methosName: 'editEmployee' },
-         { name: '删除', isType: '1', methosName: 'delEmployee' },
+         { name: '离职', isType: '1', methosName: 'leaveDelEmployee' },
+         { name: '复职', isType: '1', methosName: 'resumeDelEmployee' },
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
