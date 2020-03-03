@@ -5,11 +5,11 @@
 .innerContainer {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
-  width:100%
+  width: 100%;
 }
 .el-header {
   margin-top: 10px;
-  width:100%;
+  width: 100%;
   height: auto !important;
 }
 
@@ -65,11 +65,11 @@
     }
   }
 }
-.asideInAddNotice{
+.asideInAddNotice {
   background-color: white !important;
   min-height: 600px;
   margin-right: 5px;
-  overflow:auto;
+  overflow: auto;
 }
 .treeAndTitleContainer {
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
@@ -95,19 +95,18 @@
             <div class="treeAndTitleContainer">
               <div class="treeTitle">人员形式</div>
               <div class="treeContainer">
-                <el-tree
-                  node-key="nodeId"
-                  ref="treeNotice"
-                  :props="propsTreeConfig"
-                  show-checkbox
-                  :check-strictly="checkStrictly"
-                  :data="treeData"
-                  :default-checked-keys="defaultCheckedNodeKey"
-                  @node-expand="handellNodeExpand"
-                  @node-click="handleNodeClick"
-                  @check-change="handleCheckChange"
-                >
-                  <span class="custom-tree-node" slot-scope="{ node, data }">
+                <el-tree node-key="nodeId"
+                         ref="treeNotice"
+                         :props="propsTreeConfig"
+                         show-checkbox
+                         :check-strictly="checkStrictly"
+                         :data="treeData"
+                         :default-checked-keys="defaultCheckedNodeKey"
+                         @node-expand="handellNodeExpand"
+                         @node-click="handleNodeClick"
+                         @check-change="handleCheckChange">
+                  <span class="custom-tree-node"
+                        slot-scope="{ node, data }">
                     <span>
                       <i :class="data.icon"></i>
                       {{ data.labelName }}
@@ -124,83 +123,79 @@
           <div class="left-input-container">
             <div>
               <span>标题&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-              <el-input
-                type="text"
-                placeholder="请输入内容"
-                v-model="notice.newsTitle"
-                maxlength="10"
-                show-word-limit
-              ></el-input>
+              <el-input type="text"
+                        placeholder="请输入内容"
+                        v-model="notice.newsTitle"
+                        maxlength="10"
+                        show-word-limit></el-input>
             </div>
             <div>
               <span>公告类型</span>
-              <el-select v-model="notice.newsClass" placeholder="请选择">
-                <el-option
-                  v-for="item in newsClassOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+              <el-select v-model="notice.newsClass"
+                         placeholder="请选择">
+                <el-option v-for="item in newsClassOption"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"></el-option>
               </el-select>
               <span>公告类别</span>
-              <el-select v-model="notice.newsType" placeholder="请选择">
-                <el-option
-                  v-for="item in newsTypeOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+              <el-select v-model="notice.newsType"
+                         placeholder="请选择">
+                <el-option v-for="item in newsTypeOption"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"></el-option>
               </el-select>
             </div>
             <div>
               <span>发送方式</span>
-              <el-select v-model="notice.sendType" placeholder="请选择" @change="sendTypeSelectChange">
-                <el-option
-                  v-for="item in sendTypeOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+              <el-select v-model="notice.sendType"
+                         placeholder="请选择"
+                         @change="sendTypeSelectChange">
+                <el-option v-for="item in sendTypeOption"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"></el-option>
               </el-select>
               <span>发送渠道</span>
-              <el-select v-model="notice.sendWay" placeholder="请选择">
-                <el-option
-                  v-for="item in sendWayOption"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+              <el-select v-model="notice.sendWay"
+                         placeholder="请选择">
+                <el-option v-for="item in sendWayOption"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"></el-option>
               </el-select>
             </div>
           </div>
           <div class="right-input-container right">
             <div class="selectedNodeTip">已选择</div>
             <ul>
-              <li v-for="item in selectedNodeDatas" :key="item.nodeId">{{item.labelName}}</li>
+              <li v-for="item in selectedNodeDatas"
+                  :key="item.nodeId">{{item.labelName}}</li>
             </ul>
           </div>
         </el-header>
         <el-main>
           <div class="editorContainer">
-            <el-upload
-              class="upload-demo"
-              :action="uploadUrl"
-              :headers="myHeader"
-              :on-success="handleAvatarSuccess"
-            >
-              <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <el-upload class="upload-demo"
+                       :action="uploadUrl"
+                       :headers="myHeader"
+                       :on-success="handleAvatarSuccess">
+              <el-button size="small"
+                         type="primary"
+                         id="btnUpload">点击上传</el-button>
+              <div slot="tip"
+                   class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
             </el-upload>
-            <quill-editor
-              class="myQuillEditor"
-              v-model="notice.newsContent"
-              :options="editorOption"
-              ref="QuillEditor"
-            ></quill-editor>
+            <quill-editor class="myQuillEditor"
+                          v-model="notice.newsContent"
+                          :options="editorOption"
+                          ref="QuillEditor"></quill-editor>
           </div>
         </el-main>
         <div class="footerContainer right">
-          <el-button type="primary" @click="sendNotice">发送</el-button>
+          <el-button type="primary"
+                     @click="sendNotice">发送</el-button>
           <el-button>取消</el-button>
         </div>
       </el-container>
@@ -211,7 +206,7 @@
 <script>
 import { quillEditor } from "vue-quill-editor";
 import util from "@/util/util";
-import {TOKEN} from '@/util/constMap';
+import { TOKEN } from '@/util/constMap';
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
@@ -242,11 +237,13 @@ const allPersonNode = {
   icon: "el-icon-s-grid",
   checked: true
 };
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   //https://kang-bing-kui.gitbook.io/quill/wen-dang-document/themes 官网帮助文档
   components: { quillEditor },
   props: {},
-  data() {
+  data () {
     return {
       defaultCheckedNodeKey: ["1,0"], //默认选中的节点
       checkStrictly: false,
@@ -281,7 +278,7 @@ export default {
           toolbar: {
             container: toolbarOptions, // 工具栏
             handlers: {
-              image: function(value) {
+              image: function (value) {
                 if (value) {
                   console.log(value);
                   document.getElementById("btnUpload").click();
@@ -289,12 +286,12 @@ export default {
                   this.quill.format("image", false);
                 }
               },
-              video: function(v) {
+              video: function (v) {
                 if (v) {
                   alert("不支持上传视频");
                 }
               },
-              link: function(v) {
+              link: function (v) {
                 if (v) {
                   var href = prompt("Enter the URL");
                   this.quill.format("link", href);
@@ -377,7 +374,7 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    getTreeData(sendType) {
+    getTreeData (sendType) {
       this.hasQueryAccountNode = [];
       if (sendType == 3) {
         //全员发送
@@ -408,7 +405,7 @@ export default {
           console.log(e);
         });
     },
-    sendTypeSelectChange(sendType) {
+    sendTypeSelectChange (sendType) {
       this.checkStrictly = true;
       this.selectedNodeDatas = [];
       this.defaultCheckedNodeKey = [];
@@ -417,7 +414,7 @@ export default {
       }
       this.getTreeData(sendType);
     },
-    handleCheckChange(item, checked, indeterminate) {
+    handleCheckChange (item, checked, indeterminate) {
       //console.log(data, checked, indeterminate);
       //去除勾选
       if (!checked) {
@@ -429,7 +426,7 @@ export default {
       }
       //已经有了，就不加进去
       if (
-        this.selectedNodeDatas.find(function(x) {
+        this.selectedNodeDatas.find(function (x) {
           return x.nodeId == item.nodeId;
         }) == undefined
       ) {
@@ -445,7 +442,7 @@ export default {
         }
       }
     },
-    getAccountDataByHigher(businessId, type, successFun) {
+    getAccountDataByHigher (businessId, type, successFun) {
       //读取公司或部门下面的员工
       this.$api
         .post({
@@ -475,12 +472,12 @@ export default {
           this.$message.error("获取员工异常" + e);
         });
     },
-    appendAccountNode(data, node) {
+    appendAccountNode (data, node) {
       if (this.notice.sendType != 0) {
         //只有单独发送才要
         return;
       }
-      if (data.type == 2||data.type==0) {
+      if (data.type == 2 || data.type == 0) {
         //员工节点，和公司节点 下面 都不要加载 员工
         return;
       }
@@ -489,7 +486,7 @@ export default {
         ///没加载过员工，那么加载读取
         //append(data, parentNode) 接收两个参数，1. 要追加的子节点的 data 2. 子节点的 parent 的 data、key 或者 node
         console.log("展开了节点远程读取并加载员工节点：" + data.labelName);
-        this.getAccountDataByHigher(data.businessId, data.type, function(r) {
+        this.getAccountDataByHigher(data.businessId, data.type, function (r) {
           if (r.length > 0) {
             r.forEach((item, index, array) => {
               //执行代码
@@ -500,7 +497,7 @@ export default {
       }
       this.hasQueryAccountNode.push(data.nodeId);
     },
-    handellNodeExpand(data, node, nodeComponent) {
+    handellNodeExpand (data, node, nodeComponent) {
       if (data.type == 0) {
         //展开公司节点
         console.log("展开了公司节点：" + data.labelName);
@@ -510,11 +507,11 @@ export default {
         console.log("展开了部门节点：" + data.labelName);
       }
     },
-    handleNodeClick(data, node, nodeComponent) {
+    handleNodeClick (data, node, nodeComponent) {
       //单独发送，需要加载员工
       this.appendAccountNode(data, node);
     },
-    loadNode(node, resolve) {
+    loadNode (node, resolve) {
       //只有设置了lazy属性才会生效此方法
       if (node.level == 1) return resolve([]);
       console.log("逐步vfasong");
@@ -529,7 +526,7 @@ export default {
         ]);
       }, 500);
     },
-    getCheckedData() {
+    getCheckedData () {
       //获取左侧树选中的信息
       //let checkedData=this.$refs.treeNotice.getCheckedKeys();
       let selectedData = this.$refs.treeNotice.getCheckedNodes();
@@ -575,7 +572,7 @@ export default {
         return true;
       }
     },
-    sendNotice() {
+    sendNotice () {
       if (this.notice.newsTitle == null) {
         this.$message({
           showClose: true,
@@ -652,7 +649,7 @@ export default {
           console.log(e);
         });
     },
-    handleAvatarSuccess(res, file) {
+    handleAvatarSuccess (res, file) {
       // 如果上传成功
       if (res.code == 200) {
         let imageUrl = res.data.url;
@@ -670,13 +667,13 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
     this.myHeader = { tk: util.localStorageGet(TOKEN) };
     console.log(this.uploadUrl);
     console.log(this.myHeader);
   },
-  mounted() {
+  mounted () {
     this.quill = this.$refs.QuillEditor.quill;
   }
 };

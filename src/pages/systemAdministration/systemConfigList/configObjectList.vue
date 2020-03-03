@@ -9,7 +9,7 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
- 
+
     <template v-slot:tableColumn="">
 
       <!-- <template v-for="(item) in cell.tableData">
@@ -96,8 +96,10 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
-import but from'@/evenBus/but'
+import getMenuRid from '@/minxi/getMenuRid';
+import but from '@/evenBus/but'
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -321,7 +323,6 @@ export default {
     handleClick () {
 
     },
-    
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
@@ -331,14 +332,14 @@ export default {
       this.queryVerifyHouseDatas(val);
     },
   },
-   created() {
-      this.configId=this.$route.query.configId;
-    but.$emit('asideNav', false);
-     
+  created () {
+    this.configId = this.$route.query.configId;
+    but.$emit('asideNav', false);
+
   },
-  destroyed(){
-    but.$emit('asideNav',true);
-    But.$off ('asideNav')
+  destroyed () {
+    but.$emit('asideNav', true);
+    But.$off('asideNav')
   }
 }
 </script>

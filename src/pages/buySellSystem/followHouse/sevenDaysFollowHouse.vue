@@ -4,43 +4,58 @@
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
-        <div class="page-form-inline ">
-            <el-input placeholder="楼盘名称" style="width:280px" v-model="queryData.CommunityName" >
-                <template slot="prepend">楼盘名称 </template>
-               </el-input>
-
-               <el-input placeholder="开始日期" style="margin-left:30px;width:240px" v-model="queryData.minFollowEndTime" clearable>
-        <template slot="prepend">最后带看时间</template>
-        </el-input>
-         <el-input placeholder="结束时期" style="margin-left:30px;width:240px" v-model="queryData.maxFollowEndTime " clearable> </el-input>
-              
-       <el-input placeholder="姓名" style="margin-left:30px;width:240px" v-model="queryData.Customers" clearable>
-        <template slot="prepend">业主</template>
+      <div class="page-form-inline ">
+        <el-input placeholder="楼盘名称"
+                  style="width:280px"
+                  v-model="queryData.CommunityName">
+          <template slot="prepend">楼盘名称 </template>
         </el-input>
 
-        <el-input placeholder="业主电话" v-model="queryData.Tel " style="margin-left:30px;width:240px" clearable>
-        <template slot="prepend">电话</template>
+        <el-input placeholder="开始日期"
+                  style="margin-left:30px;width:240px"
+                  v-model="queryData.minFollowEndTime"
+                  clearable>
+          <template slot="prepend">最后带看时间</template>
         </el-input>
-       
-       
-      <el-select v-model="queryData.houseStates" style="margin-left:10px" placeholder="请选择" clearable> 
-                <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-                </el-option>
-            </el-select>
+        <el-input placeholder="结束时期"
+                  style="margin-left:30px;width:240px"
+                  v-model="queryData.maxFollowEndTime "
+                  clearable> </el-input>
+
+        <el-input placeholder="姓名"
+                  style="margin-left:30px;width:240px"
+                  v-model="queryData.Customers"
+                  clearable>
+          <template slot="prepend">业主</template>
+        </el-input>
+
+        <el-input placeholder="业主电话"
+                  v-model="queryData.Tel "
+                  style="margin-left:30px;width:240px"
+                  clearable>
+          <template slot="prepend">电话</template>
+        </el-input>
+
+        <el-select v-model="queryData.houseStates"
+                   style="margin-left:10px"
+                   placeholder="请选择"
+                   clearable>
+          <el-option v-for="item in options"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value">
+          </el-option>
+        </el-select>
         <template slot="prepend">房源类型</template>
         <el-button type="primary"
-                     style="margin-left:30px"
-                     size="mini"
-                     @click="querylistByParams()">查询</el-button>
-        </div>
+                   style="margin-left:30px"
+                   size="mini"
+                   @click="querylistByParams()">查询</el-button>
+      </div>
     </template>
-     
+
     <template #tableColumn="">
-        
+
       <el-table-column label="房源编号">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
@@ -93,22 +108,24 @@
                      v-for="(item,index) in isForBut(2)"
                      :key="index">{{item.name}}</el-button>
           <!-- </div> -->
-          
+
         </template>
-        
+
       </el-table-column>
     </template>
   </list-page>
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
   data () {
     return {
-        input:'',
+      input: '',
       loading: true, //控制表格加载动画提示
       pageJson: {
         currentPage: 1, //当前页码
@@ -130,8 +147,8 @@ export default {
       elTabs: {
         activeName: "tab1",
         list: [
-       
-        ] 
+
+        ]
       },
       options: [{
         value: '选项1',
@@ -165,23 +182,23 @@ export default {
     querylistByParams () {
       this.querylist(1);
     },
-    addCommunity(comid){
-        console.log(comid);
+    addCommunity (comid) {
+      console.log(comid);
     },
     querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize+'', page: currentPage+''};
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
-      if (this.queryData.CommunityName != null) { params.CommunityName = this.queryData.CommunityName;}
-      if (this.queryData.Customers != null) { params.Customers = this.queryData.Customers;}
-      if (this.queryData.Tel != null) { params.Tel = this.queryData.Tel;}
-      if (this.queryData.minFollowEndTime != null) { params.minFollowEndTime = this.queryData.minFollowEndTime;}
-      if (this.queryData.maxFollowEndTime != null) { params.maxFollowEndTime = this.queryData.maxFollowEndTime;}
-       this.$api.post({
-        url: '/agent_house/listFollowHouse',
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-       data: params,
-        token: false
-      }).then((e) => {
+      if (this.queryData.CommunityName != null) { params.CommunityName = this.queryData.CommunityName; }
+      if (this.queryData.Customers != null) { params.Customers = this.queryData.Customers; }
+      if (this.queryData.Tel != null) { params.Tel = this.queryData.Tel; }
+      if (this.queryData.minFollowEndTime != null) { params.minFollowEndTime = this.queryData.minFollowEndTime; }
+      if (this.queryData.maxFollowEndTime != null) { params.maxFollowEndTime = this.queryData.maxFollowEndTime; }
+      this.$api.post({
+        url: '/agent_house/listFollowHouse',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: params,
+        token: false
+      }).then((e) => {
         console.log(e.data);
         let result = e.data;
         that.loading = false;
@@ -200,8 +217,8 @@ export default {
         console.log(e);
       })
     },
-    queryConcernCount(){
-         this.$api.post({
+    queryConcernCount () {
+      this.$api.post({
         url: '/concern_community/CommunityCount',
         token: false
       }).then((e) => {
@@ -209,7 +226,7 @@ export default {
         let result = e.data;
         if (result.code == 200) {
           console.log(result.message);
-          console.log("统计结果"+result.data);
+          console.log("统计结果" + result.data);
         } else {
           console.log("查询核心盘统计结果then：" + result.message);
           alert(result.message);
@@ -236,11 +253,11 @@ export default {
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
-       this.querylist(1);
+      this.querylist(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-       this.querylist(val);
+      this.querylist(val);
     },
   },
 }

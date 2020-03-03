@@ -20,27 +20,27 @@
   <div>
     <template>
       <div class="elTree">
-        <el-tree
-          ref="treeForm"
-          :data="treeData"
-          :default-expanded-keys="defaultCheckedKeys"
-          :default-checked-keys="defaultCheckedKeys"
-          node-key="businessId"
-          show-checkbox
-          :props="defaultProps"
-          @check-change="handleCheckChange"
-          :highlight-current="true"
-          :filter-node-method="filterNode"
-          check-strictly
-          :action="''"
-        ></el-tree>
+        <el-tree ref="treeForm"
+                 :data="treeData"
+                 :default-expanded-keys="defaultCheckedKeys"
+                 :default-checked-keys="defaultCheckedKeys"
+                 node-key="businessId"
+                 show-checkbox
+                 :props="defaultProps"
+                 @check-change="handleCheckChange"
+                 :highlight-current="true"
+                 :filter-node-method="filterNode"
+                 check-strictly
+                 :action="''"></el-tree>
       </div>
     </template>
   </div>
 </template>
 <script>
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
-  data() {
+  mixins: [getMenuRid],
+  data () {
     return {
       treeData: [],
       defaultProps: {
@@ -60,7 +60,7 @@ export default {
       defaultCheckedKeys: null
     };
   },
-  mounted() {
+  mounted () {
     //读取树数据
     this.$api
       .post({
@@ -85,7 +85,7 @@ export default {
       });
   },
   methods: {
-    handleCheckChange(data, checked, node) {
+    handleCheckChange (data, checked, node) {
       if (checked == true) {
         this.checkedId = data.businessId;
         this.checkedType = data.type;
@@ -94,14 +94,14 @@ export default {
         this.unitName = data.labelName;
       }
     },
-    handleNodeClick(data) {},
-    loadNode(node, resolve) {},
-    filterNode(value, data) {
+    handleNodeClick (data) { },
+    loadNode (node, resolve) { },
+    filterNode (value, data) {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
-    treeCheck(e, data) {}
+    treeCheck (e, data) { }
   }
 };
 </script>

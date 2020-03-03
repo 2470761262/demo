@@ -1,18 +1,24 @@
 <template>
   <div class="query-cell">
-    <el-input placeholder="登录器注册密码" size="small" v-model="pwd" clearable readonly>
+    <el-input placeholder="登录器注册密码"
+              size="small"
+              v-model="pwd"
+              clearable
+              readonly>
       <template slot="prepend">登录器注册密码</template>
     </el-input>
   </div>
 </template>
 <script>
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
-  data() {
+  mixins: [getMenuRid],
+  data () {
     return {
       pwd: ""
     };
   },
-  created() {
+  created () {
     this.$api
       .post({
         url: "/logon/pwd",
