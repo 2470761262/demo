@@ -1,8 +1,36 @@
+<style scoped>
+.Impression-body{
+  width: 300px;
+  background-color: white;
+  height: 800px;
+}
+.tag-all{
+   margin-top: 8px;
+}
+.Impression-tag{
+  margin-top: 15px;
+  margin-left: 20px
+}
+</style>
 <template>
   <list-page :parentData="$data"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
+    <template v-slot:left>
+      <div class="Impression-body">
+      <div >
+        <el-input placeholder="请输入您添加过的房源印象" clearable></el-input>
+      </div>
+      <div class="tag-all">
+        <span class="Impression-tag"  v-for="item in ImpressionList" :key="item.value" >
+          <el-tag size="mini" type="success" closable>
+            {{item.impression}}
+            </el-tag>
+        </span>
+      </div>
+      </div>
+      </template>   
     <template v-slot:top>
       <div class="page-form-inline ">
         <el-input placeholder="楼盘名称"
@@ -159,12 +187,12 @@ import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 export default {
   mixins: [getMenuRid],
-
   components: {
     listPage
   },
   data () {
     return {
+      Impression:'',
       dialogVisible: false,
       value: '',
       input: '',
@@ -191,6 +219,7 @@ export default {
 
         ]
       },
+      ImpressionList:[],
       options: [{
         value: '选项1',
         label: '全部'
@@ -220,8 +249,23 @@ export default {
   },
   mounted () {
     this.querylist(1);
+    this.queryHouseImpression ();
   },
   methods: {
+    queryHouseImpression () {
+      var that = this
+      this.$api.get({
+        url: "/agentHouse/impression/getHouseImpressionList",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+      }).then((e) => {
+        console.log(e.data.code);
+        if(e.data.code){
+          this.Impression = e.data.data;
+        that.ImpressionList = e.data.data;
+        }
+      })
+    },
     concernOFF (id) {
       this.$api.post({
         url: "/concernHouseOFF/" + id,
