@@ -354,7 +354,7 @@ export default {
       if (picClass != undefined) {
         formData.append('picClass', picClass)
       }
-      formData.append('draftid', 41)//that.$store.state.addHouse.formData.id)
+      formData.append('draftid', that.$store.state.addHouse.formData.id)
       formData.append('file', uploader)
       this.$api.post({
         url: "/draft-house/picture",
@@ -383,7 +383,7 @@ export default {
       })
     },
     validateAll () {
-      return false;
+      return true;
     },
   },
 }

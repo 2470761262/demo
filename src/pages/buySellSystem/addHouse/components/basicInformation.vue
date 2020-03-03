@@ -162,7 +162,9 @@
 }
 </style>
 <template>
-  <div class="page-cell-addHouse">
+  <div class="page-cell-addHouse"
+       element-loading-text="我在去获取数据的路上了~"
+       v-loading="loading">
     <!-- 楼盘名称 -->
     <div class="page-cell-item-flex">
       <div class="form-error-tips"
@@ -369,9 +371,15 @@
       </div>
     </div>
     <!-- 证号 -->
-    <div class="form-error-tips margin-bot_20">
+    <div class="form-error-tips margin-bot_20"
+         :class="{'after-tips':errorBags.has('certificateNo')}"
+         :data-tips="errorBags.first('certificateNo')">
       <div class="page-cell-item select-nobor">
-        <el-input placeholder="请输入产权证号">
+        <el-input placeholder="请输入产权证号"
+                  v-validate="'numeric|noZero'"
+                  data-vv-name="certificateNo"
+                  data-vv-as="产权证号"
+                  v-model="formData.certificateNo">
           <div slot="prepend"
                class="item-before">证号</div>
         </el-input>
@@ -386,12 +394,12 @@
         <div class="cell-tabs-item-data">
           <div class="item-deep-data">
             <input type="text"
-                   maxlength="4"
+                   maxlength="8"
                    @click.stop=""
                    :placeholder="formData.area"
                    data-vv-name="area"
                    data-vv-as="面积"
-                   v-validate="'decimal:2'"
+                   v-validate="'decimal:2|noZero1'"
                    v-model="changeInput.area"
                    class="min-input"
                    v-if="changeBut.area">
@@ -415,7 +423,7 @@
                      :placeholder="formData.room"
                      @click.stop=""
                      v-model="changeInput.room"
-                     v-validate="'numeric|max:2'"
+                     v-validate="'numeric|noZero|max:2'"
                      data-vv-name="room"
                      data-vv-as="室"
                      class="min-input">室
@@ -424,7 +432,7 @@
                      :placeholder="formData.hall"
                      @click.stop=""
                      v-model="changeInput.hall"
-                     v-validate="'numeric|max:2'"
+                     v-validate="'numeric|noZero|max:2'"
                      data-vv-name="hall"
                      data-vv-as="厅"
                      class="min-input">厅
@@ -433,7 +441,7 @@
                      :placeholder="formData.toilet"
                      @click.stop=""
                      v-model="changeInput.toilet"
-                     v-validate="'numeric|max:2'"
+                     v-validate="'numeric|noZero|max:2'"
                      data-vv-name="toilet"
                      data-vv-as="卫"
                      class="min-input">卫
@@ -442,7 +450,7 @@
                      :placeholder="formData.balcony"
                      @click.stop=""
                      v-model="changeInput.balcony"
-                     v-validate="'numeric|max:2'"
+                     v-validate="'numeric|noZero|max:2'"
                      data-vv-name="balcony"
                      data-vv-as="阳台"
                      class="min-input">阳台
@@ -458,7 +466,6 @@
         <div class="cell-tabs-item-title">物业公司</div>
         <div class="cell-tabs-item-data">
           <div class="item-deep-data">
-            哒哒哒哒哒哒物业公司
           </div>
           <div class="but-append"
                data-tips="反馈"><i class="el-icon-question"></i></div>
@@ -466,7 +473,7 @@
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">评估价</div>
-        <div class="cell-tabs-item-data">89平米</div>
+        <div class="cell-tabs-item-data">{{formData.valuation}}</div>
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">房屋朝向</div>
@@ -474,7 +481,7 @@
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">电梯</div>
-        <div class="cell-tabs-item-data">{{formData.isElevator}}</div>
+        <div class="cell-tabs-item-data">{{formData.isElevator == 0 ? '否' : '是'}}</div>
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">房屋用途</div>
@@ -502,7 +509,7 @@
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">竣工时间</div>
-        <div class="cell-tabs-item-data">89平米</div>
+        <div class="cell-tabs-item-data">{{formData.buildingTime}}</div>
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">中学划片</div>
@@ -560,6 +567,9 @@ export default {
         this.deffData = deffData;
       }
     }
+  },
+  created () {
+    this.getLoadData(41);
   },
   mounted () {
     this.bodyClick();
@@ -624,7 +634,7 @@ export default {
         }
         if (!flag) {
           for (let i = 0; i < list.length; i++) {
-            that.formData[list[i]] = that.changeInput[list[i]]
+            that.formData[list[i]] = that.changeInput[list[i]] || 0;
           }
         }
       }
@@ -676,7 +686,7 @@ export default {
         console.log(e);
       })
     },
-    //楼盘获取焦点
+    //楼盘获取焦点 第一次点击就进行查询
     remoteCommunityNameInput () {
       if (this.selectPageCommunit.list.length == 0) {
         this.remoteCommunityName();
@@ -684,6 +694,7 @@ export default {
     },
     //楼盘选择更改事件
     remoteCommunityNameChange (e) {
+      console.log(e);
       let findResultIndex = this.selectPageCommunit.list.findIndex((item) => {
         return item.value == e;
       })
@@ -694,7 +705,34 @@ export default {
       this.formData.roomNo = '';
       this.selectPageeBuildingNo.list = [];
       this.selectPageRoomNo.list = [];
+      //初始化楼盘选中获取的数据
+      this.formData.buildingTime = '';
+      this.formData.property = '';
+      this.formData.primarySchool = '';
+      this.formData.middleSchool = '';
+      //初始化楼栋选中获取的数据
+      this.formData.isElevator = '';
+      this.formData.houseUse = '';
+      this.formData.houseStruct = '';
+      //初始化房间号选中获取的数据
+      this.formData.valuation = '';
+      this.formData.area = 0;
+      this.formData.face = '';
+      this.formData.room = 0;
+      this.getCommunityData(e);
       this.remoteBuildingNo();
+    },
+    //获取楼盘当前选中楼栋信息
+    getCommunityData (id) {
+      this.$api.get({ url: `/draft-house/community/${id}` }).then((e) => {
+        let data = e.data.data;
+        if (e.data.code == 200) {
+          this.formData.buildingTime = data.finishYear;
+          this.formData.property = data.ownerProperty;
+          this.formData.primarySchool = data.primarySchool;
+          this.formData.middleSchool = data.middleSchool;
+        }
+      })
     },
     //查询栋座
     remoteBuildingNo (e) {
@@ -734,7 +772,34 @@ export default {
       this.formData.roomNo = '';
       this.formData.roomId = '';
       this.selectPageRoomNo.list = [];
+      //初始化楼栋选中获取的数据
+      this.formData.isElevator = '';
+      this.formData.houseUse = '';
+      this.formData.houseStruct = '';
+      //初始化房间号选中获取的数据
+      this.formData.valuation = '';
+      this.formData.area = 0;
+      this.formData.face = '';
+      this.formData.room = 0;
+      this.getBuildingData(e);
       this.remoteRoomNo();
+    },
+    //获取楼栋当前选中楼栋信息
+    getBuildingData (id) {
+      this.$api.get({ url: `/draft-house/building/${id}` }).then((e) => {
+        let data = e.data.data;
+        if (e.data.code == 200) {
+          if (data.primarySchool != null && !data.primarySchool.includes("未知")) {
+            this.formData.primarySchool = data.primarySchool;
+          }
+          if (data.middleSchool != null && !data.middleSchool.includes("未知")) {
+            this.formData.middleSchool = data.middleSchool;
+          }
+          this.formData.isElevator = data.elevatorNum;
+          this.formData.houseUse = data.buildType;
+          this.formData.houseStruct = data.buildingStructure;
+        }
+      })
     },
     //查询房间号
     remoteRoomNo (e) {
@@ -773,6 +838,24 @@ export default {
         return item.value == e;
       })
       this.formData.roomNo = this.selectPageRoomNo.list[findResultIndex].name;
+      //初始化房间号选中获取的数据
+      this.formData.valuation = '';
+      this.formData.area = 0;
+      this.formData.face = '';
+      this.formData.room = 0;
+      this.getRoomData(e);
+    },
+    //获取房间号数据
+    getRoomData (id) {
+      this.$api.get({ url: `/draft-house/room/${id}` }).then((e) => {
+        let data = e.data.data;
+        if (e.data.code == 200) {
+          this.formData.valuation = data.valuation;
+          this.formData.area = data.outArea;
+          this.formData.face = data.orientation;
+          this.formData.room = data.rooms || 0;
+        }
+      })
     },
     removeTelToList (index, item) {
       this.addTel.splice(index, 1);
@@ -808,6 +891,38 @@ export default {
         }
       })
     },
+    //获取
+    getLoadData (id) {
+
+      this.loading = true;
+      return this.$api.get({
+        url: `/draft-house/${id}`,
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this.$store.commit('updateId', e.data.data.id);
+          this.$store.dispatch("InitFormData", { commitName: "updateStep1", json: e.data.data }).then(() => {
+            this.formData.communityId = this.formData.communityId.toString();
+            this.formData.buildingId = this.formData.buildingId.toString();
+            this.formData.roomId = this.formData.roomId.toString();
+          });
+          this.remoteCommunityName(this.formData.communityName);
+          this.remoteBuildingNo(this.formData.buildingNo);
+          this.remoteRoomNo(this.formData.roomNo);
+
+          //添加tel 1 2 3
+          let tel = ["tel1", "tel2", "tel3"];
+          tel.forEach((item, index) => {
+            if (e.data.data[item] != '') {
+              this.addTel.push(index);
+            }
+          })
+        }
+      }).catch((e) => {
+        return false;
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
     //创建
     upLoadData (e) {
       let that = this;
@@ -815,6 +930,7 @@ export default {
         ...that.deffData
       }
       let method = 'post';
+      console.log(that.$store.state.addHouse.formData.id, "that.$store.state.addHouse.formData.id");
       if (that.$store.state.addHouse.formData.id != '') {
         data.id = that.$store.state.addHouse.formData.id;
         method = 'put';
@@ -873,6 +989,7 @@ export default {
         list: [],
         loading: false
       },
+      loading: false,
       deffData: {}
     };
   }
