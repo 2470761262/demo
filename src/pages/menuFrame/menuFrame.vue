@@ -82,6 +82,7 @@ import asideNav from '@/components/asideNav';
 import headerContent from '@/components/headerContent';
 import util from '@/util/util';
 import { LOGINDATA } from '@/util/constMap';
+import but from '@/evenBus/but';
 export default {
   name: "menuFrame",
   components: {
@@ -96,6 +97,10 @@ export default {
     }
   },
   created () {
+ but.$on('asideNav', (e) => {
+      console.log(111111, e);
+      this.asideNavFlag = e;
+    })
     window.addEventListener('message', (e) => {
       //  console.log("-------------------", e);
       if (e.data.isXinIfram) {

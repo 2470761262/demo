@@ -28,19 +28,29 @@
                          :key="item.prop">
         </el-table-column>
       </template>
-      <el-table-column prop="headImgUrl" label="用户头像" width="90" >
-                 <!-- 图片的显示 -->
-                 <template   slot-scope="scope">            
-                    <img v-if="scope.row.headImgUrl" :src="scope.row.headImgUrl"  width="50" height="50" />
-                    <img v-else :src="'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4034879928,1229713244&fm=26&gp=0.jpg'"  width="50" height="50" />
-                 </template>         
-      </el-table-column> 
+      <el-table-column prop="headImgUrl"
+                       label="用户头像"
+                       width="90">
+        <!-- 图片的显示 -->
+        <template slot-scope="scope">
+          <img v-if="scope.row.headImgUrl"
+               :src="scope.row.headImgUrl"
+               width="50"
+               height="50" />
+          <img v-else
+               :src="'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4034879928,1229713244&fm=26&gp=0.jpg'"
+               width="50"
+               height="50" />
+        </template>
+      </el-table-column>
     </template>
   </list-page>
 </template>
 <script>
 import listPage from "@/components/listPage";
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },

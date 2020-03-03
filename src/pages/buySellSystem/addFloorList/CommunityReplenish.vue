@@ -48,7 +48,7 @@
              :model="form"
              label-width="80px"
              label-position="right">
-     
+
       <div class="page-form-inline">
         <el-form-item label="楼盘名称">
           <el-input placeholder="请输入楼盘名称"
@@ -57,7 +57,7 @@
         </el-form-item>
       </div>
 
-       <div class="page-form-inline">
+      <div class="page-form-inline">
         <el-form-item label="楼栋">
           <el-input placeholder="请输入楼栋名称"
                     v-model="form.comBuildingName">
@@ -65,7 +65,7 @@
         </el-form-item>
       </div>
 
-     <div class="page-form-inline">
+      <div class="page-form-inline">
         <el-form-item label="房间号">
           <el-input placeholder="请输入房间号"
                     v-model="form.buildIngHouses">
@@ -81,65 +81,62 @@
         </el-form-item>
       </div>
       <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">证明材料</div>
-        <div>
-          <div class="page-cell-item">
-            <el-upload drag
-                       :action="''"
-                       :on-preview="handlePreview"
-                       :limit="9"
-                       name="1"
-                       :before-upload="beforeAvatarUpload"
-                       :http-request="uploadSectionFile"
-                       :on-remove="removeImg"
-                       :file-list="form.proveImg"
-                       multiple>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
+        <div class="page-cell-item">
+          <div class="item-before item-before-top">证明材料</div>
+          <div>
+            <div class="page-cell-item">
+              <el-upload drag
+                         :action="''"
+                         :on-preview="handlePreview"
+                         :limit="9"
+                         name="1"
+                         :before-upload="beforeAvatarUpload"
+                         :http-request="uploadSectionFile"
+                         :on-remove="removeImg"
+                         :file-list="form.proveImg"
+                         multiple>
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+              </el-upload>
+            </div>
+            <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
           </div>
-          <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
         </div>
       </div>
-    </div>
-      
-
-     
-      
 
       <el-button-group>
         <el-button type="primary"
-                 @click="apply()"  >申请</el-button>
+                   @click="apply()">申请</el-button>
       </el-button-group>
     </el-form>
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%"
            :src="dialogImageUrl"
-           alt=""
-           >
+           alt="">
     </el-dialog>
   </div>
 </template>
 <script>
 
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   data () {
     return {
       form: {
-        communityName:'',
-        comBuildingName:'',
-        buildIngHouses:'',
-        ReplenishRemark:'',
-        proveImg:[],
-        prove:[],
+        communityName: '',
+        comBuildingName: '',
+        buildIngHouses: '',
+        ReplenishRemark: '',
+        proveImg: [],
+        prove: [],
       },
-      dialogImageUrl:'',
+      dialogImageUrl: '',
       dialogVisible: false,
     }
   },
   mounted () {
-    
+
 
 
   },
@@ -149,7 +146,7 @@ export default {
       this.dialogVisible = true;
       this.showFlag = true;
     },
-     beforeAvatarUpload (file) {
+    beforeAvatarUpload (file) {
       // 上传图片前处理函数
       const isJPG =
         file.type === "image/jpeg" ||
@@ -198,7 +195,7 @@ export default {
         uploader.onSuccess()
         let data = json.data.data;
         that.form.proveImg.push({ name: data.id, url: data.url, id: data.id });
-         that.form.prove.push(data.url);
+        that.form.prove.push(data.url);
         console.log(that.form.proveImg.join(','))
       }).catch(() => {
         that.$message({
@@ -208,7 +205,7 @@ export default {
         uploader.onError()
       })
     },
-     removeImg (file) {
+    removeImg (file) {
       if (file.id) {
         this.form.proveImg = this.form.proveImg.filter((item) => {
           return item.url != file.url;
@@ -222,32 +219,32 @@ export default {
         })
       }
     },
-      apply(){
-           var that = this
-          if (that.form.prove==null) {
-              alert("证明材料不能为空");
-              return;
-            }
-           
-            this.$api.get({
-                url: "/CommunityReplenish/add",
-                headers: { "Content-Type": "application/json;charset=UTF-8" },
-                token: false,
-                qs: true,
-                data: {
-                communityName: that.form.communityName,
-                comBuildingName: that.form.comBuildingName,
-                buildIngHouses: that.form.buildIngHouses,
-                ReplenishRemark: that.form.ReplenishRemark,
-                proveImg: that.form.prove.join(',')
-                }
-            }).then((e) => {
-                if (e.data.code == 200) {
-                     this.$router.push({ path: '/buySellSystem/addHouse'});
-                }
-            })
+    apply () {
+      var that = this
+      if (that.form.prove == null) {
+        alert("证明材料不能为空");
+        return;
       }
-    
+
+      this.$api.get({
+        url: "/CommunityReplenish/add",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          communityName: that.form.communityName,
+          comBuildingName: that.form.comBuildingName,
+          buildIngHouses: that.form.buildIngHouses,
+          ReplenishRemark: that.form.ReplenishRemark,
+          proveImg: that.form.prove.join(',')
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this.$router.push({ path: '/buySellSystem/addHouse' });
+        }
+      })
+    }
+
   }
 }
 </script>

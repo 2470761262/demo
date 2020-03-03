@@ -9,15 +9,13 @@
 </style>
 <template>
   <div>
-    <el-menu
-      :default-active="$route.path"
-      class="el-menu-vertical-demo"
-      background-color="#545c64"
-      text-color="#fff"
-      :collapse="collapse"
-      active-text-color="#ffd04b"
-      router
-    >
+    <el-menu :default-active="$route.path"
+             class="el-menu-vertical-demo"
+             background-color="#545c64"
+             text-color="#fff"
+             :collapse="collapse"
+             active-text-color="#ffd04b"
+             router>
       <el-submenu index="0123">
         <template slot="title">
           <i class="el-icon-location"></i>
@@ -51,16 +49,16 @@
         <el-menu-item index="/sys/ruleManager">功能点管理</el-menu-item>
         <el-menu-item index="/sys/logonRegPwd/view">授权器密码</el-menu-item>
       </el-submenu>
-      <el-submenu :index="item.rurl+index" :key="item.id" v-for="(item,index) in menuNodeDatas">
+      <el-submenu :index="item.id+''"
+                  :key="item.id"
+                  v-for="(item) in menuNodeDatas">
         <template slot="title">
           <i class="el-icon-s-flag"></i>
           <span>{{item.rname}}</span>
         </template>
-        <el-menu-item
-          :key="subItem.rurl+index"
-          v-for="(subItem,index) in item.children"
-          :index="subItem.rurl"
-        >{{subItem.rname}}</el-menu-item>
+        <el-menu-item :key="subItem.rurl+index"
+                      v-for="(subItem,index) in item.children"
+                      :index="subItem.rurl">{{subItem.rname}}</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -68,12 +66,12 @@
 <script>
 export default {
   props: ["menuNodeDatas"],
-  data() {
+  data () {
     return {
       collapse: false
     };
   },
-  created() {
+  created () {
     let that = this;
     window.addEventListener("resize", e => {
       if (window.innerWidth < 1400) {

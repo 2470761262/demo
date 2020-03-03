@@ -9,13 +9,7 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template v-slot:inputTo>
-      <div class="query-cell">
-        <el-button type="primary"
-                   size="mini"
-                   @click="toAddConfig">添加系统规则</el-button>
-      </div>
-    </template>
+
     <template v-slot:tableColumn="">
 
       <!-- <template v-for="(item) in cell.tableData">
@@ -102,7 +96,10 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
+import but from '@/evenBus/but'
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -207,8 +204,12 @@ export default {
           for (var i = 0; i < result.data.list.length; i++) {
 
             switch (result.data.list[i].parRange) {
+              case "-1":
+                result.data.list[i].parRange = "默认";
+                break;
               case "0":
                 result.data.list[i].parRange = "个人";
+                break;
               case "1":
                 result.data.list[i].parRange = "部门";
                 break;
@@ -253,7 +254,7 @@ export default {
       })
     },
 
-    toAddConfig () {
+    toList () {
       this.$router.push({ path: "/menuFrame/addConfig" });
     },
 
@@ -322,12 +323,6 @@ export default {
     handleClick () {
 
     },
-     created() {
-      this.configId=this.$route.query.configId;
-    
-    console.log(this.configId);
-     
-  },
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
@@ -337,5 +332,14 @@ export default {
       this.queryVerifyHouseDatas(val);
     },
   },
+  created () {
+    this.configId = this.$route.query.configId;
+    but.$emit('asideNav', false);
+
+  },
+  destroyed () {
+    but.$emit('asideNav', true);
+    But.$off('asideNav')
+  }
 }
 </script>
