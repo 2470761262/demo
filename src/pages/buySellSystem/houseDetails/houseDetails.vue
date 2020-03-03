@@ -51,7 +51,7 @@
           <span slot="reference">房源印象</span>
         </el-popover>
       </div>
-      <div style="margin-left:50px;font-size:30px;">房源二维码</div>
+      <div style="margin-left:50px;font-size:30px;" id="qrcode">房源二维码</div>
       <div style="margin-left:50px;">
         <div style="font-size:15px;">房源编号:</div>
         <div style="font-size:15px;">{{houseDetails.HouseNo}}</div>
@@ -258,10 +258,12 @@
       <el-button>鑫币对赌</el-button>
       <el-popover placement="top" width="600" trigger="manual" v-model="isShowChange">
         <div class="query-cell">
-          <el-radio v-model="changeType" label="4">他司售</el-radio>
-          <el-radio v-model="changeType" label="6">业主自售</el-radio>
-          <el-radio v-model="changeType" label="5">暂不售</el-radio>
-          <el-radio v-model="changeType" label="3">无效</el-radio>
+          <el-radio-group v-model="changeType" >
+          <el-radio  label="4">他司售</el-radio>
+          <el-radio  label="6">业主自售</el-radio>
+          <el-radio  label="5">暂不售</el-radio>
+          <el-radio  label="3">无效</el-radio>
+          </el-radio-group>
         </div>
         <div>
             <div v-if="changeType=='4'" style="display:flex">
@@ -272,13 +274,13 @@
               <span>万元</span>
             </div>
              <div v-if="changeType=='6'">
-                <el-radio  v-model="selfSaleType" label="0">疑似跳单</el-radio>
-                <el-radio  v-model="selfSaleType"  label="1">亲朋好友</el-radio>
+                <el-radio  v-model="subStatus" label="0">疑似跳单</el-radio>
+                <el-radio  v-model="subStatus"  label="1">亲朋好友</el-radio>
             </div>
             <div v-if="changeType=='3'">
-            <el-radio  v-model="invalidType"  label="0">号码错误</el-radio>
-            <el-radio   v-model="invalidType"  label="1">空号</el-radio>
-            <el-radio  v-model="invalidType"  label="2">房源不存在</el-radio>
+            <el-radio  v-model="subStatus"  label="2">号码错误</el-radio>
+            <el-radio   v-model="subStatus"  label="3">空号</el-radio>
+            <el-radio  v-model="subStatus"  label="4">房源不存在</el-radio>
             </div>
         </div>
         <div>
@@ -368,6 +370,7 @@
               <div
                 style="  width: 300px; height: 150px;border: 1px solid;display:flex; margin-left:20px;"
               >
+              <div v-if="houseDetails.agentPerName!=null">
                 <el-image
                   :src="houseDetails.agentPerHeadImg"
                   style="width: 80px;border-radius: 40px;border: 1 px solid;border: 1px solid;height: 80px;"
@@ -381,6 +384,21 @@
                   <div>
                     <span :data-tel="houseDetails.agentPerTel"></span>
                   </div>
+                </div>
+                </div>
+                <div >
+                    <el-dialog
+                       title="请填写完这些信息才能"
+                       :visible.sync="isShowApplyAgent"
+                       width="50%" :close-on-click-modal="false"
+                       >
+                     <supplement ></supplement>
+                      <span slot="footer" class="dialog-footer">
+                      <el-button @click="isShowApplyAgent = false">取 消</el-button>
+                     <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                   </span>
+                  </el-dialog>
+                  <el-button @click="isShowApplyAgent=true">申请跟单人</el-button>
                 </div>
               </div>
               <div
@@ -1328,9 +1346,13 @@
 </template>
 <script>
 import { HOUSEBELONGLIST } from "@/util/constMap";
+import QRCode from "qrcodejs2";
 import util from "@/util/util";
+import  supplement from "@/pages/buySellSystem/addHouse/components/supplement"
 export default {
-  components: {},
+  components: {
+    supplement
+  },
   data() {
     return {
       houseId: 0, //房源id
@@ -1408,18 +1430,18 @@ export default {
       isShowChange:false,//是否显示转状态弹窗
       dealCompany:"",//成交公司
       dealPrice:"",//成交价
-      selfSaleType:"",//自售类型
-      invalidType:"",//无效类型
+      subStatus:"",//子类型
       perId:"",//登录人id
       isRecommend:false,//是否推荐
       isShowRecommend:false,//是否展示推荐弹窗
       recommendMemo:"",//推荐的原因
-      isShowBuilding:false//是否显示楼栋号
+      isShowBuilding:false,//是否显示楼栋号
+      isShowApplyAgent:false,//是否显示申请跟单人弹窗
+     
     };
   },
   before() {},
   mounted() {
-    console.log(this.$route.params.houseId);
     if (this.$route.params.betExpire) {
       this.betExpire = this.$route.params.betExpire;
 
@@ -1442,6 +1464,7 @@ export default {
     if(util.localStorageGet("logindata")){
       this.perId=util.localStorageGet("logindata").accountId;
     }
+    // this.$store.state.addHouse.formData.step2.balance="10";
     this.getHouseDetails();
     this.getisCollectHouse();
     this.getHouseFollow();
@@ -1844,8 +1867,13 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-
             that.houseDetails = result.data;
+               let qrcode = new QRCode("qrcode", {
+                        render: "canvas",
+                        width: 150,
+                        height: 150,
+                        text: that.houseDetails.shareQRCode,
+            });
             that.agentHouseMethod = that.houseDetails.agentHouseMethod;
             that.elevator = util.analysisElevator(that.houseDetails.Elevator);
             that.sign = util.analysisSign(that.houseDetails.sign);
@@ -2623,19 +2651,19 @@ export default {
           params.followMemo="他司售";
          break;
          case "6":
-           if(this.selfSaleType==""){
+           if(this.subStatus!="0"&&this.subStatus!="1"){
             this.$message("业主自售类型未选择");
             return;
            }
-           params.selfSaleType=this.selfSaleType;
+           params.subStatus=this.subStatus;
            params.followMemo="业主自售";
            break;
             case "3":
-           if(this.invalidType==""){
+           if(this.subStatus!="3"&&this.subStatus!="2"&&this.subStatus!="4"){
             this.$message("无效类型类型未选择");
             return;
            }
-           params.invalidType=this.invalidType;
+           params.subStatus=this.subStatus;
            params.followMemo="无效";
            break;
            case "5":
