@@ -6,6 +6,22 @@
 .collectHouse {
   color: yellow;
 }
+.underline {
+  border-color: #878787;
+  border-style: solid;
+  border-top-width: 0px;
+  border-right-width: 0px;
+  border-bottom-width: 1px;
+  border-left-width: 0px;
+}
+input[type=number] {
+  -moz-appearance:textfield;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 </style>
 <template>
   <div
@@ -191,8 +207,8 @@
                   style="width:100;height:100px;border-radius:50px;"
                   :src="houseDetails.agentPerHeadImg"
                 ></el-image>
-                <div  :style="[{position:'absolute'}, {'z-index':2}, {left: '-480px' }, {top:'10px'}]">
-                  <div style="border-radius: 13px; background-color: rgba(255,255,255,.5);width: 248px;" v-if="betExpireStr" >
+                <div  :style="[{position:'absolute'}, {'z-index':2}, {left: '-520px' }, {top:'-40px'}]">
+                  <div style="border-radius: 13px; background-color: rgba(255,255,255,.5);width: 248px; " v-if="betExpireStr" >
                     <p style="margin: 0px 48px;padding: 10px 0px;font-size: large;font-weight: bolder">距离房源对赌结束</p>
                     <p style="margin: 0px 20px;padding: 0px 0 10px 0;font-size: x-large">还剩 {{ ' ' +  betExpireStr }}</p>
                   </div>
@@ -200,6 +216,7 @@
               </div>
               <div>
                 <div>{{houseDetails.agentPerName}}</div>
+
                 <div>{{houseDetails.agentPerDepartmentName}}</div>
               </div>
               <el-button :data-tel="houseDetails.agentPerTel" @click="oneTouchDialPhone">一键拨号</el-button>
@@ -255,7 +272,33 @@
           <el-button  slot="reference" @click="isShowRecommend=true">{{isRecommend?'取消推荐':'推荐房源'}}</el-button>
       </el-popover>
 
-      <el-button>鑫币对赌</el-button>
+      <el-popover
+        placement="top-start"
+        width="520"
+        v-model="addBetVisible"
+        trigger="click">
+        <div style="display: inline-flex">
+          <div style="width: 240px;float: left">
+            <p>说明：</p>
+            <p>1、对赌鑫币值封顶为{{betConf.upper}}个</p>
+            <p>2、{{betConf.expireDay}}天内成交可获得{{betConf.odds}}倍鑫币</p>
+            <p>3、合同审核通过前{{betConf.startHour}}小时提交为有效</p>
+          </div>
+          <div style="float: left;margin-left: 50px">
+            <div style="margin-top: 10px;font-size: medium;color: black;">
+              对赌鑫币值<input type="number" v-model="betAmount" style="width: 80px;text-align: center" class="underline"/>个
+            </div>
+              <span style="float: right;margin-right: 20px;font-size: small;">(对赌鑫币100起投)</span>
+          </div>
+        </div>
+        <div style="display: inline-flex;margin-top: 10px">
+          <button @click="addBetVisible= false" style=" width: 80px;margin-left: 148px;border: 0px ;background-color: #c0c4cc;font-size: medium;border-radius:5px;" >取 消</button>
+          <button @click="addBet"  style="width: 80px;margin-left: 20px;border: 0px;background-color: #0d824b;font-size: medium;border-radius:5px;" >确定</button>
+        </div>
+        <el-button slot="reference"  @click="addBetView">鑫币对赌</el-button>
+      </el-popover>
+
+
       <el-popover placement="top" width="600" trigger="manual" v-model="isShowChange">
         <div class="query-cell">
           <el-radio v-model="changeType" label="4">他司售</el-radio>
@@ -1335,7 +1378,16 @@ export default {
     return {
       houseId: 0, //房源id
       betExpire: 0, //对赌过期时间
+      betAmount: 0, //对赌过期时间
+      addBetVisible: false, //对赌窗口可见
+      addBetSuccess: false, //对赌成功窗口
       betExpireStr: "", //房源id
+      betConf: {
+        startHour:0,
+        expireDay:0,
+        odds:0,
+        upper:0,
+      },
       houseDetails: "", //房源详情数据
       houseFileList: [], //视频和图片数组
       elevator: "无配套", //电梯配套
@@ -1420,9 +1472,9 @@ export default {
   before() {},
   mounted() {
     console.log(this.$route.params.houseId);
-    if (this.$route.params.betExpire) {
-      this.betExpire = this.$route.params.betExpire;
-
+    if (this.$route.params.betExpire || util.localStorageGet("houseDetails.vue:betExpire") ){
+      this.betExpire = this.$route.params.betExpire || util.localStorageGet("houseDetails.vue:betExpire");
+      util.localStorageSet("houseDetails.vue:betExpire",this.betExpire);
       const chatTimer = setInterval(() => {
         console.log(chatTimer);
         this.showtime();
@@ -1473,9 +1525,64 @@ export default {
         lefts = Math.floor(lefttime/1000%60);
       this.betExpireStr =  leftd + "天" + lefth + "时" + leftm + "分";  //返回倒计时的字符串
     },
+    addBetView(){
+      var that =this;
+      this.$api.get({
+        url: '/house/bet/conf',
+        data: null,
+        token: false
+      }).then((e) => {
+        console.log(e.data);
+        let data=e.data
+        if (data.code == 200) {
+          this.addBetVisible = true;
+          this.betConf.startHour=data.data.startHour;
+          this.betConf.expireDay=data.data.expireDay;
+          this.betConf.odds=data.data.odds;
+          this.betConf.upper=data.data.upper;
+        } else {
+          console.log("查询对赌房源列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询对赌房源列表失败");
+        console.log(e);
+      })
+    },
+    addBet(){
+      var that =this;
+      if(that.betAmount<100){
+        this.$message.error("100起投！");
+        return
+      }
+      let params={"HouseId":that.houseId,"Amount":that.betAmount};
+      this.$api.post({
+        url: '/house/bet/add',
+        data: params,
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let data=e.data
+          debugger
+        if (data.code == 200) {
+          this.addBetSuccess = true;
+          this.$message({
+            message: '对赌已生效\n'+that.betAmount+'鑫币已扣除\n加油',
+            type: 'success'
+          });
+        } else {
+          this.$message.error( data.message);
+        }
+      }).catch((e) => {
+        console.log("查询对赌房源列表失败");
+        console.log(e);
+      })
+    },
     dialPhoneToFD(){
       this.dailPhone(1,this.houseDetails.Tel,this.houseDetails.Tel1,this.houseDetails.Tel2,this.houseDetails.Tel3);
     },
+
     oneTouchDialPhone(){
       let phone=this.houseDetails.agentPerTel;
       if(!phone){
