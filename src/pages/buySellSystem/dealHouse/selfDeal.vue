@@ -1,106 +1,98 @@
 
 <template>
-  <list-page
-    :parentData="$data"
-    @queryTabData="queryTabData"
-    @handleClick="handleClick"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
+  <list-page :parentData="$data"
+             @queryTabData="queryTabData"
+             @handleClick="handleClick"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
-        <el-select
-          v-model="data.comId"
-          @change="queryCBId()"
-          filterable
-          remote
-          placeholder="请输入楼盘进行搜索"
-          :remote-method="remoteMethod"
-          :loading="loading"
-          clearable
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          ></el-option>
+        <el-select v-model="data.comId"
+                   @change="queryCBId()"
+                   filterable
+                   remote
+                   placeholder="请输入楼盘进行搜索"
+                   :remote-method="remoteMethod"
+                   :loading="loading"
+                   clearable>
+          <el-option v-for="item in options"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value"></el-option>
         </el-select>
 
-        <el-select
-          v-model="data.cbId"
-          filterable
-          placeholder="请选择楼栋"
-          @change="queryRoomNo()"
-          clearable
-        >
-          <el-option
-            v-for="item in cbIdList"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          ></el-option>
+        <el-select v-model="data.cbId"
+                   filterable
+                   placeholder="请选择楼栋"
+                   @change="queryRoomNo()"
+                   clearable>
+          <el-option v-for="item in cbIdList"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value"></el-option>
         </el-select>
 
-        <el-select v-model="data.bhId" filterable placeholder="请选择房间号" clearable>
-          <el-option
-            v-for="item in roomNoList"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          ></el-option>
+        <el-select v-model="data.bhId"
+                   filterable
+                   placeholder="请选择房间号"
+                   clearable>
+          <el-option v-for="item in roomNoList"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value"></el-option>
         </el-select>
-        <el-input
-          placeholder="业主姓名"
-          v-model="data.customName"
-          style="margin-left:30px;width:240px"
-          clearable
-        />
-        <el-input
-          placeholder="业主电话"
-          v-model="data.tel"
-          style="margin-left:30px;width:240px"
-          clearable
-        />
-        <el-input
-          placeholder="最低售价"
-          v-model="data.minPrice"
-          style="margin-left:30px;width:120px"
-          clearable
-        />------
-        <el-input placeholder="最高售价" v-model="data.maxPrice" style="width:120px" clearable />万
-        <el-input
-          placeholder="最小面积"
-          v-model="data.minArea"
-          style="margin-left:30px;width:120px"
-          clearable
-        />------
-        <el-input placeholder="最大面积" v-model="data.maxArea" style="width:120px" clearable />平方
-        <el-date-picker
-          v-model="data.timeSelect"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="录入开始日期"
-          end-placeholder="录入结束日期"
-        ></el-date-picker>
-        <el-button type="primary" style="margin-left:10px" size="mini" @click="queryDatalist">查询</el-button>
+        <el-input placeholder="业主姓名"
+                  v-model="data.customName"
+                  style="margin-left:30px;width:240px"
+                  clearable />
+        <el-input placeholder="业主电话"
+                  v-model="data.tel"
+                  style="margin-left:30px;width:240px"
+                  clearable />
+        <el-input placeholder="最低售价"
+                  v-model="data.minPrice"
+                  style="margin-left:30px;width:120px"
+                  clearable />------
+        <el-input placeholder="最高售价"
+                  v-model="data.maxPrice"
+                  style="width:120px"
+                  clearable />万
+        <el-input placeholder="最小面积"
+                  v-model="data.minArea"
+                  style="margin-left:30px;width:120px"
+                  clearable />------
+        <el-input placeholder="最大面积"
+                  v-model="data.maxArea"
+                  style="width:120px"
+                  clearable />平方
+        <el-date-picker v-model="data.timeSelect"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="录入开始日期"
+                        end-placeholder="录入结束日期"></el-date-picker>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="queryDatalist">查询</el-button>
       </div>
     </template>
 
     <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-          :key="item.prop"
-          :formatter="formatData"
-        ></el-table-column>
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop"
+                         :formatter="formatData"></el-table-column>
       </template>
-      <el-table-column label="操作" fixed="right" key="operation">
+      <el-table-column label="操作"
+                       fixed="right"
+                       key="operation">
         <template v-slot="scope">
-          <el-button type="info" size="mini" @click="toLook(scope.row.id)">查看</el-button>
+          <el-button type="info"
+                     size="mini"
+                     @click="toLook(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
     </template>
@@ -108,11 +100,13 @@
 </template>
 <script>
 import listPage from "@/components/listPage";
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
-  data() {
+  data () {
     return {
       loading: false,
 
@@ -151,14 +145,14 @@ export default {
       tableData: []
     };
   },
-  mounted() {
+  mounted () {
     this.queryOurComDeal(1);
   },
   methods: {
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    toLook(id) {
+    toLook (id) {
       console.log(id);
       var that = this;
       that.$router.push({
@@ -166,10 +160,10 @@ export default {
         query: { houseId: id }
       });
     },
-    queryDatalist() {
+    queryDatalist () {
       this.queryOurComDeal(1);
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -195,7 +189,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -213,7 +207,7 @@ export default {
           }
         });
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -232,7 +226,7 @@ export default {
           }
         });
     },
-    queryOurComDeal(currentPage) {
+    queryOurComDeal (currentPage) {
       var that = this;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (that.data.comId != null && that.data.comId.length > 0) {
@@ -290,28 +284,28 @@ export default {
           console.log(e);
         });
     },
-    isForBut(type) {
+    isForBut (type) {
       let array = [{ name: "查看", isType: "3", methosName: "" }];
       return array.filter(item => {
         return item.isType.includes(type);
       });
     },
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryDatalist(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.queryOurComDeal(val);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryOurComDeal(1);
     },
-    formatData(row, column) {
+    formatData (row, column) {
       if (column.property == "unitPrice") {
         if (
           row.price == null ||

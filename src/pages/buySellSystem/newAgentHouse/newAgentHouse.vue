@@ -44,7 +44,7 @@
           {{scope.row.AddTime}}
         </template>
       </el-table-column>
-       <el-table-column label="跟单人">
+      <el-table-column label="跟单人">
         <template v-slot="scope">
           {{scope.row.agentPerName}}
         </template>
@@ -72,7 +72,9 @@ import Vue from 'Vue'
 import VueCookies from 'vue-cookies';
 
 
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -99,18 +101,18 @@ export default {
       elTabs: {
         activeName: "tab1",
         list: [
-        /*  { label: '全部房源', name: 'tab1' },
-          { label: '我的录入', name: 'tab2' },
-          { label: '我的跟单', name: 'tab3' },
-          { label: '我的委托', name: 'tab4' },
-          { label: '我的钥匙', name: 'tab5' },
-          { label: '我的实勘', name: 'tab6' },
-          { label: '验真列表', name: 'tab7' },
-          { label: '外网列表', name: 'tab8' },
-          { label: '审核列表', name: 'tab9' },
-          { label: '我的收藏', name: 'tab10' },
-          { label: '草稿房源', name: 'tab11' },*/
-        ] 
+          /*  { label: '全部房源', name: 'tab1' },
+            { label: '我的录入', name: 'tab2' },
+            { label: '我的跟单', name: 'tab3' },
+            { label: '我的委托', name: 'tab4' },
+            { label: '我的钥匙', name: 'tab5' },
+            { label: '我的实勘', name: 'tab6' },
+            { label: '验真列表', name: 'tab7' },
+            { label: '外网列表', name: 'tab8' },
+            { label: '审核列表', name: 'tab9' },
+            { label: '我的收藏', name: 'tab10' },
+            { label: '草稿房源', name: 'tab11' },*/
+        ]
       },
       options: [{
         value: '选项1',
@@ -145,16 +147,16 @@ export default {
     },
     queryVerifyHouseDatas (currentPage) {
 
-      let params = { limit: this.pageJson.pageSize+'', page: currentPage+'' };
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
       if (this.queryData.communityName != null) {
-       // params.communityName = this.queryData.communityName;
-       console.log("参数");
+        // params.communityName = this.queryData.communityName;
+        console.log("参数");
       }
       this.$api.post({
         url: '/agent_house/newHouseList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
-       data: params,
+        data: params,
         token: false
       }).then((e) => {
         console.log(e.data);
@@ -182,100 +184,100 @@ export default {
       });
     },
     queryTabData () { },
-     distributeEvent (e,noticeId) {
-       this[e](noticeId);
-     },
-    addCookie(id){
-      if(window.$cookies.get("houseId")==null){
-         window.$cookies.set("houseId", id);
-   this.queryVerifyHouseDatas(this.pageJson.currentPage); 
-      }else{
-         window.$cookies.set("houseId",  window.$cookies.get("houseId")+','+id);
-        
-         this.queryVerifyHouseDatas(this.pageJson.currentPage); 
-      }
-     
-   },
-    postUrl(){
-    
- this.$router.push({ path: "/buySellSystem/agentHouseContrast",query:{houseId:window.$cookies.get("houseId")} });
-   },
-   removeCookie(id){
-     let postId="";
-     let houseId=window.$cookies.get("houseId");
-     console.log(houseId);
-      if(houseId.split(",")[1]==undefined&&houseId==id){//是否单一id
-     window.$cookies.remove("houseId");
-     
-     }else{//多个id操作
-       
-      let cookie=houseId.split(',');
-      console.log(cookie);
-      for(let i=0;i<cookie.length;i++){
-         if(i==0&&id!=cookie[i]){//如果是第一个id并且不是要删除的id
-           postId+=cookie[i];
-         }else if(cookie[i]!=id&&postId==""){//如果是第一个id并且不是要删除的id
-            postId+=+cookie[i];
-
-}else if(ookie[i]!=id) {
-           postId+=','+cookie[i];
-         }
-     }
-     window.$cookies.set("houseId", postId);
-     }
-      this.queryVerifyHouseDatas(this.pageJson.currentPage); 
+    distributeEvent (e, noticeId) {
+      this[e](noticeId);
     },
-     isForBut (type) {
-       let typ=type;
-      let array=[
+    addCookie (id) {
+      if (window.$cookies.get("houseId") == null) {
+        window.$cookies.set("houseId", id);
+        this.queryVerifyHouseDatas(this.pageJson.currentPage);
+      } else {
+        window.$cookies.set("houseId", window.$cookies.get("houseId") + ',' + id);
 
-             ];
-             console.log(window.$cookies.get("houseId"));
-            if(window.$cookies.get("houseId")!=null ){
-             if(window.$cookies.get("houseId").split(",")[1]==undefined&&window.$cookies.get("houseId")==typ){
-                array=[
-         { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-       { name: '删除对比', isType: '1,3', methosName: 'removeCookie'},
-       { name: '去对比', isType: '1,3', methosName: 'postUrl'},
-               ]
-             }
-            else if(window.$cookies.get("houseId").split(",")!=""){
-     let houseId=window.$cookies.get("houseId").split(",");
-         for(var i=0;i<houseId.length;i++){
-           if(typ==houseId[i]){
-            array=[
-         { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-        { name: '删除对比', isType: '1,3', methosName: 'removeCookie'},
-        { name: '去对比', isType: '1,3', methosName: 'postUrl'},
-             ];
-            break;
-         }else if(i+1==houseId.length){
-            array=[
-         { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-      
-       { name: '添加对比', isType: '1,3', methosName: 'addCookie'},
-             ];
-             
-         }
-        }
-      } else{
-        array=[
-         { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-     
-        { name: '添加对比', isType: '1,3', methosName: 'addCookie'},
-             ];
-
+        this.queryVerifyHouseDatas(this.pageJson.currentPage);
       }
-      }else{
-      array=[
-        { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-      
-        { name: '添加对比', isType: '1,3', methosName: 'addCookie'},
-             ];
-              
+
+    },
+    postUrl () {
+
+      this.$router.push({ path: "/buySellSystem/agentHouseContrast", query: { houseId: window.$cookies.get("houseId") } });
+    },
+    removeCookie (id) {
+      let postId = "";
+      let houseId = window.$cookies.get("houseId");
+      console.log(houseId);
+      if (houseId.split(",")[1] == undefined && houseId == id) {//是否单一id
+        window.$cookies.remove("houseId");
+
+      } else {//多个id操作
+
+        let cookie = houseId.split(',');
+        console.log(cookie);
+        for (let i = 0; i < cookie.length; i++) {
+          if (i == 0 && id != cookie[i]) {//如果是第一个id并且不是要删除的id
+            postId += cookie[i];
+          } else if (cookie[i] != id && postId == "") {//如果是第一个id并且不是要删除的id
+            postId += +cookie[i];
+
+          } else if (ookie[i] != id) {
+            postId += ',' + cookie[i];
+          }
+        }
+        window.$cookies.set("houseId", postId);
+      }
+      this.queryVerifyHouseDatas(this.pageJson.currentPage);
+    },
+    isForBut (type) {
+      let typ = type;
+      let array = [
+
+      ];
+      console.log(window.$cookies.get("houseId"));
+      if (window.$cookies.get("houseId") != null) {
+        if (window.$cookies.get("houseId").split(",")[1] == undefined && window.$cookies.get("houseId") == typ) {
+          array = [
+            { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+            { name: '删除对比', isType: '1,3', methosName: 'removeCookie' },
+            { name: '去对比', isType: '1,3', methosName: 'postUrl' },
+          ]
+        }
+        else if (window.$cookies.get("houseId").split(",") != "") {
+          let houseId = window.$cookies.get("houseId").split(",");
+          for (var i = 0; i < houseId.length; i++) {
+            if (typ == houseId[i]) {
+              array = [
+                { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+                { name: '删除对比', isType: '1,3', methosName: 'removeCookie' },
+                { name: '去对比', isType: '1,3', methosName: 'postUrl' },
+              ];
+              break;
+            } else if (i + 1 == houseId.length) {
+              array = [
+                { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+
+                { name: '添加对比', isType: '1,3', methosName: 'addCookie' },
+              ];
+
+            }
+          }
+        } else {
+          array = [
+            { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+
+            { name: '添加对比', isType: '1,3', methosName: 'addCookie' },
+          ];
+
+        }
+      } else {
+        array = [
+          { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
+
+          { name: '添加对比', isType: '1,3', methosName: 'addCookie' },
+        ];
+
       }
       return array;
-     },
+    },
     handleClick () {
 
     },
@@ -285,8 +287,8 @@ export default {
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
     },
-    showNoticeDetail(noticeId){
-       this.$router.push({ name: "houseDetails",params:{houseId:noticeId} });
+    showNoticeDetail (noticeId) {
+      this.$router.push({ name: "houseDetails", params: { houseId: noticeId } });
     }
 
 

@@ -21,7 +21,9 @@ let http = axios.create({
 // 请求拦截器
 http.interceptors.request.use(function (config) {
   config.headers.tk = util.localStorageGet(TOKEN);
-  config.headers.rid = 1; //store.state.menuRid.nowRid; // 设置rid
+  if (!config.headers.rid) {
+    config.headers.rid = store.state.menuRid.nowRid; // 设置rid
+  }
   return config;
 }, function (error) {
   return Promise.reject(error);

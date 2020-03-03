@@ -75,7 +75,9 @@
   </div>
 </template>
 <script>
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   watch: {
     filterText (val) {
       this.$refs.tree2.filter(val);
