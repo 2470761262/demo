@@ -277,6 +277,16 @@ export default {
           value: "2",
           label: "月"
         }
+        ,
+         {
+          value: "3",
+          label: "个"
+        }
+        ,
+         {
+          value: "4",
+          label: "无单位"
+        }
       ],
        paraIsAllowed: [
         {
