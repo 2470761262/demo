@@ -568,10 +568,8 @@ export default {
       }
     }
   },
-  created () {
-    this.getLoadData(41);
-  },
   mounted () {
+    //this.getLoadData(41);
     this.bodyClick();
   },
   methods: {
@@ -901,14 +899,10 @@ export default {
         if (e.data.code == 200) {
           this.$store.commit('updateId', e.data.data.id);
           this.$store.dispatch("InitFormData", { commitName: "updateStep1", json: e.data.data }).then(() => {
-            this.formData.communityId = this.formData.communityId.toString();
-            this.formData.buildingId = this.formData.buildingId.toString();
-            this.formData.roomId = this.formData.roomId.toString();
+            this.selectPageCommunit.list.push({ value: this.formData.communityId, name: this.formData.communityName });
+            this.selectPageeBuildingNo.list.push({ value: this.formData.buildingId, name: this.formData.buildingNo });
+            this.selectPageRoomNo.list.push({ value: this.formData.roomId, name: this.formData.roomNo });
           });
-          this.remoteCommunityName(this.formData.communityName);
-          this.remoteBuildingNo(this.formData.buildingNo);
-          this.remoteRoomNo(this.formData.roomNo);
-
           //添加tel 1 2 3
           let tel = ["tel1", "tel2", "tel3"];
           tel.forEach((item, index) => {
