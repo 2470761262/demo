@@ -1,10 +1,10 @@
 <style lang="less" scoped>
-.wrapper{
-    text-align: center;
-    font-weight: 900;
-    color:red;
-    border-radius: 5em;
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+.wrapper {
+  text-align: center;
+  font-weight: 900;
+  color: red;
+  border-radius: 5em;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
 }
 </style>
 <template>
@@ -12,17 +12,19 @@
 </template>
 
 <script>
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {},
   props: {},
-  data() {
+  data () {
     return {
     };
   },
   watch: {},
   computed: {},
   methods: {},
-  created() {},
-  mounted() {}
+  created () { },
+  mounted () { }
 };
 </script>

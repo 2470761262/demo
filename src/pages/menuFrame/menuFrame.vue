@@ -39,7 +39,7 @@
   }
   /deep/.el-menu--inline {
     background: none !important;
-  }-
+  }
   /deep/.el-menu-item {
     background: #dbdbdb !important;
     color: #323234 !important;

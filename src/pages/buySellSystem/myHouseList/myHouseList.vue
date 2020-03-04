@@ -1,6 +1,5 @@
 <template>
   <list-page :parentData="$data"
-             
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
@@ -66,7 +65,9 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -92,7 +93,7 @@ export default {
       elTabs: {
         activeName: "tab1",
         list: [
-        
+
         ]
       },
       options: [{
@@ -128,16 +129,16 @@ export default {
     },
     queryVerifyHouseDatas (currentPage) {
 
-      let params = { limit: this.pageJson.pageSize+'', page: currentPage+'' };
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
       if (this.queryData.communityName != null) {
-       // params.communityName = this.queryData.communityName;
-       console.log("参数");
+        // params.communityName = this.queryData.communityName;
+        console.log("参数");
       }
       this.$api.post({
         url: '/agent_house/myHouseList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
-       data: params,
+        data: params,
         token: false
       }).then((e) => {
         console.log(e.data);
@@ -180,12 +181,12 @@ export default {
     },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
-       this.queryVerifyHouseDatas(val);
+      this.queryVerifyHouseDatas(val);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-       this.pageJson.pageSize = val;
-       this.queryVerifyHouseDatas(1);
+      this.pageJson.pageSize = val;
+      this.queryVerifyHouseDatas(1);
     },
   },
 }

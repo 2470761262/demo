@@ -1,42 +1,48 @@
 <template>
-  <list-page
-    :parentData="$data"
-    @handleSizeChange="sizeChange"
-    @handleCurrentChange="currentChange"
-  >
+  <list-page :parentData="$data"
+             @handleSizeChange="sizeChange"
+             @handleCurrentChange="currentChange">
     <template v-slot:top>
       <div class="query-cell">
-        <el-input placeholder="关键字" size="small" v-model="queryData.keyword" clearable>
+        <el-input placeholder="关键字"
+                  size="small"
+                  v-model="queryData.keyword"
+                  clearable>
           <template slot="prepend">关键字</template>
         </el-input>
-        <el-button type="primary" style="margin-left:10px" size="mini" @click="queryByParams">查询</el-button>
-        <el-button type="primary" style="margin-left:10px" size="mini" @click="addDocument">添加</el-button>
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="文档管理" name="first"></el-tab-pane>
-          <el-tab-pane label="规则管理" name="second"></el-tab-pane>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="queryByParams">查询</el-button>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="addDocument">添加</el-button>
+        <el-tabs v-model="activeName"
+                 @tab-click="handleClick">
+          <el-tab-pane label="文档管理"
+                       name="first"></el-tab-pane>
+          <el-tab-pane label="规则管理"
+                       name="second"></el-tab-pane>
         </el-tabs>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
       <template v-for="item in cell.tableData">
-        <el-table-column
-          v-if="!item.show"
-          :key="item.prop"
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-          :formatter="downStr"
-        ></el-table-column>
+        <el-table-column v-if="!item.show"
+                         :key="item.prop"
+                         :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :formatter="downStr"></el-table-column>
       </template>
       <el-table-column label="操作">
         <template v-slot="scope">
           <div>
-            <el-button
-              size="mini"
-              @click="distributeEvent(item.methosName,scope.row.id)"
-              v-for="(item,index) in getOpeBtns(scope.row.operation)"
-              :key="index"
-            >{{item.name}}</el-button>
+            <el-button size="mini"
+                       @click="distributeEvent(item.methosName,scope.row.id)"
+                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                       :key="index">{{item.name}}</el-button>
           </div>
         </template>
       </el-table-column>
@@ -45,11 +51,13 @@
 </template>
 <script>
 import listPage from "@/components/listPage";
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
-  data() {
+  data () {
     return {
       loading: false,
       queryData: {
@@ -72,11 +80,11 @@ export default {
       activeName: "first"
     };
   },
-  mounted() {
+  mounted () {
     this.queryDatas(1);
   },
   methods: {
-    queryDatas(currentPage) {
+    queryDatas (currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.keyword != null) {
@@ -108,18 +116,18 @@ export default {
           console.log(e);
         });
     },
-    sizeChange(val) {
+    sizeChange (val) {
       console.log("每页 ${val} 条数据");
       this.pageJson.pageSize = val;
       this.queryDatas(1);
     },
-    currentChange(val) {
+    currentChange (val) {
       this.queryDatas(val);
     },
-    queryByParams() {
+    queryByParams () {
       this.queryDatas(1);
     },
-    downStr(row, column) {
+    downStr (row, column) {
       if (column.property == "filePath") {
         //return row.filePath;
         return (
@@ -133,13 +141,13 @@ export default {
       }
       return row[column.property];
     },
-    addDocument() {
+    addDocument () {
       this.$router.push({ path: "/sys/document/edit", query: { id: 0 } });
     },
-    distributeEvent(e, RoleId) {
+    distributeEvent (e, RoleId) {
       this[e](RoleId);
     },
-    getOpeBtns(type) {
+    getOpeBtns (type) {
       let array = [
         { name: "编辑", isType: "1", methosName: "editDetail" },
         { name: "删除", isType: "1", methosName: "delDetail" }
@@ -149,10 +157,10 @@ export default {
       // })
       return array;
     },
-    editDetail(id) {
+    editDetail (id) {
       this.$router.push({ path: "/sys/document/edit", query: { id: id } });
     },
-    delDetail(id) {
+    delDetail (id) {
       this.$confirm("你确定要删除？", "注意！", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -199,7 +207,7 @@ export default {
           });
         });
     },
-    handleClick(tab, event) {
+    handleClick (tab, event) {
       if (this.activeName == "second") {
         this.$router.push({ path: "/sys/docRules/list" });
       }
