@@ -12,6 +12,7 @@
                    @change="queryCBId()"
                    filterable
                    remote
+                   @focus="remoteInput"
                    placeholder="请输入楼盘进行搜索"
                    :remote-method="remoteMethod"
                    :loading="loading"
@@ -163,6 +164,12 @@ export default {
     queryDatalist () {
       this.queryOurComDeal(1);
     },
+    remoteInput () {
+   
+      if (this.data.comId == 0) {
+        this.remoteMethod();
+      }
+    },
     remoteMethod (query) {
       var that = this;
       if (query !== "") {
@@ -175,6 +182,8 @@ export default {
             token: false,
             qs: true,
             data: {
+              page: 1,
+             limit: 50,
               communityName: query
             }
           })
@@ -189,6 +198,7 @@ export default {
         this.options = [];
       }
     },
+    
     queryCBId () {
       var that = this;
       this.$api
@@ -203,6 +213,8 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+             that.data.cbId='';
+            that.data.bhId='';
             that.cbIdList = e.data.data.list;
           }
         });
@@ -222,6 +234,8 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            
+            that.data.bhId='';
             that.roomNoList = e.data.data.list;
           }
         });

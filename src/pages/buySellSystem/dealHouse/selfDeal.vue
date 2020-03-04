@@ -10,6 +10,7 @@
       <div class="page-form-inline budingMarinSet">
         <el-select v-model="data.comId"
                    @change="queryCBId()"
+                   @focus="remoteInput"
                    filterable
                    remote
                    placeholder="请输入楼盘进行搜索"
@@ -163,11 +164,16 @@ export default {
     queryDatalist () {
       this.queryOurComDeal(1);
     },
+     remoteInput () {
+   
+      if (this.comId.length == 0) {
+        this.remoteMethod();
+      }
+    },
     remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
-
         this.$api
           .get({
             url: "/mateHouse/queryCommunity",
@@ -182,6 +188,7 @@ export default {
             console.log(e.data);
             if (e.data.code == 200) {
               that.loading = false;
+              
               that.options = e.data.data.list;
             }
           });
@@ -203,6 +210,8 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            that.data.cbId='';
+              that.data.bhId='';
             that.cbIdList = e.data.data.list;
           }
         });
@@ -222,6 +231,7 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+             that.data.bhId='';
             that.roomNoList = e.data.data.list;
           }
         });
