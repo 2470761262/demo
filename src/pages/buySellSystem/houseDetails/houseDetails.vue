@@ -479,14 +479,14 @@ input[type=number]::-webkit-outer-spin-button {
                 </div>
                 <div >
                     <el-dialog
-                       title="请填写完这些信息才能"
+                       title="请填写完这些信息才能申请为跟单人"
                        :visible.sync="isShowApplyAgent"
                        width="50%" :close-on-click-modal="false"
                        >
-                     <supplement ></supplement>
+                     <supplement  ref="com" ></supplement>
                       <span slot="footer" class="dialog-footer">
                       <el-button @click="isShowApplyAgent = false">取 消</el-button>
-                     <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                     <el-button type="primary" @click="insert">确 定</el-button>
                    </span>
                   </el-dialog>
                   <el-button @click="isShowApplyAgent=true">申请跟单人</el-button>
@@ -1510,7 +1510,6 @@ export default {
     if (util.localStorageGet("logindata")) {
       this.perId = util.localStorageGet("logindata").accountId;
     }
-    // this.$store.state.addHouse.formData.step2.balance="10";
     this.getHouseDetails();
     this.getisCollectHouse();
     this.getHouseFollow();
@@ -1530,8 +1529,16 @@ export default {
         }
       };
     });
+    this.$store.state.addHouse.formData.step2.sign=0;
+  
   },
+  //  destroyed () {
+  //   this.$store.commit("resetFormData");
+  // },
   methods: {
+    insert(){
+      console.log(this.$refs.com.formData) ;
+    },
     showtime () {
       if(!this.betExpire){
         return
