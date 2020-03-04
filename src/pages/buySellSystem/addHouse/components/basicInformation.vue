@@ -465,9 +465,9 @@
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">物业公司</div>
         <div class="cell-tabs-item-data">
-          <div class="item-deep-data">
-          </div>
+          <div class="item-deep-data">{{formData.propertyCompany}}</div>
           <div class="but-append"
+               v-if="formData.propertyCompany!=''"
                data-tips="反馈"><i class="el-icon-question"></i></div>
         </div>
       </div>
@@ -532,6 +532,12 @@ let certificateType = [
 import util from '@/util/util';
 export default {
   name: "basicInformation",
+  props: {
+    getData: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     getErrorFlag () {
       let ErroeField = ['room', 'hall', 'toilet', 'balcony'];
@@ -569,49 +575,53 @@ export default {
     }
   },
   mounted () {
-    //this.getLoadData(41);
-    this.bodyClick();
+    //true 则去获取数据
+    if (this.getData) {
+      this.getLoadData();
+    }
+    window.addEventListener('click', this.bodyClick)
+  },
+  destroyed () {
+    window.removeEventListener('click', this.bodyClick)
   },
   methods: {
     //点击其他位置进行判断，取消input
     bodyClick () {
       let that = this;
-      window.addEventListener('click', () => {
-        //面积
-        if (that.changeBut.area == true && !util.isNull(that.changeInput.area)) {
-          if (that.changeInput.area == that.formData.area) {
-            that.changeBut.area = false;
+      //面积
+      if (that.changeBut.area == true && !util.isNull(that.changeInput.area)) {
+        if (that.changeInput.area == that.formData.area) {
+          that.changeBut.area = false;
+        } else {
+          that.$message({
+            message: that.errorBags.first("area") || '修改的面积还未保存~',
+            type: 'warning'
+          });
+        }
+      } else {
+        that.changeBut.area = false;
+      }
+      //房型
+      if (that.changeBut.roomType == true) {
+        let list = ['room', 'hall', 'toilet', 'balcony'];
+        let flag = false;
+        for (let i = 0; i < list.length; i++) {
+          if (that.changeInput[list[i]] == that.formData[list[i]]) {
+            //  that.changeBut.roomType = false;
+            flag = false;
           } else {
             that.$message({
-              message: that.errorBags.first("area") || '修改的面积还未保存~',
+              message: that.getErrorText || '修改的房型还未保存~',
               type: 'warning'
             });
+            flag = true;
+            break;
           }
-        } else {
-          that.changeBut.area = false;
         }
-        //房型
-        if (that.changeBut.roomType == true) {
-          let list = ['room', 'hall', 'toilet', 'balcony'];
-          let flag = false;
-          for (let i = 0; i < list.length; i++) {
-            if (that.changeInput[list[i]] == that.formData[list[i]]) {
-              //  that.changeBut.roomType = false;
-              flag = false;
-            } else {
-              that.$message({
-                message: that.getErrorText || '修改的房型还未保存~',
-                type: 'warning'
-              });
-              flag = true;
-              break;
-            }
-          }
-          that.changeBut.roomType = flag;
-        } else {
-          that.changeBut.roomType = false;
-        }
-      })
+        that.changeBut.roomType = flag;
+      } else {
+        that.changeBut.roomType = false;
+      }
     },
     //房型的切换修改
     async changeRoomTypeBut () {
@@ -632,14 +642,14 @@ export default {
         }
         if (!flag) {
           for (let i = 0; i < list.length; i++) {
-            that.formData[list[i]] = that.changeInput[list[i]] || 0;
+            that.formData[list[i]] = that.changeInput[list[i]] || that.formData[list[i]] || 0;
           }
         }
       }
       this.changeBut.roomType = flag;
     },
     //面积的切换修改
-    async  changeAreaBut () {
+    async changeAreaBut () {
       let flag = !this.changeBut.area;
       let that = this;
       if (flag == false) {
@@ -708,6 +718,7 @@ export default {
       this.formData.property = '';
       this.formData.primarySchool = '';
       this.formData.middleSchool = '';
+      this.formData.propertyCompany = '';
       //初始化楼栋选中获取的数据
       this.formData.isElevator = '';
       this.formData.houseUse = '';
@@ -729,6 +740,7 @@ export default {
           this.formData.property = data.ownerProperty;
           this.formData.primarySchool = data.primarySchool;
           this.formData.middleSchool = data.middleSchool;
+          this.formData.propertyCompany = data.propertyCompany;
         }
       })
     },
@@ -876,7 +888,7 @@ export default {
     validateAll () {
       let that = this;
       return this.$validator.validateAll().then((e) => {
-        if (e) {
+        if (e && !that.changeBut.area && !that.changeBut.roomType) {
           return true;
         }
         return false;
@@ -890,11 +902,10 @@ export default {
       })
     },
     //获取
-    getLoadData (id) {
-
+    getLoadData () {
       this.loading = true;
       return this.$api.get({
-        url: `/draft-house/${id}`,
+        url: `/draft-house/${this.$store.state.addHouse.formData.id}`,
       }).then((e) => {
         if (e.data.code == 200) {
           this.$store.commit('updateId', e.data.data.id);
@@ -907,7 +918,7 @@ export default {
           let tel = ["tel1", "tel2", "tel3"];
           tel.forEach((item, index) => {
             if (e.data.data[item] != '') {
-              this.addTel.push(index);
+              this.addTel.push(parseInt(item.replace(/[a-zA-Z]*/g, "")));
             }
           })
         }
@@ -924,7 +935,6 @@ export default {
         ...that.deffData
       }
       let method = 'post';
-      console.log(that.$store.state.addHouse.formData.id, "that.$store.state.addHouse.formData.id");
       if (that.$store.state.addHouse.formData.id != '') {
         data.id = that.$store.state.addHouse.formData.id;
         method = 'put';

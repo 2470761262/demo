@@ -119,7 +119,9 @@
 }
 </style>
 <template>
-  <div class="page-cell-addHouse">
+  <div class="page-cell-addHouse"
+       element-loading-text="我在去获取数据的路上了~"
+       v-loading="loading">
     <!-- 房屋来源 -->
     <div class="cell-item-cell">
       <div class="item-before text-just">房源来源</div>
@@ -165,7 +167,8 @@
     <!-- 物业费 -->
     <div class="cell-item-cell el-input-w">
       <div class="item-before text-just">物业费</div>
-      <el-input type="text"></el-input>
+      <el-input type="text"
+                v-model="formData.propertyFee"></el-input>
       <div class="item-after">元/平方</div>
     </div>
     <!-- 附属配套 -->
@@ -403,10 +406,22 @@ const USE = [
 ]
 export default {
   name: "supplement",
+  props: {
+    getData: {
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     formData () {
       this.$set(this.$data, "step", JSON.parse(JSON.stringify(this.$store.state.addHouse.formData.step2)))
       return this.step
+    }
+  },
+  mounted () {
+    //true 则去获取数据
+    if (this.getData) {
+      this.getLoadData();
     }
   },
   watch: {
@@ -429,6 +444,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       step: {},
       options: [],
       deffData: {},
@@ -450,6 +466,20 @@ export default {
     }
   },
   methods: {
+    getLoadData () {
+      this.loading = true;
+      return this.$api.get({
+        url: `/draft-house/${this.$store.state.addHouse.formData.id}`,
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this.$store.dispatch("InitFormData", { commitName: "updateStep2", json: e.data.data })
+        }
+      }).catch((e) => {
+        return false;
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
     //抵押情况切换
     mortgageChange (e) {
       if (e != 1) {
