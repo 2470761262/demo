@@ -237,46 +237,6 @@ remoteMethod (query) {
           }
         });
     },
-queryCBId () {
-      var that = this
-      this.$api.get({
-        url: "/mateHouse/queryComBuilding",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          comId: that.data.comId,
-          page: 1,
-             limit: 50
-        }
-      }).then((e) => {
-        if (e.data.code == 200) {
-          that.roomNo='';
-            that.cbId='';
-          that.cbIdList = e.data.data.list;
-        }
-      })
-    },
-    queryRoomNo () {
-      var that = this
-      this.$api.get({
-        url: "/mateHouse/queryBuildIngHouses",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          comId: that.data.comId,
-          cbId: that.data.cbId,
-          page: 1,
-             limit: 50
-        }
-      }).then((e) => {
-        if (e.data.code == 200) {
-           that.roomNo='';
-          that.roomNoList = e.data.data.list;
-        }
-      })
-    },
   queryShopDisk(currentPage){
     var that =this;
    let params={"limit":that.pageJson.pageSize,"page":currentPage-1};
@@ -313,53 +273,8 @@ queryCBId () {
         console.log(e);
       })
   },
-    isForBut (type) {
-      let array = [
-        { name: '查看', isType: '3', methosName: '' }
-      ]
-      return array.filter((item) => {
-        return item.isType.includes(type)
-      })
-    },
-    queryShopDisk (currentPage) {
-      var that = this;
-      let params = { limit: that.pageJson.pageSize, page: currentPage };
-
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.beginTime = that.data.timeSelect[0];
-      params.endTime = that.data.timeSelect[1];
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.minInArea = that.data.minInArea;
-      params.maxInArea = that.data.maxInArea;
-      params.minPrice = that.data.minPrice;
-      params.maxPrice = that.data.maxPrice;
-      console.log(params);
-      this.$api
-        .get({
-          url: "/houseResource/shopDiskList",
-          data: params,
-          token: false
-        })
-        .then(e => {
-          console.log(e.data);
-          let data = e.data;
-          if (data.code == 200) {
-            that.pageJson.total = data.data.totalCount;
-            that.pageJson.currentPage = data.data.currPage;
-            that.tableData = data.data.list;
-          } else {
-            console.log("查询店公盘列表结果：" + result.message);
-            alert(result.message);
-          }
-        })
-        .catch(e => {
-          console.log("查询店公盘列表失败");
-          console.log(e);
-        });
-    },
+    
+   
     isForBut (type) {
       let array = [{ name: "查看", isType: "3", methosName: "" }];
       return array.filter(item => {
