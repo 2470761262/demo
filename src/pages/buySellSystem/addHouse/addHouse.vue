@@ -35,6 +35,7 @@
         border-left: 1px solid #999;
         border-right: 1px solid #999;
         width: 940px;
+        padding-bottom: 59px;
         // margin: 0 auto;
         //transform: translateX(-50%);
         left: calc(50% - 940px / 2);
@@ -48,6 +49,9 @@
       justify-content: center;
       border-top: 1px solid #f2f2f2;
       padding: 10px 0px;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
     }
   }
 }

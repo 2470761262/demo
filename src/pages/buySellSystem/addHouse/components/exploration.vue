@@ -5,7 +5,7 @@
     display: flex;
     margin-bottom: 100px;
     &:last-child {
-      margin-bottom: 0;
+      margin-bottom: 0 !important;
     }
     .upLoadFile-title {
       align-self: flex-start;
@@ -96,6 +96,9 @@
     }
   }
 }
+/deep/.el-loading-spinner {
+  top: 30%;
+}
 </style>
 <template>
   <div class="page-cell-addHouse"
@@ -105,7 +108,9 @@
     <!-- 外景图 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">外景图</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="outdoorImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="outdoorImgList"
                class="el-icon-upload">
           <input id="outdoorImgList"
@@ -138,7 +143,9 @@
     <!-- 客厅 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">客厅</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="livingRoomImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="livingRoomImgList"
                class="el-icon-upload">
           <input id="livingRoomImgList"
@@ -171,7 +178,9 @@
     <!-- 卧室 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">卧室</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="bedroomImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="bedroomImgList"
                class="el-icon-upload">
           <input id="bedroomImgList"
@@ -204,7 +213,9 @@
     <!-- 厨房 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">厨房</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="kitchenImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="kitchenImgList"
                class="el-icon-upload">
           <input id="kitchenImgList"
@@ -237,7 +248,9 @@
     <!-- 卫生间 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">卫生间</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="toiletImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="toiletImgList"
                class="el-icon-upload">
           <input id="toiletImgList"
@@ -270,7 +283,9 @@
     <!-- 户型图 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">户型图</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="layoutImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="layoutImgList"
                class="el-icon-upload">
           <input id="layoutImgList"
@@ -305,7 +320,9 @@
       <div class="upLoadFile-title">房源视频</div>
       <div class="upLoadFile-flex">
         <div class="upLoadFile-right">
-          <div class="upLoadFile-input">
+          <div class="upLoadFile-input"
+               v-loading="houseVideoLoading"
+               element-loading-text="文件上传中~">
             <label for="houseVideoList"
                    class="el-icon-upload">
               <input id="houseVideoList"
@@ -316,7 +333,8 @@
           <div class="upLoadFile-file-list">
             <div class="file-list-item"
                  v-if="houseVideo.url">
-              <video :src="houseVideo.url"></video>
+              <video :src="houseVideo.url"
+                     @click="imgdiaLog = true"></video>
               <div class="upLoadFile-remove el-icon-delete"></div>
             </div>
           </div>
@@ -329,6 +347,11 @@
         <div>仅可以上传一个视频,时间为60秒.</div>
       </div>
     </div>
+    <!-- 视频弹框 -->
+    <el-model-box v-model="imgdiaLog">
+      <video :src="houseVideo.url"
+             controls></video>
+    </el-model-box>
   </div>
 </template>
 <script>
@@ -344,12 +367,20 @@ export default {
   mounted () {
     //true 则去获取数据
     if (this.getData) {
-      this.getLoadData();
+      this.promiseAllViodeoAndImg();
     }
   },
   data () {
     return {
+      imgdiaLog: false,
       loading: false,
+      outdoorImgListLoading: false,
+      livingRoomImgListLoading: false,
+      bedroomImgListLoading: false,
+      kitchenImgListLoading: false,
+      toiletImgListLoading: false,
+      layoutImgListLoading: false,
+      houseVideoLoading: false,
       outdoorImgList: [], //外景图
       livingRoomImgList: [],//客厅
       bedroomImgList: [],//卧室
@@ -360,6 +391,31 @@ export default {
     }
   },
   methods: {
+    openVideo () {
+
+    },
+    promiseAllViodeoAndImg () {
+      this.loading = true;
+      Promise.all([this.getLoadDataImg(), this.getLoadDataVideo()]).catch(() => {
+        this.$message.error('获取数据失败~');
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
+    getLoadDataVideo () {
+      this.$api.post({ url: `/draft-house/videos/${this.$store.state.addHouse.formData.id}` })
+        .then((e) => {
+          let data = e.data;
+          if (data.code == 200 && data.data.length != 0) {
+            this.houseVideo = data.data[0];
+          }
+        }).catch(() => {
+          this.$message.error('获取数据失败~');
+        }).finally(() => {
+          this.loading = false;
+        })
+    },
+    //返回预览大图list
     fillterImgList (imgList) {
       if (this[imgList].length > 0) {
         return this[imgList].map((item) => {
@@ -369,10 +425,37 @@ export default {
         return [];
       }
     },
-    getLoadData () {
-      this.$api.get({ url: `/draft-house/pictures/${this.$store.state.addHouse.formData.id}` }).then((e) => {
-        console.log(e, "e");
-      })
+    //获取上传的图片
+    getLoadDataImg () {
+      return this.$api.post({ url: `/draft-house/pictures/${this.$store.state.addHouse.formData.id}` })
+        .then((e) => {
+          let data = e.data;
+          if (data.code == 200) {
+            let imgList = data.data;
+            imgList.forEach((item) => {
+              switch (item.picClass) {
+                case 1:
+                  this.outdoorImgList.push(item);
+                  break;
+                case 2:
+                  this.livingRoomImgList.push(item);
+                  break;
+                case 3:
+                  this.bedroomImgList.push(item);
+                  break;
+                case 4:
+                  this.kitchenImgList.push(item);
+                  break;
+                case 5:
+                  this.toiletImgList.push(item);
+                  break;
+                case 6:
+                  this.layoutImgList.push(item);
+                  break;
+              }
+            })
+          }
+        })
     },
     //上传视频
     getVideoFile (fileListName, e) {
@@ -416,14 +499,15 @@ export default {
     },
     uploadSectionFile (picClass, uploader, fileListName) {
       let that = this;
+      this[fileListName + 'Loading'] = true;
       let formData = new FormData();
       if (picClass != undefined) {
         formData.append('picClass', picClass)
       }
-      formData.append('draftid', that.$store.state.addHouse.formData.id)
+      formData.append('draftId', that.$store.state.addHouse.formData.id)
       formData.append('file', uploader)
       this.$api.post({
-        url: "/draft-house/picture",
+        url: `/draft-house/${picClass != undefined ? 'picture' : 'video'}`,
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
         onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
@@ -446,6 +530,8 @@ export default {
           message: '不晓得为什么,反正失败了',
           type: 'warning'
         })
+      }).finally(() => {
+        this[fileListName + 'Loading'] = false;
       })
     },
     validateAll () {
