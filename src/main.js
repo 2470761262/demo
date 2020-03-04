@@ -9,13 +9,15 @@ import store from "@/store/store";
 import "./validate/validate"; //表单验证
 import Api from "@/api/require"; //请求api
 import guard from "@/router/guard"; // 路由拦截器
+import elModelBox from '@/components/elModelBox';
+import * as socketApi from './util/webSocket'
 import themePackers from "@/themePackers/themePackers"; //主题
 import "babel-polyfill";
-import * as socketApi from './util/webSocket'
 Vue.prototype.socketApi = socketApi
 Vue.prototype.$api = Api;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
+Vue.use(elModelBox);
 guard(router);
 themePackers.createImport();
 /* eslint-disable no-new */
@@ -23,7 +25,9 @@ let app = new Vue({
   el: "#app",
   router,
   store,
-  components: { App },
+  components: {
+    App
+  },
   template: "<App/>"
 });
 

@@ -30,6 +30,7 @@ http.interceptors.request.use(function (config) {
 });
 // 响应拦截器
 http.interceptors.response.use(function (response) {
+  console.log(1111, response);
   if (response.data.code == 401) {
     Message({
       message: response.data.message,
@@ -39,6 +40,11 @@ http.interceptors.response.use(function (response) {
       "path": "/"
     });
     return;
+  } else if (response.data.code == 500) {
+    Message({
+      message: '貌似出现了一点问题~',
+      type: 'error'
+    });
   }
   return response;
 }, function (error) {
