@@ -111,6 +111,7 @@ export default {
         del: 0,
         isLocked: null,
         flag: false,
+        type : null,
       },
       configSet: {
         selectToTime: false,
@@ -125,12 +126,12 @@ export default {
         { prop: "id", label: "部门id" },
         { prop: "deptName", label: "部门名" },
         { prop: "header", label: "部门名称首拼" },
-        { prop: "managerPer", label: "负责人id" },
-        { prop: "deptParentID", label: "上级部门id" },
-        { prop: "joinType", label: "加入类型:1 直营 2 加盟" },
-        { prop: "deptType", label: "部门类型：1综合，2业务，3行政，4联营" },
-        { prop: "del", label: "是否有效: 0有效,1无效" },
-        { prop: "isLocked", label: "是否锁定: 0锁定,1正常" },
+        { prop: "managerPer", label: "负责人" },
+        { prop: "deptParentID", label: "上级部门" },
+        { prop: "joinType", label: "加入类型" },
+        { prop: "deptType", label: "部门类型" },
+        { prop: "del", label: "是否有效" },
+        { prop: "isLocked", label: "是否锁定" },
         { prop: "address", label: "部门地址" },
       ],
       tableData: [],
@@ -256,17 +257,28 @@ export default {
     toAddDeptPage (saveType) {
       if (this.queryData.flag) {
         if (saveType == 0) {
-          this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.deptParentID, coId: this.department.coId } });
-          this.department = null;
+          if(this.queryData.type ==1){
+            this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.deptParentID, ParentId: this.department.coId } });
+            this.department = null;
+          }else if(this.queryData.type == 0){
+            this.$alert('', '请选择一个部门节点', {
+            dangerouslyUseHTMLString: false
+            });
+          }
         } else if (saveType == 1) {
-          this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.id, coId: this.department.coId } });
-          this.department = null;
+          if(this.queryData.type ==1){
+            this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.id, ParentId: this.department.coId } });
+            this.department = null;
+          }else if(this.queryData.type == 0){
+            this.$router.push({ name: "addDeptManage", params: {  ParentId: this.company.id } });
+            this.company = null;
+          }
         }
-      } else {
-        this.$alert('', '请选择一个部门节点', {
+      }else {
+        this.$alert('', '请选择一个节点', {
           dangerouslyUseHTMLString: false
         });
-      }
+      } 
     },
     editDeptDetail (id) {
       this.$router.push({ path: "/sys/editDeptDetail", query: { id: id } });
@@ -319,6 +331,7 @@ export default {
     },
     treeCheck (e, data) {
       this.queryData.flag = true;
+      this.queryData.type = e.type;
       if (e.type == 0) {
         this.$api.get({
           url: '/company/' + e.businessId,

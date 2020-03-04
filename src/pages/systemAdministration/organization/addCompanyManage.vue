@@ -45,33 +45,35 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>加入类型 1 直营 2 加盟</span>
+      <span>加入类型</span>
       <el-select type="text"
                  placeholder="请输入内容"
                  v-model="companyEntity.joinType"
                  show-word-limit>
-        <el-option :value="1" />
-        <el-option :value="2" />
+       <el-option label="直营" :value="1" />
+        <el-option label="加盟" :value="2" />
       </el-select>
     </div>
     <div class="left-input-container">
       <span>开业时间</span>
       <el-input type="date"
                 placeholder="请输入内容"
-                v-model="companyEntity.RegDate"
+                v-model="companyEntity.regDate"
                 maxlength="100"
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
       <span>公司类型</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="companyEntity.ComType"
-                maxlength="100"
-                show-word-limit></el-input>
+       <el-select type="text" placeholder="请输入内容" v-model="companyEntity.ComType" show-word-limit>
+        <el-option label="经纪" :value="1" />
+        <el-option label="物业" :value="2" />
+        <el-option label="平台" :value="3" />
+        <el-option label="金融" :value="4" />
+        <el-option label="代理" :value="5" />
+      </el-select>
     </div>
     <div class="left-input-container">
-      <span>负责人id</span>
+      <span>负责人</span>
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="companyEntity.managerPer"
@@ -94,14 +96,30 @@
                 maxlength="100"
                 show-word-limit></el-input>
     </div>
-    <div class="left-input-container">
-      <span>父级id</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="companyEntity.ParentId"
-                maxlength="10"
-                disabled="true"
-                show-word-limit></el-input>
+     <div class="left-input-container">
+      <el-button type="info" @click="getDialogVisible()">设置管辖区域</el-button>
+      <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
+        <template>
+          <el-checkbox
+            :indeterminate="isIndeterminate"
+            v-model="checkAll"
+            @change="handleCheckAllChange"
+          >全选</el-checkbox>
+          <div style="margin: 15px 0;"></div>
+          <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+            <el-checkbox v-for="city in regionName" :label="city" :key="city.Name">
+              <el-popover
+                placement="top-start"
+                trigger="hover"
+              >
+                <el-checkbox v-for="city in region" :label="city" :key="city.Name" >{{city.Name}}</el-checkbox>
+                <button slot="reference"  @mouseover="checked(city.id)">{{city.Name}}</button>
+              </el-popover>    
+            </el-checkbox>
+          </el-checkbox-group>
+        </template>
+      </el-dialog>
+      <el-input type="text" placeholder="请输入内容" v-model="companyEntity.RegionName" show-word-limit></el-input>
     </div>
 
     <div class="footerContainer el-top">
@@ -125,18 +143,107 @@ export default {
         Header: null,
         Tel: null,
         JoinType: null,
-        RegDate: null,
+        regDate: null,
         ComType: null,
         managerPer: null,
         Address: null,
         CompanyDesc: null,
         ParentId: null,
-        deptParentId: null      }
+        deptParentId: null      
+        },
+      dialogVisible: false,
+      regionName: [],
+      region: [],
+      checkAll: false,
+      checkedCities: [],
+      isIndeterminate: true
     };
   },
   watch: {},
   computed: {},
   methods: {
+    checked(e){
+      console.log(e);
+      this.$api
+        .get({
+          url: "/company/regionName?id="+e,
+          token: false
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.region = result.data;
+          } else {
+            console.log("载入结果" + +result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("读取失败");
+          console.log(e);
+        });
+    },
+    handleCheckAllChange(val) {
+      this.checkedCities = val ? this.regionName : [];
+      this.isIndeterminate = false;
+    },
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.regionName.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.regionName.length;
+    },
+    getDialogVisible(id) {
+      this.dialogVisible = true;
+      this.checkedCities = [];
+      if (id == null || id == undefined){
+            id = 350000;
+        }
+      this.$api
+        .get({
+          url: "/company/regionName?id="+id,
+          token: false
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.regionName = result.data;
+          } else {
+            console.log("载入结果" + +result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("读取失败");
+          console.log(e);
+        });
+    },
+    setDialogVisible() {
+      this.dialogVisible = false;
+    },
+    handleClose(done) {
+      console.log(this.checkedCities);
+      this.companyEntity.RegionName ="";
+      this.dialogVisible = false;
+      if (this.checkedCities.length == this.regionName.length) {
+        this.companyEntity.RegionName = "全部";
+      } else {
+        for(let index in this.checkedCities) {  
+        console.log(this.checkedCities[index]);
+        if(index == this.checkedCities.length -1){
+          this.companyEntity.RegionName += this.checkedCities[index].Name ;
+        }else{
+          this.companyEntity.RegionName += this.checkedCities[index].Name +",";
+        }
+    }        
+      }
+    },
     savecompany () {
       let params = this.companyEntity;
       this.$api.post({
@@ -166,10 +273,16 @@ export default {
   },
   created () { },
   mounted () {
-    if (this.$route.params.ParentId != null) {
+    console.log(this.$route.params.ParentId,this.$route.params.deptParentID);
+    if (this.$route.params.ParentId != null && this.$route.params.deptParentID == null) {
       this.companyEntity.ParentId = this.$route.params.ParentId;
-      this.companyEntity.deptParentId = this.$route.params.ParentId;
+      this.companyEntity.deptParentId = 0;
+    }else if(this.$route.params.deptParentID != null){
+      this.companyEntity.ParentId = this.$route.params.ParentId;
+      this.companyEntity.deptParentId = this.$route.params.deptParentID;
     }
+
+    console.log(this.companyEntity.ParentId,this.companyEntity.deptParentId);
   }
 
 };

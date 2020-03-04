@@ -52,26 +52,22 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>部门类型：1综合，2业务，3行政，4联营</span>
-      <!-- <el-input
-              type="text"
-              placeholder="部门类型：1综合，2业务，3行政，4联营"
-              v-model="DeptEntity.deptType"
-              maxlength="100"
-              show-word-limit
-            ></el-input> -->
+      <span>部门类型</span>
       <el-select type="text"
                  placeholder="1综合，2业务，3行政，4联营"
                  v-model="DeptEntity.deptType"
                  show-word-limit>
-        <el-option :value="1" />
-        <!--label="综合" -->
-        <el-option :value="2" />
-        <!--label="业务" -->
-        <el-option :value="3" />
-        <!--label="行政" -->
-        <el-option :value="4" />
-        <!--label="联营" -->
+        <el-option label="综合" :value="1" />        
+        <el-option label="业务" :value="2" />        
+        <el-option label="行政" :value="3" />        
+        <el-option label="联营" :value="4" />
+      </el-select>
+      <el-select type="text"
+                 placeholder="是否片区"
+                 v-model="DeptEntity.isArea"
+                 show-word-limit>
+        <el-option label="是片区" :value="1" />
+        <el-option label="不是片区" :value="0" /> 
       </el-select>
     </div>
     <div class="left-input-container">
@@ -83,7 +79,7 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>负责人id</span>
+      <span>负责人</span>
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="DeptEntity.managerPer"
@@ -91,22 +87,25 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>加入类型 1 直营 2 加盟</span>
-      <!-- <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="DeptEntity.joinType"
-              maxlength="100"
-              show-word-limit
-            ></el-input> -->
+      <span>加入类型</span>
       <el-select type="text"
                  placeholder="请输入内容"
                  v-model="DeptEntity.joinType"
                  show-word-limit>
-        <el-option :value="1" />
-        <!--label="直营" -->
-        <el-option :value="2" />
-        <!--label="加盟" -->
+        <el-option label="直营" :value="1" />
+        <el-option label="加盟" :value="2" />
+        <el-option label="联营" :value="3" />
+      </el-select>
+    </div>
+    <div class="left-input-container">
+      <span>部门属性</span>
+      <el-select type="text"
+                 placeholder="请输入内容"
+                 v-model="DeptEntity.joinType"
+                 show-word-limit>
+        <el-option label="运营期" :value="1" />
+        <el-option label="拓展期" :value="2" />
+        
       </el-select>
     </div>
     <div class="left-input-container">
@@ -123,32 +122,6 @@
                 placeholder="请输入内容"
                 v-model="DeptEntity.deptDesc"
                 maxlength="100"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>公司id</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="DeptEntity.coId"
-                maxlength="10"
-                disabled="disabled"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>父级id</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="DeptEntity.deptParentID"
-                maxlength="10"
-                disabled="disabled"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>是否区域部门</span>
-      <el-input type="text"
-                placeholder="0 否,1 是"
-                v-model="DeptEntity.isArea"
-                maxlength="10"
                 show-word-limit></el-input>
     </div>
 
@@ -169,7 +142,8 @@ export default {
   props: {},
   data () {
     return {
-      DeptEntity: {        deptName: null,
+      DeptEntity: {        
+        deptName: null,
         header: null,
         tel: null,
         joinType: null,
@@ -181,7 +155,9 @@ export default {
         deptDesc: null,
         coId: null,
         deptParentID: null,
-        isArea: null      }
+        isArea: null,      
+        isCom : null,
+        }
     };
   },
   watch: {},
@@ -216,14 +192,16 @@ export default {
   },
   created () { },
   mounted () {
-    if (this.$route.params.coId != null) {
-      this.DeptEntity.coId = this.$route.params.coId;
+    console.log(this.$route.params.ParentId,this.$route.params.deptParentID )
+    if (this.$route.params.ParentId != null) {
+      this.DeptEntity.coId = this.$route.params.ParentId;
       this.DeptEntity.deptParentID = 0;
     }
     if (this.$route.params.deptParentID != null) {
-      this.DeptEntity.coId = this.$route.params.coId;
+      this.DeptEntity.coId = this.$route.params.ParentId;
       this.DeptEntity.deptParentID = this.$route.params.deptParentID;
     }
+    console.log(this.DeptEntity.coId ,this.DeptEntity.deptParentID )
   }
 
 };

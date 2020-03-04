@@ -52,7 +52,7 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>部门类型：1综合，2业务，3行政，4联营</span>
+      <span>部门类型</span>
       <!-- <el-input
               type="text"
               placeholder="部门类型：1综合，2业务，3行政，4联营"
@@ -73,6 +73,11 @@
         <el-option label="联营"
                    :value="4" />
       </el-select>
+       <el-input type="text"
+                placeholder="0 否,1 是"
+                v-model="DeptEntity.isArea"
+                maxlength="10"
+                show-word-limit></el-input>
     </div>
     <div class="left-input-container">
       <span>部门编码</span>
@@ -91,7 +96,7 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>加入类型 1 直营 2 加盟</span>
+      <span>加入类型</span>
       <!-- <el-input
               type="text"
               placeholder="请输入内容"
@@ -142,12 +147,8 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>是否区域部门</span>
-      <el-input type="text"
-                placeholder="0 否,1 是"
-                v-model="DeptEntity.isArea"
-                maxlength="10"
-                show-word-limit></el-input>
+      <span>是否片区</span>
+     
     </div>
 
     <div class="footerContainer el-top">

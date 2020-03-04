@@ -50,7 +50,7 @@
       ></el-input>
     </div>
     <div class="left-input-container">
-      <span>加入类型 1 直营 2 加盟</span>
+      <span>加入类型</span>
       <el-select type="text" placeholder="请输入内容" v-model="companyEntity.JoinType" show-word-limit>
         <el-option label="直营" :value="1" />
         <el-option label="加盟" :value="2" />
@@ -61,7 +61,7 @@
       <el-input
         type="date"
         placeholder="请输入内容"
-        v-model="companyEntity.RegDate"
+        v-model="companyEntity.regDate"
         maxlength="100"
         show-word-limit
       ></el-input>
@@ -77,7 +77,7 @@
       </el-select>
     </div>
     <div class="left-input-container">
-      <span>负责人id</span>
+      <span>负责人</span>
       <el-input
         type="text"
         placeholder="请输入内容"
@@ -110,15 +110,28 @@
       <el-button type="info" @click="getDialogVisible()">设置管辖区域</el-button>
       <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <template>
-          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-            <div style="margin: 15px 0;"></div>
+          <el-checkbox
+            :indeterminate="isIndeterminate"
+            v-model="checkAll"
+            @change="handleCheckAllChange"
+          >全选</el-checkbox>
+          <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-            <el-checkbox v-for="city in regionName" :label="city" :key="city">{{city}}</el-checkbox>
+            <el-checkbox v-for="city in regionName" :label="city" :key="city.Name">
+              <el-popover
+                placement="top-start"
+                trigger="hover"
+              >
+                <el-checkbox v-for="city in region" :label="city" :key="city.Name" >{{city.Name}}</el-checkbox>
+                <button slot="reference"  @mouseover="checked(city.id)">{{city.Name}}</button>
+              </el-popover>    
+            </el-checkbox>
           </el-checkbox-group>
         </template>
       </el-dialog>
       <el-input type="text" placeholder="请输入内容" v-model="companyEntity.RegionName" show-word-limit></el-input>
     </div>
+
     <div class="footerContainer el-top">
       <el-button type="primary" @click="savecompany()">确定</el-button>
       <el-button type="primary" @click="back()">返回</el-button>
@@ -135,33 +148,59 @@ export default {
       dialogVisible: false,
       companyID: 0,
       companyEntity: null,
-      regionName :[],
-
+      regionName: [],
+      region: [],
       checkAll: false,
       checkedCities: [],
       isIndeterminate: true
-      
-
-     
     };
   },
   watch: {},
   computed: {},
   methods: {
-    handleCheckAllChange(val) {
-        this.checkedCities = val ? this.regionName  : [];
-        this.isIndeterminate = false;
-      },
-      handleCheckedCitiesChange(value) {
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.regionName.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.regionName.length;
-      },
-    getDialogVisible() {
-      this.dialogVisible = true;
+    checked(e){
+      console.log(e);
       this.$api
         .get({
-          url: "/company/regionName",
+          url: "/company/regionName?id="+e,
+          token: false
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.region = result.data;
+          } else {
+            console.log("载入结果" + +result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("读取失败");
+          console.log(e);
+        });
+    },
+    handleCheckAllChange(val) {
+      this.checkedCities = val ? this.regionName : [];
+      this.isIndeterminate = false;
+    },
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.regionName.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.regionName.length;
+    },
+    getDialogVisible(id) {
+      this.dialogVisible = true;
+      this.checkedCities = [];
+      if (id == null || id == undefined){
+            id = 350000;
+        }
+      this.$api
+        .get({
+          url: "/company/regionName?id="+id,
           token: false
         })
         .then(e => {
@@ -185,9 +224,21 @@ export default {
       this.dialogVisible = false;
     },
     handleClose(done) {
-      this.dialogVisible= false;
-     this.companyEntity.RegionName=this.checkedCities.join(",");
-      
+      console.log(this.checkedCities);
+      this.companyEntity.RegionName ="";
+      this.dialogVisible = false;
+      if (this.checkedCities.length == this.regionName.length) {
+        this.companyEntity.RegionName = "全部";
+      } else {
+        for(let index in this.checkedCities) {  
+        console.log(this.checkedCities[index]);
+        if(index == this.checkedCities.length -1){
+          this.companyEntity.RegionName += this.checkedCities[index].Name ;
+        }else{
+          this.companyEntity.RegionName += this.checkedCities[index].Name +",";
+        }
+    }        
+      }
     },
     savecompany() {
       let params = this.companyEntity;
@@ -217,8 +268,7 @@ export default {
     },
     back() {
       this.$router.push({ path: "/sys/companyList" });
-    },
-  
+    }
   },
   created() {
     this.companyId = this.$route.query.companyId;

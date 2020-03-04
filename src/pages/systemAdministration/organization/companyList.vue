@@ -217,14 +217,19 @@ export default {
             dangerouslyUseHTMLString: false
           });
       }else {
-        if (saveType == 0){
-          this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.ParentId} });
-        }else if(saveType == 1){
-          this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.id}  });
+        if(this.queryData.type != 1){
+          if (saveType == 0){
+            this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.ParentId} });
+          }else if(saveType == 1){
+            this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.id}  });
+          }
+      }else if(this.department != null && this.queryData.type != 0){
+          if(saveType == 1){
+            this.$router.push({ name: "addCompanyManage", params:{deptParentID:this.department.id,ParentId:this.department.coId}  });
+          }
       }
       this.company=null;
-      }
-      
+      } 
     },
     toAddDeptPage () {
       if(this.queryData.type == null){
@@ -234,7 +239,11 @@ export default {
       }else{
         if(this.company != null && this.queryData.type != 1){
         var coId = this.company.id;
-      this.$router.push({ name: "addDeptManage", params: { coId: coId } });
+      this.$router.push({ name: "addDeptManage", params: { ParentId: coId } });
+      }else{
+         this.$alert('', '请选择一个公司!!!', {
+            dangerouslyUseHTMLString: false
+          });
       }
       }
       
