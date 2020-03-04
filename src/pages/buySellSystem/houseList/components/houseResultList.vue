@@ -87,6 +87,10 @@
       height: 100px;
       border-radius: 4px;
       overflow: hidden;
+      /deep/.el-image {
+        width: 100%;
+        height: 100%;
+      }
       img {
         width: 100%;
         height: 100%;
@@ -190,7 +194,8 @@
           {{tag.title}}{{tag.value}}
         </el-tag>
       </div>
-      <div class="select-tabs-cell">
+      <div class="select-tabs-cell"
+           v-if="querySelectFlag">
         <label class="select-checkbox">
           <input type="checkbox">
           <span>钥匙</span>
@@ -217,7 +222,7 @@
           <i class="el-icon-sort"></i>
         </div>
       </div>
-      <div class="select-tabs-cell">
+      <!-- <div class="select-tabs-cell">
         <label class="select-checkbox">
           <input type="checkbox">
           <span>钥匙</span>
@@ -226,7 +231,7 @@
           <input type="checkbox">
           <span>独家</span>
         </label>
-      </div>
+      </div> -->
     </div>
     <div class="select-for-warp"
          v-loading="loading"
@@ -237,7 +242,13 @@
                v-for="(item,index) in renderList"
                :key="index">
             <div class="select-for-item-img">
-              <img :src="item.picUrl">
+              <el-image :src="item.picUrl"
+                        fit="cover">
+                <div slot="placeholder"
+                     class="image-slot">
+                  加载中<span>...</span>
+                </div>
+              </el-image>
             </div>
             <div class="select-for-item-data">
               <div class="item-data-top">
@@ -253,8 +264,8 @@
                 <div class="item-data-bottom-avgPirce overText">{{item.unitpaice}}元/平</div>
               </div>
             </div>
-            <div class="select-for-item-but">
-              <i class="el-icon-document icon"></i>
+            <div class="select-for-item-but" >
+              <i class="el-icon-document icon" @click="toHouseDetail(item.id)"></i>
             </div>
           </div>
         </template>
@@ -366,6 +377,11 @@ export default {
     },
     navTabItem (index, row) {
       console.log(index, row);
+    },
+    toHouseDetail(id){
+  this.$router.push({name: "houseDetails",
+        params: { houseId: id}});
+    
     },
     //远程排序
     sortMethod (item) {

@@ -11,6 +11,7 @@
 
         <el-select v-model="data.comId"
                    @change="queryCBId()"
+                   @focus="remoteInput"
                    filterable
                    remote
                    placeholder="请输入楼盘进行搜索"
@@ -153,6 +154,12 @@ export default {
     queryChiefHouseParams () {
       this.queryChiefRecommendHouse(1);
     },
+      remoteInput () {
+   
+      if (this.data.comId.length == 0) {
+        this.remoteMethod();
+      }
+    },
     remoteMethod (query) {
       var that = this
       if (query !== '') {
@@ -190,6 +197,8 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          that.data.cbId='';
+          that.data.roomNo='';
           that.cbIdList = e.data.data.list;
         }
       })
@@ -207,6 +216,7 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          that.data.roomNo='';
           that.roomNoList = e.data.data.list;
         }
       })
