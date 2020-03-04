@@ -243,17 +243,17 @@ input[type=number]::-webkit-outer-spin-button {
           <div style="margin-left:20px;">
             <span>{{houseDetails.Customers}}</span>
             <br />
-            <el-dropdown>
-  <el-button type="primary">
-    查看号码<i class="el-icon-arrow-down el-icon--right"></i>
-  </el-button>
-  <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item v-if="houseDetails.Tel!=''" v-text="houseDetails.Tel" @click="contactOwer('Tel','contactPhone')"></el-dropdown-item>
-    <el-dropdown-item v-if="houseDetails.Tel1!=''" v-text="houseDetails.Tel1" @click="contactOwer('Tel1','contactPhone1')"></el-dropdown-item>
-    <el-dropdown-item v-if="houseDetails.Tel2!=''" v-text="houseDetails.Tel2" @click="contactOwer('Tel2','contactPhone2')"></el-dropdown-item>
-    <el-dropdown-item v-if="houseDetails.Tel3!=''" v-text="houseDetails.Tel3" @click="contactOwer('Tel3','contactPhone3')" ></el-dropdown-item>
-  </el-dropdown-menu>
-</el-dropdown>
+            <el-dropdown  @command="contactOwer">
+              <el-button type="primary">
+                查看号码<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-if="houseDetails.Tel!=''" v-text="houseDetails.Tel" command=""></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel1!=''" v-text="houseDetails.Tel1" command="1"></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel2!=''" v-text="houseDetails.Tel2" command="2"></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel3!=''" v-text="houseDetails.Tel3" command="3" ></el-dropdown-item>
+              </el-dropdown-menu>
+          </el-dropdown>
             <el-button :data-tel="houseDetails.Tel"
                        @click="dialPhoneToFD">联系业主</el-button>
           </div>
@@ -491,14 +491,14 @@ input[type=number]::-webkit-outer-spin-button {
                 </div>
                 <div >
                     <el-dialog
-                       title="请填写完这些信息才能"
+                       title="请填写完这些信息才能申请为跟单人"
                        :visible.sync="isShowApplyAgent"
                        width="50%" :close-on-click-modal="false"
                        >
-                     <supplement ></supplement>
+                     <supplement  ref="com" ></supplement>
                       <span slot="footer" class="dialog-footer">
                       <el-button @click="isShowApplyAgent = false">取 消</el-button>
-                     <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                     <el-button type="primary" @click="insert">确 定</el-button>
                    </span>
                   </el-dialog>
                   <el-button @click="isShowApplyAgent=true">申请跟单人</el-button>
@@ -1522,7 +1522,6 @@ export default {
     if (util.localStorageGet("logindata")) {
       this.perId = util.localStorageGet("logindata").accountId;
     }
-    // this.$store.state.addHouse.formData.step2.balance="10";
     this.getHouseDetails();
     this.getisCollectHouse();
     this.getHouseFollow();
@@ -1543,11 +1542,18 @@ export default {
       };
     });
   },
+   destroyed () {
+    this.$store.commit("resetFormData");
+  },
   methods: {
-    contactOwer(fieldName,queryName){    
-      let p={
-        queryName: this.houseDetails[fieldName]
-      }
+    insert(){
+      console.log(this.$refs.com.formData) ;
+    },
+    contactOwer(cmd){    
+       console.log(cmd);
+      let p={};
+      p["contactPhone"+cmd]=this.houseDetails["Tel"+cmd];
+      p["isLookPhone"]=true;
       this.dailPhone(1, p);
     },
     showtime () {
@@ -2021,6 +2027,7 @@ export default {
                         height: 150,
                         text: that.houseDetails.shareQRCode,
             });
+            that.$store.state.addHouse.formData.step2=that.houseDetails.applyAgentVo;
             that.agentHouseMethod = that.houseDetails.agentHouseMethod;
             that.elevator = util.analysisElevator(that.houseDetails.Elevator);
             that.sign = util.analysisSign(that.houseDetails.sign);
@@ -2048,15 +2055,19 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     that.communityPresentation = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.communityDesc=Arry2[1];
                     break;
                   case "户型介绍":
                     that.houseTypePresentation = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.roomDesc=Arry2[1];
                     break;
                   case "税费解析":
                     that.taxParsing = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.taxDesc=Arry2[1];
                     break;
                   case "核心卖点":
                     that.coreSellingPoint = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.saleDesc=Arry2[1];
                     break;
                 }
               }
