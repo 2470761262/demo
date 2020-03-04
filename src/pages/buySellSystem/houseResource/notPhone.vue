@@ -57,25 +57,24 @@
           </el-select>
         </el-item>
 
-            <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable/>------
-             <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable/>
-           <el-date-picker
-              v-model="data.timeSelect"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-          </el-date-picker>
-       <el-button type="primary"
-                     style="margin-left:10px"
-                     size="mini"
-                     @click="queryNotPhoneParams">查询</el-button>
+        
+        
+
+
+        <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
+        <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
+        <el-date-picker v-model="data.timeSelect"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+        </el-date-picker>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="queryNotPhoneParams">查询</el-button>
       </div>
     </template>
-   
-
-
-
 
     <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
@@ -86,57 +85,50 @@
         </el-table-column>
       </template>
 
-       <el-table-column
-        prop=""
-        label="户型"
-        :formatter="formatHouseType">
+      <el-table-column prop=""
+                       label="户型"
+                       :formatter="formatHouseType">
       </el-table-column>
-       <el-table-column
-        prop=""
-        label="朝向"
-        :formatter="formatOrientation">
-      </el-table-column>
-     <el-table-column 
-                       label="操作"
+
+      <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-            <el-button type="info"
-                       size="mini"
-                       @click="addPhone(scope.row.bhid)"
-                       >录入号码</el-button>
-                        <el-button type="info"
-                       size="mini"
-                       @click="toSale(scope.row.id,scope.row.comId,scope.row.cbId,scope.row.bhid)"
-                       >转在售</el-button>
+          <el-button type="info"
+                     size="mini"
+                     @click="addPhone(scope.row.bhid)">录入号码</el-button>
+          <el-button type="info"
+                     size="mini"
+                     @click="toSale(scope.row.id,scope.row.comId,scope.row.cbId,scope.row.bhid)">转在售</el-button>
         </template>
-       
-      </el-table-column>
 
+      </el-table-column>
 
     </template>
   </list-page>
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
   data () {
-    
+
     return {
       loading: false,
-      
+
       data: {
         comId: '',
         cbId: '',
         roomNo: '',
         timeSelect: '',
-        customName:'',
-        tel:'',
-        minInArea:'',
-        maxInArea:'',
+        customName: '',
+        tel: '',
+        minInArea: '',
+        maxInArea: '',
       },
       options: [],
       cbIdList: [],
@@ -147,13 +139,12 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        
         { prop: 'communityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)"},
-         
-       
+        { prop: 'inArea', label: "面积(m²)"}
+      
+
       ],
       tableData: [{
         // house: '龙腾花园-16栋-604室',
@@ -170,7 +161,7 @@ export default {
       }],
     }
   },
-  mounted(){
+  mounted () {
     this.queryNotPhone(1);
   },
   methods: {
@@ -198,32 +189,32 @@ formatOrientation(row, column){
          var that = this;
         that.$router.push({ path: '/buySellSystem/updatePhone', query: { "id": id } });
     },
-    toSale(id,comId,cbId,bhId){
+    toSale (id, comId, cbId, bhId) {
       var that = this
-        this.$api.get({
-          url: "/houseResource/turnSale",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            id: id,
-            type: 2,
-            comId:comId,
-            cbId:cbId,
-            bhId:bhId
-          }
-        }).then((e) => {
-          console.log(e.data)
-          if (e.data.code == 200) {
-              that.$router.push({ path: '/buySellSystem/addHouse', query: { "id": e.data.code.message } });
-          }else{
-             alert(e.data.message);
-          }
-        })
-      },
+      this.$api.get({
+        url: "/houseResource/turnSale",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          id: id,
+          type: 2,
+          comId: comId,
+          cbId: cbId,
+          bhId: bhId
+        }
+      }).then((e) => {
+        console.log(e.data)
+        if (e.data.code == 200) {
+          that.$router.push({ path: '/buySellSystem/addHouse', query: { "id": e.data.code.message } });
+        } else {
+          alert(e.data.message);
+        }
+      })
+    },
 
-    queryNotPhoneParams(){
-        this.queryNotPhone(1);
+    queryNotPhoneParams () {
+      this.queryNotPhone(1);
     },
     remoteInput () {
    
@@ -259,7 +250,7 @@ remoteMethod (query) {
         this.options = [];
       }
     },
-queryCBId () {
+    queryCBId () {
       var that = this
       this.$api.get({
         url: "/mateHouse/queryComBuilding",
@@ -326,13 +317,14 @@ queryCBId () {
           that.tableData=data.data;
         } else {
           console.log("查询无号码列表结果：" + result.message);
+
           alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询无号码列表失败");
-        console.log(e);
-      })
-  },
+        }
+      }).catch((e) => {
+        console.log("查询无号码列表失败");
+        console.log(e);
+      })
+    },
     isForBut (type) {
       let array = [
         { name: '查看', isType: '3', methosName: '' }
@@ -355,7 +347,7 @@ queryCBId () {
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
-       this.pageJson.pageSize = val;
+      this.pageJson.pageSize = val;
       this.queryNotPhone(1);
     }
   },

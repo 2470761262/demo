@@ -47,7 +47,7 @@
              :model="form"
              label-width="80px"
              label-position="right">
-     
+
       <div class="page-form-inline">
         <el-form-item label="客户电话">
           <el-input placeholder="请输入客户手机号码"
@@ -56,63 +56,57 @@
         </el-form-item>
       </div>
 
-       
-
-      
-      
-
-     
-      
-
       <el-button-group>
         <el-button type="primary"
-                 @click="updatePhone()"  >提交</el-button>
+                   @click="updatePhone()">提交</el-button>
       </el-button-group>
     </el-form>
   </div>
 </template>
 <script>
 
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   data () {
     return {
       form: {
-        phone:'',
-        id:''
-       
+        phone: '',
+        id: ''
+
       }
     }
   },
   mounted () {
-      var that =this;
-     that.form.id=JSON.parse(that.$route.query.id);
+    var that = this;
+    that.form.id = JSON.parse(that.$route.query.id);
   },
   methods: {
-   
-    
-   
 
-      updatePhone(){
-           var that =this;
-            this.$api.get({
-                url: "/houseResource/updatePhone",
-                headers: { "Content-Type": "application/json;charset=UTF-8" },
-                token: false,
-                qs: true,
-                data: {
-                id: that.form.id,
-                tel: that.form.phone
-                
-                }
-            }).then((e) => {
-                if (e.data.code == 200) {
-                     this.$router.push({ path: '/buySellSystem/notPhone'});
-                }else{
-                    alert(e.data.message)
-                }
-            })
-      }
-    
+
+
+
+    updatePhone () {
+      var that = this;
+      this.$api.get({
+        url: "/houseResource/updatePhone",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          id: that.form.id,
+          tel: that.form.phone
+
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this.$router.push({ path: '/buySellSystem/notPhone' });
+        } else {
+          alert(e.data.message)
+        }
+      })
+    }
+
   }
 }
 </script>

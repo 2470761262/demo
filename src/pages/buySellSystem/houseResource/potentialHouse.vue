@@ -8,6 +8,7 @@
     <template v-slot:top>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
+
         
            <el-item label="楼盘名称"
                  prop="comId">
@@ -75,8 +76,6 @@
    
 
 
-
-
     <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
@@ -86,8 +85,7 @@
         </el-table-column>
       </template>
 
-     <el-table-column 
-                       label="操作"
+      <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
@@ -103,25 +101,26 @@
                        @click="toSale(scope.row.id,scope.row.housetype,scope.row.comId,scope.row.cbId,scope.row.bhid)"
                        >转在售</el-button>
         </template>
-       
-      </el-table-column>
 
+      </el-table-column>
 
     </template>
   </list-page>
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
   data () {
-    
+
     return {
       loading: false,
-       option: [
-         {
+      option: [
+        {
           value: 'build',
           label: '楼盘数据'
         }, {
@@ -132,9 +131,9 @@ export default {
         comId: '',
         cbId: '',
         roomNo: '',
-        customName:'',
-        tel:'',
-        type:''
+        customName: '',
+        tel: '',
+        type: ''
       },
       options: [],
       cbIdList: [],
@@ -148,10 +147,10 @@ export default {
         { prop: 'communityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)"},
+        { prop: 'inArea', label: "面积(m²)" },
         { prop: 'customers', label: "业主" },
-        { prop: 'tel', label: "业主电话"}
-       
+        { prop: 'tel', label: "业主电话" }
+
       ],
       tableData: [{
         // house: '龙腾花园-16栋-604室',
@@ -168,44 +167,44 @@ export default {
       }],
     }
   },
-  mounted(){
-     this.data.type='build';
+  mounted () {
+    this.data.type = 'build';
     this.queryPotentialHouse(1);
   },
   methods: {
     queryTabData () {
       console.log(this, '111');
     },
-    toLook(id){
-        console.log(id);
-         var that = this;
-        that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
+    toLook (id) {
+      console.log(id);
+      var that = this;
+      that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
     },
-    toSale(id,type,comId,cbId,bhId){
+    toSale (id, type, comId, cbId, bhId) {
       var that = this
-        this.$api.get({
-          url: "/houseResource/turnSale",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            id: id,
-            type: type,
-            comId:comId,
-            cbId:cbId,
-            bhId:bhId
-          }
-        }).then((e) => {
-          console.log(e.data)
-          if (e.data.code == 200) {
-               that.$router.push({ path: '/buySellSystem/addHouse', query: { "id": e.data.code.message } });
-          }else{
-             alert(e.data.message);
-          }
-        })
+      this.$api.get({
+        url: "/houseResource/turnSale",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          id: id,
+          type: type,
+          comId: comId,
+          cbId: cbId,
+          bhId: bhId
+        }
+      }).then((e) => {
+        console.log(e.data)
+        if (e.data.code == 200) {
+          that.$router.push({ path: '/buySellSystem/addHouse', query: { "id": e.data.code.message } });
+        } else {
+          alert(e.data.message);
+        }
+      })
     },
-    queryPotentialHouseParams(){
-        this.queryPotentialHouse(1);
+    queryPotentialHouseParams () {
+      this.queryPotentialHouse(1);
     },
      remoteInput () {
    
@@ -241,7 +240,7 @@ remoteMethod (query) {
         this.options = [];
       }
     },
-queryCBId () {
+    queryCBId () {
       var that = this
       this.$api.get({
         url: "/mateHouse/queryComBuilding",
@@ -306,12 +305,12 @@ queryCBId () {
         } else {
           console.log("查询潜在出售列表结果：" + result.message);
           alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询潜在出售列表失败");
-        console.log(e);
-      })
-  },
+        }
+      }).catch((e) => {
+        console.log("查询潜在出售列表失败");
+        console.log(e);
+      })
+    },
     isForBut (type) {
       let array = [
         { name: '查看', isType: '3', methosName: '' }
@@ -335,7 +334,7 @@ queryCBId () {
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
-       this.pageJson.pageSize = val;
+      this.pageJson.pageSize = val;
       this.queryPotentialHouse(1);
     }
   },

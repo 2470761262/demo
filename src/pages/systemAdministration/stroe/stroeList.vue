@@ -20,49 +20,49 @@
 
 <template>
   <div>
-    
+
     <list-page :parentData="$data"
-             @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
         <div class="query-cell">
-            <el-input placeholder="门店名/部门/小组"
-                      v-model="queryData.keyWord"
-                      clearable>
-              <template slot="prepend">关键字</template>
-            </el-input>
-            <el-button type="primary"
+          <el-input placeholder="门店名/部门/小组"
+                    v-model="queryData.keyWord"
+                    clearable>
+            <template slot="prepend">关键字</template>
+          </el-input>
+          <el-button type="primary"
                      style="margin-left:10px"
                      size="mini"
                      @click="queryStroeByParams">查询</el-button>
-            <el-button type="primary"
+          <el-button type="primary"
                      style="margin-left:10px"
                      size="mini"
                      @click="toAddStroePage"
                      v-if="showList">添加</el-button>
-            <el-button type="primary"
-                style="margin-left:10px"
-                size="mini"
-                @click="queryStroeDatas(1)">实体店面</el-button>
-            <el-button type="primary"
-                style="margin-left:10px"
-                size="mini"
-                @click="queryStroeDeptDatas(1)">行政小组</el-button>
+          <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryStroeDatas(1)">实体店面</el-button>
+          <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryStroeDeptDatas(1)">行政小组</el-button>
         </div>
       </template>
-      <template v-slot:tableColumn="cell" id="cell"  >
-        <template v-for="item in cell.tableData"  >
+      <template v-slot:tableColumn="cell"
+                id="cell">
+        <template v-for="item in cell.tableData">
           <el-table-column :prop="item.prop"
                            :label="item.label"
                            :width="item.width"
-                           :key="item.prop"
-                           >
+                           :key="item.prop">
           </el-table-column>
         </template>
         <el-table-column prop="operation"
                          label="操作"
                          fixed="right"
-                         key="operation" >
+                         key="operation">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
               <el-button type="info"
@@ -74,22 +74,24 @@
           </template>
         </el-table-column>
       </template>
-    
+
     </list-page>
   </div>
 </template>
 
 <script>
 import listPage from "@/components/listPage";
-export default { 
-  
+import getMenuRid from '@/minxi/getMenuRid';
+export default {
+  mixins: [getMenuRid],
+
   components: {
     listPage
   },
-  
+
   data () {
     return {
-      showList:true,
+      showList: true,
       loading: false, //控制表格加载动画提示
       queryData: {
         keyWord: "",//查询关键字:以门店名/部门/小组为条件
@@ -101,31 +103,31 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10 //每页条数
       },
-      tableDataColumn:[],
+      tableDataColumn: [],
       tableData: [],
     }
   },
   mounted () {
-     this.queryStroeDatas(1);
+    this.queryStroeDatas(1);
   },
   methods: {
     queryStroeByParams () {
       this.queryStroeDatas(1);
     },
     queryStroeDatas (currentPage) {
-        this.showList = true ;
-        this.tableData = [];
-        this.tableDataColumn = [  { prop: "id", label: "门店id",width:"70px" },
-                                { prop: "storeName", label: "店面",width:"165px" },
-                                { prop: "flagSale", label: "职务" ,width:"165px"},
-                                { prop: "shoreAddress", label: "地址" },
-                                { prop: "shoreTel", label: "电话" },
-                                { prop: "shoreType", label: "类型" },
-                                { prop: "storeDesc", label: "描述" },
-                                { prop: "regDate", label: "开业时间", },
-                                ]
+      this.showList = true;
+      this.tableData = [];
+      this.tableDataColumn = [{ prop: "id", label: "门店id", width: "70px" },
+      { prop: "storeName", label: "店面", width: "165px" },
+      { prop: "flagSale", label: "职务", width: "165px" },
+      { prop: "shoreAddress", label: "地址" },
+      { prop: "shoreTel", label: "电话" },
+      { prop: "shoreType", label: "类型" },
+      { prop: "storeDesc", label: "描述" },
+      { prop: "regDate", label: "开业时间", },
+      ]
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.keyWord != null) {
@@ -142,26 +144,31 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-            for (var i = 0; i < result.data.list.length; i++) {
-               switch (result.data.list[i].flagSale) {
-                    case "0":
-                            result.data.list[i].flagSale  = "文职";
-                            break;
-                    case "1":
-                            result.data.list[i].flagSale  = "职务";
-                            break;
-                
-               }
-               switch (result.data.list[i].shoreType) {
-                    case 0:
-                            result.data.list[i].shoreType  = "加盟店";
-                            break;
-                    case 1:
-                            result.data.list[i].shoreType  = "直营店";
-                            break;
-                
-               }
+          for (var i = 0; i < result.data.list.length; i++) {
+            switch (result.data.list[i].flagSale) {
+              case "0":
+                result.data.list[i].flagSale = "文职";
+                break;
+              case "1":
+                result.data.list[i].flagSale = "职务";
+                break;
+
             }
+            switch (result.data.list[i].shoreType) {
+              case 0:
+                result.data.list[i].shoreType = "加盟店";
+                break;
+              case 1:
+                result.data.list[i].shoreType = "直营店";
+                break;
+
+            }
+            switch (result.data.list[i].shoreTel) {
+              case 0:
+                result.data.list[i].shoreTel = "暂无电话";
+                break;
+            }
+          }
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
           this.tableData = result.data.list;
@@ -176,19 +183,19 @@ export default {
       })
     },
     queryStroeDeptDatas (currentPage) {
-        this.showList = false ;
-        this.tableData = []
-        this.tableDataColumn = [ 
-                                //{ prop: "id", label: "门店ID" },
-                                { prop: "deptName", label: "小组"},
-                                { prop: "storeName", label: "店面",width:"165px" },
-                                { prop: "shoreAddress", label: "地址" },
-                                { prop: "shoreTel", label: "电话" },
-                                { prop: "flagSale", label: "职务" ,width:"120px"},
-                                { prop: "shoreType", label: "类型" },
-                                { prop: "storeDesc", label: "描述" },
-                                { prop: "regDate", label: "开业时间", },
-                                ]
+      this.showList = false;
+      this.tableData = []
+      this.tableDataColumn = [
+        //{ prop: "id", label: "门店ID" },
+        { prop: "deptName", label: "小组" },
+        { prop: "storeName", label: "店面", width: "165px" },
+        { prop: "shoreAddress", label: "地址" },
+        { prop: "shoreTel", label: "电话" },
+        { prop: "flagSale", label: "职务", width: "120px" },
+        { prop: "shoreType", label: "类型" },
+        { prop: "storeDesc", label: "描述" },
+        { prop: "regDate", label: "开业时间", },
+      ]
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.keyWord != null) {
@@ -205,26 +212,26 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-            for (var i = 0; i < result.data.list.length; i++) {
-               switch (result.data.list[i].flagSale) {
-                    case "0":
-                            result.data.list[i].flagSale  = "文职";
-                            break;
-                    case "1":
-                            result.data.list[i].flagSale  = "职务";
-                            break;
-                
-               }
-               switch (result.data.list[i].shoreType) {
-                    case 0:
-                            result.data.list[i].shoreType  = "加盟店";
-                            break;
-                    case 1:
-                            result.data.list[i].shoreType  = "直营店";
-                            break;
-                
-               }
+          for (var i = 0; i < result.data.list.length; i++) {
+            switch (result.data.list[i].flagSale) {
+              case "0":
+                result.data.list[i].flagSale = "文职";
+                break;
+              case "1":
+                result.data.list[i].flagSale = "职务";
+                break;
+
             }
+            switch (result.data.list[i].shoreType) {
+              case 0:
+                result.data.list[i].shoreType = "加盟店";
+                break;
+              case 1:
+                result.data.list[i].shoreType = "直营店";
+                break;
+            }
+
+          }
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
           this.tableData = result.data.list;
@@ -243,9 +250,9 @@ export default {
     editStroe (id) {
       this.$router.push({ path: "/sys/editStroe", query: { id: id } });
     },
-    delStroe (id){
-     this.$api.post({
-        url: '/stroe/del/'+id,
+    delStroe (id) {
+      this.$api.post({
+        url: '/stroe/del/' + id,
         token: false,
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
@@ -254,7 +261,7 @@ export default {
           this.$alert('', '删除成功', {
             dangerouslyUseHTMLString: false
           });
-          this.$router.push({ path: "/sys/stroeList"});
+          this.$router.push({ path: "/sys/stroeList" });
         }
       }).catch((e) => {
         console.log("删除失败");
@@ -268,19 +275,19 @@ export default {
     //   this.queryStroeDatas(1,StroeId);
     // },
     getOpeBtns (type) {
-        let array = [];
-        if (this.showList){
-             array = [
-                        { name: '详情', isType: '1', methosName: 'openDetails' },
-                        { name: '编辑', isType: '1', methosName: 'editStroe' },
-                        { name: '删除', isType: '1', methosName: 'delStroe' },
-                        ]
-        }else{
-             array = [
-                        { name: '详情', isType: '1', methosName: 'openDetails' },
-                        ]
-        }
-     
+      let array = [];
+      if (this.showList) {
+        array = [
+          { name: '详情', isType: '1', methosName: 'openDetails' },
+          { name: '编辑', isType: '1', methosName: 'editStroe' },
+          { name: '删除', isType: '1', methosName: 'delStroe' },
+        ]
+      } else {
+        array = [
+          { name: '详情', isType: '1', methosName: 'openDetails' },
+        ]
+      }
+
       // return array.filter((item) => {
       //   return item.isType.includes(type)
       // })
@@ -289,24 +296,24 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      if(this.showList){
+      if (this.showList) {
         this.queryStroeDatas(1);
-      }else{
+      } else {
         this.queryStroeDeptDatas(1);
       }
-      
+
     },
     handleCurrentChange (val) {
-     if(this.showList){
+      if (this.showList) {
         this.queryStroeDatas(val);
-      }else{
+      } else {
         this.queryStroeDeptDatas(val);
       }
     },
-    openDetails(row){
-        console.log(row)
-  
-        this.$router.push({ name: "detailsStroe",params:{id:row}});
+    openDetails (row) {
+      console.log(row)
+
+      this.$router.push({ name: "detailsStroe", params: { id: row } });
     }
   }
 };

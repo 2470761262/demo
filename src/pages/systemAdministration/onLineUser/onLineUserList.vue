@@ -24,20 +24,29 @@
       <template v-for="item in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"
-                         :width="item.width"                         
+                         :width="item.width"
                          :key="item.prop">
         </el-table-column>
       </template>
-      <el-table-column prop="userInfo.userImage" label="用户头像" width="90" >
-                 <!-- 图片的显示 -->
-                 <template   slot-scope="scope">            
-                    <img :src="scope.row.userInfo.userImage"  width="50" height="50" />
-                 </template>         
-      </el-table-column> 
-      <el-table-column prop="loginTime" :formatter="formatLoginTime"  label="登录时间"  >                 
-      </el-table-column> 
-      <el-table-column prop="clientType" :formatter="formatClientType"  label="登录终端" width="90" >                 
-      </el-table-column> 
+      <el-table-column prop="userInfo.userImage"
+                       label="用户头像"
+                       width="90">
+        <!-- 图片的显示 -->
+        <template slot-scope="scope">
+          <img :src="scope.row.userInfo.userImage"
+               width="50"
+               height="50" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="loginTime"
+                       :formatter="formatLoginTime"
+                       label="登录时间">
+      </el-table-column>
+      <el-table-column prop="clientType"
+                       :formatter="formatClientType"
+                       label="登录终端"
+                       width="90">
+      </el-table-column>
       <el-table-column prop="operation"
                        label="操作"
                        fixed="right"
@@ -58,22 +67,24 @@
 <script>
 import listPage from "@/components/listPage";
 Date.prototype.Format = function (fmt) {
-    var o = {
-            "M+": this.getMonth() + 1, // 月份
-            "d+": this.getDate(), // 日
-            "h+": this.getHours(), // 小时
-            "m+": this.getMinutes(), // 分
-            "s+": this.getSeconds(), // 秒
-            "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
-            "S": this.getMilliseconds() // 毫秒
-    };
-    if (/(y+)/.test(fmt))
-        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + ""));
-    for (var k in o)
-        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-    return fmt;
+  var o = {
+    "M+": this.getMonth() + 1, // 月份
+    "d+": this.getDate(), // 日
+    "h+": this.getHours(), // 小时
+    "m+": this.getMinutes(), // 分
+    "s+": this.getSeconds(), // 秒
+    "q+": Math.floor((this.getMonth() + 3) / 3), // 季度
+    "S": this.getMilliseconds() // 毫秒
+  };
+  if (/(y+)/.test(fmt))
+    fmt = fmt.replace(RegExp.$1, (this.getFullYear() + ""));
+  for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+  return fmt;
 }
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -90,7 +101,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 0, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
         { prop: "perId", label: "用户编码" },
@@ -107,24 +118,24 @@ export default {
         //   addDate: '2019-01-01 18:00:00'
         // }
       ],
-      tableAllData:[]
+      tableAllData: []
     }
   },
   mounted () {
     this.queryOnLineUserDatas(1);
   },
   methods: {
-    formatLoginTime(row, column){
+    formatLoginTime (row, column) {
       return new Date(row.loginTime).Format('yy-MM-dd hh:mm:ss');
     },
-    formatClientType(row, column){
-      if(row.perType == 0 ){
+    formatClientType (row, column) {
+      if (row.perType == 0) {
         return 'PC端';
-      } else if(row.clientType==3){
+      } else if (row.clientType == 3) {
         return '公众号';
-      }else if(row.clientType==4){
+      } else if (row.clientType == 4) {
         return '小程序';
-      }else{
+      } else {
         return '未知';
       }
     },
@@ -132,14 +143,14 @@ export default {
       this.queryOnLineUserDatas(1);
     },
     queryOnLineUserDatas (currentPage) {
-      let params = { pageSize: this.pageJson.pageSize, pageNum: currentPage,"clientType":0 };
+      let params = { pageSize: this.pageJson.pageSize, pageNum: currentPage, "clientType": 0 };
       let that = this;
-      if(currentPage!=1){//从第二页开始，不请求，因为第一页的时候数据已经全部请求下来
-          this.pageJson.currentPage = currentPage;
-          //this.pageJson.total = result.data.totalCount;
-        that.tableData=that.getPageData(that.tableAllData,currentPage,this.pageJson.pageSize);
+      if (currentPage != 1) {//从第二页开始，不请求，因为第一页的时候数据已经全部请求下来
+        this.pageJson.currentPage = currentPage;
+        //this.pageJson.total = result.data.totalCount;
+        that.tableData = that.getPageData(that.tableAllData, currentPage, this.pageJson.pageSize);
         return;
-      }      
+      }
       this.$api.post({
         url: '/onLineUser/queryOnLineUsers',
         data: params,
@@ -154,7 +165,7 @@ export default {
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
           this.tableAllData = result.data.list;
-          this.tableData = that.getPageData(this.tableAllData,currentPage,params.pageSize);
+          this.tableData = that.getPageData(this.tableAllData, currentPage, params.pageSize);
         } else {
           console.log("查询在线用户列表结果：" + result.message);
           alert(result.message);
@@ -164,16 +175,16 @@ export default {
         console.log(e);
       })
     },
-    getPageData(allData,currentPage,pageSize){
-      let start=(currentPage-1)*pageSize;
-      let end=(currentPage-1)*pageSize+pageSize;
-      return allData.slice(start,end);
+    getPageData (allData, currentPage, pageSize) {
+      let start = (currentPage - 1) * pageSize;
+      let end = (currentPage - 1) * pageSize + pageSize;
+      return allData.slice(start, end);
     },
-    offLineUser (perId,perType) {
+    offLineUser (perId, perType) {
       alert("查看用户详情实现");
     },
-    distributeEvent (e, perId,perType) {
-      this[e](perId,perType);
+    distributeEvent (e, perId, perType) {
+      this[e](perId, perType);
     },
     getOpeBtns (type) {
       let array = [

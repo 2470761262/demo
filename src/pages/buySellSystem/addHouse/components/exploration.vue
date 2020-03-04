@@ -1,630 +1,456 @@
 <style lang="less" scoped>
-@import url("../../../../assets/publicLess/addHouse.less");
-.el-alert--info.is-light {
-  width: fit-content;
-  margin-top: 20px;
-}
-.Division {
-  align-self: center;
-  margin-right: 20px;
-}
-.phone-upload {
-  margin-left: 20px;
-  display: flex;
-  align-self: flex-start;
-  .phone-upload-img {
-    width: 180px;
-    height: 180px;
+.page-cell-addHouse {
+  padding: 30px 50px 0;
+  .upLoadFile {
+    display: flex;
+    margin-bottom: 100px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+    .upLoadFile-title {
+      align-self: flex-start;
+      width: 80px;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .upLoadFile-flex {
+      flex: 1;
+    }
+    .upLoadFile-right {
+      flex: 1;
+      display: flex;
+    }
+    .upLoadFile-input {
+      border: 2px dashed #dcdfe6;
+      width: 100px;
+      height: 100px;
+      margin-right: 40px;
+      box-sizing: border-box;
+      flex-shrink: 0;
+      label {
+        display: block;
+        width: 100%;
+        height: 100%;
+        font-size: 50px;
+        color: #c0c4cc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        input {
+          display: none;
+        }
+      }
+    }
+    .upLoadFile-file-list {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      margin: 0 -10px;
+      .file-list-item {
+        margin-bottom: 10px;
+        flex: 0 0 25%;
+        position: relative;
+        padding: 0 10px;
+        box-sizing: border-box;
+        .upLoadFile-remove {
+          position: absolute;
+          top: -5px;
+          right: 5px;
+          font-size: 10px;
+          color: #fff;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          background: red;
+          text-align: center;
+          line-height: 20px;
+        }
+        /deep/.el-image {
+          width: 100%;
+          height: 100px;
+        }
+        img,
+        video {
+          width: 100%;
+          height: 100px;
+          object-fit: cover;
+        }
+      }
+    }
+    .upLoadFile-file-phone {
+      margin-left: 40px;
+      flex-shrink: 0;
+      border: 2px dashed #dcdfe6;
+      width: 100px;
+      height: 100px;
+      margin-right: 20px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      img {
+        width: 70px;
+        height: 70px;
+      }
+    }
   }
-  .phone-upload-text {
-    text-align: center;
-  }
-}
-.text-center {
-  text-align: center;
-  margin-top: 20px;
-}
-.videoClass {
-  max-width: 100%;
-  height: 600px;
-  margin: 0 auto;
-  display: block;
-  object-fit: scale-down;
 }
 </style>
 <template>
-  <div class="page-cell-addHouse">
-    <div class="page-cell-title">房源描述</div>
-    <!-- 小区介绍 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top"
-             data-before="*">小区介绍</div>
-        <el-input type="textarea"
-                  resize="none"
-                  maxlength="20"
-                  v-validate="'required|max:20'"
-                  data-vv-name="communityDesc"
-                  data-vv-as="小区介绍"
-                  placeholder="请输入小区介绍"
-                  v-model="formData.communityDesc">
-        </el-input>
-        <div class="textarea-tips">
-          {{formData.communityDesc.length}}/{{20}}
-        </div>
-      </div>
-    </div>
-    <!-- 户型介绍 -->
-    <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">户型介绍</div>
-        <el-input type="textarea"
-                  resize="none"
-                  maxlength="300"
-                  placeholder="请输入户型介绍"
-                  v-model="formData.roomDesc">
-        </el-input>
-        <div class="textarea-tips">
-          {{formData.roomDesc.length}}/{{300}}
-        </div>
-      </div>
-    </div>
-    <!-- 税费解析 -->
-    <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">税费解析</div>
-        <el-input type="textarea"
-                  resize="none"
-                  maxlength="20"
-                  placeholder="请输入税费解析"
-                  v-model="formData.taxDesc">
-        </el-input>
-        <div class="textarea-tips">
-          {{formData.taxDesc.length}}/{{20}}
-        </div>
-      </div>
-    </div>
-    <!-- 核心卖点 -->
-    <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">核心卖点</div>
-        <el-input type="textarea"
-                  resize="none"
-                  maxlength="20"
-                  placeholder="请输入核心卖点"
-                  v-model="formData.saleDesc">
-        </el-input>
-        <div class="textarea-tips">
-          {{formData.saleDesc.length}}/{{20}}
-        </div>
-      </div>
-    </div>
-    <div class="page-cell-title">房源图片</div>
-    <el-alert title="注：请勿填写联系方式或与房源无关的图片、链接等。请勿直接从其他网站或其他房源描述中拷贝。"
-              type="info"
-              :closable="false"
-              show-icon>
-    </el-alert>
+  <div class="page-cell-addHouse"
+       element-loading-text="我在去获取数据的路上了~"
+       v-loading="loading">
+    <!-- accept=".jpg,.png" -->
     <!-- 外景图 -->
-    <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">外景图</div>
-        <div>
-          <div class="page-cell-item">
-            <el-upload drag
-                       :action="''"
-                       :on-preview="handlePreview"
-                       :limit="9"
-                       name="1"
-                       :before-upload="beforeAvatarUpload"
-                       :http-request="uploadSectionFile"
-                       :on-remove="removeImg"
-                       :file-list="fileList.list1"
-                       multiple>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-            <div class="phone-upload">
-              <div class="Division">or</div>
-              <div>
-                <img class="phone-upload-img"
-                     src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                     alt="手机上传图片二维码">
-                <div class="phone-upload-text">手机上传</div>
-              </div>
+    <div class="upLoadFile">
+      <div class="upLoadFile-title">外景图</div>
+      <div class="upLoadFile-input">
+        <label for="outdoorImgList"
+               class="el-icon-upload">
+          <input id="outdoorImgList"
+                 type="file"
+                 @change="getFile(1,'outdoorImgList',$event)"
+                 multiple="multiplt">
+        </label>
+      </div>
+      <div class="upLoadFile-file-list">
+        <div class="file-list-item"
+             v-for="item in outdoorImgList"
+             :key="item.id">
+          <el-image :src="item.url"
+                    fit="cover"
+                    :preview-src-list="fillterImgList('outdoorImgList')">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
             </div>
-          </div>
-          <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"></div>
         </div>
       </div>
-    </div>
-    <!-- 卧室 -->
-    <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">卧室</div>
-        <div>
-          <div class="page-cell-item">
-            <el-upload drag
-                       :action="''"
-                       :on-preview="handlePreview"
-                       :limit="9"
-                       name="2"
-                       :before-upload="beforeAvatarUpload"
-                       :http-request="uploadSectionFile"
-                       :on-remove="removeImg"
-                       :file-list="fileList.list2"
-                       multiple>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-            <div class="phone-upload">
-              <div class="Division">or</div>
-              <div>
-                <img class="phone-upload-img"
-                     src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                     alt="手机上传图片二维码">
-                <div class="phone-upload-text">手机上传</div>
-              </div>
-            </div>
-          </div>
-          <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
-        </div>
-      </div>
-    </div>
-    <!-- 内景图 -->
-    <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">内景图</div>
-        <div>
-          <div class="page-cell-item">
-            <el-upload drag
-                       :action="''"
-                       :on-preview="handlePreview"
-                       :limit="9"
-                       name="3"
-                       :before-upload="beforeAvatarUpload"
-                       :http-request="uploadSectionFile"
-                       :on-remove="removeImg"
-                       :file-list="fileList.list3"
-                       multiple>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-            <div class="phone-upload">
-              <div class="Division">or</div>
-              <div>
-                <img class="phone-upload-img"
-                     src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                     alt="手机上传图片二维码">
-                <div class="phone-upload-text">手机上传</div>
-              </div>
-            </div>
-          </div>
-          <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
-        </div>
-      </div>
-    </div>
-    <!-- 厨房 -->
-    <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">厨房</div>
-        <div>
-          <div class="page-cell-item">
-            <el-upload drag
-                       :action="''"
-                       :on-preview="handlePreview"
-                       :limit="9"
-                       name="4"
-                       :before-upload="beforeAvatarUpload"
-                       :http-request="uploadSectionFile"
-                       :on-remove="removeImg"
-                       :file-list="fileList.list4"
-                       multiple>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-            <div class="phone-upload">
-              <div class="Division">or</div>
-              <div>
-                <img class="phone-upload-img"
-                     src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                     alt="手机上传图片二维码">
-                <div class="phone-upload-text">手机上传</div>
-              </div>
-            </div>
-          </div>
-          <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
-        </div>
+      <div class="upLoadFile-file-phone">
+        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+             alt="图片">
+        <div>微信扫码上传</div>
       </div>
     </div>
     <!-- 客厅 -->
-    <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">客厅</div>
-        <div>
-          <div class="page-cell-item">
-            <el-upload drag
-                       :action="''"
-                       :on-preview="handlePreview"
-                       :limit="9"
-                       name="5"
-                       :before-upload="beforeAvatarUpload"
-                       :http-request="uploadSectionFile"
-                       :on-remove="removeImg"
-                       :file-list="fileList.list5"
-                       multiple>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-            <div class="phone-upload">
-              <div class="Division">or</div>
-              <div>
-                <img class="phone-upload-img"
-                     src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                     alt="手机上传图片二维码">
-                <div class="phone-upload-text">手机上传</div>
-              </div>
+    <div class="upLoadFile">
+      <div class="upLoadFile-title">客厅</div>
+      <div class="upLoadFile-input">
+        <label for="livingRoomImgList"
+               class="el-icon-upload">
+          <input id="livingRoomImgList"
+                 type="file"
+                 @change="getFile(2,'livingRoomImgList',$event)"
+                 multiple="multiplt">
+        </label>
+      </div>
+      <div class="upLoadFile-file-list">
+        <div class="file-list-item"
+             v-for="item in livingRoomImgList"
+             :key="item.id">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('livingRoomImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
             </div>
-          </div>
-          <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"></div>
         </div>
+      </div>
+      <div class="upLoadFile-file-phone">
+        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+             alt="图片">
+        <div>微信扫码上传</div>
+      </div>
+    </div>
+    <!-- 卧室 -->
+    <div class="upLoadFile">
+      <div class="upLoadFile-title">卧室</div>
+      <div class="upLoadFile-input">
+        <label for="bedroomImgList"
+               class="el-icon-upload">
+          <input id="bedroomImgList"
+                 type="file"
+                 @change="getFile(3,'bedroomImgList',$event)"
+                 multiple="multiplt">
+        </label>
+      </div>
+      <div class="upLoadFile-file-list">
+        <div class="file-list-item"
+             v-for="item in bedroomImgList"
+             :key="item.id">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('bedroomImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"></div>
+        </div>
+      </div>
+      <div class="upLoadFile-file-phone">
+        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+             alt="图片">
+        <div>微信扫码上传</div>
+      </div>
+    </div>
+    <!-- 厨房 -->
+    <div class="upLoadFile">
+      <div class="upLoadFile-title">厨房</div>
+      <div class="upLoadFile-input">
+        <label for="kitchenImgList"
+               class="el-icon-upload">
+          <input id="kitchenImgList"
+                 type="file"
+                 @change="getFile(4,'kitchenImgList',$event)"
+                 multiple="multiplt">
+        </label>
+      </div>
+      <div class="upLoadFile-file-list">
+        <div class="file-list-item"
+             v-for="item in kitchenImgList"
+             :key="item.id">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('kitchenImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"></div>
+        </div>
+      </div>
+      <div class="upLoadFile-file-phone">
+        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+             alt="图片">
+        <div>微信扫码上传</div>
+      </div>
+    </div>
+    <!-- 卫生间 -->
+    <div class="upLoadFile">
+      <div class="upLoadFile-title">卫生间</div>
+      <div class="upLoadFile-input">
+        <label for="toiletImgList"
+               class="el-icon-upload">
+          <input id="toiletImgList"
+                 type="file"
+                 @change="getFile(5,'toiletImgList',$event)"
+                 multiple="multiplt">
+        </label>
+      </div>
+      <div class="upLoadFile-file-list">
+        <div class="file-list-item"
+             v-for="item in toiletImgList"
+             :key="item.id">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('toiletImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"></div>
+        </div>
+      </div>
+      <div class="upLoadFile-file-phone">
+        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+             alt="图片">
+        <div>微信扫码上传</div>
       </div>
     </div>
     <!-- 户型图 -->
-    <div class="form-error-tips">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top">户型图</div>
-        <div>
-          <div class="page-cell-item">
-            <el-upload drag
-                       :action="''"
-                       :on-preview="handlePreview"
-                       :limit="9"
-                       name="6"
-                       :before-upload="beforeAvatarUpload"
-                       :http-request="uploadSectionFile"
-                       :on-remove="removeImg"
-                       :file-list="fileList.list6"
-                       multiple>
-              <i class="el-icon-upload"></i>
-              <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-            </el-upload>
-            <div class="phone-upload">
-              <div class="Division">or</div>
-              <div>
-                <img class="phone-upload-img"
-                     src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                     alt="手机上传图片二维码">
-                <div class="phone-upload-text">手机上传</div>
-              </div>
+    <div class="upLoadFile">
+      <div class="upLoadFile-title">户型图</div>
+      <div class="upLoadFile-input">
+        <label for="layoutImgList"
+               class="el-icon-upload">
+          <input id="layoutImgList"
+                 type="file"
+                 @change="getFile(6,'layoutImgList',$event)"
+                 multiple="multiplt">
+        </label>
+      </div>
+      <div class="upLoadFile-file-list">
+        <div class="file-list-item"
+             v-for="item in layoutImgList"
+             :key="item.id">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('layoutImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
             </div>
-          </div>
-          <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"></div>
         </div>
       </div>
+      <div class="upLoadFile-file-phone">
+        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+             alt="图片">
+        <div>微信扫码上传</div>
+      </div>
     </div>
-    <div class="page-cell-title">房源视频</div>
     <!-- 房源视频 -->
-    <div class="form-error-tips"
-         :class="{'after-tips':errorBags.has('houseVideo')}"
-         :data-tips="errorBags.first('houseVideo')">
-      <div class="page-cell-item">
-        <div class="item-before item-before-top"
-             data-before="*">室内视频</div>
-        <div>
-          <div class="page-cell-item">
-            <el-upload ref="videoUpload"
-                       drag
-                       name="video"
-                       :limit="3"
-                       :on-remove="removeVideo"
-                       :on-preview="handlePreviewVideo"
-                       accept=".mp4"
-                       :file-list="fileList.video"
-                       :auto-upload="false"
-                       action="''"
-                       multiple>
-              <template v-if="progressFlag">
-                <el-progress type="circle"
-                             :percentage="progressNum"
-                             status="success"></el-progress>
-              </template>
-              <template v-if="!progressFlag">
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-                <el-button type="primary"
-                           size="mini"
-                           @click.stop="uploadSectionFileVideo">提交服务器</el-button>
-              </template>
-            </el-upload>
-            <div class="phone-upload">
-              <div class="Division">or</div>
-              <div>
-                <img class="phone-upload-img"
-                     src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                     alt="手机上传图片二维码">
-                <div class="phone-upload-text">手机上传</div>
-              </div>
+    <div class="upLoadFile">
+      <div class="upLoadFile-title">房源视频</div>
+      <div class="upLoadFile-flex">
+        <div class="upLoadFile-right">
+          <div class="upLoadFile-input">
+            <label for="houseVideoList"
+                   class="el-icon-upload">
+              <input id="houseVideoList"
+                     type="file"
+                     @change="getVideoFile('houseVideo',$event)">
+            </label>
+          </div>
+          <div class="upLoadFile-file-list">
+            <div class="file-list-item"
+                 v-if="houseVideo.url">
+              <video :src="houseVideo.url"></video>
+              <div class="upLoadFile-remove el-icon-delete"></div>
             </div>
           </div>
+          <div class="upLoadFile-file-phone">
+            <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                 alt="图片">
+            <div>微信扫码上传</div>
+          </div>
         </div>
+        <div>仅可以上传一个视频,时间为60秒.</div>
       </div>
     </div>
-    <el-dialog :visible.sync="dialogVisible">
-      <img width="100%"
-           :src="dialogImageUrl"
-           alt=""
-           v-if="showFlag">
-      <video :src="dialogImageUrl"
-             v-if="!showFlag"
-             controls="controls"
-             class="videoClass">您的浏览器不支持此视频播放</video>
-    </el-dialog>
   </div>
 </template>
 <script>
 import util from '@/util/util';
 export default {
   name: "exploration",
-  computed: {
-    formData () {
-      this.$set(this.$data, "step", JSON.parse(JSON.stringify(this.$store.state.addHouse.formData.step3)))
-      return this.step
+  props: {
+    getData: {
+      type: Boolean,
+      default: false
     }
   },
-  watch: {
-    formData: {
-      deep: true,
-      immediate: true,
-      handler (newValue, oldValue) {
-        //deff 获取到修改的属性
-        let deffData = util.diffGet(this.$store.state.addHouse.formData.step3, this.formData);
-        //判断当前是否有修改，如果有修改则length大于0
-        let flag = Object.keys(deffData).length > 0 ? true : false;
-        //判断store存储的是否与这次相同，相同则不commit
-        if (this.$store.state.addHouse.isformDataNoCommit != flag) {
-          this.$store.commit("updateIsformDataNoCommit", flag);
-        }
-        //把修改的过的值给与deffData用于传送后台，如果在一次进入也可以顺便把这个值清空
-        this.deffData = deffData;
-      }
+  mounted () {
+    //true 则去获取数据
+    if (this.getData) {
+      this.getLoadData();
     }
-  },
-  created () {
-    this.setValidate();
   },
   data () {
     return {
-      dialogVisible: false,
-      dialogImageUrl: '',
-      showFlag: true,
-      progressFlag: false,
-      progressNum: 0,
-      fileList: {
-        list1: [],
-        list2: [],
-        list3: [],
-        list4: [],
-        list5: [],
-        list6: [],
-        video: []
-      },
-      actionUrl: '',
-      step: {},
+      loading: false,
+      outdoorImgList: [], //外景图
+      livingRoomImgList: [],//客厅
+      bedroomImgList: [],//卧室
+      kitchenImgList: [],//厨房
+      toiletImgList: [],//卫生间
+      layoutImgList: [],//户型图
+      houseVideo: {}//房源视频
     }
   },
   methods: {
-    setValidate () {
-      this.$validator.attach("houseVideo", "required");
-      const dictionary = {
-        zh_CN: {
-          messages: {
-            required: field => field + "不能为空"
-          },
-          attributes: {
-            houseVideo: "房源视频"
-          }
-        }
-      };
-      this.$validator.updateDictionary(dictionary);
-    },
-    removeVideo (file) {
-      this.fileList.video = this.fileList.video.filter((item) => {
-        return item.url != file.url;
-      })
-    },
-    // 上传图片前处理函数
-    uploadSectionFileVideo () {
-      console.log(this.$refs.videoUpload);
-      let that = this;
-      let allSize = 0;
-      this.$refs.videoUpload.uploadFiles.forEach((item, index) => {
-        if (item.size / 1024 / 1024 > 50) {
-          this.$message.error(`${index}号文件超过50M大小.已删除`);
-          this.$refs.videoUpload.uploadFiles.splice(index, 1);
-        } else {
-          allSize + item.size / 1024 / 1024 > 50;
-        }
-      })
-      if (allSize > 100) {
-        this.$message.error(`一次多文件上传最高100M,已超过大小`);
+    fillterImgList (imgList) {
+      if (this[imgList].length > 0) {
+        return this[imgList].map((item) => {
+          return item.url;
+        })
+      } else {
+        return [];
       }
-      if (this.$refs.videoUpload.uploadFiles.length <= 0) {
+    },
+    getLoadData () {
+      this.$api.get({ url: `/draft-house/pictures/${this.$store.state.addHouse.formData.id}` }).then((e) => {
+        console.log(e, "e");
+      })
+    },
+    //上传视频
+    getVideoFile (fileListName, e) {
+      console.log(fileListName, e);
+      let file = event.target.files;
+      let isVideoType = ["video/mp4"];
+      if (!isVideoType.includes(file[0].type)) {
+        this.$message.error("上传的视频只能是MP4格式!");
         return;
       }
-      that.progressFlag = true;
-      let count = 0;
-      this.$refs.videoUpload.uploadFiles.forEach((item, index) => {
-        if (!item.id) {
-          count++;
-          let formData = new FormData();
-          formData.append('draftid', that.$store.state.addHouse.formData.id)
-          formData.append('file', item.raw)
-          this.$api.post({
-            url: "/draft-house/video",
-            headers: { "Content-Type": "multipart/form-data" },
-            data: formData,
-            onUploadProgress: progressEvent => { //静读条
-              let percent = (progressEvent.loaded / progressEvent.total * 100) | 0
-              that.progressNum = percent == 100 ? 90 : percent;
-            },
-          }).then((json) => {
-            let data = json.data.data;
-            that.fileList.video.push({ name: data.id, url: data.url, id: data.id });
-          }).then(() => {
-            that.progressNum = 100;
-            setTimeout(() => {
-              that.progressFlag = false;
-            }, 200)
-          }).catch(() => {
-            that.$message({
-              message: '不晓得为什么,反正失败了',
-              type: 'warning'
-            })
-            that.progressFlag = false;
-          })
+      if (Object.keys(this[fileListName]).length != 0) {
+        this.$message.error("只能上传一个视频");
+        return;
+      }
+      let audioElement = new Audio(URL.createObjectURL(file[0]));
+      audioElement.addEventListener("loadedmetadata", () => {
+        if (audioElement.duration > 60) {
+          this.$message.error("视频时长大于60秒了~");
+        } else {
+          this.uploadSectionFile(undefined, file[0], fileListName);
         }
-      })
-      if (count == 0) {
-        that.progressFlag = false;
+      });
+    },
+    //上传图片
+    getFile (picClass, fileListName, e) {
+      let file = event.target.files;
+      let isImgType = ["image/jpeg", "image/png"];
+      if (file.length > 9 || file.length + this[fileListName].length > 9) {
+        this.$message.error("最多一次上传9张图片");
+        return;
+      }
+      for (let index = this[fileListName].length; index < file.length; index++) {
+        if (!isImgType.includes(file[index].type)) {
+          this.$message.error("上传的图片只能是jpg,jpeg格式!");
+          return;
+        }
+      }
+      for (let index = 0; index < file.length; index++) {
+        this.uploadSectionFile(picClass, file[index], fileListName);
       }
     },
-    removeImg (file, fileList) {
-      if (file.id) {
-        this.fileList[file.listName] = this.fileList[file.listName].filter((item) => {
-          return item.url != file.url;
-        })
-        this.$api.delete({
-          url: `/draft_house/picture/${file.id}`,
-          qs: true,
-          data: {
-            url: file.url
-          }
-        })
-      }
-    },
-    uploadSectionFile (uploader) {
+    uploadSectionFile (picClass, uploader, fileListName) {
       let that = this;
       let formData = new FormData();
-      formData.append('picClass', uploader.filename)
+      if (picClass != undefined) {
+        formData.append('picClass', picClass)
+      }
       formData.append('draftid', that.$store.state.addHouse.formData.id)
-      formData.append('file', uploader.file)
+      formData.append('file', uploader)
       this.$api.post({
         url: "/draft-house/picture",
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
-        onUploadProgress: progressEvent => { //静读条
-          let percent = (progressEvent.loaded / progressEvent.total * 100) | 0
-          uploader.onProgress({ percent: percent })
+        onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
+          if (progressEvent.lengthComputable) {
+            let num = Math.round((progressEvent.loaded / progressEvent.total) * 100)
+            console.log(num, "num");
+          }
         }
       }).then((json) => {
-        uploader.onSuccess()
-        console.log(json.data.data, "json.data.data");
-        let data = json.data.data;
-        that.fileList["list" + uploader.filename].push({ id: data.id, name: data.id + ".png", url: data.url, listName: "list" + uploader.filename });
-      }).catch(() => {
+        if (json.data.code == 200) {
+          if (picClass != undefined) {
+            this[fileListName].push(json.data.data);
+          } else {
+            this[fileListName] = json.data.data;
+          }
+        }
+      }).catch((e) => {
+        console.log(e);
         that.$message({
           message: '不晓得为什么,反正失败了',
           type: 'warning'
         })
-        uploader.onError()
       })
-    },
-    beforeAvatarUpload (file) {
-      // 上传图片前处理函数
-      const isJPG =
-        file.type === "image/jpeg" ||
-        file.type === "image/png";
-      let that = this;
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是jpg,jpeg 格式!");
-      }
-      // const isSize = new Promise(function (resolve, reject) {
-      //   let width = 600;
-      //   let height = 600;
-      //   let _URL = window.URL || window.webkitURL;
-      //   let image = new Image();
-      //   image.onload = function () {
-      //     let valid = image.width == width && image.height == height;
-      //     valid ? resolve() : reject();
-      //   };
-      //   image.src = _URL.createObjectURL(file);
-      // }).then(
-      //   () => {
-      //     return file;
-      //   },
-      //   () => {
-      //     this.$message.error("上传头像图片尺寸不符合,只能是600*600!");
-      //     return Promise.reject();
-      //   }
-      // );
-      //  return isJPG && isSize;
-      return isJPG;
-    },
-    handlePreviewVideo (file) {
-      if (!file.id) {
-        this.dialogImageUrl = window.URL.createObjectURL(file.raw);// file.url;
-      } else {
-        this.dialogImageUrl = file.url;
-      }
-
-      this.dialogVisible = true;
-      this.showFlag = false;
-
-    },
-    handlePreview (file) {
-      this.dialogImageUrl = file.url;// file.url;
-      this.dialogVisible = true;
-      this.showFlag = true;
     },
     validateAll () {
-      let that = this;
-      return this.$validator.validateAll({
-        houseVideo: that.fileList.video,
-        communityDesc: that.formData.communityDesc
-      }).then((e) => {
-        if (e) {
-          return true;
-        }
-        return false;
-      }).then((e) => {
-        if (e) {
-          return that.setDataToUpdate();
-        } else {
-          return false;
-        }
-      })
+      return true;
     },
-    //修改数据到接口
-    setDataToUpdate () {
-      let that = this;
-      let sendData = {
-        id: that.$store.state.addHouse.formData.id,
-        ...that.deffData
-      }
-      if (Object.keys(this.deffData).length == 0) {//没有做出修改
-        return true;
-      }
-      return this.$api.put({
-        url: '/draft-house',
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: sendData
-      }).then((e) => {
-        console.log(e);
-        if (e.data.code == 200) {
-          //存入Vuex;
-          that.$store.commit("updateStep3", that.deffData);
-          return true;
-        } else {
-          return false;
-        }
-
-      }).catch(() => {
-        return false;
-      })
-    }
   },
 }
 </script>

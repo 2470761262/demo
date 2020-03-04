@@ -50,7 +50,9 @@
 </template>
 <script>
 import listPage from "@/components/listPage";
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -67,7 +69,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
         { prop: "id", label: "编号" },

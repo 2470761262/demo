@@ -31,7 +31,9 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },

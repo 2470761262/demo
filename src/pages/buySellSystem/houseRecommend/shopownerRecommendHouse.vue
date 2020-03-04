@@ -6,8 +6,9 @@
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
-        <!-- 楼盘 -->
+      <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
+
         
           <el-item label="楼盘名称"
                  prop="comId">
@@ -69,10 +70,7 @@
                      @click="queryShopownerHouseParams">查询</el-button>
       </div>
     </template>
-   
-
-
-
+  
 
     <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
@@ -82,39 +80,37 @@
                          :key="item.prop">
         </el-table-column>
       </template>
-     <el-table-column
-        prop=""
-        label="户型"
-        :formatter="formatHouseType">
+      <el-table-column prop=""
+                       label="户型"
+                       :formatter="formatHouseType">
       </el-table-column>
-     <el-table-column 
-                       label="操作"
+      <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-            <el-button type="info"
-                       size="mini"
-                       @click="toLook(scope.row.id)"
-                       >查看</el-button>
+          <el-button type="info"
+                     size="mini"
+                     @click="toLook(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
-
 
     </template>
   </list-page>
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
   data () {
-    
+
     return {
       loading: false,
-      
-     data: {
+
+      data: {
         comId: '',
         cbId: '',
         roomNo: '',
@@ -124,16 +120,16 @@ export default {
       cbIdList: [],
       roomNoList: [],
       pageJson: {
-       currentPage: 1, //当前页码
+        currentPage: 1, //当前页码
         total: 0, //总记录数
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-       { prop: 'houseNo', label: "房源编号" },
+        { prop: 'houseNo', label: "房源编号" },
         { prop: 'communityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)"},
+        { prop: 'inArea', label: "面积(m²)" },
         { prop: 'price', label: "售价(万元)" },
         { prop: 'seenNum', label: "被看次数" },
         { prop: 'outfollow', label: "未跟进天数" },
@@ -156,13 +152,14 @@ export default {
       }],
     }
   },
-  mounted(){
+  mounted () {
     this.queryShopownerRecommendHouse(1);
   },
   methods: {
     queryTabData () {
       console.log(this, '111');
     },
+
      formatHouseType(row, column){
       return row.Rooms+'室'+row.hall+'厅'+row.toilet+'卫';
     },
@@ -208,7 +205,7 @@ remoteMethod (query) {
         this.options = [];
       }
     },
-queryCBId () {
+    queryCBId () {
       var that = this
       this.$api.get({
         url: "/mateHouse/queryComBuilding",
@@ -248,6 +245,7 @@ queryCBId () {
         }
       })
     },
+
   queryShopownerRecommendHouse(currentPage){
     var that =this;
     let params={"limit":that.pageJson.pageSize,"page":currentPage-1};
@@ -273,12 +271,12 @@ queryCBId () {
         } else {
           console.log("查询店长推荐房源列表结果：" + result.message);
           alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询店长推荐房源列表失败");
-        console.log(e);
-      })
-  },
+        }
+      }).catch((e) => {
+        console.log("查询店长推荐房源列表失败");
+        console.log(e);
+      })
+    },
     isForBut (type) {
       let array = [
         { name: '查看', isType: '3', methosName: '' }
@@ -297,13 +295,13 @@ queryCBId () {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-       this.queryShopownerRecommendHouse(val);
+      this.queryShopownerRecommendHouse(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
-       this.pageJson.pageSize = val;
-       this.queryShopownerRecommendHouse(1);
+      this.pageJson.pageSize = val;
+      this.queryShopownerRecommendHouse(1);
     }
   },
 }
-</script>  
+</script>

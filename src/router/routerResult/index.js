@@ -58,6 +58,13 @@ export default [
             import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/shopownerRecommendHouse.vue")
     },
     {
+        //对赌房源
+        path: "/buySellSystem/houseBet",
+        name: "addHouse",
+        component: () =>
+            import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseBet/houseBet.vue")
+    },
+    {
         //补充楼盘
         path: "/buySellSystem/CommunityReplenish",
         name: "addHouse",
@@ -507,6 +514,34 @@ export default [
         name: "documentEdit",
         component: () =>
             import(/* webpackChunkName: "documentEdit" */ "@/pages/systemAdministration/document/edit.vue")
+    },
+    {
+        //系统管理 规则管理
+        path: "/sys/docRules/list",
+        name: "docRulesList",
+        component: () =>
+            import(/* webpackChunkName: "docRulesList" */ "@/pages/systemAdministration/docRules/list.vue")
+    },
+    {
+        //系统管理 规则管理 编辑
+        path: "/sys/docRules/edit",
+        name: "docRulesEdit",
+        component: () =>
+            import(/* webpackChunkName: "docRulesList" */ "@/pages/systemAdministration/docRules/edit.vue")
+    },
+    {
+        //系统管理 组织结构
+        path: "/sys/hrTree/hrTree",
+        name: "hrTree",
+        component: () =>
+            import(/* webpackChunkName: "hrTree" */ "@/pages/systemAdministration/hrTree/hrTree.vue")
+    },
+    {
+        //系统管理 获取授权器密码
+        path: "/sys/logonRegPwd/view",
+        name: "getPwd",
+        component: () =>
+            import(/* webpackChunkName: "logonRegPwd" */ "@/pages/systemAdministration/logonRegPwd/view.vue")
     },
     {
         //系统管理 岗位管理

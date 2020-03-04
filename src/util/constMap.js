@@ -32,6 +32,19 @@ export const HOUSEUSE = [ // 房屋用途 houseUse
     value: 3
   },
 ]
+export const DECORATION = [{ //装修 decoration
+    key: "毛胚",
+    value: 1
+  },
+  {
+    key: "简单装",
+    value: 2
+  },
+  {
+    key: "精装修",
+    value: 3
+  }
+]
 
 export const HOUSESTRUCT = [ // 房屋结构 houseStruct
   {
@@ -225,11 +238,11 @@ export const PAYMENTMETHOD = [ // 付款方式 paymentMethod
 ]
 export const HOUSEBELONG = [ // 附属配套 houseBelong
   {
-    key: "车位 ",
+    key: "车位",
     value: 0
   },
   {
-    key: "车库 ",
+    key: "车库",
     value: 1
   },
   {
@@ -237,8 +250,18 @@ export const HOUSEBELONG = [ // 附属配套 houseBelong
     value: 2
   },
   {
-    key: "无",
+    key: "其他",
     value: 3
+  },
+]
+export const ISOWNERONLY = [ // ISOWNERONLY 唯一用户
+  {
+    key: "不唯一",
+    value: 0
+  },
+  {
+    key: "唯一",
+    value: 1
   },
 ]
 export const ROOMTYPE = [ // 户型结构 roomType

@@ -6,7 +6,7 @@
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
-         <!-- 楼盘 -->
+      <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
         
            <el-item label="楼盘名称"
@@ -71,8 +71,7 @@
       </template>
    
 
-
-
+      
 
     <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
@@ -83,38 +82,36 @@
         </el-table-column>
       </template>
 
-      <el-table-column
-        prop=""
-        label="户型"
-        :formatter="formatHouseType">
+      <el-table-column prop=""
+                       label="户型"
+                       :formatter="formatHouseType">
       </el-table-column>
-     <el-table-column 
-                       label="操作"
+      <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-            <el-button type="info"
-                       size="mini"
-                       @click="toLook(scope.row.id)"
-                       >查看</el-button>
+          <el-button type="info"
+                     size="mini"
+                     @click="toLook(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
-
 
     </template>
   </list-page>
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
   data () {
-    
+
     return {
       loading: false,
-      
+
       data: {
         comId: '',
         cbId: '',
@@ -134,14 +131,14 @@ export default {
         { prop: 'communityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)"},
+        { prop: 'inArea', label: "面积(m²)" },
         { prop: 'price', label: "售价(万元)" },
         { prop: 'seenNum', label: "被看次数" },
         { prop: 'outfollow', label: "未跟进天数" },
         { prop: 'notLookNum', label: "未被看天数" },
         { prop: 'addTime', label: "添加时间" },
         { prop: 'brokerName', label: "经纪人" }
-        
+
       ],
       tableData: [{
         // house: '龙腾花园-16栋-604室',
@@ -158,11 +155,11 @@ export default {
       }],
     }
   },
-  mounted(){
+  mounted () {
     this.querySoleHouseList(1);
   },
   methods: {
-      
+
     queryTabData () {
       console.log(this, '111');
     },
@@ -211,7 +208,7 @@ remoteMethod (query) {
         this.options = [];
       }
     },
-queryCBId () {
+    queryCBId () {
       var that = this
       this.$api.get({
         url: "/mateHouse/queryComBuilding",
@@ -273,12 +270,12 @@ queryCBId () {
         } else {
           console.log("查询独家房源列表结果：" + result.message);
           alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询独家房源列表失败");
-        console.log(e);
-      })
-  },
+        }
+      }).catch((e) => {
+        console.log("查询独家房源列表失败");
+        console.log(e);
+      })
+    },
     isForBut (type) {
       let array = [
         { name: '查看', isType: '3', methosName: '' }
@@ -298,7 +295,7 @@ queryCBId () {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-       this.querySoleHouseList(1);
+      this.querySoleHouseList(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);

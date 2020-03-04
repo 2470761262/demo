@@ -51,7 +51,9 @@
 
 <script>
 import listPage from "@/components/listPage";
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -68,7 +70,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10//每页条数
       },
       tableDataColumn: [
         { prop: "id", label: "岗位id" },
@@ -125,9 +127,9 @@ export default {
     editRoleDetail (RoleId) {
       this.$router.push({ path: "/sys/editRoleDetail", query: { RoleId: RoleId } });
     },
-    delRoleDetail (RoleId){
+    delRoleDetail (RoleId) {
       this.$api.post({
-        url: '/role/delete/'+RoleId,
+        url: '/role/delete/' + RoleId,
         token: false,
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
@@ -136,7 +138,7 @@ export default {
           this.$alert('', '删除成功', {
             dangerouslyUseHTMLString: false
           });
-          this.$router.push({ path: "/sys/roleManagementList"});
+          this.$router.push({ path: "/sys/roleManagementList" });
         }
       }).catch((e) => {
         console.log("删除失败");
@@ -148,8 +150,8 @@ export default {
     },
     getOpeBtns (type) {
       let array = [
-         { name: '编辑', isType: '1', methosName: 'editRoleDetail' },
-         { name: '删除', isType: '1', methosName: 'delRoleDetail' }
+        { name: '编辑', isType: '1', methosName: 'editRoleDetail' },
+        { name: '删除', isType: '1', methosName: 'delRoleDetail' }
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)

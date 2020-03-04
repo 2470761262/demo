@@ -20,7 +20,7 @@
 
 <template>
   <div>
-    <template >
+    <template>
       <div class="elTree">
         <!--        <el-input placeholder="输入关键字进行过滤" v-model="filterText">-->
         <!--        </el-input>-->
@@ -38,8 +38,8 @@
     </template>
 
     <list-page :parentData="$data"
-             @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
         <div class="query-cell">
           <el-input placeholder="部门名称"
@@ -95,20 +95,22 @@
 <script>
 import listPage from "@/components/listPage";
 
-export default { 
-  
+import getMenuRid from '@/minxi/getMenuRid';
+export default {
+  mixins: [getMenuRid],
+
   components: {
     listPage
   },
   data () {
     return {
       loading: false, //控制表格加载动画提示
-      department:{},
+      department: {},
       queryData: {
         DeptName: "",
         del: 0,
-        isLocked:null,
-        flag:false,
+        isLocked: null,
+        flag: false,
       },
       configSet: {
         selectToTime: false,
@@ -117,7 +119,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
         { prop: "id", label: "部门id" },
@@ -142,28 +144,28 @@ export default {
   },
   mounted () {
     //读取公司，部门数据
-      this.$api
-        .post({
-          url: "/sys/account/company/tree",
-          token: false
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            console.log(result.message);
-            console.log(result.data);
-            this.treeData = result.data;
-          } else {
-            console.log("载入结果"+ + result.message);
-            alert(result.message);
-          }
-        })
-        .catch(e => {
-          console.log("读取失败");
-          console.log(e);
-        });
-     this.queryDeptDatas(1);
+    this.$api
+      .post({
+        url: "/sys/account/company/tree",
+        token: false
+      })
+      .then(e => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.treeData = result.data;
+        } else {
+          console.log("载入结果" + + result.message);
+          alert(result.message);
+        }
+      })
+      .catch(e => {
+        console.log("读取失败");
+        console.log(e);
+      });
+    this.queryDeptDatas(1);
   },
   methods: {
     queryDeptByParams () {
@@ -179,7 +181,7 @@ export default {
       if (this.queryData.isLocked != null) {
         params.isLocked = this.queryData.isLocked;
       }
-        params.del = this.queryData.del;
+      params.del = this.queryData.del;
       this.$api.post({
         url: '/department/list',
         data: params,
@@ -192,49 +194,49 @@ export default {
           console.log(result.message);
           console.log(result.data);
           for (var i = 0; i < result.data.list.length; i++) {
-               switch (result.data.list[i].del) {
-                    case 0:
-                            result.data.list[i].del  = "有效";
-                            break;
-                    case 1:
-                            result.data.list[i].del  = "无效";
-                            break;
-                    
-               }
-               switch (result.data.list[i].isLocked) {
-                    case 0:
-                            result.data.list[i].isLocked  = "锁定";
-                            break;
-                    case 1:
-                            result.data.list[i].isLocked  = "正常";
-                            break;
-                    
-               }
-               switch (result.data.list[i].deptType) {
-                    case 1:
-                            result.data.list[i].deptType  = "综合";
-                            break;
-                    case 2:
-                            result.data.list[i].deptType  = "业务";
-                            break;
-                    case 3:
-                            result.data.list[i].deptType  = "行政";
-                            break;
-                    case 4:
-                            result.data.list[i].deptType  = "联营";
-                            break;
-                    
-               }
-               switch (result.data.list[i].joinType) {
-                    case 1:
-                            result.data.list[i].joinType  = "直营";
-                            break;
-                    case 2:
-                            result.data.list[i].joinType  = "加盟";
-                            break;
-                    
-               }
+            switch (result.data.list[i].del) {
+              case 0:
+                result.data.list[i].del = "有效";
+                break;
+              case 1:
+                result.data.list[i].del = "无效";
+                break;
+
             }
+            switch (result.data.list[i].isLocked) {
+              case 0:
+                result.data.list[i].isLocked = "锁定";
+                break;
+              case 1:
+                result.data.list[i].isLocked = "正常";
+                break;
+
+            }
+            switch (result.data.list[i].deptType) {
+              case 1:
+                result.data.list[i].deptType = "综合";
+                break;
+              case 2:
+                result.data.list[i].deptType = "业务";
+                break;
+              case 3:
+                result.data.list[i].deptType = "行政";
+                break;
+              case 4:
+                result.data.list[i].deptType = "联营";
+                break;
+
+            }
+            switch (result.data.list[i].joinType) {
+              case 1:
+                result.data.list[i].joinType = "直营";
+                break;
+              case 2:
+                result.data.list[i].joinType = "加盟";
+                break;
+
+            }
+          }
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
           this.tableData = result.data.list;
@@ -247,31 +249,31 @@ export default {
         console.log(e);
       })
     },
-    queryDeptByIsLocked(isLocked){
+    queryDeptByIsLocked (isLocked) {
       this.queryData.isLocked = isLocked;
-      this.queryDeptDatas (1);
+      this.queryDeptDatas(1);
     },
     toAddDeptPage (saveType) {
-      if(this.queryData.flag ){
-        if(saveType == 0){
-        this.$router.push({ name: "addDeptManage",params: {deptParentID:this.department.deptParentID,coId:this.department.coId }});
-        this.department = null;
-        }else if(saveType == 1){
-        this.$router.push({ name: "addDeptManage",params: {deptParentID:this.department.id,coId:this.department.coId }});
-        this.department = null;
-       }
-      }else{
-         this.$alert('', '请选择一个部门节点', {
-            dangerouslyUseHTMLString: false
-          });
+      if (this.queryData.flag) {
+        if (saveType == 0) {
+          this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.deptParentID, coId: this.department.coId } });
+          this.department = null;
+        } else if (saveType == 1) {
+          this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.id, coId: this.department.coId } });
+          this.department = null;
+        }
+      } else {
+        this.$alert('', '请选择一个部门节点', {
+          dangerouslyUseHTMLString: false
+        });
       }
     },
     editDeptDetail (id) {
       this.$router.push({ path: "/sys/editDeptDetail", query: { id: id } });
     },
-    delDeptDetail (id){
-     this.$api.post({
-        url: '/department/del/'+id,
+    delDeptDetail (id) {
+      this.$api.post({
+        url: '/department/del/' + id,
         token: false,
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
@@ -280,7 +282,7 @@ export default {
           this.$alert('', '删除成功', {
             dangerouslyUseHTMLString: false
           });
-          this.$router.push({ path: "/sys/deptManageList"});
+          this.$router.push({ path: "/sys/deptManageList" });
         }
       }).catch((e) => {
         console.log("删除失败");
@@ -295,8 +297,8 @@ export default {
     // },
     getOpeBtns (type) {
       let array = [
-         { name: '编辑', isType: '1', methosName: 'editDeptDetail' },
-         { name: '删除', isType: '1', methosName: 'delDeptDetail' },
+        { name: '编辑', isType: '1', methosName: 'editDeptDetail' },
+        { name: '删除', isType: '1', methosName: 'delDeptDetail' },
         // { name: '子部门', isType: '1', methosName: 'querySubsidiary' },
       ]
       // return array.filter((item) => {
@@ -313,51 +315,51 @@ export default {
       this.queryDeptDatas(val);
     },
     checkChange (e, data, childData) {
-      console.log(e, data, childData, "checkChange"); 
+      console.log(e, data, childData, "checkChange");
     },
     treeCheck (e, data) {
-     this.queryData.flag = true ;
-    if(e.type == 0 ){
-      this.$api.get({
-        url: '/company/'+e.businessId,
-        token: false
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          this.company=result.data;
-        } else {
-          console.log("查询公司详情结果：" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询公司详情失败");
-        console.log(e);
-      })    
-      }else if (e.type == 1 ) {
-      this.$api.get({
-        url: '/department/'+e.businessId,
-        token: false
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          this.department=result.data;
-        } else {
-          console.log("查询部门详情结果：" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询部门详情失败");
-        console.log(e);
-      })    
+      this.queryData.flag = true;
+      if (e.type == 0) {
+        this.$api.get({
+          url: '/company/' + e.businessId,
+          token: false
+        }).then((e) => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.company = result.data;
+          } else {
+            console.log("查询公司详情结果：" + result.message);
+            alert(result.message);
+          }
+        }).catch((e) => {
+          console.log("查询公司详情失败");
+          console.log(e);
+        })
+      } else if (e.type == 1) {
+        this.$api.get({
+          url: '/department/' + e.businessId,
+          token: false
+        }).then((e) => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.department = result.data;
+          } else {
+            console.log("查询部门详情结果：" + result.message);
+            alert(result.message);
+          }
+        }).catch((e) => {
+          console.log("查询部门详情失败");
+          console.log(e);
+        })
       }
-     
-      
+
+
       console.log(e, data, "check..");
     },
     //树输入筛选

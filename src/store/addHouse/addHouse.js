@@ -17,46 +17,52 @@ let formDataJson = {
     tel3: "", //业主号码3
     price: "", //售价
     bottomPrice: "", //底价
-    area: "", //面积
-    room: "", //室
-    hall: "", //厅
-    toilet: "", //卫
-    balcony: "", //阳台
+    area: 0, //面积
+    room: 0, //室
+    hall: 0, //厅
+    toilet: 0, //卫
+    balcony: 0, //阳台
     face: "", //朝向
-    decoration: "", //装修
-    title: "", //房源标题
-    certificateType: "" //房屋证件类型
+    certificateType: "", //房屋证件类型
+    isElevator: "", //电梯 2>1
+    houseUse: "", //房屋用途 2>1
+    landCharacteristic: "", //土地性质 2>1
+    property: "", //产权性质 2>1
+    roomType: "", //户型结构 2>1
+    houseStruct: "", //房屋结构 2>1
+    primarySchool: "", //划片小学 2>1
+    middleSchool: "", //划片中学 2>1
+    buildingTime: "", //竣工时间
+    valuation: "", //评估价
+    certificateNo: "", //房间证号
+    propertyCompany: "" //物业公司
   },
   step2: {
-    houseUse: "", //房屋用途
-    houseStruct: "", //房屋结构
-    property: "", //产权性质
+    propertyFee: "", //物业费
+    isOwnerOnly: 1, //唯一住房 1唯一 0 不唯一
+    decoration: "", //装修
     houseNow: "", //房屋现状
     houseSource: "", //房屋来源
-    roomType: "", //户型结构
     sign: "", //户口情况
-    isElevator: "", //电梯
     houseDelivery: "", //交房时间
     houseBelong: "", //附属配套
-    landCharacteristic: "", //土地性质
-    primarySchool: "", //划片小学
     primarySchoolUse: "", //小学学籍占用
-    middleSchool: "", //划片中学
     middleSchoolUse: "", //中学学籍占用
-    mortgage: "", //抵押情况
+    mortgage: 0, //抵押情况
     mortgageBank: "", //抵押银行
     balance: "", //余贷
     monthlyMortgage: "", //月供
     lastSale: "", //上次交易日期
     lastPayment: "", //上次交易金额
     paymentMethod: "", //付款方式
-    buildingTime: "" //竣工时间
-  },
-  step3: {
+    buildingTime: "", //竣工时间
+    title: "", //房源标题
     communityDesc: "", //小区介绍
     roomDesc: '', //户型介绍
     taxDesc: "", //税费解析
     saleDesc: "", //核心卖点
+  },
+  step3: {
     //saleReson: "", //卖房原因
   }
 }
@@ -94,5 +100,12 @@ export default {
     updateStep3(state, val) {
       forSetStep(state, val, 'step3');
     }
-  }
+  },
+  actions: {
+    InitFormData({
+      commit
+    }, value) {
+      commit(value.commitName, value.json);
+    },
+  },
 };

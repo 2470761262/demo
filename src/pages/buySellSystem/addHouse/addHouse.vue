@@ -4,12 +4,15 @@
   flex-direction: column;
   height: 100%;
   .page-steps {
+    padding: 15px 40px !important;
+    border: 1px solid #b4b4b4;
+    border-top: none;
     /deep/.el-step__title {
       line-height: normal;
       margin-top: 10px;
+      text-indent: -14px;
     }
-    box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-    border-radius: 10px;
+    background: #fff;
     padding: 10px 0 15px;
   }
   .page-contenr {
@@ -32,8 +35,9 @@
         border-left: 1px solid #999;
         border-right: 1px solid #999;
         width: 940px;
-        transform: translateX(-50%);
-        left: 50%;
+        // margin: 0 auto;
+        //transform: translateX(-50%);
+        left: calc(50% - 940px / 2);
         min-height: 100%;
         // top: 0;
         //bottom: 0;
@@ -61,9 +65,9 @@
   <div class="page-body">
     <div class="page-steps">
       <el-steps :active="stepsActiveIndex+1"
-                align-center
                 finish-status="success">
         <el-step :title="item.title"
+                 icon="el-icon-edit"
                  v-for="(item, index) in stepsList"
                  :key="index"></el-step>
       </el-steps>
@@ -74,13 +78,15 @@
            v-loading="butLoading">
         <div class="page-contenr-com-posi">
           <keep-alive>
-            <component :is="componentName"
+            <component :getData="formDataGet"
+                       :is="componentName"
                        ref="com"></component>
           </keep-alive>
           <div class="page-contenr-but"
                v-if="stepsActiveIndex!=3">
             <el-button-group>
-              <el-button type="primary"
+              <el-button v-if="stepsActiveIndex!=0"
+                         type="primary"
                          @click="prevPage"
                          class="page-previous">{{
             prevText
@@ -89,8 +95,8 @@
                          @click="nextPage"
                          class="page-next"
                          :loading="butLoading">{{ nextText }}</el-button>
-              <el-button type="info"
-                         :loading="butLoading">保存草稿</el-button>
+              <!-- <el-button type="info"
+                         :loading="butLoading">保存草稿</el-button> -->
             </el-button-group>
           </div>
         </div>
@@ -104,7 +110,9 @@ import basicInformation from "@/pages/buySellSystem/addHouse/components/basicInf
 //异步组件工厂方法
 import componentsFactory from "@/util/componentsFactory";
 import { mapState } from "vuex";
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     basicInformation,
     supplement: () => componentsFactory("pages/buySellSystem/addHouse/components/supplement"), //补充信息
@@ -118,28 +126,30 @@ export default {
       }
     }
   },
+  created () {
+    this.$store.commit('updateId', 41);
+    this.formDataGet = true;
+  },
   watch: {
     stepsActiveIndex (val) {
-      if (val == 0) this.prevText = "重置";
-      else this.prevText = "上一步";
-
       if (val != this.stepsList.length - 1) this.nextText = "下一步";
       else this.nextText = "邀请验真";
     }
   },
   data () {
     return {
-      componentName: "basicInformation",
+      componentName: "exploration",
       stepsList: [
         { title: "必填信息", componentName: "basicInformation" },
         { title: "选填信息", componentName: "supplement" },
         { title: "实勘图片/视频", componentName: "exploration" },
         { title: "房源验真", componentName: "addHouseSuccess" }
       ],
-      prevText: "重置",
+      prevText: "上一步",
       nextText: "下一步",
       stepsActiveIndex: 0,
-      butLoading: false
+      butLoading: false,
+      formDataGet: false
     };
   },
   beforeRouteLeave (to, from, next) {

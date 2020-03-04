@@ -77,8 +77,7 @@
     </template>
    
 
-
-
+       
 
     <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
@@ -89,50 +88,48 @@
         </el-table-column>
       </template>
 
-       <el-table-column
-        prop=""
-        label="户型"
-        :formatter="formatHouseType">
+      <el-table-column prop=""
+                       label="户型"
+                       :formatter="formatHouseType">
       </el-table-column>
-     <el-table-column 
-                       label="操作"
+      <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-            <el-button type="info"
-                       size="mini"
-                       @click="toLook(scope.row.id)"
-                       >查看</el-button>
+          <el-button type="info"
+                     size="mini"
+                     @click="toLook(scope.row.id)">查看</el-button>
         </template>
-       
-      </el-table-column>
 
+      </el-table-column>
 
     </template>
   </list-page>
 </template>
 <script>
 import listPage from '@/components/listPage';
+import getMenuRid from '@/minxi/getMenuRid';
 export default {
+  mixins: [getMenuRid],
   components: {
     listPage
   },
   data () {
-    
+
     return {
       loading: false,
-      
+
       data: {
         comId: '',
         cbId: '',
         roomNo: '',
         timeSelect: '',
-        customName:'',
-        tel:'',
-        minInArea:'',
-        maxInArea:'',
-        minPrice:'',
-        maxPrice:''
+        customName: '',
+        tel: '',
+        minInArea: '',
+        maxInArea: '',
+        minPrice: '',
+        maxPrice: ''
       },
       options: [],
       cbIdList: [],
@@ -143,17 +140,17 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-          { prop: 'houseNo', label: "房源编号" },
+        { prop: 'houseNo', label: "房源编号" },
         { prop: 'communityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)"},
-         { prop: 'price', label: "售价(万元)"},
+        { prop: 'inArea', label: "面积(m²)" },
+        { prop: 'price', label: "售价(万元)" },
         { prop: 'seenNum', label: "被看次数" },
         { prop: 'outfollow', label: "未跟进天数" },
         { prop: 'notLookNum', label: "未被看天数" },
         { prop: 'addTime', label: "录入时间" }
-       
+
       ],
       tableData: [{
         // house: '龙腾花园-16栋-604室',
@@ -170,7 +167,7 @@ export default {
       }],
     }
   },
-  mounted(){
+  mounted () {
     this.querySaleNotTracking(1);
   },
   methods: {
@@ -181,13 +178,13 @@ export default {
       return row.Rooms+'室'+row.hall+'厅'+row.toilet+'卫';
     },
 
-    toLook(id){
-        console.log(id);
-         var that = this;
-        that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
+    toLook (id) {
+      console.log(id);
+      var that = this;
+      that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
     },
-    querySaleNotTrackingParams(){
-        this.querySaleNotTracking(1);
+    querySaleNotTrackingParams () {
+      this.querySaleNotTracking(1);
     },
     remoteInput () {
    
@@ -223,7 +220,7 @@ remoteMethod (query) {
         this.options = [];
       }
     },
-queryCBId () {
+    queryCBId () {
       var that = this
       this.$api.get({
         url: "/mateHouse/queryComBuilding",
@@ -293,12 +290,12 @@ queryCBId () {
         } else {
           console.log("查询在售无跟单列表结果：" + result.message);
           alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询在售无跟单列表失败");
-        console.log(e);
-      })
-  },
+        }
+      }).catch((e) => {
+        console.log("查询在售无跟单列表失败");
+        console.log(e);
+      })
+    },
     isForBut (type) {
       let array = [
         { name: '查看', isType: '3', methosName: '' }
@@ -322,7 +319,7 @@ queryCBId () {
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
-       this.pageJson.pageSize = val;
+      this.pageJson.pageSize = val;
       this.querySaleNotTracking(1);
     }
   },

@@ -21,8 +21,8 @@
 <template>
   <div>
     <list-page :parentData="$data"
-             @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
         <div class="query-cell">
           <el-input placeholder="登录名/姓名/公司/部门/岗位"
@@ -92,19 +92,22 @@
 
 <script>
 import listPage from "@/components/listPage";
-export default { 
-  
+import getMenuRid from '@/minxi/getMenuRid';
+export default {
+  mixins: [getMenuRid],
+
   components: {
     listPage
   },
-  
+
   data () {
     return {
       loading: false, //控制表格加载动画提示
       queryData: {
         keyWord: "",
-        isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户 
-        del:0 //0 查询在职员工,1 查询离职员工,2 查询待离职员工
+        isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户
+        del:0 ,//0 查询在职员工,1 查询离职员工,2 查询待离职员工
+        type:0 //0 内部  1 游客
       },
       configSet: {
         selectToTime: false,
@@ -113,7 +116,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
         { prop: "id", label: "员工id" },
@@ -159,6 +162,7 @@ export default {
       if (this.queryData.del != null) {
         params.del = this.queryData.del;
       }
+        params.type = this.queryData.type;
       this.$api.post({
         url: '/employee/list',
         data: params,
@@ -170,22 +174,22 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-            for (var i = 0; i < result.data.list.length; i++) {
-               switch (result.data.list[i].del) {
-                    case 0:
-                            result.data.list[i].del  = "在职";
-                            break;
-                    case 1:
-                            result.data.list[i].del  = "离职";
-                            break;
-                    case 2:
-                            result.data.list[i].del  = "未带看锁定";
-                            break;
-                    case 3:
-                            result.data.list[i].del  = "未审核";
-                            break;
-               }
+          for (var i = 0; i < result.data.list.length; i++) {
+            switch (result.data.list[i].del) {
+              case 0:
+                result.data.list[i].del = "在职";
+                break;
+              case 1:
+                result.data.list[i].del = "离职";
+                break;
+              case 2:
+                result.data.list[i].del = "未带看锁定";
+                break;
+              case 3:
+                result.data.list[i].del = "未审核";
+                break;
             }
+          }
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
           this.tableData = result.data.list;
@@ -205,34 +209,38 @@ export default {
     editEmployee (id) {
       this.$router.push({ path: "/sys/editemployee", query: { id: id } });
     },
-    delEmployee (id){
-     this.$api.post({
-        url: '/employee/del/'+id,
+    delEmployee (id, del) {
+      this.$api.post({
+        url: '/employee/del/' + id + '?del=' + del,
         token: false,
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
-          this.$alert('', '删除成功', {
+          this.$alert('', '成功', {
             dangerouslyUseHTMLString: false
           });
-          this.$router.push({ path: "/sys/employeeList"});
+          this.$router.push({ path: "/sys/employeeList" });
         }
       }).catch((e) => {
-        console.log("删除失败");
+        console.log("失败");
         console.log(e);
       })
     },
     distributeEvent (e, id) {
       this[e](id);
     },
-    // querySubsidiary(EmployeeId){
-    //   this.queryEmployeeDatas(1,EmployeeId);
-    // },
+    resumeDelEmployee(id){
+      this.delEmployee(id,0);
+    },
+    leaveDelEmployee(id){
+      this.delEmployee(id,1);
+    },
     getOpeBtns (type) {
       let array = [
          { name: '编辑', isType: '1', methosName: 'editEmployee' },
-         { name: '删除', isType: '1', methosName: 'delEmployee' },
+         { name: '离职', isType: '1', methosName: 'leaveDelEmployee' },
+         { name: '复职', isType: '1', methosName: 'resumeDelEmployee' },
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
@@ -247,7 +255,7 @@ export default {
     handleCurrentChange (val) {
       this.queryEmployeeDatas(val);
     },
-    
+
   }
 };
 </script>
