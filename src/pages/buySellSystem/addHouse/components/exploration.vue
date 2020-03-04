@@ -65,6 +65,10 @@
           text-align: center;
           line-height: 20px;
         }
+        /deep/.el-image {
+          width: 100%;
+          height: 100px;
+        }
         img,
         video {
           width: 100%;
@@ -94,7 +98,9 @@
 }
 </style>
 <template>
-  <div class="page-cell-addHouse">
+  <div class="page-cell-addHouse"
+       element-loading-text="我在去获取数据的路上了~"
+       v-loading="loading">
     <!-- accept=".jpg,.png" -->
     <!-- 外景图 -->
     <div class="upLoadFile">
@@ -112,8 +118,14 @@
         <div class="file-list-item"
              v-for="item in outdoorImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
+          <el-image :src="item.url"
+                    fit="cover"
+                    :preview-src-list="fillterImgList('outdoorImgList')">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
           <div class="upLoadFile-remove el-icon-delete"></div>
         </div>
       </div>
@@ -139,8 +151,14 @@
         <div class="file-list-item"
              v-for="item in livingRoomImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('livingRoomImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
           <div class="upLoadFile-remove el-icon-delete"></div>
         </div>
       </div>
@@ -166,8 +184,14 @@
         <div class="file-list-item"
              v-for="item in bedroomImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('bedroomImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
           <div class="upLoadFile-remove el-icon-delete"></div>
         </div>
       </div>
@@ -193,8 +217,14 @@
         <div class="file-list-item"
              v-for="item in kitchenImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('kitchenImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
           <div class="upLoadFile-remove el-icon-delete"></div>
         </div>
       </div>
@@ -220,8 +250,14 @@
         <div class="file-list-item"
              v-for="item in toiletImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('toiletImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
           <div class="upLoadFile-remove el-icon-delete"></div>
         </div>
       </div>
@@ -247,8 +283,14 @@
         <div class="file-list-item"
              v-for="item in layoutImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('layoutImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
           <div class="upLoadFile-remove el-icon-delete"></div>
         </div>
       </div>
@@ -293,10 +335,21 @@
 import util from '@/util/util';
 export default {
   name: "exploration",
-  created () {
+  props: {
+    getData: {
+      type: Boolean,
+      default: false
+    }
+  },
+  mounted () {
+    //true 则去获取数据
+    if (this.getData) {
+      this.getLoadData();
+    }
   },
   data () {
     return {
+      loading: false,
       outdoorImgList: [], //外景图
       livingRoomImgList: [],//客厅
       bedroomImgList: [],//卧室
@@ -307,7 +360,20 @@ export default {
     }
   },
   methods: {
-
+    fillterImgList (imgList) {
+      if (this[imgList].length > 0) {
+        return this[imgList].map((item) => {
+          return item.url;
+        })
+      } else {
+        return [];
+      }
+    },
+    getLoadData () {
+      this.$api.get({ url: `/draft-house/pictures/${this.$store.state.addHouse.formData.id}` }).then((e) => {
+        console.log(e, "e");
+      })
+    },
     //上传视频
     getVideoFile (fileListName, e) {
       console.log(fileListName, e);

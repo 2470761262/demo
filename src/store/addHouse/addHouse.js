@@ -34,9 +34,11 @@ let formDataJson = {
     middleSchool: "", //划片中学 2>1
     buildingTime: "", //竣工时间
     valuation: "", //评估价
-    certificateNo: "" //房间证号
+    certificateNo: "", //房间证号
+    propertyCompany: "" //物业公司
   },
   step2: {
+    propertyFee: "", //物业费
     isOwnerOnly: 1, //唯一住房 1唯一 0 不唯一
     decoration: "", //装修
     houseNow: "", //房屋现状
@@ -59,7 +61,6 @@ let formDataJson = {
     roomDesc: '', //户型介绍
     taxDesc: "", //税费解析
     saleDesc: "", //核心卖点
-    propertyFee:""//物业费
   },
   step3: {
     //saleReson: "", //卖房原因

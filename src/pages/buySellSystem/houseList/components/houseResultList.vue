@@ -87,6 +87,10 @@
       height: 100px;
       border-radius: 4px;
       overflow: hidden;
+      /deep/.el-image {
+        width: 100%;
+        height: 100%;
+      }
       img {
         width: 100%;
         height: 100%;
@@ -190,7 +194,8 @@
           {{tag.title}}{{tag.value}}
         </el-tag>
       </div>
-      <div class="select-tabs-cell">
+      <div class="select-tabs-cell"
+           v-if="querySelectFlag">
         <label class="select-checkbox">
           <input type="checkbox">
           <span>钥匙</span>
@@ -237,7 +242,13 @@
                v-for="(item,index) in renderList"
                :key="index">
             <div class="select-for-item-img">
-              <img :src="item.picUrl">
+              <el-image :src="item.picUrl"
+                        fit="cover">
+                <div slot="placeholder"
+                     class="image-slot">
+                  加载中<span>...</span>
+                </div>
+              </el-image>
             </div>
             <div class="select-for-item-data">
               <div class="item-data-top">

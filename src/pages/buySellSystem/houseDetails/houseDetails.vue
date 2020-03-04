@@ -243,17 +243,17 @@ input[type=number]::-webkit-outer-spin-button {
           <div style="margin-left:20px;">
             <span>{{houseDetails.Customers}}</span>
             <br />
-            <el-dropdown>
-  <el-button type="primary">
-    查看号码<i class="el-icon-arrow-down el-icon--right"></i>
-  </el-button>
-  <el-dropdown-menu slot="dropdown">
-    <el-dropdown-item v-if="houseDetails.Tel!=''" v-text="houseDetails.Tel" @click="contactOwer('Tel','contactPhone')"></el-dropdown-item>
-    <el-dropdown-item v-if="houseDetails.Tel1!=''" v-text="houseDetails.Tel1" @click="contactOwer('Tel1','contactPhone1')"></el-dropdown-item>
-    <el-dropdown-item v-if="houseDetails.Tel2!=''" v-text="houseDetails.Tel2" @click="contactOwer('Tel2','contactPhone2')"></el-dropdown-item>
-    <el-dropdown-item v-if="houseDetails.Tel3!=''" v-text="houseDetails.Tel3" @click="contactOwer('Tel3','contactPhone3')" ></el-dropdown-item>
-  </el-dropdown-menu>
-</el-dropdown>
+            <el-dropdown  @command="contactOwer">
+              <el-button type="primary">
+                查看号码<i class="el-icon-arrow-down el-icon--right"></i>
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-if="houseDetails.Tel!=''" v-text="houseDetails.Tel" command=""></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel1!=''" v-text="houseDetails.Tel1" command="1"></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel2!=''" v-text="houseDetails.Tel2" command="2"></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel3!=''" v-text="houseDetails.Tel3" command="3" ></el-dropdown-item>
+              </el-dropdown-menu>
+          </el-dropdown>
             <el-button :data-tel="houseDetails.Tel"
                        @click="dialPhoneToFD">联系业主</el-button>
           </div>
@@ -1549,10 +1549,11 @@ export default {
     insert(){
       console.log(this.$refs.com.formData) ;
     },
-    contactOwer(fieldName,queryName){    
-      let p={
-        queryName: this.houseDetails[fieldName]
-      }
+    contactOwer(cmd){    
+       console.log(cmd);
+      let p={};
+      p["contactPhone"+cmd]=this.houseDetails["Tel"+cmd];
+      p["isLookPhone"]=true;
       this.dailPhone(1, p);
     },
     showtime () {
