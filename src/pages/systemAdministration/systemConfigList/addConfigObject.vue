@@ -481,9 +481,9 @@ parRange: [
   },
   created () {
     this.queryCompanyDatas(1);
-      this.configId=this.$route.query.configId;
-      this.notice.configNo=this.$route.query.sysParNo;
-      this.notice.configName=this.$route.query.sysParName;
+      this.configId=this.$route.params.configId;
+      this.notice.configNo=this.$route.params.sysParNo;
+      this.notice.configName=this.$route.params.sysParName;
        this.notice.paraIsAllowed = this.paraIsAllowed[0].value
          this.notice.configObject = this.configObject[0].value
          this.notice.parRange = this.parRange[0].value

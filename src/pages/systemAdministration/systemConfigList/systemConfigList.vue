@@ -323,21 +323,17 @@ export default {
     },
     postConfig (id, sysParNo, sysParName) {
       console.log(id, sysParNo, sysParName);
-      this.$router.push({        path: "/sys/addConfigObject",
-        query: {          configId: id,
-          sysParNo: sysParNo,
-          sysParName: sysParName        }      });
+      
+      this.$router.push({name: "addConfigObject",
+        params: { configId: id,sysParNo: sysParNo,sysParName: sysParName }});
     },
     updateConfig (id, sysParNo, sysParName, sysParType, memo) {
       console.log(memo);
-      this.$router.push({        path: "/sys/addConfig",
-        query: {          configId: id,
-          sysParNo: sysParNo,
-          sysParName: sysParName,
-          sysParType: sysParType,
-          memo: memo
+      this.$router.push({        name: "addConfig",
+        params: {configId: id,sysParNo: sysParNo,sysParName: sysParName,sysParType: sysParType,memo: memo
         }      });
-    }, toList (id, sysParNo, sysParName, sysParType, memo) {
+    }, 
+    toList (id, sysParNo, sysParName, sysParType, memo) {
       this.popup = 1;
       console.log(id);
       this.configId = id;
