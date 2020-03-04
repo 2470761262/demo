@@ -243,9 +243,21 @@ input[type=number]::-webkit-outer-spin-button {
           <div style="margin-left:20px;">
             <span>{{houseDetails.Customers}}</span>
             <br />
+            <el-dropdown>
+  <el-button type="primary">
+    查看号码<i class="el-icon-arrow-down el-icon--right"></i>
+  </el-button>
+  <el-dropdown-menu slot="dropdown">
+    <el-dropdown-item v-if="houseDetails.Tel!=''" v-text="houseDetails.Tel" @click="contactOwer('Tel','contactPhone')"></el-dropdown-item>
+    <el-dropdown-item v-if="houseDetails.Tel1!=''" v-text="houseDetails.Tel1" @click="contactOwer('Tel1','contactPhone1')"></el-dropdown-item>
+    <el-dropdown-item v-if="houseDetails.Tel2!=''" v-text="houseDetails.Tel2" @click="contactOwer('Tel2','contactPhone2')"></el-dropdown-item>
+    <el-dropdown-item v-if="houseDetails.Tel3!=''" v-text="houseDetails.Tel3" @click="contactOwer('Tel3','contactPhone3')" ></el-dropdown-item>
+  </el-dropdown-menu>
+</el-dropdown>
             <el-button :data-tel="houseDetails.Tel"
                        @click="dialPhoneToFD">联系业主</el-button>
           </div>
+          
         </div>
       </div>
     </div>
@@ -1539,6 +1551,12 @@ export default {
     insert(){
       console.log(this.$refs.com.formData) ;
     },
+    contactOwer(fieldName,queryName){    
+      let p={
+        queryName: this.houseDetails[fieldName]
+      }
+      this.dailPhone(1, p);
+    },
     showtime () {
       if(!this.betExpire){
         return
@@ -1627,7 +1645,13 @@ export default {
       })
     },
     dialPhoneToFD () {
-      this.dailPhone(1, this.houseDetails.Tel, this.houseDetails.Tel1, this.houseDetails.Tel2, this.houseDetails.Tel3);
+      let p={
+        "contactPhone": this.houseDetails.Tel,
+            "contactPhone1": this.houseDetails.Tel1,
+            "contactPhone2": this.houseDetails.Tel2,
+            "contactPhone3": this.houseDetails.Tel3
+      }
+      this.dailPhone(1, p);
     },
     oneTouchDialPhone(){
       let phone=this.houseDetails.agentPerTel;
@@ -1637,10 +1661,13 @@ export default {
         })
         return;
       }
-      this.dailPhone(0, phone);
+      let p={
+        "contactPhone": phone        
+      }
+      this.dailPhone(0, p);
     },
     ////contactPerType,电话联系人类型，0为经纪人，1为业主
-    dailPhone (contactPerType, phone, phone1, phone2, phone3) {
+    dailPhone (contactPerType, phoneObj) {
       let that = this;
       //console.log(that.houseDetails);
       this.$confirm("确定一键拨号吗？", "友情提醒", {
@@ -1650,17 +1677,15 @@ export default {
       })
         .then(() => {
           console.log(that.houseDetails);
-          let dailParams = {
+          let oldParams = {
             "houseId": that.houseId,
             "houseType": 0,
             "housePrice": that.houseDetails.Price,
             "houseArea": that.houseDetails.InArea,
-            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主
-            "contactPhone": phone,
-            "contactPhone1": phone1,
-            "contactPhone2": phone2,
-            "contactPhone3": phone3,
+            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主            
             "remark": that.houseDetails.Title          };
+          let dailParams={};
+          Object.assign(dailParams,oldParams,phoneObj);
           if (contactPerType == 0) {//联系人类型如果是经纪人，才需要联系人id
             dailParams.contactPerId = that.houseDetails.AgentPer;//联系人id
             dailParams.unitName = that.houseDetails.agentPerDepartmentName;
