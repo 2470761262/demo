@@ -52,7 +52,11 @@
         position: relative;
         padding: 0 10px;
         box-sizing: border-box;
+        &:hover .upLoadFile-remove {
+          display: block;
+        }
         .upLoadFile-remove {
+          display: none;
           position: absolute;
           top: -5px;
           right: 5px;
@@ -64,6 +68,7 @@
           background: red;
           text-align: center;
           line-height: 20px;
+          cursor: pointer;
         }
         /deep/.el-image {
           width: 100%;
@@ -121,7 +126,7 @@
       </div>
       <div class="upLoadFile-file-list">
         <div class="file-list-item"
-             v-for="item in outdoorImgList"
+             v-for="(item,index) in outdoorImgList"
              :key="item.id">
           <el-image :src="item.url"
                     fit="cover"
@@ -131,7 +136,8 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'outdoorImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -166,7 +172,8 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'livingRoomImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -201,7 +208,8 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'bedroomImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -236,7 +244,8 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'kitchenImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -271,7 +280,8 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'toiletImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -306,7 +316,8 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'layoutImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -335,7 +346,8 @@
                  v-if="houseVideo.url">
               <video :src="houseVideo.url"
                      @click="imgdiaLog = true"></video>
-              <div class="upLoadFile-remove el-icon-delete"></div>
+              <div class="upLoadFile-remove el-icon-delete"
+                   @click="deleteVideo(houseVideo)"></div>
             </div>
           </div>
           <div class="upLoadFile-file-phone">
@@ -483,11 +495,11 @@ export default {
     getFile (picClass, fileListName, e) {
       let file = event.target.files;
       let isImgType = ["image/jpeg", "image/png"];
-      if (file.length > 9 || file.length + this[fileListName].length > 9) {
-        this.$message.error("最多一次上传9张图片");
+      if (file.length > 6) {
+        this.$message.error("最多一次上传6张图片");
         return;
       }
-      for (let index = this[fileListName].length; index < file.length; index++) {
+      for (let index = 0; index < file.length; index++) {
         if (!isImgType.includes(file[index].type)) {
           this.$message.error("上传的图片只能是jpg,jpeg格式!");
           return;
@@ -496,6 +508,33 @@ export default {
       for (let index = 0; index < file.length; index++) {
         this.uploadSectionFile(picClass, file[index], fileListName);
       }
+    },
+    //删除图片
+    deleteImg (id, url, index, listName) {
+      this.$api.delete({
+        url: `/draft-house/picture/${id}`,
+        data: {
+          url: url
+        },
+        qs: true
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this[listName].splice(index, 1)
+        }
+      })
+    },
+    deleteVideo (item) {
+      this.$api.delete({
+        url: `/draft-house/video/${item.id}`,
+        data: {
+          url: item.url
+        },
+        qs: true
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this.houseVideo = {}
+        }
+      })
     },
     uploadSectionFile (picClass, uploader, fileListName) {
       let that = this;
@@ -510,12 +549,12 @@ export default {
         url: `/draft-house/${picClass != undefined ? 'picture' : 'video'}`,
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
-        onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
-          if (progressEvent.lengthComputable) {
-            let num = Math.round((progressEvent.loaded / progressEvent.total) * 100)
-            console.log(num, "num");
-          }
-        }
+        // onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
+        //   if (progressEvent.lengthComputable) {
+        //     let num = Math.round((progressEvent.loaded / progressEvent.total) * 100)
+        //     console.log(num, "num");
+        //   }
+        // }
       }).then((json) => {
         if (json.data.code == 200) {
           if (picClass != undefined) {
