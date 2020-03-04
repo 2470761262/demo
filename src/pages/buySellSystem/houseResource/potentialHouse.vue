@@ -144,7 +144,7 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: 'communityName', label: "小区名称" },
+        { prop: 'CommunityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
         { prop: 'inArea', label: "面积(m²)" },
