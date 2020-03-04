@@ -131,8 +131,8 @@ export default {
     }
   },
   created () {
-    this.$store.commit('updateId', 41);
-    this.formDataGet = true;
+    // this.$store.commit('updateId', 41);
+    // this.formDataGet = true;
   },
   watch: {
     stepsActiveIndex (val) {
@@ -142,7 +142,7 @@ export default {
   },
   data () {
     return {
-      componentName: "exploration",
+      componentName: "basicInformation",
       stepsList: [
         { title: "必填信息", componentName: "basicInformation" },
         { title: "选填信息", componentName: "supplement" },
