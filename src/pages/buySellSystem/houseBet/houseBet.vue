@@ -16,7 +16,8 @@
                      filterable
                      remote
                      clearable
-                     placeholder="请输入楼盘进行搜索"
+                     placeholder="请选择楼盘进行搜索"
+                     @focus="remoteCommunityNameInput"
                      :remote-method="remoteMethod"
                      :loading="loading">
             <el-option v-for="item in options"
@@ -77,6 +78,8 @@
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
+            unlink-panels
+            value-format="yyyy-MM-dd"
             range-separator="至"
             start-placeholder="起"
             end-placeholder="止">
@@ -190,6 +193,7 @@
           {prop: 'inArea', label: "面积(m²)"},
           {prop: 'price', label: "售价(万元)"},
           {prop: 'createTime', label: "对赌时间"},
+          {prop: 'endTime', label: "到期时间"},
           {prop: 'amount', label: "对赌金额"},
           // { prop: 'status', label: "对赌状态" },
           {prop: 'perName', label: "对赌人"},
@@ -247,6 +251,12 @@
       queryHouseBetParams() {
         this.queryHouseBet(1);
       },
+      //楼盘获取焦点 第一次点击就进行查询
+      remoteCommunityNameInput () {
+        if (this.options.length == 0) {
+          this.remoteMethod();
+        }
+      },
       remoteMethod(query) {
         var that = this
         if (query !== '') {
@@ -274,6 +284,8 @@
       },
       queryCBId() {
         var that = this
+        that.data.cbId=""
+        that.data.roomNo=''
         this.$api.get({
           url: "/mateHouse/queryComBuilding",
           headers: {"Content-Type": "application/json;charset=UTF-8"},
@@ -290,6 +302,7 @@
       },
       queryRoomNo() {
         var that = this
+        that.data.roomNo=''
         this.$api.get({
           url: "/mateHouse/queryBuildIngHouses",
           headers: {"Content-Type": "application/json;charset=UTF-8"},
@@ -318,7 +331,9 @@
         params.tel = that.data.tel;
         params.moneyFrom = that.data.moneyFrom;
         params.moneyTo = that.data.moneyTo;
+        if (that.data.timeSelect.length>0)
         params.beginTime = that.data.timeSelect[0];
+        if (that.data.timeSelect.length>1)
         params.endTime = that.data.timeSelect[1];
 
         console.log(params);
