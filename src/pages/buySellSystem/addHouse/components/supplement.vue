@@ -171,7 +171,7 @@
         <div class="cell-item-cell el-input-w">
         <div class="item-before text-just">物业费</div>
         <el-input type="text" v-model="formData.propertyFee"
-          v-validate="'decimal:2|noZero1|max:14|required'"
+          :v-validate="required?'decimal:2|noZero1|max:14|required': 'decimal:2|noZero1|max:14'"
           data-vv-as="物业费"
           data-vv-name="propertyFee"
           placeholder="请输入物业费"
@@ -293,7 +293,7 @@
                     data-vv-as="月供"
                     data-vv-name="monthlyMortgage"
                     placeholder="请输入月供"></el-input>
-          <div class="Division">万元</div>
+          <div class="Division">元/月</div>
         </div>
       </div>
     </div>

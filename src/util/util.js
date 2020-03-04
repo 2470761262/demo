@@ -72,7 +72,13 @@ export default {
     return nowData;
   },
   isNull(value) {
-    if (value != 0 && (value == "" || value == null)) {
+    if (value != 0 && (value === "" || value === null)) {
+      return true;
+    }
+    return false;
+  },
+  isNotNull(value) {
+    if ( value != "" && value !== null) {
       return true;
     }
     return false;
