@@ -1541,12 +1541,10 @@ export default {
         }
       };
     });
-    this.$store.state.addHouse.formData.step2.sign=0;
-  
   },
-  //  destroyed () {
-  //   this.$store.commit("resetFormData");
-  // },
+   destroyed () {
+    this.$store.commit("resetFormData");
+  },
   methods: {
     insert(){
       console.log(this.$refs.com.formData) ;
@@ -2028,6 +2026,7 @@ export default {
                         height: 150,
                         text: that.houseDetails.shareQRCode,
             });
+            that.$store.state.addHouse.formData.step2=that.houseDetails.applyAgentVo;
             that.agentHouseMethod = that.houseDetails.agentHouseMethod;
             that.elevator = util.analysisElevator(that.houseDetails.Elevator);
             that.sign = util.analysisSign(that.houseDetails.sign);
@@ -2055,15 +2054,19 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     that.communityPresentation = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.communityDesc=Arry2[1];
                     break;
                   case "户型介绍":
                     that.houseTypePresentation = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.roomDesc=Arry2[1];
                     break;
                   case "税费解析":
                     that.taxParsing = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.taxDesc=Arry2[1];
                     break;
                   case "核心卖点":
                     that.coreSellingPoint = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.saleDesc=Arry2[1];
                     break;
                 }
               }

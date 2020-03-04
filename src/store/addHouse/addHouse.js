@@ -59,6 +59,7 @@ let formDataJson = {
     roomDesc: '', //户型介绍
     taxDesc: "", //税费解析
     saleDesc: "", //核心卖点
+    propertyFee:""//物业费
   },
   step3: {
     //saleReson: "", //卖房原因

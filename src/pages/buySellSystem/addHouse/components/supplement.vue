@@ -165,22 +165,26 @@
     <!-- 物业费 -->
     <div class="cell-item-cell el-input-w">
       <div class="item-before text-just">物业费</div>
-      <el-input type="text"></el-input>
+      <el-input type="text" v-model="formData.propertyFee"
+        v-validate="'decimal:2|max:14'"
+        data-vv-as="余贷"
+        data-vv-name="balance"
+        placeholder="请输入物业费"
+      ></el-input>
       <div class="item-after">元/平方</div>
     </div>
     <!-- 附属配套 -->
     <div class="cell-item-cell el-input-w">
       <div class="item-before text-just">附属配套</div>
-      <el-radio-group v-model="houseBelongSelect"
-                      @change="houseBelongChange"
+      <el-radio-group v-model="formData.houseBelong"
                       size="mini">
         <el-radio v-for="item in houseBelongList"
-                  :key="item.value"
-                  :label="item.key">{{ item.key }}</el-radio>
+                  :key="item.key"
+                  :label="item.value">{{ item.key }}</el-radio>
       </el-radio-group>
-      <el-input v-if="houseBelongSelect=='其他'"
+      <!-- <el-input v-if="houseBelongSelect=='其他'"
                 type="text"
-                v-model="formData.houseBelong"></el-input>
+                v-model="formData.houseBelong"></el-input> -->
     </div>
     <!-- 学籍占用 -->
     <div class="cell-item-cell">
@@ -466,13 +470,6 @@ export default {
     primaryRadioChange (e) {
       if (e != 1) {
         this.formData.primarySchoolUse = '';
-      }
-    },
-    houseBelongChange (e) {
-      if (e != '其他') {
-        this.formData.houseBelong = e;
-      } else {
-        this.formData.houseBelong = '';
       }
     },
     validateAll () {
