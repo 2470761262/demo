@@ -131,8 +131,8 @@ export default {
     }
   },
   created () {
-    this.$store.commit('updateId', 41);
-    this.formDataGet = true;
+    // this.$store.commit('updateId', 41);
+    // this.formDataGet = true;
   },
   watch: {
     stepsActiveIndex (val) {
