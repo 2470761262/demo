@@ -9,11 +9,15 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
         
+           <el-item label="楼盘名称"
+                 prop="comId">
           <el-select v-model="data.comId"
+                     @focus="remoteInput"
                      @change="queryCBId()"
                      filterable
                      remote
-                     placeholder="请输入楼盘进行搜索"
+                     clearable
+                     placeholder="请输入楼盘名称搜索"
                      :remote-method="remoteMethod"
                      :loading="loading">
             <el-option v-for="item in options"
@@ -22,10 +26,13 @@
                        :value="item.value">
             </el-option>
           </el-select>
-         
-      
+        </el-item>
+        <el-item label="栋座"
+                 prop="cbId"
+                 class="page-label-center">
           <el-select v-model="data.cbId"
                      filterable
+                     clearable
                      placeholder="请选择楼栋"
                      @change="queryRoomNo()">
             <el-option v-for="item in cbIdList"
@@ -34,8 +41,11 @@
                        :value="item.value">
             </el-option>
           </el-select>
-       
-       
+        </el-item>
+        <el-item label="房间号"
+                 prop="roomNo"
+                 clearable
+                 class="page-label-center">
           <el-select v-model="data.roomNo"
                      filterable
                      placeholder="请选择房间号">
@@ -45,6 +55,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
+        </el-item>
           <el-select v-model="data.type" placeholder="请选择" clearable> 
                 <el-option
                 v-for="item in option"
@@ -84,12 +95,12 @@
             <el-button type="info"
                        size="mini"
                        @click="toLook(scope.row.id)"
-                       v-if="scope.row.type!==1"
+                       v-if="scope.row.housetype!==1"
                        >查看</el-button>
 
              <el-button type="info"
                        size="mini"
-                       @click="toSale(scope.row.id,scope.row.type,scope.row.comId,scope.row.cbId,scope.row.bhid)"
+                       @click="toSale(scope.row.id,scope.row.housetype,scope.row.comId,scope.row.cbId,scope.row.bhid)"
                        >转在售</el-button>
         </template>
        
@@ -196,7 +207,13 @@ export default {
     queryPotentialHouseParams(){
         this.queryPotentialHouse(1);
     },
-    remoteMethod (query) {
+     remoteInput () {
+   
+      if (this.data.comId.length==0) {
+        this.remoteMethod();
+      }
+    },
+remoteMethod (query) {
       var that = this
       if (query !== '') {
         this.loading = true;
@@ -207,11 +224,14 @@ export default {
           token: false,
           qs: true,
           data: {
-            communityName: query
+            communityName: query,
+            page: 1,
+             limit: 50
           }
         }).then((e) => {
           console.log(e.data)
           if (e.data.code == 200) {
+            
             that.loading = false;
             that.options = e.data.data.list;
 
@@ -229,14 +249,18 @@ queryCBId () {
         token: false,
         qs: true,
         data: {
-          comId: that.data.comId
+          comId: that.data.comId,
+          page: 1,
+             limit: 50
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          that.roomNo='';
+            that.cbId='';
           that.cbIdList = e.data.data.list;
         }
       })
-    }, 
+    },
     queryRoomNo () {
       var that = this
       this.$api.get({
@@ -246,17 +270,20 @@ queryCBId () {
         qs: true,
         data: {
           comId: that.data.comId,
-          cbId: that.data.cbId
+          cbId: that.data.cbId,
+          page: 1,
+             limit: 50
         }
       }).then((e) => {
         if (e.data.code == 200) {
+           that.roomNo='';
           that.roomNoList = e.data.data.list;
         }
       })
     },
   queryPotentialHouse(currentPage){
     var that =this;
-   let params={"limit":that.pageJson.pageSize,"page":currentPage};
+   let params={"limit":that.pageJson.pageSize,"page":currentPage-1};
  
         params.comId=that.data.comId;
         params.cbId=that.data.cbId;
@@ -266,16 +293,16 @@ queryCBId () {
         params.type=that.data.type;
      console.log(params);
     this.$api.get({
-        url: '/houseResource/potentialHouseList',
+        url: '/houseResource/potentialHouse',
         data: params,       
         token: false
       }).then((e) => {
         console.log(e.data);
         let data=e.data
         if (data.code == 200) {
-          that.pageJson.total=data.data.totalCount;
-          that.pageJson.currentPage=data.data.currPage;
-          that.tableData=data.data.list;
+          that.pageJson.total=data.dataCount;
+          that.pageJson.currentPage=data.pageSum;
+          that.tableData=data.data;
         } else {
           console.log("查询潜在出售列表结果：" + result.message);
           alert(result.message);
