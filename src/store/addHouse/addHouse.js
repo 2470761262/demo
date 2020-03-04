@@ -17,11 +17,11 @@ let formDataJson = {
     tel3: "", //业主号码3
     price: "", //售价
     bottomPrice: "", //底价
-    area: "", //面积
-    room: "", //室
-    hall: "", //厅
-    toilet: "", //卫
-    balcony: "", //阳台
+    area: 0, //面积
+    room: 0, //室
+    hall: 0, //厅
+    toilet: 0, //卫
+    balcony: 0, //阳台
     face: "", //朝向
     certificateType: "", //房屋证件类型
     isElevator: "", //电梯 2>1
@@ -32,8 +32,13 @@ let formDataJson = {
     houseStruct: "", //房屋结构 2>1
     primarySchool: "", //划片小学 2>1
     middleSchool: "", //划片中学 2>1
+    buildingTime: "", //竣工时间
+    valuation: "", //评估价
+    certificateNo: "", //房间证号
+    propertyCompany: "" //物业公司
   },
   step2: {
+    propertyFee: "", //物业费
     isOwnerOnly: 1, //唯一住房 1唯一 0 不唯一
     decoration: "", //装修
     houseNow: "", //房屋现状
@@ -95,5 +100,12 @@ export default {
     updateStep3(state, val) {
       forSetStep(state, val, 'step3');
     }
-  }
+  },
+  actions: {
+    InitFormData({
+      commit
+    }, value) {
+      commit(value.commitName, value.json);
+    },
+  },
 };

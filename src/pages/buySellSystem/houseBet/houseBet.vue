@@ -228,8 +228,8 @@ queryCBId () {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.data.cbId;
-          that.data.roomNo;
+          that.data.cbId='';
+          that.data.roomNo='';
           that.cbIdList = e.data.data.list;
         }
       })
@@ -247,7 +247,7 @@ queryCBId () {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.data.roomNo;
+          that.data.roomNo='';
           that.roomNoList = e.data.data.list;
         }
       })
