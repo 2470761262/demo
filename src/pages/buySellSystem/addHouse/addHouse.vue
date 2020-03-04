@@ -76,10 +76,10 @@
                  :key="index"></el-step>
       </el-steps>
     </div>
-    <div class="page-contenr">
-      <div :class="['page-contenr-com',{'page-contenr-com-over':butLoading}]"
-           v-scrollTop="butLoading"
-           v-loading="butLoading">
+    <div class="page-contenr"
+         v-loading="butLoading"
+         element-loading-text="已经在努力加载了~">
+      <div :class="['page-contenr-com',{'page-contenr-com-over':butLoading}]">
         <div class="page-contenr-com-posi">
           <keep-alive>
             <component :getData="formDataGet"
@@ -122,13 +122,6 @@ export default {
     supplement: () => componentsFactory("pages/buySellSystem/addHouse/components/supplement"), //补充信息
     exploration: () => componentsFactory("pages/buySellSystem/addHouse/components/exploration"), //实勘图片/视频
     addHouseSuccess: () => componentsFactory("pages/buySellSystem/addHouse/components/addHouseSuccess") //邀请验真
-  },
-  directives: {
-    scrollTop: {
-      update (el, bind, vnode) {
-        el.scrollTop = 0;
-      }
-    }
   },
   created () {
     // this.$store.commit('updateId', 41);
