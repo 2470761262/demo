@@ -73,6 +73,7 @@
         <el-item label="楼盘名称"
                  prop="comId">
           <el-select v-model="comId"
+                     @focus="remoteInput"
                      @change="queryCBId()"
                      filterable
                      remote
@@ -226,7 +227,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
-        pageSize: 5 //每页条数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
         { prop: 'HouseNo', label: "房源编号" },
@@ -436,10 +437,16 @@ export default {
         console.log(e);
       })
     },
-
+ remoteInput () {
+   
+      if (this.comId.length == 0) {
+        this.remoteMethod();
+      }
+    },
     remoteMethod (query) {
       var that = this
       if (query !== '') {
+        console.log(query);
         this.loading = true;
         this.$api.get({
           url: "/mateHouse/queryCommunity",
@@ -447,11 +454,14 @@ export default {
           token: false,
           qs: true,
           data: {
-            communityName: query
+             page: 1,
+             limit: 50,
+             communityName: query
           }
         }).then((e) => {
           console.log(e.data)
           if (e.data.code == 200) {
+            
             that.loading = false;
             that.options = e.data.data.list;
           }
@@ -473,6 +483,8 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          that.roomNo='';
+            that.cbId='';
           this.cbIdList = e.data.data.list;
         }
       })
@@ -491,6 +503,7 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          that.roomNo='';
           this.roomNoList = e.data.data.list;
         }
       })
