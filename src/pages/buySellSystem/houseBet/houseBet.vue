@@ -9,12 +9,13 @@
       <div class="page-form-inline budingMarinSet">
       <el-form inline :model="data" ref="data"  size="medium">
 
-        <el-form-item label="业主" prop="customerName">
+        <el-form-item label="楼盘" prop="customerName">
 
           <el-select v-model="data.comId"
                      @change="queryCBId()"
                      filterable
                      remote
+                     clearable
                      placeholder="请输入楼盘进行搜索"
                      :remote-method="remoteMethod"
                      :loading="loading">
@@ -30,6 +31,7 @@
                      filterable
                      style="width: 132px"
                      placeholder="请选择楼栋"
+                     clearable
                      @change="queryRoomNo()">
             <el-option v-for="item in cbIdList"
                        :key="item.value"
@@ -40,6 +42,7 @@
           <el-select v-model="data.roomNo"
                      filterable
                      style="width: 132px"
+                     clearable
                      placeholder="请选择房间号">
             <el-option v-for="item in roomNoList"
                        :key="item.value"
@@ -50,23 +53,24 @@
         </el-form-item>
 
         <el-form-item label="业主" prop="customerName">
-          <el-input v-model="data.customerName" placeholder="业主姓名"/>
+          <el-input clearable v-model="data.customerName" placeholder="业主姓名"/>
         </el-form-item>
 
         <el-form-item label="电话" prop="tel">
-          <el-input v-model="data.tel" placeholder="业主电话"/>
+          <el-input clearable v-model="data.tel" placeholder="业主电话"/>
         </el-form-item>
 
         <el-form-item label="价格" prop="money_from">
-          <el-col :span="11">
-            <el-input v-model="data.money_from" placeholder="最小值"/>
+          <el-col :span="10">
+            <el-input clearable v-model="data.moneyFrom" placeholder="最小值"/>
           </el-col>
           <el-col class="line" :span="2" align="center">-</el-col>
-          <el-col :span="11">
+          <el-col :span="10">
             <el-form-item prop="money_to">
-              <el-input v-model="data.money_to" placeholder="最大值"/>
+              <el-input clearable v-model="data.moneyTo" placeholder="最大值"/>
             </el-form-item>
           </el-col>
+            万
         </el-form-item>
 
         <el-form-item label="对赌日期" prop="timeSelect">
@@ -93,7 +97,7 @@
         </el-form-item>
 
         <el-form-item label="对赌人" prop="empId">
-          <el-input v-model="data.empId" placeholder=""/>
+          <el-input clearable v-model="data.empId" placeholder=""/>
         </el-form-item>
 
         <el-button type="primary"
@@ -160,8 +164,8 @@
           tel: '',
           customerName: '',
           status: '',
-          money_from: '',
-          money_to: '',
+          moneyFrom: '',
+          moneyTo: '',
           timeSelect: ''
         },
         options: [],
@@ -312,6 +316,8 @@
         params.customerName = that.data.customerName;
         params.empId = that.data.empId;
         params.tel = that.data.tel;
+        params.moneyFrom = that.data.moneyFrom;
+        params.moneyTo = that.data.moneyTo;
         params.beginTime = that.data.timeSelect[0];
         params.endTime = that.data.timeSelect[1];
 
