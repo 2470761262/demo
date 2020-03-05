@@ -39,7 +39,7 @@
     <template v-slot:left>
       <div class="Impression-body">
       <div style="height:30px">
-          <el-select v-model="MyImpressionList.impression" @change="selectImpression($event)" 
+          <el-select v-model="imdataimdata" @change="selectImpression($event)" 
           filterable placeholder="请输入您添加过的房源印象">
              <el-option v-for="item in MyImpressionList"
                        :key="item.id"
@@ -54,7 +54,7 @@
       <div class="tag-all" v-if="showImpression">
         <span  v-for="item in ImpressionList" :key="item.id" >
           <el-tag class="Impression-tag"  size="mini" @close="handleClose(item.id)" type="success" closable>
-             id:{{item.id}}　　印象:{{item.impression}}
+             {{item.impression}}
             </el-tag>
         </span>
       </div>
@@ -275,12 +275,21 @@ export default {
   },
   methods: {
     handleClose(tag) {
-        this.ImpressionList.splice(this.ImpressionList.indexOf(tag), 1);
+      console.log('删除前：',this.ImpressionList)
+      for(let i=0;i<this.ImpressionList.length;i++){
+        if(this.ImpressionList[i].id == tag){
+        this.ImpressionList.splice(i,1);
+        }
+      }
+        console.log('删除后：',this.ImpressionList)
+         this.querylistByParams();
       },
     selectImpression(e){
        let that = this;
+       that.imdataimdata = e.impression
        var addList = [{id:e.id,impression:e.impression,houseId:e.houseId}];
        that.ImpressionList = this.ImpressionList.concat(addList);
+       this.querylistByParams();
     },
     remoteMethod (query) {
       var that = this
@@ -415,7 +424,6 @@ export default {
         
       }  },
     querylistByParams () {
-      console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
     querylist (currentPage) {
