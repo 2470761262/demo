@@ -188,7 +188,7 @@
           <el-button type="info"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
-                     <div v-if="scope.row.collectID != null && scope.row.collectID!= '' ">
+                     <div v-if="scope.row.sid != null && scope.row.collectID!= '' ">
             <el-button type="info"
                        slot="reference"
                        @click="ifOFF(scope.row.id)"
@@ -210,8 +210,7 @@ export default {
     return {
       imtag:false,
      imdataimdata:'',
-        inputVisible: false,
-        inputValue: '',
+      addList:[],
       imdata:'',
       showImpression: true,
       impression:'',
@@ -272,7 +271,6 @@ export default {
   },
   mounted () {
     this.querylist(1);
-    this.queryHouseImpression ();
     this.queryMyImpression();
   },
   methods: {
@@ -281,8 +279,7 @@ export default {
       },
     selectImpression(e){
        let that = this;
-       console.log("exo me???"+"啥啊这是"+e.id,e.impression);
-       var addList = [{id:e.id,impression:e.impression}];
+       var addList = [{id:e.id,impression:e.impression,houseId:e.houseId}];
        that.ImpressionList = this.ImpressionList.concat(addList);
     },
     remoteMethod (query) {
@@ -349,7 +346,6 @@ export default {
       }).then((e) => {})
     },
     queryMyImpression(){
-      console.log("输入了"+ this.imdataimdata);
       var that = this
       var impression = this.imdata;
        this.$api.get({
@@ -425,7 +421,15 @@ export default {
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + ''};
       let that = this;
-      if (this.ImpressionList != null && this.ImpressionList != '') { params.list = this.ImpressionList; }
+      if (this.ImpressionList != null && this.ImpressionList != '') { 
+        that.addList;
+         for (var j = 0; j < that.ImpressionList.length; j++) {
+            var houseid = that.ImpressionList[j].houseId;
+            var newList = [houseid];
+            that.addList = that.addList.concat(newList);
+          }
+        params.list = that.addList; 
+        }
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
       if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
       if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
@@ -447,23 +451,15 @@ export default {
         let result = e.data;
         that.loading = false;
         if (result.code == 200) {
-          
-          for (var j = 0; j < that.ImpressionList.length; j++) {
-            var demo1 = that.ImpressionList[j].id;
-            var demo2 = that.ImpressionList[j].houseId;
-            var demo3 = that.ImpressionList[j].impression;
-           console.log("这是要查询印象列表传入的list"+demo1+"--"+demo2+"--"+demo3); 
-          }
-
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPage;
           that.tableData = result.data.list;
         } else {
-          console.log("查询我的跟单列表结果：" + result.message);
+          console.log("查询我的关注列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询我的跟单失败");
+        console.log("查询我的关注失败");
         console.log(e);
       })
     },
