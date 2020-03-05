@@ -17,11 +17,11 @@ let formDataJson = {
     tel3: "", //业主号码3
     price: "", //售价
     bottomPrice: "", //底价
-    area: 0, //面积
-    room: 0, //室
-    hall: 0, //厅
-    toilet: 0, //卫
-    balcony: 0, //阳台
+    area: "", //面积
+    room: "", //室
+    hall: "", //厅
+    toilet: "", //卫
+    balcony: "", //阳台
     face: "", //朝向
     certificateType: "", //房屋证件类型
     isElevator: "", //电梯 2>1

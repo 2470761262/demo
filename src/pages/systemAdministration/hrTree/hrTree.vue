@@ -56,7 +56,20 @@
           <el-form-item label="公司编号">{{formCom.id}}</el-form-item>
           <el-form-item label="加入类型">{{formCom.joinType}}</el-form-item>
           <el-form-item label="楼盘管辖区域">{{formCom.region}}</el-form-item>
-          <el-form-item label="操作"></el-form-item>
+          <el-form-item label="操作">
+            <el-button
+              type="text"
+              @click="linkJump('addCompanyManage',0,formCom.id)"
+              :underline="false"
+            >添加下级公司</el-button>
+            <el-button
+              type="text"
+              @click="linkJump('addDeptManage',0,formCom.id)"
+              :underline="false"
+            >添加部门</el-button>
+            <el-button type="text" @click="linkJumpEdit(0,formCom.id)" :underline="false">修改</el-button>
+            <el-button type="text" @click="lock('company',formCom.id)" :underline="false">锁定</el-button>
+          </el-form-item>
         </el-form>
         <el-form ref="formDep" :model="formDep" v-show="checkedType===1" label-width="100px">
           <el-form-item label="部门名称">{{formDep.name}}</el-form-item>
@@ -70,7 +83,20 @@
           <el-form-item label="部门编号">{{formDep.id}}</el-form-item>
           <el-form-item label="成立日期">{{formDep.regDate}}</el-form-item>
           <el-form-item label="部门描述">{{formDep.desc}}</el-form-item>
-          <el-form-item label="操作"></el-form-item>
+          <el-form-item label="操作">
+            <el-button
+              type="text"
+              @click="linkJump('addDeptManage',formDep.id,formDep.coId)"
+              :underline="false"
+            >添加子部门</el-button>
+            <el-button
+              type="text"
+              @click="linkJump('addCompanyManage',formDep.id,formDep.coId)"
+              :underline="false"
+            >添加下级公司</el-button>
+            <el-button type="text" @click="linkJumpEdit(1,formDep.id)" :underline="false">修改</el-button>
+            <el-button type="text" @click="lock('department',formDep.id)" :underline="false">锁定</el-button>
+          </el-form-item>
         </el-form>
       </div>
       <div class="elInfo">
@@ -130,7 +156,8 @@ export default {
         store: "",
         id: null,
         regDate: "",
-        desc: ""
+        desc: "",
+        coId: ""
       },
       checkedId: null,
       checkedType: null,
@@ -162,7 +189,8 @@ export default {
   },
   methods: {
     handleCheckChange(data, checked, node) {
-      loading: true;
+      this.loading = true;
+      console.log("loading..." + this.loading);
       if (checked == true) {
         this.checkedId = data.businessId;
         this.checkedType = data.type;
@@ -204,6 +232,9 @@ export default {
             .catch(e => {
               console.log("查询公司详情失败");
               console.log(e);
+            })
+            .finally(e => {
+              this.loading = false;
             });
         } else if (this.checkedType === 1) {
           let params = { id: this.checkedId };
@@ -221,7 +252,9 @@ export default {
                 this.formDep.id = data.id;
                 this.formDep.name = data.name;
                 this.formDep.depType = ["支持线", "业务线"][data.depType - 1];
-                this.formDep.isCom = data.isCom;
+                this.formDep.isCom = ["运营期", "拓展期", "未设置"][
+                  data.isCom - 1
+                ];
                 this.formDep.principal = data.principal;
                 this.formDep.tel = data.tel;
                 this.formDep.add = data.add;
@@ -229,6 +262,7 @@ export default {
                 this.formDep.store = data.store;
                 this.formDep.regDate = data.regDate;
                 this.formDep.desc = data.desc;
+                this.formDep.coId = data.coId;
               } else {
                 console.log("查询详情结果：" + result.message);
                 alert(result.message);
@@ -237,10 +271,12 @@ export default {
             .catch(e => {
               console.log("查询详情失败");
               console.log(e);
+            })
+            .finally(e => {
+              this.loading = false;
             });
         }
       }
-      loading: false;
     },
     handleNodeClick(data) {},
     loadNode(node, resolve) {},
@@ -249,7 +285,65 @@ export default {
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
-    treeCheck(e, data) {}
+    treeCheck(e, data) {},
+    linkJump(jumpName, depId, coId) {
+      this.$router.push({
+        name: jumpName,
+        params: { deptParentID: depId, ParentId: coId, back: "hrTree" }
+      });
+    },
+    linkJumpEdit(type, id) {
+      if (type === 0) {
+        this.$router.push({
+          path: "/sys/editCompanyDetail",
+          query: { companyId: id, back: "hrTree" }
+        });
+      }
+      if (type === 1) {
+        this.$router.push({
+          path: "/sys/editDeptDetail",
+          query: { id: id, back: "hrTree" }
+        });
+      }
+    },
+    lock(type, id) {
+      this.$confirm("确实锁定？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.loading = true;
+          let params = { id: id };
+          this.$api
+            .post({
+              url: "/" + type + "/lock",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              let result = e.data;
+              this.$message({
+                type: "info",
+                message: result.message
+              });
+            })
+            .catch(e => {
+              console.log("失败");
+              console.log(e);
+            })
+            .finally(e => {
+              this.loading = false;
+              this.$router.go(0);
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    }
   }
 };
-</script>
+</script> 

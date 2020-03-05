@@ -51,16 +51,11 @@
 <template>
   <div>
     <el-container>
-
       <el-container>
         <el-header>
-
           <div class="left-input-container">
             <span>参数编号-参数名称-参数类型</span>
-            <div>
-              {{configId}}-{{notice.configName}}-{{notice.configNo}}
-            </div>
-
+            <div>{{configId}}-{{notice.configName}}-{{notice.configNo}}</div>
           </div>
           <div class="left-input-container">
             <span>公司参数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -91,12 +86,13 @@
           </div>
           <div class="left-input-container">
             <span>关联对象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select v-model="notice.configObject"
-                       placeholder="请选择">
-              <el-option v-for="item in configObject"
-                         :key="item.id"
-                         :label="item.label"
-                         :value="item.value"></el-option>
+            <el-select v-model="notice.configObject" placeholder="请选择">
+              <el-option
+                v-for="item in configObject"
+                :key="item.id"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
           <div class="left-input-container">
@@ -141,22 +137,24 @@
           </div>
           <div class="left-input-container">
             <span>时间单位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select v-model="notice.unit"
-                       placeholder="请选择">
-              <el-option v-for="item in unit"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value"></el-option>
+            <el-select v-model="notice.unit" placeholder="请选择">
+              <el-option
+                v-for="item in unit"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
           <div class="left-input-container">
             <span>是否允许&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select v-model="notice.paraIsAllowed"
-                       placeholder="请选择">
-              <el-option v-for="item in paraIsAllowed"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value"></el-option>
+            <el-select v-model="notice.paraIsAllowed" placeholder="请选择">
+              <el-option
+                v-for="item in paraIsAllowed"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
         </el-header>
@@ -217,8 +215,8 @@ export default {
         paraNum4: null,
         newsTitle: null,
         newsContent: null,
-        addPer: null,//44430,
-        receiveAcountIds: null,//[44430],
+        addPer: null, //44430,
+        receiveAcountIds: null, //[44430],
         sendWay: null,
         configNo: null,
         configMemo: null,
@@ -237,21 +235,20 @@ export default {
               image: function (value) {
                 if (value) {
                   console.log(value);
-                  document.getElementById('btnUpload').click();
+                  document.getElementById("btnUpload").click();
                 } else {
                   this.quill.format("image", false);
                 }
               },
-              video: function (v) {
+              video: function(v) {
                 if (v) {
                   alert("不支持上传视频");
                 }
               },
-              link: function (v) {
+              link: function(v) {
                 if (v) {
-                  var href = prompt('Enter the URL');
+                  var href = prompt("Enter the URL");
                   this.quill.format("link", href);
-
                 }
               }
             }
@@ -270,18 +267,15 @@ export default {
         {
           value: "1",
           label: "天"
-        }
-        ,
+        },
         {
           value: "2",
           label: "月"
-        }
-        ,
+        },
         {
           value: "3",
           label: "秒"
-        }
-        ,
+        },
         {
           value: "4",
           label: "分"
@@ -303,8 +297,7 @@ export default {
         {
           value: "1",
           label: "允许"
-        }
-        ,
+        },
         {
           value: "0",
           label: "不予许"
@@ -318,8 +311,7 @@ export default {
         {
           value: "1",
           label: "人员"
-        }
-        ,
+        },
         {
           value: "2",
           label: "部门"
@@ -348,8 +340,7 @@ parRange: [
         {
           value: "1",
           label: "部门"
-        }
-        ,
+        },
         {
           value: "2",
           label: "部门名下"
@@ -359,127 +350,126 @@ parRange: [
           label: "公司"
         }
       ],
-      company: [
-
-  ],
-  tableData:[
-    
-  ]
+      company: [],
+      tableData: []
     };
   },
   watch: {},
   computed: {},
-  mounted () {
-
-  },
+  mounted() {},
   methods: {
-    queryCompanyDatas (currentPage) {
+    queryCompanyDatas(currentPage) {
       let params = { limit: 100, page: currentPage };
       let that = this;
 
-      this.$api.post({
-        url: '/company/list',
-        data: params,
-        token: false,
-        headers: { "Content-Type": "application/json" }
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
+      this.$api
+        .post({
+          url: "/company/list",
+          data: params,
+          token: false,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
 
-          this.tableData = result.data.list;
-        } else {
-          console.log("查询公司管理列表结果：" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询公司管理列表失败");
-        console.log(e);
-      })
+            this.tableData = result.data.list;
+          } else {
+            console.log("查询公司管理列表结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询公司管理列表失败");
+          console.log(e);
+        });
     },
-    sendNotice () {
+
+    sendNotice() {
       let that = this.notice;
       console.log(this.notice);
       if (this.notice.comId == null) {
         this.$message({
           showClose: true,
-          message: '公司参数',
-          type: 'warning'
+          message: "公司参数",
+          type: "warning"
         });
         return;
       }
       if (this.notice.configNo == null) {
         this.$message({
           showClose: true,
-          message: '参数名称',
-          type: 'warning'
+          message: "参数名称",
+          type: "warning"
         });
         return;
       }
 
-
       if (this.notice.paraNum1 == null) {
         this.$message({
           showClose: true,
-          message: '参数1',
-          type: 'warning'
+          message: "参数1",
+          type: "warning"
         });
         return;
       }
       if (this.notice.unit == null) {
         this.$message({
           showClose: true,
-          message: '时间单位',
-          type: 'warning'
+          message: "时间单位",
+          type: "warning"
         });
         return;
       }
-      this.$api.get({
-        url: '/Set/companyAdd',
-        data: {
-          sysParObj: that.configObject,
-          sysParID: this.configId,
-          relationId: "0",
-          paraIsAllowed: that.paraIsAllowed,
-          parRange: that.parRange,
-          paraNum: that.paraNum1,
-          paraTwoNum: that.paraNum2,
-          paraNumStr: that.paraNum3,
-          paraNumFour: that.paraNum4,
-          remark: that.configMemo,
-          comId: this.notice.comId,
-          unit: that.unit
-        },
-        token: false,
-        headers: { "Content-Type": "application/json" }
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          this.$alert('', '添加成功', {
-            dangerouslyUseHTMLString: false
-          });
-          this.$router.push({ path: "/sys/systemConfigList" });
-          console.log(result.data);
-          this.$message({ message: result.message });
-        } else {
-          console.log("添加失败:" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("添加失败");
-        console.log(e);
-      })
+      this.$api
+        .get({
+          url: "/Set/companyAdd",
+          data: {
+            sysParObj: that.configObject,
+            sysParID: this.configId,
+            relationId: "0",
+            paraIsAllowed: that.paraIsAllowed,
+            parRange: that.parRange,
+            paraNum: that.paraNum1,
+            paraTwoNum: that.paraNum2,
+            paraNumStr: that.paraNum3,
+            paraNumFour: that.paraNum4,
+            remark: that.configMemo,
+            comId: this.notice.comId,
+            unit: that.unit
+          },
+          token: false,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            this.$alert("", "添加成功", {
+              dangerouslyUseHTMLString: false
+            });
+            this.$router.push({ path: "/sys/systemConfigList" });
+            console.log(result.data);
+            this.$message({ message: result.message });
+          } else {
+            console.log("添加失败:" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("添加失败");
+          console.log(e);
+        });
     },
-    post () {
-      this.$router.push({        path: "/sys/systemConfigList"
-      });
-    },
+    post() {
+      this.$router.push({ path: "/sys/systemConfigList" });
+    }
   },
-  created () {
+  created() {
     this.queryCompanyDatas(1);
       this.configId=this.$route.params.configId;
       this.notice.configNo=this.$route.params.sysParNo;
@@ -490,7 +480,6 @@ parRange: [
          this.notice.unit = this.unit[0].value
       this.notice.comId=this.companyDefault[0].value
      console.log(this.notice.comId);
-  },
-
+  }
 };
 </script>

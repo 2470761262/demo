@@ -110,8 +110,12 @@
       <el-button type="info" @click="getDialogVisible()">设置管辖区域</el-button>
       <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <template>
-          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-            <div style="margin: 15px 0;"></div>
+          <el-checkbox
+            :indeterminate="isIndeterminate"
+            v-model="checkAll"
+            @change="handleCheckAllChange"
+          >全选</el-checkbox>
+          <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="city in regionName" :label="city" :key="city">{{city}}</el-checkbox>
           </el-checkbox-group>
@@ -135,28 +139,27 @@ export default {
       dialogVisible: false,
       companyID: 0,
       companyEntity: null,
-      regionName :[],
+      regionName: [],
 
       checkAll: false,
       checkedCities: [],
-      isIndeterminate: true
-      
-
-     
+      isIndeterminate: true,
+      backUrl: null
     };
   },
   watch: {},
   computed: {},
   methods: {
     handleCheckAllChange(val) {
-        this.checkedCities = val ? this.regionName  : [];
-        this.isIndeterminate = false;
-      },
-      handleCheckedCitiesChange(value) {
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.regionName.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.regionName.length;
-      },
+      this.checkedCities = val ? this.regionName : [];
+      this.isIndeterminate = false;
+    },
+    handleCheckedCitiesChange(value) {
+      let checkedCount = value.length;
+      this.checkAll = checkedCount === this.regionName.length;
+      this.isIndeterminate =
+        checkedCount > 0 && checkedCount < this.regionName.length;
+    },
     getDialogVisible() {
       this.dialogVisible = true;
       this.$api
@@ -185,9 +188,8 @@ export default {
       this.dialogVisible = false;
     },
     handleClose(done) {
-      this.dialogVisible= false;
-     this.companyEntity.RegionName=this.checkedCities.join(",");
-      
+      this.dialogVisible = false;
+      this.companyEntity.RegionName = this.checkedCities.join(",");
     },
     savecompany() {
       let params = this.companyEntity;
@@ -205,7 +207,11 @@ export default {
             this.$alert("", "修改成功", {
               dangerouslyUseHTMLString: false
             });
-            this.$router.push({ path: "/sys/companyList" });
+            if (this.backUrl === "hrTree") {
+              this.$router.push({ path: "/sys/hrTree/hrTree" });
+            } else {
+              this.$router.push({ path: "/sys/companyList" });
+            }
             console.log(result.data);
             this.$message({ message: result.message });
           }
@@ -216,12 +222,18 @@ export default {
         });
     },
     back() {
-      this.$router.push({ path: "/sys/companyList" });
-    },
-  
+      if (this.backUrl === "hrTree") {
+        this.$router.push({ path: "/sys/hrTree/hrTree" });
+      } else {
+        this.$router.push({ path: "/sys/companyList" });
+      }
+    }
   },
   created() {
     this.companyId = this.$route.query.companyId;
+    if (this.$route.query.back != null) {
+      this.backUrl = this.$route.query.back;
+    }
   },
   mounted() {
     console.log("准备查询公司详情");
