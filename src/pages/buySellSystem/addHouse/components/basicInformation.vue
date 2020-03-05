@@ -419,7 +419,7 @@
           <div class="item-deep-data">
             <div class="input-tips"
                  key="input-tips"
-                 v-if="changeBut.roomType">
+                 v-show="changeBut.roomType">
               <input type="text"
                      key="room"
                      maxlength="2"
@@ -461,7 +461,7 @@
                      data-vv-as="阳台"
                      class="min-input">阳台
             </div>
-            <span v-else>{{formData.room || 0}}室{{formData.hall || 0}}厅{{formData.toilet || 0}}卫{{formData.balcony || 0}}阳台</span>
+            <span v-show="!changeBut.roomType">{{formData.room || 0}}室{{formData.hall || 0}}厅{{formData.toilet || 0}}卫{{formData.balcony || 0}}阳台</span>
           </div>
           <div class="but-append"
                :data-tips="changeBut.roomType ? '完成' : '修改'"
@@ -586,18 +586,18 @@ export default {
       this.getLoadData();
     }
     window.addEventListener('click', this.bodyClick)
-    if(this.$route.query.flag=='potentia'){
+    if (this.$route.query.flag == 'potentia') {
       this.getCommunityData(this.$route.query.comId);
       this.getBuildingData(this.$route.query.cbId);
       this.getRoomData(this.$route.query.bhId);
       this.selectPageCommunit.list.push({ value: this.$route.query.comId, name: this.$route.query.communityName });
-      this.formData.communityId=this.$route.query.comId;
+      this.formData.communityId = this.$route.query.comId;
       this.selectPageeBuildingNo.list.push({ value: this.$route.query.cbId, name: this.$route.query.buildingName });
-      this.formData.buildingId=this.$route.query.cbId;
+      this.formData.buildingId = this.$route.query.cbId;
       this.selectPageRoomNo.list.push({ value: this.$route.query.bhId, name: this.$route.query.roomNo });
-      this.formData.roomId=this.$route.query.bhId;
-      this.formData.customerName=this.$route.query.customerName;
-      this.formData.tel=this.$route.query.tel;
+      this.formData.roomId = this.$route.query.bhId;
+      this.formData.customerName = this.$route.query.customerName;
+      this.formData.tel = this.$route.query.tel;
     }
     console.log(this.$route.query.flag)
   },
