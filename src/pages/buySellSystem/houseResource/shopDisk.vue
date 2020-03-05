@@ -171,7 +171,7 @@ export default {
       console.log(this, "111");
     },
     formatHouseType (row, column) {
-      return row.rooms + "室" + row.hall + "厅" + row.toilet + "卫";
+      return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
     toLook (id) {
