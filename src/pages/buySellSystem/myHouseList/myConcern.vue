@@ -286,9 +286,16 @@ export default {
       },
     selectImpression(e){
        let that = this;
-       that.imdataimdata = e.impression
-       var addList = [{id:e.id,impression:e.impression,houseId:e.houseId}];
-       that.ImpressionList = this.ImpressionList.concat(addList);
+       var selecti = 0;
+       for(var i=0;i<that.ImpressionList.length;i++){
+        if(that.ImpressionList[i].id == e.id){
+          selecti=1;
+        }
+      }
+      if(selecti==1){
+         that.ImpressionList = this.ImpressionList
+      }else{ var addList = [{id:e.id,impression:e.impression,houseId:e.houseId}];
+       that.ImpressionList = this.ImpressionList.concat(addList);}
        this.querylistByParams();
     },
     remoteMethod (query) {
@@ -385,6 +392,7 @@ export default {
           type: 'warning'
         }).then(() => {
           that.ImpressionList = []
+          this.querylistByParams();
           this.$message({    
             type: 'success',
             message: '清除成功!'
@@ -409,6 +417,7 @@ export default {
         console.log(e.data.code);
         if(e.data.code==200){
         that.ImpressionList = e.data.data;
+        this.querylistByParams();
         }
       })
           this.$message({    
