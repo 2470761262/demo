@@ -586,6 +586,20 @@ export default {
       this.getLoadData();
     }
     window.addEventListener('click', this.bodyClick)
+    if(this.$route.query.flag=='potentia'){
+      this.getCommunityData(this.$route.query.comId);
+      this.getBuildingData(this.$route.query.cbId);
+      this.getRoomData(this.$route.query.bhId);
+      this.selectPageCommunit.list.push({ value: this.$route.query.comId, name: this.$route.query.communityName });
+      this.formData.communityId=this.$route.query.comId;
+      this.selectPageeBuildingNo.list.push({ value: this.$route.query.cbId, name: this.$route.query.buildingName });
+      this.formData.buildingId=this.$route.query.cbId;
+      this.selectPageRoomNo.list.push({ value: this.$route.query.bhId, name: this.$route.query.roomNo });
+      this.formData.roomId=this.$route.query.bhId;
+      this.formData.customerName=this.$route.query.customerName;
+      this.formData.tel=this.$route.query.tel;
+    }
+    console.log(this.$route.query.flag)
   },
   destroyed () {
     window.removeEventListener('click', this.bodyClick)

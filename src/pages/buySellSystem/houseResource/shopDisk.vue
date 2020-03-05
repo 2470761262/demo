@@ -8,8 +8,7 @@
     <template v-slot:top>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
-        
-           <el-item label="楼盘名称"
+         <el-item label="楼盘名称"
                  prop="comId">
           <el-select v-model="data.comId"
                      @focus="remoteInput"
@@ -193,32 +192,8 @@ remoteMethod (query) {
       if (query !== '') {
         this.loading = true;
 
-        this.$api
-          .get({
-            url: "/mateHouse/queryCommunity",
-            headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
-            data: {
-              communityName: query
-            }
-          })
-          .then(e => {
-            console.log(e.data);
-            if (e.data.code == 200) {
-              that.loading = false;
-              that.options = e.data.data.list;
-            }
-          });
-      } else {
-        this.options = [];
-      }
-    },
-    queryCBId () {
-      var that = this;
-      this.$api
-        .get({
-          url: "/mateHouse/queryComBuilding",
+        this.$api.get({
+          url: "/mateHouse/queryCommunity",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           qs: true,
@@ -227,15 +202,58 @@ remoteMethod (query) {
             page: 1,
              limit: 50
           }
-        })
-        .then(e => {
+        }).then((e) => {
+          console.log(e.data)
           if (e.data.code == 200) {
             
             that.loading = false;
             that.options = e.data.data.list;
 
           }
-        });
+        })
+      } else {
+        this.options = [];
+      }
+    },
+    queryCBId () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryComBuilding",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.data.comId,
+          page: 1,
+             limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.data.roomNo='';
+           that.data.cbId='';
+          that.cbIdList = e.data.data.list;
+        }
+      })
+    },
+    queryRoomNo () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryBuildIngHouses",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.data.comId,
+          cbId: that.data.cbId,
+          page: 1,
+             limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+           that.data.roomNo='';
+          that.roomNoList = e.data.data.list;
+        }
+      })
     },
   queryShopDisk(currentPage){
     var that =this;
