@@ -68,7 +68,7 @@
               :underline="false"
             >添加部门</el-button>
             <el-button type="text" @click="linkJumpEdit(0,formCom.id)" :underline="false">修改</el-button>
-            <el-link href="https://element.eleme.io" :underline="false">锁定</el-link>
+            <el-button type="text" @click="lock('company',formCom.id)" :underline="false">锁定</el-button>
           </el-form-item>
         </el-form>
         <el-form ref="formDep" :model="formDep" v-show="checkedType===1" label-width="100px">
@@ -95,7 +95,7 @@
               :underline="false"
             >添加下级公司</el-button>
             <el-button type="text" @click="linkJumpEdit(1,formDep.id)" :underline="false">修改</el-button>
-            <el-link href="https://element.eleme.io" :underline="false">锁定</el-link>
+            <el-button type="text" @click="lock('department',formDep.id)" :underline="false">锁定</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -305,6 +305,44 @@ export default {
           query: { id: id, back: "hrTree" }
         });
       }
+    },
+    lock(type, id) {
+      this.$confirm("确实锁定？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.loading = true;
+          let params = { id: id };
+          this.$api
+            .post({
+              url: "/" + type + "/lock",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              let result = e.data;
+              this.$message({
+                type: "info",
+                message: result.message
+              });
+            })
+            .catch(e => {
+              console.log("失败");
+              console.log(e);
+            })
+            .finally(e => {
+              this.loading = false;
+              this.$router.go(0);
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
     }
   }
 };
