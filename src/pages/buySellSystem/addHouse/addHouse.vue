@@ -35,8 +35,10 @@
         border-left: 1px solid #999;
         border-right: 1px solid #999;
         width: 940px;
-        transform: translateX(-50%);
-        left: 50%;
+        padding-bottom: 59px;
+        // margin: 0 auto;
+        //transform: translateX(-50%);
+        left: calc(50% - 940px / 2);
         min-height: 100%;
         // top: 0;
         //bottom: 0;
@@ -47,6 +49,9 @@
       justify-content: center;
       border-top: 1px solid #f2f2f2;
       padding: 10px 0px;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
     }
   }
 }
@@ -77,13 +82,15 @@
            v-loading="butLoading">
         <div class="page-contenr-com-posi">
           <keep-alive>
-            <component :is="componentName"
+            <component :getData="formDataGet"
+                       :is="componentName"
                        ref="com"></component>
           </keep-alive>
           <div class="page-contenr-but"
                v-if="stepsActiveIndex!=3">
             <el-button-group>
-              <el-button type="primary"
+              <el-button v-if="stepsActiveIndex!=0"
+                         type="primary"
                          @click="prevPage"
                          class="page-previous">{{
             prevText
@@ -92,8 +99,8 @@
                          @click="nextPage"
                          class="page-next"
                          :loading="butLoading">{{ nextText }}</el-button>
-              <el-button type="info"
-                         :loading="butLoading">保存草稿</el-button>
+              <!-- <el-button type="info"
+                         :loading="butLoading">保存草稿</el-button> -->
             </el-button-group>
           </div>
         </div>
@@ -123,11 +130,12 @@ export default {
       }
     }
   },
+  created () {
+    // this.$store.commit('updateId', 41);
+    // this.formDataGet = true;
+  },
   watch: {
     stepsActiveIndex (val) {
-      if (val == 0) this.prevText = "重置";
-      else this.prevText = "上一步";
-
       if (val != this.stepsList.length - 1) this.nextText = "下一步";
       else this.nextText = "邀请验真";
     }
@@ -141,10 +149,11 @@ export default {
         { title: "实勘图片/视频", componentName: "exploration" },
         { title: "房源验真", componentName: "addHouseSuccess" }
       ],
-      prevText: "重置",
+      prevText: "上一步",
       nextText: "下一步",
       stepsActiveIndex: 0,
-      butLoading: false
+      butLoading: false,
+      formDataGet: false
     };
   },
   beforeRouteLeave (to, from, next) {

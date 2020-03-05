@@ -19,7 +19,6 @@
 </style>
 <template>
   <div class="wrapper">
-
     <div class="left-input-container">
       <span>部门名称</span>
       <el-input type="text"
@@ -146,29 +145,24 @@
                 maxlength="10"
                 show-word-limit></el-input>
     </div>
-    <div class="left-input-container">
-      <span>是否片区</span>
-     
-    </div>
 
     <div class="footerContainer el-top">
-      <el-button type="primary"
-                 @click="saveDept()">确定</el-button>
-      <el-button type="primary"
-                 @click="back()">返回</el-button>
+      <el-button type="primary" @click="saveDept()">确定</el-button>
+      <el-button type="primary" @click="back()">返回</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
   components: {},
   props: {},
-  data () {
+  data() {
     return {
-      DeptEntity: {        id: null,
+      DeptEntity: {
+        id: null,
         deptName: null,
         header: null,
         tel: null,
@@ -179,64 +173,83 @@ export default {
         managerPer: null,
         address: null,
         deptDesc: null,
-        isArea: null      }
+        isArea: null,
+        backUrl: null
+      }
     };
   },
   watch: {},
   computed: {},
   methods: {
-    saveDept () {
+    saveDept() {
       let params = this.DeptEntity;
-      this.$api.put({
-        url: '/department/update',
-        data: params,
-        token: false,
-        headers: { "Content-Type": "application/json" }
-      }).then((e) => {
+      this.$api
+        .put({
+          url: "/department/update",
+          data: params,
+          token: false,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            this.$alert("", "修改成功", {
+              dangerouslyUseHTMLString: false
+            });
+
+            if (this.backUrl === "hrTree") {
+              this.$router.push({ path: "/sys/hrTree/hrTree" });
+            } else {
+              this.$router.push({ path: "/sys/DeptManageList" });
+            }
+            console.log(result.data);
+            this.$message({ message: result.message });
+          }
+        })
+        .catch(e => {
+          console.log("修改失败");
+          console.log(e);
+        });
+    },
+    back() {
+      if (this.backUrl === "hrTree") {
+        this.$router.push({ path: "/sys/hrTree/hrTree" });
+      } else {
+        this.$router.push({ path: "/sys/DeptManageList" });
+      }
+    }
+  },
+  created() {
+    this.id = this.$route.query.id;
+    if (this.$route.query.back != null) {
+      this.backUrl = this.$route.query.back;
+    }
+  },
+  mounted() {
+    console.log("准备查询部门详情");
+    debugger;
+    this.$api
+      .get({
+        url: "/department/" + this.id,
+        token: false
+      })
+      .then(e => {
+        console.log(e.data);
         let result = e.data;
         if (result.code == 200) {
           console.log(result.message);
-          this.$alert('', '修改成功', {
-            dangerouslyUseHTMLString: false
-          });
-          this.$router.push({ path: "/sys/DeptManageList" });
           console.log(result.data);
-          this.$message({ message: result.message });
+          this.DeptEntity = result.data;
+        } else {
+          console.log("查询部门详情结果：" + result.message);
+          alert(result.message);
         }
-      }).catch((e) => {
-        console.log("修改失败");
-        console.log(e);
       })
-    },
-    back () {
-      this.$router.push({ path: "/sys/DeptManageList" });
-    }
-  },
-  created () {
-    this.id = this.$route.query.id;
-  },
-  mounted () {
-    console.log("准备查询部门详情");
-    debugger;
-    this.$api.get({
-      url: '/department/' + this.id,
-      token: false
-    }).then((e) => {
-      console.log(e.data);
-      let result = e.data;
-      if (result.code == 200) {
-        console.log(result.message);
-        console.log(result.data);
-        this.DeptEntity = result.data;
-      } else {
-        console.log("查询部门详情结果：" + result.message);
-        alert(result.message);
-      }
-    }).catch((e) => {
-      console.log("查询部门详情失败");
-      console.log(e);
-    })
+      .catch(e => {
+        console.log("查询部门详情失败");
+        console.log(e);
+      });
   }
-
 };
 </script>

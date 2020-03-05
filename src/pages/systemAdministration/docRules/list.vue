@@ -65,7 +65,7 @@ export default {
       },
       pageJson: {
         currentPage: 1,
-        pageSize: 5
+        pageSize: 10
       },
       tableDataColumn: [
         { prop: "id", label: "id", show: true },

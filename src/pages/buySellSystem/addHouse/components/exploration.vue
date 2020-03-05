@@ -5,7 +5,7 @@
     display: flex;
     margin-bottom: 100px;
     &:last-child {
-      margin-bottom: 0;
+      margin-bottom: 0 !important;
     }
     .upLoadFile-title {
       align-self: flex-start;
@@ -52,7 +52,11 @@
         position: relative;
         padding: 0 10px;
         box-sizing: border-box;
+        &:hover .upLoadFile-remove {
+          display: block;
+        }
         .upLoadFile-remove {
+          display: none;
           position: absolute;
           top: -5px;
           right: 5px;
@@ -64,6 +68,11 @@
           background: red;
           text-align: center;
           line-height: 20px;
+          cursor: pointer;
+        }
+        /deep/.el-image {
+          width: 100%;
+          height: 100px;
         }
         img,
         video {
@@ -92,14 +101,21 @@
     }
   }
 }
+/deep/.el-loading-spinner {
+  top: 30%;
+}
 </style>
 <template>
-  <div class="page-cell-addHouse">
+  <div class="page-cell-addHouse"
+       element-loading-text="我在去获取数据的路上了~"
+       v-loading="loading">
     <!-- accept=".jpg,.png" -->
     <!-- 外景图 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">外景图</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="outdoorImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="outdoorImgList"
                class="el-icon-upload">
           <input id="outdoorImgList"
@@ -110,11 +126,18 @@
       </div>
       <div class="upLoadFile-file-list">
         <div class="file-list-item"
-             v-for="item in outdoorImgList"
+             v-for="(item,index) in outdoorImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <el-image :src="item.url"
+                    fit="cover"
+                    :preview-src-list="fillterImgList('outdoorImgList')">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'outdoorImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -126,7 +149,9 @@
     <!-- 客厅 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">客厅</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="livingRoomImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="livingRoomImgList"
                class="el-icon-upload">
           <input id="livingRoomImgList"
@@ -139,9 +164,16 @@
         <div class="file-list-item"
              v-for="item in livingRoomImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('livingRoomImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'livingRoomImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -153,7 +185,9 @@
     <!-- 卧室 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">卧室</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="bedroomImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="bedroomImgList"
                class="el-icon-upload">
           <input id="bedroomImgList"
@@ -166,9 +200,16 @@
         <div class="file-list-item"
              v-for="item in bedroomImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('bedroomImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'bedroomImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -180,7 +221,9 @@
     <!-- 厨房 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">厨房</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="kitchenImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="kitchenImgList"
                class="el-icon-upload">
           <input id="kitchenImgList"
@@ -193,9 +236,16 @@
         <div class="file-list-item"
              v-for="item in kitchenImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('kitchenImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'kitchenImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -207,7 +257,9 @@
     <!-- 卫生间 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">卫生间</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="toiletImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="toiletImgList"
                class="el-icon-upload">
           <input id="toiletImgList"
@@ -220,9 +272,16 @@
         <div class="file-list-item"
              v-for="item in toiletImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('toiletImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'toiletImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -234,7 +293,9 @@
     <!-- 户型图 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">户型图</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="layoutImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="layoutImgList"
                class="el-icon-upload">
           <input id="layoutImgList"
@@ -247,9 +308,16 @@
         <div class="file-list-item"
              v-for="item in layoutImgList"
              :key="item.id">
-          <img :src="item.url"
-               alt="图片">
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <el-image :src="item.url"
+                    :preview-src-list="fillterImgList('layoutImgList')"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'layoutImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
@@ -263,7 +331,9 @@
       <div class="upLoadFile-title">房源视频</div>
       <div class="upLoadFile-flex">
         <div class="upLoadFile-right">
-          <div class="upLoadFile-input">
+          <div class="upLoadFile-input"
+               v-loading="houseVideoLoading"
+               element-loading-text="文件上传中~">
             <label for="houseVideoList"
                    class="el-icon-upload">
               <input id="houseVideoList"
@@ -274,8 +344,10 @@
           <div class="upLoadFile-file-list">
             <div class="file-list-item"
                  v-if="houseVideo.url">
-              <video :src="houseVideo.url"></video>
-              <div class="upLoadFile-remove el-icon-delete"></div>
+              <video :src="houseVideo.url"
+                     @click="imgdiaLog = true"></video>
+              <div class="upLoadFile-remove el-icon-delete"
+                   @click="deleteVideo(houseVideo)"></div>
             </div>
           </div>
           <div class="upLoadFile-file-phone">
@@ -287,16 +359,40 @@
         <div>仅可以上传一个视频,时间为60秒.</div>
       </div>
     </div>
+    <!-- 视频弹框 -->
+    <el-model-box v-model="imgdiaLog">
+      <video :src="houseVideo.url"
+             controls></video>
+    </el-model-box>
   </div>
 </template>
 <script>
 import util from '@/util/util';
 export default {
   name: "exploration",
-  created () {
+  props: {
+    getData: {
+      type: Boolean,
+      default: false
+    }
+  },
+  mounted () {
+    //true 则去获取数据
+    if (this.getData) {
+      this.promiseAllViodeoAndImg();
+    }
   },
   data () {
     return {
+      imgdiaLog: false,
+      loading: false,
+      outdoorImgListLoading: false,
+      livingRoomImgListLoading: false,
+      bedroomImgListLoading: false,
+      kitchenImgListLoading: false,
+      toiletImgListLoading: false,
+      layoutImgListLoading: false,
+      houseVideoLoading: false,
       outdoorImgList: [], //外景图
       livingRoomImgList: [],//客厅
       bedroomImgList: [],//卧室
@@ -307,7 +403,72 @@ export default {
     }
   },
   methods: {
+    openVideo () {
 
+    },
+    promiseAllViodeoAndImg () {
+      this.loading = true;
+      Promise.all([this.getLoadDataImg(), this.getLoadDataVideo()]).catch(() => {
+        this.$message.error('获取数据失败~');
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
+    getLoadDataVideo () {
+      this.$api.post({ url: `/draft-house/videos/${this.$store.state.addHouse.formData.id}` })
+        .then((e) => {
+          let data = e.data;
+          if (data.code == 200 && data.data.length != 0) {
+            this.houseVideo = data.data[0];
+          }
+        }).catch(() => {
+          this.$message.error('获取数据失败~');
+        }).finally(() => {
+          this.loading = false;
+        })
+    },
+    //返回预览大图list
+    fillterImgList (imgList) {
+      if (this[imgList].length > 0) {
+        return this[imgList].map((item) => {
+          return item.url;
+        })
+      } else {
+        return [];
+      }
+    },
+    //获取上传的图片
+    getLoadDataImg () {
+      return this.$api.post({ url: `/draft-house/pictures/${this.$store.state.addHouse.formData.id}` })
+        .then((e) => {
+          let data = e.data;
+          if (data.code == 200) {
+            let imgList = data.data;
+            imgList.forEach((item) => {
+              switch (item.picClass) {
+                case 1:
+                  this.outdoorImgList.push(item);
+                  break;
+                case 2:
+                  this.livingRoomImgList.push(item);
+                  break;
+                case 3:
+                  this.bedroomImgList.push(item);
+                  break;
+                case 4:
+                  this.kitchenImgList.push(item);
+                  break;
+                case 5:
+                  this.toiletImgList.push(item);
+                  break;
+                case 6:
+                  this.layoutImgList.push(item);
+                  break;
+              }
+            })
+          }
+        })
+    },
     //上传视频
     getVideoFile (fileListName, e) {
       console.log(fileListName, e);
@@ -334,11 +495,11 @@ export default {
     getFile (picClass, fileListName, e) {
       let file = event.target.files;
       let isImgType = ["image/jpeg", "image/png"];
-      if (file.length > 9 || file.length + this[fileListName].length > 9) {
-        this.$message.error("最多一次上传9张图片");
+      if (file.length > 6) {
+        this.$message.error("最多一次上传6张图片");
         return;
       }
-      for (let index = this[fileListName].length; index < file.length; index++) {
+      for (let index = 0; index < file.length; index++) {
         if (!isImgType.includes(file[index].type)) {
           this.$message.error("上传的图片只能是jpg,jpeg格式!");
           return;
@@ -348,24 +509,52 @@ export default {
         this.uploadSectionFile(picClass, file[index], fileListName);
       }
     },
+    //删除图片
+    deleteImg (id, url, index, listName) {
+      this.$api.delete({
+        url: `/draft-house/picture/${id}`,
+        data: {
+          url: url
+        },
+        qs: true
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this[listName].splice(index, 1)
+        }
+      })
+    },
+    deleteVideo (item) {
+      this.$api.delete({
+        url: `/draft-house/video/${item.id}`,
+        data: {
+          url: item.url
+        },
+        qs: true
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this.houseVideo = {}
+        }
+      })
+    },
     uploadSectionFile (picClass, uploader, fileListName) {
       let that = this;
+      this[fileListName + 'Loading'] = true;
       let formData = new FormData();
       if (picClass != undefined) {
         formData.append('picClass', picClass)
       }
-      formData.append('draftid', that.$store.state.addHouse.formData.id)
+      formData.append('draftId', that.$store.state.addHouse.formData.id)
       formData.append('file', uploader)
       this.$api.post({
-        url: "/draft-house/picture",
+        url: `/draft-house/${picClass != undefined ? 'picture' : 'video'}`,
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
-        onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
-          if (progressEvent.lengthComputable) {
-            let num = Math.round((progressEvent.loaded / progressEvent.total) * 100)
-            console.log(num, "num");
-          }
-        }
+        // onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
+        //   if (progressEvent.lengthComputable) {
+        //     let num = Math.round((progressEvent.loaded / progressEvent.total) * 100)
+        //     console.log(num, "num");
+        //   }
+        // }
       }).then((json) => {
         if (json.data.code == 200) {
           if (picClass != undefined) {
@@ -380,6 +569,8 @@ export default {
           message: '不晓得为什么,反正失败了',
           type: 'warning'
         })
+      }).finally(() => {
+        this[fileListName + 'Loading'] = false;
       })
     },
     validateAll () {

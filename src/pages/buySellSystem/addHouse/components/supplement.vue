@@ -8,13 +8,7 @@
     &.no-top {
       margin-top: 0;
     }
-    .after-tips {
-      &:after {
-        content: attr(data-tips);
-        display: block;
-        color: red;
-      }
-    }
+   
     .item-before {
       line-height: 40px;
       &.before-text {
@@ -106,6 +100,13 @@
     }
   }
 }
+ .after-tips {
+      &:after {
+        content: attr(data-tips);
+        display: block;
+        color: red;
+      }
+    }
 .flex-cell {
   display: flex;
 }
@@ -119,7 +120,9 @@
 }
 </style>
 <template>
-  <div class="page-cell-addHouse">
+  <div class="page-cell-addHouse"
+       element-loading-text="我在去获取数据的路上了~"
+       v-loading="loading">
     <!-- 房屋来源 -->
     <div class="cell-item-cell">
       <div class="item-before text-just">房源来源</div>
@@ -163,24 +166,32 @@
       </el-radio-group>
     </div>
     <!-- 物业费 -->
-    <div class="cell-item-cell el-input-w">
-      <div class="item-before text-just">物业费</div>
-      <el-input type="text"></el-input>
-      <div class="item-after">元/平方</div>
+    <div :class="{'after-tips':errorBags.has('propertyFee')}"
+           :data-tips="errorBags.first('propertyFee')">
+        <div class="cell-item-cell el-input-w">
+        <div class="item-before text-just">物业费</div>
+        <el-input type="text" v-model="formData.propertyFee"
+          v-validate="'decimal:2|noZero1|max:14|required'"
+          data-vv-as="物业费"
+          data-vv-name="propertyFee"
+          placeholder="请输入物业费"
+        ></el-input>
+        <div class="item-after">元/平方</div>
+      </div>
     </div>
+
     <!-- 附属配套 -->
     <div class="cell-item-cell el-input-w">
       <div class="item-before text-just">附属配套</div>
-      <el-radio-group v-model="houseBelongSelect"
-                      @change="houseBelongChange"
+      <el-radio-group v-model="formData.houseBelong"
                       size="mini">
         <el-radio v-for="item in houseBelongList"
-                  :key="item.value"
-                  :label="item.key">{{ item.key }}</el-radio>
+                  :key="item.key"
+                  :label="item.value">{{ item.key }}</el-radio>
       </el-radio-group>
-      <el-input v-if="houseBelongSelect=='其他'"
+      <!-- <el-input v-if="houseBelongSelect=='其他'"
                 type="text"
-                v-model="formData.houseBelong"></el-input>
+                v-model="formData.houseBelong"></el-input> -->
     </div>
     <!-- 学籍占用 -->
     <div class="cell-item-cell">
@@ -262,9 +273,9 @@
           <el-select v-if="formData.mortgage==1"
                      v-model="formData.mortgageBank"
                      placeholder="请选择抵押银行">
-            <el-option v-for="item in options"
+            <el-option v-for="item in mortgageBankList"
                        :key="item.value"
-                       :label="item.label"
+                       :label="item.key"
                        :value="item.value">
             </el-option>
           </el-select>
@@ -403,10 +414,26 @@ const USE = [
 ]
 export default {
   name: "supplement",
+  props: {
+    getData: {
+      type: Boolean,
+      default: false
+    },
+    required:{
+      type: Boolean,
+      default: false
+    }
+  },
   computed: {
     formData () {
       this.$set(this.$data, "step", JSON.parse(JSON.stringify(this.$store.state.addHouse.formData.step2)))
       return this.step
+    }
+  },
+  mounted () {
+    //true 则去获取数据
+    if (this.getData) {
+      this.getLoadData();
     }
   },
   watch: {
@@ -429,6 +456,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       step: {},
       options: [],
       deffData: {},
@@ -446,10 +474,25 @@ export default {
       houseBelongList: formReander.HOUSEBELONG,//配套设施
       signList: formReander.SIGN,//户口情况
       decorationList: formReander.DECORATION,//装修类型
-      isowneronlyList: formReander.ISOWNERONLY //是否唯一住房
+      isowneronlyList: formReander.ISOWNERONLY ,//是否唯一住房
+      mortgageBankList:formReander.MORTGAGEBANK//抵押银行
     }
   },
   methods: {
+    getLoadData () {
+      this.loading = true;
+      return this.$api.get({
+        url: `/draft-house/${this.$store.state.addHouse.formData.id}`,
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this.$store.dispatch("InitFormData", { commitName: "updateStep2", json: e.data.data })
+        }
+      }).catch((e) => {
+        return false;
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
     //抵押情况切换
     mortgageChange (e) {
       if (e != 1) {
@@ -466,13 +509,6 @@ export default {
     primaryRadioChange (e) {
       if (e != 1) {
         this.formData.primarySchoolUse = '';
-      }
-    },
-    houseBelongChange (e) {
-      if (e != '其他') {
-        this.formData.houseBelong = e;
-      } else {
-        this.formData.houseBelong = '';
       }
     },
     validateAll () {

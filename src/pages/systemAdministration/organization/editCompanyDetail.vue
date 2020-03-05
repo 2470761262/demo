@@ -124,7 +124,7 @@
               >
                 <el-checkbox v-for="city in region" :label="city" :key="city.Name" >{{city.Name}}</el-checkbox>
                 <button slot="reference"  @mouseover="checked(city.id)">{{city.Name}}</button>
-              </el-popover>    
+              </el-popover>
             </el-checkbox>
           </el-checkbox-group>
         </template>
@@ -230,14 +230,14 @@ export default {
       if (this.checkedCities.length == this.regionName.length) {
         this.companyEntity.RegionName = "全部";
       } else {
-        for(let index in this.checkedCities) {  
+        for(let index in this.checkedCities) {
         console.log(this.checkedCities[index]);
         if(index == this.checkedCities.length -1){
           this.companyEntity.RegionName += this.checkedCities[index].Name ;
         }else{
           this.companyEntity.RegionName += this.checkedCities[index].Name +",";
         }
-    }        
+    }
       }
     },
     savecompany() {
@@ -256,7 +256,11 @@ export default {
             this.$alert("", "修改成功", {
               dangerouslyUseHTMLString: false
             });
-            this.$router.push({ path: "/sys/companyList" });
+            if (this.backUrl === "hrTree") {
+              this.$router.push({ path: "/sys/hrTree/hrTree" });
+            } else {
+              this.$router.push({ path: "/sys/companyList" });
+            }
             console.log(result.data);
             this.$message({ message: result.message });
           }
@@ -267,11 +271,18 @@ export default {
         });
     },
     back() {
-      this.$router.push({ path: "/sys/companyList" });
+      if (this.backUrl === "hrTree") {
+        this.$router.push({ path: "/sys/hrTree/hrTree" });
+      } else {
+        this.$router.push({ path: "/sys/companyList" });
+      }
     }
   },
   created() {
     this.companyId = this.$route.query.companyId;
+    if (this.$route.query.back != null) {
+      this.backUrl = this.$route.query.back;
+    }
   },
   mounted() {
     console.log("准备查询公司详情");
