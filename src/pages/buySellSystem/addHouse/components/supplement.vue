@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+@import url(../../../../assets/publicLess/upLoadFile.less);
 .page-cell-addHouse {
   padding: 0 50px;
   .cell-item-cell {
@@ -117,6 +118,48 @@
 }
 .flex-start {
   align-self: flex-start;
+}
+.upLoadFile {
+  margin-top: 60px;
+  /deep/.el-slider__bar {
+    background: #fea32e;
+  }
+  /deep/.el-slider__button {
+    border-color: #fea32e;
+  }
+  .upLoadFile-title {
+    margin-right: 20px;
+  }
+  .upLoadFile-file-list {
+    border: 1px solid #f4f4f4;
+    flex-direction: column;
+    .audio-contenr {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      .audio-contenr-but {
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #fea32e;
+        color: #fff;
+        text-align: center;
+        line-height: 30px;
+        font-size: 30px;
+        text-shadow: 0px 0px 2px #fea32e, 0px 0px 8px #fea32e,
+          0px 0px 16px #fea32e, 0px 0px 22px #fea32e, 0px 0px 30px #fea32e;
+        margin: 0 20px;
+      }
+      .el-slider {
+        flex: 1;
+      }
+      .autio-time {
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+    }
+  }
 }
 </style>
 <template>
@@ -242,7 +285,7 @@
       <div :class="{'after-tips':errorBags.has('middleSchoolUse')}"
            :data-tips="errorBags.first('middleSchoolUse')">
         <el-radio-group v-validate="{'required':middleRadio == 1}"
-                        data-vv-name="primarySchoolUse"
+                        data-vv-name="middleSchoolUse"
                         data-vv-as="中学学籍占用"
                         v-model="formData.middleSchoolUse"
                         size="mini">
@@ -397,6 +440,53 @@
                 show-word-limit>
       </el-input>
     </div>
+    <!-- 讲房语音 -->
+    <div class="upLoadFile">
+      <div class="upLoadFile-title">讲房语音</div>
+      <div class="upLoadFile-flex">
+        <div class="upLoadFile-right">
+          <div class="upLoadFile-input"
+               v-loading="audioFileLoading"
+               element-loading-text="文件上传中~">
+            <label for="houseVideoList"
+                   class="el-icon-upload">
+              <input id="houseVideoList"
+                     type="file"
+                     @change="getAudioFile($event)">
+            </label>
+          </div>
+          <div class="upLoadFile-file-list">
+            <div class="audio-title">音频.mp3</div>
+            <div class="audio-contenr">
+              <audio :src="audioFile.url"
+                     ref="audio"
+                     v-if="audioFile.url"
+                     v-audioLoad></audio>
+              <div :class="['audio-contenr-but',audioPlay.icon]"
+                   @click="openVideo"></div>
+              <el-slider v-model="audioPlay.nowTime"
+                         :format-tooltip="formatTooltip"
+                         @input="audioSliderChange"
+                         ref="audioSlider"
+                         :max="audioPlay.endTime"
+                         :disabled="audioFile.url ? false : true"></el-slider>
+              <div class="autio-time">{{audioPlay.nowTime | timefomat}} / {{audioPlay.endTime | timefomat}}</div>
+            </div>
+          </div>
+          <div class="upLoadFile-file-phone">
+            <el-image src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+                      fit="cover">
+              <div slot="placeholder"
+                   class="image-slot">
+                加载中<span>...</span>
+              </div>
+            </el-image>
+            <div>微信扫码上传</div>
+          </div>
+        </div>
+        <div>仅可以上传一个音频.</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -432,8 +522,15 @@ export default {
   },
   mounted () {
     //true 则去获取数据
+    ;
     if (this.getData) {
-      this.getLoadData();
+      this.loading = true;
+      Promise.all([this.getAudio(), this.getLoadData()])
+        .catch(() => {
+
+        }).finally(() => {
+          this.loading = false;
+        })
     }
   },
   watch: {
@@ -454,8 +551,37 @@ export default {
       }
     }
   },
+  filters: {
+    timefomat (value) {
+      return util.timeToStr(value);
+    }
+  },
+  directives: {
+    audioLoad: {
+      bind (el, binding, vnode) {
+        el.addEventListener('loadedmetadata', () => {
+          vnode.context.audioPlay.endTime = parseInt(el.duration);
+        })
+        el.addEventListener('timeupdate', () => {
+          vnode.context.audioPlay.nowTime = parseInt(el.currentTime);
+        })
+        el.addEventListener('ended', () => {
+          vnode.context.audioPlay.nowTime = 0;
+          vnode.context.audioPlay.icon = 'el-icon-video-play';
+        })
+      }
+    }
+  },
   data () {
     return {
+      audioPlay: {
+        playOrEnd: true,
+        nowTime: 0,
+        endTime: 0,
+        icon: 'el-icon-video-play'
+      },
+      audioFileLoading: false,//音频上传louding
+      audioFile: {},//音频
       loading: false,
       step: {},
       options: [],
@@ -479,8 +605,78 @@ export default {
     }
   },
   methods: {
+    //根据ID获取已经上传的音频
+    getAudio () {
+      return this.$api.post({ url: `/draft-house/audios/${this.$store.state.addHouse.formData.id}` })
+        .then((e) => {
+          if (e.data.code == 200 && e.data.data.length != 0) {
+            this.audioFile = e.data.data[0];
+          }
+        })
+    },
+    //获取音频上传
+    getAudioFile (e) {
+      let file = event.target.files;
+      let isVideoType = ["audio/mp3"];
+      if (!isVideoType.includes(file[0].type)) {
+        this.$message.error("上传的音频只能是MP3格式!");
+        return;
+      }
+      if (Object.keys(this.audioFile).length != 0) {
+        this.$message.error("只能上传一个音频");
+        return;
+      }
+      this.uploadSectionFile(file[0]);
+    },
+    //格式化slider时间
+    formatTooltip (val) {
+      return util.timeToStr(val);
+    },
+    //播放 or 暂停音频
+    openVideo () {
+      let audio = this.$refs.audio;
+      try {
+        if (audio.paused) {
+          audio.play();
+          this.audioPlay.icon = 'el-icon-video-pause';
+        } else {
+          audio.pause();
+          this.audioPlay.icon = 'el-icon-video-play';
+        }
+      } catch (error) {
+        this.$message.error("是不是没有音频阿!");
+      }
+    },
+    //监听进度条拉动设置播放位置
+    audioSliderChange (e) {
+      if (this.$refs.audioSlider.dragging) {
+        this.$refs.audio.currentTime = e;
+      }
+    },
+    uploadSectionFile (uploader) {
+      let that = this;
+      this.audioFileLoading = true;
+      let formData = new FormData();
+      formData.append('draftId', that.$store.state.addHouse.formData.id);
+      formData.append('file', uploader)
+      this.$api.post({
+        url: `/draft-house/audio`,
+        headers: { "Content-Type": "multipart/form-data" },
+        data: formData,
+      }).then((json) => {
+        if (json.data.code == 200) {
+          this.audioFile = json.data.data;
+        }
+      }).catch((e) => {
+        that.$message({
+          message: '不晓得为什么,反正失败了',
+          type: 'warning'
+        })
+      }).finally(() => {
+        this.audioFileLoading = false;
+      })
+    },
     getLoadData () {
-      this.loading = true;
       return this.$api.get({
         url: `/draft-house/${this.$store.state.addHouse.formData.id}`,
       }).then((e) => {
@@ -495,9 +691,6 @@ export default {
           this.$store.dispatch("InitFormData", { commitName: "updateStep2", json: e.data.data })
         }
       }).catch((e) => {
-        return false;
-      }).finally(() => {
-        this.loading = false;
       })
     },
     //抵押情况切换
