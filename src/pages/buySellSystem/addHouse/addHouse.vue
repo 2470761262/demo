@@ -86,16 +86,16 @@
                        :is="componentName"
                        ref="com"></component>
           </keep-alive>
-          <div class="page-contenr-but"
-               v-if="stepsActiveIndex!=3">
+          <div class="page-contenr-but">
             <el-button-group>
-              <el-button v-if="stepsActiveIndex!=0"
+              <el-button v-if="stepsActiveIndex != 0 && stepsActiveIndex != 3 "
                          type="primary"
                          @click="prevPage"
                          class="page-previous">{{
             prevText
           }}</el-button>
-              <el-button type="primary"
+              <el-button v-if="stepsActiveIndex < 3 ||  reSetMethod"
+                         type="primary"
                          @click="nextPage"
                          class="page-next"
                          :loading="butLoading">{{ nextText }}</el-button>
@@ -115,6 +115,7 @@ import basicInformation from "@/pages/buySellSystem/addHouse/components/basicInf
 import componentsFactory from "@/util/componentsFactory";
 import { mapState } from "vuex";
 import getMenuRid from '@/minxi/getMenuRid';
+import Vue from 'vue';
 export default {
   mixins: [getMenuRid],
   components: {
@@ -124,17 +125,27 @@ export default {
     addHouseSuccess: () => componentsFactory("pages/buySellSystem/addHouse/components/addHouseSuccess") //邀请验真
   },
   created () {
-    // this.$store.commit('updateId', 41);
-    // this.formDataGet = true;
+
+
+    let { method, id } = this.$route.query;
+    if (method && id) {
+      this.$store.commit('updateId', id);
+      this.formDataGet = true;
+      this.reSetMethod = method == 'reset' ? true : false;
+    }
+  },
+  mounted () {
+
   },
   watch: {
     stepsActiveIndex (val) {
-      if (val != this.stepsList.length - 1) this.nextText = "下一步";
+      if (val < this.stepsList.length - 1) this.nextText = "下一步";
       else this.nextText = "邀请验真";
     }
   },
   data () {
     return {
+      reSetMethod: false,
       componentName: "basicInformation",
       stepsList: [
         { title: "必填信息", componentName: "basicInformation" },
@@ -197,6 +208,10 @@ export default {
         case "exploration":
           flag = await this.$refs.com.validateAll();
           break;
+        case "addHouseSuccess":
+          flag = await this.$refs.com.validateAll();
+          this.butLoading = false;
+          return;
       }
       this.butLoading = false;
       if (this.stepsActiveIndex < this.stepsList.length && flag) {
