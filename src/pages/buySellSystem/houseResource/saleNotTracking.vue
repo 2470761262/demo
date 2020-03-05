@@ -177,7 +177,6 @@ export default {
      formatHouseType(row, column){
       return row.Rooms+'室'+row.hall+'厅'+row.toilet+'卫';
     },
-
     toLook (id) {
       console.log(id);
       var that = this;
