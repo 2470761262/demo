@@ -74,7 +74,9 @@
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
-                     @click="toLook(scope.row.id)">查看</el-button>
+                     @click="distributeEvent(item.methosName,scope.row.id)"
+                     v-for="(item,index) in isForBut(scope.row.id)"
+                     :key="index">{{item.name}}</el-button>
         </template>
       </el-table-column>
 
@@ -84,8 +86,9 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import houseContrast from '@/minxi/houseContrast';
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, houseContrast],
   components: {
     listPage
   },
@@ -137,7 +140,7 @@ export default {
     }
   },
   mounted () {
-    this.queryShopownerRecommendHouse(1);
+    this.queryVerifyHouseDatas(1);
   },
   methods: {
     queryTabData () {
@@ -148,10 +151,10 @@ export default {
     },
 
     toLook (id) {
-      this.$router.push({ name: 'houseDetails', params: { "houseId": id} });
+      this.$router.push({ name: 'houseDetails', params: { "houseId": id } });
     },
     queryShopownerHouseParams () {
-      this.queryShopownerRecommendHouse(1);
+      this.queryVerifyHouseDatas(1);
     },
     remoteMethod (query) {
       var that = this
@@ -211,7 +214,7 @@ export default {
         }
       })
     },
-    queryShopownerRecommendHouse (currentPage) {
+    queryVerifyHouseDatas (currentPage) {
       var that = this;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage };
 
@@ -256,16 +259,16 @@ export default {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryShopownerHouseParams();
+      this.queryVerifyHouseDatas();
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryShopownerRecommendHouse(val);
+      this.queryVerifyHouseDatas(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryShopownerRecommendHouse(1);
+      this.queryVerifyHouseDatas(1);
     }
   },
 }

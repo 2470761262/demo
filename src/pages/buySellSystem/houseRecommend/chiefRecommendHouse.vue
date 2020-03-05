@@ -76,7 +76,9 @@
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
-                     @click="toLook(scope.row.id)">查看</el-button>
+                     @click="distributeEvent(item.methosName,scope.row.id)"
+                     v-for="(item,index) in isForBut(scope.row.id)"
+                     :key="index">{{item.name}}</el-button>
         </template>
       </el-table-column>
 
@@ -86,8 +88,9 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import houseContrast from '@/minxi/houseContrast';
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, houseContrast],
   components: {
     listPage
   },
@@ -154,8 +157,8 @@ export default {
     queryChiefHouseParams () {
       this.queryChiefRecommendHouse(1);
     },
-      remoteInput () {
-   
+    remoteInput () {
+
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
@@ -197,8 +200,8 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.data.cbId='';
-          that.data.roomNo='';
+          that.data.cbId = '';
+          that.data.roomNo = '';
           that.cbIdList = e.data.data.list;
         }
       })
@@ -216,7 +219,7 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.data.roomNo='';
+          that.data.roomNo = '';
           that.roomNoList = e.data.data.list;
         }
       })

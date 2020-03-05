@@ -76,7 +76,9 @@
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
-                     @click="toLook(scope.row.id)">查看</el-button>
+                     @click="distributeEvent(item.methosName,scope.row.id)"
+                     v-for="(item,index) in isForBut(scope.row.id)"
+                     :key="index">{{item.name}}</el-button>
         </template>
       </el-table-column>
 
@@ -86,8 +88,9 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import houseContrast from '@/minxi/houseContrast';
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, houseContrast],
   components: {
     listPage
   },
@@ -140,7 +143,7 @@ export default {
     }
   },
   mounted () {
-    this.querySoleHouseList(1);
+    this.queryVerifyHouseDatas(1);
   },
   methods: {
 
@@ -153,7 +156,7 @@ export default {
 
     toLook (id) { },
     queryquerySoleHouseParams () {
-      this.querySoleHouseList(1);
+      this.queryVerifyHouseDatas(1);
     },
     remoteMethod (query) {
       var that = this
@@ -213,7 +216,7 @@ export default {
         }
       })
     },
-    querySoleHouseList (currentPage) {
+    queryVerifyHouseDatas (currentPage) {
       var that = this;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage };
       params.comId = that.data.comId;
@@ -241,14 +244,7 @@ export default {
         console.log(e);
       })
     },
-    isForBut (type) {
-      let array = [
-        { name: '查看', isType: '3', methosName: '' }
-      ]
-      return array.filter((item) => {
-        return item.isType.includes(type)
-      })
-    },
+
     handleClick () {
 
     },
@@ -260,11 +256,11 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.querySoleHouseList(1);
+      this.queryVerifyHouseDatas(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.querySoleHouseList(val);
+      this.queryVerifyHouseDatas(val);
     }
   },
 }
