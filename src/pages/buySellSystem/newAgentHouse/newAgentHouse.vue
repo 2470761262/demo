@@ -71,12 +71,13 @@ import listPage from '@/components/listPage';
 import Vue from 'Vue'
 import VueCookies from 'vue-cookies';
 
-
+import houseContrast from "@/minxi/houseContrast";
 import getMenuRid from '@/minxi/getMenuRid';
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid,houseContrast],
   components: {
-    listPage
+    listPage,
+    houseContrast
   },
   data () {
     return {
@@ -178,109 +179,12 @@ export default {
         console.log(e);
       })
     },
-    open () {
-      this.$alert('<img src="https://lsxjytestimgs.oss-cn-shenzhen.aliyuncs.com/verifyHouseShare/b25076270b8248509e9fe815005ced60.jpg"></img>', 'HTML 片段', {
-        dangerouslyUseHTMLString: true
-      });
-    },
+
     queryTabData () { },
     distributeEvent (e, noticeId) {
       this[e](noticeId);
     },
-    addCookie (id) {
-      if (window.$cookies.get("houseId") == null) {
-        window.$cookies.set("houseId", id);
-        this.queryVerifyHouseDatas(this.pageJson.currentPage);
-      } else {
-        window.$cookies.set("houseId", window.$cookies.get("houseId") + ',' + id);
 
-        this.queryVerifyHouseDatas(this.pageJson.currentPage);
-      }
-
-    },
-    postUrl () {
-
-      this.$router.push({ path: "/buySellSystem/agentHouseContrast", query: { houseId: window.$cookies.get("houseId") } });
-    },
-    removeCookie (id) {
-      let postId = "";
-      let houseId = window.$cookies.get("houseId");
-      console.log(houseId);
-      if (houseId.split(",")[1] == undefined && houseId == id) {//是否单一id
-        window.$cookies.remove("houseId");
-
-      } else {//多个id操作
-
-        let cookie = houseId.split(',');
-        console.log(cookie);
-        for (let i = 0; i < cookie.length; i++) {
-          if (i == 0 && id != cookie[i]) {//如果是第一个id并且不是要删除的id
-            postId += cookie[i];
-          } else if (cookie[i] != id && postId == "") {//如果是第一个id并且不是要删除的id
-            postId += +cookie[i];
-
-          } else if (ookie[i] != id) {
-            postId += ',' + cookie[i];
-          }
-        }
-        window.$cookies.set("houseId", postId);
-      }
-      this.queryVerifyHouseDatas(this.pageJson.currentPage);
-    },
-    isForBut (type) {
-      let typ = type;
-      let array = [
-
-      ];
-      console.log(window.$cookies.get("houseId"));
-      if (window.$cookies.get("houseId") != null) {
-        if (window.$cookies.get("houseId").split(",")[1] == undefined && window.$cookies.get("houseId") == typ) {
-          array = [
-            { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-            { name: '删除对比', isType: '1,3', methosName: 'removeCookie' },
-            { name: '去对比', isType: '1,3', methosName: 'postUrl' },
-          ]
-        }
-        else if (window.$cookies.get("houseId").split(",") != "") {
-          let houseId = window.$cookies.get("houseId").split(",");
-          for (var i = 0; i < houseId.length; i++) {
-            if (typ == houseId[i]) {
-              array = [
-                { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-                { name: '删除对比', isType: '1,3', methosName: 'removeCookie' },
-                { name: '去对比', isType: '1,3', methosName: 'postUrl' },
-              ];
-              break;
-            } else if (i + 1 == houseId.length) {
-              array = [
-                { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-
-                { name: '添加对比', isType: '1,3', methosName: 'addCookie' },
-              ];
-
-            }
-          }
-        } else {
-          array = [
-            { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-
-            { name: '添加对比', isType: '1,3', methosName: 'addCookie' },
-          ];
-
-        }
-      } else {
-        array = [
-          { name: '查看', isType: '1,3', methosName: 'showNoticeDetail' },
-
-          { name: '添加对比', isType: '1,3', methosName: 'addCookie' },
-        ];
-
-      }
-      return array;
-    },
-    handleClick () {
-
-    },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
     },

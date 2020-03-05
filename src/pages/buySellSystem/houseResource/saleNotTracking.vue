@@ -177,7 +177,6 @@ export default {
      formatHouseType(row, column){
       return row.Rooms+'室'+row.hall+'厅'+row.toilet+'卫';
     },
-
     toLook (id) {
       console.log(id);
       var that = this;
@@ -234,8 +233,8 @@ remoteMethod (query) {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.roomNo='';
-            that.cbId='';
+         that.data.roomNo='';
+            that.data.cbId='';
           that.cbIdList = e.data.data.list;
         }
       })
@@ -255,7 +254,7 @@ remoteMethod (query) {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-           that.roomNo='';
+           that.data.roomNo='';
           that.roomNoList = e.data.data.list;
         }
       })

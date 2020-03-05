@@ -84,7 +84,7 @@
       </template>
     </list-page>
   </div>
-</template >   
+</template >
 
 
 
@@ -126,7 +126,7 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "id", label: "公司id" },
+        
         { prop: "CompanyName", label: "公司名" },
         { prop: "CoDesc", label: "公司描述" },
         { prop: "Tel", label: "电话" },
@@ -204,36 +204,40 @@ export default {
       this.queryData.isLocked = isLocked;
       this.queryCompanyDatas(1);
     },
-    toAddCompanyPage(saveType) {
-      if (this.queryData.type == null) {
-        this.$alert("", "请选择一个节点", {
-          dangerouslyUseHTMLString: false
-        });
-      } else {
-        if (saveType == 0) {
-          this.$router.push({
-            name: "addCompanyManage",
-            params: { ParentId: this.company.ParentId }
+    toAddCompanyPage (saveType) {
+      if(this.queryData.type == null ){
+        this.$alert('', '请选择一个节点', {
+            dangerouslyUseHTMLString: false
           });
-        } else if (saveType == 1) {
-          this.$router.push({
-            name: "addCompanyManage",
-            params: { ParentId: this.company.id }
-          });
-        }
-        this.company = null;
+      }else {
+        if(this.queryData.type != 1){
+          if (saveType == 0){
+            this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.ParentId} });
+          }else if(saveType == 1){
+            this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.id}  });
+          }
+      }else if(this.department != null && this.queryData.type != 0){
+          if(saveType == 1){
+            this.$router.push({ name: "addCompanyManage", params:{deptParentID:this.department.id,ParentId:this.department.coId}  });
+          }
+      }
+      this.company=null;
       }
     },
-    toAddDeptPage() {
-      if (this.queryData.type == null) {
-        this.$alert("", "请选择一个节点", {
-          dangerouslyUseHTMLString: false
-        });
-      } else {
-        if (this.company != null && this.queryData.type != 1) {
-          var coId = this.company.id;
-          this.$router.push({ name: "addDeptManage", params: { coId: coId } });
-        }
+    toAddDeptPage () {
+      if(this.queryData.type == null){
+        this.$alert('', '请选择一个节点', {
+            dangerouslyUseHTMLString: false
+          });
+      }else{
+        if(this.company != null && this.queryData.type != 1){
+        var coId = this.company.id;
+      this.$router.push({ name: "addDeptManage", params: { ParentId: coId } });
+      }else{
+         this.$alert('', '请选择一个公司!!!', {
+            dangerouslyUseHTMLString: false
+          });
+      }
       }
     },
     editCompanyDetail(companyId) {
@@ -256,6 +260,10 @@ export default {
               dangerouslyUseHTMLString: false
             });
             this.$router.push({ path: "/sys/companyList" });
+          }else{
+             this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
+              dangerouslyUseHTMLString: false
+            });
           }
         })
         .catch(e => {
@@ -269,10 +277,39 @@ export default {
     // querySubsidiary(CompanyId){
     //   this.queryCompanyDatas(1,CompanyId);
     // },
+    lockCompanyDetail(id){
+      this.isLockedCompanyDetail(id,0)
+    },
+    unlockCompanyDetail(id){
+      this.isLockedCompanyDetail(id,1)
+    },
+    isLockedCompanyDetail(id,isLocked){
+        this.$api.get({
+          url:"/company/isLocked?id="+id+"&isLocked="+isLocked,
+          token:false,
+        }).then(e=>{
+          let result = e.data;
+          if (result.code == 200) {
+            this.$alert("", "锁定成功", {
+              dangerouslyUseHTMLString: false
+            });
+            this.$router.push({ path: "/sys/companyList" });
+          }else{
+             this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
+              dangerouslyUseHTMLString: false
+            });
+          }
+        }).catch(e => {
+          console.log("操作失败");
+          console.log(e);
+        });
+    },
     getOpeBtns(type) {
       let array = [
         { name: "编辑", isType: "1", methosName: "editCompanyDetail" },
-        { name: "删除", isType: "1", methosName: "delCompanyDetail" }
+        { name: "删除", isType: "1", methosName: "delCompanyDetail" },
+        { name: "锁定", isType: "1", methosName: "lockCompanyDetail" },
+        { name: "解锁", isType: "1", methosName: "unlockCompanyDetail" },
       ];
       // return array.filter((item) => {
       //   return item.isType.includes(type)

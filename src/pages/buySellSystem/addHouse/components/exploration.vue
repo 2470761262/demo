@@ -1,105 +1,7 @@
 <style lang="less" scoped>
+@import url(../../../../assets/publicLess/upLoadFile.less);
 .page-cell-addHouse {
   padding: 30px 50px 0;
-  .upLoadFile {
-    display: flex;
-    margin-bottom: 100px;
-    &:last-child {
-      margin-bottom: 0 !important;
-    }
-    .upLoadFile-title {
-      align-self: flex-start;
-      width: 80px;
-      font-size: 15px;
-      flex-shrink: 0;
-    }
-    .upLoadFile-flex {
-      flex: 1;
-    }
-    .upLoadFile-right {
-      flex: 1;
-      display: flex;
-    }
-    .upLoadFile-input {
-      border: 2px dashed #dcdfe6;
-      width: 100px;
-      height: 100px;
-      margin-right: 40px;
-      box-sizing: border-box;
-      flex-shrink: 0;
-      label {
-        display: block;
-        width: 100%;
-        height: 100%;
-        font-size: 50px;
-        color: #c0c4cc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        input {
-          display: none;
-        }
-      }
-    }
-    .upLoadFile-file-list {
-      flex: 1;
-      display: flex;
-      flex-wrap: wrap;
-      margin: 0 -10px;
-      .file-list-item {
-        margin-bottom: 10px;
-        flex: 0 0 25%;
-        position: relative;
-        padding: 0 10px;
-        box-sizing: border-box;
-        &:hover .upLoadFile-remove {
-          display: block;
-        }
-        .upLoadFile-remove {
-          display: none;
-          position: absolute;
-          top: -5px;
-          right: 5px;
-          font-size: 10px;
-          color: #fff;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: red;
-          text-align: center;
-          line-height: 20px;
-          cursor: pointer;
-        }
-        /deep/.el-image {
-          width: 100%;
-          height: 100px;
-        }
-        img,
-        video {
-          width: 100%;
-          height: 100px;
-          object-fit: cover;
-        }
-      }
-    }
-    .upLoadFile-file-phone {
-      margin-left: 40px;
-      flex-shrink: 0;
-      border: 2px dashed #dcdfe6;
-      width: 100px;
-      height: 100px;
-      margin-right: 20px;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      img {
-        width: 70px;
-        height: 70px;
-      }
-    }
-  }
 }
 /deep/.el-loading-spinner {
   top: 30%;
@@ -471,7 +373,6 @@ export default {
     },
     //上传视频
     getVideoFile (fileListName, e) {
-      console.log(fileListName, e);
       let file = event.target.files;
       let isVideoType = ["video/mp4"];
       if (!isVideoType.includes(file[0].type)) {

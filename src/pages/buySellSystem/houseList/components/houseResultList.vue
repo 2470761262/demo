@@ -264,8 +264,9 @@
                 <div class="item-data-bottom-avgPirce overText">{{item.unitpaice}}元/平</div>
               </div>
             </div>
-            <div class="select-for-item-but" >
-              <i class="el-icon-document icon" @click="toHouseDetail(item.id)"></i>
+            <div class="select-for-item-but">
+              <i class="el-icon-document icon"
+                 @click="toHouseDetail(item.id)"></i>
             </div>
           </div>
         </template>
@@ -378,10 +379,10 @@ export default {
     navTabItem (index, row) {
       console.log(index, row);
     },
-    toHouseDetail(id){
-  this.$router.push({name: "houseDetails",
-        params: { houseId: id}});
-    
+    toHouseDetail (id) {
+      this.$router.push({        name: "houseDetails",
+        params: { houseId: id }      });
+
     },
     //远程排序
     sortMethod (item) {

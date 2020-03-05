@@ -191,7 +191,7 @@ import houselistlhousepair from "@/pages/buySellSystem/houseList/components/hous
 //展示列表
 import houseresultlist from '@/pages/buySellSystem/houseList/components/houseResultList';
 const HosueList = [
-  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/myHouseList", hot: false, flag: false },
+  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/myRelatedHouse", hot: false, flag: false },
   { title: "7天被带看", icon: "el-icon-zoom-in", path: "/buySellSystem/sevenDaysFollowHouse", hot: true, flag: false },
   { title: "新增房源", icon: "el-icon-zoom-in", path: "/buySellSystem/newAgentHouse", hot: false, flag: false },
   { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false },
