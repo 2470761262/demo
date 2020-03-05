@@ -21,6 +21,11 @@
   margin: 10px;
   display: inline-block;
 }
+
+.form .formItem {
+  display: block;
+}
+
 </style>
 <template>
   <div>
@@ -85,7 +90,7 @@
              class="clearfix">
           <span>人员管理</span>
         </div>
-        <div class="text item">
+        <div class="text item form">
           <div class="formItem ">
             功能点名称:
             <el-input v-model="ruleObj.rName"
