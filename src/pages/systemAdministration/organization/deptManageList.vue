@@ -111,6 +111,7 @@ export default {
         del: 0,
         isLocked: null,
         flag: false,
+        type : null,
       },
       configSet: {
         selectToTime: false,
@@ -122,15 +123,14 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "id", label: "部门id" },
+
         { prop: "deptName", label: "部门名" },
-        { prop: "header", label: "部门名称首拼" },
-        { prop: "managerPer", label: "负责人id" },
-        { prop: "deptParentID", label: "上级部门id" },
-        { prop: "joinType", label: "加入类型:1 直营 2 加盟" },
-        { prop: "deptType", label: "部门类型：1综合，2业务，3行政，4联营" },
-        { prop: "del", label: "是否有效: 0有效,1无效" },
-        { prop: "isLocked", label: "是否锁定: 0锁定,1正常" },
+        
+        { prop: "managerPer", label: "负责人" },
+        { prop: "deptParentID", label: "上级部门" },
+        { prop: "joinType", label: "加入类型" },
+        { prop: "deptType", label: "部门类型" },
+        { prop: "isLocked", label: "部门状态" },
         { prop: "address", label: "部门地址" },
       ],
       tableData: [],
@@ -194,15 +194,6 @@ export default {
           console.log(result.message);
           console.log(result.data);
           for (var i = 0; i < result.data.list.length; i++) {
-            switch (result.data.list[i].del) {
-              case 0:
-                result.data.list[i].del = "有效";
-                break;
-              case 1:
-                result.data.list[i].del = "无效";
-                break;
-
-            }
             switch (result.data.list[i].isLocked) {
               case 0:
                 result.data.list[i].isLocked = "锁定";
@@ -228,13 +219,18 @@ export default {
 
             }
             switch (result.data.list[i].joinType) {
+              case 0:
+                result.data.list[i].joinType = "";
+                break;
               case 1:
                 result.data.list[i].joinType = "直营";
                 break;
               case 2:
                 result.data.list[i].joinType = "加盟";
                 break;
-
+              case 3:  
+                result.data.list[i].joinType = "联营";
+                break;
             }
           }
           this.pageJson.total = result.data.totalCount;
@@ -256,17 +252,28 @@ export default {
     toAddDeptPage (saveType) {
       if (this.queryData.flag) {
         if (saveType == 0) {
-          this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.deptParentID, coId: this.department.coId } });
-          this.department = null;
+          if(this.queryData.type ==1){
+            this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.deptParentID, ParentId: this.department.coId } });
+            this.department = null;
+          }else if(this.queryData.type == 0){
+            this.$alert('', '请选择一个部门节点', {
+            dangerouslyUseHTMLString: false
+            });
+          }
         } else if (saveType == 1) {
-          this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.id, coId: this.department.coId } });
-          this.department = null;
+          if(this.queryData.type ==1){
+            this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.id, ParentId: this.department.coId } });
+            this.department = null;
+          }else if(this.queryData.type == 0){
+            this.$router.push({ name: "addDeptManage", params: {  ParentId: this.company.id } });
+            this.company = null;
+          }
         }
-      } else {
-        this.$alert('', '请选择一个部门节点', {
+      }else {
+        this.$alert('', '请选择一个节点', {
           dangerouslyUseHTMLString: false
         });
-      }
+      } 
     },
     editDeptDetail (id) {
       this.$router.push({ path: "/sys/editDeptDetail", query: { id: id } });
@@ -283,6 +290,10 @@ export default {
             dangerouslyUseHTMLString: false
           });
           this.$router.push({ path: "/sys/deptManageList" });
+        }else{
+             this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
+              dangerouslyUseHTMLString: false
+            });
         }
       }).catch((e) => {
         console.log("删除失败");
@@ -299,7 +310,8 @@ export default {
       let array = [
         { name: '编辑', isType: '1', methosName: 'editDeptDetail' },
         { name: '删除', isType: '1', methosName: 'delDeptDetail' },
-        // { name: '子部门', isType: '1', methosName: 'querySubsidiary' },
+        { name: '锁定', isType: '1', methosName: 'lockDeptDetail' },
+        { name: '解锁', isType: '1', methosName: 'unlockDeptDetail' },
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
@@ -319,6 +331,7 @@ export default {
     },
     treeCheck (e, data) {
       this.queryData.flag = true;
+      this.queryData.type = e.type;
       if (e.type == 0) {
         this.$api.get({
           url: '/company/' + e.businessId,

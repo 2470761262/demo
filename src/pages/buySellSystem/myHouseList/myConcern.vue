@@ -39,7 +39,7 @@
     <template v-slot:left>
       <div class="Impression-body">
       <div style="height:30px">
-          <el-select v-model="MyImpressionList.impression" @change="selectImpression($event)" 
+          <el-select v-model="imdataimdata" @change="selectImpression($event)" 
           filterable placeholder="请输入您添加过的房源印象">
              <el-option v-for="item in MyImpressionList"
                        :key="item.id"
@@ -54,7 +54,7 @@
       <div class="tag-all" v-if="showImpression">
         <span  v-for="item in ImpressionList" :key="item.id" >
           <el-tag class="Impression-tag"  size="mini" @close="handleClose(item.id)" type="success" closable>
-             id:{{item.id}}　　印象:{{item.impression}}
+             {{item.impression}}
             </el-tag>
         </span>
       </div>
@@ -188,7 +188,7 @@
           <el-button type="info"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
-                     <div v-if="scope.row.collectID != null && scope.row.collectID!= '' ">
+                     <div v-if="scope.row.CollectID != null && scope.row.CollectID!= '' ">
             <el-button type="info"
                        slot="reference"
                        @click="ifOFF(scope.row.id)"
@@ -210,8 +210,7 @@ export default {
     return {
       imtag:false,
      imdataimdata:'',
-        inputVisible: false,
-        inputValue: '',
+      addList:[],
       imdata:'',
       showImpression: true,
       impression:'',
@@ -272,18 +271,32 @@ export default {
   },
   mounted () {
     this.querylist(1);
-    this.queryHouseImpression ();
     this.queryMyImpression();
   },
   methods: {
     handleClose(tag) {
-        this.ImpressionList.splice(this.ImpressionList.indexOf(tag), 1);
+      console.log('删除前：',this.ImpressionList)
+      for(let i=0;i<this.ImpressionList.length;i++){
+        if(this.ImpressionList[i].id == tag){
+        this.ImpressionList.splice(i,1);
+        }
+      }
+        console.log('删除后：',this.ImpressionList)
+         this.querylistByParams();
       },
     selectImpression(e){
        let that = this;
-       console.log("exo me???"+"啥啊这是"+e.id,e.impression);
-       var addList = [{id:e.id,impression:e.impression}];
-       that.ImpressionList = this.ImpressionList.concat(addList);
+       var selecti = 0;
+       for(var i=0;i<that.ImpressionList.length;i++){
+        if(that.ImpressionList[i].id == e.id){
+          selecti=1;
+        }
+      }
+      if(selecti==1){
+         that.ImpressionList = this.ImpressionList
+      }else{ var addList = [{id:e.id,impression:e.impression,houseId:e.houseId}];
+       that.ImpressionList = this.ImpressionList.concat(addList);}
+       this.querylistByParams();
     },
     remoteMethod (query) {
       var that = this
@@ -349,7 +362,6 @@ export default {
       }).then((e) => {})
     },
     queryMyImpression(){
-      console.log("输入了"+ this.imdataimdata);
       var that = this
       var impression = this.imdata;
        this.$api.get({
@@ -380,6 +392,7 @@ export default {
           type: 'warning'
         }).then(() => {
           that.ImpressionList = []
+          this.querylistByParams();
           this.$message({    
             type: 'success',
             message: '清除成功!'
@@ -404,6 +417,7 @@ export default {
         console.log(e.data.code);
         if(e.data.code==200){
         that.ImpressionList = e.data.data;
+        this.querylistByParams();
         }
       })
           this.$message({    
@@ -419,13 +433,20 @@ export default {
         
       }  },
     querylistByParams () {
-      console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + ''};
       let that = this;
-      if (this.ImpressionList != null && this.ImpressionList != '') { params.list = this.ImpressionList; }
+      if (this.ImpressionList != null && this.ImpressionList != '') { 
+        that.addList = [];
+         for (var j = 0; j < that.ImpressionList.length; j++) {
+            var houseid = that.ImpressionList[j].houseId;
+            var newList = [houseid];
+            that.addList = that.addList.concat(newList);
+          }
+        params.list = that.addList; 
+        }
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
       if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
       if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
@@ -447,23 +468,15 @@ export default {
         let result = e.data;
         that.loading = false;
         if (result.code == 200) {
-          
-          for (var j = 0; j < that.ImpressionList.length; j++) {
-            var demo1 = that.ImpressionList[j].id;
-            var demo2 = that.ImpressionList[j].houseId;
-            var demo3 = that.ImpressionList[j].impression;
-           console.log("这是要查询印象列表传入的list"+demo1+"--"+demo2+"--"+demo3); 
-          }
-
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPage;
           that.tableData = result.data.list;
         } else {
-          console.log("查询我的跟单列表结果：" + result.message);
+          console.log("查询我的关注列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询我的跟单失败");
+        console.log("查询我的关注失败");
         console.log(e);
       })
     },

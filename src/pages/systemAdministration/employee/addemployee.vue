@@ -42,14 +42,14 @@
             ></el-input>
         </div>
         <div class="left-input-container">
-            <span>性别：0男，1女</span>
+            <span>性别</span>
             <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" show-word-limit >
               <el-option label="男" :value="0" />
               <el-option label="女" :value="1" />
             </el-select>
         </div>
         <div class="left-input-container">
-            <span>状态：0实习，1试用，2正式，3离职</span>
+            <span>状态</span>
             <el-select type="text" placeholder="0实习，1试用，2正式，3离职" v-model="employeeEntity.status" show-word-limit >
               <el-option label="实习" :value="0" />
               <el-option label="试用" :value="1" />
@@ -68,7 +68,7 @@
             ></el-input>
         </div>
         <div class="left-input-container">
-            <span>学历ID</span>
+            <span>学历</span>
             <el-input
               type="text"
               placeholder="请输入内容"
@@ -137,7 +137,7 @@
             </el-select>
         </div> -->
     <div class="left-input-container">
-      <span>部门id</span>
+      <span>部门</span>
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.perDeptId"
@@ -146,7 +146,7 @@
     </div>
 
     <div class="left-input-container">
-      <span>角色id</span>
+      <span>角色</span>
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.perPostId"
@@ -154,7 +154,7 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>岗位ID</span>
+      <span>岗位</span>
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.perRole"
@@ -275,13 +275,13 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>是否菁英：0默认，1是</span>
+      <span>是否菁英</span>
       <el-select type="text"
                  placeholder="请选择"
                  v-model="employeeEntity.isGold"
                  show-word-limit>
-        <el-option :value="0" />
-        <el-option :value="1" />
+        <el-option label="默认" :value="0" />
+        <el-option label="是" :value="1" />
       </el-select>
     </div>
     <div class="left-input-container">
@@ -325,7 +325,7 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>社保ID</span>
+      <span>社保</span>
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.sheBaoId"
@@ -333,7 +333,7 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>医保ID</span>
+      <span>医保</span>
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.yiBaoId"
