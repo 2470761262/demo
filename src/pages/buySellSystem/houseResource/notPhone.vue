@@ -99,7 +99,7 @@
                      @click="addPhone(scope.row.bhid)">录入号码</el-button>
           <el-button type="info"
                      size="mini"
-                     @click="toSale(scope.row.id,scope.row.comId,scope.row.cbId,scope.row.bhid)">转在售</el-button>
+                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhid,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
         </template>
 
       </el-table-column>
@@ -189,28 +189,10 @@ formatOrientation(row, column){
          var that = this;
         that.$router.push({ path: '/buySellSystem/updatePhone', query: { "id": id } });
     },
-    toSale (id, comId, cbId, bhId) {
+    toSale (comId, cbId, bhId,communityName,buildingName,roomNo) {
       var that = this
-      this.$api.get({
-        url: "/houseResource/turnSale",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          id: id,
-          type: 2,
-          comId: comId,
-          cbId: cbId,
-          bhId: bhId
-        }
-      }).then((e) => {
-        console.log(e.data)
-        if (e.data.code == 200) {
-          that.$router.push({ path: '/buySellSystem/addHouse', query: { "id": e.data.code.message } });
-        } else {
-          alert(e.data.message);
-        }
-      })
+      that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId,'cbId':cbId,'bhId':bhId,"communityName":communityName,"buildingName":buildingName,'roomNo':roomNo,"flag":'potentia',"customerName":null,tel:null} });
+      
     },
 
     queryNotPhoneParams () {
