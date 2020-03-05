@@ -43,8 +43,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg[0]"
+                    :preview-src-list="[qrCodeImg[0]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -79,8 +85,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg[1]"
+                    :preview-src-list="[qrCodeImg[1]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -115,8 +127,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+           <el-image :src="qrCodeImg[2]"
+                    :preview-src-list="[qrCodeImg[2]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -151,8 +169,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg[3]"
+                    :preview-src-list="[qrCodeImg[3]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -187,8 +211,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg[4]"
+                    :preview-src-list="[qrCodeImg[4]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -223,8 +253,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+         <el-image :src="qrCodeImg[5]"
+                    :preview-src-list="[qrCodeImg[5]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -253,7 +289,7 @@
             </div>
           </div>
           <div class="upLoadFile-file-phone">
-            <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
+            <img :src="qrCodeImg"
                  alt="图片">
             <div>微信扫码上传</div>
           </div>
@@ -283,6 +319,9 @@ export default {
     if (this.getData) {
       this.promiseAllViodeoAndImg();
     }
+    this.currentIndex=0;
+    this.qrCodeImg=[];
+    this.getQrCode();
   },
   data () {
     return {
@@ -301,10 +340,50 @@ export default {
       kitchenImgList: [],//厨房
       toiletImgList: [],//卫生间
       layoutImgList: [],//户型图
-      houseVideo: {}//房源视频
+      houseVideo: {},//房源视频
+      qrCodeImg:[],
+      qrCodeImgTemp:[],
+      currentIndex:0,
+      picParams:[{"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-外景图片"},
+      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-客厅图片"},
+      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卧室图片"},
+      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-厨房图片"},
+      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卫生间图片"},
+      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-户型图片"}]
     }
   },
   methods: {
+     getQrCode(){
+      let that=this;      
+      if(that.currentIndex>=that.picParams.length){
+        that.qrCodeImg=that.qrCodeImgTemp;
+        return;
+      }
+      var data = that.picParams[that.currentIndex];     
+       that.$api.post({
+                      url: '/scanUpload/getUploadQrCode',
+                      data: data,
+                      headers: { "Content-Type": "application/json" }
+                    }).then((e) => {
+                      let result = e.data;
+                      if (result.code == 200) {
+                          //that.qrCodeImg="data:image/png;base64,"+item.img;
+                          that.qrCodeImgTemp[that.currentIndex]=(result.data.url);
+                          console.log(that.qrCodeImg);
+                      } else {
+                        console.log("h获取二维码结果：" + result.message);
+                        alert(result.message);
+                      }
+                      that.currentIndex=that.currentIndex+1;
+                      that.getQrCode();
+                    }).catch((e) => {
+                      that.currentIndex=that.currentIndex+1;
+                      console.log("查询二维码失败");
+                      console.log(e);
+                      that.getQrCode();
+                    })
+      
+    },
     openVideo () {
 
     },
