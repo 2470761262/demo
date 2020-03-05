@@ -236,8 +236,8 @@ remoteMethod (query) {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.roomNo='';
-            that.cbId='';
+         that.data.roomNo='';
+            that.data.cbId='';
           that.cbIdList = e.data.data.list;
         }
       })
@@ -257,7 +257,7 @@ remoteMethod (query) {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-           that.roomNo='';
+          that.data.roomNo='';
           that.roomNoList = e.data.data.list;
         }
       })

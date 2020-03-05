@@ -9,8 +9,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
-        
-          <el-item label="楼盘名称"
+        <el-item label="楼盘名称"
                  prop="comId">
           <el-select v-model="data.comId"
                      @focus="remoteInput"
@@ -57,20 +56,18 @@
             </el-option>
           </el-select>
         </el-item>
-           <el-date-picker
-              v-model="data.timeSelect"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期">
-          </el-date-picker>
-       <el-button type="primary"
-                     style="margin-left:10px"
-                     size="mini"
-                     @click="queryShopownerHouseParams">查询</el-button>
+        <el-date-picker v-model="data.timeSelect"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+        </el-date-picker>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="queryShopownerHouseParams">查询</el-button>
       </div>
     </template>
-  
 
     <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
@@ -90,7 +87,9 @@
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
-                     @click="toLook(scope.row.id)">查看</el-button>
+                     @click="distributeEvent(item.methosName,scope.row.id)"
+                     v-for="(item,index) in isForBut(scope.row.id,'queryShopownerRecommendHouse')"
+                     :key="index">{{item.name}}</el-button>
         </template>
       </el-table-column>
 
@@ -100,8 +99,9 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import houseContrast from '@/minxi/houseContrast';
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, houseContrast],
   components: {
     listPage
   },
@@ -153,31 +153,30 @@ export default {
     }
   },
   mounted () {
-    this.queryShopownerRecommendHouse(1);
+    this.queryVerifyHouseDatas(1);
   },
   methods: {
     queryTabData () {
       console.log(this, '111');
     },
 
-     formatHouseType(row, column){
-      return row.Rooms+'室'+row.hall+'厅'+row.toilet+'卫';
+    formatHouseType (row, column) {
+      return row.Rooms + '室' + row.hall + '厅' + row.toilet + '卫';
     },
 
-    toLook(id){
-       var that = this;
-        that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
+    toLook (id) {
+      this.$router.push({ name: 'houseDetails', params: { "houseId": id } });
     },
-    queryShopownerHouseParams(){
-         this.queryShopownerRecommendHouse(1);
+    queryShopownerHouseParams () {
+      this.queryVerifyHouseDatas(1);
     },
-     remoteInput () {
-   
-      if (this.data.comId.length==0) {
+    remoteInput () {
+
+      if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-remoteMethod (query) {
+    remoteMethod (query) {
       var that = this
       if (query !== '') {
         this.loading = true;
@@ -190,12 +189,12 @@ remoteMethod (query) {
           data: {
             communityName: query,
             page: 1,
-             limit: 50
+            limit: 50
           }
         }).then((e) => {
           console.log(e.data)
           if (e.data.code == 200) {
-            
+
             that.loading = false;
             that.options = e.data.data.list;
 
@@ -215,12 +214,12 @@ remoteMethod (query) {
         data: {
           comId: that.data.comId,
           page: 1,
-             limit: 50
+          limit: 50
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.roomNo='';
-            that.cbId='';
+          that.data.roomNo = '';
+          that.data.cbId = '';
           that.cbIdList = e.data.data.list;
         }
       })
@@ -236,53 +235,45 @@ remoteMethod (query) {
           comId: that.data.comId,
           cbId: that.data.cbId,
           page: 1,
-             limit: 50
+          limit: 50
         }
       }).then((e) => {
         if (e.data.code == 200) {
-           that.roomNo='';
+          that.data.roomNo = '';
           that.roomNoList = e.data.data.list;
         }
       })
     },
 
-  queryShopownerRecommendHouse(currentPage){
-    var that =this;
-    let params={"limit":that.pageJson.pageSize,"page":currentPage-1};
-   
-         params.comId=that.data.comId;
-        params.cbId=that.data.cbId;
-        params.roomNo=that.data.roomNo;
-        params.beginTime=that.data.timeSelect[0];
-        params.endTime=that.data.timeSelect[1];
+    queryVerifyHouseDatas (currentPage) {
+      var that = this;
+      let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
 
-     console.log(params);
-    this.$api.get({
-        url: '/houseRecommend/shopownerRecommendHouse',
-        data: params,       
-        token: false
-      }).then((e) => {
-        console.log(e.data);
-        let data=e.data
-        if (data.code == 200) {
-           that.pageJson.total=data.dataCount;
-          that.pageJson.currentPage=data.pageSum;
-          that.tableData=data.data;
-        } else {
-          console.log("查询店长推荐房源列表结果：" + result.message);
+      params.comId = that.data.comId;
+      params.cbId = that.data.cbId;
+      params.roomNo = that.data.roomNo;
+      params.beginTime = that.data.timeSelect[0];
+      params.endTime = that.data.timeSelect[1];
+
+      console.log(params);
+      this.$api.get({
+        url: '/houseRecommend/shopownerRecommendHouse',
+        data: params,
+        token: false
+      }).then((e) => {
+        console.log(e.data);
+        let data = e.data
+        if (data.code == 200) {
+          that.pageJson.total = data.dataCount;
+          that.pageJson.currentPage = data.pageSum;
+          that.tableData = data.data;
+        } else {
+          console.log("查询店长推荐房源列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
         console.log("查询店长推荐房源列表失败");
         console.log(e);
-      })
-    },
-    isForBut (type) {
-      let array = [
-        { name: '查看', isType: '3', methosName: '' }
-      ]
-      return array.filter((item) => {
-        return item.isType.includes(type)
       })
     },
     handleClick () {
@@ -291,16 +282,16 @@ remoteMethod (query) {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryShopownerHouseParams();
+      this.queryVerifyHouseDatas();
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryShopownerRecommendHouse(val);
+      this.queryVerifyHouseDatas(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryShopownerRecommendHouse(1);
+      this.queryVerifyHouseDatas(1);
     }
   },
 }
