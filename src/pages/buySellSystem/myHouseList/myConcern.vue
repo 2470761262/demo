@@ -188,7 +188,7 @@
           <el-button type="info"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
-                     <div v-if="scope.row.sid != null && scope.row.collectID!= '' ">
+                     <div v-if="scope.row.CollectID != null && scope.row.CollectID!= '' ">
             <el-button type="info"
                        slot="reference"
                        @click="ifOFF(scope.row.id)"
@@ -422,7 +422,7 @@ export default {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + ''};
       let that = this;
       if (this.ImpressionList != null && this.ImpressionList != '') { 
-        that.addList;
+        that.addList = [];
          for (var j = 0; j < that.ImpressionList.length; j++) {
             var houseid = that.ImpressionList[j].houseId;
             var newList = [houseid];
