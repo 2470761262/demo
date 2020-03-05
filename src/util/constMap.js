@@ -367,3 +367,18 @@ export const MORTGAGEBANK= [ //抵押银行 mortgageBank
   }
 ]
 
+export const FOLLOWWAY=[//跟进类型 followWay
+  {
+    key: "出售条件变化",
+    value: 27
+  },
+  {
+    key: "业主心态状态",
+    value: 28
+  },
+  {
+    key: "其他",
+    value: 11
+  }
+]
+

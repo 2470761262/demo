@@ -289,12 +289,12 @@ input[type=number]::-webkit-outer-spin-button {
           </div>
         </div>
         <el-button
-          v-if="houseDetails.isReleaseOutside!=1&&houseDetails.AgentPer==perId"
+          v-if="houseDetails.isReleaseOutside!=1&&(houseDetails.AgentPer==perId||isShowButton.releaseOutsideHouse)"
           slot="reference"
           @click="certificateType"
         >发布外网房源</el-button>
       </el-popover>
-       <el-button v-if="houseDetails.isReleaseOutside==1&&houseDetails.AgentPer==perId" @click="cancelOutsideHouse">
+       <el-button v-if="houseDetails.isReleaseOutside==1&&(houseDetails.AgentPer==perId||isShowButton.cancelOutsideHouse)" @click="cancelOutsideHouse">
          取消发布
        </el-button>
 
@@ -416,9 +416,9 @@ input[type=number]::-webkit-outer-spin-button {
           <el-button @click="cancelMethod">添加</el-button>
         </div>
         <el-button slot="reference"
-                   @click="isShowCancelMethod=true">取消作业方法</el-button>
+                   @click="isShowCancelMethod=true" v-if="isShowButton.cancelMethod">取消作业方法</el-button>
       </el-popover>
-      <el-button @click="houseLock">{{houseDetails.isLocking==1 ?"解锁房源":"锁定房源"}}</el-button>
+      <el-button @click="houseLock" v-if="isShowButton.locking">{{houseDetails.isLocking==1 ?"解锁房源":"锁定房源"}}</el-button>
       <el-popover placement="top"
                   width="600"
                   trigger="manual"
@@ -450,7 +450,7 @@ input[type=number]::-webkit-outer-spin-button {
         </div>
         <el-button slot="reference"
                    @click="showKeyStorageDept"
-                   v-if="agentHouseMethod.keyOwner==perId">修改钥匙存放门店</el-button>
+                   v-if="agentHouseMethod.keyOwner==perId||isShowButton.updateKeyStorageDept">修改钥匙存放门店</el-button>
       </el-popover>
     </div>
     <div class="query-cell"
@@ -495,10 +495,10 @@ input[type=number]::-webkit-outer-spin-button {
                        :visible.sync="isShowApplyAgent"
                        width="50%" :close-on-click-modal="false"
                        >
-                     <supplement  ref="com" :required="required"></supplement>
+                     <supplement  ref="com" :required="required"  :middleRadioTo="middleRadio" :primaryRadioTo="primaryRadio" :showFollow="showFollow"></supplement>
                       <span slot="footer" class="dialog-footer">
                       <el-button @click="isShowApplyAgent = false">取 消</el-button>
-                     <el-button type="primary" @click="insert">确 定</el-button>
+                     <el-button type="primary" @click="applyAgent">确 定</el-button>
                    </span>
                   </el-dialog>
                   <el-button @click="isShowApplyAgent=true">申请跟单人</el-button>
@@ -1314,8 +1314,8 @@ input[type=number]::-webkit-outer-spin-button {
                      :key="index">
                   <div>
                     <span>{{item.FollowTime}}</span>
-                    <el-button v-if="item.loginRoleId==1"
-                               @click="deleteFollow(item.id)">删除</el-button>
+                    <el-button 
+                               @click="deleteFollow(item.id)" v-if="isShowButton.deleteFollow">删除</el-button>
                   </div>
                   <div>
                     <div v-if="!item.isTellFollow">
@@ -1484,7 +1484,19 @@ export default {
       recommendMemo:"",//推荐的原因
       isShowBuilding:false,//是否显示楼栋号
       isShowApplyAgent:false,//是否显示申请跟单人弹窗
-      required:true
+      required:true,//判断非空
+      middleRadio:0,
+      primaryRadio:0,
+      isShowButton:{
+        locking:false,
+        releaseOutsideHouse:false,
+        cancelOutsideHouse:false,
+        cancelMethod:false,
+        deleteFollow:false,
+        updateKeyStorageDept:false
+      },
+      ruleId:15,
+      showFollow:true,
      
     };
   },
@@ -1528,6 +1540,7 @@ export default {
     this.getHouseFollow();
     this.getImpressionList();
     this.getisRecommend();
+    this.getAgentRules();
     this.$nextTick(() => {
       const el = document.querySelector(".act-not");
       const offsetHeight = el.offsetHeight;
@@ -1547,8 +1560,26 @@ export default {
     this.$store.commit("resetFormData");
   },
   methods: {
-    insert(){
-      console.log(this.$refs.com.formData) ;
+    getAgentRules(){
+      let that=this;
+      this.$api.get({
+        url: '/sys/rule/function/list',
+        data:{
+          rId:that.ruleId
+        },
+        token: false
+      }).then((e) => {
+         e.data.data.functionRuleList.forEach(element=>{
+           if(that.isShowButton.hasOwnProperty(element.rUrl)){
+               that.isShowButton[element.rUrl]=true;
+           }  
+         })
+      }).catch((e) => {
+      })
+    },
+    applyAgent(){
+      let flag=this.$refs.com.validateAllNotUpdata();
+
     },
     contactOwer(cmd){    
        console.log(cmd);
@@ -1871,7 +1902,6 @@ export default {
       }
       let params = {
         Eid: this.houseId,
-        operationPer: this.agentHouseMethod.keyOwner,
         KeyStorageDept: this.keyStorageDept
       };
       this.isShowKeyStorageDept = false;
@@ -2028,7 +2058,9 @@ export default {
                         height: 150,
                         text: that.houseDetails.shareQRCode,
             });
-            that.$store.state.addHouse.formData.step2=that.houseDetails.applyAgentVo;
+           // that.$store.state.addHouse.formData.step2=;
+            that.$store.commit("updateStep2",that.houseDetails.applyAgentVo);
+
             that.agentHouseMethod = that.houseDetails.agentHouseMethod;
             that.elevator = util.analysisElevator(that.houseDetails.Elevator);
             that.sign = util.analysisSign(that.houseDetails.sign);
@@ -2049,6 +2081,18 @@ export default {
                 that.houseDetails.SchoolRool.length
               );
             }
+            if(!util.isNotNull(that.primarySchoolRool)&&that.primarySchoolRool=="占用"){
+                that.primaryRadio=1;
+            }
+            else{
+              that.primaryRadio=0;
+            }
+            if(!util.isNotNull(that.middleSchoolRool)&&that.middleSchoolRool=="占用"){
+                that.middleRadio=1;
+            }
+            else{
+                that.primaryRadio=0;
+            }
             if (that.houseDetails.remark != null && that.houseDetails.remark.indexOf("$") != -1) {
               var Arry1 = that.houseDetails.remark.split("$");
               for (var i = 0; i < Arry1.length; i++) {
@@ -2061,6 +2105,7 @@ export default {
                   case "户型介绍":
                     that.houseTypePresentation = Arry2[1];
                     that.$store.state.addHouse.formData.step2.roomDesc=Arry2[1]==null?'':Arry2[1];
+                     that.$store.state.addHouse.formData.step2.title="";
                     break;
                   case "税费解析":
                     that.taxParsing = Arry2[1];
@@ -2265,7 +2310,11 @@ export default {
           if (e.data.code == 200) {
             that.reloadList();
           }
-
+          else{
+            that.$message(e.data.message)
+          }
+        }).catch(e=>{
+            that.$message(e.data.message)
         });
     },
     insertFollow () {
