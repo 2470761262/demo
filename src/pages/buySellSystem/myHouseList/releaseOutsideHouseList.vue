@@ -3,7 +3,7 @@
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
-    <template #tableColumn="cell">
+    <template #tableColumn="">
       <!-- <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"

@@ -394,6 +394,7 @@
         <div class="cell-tabs-item-data">
           <div class="item-deep-data">
             <input type="text"
+                   key="area"
                    maxlength="8"
                    @click.stop=""
                    :placeholder="formData.area"
@@ -403,7 +404,7 @@
                    v-model="changeInput.area"
                    class="min-input"
                    v-if="changeBut.area">
-            <span v-else>{{formData.area}}平方</span>
+            <span v-else>{{formData.area || 0}}平方</span>
           </div>
           <div class="but-append"
                :data-tips="changeBut.area ? '完成' : '修改'"
@@ -417,8 +418,10 @@
         <div class="cell-tabs-item-data">
           <div class="item-deep-data">
             <div class="input-tips"
+                 key="input-tips"
                  v-if="changeBut.roomType">
               <input type="text"
+                     key="room"
                      maxlength="2"
                      :placeholder="formData.room"
                      @click.stop=""
@@ -428,6 +431,7 @@
                      data-vv-as="室"
                      class="min-input">室
               <input type="text"
+                     key="hall"
                      maxlength="2"
                      :placeholder="formData.hall"
                      @click.stop=""
@@ -437,6 +441,7 @@
                      data-vv-as="厅"
                      class="min-input">厅
               <input type="text"
+                     key="toilet"
                      maxlength="2"
                      :placeholder="formData.toilet"
                      @click.stop=""
@@ -446,6 +451,7 @@
                      data-vv-as="卫"
                      class="min-input">卫
               <input type="text"
+                     key="balcony"
                      maxlength="2"
                      :placeholder="formData.balcony"
                      @click.stop=""
@@ -455,7 +461,7 @@
                      data-vv-as="阳台"
                      class="min-input">阳台
             </div>
-            <span v-else>{{formData.room}}室{{formData.hall}}厅{{formData.toilet}}卫{{formData.balcony}}阳台</span>
+            <span v-else>{{formData.room || 0}}室{{formData.hall || 0}}厅{{formData.toilet || 0}}卫{{formData.balcony || 0}}阳台</span>
           </div>
           <div class="but-append"
                :data-tips="changeBut.roomType ? '完成' : '修改'"
@@ -467,7 +473,7 @@
         <div class="cell-tabs-item-data">
           <div class="item-deep-data">{{formData.propertyCompany}}</div>
           <div class="but-append"
-               v-if="formData.propertyCompany!=''"
+               v-if="formData.propertyCompany"
                data-tips="反馈"><i class="el-icon-question"></i></div>
         </div>
       </div>
@@ -580,6 +586,20 @@ export default {
       this.getLoadData();
     }
     window.addEventListener('click', this.bodyClick)
+    if(this.$route.query.flag=='potentia'){
+      this.getCommunityData(this.$route.query.comId);
+      this.getBuildingData(this.$route.query.cbId);
+      this.getRoomData(this.$route.query.bhId);
+      this.selectPageCommunit.list.push({ value: this.$route.query.comId, name: this.$route.query.communityName });
+      this.formData.communityId=this.$route.query.comId;
+      this.selectPageeBuildingNo.list.push({ value: this.$route.query.cbId, name: this.$route.query.buildingName });
+      this.formData.buildingId=this.$route.query.cbId;
+      this.selectPageRoomNo.list.push({ value: this.$route.query.bhId, name: this.$route.query.roomNo });
+      this.formData.roomId=this.$route.query.bhId;
+      this.formData.customerName=this.$route.query.customerName;
+      this.formData.tel=this.$route.query.tel;
+    }
+    console.log(this.$route.query.flag)
   },
   destroyed () {
     window.removeEventListener('click', this.bodyClick)
@@ -590,7 +610,7 @@ export default {
       let that = this;
       //面积
       if (that.changeBut.area == true && !util.isNull(that.changeInput.area)) {
-        if (that.changeInput.area == that.formData.area) {
+        if (that.changeInput.area == that.formData.area || that.formData.area == null) {
           that.changeBut.area = false;
         } else {
           that.$message({
@@ -606,8 +626,7 @@ export default {
         let list = ['room', 'hall', 'toilet', 'balcony'];
         let flag = false;
         for (let i = 0; i < list.length; i++) {
-          if (that.changeInput[list[i]] == that.formData[list[i]]) {
-            //  that.changeBut.roomType = false;
+          if (that.changeInput[list[i]] == that.formData[list[i]] || that.formData[list[i]] == null) {
             flag = false;
           } else {
             that.$message({
@@ -633,7 +652,7 @@ export default {
           let valiFlag = await this.$validator.validate(list[i], this.changeInput[list[i]]);
           if (!valiFlag || util.isNull(that.changeInput[list[i]])) {
             that.$message({
-              message: that.getErrorText || '房型还没输入完',
+              message: that.getErrorText || '房型输入是空值',
               type: 'warning'
             });
             flag = true;
@@ -642,7 +661,7 @@ export default {
         }
         if (!flag) {
           for (let i = 0; i < list.length; i++) {
-            that.formData[list[i]] = that.changeInput[list[i]] || that.formData[list[i]] || 0;
+            that.formData[list[i]] = that.changeInput[list[i]] || that.formData[list[i]];
           }
         }
       }
@@ -917,7 +936,7 @@ export default {
           //添加tel 1 2 3
           let tel = ["tel1", "tel2", "tel3"];
           tel.forEach((item, index) => {
-            if (e.data.data[item] != '') {
+            if (util.isNotNull(e.data.data[item])) {
               this.addTel.push(parseInt(item.replace(/[a-zA-Z]*/g, "")));
             }
           })
@@ -932,9 +951,10 @@ export default {
     upLoadData (e) {
       let that = this;
       let data = {
-        ...that.deffData
+        ...that.deffData,
       }
       let method = 'post';
+
       if (that.$store.state.addHouse.formData.id != '') {
         data.id = that.$store.state.addHouse.formData.id;
         method = 'put';
@@ -945,8 +965,7 @@ export default {
       return this.$api[method]({
         url: '/draft-house',
         data: data,
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false
+        headers: { "Content-Type": "application/json;charset=UTF-8" }
       }).then((e) => {
         if (e.data.code == 200) {
           //存入Vuex;
@@ -954,7 +973,7 @@ export default {
             that.$store.commit('updateId', e.data.data)
           }
           that.$store.commit("updateStep1", that.deffData);
-          return true;
+          return false;
         } else {
           return false;
         }

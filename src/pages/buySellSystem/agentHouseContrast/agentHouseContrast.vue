@@ -76,7 +76,7 @@
 .image2 {
   border-radius: 2rem;
   width: 85%;
-  height: 18%;
+  height: 10rem;
   margin-top: 3%;
   display: flex;
   align-items: center;

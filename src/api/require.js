@@ -6,7 +6,8 @@ import {
   TOKEN
 } from '@/util/constMap';
 import {
-  Message
+  Message,
+  Switch
 } from 'element-ui';
 import store from '@/store/store';
 let http = axios.create({
@@ -47,6 +48,15 @@ http.interceptors.response.use(function (response) {
       message: '居然请求超时了~',
       type: 'error'
     });
+    return Promise.reject(error);
+  }
+  switch (error.response.status) {
+    case 500:
+      Message({
+        message: '貌似出现了一点问题~',
+        type: 'error'
+      });
+      break;
   }
   return Promise.reject(error);
 });

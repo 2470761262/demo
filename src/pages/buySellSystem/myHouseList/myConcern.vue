@@ -1,4 +1,4 @@
-<style scoped>
+﻿<style scoped>
 .Impression-body{
   width: 300px;
   background-color: white;
@@ -15,6 +15,21 @@
   float: right;
   margin-right: 10px
 }
+.el-tag + .el-tag {
+    margin-left: 10px;
+  }
+  .button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+  }
 </style>
 <template>
   <list-page :parentData="$data"
@@ -24,16 +39,22 @@
     <template v-slot:left>
       <div class="Impression-body">
       <div style="height:30px">
-        <el-input placeholder="请输入您添加过的房源印象" clearable></el-input>
+          <el-select v-model="MyImpressionList.impression" @change="selectImpression($event)" 
+          filterable placeholder="请输入您添加过的房源印象">
+             <el-option v-for="item in MyImpressionList"
+                       :key="item.id"
+                       :label="item.impression"
+                       :value="item">
+                       </el-option>
+            </el-select>
       </div>
       <div style="height:30px">
-      <el-button class="opset" type="text" @click="open">一键清除</el-button>
-        <el-button class="opset" type="text" @click="open">一键还原</el-button></div>
-      <div class="tag-all">
-        
-        <span  v-for="item in ImpressionList" :key="item.value" >
-          <el-tag class="Impression-tag"  size="mini" type="success" closable>
-            {{item.impression}}
+      <el-button class="opset" type="text" @click="show(1)">一键还原</el-button>
+      <el-button class="opset" type="text" @click="show(0)">一键清除</el-button></div>
+      <div class="tag-all" v-if="showImpression">
+        <span  v-for="item in ImpressionList" :key="item.id" >
+          <el-tag class="Impression-tag"  size="mini" @close="handleClose(item.id)" type="success" closable>
+             id:{{item.id}}　　印象:{{item.impression}}
             </el-tag>
         </span>
       </div>
@@ -86,15 +107,7 @@
                   v-model="queryData.maxInArea"
                   style="margin-left:10px;width:100px"></el-input>
 
-        <el-select v-model="value"
-                   filterable
-                   placeholder="请选择">
-          <el-option v-for="item in options"
-                     :key="item.value"
-                     :label="item.label"
-                     :value="item.value">
-          </el-option>
-        </el-select>
+        
         <template slot="prepend">房源状态</template>
         <el-date-picker v-model="queryData.timeSelect"
                         type="daterange"
@@ -175,16 +188,11 @@
           <el-button type="info"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
-          <el-popconfirm confirmButtonText='我要取消'
-                         cancelButtonText='还是不了吧'
-                         icon="el-icon-info"
-                         iconColor="red"
-                         title="确定取消关注这个房源吗？">
+                     <div v-if="scope.row.CollectID != null && scope.row.CollectID!= '' ">
             <el-button type="info"
                        slot="reference"
-                       @click="concernOFF(scope.row.id)"
-                       size="mini">取消关注</el-button>
-          </el-popconfirm>
+                       @click="ifOFF(scope.row.id)"
+                       size="mini">取消关注</el-button></div>
         </template>
       </el-table-column>
     </template>
@@ -200,7 +208,13 @@ export default {
   },
   data () {
     return {
-      Impression:'',
+      imtag:false,
+     imdataimdata:'',
+      addList:[],
+      imdata:'',
+      showImpression: true,
+      impression:'',
+      MyImpressionList:[],
       dialogVisible: false,
       value: '',
       input: '',
@@ -257,9 +271,41 @@ export default {
   },
   mounted () {
     this.querylist(1);
-    this.queryHouseImpression ();
+    this.queryMyImpression();
   },
   methods: {
+    handleClose(tag) {
+        this.ImpressionList.splice(this.ImpressionList.indexOf(tag), 1);
+      },
+    selectImpression(e){
+       let that = this;
+       var addList = [{id:e.id,impression:e.impression,houseId:e.houseId}];
+       that.ImpressionList = this.ImpressionList.concat(addList);
+    },
+    remoteMethod (query) {
+      var that = this
+      if (query !== '') {
+        this.loading = true;
+        this.$api.get({
+          url: "/agentHouse/impression/getHouseImpressionList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query
+          }
+        }).then((e) => {
+          console.log(e.data)
+          if (e.data.code == 200) {
+            that.loading = false;
+            that.options = e.data.data.list;
+             that.dynamicTags = e.data.data.list;
+          }
+        })
+      } else {
+        this.options = [];
+      }
+    },
     queryHouseImpression () {
       var that = this
       this.$api.get({
@@ -268,74 +314,122 @@ export default {
         token: false,
       }).then((e) => {
         console.log(e.data.code);
-        if(e.data.code){
-          this.Impression = e.data.data;
+        if(e.data.code==200){
+        this.Impression = e.data.data;
         that.ImpressionList = e.data.data;
         }
       })
     },
-    concernOFF (id) {
-      this.$api.post({
-        url: "/concernHouseOFF/" + id,
+    ifOFF (id) {
+      this.$confirm('是否确定取消关注?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.concernOFF(id);
+          this.$message({    
+            type: 'success',
+            message: '操作成功!'
+          });
+           this.querylist(1);
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });          
+        });
+    },concernOFF(id){
+       this.$api.post({
+        url: "/agent_house/concernHouseOFF/" + id,
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         token: false,
-      }).then((e) => {
-        alert("取消关注成功");
-      })
-
+      }).then((e) => {})
     },
-    queryAddPerId () {
+    queryMyImpression(){
       var that = this
-      this.$api.get({
-        url: "/mateHouse/queryComBuilding",
+      var impression = this.imdata;
+       this.$api.get({
+        url: "/agentHouse/impression/getMyImpressionList?impression="+impression,
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         token: false,
         qs: true,
         data: {
-          comId: that.form.comId
+          MyImpressionList: that.MyImpressionList
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.cbIdList = e.data.data.list;
+          that.MyImpressionList = e.data.data;
         }
       })
-    },
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
-        })
-        .catch(_ => { });
     },
     //跳转房源详情页面
     toHouseDetail (id) {
       this.$router.push({ path: "/buySellSystem/houseDetails", query: { houseId: id } });
     },
     //清除
-    open () {
-        this.$confirm('此操作将清除所有印象, 是否继续?', '提示', {
+    show (msg) {
+      var that = this
+      if(msg==0){
+         this.$confirm('清除当前所有房源印象?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$message({
+          that.ImpressionList = []
+          this.$message({    
             type: 'success',
-            message: '删除成功!'
+            message: '清除成功!'
           });
         }).catch(() => {
           this.$message({
             type: 'info',
-            message: '已取消删除'
+            message: '已取消'
           });          
         });
-    },
+      }else if(msg==1){
+         this.$confirm('还原所有房源印象?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$api.get({
+        url: "/agentHouse/impression/getHouseImpressionList",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+      }).then((e) => {
+        console.log(e.data.code);
+        if(e.data.code==200){
+        that.ImpressionList = e.data.data;
+        }
+      })
+          this.$message({    
+            type: 'success',
+            message: '还原成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          });          
+        });
+        
+      }  },
     querylistByParams () {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
     querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + ''};
       let that = this;
+      if (this.ImpressionList != null && this.ImpressionList != '') { 
+        that.addList = [];
+         for (var j = 0; j < that.ImpressionList.length; j++) {
+            var houseid = that.ImpressionList[j].houseId;
+            var newList = [houseid];
+            that.addList = that.addList.concat(newList);
+          }
+        params.list = that.addList; 
+        }
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
       if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
       if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
@@ -357,30 +451,16 @@ export default {
         let result = e.data;
         that.loading = false;
         if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPage;
           that.tableData = result.data.list;
         } else {
-          console.log("查询我的跟单列表结果：" + result.message);
+          console.log("查询我的关注列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询我的跟单失败");
+        console.log("查询我的关注失败");
         console.log(e);
-      })
-    },
-    distributeEvent (e, id) {
-      this[e](id);
-    },
-    isForBut (type) {
-      let array = [
-        { name: '查看', isType: '1,2,3', methosName: '' }
-      ]
-      return array.filter((item) => {
-        this.item.push("12222222222222222222222222222222222")
-        return item.isType.includes(type)
       })
     },
     handleClick () {

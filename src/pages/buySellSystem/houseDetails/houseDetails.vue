@@ -495,7 +495,7 @@ input[type=number]::-webkit-outer-spin-button {
                        :visible.sync="isShowApplyAgent"
                        width="50%" :close-on-click-modal="false"
                        >
-                     <supplement  ref="com" ></supplement>
+                     <supplement  ref="com" :required="required"></supplement>
                       <span slot="footer" class="dialog-footer">
                       <el-button @click="isShowApplyAgent = false">取 消</el-button>
                      <el-button type="primary" @click="insert">确 定</el-button>
@@ -1484,6 +1484,7 @@ export default {
       recommendMemo:"",//推荐的原因
       isShowBuilding:false,//是否显示楼栋号
       isShowApplyAgent:false,//是否显示申请跟单人弹窗
+      required:true
      
     };
   },
@@ -2055,19 +2056,19 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     that.communityPresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.communityDesc=Arry2[1];
+                    that.$store.state.addHouse.formData.step2.communityDesc=Arry2[1]==null?'':Arry2[1];
                     break;
                   case "户型介绍":
                     that.houseTypePresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.roomDesc=Arry2[1];
+                    that.$store.state.addHouse.formData.step2.roomDesc=Arry2[1]==null?'':Arry2[1];
                     break;
                   case "税费解析":
                     that.taxParsing = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.taxDesc=Arry2[1];
+                    that.$store.state.addHouse.formData.step2.taxDesc=Arry2[1]==null?'':Arry2[1];
                     break;
                   case "核心卖点":
                     that.coreSellingPoint = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.saleDesc=Arry2[1];
+                    that.$store.state.addHouse.formData.step2.saleDesc=Arry2[1]==null?'':Arry2[1];
                     break;
                 }
               }
@@ -2646,7 +2647,7 @@ export default {
       let arry = obj.conditionList;
       let params = obj.params;
       for (var i = 0; i < arry.length; i++) {
-        if (arry[i].condition) {
+        if (!arry[i].condition) {
           that.$message(arry[i].memo);
           return;
         }
@@ -2688,26 +2689,27 @@ export default {
         switchType = replaceType;
         url = "/agentHouse/propertyCheck/insertReplace";
       }
+      this.$validator;
       switch (switchType) {
         case 3:
         case 0:
           conditionList.push({
-            condition: util.isNull(that.keyType),
-            memo: "取代的钥匙类型未选择"
+            condition: util.isNotNull(that.keyType),
+            memo: "钥匙类型未选择"
           });
           if (that.keyType == "2") {
             conditionList.push({
-              condition: util.isNull(that.keyCode),
+              condition: util.isNotNull(that.keyCode),
               memo: "钥匙锁密码未填"
             });
             params.keyCode = that.keyCode;
           }
           conditionList.push({
-            condition: util.isNull(that.keyStorageDept),
+            condition: util.isNotNull(that.keyStorageDept),
             memo: "存放门店未选择"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list7"].join(",")),
+            condition: util.isNotNull(that.fileList["list7"].join(",")),
             memo: "委托图片未上传"
           });
           params.OldOwner = that.agentHouseMethod.keyOwner;
@@ -2721,15 +2723,15 @@ export default {
         case 2:
         case 1:
           conditionList.push({
-            condition: util.isNull(that.onlyType),
-            memo: "取代的委托类型未选择"
+            condition: util.isNotNull(that.onlyType),
+            memo: "委托类型未选择"
           });
           conditionList.push({
-            condition: util.isNull(that.proxyMaxTime),
+            condition: util.isNotNull(that.proxyMaxTime),
             memo: "委托截止未选择"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list7"].join(",")),
+            condition: util.isNotNull(that.fileList["list7"].join(",")),
             memo: "委托图片未上传"
           });
           params.OldOwner = that.agentHouseMethod.onlyOwner;
@@ -2743,31 +2745,31 @@ export default {
         case 12:
         case 5:
           conditionList.push({
-            condition: util.isNull(that.fileList["list1"].join(",")),
+            condition: util.isNotNull(that.fileList["list1"].join(",")),
             memo: "外景图未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list4"].join(",")),
+            condition: util.isNotNull(that.fileList["list4"].join(",")),
             memo: "客厅未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list2"].join(",")),
+            condition: util.isNotNull(that.fileList["list2"].join(",")),
             memo: "卧室未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list3"].join(",")),
+            condition: util.isNotNull(that.fileList["list3"].join(",")),
             memo: "厨房未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list5"].join(",")),
+            condition: util.isNotNull(that.fileList["list5"].join(",")),
             memo: "卫生间未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list6"].join(",")),
+            condition: util.isNotNull(that.fileList["list6"].join(",")),
             memo: "户型图未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list8"].join(",")),
+            condition: util.isNotNull(that.fileList["list8"].join(",")),
             memo: "视频未上传"
           });
           params.OldOwner = that.agentHouseMethod.realOwner;

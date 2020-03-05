@@ -8,7 +8,7 @@
     &.no-top {
       margin-top: 0;
     }
-   
+
     .item-before {
       line-height: 40px;
       &.before-text {
@@ -100,13 +100,13 @@
     }
   }
 }
- .after-tips {
-      &:after {
-        content: attr(data-tips);
-        display: block;
-        color: red;
-      }
-    }
+.after-tips {
+  &:after {
+    content: attr(data-tips);
+    display: block;
+    color: red;
+  }
+}
 .flex-cell {
   display: flex;
 }
@@ -167,15 +167,15 @@
     </div>
     <!-- 物业费 -->
     <div :class="{'after-tips':errorBags.has('propertyFee')}"
-           :data-tips="errorBags.first('propertyFee')">
-        <div class="cell-item-cell el-input-w">
+         :data-tips="errorBags.first('propertyFee')">
+      <div class="cell-item-cell el-input-w">
         <div class="item-before text-just">物业费</div>
-        <el-input type="text" v-model="formData.propertyFee"
-          v-validate="'decimal:2|noZero1|max:14|required'"
-          data-vv-as="物业费"
-          data-vv-name="propertyFee"
-          placeholder="请输入物业费"
-        ></el-input>
+        <el-input type="text"
+                  v-model="formData.propertyFee"
+                  :v-validate="required?'decimal:2|noZero1|max:14|required': 'decimal:2|noZero1|max:14'"
+                  data-vv-as="物业费"
+                  data-vv-name="propertyFee"
+                  placeholder="请输入物业费"></el-input>
         <div class="item-after">元/平方</div>
       </div>
     </div>
@@ -293,7 +293,7 @@
                     data-vv-as="月供"
                     data-vv-name="monthlyMortgage"
                     placeholder="请输入月供"></el-input>
-          <div class="Division">万元</div>
+          <div class="Division">元/月</div>
         </div>
       </div>
     </div>
@@ -419,7 +419,7 @@ export default {
       type: Boolean,
       default: false
     },
-    required:{
+    required: {
       type: Boolean,
       default: false
     }
@@ -474,8 +474,8 @@ export default {
       houseBelongList: formReander.HOUSEBELONG,//配套设施
       signList: formReander.SIGN,//户口情况
       decorationList: formReander.DECORATION,//装修类型
-      isowneronlyList: formReander.ISOWNERONLY ,//是否唯一住房
-      mortgageBankList:formReander.MORTGAGEBANK//抵押银行
+      isowneronlyList: formReander.ISOWNERONLY,//是否唯一住房
+      mortgageBankList: formReander.MORTGAGEBANK//抵押银行
     }
   },
   methods: {
@@ -485,6 +485,13 @@ export default {
         url: `/draft-house/${this.$store.state.addHouse.formData.id}`,
       }).then((e) => {
         if (e.data.code == 200) {
+          //需要显示长的属性不能是null 如果是null则删除不覆盖store的默认值
+          let isNullforStr = ['title', 'communityDesc', 'roomDesc', 'taxDesc', 'saleDesc'];
+          isNullforStr.forEach((item) => {
+            if (e.data.data[item] == null) {
+              delete e.data.data[item];
+            }
+          })
           this.$store.dispatch("InitFormData", { commitName: "updateStep2", json: e.data.data })
         }
       }).catch((e) => {
