@@ -81,6 +81,7 @@
         </div>
         <el-table :data="tableData"
                   border
+                  v-bind="$attrs"
                   v-on="$listeners"
                   v-loading="loading">
           <slot name="tableColumn"

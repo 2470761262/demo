@@ -40,8 +40,10 @@
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="DeptEntity.tel"
-                maxlength="100"
-                show-word-limit></el-input>
+                data-vv-name="tel"
+                data-vv-as="电话号码"
+                v-validate="'required|phone'"></el-input>
+                {{errorBags.first('tel')}}
     </div>
     <div class="left-input-container">
       <span>开业时间</span>
@@ -77,12 +79,26 @@
       ></el-input>
     </div>
     <div class="left-input-container">
-      <span>负责人</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="DeptEntity.managerPer"
-                maxlength="100"
-                show-word-limit></el-input>
+       <el-button type="info" @click="getDialogVisible()">选择负责人</el-button>
+       <el-dialog title="请选择:" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+          <list-page :parentData="$data" 
+          highlight-current-row  
+          @handleSizeChange="handleSizeChange" 
+          @handleCurrentChange="handleCurrentChange"  
+          @current-change="handleChange"  >
+              <template v-slot:tableColumn="cell">            
+                <template v-for="item in cell.tableData">  
+                  <el-table-column
+                    :prop="item.prop"
+                    :label="item.label"
+                    :width="item.width"
+                    :key="item.prop"
+                  ></el-table-column>
+                </template>
+            </template>           
+          </list-page>
+       </el-dialog>
+      <el-input type="text" v-model="DeptEntity.managerPerName" show-word-limit></el-input>
     </div>
     <div class="left-input-container">
       <span>加入类型</span>
@@ -128,6 +144,7 @@
     </div>
 
     <div class="footerContainer el-top">
+      
       <el-button type="primary" @click="saveDept()">确定</el-button>
       <el-button type="primary" @click="back()">返回</el-button>
     </div>
@@ -135,13 +152,40 @@
 </template>
 
 <script>
+import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
-  components: {},
+  components: {
+    listPage
+    },
   props: {},
   data() {
     return {
+      loading: false, //控制表格加载动画提示
+      queryData: {
+        keyWord: "",
+        isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户
+        del:0 ,//0 查询在职员工,1 查询离职员工,2 查询待离职员工
+        type:0 //0 内部  1 游客
+      },
+      configSet: {
+        selectToTime: false,
+        selectTo: false
+      },
+      pageJson: {
+        currentPage: 1, //当前页码
+        total: 9, //总记录数
+        pageSize: 5 //每页条数
+      },
+      tableDataColumn: [       
+        { prop: "perName", label: "姓名" },
+        { prop: "deptName", label: "部门" },        
+        { prop: "companyName", label: "公司" },
+        { prop: "positionName", label: "岗位" },      
+      ],
+      currentRow: null,
+      tableData: [],
       DeptEntity: {
         deptName: null,
         header: null,
@@ -157,14 +201,53 @@ export default {
         deptParentID: null,
         isArea: null,
         isCom : null,
-        backUrl: null
-      }
+        backUrl: null,
+        managerPerName:null
+      },
+      dialogVisible:false,
     };
   },
   watch: {},
   computed: {},
   methods: {
+    getDialogVisible(){
+      this.dialogVisible = true;
+       this.getPrincipal(1);
+    },
+    getPrincipal(currentPage){
+      let params = { limit: this.pageJson.pageSize, page: currentPage, };
+      params.coId = this.DeptEntity.coId;
+      params.postId =
+      this.$api.post({
+        url: '/employee/selectPrincipal',
+        data: params,
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+  
+          this.pageJson.total = result.data.totalCount;
+          this.pageJson.currentPage = result.data.currPage;
+          this.tableData = result.data.list;
+
+        } else {
+          console.log("查询负责人列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询负责人列表失败");
+        console.log(e);
+      })
+    },
+    handleClose(){
+      this.dialogVisible = false;
+    },
     saveDept() {
+    if(/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.DeptEntity.tel)){
       let params = this.DeptEntity;
       this.$api
         .post({
@@ -193,10 +276,28 @@ export default {
           console.log("添加失败");
           console.log(e);
         });
+      }else{
+        this.$alert("","请填写正确的电话号码!!!", {
+              dangerouslyUseHTMLString: false
+            });
+      }
     },
     back () {
       this.$router.push({ path: "/sys/DeptManageList" });
-    }
+    },
+    handleSizeChange (val) {
+      console.log(`设置了每页 ${val} 条`);
+      this.pageJson.pageSize = val;
+      this.getPrincipal(1);
+    },
+    handleCurrentChange (val) {
+      this.getPrincipal(val);
+    },
+    handleChange(row){
+    console.log(row);
+    this.DeptEntity.managerPer = row.accountId;
+    this.DeptEntity.managerPerName = row.perName;
+    },
   },
   created () { },
   mounted () {
@@ -214,6 +315,6 @@ export default {
     }
     console.log(this.DeptEntity.coId ,this.DeptEntity.deptParentID )
   }
-
+  
 };
 </script>

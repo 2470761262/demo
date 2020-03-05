@@ -123,15 +123,14 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "id", label: "部门id" },
+
         { prop: "deptName", label: "部门名" },
-        { prop: "header", label: "部门名称首拼" },
+        
         { prop: "managerPer", label: "负责人" },
         { prop: "deptParentID", label: "上级部门" },
         { prop: "joinType", label: "加入类型" },
         { prop: "deptType", label: "部门类型" },
-        { prop: "del", label: "是否有效" },
-        { prop: "isLocked", label: "是否锁定" },
+        { prop: "isLocked", label: "部门状态" },
         { prop: "address", label: "部门地址" },
       ],
       tableData: [],
@@ -195,15 +194,6 @@ export default {
           console.log(result.message);
           console.log(result.data);
           for (var i = 0; i < result.data.list.length; i++) {
-            switch (result.data.list[i].del) {
-              case 0:
-                result.data.list[i].del = "有效";
-                break;
-              case 1:
-                result.data.list[i].del = "无效";
-                break;
-
-            }
             switch (result.data.list[i].isLocked) {
               case 0:
                 result.data.list[i].isLocked = "锁定";
@@ -229,13 +219,18 @@ export default {
 
             }
             switch (result.data.list[i].joinType) {
+              case 0:
+                result.data.list[i].joinType = "";
+                break;
               case 1:
                 result.data.list[i].joinType = "直营";
                 break;
               case 2:
                 result.data.list[i].joinType = "加盟";
                 break;
-
+              case 3:  
+                result.data.list[i].joinType = "联营";
+                break;
             }
           }
           this.pageJson.total = result.data.totalCount;
@@ -295,6 +290,10 @@ export default {
             dangerouslyUseHTMLString: false
           });
           this.$router.push({ path: "/sys/deptManageList" });
+        }else{
+             this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
+              dangerouslyUseHTMLString: false
+            });
         }
       }).catch((e) => {
         console.log("删除失败");
@@ -311,7 +310,8 @@ export default {
       let array = [
         { name: '编辑', isType: '1', methosName: 'editDeptDetail' },
         { name: '删除', isType: '1', methosName: 'delDeptDetail' },
-        // { name: '子部门', isType: '1', methosName: 'querySubsidiary' },
+        { name: '锁定', isType: '1', methosName: 'lockDeptDetail' },
+        { name: '解锁', isType: '1', methosName: 'unlockDeptDetail' },
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
