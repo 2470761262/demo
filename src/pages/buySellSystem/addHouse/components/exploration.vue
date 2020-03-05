@@ -321,6 +321,7 @@ export default {
     }
     this.currentIndex=0;
     this.qrCodeImg=[];
+    this.websocketUsers=[];
     this.getQrCode();
   },
   data () {
@@ -343,20 +344,51 @@ export default {
       houseVideo: {},//房源视频
       qrCodeImg:[],
       qrCodeImgTemp:[],
+      websocketUsers:[],
       currentIndex:0,
-      picParams:[{"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-外景图片"},
-      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-客厅图片"},
-      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卧室图片"},
-      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-厨房图片"},
-      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卫生间图片"},
-      {"businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-户型图片"}]
+      picParams:[{"picContainer":"outdoorImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-外景图片"},
+      {"picContainer":"livingRoomImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-客厅图片"},
+      {"picContainer":"bedroomImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卧室图片"},
+      {"picContainer":"kitchenImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-厨房图片"},
+      {"picContainer":"toiletImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卫生间图片"},
+      {"picContainer":"houseVideo","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-户型图片"}],
+       websock: null
     }
   },
   methods: {
+    receiveMessage(r){
+      console.log(r,"接收到消息");
+      console.log(r.content,"消息内容");
+      console.log(r.user,"消息接收人（二维码标识）");
+       for(var i = 0;i<this.picParams.length;i++){
+            if(this.picParams[i].user==r.user){
+              //动态访问data，如何？
+                console.log(this[this.picParams[i].picContainer],"找到了指定用户");
+                this[this.picParams[i].picContainer].push(r.content);
+            }
+        }
+    },
+    contactSocket (user) {
+      // let e = this.socketApi.closeSocket();
+      // if (e) {
+      //   console.log("关闭了上一个旧的连接，用户为：" + oldVal);
+      // }
+      console.log("用户【" + user + "】开始接入");
+      this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""),user);
+      this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
+      //this.initWebSocket(this.$api.baseUrl().replace("http", ""), qrCode);
+      //console.log("状态" + this.websock.readyState);
+
+      console.log("用户【" + user + "】接入完毕");
+    },
      getQrCode(){
       let that=this;      
       if(that.currentIndex>=that.picParams.length){
         that.qrCodeImg=that.qrCodeImgTemp;
+        for(var i = 0;i<that.websocketUsers.length;i++){
+            that.picParams[i].user=that.websocketUsers[i];
+            that.contactSocket(that.websocketUsers[i]);
+        }
         return;
       }
       var data = that.picParams[that.currentIndex];     
@@ -369,6 +401,7 @@ export default {
                       if (result.code == 200) {
                           //that.qrCodeImg="data:image/png;base64,"+item.img;
                           that.qrCodeImgTemp[that.currentIndex]=(result.data.url);
+                          that.websocketUsers[that.currentIndex]=result.data.qrCode;
                           console.log(that.qrCodeImg);
                       } else {
                         console.log("h获取二维码结果：" + result.message);
