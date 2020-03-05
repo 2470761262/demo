@@ -5,7 +5,8 @@
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:left>
       <div style="width:300px;height:560px;background:white;">
-        <div style="margin-left:10px;">
+        <div style="margin-left:10px;margin-top:px;background:white;">
+          <div style="height:20px;"></div>
           <h2>核心盘总览</h2>
           <div>
             <div style="margin-top:10px;height:30px;width:270px;background:RoyalBlue;font-weight:bold;font-size:20px;">
@@ -22,24 +23,21 @@
             </div>
 
           </div>
-          <div style="height:30px;width:270px;font-size:20px;">
-            <el-input @keyup.enter.native="queryNotConcernCommunityList()"
-                      placeholder="输入您想添加的核心盘"
-                      v-model="queryData.selectCommunity"
-                      style="margin-top:10px;width:270px"></el-input>
-          </div>
-          <div style="margin-top:20px;width:270px;font-size:20px;border:1px solid #D3D3D3"
-               id="comList">
-            <div style="color:black;margin-left:10px;">搜索结果 </div>
-            <div v-for="(item,y) in list"
-                 :key="y"
-                 style="height:30px;width:270px;background:white;font-weight:bold;font-size:15px;margin-top:10px;">
-              <div style="color:black;float: left;margin-left:10px;">{{item.communityName}} </div>
-              <div style="cursor:pointer;color:blue;float: right;margin-right:10px;"
-                   @click="addCommunity(item.id,item.communityName)">添加 </div>
-            </div>
-          </div>
+            <div style="height:50px;margin-top:10px;">
+          <el-select style="width:270px" v-model="queryData.selectCommunity" @change="selectedCommunity($event)" 
+            filterable placeholder="请输入您想添加的核心盘">
+             <el-option style="width:270px" v-for="item in list"
+                       :key="item.id"
+                       :label="item.communityName"
+                       :value="item.id"
+                       :text="item.communityName">
+                       <span style="float: left">{{item.communityName}}</span>
+      <span style="float: right; color: #8492a6; font-size: 13px"><i class="el-icon-plus"></i></span>
+               </el-option>
+            </el-select>
+      </div>
 
+         
           <div v-for="(item,i) in array"
                :key="i"
                style="height:40px;width:270px;background:CornflowerBlue;font-weight:bold;margin-top:10px;">
@@ -131,16 +129,18 @@
                 clearable>
         <template slot="prepend">电话</template>
       </el-input>
-
+      <!-- </template>
+      <template v-slot:> -->
       <el-input placeholder="最小值"
                 v-model="queryData.minPrice"
-                style="margin-left:10px;width:160px"
+                style="width:160px"
                 clearable>
         <template slot="prepend">价格</template>
       </el-input>
       <el-input placeholder="最大值"
                 v-model="queryData.maxPrice"
-                style="margin-left:3px;width:100px"></el-input>
+                style="width:100px"></el-input>
+                
       <el-input placeholder="最小值"
                 v-model="queryData.minInArea"
                 style="width:160px"
@@ -151,7 +151,7 @@
                 v-model="queryData.maxInArea"
                 style="margin-left:3px;width:100px"></el-input>
 
-      <template slot="prepend">房源状态</template>
+     
       <el-button type="primary"
                  style="margin-left:30px"
                  size="mini"
@@ -201,12 +201,13 @@
           {{scope.row.agentPerName}}
         </template>
       </el-table-column>
-      <el-table-column label="录入时间">
+      <el-table-column label="操作">
         <template v-slot="scope">
-          {{scope.row.AddTime}}
-        </template>
+          <el-button type="info"
+          @click="toHouseDetail(scope.row.id)"
+          size="mini">查看</el-button>
+          </template>
       </el-table-column>
-
     </template>
   </list-page>
 </template>
@@ -221,7 +222,8 @@ export default {
   data () {
 
     return {
-      list: [1, 2, 3, 4, 5, 6],
+      list: [],
+      addComId :[],
       input: '',
       loading: true, //控制表格加载动画提示
       pageJson: {
@@ -266,9 +268,29 @@ export default {
   mounted () {
     this.querylist(1);
     this.queryConcernCount();
+    this.queryNotConcernCommunityList();
 
   },
   methods: {
+    selectedCommunity(e){
+      // let that = this;
+      //  that.addComId = [{id:e,communityName:"东苑小区"}]
+      // console.log("aaaaaaaaaaaaaa"+this.queryData.selectCommunity)
+      this.$confirm('是否确定关注该楼盘?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+         this.addCommunity(e);
+         this.querylistByParams ();
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        });
+      });
+      
+    },
     concernOFF (id) {
       this.$confirm('是否确定取消关注该楼盘?', '提示', {
         confirmButtonText: '确定',
@@ -276,6 +298,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.deleteConcern(id);
+        this.querylistByParams ();
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -310,9 +333,8 @@ export default {
     querylistByParams () {
       this.querylist(1);
     },
-    addCommunity (id, name) {
-      console.log("参数-----id:" + id + "---name：" + name);
-      let params = { CommunityID: id + '', CommunityName: name + '' };
+    addCommunity (id) {
+      let params = { CommunityID: id + '' };
       this.$api.post({
         url: '/concern_community/add',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -409,14 +431,14 @@ export default {
     },
     queryNotConcernCommunityList () {
       var communityName = this.queryData.selectCommunity;
-      this.hasClassA
+      // if(communityName!=null&&communityName!=''&&communityName!='undefined'){
+        this.hasClassA
       this.$api.post({
         url: '/concern_community/notConcernCommunityList?CommunityName=' + communityName,
         token: false
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
-
         if (result.code == 200) {
           console.log(result.message);
           console.log("楼盘列表" + result.data);
@@ -426,23 +448,16 @@ export default {
           return list.forEach(item => {
             return item.list;
           });
-          alert(result.message);
-
         } else {
           console.log("查询未关注楼盘then：" + result.message);
-
         }
       }).catch((e) => {
         console.log("查询未关注楼盘失败catch");
         console.log(e);
       })
+      // }
     },
- remoteInput () {
-   
-      if (this.comId.length == 0) {
-        this.remoteMethod();
-      }
-    },
+    remoteInput () {   if (this.comId.length == 0) {this.remoteMethod()}    },
     remoteMethod (query) {
       var that = this
       if (query !== '') {
@@ -469,7 +484,6 @@ export default {
       } else {
         this.options = [];
       }
-      console.log("remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
     queryCBId () {
       var that = this
@@ -508,7 +522,10 @@ export default {
         }
       })
     },
-
+ //跳转房源详情页面
+    toHouseDetail (id) {
+      this.$router.push({ path: "/buySellSystem/houseDetails", query: { houseId: id } });
+    },
 
     handleClick () {
 
