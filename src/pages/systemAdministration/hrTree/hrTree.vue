@@ -22,10 +22,34 @@
   padding: 15px 15px 15px;
   border-radius: 10px;
   float: left;
+  height: 500px;
+  overflow: scroll;
 }
 
 .el-form-item {
   margin-bottom: 0;
+}
+
+table {
+  width: 100%;
+  border-color: Black;
+  border-style: dotted;
+  border-width: 0px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  margin: 0;
+  padding: 0;
+  border-spacing: 0;
+  text-align: center;
+}
+td {
+  border-color: Black;
+  border-style: dotted;
+  border-width: 0px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  padding: 0;
+  height: 28px;
 }
 </style>
 <template>
@@ -99,28 +123,144 @@
           </el-form-item>
         </el-form>
       </div>
-      <div class="elInfo">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>卡片名称</span>
-            <el-button style="float: right; padding: 3px 0" type="text">修改</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">离职</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">锁定</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">任命</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">人员异动</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">密码重置</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">手机备案</el-button>
-          </div>
-          <div v-for="o in 4" :key="o" class="text item">{{'列表内容 ' + o }}</div>
+      <div class="elInfo" v-show="checkedType===1" v-loading="loading" :style="contentStyleObj">
+        <div v-for="(item) in this.employeeData" :key="item.AccountID">
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>{{item.PerName}}</span>
+              <el-button style="float: right; padding: 3px 0" type="text">修改</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text">离职</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text">锁定</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text">任命</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text">人员异动</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text">密码重置</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text">手机备案</el-button>
+            </div>
+            <table>
+              <tr>
+                <td>账号：</td>
+                <td>{{item.LoginUser}}</td>
+                <td>账号状态：</td>
+                <td>{{["帐号锁定","正常","三天未登录锁定","三天未带看锁定"][item.islocked]}}</td>
+              </tr>
+              <tr>
+                <td>姓名：</td>
+                <td>{{item.PerName}}</td>
+                <td>性别：</td>
+                <td>{{["男","女"][item.sex]}}</td>
+              </tr>
+              <tr>
+                <td>电话：</td>
+                <td>{{item.Tel}}</td>
+                <td>身份证号：</td>
+                <td>{{item.CardId}}</td>
+              </tr>
+              <tr>
+                <td>岗位：</td>
+                <td>{{item.PerPost}}</td>
+                <td>部门：</td>
+                <td>{{item.DeptName}}</td>
+              </tr>
+              <tr>
+                <td>角色权限：</td>
+                <td>{{item.RoleName}}</td>
+                <td>星级：</td>
+                <td>{{item.levelName}}[{{item.LevelCode}}]</td>
+              </tr>
+              <tr>
+                <td>是否菁英：</td>
+                <td>{{["否","菁英经纪人","未设置"][item.IsGold==null?3:item.IsGold]}}</td>
+                <td>引进人：</td>
+                <td>{{item.JieShaoName}}</td>
+              </tr>
+              <tr>
+                <td>微信昵称：</td>
+                <td colspan="2">{{item.nickname}}</td>
+                <td>
+                  <el-image style="width: 100px; height: 100px" :src="item.wxImgUrl"></el-image>
+                </td>
+              </tr>
+              <tr>
+                <td>入职时间：</td>
+                <td>{{item.Regtime}}</td>
+                <td>在职状态：</td>
+                <td>（{{["实习","试用","正式","离职","其他"][item.Status==null?4:item.Status]}}）-{{["在职","离职","待离职","待审核","异常状态","未知状态"][item.Del==null?5:(item.Del==-2?4:item.Del)]}}</td>
+              </tr>
+            </table>
+            <br />
+            <el-collapse class="box-card" accordion>
+              <el-collapse-item title="more" name="1">
+                <table>
+                  <tr>
+                    <td>医保：</td>
+                    <td>{{item.nickname}}</td>
+                    <td>社保：</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>生日：</td>
+                    <td>{{item.nickname}}</td>
+                    <td>学历：</td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <td>专业：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>毕业学校：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>毕业时间：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>户口所在地：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>现居地：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>毕业时间：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>紧急联系人：</td>
+                    <td>{{item.nickname}}</td>
+                    <td>联系电话：</td>
+                    <td>{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>基础底薪：</td>
+                    <td>{{item.nickname}}</td>
+                    <td>绩效薪酬：</td>
+                    <td>{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>岗位津贴：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>银行卡号：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>离职时间：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                  <tr>
+                    <td>备注：</td>
+                    <td colspan="3">{{item.nickname}}</td>
+                  </tr>
+                </table>
+              </el-collapse-item>
+            </el-collapse>
+          </el-card>
           <br />
-          <el-collapse class="box-card" accordion>
-            <el-collapse-item title="more" name="1">
-              <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
-              <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>
-            </el-collapse-item>
-          </el-collapse>
-        </el-card>
-        <br />
+        </div>
       </div>
     </template>
   </div>
@@ -161,7 +301,11 @@ export default {
       },
       checkedId: null,
       checkedType: null,
-      loading: false
+      loading: false,
+      employeeData: [],
+      contentStyleObj: {
+        height: ""
+      }
     };
   },
   mounted() {
@@ -273,7 +417,7 @@ export default {
               console.log(e);
             })
             .finally(e => {
-              this.loading = false;
+              this.employee(this.checkedId);
             });
         }
       }
@@ -343,7 +487,42 @@ export default {
             message: "已取消"
           });
         });
+    },
+    employee(id) {
+      let params = { id: id };
+      this.$api
+        .post({
+          url: "/employee/dep/list",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            let data = result.data;
+            this.employeeData = data;
+          }
+        })
+        .catch(e => {
+          console.log("查询失败");
+          console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
+        });
+    },
+    getHeight() {
+      this.contentStyleObj.height = window.innerHeight - 140 + "px";
     }
+  },
+  created() {
+    window.addEventListener("resize", this.getHeight);
+    this.getHeight();
+  },
+
+  destroyed() {
+    window.removeEventListener("resize", this.getHeight);
   }
 };
 </script> 

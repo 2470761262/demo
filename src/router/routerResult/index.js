@@ -704,5 +704,12 @@ export default [
         component: () =>
             import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/setAuthority.vue")
     },
+    {
+      //系统管理 反馈列表
+      path: "/sys/feedback",
+      name: "feedbackList",
+      component: () =>
+        import(/* webpackChunkName: "feedbackList" */ "@/pages/systemAdministration/feedback/feedbackList.vue")
+    },
 
 ]
