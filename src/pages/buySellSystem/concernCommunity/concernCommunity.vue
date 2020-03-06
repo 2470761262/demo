@@ -287,9 +287,6 @@ export default {
   },
   methods: {
     selectedCommunity (e) {
-      // let that = this;
-      //  that.addComId = [{id:e,communityName:"东苑小区"}]
-      // console.log("aaaaaaaaaaaaaa"+this.queryData.selectCommunity)
       this.$confirm('是否确定关注该楼盘?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -297,6 +294,10 @@ export default {
       }).then(() => {
         this.addCommunity(e);
         this.querylistByParams();
+        this.$message({
+          message: '关注成功',
+          type: 'success'
+        });
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -312,7 +313,7 @@ export default {
         type: 'warning'
       }).then(() => {
         this.deleteConcern(id);
-        this.querylistByParams();
+        this.queryConcernCount();
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -331,6 +332,7 @@ export default {
           this.$message({
             type: 'success',
             message: result.message
+          
           });
         } else {
           this.$message({
@@ -357,7 +359,8 @@ export default {
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
-          alert(result.message);
+          this.queryConcernCount ();
+          console.log(123);
         } else {
           console.log("添加关注" + result.message);
           alert(result.message);
@@ -367,7 +370,6 @@ export default {
         alert("添加关注失败");
         console.log(e);
       })
-      this.$router.push({ path: "/buySellSystem/concernCommunity" });
     },
     queryVerifyHouseDatas (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
@@ -433,7 +435,7 @@ export default {
           return array.forEach(item => {
             return item.array;
           });
-
+           this.querylist(1);
         } else {
           console.log("查询核心盘统计结果then：" + result.message);
           alert(result.message);

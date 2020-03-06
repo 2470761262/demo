@@ -71,7 +71,7 @@
       </el-table-column>
       <el-table-column label="公司">
         <template v-slot="scope">
-          {{scope.row.companyName}}
+          {{scope.row.comId==0?'默认':scope.row.companyName}}
         </template>
       </el-table-column>
 
