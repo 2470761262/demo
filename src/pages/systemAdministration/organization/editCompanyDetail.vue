@@ -49,7 +49,7 @@
         data-vv-as="电话号码"
         v-validate="'required|phone'"
       ></el-input>
-       {{errorBags.first('tel')}}
+      {{errorBags.first('tel')}}
     </div>
     <div class="left-input-container">
       <span>加入类型</span>
@@ -79,25 +79,32 @@
       </el-select>
     </div>
     <div class="left-input-container">
-        <el-button type="info" @click="getDialogVisible1()">选择负责人</el-button>
-       <el-dialog title="请选择:" :visible.sync="dialogVisible1" width="50%" :before-close="handleClose1">
-          <list-page :parentData="$data" 
-          highlight-current-row  
-          @handleSizeChange="handleSizeChange" 
-          @handleCurrentChange="handleCurrentChange"  
-          @current-change="handleChange"  >
-              <template v-slot:tableColumn="cell">            
-                <template v-for="item in cell.tableData">  
-                  <el-table-column
-                    :prop="item.prop"
-                    :label="item.label"
-                    :width="item.width"
-                    :key="item.prop"
-                  ></el-table-column>
-                </template>
-            </template>           
-          </list-page>
-       </el-dialog>
+      <el-button type="info" @click="getDialogVisible1()">选择负责人</el-button>
+      <el-dialog
+        title="请选择:"
+        :visible.sync="dialogVisible1"
+        width="50%"
+        :before-close="handleClose1"
+      >
+        <list-page
+          :parentData="$data"
+          highlight-current-row
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
+          @current-change="handleChange"
+        >
+          <template v-slot:tableColumn="cell">
+            <template v-for="item in cell.tableData">
+              <el-table-column
+                :prop="item.prop"
+                :label="item.label"
+                :width="item.width"
+                :key="item.prop"
+              ></el-table-column>
+            </template>
+          </template>
+        </list-page>
+      </el-dialog>
       <el-input
         type="text"
         placeholder="请输入内容"
@@ -138,12 +145,9 @@
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="city in regionName" :label="city" :key="city.Name">
-              <el-popover
-                placement="top-start"
-                trigger="hover"
-              >
-                <el-checkbox v-for="city in region" :label="city" :key="city.Name" >{{city.Name}}</el-checkbox>
-                <button slot="reference"  @mouseover="checked(city.id)">{{city.Name}}</button>
+              <el-popover placement="top-start" trigger="hover">
+                <el-checkbox v-for="city in region" :label="city" :key="city.Name">{{city.Name}}</el-checkbox>
+                <button slot="reference" @mouseover="checked(city.id)">{{city.Name}}</button>
               </el-popover>
             </el-checkbox>
           </el-checkbox-group>
@@ -162,7 +166,6 @@
 <script>
 import listPage from "@/components/listPage";
 export default {
-  
   components: {
     listPage
   },
@@ -172,9 +175,9 @@ export default {
       loading: false, //控制表格加载动画提示
       queryData: {
         keyWord: "",
-        isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户
-        del:0 ,//0 查询在职员工,1 查询离职员工,2 查询待离职员工
-        type:0 //0 内部  1 游客
+        isLocked: null, //0 查询锁定,1 查询未锁定,2 查询异常用户
+        del: 0, //0 查询在职员工,1 查询离职员工,2 查询待离职员工
+        type: 0 //0 内部  1 游客
       },
       configSet: {
         selectToTime: false,
@@ -185,11 +188,11 @@ export default {
         total: 9, //总记录数
         pageSize: 5 //每页条数
       },
-      tableDataColumn: [       
+      tableDataColumn: [
         { prop: "perName", label: "姓名" },
-        { prop: "deptName", label: "部门" },        
+        { prop: "deptName", label: "部门" },
         { prop: "companyName", label: "公司" },
-        { prop: "positionName", label: "岗位" },      
+        { prop: "positionName", label: "岗位" }
       ],
       currentRow: null,
       tableData: [],
@@ -201,66 +204,68 @@ export default {
       region: [],
       checkAll: false,
       checkedCities: [],
-      isIndeterminate: true
+      isIndeterminate: true,
+      backUrl: null
     };
   },
   watch: {},
   computed: {},
   methods: {
-    getDialogVisible1(){
+    getDialogVisible1() {
       this.dialogVisible1 = true;
-       this.getPrincipal(1);
+      this.getPrincipal(1);
     },
-    getPrincipal(currentPage){
-      let params = { limit: this.pageJson.pageSize, page: currentPage, };
+    getPrincipal(currentPage) {
+      let params = { limit: this.pageJson.pageSize, page: currentPage };
       params.coId = this.companyEntity.coId;
-      params.postId =
-      this.$api.post({
-        url: '/employee/selectPrincipal',
-        data: params,
-        token: false,
-        headers: { "Content-Type": "application/json" }
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-  
-          this.pageJson.total = result.data.totalCount;
-          this.pageJson.currentPage = result.data.currPage;
-          this.tableData = result.data.list;
+      params.postId = this.$api
+        .post({
+          url: "/employee/selectPrincipal",
+          data: params,
+          token: false,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
 
-        } else {
-          console.log("查询负责人列表结果：" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询负责人列表失败");
-        console.log(e);
-      })
+            this.pageJson.total = result.data.totalCount;
+            this.pageJson.currentPage = result.data.currPage;
+            this.tableData = result.data.list;
+          } else {
+            console.log("查询负责人列表结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询负责人列表失败");
+          console.log(e);
+        });
     },
-    handleClose1(){
+    handleClose1() {
       this.dialogVisible1 = false;
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.getPrincipal(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.getPrincipal(val);
     },
-    handleChange(row){
-    console.log(row);
-    this.companyEntity.managerPer = row.accountId;
-    this.companyEntity.managerPerName = row.perName;
+    handleChange(row) {
+      console.log(row);
+      this.companyEntity.managerPer = row.accountId;
+      this.companyEntity.managerPerName = row.perName;
     },
-    checked(e){
+    checked(e) {
       console.log(e);
       this.$api
         .get({
-          url: "/company/regionName?id="+e,
+          url: "/company/regionName?id=" + e,
           token: false
         })
         .then(e => {
@@ -293,12 +298,12 @@ export default {
     getDialogVisible(id) {
       this.dialogVisible = true;
       this.checkedCities = [];
-      if (id == null || id == undefined){
-            id = 350000;
-        }
+      if (id == null || id == undefined) {
+        id = 350000;
+      }
       this.$api
         .get({
-          url: "/company/regionName?id="+id,
+          url: "/company/regionName?id=" + id,
           token: false
         })
         .then(e => {
@@ -321,58 +326,63 @@ export default {
     setDialogVisible() {
       this.dialogVisible = false;
     },
-    
+
     handleClose(done) {
       console.log(this.checkedCities);
-      this.companyEntity.RegionName ="";
+      this.companyEntity.RegionName = "";
       this.dialogVisible = false;
       if (this.checkedCities.length == this.regionName.length) {
         this.companyEntity.RegionName = "全部";
       } else {
-        for(let index in this.checkedCities) {
-        console.log(this.checkedCities[index]);
-        if(index == this.checkedCities.length -1){
-          this.companyEntity.RegionName += this.checkedCities[index].Name ;
-        }else{
-          this.companyEntity.RegionName += this.checkedCities[index].Name +",";
+        for (let index in this.checkedCities) {
+          console.log(this.checkedCities[index]);
+          if (index == this.checkedCities.length - 1) {
+            this.companyEntity.RegionName += this.checkedCities[index].Name;
+          } else {
+            this.companyEntity.RegionName +=
+              this.checkedCities[index].Name + ",";
+          }
         }
-    }
       }
     },
     savecompany() {
-      if(/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.companyEntity.Tel)){  
-      let params = this.companyEntity;
-      this.$api
-        .put({
-          url: "/company/update",
-          data: params,
-          token: false,
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(e => {
-          let result = e.data;
-          if (result.code == 200) {
-            console.log(result.message);
-            this.$alert("", "修改成功", {
-              dangerouslyUseHTMLString: false
-            });
-            if (this.backUrl === "hrTree") {
-              this.$router.push({ path: "/sys/hrTree/hrTree" });
-            } else {
-              this.$router.push({ path: "/sys/companyList" });
+      if (
+        /^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(
+          this.companyEntity.Tel
+        )
+      ) {
+        let params = this.companyEntity;
+        this.$api
+          .put({
+            url: "/company/update",
+            data: params,
+            token: false,
+            headers: { "Content-Type": "application/json" }
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              console.log(result.message);
+              this.$alert("", "修改成功", {
+                dangerouslyUseHTMLString: false
+              });
+              if (this.backUrl === "hrTree") {
+                this.$router.push({ path: "/sys/hrTree/hrTree" });
+              } else {
+                this.$router.push({ path: "/sys/companyList" });
+              }
+              console.log(result.data);
+              this.$message({ message: result.message });
             }
-            console.log(result.data);
-            this.$message({ message: result.message });
-          }
-        })
-        .catch(e => {
-          console.log("修改失败");
-          console.log(e);
+          })
+          .catch(e => {
+            console.log("修改失败");
+            console.log(e);
+          });
+      } else {
+        this.$alert("", "请填写正确的电话号码!!!", {
+          dangerouslyUseHTMLString: false
         });
-      }else{
-        this.$alert("","请填写正确的电话号码!!!", {
-              dangerouslyUseHTMLString: false
-            });
       }
     },
     back() {
