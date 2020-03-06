@@ -288,9 +288,15 @@
                    @click="deleteVideo(houseVideo)"></div>
             </div>
           </div>
-          <div class="upLoadFile-file-phone">
-            <img :src="qrCodeImg"
-                 alt="图片">
+          <div class="upLoadFile-file-phone">            
+            <el-image :src="qrCodeImgVedio"
+              :preview-src-list="[qrCodeImgVedio]"
+              fit="cover">
+              <div slot="placeholder"
+                    class="image-slot">
+                加载中<span>...</span>
+              </div>
+            </el-image>
             <div>微信扫码上传</div>
           </div>
         </div>
@@ -321,8 +327,9 @@ export default {
     }
     this.currentIndex=0;
     this.qrCodeImg=[];
-    this.websocketUsers=[];
+    this.webSocketUser=this.guid();
     this.getQrCode();
+    this.getQrCodeForVedio();
   },
   data () {
     return {
@@ -343,55 +350,78 @@ export default {
       layoutImgList: [],//户型图
       houseVideo: {},//房源视频
       qrCodeImg:[],
+      qrCodeImgVedio:'',
       qrCodeImgTemp:[],
-      websocketUsers:[],
       currentIndex:0,
       picParams:[{"picContainer":"outdoorImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-外景图片"},
       {"picContainer":"livingRoomImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-客厅图片"},
       {"picContainer":"bedroomImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卧室图片"},
       {"picContainer":"kitchenImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-厨房图片"},
       {"picContainer":"toiletImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卫生间图片"},
-      {"picContainer":"houseVideo","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-户型图片"}],
-       websock: null
+      {"picContainer":"layoutImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-户型图片"}],
+       websock: null,
+       webSocketUser:''
     }
   },
   methods: {
+    guid(){
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      });
+    },
     receiveMessage(r){
-      console.log(r,"接收到消息");
+      console.log(r,"接收到了消息");
       console.log(r.content,"消息内容");
-      console.log(r.user,"消息接收人（二维码标识）");
-       for(var i = 0;i<this.picParams.length;i++){
-            if(this.picParams[i].user==r.user){
-              //动态访问data，如何？
-                console.log(this[this.picParams[i].picContainer],"找到了指定用户");
-                this[this.picParams[i].picContainer].push(r.content);
-            }
-        }
+      if(r.content.resourceType=="vedio"){
+        this.houseVideo={"id":-1,"url":r.content.picUrl};
+      }else{
+        for(var i = 0;i<this.picParams.length;i++){
+                  //找到消息是发送给哪个二维码的
+                    if(this.picParams[i].qrCode==r.content.qrCode){
+                      let name=this.picParams[i].picContainer;
+                        console.log(name,"变量名字");
+                        console.log(this[name],"找到了指定用户");
+                        console.log(r.content.picUrl,"接受到消息的图片地址");
+                        this[name].push({"id":-1,"url":r.content.picUrl});
+                    }
+                }
+      }      
     },
     contactSocket (user) {
-      // let e = this.socketApi.closeSocket();
-      // if (e) {
-      //   console.log("关闭了上一个旧的连接，用户为：" + oldVal);
-      // }
       console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""),user);
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
-      //this.initWebSocket(this.$api.baseUrl().replace("http", ""), qrCode);
-      //console.log("状态" + this.websock.readyState);
-
       console.log("用户【" + user + "】接入完毕");
+    },
+    getQrCodeForVedio(){
+        let that=this;
+        that.$api.post({
+                          url: '/scanUpload/getUploadQrCode',
+                          data: {'remark':"录入房源-上传视频","resourceType":"vedio","webSocketUser":that.webSocketUser},
+                          headers: { "Content-Type": "application/json" }
+                        }).then((e) => {
+                          let result = e.data;
+                          if (result.code == 200) {
+                              that.qrCodeImgVedio=(result.data.url);
+                          } else {
+                            console.log("h获取视频二维码结果：" + result.message);
+                            alert(result.message);
+                          }
+                        }).catch((e) => {
+                          console.log("查询视频二维码失败");
+                          console.log(e);
+                        })
     },
      getQrCode(){
       let that=this;      
       if(that.currentIndex>=that.picParams.length){
         that.qrCodeImg=that.qrCodeImgTemp;
-        for(var i = 0;i<that.websocketUsers.length;i++){
-            that.picParams[i].user=that.websocketUsers[i];
-            that.contactSocket(that.websocketUsers[i]);
-        }
+        that.contactSocket(this.webSocketUser);
         return;
       }
-      var data = that.picParams[that.currentIndex];     
+      var data = that.picParams[that.currentIndex];
+      data.webSocketUser=that.webSocketUser;    
        that.$api.post({
                       url: '/scanUpload/getUploadQrCode',
                       data: data,
@@ -401,7 +431,8 @@ export default {
                       if (result.code == 200) {
                           //that.qrCodeImg="data:image/png;base64,"+item.img;
                           that.qrCodeImgTemp[that.currentIndex]=(result.data.url);
-                          that.websocketUsers[that.currentIndex]=result.data.qrCode;
+                          //二维码标识，用于消息接受的路由
+                          that.picParams[that.currentIndex].qrCode=result.data.qrCode;
                           console.log(that.qrCodeImg);
                       } else {
                         console.log("h获取二维码结果：" + result.message);
@@ -524,6 +555,10 @@ export default {
     },
     //删除图片
     deleteImg (id, url, index, listName) {
+      if(id==-1){//微信上传的视频或图片，没必要删除。接口删除的也是草稿箱，我微信上传图片没放那个草稿箱，而且oss不限容量，没必要删除图片
+        this[listName].splice(index, 1);
+        return;
+      }
       this.$api.delete({
         url: `/draft-house/picture/${id}`,
         data: {
@@ -537,6 +572,11 @@ export default {
       })
     },
     deleteVideo (item) {
+       //微信上传的视频或图片，没必要删除。他删除的也是草稿箱，我微信上传图片没放那个草稿箱，而且oss不限容量，没必要删除图片      
+      if(item.id==-1){
+        this.houseVideo = {};
+        return;
+      }
       this.$api.delete({
         url: `/draft-house/video/${item.id}`,
         data: {
