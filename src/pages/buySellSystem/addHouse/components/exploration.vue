@@ -373,16 +373,20 @@ export default {
     receiveMessage(r){
       console.log(r,"接收到了消息");
       console.log(r.content,"消息内容");
-       for(var i = 0;i<this.picParams.length;i++){
-           //找到消息是发送给哪个二维码的
-            if(this.picParams[i].qrCode==r.content.qrCode){
-              let name=this.picParams[i].picContainer;
-                console.log(name,"变量名字");
-                console.log(this[name],"找到了指定用户");
-                console.log(r.content.picUrl,"接受到消息的图片地址");
-                this[name].push({"id":-1,"url":r.content.picUrl});
-            }
-        }
+      if(r.content.resourceType=="vedio"){
+        this.houseVideo={"id":-1,"url":r.content.picUrl};
+      }else{
+        for(var i = 0;i<this.picParams.length;i++){
+                  //找到消息是发送给哪个二维码的
+                    if(this.picParams[i].qrCode==r.content.qrCode){
+                      let name=this.picParams[i].picContainer;
+                        console.log(name,"变量名字");
+                        console.log(this[name],"找到了指定用户");
+                        console.log(r.content.picUrl,"接受到消息的图片地址");
+                        this[name].push({"id":-1,"url":r.content.picUrl});
+                    }
+                }
+      }      
     },
     contactSocket (user) {
       console.log("用户【" + user + "】开始接入");
@@ -569,6 +573,10 @@ export default {
     },
     deleteVideo (item) {
        //微信上传的视频或图片，没必要删除。他删除的也是草稿箱，我微信上传图片没放那个草稿箱，而且oss不限容量，没必要删除图片      
+      if(item.id==-1){
+        this.houseVideo = {};
+        return;
+      }
       this.$api.delete({
         url: `/draft-house/video/${item.id}`,
         data: {
