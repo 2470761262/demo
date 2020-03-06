@@ -72,8 +72,6 @@
     </template>
   </div>
 </template>
-  </div>
-</template>
 <script>
 export default {
   props: {
@@ -87,6 +85,11 @@ export default {
     //    type: String,
     //    default: '0'
     // },
+  },
+  watch: {
+    $route (newValue, oldValue) {
+      this.initUrlTab();
+    }
   },
   created () {
     this.initUrlTab();

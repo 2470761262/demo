@@ -6,6 +6,7 @@
 </style>
 <template>
   <div>
+    <feedback/>
     <list-page v-show="!showForm"
                :parentData="$data"
                @queryTabData="queryTabData"
@@ -118,7 +119,7 @@ export default {
       },
       pageJson: {
         currentPage: 1, //当前页码
-        total: 9, //总记录数
+        total: 0, //总记录数
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
