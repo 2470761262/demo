@@ -79,32 +79,25 @@
       </el-select>
     </div>
     <div class="left-input-container">
-      <el-button type="info" @click="getDialogVisible1()">选择负责人</el-button>
-      <el-dialog
-        title="请选择:"
-        :visible.sync="dialogVisible1"
-        width="50%"
-        :before-close="handleClose1"
-      >
-        <list-page
-          :parentData="$data"
+        <el-button type="info" @click="getDialogVisible1()">选择负责人</el-button>
+       <el-dialog title="请选择:" :visible.sync="dialogVisible1" width="50%" :before-close="handleClose1">
+          <list-page :parentData="$data"
           highlight-current-row
           @handleSizeChange="handleSizeChange"
           @handleCurrentChange="handleCurrentChange"
-          @current-change="handleChange"
-        >
-          <template v-slot:tableColumn="cell">
-            <template v-for="item in cell.tableData">
-              <el-table-column
-                :prop="item.prop"
-                :label="item.label"
-                :width="item.width"
-                :key="item.prop"
-              ></el-table-column>
+          @current-change="handleChange"  >
+              <template v-slot:tableColumn="cell">
+                <template v-for="item in cell.tableData">
+                  <el-table-column
+                    :prop="item.prop"
+                    :label="item.label"
+                    :width="item.width"
+                    :key="item.prop"
+                  ></el-table-column>
+                </template>
             </template>
-          </template>
-        </list-page>
-      </el-dialog>
+          </list-page>
+       </el-dialog>
       <el-input
         type="text"
         placeholder="请输入内容"
@@ -145,9 +138,12 @@
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="city in regionName" :label="city" :key="city.Name">
-              <el-popover placement="top-start" trigger="hover">
-                <el-checkbox v-for="city in region" :label="city" :key="city.Name">{{city.Name}}</el-checkbox>
-                <button slot="reference" @mouseover="checked(city.id)">{{city.Name}}</button>
+              <el-popover
+                placement="top-start"
+                trigger="hover"
+              >
+                <el-checkbox v-for="city in region" :label="city" :key="city.Name" >{{city.Name}}</el-checkbox>
+                <button slot="reference"  @mouseover="checked(city.id)">{{city.Name}}</button>
               </el-popover>
             </el-checkbox>
           </el-checkbox-group>
@@ -166,6 +162,7 @@
 <script>
 import listPage from "@/components/listPage";
 export default {
+
   components: {
     listPage
   },
@@ -175,9 +172,9 @@ export default {
       loading: false, //控制表格加载动画提示
       queryData: {
         keyWord: "",
-        isLocked: null, //0 查询锁定,1 查询未锁定,2 查询异常用户
-        del: 0, //0 查询在职员工,1 查询离职员工,2 查询待离职员工
-        type: 0 //0 内部  1 游客
+        isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户
+        del:0 ,//0 查询在职用户,1 查询离职用户,2 查询待离职用户
+        type:0 //0 内部  1 游客
       },
       configSet: {
         selectToTime: false,
@@ -192,7 +189,7 @@ export default {
         { prop: "perName", label: "姓名" },
         { prop: "deptName", label: "部门" },
         { prop: "companyName", label: "公司" },
-        { prop: "positionName", label: "岗位" }
+        { prop: "positionName", label: "岗位" },
       ],
       currentRow: null,
       tableData: [],

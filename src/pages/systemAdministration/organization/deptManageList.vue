@@ -66,7 +66,7 @@
         </div>
       </template>
       <template v-slot:tableColumn="cell">
-        <template v-for="item in cell.tableData">
+        <template v-for="item in cell.tableData"  >
           <el-table-column :prop="item.prop"
                            :label="item.label"
                            :width="item.width"
@@ -123,15 +123,12 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-
-        { prop: "deptName", label: "部门名" },
-        
-        { prop: "managerPer", label: "负责人" },
-        { prop: "deptParentID", label: "上级部门" },
-        { prop: "joinType", label: "加入类型" },
-        { prop: "deptType", label: "部门类型" },
-        { prop: "isLocked", label: "部门状态" },
-        { prop: "address", label: "部门地址" },
+        { prop: "deptName", label: "部门名" , width: "160px"},      
+        { prop: "managerPer", label: "负责人" , width:"160px"},
+        { prop: "joinType", label: "加入类型" , width:"160px"},
+        { prop: "deptType", label: "部门类型" , width:"160px"},
+        { prop: "isLocked", label: "部门状态" ,width: "160px" },
+        { prop: "address", label: "部门地址" , },
       ],
       tableData: [],
       treeData: [],

@@ -32,12 +32,12 @@
             ></el-input>
           </div>
         <div class="left-input-container">
-            <span>身份证id</span>
+            <span>身份证</span>
             <el-input
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.cardId"
-              maxlength="10"
+              maxlength="18"
               show-word-limit
             ></el-input>
         </div>
@@ -113,9 +113,10 @@
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.tel"
-              maxlength="10"
-              show-word-limit
-            ></el-input>
+              data-vv-name="tel"
+              data-vv-as="电话号码"
+              v-validate="'required|phone'"></el-input>
+              {{errorBags.first('tel')}}
         </div>
         <div class="left-input-container">
             <span>生日</span>
@@ -324,22 +325,7 @@
                 maxlength="10"
                 show-word-limit></el-input>
     </div>
-    <div class="left-input-container">
-      <span>社保</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="employeeEntity.sheBaoId"
-                maxlength="10"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>医保</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="employeeEntity.yiBaoId"
-                maxlength="10"
-                show-word-limit></el-input>
-    </div>
+    
 
     <div class="footerContainer el-top">
       <el-button type="primary"
@@ -392,8 +378,6 @@ export default {
         postAllowance: null,
         userImage: null,
         jieShaoName: null,
-        sheBaoId: null,
-        yiBaoId: null
       }
     };
   },

@@ -36,43 +36,43 @@
             size="mini"
             @click="queryEmployeeByParams"
           >查询</el-button>
-          <el-button type="primary" size="mini" @click="toAddEmployeePage">添加员工</el-button>
+          <el-button type="primary" size="mini" @click="toAddEmployeePage">添加用户</el-button>
           <el-button
             type="primary"
             style="margin-left:10px"
             size="mini"
             @click="queryEmployeeByIsLocked(0)"
-          >查询锁定员工</el-button>
+          >查询锁定用户</el-button>
           <el-button
             type="primary"
             style="margin-left:10px"
             size="mini"
             @click="queryEmployeeByIsLocked(1)"
-          >查询正常员工</el-button>
+          >查询正常用户</el-button>
           <el-button
             type="primary"
             style="margin-left:10px"
             size="mini"
             @click="queryEmployeeByIsLocked(2)"
-          >查询异常员工</el-button>
+          >查询异常用户</el-button>
           <el-button
             type="primary"
             style="margin-left:10px"
             size="mini"
             @click="queryEmployeeByDel(0)"
-          >查询在职员工</el-button>
+          >查询在职用户</el-button>
           <el-button
             type="primary"
             style="margin-left:10px"
             size="mini"
             @click="queryEmployeeByDel(1)"
-          >查询离职员工</el-button>
+          >查询离职用户</el-button>
           <el-button
             type="primary"
             style="margin-left:10px"
             size="mini"
             @click="queryEmployeeByDel(2)"
-          >查询待离职员工</el-button>
+          >查询待离职用户</el-button>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
@@ -99,6 +99,29 @@
         </el-table-column>
       </template>
     </list-page>
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="50%" >
+        <div class="left-input-container">
+            <span>离职时间</span>
+            <el-input
+              type="date"
+              placeholder="birthday"
+              v-model="employeeEntity.leaveTime"
+
+            ></el-input>
+            <span>离职原因</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.leaveMemo"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
+        </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose()" >取 消</el-button>
+        <el-button type="primary" @click="save()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -118,9 +141,13 @@ export default {
       queryData: {
         keyWord: "",
         isLocked: null, //0 查询锁定,1 查询未锁定,2 查询异常用户
-        del: 0, //0 查询在职员工,1 查询离职员工,2 查询待离职员工
+        del: 0, //0 查询在职用户,1 查询离职用户,2 查询待离职用户
         type: 0 //0 内部  1 游客
       },
+      employeeEntity:{  accountId:null,
+                        leaveTime:null,
+                        leaveMemo:null,
+                         },
       configSet: {
         selectToTime: false,
         selectTo: false
@@ -131,16 +158,17 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "id", label: "员工id" },
-        { prop: "perName", label: "员工名" },
+        { prop: "perName", label: "姓名" },
         { prop: "loginUser", label: "登录名" },
-        { prop: "deptName", label: "所在部门" },
-        { prop: "postName", label: "角色权限" },
+        { prop: "deptName", label: "部门" },
+        { prop: "postName", label: "角色" },
         { prop: "companyName", label: "公司" },
-        { prop: "roleName", label: "岗位名" },
-        { prop: "del", label: "是否有效: 0在职,1离职" }
+        { prop: "roleName", label: "岗位" },
+        { prop: "del", label: "状态" }
       ],
-      tableData: []
+      tableData: [],
+
+      dialogVisible:false,
     };
   },
   mounted() {
@@ -208,12 +236,12 @@ export default {
             this.pageJson.currentPage = result.data.currPage;
             this.tableData = result.data.list;
           } else {
-            console.log("查询员工管理列表结果：" + result.message);
+            console.log("查询用户管理列表结果：" + result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询员工管理列表失败");
+          console.log("查询用户管理列表失败");
           console.log(e);
         });
     },
@@ -223,32 +251,65 @@ export default {
     editEmployee(id) {
       this.$router.push({ path: "/sys/editemployee", query: { id: id } });
     },
-    delEmployee(id, del) {
-      this.$api
-        .post({
-          url: "/employee/del/" + id + "?del=" + del,
-          token: false,
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(e => {
-          let result = e.data;
-          if (result.code == 200) {
-            this.$alert("", "成功", {
-              dangerouslyUseHTMLString: false
-            });
-            this.$router.push({ path: "/sys/employeeList" });
-          }
-        })
-        .catch(e => {
-          console.log("失败");
-          console.log(e);
-        });
+    handleClose(){
+      this.dialogVisible = false;
+      this.employeeEntity = {};
+    },
+    save(){
+       this.dialogVisible = false;
+       let params= this.employeeEntity;
+       this.$api.post({
+        url: '/employee/del',
+        data: params,
+        token: false,
+        headers: { "Content-Type": "application/json;charset=UTF-8" }
+      }).then((e) => {
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          this.$alert('', '成功', {
+            dangerouslyUseHTMLString: false
+          });
+          this.$router.push({ path: "/sys/employeeList" });
+          console.log(result.data);
+          this.$message({ message: result.message });
+          this.employeeEntity = {};
+        }
+      }).catch((e) => {
+        console.log("失败");
+        console.log(e);
+      })
+    },
+    delEmployee(id) {
+     this.dialogVisible = true;
+     debugger;
+     this.employeeEntity.accountId=id;
+
     },
     distributeEvent(e, id) {
       this[e](id);
+      console.log(id);
     },
     resumeDelEmployee(id) {
-      this.delEmployee(id, 0);
+       this.$api.post({
+        url: '/employee/resume/'+id,
+        token: false,
+        headers: { "Content-Type": "application/json;charset=UTF-8" }
+      }).then((e) => {
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          this.$alert('', '成功', {
+            dangerouslyUseHTMLString: false
+          });
+          this.$router.push({ path: "/sys/employeeList" });
+          console.log(result.data);
+          this.$message({ message: result.message });
+        }
+      }).catch((e) => {
+        console.log("失败");
+        console.log(e);
+      })
     },
     leaveDelEmployee(id) {
       this.delEmployee(id, 1);

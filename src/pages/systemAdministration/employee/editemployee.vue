@@ -20,117 +20,113 @@
 <template>
   <div class="wrapper">
     <div class="left-input-container">
-      <span>姓名</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.perName"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>身份证id</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.cardId"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>性别</span>
-      <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" show-word-limit>
-        <el-option label="男" :value="0" />
-        <el-option label="女" :value="1" />
-      </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>状态</span>
-      <el-select
-        type="text"
-        placeholder="0实习，1试用，2正式，3离职"
-        v-model="employeeEntity.status"
-        show-word-limit
-      >
-        <el-option label="实习" :value="0" />
-        <el-option label="试用" :value="1" />
-        <el-option label="正式" :value="2" />
-        <el-option label="离职" :value="3" />
-      </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>现居住地址</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.address"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>学历ID</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.education"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>专业</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.speciality"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>Email</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.email"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>qq</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.qq"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>电话号码</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.tel"
-        maxlength="20"
-        show-word-limit
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>生日</span>
-      <el-input
-        type="date"
-        placeholder="birthday"
-        v-model="employeeEntity.tel"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </div>
-    <!-- <div class="left-input-container">
+            <span>姓名</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.perName"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
+          </div>
+        <div class="left-input-container">
+            <span>身份证id</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.cardId"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
+        </div>
+       <div class="left-input-container">
+            <span>性别</span>
+            <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" show-word-limit >
+              <el-option label="男" :value="0" />
+              <el-option label="女" :value="1" />
+            </el-select>
+        </div>
+        <div class="left-input-container">
+            <span>状态</span>
+            <el-select type="text" placeholder="0实习，1试用，2正式，3离职" v-model="employeeEntity.status" show-word-limit >
+              <el-option label="实习" :value="0" />
+              <el-option label="试用" :value="1" />
+              <el-option label="正式" :value="2" />
+              <el-option label="离职" :value="3" />
+            </el-select>
+        </div>
+        <div class="left-input-container">
+            <span>现居住地址</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.address"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
+        </div>
+        <div class="left-input-container">
+            <span>学历ID</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.education"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
+        </div>
+        <div class="left-input-container">
+            <span>专业</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.speciality"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
+        </div>
+        <div class="left-input-container">
+            <span>Email</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.email"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
+        </div>
+        <div class="left-input-container">
+            <span>qq</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.qq"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
+        </div>
+        <div class="left-input-container">
+            <span>电话号码</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.tel"
+              data-vv-name="tel"
+              data-vv-as="电话号码"
+              v-validate="'required|phone'"></el-input>
+              {{errorBags.first('tel')}}
+        </div>
+        <div class="left-input-container">
+            <span>生日</span>
+            <el-input
+              type="date"
+              placeholder="birthday"
+              v-model="employeeEntity.tel"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
+        </div>
+        <!-- <div class="left-input-container">
             <span>是否锁住：0 锁定，1正常，2三天未登录锁定，3三天未带看锁定</span>
             <el-input
               type="text"
@@ -141,35 +137,29 @@
             ></el-input>
     </div>-->
     <div class="left-input-container">
-      <span>部门id</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.perDeptId"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
+      <span>部门</span>
+      <el-input type="text"
+                placeholder="请输入内容"
+                v-model="employeeEntity.perDeptId"
+                maxlength="10"
+                show-word-limit></el-input>
     </div>
 
     <div class="left-input-container">
-      <span>角色id</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.perPostId"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
+      <span>角色</span>
+      <el-input type="text"
+                placeholder="请输入内容"
+                v-model="employeeEntity.perPostId"
+                maxlength="10"
+                show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>岗位ID</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.perRole"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
+      <span>岗位</span>
+      <el-input type="text"
+                placeholder="请输入内容"
+                v-model="employeeEntity.perRole"
+                maxlength="10"
+                show-word-limit></el-input>
     </div>
 
     <div class="left-input-container">
@@ -315,8 +305,8 @@
     <div class="left-input-container">
       <span>是否菁英：0默认，1是</span>
       <el-select type="text" placeholder="请选择" v-model="employeeEntity.isGold" show-word-limit>
-        <el-option :value="0" />
-        <el-option :value="1" />
+        <el-option label="默认" :value="0" />
+        <el-option label="是" :value="1" />
       </el-select>
     </div>
     <div class="left-input-container">
@@ -369,26 +359,7 @@
         show-word-limit
       ></el-input>
     </div>
-    <div class="left-input-container">
-      <span>社保ID</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.sheBaoId"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>医保ID</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.yiBaoId"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </div>
+
 
     <div class="footerContainer el-top">
       <el-button type="primary" @click="saveEmployee()">确定</el-button>
@@ -440,8 +411,6 @@ export default {
         postAllowance: null,
         userImage: null,
         jieShaoName: null,
-        sheBaoId: null,
-        yiBaoId: null
       },
       backUrl: null
     };
