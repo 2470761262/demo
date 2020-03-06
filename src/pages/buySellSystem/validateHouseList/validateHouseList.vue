@@ -29,7 +29,7 @@
                @handleClick="handleClick"
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
-      <template v-slot:tableColumn="cell">
+      <template v-slot:tableColumn>
         <el-table-column :width="item.width"
                          :formatter="item.formart"
                          :label="item.label"

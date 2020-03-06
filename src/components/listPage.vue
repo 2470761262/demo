@@ -2,7 +2,12 @@
 .page-body {
   height: 100%;
   display: flex;
-  flex-direction: column;
+  background: #fff;
+  .page-body-warp {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
   .page-body-conter {
     flex: 1;
     display: flex;
@@ -71,54 +76,61 @@
 </style>
 <template>
   <div class="page-body">
-    <div class="page-body-conter">
-      <div class="page-body-conter-left-slot">
-        <slot name="left"></slot>
-      </div>
-      <div class="page-body-conter-right">
-        <div class="query-center">
-          <slot name="top"></slot>
+    <div class="page-body-warp">
+      <div class="page-body-conter">
+        <div class="page-body-conter-left-slot">
+          <slot name="left"></slot>
         </div>
-        <el-table :data="tableData"
-                  border
-                  v-bind="$attrs"
-                  v-on="$listeners"
-                  v-loading="loading">
-          <slot name="tableColumn"
-                :tableData="tableDataColumn"></slot>
-        </el-table>
+        <div class="page-body-conter-right">
+          <div class="query-center">
+            <slot name="top"></slot>
+          </div>
+          <el-table :data="tableData"
+                    border
+                    v-bind="$attrs"
+                    v-on="$listeners"
+                    v-loading="loading">
+            <slot name="tableColumn"
+                  :tableData="tableDataColumn"></slot>
+          </el-table>
+        </div>
+      </div>
+      <div class="page-body-floot">
+        <el-pagination @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange"
+                       :current-page="pageJson.currentPage"
+                       :page-sizes="pageJson.sizes || [5,10,15,20]"
+                       :page-size="pageJson.size || 10"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="pageJson.total">
+        </el-pagination>
       </div>
     </div>
-    <div class="page-body-floot">
-      <el-pagination @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange"
-                     :current-page="pageJson.currentPage"
-                     :page-sizes="pageJson.sizes || [5,10,15,20]"
-                     :page-size="pageJson.size || 10"
-                     layout="total, sizes, prev, pager, next, jumper"
-                     :total="pageJson.total">
-      </el-pagination>
-    </div>
+    <sidebarList v-if="sidebarFlag"></sidebarList>
   </div>
 </template>
 <script>
+import sidebarList from './sidebarList';
 export default {
+  components: {
+    sidebarList,
+  },
   watch: {
     $attrs: {
       deep: true,
       immediate: true,
       handler: function (val, oldVal) {
         Object.assign(this.$data, val.parentData);
-        console.log(this);
       }
     }
   },
   data () {
     return {
+      sidebarFlag: true,
       loading: true,
       pageJson: {
-        sizes:[5,10,15,20],
-        size:10
+        sizes: [5, 10, 15, 20],
+        size: 10
       },
       tableDataColumn: [],
       tableData: [],
