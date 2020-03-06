@@ -13,6 +13,7 @@ import guard from "@/router/guard"; // 路由拦截器
 import elModelBox from '@/components/elModelBox';
 import * as socketApi from './util/webSocket'
 import themePackers from "@/themePackers/themePackers"; //主题
+import feedback from "@/components/feedback";
 import "babel-polyfill";
 Vue.prototype.socketApi = socketApi
 Vue.prototype.$api = Api;
@@ -20,6 +21,7 @@ Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(VueCookies);
 Vue.use(elModelBox);
+Vue.use(feedback);
 guard(router);
 themePackers.createImport();
 /* eslint-disable no-new */
