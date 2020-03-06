@@ -11,17 +11,19 @@
 .page-house-cell {
   display: flex;
   .house-left-tips {
-    width: 140px;
+    width: 120px;
     //  height: 200px;
     display: flex;
-    align-items: center;
+    //align-items: center;
     > span {
-      display: block;
       writing-mode: vertical-lr;
-      width: fit-content;
-      margin: 0 auto;
       color: var(--color--primary);
       font-size: 18px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 10px;
     }
   }
   &.for-house-cell {
@@ -208,7 +210,7 @@ const HosueList = [
 ];
 import getToken from "@/minxi/getUrlToken";
 import getMenuRid from "@/minxi/getMenuRid"
-import {  TOKEN } from "@/util/constMap";
+import { TOKEN } from "@/util/constMap";
 import util from "@/util/util";
 export default {
   provide () {
@@ -264,18 +266,18 @@ export default {
     navToPath (path) {
       this.$router.push({ path: path });
     },
-     GetRequest() {
+    GetRequest () {
       var href = window.location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", href);
-      var str=href.substring(href.indexOf("?"));
+      var str = href.substring(href.indexOf("?"));
       console.log("&&&&&", str);
       var theRequest = new URLSearchParams(str);
       console.log("*****", theRequest);
       var token = theRequest.get(TOKEN);
-      if(token){
+      if (token) {
         util.localStorageSet(TOKEN, token);
       }
-      console.log("傻逼傻逼：从地址tk获取到后放到storage:"+token);
+      console.log("傻逼傻逼：从地址tk获取到后放到storage:" + token);
       return token;
     },
     handleClick (e) {
