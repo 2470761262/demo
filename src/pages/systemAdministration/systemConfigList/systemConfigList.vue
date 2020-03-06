@@ -84,6 +84,7 @@
            @click="closepopup">
         <!--这里是要展示的内容层-->
         <div class="login">
+          <div style="font-size:7rem,float:right">×</div>
           <iframe style=""
                   class="if"
                   :src="url"> </iframe>
