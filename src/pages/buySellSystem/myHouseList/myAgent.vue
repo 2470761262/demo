@@ -50,7 +50,7 @@
                   v-model="queryData.maxInArea"
                   style="margin-left:10px;width:100px"></el-input>
 
-        <el-select v-model="value"
+        <!-- <el-select v-model="value"
                    filterable
                    placeholder="请选择">
           <el-option v-for="item in options"
@@ -59,7 +59,7 @@
                      :value="item.value">
           </el-option>
         </el-select>
-        <template slot="prepend">房源状态</template>
+        <template slot="prepend">房源状态</template> -->
         <el-date-picker v-model="queryData.timeSelect"
                         type="daterange"
                         range-separator="至"
@@ -89,14 +89,14 @@
       </el-table-column>
       <el-table-column label="栋座">
         <template v-slot="scope">
-          {{scope.row.BuildingName}}
+          {{scope.row.BuildingName}}栋--{{scope.row.RoomNo}}室
         </template>
       </el-table-column>
-      <el-table-column label="房间号">
+      <!-- <el-table-column label="房间号">
         <template v-slot="scope">
           {{scope.row.RoomNo}}
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column label="售价(万元)">
         <template v-slot="scope">
@@ -118,11 +118,11 @@
           {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
         </template>
       </el-table-column>
-      <el-table-column label="装修程度">
+      <!-- <el-table-column label="装修程度">
         <template v-slot="scope">
           {{scope.row.Decoration}}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="录入时间">
         <template v-slot="scope">
           {{scope.row.AddTime}}
@@ -137,32 +137,25 @@
                      size="mini">查看</el-button>
           <el-button type="info"
                      size="mini"
-                     @click="dialogVisible = true">调配</el-button>
+                     @click="toHouseData(scope.row.id,scope.row.CommunityName)">调配</el-button>
           <el-dialog title="跟单调配至本公司人员"
                      :visible.sync="dialogVisible"
                      :modal-append-to-body='false'
                      width="20%">
-            <el-select v-model="AgentPerId"
-                       @change="queryAddPerId()"
+            <el-select v-model="AgentPerId" @change="queryAddPerId()"
                        filterable
                        remote
                        clearable
-                       placeholder="请输入跟单人姓名进行搜索"
-                       :loading="loading">
-              <el-option v-for="item in AgentPerList"
-                         :key="item.accountID"
-                         :label="item.perName"
-                         :value="item.accountID">
+                       placeholder="请输入跟单人姓名进行搜索" :loading="loading">
+              <el-option v-for="item in AgentPerList" :key="item.accountID"
+                         :label="item.perName" :value="item.accountID">
                          <span style="float: left">{{item.perName}}</span>
-      <span style="float: right; color: #8492a6; font-size: 13px">{{item.deptName}}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{item.deptName}}</span>
               </el-option>
-              
             </el-select>
-            <span slot="footer"
-                  class="dialog-footer">
+            <span slot="footer"  class="dialog-footer">
               <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary"
-                         @click="updateAgentPer(scope.row.id)">确 定</el-button>
+              <el-button type="primary" @click="updateAgentPer">确 定</el-button>
             </span>
           </el-dialog>
         </template>
@@ -182,6 +175,8 @@ export default {
   data () {
     return {
       AgentPerId:'',
+      toHouseId:'',
+      toComName:'',
       dialogVisible: false,
       value: '',
       input: '',
@@ -243,6 +238,13 @@ export default {
     this. queryCompanyPerList();
   },
   methods: {
+    toHouseData(id,CommunityName){
+      var that = this
+      that.dialogVisible =  true
+      console.log("得到房源id为:"+id+"------楼盘名称"+CommunityName);
+      that.toHouseId = id;
+      that.toComName = CommunityName;
+    },
      querylistByParams () {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
@@ -325,12 +327,31 @@ export default {
         console.log("查询同公司下的所有经纪人失败");
       })
     },
-    updateAgentPer(id){
+    updateAgentPer(){
        var that = this
         console.log("得到跟单人id为:"+that.AgentPerId);
-        console.log("得到房源id为:"+id)
-        
-       that.dialogVisible = false
+        console.log("得到房源id为:"+that.toHouseId+"------楼盘名称"+that.toComName)
+       let params = { AgentPer:that.AgentPerId+'' , houseId : that.toHouseId+''};
+        this.$api.post({
+        url: '/agent_house/updateAgentPer',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: params,
+        token: false
+      }).then((e) => {
+        let result = e.data;
+        if (result.code == 200) {
+          this.$message({
+          message: '修改成功！',
+          type: 'success'
+        });
+        } else {
+          console.log("修改失败");
+        }
+      }).catch((e) => {
+        console.log("修改失败");
+      })
+      that.dialogVisible = false
+      this.querylistByParams ();
     },
     handleClick () {},
     handleSizeChange (val) {

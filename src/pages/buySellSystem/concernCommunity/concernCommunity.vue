@@ -287,9 +287,6 @@ export default {
   },
   methods: {
     selectedCommunity (e) {
-      // let that = this;
-      //  that.addComId = [{id:e,communityName:"东苑小区"}]
-      // console.log("aaaaaaaaaaaaaa"+this.queryData.selectCommunity)
       this.$confirm('是否确定关注该楼盘?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -297,6 +294,10 @@ export default {
       }).then(() => {
         this.addCommunity(e);
         this.querylistByParams();
+        this.$message({
+          message: '关注成功',
+          type: 'success'
+        });
       }).catch(() => {
         this.$message({
           type: 'info',
