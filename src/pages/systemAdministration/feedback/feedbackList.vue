@@ -6,7 +6,7 @@
 </style>
 <template>
   <div>
-    <feedback/>
+    <feedback />
     <list-page v-show="!showForm"
                :parentData="$data"
                @queryTabData="queryTabData"
@@ -22,14 +22,13 @@
             <template slot="prepend">关键字搜索</template>
           </el-input>
 
-          <el-date-picker
-            v-model="queryData.time"
-            type="daterange"
-            unlink-panels
-            value-format="yyyy-MM-dd"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
+          <el-date-picker v-model="queryData.time"
+                          type="daterange"
+                          unlink-panels
+                          value-format="yyyy-MM-dd"
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期">
             <template slot="prepend">日期选择</template>
           </el-date-picker>
 
@@ -48,10 +47,15 @@
                            :key="item.prop">
           </el-table-column>
         </template>
-        <el-table-column label="反馈图片" width="200px">
+        <el-table-column label="反馈图片"
+                         width="200px">
           <template v-slot="scope">
             <div class="demo-image__preview">
-              <el-image style="width: 40px; height: 40px" v-for="(iitem) in scope.row.pics"  :src="iitem" :preview-src-list="scope.row.pics"></el-image>
+              <el-image style="width: 40px; height: 40px"
+                        v-for="(iitem,index) in scope.row.pics"
+                        :src="iitem"
+                        :preview-src-list="scope.row.pics"
+                        :key="index"></el-image>
             </div>
           </template>
         </el-table-column>
@@ -82,9 +86,9 @@ export default {
       },
       tableDataColumn: [
         { prop: 'accountName', label: "反馈人名称", width: "100px", formatter: (row) => row.accountName },
-        { prop: 'functionPoint', label: "功能点",width: "200px",formatter: (row) => row.functionPoint },
+        { prop: 'functionPoint', label: "功能点", width: "200px", formatter: (row) => row.functionPoint },
         { prop: 'suggest', label: "反馈内容", formatter: (row) => row.suggest },
-        { prop: 'addTime', label: "反馈时间",width: "200px", formatter: (row) => row.addTime },
+        { prop: 'addTime', label: "反馈时间", width: "200px", formatter: (row) => row.addTime },
       ],
       tableData: [],
       positionObj: {},
@@ -108,7 +112,7 @@ export default {
       var that = this;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage };
       params.keyword = that.queryData.keyword;
-      if(that.queryData.time){
+      if (that.queryData.time) {
         params.beginTime = that.queryData.time[0];
         params.endTime = that.queryData.time[1];
       }
