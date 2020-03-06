@@ -39,7 +39,7 @@
     <template v-slot:left>
       <div class="Impression-body">
         <div style="height:30px">
-          <el-select v-model="MyImpressionList.impression"
+          <el-select v-model="imdataimdata"
                      @change="selectImpression($event)"
                      filterable
                      placeholder="请输入您添加过的房源印象">
@@ -67,7 +67,7 @@
                     @close="handleClose(item.id)"
                     type="success"
                     closable>
-              id:{{item.id}}　　印象:{{item.impression}}
+              {{item.impression}}
             </el-tag>
           </span>
         </div>
@@ -329,12 +329,28 @@ export default {
   },
   methods: {
     handleClose (tag) {
-      this.ImpressionList.splice(this.ImpressionList.indexOf(tag), 1);
+      console.log('删除前：', this.ImpressionList)
+      for (let i = 0; i < this.ImpressionList.length; i++) {
+        if (this.ImpressionList[i].id == tag) {
+          this.ImpressionList.splice(i, 1);
+        }
+      }
+      console.log('删除后：', this.ImpressionList)
+      this.querylistByParams();
     },
     selectImpression (e) {
       let that = this;
-      var addList = [{ id: e.id, impression: e.impression, houseId: e.houseId }];
-      that.ImpressionList = this.ImpressionList.concat(addList);
+      var selecti = 0;
+      for (var i = 0; i < that.ImpressionList.length; i++) {
+        if (that.ImpressionList[i].id == e.id) {
+          selecti = 1;
+        }
+      }
+      if (selecti == 1) {
+        that.ImpressionList = this.ImpressionList
+      } else {        var addList = [{ id: e.id, impression: e.impression, houseId: e.houseId }];
+        that.ImpressionList = this.ImpressionList.concat(addList);      }
+      this.querylistByParams();
     },
     remoteMethod (query) {
       var that = this
@@ -430,6 +446,7 @@ export default {
           type: 'warning'
         }).then(() => {
           that.ImpressionList = []
+          this.querylistByParams();
           this.$message({
             type: 'success',
             message: '清除成功!'
@@ -454,6 +471,7 @@ export default {
             console.log(e.data.code);
             if (e.data.code == 200) {
               that.ImpressionList = e.data.data;
+              this.querylistByParams();
             }
           })
           this.$message({
@@ -469,7 +487,6 @@ export default {
 
       }    },
     querylistByParams () {
-      console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
     querylist (currentPage) {

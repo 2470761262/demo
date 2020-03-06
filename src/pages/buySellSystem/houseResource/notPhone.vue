@@ -96,7 +96,7 @@
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
-                     @click="addPhone(scope.row.bhid)">录入号码</el-button>
+                     @click="addPhone(scope.row.bhid,scope.row.id)">录入号码</el-button>
           <el-button type="info"
                      size="mini"
                      @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhid,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
@@ -162,6 +162,7 @@ export default {
     }
   },
   mounted () {
+    console.log(1111111111111111)
     this.queryNotPhone(1);
   },
   methods: {
@@ -184,10 +185,40 @@ formatOrientation(row, column){
           return '---';
        }
 },
-    addPhone(id){
+    addPhone(id,esId){
         console.log(id)
-         var that = this;
-        that.$router.push({ path: '/buySellSystem/updatePhone', query: { "id": id } });
+         this.$prompt('请输业主手机号码', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /^\d{11}$/,
+          inputErrorMessage: '手机号码格式不正确'
+        }).then(({ value }) => {
+          this.$api.get({
+            url: "/houseResource/updatePhone",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
+            data: {
+              id: id,
+              tel: value,
+              esId:esId
+            }
+          }).then((e) => {
+            console.log(e.data.code)
+            if (e.data.code == 200) {
+             // this.$router.push({ path: '/buySellSystem/notPhone' });
+             this.queryNotPhone(1);
+            } else {
+              alert(e.data.message)
+            }
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });       
+        });
+        //that.$router.push({ path: '/buySellSystem/updatePhone', query: { "id": id } });
     },
     toSale (comId, cbId, bhId,communityName,buildingName,roomNo) {
       var that = this
