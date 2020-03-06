@@ -206,15 +206,26 @@
           {{scope.row.AddTime}}
         </template>
       </el-table-column>
-
+      <el-table-column label="操作"
+                       fixed="right"
+                       key="operation">
+        <template v-slot="scope">
+          <el-button type="info"
+                     size="mini"
+                     @click="distributeEvent(item.methosName,scope.row.id)"
+                     v-for="(item,index) in isForBut(scope.row.id)"
+                     :key="index">{{item.name}}</el-button>
+        </template>
+      </el-table-column>
     </template>
   </list-page>
 </template>
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import houseContrast from '@/minxi/houseContrast';
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, houseContrast],
   components: {
     listPage
   },
@@ -264,7 +275,7 @@ export default {
     }
   },
   mounted () {
-    this.querylist(1);
+    this.queryVerifyHouseDatas(1);
     this.queryConcernCount();
 
   },
@@ -308,7 +319,7 @@ export default {
       })
     },
     querylistByParams () {
-      this.querylist(1);
+      this.queryVerifyHouseDatas(1);
     },
     addCommunity (id, name) {
       console.log("参数-----id:" + id + "---name：" + name);
@@ -333,7 +344,7 @@ export default {
       })
       this.$router.push({ path: "/buySellSystem/concernCommunity" });
     },
-    querylist (currentPage) {
+    queryVerifyHouseDatas (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
 
@@ -437,8 +448,8 @@ export default {
         console.log(e);
       })
     },
- remoteInput () {
-   
+    remoteInput () {
+
       if (this.comId.length == 0) {
         this.remoteMethod();
       }
@@ -454,14 +465,14 @@ export default {
           token: false,
           qs: true,
           data: {
-             page: 1,
-             limit: 50,
-             communityName: query
+            page: 1,
+            limit: 50,
+            communityName: query
           }
         }).then((e) => {
           console.log(e.data)
           if (e.data.code == 200) {
-            
+
             that.loading = false;
             that.options = e.data.data.list;
           }
@@ -483,8 +494,8 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.roomNo='';
-            that.cbId='';
+          that.roomNo = '';
+          that.cbId = '';
           this.cbIdList = e.data.data.list;
         }
       })
@@ -503,7 +514,7 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.roomNo='';
+          that.roomNo = '';
           this.roomNoList = e.data.data.list;
         }
       })
@@ -516,11 +527,11 @@ export default {
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.querylist(1);
+      this.queryVerifyHouseDatas(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.querylist(val);
+      this.queryVerifyHouseDatas(val);
     },
   },
 }
