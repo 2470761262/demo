@@ -22,10 +22,38 @@
   padding: 15px 15px 15px;
   border-radius: 10px;
   float: left;
+  height: 500px;
+  overflow: scroll;
 }
 
 .el-form-item {
   margin-bottom: 0;
+}
+
+table {
+  width: 100%;
+  border-color: Black;
+  border-style: dotted;
+  border-width: 0px;
+  border-right-width: 1px;
+  border-bottom-width: 1px;
+  margin: 0;
+  padding: 0;
+  border-spacing: 0;
+  text-align: center;
+}
+td {
+  border-color: Black;
+  border-style: dotted;
+  border-width: 0px;
+  border-top-width: 1px;
+  border-left-width: 1px;
+  padding: 0;
+  height: 28px;
+}
+
+.el-textarea {
+  width: 80%;
 }
 </style>
 <template>
@@ -68,7 +96,7 @@
               :underline="false"
             >添加部门</el-button>
             <el-button type="text" @click="linkJumpEdit(0,formCom.id)" :underline="false">修改</el-button>
-            <el-link href="https://element.eleme.io" :underline="false">锁定</el-link>
+            <el-button type="text" @click="lock('company',formCom.id)" :underline="false">锁定</el-button>
           </el-form-item>
         </el-form>
         <el-form ref="formDep" :model="formDep" v-show="checkedType===1" label-width="100px">
@@ -95,34 +123,186 @@
               :underline="false"
             >添加下级公司</el-button>
             <el-button type="text" @click="linkJumpEdit(1,formDep.id)" :underline="false">修改</el-button>
-            <el-link href="https://element.eleme.io" :underline="false">锁定</el-link>
+            <el-button type="text" @click="lock('department',formDep.id)" :underline="false">锁定</el-button>
           </el-form-item>
         </el-form>
       </div>
-      <div class="elInfo">
-        <el-card class="box-card">
-          <div slot="header" class="clearfix">
-            <span>卡片名称</span>
-            <el-button style="float: right; padding: 3px 0" type="text">修改</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">离职</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">锁定</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">任命</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">人员异动</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">密码重置</el-button>
-            <el-button style="float: right; padding: 3px 0" type="text">手机备案</el-button>
-          </div>
-          <div v-for="o in 4" :key="o" class="text item">{{'列表内容 ' + o }}</div>
+      <div class="elInfo" v-show="checkedType===1" v-loading="loading" :style="contentStyleObj">
+        <div v-for="(item) in this.employeeData" :key="item.AccountID">
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <span>{{item.PerName}}</span>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="setPhone(item.AccountID)"
+              >手机备案</el-button>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="resetPwd(item.AccountID)"
+              >密码重置</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text" @click="quitSubmit()">人员异动</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text" @click="quitSubmit()">任命</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text" @click="quitSubmit()">锁定</el-button>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="userQuit(item.AccountID,item.PerName,item.DeptName,item.PerPost)"
+              >离职</el-button>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="userJumpEdit(item.EmpID)"
+              >修改</el-button>
+            </div>
+            <table>
+              <tr>
+                <td>账号：</td>
+                <td>{{item.LoginUser}}</td>
+                <td>账号状态：</td>
+                <td>{{["帐号锁定","正常","三天未登录锁定","三天未带看锁定"][item.islocked]}}</td>
+              </tr>
+              <tr>
+                <td>姓名：</td>
+                <td>{{item.PerName}}</td>
+                <td>性别：</td>
+                <td>{{["男","女"][item.sex]}}</td>
+              </tr>
+              <tr>
+                <td>电话：</td>
+                <td>{{item.Tel}}</td>
+                <td>身份证号：</td>
+                <td>{{item.CardId}}</td>
+              </tr>
+              <tr>
+                <td>岗位：</td>
+                <td>{{item.RoleName}}</td>
+                <td>部门：</td>
+                <td>{{item.DeptName}}</td>
+              </tr>
+              <tr>
+                <td>角色权限：</td>
+                <td>{{item.PerPost}}</td>
+                <td>星级：</td>
+                <td>{{item.levelName}}[{{item.LevelCode}}]</td>
+              </tr>
+              <tr>
+                <td>是否菁英：</td>
+                <td>{{["否","菁英经纪人","未设置"][item.IsGold==null?3:item.IsGold]}}</td>
+                <td>引进人：</td>
+                <td>{{item.JieShaoName}}</td>
+              </tr>
+              <tr>
+                <td>微信昵称：</td>
+                <td colspan="2">{{item.nickname}}</td>
+                <td>
+                  <el-image :src="item.WXImgUrl"></el-image>
+                </td>
+              </tr>
+              <tr>
+                <td>入职时间：</td>
+                <td>{{item.Regtime}}</td>
+                <td>在职状态：</td>
+                <td>（{{["实习","试用","正式","离职","其他"][item.Status==null?4:item.Status]}}）-{{["在职","离职","待离职","待审核","异常状态","未知状态"][item.Del==null?5:(item.Del==-2?4:item.Del)]}}</td>
+              </tr>
+            </table>
+            <br />
+            <el-collapse class="box-card" accordion>
+              <el-collapse-item title="more" name="1">
+                <table>
+                  <!-- <tr>
+                    <td>医保：</td>
+                    <td>{{item.YiBaoId==-1?"暂无":item.YiBaoId}}</td>
+                    <td>社保：</td>
+                    <td>{{item.SheBaoId==-1?"暂无":item.SheBaoId}}</td>
+                  </tr>-->
+                  <tr>
+                    <td>生日：</td>
+                    <td>{{item.Birthday!=null&&item.Birthday.length>10?item.Birthday.substring(0,10):item.Birthday}}</td>
+                    <td>学历：</td>
+                    <td>{{item.Education}}</td>
+                  </tr>
+                  <tr>
+                    <td>专业：</td>
+                    <td colspan="3">{{item.Speciality}}</td>
+                  </tr>
+                  <tr>
+                    <td>毕业学校：</td>
+                    <td colspan="3">{{item.GraduateSchool}}</td>
+                  </tr>
+                  <tr>
+                    <td>毕业时间：</td>
+                    <td colspan="3">{{item.Graduation}}</td>
+                  </tr>
+                  <tr>
+                    <td>户口所在地：</td>
+                    <td colspan="3">{{item.Address}}</td>
+                  </tr>
+                  <tr>
+                    <td>现居地：</td>
+                    <td colspan="3">{{item.Living}}</td>
+                  </tr>
+                  <tr>
+                    <td>紧急联系人：</td>
+                    <td>{{item.EmergencyContact}}（{{item.Relationship}}）</td>
+                    <td>联系电话：</td>
+                    <td>{{item.contactTelephone}}</td>
+                  </tr>
+                  <tr>
+                    <td>基础底薪：</td>
+                    <td>{{item.BasicSalary}}</td>
+                    <td>绩效薪酬：</td>
+                    <td>{{item.performancePay}}</td>
+                  </tr>
+                  <tr>
+                    <td>岗位津贴：</td>
+                    <td colspan="3">{{item.PostAllowance}}</td>
+                  </tr>
+                  <tr>
+                    <td>银行卡号：</td>
+                    <td colspan="3">{{item.Bankcard}}</td>
+                  </tr>
+                  <tr>
+                    <td>离职时间：</td>
+                    <td colspan="3">{{item.LeaveTime}}</td>
+                  </tr>
+                  <tr>
+                    <td>备注：</td>
+                    <td colspan="3">{{item.remark}}</td>
+                  </tr>
+                </table>
+              </el-collapse-item>
+            </el-collapse>
+          </el-card>
           <br />
-          <el-collapse class="box-card" accordion>
-            <el-collapse-item title="more" name="1">
-              <div>与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；</div>
-              <div>在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。</div>
-            </el-collapse-item>
-          </el-collapse>
-        </el-card>
-        <br />
+        </div>
       </div>
     </template>
+    <el-dialog title="离职信息" :visible.sync="dialogQuit" width="33%">
+      <el-form :model="form">
+        <span>{{this.quitInfo.name}}-{{this.quitInfo.dep}}-{{this.quitInfo.job}}</span>
+        <br />
+        <br />
+        <el-form-item label="离职时间">
+          <el-date-picker
+            v-model="quitPost.time"
+            align="right"
+            type="date"
+            placeholder="选择日期"
+            :picker-options="pickerOptions"
+          ></el-date-picker>
+        </el-form-item>
+        <br />
+        <el-form-item label="离职原因">
+          <el-input type="textarea" placeholder="请离职原因" v-model="quitPost.remark" width="100%"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogQuit = false">取 消</el-button>
+        <el-button type="primary" @click="quitSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -161,7 +341,51 @@ export default {
       },
       checkedId: null,
       checkedType: null,
-      loading: false
+      loading: false,
+      employeeData: [],
+      contentStyleObj: {
+        height: ""
+      },
+      dialogQuit: false,
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+        shortcuts: [
+          {
+            text: "今天",
+            onClick(picker) {
+              picker.$emit("pick", new Date());
+            }
+          },
+          {
+            text: "昨天",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24);
+              picker.$emit("pick", date);
+            }
+          },
+          {
+            text: "一周前",
+            onClick(picker) {
+              const date = new Date();
+              date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit("pick", date);
+            }
+          }
+        ]
+      },
+      quitInfo: {
+        name: null,
+        dep: null,
+        job: null
+      },
+      quitPost: {
+        id: null,
+        time: null,
+        remark: null
+      }
     };
   },
   mounted() {
@@ -273,7 +497,7 @@ export default {
               console.log(e);
             })
             .finally(e => {
-              this.loading = false;
+              this.employee(this.checkedId);
             });
         }
       }
@@ -305,7 +529,148 @@ export default {
           query: { id: id, back: "hrTree" }
         });
       }
+    },
+    lock(type, id) {
+      this.$confirm("确实锁定？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.loading = true;
+          let params = { id: id };
+          this.$api
+            .post({
+              url: "/" + type + "/lock",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              let result = e.data;
+              this.$message({
+                type: "info",
+                message: result.message
+              });
+            })
+            .catch(e => {
+              console.log("失败");
+              console.log(e);
+            })
+            .finally(e => {
+              this.loading = false;
+              this.$router.go(0);
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    },
+    employee(id) {
+      let params = { id: id };
+      this.$api
+        .post({
+          url: "/employee/dep/list",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            let data = result.data;
+            this.employeeData = data;
+          }
+        })
+        .catch(e => {
+          console.log("查询失败");
+          console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
+        });
+    },
+    getHeight() {
+      this.contentStyleObj.height = window.innerHeight - 140 + "px";
+    },
+    userJumpEdit(id) {
+      this.$router.push({
+        path: "/sys/editemployee",
+        query: { id: id, back: "hrTree" }
+      });
+    },
+    userQuit(id, name, dep, job) {
+      this.dialogQuit = true;
+      this.quitInfo.id = id;
+      this.quitInfo.name = name;
+      this.quitInfo.dep = dep;
+      this.quitInfo.job = job;
+      console.log(this.quitInfo);
+    },
+    quitSubmit() {
+      this.$message({
+        type: "error",
+        message: "开发中...请稍后"
+      });
+      this.dialogQuit = false;
+    },
+    setPhone(id) {
+      let params = { id: id };
+      this.$api
+        .post({
+          url: "/employee/set/phoneTag",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            this.$message({
+              type: "success",
+              message: result.message
+            });
+          } else {
+            this.$message.error(result.message);
+          }
+        })
+        .catch(e => {
+          this.$message.error(e.message);
+        });
+    },
+    resetPwd(id) {
+      let params = { id: id };
+      this.$api
+        .post({
+          url: "/employee/reset/pwd",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            this.$alert(result.message, "提示", {
+              confirmButtonText: "确定"
+            });
+          } else {
+            this.$message.error(result.message);
+          }
+        })
+        .catch(e => {
+          this.$message.error(e.message);
+        });
     }
+  },
+  created() {
+    window.addEventListener("resize", this.getHeight);
+    this.getHeight();
+  },
+
+  destroyed() {
+    window.removeEventListener("resize", this.getHeight);
   }
 };
 </script> 

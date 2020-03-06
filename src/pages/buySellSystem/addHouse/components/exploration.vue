@@ -1,100 +1,10 @@
 <style lang="less" scoped>
+@import url(../../../../assets/publicLess/upLoadFile.less);
 .page-cell-addHouse {
   padding: 30px 50px 0;
-  .upLoadFile {
-    display: flex;
-    margin-bottom: 100px;
-    &:last-child {
-      margin-bottom: 0;
-    }
-    .upLoadFile-title {
-      align-self: flex-start;
-      width: 80px;
-      font-size: 15px;
-      flex-shrink: 0;
-    }
-    .upLoadFile-flex {
-      flex: 1;
-    }
-    .upLoadFile-right {
-      flex: 1;
-      display: flex;
-    }
-    .upLoadFile-input {
-      border: 2px dashed #dcdfe6;
-      width: 100px;
-      height: 100px;
-      margin-right: 40px;
-      box-sizing: border-box;
-      flex-shrink: 0;
-      label {
-        display: block;
-        width: 100%;
-        height: 100%;
-        font-size: 50px;
-        color: #c0c4cc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        input {
-          display: none;
-        }
-      }
-    }
-    .upLoadFile-file-list {
-      flex: 1;
-      display: flex;
-      flex-wrap: wrap;
-      margin: 0 -10px;
-      .file-list-item {
-        margin-bottom: 10px;
-        flex: 0 0 25%;
-        position: relative;
-        padding: 0 10px;
-        box-sizing: border-box;
-        .upLoadFile-remove {
-          position: absolute;
-          top: -5px;
-          right: 5px;
-          font-size: 10px;
-          color: #fff;
-          width: 20px;
-          height: 20px;
-          border-radius: 50%;
-          background: red;
-          text-align: center;
-          line-height: 20px;
-        }
-        /deep/.el-image {
-          width: 100%;
-          height: 100px;
-        }
-        img,
-        video {
-          width: 100%;
-          height: 100px;
-          object-fit: cover;
-        }
-      }
-    }
-    .upLoadFile-file-phone {
-      margin-left: 40px;
-      flex-shrink: 0;
-      border: 2px dashed #dcdfe6;
-      width: 100px;
-      height: 100px;
-      margin-right: 20px;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      img {
-        width: 70px;
-        height: 70px;
-      }
-    }
-  }
+}
+/deep/.el-loading-spinner {
+  top: 30%;
 }
 </style>
 <template>
@@ -105,7 +15,9 @@
     <!-- 外景图 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">外景图</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="outdoorImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="outdoorImgList"
                class="el-icon-upload">
           <input id="outdoorImgList"
@@ -116,7 +28,7 @@
       </div>
       <div class="upLoadFile-file-list">
         <div class="file-list-item"
-             v-for="item in outdoorImgList"
+             v-for="(item,index) in outdoorImgList"
              :key="item.id">
           <el-image :src="item.url"
                     fit="cover"
@@ -126,19 +38,28 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'outdoorImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg[0]"
+                    :preview-src-list="[qrCodeImg[0]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
     <!-- 客厅 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">客厅</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="livingRoomImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="livingRoomImgList"
                class="el-icon-upload">
           <input id="livingRoomImgList"
@@ -159,19 +80,28 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'livingRoomImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg[1]"
+                    :preview-src-list="[qrCodeImg[1]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
     <!-- 卧室 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">卧室</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="bedroomImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="bedroomImgList"
                class="el-icon-upload">
           <input id="bedroomImgList"
@@ -192,19 +122,28 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'bedroomImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+           <el-image :src="qrCodeImg[2]"
+                    :preview-src-list="[qrCodeImg[2]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
     <!-- 厨房 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">厨房</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="kitchenImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="kitchenImgList"
                class="el-icon-upload">
           <input id="kitchenImgList"
@@ -225,19 +164,28 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'kitchenImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg[3]"
+                    :preview-src-list="[qrCodeImg[3]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
     <!-- 卫生间 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">卫生间</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="toiletImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="toiletImgList"
                class="el-icon-upload">
           <input id="toiletImgList"
@@ -258,19 +206,28 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'toiletImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg[4]"
+                    :preview-src-list="[qrCodeImg[4]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
     <!-- 户型图 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">户型图</div>
-      <div class="upLoadFile-input">
+      <div class="upLoadFile-input"
+           v-loading="layoutImgListLoading"
+           element-loading-text="文件上传中~">
         <label for="layoutImgList"
                class="el-icon-upload">
           <input id="layoutImgList"
@@ -291,12 +248,19 @@
               加载中<span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"></div>
+          <div class="upLoadFile-remove el-icon-delete"
+               @click="deleteImg(item.id,item.url,index,'layoutImgList')"></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+         <el-image :src="qrCodeImg[5]"
+                    :preview-src-list="[qrCodeImg[5]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -305,7 +269,9 @@
       <div class="upLoadFile-title">房源视频</div>
       <div class="upLoadFile-flex">
         <div class="upLoadFile-right">
-          <div class="upLoadFile-input">
+          <div class="upLoadFile-input"
+               v-loading="houseVideoLoading"
+               element-loading-text="文件上传中~">
             <label for="houseVideoList"
                    class="el-icon-upload">
               <input id="houseVideoList"
@@ -316,19 +282,32 @@
           <div class="upLoadFile-file-list">
             <div class="file-list-item"
                  v-if="houseVideo.url">
-              <video :src="houseVideo.url"></video>
-              <div class="upLoadFile-remove el-icon-delete"></div>
+              <video :src="houseVideo.url"
+                     @click="imgdiaLog = true"></video>
+              <div class="upLoadFile-remove el-icon-delete"
+                   @click="deleteVideo(houseVideo)"></div>
             </div>
           </div>
-          <div class="upLoadFile-file-phone">
-            <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                 alt="图片">
+          <div class="upLoadFile-file-phone">            
+            <el-image :src="qrCodeImgVedio"
+              :preview-src-list="[qrCodeImgVedio]"
+              fit="cover">
+              <div slot="placeholder"
+                    class="image-slot">
+                加载中<span>...</span>
+              </div>
+            </el-image>
             <div>微信扫码上传</div>
           </div>
         </div>
         <div>仅可以上传一个视频,时间为60秒.</div>
       </div>
     </div>
+    <!-- 视频弹框 -->
+    <el-model-box v-model="imgdiaLog">
+      <video :src="houseVideo.url"
+             controls></video>
+    </el-model-box>
   </div>
 </template>
 <script>
@@ -344,22 +323,156 @@ export default {
   mounted () {
     //true 则去获取数据
     if (this.getData) {
-      this.getLoadData();
+      this.promiseAllViodeoAndImg();
     }
+    this.currentIndex=0;
+    this.qrCodeImg=[];
+    this.webSocketUser=this.guid();
+    this.getQrCode();
+    this.getQrCodeForVedio();
   },
   data () {
     return {
+      imgdiaLog: false,
       loading: false,
+      outdoorImgListLoading: false,
+      livingRoomImgListLoading: false,
+      bedroomImgListLoading: false,
+      kitchenImgListLoading: false,
+      toiletImgListLoading: false,
+      layoutImgListLoading: false,
+      houseVideoLoading: false,
       outdoorImgList: [], //外景图
       livingRoomImgList: [],//客厅
       bedroomImgList: [],//卧室
       kitchenImgList: [],//厨房
       toiletImgList: [],//卫生间
       layoutImgList: [],//户型图
-      houseVideo: {}//房源视频
+      houseVideo: {},//房源视频
+      qrCodeImg:[],
+      qrCodeImgVedio:'',
+      qrCodeImgTemp:[],
+      currentIndex:0,
+      picParams:[{"picContainer":"outdoorImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-外景图片"},
+      {"picContainer":"livingRoomImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-客厅图片"},
+      {"picContainer":"bedroomImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卧室图片"},
+      {"picContainer":"kitchenImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-厨房图片"},
+      {"picContainer":"toiletImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-卫生间图片"},
+      {"picContainer":"layoutImgList","businessParams":JSON.stringify({"test":"闭环参数"}),"remark":"录入房源上传-户型图片"}],
+       websock: null,
+       webSocketUser:''
     }
   },
   methods: {
+    guid(){
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      });
+    },
+    receiveMessage(r){
+      console.log(r,"接收到了消息");
+      console.log(r.content,"消息内容");
+      if(r.content.resourceType=="vedio"){
+        this.houseVideo={"id":-1,"url":r.content.picUrl};
+      }else{
+        for(var i = 0;i<this.picParams.length;i++){
+                  //找到消息是发送给哪个二维码的
+                    if(this.picParams[i].qrCode==r.content.qrCode){
+                      let name=this.picParams[i].picContainer;
+                        console.log(name,"变量名字");
+                        console.log(this[name],"找到了指定用户");
+                        console.log(r.content.picUrl,"接受到消息的图片地址");
+                        this[name].push({"id":-1,"url":r.content.picUrl});
+                    }
+                }
+      }      
+    },
+    contactSocket (user) {
+      console.log("用户【" + user + "】开始接入");
+      this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""),user);
+      this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
+      console.log("用户【" + user + "】接入完毕");
+    },
+    getQrCodeForVedio(){
+        let that=this;
+        that.$api.post({
+                          url: '/scanUpload/getUploadQrCode',
+                          data: {'remark':"录入房源-上传视频","resourceType":"vedio","webSocketUser":that.webSocketUser},
+                          headers: { "Content-Type": "application/json" }
+                        }).then((e) => {
+                          let result = e.data;
+                          if (result.code == 200) {
+                              that.qrCodeImgVedio=(result.data.url);
+                          } else {
+                            console.log("h获取视频二维码结果：" + result.message);
+                            alert(result.message);
+                          }
+                        }).catch((e) => {
+                          console.log("查询视频二维码失败");
+                          console.log(e);
+                        })
+    },
+     getQrCode(){
+      let that=this;      
+      if(that.currentIndex>=that.picParams.length){
+        that.qrCodeImg=that.qrCodeImgTemp;
+        that.contactSocket(this.webSocketUser);
+        return;
+      }
+      var data = that.picParams[that.currentIndex];
+      data.webSocketUser=that.webSocketUser;    
+       that.$api.post({
+                      url: '/scanUpload/getUploadQrCode',
+                      data: data,
+                      headers: { "Content-Type": "application/json" }
+                    }).then((e) => {
+                      let result = e.data;
+                      if (result.code == 200) {
+                          //that.qrCodeImg="data:image/png;base64,"+item.img;
+                          that.qrCodeImgTemp[that.currentIndex]=(result.data.url);
+                          //二维码标识，用于消息接受的路由
+                          that.picParams[that.currentIndex].qrCode=result.data.qrCode;
+                          console.log(that.qrCodeImg);
+                      } else {
+                        console.log("h获取二维码结果：" + result.message);
+                        alert(result.message);
+                      }
+                      that.currentIndex=that.currentIndex+1;
+                      that.getQrCode();
+                    }).catch((e) => {
+                      that.currentIndex=that.currentIndex+1;
+                      console.log("查询二维码失败");
+                      console.log(e);
+                      that.getQrCode();
+                    })
+      
+    },
+    openVideo () {
+
+    },
+    promiseAllViodeoAndImg () {
+      this.loading = true;
+      Promise.all([this.getLoadDataImg(), this.getLoadDataVideo()]).catch(() => {
+        this.$message.error('获取数据失败~');
+      }).finally(() => {
+        this.loading = false;
+      })
+    },
+    getLoadDataVideo () {
+      this.$api.post({ url: `/draft-house/videos/${this.$store.state.addHouse.formData.id}` })
+        .then((e) => {
+          let data = e.data;
+          if (data.code == 200 && data.data.length != 0) {
+            this.houseVideo = data.data[0];
+          }
+        }).catch(() => {
+          this.$message.error('获取数据失败~');
+        }).finally(() => {
+          this.loading = false;
+        })
+    },
+    //返回预览大图list
     fillterImgList (imgList) {
       if (this[imgList].length > 0) {
         return this[imgList].map((item) => {
@@ -369,14 +482,40 @@ export default {
         return [];
       }
     },
-    getLoadData () {
-      this.$api.get({ url: `/draft-house/pictures/${this.$store.state.addHouse.formData.id}` }).then((e) => {
-        console.log(e, "e");
-      })
+    //获取上传的图片
+    getLoadDataImg () {
+      return this.$api.post({ url: `/draft-house/pictures/${this.$store.state.addHouse.formData.id}` })
+        .then((e) => {
+          let data = e.data;
+          if (data.code == 200) {
+            let imgList = data.data;
+            imgList.forEach((item) => {
+              switch (item.picClass) {
+                case 1:
+                  this.outdoorImgList.push(item);
+                  break;
+                case 2:
+                  this.livingRoomImgList.push(item);
+                  break;
+                case 3:
+                  this.bedroomImgList.push(item);
+                  break;
+                case 4:
+                  this.kitchenImgList.push(item);
+                  break;
+                case 5:
+                  this.toiletImgList.push(item);
+                  break;
+                case 6:
+                  this.layoutImgList.push(item);
+                  break;
+              }
+            })
+          }
+        })
     },
     //上传视频
     getVideoFile (fileListName, e) {
-      console.log(fileListName, e);
       let file = event.target.files;
       let isVideoType = ["video/mp4"];
       if (!isVideoType.includes(file[0].type)) {
@@ -400,11 +539,11 @@ export default {
     getFile (picClass, fileListName, e) {
       let file = event.target.files;
       let isImgType = ["image/jpeg", "image/png"];
-      if (file.length > 9 || file.length + this[fileListName].length > 9) {
-        this.$message.error("最多一次上传9张图片");
+      if (file.length > 6) {
+        this.$message.error("最多一次上传6张图片");
         return;
       }
-      for (let index = this[fileListName].length; index < file.length; index++) {
+      for (let index = 0; index < file.length; index++) {
         if (!isImgType.includes(file[index].type)) {
           this.$message.error("上传的图片只能是jpg,jpeg格式!");
           return;
@@ -414,24 +553,61 @@ export default {
         this.uploadSectionFile(picClass, file[index], fileListName);
       }
     },
+    //删除图片
+    deleteImg (id, url, index, listName) {
+      if(id==-1){//微信上传的视频或图片，没必要删除。接口删除的也是草稿箱，我微信上传图片没放那个草稿箱，而且oss不限容量，没必要删除图片
+        this[listName].splice(index, 1);
+        return;
+      }
+      this.$api.delete({
+        url: `/draft-house/picture/${id}`,
+        data: {
+          url: url
+        },
+        qs: true
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this[listName].splice(index, 1)
+        }
+      })
+    },
+    deleteVideo (item) {
+       //微信上传的视频或图片，没必要删除。他删除的也是草稿箱，我微信上传图片没放那个草稿箱，而且oss不限容量，没必要删除图片      
+      if(item.id==-1){
+        this.houseVideo = {};
+        return;
+      }
+      this.$api.delete({
+        url: `/draft-house/video/${item.id}`,
+        data: {
+          url: item.url
+        },
+        qs: true
+      }).then((e) => {
+        if (e.data.code == 200) {
+          this.houseVideo = {}
+        }
+      })
+    },
     uploadSectionFile (picClass, uploader, fileListName) {
       let that = this;
+      this[fileListName + 'Loading'] = true;
       let formData = new FormData();
       if (picClass != undefined) {
         formData.append('picClass', picClass)
       }
-      formData.append('draftid', that.$store.state.addHouse.formData.id)
+      formData.append('draftId', that.$store.state.addHouse.formData.id)
       formData.append('file', uploader)
       this.$api.post({
-        url: "/draft-house/picture",
+        url: `/draft-house/${picClass != undefined ? 'picture' : 'video'}`,
         headers: { "Content-Type": "multipart/form-data" },
         data: formData,
-        onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
-          if (progressEvent.lengthComputable) {
-            let num = Math.round((progressEvent.loaded / progressEvent.total) * 100)
-            console.log(num, "num");
-          }
-        }
+        // onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
+        //   if (progressEvent.lengthComputable) {
+        //     let num = Math.round((progressEvent.loaded / progressEvent.total) * 100)
+        //     console.log(num, "num");
+        //   }
+        // }
       }).then((json) => {
         if (json.data.code == 200) {
           if (picClass != undefined) {
@@ -446,6 +622,8 @@ export default {
           message: '不晓得为什么,反正失败了',
           type: 'warning'
         })
+      }).finally(() => {
+        this[fileListName + 'Loading'] = false;
       })
     },
     validateAll () {

@@ -257,7 +257,7 @@ input[type=number]::-webkit-outer-spin-button {
             <el-button :data-tel="houseDetails.Tel"
                        @click="dialPhoneToFD">联系业主</el-button>
           </div>
-
+          
         </div>
       </div>
     </div>
@@ -289,12 +289,12 @@ input[type=number]::-webkit-outer-spin-button {
           </div>
         </div>
         <el-button
-          v-if="houseDetails.isReleaseOutside!=1&&houseDetails.AgentPer==perId"
+          v-if="houseDetails.isReleaseOutside!=1&&(houseDetails.AgentPer==perId||isShowButton.releaseOutsideHouse)"
           slot="reference"
           @click="certificateType"
         >发布外网房源</el-button>
       </el-popover>
-       <el-button v-if="houseDetails.isReleaseOutside==1&&houseDetails.AgentPer==perId" @click="cancelOutsideHouse">
+       <el-button v-if="houseDetails.isReleaseOutside==1&&(houseDetails.AgentPer==perId||isShowButton.cancelOutsideHouse)" @click="cancelOutsideHouse">
          取消发布
        </el-button>
 
@@ -333,7 +333,7 @@ input[type=number]::-webkit-outer-spin-button {
             <div style="margin-top: 10px;font-size: medium;color: black;">
               对赌鑫币值<input type="number" v-model="betAmount" style="width: 80px;text-align: center" class="underline"/>个
             </div>
-              <span style="float: right;margin-right: 20px;font-size: small;">(对赌鑫币{{betConf.lower}}起投)</span>
+              <span style="float: right;margin-right: 20px;font-size: small;">(对赌鑫币100起投)</span>
           </div>
         </div>
         <div style="display: inline-flex;margin-top: 10px">
@@ -416,9 +416,9 @@ input[type=number]::-webkit-outer-spin-button {
           <el-button @click="cancelMethod">添加</el-button>
         </div>
         <el-button slot="reference"
-                   @click="isShowCancelMethod=true">取消作业方法</el-button>
+                   @click="isShowCancelMethod=true" v-if="isShowButton.cancelMethod">取消作业方法</el-button>
       </el-popover>
-      <el-button @click="houseLock">{{houseDetails.isLocking==1 ?"解锁房源":"锁定房源"}}</el-button>
+      <el-button @click="houseLock" v-if="isShowButton.locking">{{houseDetails.isLocking==1 ?"解锁房源":"锁定房源"}}</el-button>
       <el-popover placement="top"
                   width="600"
                   trigger="manual"
@@ -450,7 +450,7 @@ input[type=number]::-webkit-outer-spin-button {
         </div>
         <el-button slot="reference"
                    @click="showKeyStorageDept"
-                   v-if="agentHouseMethod.keyOwner==perId">修改钥匙存放门店</el-button>
+                   v-if="agentHouseMethod.keyOwner==perId||isShowButton.updateKeyStorageDept">修改钥匙存放门店</el-button>
       </el-popover>
     </div>
     <div class="query-cell"
@@ -491,14 +491,14 @@ input[type=number]::-webkit-outer-spin-button {
                 </div>
                 <div >
                     <el-dialog
-                       title="请填写完这些信息才能"
+                       title="请填写完这些信息才能申请为跟单人"
                        :visible.sync="isShowApplyAgent"
                        width="50%" :close-on-click-modal="false"
                        >
-                     <supplement ></supplement>
+                     <supplement  ref="com" :required="required"  :middleRadioTo="middleRadio" :primaryRadioTo="primaryRadio" :showFollow="showFollow"></supplement>
                       <span slot="footer" class="dialog-footer">
                       <el-button @click="isShowApplyAgent = false">取 消</el-button>
-                     <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+                     <el-button type="primary" @click="applyAgent">确 定</el-button>
                    </span>
                   </el-dialog>
                   <el-button @click="isShowApplyAgent=true">申请跟单人</el-button>
@@ -1314,8 +1314,8 @@ input[type=number]::-webkit-outer-spin-button {
                      :key="index">
                   <div>
                     <span>{{item.FollowTime}}</span>
-                    <el-button v-if="item.loginRoleId==1"
-                               @click="deleteFollow(item.id)">删除</el-button>
+                    <el-button 
+                               @click="deleteFollow(item.id)" v-if="isShowButton.deleteFollow">删除</el-button>
                   </div>
                   <div>
                     <div v-if="!item.isTellFollow">
@@ -1404,7 +1404,6 @@ export default {
         expireDay:0,
         odds:0,
         upper:0,
-        lower:0,
       },
       houseDetails: "", //房源详情数据
       houseFileList: [], //视频和图片数组
@@ -1485,7 +1484,20 @@ export default {
       recommendMemo:"",//推荐的原因
       isShowBuilding:false,//是否显示楼栋号
       isShowApplyAgent:false,//是否显示申请跟单人弹窗
-
+      required:true,//判断非空
+      middleRadio:0,
+      primaryRadio:0,
+      isShowButton:{
+        locking:false,
+        releaseOutsideHouse:false,
+        cancelOutsideHouse:false,
+        cancelMethod:false,
+        deleteFollow:false,
+        updateKeyStorageDept:false
+      },
+      ruleId:15,
+      showFollow:true,
+     
     };
   },
   before() {},
@@ -1509,7 +1521,6 @@ export default {
     else {
       this.houseId = util.localStorageGet("houseDetails.vue:houseId");
     }
-    debugger
     this.getBetInfo()
     console.log(this.$route.params.houseId);
     const chatTimer = setInterval(() => {
@@ -1524,12 +1535,12 @@ export default {
     if (util.localStorageGet("logindata")) {
       this.perId = util.localStorageGet("logindata").accountId;
     }
-    // this.$store.state.addHouse.formData.step2.balance="10";
     this.getHouseDetails();
     this.getisCollectHouse();
     this.getHouseFollow();
     this.getImpressionList();
     this.getisRecommend();
+    this.getAgentRules();
     this.$nextTick(() => {
       const el = document.querySelector(".act-not");
       const offsetHeight = el.offsetHeight;
@@ -1545,9 +1556,33 @@ export default {
       };
     });
   },
+   destroyed () {
+    this.$store.commit("resetFormData");
+  },
   methods: {
-    contactOwer(cmd){
-      console.log(cmd);
+    getAgentRules(){
+      let that=this;
+      this.$api.get({
+        url: '/sys/rule/function/list',
+        data:{
+          rId:that.ruleId
+        },
+        token: false
+      }).then((e) => {
+         e.data.data.functionRuleList.forEach(element=>{
+           if(that.isShowButton.hasOwnProperty(element.rUrl)){
+               that.isShowButton[element.rUrl]=true;
+           }  
+         })
+      }).catch((e) => {
+      })
+    },
+    applyAgent(){
+      let flag=this.$refs.com.validateAllNotUpdata();
+
+    },
+    contactOwer(cmd){    
+       console.log(cmd);
       let p={};
       p["contactPhone"+cmd]=this.houseDetails["Tel"+cmd];
       p["isLookPhone"]=true;
@@ -1582,11 +1617,11 @@ export default {
           this.betConf.odds=data.data.odds;
           this.betConf.upper=data.data.upper;
         } else {
-          console.log("查询对赌参数结果：" + result.message);
+          console.log("查询对赌房源列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询对赌参数失败");
+        console.log("查询对赌房源列表失败");
         console.log(e);
       })
     },
@@ -1602,18 +1637,18 @@ export default {
         if (data.code == 200) {
           this.betExpire=data.data.EndTime;
         } else {
-          console.log("查询对赌房源结果：" + data.message);
-          this.$message.error(data.message);
+          console.log("查询对赌房源列表结果：" + result.message);
+          alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询对赌房源失败");
-        this.$message.error(e);
+        console.log("查询对赌房源列表失败");
+        console.log(e);
       })
     },
     addBet(){
       var that =this;
-      if(that.betAmount<that.betConf.lower||that.betAmount> that.betConf.upper){
-        this.$message.error(that.betConf.lower+"起投！封顶" +  that.betConf.upper);
+      if(that.betAmount<100||that.betAmount> that.betConf.upper){
+        this.$message.error("100起投！封顶" +  that.betConf.upper);
         return
       }
       let params={"HouseId":that.houseId,"Amount":that.betAmount};
@@ -1658,7 +1693,7 @@ export default {
         return;
       }
       let p={
-        "contactPhone": phone
+        "contactPhone": phone        
       }
       this.dailPhone(0, p);
     },
@@ -1678,7 +1713,7 @@ export default {
             "houseType": 0,
             "housePrice": that.houseDetails.Price,
             "houseArea": that.houseDetails.InArea,
-            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主
+            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主            
             "remark": that.houseDetails.Title          };
           let dailParams={};
           Object.assign(dailParams,oldParams,phoneObj);
@@ -1867,7 +1902,6 @@ export default {
       }
       let params = {
         Eid: this.houseId,
-        operationPer: this.agentHouseMethod.keyOwner,
         KeyStorageDept: this.keyStorageDept
       };
       this.isShowKeyStorageDept = false;
@@ -2024,6 +2058,9 @@ export default {
                         height: 150,
                         text: that.houseDetails.shareQRCode,
             });
+           // that.$store.state.addHouse.formData.step2=;
+            that.$store.commit("updateStep2",that.houseDetails.applyAgentVo);
+
             that.agentHouseMethod = that.houseDetails.agentHouseMethod;
             that.elevator = util.analysisElevator(that.houseDetails.Elevator);
             that.sign = util.analysisSign(that.houseDetails.sign);
@@ -2044,6 +2081,18 @@ export default {
                 that.houseDetails.SchoolRool.length
               );
             }
+            if(!util.isNotNull(that.primarySchoolRool)&&that.primarySchoolRool=="占用"){
+                that.primaryRadio=1;
+            }
+            else{
+              that.primaryRadio=0;
+            }
+            if(!util.isNotNull(that.middleSchoolRool)&&that.middleSchoolRool=="占用"){
+                that.middleRadio=1;
+            }
+            else{
+                that.primaryRadio=0;
+            }
             if (that.houseDetails.remark != null && that.houseDetails.remark.indexOf("$") != -1) {
               var Arry1 = that.houseDetails.remark.split("$");
               for (var i = 0; i < Arry1.length; i++) {
@@ -2051,15 +2100,20 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     that.communityPresentation = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.communityDesc=Arry2[1]==null?'':Arry2[1];
                     break;
                   case "户型介绍":
                     that.houseTypePresentation = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.roomDesc=Arry2[1]==null?'':Arry2[1];
+                     that.$store.state.addHouse.formData.step2.title="";
                     break;
                   case "税费解析":
                     that.taxParsing = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.taxDesc=Arry2[1]==null?'':Arry2[1];
                     break;
                   case "核心卖点":
                     that.coreSellingPoint = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.saleDesc=Arry2[1]==null?'':Arry2[1];
                     break;
                 }
               }
@@ -2256,7 +2310,11 @@ export default {
           if (e.data.code == 200) {
             that.reloadList();
           }
-
+          else{
+            that.$message(e.data.message)
+          }
+        }).catch(e=>{
+            that.$message(e.data.message)
         });
     },
     insertFollow () {
@@ -2638,7 +2696,7 @@ export default {
       let arry = obj.conditionList;
       let params = obj.params;
       for (var i = 0; i < arry.length; i++) {
-        if (arry[i].condition) {
+        if (!arry[i].condition) {
           that.$message(arry[i].memo);
           return;
         }
@@ -2680,26 +2738,27 @@ export default {
         switchType = replaceType;
         url = "/agentHouse/propertyCheck/insertReplace";
       }
+      this.$validator;
       switch (switchType) {
         case 3:
         case 0:
           conditionList.push({
-            condition: util.isNull(that.keyType),
-            memo: "取代的钥匙类型未选择"
+            condition: util.isNotNull(that.keyType),
+            memo: "钥匙类型未选择"
           });
           if (that.keyType == "2") {
             conditionList.push({
-              condition: util.isNull(that.keyCode),
+              condition: util.isNotNull(that.keyCode),
               memo: "钥匙锁密码未填"
             });
             params.keyCode = that.keyCode;
           }
           conditionList.push({
-            condition: util.isNull(that.keyStorageDept),
+            condition: util.isNotNull(that.keyStorageDept),
             memo: "存放门店未选择"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list7"].join(",")),
+            condition: util.isNotNull(that.fileList["list7"].join(",")),
             memo: "委托图片未上传"
           });
           params.OldOwner = that.agentHouseMethod.keyOwner;
@@ -2713,15 +2772,15 @@ export default {
         case 2:
         case 1:
           conditionList.push({
-            condition: util.isNull(that.onlyType),
-            memo: "取代的委托类型未选择"
+            condition: util.isNotNull(that.onlyType),
+            memo: "委托类型未选择"
           });
           conditionList.push({
-            condition: util.isNull(that.proxyMaxTime),
+            condition: util.isNotNull(that.proxyMaxTime),
             memo: "委托截止未选择"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list7"].join(",")),
+            condition: util.isNotNull(that.fileList["list7"].join(",")),
             memo: "委托图片未上传"
           });
           params.OldOwner = that.agentHouseMethod.onlyOwner;
@@ -2735,31 +2794,31 @@ export default {
         case 12:
         case 5:
           conditionList.push({
-            condition: util.isNull(that.fileList["list1"].join(",")),
+            condition: util.isNotNull(that.fileList["list1"].join(",")),
             memo: "外景图未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list4"].join(",")),
+            condition: util.isNotNull(that.fileList["list4"].join(",")),
             memo: "客厅未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list2"].join(",")),
+            condition: util.isNotNull(that.fileList["list2"].join(",")),
             memo: "卧室未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list3"].join(",")),
+            condition: util.isNotNull(that.fileList["list3"].join(",")),
             memo: "厨房未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list5"].join(",")),
+            condition: util.isNotNull(that.fileList["list5"].join(",")),
             memo: "卫生间未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list6"].join(",")),
+            condition: util.isNotNull(that.fileList["list6"].join(",")),
             memo: "户型图未上传"
           });
           conditionList.push({
-            condition: util.isNull(that.fileList["list8"].join(",")),
+            condition: util.isNotNull(that.fileList["list8"].join(",")),
             memo: "视频未上传"
           });
           params.OldOwner = that.agentHouseMethod.realOwner;

@@ -302,3 +302,83 @@ export const HOUSEDELIVERY = [ //交房时间 houseDelivery
     value: 1
   },
 ]
+
+export const MORTGAGEBANK= [ //抵押银行 mortgageBank
+  {
+    key: "中国工商银行",
+    value: 0
+  },
+  {
+    key: "中国建设银行",
+    value: 1
+  },
+  {
+    key: "中国农业银行",
+    value: 2
+  },
+  {
+    key: "中国银行",
+    value: 3
+  },
+  {
+    key: "中国邮政储蓄银行",
+    value: 4
+  },
+  {
+    key: "农商银行",
+    value: 5
+  },
+  {
+    key: "交通银行",
+    value: 6
+  },
+  {
+    key: "招商银行",
+    value: 7
+  },
+
+  {
+    key: "光大银行",
+    value: 8
+  },
+  {
+    key: "民生银行",
+    value: 9
+  },
+  {
+    key: "平安银行",
+    value: 10
+  },
+  {
+    key: "浦发银行",
+    value: 11
+  },
+  {
+    key: "中信银行",
+    value: 12
+  },
+  {
+    key: "兴业银行",
+    value: 13
+  },
+  {
+    key: "华夏银行",
+    value: 14
+  }
+]
+
+export const FOLLOWWAY=[//跟进类型 followWay
+  {
+    key: "出售条件变化",
+    value: 27
+  },
+  {
+    key: "业主心态状态",
+    value: 28
+  },
+  {
+    key: "其他",
+    value: 11
+  }
+]
+

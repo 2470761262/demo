@@ -5,30 +5,54 @@
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
       <div class="page-form-inline ">
-        <el-input placeholder="楼盘名称"
-                  style="width:280px"
-                  v-model="queryData.CommunityName">
-          <template slot="prepend">楼盘名称 </template>
-        </el-input>
-        <el-input placeholder="栋座"
-                  v-model="queryData.BuildingName"
-                  style="margin-left:10px;width:100px"></el-input>
-        <el-input placeholder="房间号"
-                  v-model="queryData.RoomNo"
-                  style="margin-left:10px;width:100px"></el-input>
-        <el-input placeholder="姓名"
-                  style="margin-left:30px;width:240px"
-                  v-model="queryData.Customers"
-                  clearable>
-          <template slot="prepend">业主</template>
-        </el-input>
 
-        <el-input placeholder="业主电话"
-                  v-model="queryData.Tel"
-                  style="margin-left:30px;width:240px"
-                  clearable>
-          <template slot="prepend">电话</template>
-        </el-input>
+        <el-item label="楼盘名称"
+                 prop="comId">
+          <el-select v-model="queryData.CommunityName"
+                     @focus="remoteInput"
+                     @change="queryCBId()"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="请输入楼盘名称搜索"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in optionsList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
+        <el-item label="栋座"
+                 prop="cbId"
+                 class="page-label-center">
+          <el-select v-model="queryData.BuildingName"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
+        <el-item label="房间号"
+                 prop="roomNo"
+                 clearable
+                 class="page-label-center">
+          <el-select v-model="queryData.RoomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
 
         <el-input placeholder="最小值"
                   v-model="queryData.minPrice"
@@ -178,6 +202,9 @@ export default {
   },
   data () {
     return {
+      optionsList: [],
+      cbIdList: [],
+      roomNoList: [],
       dialogVisible: false,
       value: '',
       input: '',
@@ -226,7 +253,9 @@ export default {
         label: '已过期'
       }],
       queryData: {
-        communityName: '',
+        CommunityName: '',
+        BuildingName: '',
+        RoomNo: '',
         timeSelect: '',
 
       },
@@ -333,6 +362,77 @@ export default {
       return array.filter((item) => {
         this.item.push("12222222222222222222222222222222222")
         return item.isType.includes(type)
+      })
+    },
+    remoteInput () {
+
+      if (this.queryData.CommunityName.length == 0) {
+        this.remoteMethod();
+      }
+    },
+    remoteMethod (query) {
+      var that = this
+      if (query !== '') {
+        console.log(query);
+        this.loading = true;
+        this.$api.get({
+          url: "/mateHouse/queryCommunity",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            page: 1,
+            limit: 50,
+            communityName: query
+          }
+        }).then((e) => {
+          console.log(e.data)
+          if (e.data.code == 200) {
+
+            that.loading = false;
+            that.optionsList = e.data.data.list;
+          }
+        })
+      } else {
+        this.optionsList = [];
+      }
+      console.log("remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
+    },
+    queryCBId () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryComBuilding",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: this.queryData.CommunityName
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.queryData.RoomNo = '';
+          that.queryData.BuildingName = '';
+          this.cbIdList = e.data.data.list;
+        }
+      })
+      console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
+    },
+    queryRoomNo () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryBuildIngHouses",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: this.queryData.CommunityName,
+          cbId: this.queryData.BuildingName
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.queryData.RoomNo = '';
+          this.roomNoList = e.data.data.list;
+        }
       })
     },
     handleClick () {

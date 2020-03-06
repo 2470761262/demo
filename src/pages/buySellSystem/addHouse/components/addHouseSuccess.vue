@@ -82,11 +82,10 @@ export default {
     }
   },
   created () {
-    console.log(11111);
-    this.validateAll();
+    this.getQr();
   },
   methods: {
-    validateAll () {
+    getQr () {
       let that = this;
       this.$api.post({
         url: '/verifyHouse/invitationToVerify',
@@ -111,6 +110,16 @@ export default {
         that.loading = false;
       })
     },
+    validateAll () {
+      let that = this;
+      this.$api.put({
+        url: '/draft-house/reset',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: {
+          id: that.$store.state.addHouse.formData.id
+        }
+      })
+    }
   },
 }
 </script>

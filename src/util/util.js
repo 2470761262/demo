@@ -59,6 +59,7 @@ export default {
         return "无"
     }
   },
+  //添加房源数据对比
   diffGet(rData, nowData) {
     var rData = JSON.parse(JSON.stringify(rData));
     var nowData = JSON.parse(JSON.stringify(nowData));
@@ -67,12 +68,20 @@ export default {
         if (JSON.stringify(nowData[item]) == JSON.stringify(rData[item])) {
           delete nowData[item];
         }
+      } else if (rData[item] == null) {
+        delete nowData[item];
       }
     }
     return nowData;
   },
   isNull(value) {
-    if (value != 0 && (value == "" || value == null)) {
+    if (value != 0 && (value === "" || value === null)) {
+      return true;
+    }
+    return false;
+  },
+  isNotNull(value) {
+    if (value != "" && value !== null) {
       return true;
     }
     return false;
@@ -84,5 +93,17 @@ export default {
       flag = false;
     }
     return flag;
+  },
+  timeToStr(time) {
+    var m = 0,
+      s = 0,
+      _m = '00',
+      _s = '00';
+    time = Math.floor(time % 3600);
+    m = Math.floor(time / 60);
+    s = Math.floor(time % 60);
+    _s = s < 10 ? '0' + s : s + '';
+    _m = m < 10 ? '0' + m : m + '';
+    return _m + ":" + _s;
   }
 }
