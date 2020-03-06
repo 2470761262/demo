@@ -21,8 +21,7 @@
       background-color: rgb(84, 92, 100);
     }
     .children-page {
-      //height: calc(100% - 14px);
-      height: 100%;
+      height: calc(100% - 55px);
       box-sizing: border-box;
     }
   }
