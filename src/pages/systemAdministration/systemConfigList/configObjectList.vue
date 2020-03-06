@@ -176,7 +176,8 @@ export default {
         taskName: '',
         selectValue: '',
         timeSelect: '',
-      }
+      },
+      hide: false,
     }
   },
   mounted () {
@@ -312,13 +313,17 @@ export default {
     },
     isForBut (type) {
       let array = [
-
+        { name: '修改', isType: '1,2,3', methosName: 'postUpdate' },
         { name: '转有效', isType: '1,2,3', methosName: 'updateDelRight' },
         { name: '转无效', isType: '1,2,3', methosName: 'updateDelLeft' },
       ]
       return array.filter((item) => {
         return item.isType.includes(type)
       })
+    },
+    postUpdate (id) {
+      this.hide = true;
+      this.$router.push({ name: "addConfigObject", params: { objectId: id } });
     },
     handleClick () {
 
@@ -338,8 +343,9 @@ export default {
 
   },
   destroyed () {
-    but.$emit('asideNav', true);
-    But.$off('asideNav')
+    if (this.hide != true)
+      but.$emit('asideNav', true);
+    but.$off('asideNav')
   }
 }
 </script>
