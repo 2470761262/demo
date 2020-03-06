@@ -257,7 +257,7 @@ input[type=number]::-webkit-outer-spin-button {
             <el-button :data-tel="houseDetails.Tel"
                        @click="dialPhoneToFD">联系业主</el-button>
           </div>
-          
+
         </div>
       </div>
     </div>
@@ -333,7 +333,7 @@ input[type=number]::-webkit-outer-spin-button {
             <div style="margin-top: 10px;font-size: medium;color: black;">
               对赌鑫币值<input type="number" v-model="betAmount" style="width: 80px;text-align: center" class="underline"/>个
             </div>
-              <span style="float: right;margin-right: 20px;font-size: small;">(对赌鑫币100起投)</span>
+              <span style="float: right;margin-right: 20px;font-size: small;">(对赌鑫币{{betConf.lower}}起投)</span>
           </div>
         </div>
         <div style="display: inline-flex;margin-top: 10px">
@@ -1404,6 +1404,7 @@ export default {
         expireDay:0,
         odds:0,
         upper:0,
+        lower:0,
       },
       houseDetails: "", //房源详情数据
       houseFileList: [], //视频和图片数组
@@ -1484,7 +1485,7 @@ export default {
       recommendMemo:"",//推荐的原因
       isShowBuilding:false,//是否显示楼栋号
       isShowApplyAgent:false,//是否显示申请跟单人弹窗
-     
+
     };
   },
   before() {},
@@ -1508,6 +1509,7 @@ export default {
     else {
       this.houseId = util.localStorageGet("houseDetails.vue:houseId");
     }
+    debugger
     this.getBetInfo()
     console.log(this.$route.params.houseId);
     const chatTimer = setInterval(() => {
@@ -1544,7 +1546,7 @@ export default {
     });
   },
   methods: {
-    contactOwer(cmd){  
+    contactOwer(cmd){
       console.log(cmd);
       let p={};
       p["contactPhone"+cmd]=this.houseDetails["Tel"+cmd];
@@ -1580,11 +1582,11 @@ export default {
           this.betConf.odds=data.data.odds;
           this.betConf.upper=data.data.upper;
         } else {
-          console.log("查询对赌房源列表结果：" + result.message);
+          console.log("查询对赌参数结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询对赌房源列表失败");
+        console.log("查询对赌参数失败");
         console.log(e);
       })
     },
@@ -1600,18 +1602,18 @@ export default {
         if (data.code == 200) {
           this.betExpire=data.data.EndTime;
         } else {
-          console.log("查询对赌房源列表结果：" + result.message);
-          alert(result.message);
+          console.log("查询对赌房源结果：" + data.message);
+          this.$message.error(data.message);
         }
       }).catch((e) => {
-        console.log("查询对赌房源列表失败");
-        console.log(e);
+        console.log("查询对赌房源失败");
+        this.$message.error(e);
       })
     },
     addBet(){
       var that =this;
-      if(that.betAmount<100||that.betAmount> that.betConf.upper){
-        this.$message.error("100起投！封顶" +  that.betConf.upper);
+      if(that.betAmount<that.betConf.lower||that.betAmount> that.betConf.upper){
+        this.$message.error(that.betConf.lower+"起投！封顶" +  that.betConf.upper);
         return
       }
       let params={"HouseId":that.houseId,"Amount":that.betAmount};
@@ -1656,7 +1658,7 @@ export default {
         return;
       }
       let p={
-        "contactPhone": phone        
+        "contactPhone": phone
       }
       this.dailPhone(0, p);
     },
@@ -1676,7 +1678,7 @@ export default {
             "houseType": 0,
             "housePrice": that.houseDetails.Price,
             "houseArea": that.houseDetails.InArea,
-            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主            
+            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主
             "remark": that.houseDetails.Title          };
           let dailParams={};
           Object.assign(dailParams,oldParams,phoneObj);
