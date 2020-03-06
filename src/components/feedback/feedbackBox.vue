@@ -5,6 +5,13 @@
     margin: 0px;
   }
 
+  .back_btn{
+    text-align: left;
+    margin: 0px;
+    display: inline-block;
+    float: left;
+  }
+
   .feedback_divider {
     margin: 10px 0 24px 0;
   }
@@ -51,6 +58,14 @@
     </el-dialog>
 
     <div class="feedback_box">
+      <div class="back_btn">
+        <el-link slot="reference" @click="goHome" class="feedback_btn" type="primary"
+                 icon="el-icon-s-home">首页
+        </el-link>
+        <el-link slot="reference" @click="goBack" class="feedback_btn" type="primary"
+                 icon="el-icon-back">返回
+        </el-link>
+      </div>
       <el-link slot="reference" @click="outerVisible = true" class="feedback_btn" type="warning"
                icon="el-icon-edit-outline">功能反馈
       </el-link>
@@ -65,6 +80,12 @@
   import { TOKEN } from '@/util/constMap';
 
   export default {
+    props: {
+      homeUrl: {
+        type: String,
+        default: "/buySellSystem/houseList"
+      },
+    },
     data() {
       return {
         form:{
@@ -160,6 +181,12 @@
         }else{
           done();
         }
+      },
+      goBack(){
+        this.$router.go(-1);
+      },
+      goHome(){
+        this.$router.push({path:this.homeUrl});
       }
     }
   }

@@ -143,6 +143,7 @@
 </style>
 <template>
   <div class="page-back-color">
+    <feedback/>
     <div class="page-house-cell nav-back">
       <div class="page-house-cell house-left-tips"><span>为你推荐</span></div>
       <div class="page-house-cell for-house-cell">

@@ -10,18 +10,16 @@ import VueCookies from 'vue-cookies';//cookies
 import "./validate/validate"; //表单验证
 import Api from "@/api/require"; //请求api
 import guard from "@/router/guard"; // 路由拦截器
-import elModelBox from '@/components/elModelBox';
 import * as socketApi from './util/webSocket'
 import themePackers from "@/themePackers/themePackers"; //主题
-import feedback from "@/components/feedback";
+import componentsIndex from "@/components/index";
 import "babel-polyfill";
 Vue.prototype.socketApi = socketApi
 Vue.prototype.$api = Api;
 Vue.config.productionTip = false;
 Vue.use(ElementUI);
 Vue.use(VueCookies);
-Vue.use(elModelBox);
-Vue.use(feedback);
+Vue.use(componentsIndex);
 guard(router);
 themePackers.createImport();
 /* eslint-disable no-new */

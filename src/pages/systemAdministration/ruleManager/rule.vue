@@ -29,6 +29,7 @@
 </style>
 <template>
   <div>
+    <feedback/>
     <template>
       <div class="elTree">
         <div>
