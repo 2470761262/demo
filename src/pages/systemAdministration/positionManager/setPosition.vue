@@ -22,16 +22,27 @@
   margin: 10px;
   display: inline-block;
 }
+
+.selected_btn{
+  color: red;
+  cursor: pointer;
+}
+
 </style>
 <template>
   <div>
     <template>
       <div class="elTree">
+        <el-button style="margin:10px 45px;"
+                   type="primary"
+                   size="mini"
+                   @click="savePositionRule">保存</el-button>
+
         <el-tree :data="ruleTreeData"
                  show-checkbox
                  node-key="id"
                  ref="tree"
-                 check-on-click-node
+                 :check-on-click-node=false
                  highlight-current
                  :expand-on-click-node=false
                  :props="defaultProps">
@@ -41,12 +52,18 @@
             <span>
               <el-button type="text"
                          size="mini"
+                         style="cursor: pointer;"
+                         :class="{'selected_btn':node.data.dataType == '0' }"
                          @click="operationSelf(node,data)"> 自己</el-button>
               <el-button type="text"
                          size="mini"
+                         style="cursor: pointer;"
+                         :class="{'selected_btn':node.data.dataType == '1'}"
                          @click="operationDept(node, data)"> 部门权限</el-button>
                 <el-button type="text"
                            size="mini"
+                           style="cursor: pointer;"
+                           :class="{'selected_btn':node.data.dataType == '2'}"
                            @click="operationCompany(node, data)">跨部门权限</el-button>
             </span>
           </span>
@@ -61,8 +78,8 @@
           <span>操作</span>
         </div>
         <div class="text item">
-          <el-button type="primary"
-                     @click="cancel">返回</el-button>
+<!--          <el-button type="primary"-->
+<!--                     @click="cancel">返回</el-button>-->
           <div class="formItem"
                style="margin-left: 230px;"
                v-show="showSave">
@@ -90,7 +107,8 @@
                        highlight-current
                        :props="companyProps"
                        @check-change="checkNode"
-                       :default-checked-keys="companyGather">
+                       :default-checked-keys="companyGather"
+                       :default-expanded-keys="companyGather">
               </el-tree>
             </div>
           </template>
@@ -166,6 +184,7 @@ export default {
       console.log(node, data, "operationCompany..");
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 2;
+      node.data.dataType = "2";
       if (data.companyGather) {
         let gather = data.companyGather;
         let arrayGather = gather.split(",");
@@ -175,6 +194,7 @@ export default {
         this.node.childNodes = [];
         this.loadCompanyTreeNode(this.node, this.resolve);
       }
+      console.log(this.companyGather,"--------------------------------------->");
     },
     operationSelf (node, data) {
       this.showCompanyTree = false;
@@ -182,7 +202,7 @@ export default {
       this.showOperationCompany = false;
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 0;
-
+      node.data.dataType = "0";
       console.log(node, data, "operationSelf..");
     },
     operationDept (node, data) {
@@ -191,6 +211,7 @@ export default {
       this.showOperationCompany = false;
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 1;
+      node.data.dataType = "1";
       console.log(node, data, "operationDept..");
     },
 
@@ -211,6 +232,38 @@ export default {
           url: "/sys/position/set/rules",
           data: that.paramsObj,
           qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            this.$message.info("操作成功");
+          } else {
+            console.log("保存结果：" + result.message);
+            this.$message.error("保存失败" + result.message);
+          }
+        });
+    },
+    //保存角色rule
+    savePositionRule () {
+      var that = this;
+      let paramsObj = {};
+      paramsObj.id = that.postId;
+      paramsObj.ruleType = 0;
+      let checkedKeys = that.$refs.tree.getCheckedKeys();
+      let keys = "";
+      checkedKeys.forEach(key => {
+        keys = keys + "," + key;
+      });
+      console.log(keys,"before ...");
+      keys = keys.substr(1, keys.length);
+      console.log(keys,"after ...");
+      paramsObj.postRuleCode = keys;
+      this.$api
+        .put({
+          url: "/sys/position/update",
+          data: paramsObj,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
         })
         .then(e => {
           console.log(e.data);

@@ -32,10 +32,10 @@
                      style="margin-left:10px"
                      size="mini"
                      @click="queryEmployee()">查询</el-button>
-          <el-button type="primary"
-                     style="margin-left:10px"
-                     size="mini"
-                     @click="cancel()">返回</el-button>
+<!--          <el-button type="primary"-->
+<!--                     style="margin-left:10px"-->
+<!--                     size="mini"-->
+<!--                     @click="cancel()">返回</el-button>-->
         </div>
       </template>
 
