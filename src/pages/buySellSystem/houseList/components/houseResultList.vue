@@ -292,11 +292,11 @@
                                :label="item.label"
                                :width="item.width"
                                :sortable="item.order"
+                               :formatter="item.formart"
                                :sort-orders="['ascending', 'descending']"
                                show-overflow-tooltip>
               </el-table-column>
-              <el-table-column fixed="right"
-                               label="操作"
+              <el-table-column label="操作"
                                width="80px">
                 <template slot-scope="scope">
                   <el-button size="mini"
@@ -356,11 +356,11 @@ export default {
         currentPage: 1
       },
       tableColumnField: [
-        { prop: 'houseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true },
+        { prop: 'houseNo', label: '房源编号', width: '', order: false, disabled: true, default: true, formart: item => item.houseNo + '万元' },
         { prop: '1', label: '楼盘名称', order: false, width: '150', disabled: true, default: true },
-        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
         { prop: '2', label: '面积(㎡)', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.unitpaice + '万元' },
         { prop: '3', label: '户型', width: '120', order: false, disabled: false, default: true },
         { prop: '4', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
         { prop: '5', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
