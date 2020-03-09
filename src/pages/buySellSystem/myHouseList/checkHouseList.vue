@@ -138,7 +138,7 @@
                   class="dialog-footer">
               <el-button @click="showPopUp = false">取 消</el-button>
               <el-button type="primary"
-                         @click="checkHous(scope.row.id)">确 定</el-button>
+                         @click="checkHouse(scope.row.id)">确 定</el-button>
             </span>
           </el-dialog>
 
@@ -245,7 +245,8 @@ export default {
           value: "实勘人申请审核"
         }
       ],
-      title: ""
+      title: "",
+      optionsList: []
     }
   },
   mounted () {
@@ -256,12 +257,14 @@ export default {
       let that = this;
       let params = {
         id: id,
-        checkMemo: this.checkMemo
+        CheckMemo: this.checkMemo,
+        Tag: this.checkStatus
       }
       if (!util.isNotNull(this.checkMemo)) {
         this.$.message("审核说明未填")
         return true;
       }
+      this.showPopUp = false;
       this.$api.post({
         url: '/agentHouse/propertyCheck/checkHouse',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -271,6 +274,9 @@ export default {
         let result = e.data;
         that.loading = false;
         that.$message(result.message);
+        if (result.code == 200) {
+          that.querylistByParams();
+        }
       }).catch((e) => {
         that.$message("操作失败");
       })
