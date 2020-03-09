@@ -199,7 +199,7 @@ const HosueList = [
   { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false },
   { title: "成交对赌", icon: "el-icon-zoom-in", path: "/buySellSystem/houseBet", hot: true, flag: false },
   { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true, flag: false },
-  { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
+  //{ title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
   { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false, flag: false },
   { title: "店公共盘", icon: "el-icon-zoom-in", path: "/buySellSystem/shopDisk", hot: false },
   { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false, flag: false },
