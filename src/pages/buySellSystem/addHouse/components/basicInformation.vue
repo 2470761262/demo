@@ -836,7 +836,7 @@ export default {
             that.$store.commit('updateId', e.data.data)
           }
           that.$store.commit("updateStep1", that.deffData);
-          return false;
+          return true;
         } else {
           return false;
         }

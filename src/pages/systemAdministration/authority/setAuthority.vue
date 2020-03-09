@@ -22,6 +22,11 @@
   margin: 10px;
   display: inline-block;
 }
+
+.selected_btn{
+  color: red;
+  cursor: pointer;
+}
 </style>
 <template>
   <div>
@@ -43,12 +48,15 @@
             <span>
               <el-button type="text"
                          size="mini"
+                         :class="{'selected_btn':node.data.dataType == '0' }"
                          @click.stop="() => operationSelf(node,data)"> 自己</el-button>
               <el-button type="text"
                          size="mini"
+                         :class="{'selected_btn':node.data.dataType == '1'}"
                          @click.stop="() => operationDept(node, data)"> 部门权限</el-button>
               <el-button type="text"
                          size="mini"
+                         :class="{'selected_btn':node.data.dataType == '2'}"
                          @click.stop="() => operationCompany(node, data)">跨部门权限</el-button>
             </span>
           </span>
@@ -63,22 +71,20 @@
           <span>操作</span>
         </div>
         <div class="text item">
-          <el-button type="primary"
-                     @click="cancel">返回</el-button>
+<!--          <el-button type="primary"-->
+<!--                     @click="cancel">返回</el-button>-->
         </div>
         <div class="text item"
              style="margin-top: 10px;">
           <template>
-            <div class="elTree"
-                 v-show="showCompanyTree">
-              <div class="formItem"
-                   style="margin: 10px 45px;"
-                   v-show="showSave">
-                <el-button type="primary"
-                           size="mini"
-                           @click="saveCompanyRule">保存</el-button>
-              </div>
-              <el-tree :data="companyTreeData"
+            <div class="formItem"
+                 v-show="showSave">
+              <el-button type="primary"
+                         size="mini"
+                         @click="saveCompanyRule">保存</el-button>
+            </div>
+            <div class="elTree" v-show="showCompanyTree">
+              <el-tree  :data="companyTreeData"
                        show-checkbox
                        :load="loadCompanyTreeNode"
                        lazy
@@ -87,7 +93,9 @@
                        highlight-current
                        :props="companyProps"
                        @check-change="checkNode"
-                       :default-checked-keys="companyGather">
+                       :default-checked-keys="companyGather"
+                       :default-expanded-keys="companyGather">
+
               </el-tree>
             </div>
           </template>
@@ -164,6 +172,7 @@ export default {
       console.log(node, data, "operationCompany..");
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 2;
+      node.data.dataType = "2";
       if (data.companyGather) {
         let gather = data.companyGather;
         let arrayGather = gather.split(",");
@@ -179,6 +188,7 @@ export default {
       this.showSave = true;
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 0;
+      node.data.dataType = "0";
       console.log(node, data, "operationSelf..");
     },
     operationDept (node, data) {
@@ -186,6 +196,7 @@ export default {
       this.showSave = true;
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 1;
+      node.data.dataType = "1";
       console.log(node, data, "operationDept..");
     },
     //应用

@@ -124,6 +124,7 @@
       <el-table-column
         prop=""
         label="户型"
+        :render-header="customFieldColumn"
         :formatter="formatHouseType">
       </el-table-column>
       <el-table-column
@@ -196,7 +197,7 @@
           {prop: 'endTime', label: "到期时间"},
           {prop: 'amount', label: "对赌金额"},
           // { prop: 'status', label: "对赌状态" },
-          {prop: 'perName', label: "对赌人"},
+          {prop: 'brokerName', label: "对赌人"},
         ],
         tableData: [{
           // house: '龙腾花园-16栋-604室',
@@ -243,6 +244,17 @@
             return ""
             break;
         }
+      },
+      customFieldColumn (h, { column, $index }) {
+        return h('span', {}, [
+          h('span', {}, ''),
+          h('el-popover', { props: { placement: 'top', width: '200',trigger: 'hover', content: '点击数字折扣，修改折扣，点击空白处，修改完成；修改过程中，右侧出现绿色按钮功能为统一多件商品为该折扣。' }}, [
+            h('i', { slot: 'reference',class:'font-normal'},[
+              h('span', {}, '折扣'),
+              h('span', {class:'red-star'}, '*')
+            ])
+          ])
+        ])
       },
       toLook(row) {
         var that = this;

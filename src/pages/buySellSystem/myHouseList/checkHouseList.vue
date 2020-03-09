@@ -5,11 +5,24 @@
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
       <div class="page-form-inline ">
-        <el-input placeholder="楼盘名称"
-                  style="width:280px"
-                  v-model="queryData.CommunityName">
-          <template slot="prepend">楼盘名称 </template>
-        </el-input>
+        <el-item label="楼盘名称"
+                 prop="comId">
+          <el-select v-model="queryData.CommunityName"
+                     @focus="remoteInput"
+                     @change="queryCBId()"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="请输入楼盘名称搜索"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in optionsList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
 
         <el-select v-model="value"
                    filterable
@@ -156,7 +169,7 @@ export default {
         label: '已过期'
       }],
       queryData: {
-        communityName: '',
+        CommunityName: '',
         timeSelect: '',
 
       },
@@ -240,6 +253,40 @@ export default {
         this.item.push("12222222222222222222222222222222222")
         return item.isType.includes(type)
       })
+    },
+    remoteInput () {
+
+      if (this.queryData.CommunityName.length == 0) {
+        this.remoteMethod();
+      }
+    },
+    remoteMethod (query) {
+      var that = this
+      if (query !== '') {
+        console.log(query);
+        this.loading = true;
+        this.$api.get({
+          url: "/mateHouse/queryCommunity",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            page: 1,
+            limit: 50,
+            communityName: query
+          }
+        }).then((e) => {
+          console.log(e.data)
+          if (e.data.code == 200) {
+
+            that.loading = false;
+            that.optionsList = e.data.data.list;
+          }
+        })
+      } else {
+        this.optionsList = [];
+      }
+      console.log("remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
     handleClick () {
 

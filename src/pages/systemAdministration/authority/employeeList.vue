@@ -32,10 +32,10 @@
                      style="margin-left:10px"
                      size="mini"
                      @click="queryEmployee()">查询</el-button>
-          <el-button type="primary"
-                     style="margin-left:10px"
-                     size="mini"
-                     @click="cancel()">返回</el-button>
+<!--          <el-button type="primary"-->
+<!--                     style="margin-left:10px"-->
+<!--                     size="mini"-->
+<!--                     @click="cancel()">返回</el-button>-->
         </div>
       </template>
 
@@ -90,8 +90,8 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "accountID", label: "员工ID" },
-        { prop: "perName", label: "员工名" },
+        { prop: "accountID", label: "用户ID" },
+        { prop: "perName", label: "用户名" },
         { prop: "deptName", label: "所在部门" },
         { prop: "postName", label: "角色权限" },
         { prop: "companyName", label: "公司" },
@@ -126,11 +126,11 @@ export default {
           this.pageJson.currentPage = result.data.currPage;
           this.tableData = result.data.list;
         } else {
-          console.log("查询员工管理列表结果：" + result.message);
+          console.log("查询用户管理列表结果：" + result.message);
           alert(result.message);
         }
       }).catch((e) => {
-        console.log("查询员工管理列表失败");
+        console.log("查询用户管理列表失败");
         console.log(e);
       })
     },
