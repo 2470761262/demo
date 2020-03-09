@@ -41,13 +41,13 @@
             type="primary"
             style="margin-left:10px"
             size="mini"
-            @click="queryEmployeeByIsLocked(0)"
+            @click="queryEmployeeByIsLocked(1)"
           >查询锁定用户</el-button>
           <el-button
             type="primary"
             style="margin-left:10px"
             size="mini"
-            @click="queryEmployeeByIsLocked(1)"
+            @click="queryEmployeeByIsLocked(0)"
           >查询正常用户</el-button>
           <el-button
             type="primary"
@@ -280,19 +280,60 @@ export default {
         console.log(e);
       })
     },
-    delEmployee(id) {
-     this.dialogVisible = true;
-     debugger;
-     this.employeeEntity.accountId=id;
-
-    },
+    
+    
     distributeEvent(e, id) {
       this[e](id);
       console.log(id);
     },
-    resumeDelEmployee(id) {
+    lockEmployee(id) { 
+    this.operation(id,"locked",1)
+    },
+    unLockEmployee(id) {
+    this.operation(id,"locked",0)
+    },
+    delEmployee(id) {
+     this.dialogVisible = true;
+     if(this.employeeEntity.leaveTime != null && this.employeeEntity.leaveMemo != ""){
+      this.operation(id,"del",1)
+     }else{
+        this.$alert("", "请填写离职时间及原因!!!", {
+              dangerouslyUseHTMLString: false
+            });
+     }
+     
+    },
+     
+    resumeEmployee(id) {
+     this.operation(id,"del",0)
+    },
+    getOpeBtns(type) {
+      let array = [
+        { name: "编辑", isType: "1", methosName: "editEmployee" },
+        { name: "离职", isType: "1", methosName: "delEmployee" },
+        { name: "复职", isType: "1", methosName: "resumeEmployee" },
+        { name: "锁定", isType: "1", methosName: "lockEmployee" },
+        { name: "解锁", isType: "1", methosName: "unLockEmployee" }
+      ];
+      return array;
+    },
+    handleSizeChange(val) {
+      console.log(`设置了每页 ${val} 条`);
+      this.pageJson.pageSize = val;
+      this.queryEmployeeDatas(1);
+    },
+    handleCurrentChange(val) {
+      this.queryEmployeeDatas(val);
+    },
+    operation(id,UpType,upValue){
+      let params= {accountId :id,UpType:UpType ,upValue: upValue };
+      if(this.employeeEntity.leaveMemo != null && this.employeeEntity.leaveMemo != ""){
+          params.leaveMemo = this.employeeEntity.leaveMemo;
+          params.leaveTime = this.employeeEntity.leaveTime;
+      }
        this.$api.post({
-        url: '/employee/resume/'+id,
+        url: '/employee/operation',
+        data: params,
         token: false,
         headers: { "Content-Type": "application/json;charset=UTF-8" }
       }).then((e) => {
@@ -305,33 +346,15 @@ export default {
           this.$router.push({ path: "/sys/employeeList" });
           console.log(result.data);
           this.$message({ message: result.message });
+        }else{
+          this.$alert("", "人员未审核,"+result.message+"!!!", {
+              dangerouslyUseHTMLString: false
+            });
         }
       }).catch((e) => {
         console.log("失败");
         console.log(e);
       })
-    },
-    leaveDelEmployee(id) {
-      this.delEmployee(id, 1);
-    },
-    getOpeBtns(type) {
-      let array = [
-        { name: "编辑", isType: "1", methosName: "editEmployee" },
-        { name: "离职", isType: "1", methosName: "leaveDelEmployee" },
-        { name: "复职", isType: "1", methosName: "resumeDelEmployee" }
-      ];
-      // return array.filter((item) => {
-      //   return item.isType.includes(type)
-      // })
-      return array;
-    },
-    handleSizeChange(val) {
-      console.log(`设置了每页 ${val} 条`);
-      this.pageJson.pageSize = val;
-      this.queryEmployeeDatas(1);
-    },
-    handleCurrentChange(val) {
-      this.queryEmployeeDatas(val);
     }
   }
 };

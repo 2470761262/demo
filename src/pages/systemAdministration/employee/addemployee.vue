@@ -20,14 +20,43 @@
 </style>
 <template>
   <div class="wrapper">
-
-    <div class="left-input-container">
+          <div class="left-input-container">
+            <span>登录账号</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.loginUser"
+          
+              show-word-limit
+            ></el-input>
+          </div>
+            <div class="left-input-container">
+            <span>密码</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.loginPwd"
+              
+              show-word-limit
+            ></el-input>
+          </div>
+          <div class="left-input-container">
+            <span>重复密码</span>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="employeeEntity.loginPwd"
+           
+              show-word-limit
+            ></el-input>
+          </div>
+           <div class="left-input-container">
             <span>姓名</span>
             <el-input
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.perName"
-              maxlength="10"
+           
               show-word-limit
             ></el-input>
           </div>
@@ -37,8 +66,7 @@
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.cardId"
-              maxlength="18"
-              show-word-limit
+              @change="iscardId()"
             ></el-input>
         </div>
         <div class="left-input-container">
@@ -69,13 +97,28 @@
         </div>
         <div class="left-input-container">
             <span>学历</span>
-            <el-input
+             <el-select v-model="employeeEntity.education" filter-method @focus="findByParams4()"  placeholder="请选择">
+            <el-option
+              v-for="item in educationList"
+              :key="item.value"
+              :label="item.educationName"
+              :value="item.id">
+            </el-option>
+          </el-select>
+            <!-- <el-input
               type="text"
+              list="educationList"
               placeholder="请输入内容"
               v-model="employeeEntity.education"
-              maxlength="100"
-              show-word-limit
+               @focus="findByParams4()"
             ></el-input>
+            <datalist id="educationList">
+            <option v-for="(item,index) in educationList"
+                    :key="index">
+                    {{item.educationName}}
+                    </option>
+                    
+            </datalist> -->
         </div>
         <div class="left-input-container">
             <span>专业</span>
@@ -83,9 +126,8 @@
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.speciality"
-              maxlength="100"
-              show-word-limit
             ></el-input>
+      
         </div>
         <div class="left-input-container">
             <span>邮箱</span>
@@ -128,39 +170,47 @@
               show-word-limit
             ></el-input>
         </div>
-        <!-- <div class="left-input-container">
-            <span>是否锁住：0 锁定，1正常，2三天未登录锁定，3三天未带看锁定</span>
-            <el-select type="text" placeholder="是否锁住：0 锁定，1正常，2三天未登录锁定，3三天未带看锁定" v-model="employeeEntity.isLocked" show-word-limit >
-              <el-option label="锁定" :value="0" />
-              <el-option label="正常" :value="1" />
-              <el-option label="三天未登录锁定" :value="2" />
-              <el-option label="三天未带看锁定" :value="3" />
-            </el-select>
-        </div> -->
     <div class="left-input-container">
-      <span>部门</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="employeeEntity.perDeptId"
-                maxlength="10"
-                show-word-limit></el-input>
+       <el-button type="info" @click="getDialogVisible()">选择部门</el-button>
+       <el-dialog title="请选择:" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+          <template>
+            <div class="elTree">
+              <el-tree ref="tree2"
+                 :data="treeData"
+                 :default-expanded-keys="[1]"
+                 node-key="nodeId"
+                 show-checkbox
+                 :props="defaultProps"
+                 @check-change="checkChange"
+                 @check="treeCheck"
+                 :highlight-current="true"
+                 :filter-node-method="filterNode"></el-tree>
+            </div>
+          </template>
+       </el-dialog>
+      <el-input type="text" v-model="employeeEntity.deptName" show-word-limit></el-input>
     </div>
-
     <div class="left-input-container">
       <span>角色</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="employeeEntity.perPostId"
-                maxlength="10"
-                show-word-limit></el-input>
+          <el-select v-model="employeeEntity.position" filter-method @focus="findByParams()"  placeholder="请选择">
+            <el-option
+              v-for="item in positionNameList"
+              :key="item.value"
+              :label="item.positionName"
+              :value="item.id">
+            </el-option>
+          </el-select>
     </div>
     <div class="left-input-container">
       <span>岗位</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="employeeEntity.perRole"
-                maxlength="10"
-                show-word-limit></el-input>
+       <el-select v-model="employeeEntity.perRole" filter-method @focus="findByParams1()"  placeholder="请选择">
+            <el-option
+              v-for="item in roleNameList"
+              :key="item.value"
+              :label="item.roleName"
+              :value="item.id">
+            </el-option>
+          </el-select>
     </div>
 
     <div class="left-input-container">
@@ -176,8 +226,8 @@
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.remark"
-                maxlength="10"
-                show-word-limit></el-input>
+               
+                ></el-input>
     </div>
     <div class="left-input-container">
       <span>底薪</span>
@@ -224,8 +274,11 @@
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.contactTelephone"
-                maxlength="10"
-                show-word-limit></el-input>
+                data-vv-name="tel"
+                data-vv-as="电话号码"
+                v-validate="'required|phone'"
+      ></el-input>
+               {{errorBags.first('tel')}}
     </div>
     <div class="left-input-container">
       <span>现居住地</span>
@@ -269,11 +322,14 @@
     </div>
     <div class="left-input-container">
       <span>星级编号</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="employeeEntity.levelNo"
-                maxlength="10"
-                show-word-limit></el-input>
+      <el-select v-model="employeeEntity.levelNo" filter-method @focus="findByParams2()"  placeholder="请选择">
+            <el-option
+              v-for="item in levelNameList"
+              :key="item.value"
+              :label="item.levelName"
+              :value="item.levelNo">
+            </el-option>
+          </el-select>
     </div>
     <div class="left-input-container">
       <span>是否菁英</span>
@@ -310,12 +366,16 @@
                 show-word-limit></el-input>
     </div>
     <div class="left-input-container">
-      <span>头像</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="employeeEntity.userImage"
-                maxlength="10"
-                show-word-limit></el-input>
+      <el-upload
+        class="avatar-uploader"
+        action="https://jsonplaceholder.typicode.com/posts/"
+        :show-file-list="false"
+        :on-success="handleAvatarSuccess"
+        :before-upload="beforeAvatarUpload">
+        <span>头像</span>
+        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
     </div>
     <div class="left-input-container">
       <span>介绍人</span>
@@ -344,21 +404,39 @@ export default {
   props: {},
   data () {
     return {
+      treeData: [],
+      filterText: "",
+      defaultProps: {
+        children: "childrenNodes",
+        label: "labelName"
+      },
+      imageUrl:null,
+      positionNameList:null,
+      levelNameList:null,
+      educationList:null,
+      roleNameList:null,
+      dialogVisible: false,
       employeeEntity: {
+        loginUser:null,
+        loginPwd:null,
         perName: null,
         cardId: null,
         sex: null,
         status: null,
         address: null,
         education: null,
+        educationName:null,
         speciality: null,
         email: null,
         qq: null,
         tel: null,
         birthday: null,
         perDeptId: null,
+        deptName:null,
         perPostId: null,
+        positionName:null,
         perRole: null,
+        roleName:null,
         remark: null,
         basicSalary: null,
         performancePay: null,
@@ -371,6 +449,7 @@ export default {
         residenceCode: null,
         accountAddress: null,
         bankcard: null,
+        levelName:null,
         levelNo: null,
         isGold: null,
         sxId: null,
@@ -378,37 +457,258 @@ export default {
         postAllowance: null,
         userImage: null,
         jieShaoName: null,
-      }
+      },
+     
     };
   },
   watch: {},
   computed: {},
   methods: {
-    saveEmployee () {
-      let params = this.employeeEntity;
-      this.$api.post({
-        url: '/employee/add',
-        data: params,
-        token: false,
-        headers: { "Content-Type": "application/json;charset=UTF-8" }
-      }).then((e) => {
+    setId(){
+      console.log(this.employeeEntity.education);
+    },
+    handleAvatarSuccess(res, file) {
+        this.imageUrl = URL.createObjectURL(file.raw);
+        this.employeeEntity.userImage = this.imageUrl;
+      },
+      beforeAvatarUpload(file) {
+        const isJPG = file.type === 'image/jpeg';
+        const isLt2M = file.size / 1024 / 1024 < 2;
+
+        if (!isJPG) {
+          this.$message.error('上传头像图片只能是 JPG 格式!');
+        }
+        if (!isLt2M) {
+          this.$message.error('上传头像图片大小不能超过 2MB!');
+        }
+        return isJPG && isLt2M;
+      },
+      findByParams4 () {
+      let params = null;
+      if (this.employeeEntity.education != null && this.employeeEntity.education != "") {
+        params.keyWord = this.employeeEntity.education;
+      }
+      this.$api
+        .get({
+          url: "/employee/getConfigEducation",
+          data: params,
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            //debugger;
+            this.educationList = result.data;
+            console.log(this.educationList);
+          } else {
+            console.log("查询学历结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询学历失败");
+        });
+    },
+      findByParams2 () {
+      let params = null;
+      if (this.employeeEntity.levelName != null && this.employeeEntity.levelName != "") {
+        params.keyWord = this.employeeEntity.levelName;
+      }
+      this.$api
+        .post({
+          url: "/sys/position/getLevelNoList",
+          data: params,
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            //debugger;
+            this.levelNameList = result.data;
+            console.log(this.levelNameList);
+          } else {
+            console.log("查询星级结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询星级失败");
+        });
+    },
+    findByParams1 () {
+      let params = null;
+      if (this.employeeEntity.roleName != null && this.employeeEntity.roleName != "") {
+        params.keyWord = this.employeeEntity.roleName;
+      }
+      this.$api
+        .post({
+          url: "/role/getRoleName",
+          data: params,
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            //debugger;
+            this.roleNameList = result.data;
+            console.log(this.roleNameList);
+          } else {
+            console.log("查询岗位结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询岗位失败");
+        });
+    },
+    findByParams () {
+      let params = null;
+      if (this.employeeEntity.positionName != null && this.employeeEntity.positionName != "") {
+        params.keyWord = this.employeeEntity.positionName;
+      }
+      this.$api
+        .post({
+          url: "/sys/position/getPostName",
+          data: params,
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            //debugger;
+            this.positionNameList = result.data;
+            console.log(this.positionNameList);
+          } else {
+            console.log("查询角色结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询角色失败");
+        });
+    },
+    checkChange (e, data, childData) {
+      console.log(e, data, childData, "checkChange");
+    },
+    treeCheck (e, data) {
+       if (e.type == 1) {
+        this.$api.get({
+          url: '/department/' + e.businessId,
+          token: false
+        }).then((e) => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.employeeEntity.perDeptId = result.data.id;
+            this.employeeEntity.deptName = result.data.deptName;
+          } else {
+            console.log("查询部门详情结果：" + result.message);
+            alert(result.message);
+          }
+        }).catch((e) => {
+          console.log("查询部门详情失败");
+          console.log(e);
+        })
+      }else{
+        this.$alert("", "请选择一个部门节点!!!", {
+          dangerouslyUseHTMLString: false
+        });
+      }
+      console.log(e, data, "check..");
+    },
+    //树输入筛选
+    filterNode (value, data) {
+      console.log(value, data);
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
+    },
+    getDialogVisible() {
+      this.dialogVisible = true;
+      this.getDept();
+    },
+    handleClose() {
+      this.dialogVisible = false;
+      //this.employeeEntity.perDeptId =null ;
+      //this.employeeEntity.deptName = null ;
+    },
+    getDept(){
+    //读取公司，部门数据
+    this.$api
+      .post({
+        url: "/sys/account/company/tree",
+        token: false
+      })
+      .then(e => {
+        console.log(e.data);
         let result = e.data;
         if (result.code == 200) {
           console.log(result.message);
-          this.$alert('', '添加成功', {
-            dangerouslyUseHTMLString: false
-          });
-          this.$router.push({ path: "/sys/employeeList" });
           console.log(result.data);
-          this.$message({ message: result.message });
+          this.treeData = result.data;
+        } else {
+          console.log("载入结果" + + result.message);
+          alert(result.message);
         }
-      }).catch((e) => {
-        console.log("添加失败");
-        console.log(e);
       })
+      .catch(e => {
+        console.log("读取失败");
+        console.log(e);
+      });
+    },
+    saveEmployee () {
+      
+      if(this.iscardId()){
+        if(/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.employeeEntity.tel)){
+           this.employeeEntity.birthday=this.employeeEntity.birthday.toLocaleString();
+           this.employeeEntity.regTime=this.employeeEntity.regTime.toLocaleString();
+           this.employeeEntity.graduation=this.employeeEntity.graduation.toLocaleString();
+           let params = this.employeeEntity;
+           this.$api.post({
+             url: '/employee/add',
+             data: params,
+             token: false,
+             headers: { "Content-Type": "application/json;charset=UTF-8" }
+           }).then((e) => {
+             let result = e.data;
+             if (result.code == 200) {
+               console.log(result.message);
+               this.$alert('', '添加成功', {
+                 dangerouslyUseHTMLString: false
+               });
+               this.$router.push({ path: "/sys/employeeList" });
+               console.log(result.data);
+               this.$message({ message: result.message });
+             }
+           }).catch((e) => {
+             console.log("添加失败");
+             console.log(e);
+           })
+        }else{
+            this.$alert("","请填写正确的电话号码!!!", {
+              dangerouslyUseHTMLString: false
+            });
+        }
+      }else{
+          this.$alert("","请填写正确的身份证号!!!", {
+              dangerouslyUseHTMLString: false
+            });
+        }
+     
     },
     back () {
       this.$router.push({ path: "/sys/employeeList" });
+    },
+    iscardId(){
+      console.log(this.employeeEntity.cardId);
+//debugger;
+      if(!/^([1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2})$/.test(this.employeeEntity.cardId)){
+        return false;
+      }else{
+        return true;
+      }
+      
     }
   },
   created () {

@@ -22,8 +22,6 @@
   <div>
     <template>
       <div class="elTree">
-        <!--        <el-input placeholder="输入关键字进行过滤" v-model="filterText">-->
-        <!--        </el-input>-->
         <el-tree ref="tree2"
                  :data="treeData"
                  :default-expanded-keys="[1]"
