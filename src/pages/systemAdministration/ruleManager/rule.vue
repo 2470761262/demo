@@ -29,12 +29,8 @@
 </style>
 <template>
   <div>
-    <feedback/>
     <template>
       <div class="elTree">
-        <div>
-
-        </div>
         关键字:
         <el-input style="width: 200px;"
                   placeholder="输入关键字进行过滤"
@@ -70,7 +66,7 @@
           </div>
           <div class="formItem">
             <el-button type="primary"
-                       @click="saveSiblingRule">添加同级子节点</el-button>
+                       @click="saveSiblingRule">添加同级节点</el-button>
           </div>
           <div class="formItem">
             <el-button type="primary"
@@ -165,7 +161,7 @@
             是否超级:
             <el-select v-model="ruleObj.isSuper"
                        placeholder="范围">
-              <el-option v-for="item in areaList"
+              <el-option v-for="item in isSuperList"
                          :key="item.id"
                          :label="item.name"
                          :value="item.type">

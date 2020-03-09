@@ -74,7 +74,7 @@
           </template>
         </el-table-column>
       </template>
-
+      
     </list-page>
   </div>
 </template>
@@ -144,6 +144,7 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
+          if(result.data.list != null && result.data.list.length >0){
           for (var i = 0; i < result.data.list.length; i++) {
             switch (result.data.list[i].flagSale) {
               case "0":
@@ -172,6 +173,11 @@ export default {
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
           this.tableData = result.data.list;
+          }else{
+              this.$alert('', '请检查你的权限范围!!!', {
+            dangerouslyUseHTMLString: false
+          });
+          }
 
         } else {
           console.log("查询门店管理列表结果：" + result.message);
@@ -212,7 +218,8 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-          for (var i = 0; i < result.data.list.length; i++) {
+          if(result.data.list != null && result.data.list.length >0){
+             for (var i = 0; i < result.data.list.length; i++) {
             switch (result.data.list[i].flagSale) {
               case "0":
                 result.data.list[i].flagSale = "文职";
@@ -235,6 +242,8 @@ export default {
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
           this.tableData = result.data.list;
+          }
+         
         } else {
           console.log("查询门店管理列表结果：" + result.message);
           alert(result.message);

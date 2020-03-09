@@ -163,54 +163,65 @@
 
     <template #tableColumn="">
 
-      <el-table-column label="房源编号">
+      <el-table-column label="房源编号" min-width="13%">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
         </template>
       </el-table-column>
-      <el-table-column label="楼盘名称">
+      <el-table-column label="楼盘名称" min-width="12.588%">
         <template v-slot="scope">
           {{scope.row.CommunityName}}
         </template>
       </el-table-column>
-      <el-table-column label="售价(万元)">
+      <el-table-column label="售价(万元)"  min-width="7.3%">
         <template v-slot="scope">
           {{scope.row.Price}}
         </template>
       </el-table-column>
-      <el-table-column label="面积(㎡)">
+      <el-table-column label="面积(㎡)" min-width="6.7%">
         <template v-slot="scope">
           {{scope.row.InArea}}
         </template>
       </el-table-column>
-      <el-table-column label="单价(元/㎡)">
+      <el-table-column label="单价(元/㎡)" min-width="8.3%" >
         <template v-slot="scope">
           {{Math.round(scope.row.Price*10000/scope.row.InArea)+"元/m²"}}
         </template>
       </el-table-column>
-      <el-table-column label="户型">
+      <el-table-column label="户型" min-width="9.2%">
         <template v-slot="scope">
           {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
         </template>
       </el-table-column>
-      <el-table-column label="装修程度">
+      <el-table-column label="装修程度" min-width="9.2%">
         <template v-slot="scope">
           {{scope.row.Decoration}}
         </template>
       </el-table-column>
-      <el-table-column label="跟单人">
+      <el-table-column label="被看次数"  min-width="7.3%">
+        <template v-slot="scope">
+          {{scope.row.Rooms}}
+        </template>
+      </el-table-column>
+      <el-table-column label="房源状态"  min-width="7.3%">
+        <template v-slot="scope">
+          在售
+        </template>
+      </el-table-column>
+      <el-table-column label="跟单人"  min-width="7.3%">
         <template v-slot="scope">
           {{scope.row.agentPerName}}
         </template>
       </el-table-column>
-      <el-table-column label="操作">
+      <el-table-column label="操作" min-width="12.8%">
         <template v-slot="scope">
-          <el-button type="info"
-                     @click="toHouseDetail(scope.row.id)"
+          <el-button type="info" size="mini">转在售</el-button>
+                      <el-button type="success"
+                     @click="toHouseDetail(scope.row.id)" 
                      size="mini">查看</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="操作"
+      <!-- <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
@@ -220,7 +231,7 @@
                      v-for="(item,index) in isForBut(scope.row.id)"
                      :key="index">{{item.name}}</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </template>
   </list-page>
 </template>

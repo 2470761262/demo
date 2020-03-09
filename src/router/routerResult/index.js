@@ -607,21 +607,21 @@ export default [
             import(/* webpackChunkName: "editDeptDetail" */ "@/pages/systemAdministration/organization/editDeptDetail.vue")
     },
     {
-        //系统管理 员工管理
+        //系统管理 用户管理
         path: "/sys/employeeList",
         name: "employeeList",
         component: () =>
             import(/* webpackChunkName: "deptManageList" */ "@/pages/systemAdministration/employee/employeeList.vue")
     },
     {
-        //系统管理 员工管理-添加
+        //系统管理 用户管理-添加
         path: "/sys/addemployee",
         name: "addemployee",
         component: () =>
             import(/* webpackChunkName: "addDeptManage" */ "@/pages/systemAdministration/employee/addemployee.vue")
     },
     {
-        //系统管理 员工管理-修改
+        //系统管理 用户管理-修改
         path: "/sys/editemployee",
         name: "editemployee",
         component: () =>

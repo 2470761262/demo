@@ -51,7 +51,9 @@
                 :label="item.name"
                 :value="item.value"
               ></el-option>
+              
             </el-select>
+            
           </el-item>
           <el-item label="栋座" prop="cbId" class="page-label-center">
             <el-select
@@ -80,38 +82,46 @@
             </el-select>
           </el-item>
           <el-input
-            placeholder="业主姓名"
+            placeholder="姓名"
             v-model="data.customName"
             style="margin-left:30px;width:240px"
             clearable
-          />
+          >
+          <template slot="prepend">业主</template>
+          </el-input>
           <el-input
-            placeholder="业主电话"
+            placeholder="电话"
             v-model="data.tel"
             style="margin-left:30px;width:240px"
             clearable
-          />
-          <el-input
+          >
+          <template slot="prepend">业主电话</template>
+          </el-input>
+          <!-- <el-input
             placeholder="最小面积"
             v-model="data.minInArea"
             style="margin-left:30px;width:120px"
             clearable
           />------
-          <el-input placeholder="最大面积" v-model="data.maxInArea" style="width:120px" clearable />
+          <el-input placeholder="最大面积" v-model="data.maxInArea" style="width:120px" clearable /> -->
           <el-input
-            placeholder="最低售价"
+            placeholder="最小值"
             v-model="data.minPrice"
-            style="margin-left:30px;width:120px"
+            style="margin-left:30px;width:180px"
             clearable
-          />------
-          <el-input placeholder="最高售价" v-model="data.maxPrice" style="width:120px" clearable />
+          >
+          <template slot="prepend">价格</template>
+          </el-input>-
+          <el-input placeholder="最大值" v-model="data.maxPrice" style="width:120px" clearable />
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-          ></el-date-picker>
+          >
+           <template slot="prepend">录入时间</template>
+          </el-date-picker>
           <el-button
             type="primary"
             style="margin-left:10px"
@@ -289,6 +299,8 @@ export default {
         roomNo: "",
         timeSelect: ""
       },
+      cbIdList: [],
+      roomNoList: [],
       customerDiff: {
         spanList: [],
         remark: "",
@@ -310,9 +322,17 @@ export default {
       tableDataColumn: [
         {
           prop: "communityName",
-          label: "房源坐落",
+          label: "楼盘名称",
           formart: row => {
             return row.communityName + "-" + row.buildingNo + "-" + row.roomNo;
+          },
+          width: ""
+        },
+        {
+          prop: "buildingNo",
+          label: "房源坐落",
+          formart: row => {
+            return row.buildingNo + "-" + row.roomNo;
           },
           width: ""
         },
@@ -329,6 +349,12 @@ export default {
           width: "120"
         },
         {
+          prop: "price",
+          label: "单价(元/㎡)",
+          formart: row => row.unitPrice,
+          width: "120"
+        },
+        {
           prop: "roomType",
           label: "户型",
           formart: row => {
@@ -340,29 +366,53 @@ export default {
           width: "120"
         },
         {
-          prop: "decoration",
-          label: "装修程度",
-          formart: row => row.decoration,
+          prop: "checkStatus",
+          label: "验真状态",
+          formart: row => row.checkStatus,
           width: "120"
-        },
-        {
-          prop: "creatorName",
-          label: "经纪人",
-          formart: row => row.creatorName,
-          width: "120"
-        },
-        {
-          prop: "createTime",
-          label: "录入时间",
-          formart: row => row.createTime,
-          width: "160"
         },
         {
           prop: "checkStatus",
-          label: "状态",
+          label: "电话检索",
           formart: row => row.checkStatus,
           width: "120"
+        },
+        {
+          prop: "checkStatus",
+          label: "业主姓名",
+          formart: row => row.customerName,
+          width: "120"
+        },
+        {
+          prop: "checkStatus",
+          label: "业主电话",
+          formart: row => row.tel,
+          width: "120"
+        },
+        {
+          prop: "checkStatus",
+          label: "验真电话",
+          formart: row => row.checkTel,
+          width: "120"
         }
+        // {
+        //   prop: "decoration",
+        //   label: "装修程度",
+        //   formart: row => row.decoration,
+        //   width: "120"
+        // },
+        // {
+        //   prop: "creatorName",
+        //   label: "经纪人",
+        //   formart: row => row.creatorName,
+        //   width: "120"
+        // },
+        // {
+        //   prop: "createTime",
+        //   label: "录入时间",
+        //   formart: row => row.createTime,
+        //   width: "160"
+        // }
       ],
       tableData: [
         {

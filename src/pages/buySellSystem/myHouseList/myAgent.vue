@@ -75,21 +75,21 @@
 
     </template>
 
-    <template #tableColumn="">
+    <template #tableColumn="" >
 
-      <el-table-column label="房源编号">
+      <el-table-column label="房源编号" >
         <template v-slot="scope">
           {{scope.row.HouseNo}}
         </template>
       </el-table-column>
-      <el-table-column label="楼盘名称">
-        <template v-slot="scope">
+      <el-table-column label="楼盘名称" >
+        <template v-slot="scope" >
           {{scope.row.CommunityName}}
         </template>
       </el-table-column>
       <el-table-column label="栋座">
         <template v-slot="scope">
-          {{scope.row.BuildingName}}栋--{{scope.row.RoomNo}}室
+          {{scope.row.BuildingName}}栋 — {{scope.row.RoomNo}}室
         </template>
       </el-table-column>
       <!-- <el-table-column label="房间号">
@@ -138,7 +138,7 @@
           <el-button type="info"
                      size="mini"
                      @click="toHouseData(scope.row.id,scope.row.CommunityName)">调配</el-button>
-          <el-dialog title="跟单调配至本公司人员"
+          <el-dialog title="跟单人将调配至本公司人员"
                      :visible.sync="dialogVisible"
                      :modal-append-to-body='false'
                      width="20%">
