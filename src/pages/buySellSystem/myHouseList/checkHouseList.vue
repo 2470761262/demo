@@ -1,3 +1,8 @@
+<style lang="less" scoped>
+.a {
+  background-image: url(../../../assets/images/channel_current.png);
+}
+</style>
 <template>
   <list-page :parentData="$data"
              @handleClick="handleClick"
@@ -61,18 +66,18 @@
       </el-table-column>
       <el-table-column label="审核项目">
         <template v-slot="scope">
-          {{scope.row.TypeString}}
+          {{scope.row.checkProject}}
         </template>
       </el-table-column>
 
       <el-table-column label="审核类型">
         <template v-slot="scope">
-          {{scope.row.TypeString}}
+          {{scope.row.checkType}}
         </template>
       </el-table-column>
       <el-table-column label="提交人">
         <template v-slot="scope">
-          {{scope.row.AddPerString}}
+          {{scope.row.addPerName}}
         </template>
       </el-table-column>
       <el-table-column label="提交时间">
@@ -82,7 +87,7 @@
       </el-table-column>
       <el-table-column label="审核状态">
         <template v-slot="scope">
-          {{scope.row.TagString}}
+          {{scope.row.checkStatus}}
         </template>
       </el-table-column>
       <el-table-column label="备注说明">
@@ -92,27 +97,64 @@
       </el-table-column>
       <el-table-column label="附件">
         <template v-slot="scope">
-          {{scope.row.sad}}
+          <el-image v-if="scope.row.accessory==1"
+                    :src="accessoryUrl">
+
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-          <el-button type="info"
-                     @click="toHouseDetail(scope.row.id)"
-                     size="mini">审核</el-button>
-          <el-button type="info"
+          <el-button type="success"
+                     size="mini"
+                     v-if="scope.row.Tag==0"
+                     @click="getTitle(scope.row.Type)">审核</el-button>
+          <el-button size="mini"
+                     type="info"
+                     v-else>已审核</el-button>
+          <el-dialog :title="title"
+                     :visible.sync="showPopUp"
+                     width="30%"
+                     :modal="false"
+                     :center="true">
+            <div>
+              <div>
+                <span>审核状态:</span>
+                <el-radio-group v-model="checkStatus">
+                  <el-radio :label="1">通过</el-radio>
+                  <el-radio :label="2">不通过</el-radio>
+                </el-radio-group>
+              </div>
+              <div>
+                <el-input type="textarea"
+                          placeholder="请输入审核说明"
+                          v-model="checkMemo">
+                </el-input>
+              </div>
+            </div>
+            <span slot="footer"
+                  class="dialog-footer">
+              <el-button @click="showPopUp = false">取 消</el-button>
+              <el-button type="primary"
+                         @click="checkHous(scope.row.id)">确 定</el-button>
+            </span>
+          </el-dialog>
+
+          <el-button type="success"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
         </template>
       </el-table-column>
     </template>
   </list-page>
+
 </template>
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
 
@@ -173,13 +215,75 @@ export default {
         timeSelect: '',
 
       },
-
+      accessoryUrl: require('../../../assets/images/accessory.png'),
+      showPopUp: false,
+      checkStatus: 1,
+      checkMemo: "",
+      titleList: [
+        {
+          key: 0,
+          value: "钥匙人申请审核"
+        },
+        {
+          key: 1,
+          value: "委托申请审核"
+        },
+        {
+          key: 4,
+          value: "取代申请审核"
+        },
+        {
+          key: 8,
+          value: "房源转状态审核"
+        },
+        {
+          key: 11,
+          value: "举报审核"
+        },
+        {
+          key: 12,
+          value: "实勘人申请审核"
+        }
+      ],
+      title: ""
     }
   },
   mounted () {
     this.querylist(1);
   },
   methods: {
+    checkHouse (id) {
+      let that = this;
+      let params = {
+        id: id,
+        checkMemo: this.checkMemo
+      }
+      if (!util.isNotNull(this.checkMemo)) {
+        this.$.message("审核说明未填")
+        return true;
+      }
+      this.$api.post({
+        url: '/agentHouse/propertyCheck/checkHouse',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: params,
+        token: false
+      }).then((e) => {
+        let result = e.data;
+        that.loading = false;
+        that.$message(result.message);
+      }).catch((e) => {
+        that.$message("操作失败");
+      })
+
+    },
+    getTitle (checkType) {
+      this.titleList.forEach(element => {
+        if (element.key == checkType) {
+          this.title = element.value;
+        }
+      });
+      this.showPopUp = true;
+    },
     queryAddPerId () {
       var that = this
       this.$api.get({

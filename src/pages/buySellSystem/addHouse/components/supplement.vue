@@ -174,7 +174,7 @@
         <el-select v-model="formData.houseSource"
                    placeholder="请选择房源来源"
                     v-validate="required?'required': ''"
-                             
+                           
                    data-vv-as="房源来源"
                    data-vv-name="houseSource">
           <el-option v-for="item in houseSourceList"
@@ -278,10 +278,7 @@
              data-before="(小学)">学籍占用</div>
         <el-radio-group size="mini"
                         @change="primaryRadioChange"
-                        v-model="primaryRadio"
-                        v-validate="required?'required': ''"
-                        data-vv-as="学籍占用(小学)"
-                        data-vv-name="primaryRadio">
+                        v-model="primaryRadio">
           <el-radio v-for="item in primarySchoolUseList"
                     :key="item.value"
                     :label="item.value">{{ item.key }}</el-radio>
@@ -311,10 +308,7 @@
          :data-tips="errorBags.first('middleRadio')">
       <div class="cell-item-cell ">
         <div class="item-before  text-just before-text"
-             data-before="(中学)"
-             v-validate="required?'required': ''"
-             data-vv-as="学籍占用(中学)"
-             data-vv-name="middleRadio">学籍占用</div>
+             data-before="(中学)">学籍占用</div>
         <el-radio-group size="mini"
                         @change="middleRadioChange"
                         v-model="middleRadio">
@@ -362,12 +356,15 @@
     </div>
     <div class="cell-item-cell  no-top">
       <div class="item-before"></div>
-      <div :class="{'after-tips':errorBags.has('balance') ||  errorBags.has('monthlyMortgage')}"
-           :data-tips="errorBags.first('balance') || errorBags.first('monthlyMortgage')">
+      <div :class="{'after-tips':errorBags.has('mortgageBank') || errorBags.has('balance') ||  errorBags.has('monthlyMortgage')}"
+           :data-tips="errorBags.first('mortgageBank')|| errorBags.first('balance') || errorBags.first('monthlyMortgage')">
         <div class="cell-item-cell  no-top">
           <el-select v-if="formData.mortgage==1"
                      v-model="formData.mortgageBank"
-                     placeholder="请选择抵押银行">
+                     placeholder="请选择抵押银行"
+                     v-validate="formData.mortgage==1?'required':''"
+                     data-vv-as="抵押银行"
+                     data-vv-name="mortgageBank">
             <el-option v-for="item in mortgageBankList"
                        :key="item.value"
                        :label="item.key"
@@ -384,7 +381,7 @@
           <div class="Division">万元</div>
           <el-input class="other-input"
                     v-model="formData.monthlyMortgage"
-                    :v-validate="required?'decimal:2|max:14|required':'decimal:2|max:14'"
+                    v-validate="required?'decimal:2|max:14|required':'decimal:2|max:14'"
                     data-vv-as="月供"
                     data-vv-name="monthlyMortgage"
                     placeholder="请输入月供"></el-input>
@@ -660,6 +657,12 @@ export default {
     showFollow: {
       type: Boolean,
       default: false
+    },
+    audioList: {
+      type: Array,
+      default: function () {
+        return [];
+      }
     }
   },
   computed: {
@@ -700,7 +703,9 @@ export default {
           this.loading = false;
         })
     }
-
+    if (this.audioList != null && this.audioList.length > 0) {
+      this.audioFile = this.audioList[0];
+    }
   },
   watch: {
     formData: {
