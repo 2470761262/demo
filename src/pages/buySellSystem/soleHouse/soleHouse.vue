@@ -9,8 +9,8 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
-        <el-item label="楼盘名称"
-                 prop="comId">
+        <!-- <el-item label="楼盘名称"
+                 prop="comId"> -->
           <el-select v-model="data.comId"
                      @focus="remoteInput"
                      @change="queryCBId()"
@@ -26,10 +26,10 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </el-item>
-        <el-item label="栋座"
+        <!-- </el-item> -->
+        <!-- <el-item label="栋座"
                  prop="cbId"
-                 class="page-label-center">
+                 class="page-label-center"> -->
           <el-select v-model="data.cbId"
                      filterable
                      clearable
@@ -41,11 +41,11 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </el-item>
-        <el-item label="房间号"
+        <!-- </el-item> -->
+        <!-- <el-item label="房间号"
                  prop="roomNo"
                  clearable
-                 class="page-label-center">
+                 class="page-label-center"> -->
           <el-select v-model="data.roomNo"
                      filterable
                      placeholder="请选择房间号">
@@ -55,7 +55,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </el-item>
+        <!-- </el-item> -->
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
                         range-separator="至"
@@ -66,18 +66,21 @@
                    style="margin-left:10px"
                    size="mini"
                    @click="queryquerySoleHouseParams">查询</el-button>
+         <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableData"
+                          @change="tabColumnChange"></definitionmenu>
       </div>
     </template>
 
-    <template #tableColumn="cell">
-      <template v-for="(item) in cell.tableData">
+    <template #tableColumn>
+      <template v-for="(item) in tableData" >
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
                          :key="item.prop">
         </el-table-column>
       </template>
-
       <el-table-column prop=""
                        label="户型"
                        :formatter="formatHouseType">
@@ -101,10 +104,13 @@
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 import houseContrast from '@/minxi/houseContrast';
+import definitionmenu from '@/components/definitionMenu';
+
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
-    listPage
+    listPage,
+    definitionmenu
   },
   data () {
 
@@ -125,45 +131,39 @@ export default {
         total: 0, //总记录数
         pageSize: 10 //每页条数
       },
-      tableDataColumn: [
-        { prop: 'houseNo', label: "房源编号" },
-        { prop: 'communityName', label: "小区名称" },
-        { prop: 'buildingName', label: "楼栋号" },
-        { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)" },
-        { prop: 'price', label: "售价(万元)" },
-        { prop: 'seenNum', label: "被看次数" },
-        { prop: 'outfollow', label: "未跟进天数" },
-        { prop: 'notLookNum', label: "未被看天数" },
-        { prop: 'addTime', label: "添加时间" },
-        { prop: 'brokerName', label: "经纪人" }
-
+       tableColumnField: [
+        { prop: 'houseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true },
+        { prop: '1', label: '楼盘名称', order: false, width: '150', disabled: true, default: true },
+        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '2', label: '面积(㎡)', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '3', label: '户型', width: '120', order: false, disabled: false, default: true },
+        { prop: '4', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '5', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '6', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '7', label: '录入时间', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: '8', label: '杀杀杀', width: '120', order: 'custom', disabled: false, default: false },
+        { prop: '9', label: '杀35杀杀', width: '150', order: 'custom', disabled: false, default: false }
       ],
-      tableData: [{
-        // house: '龙腾花园-16栋-604室',
-        // priceArea: '234万/100平',
-        // type: '3室2厅1卫',
-        // levae: '精装修',
-        // economicPro: '周杰伦',
-
-        // validateType: '通过',
-        // cutPro: '周杰伦1',
-        // addTime: '2019-01-01 18:00:00',
-        // cellType: '号码异常',
-        // operation: '3',
-      }],
+      tableData: []
     }
   },
   mounted () {
     this.queryVerifyHouseDatas(1);
   },
   methods: {
-
+     tabColumnChange (e) {
+     
+      this.tableData = e;
+        console.log(e,"111111111111");
+       console.log(this.tableData,"111111111");
+      //console.log("this.tableColumn",this.tableColumn);
+    },
     queryTabData () {
       console.log(this, '111');
     },
     formatHouseType (row, column) {
-      return row.Rooms + '室' + row.hall + '厅' + row.toilet + '卫';
+      return row.rooms + '室' + row.hall + '厅' + row.toilet + '卫';
     },
 
     toLook (id) {
@@ -249,7 +249,7 @@ export default {
     },
     queryVerifyHouseDatas (currentPage) {
       var that = this;
-      let params = { "limit": that.pageJson.pageSize, "page": currentPage };
+      let params = { "limit": that.pageJson.pageSize, "page": currentPage-1 };
       params.comId = that.data.comId;
       params.cbId = that.data.cbId;
       params.roomNo = that.data.roomNo;
@@ -263,9 +263,9 @@ export default {
         console.log(e.data);
         let data = e.data
         if (data.code == 200) {
-          that.pageJson.total = data.data.totalCount;
-          that.pageJson.currentPage = data.data.currPage;
-          that.tableData = data.data.list;
+         that.pageJson.total=data.dataCount;
+          that.pageJson.currentPage=data.pageSum;
+          that.tableData=data.data;
         } else {
           console.log("查询独家房源列表结果：" + result.message);
           alert(result.message);
