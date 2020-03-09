@@ -9,7 +9,7 @@
   }
   .page-cell-main {
     height: calc(100% - 60px);
-    width: 1920px;
+    // width: 1920px;
     .el-aside,
     .el-main {
       height: 100%;
