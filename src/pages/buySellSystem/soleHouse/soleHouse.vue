@@ -1,6 +1,6 @@
 
 <template>
-  <list-page :parentData="$data"
+  <list-page @sort-change="sortMethod" :parentData="$data"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
@@ -9,8 +9,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
-        <!-- <el-item label="楼盘名称"
-                 prop="comId"> -->
+        
           <el-select v-model="data.comId"
                      @focus="remoteInput"
                      @change="queryCBId()"
@@ -26,10 +25,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        <!-- </el-item> -->
-        <!-- <el-item label="栋座"
-                 prop="cbId"
-                 class="page-label-center"> -->
+      
           <el-select v-model="data.cbId"
                      filterable
                      clearable
@@ -41,11 +37,6 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        <!-- </el-item> -->
-        <!-- <el-item label="房间号"
-                 prop="roomNo"
-                 clearable
-                 class="page-label-center"> -->
           <el-select v-model="data.roomNo"
                      filterable
                      placeholder="请选择房间号">
@@ -55,36 +46,33 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        <!-- </el-item> -->
+        
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
+        <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
-                   @click="queryquerySoleHouseParams">查询</el-button>
-         <definitionmenu class="menuMarin"
-                          :renderList="tableColumnField"
-                          :tableColumn="tableData"
-                          @change="tabColumnChange"></definitionmenu>
+                   @click="querySoleHouseParams">查询</el-button>
       </div>
     </template>
-
+<!-- :formatter="item.format" -->
     <template #tableColumn>
-      <template v-for="(item) in tableData" >
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
+      <template v-for="(item) in tableColumn">
+        <el-table-column :prop="item.prop" :label="item.label"
                          :width="item.width"
-                         :key="item.prop">
+                         :key="item.prop"
+                          :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order">
         </el-table-column>
       </template>
-      <el-table-column prop=""
-                       label="户型"
-                       :formatter="formatHouseType">
-      </el-table-column>
       <el-table-column label="操作"
                        fixed="right"
                        key="operation">
@@ -105,7 +93,6 @@ import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 import houseContrast from '@/minxi/houseContrast';
 import definitionmenu from '@/components/definitionMenu';
-
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -131,47 +118,53 @@ export default {
         total: 0, //总记录数
         pageSize: 10 //每页条数
       },
-       tableColumnField: [
-        { prop: 'houseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true },
-        { prop: '1', label: '楼盘名称', order: false, width: '150', disabled: true, default: true },
-        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: '2', label: '面积(㎡)', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: '3', label: '户型', width: '120', order: false, disabled: false, default: true },
-        { prop: '4', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: '5', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: '6', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: '7', label: '录入时间', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: '8', label: '杀杀杀', width: '120', order: 'custom', disabled: false, default: false },
-        { prop: '9', label: '杀35杀杀', width: '150', order: 'custom', disabled: false, default: false }
+      tableColumnField: [
+        { prop: 'houseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true,format:(item)=>  item.houseNo   },
+        { prop: 'communityName', label: '小区名称', order: false, width: '150', disabled: true, default: true,format:(item)=> item.communityName },
+        { prop: 'buildingName', label: '楼栋号', width: '90', order: false, disabled: true, default: true,format:(item)=> item.buildingName},
+        { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true,format:(item)=> item.roomNo},
+        { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true,format:(item)=> item.inArea },
+        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true,format:(item)=> item.price },
+        { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true,format:(item)=> item.seenNum },
+        { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true,format:(item)=> item.outfollow },
+        { prop: 'notLookNum', label: '未被看天数', width: '120', order: false, disabled: false, default: true,format:(item)=> item.notLookNum },
+        { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: true,format:(item)=> item.addTime },
+        { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true,format:(item)=> item.brokerName },
+        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: false,format:(item)=> item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false,format:(item)=> item.unitpaice },
+        { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false,format:(item)=> item.face },
+        { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false,format:(item)=> item.floor },
+        { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: false,format:(item)=> item.decoration },
+        { prop: 'addName', label: '录入人', width: '120', order: false, disabled: false, default: false,format:(item)=> item.addName }
       ],
-      tableData: []
+      tableColumn: [],
+      tableData: [],
     }
   },
   mounted () {
-    this.queryVerifyHouseDatas(1);
+    this.querySoleHouse(1,'id','ascending');
   },
   methods: {
-     tabColumnChange (e) {
-     
-      this.tableData = e;
-        console.log(e,"111111111111");
-       console.log(this.tableData,"111111111");
-      //console.log("this.tableColumn",this.tableColumn);
+    sortMethod(e){
+      console.log(e,"eeee排序");
+      this.querySoleHouse(1,e.prop,e.order);
+    },
+   tabColumnChange (e) {
+      this.tableColumn = e;
     },
     queryTabData () {
       console.log(this, '111');
     },
     formatHouseType (row, column) {
-      return row.rooms + '室' + row.hall + '厅' + row.toilet + '卫';
+      return row.Rooms + '室' + row.hall + '厅' + row.toilet + '卫';
     },
 
     toLook (id) {
       var that = this;
       that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
     },
-    queryquerySoleHouseParams () {
-      this.querySoleHouseList(1);
+    querySoleHouseParams () {
+      this.querySoleHouse(1,'id','ascending');
     },
     remoteInput () {
 
@@ -247,7 +240,7 @@ export default {
         }
       })
     },
-    queryVerifyHouseDatas (currentPage) {
+    querySoleHouse(currentPage,column,type) {
       var that = this;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage-1 };
       params.comId = that.data.comId;
@@ -255,6 +248,8 @@ export default {
       params.roomNo = that.data.roomNo;
       params.beginTime = that.data.timeSelect[0];
       params.endTime = that.data.timeSelect[1];
+      params.sortColumn=column;
+      params.sortType=type;
       this.$api.get({
         url: '/soleHouse/querySoleHouse',
         data: params,
@@ -263,9 +258,9 @@ export default {
         console.log(e.data);
         let data = e.data
         if (data.code == 200) {
-         that.pageJson.total=data.dataCount;
+           that.pageJson.total=data.dataCount;
           that.pageJson.currentPage=data.pageSum;
-          that.tableData=data.data;
+          that.tableData = data.data;
         } else {
           console.log("查询独家房源列表结果：" + result.message);
           alert(result.message);
@@ -282,16 +277,16 @@ export default {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryquerySoleHouseParams(1);
+      this.querySoleHouseParams(1);
     },
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryVerifyHouseDatas(1);
+      this.querySoleHouse(1,'id','ascending');
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryVerifyHouseDatas(val);
+      this.querySoleHouse(val,'id','ascending');
     }
   },
 }
