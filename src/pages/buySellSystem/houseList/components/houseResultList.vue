@@ -222,7 +222,7 @@
           <i class="el-icon-sort"></i>
         </div>
       </div>
-      <!-- <div class="select-tabs-cell">
+      <div class="select-tabs-cell">
         <label class="select-checkbox">
           <input type="checkbox">
           <span>钥匙</span>
@@ -231,7 +231,7 @@
           <input type="checkbox">
           <span>独家</span>
         </label>
-      </div> -->
+      </div>
     </div>
     <div class="select-for-warp"
          v-loading="loading"
