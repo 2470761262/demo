@@ -230,7 +230,7 @@ export default {
       },
       websock: null,
       sessionId: null,
-      openWebSocketType: false //true为websocket方式，false为轮询方式
+      openWebSocketType: true //true为websocket方式，false为轮询方式
     };
   },
   methods: {

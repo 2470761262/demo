@@ -178,7 +178,7 @@ export default {
       queryData: {
         keyWord: "",
         isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户
-        del:0 ,//0 查询在职员工,1 查询离职员工,2 查询待离职员工
+        del:0 ,//0 查询在职用户,1 查询离职用户,2 查询待离职用户
         type:0 //0 内部  1 游客
       },
       configSet: {

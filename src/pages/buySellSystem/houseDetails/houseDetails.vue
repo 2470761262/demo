@@ -343,7 +343,7 @@ input[type="number"]::-webkit-outer-spin-button {
                      style="width: 80px;text-align: center"
                      class="underline" />个
             </div>
-            <span style="float: right;margin-right: 20px;font-size: small;">(对赌鑫币100起投)</span>
+            <span style="float: right;margin-right: 20px;font-size: small;">(对赌鑫币{{betConf.lower}}起投)</span>
           </div>
         </div>
         <div style="display: inline-flex;margin-top: 10px">
@@ -1433,6 +1433,7 @@ export default {
         expireDay: 0,
         odds: 0,
         upper: 0,
+        lower: 0,
       },
       houseDetails: "", //房源详情数据
       houseFileList: [], //视频和图片数组
@@ -1676,13 +1677,15 @@ export default {
           this.betConf.expireDay = data.data.expireDay;
           this.betConf.odds = data.data.odds;
           this.betConf.upper = data.data.upper;
+          this.betConf.lower = data.data.lower;
         } else {
-          console.log("查询对赌房源列表结果：" + result.message);
-          alert(result.message);
+          this.addBetVisible = false;
+          console.log("查询对赌房源列表结果：" + data.message);
+          this.$message.error({ message: data.message, offset: 400 });
         }
       }).catch((e) => {
         console.log("查询对赌房源列表失败");
-        console.log(e);
+        this.$message.error({ message: e, offset: 400 });
       })
     },
     getBetInfo () {
@@ -1698,7 +1701,7 @@ export default {
           this.betExpire = data.data.EndTime;
         } else {
           console.log("查询对赌房源列表结果：" + result.message);
-          alert(result.message);
+          this.$message.error({ message: data.message, offset: 400 });
         }
       }).catch((e) => {
         console.log("查询对赌房源列表失败");
@@ -1707,8 +1710,8 @@ export default {
     },
     addBet () {
       var that = this;
-      if (that.betAmount < 100 || that.betAmount > that.betConf.upper) {
-        this.$message.error("100起投！封顶" + that.betConf.upper);
+      if (that.betAmount < that.betConf.lower || that.betAmount > that.betConf.upper) {
+        this.$message.error({ message: that.betConf.lower + "起投！封顶" + that.betConf.upper, offset: 400 });
         return
       }
       let params = { "HouseId": that.houseId, "Amount": that.betAmount };
@@ -1773,7 +1776,7 @@ export default {
             "houseType": 0,
             "housePrice": that.houseDetails.Price,
             "houseArea": that.houseDetails.InArea,
-            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主            
+            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主
             "remark": that.houseDetails.Title          };
           let dailParams = {};
           Object.assign(dailParams, oldParams, phoneObj);

@@ -10,9 +10,9 @@
       <div class="page-form-inline budingMarinSet">
         <el-select v-model="data.comId"
                    @change="queryCBId()"
-                   @focus="remoteInput"
                    filterable
                    remote
+                   @focus="remoteInput"
                    placeholder="请输入楼盘进行搜索"
                    :remote-method="remoteMethod"
                    :loading="loading"
@@ -164,8 +164,8 @@ export default {
     queryDatalist () {
       this.queryOurComDeal(1);
     },
-     remoteInput () {
-   
+    remoteInput () {
+
       if (this.comId.length == 0) {
         this.remoteMethod();
       }
@@ -188,7 +188,7 @@ export default {
             console.log(e.data);
             if (e.data.code == 200) {
               that.loading = false;
-              
+
               that.options = e.data.data.list;
             }
           });
@@ -210,8 +210,8 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-            that.data.cbId='';
-              that.data.bhId='';
+            that.data.cbId = '';
+            that.data.bhId = '';
             that.cbIdList = e.data.data.list;
           }
         });
@@ -231,7 +231,7 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-             that.data.bhId='';
+            that.data.bhId = '';
             that.roomNoList = e.data.data.list;
           }
         });
@@ -299,6 +299,82 @@ export default {
       return array.filter(item => {
         return item.isType.includes(type);
       });
+    },
+    remoteInput () {
+
+      if (this.data.comId == 0) {
+        this.remoteMethod();
+      }
+    },
+    remoteMethod (query) {
+      var that = this;
+      if (query !== "") {
+        this.loading = true;
+
+        this.$api
+          .get({
+            url: "/mateHouse/queryCommunity",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
+            data: {
+              page: 1,
+              limit: 50,
+              communityName: query
+            }
+          })
+          .then(e => {
+            console.log(e.data);
+            if (e.data.code == 200) {
+              that.loading = false;
+              that.options = e.data.data.list;
+            }
+          });
+      } else {
+        this.options = [];
+      }
+    },
+
+    queryCBId () {
+      var that = this;
+      this.$api
+        .get({
+          url: "/mateHouse/queryComBuilding",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            comId: that.data.comId
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.data.cbId = '';
+            that.data.bhId = '';
+            that.cbIdList = e.data.data.list;
+          }
+        });
+    },
+    queryRoomNo () {
+      var that = this;
+      this.$api
+        .get({
+          url: "/mateHouse/queryBuildIngHouses",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            comId: that.data.comId,
+            cbId: that.data.cbId
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+
+            that.data.bhId = '';
+            that.roomNoList = e.data.data.list;
+          }
+        });
     },
     handleClick () { },
     queryTabData () {

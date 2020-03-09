@@ -81,13 +81,13 @@
     <div class="left-input-container">
        <el-button type="info" @click="getDialogVisible()">选择负责人</el-button>
        <el-dialog title="请选择:" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
-          <list-page :parentData="$data" 
-          highlight-current-row  
-          @handleSizeChange="handleSizeChange" 
-          @handleCurrentChange="handleCurrentChange"  
+          <list-page :parentData="$data"
+          highlight-current-row
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
           @current-change="handleChange"  >
-              <template v-slot:tableColumn="cell">            
-                <template v-for="item in cell.tableData">  
+              <template v-slot:tableColumn="cell">
+                <template v-for="item in cell.tableData">
                   <el-table-column
                     :prop="item.prop"
                     :label="item.label"
@@ -95,7 +95,7 @@
                     :key="item.prop"
                   ></el-table-column>
                 </template>
-            </template>           
+            </template>
           </list-page>
        </el-dialog>
       <el-input type="text" v-model="DeptEntity.managerPerName" show-word-limit></el-input>
@@ -115,12 +115,34 @@
       <span>部门属性</span>
       <el-select type="text"
                  placeholder="请输入内容"
-                 v-model="DeptEntity.joinType"
+                 v-model="DeptEntity.isCom"
                  show-word-limit>
         <el-option label="运营期" :value="1" />
         <el-option label="拓展期" :value="2" />
 
       </el-select>
+    </div>
+    <div class="left-input-container">
+       <el-button type="info" @click="getDialogVisible3()">选择店面</el-button>
+       <el-dialog title="请选择:" :visible.sync="dialogVisible3" width="40%" :before-close="handleClose">
+          <list-page :parentData="$data"
+          highlight-current-row
+          @handleSizeChange="handleSizeChange3"
+          @handleCurrentChange="handleCurrentChange3"
+          @current-change="handleChange3"  >
+              <template v-slot:tableColumn="cell">
+                <template v-for="item in cell.tableData">
+                  <el-table-column
+                    :prop="item.prop"
+                    :label="item.label"
+                    :width="item.width"
+                    :key="item.prop"
+                  ></el-table-column>
+                </template>
+            </template>
+          </list-page>
+       </el-dialog>
+      <el-input type="text" v-model="DeptEntity.storeName" show-word-limit></el-input>
     </div>
     <div class="left-input-container">
       <span>地址</span>
@@ -144,7 +166,6 @@
     </div>
 
     <div class="footerContainer el-top">
-      
       <el-button type="primary" @click="saveDept()">确定</el-button>
       <el-button type="primary" @click="back()">返回</el-button>
     </div>
@@ -166,7 +187,7 @@ export default {
       queryData: {
         keyWord: "",
         isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户
-        del:0 ,//0 查询在职员工,1 查询离职员工,2 查询待离职员工
+        del:0 ,//0 查询在职用户,1 查询离职用户,2 查询待离职用户
         type:0 //0 内部  1 游客
       },
       configSet: {
@@ -178,12 +199,7 @@ export default {
         total: 9, //总记录数
         pageSize: 5 //每页条数
       },
-      tableDataColumn: [       
-        { prop: "perName", label: "姓名" },
-        { prop: "deptName", label: "部门" },        
-        { prop: "companyName", label: "公司" },
-        { prop: "positionName", label: "岗位" },      
-      ],
+      tableDataColumn: [],
       currentRow: null,
       tableData: [],
       DeptEntity: {
@@ -202,9 +218,12 @@ export default {
         isArea: null,
         isCom : null,
         backUrl: null,
-        managerPerName:null
+        managerPerName:null,
+        sId:null,
+        storeName:null
       },
       dialogVisible:false,
+      dialogVisible3:false,
     };
   },
   watch: {},
@@ -213,11 +232,16 @@ export default {
     getDialogVisible(){
       this.dialogVisible = true;
        this.getPrincipal(1);
+       this.tableDataColumn = [
+        { prop: "perName", label: "姓名" },
+        { prop: "deptName", label: "部门" },
+        { prop: "companyName", label: "公司" },
+        { prop: "positionName", label: "岗位" },
+        ]
     },
     getPrincipal(currentPage){
       let params = { limit: this.pageJson.pageSize, page: currentPage, };
       params.coId = this.DeptEntity.coId;
-      params.postId =
       this.$api.post({
         url: '/employee/selectPrincipal',
         data: params,
@@ -229,7 +253,7 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-  
+
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
           this.tableData = result.data.list;
@@ -245,6 +269,7 @@ export default {
     },
     handleClose(){
       this.dialogVisible = false;
+      this.dialogVisible3 = false;
     },
     saveDept() {
     if(/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.DeptEntity.tel)){
@@ -298,6 +323,58 @@ export default {
     this.DeptEntity.managerPer = row.accountId;
     this.DeptEntity.managerPerName = row.perName;
     },
+    getStores(currentPage){
+      let params = { limit: this.pageJson.pageSize, page: currentPage, };
+      this.$api.post({
+        url: '/stroe/list',
+        data: params,
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          debugger;
+          if(result.data.list != null && result.data.list.length >0){
+          this.pageJson.total = result.data.totalCount;
+          this.pageJson.currentPage = result.data.currPage;
+          this.tableData = result.data.list;
+          }else{
+            this.$alert('', '请检查你的权限范围!!!', {
+            dangerouslyUseHTMLString: false
+            });
+          }
+        } else {
+          console.log("查询门店列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询门店列表结果：失败!!!");
+        console.log(e);
+      })
+    },
+    getDialogVisible3(){
+      this.dialogVisible3 = true;
+       this.getStores(1);
+       this.tableDataColumn = [
+        { prop: "storeName", label: "门店" },
+        ]
+    },
+    handleSizeChange3 (val) {
+      console.log(`设置了每页 ${val} 条`);
+      this.pageJson.pageSize = val;
+      this.getStores(1);
+    },
+    handleCurrentChange3 (val) {
+      this.getStores(val);
+    },
+    handleChange3(row){
+    console.log(row);
+    this.DeptEntity.storeName = row.storeName;
+    this.DeptEntity.sId = row.id;
+    },
   },
   created () { },
   mounted () {
@@ -315,6 +392,6 @@ export default {
     }
     console.log(this.DeptEntity.coId ,this.DeptEntity.deptParentID )
   }
-  
+
 };
 </script>

@@ -74,6 +74,24 @@ export default {
     }
     return nowData;
   },
+  deepCopy(obj, cache = []) {
+    if (obj === null || typeof obj !== 'object') {
+      return obj
+    }
+    const hit = find(cache, c => c.original === obj)
+    if (hit) {
+      return hit.copy
+    }
+    const copy = Array.isArray(obj) ? [] : {}
+    cache.push({
+      original: obj,
+      copy
+    })
+    Object.keys(obj).forEach(key => {
+      copy[key] = this.deepCopy(obj[key], cache)
+    })
+    return copy
+  },
   isNull(value) {
     if (value != 0 && (value === "" || value === null)) {
       return true;

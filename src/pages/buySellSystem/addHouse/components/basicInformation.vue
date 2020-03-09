@@ -1,170 +1,24 @@
 <style lang="less" scoped>
-.page-cell-addHouse {
-  padding: 0 50px;
-}
-.page-cell-item-flex {
-  display: flex;
-}
-.form-error-tips {
-  position: relative;
-  &.select-pad-width_100 {
-    margin-left: 20px;
-    .item-before {
-      width: 60px !important;
-    }
-    /deep/.el-input__inner {
-      width: 110px !important;
-      padding-right: 0 !important;
-    }
-  }
-  &.after-tips {
-    &::after {
-      position: absolute;
-      content: attr(data-tips);
-      color: red;
-      font-size: 13px;
-      bottom: 0;
-      transform: translateY(100%);
-    }
-  }
-  .page-cell-item {
-    display: flex;
-    display: -webkit-box; // flex 导致文本居中有问题，把前缀优先暂无问题
-    /deep/.el-input__inner {
-      width: 180px;
-    }
-    .el-input-group {
-      width: auto;
-    }
-    /deep/.el-input-group__prepend {
-      padding: 0;
-      border: none;
-      background: none;
-      white-space: normal;
-    }
-    /deep/.el-input-group__append {
-      padding: 0;
-      background: none;
-      border: none;
-      .item-before-col {
-        text-align: center;
-        margin-left: 10px;
-        color: #1d8957;
-      }
-    }
-    &.select-nobor {
-      /deep/.el-input__inner {
-        border: none;
-        border-bottom: 1px solid #c0c4cc;
-        border-radius: 0;
-      }
-    }
-    .item-before {
-      position: relative;
-      width: 80px;
-      margin-right: 10px;
-      height: 40px;
-      line-height: 40px;
-      text-align: justify;
-      font-size: 15px;
-      padding-left: 10px;
-      box-sizing: border-box;
-      color: #666;
-      &::before {
-        content: attr(data-before);
-        color: red;
-        position: absolute;
-        left: 0;
-      }
-      &::after {
-        content: "";
-        width: 100%;
-        display: inline-block;
-      }
-    }
-  }
-}
-
-.center-flex {
-  align-items: center;
-}
-.input-after-checkbox {
-  margin-left: 30px;
-}
-.margin-bot_20 {
-  margin-bottom: 20px;
-}
-.maging-top_60 {
-  margin-top: 60px;
-}
-.dividing_line {
-  height: 1px;
-  background: #c0c4cc;
-  margin-top: 20px;
-}
-.cell-tabs {
-  flex-wrap: wrap;
-  margin-top: 60px;
-  .page-cell-item-flex {
-    flex: 0 0 50%;
-    align-items: center;
-    font-size: 15px;
-    margin-top: 20px;
-    .cell-tabs-item-title {
-      width: 80px;
-      margin-right: 25px;
-      font-size: inherit;
-      color: #c0c0c0;
-      text-align: justify;
-      height: 40px;
-      line-height: 40px;
-      &:after {
-        display: inline-block;
-        width: 100%;
-        content: "";
-      }
-    }
-    .cell-tabs-item-data {
-      font-size: inherit;
-      color: #666;
-      display: flex;
-      .item-deep-data {
-        color: inherit;
-      }
-      .but-append {
-        cursor: pointer;
-        margin-left: 10px;
-        color: #0d824b;
-        align-self: center;
-        &::before {
-          content: attr(data-tips);
-          font-size: 13px;
-          text-decoration: underline;
-        }
-      }
-    }
-  }
-}
-.min-input {
-  border: none;
-  outline: none;
-  border-bottom: 1px solid #999;
-  width: 50px;
-  text-align: center;
-  font-size: 15px;
-}
-.input-tips {
-  display: flex;
-  align-items: center;
-  .min-input {
-    width: 40px;
-  }
-}
+@import url(../../../../assets/publicLess/addHouse.less);
 </style>
 <template>
   <div class="page-cell-addHouse"
        element-loading-text="我在去获取数据的路上了~"
        v-loading="loading">
+    <div class="form-error-tips "
+         id="addHouseType">
+      <div class="page-cell-item">
+        <div class="item-before"
+             data-before="*"></div>
+        <el-radio-group v-model="addHouseType"
+                        @change="houseTypeChange"
+                        size="mini">
+          <el-radio label="basicInformation">单套录入</el-radio>
+          <el-radio label="morePushHouse">多套录入</el-radio>
+        </el-radio-group>
+        <span class="addhouse-tips">(多套录入仅支持同一小区同一业主)</span>
+      </div>
+    </div>
     <!-- 楼盘名称 -->
     <div class="page-cell-item-flex">
       <div class="form-error-tips"
@@ -419,7 +273,7 @@
           <div class="item-deep-data">
             <div class="input-tips"
                  key="input-tips"
-                 v-if="changeBut.roomType">
+                 v-show="changeBut.roomType">
               <input type="text"
                      key="room"
                      maxlength="2"
@@ -461,7 +315,7 @@
                      data-vv-as="阳台"
                      class="min-input">阳台
             </div>
-            <span v-else>{{formData.room || 0}}室{{formData.hall || 0}}厅{{formData.toilet || 0}}卫{{formData.balcony || 0}}阳台</span>
+            <span v-show="!changeBut.roomType">{{formData.room || 0}}室{{formData.hall || 0}}厅{{formData.toilet || 0}}卫{{formData.balcony || 0}}阳台</span>
           </div>
           <div class="but-append"
                :data-tips="changeBut.roomType ? '完成' : '修改'"
@@ -542,6 +396,9 @@ export default {
     getData: {
       type: Boolean,
       default: false
+    },
+    houseType: {
+      type: String
     }
   },
   computed: {
@@ -586,25 +443,31 @@ export default {
       this.getLoadData();
     }
     window.addEventListener('click', this.bodyClick)
-    if(this.$route.query.flag=='potentia'){
+    if (this.$route.query.flag == 'potentia') {
       this.getCommunityData(this.$route.query.comId);
       this.getBuildingData(this.$route.query.cbId);
       this.getRoomData(this.$route.query.bhId);
       this.selectPageCommunit.list.push({ value: this.$route.query.comId, name: this.$route.query.communityName });
-      this.formData.communityId=this.$route.query.comId;
+      this.formData.communityId = this.$route.query.comId;
       this.selectPageeBuildingNo.list.push({ value: this.$route.query.cbId, name: this.$route.query.buildingName });
-      this.formData.buildingId=this.$route.query.cbId;
+      this.formData.buildingId = this.$route.query.cbId;
       this.selectPageRoomNo.list.push({ value: this.$route.query.bhId, name: this.$route.query.roomNo });
-      this.formData.roomId=this.$route.query.bhId;
-      this.formData.customerName=this.$route.query.customerName;
-      this.formData.tel=this.$route.query.tel;
+      this.formData.roomId = this.$route.query.bhId;
+      this.formData.customerName = this.$route.query.customerName;
+      this.formData.tel = this.$route.query.tel;
     }
     console.log(this.$route.query.flag)
   },
   destroyed () {
     window.removeEventListener('click', this.bodyClick)
   },
+  activated () {
+    this.addHouseType = this.houseType;
+  },
   methods: {
+    houseTypeChange (e) {
+      this.$emit('update:houseType', e);
+    },
     //点击其他位置进行判断，取消input
     bodyClick () {
       let that = this;
@@ -973,7 +836,7 @@ export default {
             that.$store.commit('updateId', e.data.data)
           }
           that.$store.commit("updateStep1", that.deffData);
-          return false;
+          return true;
         } else {
           return false;
         }
@@ -984,6 +847,7 @@ export default {
   },
   data () {
     return {
+      addHouseType: this.houseType,
       step: {},
       addTel: [],
       sexList: sex,

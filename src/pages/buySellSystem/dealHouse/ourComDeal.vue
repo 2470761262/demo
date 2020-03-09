@@ -9,8 +9,10 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
         <el-select v-model="data.comId"
+                   @change="queryCBId()"
                    filterable
                    remote
+                   @focus="remoteInput"
                    placeholder="请输入楼盘进行搜索"
                    :remote-method="remoteMethod"
                    :loading="loading"
@@ -206,6 +208,40 @@ export default {
       return array.filter(item => {
         return item.isType.includes(type);
       });
+    },
+    remoteInput () {
+
+      if (this.data.comId == 0) {
+        this.remoteMethod();
+      }
+    },
+    remoteMethod (query) {
+      var that = this;
+      if (query !== "") {
+        this.loading = true;
+
+        this.$api
+          .get({
+            url: "/mateHouse/queryCommunity",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
+            data: {
+              page: 1,
+              limit: 50,
+              communityName: query
+            }
+          })
+          .then(e => {
+            console.log(e.data);
+            if (e.data.code == 200) {
+              that.loading = false;
+              that.options = e.data.data.list;
+            }
+          });
+      } else {
+        this.options = [];
+      }
     },
     handleClick () { },
     queryTabData () {

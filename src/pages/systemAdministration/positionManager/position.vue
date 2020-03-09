@@ -11,10 +11,9 @@
                @queryTabData="queryTabData"
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
-
       <template v-slot:top>
         <div class="page-form-inline budingMarinSet"
-             style="margin-bottom: 10px;">
+             style="margin: 10px;">
           <el-input style="width: 400px;"
                     placeholder="角色名称搜索"
                     v-model="queryData.keyword">
@@ -118,7 +117,7 @@ export default {
       },
       pageJson: {
         currentPage: 1, //当前页码
-        total: 9, //总记录数
+        total: 0, //总记录数
         pageSize: 10 //每页条数
       },
       tableDataColumn: [

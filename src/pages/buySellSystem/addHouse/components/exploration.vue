@@ -43,8 +43,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg[1]"
+                    :preview-src-list="[qrCodeImg[1]]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -79,8 +85,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg['2']"
+                    :preview-src-list="[qrCodeImg['2']]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -115,8 +127,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+           <el-image :src="qrCodeImg['3']"
+                    :preview-src-list="[qrCodeImg['3']]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -151,8 +169,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg['4']"
+                    :preview-src-list="[qrCodeImg['4']]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -187,8 +211,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+            <el-image :src="qrCodeImg['5']"
+                    :preview-src-list="[qrCodeImg['5']]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -223,8 +253,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-             alt="图片">
+         <el-image :src="qrCodeImg['6']"
+                    :preview-src-list="[qrCodeImg['6']]"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -252,9 +288,15 @@
                    @click="deleteVideo(houseVideo)"></div>
             </div>
           </div>
-          <div class="upLoadFile-file-phone">
-            <img src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                 alt="图片">
+          <div class="upLoadFile-file-phone">            
+            <el-image :src="qrCodeImgVedio"
+              :preview-src-list="[qrCodeImgVedio]"
+              fit="cover">
+              <div slot="placeholder"
+                    class="image-slot">
+                加载中<span>...</span>
+              </div>
+            </el-image>
             <div>微信扫码上传</div>
           </div>
         </div>
@@ -279,10 +321,36 @@ export default {
     }
   },
   mounted () {
+    let that=this;
     //true 则去获取数据
-    if (this.getData) {
-      this.promiseAllViodeoAndImg();
+    if (that.getData) {
+      that.promiseAllViodeoAndImg();
     }
+    that.currentIndex=0;
+    that.qrCodeImg=[];
+    
+    that.webSocketUser=this.guid();
+    //接入聊天
+    that.contactSocket(that.webSocketUser);
+    let obj=that.picParams;
+    let temp;
+    for(let key  in obj){
+        console.log(key + '---' + obj[key]);
+        temp=obj[key];
+        temp.webSocketUser=that.webSocketUser;
+        that.getQrCode2(temp,function(data){
+                // that.qrCodeImgTemp[key]=(data.url);
+                //二维码标识，用于消息接受的路由
+                console.log("回调执行开始");
+                //console.log(that.picParams[key]);
+                that.picParams[key].qrCode=data.qrCode;
+                that.qrCodeImg[key]=data.url;
+                //console.log(that.picParams[key]);
+                //console.log("回调执行结束");
+        });
+    }
+    
+    this.getQrCodeForVedio();
   },
   data () {
     return {
@@ -301,10 +369,101 @@ export default {
       kitchenImgList: [],//厨房
       toiletImgList: [],//卫生间
       layoutImgList: [],//户型图
-      houseVideo: {}//房源视频
+      houseVideo: {},//房源视频
+      qrCodeImg:[],
+      qrCodeImgVedio:'',
+      picParams:{1:{"picContainer":"outdoorImgList","remark":"录入房源上传-外景图片"},
+      2:{"picContainer":"livingRoomImgList","remark":"录入房源上传-客厅图片"},
+      3:{"picContainer":"bedroomImgList","remark":"录入房源上传-卧室图片"},
+      4:{"picContainer":"kitchenImgList","remark":"录入房源上传-厨房图片"},
+      5:{"picContainer":"toiletImgList","remark":"录入房源上传-卫生间图片"},
+      6:{"picContainer":"layoutImgList","remark":"录入房源上传-户型图片"}},
+       websock: null,
+       webSocketUser:''
     }
   },
   methods: {
+    guid(){
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      });
+    },
+    receiveMessage(r){
+      let that=this;
+      console.log(r,"接收到了消息");
+      if(r.content.resourceType=="vedio"){
+        console.log(r.content,"视频消息内容，准备插入草稿箱")
+        that.uploadFileInfo(undefined,r.content.picUrl,function(data){
+          that.houseVideo=data;
+          that.houseVideo.url=r.content.picUrl;
+        });
+      }else{
+        let obj=that.picParams;
+        let temp;
+        for(let key  in obj){
+            temp=obj[key];
+            //找到消息是发送给哪个二维码的
+            if(temp.qrCode==r.content.qrCode){
+               let name=temp.picContainer;
+                console.log(name,"变量名字");
+                console.log(that[name],"找到了指定用户");
+                console.log(r.content.picUrl,"接受到消息的图片地址");
+                that.uploadFileInfo(temp.picClass,r.content.picUrl,function(data){
+                  data.url=r.content.picUrl;
+                  that[name].push(data);
+                });
+
+            }
+        }
+      }      
+    },
+    contactSocket (user) {
+      console.log("用户【" + user + "】开始接入");
+      this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""),user);
+      this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
+      console.log("用户【" + user + "】接入完毕");
+    },
+    getQrCodeForVedio(){
+        let that=this;
+        that.$api.post({
+                          url: '/scanUpload/getUploadQrCode',
+                          data: {'remark':"录入房源-上传视频","resourceType":"vedio","webSocketUser":that.webSocketUser,"businessParams":JSON.stringify({"test":"闭环参数"})},
+                          headers: { "Content-Type": "application/json" }
+                        }).then((e) => {
+                          let result = e.data;
+                          if (result.code == 200) {
+                              that.qrCodeImgVedio=(result.data.url);
+                          } else {
+                            console.log("h获取视频二维码结果：" + result.message);
+                            alert(result.message);
+                          }
+                        }).catch((e) => {
+                          console.log("查询视频二维码失败");
+                          console.log(e);
+                        })
+    },
+    getQrCode2(data,callback){
+      let that=this; 
+       that.$api.post({
+                      url: '/scanUpload/getUploadQrCode',
+                      data: data,
+                      headers: { "Content-Type": "application/json" }
+                    }).then((e) => {
+                      let result = e.data;
+                      console.log("请求二维码成功");
+                      if (result.code == 200) {
+                          //that.qrCodeImg="data:image/png;base64,"+item.img;
+                         callback(result.data);
+                      } else {
+                        console.log("h获取二维码结果：" + result.message);
+                        alert(result.message);
+                      }                     
+                    }).catch((e) => {                    
+                      console.log("查询二维码失败");
+                      console.log(e);                    
+                    })
+    },    
     openVideo () {
 
     },
@@ -425,6 +584,11 @@ export default {
       })
     },
     deleteVideo (item) {
+       //微信上传的视频或图片，没必要删除。他删除的也是草稿箱，我微信上传图片没放那个草稿箱，而且oss不限容量，没必要删除图片      
+      if(item.id==-1){
+        this.houseVideo = {};
+        return;
+      }
       this.$api.delete({
         url: `/draft-house/video/${item.id}`,
         data: {
@@ -435,6 +599,38 @@ export default {
         if (e.data.code == 200) {
           this.houseVideo = {}
         }
+      })
+    },
+    uploadFileInfo (picClass,url,callBack) {
+      let that = this;
+      let formData = {};
+      //注意大驼峰
+      formData.PicClass= picClass;
+      formData.IpStr=url;
+      formData.FileStr='';
+      formData.PicName='';
+      formData.DraftId=that.$store.state.addHouse.formData.id;
+      this.$api.post({
+        url: `/draft-house/${picClass != undefined ? 'pictureDraft' : 'videoDraft'}`,
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: formData        
+      }).then((json) => {
+        if (json.data.code == 200) {
+           callBack(json.data.data);
+        }else{
+           that.$message({
+            message: json.data.message,
+            type: 'warning'
+          })
+        }
+      }).catch((e) => {
+        console.log(e);
+        that.$message({
+          message: '不晓得为什么,反正失败了2',
+          type: 'warning'
+        })
+      }).finally(() => {
+        
       })
     },
     uploadSectionFile (picClass, uploader, fileListName) {
