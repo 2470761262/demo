@@ -115,18 +115,18 @@
       </el-table-column>
       <el-table-column label="审核项目">
         <template v-slot="scope">
-          {{scope.row.TypeString}}
+          {{scope.row.checkProject}}
         </template>
       </el-table-column>
 
       <el-table-column label="审核类型">
         <template v-slot="scope">
-          {{scope.row.TypeString}}
+          {{scope.row.checkType}}
         </template>
       </el-table-column>
       <el-table-column label="提交人">
         <template v-slot="scope">
-          {{scope.row.AddPerString}}
+          {{scope.row.addPerName}}
         </template>
       </el-table-column>
       <el-table-column label="提交时间">
@@ -216,6 +216,7 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
 
