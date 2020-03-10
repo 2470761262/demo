@@ -21,7 +21,9 @@
 <template>
   <div>
     <list-page
+      highlight-current-row
       :parentData="$data"
+      @current-change="handleChange"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
@@ -73,6 +75,8 @@
             size="mini"
             @click="queryEmployeeByDel(2)"
           >查询待离职用户</el-button>
+          <el-button  icon="el-icon-refresh" circle @click="switchUser()"></el-button>
+      
         </div>
       </template>
       <template v-slot:tableColumn="cell">
@@ -280,8 +284,27 @@ export default {
         console.log(e);
       })
     },
+    handleChange(row){
+    console.log(row);
+    switch (row.del) {
+      case "在职":
+        row.del = 0;
+        break;
+      case "离职":
+        row.del = 1;
+        break;
+      case "未带看锁定":
+        row.del = 2;
+        break;
+      case "未审核":
+        row.del = 3;
+        break;
+    }
+            
+    this.employeeEntity = row;
     
-    
+    console.log(this.employeeEntity);
+    },
     distributeEvent(e, id) {
       this[e](id);
       console.log(id);
@@ -355,6 +378,36 @@ export default {
         console.log("失败");
         console.log(e);
       })
+    },
+    switchUser(){
+      if(this.employeeEntity.id != null && this.employeeEntity.id != ""){
+        params.newPerId = this.employeeEntity.id;
+        this.$api.post({
+        url: '/employee/insertRATbl',
+        data: params,
+        token: false,
+        headers: { "Content-Type": "application/json;charset=UTF-8" }
+      }).then((e) => {
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          this.$alert('', '成功', {
+            dangerouslyUseHTMLString: false
+          });
+
+          this.$router.push({ path: "/sys/employeeList" });
+          
+        }else{
+          this.$alert("", result.message+"!!!", {
+              dangerouslyUseHTMLString: false
+            });
+        }
+      }).catch((e) => {
+        console.log("失败");
+        console.log(e);
+      })
+      }
+      
     }
   }
 };
