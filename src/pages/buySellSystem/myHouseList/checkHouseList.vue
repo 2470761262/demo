@@ -1,8 +1,3 @@
-<style lang="less" scoped>
-.a {
-  background-image: url(../../../assets/images/channel_current.png);
-}
-</style>
 <template>
   <list-page :parentData="$data"
              @handleClick="handleClick"
@@ -21,7 +16,7 @@
                      placeholder="请输入楼盘名称搜索"
                      :remote-method="remoteMethod"
                      :loading="loading">
-            <el-option v-for="item in optionsList"
+            <el-option v-for="item in comList"
                        :key="item.value"
                        :label="item.name"
                        :value="item.value">
@@ -29,15 +24,37 @@
           </el-select>
         </el-item>
 
-        <el-select v-model="value"
-                   filterable
-                   placeholder="请选择">
-          <el-option v-for="item in options"
-                     :key="item.value"
-                     :label="item.label"
-                     :value="item.value">
-          </el-option>
-        </el-select>
+        <el-item label="栋座"
+                 prop="cbId"
+                 class="page-label-center">
+          <el-select v-model="queryData.cbId"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+              <!--如果接口是模糊搜索，value改成item.name就行 -->
+            </el-option>
+          </el-select>
+        </el-item>
+        <el-item label="房间号"
+                 prop="roomNo"
+                 clearable
+                 class="page-label-center">
+          <el-select v-model="queryData.roomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
+
         <template slot="prepend">房源状态</template>
         <el-date-picker v-model="queryData.timeSelect"
                         type="daterange"
@@ -46,10 +63,42 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
-        <el-button type="primary"
-                   style="margin-left:30px"
-                   size="mini"
-                   @click="querylistByParams">查询</el-button>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+              @click="Remove">
+          清除
+        </span>
+        <div style="margin-top:15px">
+
+          <span style="margin-left:30px">
+            审核类型：
+          </span>
+          <el-select filterable
+                     v-model="type"
+                     placeholder="请选择">
+            <el-option v-for="item in typeList"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <span style="margin-left:30px">
+            审核状态：
+          </span>
+          <el-select filterable
+                     v-model="state"
+                     placeholder="请选择">
+            <el-option v-for="item in stateList"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button type="primary"
+                     style="margin-left:30px"
+                     size="mini"
+                     @click="querylistByParams">查询</el-button>
+        </div>
+
       </div>
     </template>
 
@@ -66,18 +115,18 @@
       </el-table-column>
       <el-table-column label="审核项目">
         <template v-slot="scope">
-          {{scope.row.checkProject}}
+          {{scope.row.TypeString}}
         </template>
       </el-table-column>
 
       <el-table-column label="审核类型">
         <template v-slot="scope">
-          {{scope.row.checkType}}
+          {{scope.row.TypeString}}
         </template>
       </el-table-column>
       <el-table-column label="提交人">
         <template v-slot="scope">
-          {{scope.row.addPerName}}
+          {{scope.row.AddPerString}}
         </template>
       </el-table-column>
       <el-table-column label="提交时间">
@@ -97,10 +146,7 @@
       </el-table-column>
       <el-table-column label="附件">
         <template v-slot="scope">
-          <el-image v-if="scope.row.accessory==1"
-                    :src="accessoryUrl">
-
-          </el-image>
+          {{scope.row.sad}}
         </template>
       </el-table-column>
       <el-table-column label="操作"
@@ -166,12 +212,10 @@
       </el-table-column>
     </template>
   </list-page>
-
 </template>
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
-import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
 
@@ -180,6 +224,12 @@ export default {
   },
   data () {
     return {
+      type: '',
+      option: '',
+      state: '',
+      cbIdList: '',
+      roomNoList: '',
+      comList: '',
       dialogVisible: false,
       value: '',
       input: '',
@@ -208,6 +258,16 @@ export default {
 
         ]
       },
+      stateList: [{
+        value: '0',
+        label: '待审核'
+      }, {
+        value: '1',
+        label: '审核通过'
+      }, {
+        value: '2',
+        label: '未通过'
+      },],
       options: [{
         value: '选项1',
         label: '全部'
@@ -227,10 +287,67 @@ export default {
         value: '选项6',
         label: '已过期'
       }],
+      projectList: [{
+        value: '1',
+        label: '作业人申请'
+      }, {
+        value: '2',
+        label: '取代申请'
+      }, {
+        value: '3',
+        label: '房源转状态'
+      }, {
+        value: '4',
+        label: '建楼申请'
+      }, {
+        value: '5',
+        label: '举报'
+      }, {
+        value: '6',
+        label: '录入修改'
+      }],
+      typeList: [{
+        value: '0',
+        label: '钥匙人'
+      }, {
+        value: '1',
+        label: '独家委托取代'
+      }, {
+        value: '2',
+        label: '类型转换'
+      }, {
+        value: '3',
+        label: '申请删除'
+      }, {
+        value: '4',
+        label: '取代'
+      }, {
+        value: '5',
+        label: '客户ab类'
+      }, {
+        value: '6',
+        label: '客户删除'
+      }, {
+        value: '7',
+        label: '房源T类'
+      }, {
+        value: '8',
+        label: '房源转状态'
+      }, {
+        value: '9',
+        label: '普通委托'
+      }, {
+        value: '10',
+        label: '录入房源'
+      }, {
+        value: '11',
+        label: '举报'
+      }],
       queryData: {
         CommunityName: '',
         timeSelect: '',
-
+        roomNo: '',
+        cbId: '',
       },
       accessoryUrl: require('../../../assets/images/accessory.png'),
       showPopUp: false,
@@ -300,6 +417,71 @@ export default {
       }).catch((e) => {
         that.$message("操作失败");
       })
+    },
+    remoteInput () {
+
+      if (this.comId.length == 0) {
+        this.remoteMethod();
+      }
+    },
+    remoteMethod (query) {
+      var that = this
+      if (query !== '') {
+        this.loading = true;
+
+        this.$api.get({
+          url: "/mateHouse/queryCommunity",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        }).then((e) => {
+          console.log(e.data.code)
+          if (e.data.code == 200) {
+
+            that.loading = false;
+            that.comList = e.data.data.list;
+
+          }
+        })
+      } else {
+        this.options = [];
+      }
+    },
+    Remove () {
+      this.cbId = '';
+      this.type = '';
+      this.state = '';
+      this.value = '';
+      this.queryData.roomNo = '';
+      this.queryData.CommunityName = '';
+      this.queryData.cbId = '';
+
+      this.queryData.timeSelect = '';
+    },
+    queryCBId () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryComBuilding",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.queryData.CommunityName,
+          page: 1,
+          limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.queryData.roomNo = '';
+          that.queryData.cbId = '';
+          that.cbIdList = e.data.data.list;
+        }
+      })
 
     },
     getTitle (row) {
@@ -312,19 +494,23 @@ export default {
       this.row = row
       this.showPopUp = true;
     },
-    queryAddPerId () {
+    queryRoomNo () {
       var that = this
       this.$api.get({
-        url: "/mateHouse/queryComBuilding",
+        url: "/mateHouse/queryBuildIngHouses",
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         token: false,
         qs: true,
         data: {
-          comId: that.form.comId
+          comId: that.queryData.comId,
+          cbId: that.queryData.cbId,
+          page: 1,
+          limit: 50
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.cbIdList = e.data.data.list;
+          that.queryData.roomNo = '';
+          that.roomNoList = e.data.data.list;
         }
       })
     },
@@ -340,14 +526,11 @@ export default {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
-      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
-      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
-      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
-      if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
-      if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
-      if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
-      if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
+      if (this.queryData.cbId != null && this.queryData.cbId != '') { params.cbId = this.queryData.cbId; }
+      if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomNo = this.queryData.roomNo; }
+      if (this.state != null && this.state != '') { params.state = this.state; }
+      if (this.type != null && this.type != '') { params.type = this.type; }
+      if (this.value != null && this.value != '') { params.value = this.value; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
       this.$api.post({
@@ -412,7 +595,7 @@ export default {
           if (e.data.code == 200) {
 
             that.loading = false;
-            that.optionsList = e.data.data.list;
+            that.comList = e.data.data.list;
           }
         })
       } else {

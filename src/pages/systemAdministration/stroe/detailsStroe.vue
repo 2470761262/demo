@@ -108,6 +108,7 @@ export default {
   },
   data () {
     return {
+       sidebarFlag:false,
       loading: false,
       stroeDeptEntity: {
         sId: null,

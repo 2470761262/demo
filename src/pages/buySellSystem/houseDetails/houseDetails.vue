@@ -357,7 +357,7 @@ input[type="number"]::-webkit-outer-spin-button {
       </el-popover>
       <el-dialog title=""
                  :visible.sync="addBetSuccess"
-                 width="240px"
+                 width="232px"
                  top="300px">
         <div style="margin-top: -40px">
           <div v-if="!addBetResult.status"
@@ -365,8 +365,9 @@ input[type="number"]::-webkit-outer-spin-button {
             <span>{{addBetResult.err}}</span>
           </div>
           <div v-if="addBetResult.status">
-            <p style="margin-left: 40px;margin-bottom: 10px;">对赌已生效</p>
-            <p style="margin-bottom: 10px;font-size: x-large;color: black;">{{betAmount}}鑫币已扣除</p>
+            <el-image style="margin-left: 20px" :src="require('../../../assets/images/beton.png')" lazy></el-image>
+            <p style="margin:10px 60px;">对赌已生效</p>
+            <p style="margin-bottom: 10px;margin-left: 13px;font-size: x-large;color: black;">{{betAmount}}鑫币已支付</p>
             <button style="width: 80px;font-size: medium;border: 0px;margin-left: 60px;background-color: #0d824b;border-radius:5px;">加油</button>
           </div>
         </div>

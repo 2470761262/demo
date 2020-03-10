@@ -69,12 +69,14 @@
         <el-table-column :prop="item.prop" :label="item.label"
                          :width="item.width"
                          :key="item.prop"
+                          :formatter="item.formart"
                           :sort-orders="['ascending', 'descending']"
                          :sortable="item.order">
         </el-table-column>
       </template>
       <el-table-column label="操作"
                        fixed="right"
+                       width="150"
                        key="operation">
         <template v-slot="scope">
           <el-button type="info"
@@ -123,15 +125,15 @@ export default {
         { prop: 'communityName', label: '小区名称', order: false, width: '150', disabled: true, default: true},
         { prop: 'buildingName', label: '楼栋号', width: '90', order: false, disabled: true, default: true},
         { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true},
-        { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true,formart:(item)=> item.inArea+'m²' },
-        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true,formart:(item)=> item.price+'万元' },
+        { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true,formart: item=> item.inArea+'m²' },
+        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true,formart: item=> item.price+'万元' },
         { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true},
         { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true},
         { prop: 'notLookNum', label: '未被看天数', width: '120', order: false, disabled: false, default: true},
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: true },
         { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true},
-        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true,formart:(item)=> item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
-        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false,format:(item)=> item.unitpaice+'元/㎡' },
+        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true,formart: item=> item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false,format: item=> item.unitpaice+'元/㎡' },
         { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false},
         { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false},
         { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: false },
@@ -258,9 +260,9 @@ export default {
         console.log(e.data);
         let data = e.data
         if (data.code == 200) {
-           that.pageJson.total=data.dataCount;
-          that.pageJson.currentPage=data.pageSum;
-          that.tableData = data.data;
+           that.pageJson.total=data.data.dataCount;
+          that.pageJson.currentPage=data.data.pageSum;
+          that.tableData = data.data.data;
         } else {
           console.log("查询独家房源列表结果：" + result.message);
           alert(result.message);
