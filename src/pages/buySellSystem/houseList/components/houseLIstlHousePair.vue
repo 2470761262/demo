@@ -199,9 +199,9 @@
         <div class="select-input-set">
           <i class="el-icon-search"></i> <input type="text"
                  class="select-input-sub"
-                 placeholder="请输入关键字" />
+                 placeholder="请输入关键字" v-model="searchData"/>
         </div>
-        <div class="select-but-sub">开始搜索</div>
+        <div class="select-but-sub"  @click="search">开始搜索</div>
         <div class="select-but-reset"
              @click="resetForm('form')">
           <i class="el-icon-refresh reset-icon"></i>
@@ -213,6 +213,7 @@
         <el-form-item label="楼盘名称"
                       prop="comId">
           <el-select v-model="form.comId"
+           @focus="remoteInput"
                      @change="queryCBId()"
                      filterable
                      remote
@@ -547,6 +548,7 @@ export default {
   },
   data () {
     return {
+      searchData:'',
       flootMinMax: {
         min: -2,
         max: 40
@@ -682,6 +684,12 @@ export default {
         }
       })
     },
+    remoteInput () {
+      var that =this;
+      if (that.form.comId.length == 0) {
+        this.remoteMethod();
+      }
+    },
     remoteMethod (query) {
       var that = this
       if (query !== '') {
@@ -719,6 +727,8 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
+           that.form.roomNo = '';
+          that.form.cbId = '';
           that.cbIdList = e.data.data.list;
         }
       })
@@ -736,9 +746,14 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
+           that.form.roomNo = '';
           that.roomNoList = e.data.data.list;
         }
       })
+    },
+    search(){
+      var that=this;
+      that.form.searchInfo=that.searchData;
     },
     mateHouse () {
       var that = this
