@@ -110,7 +110,7 @@
           <el-button type="success"
                      size="mini"
                      v-if="scope.row.Tag==0"
-                     @click="getTitle(scope.row.Type)">审核</el-button>
+                     @click="getTitle(scope.row)">审核</el-button>
           <el-button size="mini"
                      type="info"
                      v-else>已审核</el-button>
@@ -127,23 +127,40 @@
                   <el-radio :label="2">不通过</el-radio>
                 </el-radio-group>
               </div>
+              <div v-if="row.Type==1||row.ReplaceType==2">
+                <span>委托截止时间:</span>
+                <span>{{row.ProxyMaxTime}}</span>
+              </div>
+              <div v-if="row.Type==0||row.ReplaceType==3"
+                   style="display:flex">
+                <span>钥匙类型:</span>
+                <span v-if="row.keyType==0">钥匙</span>
+                <span v-if="row.keyType==1">指纹锁</span>
+                <span v-if="row.keyType==2">密码锁</span>
+                <div v-if="row.keyType==2"
+                     style="margin-left:20px;">
+                  <span>密码:</span>
+                  <span>{{row.keyCode}}</span>
+                </div>
+              </div>
               <div>
                 <el-input type="textarea"
                           placeholder="请输入审核说明"
                           v-model="checkMemo">
                 </el-input>
               </div>
+
             </div>
             <span slot="footer"
                   class="dialog-footer">
               <el-button @click="showPopUp = false">取 消</el-button>
               <el-button type="primary"
-                         @click="checkHouse(scope.row.id)">确 定</el-button>
+                         @click="checkHouse()">确 定</el-button>
             </span>
           </el-dialog>
 
           <el-button type="success"
-                     @click="toHouseDetail(scope.row.id)"
+                     @click="toHouseDetail(scope.row.Eid)"
                      size="mini">查看</el-button>
         </template>
       </el-table-column>
@@ -246,17 +263,19 @@ export default {
         }
       ],
       title: "",
-      optionsList: []
+      optionsList: [],
+      checkId: 0,
+      row: {}
     }
   },
   mounted () {
     this.querylist(1);
   },
   methods: {
-    checkHouse (id) {
+    checkHouse () {
       let that = this;
       let params = {
-        id: id,
+        id: this.checkId,
         CheckMemo: this.checkMemo,
         Tag: this.checkStatus
       }
@@ -276,18 +295,21 @@ export default {
         that.$message(result.message);
         if (result.code == 200) {
           that.querylistByParams();
+          that.CheckMemo = "";
         }
       }).catch((e) => {
         that.$message("操作失败");
       })
 
     },
-    getTitle (checkType) {
+    getTitle (row) {
       this.titleList.forEach(element => {
-        if (element.key == checkType) {
+        if (element.key == row.Type) {
           this.title = element.value;
         }
       });
+      this.checkId = row.id;
+      this.row = row
       this.showPopUp = true;
     },
     queryAddPerId () {
