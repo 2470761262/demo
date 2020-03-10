@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .page-body {
-  height: 100%;
+  min-height: 100%;
   display: flex;
   background: #fff;
   .page-body-warp {
@@ -14,6 +14,7 @@
     .page-body-conter-right {
       flex: 1;
       overflow: hidden;
+      width: 0;
     }
   }
   .page-body-floot {

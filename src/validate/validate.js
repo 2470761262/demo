@@ -34,6 +34,27 @@ Validator.extend('noZero1', {
   },
   validate: value => /^(?!0$|0\.00|0\.0|0\d+$)([1-9]?\d+(\.\d*)|(\\s&&[^\\f\\n\\r\\t\\v])|([1-9]*[1-9][0-9]*)?)$/.test(value)
 });
+//比较大小
+Validator.extend('isGreater', {
+  compare: ['compare', 'title'],
+  messages: {
+    zh_CN: (field, args) => {
+      return `${field}不能大于${args[1]}:${args[0]== '' ? 0 : args[0]}`
+    }
+  },
+  validate: (value, compare) => {
+    return value < (compare[0] == '' ? 0 : compare[0]);
+  }
+});
+//中文
+Validator.extend('isChinese', {
+  messages: {
+    zh_CN: (field, args) => field + '需要是中文',
+  },
+  validate: (value) => {
+    return /^[\u4e00-\u9fa5]+$/.test(value)
+  }
+});
 Vue.use(VeeValidate, config);
 // 使用中文提示
 Validator.localize("zh_CN", veeMessage);

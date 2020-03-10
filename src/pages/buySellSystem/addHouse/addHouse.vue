@@ -36,12 +36,9 @@
         border-right: 1px solid #999;
         width: 940px;
         padding-bottom: 59px;
-        // margin: 0 auto;
-        //transform: translateX(-50%);
+        box-sizing: border-box;
         left: calc(50% - 940px / 2);
         min-height: 100%;
-        // top: 0;
-        //bottom: 0;
       }
     }
     .page-contenr-but {
@@ -82,7 +79,8 @@
       <div :class="['page-contenr-com',{'page-contenr-com-over':butLoading}]">
         <div class="page-contenr-com-posi">
           <keep-alive>
-            <component :getData="formDataGet"
+            <component :houseType.sync="componentName"
+                       :getData="formDataGet"
                        :is="componentName"
                        ref="com"></component>
           </keep-alive>
@@ -122,7 +120,8 @@ export default {
     basicInformation,
     supplement: () => componentsFactory("pages/buySellSystem/addHouse/components/supplement"), //补充信息
     exploration: () => componentsFactory("pages/buySellSystem/addHouse/components/exploration"), //实勘图片/视频
-    addHouseSuccess: () => componentsFactory("pages/buySellSystem/addHouse/components/addHouseSuccess") //邀请验真
+    addHouseSuccess: () => componentsFactory("pages/buySellSystem/addHouse/components/addHouseSuccess"), //邀请验真
+    morePushHouse: () => componentsFactory("pages/buySellSystem/addHouse/components/morePushHouse") //多套录入
   },
   created () {
 
@@ -134,19 +133,23 @@ export default {
       this.reSetMethod = method == 'reset' ? true : false;
     }
   },
-  mounted () {
-
-  },
   watch: {
     stepsActiveIndex (val) {
       if (val < this.stepsList.length - 1) this.nextText = "下一步";
       else this.nextText = "邀请验真";
+    },
+    componentName (val) {
+      if (val == "morePushHouse") {
+        this.nextText = "邀请验真";
+      } else {
+        this.nextText = "下一步";
+      }
     }
   },
   data () {
     return {
       reSetMethod: false,
-      componentName: "basicInformation",
+      componentName: "basicInformation",//morePushHouse
       stepsList: [
         { title: "必填信息", componentName: "basicInformation" },
         { title: "选填信息", componentName: "supplement" },

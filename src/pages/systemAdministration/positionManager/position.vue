@@ -6,16 +6,14 @@
 </style>
 <template>
   <div>
-    <feedback/>
     <list-page v-show="!showForm"
                :parentData="$data"
                @queryTabData="queryTabData"
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
-
       <template v-slot:top>
         <div class="page-form-inline budingMarinSet"
-             style="margin-bottom: 10px;">
+             style="margin: 10px;">
           <el-input style="width: 400px;"
                     placeholder="角色名称搜索"
                     v-model="queryData.keyword">

@@ -29,12 +29,8 @@
 </style>
 <template>
   <div>
-    <feedback/>
     <template>
       <div class="elTree">
-        <div>
-
-        </div>
         关键字:
         <el-input style="width: 200px;"
                   placeholder="输入关键字进行过滤"
@@ -70,7 +66,7 @@
           </div>
           <div class="formItem">
             <el-button type="primary"
-                       @click="saveSiblingRule">添加同级子节点</el-button>
+                       @click="saveSiblingRule">添加同级节点</el-button>
           </div>
           <div class="formItem">
             <el-button type="primary"
@@ -165,7 +161,7 @@
             是否超级:
             <el-select v-model="ruleObj.isSuper"
                        placeholder="范围">
-              <el-option v-for="item in areaList"
+              <el-option v-for="item in isSuperList"
                          :key="item.id"
                          :label="item.name"
                          :value="item.type">
@@ -494,7 +490,8 @@ export default {
       console.log(this.ruleObj, "rule object。。。")
       this.saveType = "saveSub";
       let pId = this.ruleObj.id;
-      this.ruleObj = this.defaultRule;
+      let rule = this.defaultRule;
+      this.ruleObj = rule;
       this.ruleObj.pId = pId;
       this.showTable = true;
       this.selectRuleUrlConfig();
@@ -507,7 +504,8 @@ export default {
       }
       this.saveType = "saveSib";
       let id = this.ruleObj.id;
-      this.ruleObj = this.defaultRule;
+      let rule = this.defaultRule;
+      this.ruleObj = rule;
       this.ruleObj.id = id;
       this.showTable = true;
       this.selectRuleUrlConfig();
@@ -520,7 +518,7 @@ export default {
     },
     //保存节点信息
     saveRuleObj () {
-      //获取参数进行重置密码;
+      //获取参数进行保存;
       if (!this.ruleObj) {
         this.$message.info("请填充内容后进行保存");
         return;
