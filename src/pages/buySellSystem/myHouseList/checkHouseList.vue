@@ -55,15 +55,6 @@
           </el-select>
         </el-item>
 
-        <el-select v-model="value"
-                   filterable
-                   placeholder="请选择">
-          <el-option v-for="item in options"
-                     :key="item.value"
-                     :label="item.label"
-                     :value="item.value">
-          </el-option>
-        </el-select>
         <template slot="prepend">房源状态</template>
         <el-date-picker v-model="queryData.timeSelect"
                         type="daterange"
@@ -72,27 +63,19 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
-        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+              @click="Remove">
           清除
         </span>
         <div style="margin-top:15px">
-          <span style="margin-left:30px">
-            审核项目：
-          </span>
-          <el-select filterable
-                     placeholder="请选择">
-            <el-option v-for="item in options"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value">
-            </el-option>
-          </el-select>
+
           <span style="margin-left:30px">
             审核类型：
           </span>
           <el-select filterable
+                     v-model="type"
                      placeholder="请选择">
-            <el-option v-for="item in options"
+            <el-option v-for="item in typeList"
                        :key="item.value"
                        :label="item.label"
                        :value="item.value">
@@ -102,8 +85,9 @@
             审核状态：
           </span>
           <el-select filterable
+                     v-model="state"
                      placeholder="请选择">
-            <el-option v-for="item in options"
+            <el-option v-for="item in stateList"
                        :key="item.value"
                        :label="item.label"
                        :value="item.value">
@@ -152,7 +136,7 @@
       </el-table-column>
       <el-table-column label="审核状态">
         <template v-slot="scope">
-          {{scope.row.TagString}}
+          {{scope.row.checkStatus}}
         </template>
       </el-table-column>
       <el-table-column label="备注说明">
@@ -191,6 +175,9 @@ export default {
   },
   data () {
     return {
+      type: '',
+      option: '',
+      state: '',
       cbIdList: '',
       roomNoList: '',
       comList: '',
@@ -222,14 +209,14 @@ export default {
 
         ]
       },
-      state: [{
+      stateList: [{
         value: '0',
         label: '待审核'
       }, {
         value: '1',
-        label: '已审核'
+        label: '审核通过'
       }, {
-        value: '-1',
+        value: '2',
         label: '未通过'
       },],
       options: [{
@@ -250,6 +237,62 @@ export default {
       }, {
         value: '选项6',
         label: '已过期'
+      }],
+      projectList: [{
+        value: '1',
+        label: '作业人申请'
+      }, {
+        value: '2',
+        label: '取代申请'
+      }, {
+        value: '3',
+        label: '房源转状态'
+      }, {
+        value: '4',
+        label: '建楼申请'
+      }, {
+        value: '5',
+        label: '举报'
+      }, {
+        value: '6',
+        label: '录入修改'
+      }],
+      typeList: [{
+        value: '0',
+        label: '钥匙人'
+      }, {
+        value: '1',
+        label: '独家委托取代'
+      }, {
+        value: '2',
+        label: '类型转换'
+      }, {
+        value: '3',
+        label: '申请删除'
+      }, {
+        value: '4',
+        label: '取代'
+      }, {
+        value: '5',
+        label: '客户ab类'
+      }, {
+        value: '6',
+        label: '客户删除'
+      }, {
+        value: '7',
+        label: '房源T类'
+      }, {
+        value: '8',
+        label: '房源转状态'
+      }, {
+        value: '9',
+        label: '普通委托'
+      }, {
+        value: '10',
+        label: '录入房源'
+      }, {
+        value: '11',
+        label: '举报'
       }],
       queryData: {
         CommunityName: '',
@@ -297,6 +340,17 @@ export default {
       } else {
         this.options = [];
       }
+    },
+    Remove () {
+      this.cbId = '';
+      this.type = '';
+      this.state = '';
+      this.value = '';
+      this.queryData.roomNo = '';
+      this.queryData.CommunityName = '';
+      this.queryData.cbId = '';
+
+      this.queryData.timeSelect = '';
     },
     queryCBId () {
       var that = this
@@ -350,14 +404,11 @@ export default {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
-      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
-      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
-      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
-      if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
-      if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
-      if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
-      if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
+      if (this.queryData.cbId != null && this.queryData.cbId != '') { params.cbId = this.queryData.cbId; }
+      if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomNo = this.queryData.roomNo; }
+      if (this.state != null && this.state != '') { params.state = this.state; }
+      if (this.type != null && this.type != '') { params.type = this.type; }
+      if (this.value != null && this.value != '') { params.value = this.value; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
       this.$api.post({
