@@ -13,7 +13,7 @@
 .login {
   position: fixed;
   font-size: 24px;
-  height: 500px;
+  height: 900px;
   width: 97%;
   background-color: #ffffff;
   border-radius: 0.25rem;
