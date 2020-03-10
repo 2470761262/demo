@@ -15,6 +15,7 @@
                      @change="queryCBId()"
                      filterable
                      remote
+                     style="width: 180px"
                      clearable
                      placeholder="请选择楼盘进行搜索"
                      @focus="remoteCommunityNameInput"
@@ -62,16 +63,16 @@
         </el-form-item>
 
         <el-form-item label="价格" prop="money_from">
-          <el-col :span="10">
-            <el-input clearable v-model="data.moneyFrom" placeholder="最小值"/>
+          <el-col :span="8">
+            <el-input clearable v-model="data.moneyFrom"  placeholder="最小值"/>
           </el-col>
           <el-col class="line" :span="2" align="center">-</el-col>
-          <el-col :span="10">
+          <el-col :span="8">
             <el-form-item prop="money_to">
               <el-input clearable v-model="data.moneyTo" placeholder="最大值"/>
             </el-form-item>
           </el-col>
-            万
+          <el-col class="line" :span="1" align="center">万</el-col>
         </el-form-item>
 
         <el-form-item label="对赌日期" prop="timeSelect">
