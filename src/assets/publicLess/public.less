@@ -85,3 +85,42 @@ div {
 .font-big-title {
   font-size: 20px;
 }
+
+html {
+  min-width: 1280px;
+  max-width: 1920px;
+
+  @media screen and (max-width: 1280px) {
+    font-size: 66.66px;
+  }
+
+  @media screen and (min-width: 1280px) and (max-width: 1369px) {
+    font-size: 66.66px;
+  }
+
+  @media screen and (min-width: 1369px) and (max-width: 1440px) {
+    font-size: 71.3px;
+  }
+
+  @media screen and (min-width: 1441px) and (max-width: 1600px) {
+    font-size: 75.05px;
+  }
+
+  @media screen and (min-width: 1601px) and (max-width: 1800px) {
+    font-size: 83.38px;
+  }
+
+  @media screen and (min-width: 1801px) and (max-width: 1919px) {
+    font-size: 93.8px;
+  }
+
+  @media screen and (min-width: 1920px) {
+    font-size: 100px;
+  }
+}
+
+body {
+  //overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+}

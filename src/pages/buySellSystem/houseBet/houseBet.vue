@@ -121,16 +121,50 @@
                          :key="item.prop">
         </el-table-column>
       </template>
+<!--      房源编号、楼盘名称、售价（可排序）、面积（可排序）、单价（可排序）、户型（X室X厅X卫）、对赌鑫币值、预期奖励鑫币值、对赌时间（对赌成功当日）、对赌结果、剩余天数、对赌人、操作（查看）-->
       <el-table-column
-        prop=""
-        label="户型"
-        :render-header="customFieldColumn"
-        :formatter="formatHouseType">
+        prop="price"
+        label="售价(万元)"
+        :render-header="customFieldColumn">
+      </el-table-column>
+      <el-table-column
+        prop="inArea"
+        label="面积(m²)"
+        :render-header="customFieldColumn">
+      </el-table-column>
+      <el-table-column
+        prop="price/inArea"
+        label="单价(元/㎡)"
+        :formatter="unitPrice"
+        :render-header="customFieldColumn">
       </el-table-column>
       <el-table-column
         prop=""
-        label="对赌状态"
+        label="户型"
+        :formatter="formatHouseType">
+      </el-table-column>
+      <el-table-column
+        prop="amount"
+        label="对赌鑫币"
+        :render-header="customFieldColumn">
+      </el-table-column>
+      <el-table-column
+        prop="createTime"
+        label="对赌时间"
+        :render-header="customFieldColumn">
+      </el-table-column>
+      <el-table-column
+        prop="status"
+        label="对赌结果"
         :formatter="formatHouseBetStatus">
+      </el-table-column>
+      <el-table-column
+        prop="brokerName"
+        label="对赌人">
+      </el-table-column>
+      <el-table-column
+        prop="endTime"
+        label="到期时间">
       </el-table-column>
       <el-table-column
         label="操作"
@@ -170,6 +204,8 @@
           status: '',
           moneyFrom: '',
           moneyTo: '',
+          order: '',
+          orderAsc: '',
           timeSelect: ''
         },
         options: [],
@@ -188,16 +224,7 @@
         },
         tableDataColumn: [
           {prop: 'houseNo', label: "房源编号"},
-          {prop: 'communityName', label: "小区名称"},
-          {prop: 'buildingName', label: "楼栋号"},
-          {prop: 'roomNo', label: "房间号"},
-          {prop: 'inArea', label: "面积(m²)"},
-          {prop: 'price', label: "售价(万元)"},
-          {prop: 'createTime', label: "对赌时间"},
-          {prop: 'endTime', label: "到期时间"},
-          {prop: 'amount', label: "对赌金额"},
-          // { prop: 'status', label: "对赌状态" },
-          {prop: 'brokerName', label: "对赌人"},
+          {prop: 'communityName', label: "楼盘名称"},
         ],
         tableData: [{
           // house: '龙腾花园-16栋-604室',
@@ -226,6 +253,11 @@
           return row.rooms + '室' + row.hall + '厅' + row.toilet + '卫';
         }
       },
+      unitPrice(row, column) {
+        if (row.rooms) {
+          return Math.round(row.price*1000/row.inArea) ;
+        }
+      },
       formatHouseBetStatus(row, column) {
         switch (row.status) {
           case 0:
@@ -245,16 +277,20 @@
             break;
         }
       },
-      customFieldColumn (h, { column, $index }) {
+      customFieldColumn (h, params) {
+        var that = this
         return h('span', {}, [
-          h('span', {}, ''),
-          h('el-popover', { props: { placement: 'top', width: '200',trigger: 'hover', content: '点击数字折扣，修改折扣，点击空白处，修改完成；修改过程中，右侧出现绿色按钮功能为统一多件商品为该折扣。' }}, [
-            h('i', { slot: 'reference',class:'font-normal'},[
-              h('span', {}, '折扣'),
-              h('span', {class:'red-star'}, '*')
-            ])
-          ])
+          h('span', {}, params.column.label),
+          h('span', {style:{'color': params.column.property==that.data.order&& that.data.orderAsc == 'DESC'?'red':'',float:'right'},
+            on:{click: ()=>{that.orderBy(params.column.property,"DESC")}}}, '↓'),
+          h('span', {style:{'color':params.column.property==that.data.order&& that.data.orderAsc == 'ASC'?'red':'',float:'right'},
+            on:{click: ()=>{that.orderBy(params.column.property, "ASC")}}}, '↑')
         ])
+      },
+      orderBy(o,Asc){
+        this.data.order = o;
+        this.data.orderAsc = Asc;
+        this.queryHouseBetParams();
       },
       toLook(row) {
         var that = this;
@@ -347,6 +383,8 @@
         params.beginTime = that.data.timeSelect[0];
         if (that.data.timeSelect.length>1)
         params.endTime = that.data.timeSelect[1];
+        params.order = that.data.order;
+        params.orderAsc = that.data.orderAsc;
 
         console.log(params);
         this.$api.get({

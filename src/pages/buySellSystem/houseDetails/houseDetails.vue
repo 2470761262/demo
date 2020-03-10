@@ -14,11 +14,11 @@
   border-bottom-width: 1px;
   border-left-width: 0px;
 }
-input[type=number] {
-  -moz-appearance:textfield;
+input[type="number"] {
+  -moz-appearance: textfield;
 }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -68,7 +68,8 @@ input[type=number]::-webkit-outer-spin-button {
           <span slot="reference">房源印象</span>
         </el-popover>
       </div>
-      <div style="margin-left:50px;font-size:30px;" id="qrcode">房源二维码</div>
+      <div style="margin-left:50px;font-size:30px;"
+           id="qrcode">房源二维码</div>
       <div style="margin-left:50px;">
         <div style="font-size:15px;">房源编号:</div>
         <div style="font-size:15px;">{{houseDetails.HouseNo}}</div>
@@ -224,8 +225,9 @@ input[type=number]::-webkit-outer-spin-button {
               <div style="position:relative;">
                 <el-image style="width:100;height:100px;border-radius:50px;"
                           :src="houseDetails.agentPerHeadImg"></el-image>
-                <div  :style="[{position:'absolute'}, {'z-index':2}, {left: '-520px' }, {top:'-40px'}]">
-                  <div style="border-radius: 13px; background-color: rgba(255,255,255,.5);width: 248px; " v-if="betExpireStr" >
+                <div :style="[{position:'absolute'}, {'z-index':2}, {left: '-520px' }, {top:'-40px'}]">
+                  <div style="border-radius: 13px; background-color: rgba(255,255,255,.5);width: 248px; "
+                       v-if="betExpireStr">
                     <p style="margin: 0px 48px;padding: 10px 0px;font-size: large;font-weight: bolder">距离房源对赌结束</p>
                     <p style="margin: 0px 20px;padding: 0px 0 10px 0;font-size: x-large">还剩 {{ ' ' +  betExpireStr }}</p>
                   </div>
@@ -243,17 +245,25 @@ input[type=number]::-webkit-outer-spin-button {
           <div style="margin-left:20px;">
             <span>{{houseDetails.Customers}}</span>
             <br />
-            <el-dropdown  @command="contactOwer">
+            <el-dropdown @command="contactOwer">
               <el-button type="primary">
                 查看号码<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-if="houseDetails.Tel!=''" v-text="houseDetails.Tel" command=""></el-dropdown-item>
-                <el-dropdown-item v-if="houseDetails.Tel1!=''" v-text="houseDetails.Tel1" command="1"></el-dropdown-item>
-                <el-dropdown-item v-if="houseDetails.Tel2!=''" v-text="houseDetails.Tel2" command="2"></el-dropdown-item>
-                <el-dropdown-item v-if="houseDetails.Tel3!=''" v-text="houseDetails.Tel3" command="3" ></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel!=''"
+                                  v-text="houseDetails.Tel"
+                                  command=""></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel1!=''"
+                                  v-text="houseDetails.Tel1"
+                                  command="1"></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel2!=''"
+                                  v-text="houseDetails.Tel2"
+                                  command="2"></el-dropdown-item>
+                <el-dropdown-item v-if="houseDetails.Tel3!=''"
+                                  v-text="houseDetails.Tel3"
+                                  command="3"></el-dropdown-item>
               </el-dropdown-menu>
-          </el-dropdown>
+            </el-dropdown>
             <el-button :data-tel="houseDetails.Tel"
                        @click="dialPhoneToFD">联系业主</el-button>
           </div>
@@ -288,16 +298,14 @@ input[type=number]::-webkit-outer-spin-button {
             <el-button @click="updateCertificateNo">确定</el-button>
           </div>
         </div>
-        <el-button
-          v-if="houseDetails.isReleaseOutside!=1&&(houseDetails.AgentPer==perId||isShowButton.releaseOutsideHouse)"
-          slot="reference"
-          @click="certificateType"
-        >发布外网房源</el-button>
+        <el-button v-if="houseDetails.isReleaseOutside!=1&&(houseDetails.AgentPer==perId||isShowButton.releaseOutsideHouse)"
+                   slot="reference"
+                   @click="certificateType">发布外网房源</el-button>
       </el-popover>
-       <el-button v-if="houseDetails.isReleaseOutside==1&&(houseDetails.AgentPer==perId||isShowButton.cancelOutsideHouse)" @click="cancelOutsideHouse">
-         取消发布
-       </el-button>
-
+      <el-button v-if="houseDetails.isReleaseOutside==1&&(houseDetails.AgentPer==perId||isShowButton.cancelOutsideHouse)"
+                 @click="cancelOutsideHouse">
+        取消发布
+      </el-button>
 
       <el-popover placement="top"
                   width="600"
@@ -317,11 +325,10 @@ input[type=number]::-webkit-outer-spin-button {
                    @click="isShowRecommend=true">{{isRecommend?'取消推荐':'推荐房源'}}</el-button>
       </el-popover>
 
-      <el-popover
-        placement="top-start"
-        width="520"
-        v-model="addBetVisible"
-        trigger="click">
+      <el-popover placement="top-start"
+                  width="520"
+                  v-model="addBetVisible"
+                  trigger="click">
         <div style="display: inline-flex">
           <div style="width: 240px;float: left">
             <p>说明：</p>
@@ -331,60 +338,75 @@ input[type=number]::-webkit-outer-spin-button {
           </div>
           <div style="float: left;margin-left: 50px">
             <div style="margin-top: 10px;font-size: medium;color: black;">
-              对赌鑫币值<input type="number" v-model="betAmount" style="width: 80px;text-align: center" class="underline"/>个
+              对赌鑫币值<input type="number"
+                     v-model="betAmount"
+                     style="width: 80px;text-align: center"
+                     class="underline" />个
             </div>
-              <span style="float: right;margin-right: 20px;font-size: small;">(对赌鑫币{{betConf.lower}}起投)</span>
+            <span style="float: right;margin-right: 20px;font-size: small;">(对赌鑫币{{betConf.lower}}起投)</span>
           </div>
         </div>
         <div style="display: inline-flex;margin-top: 10px">
-          <button @click="addBetVisible= false" style=" width: 80px;margin-left: 148px;border: 0px ;background-color: #c0c4cc;font-size: medium;border-radius:5px;" >取 消</button>
-          <button @click="addBet"  style="width: 80px;margin-left: 20px;border: 0px;background-color: #0d824b;font-size: medium;border-radius:5px;" >确定</button>
+          <button @click="addBetVisible= false"
+                  style=" width: 80px;margin-left: 148px;border: 0px ;background-color: #c0c4cc;font-size: medium;border-radius:5px;">取 消</button>
+          <button @click="addBet"
+                  style="width: 80px;margin-left: 20px;border: 0px;background-color: #0d824b;font-size: medium;border-radius:5px;">确定</button>
         </div>
-        <el-button slot="reference"  @click="showBetView">鑫币对赌</el-button>
+        <el-button slot="reference"
+                   @click="showBetView">鑫币对赌</el-button>
       </el-popover>
-      <el-dialog
-        title=""
-        :visible.sync="addBetSuccess"
-        width="240px"
-        top = "300px">
+      <el-dialog title=""
+                 :visible.sync="addBetSuccess"
+                 width="240px"
+                 top="300px">
         <div style="margin-top: -40px">
-          <div v-if="!addBetResult.status" style="margin-right: 13px;">
+          <div v-if="!addBetResult.status"
+               style="margin-right: 13px;">
             <span>{{addBetResult.err}}</span>
           </div>
           <div v-if="addBetResult.status">
-            <p  style="margin-left: 40px;margin-bottom: 10px;">对赌已生效</p>
+            <p style="margin-left: 40px;margin-bottom: 10px;">对赌已生效</p>
             <p style="margin-bottom: 10px;font-size: x-large;color: black;">{{betAmount}}鑫币已扣除</p>
             <button style="width: 80px;font-size: medium;border: 0px;margin-left: 60px;background-color: #0d824b;border-radius:5px;">加油</button>
           </div>
         </div>
       </el-dialog>
 
-      <el-popover placement="top" width="600" trigger="manual" v-model="isShowChange">
+      <el-popover placement="top"
+                  width="600"
+                  trigger="manual"
+                  v-model="isShowChange">
         <div class="query-cell">
-          <el-radio-group v-model="changeType" >
-          <el-radio  label="4">他司售</el-radio>
-          <el-radio  label="6">业主自售</el-radio>
-          <el-radio  label="5">暂不售</el-radio>
-          <el-radio  label="3">无效</el-radio>
+          <el-radio-group v-model="changeType">
+            <el-radio label="4">他司售</el-radio>
+            <el-radio label="6">业主自售</el-radio>
+            <el-radio label="5">暂不售</el-radio>
+            <el-radio label="3">无效</el-radio>
           </el-radio-group>
         </div>
         <div>
-            <div v-if="changeType=='4'" style="display:flex">
-              <span>成交公司</span>
-              <el-input v-model="dealCompany"></el-input>
-              <span>成交价</span>
-              <el-input v-model="dealPrice"></el-input>
-              <span>万元</span>
-            </div>
-             <div v-if="changeType=='6'">
-                <el-radio  v-model="subStatus" label="0">疑似跳单</el-radio>
-                <el-radio  v-model="subStatus"  label="1">亲朋好友</el-radio>
-            </div>
-            <div v-if="changeType=='3'">
-            <el-radio  v-model="subStatus"  label="2">号码错误</el-radio>
-            <el-radio   v-model="subStatus"  label="3">空号</el-radio>
-            <el-radio  v-model="subStatus"  label="4">房源不存在</el-radio>
-            </div>
+          <div v-if="changeType=='4'"
+               style="display:flex">
+            <span>成交公司</span>
+            <el-input v-model="dealCompany"></el-input>
+            <span>成交价</span>
+            <el-input v-model="dealPrice"></el-input>
+            <span>万元</span>
+          </div>
+          <div v-if="changeType=='6'">
+            <el-radio v-model="subStatus"
+                      label="0">疑似跳单</el-radio>
+            <el-radio v-model="subStatus"
+                      label="1">亲朋好友</el-radio>
+          </div>
+          <div v-if="changeType=='3'">
+            <el-radio v-model="subStatus"
+                      label="2">号码错误</el-radio>
+            <el-radio v-model="subStatus"
+                      label="3">空号</el-radio>
+            <el-radio v-model="subStatus"
+                      label="4">房源不存在</el-radio>
+          </div>
         </div>
         <div>
           <el-button @click="isShowChange=false">取消</el-button>
@@ -416,9 +438,11 @@ input[type=number]::-webkit-outer-spin-button {
           <el-button @click="cancelMethod">添加</el-button>
         </div>
         <el-button slot="reference"
-                   @click="isShowCancelMethod=true" v-if="isShowButton.cancelMethod">取消作业方法</el-button>
+                   @click="isShowCancelMethod=true"
+                   v-if="isShowButton.cancelMethod">取消作业方法</el-button>
       </el-popover>
-      <el-button @click="houseLock" v-if="isShowButton.locking">{{houseDetails.isLocking==1 ?"解锁房源":"锁定房源"}}</el-button>
+      <el-button @click="houseLock"
+                 v-if="isShowButton.locking">{{houseDetails.isLocking==1 ?"解锁房源":"锁定房源"}}</el-button>
       <el-popover placement="top"
                   width="600"
                   trigger="manual"
@@ -473,35 +497,40 @@ input[type=number]::-webkit-outer-spin-button {
                 </div>
               </div>
               <div style="  width: 300px; height: 150px;border: 1px solid;display:flex; margin-left:20px;">
-              <div v-if="houseDetails.agentPerName!=null">
-                <el-image
-                  :src="houseDetails.agentPerHeadImg"
-                  style="width: 80px;border-radius: 40px;border: 1 px solid;border: 1px solid;height: 80px;"
-                ></el-image>
-                <div style="margin-left:30px;">
-                  <div style="font-size:20px;">{{houseDetails.agentPerName}}</div>
-                  <div>{{houseDetails.agentPerDepartmentName}}</div>
-                </div>
-                <div style="margin-left:30px;">
-                  <div>跟单人</div>
-                  <div>
-                    <span :data-tel="houseDetails.agentPerTel"></span>
+                <div v-if="houseDetails.agentPerName!=null">
+                  <el-image :src="houseDetails.agentPerHeadImg"
+                            style="width: 80px;border-radius: 40px;border: 1 px solid;border: 1px solid;height: 80px;"></el-image>
+                  <div style="margin-left:30px;">
+                    <div style="font-size:20px;">{{houseDetails.agentPerName}}</div>
+                    <div>{{houseDetails.agentPerDepartmentName}}</div>
+                  </div>
+                  <div style="margin-left:30px;">
+                    <div>跟单人</div>
+                    <div>
+                      <span :data-tel="houseDetails.agentPerTel"></span>
+                    </div>
                   </div>
                 </div>
-                </div>
-                <div >
-                    <el-dialog
-                       title="请填写完这些信息才能申请为跟单人"
-                       :visible.sync="isShowApplyAgent"
-                       width="50%" :close-on-click-modal="false"
-                       >
-                     <supplement  ref="com" :required="required"  :middleRadioTo="middleRadio" :primaryRadioTo="primaryRadio" :showFollow="showFollow"></supplement>
-                      <span slot="footer" class="dialog-footer">
+                <div>
+                  <el-dialog title="请填写完这些信息才能申请为跟单人"
+                             :visible.sync="isShowApplyAgent"
+                             width="50%"
+                             :close-on-click-modal="false">
+                    <supplement ref="com"
+                                :required="required"
+                                :middleRadioTo="middleRadio"
+                                :primaryRadioTo="primaryRadio"
+                                :showFollow="showFollow"
+                                :audioList="audioList"></supplement>
+                    <span slot="footer"
+                          class="dialog-footer">
                       <el-button @click="isShowApplyAgent = false">取 消</el-button>
-                     <el-button type="primary" @click="applyAgent">确 定</el-button>
-                   </span>
+                      <el-button type="primary"
+                                 @click="applyAgent">确 定</el-button>
+                    </span>
                   </el-dialog>
-                  <el-button @click="isShowApplyAgent=true">申请跟单人</el-button>
+                  <el-button @click="isShowApplyAgent=true"
+                             v-if="houseDetails.agentPerName==null ">申请跟单人</el-button>
                 </div>
               </div>
               <div style="  width: 300px; height: 150px;border: 1px solid;display:flex;margin-top:20px;">
@@ -1314,8 +1343,8 @@ input[type=number]::-webkit-outer-spin-button {
                      :key="index">
                   <div>
                     <span>{{item.FollowTime}}</span>
-                    <el-button
-                               @click="deleteFollow(item.id)" v-if="isShowButton.deleteFollow">删除</el-button>
+                    <el-button @click="deleteFollow(item.id)"
+                               v-if="isShowButton.deleteFollow">删除</el-button>
                   </div>
                   <div>
                     <div v-if="!item.isTellFollow">
@@ -1380,14 +1409,14 @@ input[type=number]::-webkit-outer-spin-button {
 import { HOUSEBELONGLIST } from "@/util/constMap";
 import QRCode from "qrcodejs2";
 import util from "@/util/util";
-import  supplement from "@/pages/buySellSystem/addHouse/components/supplement"
+import supplement from "@/pages/buySellSystem/addHouse/components/supplement"
 import getMenuRid from '@/minxi/getMenuRid';
 export default {
   mixins: [getMenuRid],
   components: {
     supplement
   },
-  data() {
+  data () {
     return {
       houseId: 0, //房源id
       betExpire: 0, //对赌过期时间
@@ -1397,14 +1426,14 @@ export default {
       betExpireStr: "", //房源id
       addBetResult: {
         status: false,
-        err:"",
+        err: "",
       },
       betConf: {
-        startHour:0,
-        expireDay:0,
-        odds:0,
-        upper:0,
-        lower:0,
+        startHour: 0,
+        expireDay: 0,
+        odds: 0,
+        upper: 0,
+        lower: 0,
       },
       houseDetails: "", //房源详情数据
       houseFileList: [], //视频和图片数组
@@ -1471,38 +1500,38 @@ export default {
       dialogVisible: false, //是否展示放大的图片或者视频
       isShowReal: false, //是否显示取代实勘人的弹窗
       isShowKeyStorageDept: false, //是否显示修改钥匙存放门店弹窗
-      cancelMethodType:"0",//
-      isShowCancelMethod:false,
-      cancelMemo:"",
-      changeType:"4",//转换类型
-      isShowChange:false,//是否显示转状态弹窗
-      dealCompany:"",//成交公司
-      dealPrice:"",//成交价
-      subStatus:"",//子类型
-      perId:"",//登录人id
-      isRecommend:false,//是否推荐
-      isShowRecommend:false,//是否展示推荐弹窗
-      recommendMemo:"",//推荐的原因
-      isShowBuilding:false,//是否显示楼栋号
-      isShowApplyAgent:false,//是否显示申请跟单人弹窗
-      required:true,//判断非空
-      middleRadio:0,
-      primaryRadio:0,
-      isShowButton:{
-        locking:false,
-        releaseOutsideHouse:false,
-        cancelOutsideHouse:false,
-        cancelMethod:false,
-        deleteFollow:false,
-        updateKeyStorageDept:false
-      },
-      ruleId:15,
-      showFollow:true,
-
+      cancelMethodType: "0",//
+      isShowCancelMethod: false,
+      cancelMemo: "",
+      changeType: "4",//转换类型
+      isShowChange: false,//是否显示转状态弹窗
+      dealCompany: "",//成交公司
+      dealPrice: "",//成交价
+      subStatus: "",//子类型
+      perId: "",//登录人id
+      isRecommend: false,//是否推荐
+      isShowRecommend: false,//是否展示推荐弹窗
+      recommendMemo: "",//推荐的原因
+      isShowBuilding: false,//是否显示楼栋号
+      isShowApplyAgent: false,//是否显示申请跟单人弹窗
+      required: true,//判断非空
+      middleRadio: 0,//小学占用级
+      primaryRadio: 0,//中学占用年级
+      isShowButton: {
+        locking: false,
+        releaseOutsideHouse: false,
+        cancelOutsideHouse: false,
+        cancelMethod: false,
+        deleteFollow: false,
+        updateKeyStorageDept: false
+      },//是否显示按钮
+      ruleId: 15,
+      showFollow: true,//是否显示组件的跟进
+      audioList: []//音频文件
     };
   },
-  before() {},
-  mounted() {
+  before () { },
+  mounted () {
     if (this.$route.params.betExpire) {
       this.betExpire = this.$route.params.betExpire;
 
@@ -1557,40 +1586,71 @@ export default {
       };
     });
   },
-   destroyed () {
+  destroyed () {
     this.$store.commit("resetFormData");
   },
   methods: {
-    getAgentRules(){
-      let that=this;
+    getAgentRules () {
+      let that = this;
       this.$api.get({
-        url: '/sys/rule/function/list',
-        data:{
-          rId:that.ruleId
+        url: '/sys/rule/function/list',
+        data: {
+          rId: that.ruleId
         },
-        token: false
-      }).then((e) => {
-         e.data.data.functionRuleList.forEach(element=>{
-           if(that.isShowButton.hasOwnProperty(element.rUrl)){
-               that.isShowButton[element.rUrl]=true;
-           }
-         })
-      }).catch((e) => {
+        token: false
+      }).then((e) => {
+        e.data.data.functionRuleList.forEach(element => {
+          if (that.isShowButton.hasOwnProperty(element.rUrl)) {
+            that.isShowButton[element.rUrl] = true;
+          }
+        })
+      }).catch((e) => {
       })
     },
-    applyAgent(){
-      let flag=this.$refs.com.validateAllNotUpdata();
+    applyAgent () {
+      let params = this.$refs.com.formData;
+      let that = this;
+      this.$refs.com.validateAllNotUpdata().then((e) => {
+        if (e) {
+          params.houseId = that.houseId;
+          if (that.$refs.com.audioFile.id) {
+            params.audioId = that.$refs.com.audioFile.id;
+          }
+          that.isShowApplyAgent = false;
+          that.loading = true;
+          that.$api
+            .post({
+              url: "/agentHouse/propertyCheck/applyAgent",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              data: params
+            })
+            .then(e => {
+              let result = e.data;
+              that.loading = false;
+              if (result.code == 200) {
+                that.getHouseDetails();
+              }
+              else {
+                that.$message(result.message)
+              }
+            })
+            .catch(e => {
+              that.loading = false;
+              that.$message(e.message)
+            });
+        }
+      });
 
     },
-    contactOwer(cmd){
-       console.log(cmd);
-      let p={};
-      p["contactPhone"+cmd]=this.houseDetails["Tel"+cmd];
-      p["isLookPhone"]=true;
+    contactOwer (cmd) {
+      console.log(cmd);
+      let p = {};
+      p["contactPhone" + cmd] = this.houseDetails["Tel" + cmd];
+      p["isLookPhone"] = true;
       this.dailPhone(1, p);
     },
     showtime () {
-      if(!this.betExpire){
+      if (!this.betExpire) {
         return
       }
       var nowtime = new Date(),  //获取当前时间
@@ -1602,100 +1662,100 @@ export default {
         lefts = Math.floor(lefttime / 1000 % 60);
       this.betExpireStr = leftd + "天" + lefth + "时" + leftm + "分";  //返回倒计时的字符串
     },
-    showBetView(){
-      var that =this;
+    showBetView () {
+      var that = this;
       this.$api.get({
-        url: '/house/bet/conf',
+        url: '/house/bet/conf',
         data: null,
-        token: false
-      }).then((e) => {
+        token: false
+      }).then((e) => {
         console.log(e.data);
-        let data=e.data
-        if (data.code == 200) {
+        let data = e.data
+        if (data.code == 200) {
           this.addBetVisible = true;
-          this.betConf.startHour=data.data.startHour;
-          this.betConf.expireDay=data.data.expireDay;
-          this.betConf.odds=data.data.odds;
-          this.betConf.upper=data.data.upper;
-          this.betConf.lower=data.data.lower;
-        } else {
+          this.betConf.startHour = data.data.startHour;
+          this.betConf.expireDay = data.data.expireDay;
+          this.betConf.odds = data.data.odds;
+          this.betConf.upper = data.data.upper;
+          this.betConf.lower = data.data.lower;
+        } else {
           this.addBetVisible = false;
-          console.log("查询对赌房源列表结果：" + data.message);
-          this.$message.error({message:data.message,offset:400});
+          console.log("查询对赌房源列表结果：" + data.message);
+          this.$message.error({ message: data.message, offset: 400 });
         }
-      }).catch((e) => {
+      }).catch((e) => {
         console.log("查询对赌房源列表失败");
-        this.$message.error({message:e,offset:400});
+        this.$message.error({ message: e, offset: 400 });
       })
     },
-    getBetInfo(){
-      var that =this;
+    getBetInfo () {
+      var that = this;
       this.$api.get({
-        url: '/house/bet/inBet/'+that.houseId,
+        url: '/house/bet/inBet/' + that.houseId,
         data: null,
-        token: false
-      }).then((e) => {
+        token: false
+      }).then((e) => {
         console.log(e.data);
-        let data=e.data
-        if (data.code == 200) {
-          this.betExpire=data.data.EndTime;
-        } else {
-          console.log("查询对赌房源列表结果：" + result.message);
-          this.$message.error({message:data.message,offset:400});
+        let data = e.data
+        if (data.code == 200) {
+          this.betExpire = data.data.EndTime;
+        } else {
+          console.log("查询对赌房源列表结果：" + result.message);
+          this.$message.error({ message: data.message, offset: 400 });
         }
-      }).catch((e) => {
+      }).catch((e) => {
         console.log("查询对赌房源列表失败");
         console.log(e);
       })
     },
-    addBet(){
-      var that =this;
-      if(that.betAmount<that.betConf.lower||that.betAmount> that.betConf.upper){
-        this.$message.error({message:that.betConf.lower+"起投！封顶" +  that.betConf.upper,offset:400});
+    addBet () {
+      var that = this;
+      if (that.betAmount < that.betConf.lower || that.betAmount > that.betConf.upper) {
+        this.$message.error({ message: that.betConf.lower + "起投！封顶" + that.betConf.upper, offset: 400 });
         return
       }
-      let params={"HouseId":that.houseId,"Amount":that.betAmount};
+      let params = { "HouseId": that.houseId, "Amount": that.betAmount };
       this.$api.post({
-        url: '/house/bet/add',
+        url: '/house/bet/add',
         data: params,
-        token: false,
+        token: false,
         headers: { "Content-Type": "application/json" }
-      }).then((e) => {
+      }).then((e) => {
         console.log(e.data);
-        let data=e.data
+        let data = e.data
         this.addBetSuccess = true;
-        if (data.code == 200) {
+        if (data.code == 200) {
           this.getBetInfo();
           this.addBetVisible = false
-          this.addBetResult.status=true;
-        } else {
-          this.$message.error( data.message);
-          this.addBetResult.status=false;
-          this.addBetResult.err=data.message;
+          this.addBetResult.status = true;
+        } else {
+          this.$message.error(data.message);
+          this.addBetResult.status = false;
+          this.addBetResult.err = data.message;
         }
-      }).catch((e) => {
+      }).catch((e) => {
         console.log("查询对赌房源列表失败");
         console.log(e);
       })
     },
     dialPhoneToFD () {
-      let p={
+      let p = {
         "contactPhone": this.houseDetails.Tel,
-            "contactPhone1": this.houseDetails.Tel1,
-            "contactPhone2": this.houseDetails.Tel2,
-            "contactPhone3": this.houseDetails.Tel3
+        "contactPhone1": this.houseDetails.Tel1,
+        "contactPhone2": this.houseDetails.Tel2,
+        "contactPhone3": this.houseDetails.Tel3
       }
       this.dailPhone(1, p);
     },
-    oneTouchDialPhone(){
-      let phone=this.houseDetails.agentPerTel;
-      if(!phone){
+    oneTouchDialPhone () {
+      let phone = this.houseDetails.agentPerTel;
+      if (!phone) {
         this.$message({
           message: "该经纪人号码为空"
         })
         return;
       }
-      let p={
+      let p = {
         "contactPhone": phone
       }
       this.dailPhone(0, p);
@@ -1718,8 +1778,8 @@ export default {
             "houseArea": that.houseDetails.InArea,
             "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主
             "remark": that.houseDetails.Title          };
-          let dailParams={};
-          Object.assign(dailParams,oldParams,phoneObj);
+          let dailParams = {};
+          Object.assign(dailParams, oldParams, phoneObj);
           if (contactPerType == 0) {//联系人类型如果是经纪人，才需要联系人id
             dailParams.contactPerId = that.houseDetails.AgentPer;//联系人id
             dailParams.unitName = that.houseDetails.agentPerDepartmentName;
@@ -2055,15 +2115,12 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             that.houseDetails = result.data;
-               let qrcode = new QRCode("qrcode", {
-                        render: "canvas",
-                        width: 150,
-                        height: 150,
-                        text: that.houseDetails.shareQRCode,
+            let qrcode = new QRCode("qrcode", {
+              render: "canvas",
+              width: 150,
+              height: 150,
+              text: that.houseDetails.shareQRCode,
             });
-           // that.$store.state.addHouse.formData.step2=;
-            that.$store.commit("updateStep2",that.houseDetails.applyAgentVo);
-
             that.agentHouseMethod = that.houseDetails.agentHouseMethod;
             that.elevator = util.analysisElevator(that.houseDetails.Elevator);
             that.sign = util.analysisSign(that.houseDetails.sign);
@@ -2084,17 +2141,17 @@ export default {
                 that.houseDetails.SchoolRool.length
               );
             }
-            if(!util.isNotNull(that.primarySchoolRool)&&that.primarySchoolRool=="占用"){
-                that.primaryRadio=1;
+            if (!util.isNotNull(that.primarySchoolRool) && that.primarySchoolRool == "占用") {
+              that.primaryRadio = 1;
             }
-            else{
-              that.primaryRadio=0;
+            else {
+              that.primaryRadio = 0;
             }
-            if(!util.isNotNull(that.middleSchoolRool)&&that.middleSchoolRool=="占用"){
-                that.middleRadio=1;
+            if (!util.isNotNull(that.middleSchoolRool) && that.middleSchoolRool == "占用") {
+              that.middleRadio = 1;
             }
-            else{
-                that.primaryRadio=0;
+            else {
+              that.primaryRadio = 0;
             }
             if (that.houseDetails.remark != null && that.houseDetails.remark.indexOf("$") != -1) {
               var Arry1 = that.houseDetails.remark.split("$");
@@ -2103,24 +2160,25 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     that.communityPresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.communityDesc=Arry2[1]==null?'':Arry2[1];
+                    that.houseDetails.applyAgentVo.communityDesc = Arry2[1];
                     break;
                   case "户型介绍":
                     that.houseTypePresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.roomDesc=Arry2[1]==null?'':Arry2[1];
-                     that.$store.state.addHouse.formData.step2.title="";
+                    that.houseDetails.applyAgentVo.roomDesc = Arry2[1];
                     break;
                   case "税费解析":
                     that.taxParsing = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.taxDesc=Arry2[1]==null?'':Arry2[1];
+                    that.houseDetails.applyAgentVo.taxDesc = Arry2[1];
                     break;
                   case "核心卖点":
                     that.coreSellingPoint = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.saleDesc=Arry2[1]==null?'':Arry2[1];
+                    that.houseDetails.applyAgentVo.saleDesc = Arry2[1];
                     break;
                 }
               }
             }
+            that.$store.commit("updateStep2", that.houseDetails.applyAgentVo);
+            that.audioList = that.houseDetails.applyAgentVo.saleUploadAudioList;
             that.houseDetails.saleUploadPicDtoList.forEach(element => {
               var pic = {
                 type: 1,
@@ -2313,11 +2371,11 @@ export default {
           if (e.data.code == 200) {
             that.reloadList();
           }
-          else{
+          else {
             that.$message(e.data.message)
           }
-        }).catch(e=>{
-            that.$message(e.data.message)
+        }).catch(e => {
+          that.$message(e.data.message)
         });
     },
     insertFollow () {
@@ -2859,30 +2917,30 @@ export default {
             this.$message("只能填入数字");
             return;
           }
-          params.dealCompany=this.dealCompany;
-          params.dealPrice=this.dealPrice;
-          params.followMemo="他司售";
-         break;
-         case "6":
-           if(this.subStatus!="0"&&this.subStatus!="1"){
+          params.dealCompany = this.dealCompany;
+          params.dealPrice = this.dealPrice;
+          params.followMemo = "他司售";
+          break;
+        case "6":
+          if (this.subStatus != "0" && this.subStatus != "1") {
             this.$message("业主自售类型未选择");
             return;
-           }
-           params.subStatus=this.subStatus;
-           params.followMemo="业主自售";
-           break;
-            case "3":
-           if(this.subStatus!="3"&&this.subStatus!="2"&&this.subStatus!="4"){
+          }
+          params.subStatus = this.subStatus;
+          params.followMemo = "业主自售";
+          break;
+        case "3":
+          if (this.subStatus != "3" && this.subStatus != "2" && this.subStatus != "4") {
             this.$message("无效类型类型未选择");
             return;
-           }
-           params.subStatus=this.subStatus;
-           params.followMemo="无效";
-           break;
-           case "5":
-              params.followMemo="暂不售";
-             break;
-       default:
+          }
+          params.subStatus = this.subStatus;
+          params.followMemo = "无效";
+          break;
+        case "5":
+          params.followMemo = "暂不售";
+          break;
+        default:
 
           break;
       }

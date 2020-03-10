@@ -24,7 +24,7 @@
                :visible.sync="outerVisible"
                :before-close="beforeClose" >
       <div class="text item">
-          <el-form class="form" label-width="80px" >
+          <el-form class="form" label-width="80px" style="width: 100%" >
             <el-form-item label="功能点">
               <el-input v-model="form.functionPoint" property="功能点名称" ></el-input>
             </el-form-item>

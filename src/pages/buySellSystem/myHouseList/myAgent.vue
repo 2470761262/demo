@@ -86,18 +86,6 @@
         <el-input placeholder="最大值"
                   v-model="queryData.maxInArea"
                   style="margin-left:10px;width:100px"></el-input>
-
-        <!-- <el-select v-model="value"
-                   filterable
-                   placeholder="请选择">
-          <el-option v-for="item in options"
-                     :key="item.value"
-                     :label="item.label"
-                     :value="item.value">
-          </el-option>
-        </el-select>
-        <template slot="prepend">房源状态</template> -->
-
         <el-date-picker v-model="queryData.timeSelect"
                         type="daterange"
                         range-separator="至"
@@ -121,11 +109,9 @@
                    style="margin-left:30px"
                    size="mini">更多筛选</el-button>
       </div>
-
     </template>
 
     <template #tableColumn="">
-
       <el-table-column label="房源编号">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
@@ -141,12 +127,6 @@
           {{scope.row.BuildingName}}栋 — {{scope.row.RoomNo}}室
         </template>
       </el-table-column>
-      <!-- <el-table-column label="房间号">
-        <template v-slot="scope">
-          {{scope.row.RoomNo}}
-        </template>
-      </el-table-column> -->
-
       <el-table-column label="售价(万元)">
         <template v-slot="scope">
           {{scope.row.Price}}
@@ -167,11 +147,6 @@
           {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
         </template>
       </el-table-column>
-      <!-- <el-table-column label="装修程度">
-        <template v-slot="scope">
-          {{scope.row.Decoration}}
-        </template>
-      </el-table-column> -->
       <el-table-column label="录入时间">
         <template v-slot="scope">
           {{scope.row.AddTime}}
@@ -215,7 +190,9 @@
           </el-dialog>
         </template>
       </el-table-column>
+
     </template>
+
   </list-page>
 </template>
 <script>
@@ -223,7 +200,6 @@ import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 export default {
   mixins: [getMenuRid],
-
   components: {
     listPage
   },
@@ -320,7 +296,7 @@ export default {
       this.queryData.timeSelect = '';
     },
     querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
       if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
@@ -334,7 +310,7 @@ export default {
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
       this.$api.post({
-        url: '/agent_house/myHouseList',
+        url: '/agent_house/myAgentHouseList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false

@@ -490,7 +490,8 @@ export default {
       console.log(this.ruleObj, "rule object。。。")
       this.saveType = "saveSub";
       let pId = this.ruleObj.id;
-      this.ruleObj = this.defaultRule;
+      let rule = this.defaultRule;
+      this.ruleObj = rule;
       this.ruleObj.pId = pId;
       this.showTable = true;
       this.selectRuleUrlConfig();
@@ -503,7 +504,8 @@ export default {
       }
       this.saveType = "saveSib";
       let id = this.ruleObj.id;
-      this.ruleObj = this.defaultRule;
+      let rule = this.defaultRule;
+      this.ruleObj = rule;
       this.ruleObj.id = id;
       this.showTable = true;
       this.selectRuleUrlConfig();
@@ -516,7 +518,7 @@ export default {
     },
     //保存节点信息
     saveRuleObj () {
-      //获取参数进行重置密码;
+      //获取参数进行保存;
       if (!this.ruleObj) {
         this.$message.info("请填充内容后进行保存");
         return;

@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import util from '@/util/util';
 export default {
   props: {
     renderList: {
@@ -88,24 +89,24 @@ export default {
       immediate: true,
       deep: true,
       handler (newValue, oldValue) {
-        this.thatRenderList = JSON.parse(JSON.stringify(newValue));
+        this.thatRenderList = util.deepCopy(newValue);
       }
     },
     tableColumn: {
       immediate: true,
       deep: true,
       handler (newValue, oldValue) {
-        this.thatTableColumn = JSON.parse(JSON.stringify(newValue));
+        this.thatTableColumn = util.deepCopy(newValue);
       }
     },
     visible (newVal) {
       if (newVal) {
-        this.ordThatRenderList = JSON.stringify(this.thatRenderList);
-        this.ordThatTableColumn = JSON.stringify(this.thatTableColumn);
+        this.ordThatRenderList = util.deepCopy(this.thatRenderList);
+        this.ordThatTableColumn = util.deepCopy(this.thatTableColumn);
       } else {
         if (this.submitFlag == false) {
-          this.thatRenderList = JSON.parse(this.ordThatRenderList);
-          this.thatTableColumn = JSON.parse(this.ordThatTableColumn);
+          this.thatRenderList = util.deepCopy(this.ordThatRenderList);
+          this.thatTableColumn = util.deepCopy(this.ordThatTableColumn);
         }
       }
     }

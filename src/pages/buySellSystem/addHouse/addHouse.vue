@@ -149,7 +149,7 @@ export default {
   data () {
     return {
       reSetMethod: false,
-      componentName: "morePushHouse",//morePushHouse
+      componentName: "basicInformation",//morePushHouse
       stepsList: [
         { title: "必填信息", componentName: "basicInformation" },
         { title: "选填信息", componentName: "supplement" },
