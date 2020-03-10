@@ -254,7 +254,7 @@ export default {
       },
       treeData: [allPersonNode],
       selectedNodeDatas: [], //选中的节点数据
-      hasQueryAccountNode: [], //存放已经加载过员工的节点，防止二次加载读取
+      hasQueryAccountNode: [], //存放已经加载过用户的节点，防止二次加载读取
       quill: null,
       uploadUrl: "",
       myHeader: "",
@@ -431,7 +431,7 @@ export default {
         }) == undefined
       ) {
         if (this.notice.sendType == 0 && item.type == 2) {
-          //按单独发送， 员工
+          //按单独发送， 用户
           this.selectedNodeDatas.push(item);
         } else if (this.notice.sendType == 1 && item.type == 3) {
           this.selectedNodeDatas.push(item);
@@ -443,7 +443,7 @@ export default {
       }
     },
     getAccountDataByHigher (businessId, type, successFun) {
-      //读取公司或部门下面的员工
+      //读取公司或部门下面的用户
       this.$api
         .post({
           url:
@@ -462,14 +462,14 @@ export default {
             console.log(result.data);
             successFun(result.data);
           } else {
-            console.log("获取员工失败：" + result.message);
-            this.$message.error("获取员工失败：" + result.message);
+            console.log("获取用户失败：" + result.message);
+            this.$message.error("获取用户失败：" + result.message);
           }
         })
         .catch(e => {
-          console.log("获取员工异常");
+          console.log("获取用户异常");
           console.log(e);
-          this.$message.error("获取员工异常" + e);
+          this.$message.error("获取用户异常" + e);
         });
     },
     appendAccountNode (data, node) {
@@ -478,14 +478,14 @@ export default {
         return;
       }
       if (data.type == 2 || data.type == 0) {
-        //员工节点，和公司节点 下面 都不要加载 员工
+        //用户节点，和公司节点 下面 都不要加载 用户
         return;
       }
       let that = this;
       if (this.hasQueryAccountNode.indexOf(data.nodeId) == -1) {
-        ///没加载过员工，那么加载读取
+        ///没加载过用户，那么加载读取
         //append(data, parentNode) 接收两个参数，1. 要追加的子节点的 data 2. 子节点的 parent 的 data、key 或者 node
-        console.log("展开了节点远程读取并加载员工节点：" + data.labelName);
+        console.log("展开了节点远程读取并加载用户节点：" + data.labelName);
         this.getAccountDataByHigher(data.businessId, data.type, function (r) {
           if (r.length > 0) {
             r.forEach((item, index, array) => {
@@ -508,7 +508,7 @@ export default {
       }
     },
     handleNodeClick (data, node, nodeComponent) {
-      //单独发送，需要加载员工
+      //单独发送，需要加载用户
       this.appendAccountNode(data, node);
     },
     loadNode (node, resolve) {
@@ -540,7 +540,7 @@ export default {
           if (this.notice.sendType == 0) {
             //按单独发送
             if (item.type == 2) {
-              //item.type =2员工，3职位，1部门，0公司
+              //item.type =2用户，3职位，1部门，0公司
               this.notice.receiveAcountIds.push(item.businessId);
             }
           } else if (this.notice.sendType == 1) {

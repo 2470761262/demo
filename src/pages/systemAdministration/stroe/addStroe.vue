@@ -101,6 +101,7 @@ export default {
   props: {},
   data () {
     return {
+      
       StroeEntity: {
         storeName: null,
         flagSale: null,
