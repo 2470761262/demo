@@ -17,6 +17,9 @@
     }
   }
 }
+.i {
+  cursor: pointer;
+}
 .select-tabs {
   display: flex;
   justify-content: space-between;
@@ -121,6 +124,9 @@
             color: #fff;
           }
         }
+      }
+      i {
+        cursor: pointer;
       }
       .item-data-middle {
         font-size: 22px;
@@ -265,7 +271,7 @@
               </div>
             </div>
             <div class="select-for-item-but">
-              <i class="el-icon-document icon"
+              <i class="el-icon-document icon i"
                  @click="toHouseDetail(item.id)"></i>
             </div>
           </div>

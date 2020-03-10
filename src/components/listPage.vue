@@ -14,6 +14,7 @@
     .page-body-conter-right {
       flex: 1;
       overflow: hidden;
+      width: 0;
     }
   }
   .page-body-floot {

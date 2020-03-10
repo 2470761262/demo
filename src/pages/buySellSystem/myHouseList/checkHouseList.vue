@@ -16,7 +16,38 @@
                      placeholder="请输入楼盘名称搜索"
                      :remote-method="remoteMethod"
                      :loading="loading">
-            <el-option v-for="item in optionsList"
+            <el-option v-for="item in comList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
+
+        <el-item label="栋座"
+                 prop="cbId"
+                 class="page-label-center">
+          <el-select v-model="queryData.cbId"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+              <!--如果接口是模糊搜索，value改成item.name就行 -->
+            </el-option>
+          </el-select>
+        </el-item>
+        <el-item label="房间号"
+                 prop="roomNo"
+                 clearable
+                 class="page-label-center">
+          <el-select v-model="queryData.roomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
                        :key="item.value"
                        :label="item.name"
                        :value="item.value">
@@ -41,10 +72,49 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
-        <el-button type="primary"
-                   style="margin-left:30px"
-                   size="mini"
-                   @click="querylistByParams">查询</el-button>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'>
+          清除
+        </span>
+        <div style="margin-top:15px">
+          <span style="margin-left:30px">
+            审核项目：
+          </span>
+          <el-select filterable
+                     placeholder="请选择">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <span style="margin-left:30px">
+            审核类型：
+          </span>
+          <el-select filterable
+                     placeholder="请选择">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <span style="margin-left:30px">
+            审核状态：
+          </span>
+          <el-select filterable
+                     placeholder="请选择">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button type="primary"
+                     style="margin-left:30px"
+                     size="mini"
+                     @click="querylistByParams">查询</el-button>
+        </div>
+
       </div>
     </template>
 
@@ -121,6 +191,9 @@ export default {
   },
   data () {
     return {
+      cbIdList: '',
+      roomNoList: '',
+      comList: '',
       dialogVisible: false,
       value: '',
       input: '',
@@ -149,6 +222,16 @@ export default {
 
         ]
       },
+      state: [{
+        value: '0',
+        label: '待审核'
+      }, {
+        value: '1',
+        label: '已审核'
+      }, {
+        value: '-1',
+        label: '未通过'
+      },],
       options: [{
         value: '选项1',
         label: '全部'
@@ -171,7 +254,8 @@ export default {
       queryData: {
         CommunityName: '',
         timeSelect: '',
-
+        roomNo: '',
+        cbId: '',
       },
 
     }
@@ -180,7 +264,41 @@ export default {
     this.querylist(1);
   },
   methods: {
-    queryAddPerId () {
+    remoteInput () {
+
+      if (this.comId.length == 0) {
+        this.remoteMethod();
+      }
+    },
+    remoteMethod (query) {
+      var that = this
+      if (query !== '') {
+        this.loading = true;
+
+        this.$api.get({
+          url: "/mateHouse/queryCommunity",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        }).then((e) => {
+          console.log(e.data.code)
+          if (e.data.code == 200) {
+
+            that.loading = false;
+            that.comList = e.data.data.list;
+
+          }
+        })
+      } else {
+        this.options = [];
+      }
+    },
+    queryCBId () {
       var that = this
       this.$api.get({
         url: "/mateHouse/queryComBuilding",
@@ -188,11 +306,35 @@ export default {
         token: false,
         qs: true,
         data: {
-          comId: that.form.comId
+          comId: that.queryData.CommunityName,
+          page: 1,
+          limit: 50
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          that.queryData.roomNo = '';
+          that.queryData.cbId = '';
           that.cbIdList = e.data.data.list;
+        }
+      })
+    },
+    queryRoomNo () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryBuildIngHouses",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.queryData.comId,
+          cbId: that.queryData.cbId,
+          page: 1,
+          limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.queryData.roomNo = '';
+          that.roomNoList = e.data.data.list;
         }
       })
     },
@@ -280,7 +422,7 @@ export default {
           if (e.data.code == 200) {
 
             that.loading = false;
-            that.optionsList = e.data.data.list;
+            that.comList = e.data.data.list;
           }
         })
       } else {

@@ -90,7 +90,7 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "accountID", label: "用户ID" },
+        { prop: "id", label: "用户ID" },
         { prop: "perName", label: "用户名" },
         { prop: "deptName", label: "所在部门" },
         { prop: "postName", label: "角色权限" },
@@ -145,7 +145,7 @@ export default {
     setAuthority (row) {
       let that = this;
       //跳转页面
-      let params = { "accountId": row.accountID, "postId": that.queryData.postId };
+      let params = { "accountId": row.id, "postId": that.queryData.postId };
       console.log(params, "xxx");
       that.$router.push({ path: '/sys/authority/setAuthority', query: params });
     },

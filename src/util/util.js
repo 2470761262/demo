@@ -74,6 +74,9 @@ export default {
     }
     return nowData;
   },
+  find(list, f) {
+    return list.filter(f)[0]
+  },
   deepCopy(obj, cache = []) {
     if (obj === null || typeof obj !== 'object') {
       return obj

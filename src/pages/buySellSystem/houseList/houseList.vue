@@ -165,7 +165,8 @@
           <i class="el-icon-plus"></i>
           <span>录入房源</span>
         </div>
-        <div class="house-cell-but">
+        <div class="house-cell-but"
+             @click="navToPath('/buySellSystem/concernCommunity')">
           <i class="el-icon-plus"></i>
           <span>管理入口</span>
         </div>
@@ -199,7 +200,7 @@ const HosueList = [
   { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false ,type:4},
   { title: "成交对赌", icon: "el-icon-zoom-in", path: "/buySellSystem/houseBet", hot: true, flag: false ,type:5},
   { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true, flag: false ,type:6},
-  { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false ,type:7},
+  //{ title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false ,type:7},
   { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false, flag: false ,type:8},
   { title: "店公共盘", icon: "el-icon-zoom-in", path: "/buySellSystem/shopDisk", hot: false ,type:9},
   { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false, flag: false ,type:10},

@@ -105,7 +105,7 @@
         <el-input placeholder="请输入业主姓名"
                   data-vv-name="customerName"
                   data-vv-as="业主姓名"
-                  v-validate="'required'"
+                  v-validate="'required|isChinese'"
                   v-model="formData.customerName">
           <div slot="prepend"
                class="item-before"
@@ -193,7 +193,7 @@
            :data-tips="errorBags.first('price')">
         <div class="page-cell-item select-nobor">
           <el-input placeholder="请输入售价"
-                    v-validate="'required|decimal:2'"
+                    v-validate="'required|decimal:2|noZero1'"
                     data-vv-name="price"
                     data-vv-as="售价"
                     v-model="formData.price">
@@ -213,7 +213,7 @@
           <el-input placeholder="请输入底价"
                     data-vv-name="bottomPrice"
                     data-vv-as="底价"
-                    v-validate="'required|decimal:2'"
+                    v-validate="{required:true,decimal:2,isGreater:[formData.price,'售价'],noZero1:true}"
                     v-model="formData.bottomPrice">
             <div slot="prepend"
                  class="item-before"
@@ -543,7 +543,7 @@ export default {
           });
           flag = true;
         } else {
-          that.formData.area = that.changeInput.area;
+          that.formData.area = that.changeInput.area || that.formData.area;
         }
       }
       this.changeBut.area = flag;
