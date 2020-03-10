@@ -183,6 +183,7 @@ export default {
   props: {},
   data() {
     return {
+      sidebarFlag:false,
       loading: false, //控制表格加载动画提示
       queryData: {
         keyWord: "",
