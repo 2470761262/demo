@@ -194,19 +194,19 @@ import houselistlhousepair from "@/pages/buySellSystem/houseList/components/hous
 //展示列表
 import houseresultlist from '@/pages/buySellSystem/houseList/components/houseResultList';
 const HosueList = [
-  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/myRelatedHouse", hot: false, flag: false ,type: 1},
-  { title: "7天被带看", icon: "el-icon-zoom-in", path: "/buySellSystem/sevenDaysFollowHouse", hot: true, flag: false ,type:2},
-  { title: "新增房源", icon: "el-icon-zoom-in", path: "/buySellSystem/newAgentHouse", hot: false, flag: false ,type:3},
-  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false ,type:4},
-  { title: "成交对赌", icon: "el-icon-zoom-in", path: "/buySellSystem/houseBet", hot: true, flag: false ,type:5},
-  { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true, flag: false ,type:6},
-  //{ title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false ,type:7},
-  { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false, flag: false ,type:8},
-  { title: "店公共盘", icon: "el-icon-zoom-in", path: "/buySellSystem/shopDisk", hot: false ,type:9},
-  { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false, flag: false ,type:10},
-  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "/buySellSystem/saleNotTracking", hot: false, flag: false ,type:11},
-  { title: "全部在售", icon: "el-icon-zoom-in", path: "/buySellSystem/saleAll", hot: false, flag: false ,type:12},
-  { title: "店长推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/shopownerRecommendHouse", hot: false, flag: false ,type:13},
+  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false },
+  { title: "7天被带看", icon: "el-icon-zoom-in", path: "/buySellSystem/sevenDaysFollowHouse", hot: true, flag: false },
+  { title: "新增房源", icon: "el-icon-zoom-in", path: "/buySellSystem/newAgentHouse", hot: false, flag: false },
+  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false },
+  { title: "成交对赌", icon: "el-icon-zoom-in", path: "/buySellSystem/houseBet", hot: true, flag: false },
+  { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true, flag: false },
+  // { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
+  { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false, flag: false },
+  { title: "店公共盘", icon: "el-icon-zoom-in", path: "/buySellSystem/shopDisk", hot: false },
+  { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false, flag: false },
+  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "/buySellSystem/saleNotTracking", hot: false, flag: false },
+  { title: "全部在售", icon: "el-icon-zoom-in", path: "", hot: false, flag: false },
+  { title: "店长推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/shopownerRecommendHouse", hot: false, flag: false },
 ];
 import getToken from "@/minxi/getUrlToken";
 import getMenuRid from "@/minxi/getMenuRid"
