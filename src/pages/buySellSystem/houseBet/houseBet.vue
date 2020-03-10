@@ -205,7 +205,7 @@
           moneyFrom: '',
           moneyTo: '',
           order: '',
-          orderAsc: false,
+          orderAsc: '',
           timeSelect: ''
         },
         options: [],
@@ -282,12 +282,12 @@
         return h('span', {}, [
           h('span', {}, params.column.label),
           h('span', {style:'color:red;float:right',on:{click: ()=>{that.orderBy(params.column.property,"DESC")}}}, '↓'),
-          h('span', {style:'color:red;float:right',on:{click: ()=>{that.orderBy(params.column.property), "ASC"}}}, '↑')
+          h('span', {style:'color:red;float:right',on:{click: ()=>{that.orderBy(params.column.property, "ASC")}}}, '↑')
         ])
       },
       orderBy(o,Asc){
-        this.data.order = o
-        this.data.orderAsc = Asc
+        this.data.order = o;
+        this.data.orderAsc = Asc;
         this.queryHouseBetParams();
       },
       toLook(row) {
