@@ -13,7 +13,7 @@
 .login {
   position: fixed;
   font-size: 24px;
-  height: 50rem;
+  height: 500px;
   width: 97%;
   background-color: #ffffff;
   border-radius: 0.25rem;
@@ -116,7 +116,10 @@
       <el-table-column label="备注">
         <template v-slot="scope">{{scope.row.memo}}</template>
       </el-table-column>
-      <el-table-column prop="operation" label="操作" fixed="right" key="992">
+      <el-table-column prop="operation"
+                       label="操作"
+                       fixed="right"
+                       key="992">
         <template v-slot="scope">
           <!-- <div v-if="scope.row.operation!=''"> -->
           <el-button type="info"

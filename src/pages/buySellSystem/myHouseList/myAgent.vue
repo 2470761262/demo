@@ -5,17 +5,54 @@
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
       <div class="page-form-inline ">
-        <el-input placeholder="楼盘名称"
-                  style="width:280px"
-                  v-model="queryData.CommunityName">
-          <template slot="prepend">楼盘名称 </template>
-        </el-input>
-        <el-input placeholder="栋座"
-                  v-model="queryData.BuildingName"
-                  style="margin-left:10px;width:100px"></el-input>
-        <el-input placeholder="房间号"
-                  v-model="queryData.RoomNo"
-                  style="margin-left:10px;width:100px"></el-input>
+        <el-item label="楼盘名称"
+                 prop="comId">
+          <el-select v-model="queryData.CommunityName"
+                     @focus="remoteInput"
+                     @change="queryCBId()"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="请输入楼盘名称搜索"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
+
+        <el-item label="栋座"
+                 prop="cbId"
+                 class="page-label-center">
+          <el-select v-model="queryData.cbId"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
+        <el-item label="房间号"
+                 prop="roomNo"
+                 clearable
+                 class="page-label-center">
+          <el-select v-model="queryData.roomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
         <el-input placeholder="姓名"
                   style="margin-left:30px;width:240px"
                   v-model="queryData.Customers"
@@ -60,6 +97,7 @@
           </el-option>
         </el-select>
         <template slot="prepend">房源状态</template> -->
+
         <el-date-picker v-model="queryData.timeSelect"
                         type="daterange"
                         range-separator="至"
@@ -67,23 +105,34 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+              @click="delece">
+          清除
+        </span>
+        <span><input type='checkbox'
+                 style='margin-left:10px' /> 钥匙</span>
+        <span><input type='checkbox'
+                 style='margin-left:10px;background:#fff' /> 独家</span>
         <el-button type="primary"
                    style="margin-left:30px"
                    size="mini"
                    @click="querylistByParams">查询</el-button>
+        <el-button type="primary"
+                   style="margin-left:30px"
+                   size="mini">更多筛选</el-button>
       </div>
 
     </template>
 
-    <template #tableColumn="" >
+    <template #tableColumn="">
 
-      <el-table-column label="房源编号" >
+      <el-table-column label="房源编号">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
         </template>
       </el-table-column>
-      <el-table-column label="楼盘名称" >
-        <template v-slot="scope" >
+      <el-table-column label="楼盘名称">
+        <template v-slot="scope">
           {{scope.row.CommunityName}}
         </template>
       </el-table-column>
@@ -142,20 +191,26 @@
                      :visible.sync="dialogVisible"
                      :modal-append-to-body='false'
                      width="20%">
-            <el-select v-model="AgentPerId" @change="queryAddPerId()"
+            <el-select v-model="AgentPerId"
+                       @change="queryAddPerId()"
                        filterable
                        remote
                        clearable
-                       placeholder="请输入跟单人姓名进行搜索" :loading="loading">
-              <el-option v-for="item in AgentPerList" :key="item.accountID"
-                         :label="item.perName" :value="item.accountID">
-                         <span style="float: left">{{item.perName}}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">{{item.deptName}}</span>
+                       placeholder="请输入跟单人姓名进行搜索"
+                       :loading="loading">
+              <el-option v-for="item in AgentPerList"
+                         :key="item.accountID"
+                         :label="item.perName"
+                         :value="item.accountID">
+                <span style="float: left">{{item.perName}}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">{{item.deptName}}</span>
               </el-option>
             </el-select>
-            <span slot="footer"  class="dialog-footer">
+            <span slot="footer"
+                  class="dialog-footer">
               <el-button @click="dialogVisible = false">取 消</el-button>
-              <el-button type="primary" @click="updateAgentPer">确 定</el-button>
+              <el-button type="primary"
+                         @click="updateAgentPer">确 定</el-button>
             </span>
           </el-dialog>
         </template>
@@ -174,14 +229,17 @@ export default {
   },
   data () {
     return {
-      AgentPerId:'',
-      toHouseId:'',
-      toComName:'',
+      roomNoList: '',
+      cbIdList: '',
+      comId: '',
+      AgentPerId: '',
+      toHouseId: '',
+      toComName: '',
       dialogVisible: false,
       value: '',
       input: '',
       addPer: '',
-      AgentPerList:[],
+      AgentPerList: [],
       loading: true, //控制表格加载动画提示
       pageJson: {
         currentPage: 1, //当前页码
@@ -228,6 +286,8 @@ export default {
       queryData: {
         communityName: '',
         timeSelect: '',
+        roomNo: '',
+        cbId: ''
 
       },
 
@@ -235,19 +295,29 @@ export default {
   },
   mounted () {
     this.querylist(1);
-    this. queryCompanyPerList();
+    this.queryCompanyPerList();
   },
   methods: {
-    toHouseData(id,CommunityName){
+    toHouseData (id, CommunityName) {
       var that = this
-      that.dialogVisible =  true
-      console.log("得到房源id为:"+id+"------楼盘名称"+CommunityName);
+      that.dialogVisible = true
+      console.log("得到房源id为:" + id + "------楼盘名称" + CommunityName);
       that.toHouseId = id;
       that.toComName = CommunityName;
     },
-     querylistByParams () {
+    querylistByParams () {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
+    },
+    delece () {
+      this.queryData.CommunityName = '';
+      this.queryData.cbId = '';
+      this.queryData.roomNo = '';
+      this.queryData.Customers = '';
+      this.queryData.Tel = '';
+      this.queryData.minPrice = '';
+      this.queryData.maxPrice = '';
+      this.queryData.timeSelect = '';
     },
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
@@ -307,11 +377,84 @@ export default {
     toHouseDetail (id) {
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
+    remoteInput () {
 
+      if (this.comId.length == 0) {
+        this.remoteMethod();
+      }
+    },
+    remoteMethod (query) {
+      var that = this
+      if (query !== '') {
+        this.loading = true;
+
+        this.$api.get({
+          url: "/mateHouse/queryCommunity",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        }).then((e) => {
+          console.log(e.data)
+          if (e.data.code == 200) {
+
+            that.loading = false;
+            that.options = e.data.data.list;
+
+          }
+        })
+      } else {
+        this.options = [];
+      }
+    },
+    queryCBId () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryComBuilding",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.queryData.CommunityName,
+          page: 1,
+          limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.queryData.roomNo = '';
+          that.queryData.cbId = '';
+          that.cbIdList = e.data.data.list;
+        }
+      })
+    },
+    queryRoomNo () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryBuildIngHouses",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.queryData.comId,
+          cbId: that.queryData.cbId,
+          page: 1,
+          limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.queryData.roomNo = '';
+          that.roomNoList = e.data.data.list;
+        }
+      })
+    },
     distributeEvent (e, id) {
       this[e](id);
     },
-    queryCompanyPerList(){
+    queryCompanyPerList () {
       var that = this
       this.$api.get({
         url: '/employee/companyPerList',
@@ -327,12 +470,12 @@ export default {
         console.log("查询同公司下的所有经纪人失败");
       })
     },
-    updateAgentPer(){
-       var that = this
-        console.log("得到跟单人id为:"+that.AgentPerId);
-        console.log("得到房源id为:"+that.toHouseId+"------楼盘名称"+that.toComName)
-       let params = { AgentPer:that.AgentPerId+'' , houseId : that.toHouseId+''};
-        this.$api.post({
+    updateAgentPer () {
+      var that = this
+      console.log("得到跟单人id为:" + that.AgentPerId);
+      console.log("得到房源id为:" + that.toHouseId + "------楼盘名称" + that.toComName)
+      let params = { AgentPer: that.AgentPerId + '', houseId: that.toHouseId + '' };
+      this.$api.post({
         url: '/agent_house/updateAgentPer',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
@@ -341,9 +484,9 @@ export default {
         let result = e.data;
         if (result.code == 200) {
           this.$message({
-          message: '修改成功！',
-          type: 'success'
-        });
+            message: '修改成功！',
+            type: 'success'
+          });
         } else {
           console.log("修改失败");
         }
@@ -351,9 +494,9 @@ export default {
         console.log("修改失败");
       })
       that.dialogVisible = false
-      this.querylistByParams ();
+      this.querylistByParams();
     },
-    handleClick () {},
+    handleClick () { },
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;

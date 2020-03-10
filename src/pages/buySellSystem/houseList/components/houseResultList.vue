@@ -17,6 +17,9 @@
     }
   }
 }
+.i {
+  cursor: pointer;
+}
 .select-tabs {
   display: flex;
   justify-content: space-between;
@@ -122,6 +125,9 @@
           }
         }
       }
+      i {
+        cursor: pointer;
+      }
       .item-data-middle {
         font-size: 22px;
         color: #636363;
@@ -223,11 +229,11 @@
         </div>
       </div>
       <div class="select-tabs-cell">
-        <label class="select-checkbox">
+        <label class="select-checkbox i">
           <input type="checkbox">
           <span>钥匙</span>
         </label>
-        <label class="select-checkbox">
+        <label class="select-checkbox i">
           <input type="checkbox">
           <span>独家</span>
         </label>
@@ -265,7 +271,7 @@
               </div>
             </div>
             <div class="select-for-item-but">
-              <i class="el-icon-document icon"
+              <i class="el-icon-document icon i"
                  @click="toHouseDetail(item.id)"></i>
             </div>
           </div>
