@@ -1,8 +1,3 @@
-<style lang="less" scoped>
-.a {
-  background-image: url(../../../assets/images/channel_current.png);
-}
-</style>
 <template>
   <list-page :parentData="$data"
              @handleClick="handleClick"
@@ -21,7 +16,38 @@
                      placeholder="请输入楼盘名称搜索"
                      :remote-method="remoteMethod"
                      :loading="loading">
-            <el-option v-for="item in optionsList"
+            <el-option v-for="item in comList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
+
+        <el-item label="栋座"
+                 prop="cbId"
+                 class="page-label-center">
+          <el-select v-model="queryData.cbId"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+              <!--如果接口是模糊搜索，value改成item.name就行 -->
+            </el-option>
+          </el-select>
+        </el-item>
+        <el-item label="房间号"
+                 prop="roomNo"
+                 clearable
+                 class="page-label-center">
+          <el-select v-model="queryData.roomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
                        :key="item.value"
                        :label="item.name"
                        :value="item.value">
@@ -46,10 +72,49 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
-        <el-button type="primary"
-                   style="margin-left:30px"
-                   size="mini"
-                   @click="querylistByParams">查询</el-button>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'>
+          清除
+        </span>
+        <div style="margin-top:15px">
+          <span style="margin-left:30px">
+            审核项目：
+          </span>
+          <el-select filterable
+                     placeholder="请选择">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <span style="margin-left:30px">
+            审核类型：
+          </span>
+          <el-select filterable
+                     placeholder="请选择">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <span style="margin-left:30px">
+            审核状态：
+          </span>
+          <el-select filterable
+                     placeholder="请选择">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <el-button type="primary"
+                     style="margin-left:30px"
+                     size="mini"
+                     @click="querylistByParams">查询</el-button>
+        </div>
+
       </div>
     </template>
 
@@ -66,18 +131,18 @@
       </el-table-column>
       <el-table-column label="审核项目">
         <template v-slot="scope">
-          {{scope.row.checkProject}}
+          {{scope.row.TypeString}}
         </template>
       </el-table-column>
 
       <el-table-column label="审核类型">
         <template v-slot="scope">
-          {{scope.row.checkType}}
+          {{scope.row.TypeString}}
         </template>
       </el-table-column>
       <el-table-column label="提交人">
         <template v-slot="scope">
-          {{scope.row.addPerName}}
+          {{scope.row.AddPerString}}
         </template>
       </el-table-column>
       <el-table-column label="提交时间">
@@ -87,7 +152,7 @@
       </el-table-column>
       <el-table-column label="审核状态">
         <template v-slot="scope">
-          {{scope.row.checkStatus}}
+          {{scope.row.TagString}}
         </template>
       </el-table-column>
       <el-table-column label="备注说明">
@@ -97,64 +162,27 @@
       </el-table-column>
       <el-table-column label="附件">
         <template v-slot="scope">
-          <el-image v-if="scope.row.accessory==1"
-                    :src="accessoryUrl">
-
-          </el-image>
+          {{scope.row.sad}}
         </template>
       </el-table-column>
       <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-          <el-button type="success"
-                     size="mini"
-                     v-if="scope.row.Tag==0"
-                     @click="getTitle(scope.row.Type)">审核</el-button>
-          <el-button size="mini"
-                     type="info"
-                     v-else>已审核</el-button>
-          <el-dialog :title="title"
-                     :visible.sync="showPopUp"
-                     width="30%"
-                     :modal="false"
-                     :center="true">
-            <div>
-              <div>
-                <span>审核状态:</span>
-                <el-radio-group v-model="checkStatus">
-                  <el-radio :label="1">通过</el-radio>
-                  <el-radio :label="2">不通过</el-radio>
-                </el-radio-group>
-              </div>
-              <div>
-                <el-input type="textarea"
-                          placeholder="请输入审核说明"
-                          v-model="checkMemo">
-                </el-input>
-              </div>
-            </div>
-            <span slot="footer"
-                  class="dialog-footer">
-              <el-button @click="showPopUp = false">取 消</el-button>
-              <el-button type="primary"
-                         @click="checkHouse(scope.row.id)">确 定</el-button>
-            </span>
-          </el-dialog>
-
-          <el-button type="success"
+          <el-button type="info"
+                     @click="toHouseDetail(scope.row.id)"
+                     size="mini">审核</el-button>
+          <el-button type="info"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
         </template>
       </el-table-column>
     </template>
   </list-page>
-
 </template>
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
-import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
 
@@ -163,6 +191,9 @@ export default {
   },
   data () {
     return {
+      cbIdList: '',
+      roomNoList: '',
+      comList: '',
       dialogVisible: false,
       value: '',
       input: '',
@@ -191,6 +222,16 @@ export default {
 
         ]
       },
+      state: [{
+        value: '0',
+        label: '待审核'
+      }, {
+        value: '1',
+        label: '已审核'
+      }, {
+        value: '-1',
+        label: '未通过'
+      },],
       options: [{
         value: '选项1',
         label: '全部'
@@ -213,84 +254,51 @@ export default {
       queryData: {
         CommunityName: '',
         timeSelect: '',
-
+        roomNo: '',
+        cbId: '',
       },
-      accessoryUrl: require('../../../assets/images/accessory.png'),
-      showPopUp: false,
-      checkStatus: 1,
-      checkMemo: "",
-      titleList: [
-        {
-          key: 0,
-          value: "钥匙人申请审核"
-        },
-        {
-          key: 1,
-          value: "委托申请审核"
-        },
-        {
-          key: 4,
-          value: "取代申请审核"
-        },
-        {
-          key: 8,
-          value: "房源转状态审核"
-        },
-        {
-          key: 11,
-          value: "举报审核"
-        },
-        {
-          key: 12,
-          value: "实勘人申请审核"
-        }
-      ],
-      title: "",
-      optionsList: []
+
     }
   },
   mounted () {
     this.querylist(1);
   },
   methods: {
-    checkHouse (id) {
-      let that = this;
-      let params = {
-        id: id,
-        CheckMemo: this.checkMemo,
-        Tag: this.checkStatus
-      }
-      if (!util.isNotNull(this.checkMemo)) {
-        this.$.message("审核说明未填")
-        return true;
-      }
-      this.showPopUp = false;
-      this.$api.post({
-        url: '/agentHouse/propertyCheck/checkHouse',
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: params,
-        token: false
-      }).then((e) => {
-        let result = e.data;
-        that.loading = false;
-        that.$message(result.message);
-        if (result.code == 200) {
-          that.querylistByParams();
-        }
-      }).catch((e) => {
-        that.$message("操作失败");
-      })
+    remoteInput () {
 
+      if (this.comId.length == 0) {
+        this.remoteMethod();
+      }
     },
-    getTitle (checkType) {
-      this.titleList.forEach(element => {
-        if (element.key == checkType) {
-          this.title = element.value;
-        }
-      });
-      this.showPopUp = true;
+    remoteMethod (query) {
+      var that = this
+      if (query !== '') {
+        this.loading = true;
+
+        this.$api.get({
+          url: "/mateHouse/queryCommunity",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        }).then((e) => {
+          console.log(e.data.code)
+          if (e.data.code == 200) {
+
+            that.loading = false;
+            that.comList = e.data.data.list;
+
+          }
+        })
+      } else {
+        this.options = [];
+      }
     },
-    queryAddPerId () {
+    queryCBId () {
       var that = this
       this.$api.get({
         url: "/mateHouse/queryComBuilding",
@@ -298,11 +306,35 @@ export default {
         token: false,
         qs: true,
         data: {
-          comId: that.form.comId
+          comId: that.queryData.CommunityName,
+          page: 1,
+          limit: 50
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          that.queryData.roomNo = '';
+          that.queryData.cbId = '';
           that.cbIdList = e.data.data.list;
+        }
+      })
+    },
+    queryRoomNo () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryBuildIngHouses",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.queryData.comId,
+          cbId: that.queryData.cbId,
+          page: 1,
+          limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.queryData.roomNo = '';
+          that.roomNoList = e.data.data.list;
         }
       })
     },
@@ -390,7 +422,7 @@ export default {
           if (e.data.code == 200) {
 
             that.loading = false;
-            that.optionsList = e.data.data.list;
+            that.comList = e.data.data.list;
           }
         })
       } else {

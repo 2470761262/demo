@@ -51,9 +51,7 @@
                 :label="item.name"
                 :value="item.value"
               ></el-option>
-              
             </el-select>
-            
           </el-item>
           <el-item label="栋座" prop="cbId" class="page-label-center">
             <el-select
@@ -87,7 +85,7 @@
             style="margin-left:30px;width:240px"
             clearable
           >
-          <template slot="prepend">业主</template>
+            <template slot="prepend">业主</template>
           </el-input>
           <el-input
             placeholder="电话"
@@ -95,22 +93,24 @@
             style="margin-left:30px;width:240px"
             clearable
           >
-          <template slot="prepend">业主电话</template>
+            <template slot="prepend">业主电话</template>
           </el-input>
-          <!-- <el-input
+           <el-input
             placeholder="最小面积"
             v-model="data.minInArea"
             style="margin-left:30px;width:120px"
             clearable
-          />------
-          <el-input placeholder="最大面积" v-model="data.maxInArea" style="width:120px" clearable /> -->
+          >
+            <template slot="prepend">面积</template>
+          </el-input>-
+          <el-input placeholder="最大面积" v-model="data.maxInArea" style="width:120px" clearable />
           <el-input
             placeholder="最小值"
             v-model="data.minPrice"
             style="margin-left:30px;width:180px"
             clearable
           >
-          <template slot="prepend">价格</template>
+            <template slot="prepend">价格</template>
           </el-input>-
           <el-input placeholder="最大值" v-model="data.maxPrice" style="width:120px" clearable />
           <el-date-picker
@@ -120,7 +120,7 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           >
-           <template slot="prepend">录入时间</template>
+            <template slot="prepend">录入时间</template>
           </el-date-picker>
           <el-button
             type="primary"
@@ -297,7 +297,15 @@ export default {
         comId: "",
         cbId: "",
         roomNo: "",
-        timeSelect: ""
+        timeSelect: "",
+        beginTime:"",
+        endTime:"",
+        customName:"",
+        tel:"",
+        minInArea:"",
+        maxInArea:"",
+        minPrice:"",
+        maxPrice:""
       },
       cbIdList: [],
       roomNoList: [],
@@ -324,7 +332,7 @@ export default {
           prop: "communityName",
           label: "楼盘名称",
           formart: row => {
-            return row.communityName + "-" + row.buildingNo + "-" + row.roomNo;
+            return row.communityName;
           },
           width: ""
         },
@@ -512,12 +520,22 @@ export default {
       this.queryVerifyHouseDatas(1);
     },
     queryVerifyHouseDatas(currentPage) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       that.loading = true;
-      if (this.queryData.newsTitle != null) {
-        params.newsTitle = this.queryData.newsTitle;
-      }
+
+      let params={"limit":that.pageJson.pageSize,"page":currentPage-1};
+
+      params.comId=that.data.comId;
+      params.cbId=that.data.cbId;
+      params.roomNo=that.data.roomNo;
+      params.beginTime=that.data.timeSelect[0];
+      params.endTime=that.data.timeSelect[1];
+      params.customName=that.data.customName;
+      params.tel=that.data.tel;
+      params.minInArea=that.data.minInArea;
+      params.maxInArea=that.data.maxInArea;
+      params.minPrice=that.data.minPrice;
+      params.maxPrice=that.data.maxPrice;
       this.$api
         .post({
           url: "/draft-house/page",
@@ -583,36 +601,35 @@ export default {
           that.loading = false;
         });
     },
-    remoteInput () {
-
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
-      var that = this
-      if (query !== '') {
+    remoteMethod(query) {
+      var that = this;
+      if (query !== "") {
         this.loading = true;
 
-        this.$api.get({
-          url: "/mateHouse/queryCommunity",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            communityName: query,
-            page: 1,
-            limit: 50
-          }
-        }).then((e) => {
-          console.log(e.data)
-          if (e.data.code == 200) {
-
-            that.loading = false;
-            that.options = e.data.data.list;
-
-          }
-        })
+        this.$api
+          .get({
+            url: "/mateHouse/queryCommunity",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
+            data: {
+              communityName: query,
+              page: 1,
+              limit: 50
+            }
+          })
+          .then(e => {
+            console.log(e.data);
+            if (e.data.code == 200) {
+              that.loading = false;
+              that.options = e.data.data.list;
+            }
+          });
       } else {
         this.options = [];
       }
