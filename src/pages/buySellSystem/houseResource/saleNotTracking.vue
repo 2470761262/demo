@@ -300,10 +300,10 @@ export default {
         params.sortType = type;
       }
 
-      this.$api.get({
+      this.$api.post({
         url: '/houseResource/getSaleNotTrack',
         data: params,
-        qs: true,
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let data = e.data

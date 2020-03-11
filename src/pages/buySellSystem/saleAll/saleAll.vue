@@ -299,10 +299,10 @@ export default {
         params.sortType = type;
       }
 
-      this.$api.get({
+      this.$api.post({
         url: '/saleAll/querySaleAll',
         data: params,
-        token: false
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let data = e.data

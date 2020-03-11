@@ -253,10 +253,10 @@ export default {
       params.endTime = that.data.timeSelect[1];
       params.sortColumn = column;
       params.sortType = type;
-      this.$api.get({
+      this.$api.post({
         url: '/soleHouse/querySoleHouse',
         data: params,
-        token: false
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let data = e.data

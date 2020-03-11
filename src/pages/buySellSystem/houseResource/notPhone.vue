@@ -8,6 +8,7 @@
     <template v-slot:top>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
+<<<<<<< HEAD
 
         <el-select v-model="data.comId"
                    @focus="remoteInput"
@@ -24,6 +25,50 @@
                      :value="item.value">
           </el-option>
         </el-select>
+=======
+        
+         
+          <el-select v-model="data.comId"
+                     @focus="remoteInput"
+                     @change="queryCBId()"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="请输入楼盘名称搜索"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        
+          <el-select v-model="data.cbId"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        
+          <el-select v-model="data.roomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        
+        
+        
+>>>>>>> b1eb009ea2ac8b1ed3a2859a8ecaef576f3b0e9a
 
         <el-select v-model="data.cbId"
                    filterable
@@ -298,6 +343,7 @@ export default {
         }
       })
     },
+<<<<<<< HEAD
     queryNotPhone (currentPage) {
       var that = this;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
@@ -324,6 +370,35 @@ export default {
           that.tableData = data.data;
         } else {
           console.log("查询无号码列表结果：" + result.message);
+=======
+  queryNotPhone(currentPage){
+    var that =this;
+   let params={"limit":that.pageJson.pageSize,"page":currentPage-1};
+ 
+        params.comId=that.data.comId;
+        params.cbId=that.data.cbId;
+        params.roomNo=that.data.roomNo;
+        params.beginTime=that.data.timeSelect[0];
+        params.endTime=that.data.timeSelect[1];
+        params.customName=that.data.customName;
+        params.tel=that.data.tel;
+        params.minInArea=that.data.minInArea;
+        params.maxInArea=that.data.maxInArea;
+     console.log(params);
+    this.$api.get({
+        url: '/houseResource/getNotPhone',
+        data: params,       
+       qs: true
+      }).then((e) => {
+        console.log(e.data);
+        let data=e.data
+        if (data.code == 200) {
+          that.pageJson.total=data.dataCount;
+          that.pageJson.currentPage=data.pageSum;
+          that.tableData=data.data;
+        } else {
+          console.log("查询无号码列表结果：" + result.message);
+>>>>>>> b1eb009ea2ac8b1ed3a2859a8ecaef576f3b0e9a
 
           alert(result.message);
         }

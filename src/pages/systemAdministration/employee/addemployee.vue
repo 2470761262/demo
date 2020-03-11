@@ -2,10 +2,8 @@
 
 .left-input-container {
   padding: 10px;
-  font-size: 1rem;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
-  border-radius: 0.5rem;
+
+  border-radius: 0rem;
   .el-input {
     width: 80%;
   }
@@ -105,20 +103,7 @@
               :value="item.id">
             </el-option>
           </el-select>
-            <!-- <el-input
-              type="text"
-              list="educationList"
-              placeholder="请输入内容"
-              v-model="employeeEntity.education"
-               @focus="findByParams4()"
-            ></el-input>
-            <datalist id="educationList">
-            <option v-for="(item,index) in educationList"
-                    :key="index">
-                    {{item.educationName}}
-                    </option>
-                    
-            </datalist> -->
+         
         </div>
         <div class="left-input-container">
             <span>专业</span>
@@ -171,7 +156,7 @@
             ></el-input>
         </div>
     <div class="left-input-container">
-       <el-button type="info" @click="getDialogVisible()">选择部门</el-button>
+       <el-button type="info" @click="getDialogVisible()" size="small" style="margin-top: 4px;">选择部门</el-button>
        <el-dialog title="请选择:" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
           <template>
             <div class="elTree">
@@ -368,7 +353,8 @@
     <div class="left-input-container">
       <el-upload
         class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
+        :action="uploadUrl"
+        :headers="myHeader"
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload">
@@ -384,7 +370,7 @@
                 v-model="employeeEntity.jieShaoName"
                 maxlength="10"
                 show-word-limit></el-input> -->
-      <el-button type="info" @click="getDialogVisible1()">介绍人</el-button>
+      <el-button type="info" @click="getDialogVisible1()" size="small" style="margin-top: 4px;">介绍人</el-button>
        <el-dialog title="请选择:" :visible.sync="dialogVisible1" width="50%" :before-close="handleClose">
           <list-page :parentData="$data"
           highlight-current-row
@@ -417,6 +403,8 @@
 </template>
 
 <script>
+import util from "@/util/util";
+import { TOKEN } from '@/util/constMap';
 import listPage from "@/components/listPage";
 import getMenuRid from '@/minxi/getMenuRid';
 export default {
@@ -503,7 +491,8 @@ export default {
         jieShaoName: null,
         jieShaoNameId:null,
       },
-     
+      uploadUrl: "",
+      myHeader: "",
     };
   },
   watch: {},
@@ -814,6 +803,8 @@ export default {
     },
   },
   created () {
+    this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
+    this.myHeader = { tk: util.localStorageGet(TOKEN) };
     this.employeeEntity.isGold = 0;
   },
   mounted () { }
