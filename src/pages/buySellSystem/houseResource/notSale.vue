@@ -88,7 +88,7 @@
                      @click="toLook(scope.row.id)">查看</el-button>
           <el-button type="info"
                      size="mini"
-                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhid,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
+                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
         </template>
 
       </el-table-column>
@@ -177,6 +177,7 @@ export default {
     },
     toSale (comId, cbId, bhId,communityName,buildingName,roomNo,customers,tel) {
       var that = this
+      console.log(bhId);
       that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId,'cbId':cbId,'bhId':bhId,"communityName":communityName,"buildingName":buildingName,'roomNo':roomNo,"flag":'potentia',"customerName":customers,tel:tel} });
       
     },

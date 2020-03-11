@@ -60,7 +60,7 @@
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
-                   @click="querySoleHouseParams">查询</el-button>
+                   @click="querySoleHouseParams()">查询</el-button>
       </div>
     </template>
     <!-- :formatter="item.format" -->
