@@ -273,7 +273,7 @@ export default {
       this.$api.post({
         url: '/houseResource/getShopDisk',
         data: params,
-        qs: true,
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let data = e.data

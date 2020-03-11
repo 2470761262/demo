@@ -47,8 +47,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
- 
-
+        
         
         
 
@@ -312,7 +311,7 @@ remoteMethod (query) {
     this.$api.get({
         url: '/houseResource/getNotPhone',
         data: params,       
-        token: false
+       qs: true
       }).then((e) => {
         console.log(e.data);
         let data=e.data

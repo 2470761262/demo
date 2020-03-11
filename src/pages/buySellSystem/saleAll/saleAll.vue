@@ -272,7 +272,7 @@ export default {
       this.$api.get({
          url: '/saleAll/querySaleAll',
         data: params,
-        token: false
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let data = e.data

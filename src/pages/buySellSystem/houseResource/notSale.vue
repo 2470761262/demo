@@ -195,10 +195,8 @@ export default {
       if (query !== '') {
         this.loading = true;
 
-        this.$api.get({
+        this.$api.post({
           url: "/mateHouse/queryCommunity",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
           qs: true,
           data: {
             communityName: query,
@@ -275,7 +273,7 @@ export default {
       this.$api.get({
         url: '/houseResource/getNotSale',
         data: params,
-        token: false
+       qs: true
       }).then((e) => {
         console.log(e.data);
         let data = e.data

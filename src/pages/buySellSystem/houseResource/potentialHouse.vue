@@ -268,7 +268,7 @@ remoteMethod (query) {
     this.$api.get({
         url: '/houseResource/potentialHouse',
         data: params,       
-        token: false
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let data=e.data
