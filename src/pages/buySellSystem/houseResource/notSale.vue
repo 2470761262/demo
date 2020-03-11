@@ -270,7 +270,7 @@ export default {
         params.maxInArea=that.data.maxInArea;
       params.sortColumn=column;
       params.sortType=type;
-      this.$api.get({
+      this.$api.post({
         url: '/houseResource/getNotSale',
         data: params,
        qs: true

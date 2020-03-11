@@ -269,7 +269,7 @@ export default {
         params.maxPrice=that.data.maxPrice;
         params.sortColumn=column;
       params.sortType=type;
-      this.$api.get({
+      this.$api.post({
          url: '/saleAll/querySaleAll',
         data: params,
         qs: true
