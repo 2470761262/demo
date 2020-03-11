@@ -157,7 +157,7 @@ export default {
   data () {
     return {
       reSetMethod: false,
-      componentName: "exploration", //morePushHouse
+      componentName: "basicInformation", //morePushHouse
       stepsList: [
         { title: "必填信息", componentName: "basicInformation" },
         { title: "选填信息", componentName: "supplement" },
