@@ -294,6 +294,7 @@ export default {
       this.queryData.minPrice = '';
       this.queryData.maxPrice = '';
       this.queryData.timeSelect = '';
+      this.querylist(1);
     },
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
