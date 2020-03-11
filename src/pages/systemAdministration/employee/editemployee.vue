@@ -1,9 +1,7 @@
 <style lang="less" scoped>
 .left-input-container {
   padding: 10px;
-  font-size: 1rem;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
+
   border-radius: 0.5rem;
   .el-input {
     width: 80%;
@@ -67,7 +65,7 @@
         </div>
         <div class="left-input-container">
             <span>学历ID</span>
-            <el-select v-model="employeeEntity.education" filter-method @focus="findByParams4()"  placeholder="请选择">
+            <el-select v-model="employeeEntity.education"  @focus="findByParams4()"  placeholder="请选择">
             <el-option
               v-for="item in educationList"
               :key="item.value"
@@ -127,7 +125,7 @@
         </div>
       
     <div class="left-input-container">
-       <el-button type="info" >选择部门</el-button>
+       <el-button type="info" size="small" style="margin-top: 4px;">选择部门</el-button>
        <el-dialog title="请选择:" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
           <template>
             <div class="elTree">
@@ -149,7 +147,7 @@
 
     <div class="left-input-container">
       <span>角色</span>
-      <el-select v-model="employeeEntity.perPost" filter-method @focus="findByParams()" disabled="disabled"  placeholder="请选择">
+      <el-select v-model="employeeEntity.perPost"  @focus="findByParams()" disabled="disabled"  placeholder="请选择">
             <el-option
               v-for="item in positionNameList"
               :key="item.value"
@@ -160,7 +158,7 @@
     </div>
     <div class="left-input-container">
       <span>岗位</span>
-      <el-select v-model="employeeEntity.perRole" filter-method @focus="findByParams1()"  disabled="disabled" placeholder="请选择">
+      <el-select v-model="employeeEntity.perRole"  @focus="findByParams1()"  disabled="disabled" placeholder="请选择">
             <el-option
               v-for="item in roleNameList"
               :key="item.value"
@@ -301,7 +299,7 @@
     </div>
     <div class="left-input-container">
       <span>星级编号</span>
-     <el-select v-model="employeeEntity.levelNo" filter-method @focus="findByParams2()" disabled="true" placeholder="请选择">
+     <el-select v-model="employeeEntity.levelNo"  @focus="findByParams2()" disabled="disabled" placeholder="请选择">
             <el-option
               v-for="item in levelNameList"
               :key="item.value"
@@ -348,7 +346,8 @@
     <div class="left-input-container">
       <el-upload
         class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
+        :action="uploadUrl"
+        :headers="myHeader"
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload">
@@ -358,15 +357,7 @@
       </el-upload>
     </div>
     <div class="left-input-container">
-      <!-- <span>介绍人</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.jieShaoName"
-        maxlength="10"
-        show-word-limit
-      ></el-input> -->
-       <el-button type="info" @click="getDialogVisible1()">介绍人</el-button>
+       <el-button type="info" @click="getDialogVisible1()" size="small" style="margin-top: 4px;">介绍人</el-button>
        <el-dialog title="请选择:" :visible.sync="dialogVisible1" width="50%" :before-close="handleClose">
           <list-page :parentData="$data"
           highlight-current-row
@@ -397,6 +388,8 @@
 </template>
 
 <script>
+import util from "@/util/util";
+import { TOKEN } from '@/util/constMap';
 import getMenuRid from "@/minxi/getMenuRid";
 import listPage from "@/components/listPage";
 export default {
@@ -484,7 +477,8 @@ export default {
         jieShaoNameId: null,
       },
       backUrl: null,
-     
+      uploadUrl: "",
+      myHeader: "",
     };
   },
   watch: {},
@@ -794,6 +788,8 @@ export default {
     }
   },
   created() {
+    this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
+    this.myHeader = { tk: util.localStorageGet(TOKEN) };
     this.id = this.$route.query.id;
     if (this.$route.query.back != null) {
       this.backUrl = this.$route.query.back;
