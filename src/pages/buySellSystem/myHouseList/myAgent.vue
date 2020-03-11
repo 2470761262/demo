@@ -1,5 +1,17 @@
+<style lang="less" scoped >
+/deep/.backred {
+  background: #FF3333;
+}
+/deep/.backblue {
+background: #FFFF77;
+}
+/deep/.default{
+background: white;
+}
+</style>
 <template>
   <list-page :parentData="$data"
+             :row-class-name="mark" 
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
@@ -156,9 +168,14 @@
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
+          <el-tooltip placement="top">
+                <div v-if="scope.row.Rooms==3" slot="content">未完善房源</div>
+                <div v-else-if="scope.row.Rooms==2" slot="content">多天未跟单房源</div>
+                <div v-else slot="content">查看
+                </div>
           <el-button type="info"
                      @click="toHouseDetail(scope.row.id)"
-                     size="mini">查看</el-button>
+                     size="mini">查看</el-button> </el-tooltip>
           <el-button type="info"
                      size="mini"
                      @click="toHouseData(scope.row.id,scope.row.CommunityName)">调配</el-button>
@@ -190,7 +207,6 @@
           </el-dialog>
         </template>
       </el-table-column>
-
     </template>
 
   </list-page>

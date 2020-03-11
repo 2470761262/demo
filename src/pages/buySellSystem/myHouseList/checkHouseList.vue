@@ -115,18 +115,18 @@
       </el-table-column>
       <el-table-column label="审核项目">
         <template v-slot="scope">
-          {{scope.row.TypeString}}
+          {{scope.row.checkProject}}
         </template>
       </el-table-column>
 
       <el-table-column label="审核类型">
         <template v-slot="scope">
-          {{scope.row.TypeString}}
+          {{scope.row.checkType}}
         </template>
       </el-table-column>
       <el-table-column label="提交人">
         <template v-slot="scope">
-          {{scope.row.AddPerString}}
+          {{scope.row.addPerName}}
         </template>
       </el-table-column>
       <el-table-column label="提交时间">
@@ -153,11 +153,60 @@
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-          <el-button type="info"
-                     @click="toHouseDetail(scope.row.id)"
-                     size="mini">审核</el-button>
-          <el-button type="info"
-                     @click="toHouseDetail(scope.row.id)"
+          <el-button type="success"
+                     size="mini"
+                     v-if="scope.row.Tag==0"
+                     @click="getTitle(scope.row)">审核</el-button>
+          <el-button size="mini"
+                     type="info"
+                     v-else>已审核</el-button>
+          <el-dialog :title="title"
+                     :visible.sync="showPopUp"
+                     width="30%"
+                     :modal="false"
+                     :center="true">
+            <div>
+              <div>
+                <span>审核状态:</span>
+                <el-radio-group v-model="checkStatus">
+                  <el-radio :label="1">通过</el-radio>
+                  <el-radio :label="2">不通过</el-radio>
+                </el-radio-group>
+              </div>
+              <div v-if="row.Type==1||row.ReplaceType==2">
+                <span>委托截止时间:</span>
+                <span>{{row.ProxyMaxTime}}</span>
+              </div>
+              <div v-if="row.Type==0||row.ReplaceType==3"
+                   style="display:flex">
+                <span>钥匙类型:</span>
+                <span v-if="row.keyType==0">钥匙</span>
+                <span v-if="row.keyType==1">指纹锁</span>
+                <span v-if="row.keyType==2">密码锁</span>
+                <div v-if="row.keyType==2"
+                     style="margin-left:20px;">
+                  <span>密码:</span>
+                  <span>{{row.keyCode}}</span>
+                </div>
+              </div>
+              <div>
+                <el-input type="textarea"
+                          placeholder="请输入审核说明"
+                          v-model="checkMemo">
+                </el-input>
+              </div>
+
+            </div>
+            <span slot="footer"
+                  class="dialog-footer">
+              <el-button @click="showPopUp = false">取 消</el-button>
+              <el-button type="primary"
+                         @click="checkHouse()">确 定</el-button>
+            </span>
+          </el-dialog>
+
+          <el-button type="success"
+                     @click="toHouseDetail(scope.row.Eid)"
                      size="mini">查看</el-button>
         </template>
       </el-table-column>
@@ -167,6 +216,7 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
 
@@ -300,13 +350,75 @@ export default {
         roomNo: '',
         cbId: '',
       },
-
+      accessoryUrl: require('../../../assets/images/accessory.png'),
+      showPopUp: false,
+      checkStatus: 1,
+      checkMemo: "",
+      titleList: [
+        {
+          key: 0,
+          value: "钥匙人申请审核"
+        },
+        {
+          key: 1,
+          value: "委托申请审核"
+        },
+        {
+          key: 4,
+          value: "取代申请审核"
+        },
+        {
+          key: 8,
+          value: "房源转状态审核"
+        },
+        {
+          key: 11,
+          value: "举报审核"
+        },
+        {
+          key: 12,
+          value: "实勘人申请审核"
+        }
+      ],
+      title: "",
+      optionsList: [],
+      checkId: 0,
+      row: {}
     }
   },
   mounted () {
     this.querylist(1);
   },
   methods: {
+    checkHouse () {
+      let that = this;
+      let params = {
+        id: this.checkId,
+        CheckMemo: this.checkMemo,
+        Tag: this.checkStatus
+      }
+      if (!util.isNotNull(this.checkMemo)) {
+        this.$.message("审核说明未填")
+        return true;
+      }
+      this.showPopUp = false;
+      this.$api.post({
+        url: '/agentHouse/propertyCheck/checkHouse',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: params,
+        token: false
+      }).then((e) => {
+        let result = e.data;
+        that.loading = false;
+        that.$message(result.message);
+        if (result.code == 200) {
+          that.querylistByParams();
+          that.CheckMemo = "";
+        }
+      }).catch((e) => {
+        that.$message("操作失败");
+      })
+    },
     remoteInput () {
 
       if (this.comId.length == 0) {
@@ -371,6 +483,17 @@ export default {
           that.cbIdList = e.data.data.list;
         }
       })
+
+    },
+    getTitle (row) {
+      this.titleList.forEach(element => {
+        if (element.key == row.Type) {
+          this.title = element.value;
+        }
+      });
+      this.checkId = row.id;
+      this.row = row
+      this.showPopUp = true;
     },
     queryRoomNo () {
       var that = this

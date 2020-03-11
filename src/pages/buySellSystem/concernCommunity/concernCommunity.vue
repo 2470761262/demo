@@ -205,7 +205,7 @@
       </el-table-column>
       <el-table-column label="房源状态"  min-width="7.3%">
         <template v-slot="scope">
-          在售
+          {{scope.row.Rooms}}
         </template>
       </el-table-column>
       <el-table-column label="跟单人"  min-width="7.3%">
@@ -221,17 +221,7 @@
                      size="mini">查看</el-button>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="操作"
-                       fixed="right"
-                       key="operation">
-        <template v-slot="scope">
-          <el-button type="info"
-                     size="mini"
-                     @click="distributeEvent(item.methosName,scope.row.id)"
-                     v-for="(item,index) in isForBut(scope.row.id)"
-                     :key="index">{{item.name}}</el-button>
-        </template>
-      </el-table-column> -->
+     
     </template>
   </list-page>
 </template>

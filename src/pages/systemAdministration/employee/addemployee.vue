@@ -192,7 +192,7 @@
     </div>
     <div class="left-input-container">
       <span>角色</span>
-          <el-select v-model="employeeEntity.position" filter-method @focus="findByParams()"  placeholder="请选择">
+          <el-select v-model="employeeEntity.perPost" filter-method @focus="findByParams()" @change="initposition()"  placeholder="请选择">
             <el-option
               v-for="item in positionNameList"
               :key="item.value"
@@ -378,12 +378,32 @@
       </el-upload>
     </div>
     <div class="left-input-container">
-      <span>介绍人</span>
+      <!-- <span>介绍人</span>
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.jieShaoName"
                 maxlength="10"
-                show-word-limit></el-input>
+                show-word-limit></el-input> -->
+      <el-button type="info" @click="getDialogVisible1()">介绍人</el-button>
+       <el-dialog title="请选择:" :visible.sync="dialogVisible1" width="50%" :before-close="handleClose">
+          <list-page :parentData="$data"
+          highlight-current-row
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
+          @current-change="handleChange"  >
+              <template v-slot:tableColumn="cell">
+                <template v-for="item in cell.tableData">
+                  <el-table-column
+                    :prop="item.prop"
+                    :label="item.label"
+                    :width="item.width"
+                    :key="item.prop"
+                  ></el-table-column>
+                </template>
+            </template>
+          </list-page>
+       </el-dialog>
+      <el-input type="text" v-model="employeeEntity.jieShaoName" show-word-limit></el-input>
     </div>
     
 
@@ -397,25 +417,49 @@
 </template>
 
 <script>
+import listPage from "@/components/listPage";
 import getMenuRid from '@/minxi/getMenuRid';
 export default {
   mixins: [getMenuRid],
-  components: {},
+  components: {
+    listPage
+  },
   props: {},
   data () {
     return {
+      sidebarFlag:false,
       treeData: [],
       filterText: "",
       defaultProps: {
         children: "childrenNodes",
         label: "labelName"
       },
+      loading: false, //控制表格加载动画提示
+      queryData: {
+        keyWord: "",
+        isLocked:null, //0 查询锁定,1 查询未锁定,2 查询异常用户
+        del:0 ,//0 查询在职用户,1 查询离职用户,2 查询待离职用户
+        type:0 //0 内部  1 游客
+      },
+      configSet: {
+        selectToTime: false,
+        selectTo: false
+      },
+      pageJson: {
+        currentPage: 1, //当前页码
+        total: 9, //总记录数
+        pageSize: 5 //每页条数
+      },
+      tableDataColumn: [],
+      currentRow: null,
+      tableData: [],
       imageUrl:null,
       positionNameList:null,
       levelNameList:null,
       educationList:null,
       roleNameList:null,
       dialogVisible: false,
+      dialogVisible1:false,
       employeeEntity: {
         loginUser:null,
         loginPwd:null,
@@ -431,9 +475,9 @@ export default {
         qq: null,
         tel: null,
         birthday: null,
-        perDeptId: null,
+        perDept: null,
         deptName:null,
-        perPostId: null,
+        perPost: null,
         positionName:null,
         perRole: null,
         roleName:null,
@@ -457,6 +501,7 @@ export default {
         postAllowance: null,
         userImage: null,
         jieShaoName: null,
+        jieShaoNameId:null,
       },
      
     };
@@ -464,9 +509,48 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    setId(){
-      console.log(this.employeeEntity.education);
+    getDialogVisible1(){
+      this.dialogVisible1 = true;
+       this.getPrincipal(1);
+       this.tableDataColumn = [
+        { prop: "perName", label: "姓名" },
+        { prop: "deptName", label: "部门" },
+        { prop: "companyName", label: "公司" },
+        { prop: "positionName", label: "岗位" },
+        ]
     },
+    getPrincipal(currentPage){
+      let params = { limit: this.pageJson.pageSize, page: currentPage };
+      params.coId = 0;
+      params.type = 0;
+      params.del = 0;
+      params.isLocked =this.employeeEntity.isLocked;
+      this.$api.post({
+        url: '/employee/selectPrincipal',
+        data: params,
+        token: false,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+
+          this.pageJson.total = result.data.totalCount;
+          this.pageJson.currentPage = result.data.currPage;
+          this.tableData = result.data.list;
+
+        } else {
+          console.log("查询负责人列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询负责人列表失败");
+        console.log(e);
+      })
+    },
+  
     handleAvatarSuccess(res, file) {
         this.imageUrl = URL.createObjectURL(file.raw);
         this.employeeEntity.userImage = this.imageUrl;
@@ -630,6 +714,7 @@ export default {
     },
     handleClose() {
       this.dialogVisible = false;
+      this.dialogVisible1 = false;
       //this.employeeEntity.perDeptId =null ;
       //this.employeeEntity.deptName = null ;
     },
@@ -700,16 +785,33 @@ export default {
     back () {
       this.$router.push({ path: "/sys/employeeList" });
     },
+    handleSizeChange (val) {
+      console.log(`设置了每页 ${val} 条`);
+      this.pageJson.pageSize = val;
+      this.getPrincipal(1);
+    },
+    handleCurrentChange (val) {
+      this.getPrincipal(val);
+    },
+    handleChange(row){
+    console.log(row);
+    this.employeeEntity.jieShaoName = row.perName;
+    this.employeeEntity.jieShaoNameId = row.accountId;
+    },
     iscardId(){
       console.log(this.employeeEntity.cardId);
 //debugger;
       if(!/^([1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2})$/.test(this.employeeEntity.cardId)){
         return false;
       }else{
+         if(!/^([1-9]{1})(\d{14}|\d{18})$/.test(this.employeeEntity.bankcard)){
+           return false;
+        }else{
         return true;
+        }
       }
       
-    }
+    },
   },
   created () {
     this.employeeEntity.isGold = 0;
