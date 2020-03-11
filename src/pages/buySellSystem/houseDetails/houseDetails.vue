@@ -226,10 +226,10 @@ input[type="number"]::-webkit-outer-spin-button {
                 <el-image style="width:100;height:100px;border-radius:50px;"
                           :src="houseDetails.agentPerHeadImg"></el-image>
                 <div :style="[{position:'absolute'}, {'z-index':2}, {left: '-520px' }, {top:'-40px'}]">
-                  <div style="border-radius: 13px; background-color: rgba(255,255,255,.5);width: 248px; "
+                  <div style="text-align: center;border-radius: 13px; background-color: rgba(255,255,255,.5);width: 248px; "
                        v-if="betExpireStr">
-                    <p style="margin: 0px 48px;padding: 10px 0px;font-size: large;font-weight: bolder">距离房源对赌结束</p>
-                    <p style="margin: 0px 20px;padding: 0px 0 10px 0;font-size: x-large">还剩 {{ ' ' +  betExpireStr }}</p>
+                    <p style="padding: 10px 0px;font-size: large;font-weight: bolder">距离房源对赌结束</p>
+                    <p style="padding: 0px 0 10px 0;font-size: x-large">还剩 {{ ' ' +  betExpireStr }}</p>
                   </div>
                 </div>
               </div>
@@ -359,16 +359,16 @@ input[type="number"]::-webkit-outer-spin-button {
                  :visible.sync="addBetSuccess"
                  width="232px"
                  top="300px">
-        <div style="margin-top: -40px">
+        <div style="margin-top: -40px;margin-bottom: -13px;">
           <div v-if="!addBetResult.status"
                style="margin-right: 13px;">
             <span>{{addBetResult.err}}</span>
           </div>
-          <div v-if="addBetResult.status">
+          <div v-if="addBetResult.status" style="text-align: center;">
             <el-image style="margin-left: 20px" :src="require('../../../assets/images/beton.png')" lazy></el-image>
-            <p style="margin:10px 60px;">对赌已生效</p>
-            <p style="margin-bottom: 10px;margin-left: 13px;font-size: x-large;color: black;">{{betAmount}}鑫币已支付</p>
-            <button style="width: 80px;font-size: medium;border: 0px;margin-left: 60px;background-color: #0d824b;border-radius:5px;">加油</button>
+            <p style="">对赌已生效</p>
+            <p style="margin-bottom: 10px;font-size: x-large;color: black;">{{betAmount}}鑫币已支付</p>
+            <button style="margin-bottom: -10px;width: 80px;font-size: medium;border: 0px;background-color: #0d824b;border-radius:5px;">加油</button>
           </div>
         </div>
       </el-dialog>
@@ -1661,7 +1661,10 @@ export default {
         lefth = Math.floor(lefttime / (1000 * 60 * 60) % 24),  //计算小时数
         leftm = Math.floor(lefttime / (1000 * 60) % 60), //计算分钟数
         lefts = Math.floor(lefttime / 1000 % 60);
-      this.betExpireStr = leftd + "天" + lefth + "时" + leftm + "分";  //返回倒计时的字符串
+      this.betExpireStr = leftd + "天" + this.zerofill(lefth ,2)+ "时" + this.zerofill(leftm,2) + "分";  //返回倒计时的字符串
+    },
+    zerofill(number,length){
+      return (Array(length).join(0) + number).slice(-length);
     },
     showBetView () {
       var that = this;
