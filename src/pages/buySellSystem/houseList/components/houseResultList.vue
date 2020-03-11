@@ -248,7 +248,7 @@
                v-for="(item,index) in renderList"
                :key="index">
             <div class="select-for-item-img">
-              <el-image :src="item.picUrl"
+              <el-image :src="item.picUrl+'?x-oss-process=style/thumb'"
                         fit="cover">
                 <div slot="placeholder"
                      class="image-slot">
