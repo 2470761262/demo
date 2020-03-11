@@ -94,12 +94,12 @@
                        width="150"
                        key="operation">
         <template v-slot="scope">
-          <el-button type="info"
-                     size="mini"
-                     @click="distributeEvent(item.methosName,scope.row.id)"
-                     v-for="(item,index) in isForBut(scope.row.id)"
-                     :key="index">{{item.name}}</el-button>
-        </template>
+      <el-button type="info"
+                 size="mini"
+                 @click="distributeEvent(item.methosName,scope.row.id)"
+                 v-for="(item,index) in isForBut(2)"
+                 :key="index">{{item.name}}</el-button>
+    </template>
 
       </el-table-column>
 
@@ -179,6 +179,12 @@ export default {
       console.log(e,"eeee排序");
       this.querySaleNotTrack(1,e.prop,e.order);
     },
+  
+     distributeEvent (e, id) {
+         var that = this;
+         console.log("hhhhhhhhhhhhhhhhhh", id);
+       that.$router.push({ name: "houseDetails", params: { houseId: id } });
+    },
    tabColumnChange (e) {
       this.tableColumn = e;
     },
@@ -197,6 +203,12 @@ export default {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
+    },
+    isForBut (type) {
+      let array = [{ name: "查看", isType: "1,2,3", methosName: "" }];
+      return array.filter(item => {
+        return item.isType.includes(type);
+      });
     },
     remoteMethod (query) {
       var that = this
