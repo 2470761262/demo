@@ -196,6 +196,7 @@
                            :data-vv-as="'房间号'+(index+1)"
                            v-validate="'required'"
                            v-model="item.roomId"
+                           @change="remoteRoomNoChange($event,index)"
                            @blur="selectPageRoom.focusIndex = -1"
                            @focus="selectPageRoom.focusIndex = index"
                            placeholder="房间号">
@@ -414,11 +415,12 @@ export default {
       selectPageBuilding: {
         loading: '',
         list: [],
-        focusIndex: -1 // 当前触发的index
+
       },
       selectPageRoom: {
         loading: '',
-        list: []
+        list: [],
+        focusIndex: undefined // 当前触发的index
       },
       selectPageCommunit: {
         loading: false,
@@ -546,6 +548,13 @@ export default {
         }
       })
     },
+    //房间号选择更改事件
+    remoteRoomNoChange (e, index) {
+      let findResultIndex = this.selectPageRoom.list.findIndex(item => {
+        return item.value == e;
+      });
+      this.tableFor[index].roomNo = this.selectPageRoom.list[findResultIndex].name;
+    },
     //输入的套数改变
     houseListChange (e) {
       let that = this;
@@ -630,30 +639,27 @@ export default {
     //提交数据d
     upLoadData () {
       let that = this;
-      let successId = [];
-      this.tableFor.forEach(async (item, index) => {
-        await this.$api.post({
-          url: "/draft-house",
-          data: {
-            communityName: that.selectPageCommunit.name,
-            communityId: that.selectPageCommunit.communityId,
-            buildingNo: item.buildingNo,
-            buildingId: item.buildingId,
-            roomNo: item.roomNo,
-            roomId: item.roomId,
-            ...that.form
-          },
-          headers: { "Content-Type": "application/json;charset=UTF-8" }
-        })
-          .then(e => {
-            if (e.data.code == 200) {
-              successId.push(e.data.data);
-            }
-          })
-          .catch(e => {
-            return false;
-          });
+      return this.$api.post({
+        url: "/draft-house/multiple",
+        data: {
+          communityName: that.selectPageCommunit.name,
+          communityId: that.selectPageCommunit.id,
+          list: that.tableFor,
+          ...that.form
+        },
+        headers: { "Content-Type": "application/json;charset=UTF-8" }
       })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.$store.commit("updateId", e.data.data);
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .catch(e => {
+          return false;
+        });
     }
   },
 }

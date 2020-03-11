@@ -1,17 +1,5 @@
-<style lang="less" scoped >
-/deep/.backred {
-  background: #FF3333;
-}
-/deep/.backblue {
-background: #FFFF77;
-}
-/deep/.default{
-background: white;
-}
-</style>
 <template>
   <list-page :parentData="$data"
-             :row-class-name="mark" 
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
@@ -106,7 +94,7 @@ background: white;
                         end-placeholder="结束日期">
         </el-date-picker>
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-              @click="delece">
+              @click="remove">
           清除
         </span>
         <span><input type='checkbox'
@@ -168,14 +156,9 @@ background: white;
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-          <el-tooltip placement="top">
-                <div v-if="scope.row.Rooms==3" slot="content">未完善房源</div>
-                <div v-else-if="scope.row.Rooms==2" slot="content">多天未跟单房源</div>
-                <div v-else slot="content">查看
-                </div>
           <el-button type="info"
                      @click="toHouseDetail(scope.row.id)"
-                     size="mini">查看</el-button> </el-tooltip>
+                     size="mini">查看</el-button>
           <el-button type="info"
                      size="mini"
                      @click="toHouseData(scope.row.id,scope.row.CommunityName)">调配</el-button>
@@ -207,6 +190,7 @@ background: white;
           </el-dialog>
         </template>
       </el-table-column>
+
     </template>
 
   </list-page>
@@ -276,7 +260,7 @@ export default {
         label: '已过期'
       }],
       queryData: {
-        communityName: '',
+        CommunityName: '',
         timeSelect: '',
         roomNo: '',
         cbId: ''
@@ -301,7 +285,7 @@ export default {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
-    delece () {
+    remove () {
       this.queryData.CommunityName = '';
       this.queryData.cbId = '';
       this.queryData.roomNo = '';
@@ -310,13 +294,14 @@ export default {
       this.queryData.minPrice = '';
       this.queryData.maxPrice = '';
       this.queryData.timeSelect = '';
+      this.querylist(1);
     },
     querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '',sortColumn:'id' };
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
-      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
+      if (this.queryData.cbId != null && this.queryData.cbId != '') { params.cbId = this.queryData.cbId; }
+      if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomNo = this.queryData.roomNo; }
       if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
       if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
       if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
@@ -326,7 +311,7 @@ export default {
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
       this.$api.post({
-        url: '/agent_house/myAgentHouseList',
+        url: '/myHouse/getMyAgent',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false
@@ -339,7 +324,7 @@ export default {
           console.log(result.data);
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPage;
-          that.tableData = result.data.list;
+          that.tableData = result.data.data;
         } else {
           console.log("查询我的跟单列表结果：" + result.message);
           alert(result.message);
@@ -431,7 +416,7 @@ export default {
         token: false,
         qs: true,
         data: {
-          comId: that.queryData.comId,
+          comId: that.queryData.CommunityName,
           cbId: that.queryData.cbId,
           page: 1,
           limit: 50

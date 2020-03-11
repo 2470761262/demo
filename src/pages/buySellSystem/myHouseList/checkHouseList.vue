@@ -1,217 +1,388 @@
 <template>
-  <list-page :parentData="$data"
-             @handleClick="handleClick"
-             @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
-    <template v-slot:top>
-      <div class="page-form-inline ">
-        <el-item label="楼盘名称"
-                 prop="comId">
-          <el-select v-model="queryData.CommunityName"
-                     @focus="remoteInput"
-                     @change="queryCBId()"
-                     filterable
-                     remote
-                     clearable
-                     placeholder="请输入楼盘名称搜索"
-                     :remote-method="remoteMethod"
-                     :loading="loading">
-            <el-option v-for="item in comList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </el-item>
+  <div>
+    <list-page :parentData="$data"
+               @handleClick="handleClick"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
+      <template v-slot:top>
+        <div class="page-form-inline ">
+          <el-item label="楼盘名称"
+                   prop="comId">
+            <el-select v-model="queryData.CommunityName"
+                       @focus="remoteInput"
+                       @change="queryCBId()"
+                       filterable
+                       remote
+                       clearable
+                       placeholder="请输入楼盘名称搜索"
+                       :remote-method="remoteMethod"
+                       :loading="loading">
+              <el-option v-for="item in comList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+          </el-item>
 
-        <el-item label="栋座"
-                 prop="cbId"
-                 class="page-label-center">
-          <el-select v-model="queryData.cbId"
-                     filterable
-                     clearable
-                     placeholder="请选择楼栋"
-                     @change="queryRoomNo()">
-            <el-option v-for="item in cbIdList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-              <!--如果接口是模糊搜索，value改成item.name就行 -->
-            </el-option>
-          </el-select>
-        </el-item>
-        <el-item label="房间号"
-                 prop="roomNo"
-                 clearable
-                 class="page-label-center">
-          <el-select v-model="queryData.roomNo"
-                     filterable
-                     placeholder="请选择房间号">
-            <el-option v-for="item in roomNoList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        </el-item>
+          <el-item label="栋座"
+                   prop="cbId"
+                   class="page-label-center">
+            <el-select v-model="queryData.cbId"
+                       filterable
+                       clearable
+                       placeholder="请选择楼栋"
+                       @change="queryRoomNo()">
+              <el-option v-for="item in cbIdList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value">
+                <!--如果接口是模糊搜索，value改成item.name就行 -->
+              </el-option>
+            </el-select>
+          </el-item>
+          <el-item label="房间号"
+                   prop="roomNo"
+                   clearable
+                   class="page-label-center">
+            <el-select v-model="queryData.roomNo"
+                       filterable
+                       placeholder="请选择房间号">
+              <el-option v-for="item in roomNoList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+          </el-item>
 
-        <template slot="prepend">房源状态</template>
-        <el-date-picker v-model="queryData.timeSelect"
-                        type="daterange"
-                        range-separator="至"
-                        value-format="yyyy-MM-dd"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期">
-        </el-date-picker>
-        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-              @click="Remove">
-          清除
-        </span>
-        <div style="margin-top:15px">
-
-          <span style="margin-left:30px">
-            审核类型：
+          <template slot="prepend">房源状态</template>
+          <el-date-picker v-model="queryData.timeSelect"
+                          type="daterange"
+                          range-separator="至"
+                          value-format="yyyy-MM-dd"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期">
+          </el-date-picker>
+          <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+                @click="Remove">
+            清除
           </span>
-          <el-select filterable
-                     v-model="type"
-                     placeholder="请选择">
-            <el-option v-for="item in typeList"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-          <span style="margin-left:30px">
-            审核状态：
-          </span>
-          <el-select filterable
-                     v-model="state"
-                     placeholder="请选择">
-            <el-option v-for="item in stateList"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-          <el-button type="primary"
-                     style="margin-left:30px"
-                     size="mini"
-                     @click="querylistByParams">查询</el-button>
-        </div>
+          <div style="margin-top:15px">
 
-      </div>
-    </template>
-
-    <template #tableColumn="">
-      <el-table-column label="楼盘名称">
-        <template v-slot="scope">
-          {{scope.row.communityName}}
-        </template>
-      </el-table-column>
-      <el-table-column label="房源坐落">
-        <template v-slot="scope">
-          {{scope.row.buildingName+"栋-"+scope.row.roomNo+"室"}}
-        </template>
-      </el-table-column>
-      <el-table-column label="审核项目">
-        <template v-slot="scope">
-          {{scope.row.checkProject}}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="审核类型">
-        <template v-slot="scope">
-          {{scope.row.checkType}}
-        </template>
-      </el-table-column>
-      <el-table-column label="提交人">
-        <template v-slot="scope">
-          {{scope.row.addPerName}}
-        </template>
-      </el-table-column>
-      <el-table-column label="提交时间">
-        <template v-slot="scope">
-          {{scope.row.AddTime}}
-        </template>
-      </el-table-column>
-      <el-table-column label="审核状态">
-        <template v-slot="scope">
-          {{scope.row.checkStatus}}
-        </template>
-      </el-table-column>
-      <el-table-column label="备注说明">
-        <template v-slot="scope">
-          {{scope.row.CheckMemo}}
-        </template>
-      </el-table-column>
-      <el-table-column label="附件">
-        <template v-slot="scope">
-          {{scope.row.sad}}
-        </template>
-      </el-table-column>
-      <el-table-column label="操作"
-                       fixed="right"
-                       key="operation">
-        <template v-slot="scope">
-          <el-button type="success"
-                     size="mini"
-                     v-if="scope.row.Tag==0"
-                     @click="getTitle(scope.row)">审核</el-button>
-          <el-button size="mini"
-                     type="info"
-                     v-else>已审核</el-button>
-          <el-dialog :title="title"
-                     :visible.sync="showPopUp"
-                     width="30%"
-                     :modal="false"
-                     :center="true">
-            <div>
-              <div>
-                <span>审核状态:</span>
-                <el-radio-group v-model="checkStatus">
-                  <el-radio :label="1">通过</el-radio>
-                  <el-radio :label="2">不通过</el-radio>
-                </el-radio-group>
-              </div>
-              <div v-if="row.Type==1||row.ReplaceType==2">
-                <span>委托截止时间:</span>
-                <span>{{row.ProxyMaxTime}}</span>
-              </div>
-              <div v-if="row.Type==0||row.ReplaceType==3"
-                   style="display:flex">
-                <span>钥匙类型:</span>
-                <span v-if="row.keyType==0">钥匙</span>
-                <span v-if="row.keyType==1">指纹锁</span>
-                <span v-if="row.keyType==2">密码锁</span>
-                <div v-if="row.keyType==2"
-                     style="margin-left:20px;">
-                  <span>密码:</span>
-                  <span>{{row.keyCode}}</span>
-                </div>
-              </div>
-              <div>
-                <el-input type="textarea"
-                          placeholder="请输入审核说明"
-                          v-model="checkMemo">
-                </el-input>
-              </div>
-
-            </div>
-            <span slot="footer"
-                  class="dialog-footer">
-              <el-button @click="showPopUp = false">取 消</el-button>
-              <el-button type="primary"
-                         @click="checkHouse()">确 定</el-button>
+            <span style="margin-left:30px">
+              审核类型：
             </span>
-          </el-dialog>
+            <el-select filterable
+                       v-model="type"
+                       placeholder="请选择">
+              <el-option v-for="item in typeList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+            <span style="margin-left:30px">
+              审核状态：
+            </span>
+            <el-select filterable
+                       v-model="state"
+                       placeholder="请选择">
+              <el-option v-for="item in stateList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+            <el-button type="primary"
+                       style="margin-left:30px"
+                       size="mini"
+                       @click="querylistByParams">查询</el-button>
+          </div>
 
-          <el-button type="success"
-                     @click="toHouseDetail(scope.row.Eid)"
-                     size="mini">查看</el-button>
-        </template>
-      </el-table-column>
-    </template>
-  </list-page>
+        </div>
+      </template>
+
+      <template #tableColumn="">
+        <el-table-column label="楼盘名称">
+          <template v-slot="scope">
+            {{scope.row.communityName}}
+          </template>
+        </el-table-column>
+        <el-table-column label="房源坐落">
+          <template v-slot="scope">
+            {{scope.row.buildingName+"栋-"+scope.row.roomNo+"室"}}
+          </template>
+        </el-table-column>
+        <el-table-column label="审核项目">
+          <template v-slot="scope">
+            {{scope.row.checkProject}}
+          </template>
+        </el-table-column>
+
+        <el-table-column label="审核类型">
+          <template v-slot="scope">
+            {{scope.row.checkType}}
+          </template>
+        </el-table-column>
+        <el-table-column label="提交人">
+          <template v-slot="scope">
+            {{scope.row.addPerName}}
+          </template>
+        </el-table-column>
+        <el-table-column label="提交时间">
+          <template v-slot="scope">
+            {{scope.row.AddTime}}
+          </template>
+        </el-table-column>
+        <el-table-column label="审核状态">
+          <template v-slot="scope">
+            {{scope.row.checkStatus}}
+          </template>
+        </el-table-column>
+        <el-table-column label="备注说明">
+          <template v-slot="scope">
+            {{scope.row.CheckMemo}}
+          </template>
+        </el-table-column>
+        <el-table-column label="附件">
+          <template v-slot="scope">
+            <el-image v-if="scope.row.accessory==1"
+                      :src="accessoryUrl"
+                      @click="getAccessory(scope.row.id)">
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作"
+                         fixed="right"
+                         key="operation">
+          <template v-slot="scope">
+            <el-button type="success"
+                       size="mini"
+                       v-if="scope.row.Tag==0"
+                       @click="getTitle(scope.row)">审核</el-button>
+            <el-button size="mini"
+                       type="info"
+                       v-else>已审核</el-button>
+            <el-dialog :title="title"
+                       :visible.sync="showPopUp"
+                       width="30%"
+                       :modal="false"
+                       :center="true">
+              <div>
+                <div>
+                  <span>审核状态:</span>
+                  <el-radio-group v-model="checkStatus">
+                    <el-radio :label="1">通过</el-radio>
+                    <el-radio :label="2">不通过</el-radio>
+                  </el-radio-group>
+                </div>
+                <div v-if="row.Type==1||row.ReplaceType==2">
+                  <span>委托截止时间:</span>
+                  <span>{{row.ProxyMaxTime}}</span>
+                </div>
+                <div v-if="row.Type==0||row.ReplaceType==3"
+                     style="display:flex">
+                  <span>钥匙类型:</span>
+                  <span v-if="row.keyType==0">钥匙</span>
+                  <span v-if="row.keyType==1">指纹锁</span>
+                  <span v-if="row.keyType==2">密码锁</span>
+                  <div v-if="row.keyType==2"
+                       style="margin-left:20px;">
+                    <span>密码:</span>
+                    <span>{{row.keyCode}}</span>
+                  </div>
+                </div>
+                <div v-if="row.Type==8">
+                  <div v-if="row.NewSaleTag==4"
+                       style="display:flex">
+                    <span>成交公司:</span>
+                    <span>{{row.dealCompany}}</span>
+                    <div v-if="row.dealPrice!=null&&row.dealPrice!=''">
+                      <span>成交价:</span>
+                      <span>{{row.dealPrice}}</span>
+                    </div>
+                  </div>
+                  <div v-if="row.NewSaleTag==6">
+                    <span>子类型:</span>
+                    <span v-if="row.subStatus==0">疑似跳单</span>
+                    <span v-if="row.subStatus==1">亲朋好友</span>
+                  </div>
+                  <div v-if="row.NewSaleTag==3">
+                    <span>子类型:</span>
+                    <span v-if="row.subStatus==2">号码错误</span>
+                    <span v-if="row.subStatus==3">空号</span>
+                    <span v-if="row.subStatus==4">房源不存在</span>
+                  </div>
+                </div>
+                <div>
+                  <el-input type="textarea"
+                            placeholder="请输入审核说明"
+                            v-model="checkMemo">
+                  </el-input>
+                </div>
+
+              </div>
+              <span slot="footer"
+                    class="dialog-footer">
+                <el-button @click="showPopUp = false">取 消</el-button>
+                <el-button type="primary"
+                           @click="checkHouse()">确 定</el-button>
+              </span>
+            </el-dialog>
+
+            <el-button type="success"
+                       @click="toHouseDetail(scope.row.Eid)"
+                       size="mini">查看</el-button>
+          </template>
+        </el-table-column>
+      </template>
+    </list-page>
+    <el-dialog :visible.sync="showAccessory"
+               width="50%"
+               :modal-append-to-body="false">
+      <div style="display:flex"
+           slot="title">
+        <div style="width:20%;height:50px;"
+             v-if="accessoryListObj.file7.length>0">
+          <el-carousel :autoplay="false"
+                       height="50px"
+                       type="card"
+                       @change="changePic7">
+            <el-carousel-item v-for="(item,index) in accessoryListObj.file7"
+                              :key="index">
+              <video :src="item.url"
+                     height="100%"
+                     width="100%"
+                     @click="cutPic(item.activeIndex)"></video>
+            </el-carousel-item>
+          </el-carousel>
+          <span>视频</span>
+          <span>({{accessoryListObj.file7.length}})</span>
+        </div>
+        <div style="width:20%;height:50px;"
+             v-if="accessoryListObj.file4.length>0">
+          <el-carousel :autoplay="false"
+                       height="50px"
+                       type="card"
+                       @change="changePic4">
+            <el-carousel-item v-for="(item,index) in accessoryListObj.file4"
+                              :key="index">
+              <el-image :src="item.url"
+                        :fit="fill"
+                        style="width:100%;height:100%"
+                        @click="cutPic(item.activeIndex)"></el-image>
+            </el-carousel-item>
+          </el-carousel>
+          <span>客厅</span>
+          <span>({{accessoryListObj.file4.length}})</span>
+        </div>
+        <div style="width:20%; height:50px;"
+             v-if="accessoryListObj.file3.length>0">
+          <el-carousel :autoplay="false"
+                       height="50px"
+                       type="card"
+                       @change="changePic3">
+            <el-carousel-item v-for="(item,index) in accessoryListObj.file3"
+                              :key="index">
+              <el-image :src="item.url"
+                        :fit="fill"
+                        style="width:100%;height:100%"
+                        @click="cutPic(item.activeIndex)"></el-image>
+            </el-carousel-item>
+          </el-carousel>
+          <span>厨房</span>
+          <span>({{accessoryListObj.file3.length}})</span>
+        </div>
+        <div style="width:20%; height:50px;"
+             v-if="accessoryListObj.file2.length>0">
+          <el-carousel :autoplay="false"
+                       height="50px"
+                       type="card"
+                       @change="changePic2">
+            <el-carousel-item v-for="(item,index) in accessoryListObj.file2"
+                              :key="index">
+              <el-image :src="item.url"
+                        :fit="fill"
+                        style="width:100%;height:100%"
+                        @click="cutPic(item.activeIndex)"></el-image>
+            </el-carousel-item>
+          </el-carousel>
+          <span>卧室</span>
+          <span>({{accessoryListObj.file2.length}})</span>
+        </div>
+        <div style="width:20%; height:50px;"
+             v-if="accessoryListObj.file1.length>0">
+          <el-carousel :autoplay="false"
+                       height="50px"
+                       type="card"
+                       @change="changePic1">
+            <el-carousel-item v-for="(item,index) in accessoryListObj.file1"
+                              :key="index">
+              <el-image :src="item.url"
+                        :fit="fill"
+                        style="width:100%;height:100%"
+                        @click="cutPic(item.activeIndex)"></el-image>
+            </el-carousel-item>
+          </el-carousel>
+          <span>外景图</span>
+          <span>({{accessoryListObj.file1.length}})</span>
+        </div>
+        <div style="width:20%; height:50px;"
+             v-if="accessoryListObj.file5.length>0">
+          <el-carousel :autoplay="false"
+                       height="50px"
+                       type="card"
+                       @change="changePic5">
+            <el-carousel-item v-for="(item,index) in accessoryListObj.file5"
+                              :key="index">
+              <el-image :src="item.url"
+                        :fit="fill"
+                        style="width:100%;height:100%"
+                        @click="cutPic(item.activeIndex)"></el-image>
+            </el-carousel-item>
+          </el-carousel>
+          <span>卫生间</span>
+          <span>({{accessoryListObj.file5.length}})</span>
+        </div>
+        <div style="width:20%; height:50px;"
+             v-if="accessoryListObj.file6.length>0">
+          <el-carousel :autoplay="false"
+                       height="50px"
+                       type="card"
+                       @change="changePic6">
+            <el-carousel-item v-for="(item,index) in accessoryListObj.file6"
+                              :key="index">
+              <el-image :src="item.url"
+                        :fit="fill"
+                        style="width:100%;height:100%"
+                        @click="cutPic(item.activeIndex)"></el-image>
+            </el-carousel-item>
+          </el-carousel>
+          <span>户型图</span>
+          <span>({{accessoryListObj.file6.length}})</span>
+        </div>
+      </div>
+      <div style="margin-top:20px;">
+        <el-carousel :autoplay="false"
+                     height="600px"
+                     ref="loopImg">
+          <el-carousel-item v-for="(item,index) in accessoryListObj.file8"
+                            :key="index">
+            <img :src="item.url"
+                 :fit="fill"
+                 v-if="item.subType!=7"
+                 style="width:100%;height:100%">
+            <video :src="item.url"
+                   controls="controls"
+                   v-else
+                   height="100%"
+                   width="100%"></video>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 <script>
 import listPage from '@/components/listPage';
@@ -383,13 +554,92 @@ export default {
       title: "",
       optionsList: [],
       checkId: 0,
-      row: {}
+      row: {},
+      accessoryAllList: [],
+      accessoryListObj: {
+        file1: [],
+        file2: [],
+        file3: [],
+        file4: [],
+        file5: [],
+        file6: [],
+        file7: [],
+        file8: []
+      },
+      showAccessory: false,
+      fill: "fill"
     }
   },
   mounted () {
     this.querylist(1);
   },
   methods: {
+    changePic1 (index) {
+      this.cutPic(this.accessoryListObj.file1[index].activeIndex)
+    },
+    changePic2 (index) {
+      this.cutPic(this.accessoryListObj.file2[index].activeIndex)
+    },
+    changePic3 (index) {
+      this.cutPic(this.accessoryListObj.file3[index].activeIndex)
+    },
+    changePic4 (index) {
+      this.cutPic(this.accessoryListObj.file4[index].activeIndex)
+    },
+    changePic5 (index) {
+      this.cutPic(this.accessoryListObj.file5[index].activeIndex)
+    },
+    changePic6 (index) {
+      this.cutPic(this.accessoryListObj.file6[index].activeIndex)
+    },
+    changePic7 (index) {
+      this.cutPic(this.accessoryListObj.file7[index].activeIndex)
+    },
+    cutPic (index) {
+      let that = this;
+      that.$refs.loopImg.setActiveItem(index);
+    },
+    getFile (list) {
+      for (let key in this.accessoryListObj) {
+        this.accessoryListObj[key] = [];//清空数组
+        list.forEach((element, index) => {
+          if ("file" + element.subType == key) {
+            element.activeIndex = index;
+            this.accessoryListObj[key].push(element);
+          }
+        });
+      }
+      this.accessoryListObj.file8 = list;
+      this.showAccessory = true;
+    },
+    getAccessory (checkId) {
+      let that = this;
+      let exists = false;
+      this.accessoryAllList.forEach(element => {
+        if (element.key == checkId) {
+          exists = true;
+          this.getFile(element.value);
+          return true;
+        }
+      });
+      if (exists) {
+        return true;
+      }
+      this.$api.get({
+        url: '/agentHouse/followPic/getAccessory/' + checkId,
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: {},
+        token: false
+      }).then((e) => {
+        let result = e.data;
+        if (result.code == 200) {
+          that.accessoryAllList.push({ "key": checkId, "value": result.data });
+          that.getFile(result.data);
+        }
+      }).catch((e) => {
+        that.$message("获取失败");
+      })
+    },
     checkHouse () {
       let that = this;
       let params = {
@@ -461,8 +711,8 @@ export default {
       this.queryData.roomNo = '';
       this.queryData.CommunityName = '';
       this.queryData.cbId = '';
-
       this.queryData.timeSelect = '';
+      this.querylist(1);
     },
     queryCBId () {
       var that = this

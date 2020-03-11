@@ -157,7 +157,7 @@ export default {
   data () {
     return {
       reSetMethod: false,
-      componentName: "basicInformation", //morePushHouse
+      componentName: "exploration", //morePushHouse
       stepsList: [
         { title: "必填信息", componentName: "basicInformation" },
         { title: "选填信息", componentName: "supplement" },
@@ -228,8 +228,14 @@ export default {
           this.butLoading = false;
           return;
         case "morePushHouse":
-          await this.$refs.com.validateAll();
+          flag = await this.$refs.com.validateAll();
           this.butLoading = false;
+          if (flag) {
+            this.stepsActiveIndex = 3;
+            this.componentName = this.stepsList[
+              this.stepsActiveIndex
+            ].componentName;
+          }
           return;
       }
       this.butLoading = false;

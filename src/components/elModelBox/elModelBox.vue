@@ -29,7 +29,10 @@
   .diaLogModel-warp {
     position: relative;
     z-index: 10;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
   }
 }
 .dadlog-enter-active {
