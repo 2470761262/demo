@@ -24,7 +24,7 @@
 }
 .left-input-container {
   padding: 10px;
-  font-size: 1rem;
+  font-size: 20px;
   border-right: 1px solid black;
   border-left: 1px solid black;
   border-radius: 0.5rem;
