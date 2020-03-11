@@ -883,7 +883,9 @@ export default {
         })
         .then(json => {
           if (json.data.code == 200) {
-            callback(json.data.data);
+            let d=json.data.data;
+            d.url=url;
+            callback(d);
           }
         })
         .catch(e => {
