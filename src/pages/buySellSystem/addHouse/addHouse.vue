@@ -224,7 +224,11 @@ export default {
           flag = await this.$refs.com.validateAll();
           break;
         case "addHouseSuccess":
-          flag = await this.$refs.com.validateAll();
+          await this.$refs.com.validateAll();
+          this.butLoading = false;
+          return;
+        case "morePushHouse":
+          await this.$refs.com.validateAll();
           this.butLoading = false;
           return;
       }
