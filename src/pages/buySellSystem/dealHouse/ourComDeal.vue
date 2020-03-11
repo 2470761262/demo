@@ -43,6 +43,10 @@
                         range-separator="至"
                         start-placeholder="成交开始日期"
                         end-placeholder="成交结束日期"></el-date-picker>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+              @click="Remove">
+          清除
+        </span>
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
@@ -156,6 +160,11 @@ export default {
       } else {
         this.options = [];
       }
+    },
+    Remove () {
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.queryOurComDeal(1);
+
     },
     queryOurComDeal (currentPage) {
       var that = this;
