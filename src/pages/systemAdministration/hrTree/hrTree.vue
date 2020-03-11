@@ -71,6 +71,7 @@ td {
           :filter-node-method="filterNode"
           check-strictly
           :action="''"
+          empty-text="暂无数据，请检查权限"
         ></el-tree>
       </div>
       <div class="elControl" v-loading="loading">
@@ -280,7 +281,7 @@ td {
       </div>
     </template>
     <el-dialog title="离职信息" :visible.sync="dialogQuit" width="33%">
-      <el-form :model="form">
+      <el-form>
         <span>{{this.quitInfo.name}}-{{this.quitInfo.dep}}-{{this.quitInfo.job}}</span>
         <br />
         <br />
@@ -306,7 +307,9 @@ td {
   </div>
 </template>
 <script>
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
+  mixins: [getMenuRid],
   data() {
     return {
       treeData: [],
@@ -392,7 +395,7 @@ export default {
     //读取树数据
     this.$api
       .post({
-        url: "/sys/account/company/tree"
+        url: "/sys/tree/unit"
       })
       .then(e => {
         console.log(e.data);

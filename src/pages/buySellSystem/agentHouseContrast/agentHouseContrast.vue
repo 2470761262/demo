@@ -30,7 +30,7 @@
 }
 .detailBox {
   width: 15rem;
-  height: 50rem;
+  height: 1000px;
   padding-right: 1rem;
   border-right: rgb(242, 242, 242) 1px solid;
   display: inline-block;
@@ -86,7 +86,7 @@
 }
 .text {
   margin-left: 5%;
-  font-size: 1.5rem;
+  font-size: 23px;
   width: 95%;
   height: 6%;
   display: flex;

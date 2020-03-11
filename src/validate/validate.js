@@ -43,7 +43,8 @@ Validator.extend('isGreater', {
     }
   },
   validate: (value, compare) => {
-    return value < (compare[0] == '' ? 0 : compare[0]);
+    console.log(value, compare, "value, compare", value, (compare[0] == '' ? 0 : compare[0]));
+    return Number(value) < Number((compare[0] == '' ? 0 : compare[0]));
   }
 });
 //中文

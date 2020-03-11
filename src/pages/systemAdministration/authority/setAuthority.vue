@@ -221,7 +221,7 @@ export default {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            this.$message.info("操作成功");
+            this.$message.info("重新登录后生效，操作成功");
           } else {
             console.log("保存结果：" + result.message);
             this.$message.error("保存失败" + result.message);
@@ -246,7 +246,7 @@ export default {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            this.$message.info("操作成功");
+            this.$message.info("重新登录后生效，操作成功");
           } else {
             console.log("保存结果：" + result.message);
             this.$message.error("保存失败" + result.message);

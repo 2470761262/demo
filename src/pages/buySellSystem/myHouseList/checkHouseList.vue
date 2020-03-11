@@ -711,8 +711,8 @@ export default {
       this.queryData.roomNo = '';
       this.queryData.CommunityName = '';
       this.queryData.cbId = '';
-
       this.queryData.timeSelect = '';
+      this.querylist(1);
     },
     queryCBId () {
       var that = this

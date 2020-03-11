@@ -5,7 +5,7 @@
   <div class="page-cell-addHouse"
        element-loading-text="我在去获取数据的路上了~"
        v-loading="loading">
-    <div class="form-error-tips "
+    <div class="form-error-tips"
          id="addHouseType">
       <div class="page-cell-item">
         <div class="item-before"
@@ -41,8 +41,7 @@
             <el-option v-for="item in selectPageCommunit.list"
                        :key="item.value"
                        :label="item.name"
-                       :value="item.value">
-            </el-option>
+                       :value="item.value"></el-option>
           </el-select>
         </div>
       </div>
@@ -66,8 +65,7 @@
             <el-option v-for="item in selectPageeBuildingNo.list"
                        :key="item.value"
                        :label="item.name"
-                       :value="item.value">
-            </el-option>
+                       :value="item.value"></el-option>
           </el-select>
         </div>
       </div>
@@ -75,8 +73,8 @@
       <div class="form-error-tips select-pad-width_100"
            :class="{'after-tips':errorBags.has('roomId')}"
            :data-tips="errorBags.first('roomId')">
-        <div class="page-cell-item ">
-          <div class="item-before "
+        <div class="page-cell-item">
+          <div class="item-before"
                data-before="*">房间号</div>
           <el-select filterable
                      remote
@@ -91,14 +89,13 @@
             <el-option v-for="item in selectPageRoomNo.list"
                        :key="item.value"
                        :label="item.name"
-                       :value="item.value">
-            </el-option>
+                       :value="item.value"></el-option>
           </el-select>
         </div>
       </div>
     </div>
     <!-- 业主姓名 -->
-    <div class="form-error-tips maging-top_60 margin-bot_20 "
+    <div class="form-error-tips maging-top_60 margin-bot_20"
          :class="{'after-tips':errorBags.has('customerName')}"
          :data-tips="errorBags.first('customerName')">
       <div class="page-cell-item select-nobor center-flex">
@@ -106,10 +103,11 @@
                   data-vv-name="customerName"
                   data-vv-as="业主姓名"
                   v-validate="'required|isChinese'"
-                  v-model="formData.customerName">
+                  v-model="formData.customerName"
+                  maxlength="5">
           <div slot="prepend"
                class="item-before"
-               data-before="*"> 业主姓名</div>
+               data-before="*">业主姓名</div>
         </el-input>
         <div class="input-after-checkbox">
           <el-radio-group v-model="formData.sex"
@@ -144,28 +142,30 @@
       </div>
     </div>
     <!-- 电话号码 for -->
-    <div class="form-error-tips margin-bot_20"
-         :class="{'after-tips':errorBags.has('tel'+item)}"
-         :data-tips="errorBags.first('tel'+item)"
-         v-for="(item,index) in addTel"
-         :key="index">
-      <div class="page-cell-item select-nobor">
-        <el-input placeholder="请输入业主电话号码"
-                  v-model="formData['tel'+item]"
-                  :data-vv-name="'tel'+item"
-                  :data-vv-as="'电话号码'+item"
-                  v-validate="'phone'">
-          <div slot="prepend"
-               class="item-before">手机号{{item}}</div>
-          <div slot="append"
-               @click="removeTelToList(index,item)"
-               class="item-after item-before-col">
-            <i class="el-icon-circle-plus-outline"></i>
-            <div>删除</div>
-          </div>
-        </el-input>
+    <transition-group name="el">
+      <div class="form-error-tips margin-bot_20"
+           :class="{'after-tips':errorBags.has('tel'+item)}"
+           :data-tips="errorBags.first('tel'+item)"
+           v-for="(item,index) in addTel"
+           :key="item">
+        <div class="page-cell-item select-nobor">
+          <el-input placeholder="请输入业主电话号码"
+                    v-model="formData['tel'+item]"
+                    :data-vv-name="'tel'+item"
+                    :data-vv-as="'电话号码'+item"
+                    v-validate="'phone'">
+            <div slot="prepend"
+                 class="item-before">手机号{{item}}</div>
+            <div slot="append"
+                 @click="removeTelToList(index,item)"
+                 class="item-after item-before-col">
+              <i class="el-icon-circle-plus-outline"></i>
+              <div>删除</div>
+            </div>
+          </el-input>
+        </div>
       </div>
-    </div>
+    </transition-group>
     <div class="page-cell-item-flex maging-top_60 margin-bot_20">
       <!-- 房屋证件 -->
       <div class="form-error-tips"
@@ -182,8 +182,7 @@
             <el-option v-for="item in certificateType"
                        :key="item.label"
                        :label="item.title"
-                       :value="item.label">
-            </el-option>
+                       :value="item.label"></el-option>
           </el-select>
         </div>
       </div>
@@ -250,19 +249,21 @@
             <input type="text"
                    key="area"
                    maxlength="8"
-                   @click.stop=""
+                   @click.stop
                    :placeholder="formData.area"
                    data-vv-name="area"
                    data-vv-as="面积"
                    v-validate="'decimal:2|noZero1'"
                    v-model="changeInput.area"
                    class="min-input"
-                   v-if="changeBut.area">
-            <span v-else>{{formData.area || 0}}平方</span>
+                   v-show="changeBut.area" />
+            <span v-show="!changeBut.area">{{formData.area || 0}}平方</span>
           </div>
           <div class="but-append"
                :data-tips="changeBut.area ? '完成' : '修改'"
-               @click.stop="changeAreaBut"><i class="el-icon-question"></i></div>
+               @click.stop="changeAreaBut">
+            <i class="el-icon-question"></i>
+          </div>
         </div>
       </div>
       <div class="page-cell-item-flex form-error-tips"
@@ -278,48 +279,50 @@
                      key="room"
                      maxlength="2"
                      :placeholder="formData.room"
-                     @click.stop=""
+                     @click.stop
                      v-model="changeInput.room"
+                     data-vv-as="室"
                      v-validate="'numeric|noZero|max:2'"
                      data-vv-name="room"
-                     data-vv-as="室"
-                     class="min-input">室
+                     class="min-input" />室
               <input type="text"
                      key="hall"
                      maxlength="2"
                      :placeholder="formData.hall"
-                     @click.stop=""
+                     @click.stop
                      v-model="changeInput.hall"
-                     v-validate="'numeric|noZero|max:2'"
-                     data-vv-name="hall"
                      data-vv-as="厅"
-                     class="min-input">厅
+                     data-vv-name="hall"
+                     v-validate="'numeric|noZero|max:2'"
+                     class="min-input" />厅
               <input type="text"
                      key="toilet"
                      maxlength="2"
                      :placeholder="formData.toilet"
-                     @click.stop=""
+                     @click.stop
                      v-model="changeInput.toilet"
-                     v-validate="'numeric|noZero|max:2'"
-                     data-vv-name="toilet"
                      data-vv-as="卫"
-                     class="min-input">卫
+                     data-vv-name="toilet"
+                     v-validate="'numeric|noZero|max:2'"
+                     class="min-input" />卫
               <input type="text"
                      key="balcony"
                      maxlength="2"
                      :placeholder="formData.balcony"
-                     @click.stop=""
+                     @click.stop
                      v-model="changeInput.balcony"
-                     v-validate="'numeric|noZero|max:2'"
-                     data-vv-name="balcony"
                      data-vv-as="阳台"
-                     class="min-input">阳台
+                     data-vv-name="balcony"
+                     v-validate="'numeric|noZero|max:2'"
+                     class="min-input" />阳台
             </div>
             <span v-show="!changeBut.roomType">{{formData.room || 0}}室{{formData.hall || 0}}厅{{formData.toilet || 0}}卫{{formData.balcony || 0}}阳台</span>
           </div>
           <div class="but-append"
                :data-tips="changeBut.roomType ? '完成' : '修改'"
-               @click.stop="changeRoomTypeBut"><i class="el-icon-question"></i></div>
+               @click.stop="changeRoomTypeBut">
+            <i class="el-icon-question"></i>
+          </div>
         </div>
       </div>
       <div class="page-cell-item-flex">
@@ -328,7 +331,9 @@
           <div class="item-deep-data">{{formData.propertyCompany}}</div>
           <div class="but-append"
                v-if="formData.propertyCompany"
-               data-tips="反馈"><i class="el-icon-question"></i></div>
+               data-tips="反馈">
+            <i class="el-icon-question"></i>
+          </div>
         </div>
       </div>
       <div class="page-cell-item-flex">
@@ -386,10 +391,10 @@ let sex = [
 let certificateType = [
   { title: "不动产权证", label: 1 },
   { title: "购房合同", label: 2 },
-  { title: "拆迁安置协议书", label: 3 },
-]
+  { title: "拆迁安置协议书", label: 3 }
+];
 //import { mapState } from "vuex";
-import util from '@/util/util';
+import util from "@/util/util";
 export default {
   name: "basicInformation",
   props: {
@@ -403,11 +408,11 @@ export default {
   },
   computed: {
     getErrorFlag () {
-      let ErroeField = ['room', 'hall', 'toilet', 'balcony'];
+      let ErroeField = ["room", "hall", "toilet", "balcony"];
       return ErroeField.some(item => this.errorBags.has(item));
     },
     getErrorText () {
-      let ErroeField = ['room', 'hall', 'toilet', 'balcony'];
+      let ErroeField = ["room", "hall", "toilet", "balcony"];
       for (let index = 0; index < ErroeField.length; index++) {
         if (this.errorBags.first(ErroeField[index]) != null) {
           return this.errorBags.first(ErroeField[index]);
@@ -415,8 +420,12 @@ export default {
       }
     },
     formData () {
-      this.$set(this.$data, "step", JSON.parse(JSON.stringify(this.$store.state.addHouse.formData.step1)))
-      return this.step
+      this.$set(
+        this.$data,
+        "step",
+        JSON.parse(JSON.stringify(this.$store.state.addHouse.formData.step1))
+      );
+      return this.step;
     }
   },
   watch: {
@@ -425,7 +434,10 @@ export default {
       immediate: true,
       handler (newValue, oldValue) {
         //deff 获取到修改的属性
-        let deffData = util.diffGet(this.$store.state.addHouse.formData.step1, this.formData);
+        let deffData = util.diffGet(
+          this.$store.state.addHouse.formData.step1,
+          this.formData
+        );
         //判断当前是否有修改，如果有修改则length大于0
         let flag = Object.keys(deffData).length > 0 ? true : false;
         //判断store存储的是否与这次相同，相同则不commit
@@ -442,43 +454,55 @@ export default {
     if (this.getData) {
       this.getLoadData();
     }
-    window.addEventListener('click', this.bodyClick)
-    if (this.$route.query.flag == 'potentia') {
+    window.addEventListener("click", this.bodyClick);
+    if (this.$route.query.flag == "potentia") {
       this.getCommunityData(this.$route.query.comId);
       this.getBuildingData(this.$route.query.cbId);
       this.getRoomData(this.$route.query.bhId);
-      this.selectPageCommunit.list.push({ value: this.$route.query.comId, name: this.$route.query.communityName });
+      this.selectPageCommunit.list.push({
+        value: this.$route.query.comId,
+        name: this.$route.query.communityName
+      });
       this.formData.communityId = this.$route.query.comId;
-      this.selectPageeBuildingNo.list.push({ value: this.$route.query.cbId, name: this.$route.query.buildingName });
+      this.selectPageeBuildingNo.list.push({
+        value: this.$route.query.cbId,
+        name: this.$route.query.buildingName
+      });
       this.formData.buildingId = this.$route.query.cbId;
-      this.selectPageRoomNo.list.push({ value: this.$route.query.bhId, name: this.$route.query.roomNo });
+      this.selectPageRoomNo.list.push({
+        value: this.$route.query.bhId,
+        name: this.$route.query.roomNo
+      });
       this.formData.roomId = this.$route.query.bhId;
       this.formData.customerName = this.$route.query.customerName;
       this.formData.tel = this.$route.query.tel;
     }
-    console.log(this.$route.query.flag)
+    console.log(this.$route.query.flag);
   },
   destroyed () {
-    window.removeEventListener('click', this.bodyClick)
+    window.removeEventListener("click", this.bodyClick);
   },
   activated () {
     this.addHouseType = this.houseType;
   },
   methods: {
     houseTypeChange (e) {
-      this.$emit('update:houseType', e);
+      this.$emit("update:houseType", e);
     },
     //点击其他位置进行判断，取消input
     bodyClick () {
       let that = this;
       //面积
       if (that.changeBut.area == true && !util.isNull(that.changeInput.area)) {
-        if (that.changeInput.area == that.formData.area || that.formData.area == null) {
+        if (
+          that.changeInput.area == that.formData.area ||
+          that.formData.area == null
+        ) {
           that.changeBut.area = false;
         } else {
           that.$message({
-            message: that.errorBags.first("area") || '修改的面积还未保存~',
-            type: 'warning'
+            message: that.errorBags.first("area") || "修改的面积还未保存~",
+            type: "warning"
           });
         }
       } else {
@@ -486,15 +510,18 @@ export default {
       }
       //房型
       if (that.changeBut.roomType == true) {
-        let list = ['room', 'hall', 'toilet', 'balcony'];
+        let list = ["room", "hall", "toilet", "balcony"];
         let flag = false;
         for (let i = 0; i < list.length; i++) {
-          if (that.changeInput[list[i]] == that.formData[list[i]] || that.formData[list[i]] == null) {
+          if (
+            that.changeInput[list[i]] == that.formData[list[i]] ||
+            that.formData[list[i]] == null
+          ) {
             flag = false;
           } else {
             that.$message({
-              message: that.getErrorText || '修改的房型还未保存~',
-              type: 'warning'
+              message: that.getErrorText || "修改的房型还未保存~",
+              type: "warning"
             });
             flag = true;
             break;
@@ -509,14 +536,17 @@ export default {
     async changeRoomTypeBut () {
       let flag = !this.changeBut.roomType;
       let that = this;
-      let list = ['room', 'hall', 'toilet', 'balcony'];
+      let list = ["room", "hall", "toilet", "balcony"];
       if (flag == false) {
         for (let i = 0; i < list.length; i++) {
-          let valiFlag = await this.$validator.validate(list[i], this.changeInput[list[i]]);
+          let valiFlag = await this.$validator.validate(
+            list[i],
+            this.changeInput[list[i]]
+          );
           if (!valiFlag || util.isNull(that.changeInput[list[i]])) {
             that.$message({
-              message: that.getErrorText || '房型输入是空值',
-              type: 'warning'
+              message: that.getErrorText || "房型输入是空值",
+              type: "warning"
             });
             flag = true;
             break;
@@ -524,7 +554,8 @@ export default {
         }
         if (!flag) {
           for (let i = 0; i < list.length; i++) {
-            that.formData[list[i]] = that.changeInput[list[i]] || that.formData[list[i]];
+            that.formData[list[i]] =
+              that.changeInput[list[i]] || that.formData[list[i]];
           }
         }
       }
@@ -535,11 +566,14 @@ export default {
       let flag = !this.changeBut.area;
       let that = this;
       if (flag == false) {
-        let valiFlag = await this.$validator.validate('area', this.changeInput.area);
+        let valiFlag = await this.$validator.validate(
+          "area",
+          this.changeInput.area
+        );
         if (!valiFlag || util.isNull(that.changeInput.area)) {
           that.$message({
-            message: '面积输入的有问题',
-            type: 'warning'
+            message: "面积输入的有问题",
+            type: "warning"
           });
           flag = true;
         } else {
@@ -551,30 +585,33 @@ export default {
     //跳转到补充楼盘页面
     toHouse () {
       var that = this;
-      that.$router.push({ path: '/buySellSystem/CommunityReplenish' });
+      that.$router.push({ path: "/buySellSystem/CommunityReplenish" });
     },
     //查询楼盘
     remoteCommunityName (e) {
       let that = this;
       that.selectPageCommunit.loading = true;
-      this.$api.post({
-        url: '/mateHouse/queryCommunity',
-        data: {
-          page: 1,
-          limit: 50,
-          communityName: e == undefined ? '' : e.trim(),
-        },
-        qs: true,
-        token: false
-      }).then((e) => {
-        let data = e.data;
-        if (data.code == 200) {
-          that.selectPageCommunit.list = data.data.list;
-          that.selectPageCommunit.loading = false;
-        }
-      }).catch((e) => {
-        console.log(e);
-      })
+      this.$api
+        .post({
+          url: "/mateHouse/queryCommunity",
+          data: {
+            page: 1,
+            limit: 50,
+            communityName: e == undefined ? "" : e.trim()
+          },
+          qs: true,
+          token: false
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            that.selectPageCommunit.list = data.data.list;
+            that.selectPageCommunit.loading = false;
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
     //楼盘获取焦点 第一次点击就进行查询
     remoteCommunityNameInput () {
@@ -585,37 +622,39 @@ export default {
     //楼盘选择更改事件
     remoteCommunityNameChange (e) {
       console.log(e);
-      let findResultIndex = this.selectPageCommunit.list.findIndex((item) => {
+      let findResultIndex = this.selectPageCommunit.list.findIndex(item => {
         return item.value == e;
-      })
-      this.formData.communityName = this.selectPageCommunit.list[findResultIndex].name;
-      this.formData.buildingId = '';
-      this.formData.roomId = '';
-      this.formData.buildingNo = '';
-      this.formData.roomNo = '';
+      });
+      this.formData.communityName = this.selectPageCommunit.list[
+        findResultIndex
+      ].name;
+      this.formData.buildingId = "";
+      this.formData.roomId = "";
+      this.formData.buildingNo = "";
+      this.formData.roomNo = "";
       this.selectPageeBuildingNo.list = [];
       this.selectPageRoomNo.list = [];
       //初始化楼盘选中获取的数据
-      this.formData.buildingTime = '';
-      this.formData.property = '';
-      this.formData.primarySchool = '';
-      this.formData.middleSchool = '';
-      this.formData.propertyCompany = '';
+      this.formData.buildingTime = "";
+      this.formData.property = "";
+      this.formData.primarySchool = "";
+      this.formData.middleSchool = "";
+      this.formData.propertyCompany = "";
       //初始化楼栋选中获取的数据
-      this.formData.isElevator = '';
-      this.formData.houseUse = '';
-      this.formData.houseStruct = '';
+      this.formData.isElevator = "";
+      this.formData.houseUse = "";
+      this.formData.houseStruct = "";
       //初始化房间号选中获取的数据
-      this.formData.valuation = '';
+      this.formData.valuation = "";
       this.formData.area = 0;
-      this.formData.face = '';
+      this.formData.face = "";
       this.formData.room = 0;
       this.getCommunityData(e);
       this.remoteBuildingNo();
     },
     //获取楼盘当前选中楼栋信息
     getCommunityData (id) {
-      this.$api.get({ url: `/draft-house/community/${id}` }).then((e) => {
+      this.$api.get({ url: `/draft-house/community/${id}` }).then(e => {
         let data = e.data.data;
         if (e.data.code == 200) {
           this.formData.buildingTime = data.finishYear;
@@ -624,122 +663,140 @@ export default {
           this.formData.middleSchool = data.middleSchool;
           this.formData.propertyCompany = data.propertyCompany;
         }
-      })
+      });
     },
     //查询栋座
     remoteBuildingNo (e) {
       let that = this;
       //验证楼盘
-      that.$validator.validate("communityId", this.formData.communityId).then((result) => {
-        if (result) {
-          that.selectPageeBuildingNo.loading = true;
-          that.$api.post({
-            url: '/mateHouse/queryComBuilding',
-            data: {
-              page: 1,
-              limit: 50,
-              comBuildingName: e == undefined ? '' : e.trim(),
-              comId: that.formData.communityId
-            },
-            qs: true,
-            token: false
-          }).then((e) => {
-            let data = e.data;
-            if (data.code == 200) {
-              that.selectPageeBuildingNo.list = data.data.list;
-              that.selectPageeBuildingNo.loading = false;
-            }
-          }).catch((e) => {
-            console.log(e);
-          })
-        }
-      })
+      that.$validator
+        .validate("communityId", this.formData.communityId)
+        .then(result => {
+          if (result) {
+            that.selectPageeBuildingNo.loading = true;
+            that.$api
+              .post({
+                url: "/mateHouse/queryComBuilding",
+                data: {
+                  page: 1,
+                  limit: 50,
+                  comBuildingName: e == undefined ? "" : e.trim(),
+                  comId: that.formData.communityId
+                },
+                qs: true,
+                token: false
+              })
+              .then(e => {
+                let data = e.data;
+                if (data.code == 200) {
+                  that.selectPageeBuildingNo.list = data.data.list;
+                  that.selectPageeBuildingNo.loading = false;
+                }
+              })
+              .catch(e => {
+                console.log(e);
+              });
+          }
+        });
     },
     //栋座选择更改事件
     remoteBuildingNoChange (e) {
-      let findResultIndex = this.selectPageeBuildingNo.list.findIndex((item) => {
+      let findResultIndex = this.selectPageeBuildingNo.list.findIndex(item => {
         return item.value == e;
-      })
-      this.formData.buildingNo = this.selectPageeBuildingNo.list[findResultIndex].name;
-      this.formData.roomNo = '';
-      this.formData.roomId = '';
+      });
+      this.formData.buildingNo = this.selectPageeBuildingNo.list[
+        findResultIndex
+      ].name;
+      this.formData.roomNo = "";
+      this.formData.roomId = "";
       this.selectPageRoomNo.list = [];
       //初始化楼栋选中获取的数据
-      this.formData.isElevator = '';
-      this.formData.houseUse = '';
-      this.formData.houseStruct = '';
+      this.formData.isElevator = "";
+      this.formData.houseUse = "";
+      this.formData.houseStruct = "";
       //初始化房间号选中获取的数据
-      this.formData.valuation = '';
+      this.formData.valuation = "";
       this.formData.area = 0;
-      this.formData.face = '';
+      this.formData.face = "";
       this.formData.room = 0;
       this.getBuildingData(e);
       this.remoteRoomNo();
     },
     //获取楼栋当前选中楼栋信息
     getBuildingData (id) {
-      this.$api.get({ url: `/draft-house/building/${id}` }).then((e) => {
+      this.$api.get({ url: `/draft-house/building/${id}` }).then(e => {
         let data = e.data.data;
         if (e.data.code == 200) {
-          if (data.primarySchool != null && !data.primarySchool.includes("未知")) {
+          if (
+            data.primarySchool != null &&
+            !data.primarySchool.includes("未知")
+          ) {
             this.formData.primarySchool = data.primarySchool;
           }
-          if (data.middleSchool != null && !data.middleSchool.includes("未知")) {
+          if (
+            data.middleSchool != null &&
+            !data.middleSchool.includes("未知")
+          ) {
             this.formData.middleSchool = data.middleSchool;
           }
           this.formData.isElevator = data.elevatorNum;
           this.formData.houseUse = data.buildType;
           this.formData.houseStruct = data.buildingStructure;
         }
-      })
+      });
     },
     //查询房间号
     remoteRoomNo (e) {
       let that = this;
       //验证楼栋
-      that.$validator.validate("buildingId", this.formData.buildingId).then((result) => {
-        if (result) {
-          that.selectPageRoomNo.loading = true;
-          that.$api.post({
-            url: '/mateHouse/queryBuildIngHouses',
-            data: {
-              page: 1,
-              limit: 50,
-              comId: that.formData.communityId,
-              cbId: this.formData.buildingId,
-              roomNo: e == undefined ? '' : e.trim(),
-              isNotSale: 1
-            },
-            qs: true,
-            token: false
-          }).then((e) => {
-            let data = e.data;
-            if (data.code == 200) {
-              that.selectPageRoomNo.list = data.data.list;
-              that.selectPageRoomNo.loading = false;
-            }
-          }).catch((e) => {
-            console.log(e);
-          })
-        }
-      })
+      that.$validator
+        .validate("buildingId", this.formData.buildingId)
+        .then(result => {
+          if (result) {
+            that.selectPageRoomNo.loading = true;
+            that.$api
+              .post({
+                url: "/mateHouse/queryBuildIngHouses",
+                data: {
+                  page: 1,
+                  limit: 50,
+                  comId: that.formData.communityId,
+                  cbId: that.formData.buildingId,
+                  roomNo: e == undefined ? "" : e.trim(),
+                  isNotSale: 1
+                },
+                qs: true,
+                token: false
+              })
+              .then(e => {
+                let data = e.data;
+                if (data.code == 200) {
+                  that.selectPageRoomNo.list = data.data.list;
+                  that.selectPageRoomNo.loading = false;
+                }
+              })
+              .catch(e => {
+                console.log(e);
+              });
+          }
+        });
     },
     //房间号选择更改事件
     remoteRoomNoChange (e) {
-      let findResultIndex = this.selectPageRoomNo.list.findIndex((item) => {
+      let findResultIndex = this.selectPageRoomNo.list.findIndex(item => {
         return item.value == e;
-      })
+      });
       this.formData.roomNo = this.selectPageRoomNo.list[findResultIndex].name;
       //初始化房间号选中获取的数据
-      this.formData.valuation = '';
+      this.formData.valuation = "";
       this.formData.area = 0;
-      this.formData.face = '';
+      this.formData.face = "";
       this.formData.room = 0;
       this.getRoomData(e);
     },
     //获取房间号数据
     getRoomData (id) {
-      this.$api.get({ url: `/draft-house/room/${id}` }).then((e) => {
+      this.$api.get({ url: `/draft-house/room/${id}` }).then(e => {
         let data = e.data.data;
         if (e.data.code == 200) {
           this.formData.valuation = data.valuation;
@@ -747,11 +804,11 @@ export default {
           this.formData.face = data.orientation;
           this.formData.room = data.rooms || 0;
         }
-      })
+      });
     },
     removeTelToList (index, item) {
       this.addTel.splice(index, 1);
-      this.formData['tel' + item] = '';
+      this.formData["tel" + item] = "";
     },
     //添加电话号码123
     addTelToList () {
@@ -769,81 +826,104 @@ export default {
     //验证
     validateAll () {
       let that = this;
-      return this.$validator.validateAll().then((e) => {
-        if (e && !that.changeBut.area && !that.changeBut.roomType) {
-          return true;
-        }
-        return false;
-
-      }).then((e) => {
-        if (e) {
-          return this.upLoadData();
-        } else {
+      return this.$validator
+        .validateAll()
+        .then(e => {
+          if (e && !that.changeBut.area && !that.changeBut.roomType) {
+            return true;
+          }
           return false;
-        }
-      })
+        })
+        .then(e => {
+          if (e) {
+            return this.upLoadData();
+          } else {
+            return false;
+          }
+        });
     },
     //获取
     getLoadData () {
       this.loading = true;
-      return this.$api.get({
-        url: `/draft-house/${this.$store.state.addHouse.formData.id}`,
-      }).then((e) => {
-        if (e.data.code == 200) {
-          this.$store.commit('updateId', e.data.data.id);
-          this.$store.dispatch("InitFormData", { commitName: "updateStep1", json: e.data.data }).then(() => {
-            this.selectPageCommunit.list.push({ value: this.formData.communityId, name: this.formData.communityName });
-            this.selectPageeBuildingNo.list.push({ value: this.formData.buildingId, name: this.formData.buildingNo });
-            this.selectPageRoomNo.list.push({ value: this.formData.roomId, name: this.formData.roomNo });
-          });
-          //添加tel 1 2 3
-          let tel = ["tel1", "tel2", "tel3"];
-          tel.forEach((item, index) => {
-            if (util.isNotNull(e.data.data[item])) {
-              this.addTel.push(parseInt(item.replace(/[a-zA-Z]*/g, "")));
-            }
-          })
-        }
-      }).catch((e) => {
-        return false;
-      }).finally(() => {
-        this.loading = false;
-      })
+      return this.$api
+        .get({
+          url: `/draft-house/${this.$store.state.addHouse.formData.id}`
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$store.commit("updateId", e.data.data.id);
+            this.$store
+              .dispatch("InitFormData", {
+                commitName: "updateStep1",
+                json: e.data.data
+              })
+              .then(() => {
+                this.selectPageCommunit.list.push({
+                  value: this.formData.communityId,
+                  name: this.formData.communityName
+                });
+                this.selectPageeBuildingNo.list.push({
+                  value: this.formData.buildingId,
+                  name: this.formData.buildingNo
+                });
+                this.selectPageRoomNo.list.push({
+                  value: this.formData.roomId,
+                  name: this.formData.roomNo
+                });
+              });
+            //添加tel 1 2 3
+            let tel = ["tel1", "tel2", "tel3"];
+            tel.forEach((item, index) => {
+              if (util.isNotNull(e.data.data[item])) {
+                this.addTel.push(parseInt(item.replace(/[a-zA-Z]*/g, "")));
+              }
+            });
+          }
+        })
+        .catch(e => {
+          return false;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     //创建
     upLoadData (e) {
       let that = this;
       let data = {
-        ...that.deffData,
-      }
-      let method = 'post';
+        ...that.deffData
+      };
+      let method = "post";
 
-      if (that.$store.state.addHouse.formData.id != '') {
+      if (that.$store.state.addHouse.formData.id != "") {
         data.id = that.$store.state.addHouse.formData.id;
-        method = 'put';
+        method = "put";
       }
-      if (Object.keys(this.deffData).length == 0) {//没有做出修改
+      if (Object.keys(this.deffData).length == 0) {
+        //没有做出修改
         return true;
       }
       return this.$api[method]({
-        url: '/draft-house',
+        url: "/draft-house",
         data: data,
         headers: { "Content-Type": "application/json;charset=UTF-8" }
-      }).then((e) => {
-        if (e.data.code == 200) {
-          //存入Vuex;
-          if (e.data.data != null) {
-            that.$store.commit('updateId', e.data.data)
-          }
-          that.$store.commit("updateStep1", that.deffData);
-          return true;
-        } else {
-          return false;
-        }
-      }).catch((e) => {
-        return false;
       })
-    },
+        .then(e => {
+          if (e.data.code == 200) {
+            //存入Vuex;
+            if (e.data.data != null) {
+              that.$store.commit("updateId", e.data.data);
+            }
+            that.$store.commit("updateStep1", that.deffData);
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .catch(e => {
+          return false;
+        });
+    }
   },
   data () {
     return {
@@ -856,23 +936,26 @@ export default {
         roomType: false
       },
       changeInput: {
-        area: '',
-        room: '',
-        hall: '',
-        toilet: '',
-        balcony: ''
+        area: "",
+        room: "",
+        hall: "",
+        toilet: "",
+        balcony: ""
       },
       certificateType: certificateType,
       options: [],
-      selectPageCommunit: { // 楼栋
+      selectPageCommunit: {
+        // 楼栋
         list: [],
         loading: false
       },
-      selectPageeBuildingNo: {// 栋座
+      selectPageeBuildingNo: {
+        // 栋座
         list: [],
         loading: false
       },
-      selectPageRoomNo: {// 房间号
+      selectPageRoomNo: {
+        // 房间号
         list: [],
         loading: false
       },

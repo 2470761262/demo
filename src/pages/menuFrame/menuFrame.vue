@@ -70,7 +70,9 @@
         <feedback />
         <div class="children-page">
           <!-- 二级页面 router-view -->
-          <router-view />
+          <transition name="el">
+            <router-view />
+          </transition>
         </div>
       </el-main>
     </el-container>

@@ -77,9 +77,11 @@
                    size="mini"
                    @click="queryDatalist">查询</el-button>
       </div>
+
     </template>
 
     <template #tableColumn="cell">
+
       <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"
@@ -165,7 +167,7 @@ export default {
       this.queryOurComDeal(1);
     },
     remoteInput () {
-   
+
       if (this.data.comId == 0) {
         this.remoteMethod();
       }
@@ -183,7 +185,7 @@ export default {
             qs: true,
             data: {
               page: 1,
-             limit: 50,
+              limit: 50,
               communityName: query
             }
           })
@@ -198,7 +200,7 @@ export default {
         this.options = [];
       }
     },
-    
+
     queryCBId () {
       var that = this;
       this.$api
@@ -213,8 +215,8 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-             that.data.cbId='';
-            that.data.bhId='';
+            that.data.cbId = '';
+            that.data.bhId = '';
             that.cbIdList = e.data.data.list;
           }
         });
@@ -234,8 +236,8 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-            
-            that.data.bhId='';
+
+            that.data.bhId = '';
             that.roomNoList = e.data.data.list;
           }
         });

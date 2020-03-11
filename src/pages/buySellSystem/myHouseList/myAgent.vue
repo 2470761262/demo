@@ -94,7 +94,7 @@
                         end-placeholder="结束日期">
         </el-date-picker>
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-              @click="delece">
+              @click="remove">
           清除
         </span>
         <span><input type='checkbox'
@@ -260,7 +260,7 @@ export default {
         label: '已过期'
       }],
       queryData: {
-        communityName: '',
+        CommunityName: '',
         timeSelect: '',
         roomNo: '',
         cbId: ''
@@ -285,7 +285,7 @@ export default {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
-    delece () {
+    remove () {
       this.queryData.CommunityName = '';
       this.queryData.cbId = '';
       this.queryData.roomNo = '';
@@ -294,13 +294,14 @@ export default {
       this.queryData.minPrice = '';
       this.queryData.maxPrice = '';
       this.queryData.timeSelect = '';
+      this.querylist(1);
     },
     querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '',sortColumn:'id' };
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
-      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
+      if (this.queryData.cbId != null && this.queryData.cbId != '') { params.cbId = this.queryData.cbId; }
+      if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomNo = this.queryData.roomNo; }
       if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
       if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
       if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
@@ -310,7 +311,7 @@ export default {
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
       this.$api.post({
-        url: '/agent_house/myAgentHouseList',
+        url: '/myHouse/getMyAgent',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false
@@ -323,7 +324,7 @@ export default {
           console.log(result.data);
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPage;
-          that.tableData = result.data.list;
+          that.tableData = result.data.data;
         } else {
           console.log("查询我的跟单列表结果：" + result.message);
           alert(result.message);
@@ -415,7 +416,7 @@ export default {
         token: false,
         qs: true,
         data: {
-          comId: that.queryData.comId,
+          comId: that.queryData.CommunityName,
           cbId: that.queryData.cbId,
           page: 1,
           limit: 50
