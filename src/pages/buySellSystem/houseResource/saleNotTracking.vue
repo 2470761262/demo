@@ -281,7 +281,7 @@ export default {
         params.sortType = type;
       }
 
-      this.$api.get({
+      this.$api.post({
         url: '/houseResource/getSaleNotTrack',
         data: params,
         qs: true
