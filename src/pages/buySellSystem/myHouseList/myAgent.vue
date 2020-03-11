@@ -312,7 +312,7 @@ export default {
       this.queryData.timeSelect = '';
     },
     querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '',sortColumn:'id' };
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
       if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
@@ -326,7 +326,7 @@ export default {
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
       this.$api.post({
-        url: '/agent_house/myAgentHouseList',
+        url: '/myHouse/getMyAgent',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false
@@ -339,7 +339,7 @@ export default {
           console.log(result.data);
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPage;
-          that.tableData = result.data.list;
+          that.tableData = result.data.data;
         } else {
           console.log("查询我的跟单列表结果：" + result.message);
           alert(result.message);
