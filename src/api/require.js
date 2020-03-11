@@ -30,7 +30,8 @@ http.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 // 响应拦截器
-http.interceptors.response.use(function (response) {
+http.interceptors.response.use((response) => {
+
   if (response.data.code == 401) {
     Message({
       message: response.data.message,
@@ -40,9 +41,14 @@ http.interceptors.response.use(function (response) {
       "path": "/"
     });
     return;
+  } else {
+    Message({
+      message: response.data.message,
+      type: 'error'
+    });
   }
   return response;
-}, function (error) {
+}, (error) => {
   if (error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
     Message({
       message: '居然请求超时了~',
