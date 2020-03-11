@@ -41,11 +41,13 @@ http.interceptors.response.use((response) => {
       "path": "/"
     });
     return;
-  } else {
+  } else if (response.data.code != 200) {
+
     Message({
       message: response.data.message,
       type: 'error'
     });
+    return Promise.reject(error);
   }
   return response;
 }, (error) => {
