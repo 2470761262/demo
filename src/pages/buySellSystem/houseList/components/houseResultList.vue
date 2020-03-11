@@ -410,10 +410,13 @@ export default {
         if (value[item] instanceof Array) {
           value[item] = value[item].join(',')
         }
-      })
+      });
+      let actionUrl = value.action;
+      value.action = "";
+      console.log(value,"==============>?");
       let restuleParms = Object.assign({}, value, { page: that.pageJson.currentPage, limit: 8 });
       return this.$api.get({
-        url: "/mateHouse/getMateHouse",
+        url: actionUrl,
         token: false,
         data: restuleParms,
       }).then((e) => {
