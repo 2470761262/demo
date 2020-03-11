@@ -315,6 +315,7 @@ export default {
       }).then(() => {
         this.deleteConcern(id);
         this.queryConcernCount();
+        this.querylistByParams();
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -546,7 +547,12 @@ export default {
     },
     //跳转房源详情页面
     toHouseDetail (id) {
-      this.$router.push({ path: "/buySellSystem/houseDetails", query: { houseId: id } });
+    console.log(id);
+      var that = this;
+      that.$router.push({
+        path: "/buySellSystem/houseDetails",
+        query: { houseId: id }
+      });
     },
 
     handleClick () {

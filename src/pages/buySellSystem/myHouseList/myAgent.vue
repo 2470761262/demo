@@ -299,17 +299,17 @@ export default {
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '',sortColumn:'id' };
       let that = this;
-      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-      if (this.queryData.cbId != null && this.queryData.cbId != '') { params.cbId = this.queryData.cbId; }
-      if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomNo = this.queryData.roomNo; }
-      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
-      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
+      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.comId = this.queryData.CommunityName; }
+      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
+      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
+      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.customName = this.queryData.Customers; }
+      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.tel = this.queryData.Tel; }
       if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
       if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
       if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
       if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
+      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.beginTime = this.queryData.timeSelect[0]; }
+      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.endTime = this.queryData.timeSelect[1]; }
       this.$api.post({
         url: '/myHouse/getMyAgent',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
