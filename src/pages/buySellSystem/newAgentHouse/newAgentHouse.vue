@@ -155,7 +155,7 @@ export default {
         console.log("参数");
       }
       this.$api.post({
-        url: '/agent_house/newHouseList',
+        url: '/agent_house/queryNewHouse',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false

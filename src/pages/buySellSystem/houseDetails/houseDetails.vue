@@ -1526,7 +1526,6 @@ export default {
         deleteFollow: false,
         updateKeyStorageDept: false
       },//是否显示按钮
-      ruleId: 15,
       showFollow: true,//是否显示组件的跟进
       audioList: []//音频文件
     };
@@ -1596,7 +1595,6 @@ export default {
       this.$api.get({
         url: '/sys/rule/function/list',
         data: {
-          rId: that.ruleId
         },
         token: false
       }).then((e) => {
@@ -2157,6 +2155,7 @@ export default {
             else {
               that.primaryRadio = 0;
             }
+
             if (that.houseDetails.remark != null && that.houseDetails.remark.indexOf("$") != -1) {
               var Arry1 = that.houseDetails.remark.split("$");
               for (var i = 0; i < Arry1.length; i++) {
@@ -2164,25 +2163,27 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     that.communityPresentation = Arry2[1];
-                    that.houseDetails.applyAgentVo.communityDesc = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.communityDesc = Arry2[1];
                     break;
                   case "户型介绍":
                     that.houseTypePresentation = Arry2[1];
-                    that.houseDetails.applyAgentVo.roomDesc = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.roomDesc = Arry2[1];
                     break;
                   case "税费解析":
                     that.taxParsing = Arry2[1];
-                    that.houseDetails.applyAgentVo.taxDesc = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.taxDesc = Arry2[1];
                     break;
                   case "核心卖点":
                     that.coreSellingPoint = Arry2[1];
-                    that.houseDetails.applyAgentVo.saleDesc = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.saleDesc = Arry2[1];
                     break;
                 }
               }
             }
-            that.$store.commit("updateStep2", that.houseDetails.applyAgentVo);
-            that.audioList = that.houseDetails.applyAgentVo.saleUploadAudioList;
+            if (that.houseDetails.applyAgentVo != null) {
+              that.$store.commit("updateStep2", that.houseDetails.applyAgentVo);
+              that.audioList = that.houseDetails.applyAgentVo.saleUploadAudioList;
+            }
             that.houseDetails.saleUploadPicDtoList.forEach(element => {
               var pic = {
                 type: 1,
@@ -2191,7 +2192,6 @@ export default {
               };
               that.houseFileList.push(pic);
             });
-
             that.houseDetails.saleUploadVideoDtoList.forEach(element => {
               var video = {
                 type: 0,
@@ -2200,6 +2200,7 @@ export default {
               };
               that.houseFileList.push(video);
             });
+
           } else {
             that.$message(result.message);
           }

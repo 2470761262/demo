@@ -711,5 +711,19 @@ export default [
       component: () =>
         import(/* webpackChunkName: "feedbackList" */ "@/pages/systemAdministration/feedback/feedbackList.vue")
     },
+    {
+        //系统管理 人员异动列表
+        path: "/sys/personLogList",
+        name: "personLogList",
+        component: () =>
+          import(/* webpackChunkName: "personLogList" */ "@/pages/systemAdministration/personLog/personLogList.vue")
+    },
+    {
+        //系统管理 人员异动列表-详情
+        path: "/sys/editPersonLogDetail",
+        name: "editPersonLogDetail",
+        component: () =>
+          import(/* webpackChunkName: "editPersonLogDetail" */ "@/pages/systemAdministration/personLog/editPersonLogDetail.vue")
+    }
 
 ]
