@@ -254,7 +254,8 @@ export default {
       params.sortType=type;
       this.$api.post({
         url: '/houseRecommend/shopOwnerRecommendHouse',
-        data: params
+        data: params,
+        qs: true,
       }).then((e) => {
         console.log(e.data);
         let data = e.data

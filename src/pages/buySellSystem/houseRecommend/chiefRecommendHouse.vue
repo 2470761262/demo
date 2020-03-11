@@ -255,6 +255,7 @@ export default {
       this.$api.post({
         url: '/houseRecommend/chiefRecommendHouse',
         data: params,
+        qs: true,
       }).then((e) => {
         console.log(e.data);
         let data = e.data
