@@ -270,9 +270,10 @@ export default {
         params.maxPrice=that.data.maxPrice;
       params.sortColumn=column;
       params.sortType=type;
-      this.$api.pst({
+      this.$api.post({
         url: '/houseResource/getSaleNotTrack',
         data: params,
+        qs: true,
       }).then((e) => {
         console.log(e.data);
         let data = e.data
