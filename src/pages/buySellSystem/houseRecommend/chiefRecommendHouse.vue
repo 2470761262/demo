@@ -9,7 +9,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
-        
+
           <el-select v-model="data.comId"
                      @focus="remoteInput"
                      @change="queryCBId()"
@@ -25,7 +25,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-      
+
           <el-select v-model="data.cbId"
                      filterable
                      clearable
@@ -46,7 +46,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        
+
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
                         range-separator="至"
@@ -137,7 +137,7 @@ export default {
         { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false},
         { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false},
         { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: false }
-       
+
       ],
       tableColumn: [],
       tableData: [],
@@ -252,10 +252,10 @@ export default {
       params.endTime = that.data.timeSelect[1];
       params.sortColumn=column;
       params.sortType=type;
-      this.$api.get({
+      this.$api.post({
         url: '/houseRecommend/chiefRecommendHouse',
         data: params,
-        token: false
+        qs: true,
       }).then((e) => {
         console.log(e.data);
         let data = e.data
@@ -292,4 +292,4 @@ export default {
     }
   },
 }
-</script>  
+</script>

@@ -21,7 +21,7 @@
         width: 105px;
         text-align: center;
         font-size: 15px;
-        padding-right: 90px;
+        padding-right: 45px;
         &:first-child {
           padding-right: 0;
         }
@@ -47,6 +47,12 @@
       font-size: 13px;
     }
   }
+}
+.select-pad-width_70 {
+  margin-left: 30px;
+}
+.el-leave-active {
+  position: static;
 }
 </style>
 <template>
@@ -112,14 +118,12 @@
            :class="{'after-tips':errorBags.has('tableAvgPirce')}"
            :data-tips="errorBags.first('tableAvgPirce')">
         <div class="page-cell-item select-nobor">
-          <el-input placeholder="钱"
+          <el-input placeholder="￥"
                     v-number.floot
                     data-vv-name="tableAvgPirce"
                     data-vv-as="总售价"
                     v-validate="'required'"
-                    @input="tableAvgPirceChange"
-                    @focus="pirceFoucusFlag = true"
-                    @blur="pirceFoucusFlag = false"
+                    @input="tableAvgChange('tableAvgPirce','price')"
                     v-model="tableAvgPirce">
             <div slot="prepend"
                  class="item-before">总售价</div>
@@ -128,70 +132,108 @@
           </el-input>
         </div>
       </div>
-    </div>
-    <div class="page-cell-for-add"
-         v-if="tableFor.length > 0">
-      <div class="for-add-table">
-        <div class="for-add-header">
-          <div class="for-add-tr">
-            <div class="for-add-td">序号</div>
-            <div class="for-add-td">楼栋</div>
-            <div class="for-add-td">房间号</div>
-            <div class="for-add-td">售价</div>
-          </div>
+      <div class="form-error-tips select-pad-width_70 "
+           :class="{'after-tips':errorBags.has('bottomPriceAvgPrice')}"
+           :data-tips="errorBags.first('bottomPriceAvgPrice')">
+        <div class="page-cell-item select-nobor">
+          <el-input placeholder="￥"
+                    v-number.floot
+                    data-vv-name="bottomPriceAvgPrice"
+                    data-vv-as="总底价"
+                    v-validate="{required:true,isGreater:[tableAvgPirce,'总售价']}"
+                    @input="tableAvgChange('bottomPriceAvgPrice','bottomPrice')"
+                    v-model="bottomPriceAvgPrice">
+            <div slot="prepend"
+                 class="item-before">总底价</div>
+            <div slot="append"
+                 class="item-before">万</div>
+          </el-input>
         </div>
-        <div class="for-add-tbody">
-          <div class="for-add-tr"
-               :class="{'after-tips':errorBags.has('buildingId'+(index+1))}"
-               :data-tips="errorBags.first('buildingId'+(index+1))"
-               v-for="(item,index) in tableFor"
-               :key="index">
-            <div class="for-add-td">{{index+1}}</div>
-            <div class="for-add-td select-nobor">
-              <el-select filterable
-                         remote
-                         :data-vv-name="'buildingId'+(index+1)"
-                         :data-vv-as="'楼栋'+(index+1)"
-                         v-validate="'required'"
-                         :remote-method="remoteBuildingNo"
-                         @change="remoteBuildingNoChange($event,index)"
-                         v-model="item.buildingId"
-                         placeholder="楼栋">
-                <el-option v-for="item in selectPageBuilding.list"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.value">
-                </el-option>
-              </el-select>
+      </div>
+    </div>
+    <transition name="el">
+      <div class="page-cell-for-add"
+           v-if="tableFor.length > 0">
+        <div class="for-add-table">
+          <div class="for-add-header">
+            <div class="for-add-tr">
+              <div class="for-add-td">序号</div>
+              <div class="for-add-td">楼栋</div>
+              <div class="for-add-td">房间号</div>
+              <div class="for-add-td">售价</div>
+              <div class="for-add-td">总底价</div>
             </div>
-            <div class="for-add-td select-nobor">
-              <el-select filterable
-                         remote
-                         :remote-method="remoteRoomNo"
-                         :data-vv-name="'roomId'+(index+1)"
-                         :data-vv-as="'房间号'+(index+1)"
-                         v-validate="'required'"
-                         v-model="item.roomId"
-                         placeholder="房间号">
-                <el-option v-for="item in selectPageRoom.list"
-                           :key="item.value"
-                           :label="item.name"
-                           :value="item.value">
-                </el-option>
-              </el-select>
-            </div>
-            <div class="for-add-td select-nobor select-pad-width_70">
-              <div class="tr-flex">
-                <el-input placeholder="售价"
-                          v-number.floot
-                          v-model="item.price"></el-input>
-                <span>万</span>
+          </div>
+          <div class="for-add-tbody">
+            <div class="for-add-tr"
+                 :class="{'after-tips':errorBags.has('buildingId'+(index+1)) || errorBags.has('roomId'+(index+1)) || errorBags.has('bottomPrice'+(index+1))}"
+                 :data-tips="errorBags.first('buildingId'+(index+1)) || errorBags.first('roomId'+(index+1)) || errorBags.first('bottomPrice'+(index+1))"
+                 v-for="(item,index) in tableFor"
+                 :key="index">
+              <div class="for-add-td">{{index+1}}</div>
+              <div class="for-add-td select-nobor">
+                <el-select filterable
+                           remote
+                           :data-vv-name="'buildingId'+(index+1)"
+                           :data-vv-as="'楼栋'+(index+1)"
+                           v-validate="'required'"
+                           :remote-method="remoteBuildingNo"
+                           @change="remoteBuildingNoChange($event,index)"
+                           v-model="item.buildingId"
+                           placeholder="楼栋">
+                  <el-option v-for="item in selectPageBuilding.list"
+                             :key="item.value"
+                             :label="item.name"
+                             :value="item.value">
+                  </el-option>
+                </el-select>
+              </div>
+              <div class="for-add-td select-nobor">
+                <el-select filterable
+                           remote
+                           :remote-method="remoteRoomNo"
+                           :data-vv-name="'roomId'+(index+1)"
+                           :data-vv-as="'房间号'+(index+1)"
+                           v-validate="'required'"
+                           v-model="item.roomId"
+                           @change="remoteRoomNoChange($event,index)"
+                           @blur="selectPageRoom.focusIndex = -1"
+                           @focus="selectPageRoom.focusIndex = index"
+                           placeholder="房间号">
+                  <el-option v-for="item in selectPageRoom.list"
+                             :key="item.value"
+                             :disabled="filterRoomDisabled().includes(item.value)"
+                             :label="item.name"
+                             :value="item.value">
+                  </el-option>
+                </el-select>
+              </div>
+              <div class="for-add-td select-nobor select-pad-width_70">
+                <div class="tr-flex">
+                  <el-input placeholder="售价"
+                            v-number.floot
+                            @input="updatePirce('tableAvgPirce','price')"
+                            v-model="item.price"></el-input>
+                  <span>万</span>
+                </div>
+              </div>
+              <div class="for-add-td select-nobor select-pad-width_70">
+                <div class="tr-flex">
+                  <el-input placeholder="底价"
+                            v-number.floot
+                            :data-vv-name="'bottomPrice'+(index+1)"
+                            :data-vv-as="'楼栋'+(index+1)"
+                            v-validate="{isGreater:[item.price,'售价']}"
+                            @input="updatePirce('bottomPriceAvgPrice','bottomPrice')"
+                            v-model="item.bottomPrice"></el-input>
+                  <span>万</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </transition>
     <!-- 业主姓名 -->
     <div class="form-error-tips maging-top_60 margin-bot_20 "
          :class="{'after-tips':errorBags.has('customerName')}"
@@ -239,28 +281,30 @@
       </div>
     </div>
     <!-- 电话号码 for -->
-    <div class="form-error-tips margin-bot_20"
-         :class="{'after-tips':errorBags.has('tel'+item)}"
-         :data-tips="errorBags.first('tel'+item)"
-         v-for="(item,index) in addTel"
-         :key="index">
-      <div class="page-cell-item select-nobor">
-        <el-input placeholder="请输入业主电话号码"
-                  :data-vv-name="'tel'+item"
-                  :data-vv-as="'电话号码'+item"
-                  v-validate="'phone'"
-                  v-model="form['tel'+item]">
-          <div slot="prepend"
-               class="item-before">手机号{{item}}</div>
-          <div slot="append"
-               @click="removeTelToList(index,item)"
-               class="item-after item-before-col">
-            <i class="el-icon-circle-plus-outline"></i>
-            <div>删除</div>
-          </div>
-        </el-input>
+    <transition-group name="el">
+      <div class="form-error-tips margin-bot_20"
+           :class="{'after-tips':errorBags.has('tel'+item)}"
+           :data-tips="errorBags.first('tel'+item)"
+           v-for="(item,index) in addTel"
+           :key="item">
+        <div class="page-cell-item select-nobor">
+          <el-input placeholder="请输入业主电话号码"
+                    :data-vv-name="'tel'+item"
+                    :data-vv-as="'电话号码'+item"
+                    v-validate="'phone'"
+                    v-model="form['tel'+item]">
+            <div slot="prepend"
+                 class="item-before">手机号{{item}}</div>
+            <div slot="append"
+                 @click="removeTelToList(index,item)"
+                 class="item-after item-before-col">
+              <i class="el-icon-circle-plus-outline"></i>
+              <div>删除</div>
+            </div>
+          </el-input>
+        </div>
       </div>
-    </div>
+    </transition-group>
     <div class="page-cell-item-flex maging-top_60 margin-bot_20">
       <!-- 房屋证件 -->
       <div class="form-error-tips"
@@ -283,7 +327,7 @@
         </div>
       </div>
       <!-- 售价 -->
-      <div class="form-error-tips select-pad-width_100"
+      <!-- <div class="form-error-tips select-pad-width_100"
            :class="{'after-tips':errorBags.has('price')}"
            :data-tips="errorBags.first('price')">
         <div class="page-cell-item select-nobor">
@@ -299,9 +343,9 @@
                  class="item-after item-before-col">万</div>
           </el-input>
         </div>
-      </div>
+      </div> -->
       <!-- 底价 -->
-      <div class="form-error-tips select-pad-width_100"
+      <!-- <div class="form-error-tips select-pad-width_100"
            :class="{'after-tips':errorBags.has('bottomPrice')}"
            :data-tips="errorBags.first('bottomPrice')">
         <div class="page-cell-item select-nobor">
@@ -317,7 +361,7 @@
                  class="item-after item-before-col">万</div>
           </el-input>
         </div>
-      </div>
+      </div> -->
     </div>
     <!-- 证号 -->
     <div class="form-error-tips margin-bot_20">
@@ -343,6 +387,7 @@ let certificateType = [
   { title: "拆迁安置协议书", label: 3 },
 ]
 export default {
+  name: "morePushHouse",
   props: {
     houseType: {
       type: String
@@ -350,52 +395,38 @@ export default {
   },
   data () {
     return {
-      pirceFoucusFlag: false,
       addHouseType: this.houseType,
       sexList: sex,
       addTel: [],//123电话号码数组
       tableForList: '',//共多少套
-      tableAvgPirce: '',//总售价多少钱
+      tableAvgPirce: '',//总售价
+      bottomPriceAvgPrice: '',//总底价
       tableFor: [],//表格
       form: {
         customerName: '',//用户姓名
         sex: 0,//业主称谓
         tel: "",//业主电话号码
         certificateType: "",//房屋证件
-        price: '',//售价
-        bottomPrice: '',//底价
+        // price: '',//售价
+        // bottomPrice: '',//底价
         certificateNo: ""//证号
       },
       certificateTypeList: certificateType,
       selectPageBuilding: {
         loading: '',
-        list: []
+        list: [],
+
       },
       selectPageRoom: {
         loading: '',
-        list: []
+        list: [],
+        focusIndex: undefined // 当前触发的index
       },
       selectPageCommunit: {
         loading: false,
         id: '',
         name: '',
         list: []
-      }
-    }
-  },
-  watch: {
-    tableFor: {
-      deep: true,
-      handler (newValue, oldValue) {
-        if (!Number.isNaN(this.tableAvgPirce) && !this.pirceFoucusFlag) {
-          let price = 0;
-          newValue.forEach((item) => {
-            if (item.price != '' && !Number.isNaN(Number(item.price))) {
-              price += Number(item.price);
-            }
-          })
-          this.tableAvgPirce = price;
-        }
       }
     }
   },
@@ -411,6 +442,7 @@ export default {
       this.tableFor = [];
       this.tableForList = '';
       this.tableAvgPirce = '';
+      this.bottomPriceAvgPrice = '';
       this.remoteBuildingNo();
     },
     //楼盘获取焦点 第一次点击就进行查询
@@ -485,34 +517,43 @@ export default {
     //查询房间号
     remoteRoomNo (e, index) {
       let that = this;
-      console.log(e, index, 11111111);
+      if (index == undefined) {
+        index = this.selectPageRoom.focusIndex;
+      }
       //验证楼栋
-      //   that.$validator.validate('buildingId' + (index + 1), this.tableFor[index].buildingId).then((result) => {
-      //     if (result) {
-      //       that.selectPageRoom.loading = true;
-      //       that.$api.post({
-      //         url: '/mateHouse/queryBuildIngHouses',
-      //         data: {
-      //           page: 1,
-      //           limit: 50,
-      //           comId: that.selectPageCommunit.id,
-      //           cbId: that.tableFor[index].buildingId,
-      //           roomNo: e == undefined ? '' : e.trim(),
-      //           isNotSale: 1
-      //         },
-      //         qs: true,
-      //         token: false
-      //       }).then((e) => {
-      //         let data = e.data;
-      //         if (data.code == 200) {
-      //           that.selectPageRoom.list = data.data.list;
-      //           that.selectPageRoom.loading = false;
-      //         }
-      //       }).catch((e) => {
-      //         console.log(e);
-      //       })
-      //     }
-      //   })
+      that.$validator.validate('buildingId' + (index + 1), this.tableFor[index].buildingId).then((result) => {
+        if (result) {
+          that.selectPageRoom.loading = true;
+          that.$api.post({
+            url: '/mateHouse/queryBuildIngHouses',
+            data: {
+              page: 1,
+              limit: 50,
+              comId: that.selectPageCommunit.id,
+              cbId: that.tableFor[index].buildingId,
+              roomNo: e == undefined ? '' : e.trim(),
+              isNotSale: 1
+            },
+            qs: true,
+            token: false
+          }).then((e) => {
+            let data = e.data;
+            if (data.code == 200) {
+              that.selectPageRoom.list = data.data.list;
+              that.selectPageRoom.loading = false;
+            }
+          }).catch((e) => {
+            console.log(e);
+          })
+        }
+      })
+    },
+    //房间号选择更改事件
+    remoteRoomNoChange (e, index) {
+      let findResultIndex = this.selectPageRoom.list.findIndex(item => {
+        return item.value == e;
+      });
+      this.tableFor[index].roomNo = this.selectPageRoom.list[findResultIndex].name;
     },
     //输入的套数改变
     houseListChange (e) {
@@ -524,18 +565,36 @@ export default {
           buildingNo: '',
           buildingId: '',
           roomNo: '',
-          roomId: ''
+          roomId: '',
+          bottomPrice: !Number.isNaN(that.bottomPriceAvgPrice) ? (that.bottomPriceAvgPrice / e).toFixed(2) : ''
         })
       }
     },
     //输入的总价钱设置tab的平均值
-    tableAvgPirceChange (e) {
+    tableAvgChange (objName, toObjName) {
       let that = this;
       this.tableFor.forEach((item) => {
-        console.log(that.tableAvgPirce / that.tableFor.length, "that.tableAvgPirce / that.tableFor.length");
-        if (!Number.isNaN(that.tableAvgPirce))
-          item.price = (that.tableAvgPirce / that.tableFor.length).toFixed(2);
+        if (!Number.isNaN(that[objName]))
+          item[toObjName] = (that[objName] / that.tableFor.length).toFixed(2);
       })
+    },
+    //当前选择已经存在这个房间则不让在重复选择
+    filterRoomDisabled () {
+      return this.tableFor.map((item) => {
+        return item.roomId
+      }).join(",");
+    },
+    //同步更新价钱
+    updatePirce (priceName, itemName) {
+      if (!Number.isNaN(this[itemName])) {
+        let price = 0;
+        this.tableFor.forEach((item) => {
+          if (item[itemName] != '' && !Number.isNaN(Number(item[itemName]))) {
+            price += Number(item[itemName]);
+          }
+        })
+        this[priceName] = price || '';
+      }
     },
     //添加电话号码
     addTelToList () {
@@ -558,6 +617,50 @@ export default {
     houseTypeChange (e) {
       this.$emit('update:houseType', e);
     },
+    //验证
+    validateAll () {
+      let that = this;
+      return this.$validator
+        .validateAll()
+        .then(e => {
+          if (e) {
+            return true;
+          }
+          return false;
+        })
+        .then(e => {
+          if (e) {
+            return this.upLoadData();
+          } else {
+            return false;
+          }
+        });
+    },
+    //提交数据d
+    upLoadData () {
+      let that = this;
+      return this.$api.post({
+        url: "/draft-house/multiple",
+        data: {
+          communityName: that.selectPageCommunit.name,
+          communityId: that.selectPageCommunit.id,
+          list: that.tableFor,
+          ...that.form
+        },
+        headers: { "Content-Type": "application/json;charset=UTF-8" }
+      })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.$store.commit("updateId", e.data.data);
+            return true;
+          } else {
+            return false;
+          }
+        })
+        .catch(e => {
+          return false;
+        });
+    }
   },
 }
 </script>
