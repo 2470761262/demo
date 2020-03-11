@@ -10,7 +10,6 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
-<<<<<<< HEAD
         <el-select v-model="data.comId"
                    @focus="remoteInput"
                    @change="queryCBId()"
@@ -52,49 +51,6 @@
         <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
         <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
         <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
-=======
-
-          <el-select v-model="data.comId"
-                     @focus="remoteInput"
-                     @change="queryCBId()"
-                     filterable
-                     remote
-                     clearable
-                     placeholder="请输入楼盘名称搜索"
-                     :remote-method="remoteMethod"
-                     :loading="loading">
-            <el-option v-for="item in options"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-
-          <el-select v-model="data.cbId"
-                     filterable
-                     clearable
-                     placeholder="请选择楼栋"
-                     @change="queryRoomNo()">
-            <el-option v-for="item in cbIdList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-          <el-select v-model="data.roomNo"
-                     filterable
-                     placeholder="请选择房间号">
-            <el-option v-for="item in roomNoList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-         <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable />
-           <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
-            <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
-             <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
->>>>>>> b1eb009ea2ac8b1ed3a2859a8ecaef576f3b0e9a
 
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
@@ -228,11 +184,7 @@ export default {
     toSale (comId, cbId, bhId, communityName, buildingName, roomNo, customers, tel) {
       var that = this
       console.log(bhId);
-<<<<<<< HEAD
       that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId, 'cbId': cbId, 'bhId': bhId, "communityName": communityName, "buildingName": buildingName, 'roomNo': roomNo, "flag": 'potentia', "customerName": customers, tel: tel } });
-=======
-      that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId,'cbId':cbId,'bhId':bhId,"communityName":communityName,"buildingName":buildingName,'roomNo':roomNo,"flag":'potentia',"customerName":customers,tel:tel} });
->>>>>>> b1eb009ea2ac8b1ed3a2859a8ecaef576f3b0e9a
 
     },
     queryNotSaleParams () {
@@ -327,7 +279,6 @@ export default {
     },
     queryNotSale (currentPage, column, type) {
       var that = this;
-<<<<<<< HEAD
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
       params.comId = that.data.comId;
       params.cbId = that.data.cbId;
@@ -340,25 +291,10 @@ export default {
       params.maxInArea = that.data.maxInArea;
       params.sortColumn = column;
       params.sortType = type;
-      this.$api.get({
-=======
-      let params = { "limit": that.pageJson.pageSize, "page": currentPage-1 };
-      params.comId=that.data.comId;
-        params.cbId=that.data.cbId;
-        params.roomNo=that.data.roomNo;
-        params.beginTime=that.data.timeSelect[0];
-        params.endTime=that.data.timeSelect[1];
-        params.customName=that.data.customName;
-        params.tel=that.data.tel;
-        params.minInArea=that.data.minInArea;
-        params.maxInArea=that.data.maxInArea;
-      params.sortColumn=column;
-      params.sortType=type;
       this.$api.post({
->>>>>>> b1eb009ea2ac8b1ed3a2859a8ecaef576f3b0e9a
         url: '/houseResource/getNotSale',
         data: params,
-       qs: true
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let data = e.data
