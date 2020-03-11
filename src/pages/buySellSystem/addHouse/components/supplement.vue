@@ -669,7 +669,7 @@
             </div>
           </div>
           <div class="upLoadFile-file-phone">
-            <el-image src="http://sys.lsxjy.com.cn/images/androidDownload.png" fit="cover">
+            <el-image :src="audioQrCodeImage" fit="cover">
               <div slot="placeholder" class="image-slot">
                 加载中
                 <span>...</span>
@@ -686,6 +686,7 @@
 <script>
 import * as formReander from "@/util/constMap";
 import util from "@/util/util";
+//import func from '../../../../../vue-temp/vue-editor-bridge';
 const USE = [
   {
     key: "未占用",
@@ -758,6 +759,7 @@ export default {
     }
   },
   mounted() {
+    let that=this;
     //true 则去获取数据
     if (this.getData) {
       this.loading = true;
@@ -770,6 +772,10 @@ export default {
     if (this.audioList != null && this.audioList.length > 0) {
       this.audioFile = this.audioList[0];
     }
+    this.getQrCode({"remark":"录入房源-上传音频","resourceType":"audio"},function(data){
+      that.audioQrCodeImage=data.url;
+      that.contactSocket(data.qrCode);
+    });
   },
   watch: {
     formData: {
@@ -822,10 +828,76 @@ export default {
       decorationList: formReander.DECORATION, //装修类型
       isowneronlyList: formReander.ISOWNERONLY, //是否唯一住房
       mortgageBankList: formReander.MORTGAGEBANK, //抵押银行
-      followWayList: formReander.FOLLOWWAY //跟进类型
+      followWayList: formReander.FOLLOWWAY, //跟进类型
+      audioQrCodeImage:''
     };
   },
   methods: {
+    contactSocket (user) {
+      console.log("用户【" + user + "】开始接入");
+      this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""),user);
+      this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
+      console.log("用户【" + user + "】接入完毕");
+    },
+    receiveMessage(r){
+      let that=this;
+      console.log(r,"录入房源页面之音频上传接收到了消息");
+      if(r.content.resourceType=="audio"){
+        console.log(r.content,"音频消息内容，准备插入草稿箱")
+        that.uploadFileInfo(r.content.picUrl,function(data){
+          that.audioFile = data;
+        });
+      }      
+    },
+    //获取扫码上传语音二维码
+    getQrCode(data,callback){
+      let that=this; 
+       that.$api.post({
+                      url: '/scanUpload/getUploadQrCode',
+                      data: data,
+                      headers: { "Content-Type": "application/json" }
+                    }).then((e) => {
+                      let result = e.data;
+                      console.log("请求二维码成功");
+                      if (result.code == 200) {
+                          //that.qrCodeImg="data:image/png;base64,"+item.img;
+                         callback(result.data);
+                      } else {
+                        console.log("h获取二维码结果：" + result.message);
+                        alert(result.message);
+                      }                     
+                    }).catch((e) => {                    
+                      console.log("查询二维码失败");
+                      console.log(e);                    
+                    })
+    },
+     uploadFileInfo(url,callback) {
+      let that = this;
+      this.audioFileLoading = true;
+      let formData = {};
+      formData.DraftId=that.$store.state.addHouse.formData.id;
+      formData.IpStr=url;
+      this.$api
+        .post({
+          url: `/draft-house/audioDraft`,
+          headers: { "Content-Type": "application/json" },
+          data: formData
+        })
+        .then(json => {
+          if (json.data.code == 200) {
+            callback(json.data.data);
+          }
+        })
+        .catch(e => {
+          that.$message({
+            message: "不晓得为什么,反正失败了",
+            type: "warning"
+          });
+        })
+        .finally(() => {
+          this.audioFileLoading = false;
+        });
+    },
     //根据ID获取已经上传的音频
     getAudio() {
       return this.$api

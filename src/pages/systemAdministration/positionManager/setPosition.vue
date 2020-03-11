@@ -237,7 +237,7 @@ export default {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            this.$message.info("操作成功");
+            this.$message.info("重新登录后生效，操作成功");
           } else {
             console.log("保存结果：" + result.message);
             this.$message.error("保存失败" + result.message);
@@ -269,7 +269,7 @@ export default {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            this.$message.info("操作成功");
+            this.$message.info("重新登录后生效，操作成功");
           } else {
             console.log("保存结果：" + result.message);
             this.$message.error("保存失败" + result.message);
@@ -304,7 +304,7 @@ export default {
           if (result.code == 200) {
             resolve(result.data); //动态加载时
           } else {
-            console.log("发送公告结果：" + result.message);
+            console.log("请求结果：" + result.message);
             alert(result.message);
           }
         });
