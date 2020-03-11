@@ -9,7 +9,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
-        
+
           <el-select v-model="data.comId"
                      @focus="remoteInput"
                      @change="queryCBId()"
@@ -25,7 +25,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-      
+
           <el-select v-model="data.cbId"
                      filterable
                      clearable
@@ -50,7 +50,7 @@
            <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
             <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
              <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
-            
+
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
                         range-separator="至"
@@ -179,7 +179,7 @@ export default {
       var that = this
       console.log(bhId);
       that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId,'cbId':cbId,'bhId':bhId,"communityName":communityName,"buildingName":buildingName,'roomNo':roomNo,"flag":'potentia',"customerName":customers,tel:tel} });
-      
+
     },
     queryNotSaleParams  () {
       this.queryNotSale(1,'id','ascending');
@@ -310,4 +310,4 @@ export default {
     }
   },
 }
-</script>  
+</script>
