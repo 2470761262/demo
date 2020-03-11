@@ -1,9 +1,7 @@
 <style lang="less" scoped>
 .left-input-container {
   padding: 10px;
-  font-size: 1rem;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
+
   border-radius: 0.5rem;
   .el-input {
     width: 80%;

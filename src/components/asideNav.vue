@@ -49,6 +49,8 @@
         <el-menu-item index="/sys/ruleManager">功能点管理</el-menu-item>
         <el-menu-item index="/sys/logonRegPwd/view">授权器密码</el-menu-item>
         <el-menu-item index="/sys/personLogList">人员异动</el-menu-item>
+        <el-menu-item index="/sys/baseCustomersList">客户管理</el-menu-item>
+        
       </el-submenu>
       <el-submenu :index="item.id+''"
                   :key="item.id"
