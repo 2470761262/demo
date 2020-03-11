@@ -9,7 +9,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
-        
+
           <el-select v-model="data.comId"
                      @focus="remoteInput"
                      @change="queryCBId()"
@@ -25,7 +25,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-      
+
           <el-select v-model="data.cbId"
                      filterable
                      clearable
@@ -270,10 +270,9 @@ export default {
         params.maxPrice=that.data.maxPrice;
       params.sortColumn=column;
       params.sortType=type;
-      this.$api.get({
+      this.$api.post({
         url: '/houseResource/getShopDisk',
         data: params,
-        token: false
       }).then((e) => {
         console.log(e.data);
         let data = e.data
@@ -310,4 +309,4 @@ export default {
     }
   },
 }
-</script>  
+</script>
