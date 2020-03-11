@@ -228,8 +228,14 @@ export default {
           this.butLoading = false;
           return;
         case "morePushHouse":
-          await this.$refs.com.validateAll();
+          flag = await this.$refs.com.validateAll();
           this.butLoading = false;
+          if (flag) {
+            this.stepsActiveIndex = 3;
+            this.componentName = this.stepsList[
+              this.stepsActiveIndex
+            ].componentName;
+          }
           return;
       }
       this.butLoading = false;
