@@ -9,8 +9,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
         
-           <el-item label="楼盘名称"
-                 prop="comId">
+         
           <el-select v-model="data.comId"
                      @focus="remoteInput"
                      @change="queryCBId()"
@@ -26,10 +25,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </el-item>
-        <el-item label="栋座"
-                 prop="cbId"
-                 class="page-label-center">
+        
           <el-select v-model="data.cbId"
                      filterable
                      clearable
@@ -41,11 +37,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </el-item>
-        <el-item label="房间号"
-                 prop="roomNo"
-                 clearable
-                 class="page-label-center">
+        
           <el-select v-model="data.roomNo"
                      filterable
                      placeholder="请选择房间号">
@@ -55,8 +47,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </el-item>
-
+        
         
         
 
@@ -320,7 +311,7 @@ remoteMethod (query) {
     this.$api.get({
         url: '/houseResource/getNotPhone',
         data: params,       
-        token: false
+       qs: true
       }).then((e) => {
         console.log(e.data);
         let data=e.data

@@ -9,7 +9,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
-        
+
           <el-select v-model="data.comId"
                      @focus="remoteInput"
                      @change="queryCBId()"
@@ -25,7 +25,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-      
+
           <el-select v-model="data.cbId"
                      filterable
                      clearable
@@ -50,7 +50,7 @@
            <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
             <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
              <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
-            
+
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
                         range-separator="至"
@@ -88,7 +88,7 @@
                      @click="toLook(scope.row.id)">查看</el-button>
           <el-button type="info"
                      size="mini"
-                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhid,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
+                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
         </template>
 
       </el-table-column>
@@ -177,8 +177,9 @@ export default {
     },
     toSale (comId, cbId, bhId,communityName,buildingName,roomNo,customers,tel) {
       var that = this
+      console.log(bhId);
       that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId,'cbId':cbId,'bhId':bhId,"communityName":communityName,"buildingName":buildingName,'roomNo':roomNo,"flag":'potentia',"customerName":customers,tel:tel} });
-      
+
     },
     queryNotSaleParams  () {
       this.queryNotSale(1,'id','ascending');
@@ -194,10 +195,8 @@ export default {
       if (query !== '') {
         this.loading = true;
 
-        this.$api.get({
+        this.$api.post({
           url: "/mateHouse/queryCommunity",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
           qs: true,
           data: {
             communityName: query,
@@ -271,10 +270,10 @@ export default {
         params.maxInArea=that.data.maxInArea;
       params.sortColumn=column;
       params.sortType=type;
-      this.$api.get({
+      this.$api.post({
         url: '/houseResource/getNotSale',
         data: params,
-        token: false
+       qs: true
       }).then((e) => {
         console.log(e.data);
         let data = e.data
@@ -311,4 +310,4 @@ export default {
     }
   },
 }
-</script>  
+</script>

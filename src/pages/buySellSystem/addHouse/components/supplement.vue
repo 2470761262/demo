@@ -408,25 +408,27 @@
               :value="item.value"
             ></el-option>
           </el-select>
-          <div class="Division">余贷/月供</div>
+          <div class="Division" v-if="formData.mortgage==1">余贷/月供</div>
           <el-input
             class="other-input"
             v-model="formData.balance"
-            v-validate="required?'decimal:2|max:14|required':'decimal:2|max:14'"
+            v-validate="formData.mortgage==1&&required?'decimal:2|max:14|required':'decimal:2|max:14'"
             data-vv-as="余贷"
             data-vv-name="balance"
             placeholder="请输入余贷金额"
+            v-if="formData.mortgage==1"
           ></el-input>
-          <div class="Division">万元</div>
+          <div class="Division" v-if="formData.mortgage==1">万元</div>
           <el-input
             class="other-input"
             v-model="formData.monthlyMortgage"
-            v-validate="required?'decimal:2|max:14|required':'decimal:2|max:14'"
+            v-validate="formData.mortgage==1&&required?'decimal:2|max:14|required':'decimal:2|max:14'"
             data-vv-as="月供"
             data-vv-name="monthlyMortgage"
             placeholder="请输入月供"
+            v-if="formData.mortgage==1"
           ></el-input>
-          <div class="Division">元/月</div>
+          <div class="Division" v-if="formData.mortgage==1">元/月</div>
         </div>
       </div>
     </div>
