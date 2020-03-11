@@ -242,7 +242,8 @@ export default {
     queryMyRelatedHouseList (currentPage) {
       let params = {
         limit: this.pageJson.pageSize + "",
-        page: currentPage + ""
+        page: currentPage + "",
+        sortColumn: 'id'
       };
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
@@ -261,7 +262,7 @@ export default {
         params.workType = that.workType;
       }
       this.$api.post({
-        url: "/agent_house/myRelatedHouseList",
+        url: "/myHouse/getMyRelated",
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false
@@ -273,8 +274,8 @@ export default {
           console.log(result.message);
           console.log(result.data);
           that.pageJson.total = result.data.totalCount;
-          that.pageJson.currentPage = result.data.currentPage;
-          that.tableData = result.data.list;
+          that.pageJson.currentPage = result.data.currPage;
+          that.tableData = result.data.data;
         } else {
           console.log("查询我的房源列表结果：" + result.message);
           alert(result.message);
