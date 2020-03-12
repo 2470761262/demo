@@ -63,6 +63,10 @@
                         :renderList="tableColumnField"
                         :tableColumn="tableColumn"
                         @change="tabColumnChange"></definitionmenu>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+              @click="Remove">
+          清除
+        </span>
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
@@ -215,6 +219,21 @@ export default {
         this.options = [];
       }
     },
+    Remove () {
+      let that = this;
+      that.data.comId = '';
+      that.data.cbId = '';
+      that.data.roomNo = '';
+      that.data.timeSelect[0] = '';
+      that.data.timeSelect[1] = '';
+      that.data.customName = '';
+      that.data.tel = '';
+      that.data.minInArea = '';
+      that.data.maxInArea = '';
+      that.data.minPrice = '';
+      that.data.maxPrice = '';
+      this.queryVerifyHouseDatas(1);
+    },
     queryCBId () {
       var that = this
       this.$api.get({
@@ -289,7 +308,6 @@ export default {
         let data = e.data
         if (data.code == 200) {
           that.pageJson.total = data.data.dataCount;
-          that.pageJson.currentPage = data.data.pageSum;
           that.tableData = data.data.data;
         } else {
           console.log("查询全部在售房源列表结果：" + result.message);

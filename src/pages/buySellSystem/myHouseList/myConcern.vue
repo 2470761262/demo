@@ -164,6 +164,10 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+              @click="remove">
+          清除
+        </span>
         <el-button type="primary"
                    style="margin-left:30px"
                    size="mini"
@@ -337,6 +341,10 @@ export default {
       }
       console.log('删除后：', this.ImpressionList)
       this.querylistByParams();
+    },
+    remove () {
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.querylist(1);
     },
     selectImpression (e) {
       let that = this;

@@ -190,6 +190,7 @@
 </template>
 <script>
 //筛选
+
 import houselistlhousepair from "@/pages/buySellSystem/houseList/components/houseLIstlHousePair";
 //展示列表
 import houseresultlist from '@/pages/buySellSystem/houseList/components/houseResultList';
@@ -235,8 +236,8 @@ export default {
         flootSlider: [-2, -2],
       },
       form: {
-        type:'12',
-        title:'全部在售',
+        type:'13',
+        title:'店长推荐',
         business: [],
         houseType: [],
         renovation: [],
@@ -261,11 +262,13 @@ export default {
     };
   },
   created () {
-    console.log("===========" + JSON.stringify(this.GetRequest()));
+   this.form.type = '12';
+   this.form.title ='全部在售';
+   this.form.action = '/mateHouse/getMateHouse/soleAllHouse';
   },
   methods: {
     setSelectNav (item) {
-      console.log(item);
+      console.log("11111111111"+JSON.stringify(item));
       item.flag = !item.flag;
       if(this.form.type == item.type){
          this.form.type = '12';

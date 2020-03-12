@@ -474,6 +474,9 @@ export default {
         name: this.$route.query.roomNo
       });
       this.formData.roomId = this.$route.query.bhId;
+      this.formData.roomNo = this.$route.query.roomNo;
+      this.formData.communityName = this.$route.query.communityName;
+      this.formData.buildingNo = this.$route.query.buildingName;
       this.formData.customerName = this.$route.query.customerName;
       this.formData.tel = this.$route.query.tel;
     }

@@ -72,6 +72,9 @@ td {
           check-strictly
           :action="''"
           empty-text="暂无数据，请检查权限"
+          auto-expand-parent
+          :default-expanded-keys="curNodeId"
+          :default-checked-keys="curNodeId"
         ></el-tree>
       </div>
       <div class="elControl" v-loading="loading">
@@ -154,7 +157,7 @@ td {
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
-                @click="userJumpEdit(item.EmpID)"
+                @click="userJumpEdit(item.AccountID)"
               >修改</el-button>
             </div>
             <table>
@@ -388,43 +391,25 @@ export default {
         id: null,
         time: null,
         remark: null
-      }
+      },
+      curNodeId: [],
+      jumpNodeId: null
     };
-  },
-  mounted() {
-    //读取树数据
-    this.$api
-      .post({
-        url: "/sys/tree/unit"
-      })
-      .then(e => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          this.treeData = result.data;
-        } else {
-          console.log("载入结果" + +result.message);
-          alert(result.message);
-        }
-      })
-      .catch(e => {
-        console.log("读取失败");
-        console.log(e);
-      });
   },
   methods: {
     handleCheckChange(data, checked, node) {
+      console.log(11111111111);
       this.loading = true;
-      console.log("loading..." + this.loading);
       if (checked == true) {
         this.checkedId = data.businessId;
         this.checkedType = data.type;
         this.$refs.treeForm.setCheckedNodes([data]);
+        this.jumpNodeId = data.nodeId;
         console.log(
-          "当前类型：" + this.checkedType + ",ID：" + data.businessId
+          "当前类型：" + this.checkedType + ",ID：" + data.businessId,
+          "data:"
         );
+        //console.log(this.$refs.treeForm.getNode("5511,1"), data);
         if (this.checkedType === 0) {
           this.$api
             .get({
@@ -516,20 +501,25 @@ export default {
     linkJump(jumpName, depId, coId) {
       this.$router.push({
         name: jumpName,
-        params: { deptParentID: depId, ParentId: coId, back: "hrTree" }
+        params: {
+          deptParentID: depId,
+          ParentId: coId,
+          back: "hrTree",
+          cur: this.jumpNodeId
+        }
       });
     },
     linkJumpEdit(type, id) {
       if (type === 0) {
         this.$router.push({
           path: "/sys/editCompanyDetail",
-          query: { companyId: id, back: "hrTree" }
+          query: { companyId: id, back: "hrTree", cur: this.jumpNodeId }
         });
       }
       if (type === 1) {
         this.$router.push({
           path: "/sys/editDeptDetail",
-          query: { id: id, back: "hrTree" }
+          query: { id: id, back: "hrTree", cur: this.jumpNodeId }
         });
       }
     },
@@ -601,7 +591,7 @@ export default {
     userJumpEdit(id) {
       this.$router.push({
         path: "/sys/editemployee",
-        query: { id: id, back: "hrTree" }
+        query: { id: id, back: "hrTree", cur: this.jumpNodeId }
       });
     },
     userQuit(id, name, dep, job) {
@@ -667,11 +657,42 @@ export default {
         });
     }
   },
-  created() {
+  mounted() {
+    //读取树数据
+    this.$api
+      .post({
+        url: "/sys/tree/unit"
+      })
+      .then(e => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data, 222222222222);
+          this.treeData = result.data;
+        } else {
+          console.log("载入结果" + +result.message);
+          alert(result.message);
+        }
+      })
+      .then(() => {
+        if (this.$route.query.cur != null) {
+          this.curNodeId = [this.$route.query.cur];
+          this.$nextTick(() => {
+            this.handleCheckChange(
+              this.$refs.treeForm.getNode(...this.curNodeId).data,
+              true
+            );
+          });
+        }
+      })
+      .catch(e => {
+        console.log("读取失败");
+        console.log(e);
+      });
     window.addEventListener("resize", this.getHeight);
     this.getHeight();
   },
-
   destroyed() {
     window.removeEventListener("resize", this.getHeight);
   }

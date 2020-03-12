@@ -24,7 +24,7 @@
 }
 .left-input-container {
   padding: 10px;
-  font-size: 1rem;
+  font-size: 20px;
   border-right: 1px solid black;
   border-left: 1px solid black;
   border-radius: 0.5rem;
@@ -541,7 +541,8 @@ export default {
 
     } else {
       this.queryCompanyDatas(1);
-      this.configId = this.$route.params.configId;
+      this.notice.configId = this.$route.params.configId;
+      console.log(this.configId, 111111111);
       this.notice.configNo = this.$route.params.sysParNo;
       this.notice.configName = this.$route.params.sysParName;
       this.notice.paraIsAllowed = this.paraIsAllowed[0].value

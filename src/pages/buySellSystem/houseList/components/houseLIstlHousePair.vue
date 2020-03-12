@@ -187,6 +187,14 @@
 .marginBotEmp {
   margin-bottom: 0;
 }
+.ohter-item {
+  /deep/.el-form-item__content {
+    margin-left: 0 !important;
+  }
+  /deep/.select-input {
+    .marginBotEmp !important;
+  }
+}
 </style>
 <template >
   <div class="query-warp">
@@ -195,25 +203,45 @@
              :model="form"
              label-width="75px"
              label-position="left">
-      <div class="select-input">
+      <el-form-item prop="type"
+                    class="ohter-item">
+        <div class="select-input">
+          <div class="select-input-set">
+            <i class="el-icon-search"></i> <input type="text"
+                   class="select-input-sub"
+                   placeholder="请输入关键字"
+                   v-model="searchData" />
+          </div>
+          <div class="select-but-sub"
+               @click="search">开始搜索</div>
+          <div class="select-but-reset"
+               @click="resetForm('form')">
+            <i class="el-icon-refresh reset-icon"></i>
+            <span class="select-but-reset-title">重置</span>
+          </div>
+        </div>
+      </el-form-item>
+      <!-- <div class="select-input">
         <div class="select-input-set">
           <i class="el-icon-search"></i> <input type="text"
                  class="select-input-sub"
-                 placeholder="请输入关键字" v-model="searchData"/>
+                 placeholder="请输入关键字"
+                 v-model="searchData" />
         </div>
-        <div class="select-but-sub"  @click="search">开始搜索</div>
+        <div class="select-but-sub"
+             @click="search">开始搜索</div>
         <div class="select-but-reset"
              @click="resetForm('form')">
           <i class="el-icon-refresh reset-icon"></i>
           <span class="select-but-reset-title">重置</span>
         </div>
-      </div>
+      </div> -->
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
         <el-form-item label="楼盘名称"
                       prop="comId">
           <el-select v-model="form.comId"
-           @focus="remoteInput"
+                     @focus="remoteInput"
                      @change="queryCBId()"
                      filterable
                      remote
@@ -548,7 +576,7 @@ export default {
   },
   data () {
     return {
-      searchData:'',
+      searchData: '',
       flootMinMax: {
         min: -2,
         max: 40
@@ -647,6 +675,8 @@ export default {
     //重置表单
     resetForm (formName) {
       this.$refs[formName].resetFields();
+      this.searchData = '';
+      this.form.title = '全部在售';
       this.Slider.priceSlider = [20, 20];
       this.Slider.areaSlider = [20, 20];
       this.Slider.flootSlider = [-2, -2];
@@ -685,7 +715,7 @@ export default {
       })
     },
     remoteInput () {
-      var that =this;
+      var that = this;
       if (that.form.comId.length == 0) {
         this.remoteMethod();
       }
@@ -727,7 +757,7 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-           that.form.roomNo = '';
+          that.form.roomNo = '';
           that.form.cbId = '';
           that.cbIdList = e.data.data.list;
         }
@@ -746,14 +776,14 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-           that.form.roomNo = '';
+          that.form.roomNo = '';
           that.roomNoList = e.data.data.list;
         }
       })
     },
-    search(){
-      var that=this;
-      that.form.searchInfo=that.searchData;
+    search () {
+      var that = this;
+      that.form.searchInfo = that.searchData;
     },
     mateHouse () {
       var that = this
