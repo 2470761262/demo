@@ -72,10 +72,10 @@
           </el-form-item>
 
           <el-form-item label="价格"
-                        prop="money_from">
+                        prop="minMoney">
             <el-col :span="8">
               <el-input clearable
-                        v-model="data.moneyFrom"
+                        v-model="data.minMoney"
                         placeholder="最小值" />
             </el-col>
             <el-col class="line"
@@ -84,7 +84,7 @@
             <el-col :span="8">
               <el-form-item prop="money_to">
                 <el-input clearable
-                          v-model="data.moneyTo"
+                          v-model="data.maxMoney"
                           placeholder="最大值" />
               </el-form-item>
             </el-col>
@@ -215,8 +215,8 @@ export default {
         tel: '',
         customerName: '',
         status: '',
-        moneyFrom: '',
-        moneyTo: '',
+        minMoney: '',
+        maxMoney: '',
         order: '',
         empId: '',
         empName: '',
@@ -398,8 +398,8 @@ export default {
       params.empId = that.data.empId;
       params.empName = that.data.empName;
       params.tel = that.data.tel;
-      params.moneyFrom = that.data.moneyFrom;
-      params.moneyTo = that.data.moneyTo;
+      params.minMoney = that.data.minMoney;
+      params.maxMoney = that.data.maxMoney;
       if (that.data.timeSelect.length > 0)
         params.beginTime = that.data.timeSelect[0];
       if (that.data.timeSelect.length > 1)
