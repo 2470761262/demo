@@ -100,8 +100,8 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="对赌人" prop="empId">
-          <el-input clearable v-model="data.empId" placeholder=""/>
+        <el-form-item label="对赌人" prop="empName">
+          <el-input clearable v-model="data.empName" placeholder="请输入对赌人姓名"/>
         </el-form-item>
 
         <el-button type="primary"
@@ -206,6 +206,8 @@
           moneyFrom: '',
           moneyTo: '',
           order: '',
+          empId: '',
+          empName: '',
           orderAsc: '',
           timeSelect: ''
         },
@@ -377,6 +379,7 @@
         params.status = that.data.status;
         params.customerName = that.data.customerName;
         params.empId = that.data.empId;
+        params.empName = that.data.empName;
         params.tel = that.data.tel;
         params.moneyFrom = that.data.moneyFrom;
         params.moneyTo = that.data.moneyTo;
