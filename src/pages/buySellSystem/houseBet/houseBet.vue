@@ -320,6 +320,7 @@ export default {
       this.queryHouseBet(1);
     },
     //楼盘获取焦点 第一次点击就进行查询
+
     remoteCommunityNameInput () {
       if (this.options.length == 0) {
         this.remoteMethod();
