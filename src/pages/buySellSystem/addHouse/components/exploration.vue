@@ -312,6 +312,7 @@
 </template>
 <script>
 import util from '@/util/util';
+import { LOGINDATA } from "@/util/constMap";
 export default {
   name: "exploration",
   props: {
@@ -354,12 +355,13 @@ export default {
     let pa = { "businessType": 0, "businessParams": JSON.stringify(businessParams), "remark": "录入房源-上传图片" };
     pa.webSocketUser = that.webSocketUser;
     that.getQrCode2(pa, function (data) {
-      //二维码标识，用于消息接受的路由
-      console.log("回调执行开始");
       that.qrCodeImg = data.url;
-      //console.log("回调执行结束");
+      console.log(that.qrCodeImg,"图片二维码地址");
     });
-    this.getQrCodeForVedio();
+    this.getQrCodeForVedio(function(data){
+        that.qrCodeImgVedio = data;
+        console.log(that.qrCodeImgVedio,"视频二维码地址");
+    });
   },
   data () {
     return {
@@ -424,16 +426,18 @@ export default {
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
       console.log("用户【" + user + "】接入完毕");
     },
-    getQrCodeForVedio () {
+    getQrCodeForVedio (callback) {
       let that = this;
+      let loginUser=util.localStorageGet(LOGINDATA);
+
       that.$api.post({
         url: '/scanUpload/getUploadQrCode',
-        data: { 'remark': "录入房源-上传视频", "resourceType": "vedio", "webSocketUser": that.webSocketUser, "businessParams": JSON.stringify({ "test": "闭环参数" }) },
+        data: {'operatePerId':loginUser.accountId,'operatePerName':loginUser.userName, 'remark': "录入房源-上传视频", "resourceType": "vedio", "webSocketUser": that.webSocketUser, "businessParams": JSON.stringify({ "test": "闭环参数" }) },
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
-          that.qrCodeImgVedio = (result.data.url);
+          callback(result.data.url);
         } else {
           console.log("h获取视频二维码结果：" + result.message);
           alert(result.message);

@@ -120,10 +120,10 @@
           </el-form-item>
 
           <el-form-item label="对赌人"
-                        prop="empId">
+                        prop="empName">
             <el-input clearable
-                      v-model="data.empId"
-                      placeholder="" />
+                      v-model="data.empName"
+                      placeholder="对赌人姓名" />
           </el-form-item>
           <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
                 @click="Remove">
@@ -218,6 +218,8 @@ export default {
         moneyFrom: '',
         moneyTo: '',
         order: '',
+        empId: '',
+        empName: '',
         orderAsc: '',
         timeSelect: ''
       },
@@ -394,6 +396,7 @@ export default {
       params.status = that.data.status;
       params.customerName = that.data.customerName;
       params.empId = that.data.empId;
+      params.empName = that.data.empName;
       params.tel = that.data.tel;
       params.moneyFrom = that.data.moneyFrom;
       params.moneyTo = that.data.moneyTo;

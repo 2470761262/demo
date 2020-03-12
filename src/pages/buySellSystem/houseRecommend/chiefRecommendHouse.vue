@@ -261,7 +261,7 @@ export default {
         let data = e.data
         if (data.code == 200) {
            that.pageJson.total=data.data.dataCount;
-          that.pageJson.currentPage=data.data.pageSum;
+          
           that.tableData = data.data.data;
         } else {
           console.log("查询总监推荐列表结果：" + result.message);
