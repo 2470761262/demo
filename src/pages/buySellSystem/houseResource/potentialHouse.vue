@@ -272,10 +272,10 @@ export default {
       params.tel = that.data.tel;
       params.type = that.data.type;
       console.log(params);
-      this.$api.get({
+      this.$api.post({
         url: '/houseResource/potentialHouse',
         data: params,
-        token: false
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let data = e.data
