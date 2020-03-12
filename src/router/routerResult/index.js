@@ -93,7 +93,13 @@ export default [
                 component: () =>
                     import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/concernCommunity/concernCommunity.vue")
             },
-
+            {
+              //对赌房源
+              path: "/buySellSystem/houseBet1",
+              name: "concernCommunity",
+              component: () =>
+                import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseBet/houseBet.vue")
+            },
             {
                 //七天内被带看
                 path: "/buySellSystem/sevenDaysFollowHouse",
