@@ -669,7 +669,7 @@
             </div>
           </div>
           <div class="upLoadFile-file-phone">
-            <el-image :src="audioQrCodeImage" fit="cover">
+            <el-image :src="audioQrCodeImage" :preview-src-list="[audioQrCodeImage]"  fit="cover">
               <div slot="placeholder" class="image-slot">
                 加载中
                 <span>...</span>
