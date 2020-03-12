@@ -135,7 +135,7 @@ export default {
         // params.communityName = this.queryData.communityName;
         console.log("参数");
       }
-      this.$api.get({
+      this.$api.post({
         url: '/agent_house/getReleaseOutsideHouseList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
@@ -145,18 +145,14 @@ export default {
         let result = e.data;
         that.loading = false;
         if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPage;
           that.tableData = result.data.list;
         } else {
-          console.log("查询我的房源列表结果：" + result.message);
-          alert(result.message);
+
         }
       }).catch((e) => {
-        console.log("查询我的房源列表失败");
-        console.log(e);
+
       })
     },
     open () {
