@@ -314,7 +314,7 @@ export default {
     },
     toLook (row) {
       var that = this;
-      that.$router.push({ name: 'houseDetails', params: { "houseId": row.id } });
+      that.$router.push({ name: 'houseDetails', params: { "houseId": row.houseId } });
     },
     queryHouseBetParams () {
       this.queryHouseBet(1);
