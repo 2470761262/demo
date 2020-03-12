@@ -357,11 +357,11 @@ export default {
     that.getQrCode2(pa, function (data) {
       that.qrCodeImg = data.url;
       console.log(that.qrCodeImg,"图片二维码地址");
-    });
-    this.getQrCodeForVedio(function(data){
+      this.getQrCodeForVedio(function(data){
         that.qrCodeImgVedio = data;
         console.log(that.qrCodeImgVedio,"视频二维码地址");
-    });
+      });
+    });    
   },
   data () {
     return {
