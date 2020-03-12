@@ -138,7 +138,8 @@
           color: #636363;
           font-size: 14px;
           align-self: flex-end;
-          margin-right: 80px;
+          flex: 1;
+          width: 0;
         }
         .item-data-bottom-price {
           font-size: 20px;
@@ -230,11 +231,11 @@
       </div>
       <div class="select-tabs-cell">
         <label class="select-checkbox">
-          <input type="checkbox" >
+          <input type="checkbox">
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
-          <input type="checkbox" >
+          <input type="checkbox">
           <span>独家</span>
         </label>
       </div>
@@ -259,8 +260,9 @@
             <div class="select-for-item-data">
               <div class="item-data-top">
                 <div class="item-data-top-no overText">{{item.houseNo}}</div>
-                <div class="item-data-top-tag" >
-                  <div class="top-tag-item overText" v-if="item.keyOwner>0" >钥匙</div>
+                <div class="item-data-top-tag">
+                  <div class="top-tag-item overText"
+                       v-if="item.keyOwner>0">钥匙</div>
                 </div>
               </div>
               <div class="item-data-middle overText">{{item.title}}</div>
@@ -363,21 +365,21 @@ export default {
         currentPage: 1
       },
       tableColumnField: [
-        { prop: 'houseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true},
-        { prop: 'communityName', label: '小区名称', order: false, width: '150', disabled: true, default: true},
-        { prop: 'buildingName', label: '楼栋号', width: '90', order: false, disabled: true, default: true},
-        { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true},
-        { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true,formart: item=> item.inArea+'m²' },
-        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true,formart: item=> item.price+'万元' },
-        { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true},
-        { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true},
-        { prop: 'notLookNum', label: '未被看天数', width: '120', order: false, disabled: false, default: true},
+        { prop: 'houseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true },
+        { prop: 'communityName', label: '小区名称', order: false, width: '150', disabled: true, default: true },
+        { prop: 'buildingName', label: '楼栋号', width: '90', order: false, disabled: true, default: true },
+        { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true },
+        { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
+        { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true },
+        { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true },
+        { prop: 'notLookNum', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: true },
-        { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true},
-        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true,formart: item=> item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
-        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false,format: item=> item.unitpaice+'元/㎡' },
-        { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false},
-        { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false},
+        { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
+        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
+        { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
+        { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },
         { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: false },
         { prop: 'addName', label: '录入人', width: '120', order: false, disabled: false, default: false }
       ],
@@ -413,7 +415,7 @@ export default {
       });
       let actionUrl = value.action;
       value.action = "";
-      console.log(value,"==============>?");
+      console.log(value, "==============>?");
       let restuleParms = Object.assign({}, value, { page: that.pageJson.currentPage, limit: 8 });
       return this.$api.get({
         url: actionUrl,
@@ -451,10 +453,10 @@ export default {
       }
 
       //房源类型
-      if (value.title!=null && value.title!='') {
+      if (value.title != null && value.title != '') {
         this.dynamicTags.push({ title: `房源类型:${value.title}`, field: "type", arr: false })
-      }else{
-         this.dynamicTags.push({ title: `房源类型:全部在售`, field: "type", arr: false })
+      } else {
+        this.dynamicTags.push({ title: `房源类型:全部在售`, field: "type", arr: false })
       }
       //商圈
       this.appendFormTag(value.business, '商圈', 'business');

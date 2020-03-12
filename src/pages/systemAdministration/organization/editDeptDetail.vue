@@ -1,9 +1,7 @@
 <style lang="less" scoped>
 .left-input-container {
   padding: 10px;
-  font-size: 1rem;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
+
   border-radius: 0.5rem;
   .el-input {
     width: 80%;
@@ -19,156 +17,136 @@
 </style>
 <template>
   <div class="wrapper">
-    <div class="left-input-container">
-      <span>部门名称</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="DeptEntity.deptName"
-                maxlength="10"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>部门名首拼</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="DeptEntity.header"
-                maxlength="10"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>电话</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="DeptEntity.tel"
-                data-vv-name="tel"
-                data-vv-as="电话号码"
-                v-validate="'required|phone'"></el-input>
-                {{errorBags.first('tel')}}
-    </div>
-    <div class="left-input-container">
-      <span>开业时间</span>
-      <el-input type="date"
-                placeholder="请输入内容"
-                v-model="DeptEntity.regDate"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>部门类型</span>
-      <!-- <el-input
-              type="text"
-              placeholder="部门类型：1综合，2业务，3行政，4联营"
-              v-model="DeptEntity.deptType"
-              maxlength="100"
-              show-word-limit
-            ></el-input> -->
-      <el-select type="text"
-                 placeholder="1综合，2业务，3行政，4联营"
-                 v-model="DeptEntity.deptType"
-                 show-word-limit>
-        <el-option label="综合"
-                   :value="1" />
-        <el-option label="业务"
-                   :value="2" />
-        <el-option label="行政"
-                   :value="3" />
-        <el-option label="联营"
-                   :value="4" />
-      </el-select>
-       <el-select type="text"
-                 placeholder="是否片区"
-                 v-model="DeptEntity.isArea"
-                 show-word-limit>
-        <el-option label="是片区" :value="1" />
-        <el-option label="不是片区" :value="0" />
-      </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>部门编码</span>
-      <el-input type="text"
+     <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
+        <el-form-item label="部门名称:" >
+          <el-input v-model="DeptEntity.deptName" ></el-input>
+        </el-form-item>
+        <el-form-item label="部门首拼">
+          <el-input v-model="DeptEntity.header" ></el-input>
+        </el-form-item>
+      </el-form>
+      <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
+        <el-form-item label="电话:" >
+          <el-input v-model="DeptEntity.tel" ></el-input>
+        </el-form-item>
+        <el-form-item label="开业时间">
+          <el-date-picker
+            v-model="DeptEntity.regDate"
+            type="date"
+            placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+      </el-form>
+      <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
+        <el-form-item label="部门类型:" >
+          <el-select type="text" v-model="DeptEntity.deptType">
+            <el-option label="综合" :value="1" />
+            <el-option label="业务" :value="2" />
+            <el-option label="行政" :value="3" />
+            <el-option label="联营" :value="4" />
+          </el-select>
+          <el-select type="text"
+                     placeholder="是否片区"
+                     v-model="DeptEntity.isArea"
+                     show-word-limit>
+            <el-option label="是片区" :value="1" />
+            <el-option label="不是片区" :value="0" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="部门编码:" >
+            <el-input
+                type="text"
                 placeholder="请输入内容"
                 v-model="DeptEntity.deptCode"
                 maxlength="100"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-       <el-button type="info" @click="getDialogVisible()">选择负责人</el-button>
-       <el-dialog title="请选择:" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
-          <list-page :parentData="$data" 
-          highlight-current-row  
-          @handleSizeChange="handleSizeChange" 
-          @handleCurrentChange="handleCurrentChange"  
-          @current-change="handleChange"  >
-              <template v-slot:tableColumn="cell">            
-                <template v-for="item in cell.tableData">  
-                  <el-table-column
-                    :prop="item.prop"
-                    :label="item.label"
-                    :width="item.width"
-                    :key="item.prop"
-                  ></el-table-column>
+                show-word-limit
+            ></el-input>
+        </el-form-item>
+      </el-form>
+       <el-form ref="form" :model="DeptEntity"  :inline="true">
+        <el-button type="info" @click="getDialogVisible()" size="small" style="margin-top: 4px;">选择负责人</el-button>
+        <el-form-item >
+           <el-dialog title="请选择:" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
+              <list-page :parentData="$data"
+              highlight-current-row
+              @handleSizeChange="handleSizeChange"
+              @handleCurrentChange="handleCurrentChange"
+              @current-change="handleChange"  >
+                  <template v-slot:tableColumn="cell">
+                    <template v-for="item in cell.tableData">
+                      <el-table-column
+                        :prop="item.prop"
+                        :label="item.label"
+                        :width="item.width"
+                        :key="item.prop"
+                      ></el-table-column>
+                    </template>
                 </template>
-            </template>           
-          </list-page>
-       </el-dialog>
-      <el-input type="text" v-model="DeptEntity.managerPerName" show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>加入类型</span>
-      <!-- <el-input
-              type="text"
-              placeholder="请输入内容"
-              v-model="DeptEntity.joinType"
-              maxlength="100"
-              show-word-limit
-            ></el-input> -->
-      <el-select type="text"
+              </list-page>
+           </el-dialog>
+          <el-input type="text" v-model="DeptEntity.managerPerName"></el-input>
+        </el-form-item>
+        <el-form-item label="加入类型">
+           <el-select type="text"
                  placeholder="请输入内容"
                  v-model="DeptEntity.joinType"
                  show-word-limit>
-        <el-option label="直营"
-                   :value="1" />
-        <el-option label="加盟"
-                   :value="2" />
+        <el-option label="直营" :value="1" />
+        <el-option label="加盟" :value="2" />
+        <el-option label="联营" :value="3" />
       </el-select>
-    </div>
-     <div class="left-input-container">
-       <el-button type="info" @click="getDialogVisible3()">选择店面</el-button>
-       <el-dialog title="请选择:" :visible.sync="dialogVisible3" width="40%" :before-close="handleClose">
-          <list-page :parentData="$data" 
-          highlight-current-row  
-          @handleSizeChange="handleSizeChange3" 
-          @handleCurrentChange="handleCurrentChange3"  
-          @current-change="handleChange3"  >
-              <template v-slot:tableColumn="cell">            
-                <template v-for="item in cell.tableData">  
-                  <el-table-column
-                    :prop="item.prop"
-                    :label="item.label"
-                    :width="item.width"
-                    :key="item.prop"
-                  ></el-table-column>
+        </el-form-item>
+      </el-form>
+      <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
+        <el-form-item label="部门属性:" >
+          <el-select type="text"
+                 placeholder="请输入内容"
+                 v-model="DeptEntity.isCom"
+                 show-word-limit>
+              <el-option label="运营期" :value="1" />
+              <el-option label="拓展期" :value="2" />
+          </el-select>
+        </el-form-item>
+        <el-button type="info" @click="getDialogVisible3()" size="small" style="margin-top: 4px;">选择店面</el-button>
+        <el-form-item >
+          <el-dialog title="请选择:" :visible.sync="dialogVisible3" width="40%" :before-close="handleClose">
+          <list-page :parentData="$data"
+              highlight-current-row
+              @handleSizeChange="handleSizeChange3"
+              @handleCurrentChange="handleCurrentChange3"
+              @current-change="handleChange3"  >
+                  <template v-slot:tableColumn="cell">
+                    <template v-for="item in cell.tableData">
+                      <el-table-column
+                        :prop="item.prop"
+                        :label="item.label"
+                        :width="item.width"
+                        :key="item.prop"
+                      ></el-table-column>
+                    </template>
                 </template>
-            </template>           
-          </list-page>
-       </el-dialog>
-      <el-input type="text" v-model="DeptEntity.storeName" show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>地址</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="DeptEntity.address"
-                maxlength="100"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>部门描述</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="DeptEntity.deptDesc"
-                maxlength="100"
-                show-word-limit></el-input>
-    </div>
+              </list-page>
+           </el-dialog>
+          <el-input type="text" v-model="DeptEntity.storeName" show-word-limit></el-input>
+        </el-form-item>
+      </el-form>
+      <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
+        <el-form-item label="地址:" >
+          <el-input
+            type="text"
+            placeholder="请输入内容"
+            v-model="DeptEntity.address"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="部门描述">
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="DeptEntity.deptDesc"
+            ></el-input>
+        </el-form-item>
+      </el-form>
+
     
 
     <div class="footerContainer el-top">
