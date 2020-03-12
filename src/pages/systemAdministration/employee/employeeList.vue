@@ -162,13 +162,13 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "perName", label: "姓名" },
-        { prop: "loginUser", label: "登录名" },
-        { prop: "deptName", label: "部门" },
-        { prop: "postName", label: "角色" },
-        { prop: "companyName", label: "公司" },
-        { prop: "roleName", label: "岗位" },
-        { prop: "del", label: "状态" }
+        { prop: "perName", label: "姓名" ,width:"150px"},
+        { prop: "loginUser", label: "登录名",width:"160px" },
+        { prop: "deptName", label: "部门",width:"200px" },
+        { prop: "postName", label: "角色" ,width:"160px"},
+        { prop: "companyName", label: "公司" ,width:"200px"},
+        { prop: "roleName", label: "岗位" ,width:"160px"},
+        { prop: "del", label: "状态",width:"160px" }
       ],
       tableData: [],
 

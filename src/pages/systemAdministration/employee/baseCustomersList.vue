@@ -39,7 +39,7 @@
           <div v-if="scope.row.operation!=''">
             <el-button type="info"
                        size="mini"
-                       @click="distributeEvent(item.methosName,scope.row.bCustomerID)"
+                       @click="distributeEvent(item.methosName,scope.row.id)"
                        v-for="(item,index) in getOpeBtns(scope.row.operation)"
                        :key="index">{{item.name}}</el-button>
           </div>
@@ -108,17 +108,16 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-          this.pageJson.total = result.data.totalCount;
-          this.pageJson.currentPage = result.data.currPage;
-          this.tableData = result.data.list;
-          debugger;
-            for (var i = 0; i < result.data.list.length; i++) {
-              switch (result.data.list[i].sex) {
+          this.pageJson.total = result.data.totalElements;
+          this.tableData = result.data.content;
+
+            for (var i = 0; i < result.data.content.length; i++) {
+              switch (result.data.content[i].sex) {
                 case 0:
-                  result.data.list[i].sex = "男";
+                  result.data.content[i].sex = "男";
                   break;
                 case 1:
-                  result.data.list[i].sex = "女";
+                  result.data.content[i].sex = "女";
                   break;
               }
             }
@@ -132,7 +131,6 @@ export default {
       })
     },
     editBaseCustomersDetail (customersId) {
-      debugger;
       this.$router.push({ name: "editBaseCustomersDetail", params: { customersId: customersId } });
     },
     distributeEvent (e, customersId) {
