@@ -730,6 +730,20 @@ export default [
         name: "editPersonLogDetail",
         component: () =>
           import(/* webpackChunkName: "editPersonLogDetail" */ "@/pages/systemAdministration/personLog/editPersonLogDetail.vue")
-    }
+    },
+    {
+        //系统管理 客户列表
+        path: "/sys/baseCustomersList",
+        name: "baseCustomersList",
+        component: () =>
+          import(/* webpackChunkName: "baseCustomersList" */ "@/pages/systemAdministration/employee/baseCustomersList.vue")
+    },
+    {
+        //系统管理 客户列表
+        path: "/sys/editBaseCustomersDetail",
+        name: "editBaseCustomersDetail",
+        component: () =>
+          import(/* webpackChunkName: "editBaseCustomersDetail" */ "@/pages/systemAdministration/employee/editBaseCustomersDetail.vue")
+    },
 
 ]

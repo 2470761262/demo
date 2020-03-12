@@ -8,50 +8,44 @@
     <template v-slot:top>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
-        
-         
-          <el-select v-model="data.comId"
-                     @focus="remoteInput"
-                     @change="queryCBId()"
-                     filterable
-                     remote
-                     clearable
-                     placeholder="请输入楼盘名称搜索"
-                     :remote-method="remoteMethod"
-                     :loading="loading">
-            <el-option v-for="item in options"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        
-          <el-select v-model="data.cbId"
-                     filterable
-                     clearable
-                     placeholder="请选择楼栋"
-                     @change="queryRoomNo()">
-            <el-option v-for="item in cbIdList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-        
-          <el-select v-model="data.roomNo"
-                     filterable
-                     placeholder="请选择房间号">
-            <el-option v-for="item in roomNoList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
- 
 
-        
-        
+        <el-select v-model="data.comId"
+                   @focus="remoteInput"
+                   @change="queryCBId()"
+                   filterable
+                   remote
+                   clearable
+                   placeholder="请输入楼盘名称搜索"
+                   :remote-method="remoteMethod"
+                   :loading="loading">
+          <el-option v-for="item in options"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value">
+          </el-option>
+        </el-select>
 
+        <el-select v-model="data.cbId"
+                   filterable
+                   clearable
+                   placeholder="请选择楼栋"
+                   @change="queryRoomNo()">
+          <el-option v-for="item in cbIdList"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value">
+          </el-option>
+        </el-select>
+
+        <el-select v-model="data.roomNo"
+                   filterable
+                   placeholder="请选择房间号">
+          <el-option v-for="item in roomNoList"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value">
+          </el-option>
+        </el-select>
 
         <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
         <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
@@ -61,6 +55,10 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+              @click="Remove">
+          清除
+        </span>
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
@@ -134,8 +132,8 @@ export default {
         { prop: 'communityName', label: "小区名称" },
         { prop: 'buildingName', label: "楼栋号" },
         { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)"}
-      
+        { prop: 'inArea', label: "面积(m²)" }
+
 
       ],
       tableData: [{
@@ -161,73 +159,78 @@ export default {
     queryTabData () {
       console.log(this, '111');
     },
-     formatHouseType(row, column){
-       if(row.Rooms!=null && row.Rooms!=''){
-          return row.Rooms+'室';
-       }else{
-          return '---';
-       }
-     
+    formatHouseType (row, column) {
+      if (row.Rooms != null && row.Rooms != '') {
+        return row.Rooms + '室';
+      } else {
+        return '---';
+      }
+
     },
 
-formatOrientation(row, column){
-   if(row.orientation!=null && row.orientation!=''){
-          return row.orientation;
-       }else{
-          return '---';
-       }
-},
-    addPhone(id,esId){
-        console.log(id)
-         this.$prompt('请输业主手机号码', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          inputPattern: /^\d{11}$/,
-          inputErrorMessage: '手机号码格式不正确'
-        }).then(({ value }) => {
-          this.$api.get({
-            url: "/houseResource/updatePhone",
-            headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
-            data: {
-              id: id,
-              tel: value,
-              esId:esId
-            }
-          }).then((e) => {
-            console.log(e.data.code)
-            if (e.data.code == 200) {
-             // this.$router.push({ path: '/buySellSystem/notPhone' });
-             this.queryNotPhone(1);
-            } else {
-              alert(e.data.message)
-            }
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          });       
-        });
-        //that.$router.push({ path: '/buySellSystem/updatePhone', query: { "id": id } });
+    formatOrientation (row, column) {
+      if (row.orientation != null && row.orientation != '') {
+        return row.orientation;
+      } else {
+        return '---';
+      }
     },
-    toSale (comId, cbId, bhId,communityName,buildingName,roomNo) {
+    Remove () {
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.queryNotPhone(1);
+
+    },
+    addPhone (id, esId) {
+      console.log(id)
+      this.$prompt('请输业主手机号码', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^\d{11}$/,
+        inputErrorMessage: '手机号码格式不正确'
+      }).then(({ value }) => {
+        this.$api.get({
+          url: "/houseResource/updatePhone",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            id: id,
+            tel: value,
+            esId: esId
+          }
+        }).then((e) => {
+          console.log(e.data.code)
+          if (e.data.code == 200) {
+            // this.$router.push({ path: '/buySellSystem/notPhone' });
+            this.queryNotPhone(1);
+          } else {
+            alert(e.data.message)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        });
+      });
+      //that.$router.push({ path: '/buySellSystem/updatePhone', query: { "id": id } });
+    },
+    toSale (comId, cbId, bhId, communityName, buildingName, roomNo) {
       var that = this
-      that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId,'cbId':cbId,'bhId':bhId,"communityName":communityName,"buildingName":buildingName,'roomNo':roomNo,"flag":'potentia',"customerName":null,tel:null} });
-      
+      that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId, 'cbId': cbId, 'bhId': bhId, "communityName": communityName, "buildingName": buildingName, 'roomNo': roomNo, "flag": 'potentia', "customerName": null, tel: null } });
+
     },
 
     queryNotPhoneParams () {
       this.queryNotPhone(1);
     },
     remoteInput () {
-   
-      if (this.data.comId.length==0) {
+
+      if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-remoteMethod (query) {
+    remoteMethod (query) {
       var that = this
       if (query !== '') {
         this.loading = true;
@@ -240,12 +243,12 @@ remoteMethod (query) {
           data: {
             communityName: query,
             page: 1,
-             limit: 50
+            limit: 50
           }
         }).then((e) => {
           console.log(e.data)
           if (e.data.code == 200) {
-            
+
             that.loading = false;
             that.options = e.data.data.list;
 
@@ -265,12 +268,12 @@ remoteMethod (query) {
         data: {
           comId: that.data.comId,
           page: 1,
-             limit: 50
+          limit: 50
         }
       }).then((e) => {
         if (e.data.code == 200) {
-         that.data.roomNo='';
-           that.data.cbId='';
+          that.data.roomNo = '';
+          that.data.cbId = '';
           that.cbIdList = e.data.data.list;
         }
       })
@@ -286,42 +289,41 @@ remoteMethod (query) {
           comId: that.data.comId,
           cbId: that.data.cbId,
           page: 1,
-             limit: 50
+          limit: 50
         }
       }).then((e) => {
         if (e.data.code == 200) {
-           that.data.roomNo='';
+          that.data.roomNo = '';
           that.roomNoList = e.data.data.list;
         }
       })
     },
-  queryNotPhone(currentPage){
-    var that =this;
-   let params={"limit":that.pageJson.pageSize,"page":currentPage-1};
- 
-        params.comId=that.data.comId;
-        params.cbId=that.data.cbId;
-        params.roomNo=that.data.roomNo;
-        params.beginTime=that.data.timeSelect[0];
-        params.endTime=that.data.timeSelect[1];
-        params.customName=that.data.customName;
-        params.tel=that.data.tel;
-        params.minInArea=that.data.minInArea;
-        params.maxInArea=that.data.maxInArea;
-     console.log(params);
-    this.$api.get({
-        url: '/houseResource/getNotPhone',
-        data: params,       
-        token: false
-      }).then((e) => {
-        console.log(e.data);
-        let data=e.data
-        if (data.code == 200) {
-          that.pageJson.total=data.dataCount;
-          that.pageJson.currentPage=data.pageSum;
-          that.tableData=data.data;
-        } else {
-          console.log("查询无号码列表结果：" + result.message);
+    queryNotPhone (currentPage) {
+      var that = this;
+      let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
+
+      params.comId = that.data.comId;
+      params.cbId = that.data.cbId;
+      params.roomNo = that.data.roomNo;
+      params.beginTime = that.data.timeSelect[0];
+      params.endTime = that.data.timeSelect[1];
+      params.customName = that.data.customName;
+      params.tel = that.data.tel;
+      params.minInArea = that.data.minInArea;
+      params.maxInArea = that.data.maxInArea;
+      console.log(params);
+      this.$api.get({
+        url: '/houseResource/getNotPhone',
+        data: params,
+        token: false
+      }).then((e) => {
+        console.log(e.data);
+        let data = e.data
+        if (data.code == 200) {
+          that.pageJson.total = data.dataCount;
+          that.tableData = data.data;
+        } else {
+          console.log("查询无号码列表结果：" + result.message);
 
           alert(result.message);
         }

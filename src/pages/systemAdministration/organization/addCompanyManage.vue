@@ -1,9 +1,7 @@
 <style lang="less" scoped>
 .left-input-container {
   padding: 10px;
-  font-size: 1rem;
-  border-right: 1px solid black;
-  border-left: 1px solid black;
+
   border-radius: 0.5rem;
   .el-input {
     width: 80%;
@@ -83,7 +81,7 @@
       </el-select>
     </div>
     <div class="left-input-container">
-        <el-button type="info" @click="getDialogVisible1()">选择负责人</el-button>
+        <el-button type="info" @click="getDialogVisible1()" size="small" style="margin-top: 4px;">选择负责人</el-button>
        <el-dialog title="请选择:" :visible.sync="dialogVisible1" width="50%" :before-close="handleClose1">
           <list-page :parentData="$data" 
           highlight-current-row  
@@ -131,7 +129,7 @@
       ></el-input>
     </div>
      <div class="left-input-container">
-      <el-button type="info" @click="getDialogVisible()">设置管辖区域</el-button>
+      <el-button type="info" @click="getDialogVisible()" size="small" style="margin-top: 4px;">设置管辖区域</el-button>
       <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <template>
           <el-checkbox

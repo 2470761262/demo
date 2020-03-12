@@ -1,227 +1,208 @@
+
 <template>
-  <list-page :parentData="$data"
+  <list-page @sort-change="sortMethod" :parentData="$data"
+             @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
-      <div class="page-inline budingMarinSet">
+      <!-- 楼盘 -->
+      <div class="page-form-inline budingMarinSet">
 
-        <el-input placeholder="姓名"
-                  style="width:240px"
-                  v-model="queryData.Customers"
-                  clearable>
-          <template slot="prepend">业主</template>
-        </el-input>
-        <el-input placeholder="业主电话"
-                  v-model="queryData.Tel"
-                  style="margin-left:10px;width:240px"
-                  clearable>
-          <template slot="prepend">电话</template>
-        </el-input>
 
-        <el-input placeholder="最小值"
-                  v-model="queryData.minPrice"
-                  style="margin-left:10px;width:160px"
-                  clearable>
-          <template slot="prepend">价格</template>
-        </el-input>
-        <el-input placeholder="最大值"
-                  v-model="queryData.maxPrice"
-                  style="width:100px"
-                  clearable></el-input>
-        <br />
-        <el-input placeholder="最小值"
-                  v-model="queryData.minInArea"
-                  style="margin-left:3px;width:160px"
-                  clearable>
-          <template slot="prepend">面积</template>
-        </el-input>—
-        <el-input placeholder="最大值"
-                  v-model="queryData.maxInArea"
-                  style="width:100px"
-                  clearable></el-input>
-        <el-button type="primary"
-                   style="margin-left:30px"
-                   size="mini"
-                   @click="queryMyRelatedHouseList(1)">查询</el-button>
-      </div>
-      <template>
+          <el-select v-model="data.comId"
+                     @focus="remoteInput"
+                     @change="queryCBId()"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="请输入楼盘名称搜索"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+
+          <el-select v-model="data.cbId"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+          <el-select v-model="data.roomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+         <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable />
+           <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
+            <el-input placeholder="最小面积" v-model="data.minInArea"  style="margin-left:30px;width:120px" clearable />------
+             <el-input placeholder="最大面积" v-model="data.maxInArea"  style="width:120px" clearable />
+              <el-input placeholder="最低售价" v-model="data.minPrice"  style="margin-left:30px;width:120px" clearable />------
+             <el-input placeholder="最高售价" v-model="data.maxPrice"  style="width:120px" clearable />
+        <el-date-picker v-model="data.timeSelect"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+        </el-date-picker>
+        <template>
         <el-select v-model="workType"
                    value-key="item.value"
-                   placeholder="请选择">
-          <el-option v-for="item in options"
+                   placeholder="请选择作业方">
+          <el-option v-for="item in option"
                      :key="item.value"
                      :label="item.label"
                      :value="item.value"></el-option>
         </el-select>
       </template>
-  <el-date-picker v-model="queryData.timeSelect" type="daterange" range-separator="至"
-      value-format="yyyy-MM-dd" start-placeholder="开始日期" end-placeholder="结束日期">
-    </el-date-picker>
+        <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="querySaleNotTrackParams">查询</el-button>
+      </div>
     </template>
+<!-- :formatter="item.format" -->
     <template #tableColumn>
-  <el-table-column label="房源编号">
-    <template v-slot="scope">{{scope.row.HouseNo}}</template>
-  </el-table-column>
-  <el-table-column label="楼盘名称">
-    <template v-slot="scope">{{scope.row.CommunityName}}</template>
-  </el-table-column>
-  <el-table-column label="售价(万元)">
-    <template v-slot="scope">{{scope.row.Price}}</template>
-  </el-table-column>
-  <el-table-column label="面积(㎡)">
-    <template v-slot="scope">{{scope.row.InArea}}</template>
-  </el-table-column>
-  <el-table-column label="单价(元/㎡)">
-    <template v-slot="scope"> {{Math.round(scope.row.Price*10000/scope.row.InArea)+"元/m²"}}</template>
-  </el-table-column>
-  <el-table-column label="户型">
-    <template v-slot="scope">{{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}</template>
-  </el-table-column>
-  <el-table-column label="作业类型">
-    <template v-slot="scope">{{scope.row.Decoration}}</template>
-  </el-table-column>
-  <el-table-column label="跟单人">
-    <template v-slot="scope">{{scope.row.Decoration}}</template>
-  </el-table-column>
-  <el-table-column label="录入时间">
-    <template v-slot="scope">{{scope.row.AddTime}}</template>
-  </el-table-column>
-  <el-table-column prop="operation"
-                   label="操作"
-                   fixed="right"
-                   key="992">
-    <template v-slot="scope">
+      <template v-for="(item) in tableColumn">
+        <el-table-column :prop="item.prop" :label="item.label"
+                         :width="item.width"
+                         :key="item.prop"
+                          :formatter="item.formart"
+                          :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order">
+        </el-table-column>
+      </template>
+      <el-table-column label="操作"
+                       fixed="right"
+                       width="150"
+                       key="operation">
+        <template v-slot="scope">
       <el-button type="info"
                  size="mini"
                  @click="distributeEvent(item.methosName,scope.row.id)"
                  v-for="(item,index) in isForBut(2)"
                  :key="index">{{item.name}}</el-button>
     </template>
-  </el-table-column>
-</template>
+
+      </el-table-column>
+
+    </template>
   </list-page>
 </template>
 <script>
-import listPage from "@/components/listPage";
+import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import houseContrast from '@/minxi/houseContrast';
+import definitionmenu from '@/components/definitionMenu';
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, houseContrast],
   components: {
-    listPage
+    listPage,
+    definitionmenu
   },
   data () {
     return {
-      loading: true, //控制表格加载动画提示
+      loading: false,
+       workType: '',
+     data: {
+        comId: "",
+        cbId: "",
+        roomNo: "",
+        timeSelect: "",
+        customName: "",
+        tel: "",
+        minInArea: "",
+        maxInArea: "",
+        minPrice: "",
+        maxPrice: ""
+      },
+      option: [{value: "1",label: "全部"},
+      {value: "2",label: "草稿"},
+      {value: "3",label: "录入"},
+      {value: "4",label: "钥匙"},
+      {value: "5",label: "委托"},
+      {value: "6",label: "实勘"},
+      {value: "7",label: "锁定"}],
+      options:[],
+      cbIdList: [],
+      roomNoList: [],
       pageJson: {
         currentPage: 1, //当前页码
-        total: 9, //总记录数
+        total: 0, //总记录数
         pageSize: 10 //每页条数
       },
-      tableDataColumn: [
-        { prop: "HouseNo", label: "房源编号" },
-        { prop: "CommunityName", label: "楼盘名称" },
-        { prop: "Price", label: "售价(万元)" },
-        { prop: "InArea", label: "面积(m²)" },
-        { prop: "PropertyFee", label: "均价(元/平)" },
-        { prop: "Decoration", label: "户型" },
-        { prop: "Decoration", label: "装修程度" },
-        { prop: "AddTime", label: "录入时间" }
+      tableColumnField: [
+        { prop: 'HouseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true},
+        { prop: 'CommunityName', label: '楼盘名称', order: false, width: '150', disabled: true, default: true},
+        { prop: 'BuildingName', label: '楼栋号', width: '90', order: false, disabled: true, default: true},
+        { prop: 'RoomNo', label: '房间号', width: '110', order: false, disabled: true, default: true},
+        { prop: 'InArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true,formart: item=> item.InArea+'m²' },
+        { prop: 'Price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true,formart: item=> item.Price+'万元' },
+        { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true},
+        { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true},
+        { prop: 'notLookNum', label: '未被看天数', width: '120', order: false, disabled: false, default: true},
+        { prop: 'AddTime', label: '添加时间', width: '120', order: false, disabled: false, default: true },
+        { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true},
+        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true,formart: item=> item.Rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: '', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false,format: item=> Math.round(item.Price*10000/item.InArea)+'元/㎡' },
+        { prop: 'Face', label: '朝向', width: '120', order: false, disabled: false, default: false},
+        { prop: 'Floor', label: '楼层', width: '120', order: false, disabled: false, default: false},
+        { prop: 'Decoration', label: '装修', width: '120', order: false, disabled: false, default: false },
+        { prop: 'AddPer', label: '录入人', width: '120', order: false, disabled: false, default: false }
       ],
+      tableColumn: [],
       tableData: [],
-      elTabs: {
-        activeName: "tab1",
-        list: []
-      },
-      options: [{
-        value: "1",
-        label: "全部"
-      },
-      {
-        value: "2",
-        label: "草稿"
-      },
-      {
-        value: "3",
-        label: "录入"
-      },
-      {
-        value: "4",
-        label: "钥匙"
-      },
-      {
-        value: "5",
-        label: "委托"
-      },
-      {
-        value: "6",
-        label: "实勘"
-      },
-      {
-        value: "7",
-        label: "锁定"
-      }],
-      value: '',
-      workType: '',
-      queryData: {
-        communityName: '',
-        timeSelect: '',
-      }
-    };
+    }
   },
   mounted () {
-    this.queryMyRelatedHouseListByParams(1);
+    this.querySaleNotTrack(1,'id','ascending');
   },
   methods: {
-    queryMyRelatedHouseListByParams () {
-      this.queryMyRelatedHouseList(1);
+    sortMethod(e){
+      console.log(e,"eeee排序");
+      this.querySaleNotTrack(1,e.prop,e.order);
     },
-    queryMyRelatedHouseList (currentPage) {
-      let params = {
-        limit: this.pageJson.pageSize + "",
-        page: currentPage + ""
-      };
-      let that = this;
-      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
-      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
-      if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
-      if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
-      if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
-      if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
-      if (that.workType != null && that.workType != '') {
-        console.log("options的值！！！" + that.workType);
-        params.workType = that.workType;
+  
+     distributeEvent (e, id) {
+         var that = this;
+         console.log("hhhhhhhhhhhhhhhhhh", id);
+       that.$router.push({ name: "houseDetails", params: { houseId: id } });
+    },
+   tabColumnChange (e) {
+      this.tableColumn = e;
+    },
+    queryTabData () {
+      console.log(this, '111');
+    },
+    toLook (id) {
+      var that = this;
+      that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
+    },
+   querySaleNotTrackParams () {
+      this.querySaleNotTrack(1,'id','ascending');
+    },
+    remoteInput () {
+
+      if (this.data.comId.length == 0) {
+        this.remoteMethod();
       }
-      this.$api.post({
-        url: "/agent_house/myRelatedHouseList",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: params,
-        token: false
-      }).then(e => {
-        console.log(e.data);
-        let result = e.data;
-        that.loading = false;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          that.pageJson.total = result.data.totalCount;
-          that.pageJson.currentPage = result.data.currPage;
-          that.tableData = result.data.list;
-        } else {
-          console.log("查询我的房源列表结果：" + result.message);
-          alert(result.message);
-        }
-      })
-        .catch(e => {
-          console.log("查询我的房源列表失败");
-          console.log(e);
-        });
-    },
-    queryTabData () { },
-    distributeEvent (e, id) {
-      this[e](id);
     },
     isForBut (type) {
       let array = [{ name: "查看", isType: "1,2,3", methosName: "" }];
@@ -229,16 +210,131 @@ export default {
         return item.isType.includes(type);
       });
     },
-    handleClick () { },
+    remoteMethod (query) {
+      var that = this
+      if (query !== '') {
+        this.loading = true;
+
+        this.$api.get({
+          url: "/mateHouse/queryCommunity",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        }).then((e) => {
+          console.log(e.data)
+          if (e.data.code == 200) {
+            that.loading = false;
+            that.options = e.data.data.list;
+          }
+        })
+      } else {
+        this.options = [];
+      }
+    },
+    queryCBId () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryComBuilding",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.data.comId,
+          page: 1,
+          limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.data.roomNo = '';
+          that.data.cbId = '';
+          that.cbIdList = e.data.data.list;
+        }
+      })
+    },
+    queryRoomNo () {
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryBuildIngHouses",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.data.comId,
+          cbId: that.data.cbId,
+          page: 1,
+          limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.data.roomNo = '';
+          that.roomNoList = e.data.data.list;
+        }
+      })
+    },
+    querySaleNotTrack(currentPage,column,type) {
+      var that = this;
+      let params = { "limit": that.pageJson.pageSize, "page": currentPage-1 };
+      if (that.workType != null && that.workType != '') {
+        console.log("option的值！！！" + that.workType);
+        params.workType = that.workType;
+      }
+        params.comId=that.data.comId;
+        params.cbId=that.data.cbId;
+        params.roomNo=that.data.roomNo;
+        params.beginTime=that.data.timeSelect[0];
+        params.endTime=that.data.timeSelect[1];
+        params.customName=that.data.customName;
+        params.tel=that.data.tel;
+        params.minInArea=that.data.minInArea;
+        params.maxInArea=that.data.maxInArea;
+        params.minPrice=that.data.minPrice;
+        params.maxPrice=that.data.maxPrice;
+      params.sortColumn=column;
+      params.sortType=type;
+       this.$api.post({
+        url: "/myHouse/getMyRelated",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: params,
+        token: false
+      }).then((e) => {
+        console.log(e.data);
+        let data = e.data
+        if (data.code == 200) {
+           that.pageJson.total=data.data.dataCount;
+          that.pageJson.currentPage=data.data.pageSum;
+          that.tableData = data.data.data;
+        } else {
+          console.log("查询我的相关列表结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询我的相关列表失败");
+        console.log(e);
+      })
+    },
+
+    handleClick () {
+
+    },
+    queryTabData () {
+      this.$emit("queryTabData");
+      console.log(this.queryData);
+      this.querySaleNotTrackParams(1);
+    },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
-      this.queryMyRelatedHouseList(val);
+      console.log(`设置了每页 ${val} 条`);
+      this.pageJson.pageSize = val;
+      this.querySaleNotTrack(1,'id','ascending');
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.pageJson.pageSize = val;
-      this.queryMyRelatedHouseList(1);
+      this.querySaleNotTrack(val,'id','ascending');
     }
-  }
-};
+  },
+}
 </script>

@@ -43,14 +43,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-            <el-image :src="qrCodeImg"
-                    :preview-src-list="[qrCodeImg]"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
-            </div>
-          </el-image>
+        <el-image :src="qrCodeImg"
+                  :preview-src-list="[qrCodeImg]"
+                  fit="cover">
+          <div slot="placeholder"
+               class="image-slot">
+            加载中<span>...</span>
+          </div>
+        </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -85,14 +85,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-            <el-image :src="qrCodeImg"
-                    :preview-src-list="[qrCodeImg]"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
-            </div>
-          </el-image>
+        <el-image :src="qrCodeImg"
+                  :preview-src-list="[qrCodeImg]"
+                  fit="cover">
+          <div slot="placeholder"
+               class="image-slot">
+            加载中<span>...</span>
+          </div>
+        </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -127,14 +127,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-           <el-image :src="qrCodeImg"
-                    :preview-src-list="[qrCodeImg]"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
-            </div>
-          </el-image>
+        <el-image :src="qrCodeImg"
+                  :preview-src-list="[qrCodeImg]"
+                  fit="cover">
+          <div slot="placeholder"
+               class="image-slot">
+            加载中<span>...</span>
+          </div>
+        </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -169,14 +169,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-            <el-image :src="qrCodeImg"
-                    :preview-src-list="[qrCodeImg]"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
-            </div>
-          </el-image>
+        <el-image :src="qrCodeImg"
+                  :preview-src-list="[qrCodeImg]"
+                  fit="cover">
+          <div slot="placeholder"
+               class="image-slot">
+            加载中<span>...</span>
+          </div>
+        </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -211,14 +211,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-            <el-image :src="qrCodeImg"
-                    :preview-src-list="[qrCodeImg]"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
-            </div>
-          </el-image>
+        <el-image :src="qrCodeImg"
+                  :preview-src-list="[qrCodeImg]"
+                  fit="cover">
+          <div slot="placeholder"
+               class="image-slot">
+            加载中<span>...</span>
+          </div>
+        </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -253,14 +253,14 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-         <el-image :src="qrCodeImg"
-                    :preview-src-list="[qrCodeImg]"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
-            </div>
-          </el-image>
+        <el-image :src="qrCodeImg"
+                  :preview-src-list="[qrCodeImg]"
+                  fit="cover">
+          <div slot="placeholder"
+               class="image-slot">
+            加载中<span>...</span>
+          </div>
+        </el-image>
         <div>微信扫码上传</div>
       </div>
     </div>
@@ -288,12 +288,12 @@
                    @click="deleteVideo(houseVideo)"></div>
             </div>
           </div>
-          <div class="upLoadFile-file-phone">            
+          <div class="upLoadFile-file-phone">
             <el-image :src="qrCodeImgVedio"
-              :preview-src-list="[qrCodeImgVedio]"
-              fit="cover">
+                      :preview-src-list="[qrCodeImgVedio]"
+                      fit="cover">
               <div slot="placeholder"
-                    class="image-slot">
+                   class="image-slot">
                 加载中<span>...</span>
               </div>
             </el-image>
@@ -321,15 +321,15 @@ export default {
     }
   },
   mounted () {
-    let that=this;
+    let that = this;
     //true 则去获取数据
     if (that.getData) {
       that.promiseAllViodeoAndImg();
     }
-    that.currentIndex=0;
-    that.qrCodeImg=[];
-    
-    that.webSocketUser=this.guid();
+    that.currentIndex = 0;
+    that.qrCodeImg = '';
+
+    that.webSocketUser = this.guid();
     //接入聊天
     that.contactSocket(that.webSocketUser);
     // let obj=that.picParams;
@@ -350,14 +350,14 @@ export default {
     //     });
     // }
     //businessType=0代表录入房源（业务类型）
-    let businessParams={1:"外景",2:"客厅",3:"卧室",4:"厨房",5:"卫生间",6:"户型"};
-    let pa={"businessType":0,"businessParams":JSON.stringify(businessParams),"remark":"录入房源-上传图片"};
-    pa.webSocketUser=that.webSocketUser;
-    that.getQrCode2(pa,function(data){
-            //二维码标识，用于消息接受的路由
-            console.log("回调执行开始");
-            that.qrCodeImg=data.url;
-            //console.log("回调执行结束");
+    let businessParams = { 1: "外景", 2: "客厅", 3: "卧室", 4: "厨房", 5: "卫生间", 6: "户型" };
+    let pa = { "businessType": 0, "businessParams": JSON.stringify(businessParams), "remark": "录入房源-上传图片" };
+    pa.webSocketUser = that.webSocketUser;
+    that.getQrCode2(pa, function (data) {
+      //二维码标识，用于消息接受的路由
+      console.log("回调执行开始");
+      that.qrCodeImg = data.url;
+      //console.log("回调执行结束");
     });
     this.getQrCodeForVedio();
   },
@@ -379,91 +379,91 @@ export default {
       toiletImgList: [],//卫生间
       layoutImgList: [],//户型图
       houseVideo: {},//房源视频
-      qrCodeImg:'',
-      qrCodeImgVedio:'',
-      picParams:{1:{"picContainer":"outdoorImgList","remark":"录入房源上传-外景图片"},
-      2:{"picContainer":"livingRoomImgList","remark":"录入房源上传-客厅图片"},
-      3:{"picContainer":"bedroomImgList","remark":"录入房源上传-卧室图片"},
-      4:{"picContainer":"kitchenImgList","remark":"录入房源上传-厨房图片"},
-      5:{"picContainer":"toiletImgList","remark":"录入房源上传-卫生间图片"},
-      6:{"picContainer":"layoutImgList","remark":"录入房源上传-户型图片"}},
-       websock: null,
-       webSocketUser:''
+      qrCodeImg: '',
+      qrCodeImgVedio: '',
+      picParams: {        1: { "picContainer": "outdoorImgList", "remark": "录入房源上传-外景图片" },
+        2: { "picContainer": "livingRoomImgList", "remark": "录入房源上传-客厅图片" },
+        3: { "picContainer": "bedroomImgList", "remark": "录入房源上传-卧室图片" },
+        4: { "picContainer": "kitchenImgList", "remark": "录入房源上传-厨房图片" },
+        5: { "picContainer": "toiletImgList", "remark": "录入房源上传-卫生间图片" },
+        6: { "picContainer": "layoutImgList", "remark": "录入房源上传-户型图片" }      },
+      websock: null,
+      webSocketUser: ''
     }
   },
   methods: {
-    guid(){
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+    guid () {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
       });
     },
-    receiveMessage(r){
-      let that=this;
-      console.log(r,"接收到了消息");
-      if(r.content.resourceType=="vedio"){
-        console.log(r.content,"视频消息内容，准备插入草稿箱")
-        that.uploadFileInfo(undefined,r.content.picUrl,function(data){
-          that.houseVideo=data;
+    receiveMessage (r) {
+      let that = this;
+      console.log(r, "接收到了消息");
+      if (r.content.resourceType == "vedio") {
+        console.log(r.content, "视频消息内容，准备插入草稿箱")
+        that.uploadFileInfo(undefined, r.content.picUrl, function (data) {
+          that.houseVideo = data;
         });
-      }else{
-        let temp=that.picParams[r.content.picClass];
-        
+      } else {
+        let temp = that.picParams[r.content.picClass];
+
         //找到消息是发送给哪个二维码的
-        let name=temp.picContainer;
-        console.log(that[name],"找到了指定用户");
-        console.log(r.content.picUrl,"接受到消息的图片地址");
-        that.uploadFileInfo(temp.picClass,r.content.picUrl,function(data){
+        let name = temp.picContainer;
+        console.log(that[name], "找到了指定用户");
+        console.log(r.content.picUrl, "接受到消息的图片地址");
+        that.uploadFileInfo(temp.picClass, r.content.picUrl, function (data) {
           that[name].push(data);
         });
-      }      
+      }
     },
     contactSocket (user) {
       console.log("用户【" + user + "】开始接入");
-      this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""),user);
+      this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""), user);
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
       console.log("用户【" + user + "】接入完毕");
     },
-    getQrCodeForVedio(){
-        let that=this;
-        that.$api.post({
-                          url: '/scanUpload/getUploadQrCode',
-                          data: {'remark':"录入房源-上传视频","resourceType":"vedio","webSocketUser":that.webSocketUser,"businessParams":JSON.stringify({"test":"闭环参数"})},
-                          headers: { "Content-Type": "application/json" }
-                        }).then((e) => {
-                          let result = e.data;
-                          if (result.code == 200) {
-                              that.qrCodeImgVedio=(result.data.url);
-                          } else {
-                            console.log("h获取视频二维码结果：" + result.message);
-                            alert(result.message);
-                          }
-                        }).catch((e) => {
-                          console.log("查询视频二维码失败");
-                          console.log(e);
-                        })
+    getQrCodeForVedio () {
+      let that = this;
+      that.$api.post({
+        url: '/scanUpload/getUploadQrCode',
+        data: { 'remark': "录入房源-上传视频", "resourceType": "vedio", "webSocketUser": that.webSocketUser, "businessParams": JSON.stringify({ "test": "闭环参数" }) },
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        let result = e.data;
+        if (result.code == 200) {
+          that.qrCodeImgVedio = (result.data.url);
+        } else {
+          console.log("h获取视频二维码结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询视频二维码失败");
+        console.log(e);
+      })
     },
-    getQrCode2(data,callback){
-      let that=this; 
-       that.$api.post({
-                      url: '/scanUpload/getUploadQrCode',
-                      data: data,
-                      headers: { "Content-Type": "application/json" }
-                    }).then((e) => {
-                      let result = e.data;
-                      console.log("请求二维码成功");
-                      if (result.code == 200) {
-                          //that.qrCodeImg="data:image/png;base64,"+item.img;
-                         callback(result.data);
-                      } else {
-                        console.log("h获取二维码结果：" + result.message);
-                        alert(result.message);
-                      }                     
-                    }).catch((e) => {                    
-                      console.log("查询二维码失败");
-                      console.log(e);                    
-                    })
-    },    
+    getQrCode2 (data, callback) {
+      let that = this;
+      that.$api.post({
+        url: '/scanUpload/getUploadQrCode',
+        data: data,
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        let result = e.data;
+        console.log("请求二维码成功");
+        if (result.code == 200) {
+          //that.qrCodeImg="data:image/png;base64,"+item.img;
+          callback(result.data);
+        } else {
+          console.log("h获取二维码结果：" + result.message);
+          alert(result.message);
+        }
+      }).catch((e) => {
+        console.log("查询二维码失败");
+        console.log(e);
+      })
+    },
     openVideo () {
 
     },
@@ -584,8 +584,8 @@ export default {
       })
     },
     deleteVideo (item) {
-       //微信上传的视频或图片，没必要删除。他删除的也是草稿箱，我微信上传图片没放那个草稿箱，而且oss不限容量，没必要删除图片      
-      if(item.id==-1){
+      //微信上传的视频或图片，没必要删除。他删除的也是草稿箱，我微信上传图片没放那个草稿箱，而且oss不限容量，没必要删除图片      
+      if (item.id == -1) {
         this.houseVideo = {};
         return;
       }
@@ -601,26 +601,26 @@ export default {
         }
       })
     },
-    uploadFileInfo (picClass,url,callBack) {
+    uploadFileInfo (picClass, url, callBack) {
       let that = this;
       let formData = {};
       //注意大驼峰
-      formData.PicClass= picClass;
-      formData.IpStr=url;
-      formData.FileStr='';
-      formData.PicName='';
-      formData.DraftId=that.$store.state.addHouse.formData.id;
+      formData.PicClass = picClass;
+      formData.IpStr = url;
+      formData.FileStr = '';
+      formData.PicName = '';
+      formData.DraftId = that.$store.state.addHouse.formData.id;
       this.$api.post({
         url: `/draft-house/${picClass != undefined ? 'pictureDraft' : 'videoDraft'}`,
         headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: formData        
+        data: formData
       }).then((json) => {
         if (json.data.code == 200) {
-           let result=json.data.data;
-           result.url=url;
-           callBack(result);
-        }else{
-           that.$message({
+          let result = json.data.data;
+          result.url = url;
+          callBack(result);
+        } else {
+          that.$message({
             message: json.data.message,
             type: 'warning'
           })
@@ -632,7 +632,7 @@ export default {
           type: 'warning'
         })
       }).finally(() => {
-        
+
       })
     },
     uploadSectionFile (picClass, uploader, fileListName) {
