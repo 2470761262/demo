@@ -427,7 +427,7 @@ export default {
         if (row.selfSaleType.length < 1) {
           return "";
         } else {
-          return ["疑似跳单", "", "亲朋好友"][row.selfSaleType];
+          return ["疑似跳单", "亲朋好友", ""][row.selfSaleType];
         }
       }
       return row[column.property];

@@ -239,135 +239,43 @@
       </template>
     </list-page>
     <el-dialog :visible.sync="showAccessory"
-               width="50%"
+               width="60%"
                :modal-append-to-body="false">
       <div style="display:flex"
            slot="title">
-        <div style="width:20%;height:50px;"
-             v-if="accessoryListObj.file7.length>0">
-          <el-carousel :autoplay="false"
-                       height="50px"
-                       type="card"
-                       @change="changePic7">
-            <el-carousel-item v-for="(item,index) in accessoryListObj.file7"
-                              :key="index">
-              <video :src="item.url"
-                     height="100%"
-                     width="100%"
-                     @click="cutPic(item.activeIndex)"></video>
-            </el-carousel-item>
-          </el-carousel>
-          <span>视频</span>
-          <span>({{accessoryListObj.file7.length}})</span>
-        </div>
-        <div style="width:20%;height:50px;"
-             v-if="accessoryListObj.file4.length>0">
-          <el-carousel :autoplay="false"
-                       height="50px"
-                       type="card"
-                       @change="changePic4">
-            <el-carousel-item v-for="(item,index) in accessoryListObj.file4"
-                              :key="index">
-              <el-image :src="item.url"
-                        :fit="fill"
-                        style="width:100%;height:100%"
-                        @click="cutPic(item.activeIndex)"></el-image>
-            </el-carousel-item>
-          </el-carousel>
-          <span>客厅</span>
-          <span>({{accessoryListObj.file4.length}})</span>
-        </div>
-        <div style="width:20%; height:50px;"
-             v-if="accessoryListObj.file3.length>0">
-          <el-carousel :autoplay="false"
-                       height="50px"
-                       type="card"
-                       @change="changePic3">
-            <el-carousel-item v-for="(item,index) in accessoryListObj.file3"
-                              :key="index">
-              <el-image :src="item.url"
-                        :fit="fill"
-                        style="width:100%;height:100%"
-                        @click="cutPic(item.activeIndex)"></el-image>
-            </el-carousel-item>
-          </el-carousel>
-          <span>厨房</span>
-          <span>({{accessoryListObj.file3.length}})</span>
-        </div>
-        <div style="width:20%; height:50px;"
-             v-if="accessoryListObj.file2.length>0">
-          <el-carousel :autoplay="false"
-                       height="50px"
-                       type="card"
-                       @change="changePic2">
-            <el-carousel-item v-for="(item,index) in accessoryListObj.file2"
-                              :key="index">
-              <el-image :src="item.url"
-                        :fit="fill"
-                        style="width:100%;height:100%"
-                        @click="cutPic(item.activeIndex)"></el-image>
-            </el-carousel-item>
-          </el-carousel>
-          <span>卧室</span>
-          <span>({{accessoryListObj.file2.length}})</span>
-        </div>
-        <div style="width:20%; height:50px;"
-             v-if="accessoryListObj.file1.length>0">
-          <el-carousel :autoplay="false"
-                       height="50px"
-                       type="card"
-                       @change="changePic1">
-            <el-carousel-item v-for="(item,index) in accessoryListObj.file1"
-                              :key="index">
-              <el-image :src="item.url"
-                        :fit="fill"
-                        style="width:100%;height:100%"
-                        @click="cutPic(item.activeIndex)"></el-image>
-            </el-carousel-item>
-          </el-carousel>
-          <span>外景图</span>
-          <span>({{accessoryListObj.file1.length}})</span>
-        </div>
-        <div style="width:20%; height:50px;"
-             v-if="accessoryListObj.file5.length>0">
-          <el-carousel :autoplay="false"
-                       height="50px"
-                       type="card"
-                       @change="changePic5">
-            <el-carousel-item v-for="(item,index) in accessoryListObj.file5"
-                              :key="index">
-              <el-image :src="item.url"
-                        :fit="fill"
-                        style="width:100%;height:100%"
-                        @click="cutPic(item.activeIndex)"></el-image>
-            </el-carousel-item>
-          </el-carousel>
-          <span>卫生间</span>
-          <span>({{accessoryListObj.file5.length}})</span>
-        </div>
-        <div style="width:20%; height:50px;"
-             v-if="accessoryListObj.file6.length>0">
-          <el-carousel :autoplay="false"
-                       height="50px"
-                       type="card"
-                       @change="changePic6">
-            <el-carousel-item v-for="(item,index) in accessoryListObj.file6"
-                              :key="index">
-              <el-image :src="item.url"
-                        :fit="fill"
-                        style="width:100%;height:100%"
-                        @click="cutPic(item.activeIndex)"></el-image>
-            </el-carousel-item>
-          </el-carousel>
-          <span>户型图</span>
-          <span>({{accessoryListObj.file6.length}})</span>
+        <div v-for="(item,index) in  accessoryMoldList"
+             :key="index"
+             style="width:100%">
+          <div style="margin-left:10px;"
+               v-if="item.list.length>0">
+            <el-carousel :autoplay="false"
+                         height="60px"
+                         @change="changeFile($event,index)">
+              <el-carousel-item v-for="(item1,index1) in item.list"
+                                :key="index1">
+                <video :src="item1.url"
+                       height="100%"
+                       width="100%"
+                       @click="cutPic(item1.activeIndex)"
+                       v-if="item.type==7"></video>
+                <el-image :src="item1.url"
+                          :fit="fill"
+                          v-if="item.type!=7"
+                          style="width:100%;height:100%"
+                          @click="cutPic(item1.activeIndex)">
+                </el-image>
+              </el-carousel-item>
+            </el-carousel>
+            <span>{{item.title}}</span>
+            <span>({{item.list.length}})</span>
+          </div>
         </div>
       </div>
       <div style="margin-top:20px;">
         <el-carousel :autoplay="false"
                      height="600px"
                      ref="loopImg">
-          <el-carousel-item v-for="(item,index) in accessoryListObj.file8"
+          <el-carousel-item v-for="(item,index) in file8"
                             :key="index">
             <img :src="item.url"
                  :fit="fill"
@@ -480,40 +388,22 @@ export default {
       }],
       typeList: [{
         value: '0',
-        label: '钥匙人'
+        label: '钥匙人申请'
       }, {
         value: '1',
-        label: '独家委托取代'
-      }, {
-        value: '2',
-        label: '类型转换'
-      }, {
-        value: '3',
-        label: '申请删除'
+        label: '委托申请'
       }, {
         value: '4',
         label: '取代'
       }, {
-        value: '5',
-        label: '客户ab类'
-      }, {
-        value: '6',
-        label: '客户删除'
-      }, {
-        value: '7',
-        label: '房源T类'
-      }, {
         value: '8',
         label: '房源转状态'
       }, {
-        value: '9',
-        label: '普通委托'
-      }, {
-        value: '10',
-        label: '录入房源'
-      }, {
         value: '11',
         label: '举报'
+      }, {
+        value: "12",
+        label: "实勘人申请"
       }],
       queryData: {
         CommunityName: '',
@@ -556,6 +446,16 @@ export default {
       checkId: 0,
       row: {},
       accessoryAllList: [],
+      accessoryMoldList: [
+        { title: "外景图", list: [], type: 1 },
+        { title: "卧室图", list: [], type: 2 },
+        { title: "厨房", list: [], type: 3 },
+        { title: "客厅", list: [], type: 4 },
+        { title: "卫生间", list: [], type: 5 },
+        { title: "户型", list: [], type: 6 },
+        { title: "视频", list: [], type: 7 },
+
+      ],
       accessoryListObj: {
         file1: [],
         file2: [],
@@ -564,8 +464,9 @@ export default {
         file5: [],
         file6: [],
         file7: [],
-        file8: []
+
       },
+      file8: [],
       showAccessory: false,
       fill: "fill"
     }
@@ -574,42 +475,26 @@ export default {
     this.querylist(1);
   },
   methods: {
-    changePic1 (index) {
-      this.cutPic(this.accessoryListObj.file1[index].activeIndex)
-    },
-    changePic2 (index) {
-      this.cutPic(this.accessoryListObj.file2[index].activeIndex)
-    },
-    changePic3 (index) {
-      this.cutPic(this.accessoryListObj.file3[index].activeIndex)
-    },
-    changePic4 (index) {
-      this.cutPic(this.accessoryListObj.file4[index].activeIndex)
-    },
-    changePic5 (index) {
-      this.cutPic(this.accessoryListObj.file5[index].activeIndex)
-    },
-    changePic6 (index) {
-      this.cutPic(this.accessoryListObj.file6[index].activeIndex)
-    },
-    changePic7 (index) {
-      this.cutPic(this.accessoryListObj.file7[index].activeIndex)
+    changeFile (e, index) {
+      let typeList = this.accessoryMoldList[index].list;
+      let activeIndex = typeList[e].activeIndex;
+      this.cutPic(activeIndex);
     },
     cutPic (index) {
       let that = this;
       that.$refs.loopImg.setActiveItem(index);
     },
     getFile (list) {
-      for (let key in this.accessoryListObj) {
-        this.accessoryListObj[key] = [];//清空数组
+      this.accessoryMoldList.forEach(item => {
+        item.list = [];//清空数组
         list.forEach((element, index) => {
-          if ("file" + element.subType == key) {
+          if (element.subType == item.type) {
             element.activeIndex = index;
-            this.accessoryListObj[key].push(element);
+            item.list.push(element)
           }
         });
-      }
-      this.accessoryListObj.file8 = list;
+      });
+      this.file8 = list;
       this.showAccessory = true;
     },
     getAccessory (checkId) {
