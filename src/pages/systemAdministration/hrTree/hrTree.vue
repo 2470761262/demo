@@ -103,7 +103,12 @@ td {
             <el-button type="text" @click="lock('company',formCom.id)" :underline="false">锁定</el-button>
           </el-form-item>
         </el-form>
-        <el-form ref="formDep" :model="formDep" v-show="checkedType===1" label-width="100px">
+        <el-form
+          ref="formDep"
+          :model="formDep"
+          v-show="checkedType===1||checkedType===2"
+          label-width="100px"
+        >
           <el-form-item label="部门名称">{{formDep.name}}</el-form-item>
           <el-form-item label="部门类型">{{formDep.depType}}</el-form-item>
           <el-form-item label="部门属性">{{formDep.isCom}}</el-form-item>
@@ -131,7 +136,12 @@ td {
           </el-form-item>
         </el-form>
       </div>
-      <div class="elInfo" v-show="checkedType===1" v-loading="loading" :style="contentStyleObj">
+      <div
+        class="elInfo"
+        v-show="checkedType===1||checkedType===2"
+        v-loading="loading"
+        :style="contentStyleObj"
+      >
         <div v-for="(item) in this.employeeData" :key="item.AccountID">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
@@ -157,7 +167,7 @@ td {
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
-                @click="userJumpEdit(item.AccountID)"
+                @click="userJumpEdit(item.EmpID)"
               >修改</el-button>
             </div>
             <table>
@@ -396,9 +406,42 @@ export default {
       jumpNodeId: null
     };
   },
+  mounted() {
+    //读取树数据
+    this.$api
+      .post({
+        url: "/sys/tree/unit"
+      })
+      .then(e => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.treeData = result.data;
+        } else {
+          console.log("载入结果" + +result.message);
+          alert(result.message);
+        }
+      })
+      .then(() => {
+        if (this.$route.query.cur != null) {
+          this.curNodeId = [this.$route.query.cur];
+          this.$nextTick(() => {
+            this.handleCheckChange(
+              this.$refs.treeForm.getNode(...this.curNodeId).data,
+              true
+            );
+          });
+        }
+      })
+      .catch(e => {
+        console.log("读取失败");
+        console.log(e);
+      });
+  },
   methods: {
     handleCheckChange(data, checked, node) {
-      console.log(11111111111);
       this.loading = true;
       if (checked == true) {
         this.checkedId = data.businessId;
@@ -406,10 +449,8 @@ export default {
         this.$refs.treeForm.setCheckedNodes([data]);
         this.jumpNodeId = data.nodeId;
         console.log(
-          "当前类型：" + this.checkedType + ",ID：" + data.businessId,
-          "data:"
+          "当前类型：" + this.checkedType + ",ID：" + data.businessId
         );
-        //console.log(this.$refs.treeForm.getNode("5511,1"), data);
         if (this.checkedType === 0) {
           this.$api
             .get({
@@ -486,6 +527,45 @@ export default {
             })
             .finally(e => {
               this.employee(this.checkedId);
+            });
+        } else if (this.checkedType === 2) {
+          let params = { id: data.parentNodeId.split(",")[0] };
+          this.$api
+            .post({
+              url: "/department/detail",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              console.log(e.data);
+              let result = e.data;
+              if (result.code == 200) {
+                let data = result.data;
+                this.formDep.id = data.id;
+                this.formDep.name = data.name;
+                this.formDep.depType = ["支持线", "业务线"][data.depType - 1];
+                this.formDep.isCom = ["运营期", "拓展期", "未设置"][
+                  data.isCom - 1
+                ];
+                this.formDep.principal = data.principal;
+                this.formDep.tel = data.tel;
+                this.formDep.add = data.add;
+                this.formDep.employeesNum = data.employeesNum;
+                this.formDep.store = data.store;
+                this.formDep.regDate = data.regDate;
+                this.formDep.desc = data.desc;
+                this.formDep.coId = data.coId;
+              } else {
+                console.log("查询详情结果：" + result.message);
+                alert(result.message);
+              }
+            })
+            .catch(e => {
+              console.log("查询详情失败");
+              console.log(e);
+            })
+            .finally(e => {
+              this.userInfo(this.checkedId);
             });
         }
       }
@@ -585,6 +665,30 @@ export default {
           this.loading = false;
         });
     },
+    userInfo(id) {
+      let params = { id: id };
+      this.$api
+        .post({
+          url: "/employee/info",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            let data = result.data;
+            this.employeeData = data;
+          }
+        })
+        .catch(e => {
+          console.log("查询失败");
+          console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
+        });
+    },
     getHeight() {
       this.contentStyleObj.height = window.innerHeight - 140 + "px";
     },
@@ -657,42 +761,11 @@ export default {
         });
     }
   },
-  mounted() {
-    //读取树数据
-    this.$api
-      .post({
-        url: "/sys/tree/unit"
-      })
-      .then(e => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data, 222222222222);
-          this.treeData = result.data;
-        } else {
-          console.log("载入结果" + +result.message);
-          alert(result.message);
-        }
-      })
-      .then(() => {
-        if (this.$route.query.cur != null) {
-          this.curNodeId = [this.$route.query.cur];
-          this.$nextTick(() => {
-            this.handleCheckChange(
-              this.$refs.treeForm.getNode(...this.curNodeId).data,
-              true
-            );
-          });
-        }
-      })
-      .catch(e => {
-        console.log("读取失败");
-        console.log(e);
-      });
+  created() {
     window.addEventListener("resize", this.getHeight);
     this.getHeight();
   },
+
   destroyed() {
     window.removeEventListener("resize", this.getHeight);
   }
