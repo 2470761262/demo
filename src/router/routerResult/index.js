@@ -58,13 +58,6 @@ export default [
             import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/shopownerRecommendHouse.vue")
     },
     {
-        //对赌房源
-        path: "/buySellSystem/houseBet",
-        name: "addHouse",
-        component: () =>
-            import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseBet/houseBet.vue")
-    },
-    {
         //补充楼盘
         path: "/buySellSystem/CommunityReplenish",
         name: "addHouse",
@@ -95,7 +88,7 @@ export default [
             },
             {
               //对赌房源
-              path: "/buySellSystem/houseBet1",
+              path: "/buySellSystem/houseBet",
               name: "concernCommunity",
               component: () =>
                 import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseBet/houseBet.vue")

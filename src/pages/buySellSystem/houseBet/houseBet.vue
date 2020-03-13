@@ -120,10 +120,30 @@
           </el-form-item>
 
           <el-form-item label="对赌人"
-                        prop="empName">
+                        prop="empName" style="position: relative;">
             <el-input clearable
                       v-model="data.empName"
-                      placeholder="对赌人姓名" />
+                      placeholder="对赌人公司/部门/姓名"
+                      v-on:click.native="showHrTree = true"
+                      readonly/>
+            <div class="elTree" style="position: absolute;z-index: 2;min-width: 280px" v-show="showHrTree">
+              <el-tree
+                ref="treeForm"
+                :data="treeData"
+                node-key="nodeId"
+                show-checkbox
+                :props="defaultProps"
+                @check-change="handleCheckChange"
+                :highlight-current="true"
+                :filter-node-method="filterNode"
+                check-strictly
+                :action="''"
+                empty-text="暂无数据，请检查权限"
+                auto-expand-parent
+                :default-expanded-keys="curNodeId"
+                :default-checked-keys="curNodeId"
+              ></el-tree>
+            </div>
           </el-form-item>
           <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
                 @click="Remove">
@@ -207,7 +227,13 @@ export default {
 
     return {
       loading: false,
-
+      showHrTree: false,
+      defaultProps: {
+        children: "childrenNodes",
+        label: "labelName"
+      },
+      treeData: [],
+      curNodeId: [],
       data: {
         comId: '',
         cbId: '',
@@ -219,6 +245,8 @@ export default {
         maxMoney: '',
         order: '',
         empId: '',
+        deptId: '',
+        coId: '',
         empName: '',
         orderAsc: '',
         timeSelect: ''
@@ -258,12 +286,69 @@ export default {
   },
   mounted () {
     this.queryHouseBet(1);
+    //读取树数据
+    this.$api
+      .post({
+        url: "/sys/tree/bet"
+      })
+      .then(e => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.treeData = result.data;
+        } else {
+          console.log("载入结果" + +result.message);
+          alert(result.message);
+        }
+      })
+      .then(() => {
+        if (this.$route.query.cur != null) {
+          this.curNodeId = [this.$route.query.cur];
+          this.$nextTick(() => {
+            this.handleCheckChange(
+              this.$refs.treeForm.getNode(...this.curNodeId).data,
+              true
+            );
+          });
+        }
+      })
+      .catch(e => {
+        console.log("读取失败");
+        console.log(e);
+      });
   },
   methods: {
     Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryHouseBet(1);
 
+    },
+    handleCheckChange(data, checked, node) {
+      this.showHrTree = false;
+      if (checked == true) {
+        this.data.empName = data.labelName;
+        this.checkedType = data.type;
+        this.$refs.treeForm.setCheckedNodes([data]);
+        // this.jumpNodeId = data.nodeId;
+        console.log(
+          "当前类型：" + this.checkedType + ",ID：" + data.businessId
+        );
+        //  0公司，1部门，2员工，3职位
+        if (this.checkedType === 0) {
+          this.data.coId=data.businessId;
+        } else if (this.checkedType === 1) {
+          this.data.deptId=data.businessId;
+        } else if (this.checkedType === 2) {
+          this.data.empId=data.businessId;
+        }
+      }
+    },
+    filterNode(value, data) {
+      console.log(value, data);
+      if (!value) return true;
+      return data.label.indexOf(value) !== -1;
     },
     queryTabData () {
       console.log(this, '111');
@@ -397,7 +482,8 @@ export default {
       params.status = that.data.status;
       params.customerName = that.data.customerName;
       params.empId = that.data.empId;
-      params.empName = that.data.empName;
+      params.coId = that.data.coId;
+      params.deptId = that.data.deptId;
       params.tel = that.data.tel;
       params.minMoney = that.data.minMoney;
       params.maxMoney = that.data.maxMoney;
