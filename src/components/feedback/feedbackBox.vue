@@ -156,6 +156,7 @@
           that.form.pics.push(response.data.url);
         }
         console.log(response,file,fileList,"file list ....");
+        console.log( that.form);
       },
       cleanFiles(){
         this.$refs.upload.clearFiles();
@@ -256,8 +257,8 @@
         console.log(21)
         console.log(r,"消息内容");
         //。。。执行你需要的业务逻辑
-       this.dialogImageUrl = r.content.picUrl;
-       this.form.pics.push(r.content.picUrl);
+       this.uploadUrl = r.content.picUrl;
+      // this.form.pics.push(r.content.picUrl);
         console.log(this.uploadUrl,this.form,"231");
       }
 
