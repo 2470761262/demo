@@ -741,50 +741,76 @@ export default {
       }
     },
     setPhone(id) {
-      let params = { id: id };
-      this.$api
-        .post({
-          url: "/employee/set/phoneTag",
-          data: params,
-          qs: true
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            this.$message({
-              type: "success",
-              message: result.message
+      this.$confirm("注意！你确定要手机备案？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = { id: id };
+          this.$api
+            .post({
+              url: "/employee/set/phoneTag",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              console.log(e.data);
+              let result = e.data;
+              if (result.code == 200) {
+                this.$message({
+                  type: "success",
+                  message: result.message
+                });
+              } else {
+                this.$message.error(result.message);
+              }
+            })
+            .catch(e => {
+              this.$message.error(e.message);
             });
-          } else {
-            this.$message.error(result.message);
-          }
         })
-        .catch(e => {
-          this.$message.error(e.message);
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
         });
     },
     resetPwd(id) {
-      let params = { id: id };
-      this.$api
-        .post({
-          url: "/employee/reset/pwd",
-          data: params,
-          qs: true
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            this.$alert(result.message, "提示", {
-              confirmButtonText: "确定"
+      this.$confirm("注意！你确定要重置该用户密码？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = { id: id };
+          this.$api
+            .post({
+              url: "/employee/reset/pwd",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              console.log(e.data);
+              let result = e.data;
+              if (result.code == 200) {
+                this.$alert(result.message, "提示", {
+                  confirmButtonText: "确定"
+                });
+              } else {
+                this.$message.error(result.message);
+              }
+            })
+            .catch(e => {
+              this.$message.error(e.message);
             });
-          } else {
-            this.$message.error(result.message);
-          }
         })
-        .catch(e => {
-          this.$message.error(e.message);
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
         });
     },
     operation(params) {
@@ -815,15 +841,28 @@ export default {
         });
     },
     userLock(id) {
-      if (id == null || id == "") {
-        this.$message({
-          type: "error",
-          message: "参数出错"
+      this.$confirm("注意！你确定要锁定该用户？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          if (id == null || id == "") {
+            this.$message({
+              type: "error",
+              message: "参数出错"
+            });
+          } else {
+            let params = { accountId: id, UpType: "locked", upValue: 1 };
+            this.operation(params);
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
         });
-      } else {
-        let params = { accountId: id, UpType: "locked", upValue: 1 };
-        this.operation(params);
-      }
     }
   },
   created() {
