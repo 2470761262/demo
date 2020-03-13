@@ -448,6 +448,8 @@
           v-validate="required?'required': ''"
           data-vv-as="契税发票时间"
           data-vv-name="lastSale"
+          @change="changeOnly"
+          :picker-options="pickerOptions"
         ></el-date-picker>
       </div>
       <div class="Division">是否唯一住房</div>
@@ -461,6 +463,7 @@
           v-validate="required?'required': ''"
           data-vv-as="唯一住房"
           data-vv-name="isOwnerOnly"
+          @change="changeOnly"
         >
           <el-radio
             v-for="item in isowneronlyList"
@@ -469,7 +472,10 @@
           >{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
-      <div class="Division">满5唯一</div>
+      <div
+        class="Division"
+        v-show="formData.isOwnerOnly===1&&formData.lastSale!=null&&formData.lastSale!=''"
+      >{{this.onlyStr}}</div>
     </div>
 
     <!-- 付款方式 -->
@@ -669,7 +675,7 @@
             </div>
           </div>
           <div class="upLoadFile-file-phone">
-            <el-image :src="audioQrCodeImage" :preview-src-list="[audioQrCodeImage]"  fit="cover">
+            <el-image :src="audioQrCodeImage" :preview-src-list="[audioQrCodeImage]" fit="cover">
               <div slot="placeholder" class="image-slot">
                 加载中
                 <span>...</span>
@@ -832,7 +838,13 @@ export default {
       isowneronlyList: formReander.ISOWNERONLY, //是否唯一住房
       mortgageBankList: formReander.MORTGAGEBANK, //抵押银行
       followWayList: formReander.FOLLOWWAY, //跟进类型
-      audioQrCodeImage: ""
+      audioQrCodeImage: "",
+      onlyStr: "",
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      }
     };
   },
   methods: {
@@ -894,8 +906,8 @@ export default {
         })
         .then(json => {
           if (json.data.code == 200) {
-            let d=json.data.data;
-            d.url=url;
+            let d = json.data.data;
+            d.url = url;
             callback(d);
           }
         })
@@ -1099,6 +1111,30 @@ export default {
         .catch(() => {
           return false;
         });
+    },
+    changeOnly() {
+      console.log("触发...");
+      if (
+        this.formData.isOwnerOnly === 1 &&
+        this.formData.lastSale != null &&
+        this.formData.lastSale != ""
+      ) {
+        let iDays = parseInt(
+          Math.abs(new Date() - new Date(this.formData.lastSale)) /
+            1000 /
+            60 /
+            60 /
+            24 /
+            365
+        );
+        if (iDays >= 5) {
+          this.onlyStr = "满5唯一";
+        } else if (iDays >= 2) {
+          this.onlyStr = "满2唯一";
+        } else {
+          this.onlyStr = "";
+        }
+      }
     }
   }
 };
