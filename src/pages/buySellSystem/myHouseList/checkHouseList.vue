@@ -86,7 +86,7 @@
               审核状态：
             </span>
             <el-select filterable
-                       v-model="state"
+                       v-model="status"
                        placeholder="请选择">
               <el-option v-for="item in stateList"
                          :key="item.value"
@@ -306,7 +306,7 @@ export default {
     return {
       type: '',
       option: '',
-      state: '',
+      status: '',
       cbIdList: '',
       roomNoList: '',
       comList: '',
@@ -591,7 +591,7 @@ export default {
     Remove () {
       this.cbId = '';
       this.type = '';
-      this.state = '';
+      this.status = '';
       this.value = '';
       this.queryData.roomNo = '';
       this.queryData.CommunityName = '';
@@ -664,7 +664,7 @@ export default {
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
       if (this.queryData.cbId != null && this.queryData.cbId != '') { params.cbId = this.queryData.cbId; }
       if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomNo = this.queryData.roomNo; }
-      if (this.state != null && this.state != '') { params.state = this.state; }
+      if (this.status != null && this.status != '') { params.status = this.status; }
       if (this.type != null && this.type != '') { params.type = this.type; }
       if (this.value != null && this.value != '') { params.value = this.value; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
