@@ -195,19 +195,19 @@ import houselistlhousepair from "@/pages/buySellSystem/houseList/components/hous
 //展示列表
 import houseresultlist from '@/pages/buySellSystem/houseList/components/houseResultList';
 const HosueList = [
-  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false ,type: 1,url:"/mateHouse/getMateHouse/myHouse"},
-  { title: "7天被带看", icon: "el-icon-zoom-in", path: "/buySellSystem/sevenDaysFollowHouse", hot: true, flag: false ,type: 2,url:"/mateHouse/getMateHouse/sevenDayHouse"},
-  { title: "新增房源", icon: "el-icon-zoom-in", path: "/buySellSystem/newAgentHouse", hot: false, flag: false ,type: 3,url:"/mateHouse/getMateHouse/addHouse"},
-  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false ,type: 4,url:"/mateHouse/getMateHouse/myKernelHouse"},
-  { title: "成交对赌", icon: "el-icon-zoom-in", path: "/buySellSystem/houseBet", hot: true, flag: false ,type: 5,url:"/mateHouse/getMateHouse/gambling"},
-  { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true, flag: false ,type: 6,url:"/mateHouse/getMateHouse/chiefRecommendHouse"},
+  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false, type: 1, url: "/mateHouse/getMateHouse/myHouse" },
+  { title: "7天被带看", icon: "el-icon-zoom-in", path: "/buySellSystem/sevenDaysFollowHouse", hot: true, flag: false, type: 2, url: "/mateHouse/getMateHouse/sevenDayHouse" },
+  { title: "新增房源", icon: "el-icon-zoom-in", path: "/buySellSystem/newAgentHouse", hot: false, flag: false, type: 3, url: "/mateHouse/getMateHouse/addHouse" },
+  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false, type: 4, url: "/mateHouse/getMateHouse/myKernelHouse" },
+  { title: "成交对赌", icon: "el-icon-zoom-in", path: "/buySellSystem/houseBet", hot: true, flag: false, type: 5, url: "/mateHouse/getMateHouse/gambling" },
+  { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true, flag: false, type: 6, url: "/mateHouse/getMateHouse/chiefRecommendHouse" },
   // { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false ,url:"/mateHouse/getMateHouse/keyHouse"},
-  { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false, flag: false ,type: 8,url:"/mateHouse/getMateHouse/soleHouse"},
-  { title: "店公共盘", icon: "el-icon-zoom-in", path: "/buySellSystem/shopDisk", hot: false ,type: 9,url:"/mateHouse/getMateHouse/shopDisk"},
-  { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false, flag: false ,type: 10,url:"/mateHouse/getMateHouse/myAttention"},
-  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "/buySellSystem/saleNotTracking", hot: false, flag: false ,type: 11,url:"/mateHouse/getMateHouse/saleNotTrack"},
-  { title: "全部在售", icon: "el-icon-zoom-in", path: "/buySellSystem/saleAll", hot: false, flag: false ,type: 12,url:"/mateHouse/getMateHouse/soleAllHouse"},
-  { title: "店长推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/shopownerRecommendHouse", hot: false, flag: false ,type: 13,url:"/mateHouse/getMateHouse/shopOwnerRecommendHouse"},
+  { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false, flag: false, type: 8, url: "/mateHouse/getMateHouse/soleHouse" },
+  { title: "店公共盘", icon: "el-icon-zoom-in", path: "/buySellSystem/shopDisk", hot: false, type: 9, url: "/mateHouse/getMateHouse/shopDisk" },
+  { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false, flag: false, type: 10, url: "/mateHouse/getMateHouse/myAttention" },
+  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "/buySellSystem/saleNotTracking", hot: false, flag: false, type: 11, url: "/mateHouse/getMateHouse/saleNotTrack" },
+  { title: "全部在售", icon: "el-icon-zoom-in", path: "/buySellSystem/saleAll", hot: false, flag: false, type: 12, url: "/mateHouse/getMateHouse/soleAllHouse" },
+  { title: "店长推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/shopownerRecommendHouse", hot: false, flag: false, type: 13, url: "/mateHouse/getMateHouse/shopOwnerRecommendHouse" },
 ];
 import getToken from "@/minxi/getUrlToken";
 import getMenuRid from "@/minxi/getMenuRid"
@@ -236,8 +236,8 @@ export default {
         flootSlider: [-2, -2],
       },
       form: {
-        type:'13',
-        title:'店长推荐',
+        type: '13',
+        title: '店长推荐',
         business: [],
         houseType: [],
         renovation: [],
@@ -255,35 +255,38 @@ export default {
         minPrice: '',
         maxPrice: '',
         face: [],
-        sortColumn:'id',
-        sortType:'ascending',
-        searchInfo:''
+        sortColumn: 'id',
+        sortType: 'ascending',
+        searchInfo: '',
+        isOnly: '',
+        keyOwner: ''
       }
     };
   },
   created () {
-   this.form.type = '12';
-   this.form.title ='全部在售';
-   this.form.action = '/mateHouse/getMateHouse/soleAllHouse';
+    this.form.type = '12';
+    this.form.title = '全部在售';
+    this.form.action = '/mateHouse/getMateHouse/soleAllHouse';
   },
   methods: {
     setSelectNav (item) {
-      console.log("11111111111"+JSON.stringify(item));
+      console.log("11111111111" + JSON.stringify(item));
       item.flag = !item.flag;
-      if(this.form.type == item.type){
-         this.form.type = '12';
-         this.form.title ='全部在售';
-         this.form.action = '/mateHouse/getMateHouse/soleAllHouse';
-      }else{
-         this.form.type = item.type;
-         this.form.title=item.title;
-         this.form.action = item.url;
+      if (this.form.type == item.type) {
+        this.form.type = '12';
+        this.form.title = '全部在售';
+        this.form.action = '/mateHouse/getMateHouse/soleAllHouse';
+      } else {
+        this.form.type = item.type;
+        this.form.title = item.title;
+        this.form.action = item.url;
       }
     },
     //跳转页面
     navToPath (path) {
       this.$router.push({ path: path });
     },
+
     GetRequest () {
       var href = window.location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", href);

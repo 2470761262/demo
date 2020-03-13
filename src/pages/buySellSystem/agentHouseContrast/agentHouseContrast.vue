@@ -29,9 +29,9 @@
   border: black 1px solid;
 }
 .detailBox {
-  width: 200px;
+  width: 15rem;
   height: 1000px;
-  padding-right: 100px;
+  padding-right: 1rem;
   border-right: rgb(242, 242, 242) 1px solid;
   display: inline-block;
 }
@@ -43,7 +43,7 @@
 .houseName {
   background: rgb(242, 242, 242);
   display: flex;
-  width: 95%;
+  width: 200px;
   margin-right: 5%;
   height: 100%;
   justify-content: center;
@@ -66,18 +66,18 @@
   border-radius: 20px;
   width: 200px;
   height: 150px;
-  margin-top: 50px;
+  margin-top: 3%;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #808080;
-  margin-bottom: 50px;
+  margin-bottom: 11%;
 }
 .image2 {
-  border-radius: 20px;
-  width: 200px;
-  height: 150px;
-  margin-top: 20px;
+  border-radius: 2rem;
+  width: 85%;
+  height: 10rem;
+  margin-top: 3%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,7 +128,7 @@
     <div class="msgBox">
       <el-scrollbar style="height:100%;width:105rem">
         <div class="detailBox"
-             style="width:100px;margin-top:50px">
+             style="width:100px;margin-top:1rem;loat: left;">
           <div class="house">
             <div class="houseName2 text"> 房源名:</div>
 

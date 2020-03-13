@@ -118,6 +118,12 @@
             </el-option>
           </el-select>
         </el-item>
+        <span><input type='checkbox'
+                 style='margin-left:10px'
+                 @click="keySelect()" /> 钥匙</span>
+        <span><input type='checkbox'
+                 style='margin-left:10px;background:#fff'
+                 @click="onlySelect()" /> 独家</span>
       </div>
       <el-input placeholder="姓名"
                 style="width:240px"
@@ -163,65 +169,77 @@
 
     <template #tableColumn="">
 
-      <el-table-column label="房源编号" min-width="13%">
+      <el-table-column label="房源编号"
+                       min-width="13%">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
         </template>
       </el-table-column>
-      <el-table-column label="楼盘名称" min-width="12.588%">
+      <el-table-column label="楼盘名称"
+                       min-width="12.588%">
         <template v-slot="scope">
           {{scope.row.CommunityName}}
         </template>
       </el-table-column>
-      <el-table-column label="售价(万元)"  min-width="7.3%">
+      <el-table-column label="售价(万元)"
+                       min-width="7.3%">
         <template v-slot="scope">
           {{scope.row.Price}}
         </template>
       </el-table-column>
-      <el-table-column label="面积(㎡)" min-width="6.7%">
+      <el-table-column label="面积(㎡)"
+                       min-width="6.7%">
         <template v-slot="scope">
           {{scope.row.InArea}}
         </template>
       </el-table-column>
-      <el-table-column label="单价(元/㎡)" min-width="8.3%" >
+      <el-table-column label="单价(元/㎡)"
+                       min-width="8.3%">
         <template v-slot="scope">
           {{Math.round(scope.row.Price*10000/scope.row.InArea)+"元/m²"}}
         </template>
       </el-table-column>
-      <el-table-column label="户型" min-width="9.2%">
+      <el-table-column label="户型"
+                       min-width="9.2%">
         <template v-slot="scope">
           {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
         </template>
       </el-table-column>
-      <el-table-column label="装修程度" min-width="9.2%">
+      <el-table-column label="装修程度"
+                       min-width="9.2%">
         <template v-slot="scope">
           {{scope.row.Decoration}}
         </template>
       </el-table-column>
-      <el-table-column label="被看次数"  min-width="7.3%">
+      <el-table-column label="被看次数"
+                       min-width="7.3%">
         <template v-slot="scope">
           {{scope.row.Rooms}}
         </template>
       </el-table-column>
-      <el-table-column label="房源状态"  min-width="7.3%">
+      <el-table-column label="房源状态"
+                       min-width="7.3%">
         <template v-slot="scope">
           {{scope.row.Rooms}}
         </template>
       </el-table-column>
-      <el-table-column label="跟单人"  min-width="7.3%">
+      <el-table-column label="跟单人"
+                       min-width="7.3%">
         <template v-slot="scope">
           {{scope.row.agentPerName}}
         </template>
       </el-table-column>
-      <el-table-column label="操作" min-width="12.8%">
+      <el-table-column label="操作"
+                       min-width="12.8%">
         <template v-slot="scope">
-          <el-button type="info" size="mini">转在售</el-button>
-                      <el-button type="success"
-                     @click="toHouseDetail(scope.row.id)" 
+          <el-button type="info"
+                     size="mini">转在售</el-button>
+          <el-button type="success"
+                     @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
         </template>
       </el-table-column>
-     
+
     </template>
   </list-page>
 </template>
@@ -246,16 +264,12 @@ export default {
         total: 9, //总记录数
         pageSize: 10 //每页条数
       },
+
       tableDataColumn: [
-        { prop: 'HouseNo', label: "房源编号" },
-        { prop: 'CommunityName', label: "楼盘名称" },
         { prop: 'Price', label: "售价(万元)" },
         { prop: 'InArea', label: "面积(m²)" },
         { prop: 'PropertyFee', label: "均价(元/平)" },
-        { prop: 'hall', label: "户型" },
-        { prop: 'Decoration', label: "装修程度" },
-        { prop: 'AgentPer', label: "跟单人" },
-        { prop: 'AddTime', label: "录入时间" }
+        { prop: 'CommunityName', label: "被看次数" },
       ],
       tableData: [],
       elTabs: {
@@ -276,7 +290,9 @@ export default {
       cbId: '',
       roomNo: '',
       queryData: {
-        communityName: ''
+        communityName: '',
+        isOnly: '',
+        keyOwner: '',
       }
     }
   },
@@ -287,6 +303,21 @@ export default {
 
   },
   methods: {
+    keySelect () {
+      if (this.queryData.keyOwner != '') {
+        this.queryData.keyOwner = '';
+      } else {
+        this.queryData.keyOwner = '1';
+      }
+    },
+    onlySelect () {
+      if (this.queryData.isOnly != '') {
+        this.queryData.isOnly = '';
+      } else {
+        this.queryData.isOnly = '1';
+      }
+
+    },
     selectedCommunity (e) {
       this.$confirm('是否确定关注该楼盘?', '提示', {
         confirmButtonText: '确定',
@@ -334,7 +365,7 @@ export default {
           this.$message({
             type: 'success',
             message: result.message
-          
+
           });
         } else {
           this.$message({
@@ -361,7 +392,7 @@ export default {
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
-          this.queryConcernCount ();
+          this.queryConcernCount();
           console.log(123);
         } else {
           console.log("添加关注" + result.message);
@@ -437,7 +468,7 @@ export default {
           return array.forEach(item => {
             return item.array;
           });
-           this.querylist(1);
+          this.querylist(1);
         } else {
           console.log("查询核心盘统计结果then：" + result.message);
           alert(result.message);
@@ -547,7 +578,7 @@ export default {
     },
     //跳转房源详情页面
     toHouseDetail (id) {
-    console.log(id);
+      console.log(id);
       var that = this;
       that.$router.push({
         path: "/buySellSystem/houseDetails",
