@@ -6,7 +6,7 @@ export default [
             { name: "我的相关", active: '/buySellSystem/myRelatedHouse' },
             { name: "我的数据", active: '/buySellSystem/myHouseData' },
             { name: "我的关注", active: '/buySellSystem/myConcern' },
-            { name: "成交对赌", active: '/buySellSystem/houseBet1' },
+            { name: "成交对赌", active: '/buySellSystem/houseBet' },
             { name: "验真列表", active: '/buySellSystem/validateHouseList' },
             { name: "审核列表", active: '/buySellSystem/checkHouseList' },
             { name: "外网房源", active: '/buySellSystem/releaseOutsideHouseList' },
