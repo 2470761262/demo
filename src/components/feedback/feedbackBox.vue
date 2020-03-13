@@ -256,7 +256,8 @@
         console.log(21)
         console.log(r,"消息内容");
         //。。。执行你需要的业务逻辑
-       this.uploadUrl = r.content.url;
+       this.uploadUrl = r.content.picUrl;
+        console.log(this.uploadUrl,"this.uploadUrl");
       }
 
     },
