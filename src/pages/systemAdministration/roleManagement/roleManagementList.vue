@@ -4,7 +4,9 @@
 }
 </style>
 <template>
-  <list-page :parentData="$data"
+  <div>
+    <template>
+    <list-page :parentData="$data"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
@@ -39,7 +41,7 @@
           <div v-if="scope.row.operation!=''">
             <el-button type="info"
                        size="mini"
-                       @click="distributeEvent(item.methosName,scope.row.id)"
+                       @click="distributeEvent(item.methosName,scope.row)"
                        v-for="(item,index) in getOpeBtns(scope.row.operation)"
                        :key="index">{{item.name}}</el-button>
           </div>
@@ -47,6 +49,9 @@
       </el-table-column>
     </template>
   </list-page>
+  </template>
+ 
+  </div>
 </template>
 
 <script>
@@ -58,7 +63,7 @@ export default {
     listPage
   },
   data () {
-    return {
+    return { 
       loading: false, //控制表格加载动画提示
       queryData: {
         RoleName: ""
@@ -72,20 +77,23 @@ export default {
         total: 9, //总记录数
         pageSize: 10//每页条数
       },
+      
       tableDataColumn: [
-        { prop: "id", label: "岗位id" },
+       // { prop: "id", label: "岗位" },
         { prop: "RoleName", label: "岗位名" },
         { prop: "ModDate", label: "修改时间" },
-        { prop: "del", label: "有效状态 0有效 1无效" },
+        { prop: "del", label: "有效状态" },
         { prop: "RoleDesc", label: "岗位描述" },
         { prop: "AddName", label: "添加人" },
         { prop: "AddTime", label: "添加时间" },
-        { prop: "OldRoleId", label: "OldRoleId" },
+        //{ prop: "OldRoleId", label: "OldRoleId" },
       ],
       tableData: [],
+      dialogVisible: false,
     }
   },
   mounted () {
+    this.sidebarFlag = true;
     this.queryRoleDatas(1);
   },
   methods: {
@@ -99,7 +107,7 @@ export default {
         params.RoleName = this.queryData.RoleName;
       }
       this.$api.post({
-        url: '/role/list',
+        url: '/role/roleList',
         data: params,
         token: false,
         headers: { "Content-Type": "application/json" }
@@ -111,6 +119,17 @@ export default {
           console.log(result.data);
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
+          
+          for(var i=0;i<result.data.list.length;i++){
+            switch (result.data.list[i].del){
+              case 0:
+                result.data.list[i].del= " 有效 ";
+                break;
+              case 1:
+                result.data.list[i].del = "无效";
+                break;
+            }
+          }
           this.tableData = result.data.list;
         } else {
           console.log("查询岗位管理列表结果：" + result.message);
@@ -124,12 +143,12 @@ export default {
     toAddRolePage () {
       this.$router.push({ path: "/sys/addRoleManagementList" });
     },
-    editRoleDetail (RoleId) {
-      this.$router.push({ path: "/sys/editRoleDetail", query: { RoleId: RoleId } });
+    editRoleDetail (row) {
+      this.$router.push({ path: "/sys/editRoleDetail", query: { RoleId: row.id } });
     },
-    delRoleDetail (RoleId) {
+    delRoleDetail (row) {
       this.$api.post({
-        url: '/role/delete/' + RoleId,
+        url: '/role/delete/' + row.id ,
         token: false,
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
@@ -145,13 +164,14 @@ export default {
         console.log(e);
       })
     },
-    distributeEvent (e, RoleId) {
-      this[e](RoleId);
+    distributeEvent (e, row ) {
+      this[e](row );
     },
     getOpeBtns (type) {
       let array = [
         { name: '编辑', isType: '1', methosName: 'editRoleDetail' },
-        { name: '删除', isType: '1', methosName: 'delRoleDetail' }
+        { name: '删除', isType: '1', methosName: 'delRoleDetail' },
+        { name: '角色', isType: '1', methosName: 'PositionDetail' },
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)
@@ -165,7 +185,11 @@ export default {
     },
     handleCurrentChange (val) {
       this.queryRoleDatas(val);
-    }
+    },
+    PositionDetail(row){
+      this.$router.push({ path: "/sys/positionManager", query: { id: row.id  ,name:row.RoleName} });
+    },
+    
   }
 };
 </script>

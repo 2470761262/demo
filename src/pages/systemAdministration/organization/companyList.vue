@@ -250,7 +250,7 @@ export default {
       this.$api
         .post({
           url: "/company/del/" + id,
-          token: false,
+          token: true,
           headers: { "Content-Type": "application/json" }
         })
         .then(e => {
@@ -286,7 +286,7 @@ export default {
     isLockedCompanyDetail(id,isLocked){
         this.$api.get({
           url:"/company/isLocked?id="+id+"&isLocked="+isLocked,
-          token:false,
+          token:true,
         }).then(e=>{
           let result = e.data;
           if (result.code == 200) {

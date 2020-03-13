@@ -85,6 +85,13 @@
               <template slot="prepend">角色级别:</template>
             </el-input>
           </div>
+          <div class="formItem " v-if="role">
+            <el-input v-model="positionObj.roleName"
+                      readonly="readonly"
+                      placeholder="岗位">
+              <template slot="prepend">关联岗位:</template>
+            </el-input>
+          </div>
         </div>
         <div class="text item">
           <div class="formItem"
@@ -110,10 +117,13 @@ export default {
   },
   data () {
     return {
+      role:false,
       loading: false,
       showForm: false,
       queryData: {
-        keyword: ''
+        keyword: '',
+        roleName:'',
+        oldRoleId: null,
       },
       pageJson: {
         currentPage: 1, //当前页码
@@ -140,6 +150,8 @@ export default {
     }
   },
   mounted () {
+    this.queryData.oldRoleId =this.$route.query.id;
+    this.queryData.roleName =this.$route.query.name;
     this.queryAddFloorList(1);
   },
   methods: {
@@ -155,7 +167,10 @@ export default {
       var that = this;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage };
       params.keyword = that.queryData.keyword;
-      console.log(params);
+      if(that.queryData.oldRoleId != null){
+        this.role = true;
+        params.oldRoleId = that.queryData.oldRoleId;
+         console.log(params);
       this.$api.post({
         url: '/sys/position',
         data: params,
@@ -175,6 +190,13 @@ export default {
         console.log("查询角色列表失败");
         console.log(e);
       })
+      }else{
+        this.$alert('', '请从岗位管理页面选择对应岗位!!!', {
+            dangerouslyUseHTMLString: false
+          });
+          this.$router.push({ path: "/sys/roleManagementList" });
+      }
+     
     },
     //取消
     cancel () {
@@ -199,6 +221,10 @@ export default {
     addPosition () {
       console.log("add..");
       this.positionObj = {};
+      if(this.queryData.oldRoleId != null){
+         this.positionObj.oldRoleId =this.queryData.oldRoleId;
+         this.positionObj.roleName = this.queryData.roleName;
+      } 
       this.showForm = true;
       this.saveType = "add";
     },
@@ -216,6 +242,10 @@ export default {
             console.log(result.message);
             console.log(result.data);
             this.positionObj = result.data;
+            if(this.queryData.oldRoleId != null){
+               this.positionObj.oldRoleId =this.queryData.oldRoleId;
+               this.positionObj.roleName = this.queryData.roleName;
+            } 
             this.showForm = true;
             this.saveType = "update";
           } else {
