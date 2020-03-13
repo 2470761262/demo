@@ -76,6 +76,7 @@ td {
           auto-expand-parent
           :default-expanded-keys="curNodeId"
           :default-checked-keys="curNodeId"
+          v-loading="treeLoading"
         ></el-tree>
       </div>
       <div class="elControl" v-loading="loading">
@@ -157,9 +158,13 @@ td {
                 type="text"
                 @click="resetPwd(item.AccountID)"
               >密码重置</el-button>
-              <el-button style="float: right; padding: 3px 0" type="text" @click="quitSubmit()">人员异动</el-button>
-              <el-button style="float: right; padding: 3px 0" type="text" @click="quitSubmit()">任命</el-button>
-              <el-button style="float: right; padding: 3px 0" type="text" @click="quitSubmit()">锁定</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text">人员异动</el-button>
+              <el-button style="float: right; padding: 3px 0" type="text">任命</el-button>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="userLock(item.AccountID)"
+              >锁定</el-button>
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
@@ -168,7 +173,7 @@ td {
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
-                @click="userJumpEdit(item.EmpID)"
+                @click="userJumpEdit(item.AccountID)"
               >修改</el-button>
             </div>
             <table>
@@ -315,7 +320,7 @@ td {
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogQuit = false">取 消</el-button>
-        <el-button type="primary" @click="quitSubmit">确 定</el-button>
+        <el-button type="primary" @click="userQuitSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -405,7 +410,8 @@ export default {
         remark: null
       },
       curNodeId: [],
-      jumpNodeId: null
+      jumpNodeId: null,
+      treeLoading: true
     };
   },
   mounted() {
@@ -440,6 +446,9 @@ export default {
       .catch(e => {
         console.log("读取失败");
         console.log(e);
+      })
+      .finally(e => {
+        this.treeLoading = false;
       });
   },
   methods: {
@@ -709,12 +718,27 @@ export default {
       this.quitInfo.job = job;
       console.log(this.quitInfo);
     },
-    quitSubmit() {
-      this.$message({
-        type: "error",
-        message: "开发中...请稍后"
-      });
-      this.dialogQuit = false;
+    userQuitSubmit() {
+      if (
+        this.quitPost.time == null ||
+        this.quitPost.time == "" ||
+        this.quitPost.remark == null ||
+        this.quitPost.remark == ""
+      ) {
+        this.$message({
+          type: "error",
+          message: "离职信息请填写完整"
+        });
+      } else {
+        let params = {
+          accountId: this.quitInfo.id,
+          UpType: "del",
+          upValue: 1,
+          leaveMemo: this.quitPost.remark,
+          leaveTime: this.quitPost.time
+        };
+        this.operation(params);
+      }
     },
     setPhone(id) {
       let params = { id: id };
@@ -762,6 +786,44 @@ export default {
         .catch(e => {
           this.$message.error(e.message);
         });
+    },
+    operation(params) {
+      this.$api
+        .post({
+          url: "/employee/operation",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.$message({
+              type: "success",
+              message: "操作成功"
+            });
+            this.dialogQuit = false;
+          } else {
+            this.$message({
+              type: "error",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("失败");
+          console.log(e);
+        });
+    },
+    userLock(id) {
+      if (id == null || id == "") {
+        this.$message({
+          type: "error",
+          message: "参数出错"
+        });
+      } else {
+        let params = { accountId: id, UpType: "locked", upValue: 1 };
+        this.operation(params);
+      }
     }
   },
   created() {
