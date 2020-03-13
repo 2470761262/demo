@@ -106,7 +106,7 @@
                        ref="companyTree"
                        highlight-current
                        :props="companyProps"
-                       @check-change="checkNode"
+                       @check="checkNode"
                        :default-checked-keys="companyGather"
                        :default-expanded-keys="companyGather">
               </el-tree>
@@ -144,7 +144,11 @@ export default {
       showCompanyTree: false,
       companyGather: [],
       paramsObj: {},
-      showOperationCompany: false
+      showOperationCompany: false,
+      companyTreeSelectNode:{
+        companyIds: [],
+        deptIds:[],
+      },
     }
   },
   mounted () {
@@ -226,6 +230,19 @@ export default {
       that.paramsObj.postId = that.postId;
       that.paramsObj.ruleType = 0;
       that.paramsObj.type = type;
+      let companyId = "";
+      that.companyTreeSelectNode.companyIds.forEach(id => {
+        companyId = companyId + "," + id;
+      });
+      let deptId = "";
+      that.companyTreeSelectNode.deptIds.forEach(id => {
+        deptId = deptId + "," + id;
+      });
+      companyId = companyId.substr(1, companyId.length);
+      deptId = deptId.substr(1, deptId.length);
+      that.paramsObj.companyId = companyId;
+      that.paramsObj.deptId = deptId;
+      console.log(that.paramsObj, "save company ...");
 
       this.$api
         .post({
@@ -285,7 +302,6 @@ export default {
       }
       console.log(node, resolve, "load tree node");
       //读取功能点数据
-      debugger;
       var pId = node.id;
       var type = null;
       if (node.data) {
@@ -311,13 +327,17 @@ export default {
     },
 
     //选中节点
-    checkNode (data, checked, indeterminate) {
-      if (checked) {
-        if (data.deptParentId == 0) {
-          this.paramsObj.companyId = data.id;
-        } else {
-          this.paramsObj.deptId = data.deptParentId;
-        }
+    checkNode (data, checkedData) {
+      if(checkedData.checkedNodes){
+        this.companyTreeSelectNode.companyIds = new Array();
+        this.companyTreeSelectNode.deptIds = new Array();
+        checkedData.checkedNodes.forEach(node =>{
+          if (node.type == 0) {
+            this.companyTreeSelectNode.companyIds.push(node.id);
+          }else{
+            this.companyTreeSelectNode.deptIds.push(node.deptParentId);
+          }
+        })
       }
     },
     //取消
