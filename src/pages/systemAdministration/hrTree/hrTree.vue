@@ -59,6 +59,7 @@ td {
 <template>
   <div>
     <template>
+      <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
       <div class="elTree">
         <el-tree
           ref="treeForm"
@@ -325,6 +326,7 @@ export default {
   mixins: [getMenuRid],
   data() {
     return {
+      filterText: "",
       treeData: [],
       defaultProps: {
         children: "childrenNodes",
@@ -570,12 +572,13 @@ export default {
         }
       }
     },
-    handleNodeClick(data) {},
-    loadNode(node, resolve) {},
     filterNode(value, data) {
-      console.log(value, data);
+      console.log("value：" + value);
+      console.log(data);
       if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      if (data.labelName != null) {
+        return data.labelName.indexOf(value) !== -1;
+      }
     },
     treeCheck(e, data) {},
     linkJump(jumpName, depId, coId) {
@@ -768,6 +771,11 @@ export default {
 
   destroyed() {
     window.removeEventListener("resize", this.getHeight);
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    }
   }
 };
 </script> 
