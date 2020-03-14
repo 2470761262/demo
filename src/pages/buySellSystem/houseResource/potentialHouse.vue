@@ -89,10 +89,10 @@
                      @click="toLook(scope.row.id)"
                      v-if="scope.row.housetype!==1">查看</el-button>
 
-          <el-button type="info"
-                     size="mini"
-                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhid,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
-
+             <el-button type="info"
+                       size="mini"
+                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
+                     
         </template>
 
       </el-table-column>

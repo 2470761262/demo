@@ -613,6 +613,13 @@ export default [
             import(/* webpackChunkName: "deptManageList" */ "@/pages/systemAdministration/employee/employeeList.vue")
     },
     {
+        //系统管理 用户管理-详情
+        path: "/sys/employeedetails",
+        name: "employeedetails",
+        component: () =>
+            import(/* webpackChunkName: "employeedetails" */ "@/pages/systemAdministration/employee/employeedetails.vue")
+    },
+    {
         //系统管理 用户管理-添加
         path: "/sys/addemployee",
         name: "addemployee",

@@ -17,16 +17,28 @@
 </style>
 <template>
   <div class="wrapper">
-    <div class="left-input-container">
-      <span>姓名</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.perName"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </div>
+  
+    <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
+      <el-form-item label="姓名:">
+        <el-input v-model="employeeEntity.perName" readonly="readonly"></el-input>
+      </el-form-item>
+      <el-form-item label="头像">
+        <img v-if="employeeEntity.userImage" :src="employeeEntity.userImage" class="avatar" />
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-form-item>
+    </el-form>
+      <el-upload
+        class="avatar-uploader"
+        :action="uploadUrl"
+        :headers="myHeader"
+        :show-file-list="false"
+        :on-success="handleAvatarSuccess"
+        :before-upload="beforeAvatarUpload"
+      >
+        <span>头像</span>
+        <img v-if="employeeEntity.userImage" :src="employeeEntity.userImage" class="avatar" />
+        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+      </el-upload>
     <div class="left-input-container">
       <span>身份证</span>
       <el-input
@@ -362,20 +374,6 @@
       ></el-input>
     </div>
     <div class="left-input-container">
-      <el-upload
-        class="avatar-uploader"
-        :action="uploadUrl"
-        :headers="myHeader"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload"
-      >
-        <span>头像</span>
-        <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
-    </div>
-    <div class="left-input-container">
       <el-button type="info" @click="getDialogVisible1()" size="small" style="margin-top: 4px;">介绍人</el-button>
       <el-dialog
         title="请选择:"
@@ -554,8 +552,7 @@ export default {
         });
     },
     handleAvatarSuccess(res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw);
-      this.employeeEntity.userImage = this.imageUrl;
+      this.employeeEntity.userImage = URL.createObjectURL(file.raw);
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === "image/jpeg";

@@ -24,13 +24,12 @@
 </style>
 <template>
   <div style="height:100%">
-    <list-page
-      :parentData="$data"
-      @queryTabData="queryTabData"
-      @handleClick="handleClick"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
+    <list-page @sort-change="sortMethod" 
+               :parentData="$data"
+               @queryTabData="queryTabData"
+               @handleClick="handleClick"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
         <div class="page-form-inline budingMarinSet">
           <el-item label="楼盘名称" prop="comId">
@@ -112,14 +111,39 @@
           >
             <template slot="prepend">价格</template>
           </el-input>-
-          <el-input placeholder="最大值" v-model="data.maxPrice" style="width:120px" clearable />
-          <el-date-picker
-            v-model="data.timeSelect"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          >
+          <el-input placeholder="最大值"
+                    v-model="data.maxPrice"
+                    style="width:120px"
+                    clearable />
+          <span style="margin-left:30px">
+              验真状态：
+            </span>
+            <el-select filterable
+                       v-model="data.checkStatusValue"
+                       placeholder="请选择">
+              <el-option v-for="item in checkStatusList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+            <span style="margin-left:30px">
+              电话检索：
+            </span>
+            <el-select filterable
+                       v-model="data.phoneStatusValue"
+                       placeholder="请选择">
+              <el-option v-for="item in phoneStatusList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+          <el-date-picker v-model="data.timeSelect"
+                          type="daterange"
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期">
             <template slot="prepend">录入时间</template>
           </el-date-picker>
           <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px" @click="Remove">清除</span>
@@ -132,15 +156,19 @@
         </div>
       </template>
       <template #tableColumn>
-        <el-table-column
-          :width="item.width"
-          :formatter="item.formart"
-          :label="item.label"
-          show-overflow-tooltip
-          v-for="(item,index) in tableDataColumn"
-          :key="index"
-        ></el-table-column>
-        <el-table-column prop="operation" label="操作" fixed="right" key="992">
+        <el-table-column :width="item.width"
+                         :formatter="item.formart"
+                         :label="item.label"
+                         show-overflow-tooltip
+                         v-for="(item,index) in tableDataColumn"
+                         :key="index"
+                         :prop="item.prop"
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order"></el-table-column>
+        <el-table-column prop="operation"
+                         label="操作"
+                         fixed="right"
+                         key="992">
           <template v-slot="scope">
             <el-button
               :type="item.buttonType"
@@ -306,7 +334,9 @@ export default {
         minInArea: "",
         maxInArea: "",
         minPrice: "",
-        maxPrice: ""
+        maxPrice: "",
+        checkStatusValue:"",
+        phoneStatusValue:""
       },
       cbIdList: [],
       roomNoList: [],
@@ -335,7 +365,8 @@ export default {
           formart: row => {
             return row.communityName;
           },
-          width: ""
+          width: "",
+          order: false
         },
         {
           prop: "buildingNo",
@@ -343,25 +374,29 @@ export default {
           formart: row => {
             return row.buildingNo + "-" + row.roomNo;
           },
-          width: ""
+          width: "",
+          order: false
         },
         {
           prop: "price",
           label: "售价(万元)",
           formart: row => row.price,
-          width: "120"
+          width: "120",
+          order: true
         },
         {
           prop: "area",
           label: "面积(㎡)",
           formart: row => row.area,
-          width: "120"
+          width: "120",
+          order: true
         },
         {
-          prop: "price",
+          prop: "unit_price",
           label: "单价(元/㎡)",
           formart: row => row.unitPrice,
-          width: "120"
+          width: "120",
+          order: true
         },
         {
           prop: "roomType",
@@ -372,37 +407,43 @@ export default {
             let toilet = row.toilet || 0;
             return room + "室-" + hall + "厅-" + toilet + "卫";
           },
-          width: "120"
+          width: "120",
+          order: false
         },
         {
           prop: "checkStatus",
           label: "验真状态",
           formart: row => row.checkStatus,
-          width: "120"
+          width: "120",
+          order: false
         },
         {
-          prop: "checkStatus",
+          prop: "phoneStatus",
           label: "电话检索",
-          formart: row => row.checkStatus,
-          width: "120"
+          formart: row => row.phoneStatus,
+          width: "120",
+          order: false
         },
         {
-          prop: "checkStatus",
+          prop: "customerName",
           label: "业主姓名",
           formart: row => row.customerName,
-          width: "120"
+          width: "120",
+          order: false
         },
         {
-          prop: "checkStatus",
+          prop: "tel",
           label: "业主电话",
           formart: row => row.tel,
-          width: "120"
+          width: "120",
+          order: false
         },
         {
-          prop: "checkStatus",
+          prop: "checkTel",
           label: "验真电话",
           formart: row => row.checkTel,
-          width: "120"
+          width: "120",
+          order: false
         }
         // {
         //   prop: "decoration",
@@ -457,32 +498,6 @@ export default {
           { label: "全部", name: "tab5" }
         ]
       },
-      options: [
-        {
-          value: "选项1",
-          label: "全部"
-        },
-        {
-          value: "选项2",
-          label: "待验真"
-        },
-        {
-          value: "选项3",
-          label: "客户验真"
-        },
-        {
-          value: "选项4",
-          label: "店长验真"
-        },
-        {
-          value: "选项5",
-          label: "验真失败"
-        },
-        {
-          value: "选项6",
-          label: "已过期"
-        }
-      ],
       queryData: {
         houseName: "",
         taskName: "",
@@ -491,23 +506,30 @@ export default {
       },
       nowRow: {},
       checkStatusList: [
-        { key: "1", value: "待客户验真" },
-        { key: "2", value: "待店长验真" }, //客户验真过期
-        { key: "3", value: "店长验真通过" },
-        { key: "4", value: "验真过期" },
-        { key: "5", value: "验真失败" },
-        { key: "6", value: "验真成功" }
-      ]
+        { key: "1",label:"待验真", value: "1" },
+        { key: "2",label: "验真成功", value: "2" },
+        { key: "3",label: "验真失败", value: "3" },
+        { key: "4",label: "已过期", value: "4" }
+      ],
+      phoneStatusList: [
+        { key: "1", label: "号码正常" , value: "0" },
+        { key: "2", label: "号码异常", value: "1" }
+      ],
+      checkStatusValue:"",
+      phoneStatusValue:""
     };
   },
   created() {
     console.log("===========" + JSON.stringify(this.GetRequest()));
   },
-  mounted() {
-    this.queryVerifyHouseByParams(1);
+  mounted () {
+    this.queryVerifyHouseByParams(1, 'id', 'ascending');
   },
   methods: {
-    GetRequest() {
+    sortMethod (e) {
+      this.queryVerifyHouseByParams(1, e.prop, e.order);
+    },
+    GetRequest () {
       var url = location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", location);
       var theRequest = new URLSearchParams(
@@ -517,14 +539,16 @@ export default {
       util.localStorageSet("token", token);
       return token;
     },
-    queryVerifyHouseByParams() {
-      this.queryVerifyHouseDatas(1);
+
+    queryVerifyHouseByParams (currentPage, column, type) {
+      this.queryVerifyHouseDatas(currentPage, column, type);
     },
     Remove() {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryVerifyHouseDatas(1);
+      this.queryVerifyHouseDatas(1,'id', 'ascending');
+
     },
-    queryVerifyHouseDatas(currentPage) {
+    queryVerifyHouseDatas (currentPage, column, type) {
       let that = this;
       that.loading = true;
 
@@ -541,6 +565,10 @@ export default {
       params.maxInArea = that.data.maxInArea;
       params.minPrice = that.data.minPrice;
       params.maxPrice = that.data.maxPrice;
+      params.checkStatusValue=that.data.checkStatusValue;
+      params.phoneStatusValue=that.data.phoneStatusValue;
+      params.sortColumn = column;
+      params.sortType = type;
       this.$api
         .post({
           url: "/draft-house/page",
