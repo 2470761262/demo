@@ -131,11 +131,13 @@
           </el-option>
         </el-select>
         <span>
-          <el-checkbox style='margin-left:10px'
-                       @click="keySelect()" /> 钥匙</span>
+          <input type="checkbox"
+                 style='margin-left:10px'
+                 @click="keySelect()" /> 钥匙</span>
         <span>
-          <el-checkbox style='margin-left:10px;background:#fff'
-                       @click="onlySelect()" /> 独家</span>
+          <input type="checkbox"
+                 style='margin-left:10px;background:#fff'
+                 @click="onlySelect()" /> 独家</span>
       </div>
       <div style="width:1000px">
         <el-input placeholder="姓名"
