@@ -55,12 +55,21 @@ td {
 .el-textarea {
   width: 80%;
 }
+
+.treeSearch {
+  width: 100%;
+}
+
+// .elTreeChange {
+//   width: 60%;
+//   float: right;
+// }
 </style>
 <template>
   <div>
     <template>
-      <el-input placeholder="输入关键字进行过滤" v-model="filterText"></el-input>
       <div class="elTree">
+        <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
         <el-tree
           ref="treeForm"
           :data="treeData"
@@ -158,8 +167,16 @@ td {
                 type="text"
                 @click="resetPwd(item.AccountID)"
               >密码重置</el-button>
-              <el-button style="float: right; padding: 3px 0" type="text">人员异动</el-button>
-              <el-button style="float: right; padding: 3px 0" type="text">任命</el-button>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="userHandle('change',item.AccountID,item.PerName,item.DeptName,item.PerPost,item.Deptid,item.PerPostid,item.PerRole,item.LevelNo,item.IsGold)"
+              >人员异动</el-button>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="userHandle('appoint',item.AccountID,item.PerName,item.DeptName,item.PerPost,item.Deptid,item.PerPostid,item.PerRole,item.LevelNo,item.IsGold)"
+              >任命</el-button>
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
@@ -168,7 +185,7 @@ td {
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
-                @click="userQuit(item.AccountID,item.PerName,item.DeptName,item.PerPost)"
+                @click="userHandle('quit',item.AccountID,item.PerName,item.DeptName,item.PerPost,item.Deptid,item.PerPostid,item.PerRole,item.LevelNo,item.IsGold)"
               >离职</el-button>
               <el-button
                 style="float: right; padding: 3px 0"
@@ -301,7 +318,7 @@ td {
     </template>
     <el-dialog title="离职信息" :visible.sync="dialogQuit" width="33%">
       <el-form>
-        <span>{{this.quitInfo.name}}-{{this.quitInfo.dep}}-{{this.quitInfo.job}}</span>
+        <span>{{this.optInfo.name}}-{{this.optInfo.dep}}-{{this.optInfo.job}}</span>
         <br />
         <br />
         <el-form-item label="离职时间">
@@ -323,6 +340,96 @@ td {
         <el-button type="primary" @click="userQuitSubmit">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="任命信息" :visible.sync="dialogChange" width="52%">
+      <el-form>
+        <span>{{this.optInfo.name}}-{{this.optInfo.dep}}-{{this.optInfo.job}}</span>
+        <table>
+          <tr>
+            <td rowspan="4">
+              <el-form-item label="调动部门" label-position="right">
+                <el-input placeholder="输入关键字进行过滤" v-model="filterTextChange"></el-input>
+                <div>
+                  <el-tree
+                    ref="treeFormChange"
+                    :data="treeDataChange"
+                    node-key="nodeId"
+                    show-checkbox
+                    :props="defaultProps"
+                    @check-change="handleCheckChangeChange"
+                    :highlight-current="true"
+                    :filter-node-method="filterNode"
+                    check-strictly
+                    :action="''"
+                    empty-text="暂无数据，请检查权限"
+                    auto-expand-parent
+                    :default-expanded-keys="curNodeIdChange"
+                    :default-checked-keys="curNodeIdChange"
+                  ></el-tree>
+                </div>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="岗位" label-position="right">
+                <el-select v-model="optInfo.role" filterable placeholder="请选择" :disabled="RoleDis">
+                  <el-option
+                    v-for="item in postOptions"
+                    :key="item.roleID"
+                    :label="item.roleName"
+                    :value="item.roleID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="角色权限" label-position="right">
+                <el-select v-model="optInfo.post" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in positionNameList"
+                    :key="item.id"
+                    :label="item.positionName"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="星级" label-position="right">
+                <el-select v-model="optInfo.level" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in levelNameList"
+                    :key="item.levelNo"
+                    :label="item.levelName+'['+item.levelCode+']('+item.companyName+')'"
+                    :value="item.levelNo"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="是否菁英" label-position="right">
+                <el-select v-model="optInfo.isGold" placeholder="请选择">
+                  <el-option
+                    v-for="item in isGoldOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+        </table>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogChange = false">取 消</el-button>
+        <el-button type="primary" @click="userChangeSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -332,7 +439,9 @@ export default {
   data() {
     return {
       filterText: "",
+      filterTextChange: "",
       treeData: [],
+      treeDataChange: [],
       defaultProps: {
         children: "childrenNodes",
         label: "labelName"
@@ -370,6 +479,7 @@ export default {
         height: ""
       },
       dialogQuit: false,
+      dialogChange: false,
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -399,10 +509,15 @@ export default {
           }
         ]
       },
-      quitInfo: {
+      optInfo: {
         name: null,
         dep: null,
-        job: null
+        job: null,
+        post: null,
+        role: null,
+        level: null,
+        isGold: null,
+        fnFrom: null
       },
       quitPost: {
         id: null,
@@ -410,8 +525,26 @@ export default {
         remark: null
       },
       curNodeId: [],
+      curNodeIdChange: [],
       jumpNodeId: null,
-      treeLoading: true
+      treeLoading: true,
+      postOptions: [],
+      positionNameList: [],
+      levelNameList: [],
+      isGoldOptions: [
+        {
+          value: "0",
+          label: "否"
+        },
+        {
+          value: "1",
+          label: "是"
+        }
+      ],
+      RoleDis: false,
+      checkedIdChange: null,
+      checkedTypeChange: null,
+      logStr: ""
     };
   },
   mounted() {
@@ -710,13 +843,129 @@ export default {
         query: { id: id, back: "hrTree", cur: this.jumpNodeId }
       });
     },
-    userQuit(id, name, dep, job) {
-      this.dialogQuit = true;
-      this.quitInfo.id = id;
-      this.quitInfo.name = name;
-      this.quitInfo.dep = dep;
-      this.quitInfo.job = job;
-      console.log(this.quitInfo);
+    userHandle(
+      type,
+      id,
+      name,
+      dep,
+      job,
+      deptId,
+      perPostid,
+      roleId,
+      level,
+      isGold
+    ) {
+      if (type === "quit") {
+        this.dialogQuit = true;
+      } else {
+        //读取树数据
+        this.$api
+          .post({
+            url: "/sys/tree/unit/noMan"
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.treeDataChange = result.data;
+              //this.filterTextChange = dep;
+              this.curNodeIdChange = [deptId + ",1"];
+            } else {
+              console.log("载入结果" + +result.message);
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("读取失败");
+            console.log(e);
+          });
+        let paramsRole = {};
+        paramsRole.keyWord = "";
+        this.$api
+          .post({
+            url: "/role/getRoleName",
+            data: paramsRole
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.postOptions = result.data;
+            } else {
+              console.log("查询岗位结果：" + result.message);
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("查询岗位失败");
+          });
+        this.$api
+          .post({
+            url: "/sys/position/getPostName",
+            data: paramsRole
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.positionNameList = result.data;
+            } else {
+              console.log("查询角色结果：" + result.message);
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("查询角色失败");
+          });
+        paramsRole.depId = deptId;
+        this.$api
+          .post({
+            url: "/sys/position/getLevelList",
+            data: paramsRole,
+            qs: true
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.levelNameList = result.data;
+            } else {
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("查询星级失败");
+          });
+        if (type === "change") {
+          this.dialogChange = true;
+          this.RoleDis = true;
+          this.optInfo.fnFrom = 1; //0任命，1调动
+        }
+        if (type === "appoint") {
+          this.dialogChange = true;
+          this.RoleDis = false;
+          this.optInfo.fnFrom = 0; //0任命，1调动
+        }
+      }
+      this.optInfo.id = id;
+      this.optInfo.name = name;
+      this.optInfo.dep = dep;
+      this.optInfo.job = job;
+      this.optInfo.post = perPostid;
+      this.optInfo.role = roleId;
+      //console.log(level);
+      this.optInfo.level = level + "";
+      this.optInfo.isGold = isGold + "";
+      this.checkedIdChange = deptId;
+      this.checkedTypeChange = 1;
+      this.logStr =
+        "[部门ID:" +
+        deptId +
+        "改成rpl1],[角色ID:" +
+        roleId +
+        "改成rpl2],[级别编号:" +
+        level +
+        "改成rpl3],[岗位ID:" +
+        perPostid +
+        "改成rpl4],[菁英:" +
+        isGold +
+        "改成rpl5]";
     },
     userQuitSubmit() {
       if (
@@ -731,7 +980,7 @@ export default {
         });
       } else {
         let params = {
-          accountId: this.quitInfo.id,
+          accountId: this.optInfo.id,
           UpType: "del",
           upValue: 1,
           leaveMemo: this.quitPost.remark,
@@ -863,6 +1112,75 @@ export default {
             message: "已取消"
           });
         });
+    },
+    handleCheckChangeChange(data, checked, node) {
+      if (checked == true) {
+        this.checkedIdChange = data.businessId;
+        this.checkedTypeChange = data.type;
+        this.$refs.treeFormChange.setCheckedNodes([data]);
+        if (this.checkedTypeChange === 1) {
+          this.$message({
+            type: "success",
+            message: "已选择【" + data.labelName + "】"
+          });
+          this.filterTextChange = null;
+        } else {
+          this.$message({
+            type: "error",
+            message: "请选择部门！"
+          });
+        }
+      }
+    },
+    userChangeSubmit() {
+      if (this.checkedTypeChange !== 1) {
+        this.$message({
+          type: "error",
+          message: "请选择部门！"
+        });
+        return;
+      }
+      let params = {
+        id: this.optInfo.id,
+        dep: this.checkedIdChange,
+        post: this.optInfo.post,
+        level: this.optInfo.level,
+        role: this.optInfo.role,
+        isGold: this.optInfo.isGold,
+        fnFrom: this.optInfo.fnFrom
+      };
+      this.logStr = this.logStr
+        .replace("rpl1", this.checkedIdChange)
+        .replace("rpl2", this.optInfo.role)
+        .replace("rpl3", this.optInfo.level)
+        .replace("rpl4", this.optInfo.post)
+        .replace("rpl5", this.optInfo.isGold);
+      params.log = this.logStr;
+      this.$api
+        .post({
+          url: "/sys/tree/user/change",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.$message({
+              type: "success",
+              message: result.message
+            });
+            this.dialogChange = false;
+          } else {
+            this.$message({
+              type: "error",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("保存失败");
+          console.log(e);
+        });
     }
   },
   created() {
@@ -876,6 +1194,9 @@ export default {
   watch: {
     filterText(val) {
       this.$refs.treeForm.filter(val);
+    },
+    filterTextChange(val) {
+      this.$refs.treeFormChange.filter(val);
     }
   }
 };

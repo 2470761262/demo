@@ -301,14 +301,16 @@ export default {
       tableDataColumn: [
         { prop: 'HouseNo', label: "房源编号", width: '110px', order: false, disabled: false, default: true },
         { prop: 'CommunityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
-        { prop: 'Price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
-        { prop: 'InArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: 'price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.Price + '万元' },
+        { prop: 'inArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.InArea + 'm²' },
         { prop: 'unitpaice', label: "均价(元/平)", width: '130px', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
         { prop: 'decoration', label: "装修程度", width: '110px', order: false, disabled: false, default: true },
-        { prop: '', label: "被看次数", width: '110px', order: 'custom', disabled: false, default: true },//自己补充
-        { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
+        { prop: 'seenNum', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'outfollow', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'notLookNum', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
+       // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
-        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.Rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
       ],
       tableData: [],
       elTabs: {

@@ -146,7 +146,45 @@ export default {
           console.log(result.data);
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
+         
+          for(var i=0;i<result.data.list.length;i++){
+            switch(result.data.list[i].fnFrom){
+              case 0:
+                result.data.list[i].fnFrom ="任命";
+                break;
+              case 1:
+                result.data.list[i].fnFrom ="调动";
+                break;
+
+            }
+            switch(result.data.list[i].logType){
+              case 1:
+                result.data.list[i].logType ="新增";
+                break;
+              case 2:
+                result.data.list[i].logType ="修改";
+                break;
+              case 3:
+                result.data.list[i].logType ="人员状态";
+                break;
+              case 4:
+                result.data.list[i].logType ="修改部门岗位星级";
+                break;
+            }
+            switch(result.data.list[i].tag){
+              case 0:
+                result.data.list[i].tag ="默认";
+                break;
+              case 1:
+                result.data.list[i].tag ="审核通过";
+                break;
+              case -1:
+                result.data.list[i].tag ="不通过";
+                break;
+            }
+          }
           this.tableData = result.data.list;
+
         } else {
           console.log("查询人员异动列表结果：" + result.message);
           alert(result.message);

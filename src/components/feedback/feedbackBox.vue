@@ -262,10 +262,8 @@
         //。。。执行你需要的业务逻辑
        this.dialogImageUrl = r.content.picUrl;
        this.dialogVisible = true;
-       this.form.pics.push(r.content.picUrl);
-       // console.log(this.dialogImageUrl,this.form,"231");
-        this.uploadUrl = r.content.picUrl;
-        // this.form.pics.push(r.content.picUrl);
+       this.uploadUrl = r.content.picUrl + "/noticeManage/common/picture";
+       this.myHeader = { tk: util.localStorageGet(TOKEN) };
         console.log(this.uploadUrl,this.form,"231");
       }
 
