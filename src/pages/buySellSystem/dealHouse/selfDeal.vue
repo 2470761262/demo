@@ -3,6 +3,7 @@
   <list-page :parentData="$data"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
+             @sort-change="sortMethod"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
@@ -80,6 +81,7 @@
                    style="margin-left:10px"
                    size="mini"
                    @click="queryDatalist">查询</el-button>
+        <div style='color:red;font-size:16px;margin:10px 0 10px 10px'>本列表仅供查询使用，本列表房源在'在资源库-暂不售'内同步显示，转在售请到'暂不售'页面</div>
       </div>
     </template>
 
@@ -89,7 +91,9 @@
                          :label="item.label"
                          :width="item.width"
                          :key="item.prop"
-                         :formatter="formatData"></el-table-column>
+                         :formatter="item.formart"
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order"></el-table-column>
       </template>
       <el-table-column label="操作"
                        fixed="right"
@@ -138,12 +142,12 @@ export default {
       tableDataColumn: [
         { prop: "houseNo", label: "房源编号" },
         { prop: "communityName", label: "楼盘名称" },
-        { prop: "price", label: "成交价(万元)" },
-        { prop: "area", label: "面积(m²)" },
-        { prop: "unitPrice", label: "单价(元/m²)" },
+        { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true },
+        { prop: "area", label: "面积(m²)", order: 'custom', disabled: false, default: true },
+        { prop: "unitPrice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true },
         { prop: "houseType", label: "户型" },
-        { prop: "seenNum", label: "被看次数" },
-        { prop: "tradeTime", label: "成交时间" },
+        { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true },
+        { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
         { prop: "selfSaleType", label: "成交方式" },
         { prop: "followPerName", label: "跟单人" }
       ],
@@ -151,9 +155,13 @@ export default {
     };
   },
   mounted () {
-    this.queryOurComDeal(1);
+    this.queryOurComDeal(1, 'id', 'ascending');
   },
   methods: {
+    sortMethod (e) {
+      console.log(e, "eeee排序");
+      this.queryOurComDeal(1, 'id', 'ascending');
+    },
     queryTabData () {
       console.log(this, "111");
     },
@@ -166,7 +174,7 @@ export default {
       });
     },
     queryDatalist () {
-      this.queryOurComDeal(1);
+      this.queryOurComDeal(1, 'id', 'ascending');
     },
     remoteInput () {
 
@@ -242,10 +250,10 @@ export default {
     },
     Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryOurComDeal(1);
+      this.queryOurComDeal(1, 'id', 'ascending');
 
     },
-    queryOurComDeal (currentPage) {
+    queryOurComDeal (currentPage, column, type) {
       var that = this;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (that.data.comId != null && that.data.comId.length > 0) {
@@ -291,7 +299,7 @@ export default {
           let data = e.data;
           if (data.code == 200) {
             that.pageJson.total = data.data.totalCount;
-            that.pageJson.currentPage = data.data.currPage;
+
             that.tableData = data.data.list;
           } else {
             console.log("查询我司成交列表结果：" + result.message);
@@ -389,7 +397,7 @@ export default {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryDatalist(1);
+      this.queryOurComDeal(1, 'id', 'ascending');
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
@@ -398,7 +406,7 @@ export default {
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryOurComDeal(1);
+      this.queryOurComDeal(1, 'id', 'ascending');
     },
     formatData (row, column) {
       if (column.property == "unitPrice") {

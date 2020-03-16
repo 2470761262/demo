@@ -2,7 +2,8 @@
   <list-page :parentData="$data"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+             @handleCurrentChange="handleCurrentChange"
+             @sort-change="sortMethod">
     <template v-slot:top>
       <div class="page-form-inline ">
         <el-item label="楼盘名称"
@@ -97,10 +98,12 @@
               @click="remove">
           清除
         </span>
-        <span><input type='checkbox'
-                 style='margin-left:10px' /> 钥匙</span>
-        <span><input type='checkbox'
-                 style='margin-left:10px;background:#fff' /> 独家</span>
+        <span>
+          <el-checkbox style='margin-left:10px'
+                       @click="keySelect()" /> 钥匙</span>
+        <span>
+          <el-checkbox style='margin-left:10px;background:#fff'
+                       @click="onlySelect()" /> 独家</span>
         <el-button type="primary"
                    style="margin-left:30px"
                    size="mini"
@@ -112,7 +115,7 @@
     </template>
 
     <template #tableColumn="">
-      <el-table-column label="房源编号">
+      <!-- <el-table-column label="房源编号">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
         </template>
@@ -151,7 +154,17 @@
         <template v-slot="scope">
           {{scope.row.AddTime}}
         </template>
-      </el-table-column>
+      </el-table-column> -->
+      <template v-for="(item) in tableDataColumn">
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop"
+                         :formatter="item.formart"
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order">
+        </el-table-column>
+      </template>
       <el-table-column label="操作"
                        fixed="right"
                        key="operation">
@@ -223,15 +236,17 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: 'HouseNo', label: "房源编号" },
-        { prop: 'CommunityName', label: "楼盘名称" },
-        { prop: 'Price', label: "售价(万元)" },
-        { prop: 'InArea', label: "面积(m²)" },
-        { prop: 'PropertyFee', label: "均价(元/平)" },
-        { prop: 'hall', label: "户型" },
-        { prop: 'Decoration', label: "装修程度" },
-        { prop: 'AgentPer', label: "跟单人" },
-        { prop: 'AddTime', label: "录入时间" }
+        { prop: 'HouseNo', label: "房源编号", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'CommunityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'Price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
+        { prop: 'InArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: 'unitpaice', label: "单价(元/平)", width: '130px', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
+        { prop: 'houseType', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },//自己补充
+        { prop: '', label: "被看次数", width: '140px', order: 'custom', disabled: false, default: true },//自己补充
+        { prop: '', label: "未跟进天数", width: '140px', order: 'custom', disabled: false, default: true },//自己补充
+        { prop: '', label: "未被看天数", width: '140px', order: 'custom', disabled: false, default: true },//自己补充
+        { prop: '', label: "录入时间", width: '110px', order: 'custom', disabled: false, default: true },//自己补充
+
       ],
       tableData: [],
       elTabs: {
@@ -263,8 +278,9 @@ export default {
         CommunityName: '',
         timeSelect: '',
         roomNo: '',
-        cbId: ''
-
+        cbId: '',
+        isOnly: '',
+        keyOwner: ''
       },
 
     }
@@ -274,6 +290,10 @@ export default {
     this.queryCompanyPerList();
   },
   methods: {
+    sortMethod (e) {
+      console.log(e, "eeee排序");
+      this.querylist(1, e.prop, e.order);
+    },
     toHouseData (id, CommunityName) {
       var that = this
       that.dialogVisible = true
@@ -283,7 +303,21 @@ export default {
     },
     querylistByParams () {
       console.log(this.queryData.timeSelect);
-      this.querylist(1);
+      this.querylist(1, 'id', 'ascending');
+    },
+    keySelect () {
+      if (this.queryData.keyOwner != '') {
+        this.queryData.keyOwner = '';
+      } else {
+        this.queryData.keyOwner = '1';
+      }
+    },
+    onlySelect () {
+      if (this.queryData.isOnly != '') {
+        this.queryData.isOnly = '';
+      } else {
+        this.queryData.isOnly = '1';
+      }
     },
     remove () {
       this.queryData.CommunityName = '';
@@ -297,7 +331,7 @@ export default {
       this.querylist(1);
     },
     querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '',sortColumn:'id' };
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', sortColumn: 'id' };
       let that = this;
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.comId = this.queryData.CommunityName; }
       if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
@@ -477,11 +511,11 @@ export default {
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.querylist(1);
+      this.querylist(1, 'id', 'ascending');
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.querylist(val);
+      this.querylist(val, 'id', 'ascending');
     },
   },
 }

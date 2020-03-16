@@ -33,6 +33,7 @@
 </style>
 <template>
   <list-page :parentData="$data"
+             @sort-change="sortMethod"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
@@ -164,6 +165,12 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
+        <span>
+          <el-checkbox style='margin-left:10px'
+                       @click="keySelect()" /> 钥匙</span>
+        <span>
+          <el-checkbox style='margin-left:10px;background:#fff'
+                       @click="onlySelect()" /> 独家</span>
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
               @click="remove">
           清除
@@ -177,7 +184,7 @@
 
     <template #tableColumn="">
 
-      <el-table-column label="房源编号">
+      <!-- <el-table-column label="房源编号">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
         </template>
@@ -232,12 +239,23 @@
         <template v-slot="scope">
           {{scope.row.AgentPerName}}
         </template>
-      </el-table-column>
+      </el-table-column> -->
+      <template v-for="(item) in tableDataColumn">
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop"
+                         :formatter="item.formart"
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order">
+        </el-table-column>
+      </template>
       <el-table-column label="操作"
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
           <el-button type="info"
+                     style='background:green'
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
           <div v-if="scope.row.CollectID != null && scope.row.CollectID!= '' ">
@@ -282,13 +300,18 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: 'HouseNo', label: "房源编号" },
-        { prop: 'CommunityName', label: "楼盘名称" },
-        { prop: 'Price', label: "售价(万元)" },
-        { prop: 'InArea', label: "面积(m²)" },
-        { prop: 'PropertyFee', label: "均价(元/平)" },
-        { prop: 'hall', label: "户型" },
-        { prop: 'AddTime', label: "录入时间" }
+        { prop: 'HouseNo', label: "房源编号", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'CommunityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'BuildingName', label: "栋座", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'RoomNo', label: "房间号", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'Price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
+        { prop: 'InArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: 'unitpaice', label: "单价(元/平)", width: '130px', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
+        { prop: '', label: "被看次数", width: '110px', order: 'custom', disabled: false, default: true },//自己补充
+        { prop: '', label: "未被带看天数", width: '130px', order: 'custom', disabled: false, default: true },//自己补充
+        { prop: '', label: "未跟进天数", width: '130px', order: 'custom', disabled: false, default: true },//自己补充
+        { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
+        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
       ],
       tableData: [],
       elTabs: {
@@ -322,16 +345,36 @@ export default {
         BuildingName: '',
         timeSelect: '',
         RoomNo: '',
-        cbId: ''
+        cbId: '',
+        isOnly: '',
+        keyOwner: ''
       },
 
     }
   },
   mounted () {
-    this.querylist(1);
+    this.querylist(1, 'id', 'ascending');
     this.queryMyImpression();
   },
   methods: {
+    sortMethod (e) {
+      console.log(e, "eeee排序");
+      this.querylist(1, 'id', 'ascending');
+    },
+    keySelect () {
+      if (this.queryData.keyOwner != '') {
+        this.queryData.keyOwner = '';
+      } else {
+        this.queryData.keyOwner = '1';
+      }
+    },
+    onlySelect () {
+      if (this.queryData.isOnly != '') {
+        this.queryData.isOnly = '';
+      } else {
+        this.queryData.isOnly = '1';
+      }
+    },
     handleClose (tag) {
       console.log('删除前：', this.ImpressionList)
       for (let i = 0; i < this.ImpressionList.length; i++) {
@@ -495,9 +538,9 @@ export default {
 
       }    },
     querylistByParams () {
-      this.querylist(1);
+      this.querylist(1, 'id', 'ascending');
     },
-    querylist (currentPage) {
+    querylist (currentPage, column, type) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
       if (this.ImpressionList != null && this.ImpressionList != '') {
@@ -510,6 +553,8 @@ export default {
         params.list = that.addList;
       }
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
+      if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
+      if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
       if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
       if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
       if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
@@ -619,11 +664,11 @@ export default {
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.querylist(1);
+      this.querylist(1, 'id', 'ascending');
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.querylist(val);
+      this.querylist(val, 'id', 'ascending');
     },
   },
 }

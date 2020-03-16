@@ -3,6 +3,7 @@
   <list-page :parentData="$data"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
+             @sort-change="sortMethod"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
@@ -51,16 +52,20 @@
                    style="margin-left:10px"
                    size="mini"
                    @click="queryDatalist">查询</el-button>
+        <div style='color:red;font-size:16px;margin:10px 0 10px 0'>①非作业方在签订合同15天后才可查询；②成交房源将锁定90天，90天后会在'资源库=潜在房源'中显示；③90天内有出售请重新录入</div>
       </div>
     </template>
 
     <template #tableColumn="cell">
+
       <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
                          :key="item.prop"
-                         :formatter="formatData"></el-table-column>
+                         :formatter="item.formart"
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order"></el-table-column>
       </template>
       <el-table-column label="操作"
                        fixed="right"
@@ -105,12 +110,12 @@ export default {
       tableDataColumn: [
         { prop: "houseNo", label: "房源编号" },
         { prop: "communityName", label: "楼盘名称" },
-        { prop: "price", label: "成交价(万元)" },
-        { prop: "area", label: "面积(m²)" },
-        { prop: "unitPrice", label: "单价(元/m²)" },
-        { prop: "houseType", label: "户型" },
-        { prop: "seenNum", label: "被看次数" },
-        { prop: "tradeTime", label: "成交时间" },
+        { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true },
+        { prop: "area", label: "面积(m²)", order: 'custom', disabled: false, default: true },
+        { prop: "unitPrice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true },
+        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },//自己补充
+        { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true },
+        { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
         { prop: "tradePerName", label: "成交人" },
         { prop: "followPerName", label: "跟单人" }
       ],
@@ -118,9 +123,13 @@ export default {
     };
   },
   mounted () {
-    this.queryOurComDeal(1);
+    this.queryOurComDeal(1, 'id', 'ascending');
   },
   methods: {
+    sortMethod (e) {
+      console.log(e, "eeee排序");
+      this.queryOurComDeal(1, 'id', 'ascending');
+    },
     queryTabData () {
       console.log(this, "111");
     },
@@ -163,10 +172,10 @@ export default {
     },
     Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryOurComDeal(1);
+      this.queryOurComDeal(1, 'id', 'ascending');
 
     },
-    queryOurComDeal (currentPage) {
+    queryOurComDeal (currentPage, column, type) {
       var that = this;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (that.data.comId != null && that.data.comId.length > 0) {
@@ -260,12 +269,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryOurComDeal(val);
+      this.queryOurComDeal(val, 'id', 'ascending');
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryOurComDeal(1);
+      this.queryOurComDeal(1, 'id', 'ascending');
     },
     formatData (row, column) {
       if (column.property == "unitPrice") {

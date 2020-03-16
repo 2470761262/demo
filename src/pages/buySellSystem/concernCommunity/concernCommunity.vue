@@ -1,5 +1,6 @@
 <template>
   <list-page :parentData="$data"
+             @sort-change="sortMethod"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
@@ -118,58 +119,74 @@
             </el-option>
           </el-select>
         </el-item>
-        <span><input type='checkbox'
-                 style='margin-left:10px'
-                 @click="keySelect()" /> 钥匙</span>
-        <span><input type='checkbox'
-                 style='margin-left:10px;background:#fff'
-                 @click="onlySelect()" /> 独家</span>
+        <span>
+          房源状态
+        </span>
+        <el-select style="width:100px">
+          <el-option v-for="item in state"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value">
+
+          </el-option>
+        </el-select>
+        <span>
+          <el-checkbox style='margin-left:10px'
+                       @click="keySelect()" /> 钥匙</span>
+        <span>
+          <el-checkbox style='margin-left:10px;background:#fff'
+                       @click="onlySelect()" /> 独家</span>
       </div>
-      <el-input placeholder="姓名"
-                style="width:240px"
-                v-model="queryData.Customers"
-                clearable>
-        <template slot="prepend">业主</template>
-      </el-input>
+      <div style="width:1000px">
+        <el-input placeholder="姓名"
+                  style="width:240px"
+                  v-model="queryData.Customers"
+                  clearable>
+          <template slot="prepend">业主</template>
+        </el-input>
 
-      <el-input placeholder="业主电话"
-                v-model="queryData.Tel"
-                style="margin-left:10px;width:240px"
-                clearable>
-        <template slot="prepend">电话</template>
-      </el-input>
-      <!-- </template>
+        <el-input placeholder="业主电话"
+                  v-model="queryData.Tel"
+                  style="margin-left:10px;width:240px"
+                  clearable>
+          <template slot="prepend">电话</template>
+        </el-input>
+        <!-- </template>
       <template v-slot:> -->
-      <el-input placeholder="最小值"
-                v-model="queryData.minPrice"
-                style="width:160px"
-                clearable>
-        <template slot="prepend">价格</template>
-      </el-input>
-      <el-input placeholder="最大值"
-                v-model="queryData.maxPrice"
-                style="width:100px"></el-input>
+        <el-input placeholder="最小值"
+                  v-model="queryData.minPrice"
+                  style="width:160px"
+                  clearable>
+          <template slot="prepend">价格</template>
+        </el-input>
+        <el-input placeholder="最大值"
+                  v-model="queryData.maxPrice"
+                  style="width:100px"></el-input>
 
-      <el-input placeholder="最小值"
-                v-model="queryData.minInArea"
-                style="width:160px"
-                clearable>
-        <template slot="prepend">面积</template>
-      </el-input>
-      <el-input placeholder="最大值"
-                v-model="queryData.maxInArea"
-                style="margin-left:3px;width:100px"></el-input>
-
+        <el-input placeholder="最小值"
+                  v-model="queryData.minInArea"
+                  style="width:160px"
+                  clearable>
+          <template slot="prepend">面积</template>
+        </el-input>
+        <el-input placeholder="最大值"
+                  v-model="queryData.maxInArea"
+                  style="margin-left:3px;width:100px"></el-input>
+      </div>
       <el-button type="primary"
                  style="margin-left:30px"
                  size="mini"
                  @click="querylistByParams()">查询</el-button>
+      <el-button type="primary"
+                 style="margin-left:30px"
+                 size="mini"
+                 @click="querylistByParams()">更多筛选</el-button>
 
     </template>
 
     <template #tableColumn="">
 
-      <el-table-column label="房源编号"
+      <!-- <el-table-column label="房源编号"
                        min-width="13%">
         <template v-slot="scope">
           {{scope.row.HouseNo}}
@@ -194,7 +211,7 @@
         </template>
       </el-table-column>
       <el-table-column label="单价(元/㎡)"
-                       min-width="8.3%">
+                       min-width="9%">
         <template v-slot="scope">
           {{Math.round(scope.row.Price*10000/scope.row.InArea)+"元/m²"}}
         </template>
@@ -228,7 +245,17 @@
         <template v-slot="scope">
           {{scope.row.agentPerName}}
         </template>
-      </el-table-column>
+      </el-table-column> -->
+      <template v-for="(item) in tableDataColumn">
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop"
+                         :formatter="item.formart"
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order">
+        </el-table-column>
+      </template>
       <el-table-column label="操作"
                        min-width="12.8%">
         <template v-slot="scope">
@@ -264,12 +291,22 @@ export default {
         total: 9, //总记录数
         pageSize: 10 //每页条数
       },
-
+      state: [
+        { value: '1', label: "房源编号1" },
+        { value: '2', label: "房源编号2" },
+        { value: '3', label: "房源编号3" },
+      ],
       tableDataColumn: [
-        { prop: 'Price', label: "售价(万元)" },
-        { prop: 'InArea', label: "面积(m²)" },
-        { prop: 'PropertyFee', label: "均价(元/平)" },
-        { prop: 'CommunityName', label: "被看次数" },
+        { prop: 'HouseNo', label: "房源编号", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'CommunityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'Price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
+        { prop: 'InArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: 'unitpaice', label: "均价(元/平)", width: '130px', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
+        { prop: 'decoration', label: "装修程度", width: '110px', order: false, disabled: false, default: true },
+        { prop: '', label: "被看次数", width: '110px', order: 'custom', disabled: false, default: true },//自己补充
+        { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
+        { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
+        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
       ],
       tableData: [],
       elTabs: {
@@ -297,12 +334,16 @@ export default {
     }
   },
   mounted () {
-    this.queryVerifyHouseDatas(1);
+    this.queryVerifyHouseDatas(1, 'id', 'ascending');
     this.queryConcernCount();
     this.queryNotConcernCommunityList();
 
   },
   methods: {
+    sortMethod (e) {
+      console.log(e, "eeee排序");
+      this.queryVerifyHouseDatas(1, 'id', 'ascending');
+    },
     keySelect () {
       if (this.queryData.keyOwner != '') {
         this.queryData.keyOwner = '';
@@ -380,7 +421,7 @@ export default {
       })
     },
     querylistByParams () {
-      this.queryVerifyHouseDatas(1);
+      this.queryVerifyHouseDatas(1, 'id', 'ascending');
     },
     addCommunity (id) {
       let params = { CommunityID: id + '' };
@@ -404,12 +445,14 @@ export default {
         console.log(e);
       })
     },
-    queryVerifyHouseDatas (currentPage) {
+    queryVerifyHouseDatas (currentPage, column, type) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
 
       if (this.comId != null && this.comId != '') { params.Comid = this.comId; }
       if (this.cbId != null && this.cbId != '') { params.CBid = this.cbId; }
+      if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
+      if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
       if (this.roomNo != null && this.roomNo != '') { params.BHID = this.roomNo; }
       if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
       if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
@@ -540,6 +583,7 @@ export default {
       }
     },
     queryCBId () {
+      console.log(this);
       var that = this
       this.$api.get({
         url: "/mateHouse/queryComBuilding",
@@ -592,11 +636,11 @@ export default {
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryVerifyHouseDatas(1);
+      this.queryVerifyHouseDatas(1, 'id', 'ascending');
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryVerifyHouseDatas(val);
+      this.queryVerifyHouseDatas(val, 'id', 'ascending');
     },
   },
 }
