@@ -119,12 +119,12 @@ export default {
     queryStroeDatas (currentPage) {
       this.showList = true;
       this.tableData = [];
-      this.tableDataColumn = [{ prop: "id", label: "门店id", width: "70px" },
+      this.tableDataColumn = [//{ prop: "id", label: "门店id", width: "70px" },
       { prop: "storeName", label: "店面", width: "165px" },
-      { prop: "flagSale", label: "职务", width: "165px" },
+      { prop: "flagSale", label: "职务", width: "150px" },
       { prop: "shoreAddress", label: "地址" },
       { prop: "shoreTel", label: "电话" },
-      { prop: "shoreType", label: "类型" },
+      { prop: "shoreType", label: "类型",width: "165px" },
       { prop: "storeDesc", label: "描述" },
       { prop: "regDate", label: "开业时间", },
       ]
