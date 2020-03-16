@@ -128,7 +128,7 @@
           {{scope.row.AddTime}}
         </template>
       </el-table-column> -->
-      <template v-for="(item) in tableDataColumn">
+      <template v-for="(item) in tableColumnField">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
