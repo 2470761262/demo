@@ -82,7 +82,7 @@ export default {
        // { prop: "id", label: "岗位" },
         { prop: "RoleName", label: "岗位名" },
         { prop: "ModDate", label: "修改时间" },
-        { prop: "del", label: "有效状态" },
+        { prop: "del", label: "有效状态",width:"100px" },
         { prop: "RoleDesc", label: "岗位描述" },
         { prop: "AddName", label: "添加人" },
         { prop: "AddTime", label: "添加时间" },
@@ -171,7 +171,7 @@ export default {
       let array = [
         { name: '编辑', isType: '1', methosName: 'editRoleDetail' },
         { name: '删除', isType: '1', methosName: 'delRoleDetail' },
-        { name: '角色', isType: '1', methosName: 'PositionDetail' },
+        { name: '角色设置', isType: '1', methosName: 'PositionDetail' },
       ]
       // return array.filter((item) => {
       //   return item.isType.includes(type)

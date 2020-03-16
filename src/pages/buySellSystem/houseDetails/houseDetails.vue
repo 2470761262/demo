@@ -368,7 +368,10 @@ input[type="number"]::-webkit-outer-spin-button {
             <el-image style="margin-left: 20px" :src="require('../../../assets/images/beton.png')" lazy></el-image>
             <p style="">对赌已生效</p>
             <p style="margin-bottom: 10px;font-size: x-large;color: black;">{{betAmount}}鑫币已支付</p>
-            <button style="margin-bottom: -10px;width: 80px;font-size: medium;border: 0px;background-color: #0d824b;border-radius:5px;">加油</button>
+            <button
+              @click="addBetSuccess=false"
+              style="margin-bottom: -10px;width: 80px;font-size: medium;border: 0px;background-color: #0d824b;border-radius:5px;">
+              加油</button>
           </div>
         </div>
       </el-dialog>
@@ -1728,12 +1731,12 @@ export default {
         this.addBetSuccess = true;
         if (data.code == 200) {
           this.getBetInfo();
-          this.addBetVisible = false
-          this.addBetResult.status = true;
+          that.addBetVisible = false
+          that.addBetResult.status = true;
         } else {
           this.$message.error(data.message);
-          this.addBetResult.status = false;
-          this.addBetResult.err = data.message;
+          that.addBetResult.status = false;
+          that.addBetResult.err = data.message;
         }
       }).catch((e) => {
         console.log("查询对赌房源列表失败");

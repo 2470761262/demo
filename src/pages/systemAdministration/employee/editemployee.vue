@@ -22,10 +22,7 @@
       <el-form-item label="姓名:">
         <el-input v-model="employeeEntity.perName" readonly="readonly"></el-input>
       </el-form-item>
-      <el-form-item label="头像">
-        <img v-if="employeeEntity.userImage" :src="employeeEntity.userImage" class="avatar" />
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-form-item>
+
     </el-form>
       <el-upload
         class="avatar-uploader"

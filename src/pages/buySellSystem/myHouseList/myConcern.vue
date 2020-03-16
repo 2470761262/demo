@@ -304,14 +304,14 @@ export default {
         { prop: 'CommunityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
         { prop: 'BuildingName', label: "栋座", width: '110px', order: false, disabled: false, default: true },
         { prop: 'RoomNo', label: "房间号", width: '110px', order: false, disabled: false, default: true },
-        { prop: 'Price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
-        { prop: 'InArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: 'Price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.Price + '万元' },
+        { prop: 'InArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.InArea + 'm²' },
         { prop: 'unitpaice', label: "单价(元/平)", width: '130px', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
         { prop: '', label: "被看次数", width: '110px', order: 'custom', disabled: false, default: true },//自己补充
         { prop: '', label: "未被带看天数", width: '130px', order: 'custom', disabled: false, default: true },//自己补充
         { prop: '', label: "未跟进天数", width: '130px', order: 'custom', disabled: false, default: true },//自己补充
         { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
-        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.Rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
       ],
       tableData: [],
       elTabs: {
