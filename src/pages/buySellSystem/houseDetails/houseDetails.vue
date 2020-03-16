@@ -368,7 +368,10 @@ input[type="number"]::-webkit-outer-spin-button {
             <el-image style="margin-left: 20px" :src="require('../../../assets/images/beton.png')" lazy></el-image>
             <p style="">对赌已生效</p>
             <p style="margin-bottom: 10px;font-size: x-large;color: black;">{{betAmount}}鑫币已支付</p>
-            <button style="margin-bottom: -10px;width: 80px;font-size: medium;border: 0px;background-color: #0d824b;border-radius:5px;">加油</button>
+            <button
+              @click="addBetResult.status=false"
+              style="margin-bottom: -10px;width: 80px;font-size: medium;border: 0px;background-color: #0d824b;border-radius:5px;">
+              加油</button>
           </div>
         </div>
       </el-dialog>
