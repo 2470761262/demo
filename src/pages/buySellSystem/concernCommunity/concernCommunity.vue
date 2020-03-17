@@ -1,3 +1,8 @@
+<style>
+.div {
+  position: absolute;
+}
+</style>
 <template>
   <list-page :parentData="$data"
              @sort-change="sortMethod"
@@ -176,14 +181,14 @@
                   style="margin-left:3px;width:100px"></el-input>
       </div>
       <el-button type="primary"
-                 style="margin-left:30px"
+                 style="height:40px;margin-right:5px;margin-top:10px"
                  size="mini"
                  @click="querylistByParams()">查询</el-button>
-      <el-button type="primary"
-                 style="margin-left:30px"
-                 size="mini"
-                 @click="querylistByParams()">更多筛选</el-button>
+      <moreSelect @moreSlectChange="moreSlectChange"
+                  style="height:40px;margin-right:5px;margin-top:10px"></moreSelect>
+      <div class="div">
 
+      </div>
     </template>
 
     <template #tableColumn="">
@@ -274,12 +279,14 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
+import moreSelect from '@/components/moreSelect';
 import getMenuRid from '@/minxi/getMenuRid';
 import houseContrast from '@/minxi/houseContrast';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
-    listPage
+    listPage,
+    moreSelect
   },
   data () {
 
@@ -301,16 +308,19 @@ export default {
       tableDataColumn: [
         { prop: 'HouseNo', label: "房源编号", width: '110px', order: false, disabled: false, default: true },
         { prop: 'CommunityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
-        { prop: 'Price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
-        { prop: 'InArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: 'price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.Price + '万元' },
+        { prop: 'inArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.InArea + 'm²' },
         { prop: 'unitpaice', label: "均价(元/平)", width: '130px', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
         { prop: 'decoration', label: "装修程度", width: '110px', order: false, disabled: false, default: true },
-        { prop: '', label: "被看次数", width: '110px', order: 'custom', disabled: false, default: true },//自己补充
-        { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
+        { prop: 'seenNum', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'outfollow', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'notLookNum', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
+        // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
-        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.Rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
       ],
-      tableData: [],
+      tableData: {},
+      moreSlect: [],
       elTabs: {
         activeName: "tab1",
         list: [
@@ -345,6 +355,11 @@ export default {
     sortMethod (e) {
       console.log(e, "eeee排序");
       this.queryVerifyHouseDatas(1, 'id', 'ascending');
+    },
+    moreSlectChange (e) {
+
+      this.moreSlect = e;
+      console.log(Object.keys(this.moreSlect).length);
     },
     keySelect () {
       if (this.queryData.keyOwner != '') {
@@ -450,18 +465,24 @@ export default {
     queryVerifyHouseDatas (currentPage, column, type) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
-
-      if (this.comId != null && this.comId != '') { params.Comid = this.comId; }
-      if (this.cbId != null && this.cbId != '') { params.CBid = this.cbId; }
-      if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
-      if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
-      if (this.roomNo != null && this.roomNo != '') { params.BHID = this.roomNo; }
-      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
-      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
-      if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
-      if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
-      if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
-      if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
+      if (Object.keys(this.moreSlect).length != 0) {
+        for (let key in this.moreSlect) {
+          params[key] = this.moreSlect[key]
+        }
+      }
+      else {
+        if (this.comId != null && this.comId != '') { params.Comid = this.comId; }
+        if (this.cbId != null && this.cbId != '') { params.CBid = this.cbId; }
+        if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
+        if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
+        if (this.roomNo != null && this.roomNo != '') { params.BHID = this.roomNo; }
+        if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
+        if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
+        if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
+        if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
+        if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
+        if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
+      }
       this.$api.post({
         url: '/concern_community/list',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
