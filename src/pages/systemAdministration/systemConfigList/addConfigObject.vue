@@ -541,7 +541,8 @@ export default {
 
     } else {
       this.queryCompanyDatas(1);
-      this.configId = this.$route.params.configId;
+      this.notice.configId = this.$route.params.configId;
+      console.log(this.configId, 111111111);
       this.notice.configNo = this.$route.params.sysParNo;
       this.notice.configName = this.$route.params.sysParName;
       this.notice.paraIsAllowed = this.paraIsAllowed[0].value

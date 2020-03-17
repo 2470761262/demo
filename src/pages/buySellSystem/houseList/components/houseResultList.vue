@@ -217,25 +217,30 @@
     <div class="select-tabs"
          v-if="!querySelectFlag">
       <div class="select-tabs-cell">
-        <div class="select-tabs-item">
+        <div class="select-tabs-item"
+             @click="defaultSelect()">
           <div class="tabs-item-title">默认排序</div>
         </div>
-        <div class="select-tabs-item">
+        <div class="select-tabs-item"
+             @click="priceSelect()">
           <div class="tabs-item-title">价格</div>
           <i class="el-icon-sort"></i>
         </div>
-        <div class="select-tabs-item">
+        <div class="select-tabs-item"
+             @click="inAreaSelect()">
           <div class="tabs-item-title">面积</div>
           <i class="el-icon-sort"></i>
         </div>
       </div>
       <div class="select-tabs-cell">
         <label class="select-checkbox">
-          <input type="checkbox">
+          <input type="checkbox"
+                 @click="keySelect()">
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
-          <input type="checkbox">
+          <input type="checkbox"
+                 @click="onlySelect()">
           <span>独家</span>
         </label>
       </div>
@@ -401,6 +406,46 @@ export default {
     //远程排序
     sortMethod (item) {
       console.log(item);
+    },
+    keySelect () {
+      if (this.form.keyOwner != '') {
+        this.form.keyOwner = '';
+      } else {
+        this.form.keyOwner = '1';
+      }
+
+
+    },
+    onlySelect () {
+      if (this.form.isOnly != '') {
+        this.form.isOnly = '';
+      } else {
+        this.form.isOnly = '1';
+      }
+
+
+    },
+    defaultSelect () {
+      this.form.sortColumn = 'id';
+      this.form.sortType = "ascending";
+    },
+    priceSelect () {
+      this.form.sortColumn = 'price';
+      if (this.form.sortType == "ascending") {
+        this.form.sortType = "descending"
+      } else {
+        this.form.sortType = "ascending"
+      }
+      console.log(this.form.sortType);
+    },
+    inAreaSelect () {
+      this.form.sortColumn = 'inArea';
+      if (this.form.sortType == "ascending") {
+        this.form.sortType = "descending"
+      } else {
+        this.form.sortType = "ascending"
+      }
+      console.log(this.form.sortType);
     },
     InitPageJson () {
       this.pageJson = { total: 1, currentPage: 1 }

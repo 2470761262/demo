@@ -95,7 +95,7 @@
         </div>
         <div class="left-input-container">
             <span>学历</span>
-             <el-select v-model="employeeEntity.education" filter-method @focus="findByParams4()"  placeholder="请选择">
+             <el-select v-model="employeeEntity.education"  @focus="findByParams4()"  placeholder="请选择">
             <el-option
               v-for="item in educationList"
               :key="item.value"
@@ -177,7 +177,7 @@
     </div>
     <div class="left-input-container">
       <span>角色</span>
-          <el-select v-model="employeeEntity.perPost" filter-method @focus="findByParams()" @change="initposition()"  placeholder="请选择">
+          <el-select v-model="employeeEntity.perPost"  @focus="findByParams()" @change="initposition()"  placeholder="请选择">
             <el-option
               v-for="item in positionNameList"
               :key="item.value"
@@ -188,7 +188,7 @@
     </div>
     <div class="left-input-container">
       <span>岗位</span>
-       <el-select v-model="employeeEntity.perRole" filter-method @focus="findByParams1()"  placeholder="请选择">
+       <el-select v-model="employeeEntity.perRole"  @focus="findByParams1()"  placeholder="请选择">
             <el-option
               v-for="item in roleNameList"
               :key="item.value"
@@ -307,7 +307,7 @@
     </div>
     <div class="left-input-container">
       <span>星级编号</span>
-      <el-select v-model="employeeEntity.levelNo" filter-method @focus="findByParams2()"  placeholder="请选择">
+      <el-select v-model="employeeEntity.levelNo"  @focus="findByParams2()"  placeholder="请选择">
             <el-option
               v-for="item in levelNameList"
               :key="item.value"

@@ -1,6 +1,7 @@
 
 <template>
   <list-page :parentData="$data"
+             @sort-change="sortMethod"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
@@ -71,6 +72,8 @@
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
+                         :sortable="item.order"
+                         :sort-orders="['ascending', 'descending']"
                          :key="item.prop">
         </el-table-column>
       </template>
@@ -129,10 +132,10 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: 'communityName', label: "小区名称" },
-        { prop: 'buildingName', label: "楼栋号" },
-        { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)" }
+        { prop: 'communityName', label: "小区名称", width: '170', order: "custom", disabled: true, default: true },
+        { prop: 'buildingName', label: "楼栋号", width: '170', order: "custom", disabled: true, default: true },
+        { prop: 'roomNo', label: "房间号", width: '170', order: "custom", disabled: true, default: true },
+        { prop: 'inArea', label: "面积(m²)", width: '170', order: "custom", disabled: true, default: true }
 
 
       ],
@@ -257,6 +260,10 @@ export default {
       } else {
         this.options = [];
       }
+    },
+    sortMethod (e) {
+      console.log(e.prop, e.order);
+      this.queryNotPhone(1, e.prop, e.order);
     },
     queryCBId () {
       var that = this

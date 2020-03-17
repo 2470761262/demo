@@ -55,11 +55,21 @@ td {
 .el-textarea {
   width: 80%;
 }
+
+.treeSearch {
+  width: 100%;
+}
+
+// .elTreeChange {
+//   width: 60%;
+//   float: right;
+// }
 </style>
 <template>
   <div>
     <template>
       <div class="elTree">
+        <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
         <el-tree
           ref="treeForm"
           :data="treeData"
@@ -72,6 +82,10 @@ td {
           check-strictly
           :action="''"
           empty-text="暂无数据，请检查权限"
+          auto-expand-parent
+          :default-expanded-keys="curNodeId"
+          :default-checked-keys="curNodeId"
+          v-loading="treeLoading"
         ></el-tree>
       </div>
       <div class="elControl" v-loading="loading">
@@ -100,7 +114,12 @@ td {
             <el-button type="text" @click="lock('company',formCom.id)" :underline="false">锁定</el-button>
           </el-form-item>
         </el-form>
-        <el-form ref="formDep" :model="formDep" v-show="checkedType===1" label-width="100px">
+        <el-form
+          ref="formDep"
+          :model="formDep"
+          v-show="checkedType===1||checkedType===2"
+          label-width="100px"
+        >
           <el-form-item label="部门名称">{{formDep.name}}</el-form-item>
           <el-form-item label="部门类型">{{formDep.depType}}</el-form-item>
           <el-form-item label="部门属性">{{formDep.isCom}}</el-form-item>
@@ -128,7 +147,12 @@ td {
           </el-form-item>
         </el-form>
       </div>
-      <div class="elInfo" v-show="checkedType===1" v-loading="loading" :style="contentStyleObj">
+      <div
+        class="elInfo"
+        v-show="checkedType===1||checkedType===2"
+        v-loading="loading"
+        :style="contentStyleObj"
+      >
         <div v-for="(item) in this.employeeData" :key="item.AccountID">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
@@ -143,18 +167,30 @@ td {
                 type="text"
                 @click="resetPwd(item.AccountID)"
               >密码重置</el-button>
-              <el-button style="float: right; padding: 3px 0" type="text" @click="quitSubmit()">人员异动</el-button>
-              <el-button style="float: right; padding: 3px 0" type="text" @click="quitSubmit()">任命</el-button>
-              <el-button style="float: right; padding: 3px 0" type="text" @click="quitSubmit()">锁定</el-button>
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
-                @click="userQuit(item.AccountID,item.PerName,item.DeptName,item.PerPost)"
+                @click="userHandle('change',item.AccountID,item.PerName,item.DeptName,item.PerPost,item.Deptid,item.PerPostid,item.PerRole,item.LevelNo,item.IsGold)"
+              >人员异动</el-button>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="userHandle('appoint',item.AccountID,item.PerName,item.DeptName,item.PerPost,item.Deptid,item.PerPostid,item.PerRole,item.LevelNo,item.IsGold)"
+              >任命</el-button>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="userLock(item.AccountID)"
+              >锁定</el-button>
+              <el-button
+                style="float: right; padding: 3px 0"
+                type="text"
+                @click="userHandle('quit',item.AccountID,item.PerName,item.DeptName,item.PerPost,item.Deptid,item.PerPostid,item.PerRole,item.LevelNo,item.IsGold)"
               >离职</el-button>
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
-                @click="userJumpEdit(item.EmpID)"
+                @click="userJumpEdit(item.AccountID)"
               >修改</el-button>
             </div>
             <table>
@@ -282,7 +318,7 @@ td {
     </template>
     <el-dialog title="离职信息" :visible.sync="dialogQuit" width="33%">
       <el-form>
-        <span>{{this.quitInfo.name}}-{{this.quitInfo.dep}}-{{this.quitInfo.job}}</span>
+        <span>{{this.optInfo.name}}-{{this.optInfo.dep}}-{{this.optInfo.job}}</span>
         <br />
         <br />
         <el-form-item label="离职时间">
@@ -301,7 +337,97 @@ td {
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogQuit = false">取 消</el-button>
-        <el-button type="primary" @click="quitSubmit">确 定</el-button>
+        <el-button type="primary" @click="userQuitSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="任命信息" :visible.sync="dialogChange" width="52%">
+      <el-form>
+        <span>{{this.optInfo.name}}-{{this.optInfo.dep}}-{{this.optInfo.job}}</span>
+        <table>
+          <tr>
+            <td rowspan="4">
+              <el-form-item label="调动部门" label-position="right">
+                <el-input placeholder="输入关键字进行过滤" v-model="filterTextChange"></el-input>
+                <div>
+                  <el-tree
+                    ref="treeFormChange"
+                    :data="treeDataChange"
+                    node-key="nodeId"
+                    show-checkbox
+                    :props="defaultProps"
+                    @check-change="handleCheckChangeChange"
+                    :highlight-current="true"
+                    :filter-node-method="filterNode"
+                    check-strictly
+                    :action="''"
+                    empty-text="暂无数据，请检查权限"
+                    auto-expand-parent
+                    :default-expanded-keys="curNodeIdChange"
+                    :default-checked-keys="curNodeIdChange"
+                  ></el-tree>
+                </div>
+              </el-form-item>
+            </td>
+            <td>
+              <el-form-item label="岗位" label-position="right">
+                <el-select v-model="optInfo.role" filterable placeholder="请选择" :disabled="RoleDis">
+                  <el-option
+                    v-for="item in postOptions"
+                    :key="item.roleID"
+                    :label="item.roleName"
+                    :value="item.roleID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="角色权限" label-position="right">
+                <el-select v-model="optInfo.post" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in positionNameList"
+                    :key="item.id"
+                    :label="item.positionName"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="星级" label-position="right">
+                <el-select v-model="optInfo.level" filterable placeholder="请选择">
+                  <el-option
+                    v-for="item in levelNameList"
+                    :key="item.levelNo"
+                    :label="item.levelName+'['+item.levelCode+']('+item.companyName+')'"
+                    :value="item.levelNo"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <el-form-item label="是否菁英" label-position="right">
+                <el-select v-model="optInfo.isGold" placeholder="请选择">
+                  <el-option
+                    v-for="item in isGoldOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+        </table>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogChange = false">取 消</el-button>
+        <el-button type="primary" @click="userChangeSubmit">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -312,7 +438,10 @@ export default {
   mixins: [getMenuRid],
   data() {
     return {
+      filterText: "",
+      filterTextChange: "",
       treeData: [],
+      treeDataChange: [],
       defaultProps: {
         children: "childrenNodes",
         label: "labelName"
@@ -350,6 +479,7 @@ export default {
         height: ""
       },
       dialogQuit: false,
+      dialogChange: false,
       pickerOptions: {
         disabledDate(time) {
           return time.getTime() > Date.now();
@@ -379,16 +509,42 @@ export default {
           }
         ]
       },
-      quitInfo: {
+      optInfo: {
         name: null,
         dep: null,
-        job: null
+        job: null,
+        post: null,
+        role: null,
+        level: null,
+        isGold: null,
+        fnFrom: null
       },
       quitPost: {
         id: null,
         time: null,
         remark: null
-      }
+      },
+      curNodeId: [],
+      curNodeIdChange: [],
+      jumpNodeId: null,
+      treeLoading: true,
+      postOptions: [],
+      positionNameList: [],
+      levelNameList: [],
+      isGoldOptions: [
+        {
+          value: "0",
+          label: "否"
+        },
+        {
+          value: "1",
+          label: "是"
+        }
+      ],
+      RoleDis: false,
+      checkedIdChange: null,
+      checkedTypeChange: null,
+      logStr: ""
     };
   },
   mounted() {
@@ -409,19 +565,33 @@ export default {
           alert(result.message);
         }
       })
+      .then(() => {
+        if (this.$route.query.cur != null) {
+          this.curNodeId = [this.$route.query.cur];
+          this.$nextTick(() => {
+            this.handleCheckChange(
+              this.$refs.treeForm.getNode(...this.curNodeId).data,
+              true
+            );
+          });
+        }
+      })
       .catch(e => {
         console.log("读取失败");
         console.log(e);
+      })
+      .finally(e => {
+        this.treeLoading = false;
       });
   },
   methods: {
     handleCheckChange(data, checked, node) {
       this.loading = true;
-      console.log("loading..." + this.loading);
       if (checked == true) {
         this.checkedId = data.businessId;
         this.checkedType = data.type;
         this.$refs.treeForm.setCheckedNodes([data]);
+        this.jumpNodeId = data.nodeId;
         console.log(
           "当前类型：" + this.checkedType + ",ID：" + data.businessId
         );
@@ -502,34 +672,79 @@ export default {
             .finally(e => {
               this.employee(this.checkedId);
             });
+        } else if (this.checkedType === 2) {
+          let params = { id: data.parentNodeId.split(",")[0] };
+          this.$api
+            .post({
+              url: "/department/detail",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              console.log(e.data);
+              let result = e.data;
+              if (result.code == 200) {
+                let data = result.data;
+                this.formDep.id = data.id;
+                this.formDep.name = data.name;
+                this.formDep.depType = ["支持线", "业务线"][data.depType - 1];
+                this.formDep.isCom = ["运营期", "拓展期", "未设置"][
+                  data.isCom - 1
+                ];
+                this.formDep.principal = data.principal;
+                this.formDep.tel = data.tel;
+                this.formDep.add = data.add;
+                this.formDep.employeesNum = data.employeesNum;
+                this.formDep.store = data.store;
+                this.formDep.regDate = data.regDate;
+                this.formDep.desc = data.desc;
+                this.formDep.coId = data.coId;
+              } else {
+                console.log("查询详情结果：" + result.message);
+                alert(result.message);
+              }
+            })
+            .catch(e => {
+              console.log("查询详情失败");
+              console.log(e);
+            })
+            .finally(e => {
+              this.userInfo(this.checkedId);
+            });
         }
       }
     },
-    handleNodeClick(data) {},
-    loadNode(node, resolve) {},
     filterNode(value, data) {
-      console.log(value, data);
+      console.log("value：" + value);
+      console.log(data);
       if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      if (data.labelName != null) {
+        return data.labelName.indexOf(value) !== -1;
+      }
     },
     treeCheck(e, data) {},
     linkJump(jumpName, depId, coId) {
       this.$router.push({
         name: jumpName,
-        params: { deptParentID: depId, ParentId: coId, back: "hrTree" }
+        params: {
+          deptParentID: depId,
+          ParentId: coId,
+          back: "hrTree",
+          cur: this.jumpNodeId
+        }
       });
     },
     linkJumpEdit(type, id) {
       if (type === 0) {
         this.$router.push({
           path: "/sys/editCompanyDetail",
-          query: { companyId: id, back: "hrTree" }
+          query: { companyId: id, back: "hrTree", cur: this.jumpNodeId }
         });
       }
       if (type === 1) {
         this.$router.push({
           path: "/sys/editDeptDetail",
-          query: { id: id, back: "hrTree" }
+          query: { id: id, back: "hrTree", cur: this.jumpNodeId }
         });
       }
     },
@@ -595,75 +810,376 @@ export default {
           this.loading = false;
         });
     },
+    userInfo(id) {
+      let params = { id: id };
+      this.$api
+        .post({
+          url: "/employee/info",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            let data = result.data;
+            this.employeeData = data;
+          }
+        })
+        .catch(e => {
+          console.log("查询失败");
+          console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
+        });
+    },
     getHeight() {
       this.contentStyleObj.height = window.innerHeight - 140 + "px";
     },
     userJumpEdit(id) {
       this.$router.push({
         path: "/sys/editemployee",
-        query: { id: id, back: "hrTree" }
+        query: { id: id, back: "hrTree", cur: this.jumpNodeId }
       });
     },
-    userQuit(id, name, dep, job) {
-      this.dialogQuit = true;
-      this.quitInfo.id = id;
-      this.quitInfo.name = name;
-      this.quitInfo.dep = dep;
-      this.quitInfo.job = job;
-      console.log(this.quitInfo);
+    userHandle(
+      type,
+      id,
+      name,
+      dep,
+      job,
+      deptId,
+      perPostid,
+      roleId,
+      level,
+      isGold
+    ) {
+      if (type === "quit") {
+        this.dialogQuit = true;
+      } else {
+        //读取树数据
+        this.$api
+          .post({
+            url: "/sys/tree/unit/noMan"
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.treeDataChange = result.data;
+              //this.filterTextChange = dep;
+              this.curNodeIdChange = [deptId + ",1"];
+            } else {
+              console.log("载入结果" + +result.message);
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("读取失败");
+            console.log(e);
+          });
+        let paramsRole = {};
+        paramsRole.keyWord = "";
+        this.$api
+          .post({
+            url: "/role/getRoleName",
+            data: paramsRole
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.postOptions = result.data;
+            } else {
+              console.log("查询岗位结果：" + result.message);
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("查询岗位失败");
+          });
+        this.$api
+          .post({
+            url: "/sys/position/getPostName",
+            data: paramsRole
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.positionNameList = result.data;
+            } else {
+              console.log("查询角色结果：" + result.message);
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("查询角色失败");
+          });
+        paramsRole.depId = deptId;
+        this.$api
+          .post({
+            url: "/sys/position/getLevelList",
+            data: paramsRole,
+            qs: true
+          })
+          .then(e => {
+            let result = e.data;
+            if (result.code == 200) {
+              this.levelNameList = result.data;
+            } else {
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("查询星级失败");
+          });
+        if (type === "change") {
+          this.dialogChange = true;
+          this.RoleDis = true;
+          this.optInfo.fnFrom = 1; //0任命，1调动
+        }
+        if (type === "appoint") {
+          this.dialogChange = true;
+          this.RoleDis = false;
+          this.optInfo.fnFrom = 0; //0任命，1调动
+        }
+      }
+      this.optInfo.id = id;
+      this.optInfo.name = name;
+      this.optInfo.dep = dep;
+      this.optInfo.job = job;
+      this.optInfo.post = perPostid;
+      this.optInfo.role = roleId;
+      //console.log(level);
+      this.optInfo.level = level + "";
+      this.optInfo.isGold = isGold + "";
+      this.checkedIdChange = deptId;
+      this.checkedTypeChange = 1;
+      this.logStr =
+        "[部门ID:" +
+        deptId +
+        "改成rpl1],[角色ID:" +
+        roleId +
+        "改成rpl2],[级别编号:" +
+        level +
+        "改成rpl3],[岗位ID:" +
+        perPostid +
+        "改成rpl4],[菁英:" +
+        isGold +
+        "改成rpl5]";
     },
-    quitSubmit() {
-      this.$message({
-        type: "error",
-        message: "开发中...请稍后"
-      });
-      this.dialogQuit = false;
+    userQuitSubmit() {
+      if (
+        this.quitPost.time == null ||
+        this.quitPost.time == "" ||
+        this.quitPost.remark == null ||
+        this.quitPost.remark == ""
+      ) {
+        this.$message({
+          type: "error",
+          message: "离职信息请填写完整"
+        });
+      } else {
+        let params = {
+          accountId: this.optInfo.id,
+          UpType: "del",
+          upValue: 1,
+          leaveMemo: this.quitPost.remark,
+          leaveTime: this.quitPost.time
+        };
+        this.operation(params);
+      }
     },
     setPhone(id) {
-      let params = { id: id };
+      this.$confirm("注意！你确定要手机备案？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = { id: id };
+          this.$api
+            .post({
+              url: "/employee/set/phoneTag",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              console.log(e.data);
+              let result = e.data;
+              if (result.code == 200) {
+                this.$message({
+                  type: "success",
+                  message: result.message
+                });
+              } else {
+                this.$message.error(result.message);
+              }
+            })
+            .catch(e => {
+              this.$message.error(e.message);
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    },
+    resetPwd(id) {
+      this.$confirm("注意！你确定要重置该用户密码？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let params = { id: id };
+          this.$api
+            .post({
+              url: "/employee/reset/pwd",
+              data: params,
+              qs: true
+            })
+            .then(e => {
+              console.log(e.data);
+              let result = e.data;
+              if (result.code == 200) {
+                this.$alert(result.message, "提示", {
+                  confirmButtonText: "确定"
+                });
+              } else {
+                this.$message.error(result.message);
+              }
+            })
+            .catch(e => {
+              this.$message.error(e.message);
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    },
+    operation(params) {
       this.$api
         .post({
-          url: "/employee/set/phoneTag",
+          url: "/employee/operation",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.$message({
+              type: "success",
+              message: "操作成功"
+            });
+            this.dialogQuit = false;
+          } else {
+            this.$message({
+              type: "error",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("失败");
+          console.log(e);
+        });
+    },
+    userLock(id) {
+      this.$confirm("注意！你确定要锁定该用户？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          if (id == null || id == "") {
+            this.$message({
+              type: "error",
+              message: "参数出错"
+            });
+          } else {
+            let params = { accountId: id, UpType: "locked", upValue: 1 };
+            this.operation(params);
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    },
+    handleCheckChangeChange(data, checked, node) {
+      if (checked == true) {
+        this.checkedIdChange = data.businessId;
+        this.checkedTypeChange = data.type;
+        this.$refs.treeFormChange.setCheckedNodes([data]);
+        if (this.checkedTypeChange === 1) {
+          this.$message({
+            type: "success",
+            message: "已选择【" + data.labelName + "】"
+          });
+          this.filterTextChange = null;
+        } else {
+          this.$message({
+            type: "error",
+            message: "请选择部门！"
+          });
+        }
+      }
+    },
+    userChangeSubmit() {
+      if (this.checkedTypeChange !== 1) {
+        this.$message({
+          type: "error",
+          message: "请选择部门！"
+        });
+        return;
+      }
+      let params = {
+        id: this.optInfo.id,
+        dep: this.checkedIdChange,
+        post: this.optInfo.post,
+        level: this.optInfo.level,
+        role: this.optInfo.role,
+        isGold: this.optInfo.isGold,
+        fnFrom: this.optInfo.fnFrom
+      };
+      this.logStr = this.logStr
+        .replace("rpl1", this.checkedIdChange)
+        .replace("rpl2", this.optInfo.role)
+        .replace("rpl3", this.optInfo.level)
+        .replace("rpl4", this.optInfo.post)
+        .replace("rpl5", this.optInfo.isGold);
+      params.log = this.logStr;
+      this.$api
+        .post({
+          url: "/sys/tree/user/change",
           data: params,
           qs: true
         })
         .then(e => {
-          console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
             this.$message({
               type: "success",
               message: result.message
             });
+            this.dialogChange = false;
           } else {
-            this.$message.error(result.message);
-          }
-        })
-        .catch(e => {
-          this.$message.error(e.message);
-        });
-    },
-    resetPwd(id) {
-      let params = { id: id };
-      this.$api
-        .post({
-          url: "/employee/reset/pwd",
-          data: params,
-          qs: true
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            this.$alert(result.message, "提示", {
-              confirmButtonText: "确定"
+            this.$message({
+              type: "error",
+              message: result.message
             });
-          } else {
-            this.$message.error(result.message);
           }
         })
         .catch(e => {
-          this.$message.error(e.message);
+          console.log("保存失败");
+          console.log(e);
         });
     }
   },
@@ -674,6 +1190,14 @@ export default {
 
   destroyed() {
     window.removeEventListener("resize", this.getHeight);
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    },
+    filterTextChange(val) {
+      this.$refs.treeFormChange.filter(val);
+    }
   }
 };
 </script> 

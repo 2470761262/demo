@@ -390,12 +390,12 @@ export default {
         this.addBetSuccess = true;
         if (data.code == 200) {
           this.getBetInfo();
-          this.addBetVisible = false
-          this.addBetResult.status = true;
+          that.addBetVisible = false
+          that.addBetResult.status = true;
         } else {
           this.$message.error(data.message);
-          this.addBetResult.status = false;
-          this.addBetResult.err = data.message;
+          that.addBetResult.status = false;
+          that.addBetResult.err = data.message;
         }
       }).catch((e) => {
         console.log("查询对赌房源列表失败");

@@ -394,7 +394,7 @@
       >
         <div class="cell-item-cell no-top">
           <el-select
-            v-if="formData.mortgage==1"
+            v-show="formData.mortgage==1"
             v-model="formData.mortgageBank"
             placeholder="请选择抵押银行"
             v-validate="formData.mortgage==1?'required':''"
@@ -416,7 +416,7 @@
             data-vv-as="余贷"
             data-vv-name="balance"
             placeholder="请输入余贷金额"
-            v-if="formData.mortgage==1"
+            v-show="formData.mortgage==1"
           ></el-input>
           <div class="Division" v-if="formData.mortgage==1">万元</div>
           <el-input
@@ -426,7 +426,7 @@
             data-vv-as="月供"
             data-vv-name="monthlyMortgage"
             placeholder="请输入月供"
-            v-if="formData.mortgage==1"
+            v-show="formData.mortgage==1"
           ></el-input>
           <div class="Division" v-if="formData.mortgage==1">元/月</div>
         </div>
@@ -448,6 +448,8 @@
           v-validate="required?'required': ''"
           data-vv-as="契税发票时间"
           data-vv-name="lastSale"
+          @change="changeOnly"
+          :picker-options="pickerOptions"
         ></el-date-picker>
       </div>
       <div class="Division">是否唯一住房</div>
@@ -461,6 +463,7 @@
           v-validate="required?'required': ''"
           data-vv-as="唯一住房"
           data-vv-name="isOwnerOnly"
+          @change="changeOnly"
         >
           <el-radio
             v-for="item in isowneronlyList"
@@ -469,7 +472,10 @@
           >{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
-      <div class="Division">满5唯一</div>
+      <div
+        class="Division"
+        v-show="formData.isOwnerOnly===1&&formData.lastSale!=null&&formData.lastSale!=''"
+      >{{this.onlyStr}}</div>
     </div>
 
     <!-- 付款方式 -->
@@ -669,7 +675,7 @@
             </div>
           </div>
           <div class="upLoadFile-file-phone">
-            <el-image :src="audioQrCodeImage" fit="cover">
+            <el-image :src="audioQrCodeImage" :preview-src-list="[audioQrCodeImage]" fit="cover">
               <div slot="placeholder" class="image-slot">
                 加载中
                 <span>...</span>
@@ -759,7 +765,7 @@ export default {
     }
   },
   mounted() {
-    let that=this;
+    let that = this;
     //true 则去获取数据
     if (this.getData) {
       this.loading = true;
@@ -772,10 +778,13 @@ export default {
     if (this.audioList != null && this.audioList.length > 0) {
       this.audioFile = this.audioList[0];
     }
-    this.getQrCode({"remark":"录入房源-上传音频","resourceType":"audio"},function(data){
-      that.audioQrCodeImage=data.url;
-      that.contactSocket(data.qrCode);
-    });
+    this.getQrCode(
+      { remark: "录入房源-上传音频", resourceType: "audio" },
+      function(data) {
+        that.audioQrCodeImage = data.url;
+        that.contactSocket(data.qrCode);
+      }
+    );
   },
   watch: {
     formData: {
@@ -829,54 +838,66 @@ export default {
       isowneronlyList: formReander.ISOWNERONLY, //是否唯一住房
       mortgageBankList: formReander.MORTGAGEBANK, //抵押银行
       followWayList: formReander.FOLLOWWAY, //跟进类型
-      audioQrCodeImage:''
+      audioQrCodeImage: "",
+      onlyStr: "",
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      }
     };
   },
   methods: {
-    contactSocket (user) {
+    contactSocket(user) {
       console.log("用户【" + user + "】开始接入");
-      this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""),user);
+      this.socketApi.initWebSocket(
+        this.$api.baseUrl().replace("http", ""),
+        user
+      );
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
       console.log("用户【" + user + "】接入完毕");
     },
-    receiveMessage(r){
-      let that=this;
-      console.log(r,"录入房源页面之音频上传接收到了消息");
-      if(r.content.resourceType=="audio"){
-        console.log(r.content,"音频消息内容，准备插入草稿箱")
-        that.uploadFileInfo(r.content.picUrl,function(data){
+    receiveMessage(r) {
+      let that = this;
+      console.log(r, "录入房源页面之音频上传接收到了消息");
+      if (r.content.resourceType == "audio") {
+        console.log(r.content, "音频消息内容，准备插入草稿箱");
+        that.uploadFileInfo(r.content.picUrl, function(data) {
           that.audioFile = data;
         });
-      }      
+      }
     },
     //获取扫码上传语音二维码
-    getQrCode(data,callback){
-      let that=this; 
-       that.$api.post({
-                      url: '/scanUpload/getUploadQrCode',
-                      data: data,
-                      headers: { "Content-Type": "application/json" }
-                    }).then((e) => {
-                      let result = e.data;
-                      console.log("请求二维码成功");
-                      if (result.code == 200) {
-                          //that.qrCodeImg="data:image/png;base64,"+item.img;
-                         callback(result.data);
-                      } else {
-                        console.log("h获取二维码结果：" + result.message);
-                        alert(result.message);
-                      }                     
-                    }).catch((e) => {                    
-                      console.log("查询二维码失败");
-                      console.log(e);                    
-                    })
+    getQrCode(data, callback) {
+      let that = this;
+      that.$api
+        .post({
+          url: "/scanUpload/getUploadQrCode",
+          data: data,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log("请求二维码成功");
+          if (result.code == 200) {
+            //that.qrCodeImg="data:image/png;base64,"+item.img;
+            callback(result.data);
+          } else {
+            console.log("h获取二维码结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询二维码失败");
+          console.log(e);
+        });
     },
-     uploadFileInfo(url,callback) {
+    uploadFileInfo(url, callback) {
       let that = this;
       this.audioFileLoading = true;
       let formData = {};
-      formData.DraftId=that.$store.state.addHouse.formData.id;
-      formData.IpStr=url;
+      formData.DraftId = that.$store.state.addHouse.formData.id;
+      formData.IpStr = url;
       this.$api
         .post({
           url: `/draft-house/audioDraft`,
@@ -885,8 +906,8 @@ export default {
         })
         .then(json => {
           if (json.data.code == 200) {
-            let d=json.data.data;
-            d.url=url;
+            let d = json.data.data;
+            d.url = url;
             callback(d);
           }
         })
@@ -915,7 +936,8 @@ export default {
     //获取音频上传
     getAudioFile(e) {
       let file = event.target.files;
-      let isVideoType = ["audio/mp3"];
+      let isVideoType = ["audio/mp3", "audio/mpeg"];
+      //console.log("音频格式：" + file[0].type);
       if (!isVideoType.includes(file[0].type)) {
         this.$message.error("上传的音频只能是MP3格式!");
         return;
@@ -1089,6 +1111,30 @@ export default {
         .catch(() => {
           return false;
         });
+    },
+    changeOnly() {
+      console.log("触发...");
+      if (
+        this.formData.isOwnerOnly === 1 &&
+        this.formData.lastSale != null &&
+        this.formData.lastSale != ""
+      ) {
+        let iDays = parseInt(
+          Math.abs(new Date() - new Date(this.formData.lastSale)) /
+            1000 /
+            60 /
+            60 /
+            24 /
+            365
+        );
+        if (iDays >= 5) {
+          this.onlyStr = "满5唯一";
+        } else if (iDays >= 2) {
+          this.onlyStr = "满2唯一";
+        } else {
+          this.onlyStr = "";
+        }
+      }
     }
   }
 };

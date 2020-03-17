@@ -58,13 +58,6 @@ export default [
             import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/shopownerRecommendHouse.vue")
     },
     {
-        //对赌房源
-        path: "/buySellSystem/houseBet",
-        name: "addHouse",
-        component: () =>
-            import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseBet/houseBet.vue")
-    },
-    {
         //补充楼盘
         path: "/buySellSystem/CommunityReplenish",
         name: "addHouse",
@@ -93,7 +86,13 @@ export default [
                 component: () =>
                     import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/concernCommunity/concernCommunity.vue")
             },
-
+            {
+              //对赌房源
+              path: "/buySellSystem/houseBet",
+              name: "concernCommunity",
+              component: () =>
+                import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseBet/houseBet.vue")
+            },
             {
                 //七天内被带看
                 path: "/buySellSystem/sevenDaysFollowHouse",
@@ -612,6 +611,13 @@ export default [
         name: "employeeList",
         component: () =>
             import(/* webpackChunkName: "deptManageList" */ "@/pages/systemAdministration/employee/employeeList.vue")
+    },
+    {
+        //系统管理 用户管理-详情
+        path: "/sys/employeedetails",
+        name: "employeedetails",
+        component: () =>
+            import(/* webpackChunkName: "employeedetails" */ "@/pages/systemAdministration/employee/employeedetails.vue")
     },
     {
         //系统管理 用户管理-添加

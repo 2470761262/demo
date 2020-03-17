@@ -43,13 +43,13 @@
 .houseName {
   background: rgb(242, 242, 242);
   display: flex;
-  width: 85%;
+  width: 200px;
   margin-right: 5%;
   height: 100%;
   justify-content: center;
   align-items: center;
   border-radius: 5rem;
-  font-size: 1rem;
+  font-size: 24px;
 }
 .houseName2 {
   background: rgb(242, 242, 242);
@@ -63,9 +63,9 @@
   font-size: 1rem;
 }
 .image {
-  border-radius: 2rem;
-  width: 85%;
-  height: 18%;
+  border-radius: 20px;
+  width: 200px;
+  height: 150px;
   margin-top: 3%;
   display: flex;
   align-items: center;
@@ -118,7 +118,7 @@
   white-space: nowrap;
 }
 .characteristic {
-  font-size: 1rem;
+  font-size: 16px;
   overflow: hidden;
 }
 </style>
@@ -128,7 +128,7 @@
     <div class="msgBox">
       <el-scrollbar style="height:100%;width:105rem">
         <div class="detailBox"
-             style="width:8rem;margin-top:1rem;loat: left;">
+             style="width:100px;margin-top:1rem;loat: left;">
           <div class="house">
             <div class="houseName2 text"> 房源名:</div>
 
