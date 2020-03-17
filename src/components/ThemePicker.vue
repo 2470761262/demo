@@ -41,13 +41,11 @@ export default {
   },
   watch: {
     theme (val, oldVal) {
-      console.log(val, oldVal, this.conut);
       if (this.conut == false) {
         this.conut = true;
         return
       }
       if (typeof val !== 'string' || val == "null") return
-      console.log(11111);
       themePackers.createStyle(val, oldVal);
       // 响应外部操作
       this.$emit('onThemeChange', val);
