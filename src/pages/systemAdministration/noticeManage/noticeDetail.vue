@@ -33,11 +33,11 @@
              class="newsAddTime"></div>
       </el-col>
     </el-row>
-    <el-row>
+    <!-- <el-row>
       <el-col :span="24">
         <div class="right">查看阅读情况</div>
       </el-col>
-    </el-row>
+    </el-row> -->
     <el-row>
       <el-col :span="24">
         <div v-html="noticeEntity.newsContent"

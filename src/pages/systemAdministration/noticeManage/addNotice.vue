@@ -22,7 +22,7 @@
 .left-input-container {
   width: 53%;
   float: left;
-  font-size: 1rem;
+  font-size: 0.15rem;
   border-right: 1px solid black;
   border-left: 1px solid black;
   border-radius: 0.5rem;
