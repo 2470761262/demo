@@ -35,22 +35,6 @@
     height: 100%;
   }
 }
-.dadlog-enter-active {
-  animation: dadlog-in 0.3s;
-}
-.dadlog-leave-active {
-  animation: dadlog-in 0.3s reverse;
-}
-@keyframes dadlog-in {
-  0% {
-    transform: translate3d(0, -20px, 0);
-    opacity: 0;
-  }
-  100% {
-    transform: translate3d(0, 0px, 0);
-    opacity: 1;
-  }
-}
 </style>
 <template>
   <transition name="dadlog">
