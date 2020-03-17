@@ -467,7 +467,12 @@ export default {
       let that = this;
       if (Object.keys(this.moreSlect).length != 0) {
         for (let key in this.moreSlect) {
-          params[key] = this.moreSlect[key]
+          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
+            params.biginTime = this.moreSlect[key][0];
+            params.endTime = this.moreSlect[key][1];
+          } else {
+            params[key] = this.moreSlect[key]
+          }
         }
       }
       else {

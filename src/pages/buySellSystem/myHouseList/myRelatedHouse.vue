@@ -69,10 +69,12 @@
                        :value="item.value"></el-option>
           </el-select>
         </template>
-        <definitionmenu class="menuMarin"
-                        :renderList="tableColumnField"
-                        :tableColumn="tableColumn"
-                        @change="tabColumnChange"></definitionmenu>
+        <el-button style="margin-left:30px;width:150px;height:30px;border:0"
+                   size="mini">
+          <moreSelect @moreSlectChange="moreSlectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
+
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
@@ -81,6 +83,10 @@
               @click="remove">
           清除
         </span>
+        <definitionmenu class="menuMarin"
+                        :renderList="tableColumnField"
+                        :tableColumn="tableColumn"
+                        @change="tabColumnChange"></definitionmenu>
       </div>
     </template>
     <!-- :formatter="item.format" -->
@@ -115,13 +121,15 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import moreSelect from '@/components/moreSelect';
 import houseContrast from '@/minxi/houseContrast';
 import definitionmenu from '@/components/definitionMenu';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
-    definitionmenu
+    definitionmenu,
+    moreSelect
   },
   data () {
     return {
@@ -174,6 +182,7 @@ export default {
       ],
       tableColumn: [],
       tableData: [],
+      moreSlect: {},
     }
   },
   mounted () {
@@ -183,6 +192,13 @@ export default {
     sortMethod (e) {
       console.log(e, "eeee排序");
       this.querySaleNotTrack(1, e.prop, e.order);
+    },
+    moreSlectChange (e) {
+      if (e != '')
+        this.moreSlect = e;
+      this.querySaleNotTrack(1, 'id', 'ascending')
+
+
     },
     remove () {
       this.data.comId = '';
@@ -299,19 +315,30 @@ export default {
         console.log("option的值！！！" + that.workType);
         params.workType = that.workType;
       }
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.beginTime = that.data.timeSelect[0];
-      params.endTime = that.data.timeSelect[1];
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.minInArea = that.data.minInArea;
-      params.maxInArea = that.data.maxInArea;
-      params.minPrice = that.data.minPrice;
-      params.maxPrice = that.data.maxPrice;
       params.sortColumn = column;
       params.sortType = type;
+      if (Object.keys(this.moreSlect).length != 0) {
+        for (let key in this.moreSlect) {
+          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
+            params.biginTime = this.moreSlect[key][0];
+            params.endTime = this.moreSlect[key][1];
+          } else {
+            params[key] = this.moreSlect[key]
+          }
+        }
+      } else {
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.roomNo = that.data.roomNo;
+        params.beginTime = that.data.timeSelect[0];
+        params.endTime = that.data.timeSelect[1];
+        params.customName = that.data.customName;
+        params.tel = that.data.tel;
+        params.minInArea = that.data.minInArea;
+        params.maxInArea = that.data.maxInArea;
+        params.minPrice = that.data.minPrice;
+        params.maxPrice = that.data.maxPrice;
+      }
       this.$api.post({
         url: "/myHouse/getMyRelated",
         headers: { "Content-Type": "application/json;charset=UTF-8" },

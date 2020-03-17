@@ -185,7 +185,7 @@ span {
                   <el-option v-for='(item) in EntrustList'
                              :key="item.id"
                              :value='item.value'
-                             :label="item.label">></el-option>
+                             :label="item.label"></el-option>
                 </el-select>
                 <span>委托</span>
                 <el-select v-model="more.entrust"
@@ -356,7 +356,7 @@ export default {
         personnel: '',
         physicalRegion: '',
         minFloor: '',
-        maxFlorr: '',
+        maxFloor: '',
         addTime: '',
         followTime: '',
         houseType: '',
@@ -387,6 +387,7 @@ export default {
     },
     remove () {
       Object.assign(this.$data, this.$options.data.call(this));
+      this.$emit("moreSlectChange", '');
     },
     remoteMethod (query) {
       var that = this
@@ -439,6 +440,7 @@ export default {
         console.log(key, this.more[key])
         if (this.more[key] != '') {
           data = this.more;
+          break
         }
       }
       this.$emit("moreSlectChange", data);
