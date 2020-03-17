@@ -111,7 +111,7 @@ export default {
   data () {
 
     return {
-      loading: false,
+      loading: true,
       option: [
         {
           value: 'build',
@@ -191,9 +191,9 @@ export default {
     remoteMethod (query) {
       var that = this
       if (query !== '') {
-        this.loading = true;
+        that.loading = true;
 
-        this.$api.get({
+        that.$api.get({
           url: "/mateHouse/queryCommunity",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
@@ -213,7 +213,7 @@ export default {
           }
         })
       } else {
-        this.options = [];
+        that.options = [];
       }
     },
     queryCBId () {
@@ -263,6 +263,7 @@ export default {
     },
     queryPotentialHouse (currentPage) {
       var that = this;
+      that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
 
       params.comId = that.data.comId;
@@ -278,6 +279,7 @@ export default {
         qs: true
       }).then((e) => {
         console.log(e.data);
+        that.loading = false;
         let data = e.data
         if (data.code == 200) {
           that.pageJson.total = data.dataCount;

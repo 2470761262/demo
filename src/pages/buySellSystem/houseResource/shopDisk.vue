@@ -116,7 +116,7 @@ export default {
   data () {
 
     return {
-      loading: false,
+      loading: true,
 
       data: {
         comId: "",
@@ -275,6 +275,7 @@ export default {
     },
     queryVerifyHouseDatas (currentPage, column, type) {
       var that = this;
+      that.loading=true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
       params.comId = that.data.comId;
       params.cbId = that.data.cbId;
@@ -303,6 +304,7 @@ export default {
         qs: true
       }).then((e) => {
         console.log(e.data);
+        that.loading=false;
         let data = e.data
         if (data.code == 200) {
           that.pageJson.total = data.data.dataCount;

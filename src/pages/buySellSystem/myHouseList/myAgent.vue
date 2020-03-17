@@ -438,7 +438,7 @@ export default {
 
       console.log("得到跟单人id为:" + that.newAgentName + "======" + JSON.stringify(that.AgentPerId.accountID));
       console.log("得到房源id为:" + that.toHouseId + "------楼盘名称" + that.toComName)
-      let params = { houseId: parseInt(that.toHouseId) + '', newAgentPer: parseInt(JSON.stringify(that.AgentPerId.accountID)), oldAgentPer: parseInt(that.agentper), newAgentName: JSON.stringify(that.AgentPerId.perName) };
+      let params = { houseId: parseInt(that.toHouseId) + '', newAgentPer: parseInt(JSON.stringify(that.AgentPerId.accountID)), oldAgentPer: parseInt(that.agentper), newAgentName: that.AgentPerId.perName };
 
       this.$api.post({
         url: '/agent_house/updateAgentPer',
@@ -483,7 +483,7 @@ export default {
 
     toLook (id) {
       var that = this;
-      that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
+      that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
     },
     queryMyAgentParams () {
       this.queryMyAgent(1, 'id', 'ascending');
