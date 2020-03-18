@@ -277,6 +277,7 @@ export default {
       roomNoList: [],
       imtag: false,
       imdataimdata: '',
+      moreSlect:'',
       addList: [],
       imdata: '',
       showImpression: true,
@@ -542,17 +543,33 @@ export default {
       this.querylist(1, 'id', 'ascending');
     },
     querylist (currentPage, column, type) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage-1 };
-      let that = this;
-      if (this.ImpressionList != null && this.ImpressionList != '') {
-        that.addList = [];
-        for (var j = 0; j < that.ImpressionList.length; j++) {
-          var houseid = that.ImpressionList[j].houseId;
-          var newList = [houseid];
-          that.addList = that.addList.concat(newList);
-        }
-        params.list = that.addList;
-      }
+    let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
+      let that = this;
+      if (this.ImpressionList != null && this.ImpressionList != '') {
+        that.addList = [];
+        for (var j = 0; j < that.ImpressionList.length; j++) {
+          var houseid = that.ImpressionList[j].houseId;
+          var newList = [houseid];
+          that.addList = that.addList.concat(newList);
+        }
+        params.list = that.addList;
+      }
+      if (Object.keys(this.moreSlect).length != 0) {
+        for (let key in this.moreSlect) {
+          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
+            params.biginTime = this.moreSlect[key][0];
+            params.endTime = this.moreSlect[key][1];
+          }
+          else if (this.key == 'followTime' && this.moreSlect[key] !== '') {
+            params.biginFollowTime = this.moreSlect[key][0];
+            params.endFollowTime = this.moreSlect[key][1];
+          }
+          else {
+            params[key] = this.moreSlect[key]
+          }
+        }
+      }
+      else {
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
       if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
       if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
@@ -566,7 +583,8 @@ export default {
       if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
-       params.isOnly=that.queryData.isOnly;
+      
+}params.isOnly=that.queryData.isOnly;
       params.keyOwner=that.queryData.keyOwner;
        if (column == '' || type == null || type == undefined) {
         params.sortColumn = 'id';

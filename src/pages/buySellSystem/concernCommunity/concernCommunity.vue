@@ -437,7 +437,7 @@ export default {
         }
 
       }).catch((e) => {
-        alert("添加关注失败");
+        alert("添加关注 失败");
         console.log(e);
       })
     },
