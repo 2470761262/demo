@@ -62,7 +62,8 @@ export default {
     saveRole () {
       this.$api.post({
         url: '/role/update',
-        data: {          id: this.roleEntity.roleID,
+        data: {
+          id: this.roleEntity.roleID,
           RoleName: this.roleEntity.RoleName,
           RoleDesc: this.roleEntity.RoleDesc
         },
@@ -75,7 +76,7 @@ export default {
           this.$alert('', '修改成功', {
             dangerouslyUseHTMLString: false
           });
-          this.$router.push({ path: "/sys/roleManagementList" });
+          this.$router.go(-1);
           console.log(result.data);
           this.$message({ message: result.message });
         }

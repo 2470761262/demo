@@ -89,7 +89,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
 
       data: {
         comId: "",
@@ -147,7 +147,7 @@ export default {
     remoteMethod (query) {
       var that = this;
       if (query !== "") {
-        this.loading = true;
+        that.loading = true;
 
         this.$api
           .get({
@@ -161,13 +161,14 @@ export default {
           })
           .then(e => {
             console.log(e.data);
+            that.loading = true;
             if (e.data.code == 200) {
               that.loading = false;
               that.options = e.data.data.list;
             }
           });
       } else {
-        this.options = [];
+        that.options = [];
       }
     },
     Remove () {
@@ -177,6 +178,7 @@ export default {
     },
     queryOurComDeal (currentPage, column, type) {
       var that = this;
+      that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (that.data.comId != null && that.data.comId.length > 0) {
         params.comid = that.data.comId;
@@ -207,6 +209,7 @@ export default {
         .then(e => {
           console.log(e.data);
           let data = e.data;
+          that.loading = false;
           if (data.code == 200) {
             that.pageJson.total = data.data.totalCount;
             that.pageJson.currentPage = data.data.currPage;

@@ -64,26 +64,29 @@
           清除
         </span>
         <span>
+
           <el-checkbox style='margin-left:10px'
                        @click="keySelect()" /> 钥匙</span>
         <span>
           <el-checkbox style='margin-left:10px;background:#fff'
                        @click="onlySelect()" /> 独家</span>
+
         <el-button type="primary"
                    style="margin-left:30px"
-                   size="mini"
-                   @click="querylistByParams">查询</el-button>
-        <el-button type="primary"
-                   style="margin-left:30px"
-                   size="mini">更多筛选</el-button>
-        <definitionmenu class="menuMarin"
-                        :renderList="tableColumnField"
-                        :tableColumn="tableColumn"
-                        @change="tabColumnChange"></definitionmenu>
-        <el-button type="primary"
-                   style="margin-left:10px"
                    size="mini"
                    @click="queryMyAgentParams">查询</el-button>
+        <el-button style="margin-left:30px;width:50px;height:30px;border:0"
+                   size="mini">
+          <moreSelect @moreSlectChange="moreSlectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
+        <el-button style="margin-left:80px;width:50px;height:30px;border:0"
+                   size="mini">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </el-button>
       </div>
     </template>
 
@@ -123,7 +126,7 @@
           {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
         </template>
       </el-table-column>
-      <el-table-column label="录入时间">
+      <el-table-column label ="录入时间">
         <template v-slot="scope">
           {{scope.row.AddTime}}
         </template>
@@ -186,13 +189,14 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
-
+import moreSelect from '@/components/moreSelect';
 import definitionmenu from '@/components/definitionMenu';
 export default {
   mixins: [getMenuRid,],
   components: {
     listPage,
-    definitionmenu
+    definitionmenu,
+    moreSelect
   },
   data () {
 
@@ -274,6 +278,7 @@ export default {
         value: '选项6',
         label: '已过期'
       }],
+      moreSlect: {},
       queryData: {
         CommunityName: '',
         timeSelect: '',
@@ -290,6 +295,13 @@ export default {
 
   },
   methods: {
+    moreSlectChange (e) {
+      if (e != '')
+        this.moreSlect = e;
+      this.queryMyAgent(1, e.prop, e.order)
+
+
+    },
     sortMethod (e) {
       console.log(e, "eeee排序");
       this.querylist(1, e.prop, e.order);
@@ -323,9 +335,10 @@ export default {
       this.newAgentName = name;
       console.log("==========" + this.newAgentName)
     },
-    querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', sortColumn: 'id' };
+    querylist (currentPage, column, type) {
+      let params = { limit: this.pageJson.pageSize, page: currentPage-1 };
       let that = this;
+
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.comId = this.queryData.CommunityName; }
       if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
       if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
@@ -337,6 +350,18 @@ export default {
       if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.beginTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.endTime = this.queryData.timeSelect[1]; }
+params.isOnly=that.queryData.isOnly;
+      params.keyOwner=that.queryData.keyOwner;
+       if (column == '' || type == null || type == undefined) {
+        params.sortColumn = 'id';
+      } else {
+        params.sortColumn = column;
+      }
+      if (type == '' || type == null || type == undefined) {
+        params.sortType = 'ascending';
+      } else {
+        params.sortType = type;
+      }
       this.$api.post({
         url: '/myHouse/getMyAgent',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -349,8 +374,7 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-          that.pageJson.total = result.data.totalCount;
-          that.pageJson.currentPage = result.data.currPage;
+          that.pageJson.total = result.data.dataCount;
           that.tableData = result.data.data;
         } else {
           console.log("查询我的跟单列表结果：" + result.message);
@@ -424,7 +448,7 @@ export default {
 
       console.log("得到跟单人id为:" + that.newAgentName + "======" + JSON.stringify(that.AgentPerId.accountID));
       console.log("得到房源id为:" + that.toHouseId + "------楼盘名称" + that.toComName)
-      let params = { houseId: parseInt(that.toHouseId) + '', newAgentPer: parseInt(JSON.stringify(that.AgentPerId.accountID)), oldAgentPer: parseInt(that.agentper), newAgentName: JSON.stringify(that.AgentPerId.perName) };
+      let params = { houseId: parseInt(that.toHouseId) + '', newAgentPer: parseInt(JSON.stringify(that.AgentPerId.accountID)), oldAgentPer: parseInt(that.agentper), newAgentName: that.AgentPerId.perName };
 
       this.$api.post({
         url: '/agent_house/updateAgentPer',
@@ -469,7 +493,7 @@ export default {
 
     toLook (id) {
       var that = this;
-      that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
+      that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
     },
     queryMyAgentParams () {
       this.queryMyAgent(1, 'id', 'ascending');
@@ -551,19 +575,34 @@ export default {
     queryMyAgent (currentPage, column, type) {
       var that = this;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.beginTime = that.data.timeSelect[0];
-      params.endTime = that.data.timeSelect[1];
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.minInArea = that.data.minInArea;
-      params.maxInArea = that.data.maxInArea;
       params.sortColumn = column;
       params.sortType = type;
-      params.keyOwner = this.data.keyOwner;
-      params.isOnly = this.data.isOnly;
+      if (Object.keys(this.moreSlect).length != 0) {
+        for (let key in this.moreSlect) {
+          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
+            params.biginTime = this.moreSlect[key][0];
+            params.endTime = this.moreSlect[key][1];
+          } else if (this.key == 'followTime' && this.moreSlect[key] !== '') {
+            params.biginFollowTime = this.moreSlect[key][0];
+            params.endFollowTime = this.moreSlect[key][1];
+          } else {
+            params[key] = this.moreSlect[key]
+          }
+        }
+      }
+      else {
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.roomNo = that.data.roomNo;
+        params.beginTime = that.data.timeSelect[0];
+        params.endTime = that.data.timeSelect[1];
+        params.customName = that.data.customName;
+        params.tel = that.data.tel;
+        params.minInArea = that.data.minInArea;
+        params.maxInArea = that.data.maxInArea;
+        params.keyOwner = this.data.keyOwner;
+        params.isOnly = this.data.isOnly;
+      }
       this.$api.post({
         url: '/myHouse/getMyAgent',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -595,11 +634,11 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.querylist(1, 'id', 'ascending');
+      this.queryMyAgent(1, 'id', 'ascending');
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.querylist(val, 'id', 'ascending');
+      this.queryMyAgent(val, 'id', 'ascending');
     },
   },
 }

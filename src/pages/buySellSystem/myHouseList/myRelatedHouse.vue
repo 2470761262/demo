@@ -69,10 +69,12 @@
                        :value="item.value"></el-option>
           </el-select>
         </template>
-        <definitionmenu class="menuMarin"
-                        :renderList="tableColumnField"
-                        :tableColumn="tableColumn"
-                        @change="tabColumnChange"></definitionmenu>
+        <el-button style="margin-left:30px;width:150px;height:30px;border:0"
+                   size="mini">
+          <moreSelect @moreSlectChange="moreSlectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
+
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
@@ -81,6 +83,10 @@
               @click="remove">
           清除
         </span>
+        <definitionmenu class="menuMarin"
+                        :renderList="tableColumnField"
+                        :tableColumn="tableColumn"
+                        @change="tabColumnChange"></definitionmenu>
       </div>
     </template>
     <!-- :formatter="item.format" -->
@@ -115,17 +121,19 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import moreSelect from '@/components/moreSelect';
 import houseContrast from '@/minxi/houseContrast';
 import definitionmenu from '@/components/definitionMenu';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
-    definitionmenu
+    definitionmenu,
+    moreSelect
   },
   data () {
     return {
-      loading: false,
+      loading: true,
       workType: '',
       data: {
         comId: "",
@@ -165,7 +173,7 @@ export default {
         { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true },
         { prop: 'notLookNum', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: false },
-        { prop: 'AgentName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
+        { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
         { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
         { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
         { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
@@ -174,6 +182,7 @@ export default {
       ],
       tableColumn: [],
       tableData: [],
+      moreSlect: {},
     }
   },
   mounted () {
@@ -183,6 +192,13 @@ export default {
     sortMethod (e) {
       console.log(e, "eeee排序");
       this.querySaleNotTrack(1, e.prop, e.order);
+    },
+    moreSlectChange (e) {
+      if (e != '')
+        this.moreSlect = e;
+      this.querySaleNotTrack(1, 'id', 'ascending')
+
+
     },
     remove () {
       this.data.comId = '';
@@ -229,9 +245,9 @@ export default {
     remoteMethod (query) {
       var that = this
       if (query !== '') {
-        this.loading = true;
+        that.loading = true;
 
-        this.$api.get({
+        that.$api.get({
           url: "/mateHouse/queryCommunity",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
@@ -249,7 +265,7 @@ export default {
           }
         })
       } else {
-        this.options = [];
+        that.options = [];
       }
     },
     queryCBId () {
@@ -294,24 +310,36 @@ export default {
     },
     querySaleNotTrack (currentPage, column, type) {
       var that = this;
+      that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
       if (that.workType != null && that.workType != '') {
         console.log("option的值！！！" + that.workType);
         params.workType = that.workType;
       }
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.beginTime = that.data.timeSelect[0];
-      params.endTime = that.data.timeSelect[1];
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.minInArea = that.data.minInArea;
-      params.maxInArea = that.data.maxInArea;
-      params.minPrice = that.data.minPrice;
-      params.maxPrice = that.data.maxPrice;
       params.sortColumn = column;
       params.sortType = type;
+      if (Object.keys(this.moreSlect).length != 0) {
+        for (let key in this.moreSlect) {
+          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
+            params.biginTime = this.moreSlect[key][0];
+            params.endTime = this.moreSlect[key][1];
+          } else {
+            params[key] = this.moreSlect[key]
+          }
+        }
+      } else {
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.roomNo = that.data.roomNo;
+        params.beginTime = that.data.timeSelect[0];
+        params.endTime = that.data.timeSelect[1];
+        params.customName = that.data.customName;
+        params.tel = that.data.tel;
+        params.minInArea = that.data.minInArea;
+        params.maxInArea = that.data.maxInArea;
+        params.minPrice = that.data.minPrice;
+        params.maxPrice = that.data.maxPrice;
+      }
       this.$api.post({
         url: "/myHouse/getMyRelated",
         headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -319,6 +347,7 @@ export default {
         token: false
       }).then((e) => {
         console.log(e.data);
+        that.loading = false;
         let data = e.data
         if (data.code == 200) {
           that.pageJson.total = data.data.dataCount;

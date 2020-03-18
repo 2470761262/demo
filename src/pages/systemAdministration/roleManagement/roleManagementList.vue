@@ -50,7 +50,7 @@
     </template>
   </list-page>
   </template>
- 
+
   </div>
 </template>
 
@@ -63,7 +63,7 @@ export default {
     listPage
   },
   data () {
-    return { 
+    return {
       loading: false, //控制表格加载动画提示
       queryData: {
         RoleName: ""
@@ -77,7 +77,7 @@ export default {
         total: 9, //总记录数
         pageSize: 10//每页条数
       },
-      
+      companyId : null,
       tableDataColumn: [
        // { prop: "id", label: "岗位" },
         { prop: "RoleName", label: "岗位名" },
@@ -93,6 +93,8 @@ export default {
     }
   },
   mounted () {
+    let companyId = JSON.parse(this.$route.query.id);
+    this.companyId = companyId;
     this.sidebarFlag = true;
     this.queryRoleDatas(1);
   },
@@ -105,6 +107,9 @@ export default {
       let that = this;
       if (this.queryData.RoleName != null) {
         params.RoleName = this.queryData.RoleName;
+      }
+      if(this.companyId){
+        params.companyId = this.companyId;
       }
       this.$api.post({
         url: '/role/roleList',
@@ -119,7 +124,7 @@ export default {
           console.log(result.data);
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
-          
+
           for(var i=0;i<result.data.list.length;i++){
             switch (result.data.list[i].del){
               case 0:
@@ -141,7 +146,7 @@ export default {
       })
     },
     toAddRolePage () {
-      this.$router.push({ path: "/sys/addRoleManagementList" });
+      this.$router.push({ path: "/sys/addRoleManagementList",query:{companyId: this.companyId}});
     },
     editRoleDetail (row) {
       this.$router.push({ path: "/sys/editRoleDetail", query: { RoleId: row.id } });
@@ -157,7 +162,7 @@ export default {
           this.$alert('', '删除成功', {
             dangerouslyUseHTMLString: false
           });
-          this.$router.push({ path: "/sys/roleManagementList" });
+          this.$router.go(-1);
         }
       }).catch((e) => {
         console.log("删除失败");
@@ -189,7 +194,7 @@ export default {
     PositionDetail(row){
       this.$router.push({ path: "/sys/positionManager", query: { id: row.id  ,name:row.RoleName} });
     },
-    
+
   }
 };
 </script>

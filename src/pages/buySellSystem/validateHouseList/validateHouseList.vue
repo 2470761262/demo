@@ -523,7 +523,7 @@ export default {
     console.log("===========" + JSON.stringify(this.GetRequest()));
   },
   mounted () {
-    this.queryVerifyHouseByParams(1, 'id', 'ascending');
+    this.queryVerifyHouseByParams(1, 'id', 'descending');
   },
   methods: {
     sortMethod (e) {
@@ -545,7 +545,7 @@ export default {
     },
     Remove() {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryVerifyHouseDatas(1,'id', 'ascending');
+      this.queryVerifyHouseDatas(1,'id', 'descending');
 
     },
     queryVerifyHouseDatas (currentPage, column, type) {

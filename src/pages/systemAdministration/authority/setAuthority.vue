@@ -84,19 +84,26 @@
                          @click="saveCompanyRule">保存</el-button>
             </div>
             <div class="elTree" v-show="showCompanyTree">
-              <el-tree  :data="companyTreeData"
-                       show-checkbox
-                       :load="loadCompanyTreeNode"
-                       lazy
-                       node-key="id"
-                       ref="companyTree"
-                       highlight-current
-                       :props="companyProps"
-                       @check="checkNode"
-                       :default-checked-keys="companyGather"
-                       :default-expanded-keys="companyGather">
 
-              </el-tree>
+              <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
+              <el-tree
+                ref="companyTree"
+                :data="companyTreeData"
+                node-key="businessId"
+                show-checkbox
+                :props="companyProps"
+                @check="checkNode"
+                :highlight-current="true"
+                :filter-node-method="filterNode"
+                check-strictly
+                :action="''"
+                empty-text="暂无数据，请检查权限"
+                auto-expand-parent
+                :default-checked-keys="companyGather"
+                :default-expanded-keys="companyGather"
+                v-loading="treeLoading"
+              ></el-tree>
+
             </div>
           </template>
         </div>
@@ -112,6 +119,8 @@ export default {
   components: {},
   data () {
     return {
+      filterText: "",
+      treeLoading: true,
       ruleTreeData: [],
       companyTreeData: [],
       positionObj: {},
@@ -123,8 +132,8 @@ export default {
         label: "rName",
       },
       companyProps: {
-        children: "children",
-        label: "name",
+        children: "childrenNodes",
+        label: "labelName"
       },
       showSave: false,
       showCompanyTree: false,
@@ -168,6 +177,42 @@ export default {
         console.log("查询树节点");
         console.log(e);
       });
+
+    //读取树数据
+    this.$api
+      .post({
+        url: "/sys/tree/person/set/unit"
+      })
+      .then(e => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.companyTreeData = result.data;
+        } else {
+          console.log("载入结果" + +result.message);
+          alert(result.message);
+        }
+      })
+      .then(() => {
+        if (this.$route.query.cur != null) {
+          this.curNodeId = [this.$route.query.cur];
+          this.$nextTick(() => {
+            this.handleCheckChange(
+              this.$refs.companyTreeData.getNode(...this.curNodeId).data,
+              true
+            );
+          });
+        }
+      })
+      .catch(e => {
+        console.log("读取失败");
+        console.log(e);
+      })
+      .finally(e => {
+        this.treeLoading = false;
+      });
   },
   methods: {
     operationCompany (node, data) {
@@ -182,9 +227,7 @@ export default {
         let arrayGather = gather.split(",");
         this.companyGather = arrayGather;
       } else {
-        this.companyGather = new Array();
-        this.node.childNodes = [];
-        this.loadCompanyTreeNode(this.node, this.resolve);
+        this.$refs.companyTree.setCheckedKeys([]);
       }
     },
     operationSelf (node, data) {
@@ -270,37 +313,35 @@ export default {
         });
     },
 
-    //动态加载节点
-    loadCompanyTreeNode (node, resolve) {
-      if (node.level == 0) {
-        this.node = node;
-        this.resolve = resolve;
-      }
-      console.log(node, resolve, "load tree node");
-      //读取功能点数据
-      var pId = node.id;
-      var type = null;
-      if (node.data) {
-        pId = node.data.id;
-        type = node.data.type;
-      }
-      this.$api
-        .post({
-          url: "/company/tree/companyAndDept",
-          data: { id: pId, type: type },
-          qs: true
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            resolve(result.data); //动态加载时
-          } else {
-            console.log("发送公告结果：" + result.message);
-            alert(result.message);
-          }
-        });
-    },
+    // //动态加载节点
+    // loadCompanyTreeNode (node, resolve) {
+    //   if (node.level == 0) {
+    //     this.node = node;
+    //     this.resolve = resolve;
+    //   }
+    //   console.log(node, resolve, "load tree node");
+    //   //读取功能点数据
+    //   var pId = node.id;
+    //   var type = null;
+    //   if (node.data) {
+    //     pId = node.data.id;
+    //     type = node.data.type;
+    //   }
+    //   this.$api
+    //     .post({
+    //       url: "/sys/tree/unit",
+    //     })
+    //     .then(e => {
+    //       console.log(e.data);
+    //       let result = e.data;
+    //       if (result.code == 200) {
+    //         resolve(result.data); //动态加载时
+    //       } else {
+    //         console.log("发送公告结果：" + result.message);
+    //         alert(result.message);
+    //       }
+    //     });
+    // },
 
     //选中节点
     checkNode (data, checkedData) {
@@ -309,9 +350,9 @@ export default {
         this.companyTreeSelectNode.deptIds = new Array();
         checkedData.checkedNodes.forEach(node =>{
           if (node.type == 0) {
-            this.companyTreeSelectNode.companyIds.push(node.id);
+            this.companyTreeSelectNode.companyIds.push(node.businessId);
           }else{
-            this.companyTreeSelectNode.deptIds.push(node.deptParentId);
+            this.companyTreeSelectNode.deptIds.push(node.businessId);
           }
         })
       }
@@ -323,6 +364,20 @@ export default {
       var that = this;
       //跳转页面
       that.$router.push({ path: '/sys/authority/employeeList', query: { "id": this.paramsObj.postId } });
+    },
+    filterNode(value, data) {
+      console.log("value：" + value);
+      console.log(data);
+      if (!value) return true;
+      if (data.labelName != null) {
+        return data.labelName.indexOf(value) !== -1;
+      }
+    },
+  }
+  ,
+  watch: {
+    filterText(val) {
+      this.$refs.companyTree.filter(val);
     },
   }
 }
