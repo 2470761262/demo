@@ -4,9 +4,21 @@
   height: 406px;
   margin-bottom: 8px;
   position: relative;
-  .img-item {
+  &:after {
+    content: "验证通过";
+    background: #0d824b;
+    color: #fff;
+    font-size: 16px;
+    right: 0;
+    top: 0;
+    border-radius: 4px;
+    padding: 4px 8px;
+    position: absolute;
+  }
+  .loop-item {
     width: 100%;
     height: 100%;
+    object-fit: cover;
   }
 }
 .img-list {
@@ -17,7 +29,7 @@
   .item-img-for {
     overflow: hidden;
     &.scrollActive {
-      .img-item:nth-child(1) {
+      .loop-item:nth-child(1) {
         margin-left: 8px !important;
       }
     }
@@ -26,7 +38,7 @@
       font-size: 0;
       white-space: nowrap;
       display: inline-block;
-      .img-item {
+      .loop-item {
         display: inline-block;
         margin-left: 8px;
         width: 150px;
@@ -64,15 +76,29 @@
 <template>
   <div>
     <section class="loog-body">
+      <!-- 图片 -->
       <template v-if="loopBig.typeStr == 'picUrl'">
-        <el-image class="img-item"
+        <el-image class="loop-item"
                   :src="loopBig.src"
+                  :preview-src-list="previewList()"
                   fit="cover">
           <div slot="placeholder"
                class="image-slot">
             加载中<span>...</span>
           </div>
         </el-image>
+      </template>
+      <!-- 音频 -->
+      <template v-if="loopBig.typeStr == 'picUrl' && resultData.saleUploadAudioList">
+        <el-audio fixed
+                  v-if="resultData.saleUploadAudioList.length > 0"
+                  :url="resultData.saleUploadAudioList[0].url">
+          经纪人讲房
+        </el-audio>
+      </template>
+      <!-- 视频 -->
+      <template v-if="loopBig.typeStr == 'videoUrl'">
+        <el-video :src="loopBig.src"></el-video>
       </template>
     </section>
     <section class="img-list"
@@ -91,16 +117,26 @@
         <div class="img-scroll-translateX"
              :style="moveX">
           <template v-for="item in loopList">
-            <el-image @click.native="changeImg(item)"
-                      :key="item.id"
-                      class="img-item"
-                      :src="item.picUrl"
-                      fit="cover">
-              <div slot="placeholder"
-                   class="image-slot">
-                加载中<span>...</span>
-              </div>
-            </el-image>
+            <!-- 循环图片 -->
+            <template v-if="item.picUrl">
+              <el-image @click.native.stop="changeLoop(item)"
+                        :key="item.id"
+                        class="loop-item"
+                        :src="item.picUrl"
+                        fit="cover">
+                <div slot="placeholder"
+                     class="image-slot">
+                  加载中<span>...</span>
+                </div>
+              </el-image>
+            </template>
+            <!-- 视频 -->
+            <template v-if="item.videoUrl">
+              <video @click="changeLoop(item)"
+                     class="loop-item"
+                     :src="item.videoUrl"
+                     :key="item.id"></video>
+            </template>
           </template>
         </div>
       </div>
@@ -110,8 +146,14 @@
 
 <script>
 import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
+import elVideo from '@/components/elVideo';
+import elAudio from '@/components/audio';
 export default {
   inject: ["houseDetails"],
+  components: {
+    elVideo,
+    elAudio
+  },
   mounted () {
     addResizeListener(this.$refs.itemOver, this.update);
   },
@@ -122,13 +164,20 @@ export default {
     moveX () {
       return `transform: translateX(${this.renderX}px)`
     },
+    resultData () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        return this.houseDetails.data
+      } else {
+        return {};
+      }
+    },
     //轮播
     loopList () {
       if (Object.keys(this.houseDetails).length > 0) {
-        let saleUploadPicDtoList = this.houseDetails.data.saleUploadPicDtoList ? this.houseDetails.data.saleUploadPicDtoList : [];
-        let saleUploadVideoDtoList = this.houseDetails.data.saleUploadVideoDtoList ? this.houseDetails.data.saleUploadVideoDtoList : [];
-        let resultList = [...saleUploadPicDtoList, ...saleUploadVideoDtoList];
-        this.changeImg(resultList[0]);
+        let saleUploadPicDtoList = this.resultData.saleUploadPicDtoList ? this.resultData.saleUploadPicDtoList : [];
+        let saleUploadVideoDtoList = this.resultData.saleUploadVideoDtoList ? this.resultData.saleUploadVideoDtoList : [];
+        let resultList = [...saleUploadVideoDtoList, ...saleUploadPicDtoList];
+        this.changeLoop(resultList[0]);
         return resultList;
       }
       return [];
@@ -177,7 +226,16 @@ export default {
 
       this.renderX = -this.translateX
     },
-    changeImg (item) {
+    //预览大图
+    previewList () {
+      if (this.resultData.saleUploadPicDtoList) {
+        return this.resultData.saleUploadPicDtoList.map((item) => {
+          return item.picUrl;
+        })
+      }
+      return [];
+    },
+    changeLoop (item) {
       if ('picUrl' in item) {
         this.$set(this.loopBig, 'typeStr', 'picUrl')
         this.$set(this.loopBig, 'src', item.picUrl)
