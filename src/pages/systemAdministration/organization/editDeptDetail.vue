@@ -335,7 +335,7 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            debugger;
+            //debugger;
             if (result.data.list != null && result.data.list.length > 0) {
               this.pageJson.total = result.data.totalCount;
               this.pageJson.currentPage = result.data.currPage;

@@ -26,15 +26,10 @@
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-form-item>
     </el-form>
-    
+
     <div class="left-input-container">
       <span>身份证</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.cardId"
-        readonly="readonly"
-      ></el-input>
+      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.cardId" readonly="readonly"></el-input>
     </div>
     <div class="left-input-container">
       <span>性别</span>
@@ -88,51 +83,34 @@
     </div>
     <div class="left-input-container">
       <span>Email</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.email"
-     readonly="readonly"
-      ></el-input>
+      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.email" readonly="readonly"></el-input>
     </div>
     <div class="left-input-container">
       <span>qq</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.qq"
-       
-        readonly="readonly"
-      ></el-input>
+      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.qq" readonly="readonly"></el-input>
     </div>
     <div class="left-input-container">
       <span>电话号码</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.tel"
-       readonly="readonly"
-       
-      ></el-input>
-      
+      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.tel" readonly="readonly"></el-input>
     </div>
     <div class="left-input-container">
       <span>生日</span>
-      <el-date-picker v-model="employeeEntity.birthday" readonly="readonly" type="date" placeholder="选择日期"></el-date-picker>
+      <el-date-picker
+        v-model="employeeEntity.birthday"
+        readonly="readonly"
+        type="date"
+        placeholder="选择日期"
+      ></el-date-picker>
     </div>
 
     <div class="left-input-container">
-      <span type="info" size="small" style="margin-top: 4px;">选择部门</span>  
+      <span type="info" size="small" style="margin-top: 4px;">选择部门</span>
       <el-input type="text" v-model="employeeEntity.deptName" readonly="readonly" show-word-limit></el-input>
     </div>
 
     <div class="left-input-container">
       <span>角色</span>
-      <el-select
-        v-model="employeeEntity.perPost"
-        readonly="readonly"
-        placeholder="请选择"
-      >
+      <el-select v-model="employeeEntity.perPost" readonly="readonly" placeholder="请选择">
         <el-option
           v-for="item in positionNameList"
           :key="item.value"
@@ -143,12 +121,7 @@
     </div>
     <div class="left-input-container">
       <span>岗位</span>
-      <el-select
-        v-model="employeeEntity.perRole"
-       
-        readonly="readonly"
-        placeholder="请选择"
-      >
+      <el-select v-model="employeeEntity.perRole" readonly="readonly" placeholder="请选择">
         <el-option
           v-for="item in roleNameList"
           :key="item.value"
@@ -160,16 +133,16 @@
 
     <div class="left-input-container">
       <span>入职时间</span>
-      <el-date-picker v-model="employeeEntity.regTime" readonly="readonly" type="date" placeholder="选择日期"></el-date-picker>
+      <el-date-picker
+        v-model="employeeEntity.regTime"
+        readonly="readonly"
+        type="date"
+        placeholder="选择日期"
+      ></el-date-picker>
     </div>
     <div class="left-input-container">
       <span>备注</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.remark"
-        readonly="readonly"
-      ></el-input>
+      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.remark" readonly="readonly"></el-input>
     </div>
     <div class="left-input-container">
       <span>底薪</span>
@@ -224,16 +197,10 @@
         v-model="employeeEntity.contactTelephone"
         readonly="readonly"
       ></el-input>
-      
     </div>
     <div class="left-input-container">
       <span>现居住地</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.living"
-        readonly="readonly"
-      ></el-input>
+      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.living" readonly="readonly"></el-input>
     </div>
     <div class="left-input-container">
       <span>毕业学校</span>
@@ -273,12 +240,7 @@
     </div>
     <div class="left-input-container">
       <span>星级编号</span>
-      <el-select
-        v-model="employeeEntity.levelNo"
-        
-        readonly="readonly"
-        placeholder="请选择"
-      >
+      <el-select v-model="employeeEntity.levelNo" readonly="readonly" placeholder="请选择">
         <el-option
           v-for="item in levelNameList"
           :key="item.value"
@@ -302,16 +264,16 @@
     </div>
     <div class="left-input-container">
       <span>岗位属性</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.sxId"
-       readonly="readonly"
-      ></el-input>
+      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.sxId" readonly="readonly"></el-input>
     </div>
     <div class="left-input-container">
       <span>毕业时间</span>
-      <el-date-picker v-model="employeeEntity.graduation" type="date" readonly="readonly" placeholder="选择日期"></el-date-picker>
+      <el-date-picker
+        v-model="employeeEntity.graduation"
+        type="date"
+        readonly="readonly"
+        placeholder="选择日期"
+      ></el-date-picker>
     </div>
     <div class="left-input-container">
       <span>岗位津贴</span>
@@ -322,7 +284,7 @@
         readonly="readonly"
       ></el-input>
     </div>
-    
+
     <div class="left-input-container">
       <span type="info" size="small" style="margin-top: 4px;">介绍人</span>
 
@@ -330,7 +292,6 @@
     </div>
 
     <div class="footerContainer el-top">
-     
       <el-button type="primary" @click="back()">返回</el-button>
     </div>
   </div>
@@ -459,8 +420,7 @@ export default {
       } else {
         this.$router.push({ path: "/sys/employeeList" });
       }
-    },
-   
+    }
   },
   created() {
     this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
@@ -474,8 +434,8 @@ export default {
     }
   },
   mounted() {
-      debugger;
-    let   id = this.$route.params.id;
+    //debugger;
+    let id = this.$route.params.id;
     this.$api
       .get({
         url: "/employee/" + id,
