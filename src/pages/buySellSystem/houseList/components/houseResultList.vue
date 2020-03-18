@@ -493,11 +493,11 @@ export default {
       }
       //面积
       if (this.Slider.areaSlider[1] != 20) {
-        this.dynamicTags.push({ title: `面积:${value.minInArea}-${value.maxInArea}万`, field: "area", arr: false })
+        this.dynamicTags.push({ title: `面积:${value.minInArea}-${value.maxInArea}㎡`, field: "area", arr: false })
       }
       //楼层
       if (this.Slider.flootSlider[1] != -2) {
-        this.dynamicTags.push({ title: `面积:${value.minFloor}-${value.maxFloor}层`, field: "floot", arr: false })
+        this.dynamicTags.push({ title: `楼层:${value.minFloor}-${value.maxFloor}层`, field: "floot", arr: false })
       }
 
       //房源类型
