@@ -1,5 +1,9 @@
 export default {
   install(Vue) {
+    /**
+     *  指令
+     * 
+     */
     Vue.directive('number', {
       bind: (el, binding, vnode) => {
         const input = el.getElementsByTagName('input')[0];
@@ -35,6 +39,17 @@ export default {
           }
         }
       }
+    })
+    /**
+     *  过滤器
+     * 
+     */
+    Vue.filter('emptyRead', (value, Company) => {
+      let result = ['', null, 0, '无'].every(item => item != value);
+      if (!result) {
+        return '暂无'
+      }
+      return Company ? value + Company : value;
     })
   }
 }

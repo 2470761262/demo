@@ -82,7 +82,6 @@ export default {
     audioLoad: {
       bind (el, binding, vnode) {
         el.addEventListener("loadedmetadata", () => {
-          console.log(vnode.context.audioPlay, el.duration);
           vnode.context.audioPlay.endTime = parseInt(el.duration);
         });
         el.addEventListener("timeupdate", () => {

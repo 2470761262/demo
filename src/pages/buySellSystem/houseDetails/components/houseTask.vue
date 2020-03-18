@@ -17,7 +17,7 @@
     }
   }
   .task-pro-content {
-    margin-top: 25px;
+    margin-top: 30px;
     height: 85px;
     flex: 1;
     margin-right: 25px;
