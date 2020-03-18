@@ -179,6 +179,11 @@
                    style="margin-left:30px"
                    size="mini"
                    @click="querylistByParams">查询</el-button>
+        <el-button style="margin-left:30px;width:50px;height:30px;border:0"
+                   size="mini">
+          <moreSelect @moreSlectChange="moreSlectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
       </div>
     </template>
 
@@ -272,10 +277,12 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import moreSelect from '@/components/moreSelect';
 export default {
   mixins: [getMenuRid],
   components: {
-    listPage
+    listPage,
+    moreSelect
   },
   data () {
     return {
@@ -349,7 +356,7 @@ export default {
         isOnly: '',
         keyOwner: ''
       },
-
+      moreSlect: {}
     }
   },
   mounted () {
@@ -357,6 +364,13 @@ export default {
     this.queryMyImpression();
   },
   methods: {
+    moreSlectChange (e) {
+      if (e != '')
+        this.moreSlect = e;
+      this.querylist(1, 'id', 'ascending')
+
+
+    },
     sortMethod (e) {
       console.log(e, "eeee排序");
       this.querylist(1, 'id', 'ascending');
@@ -552,19 +566,31 @@ export default {
         }
         params.list = that.addList;
       }
-      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-      if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
-      if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
-      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
-      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
-      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
-      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
-      if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
-      if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
-      if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
-      if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
+      if (Object.keys(this.moreSlect).length != 0) {
+        for (let key in this.moreSlect) {
+          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
+            params.biginTime = this.moreSlect[key][0];
+            params.endTime = this.moreSlect[key][1];
+          } else {
+            params[key] = this.moreSlect[key]
+          }
+        }
+      }
+      else {
+        if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
+        if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
+        if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
+        if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
+        if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
+        if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
+        if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
+        if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
+        if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
+        if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
+        if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
+        if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
+        if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
+      }
       this.$api.post({
         url: '/agent_house/myCollectHouseList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },

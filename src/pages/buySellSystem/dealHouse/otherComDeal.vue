@@ -119,7 +119,7 @@ export default {
   },
   data () {
     return {
-      loading: false,
+      loading: true,
 
       data: {
         comId: "",
@@ -187,9 +187,10 @@ export default {
     remoteMethod (query) {
       var that = this;
       if (query !== "") {
-        this.loading = true;
+        
+        that.loading = true;
 
-        this.$api
+        that.$api
           .get({
             url: "/mateHouse/queryCommunity",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -209,13 +210,13 @@ export default {
             }
           });
       } else {
-        this.options = [];
+        that.options = [];
       }
     },
 
     queryCBId () {
       var that = this;
-      this.$api
+      that.$api
         .get({
           url: "/mateHouse/queryComBuilding",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -235,7 +236,7 @@ export default {
     },
     queryRoomNo () {
       var that = this;
-      this.$api
+      that.$api
         .get({
           url: "/mateHouse/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -261,6 +262,7 @@ export default {
     },
     queryOurComDeal (currentPage, column, type) {
       var that = this;
+      that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (that.data.comId != null && that.data.comId.length > 0) {
         params.comid = that.data.comId;
@@ -302,6 +304,7 @@ export default {
         })
         .then(e => {
           console.log(e.data);
+          that.loading = false;
           let data = e.data;
           if (data.code == 200) {
             that.pageJson.total = data.data.totalCount;
@@ -313,6 +316,7 @@ export default {
           }
         })
         .catch(e => {
+          that.loading = false;
           console.log("查询我司成交列表失败");
           console.log(e);
         });

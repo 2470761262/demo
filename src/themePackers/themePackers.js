@@ -1,11 +1,14 @@
 import util from '@/util/util';
-import { TREMEPACKERS, TREMEDEFTULTCOLOR } from '@/util/constMap';
+import {
+  TREMEPACKERS,
+  TREMEDEFTULTCOLOR
+} from '@/util/constMap';
 import api from '@/api/require';
 const version = require('element-ui/package.json').version // element-ui version from node_modules
 const defaultColor = "#409EFF"; // 不可修改
 let themeData = {
   chalk: '',
-  createImport (val, ordVal = defaultColor) {
+  createImport(val, ordVal = defaultColor) {
     let newVal = val;
     if (newVal == undefined) {
       let storeColor = util.localStorageGet(TREMEPACKERS);
@@ -16,14 +19,14 @@ let themeData = {
       newVal = storeColor;
     }
     // 皮肤是基于style内容匹配,打包完之后被压缩成文件
-    if (process.env.NODE_ENV != 'development') {
-      themeData.createStyle(newVal, ordVal);
-    }
+    // if (process.env.NODE_ENV != 'development') {
+    // themeData.createStyle(newVal, ordVal);
+    // }
     themeData.createStyle(newVal, ordVal);
     themeData.init(newVal);
     return Promise.resolve();
   },
-  init (color) {
+  init(color) {
     let tremePackers = util.localStorageGet(TREMEPACKERS);
     if (!color) {
       if (tremePackers) {
@@ -36,7 +39,7 @@ let themeData = {
       util.localStorageSet(TREMEPACKERS, color);
     }
   },
-  createStyle (val, oldVal) {
+  createStyle(val, oldVal) {
     const themeCluster = themeData.getThemeCluster(val.replace('#', ''))
     const originalCluster = themeData.getThemeCluster(oldVal.replace('#', ''))
     const getHandler = (variable, id) => {
@@ -56,10 +59,13 @@ let themeData = {
     }
     const chalkHandler = getHandler('chalk', 'chalk-style')
     if (!themeData.chalk) {
-      const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
-      themeData.getCSSString(url, chalkHandler, 'chalk').then(({ styleCss, variable }) => {
-        themeData[variable] = styleCss;
-      })
+      //   const url = `https://unpkg.com/element-ui@${version}/lib/theme-chalk/index.css`
+      //   themeData.getCSSString(url, chalkHandler, 'chalk').then(({
+      //     styleCss,
+      //     variable
+      //   }) => {
+      //     themeData[variable] = styleCss;
+      //   })
     } else {
       chalkHandler()
     }
@@ -69,33 +75,38 @@ let themeData = {
         return new RegExp(oldVal, 'i').test(text) && !/Chalk Variables/.test(text)
       })
     styles.forEach(style => {
-      const { innerText } = style
+      const {
+        innerText
+      } = style
       if (typeof innerText !== 'string') return
       style.innerText = themeData.updateStyle(innerText, originalCluster, themeCluster)
     })
 
   },
-  updateStyle (style, oldCluster, newCluster) {
+  updateStyle(style, oldCluster, newCluster) {
     let newStyle = style
     oldCluster.forEach((color, index) => {
       newStyle = newStyle.replace(new RegExp(color, 'ig'), newCluster[index])
     })
     return newStyle
   },
-  getCSSString (url, callback, variable) {
+  getCSSString(url, callback, variable) {
     return new Promise((r, s) => {
       const xhr = new XMLHttpRequest()
       xhr.open('GET', url)
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-          r({ styleCss: xhr.responseText.replace(/@font-face{[^}]+}/, ''), variable: variable });
+          r({
+            styleCss: xhr.responseText.replace(/@font-face{[^}]+}/, ''),
+            variable: variable
+          });
           callback();
         }
       }
       xhr.send();
     })
   },
-  getThemeCluster (theme) {
+  getThemeCluster(theme) {
     const tintColor = (color, tint) => {
       let red = parseInt(color.slice(0, 2), 16)
       let green = parseInt(color.slice(2, 4), 16)

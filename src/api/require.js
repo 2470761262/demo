@@ -47,7 +47,7 @@ http.interceptors.response.use((response) => {
       message: response.data.message,
       type: 'error'
     });
-    return Promise.reject(error);
+    return Promise.reject(response);
   }
   return response;
 }, (error) => {
