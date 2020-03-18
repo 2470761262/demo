@@ -46,10 +46,10 @@
                 slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
             <span>
-              <el-button type="text"
-                         size="mini"
-                         :class="{'selected_btn':node.data.dataType == '2'}"
-                         @click.stop="() => operationCompany(node, data)">权限设置</el-button>
+<!--              <el-button type="text"-->
+<!--                         size="mini"-->
+<!--                         :class="{'selected_btn':node.data.dataType == '2'}"-->
+<!--                         @click.stop="() => operationCompany(node, data)">权限设置</el-button>-->
             </span>
           </span>
         </el-tree>
@@ -80,7 +80,6 @@
               @check="checkNode"
               :highlight-current="true"
               :filter-node-method="filterNode"
-              check-strictly
               :action="''"
               empty-text="暂无数据，请检查权限"
               auto-expand-parent

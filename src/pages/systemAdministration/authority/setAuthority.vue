@@ -350,9 +350,9 @@ export default {
         this.companyTreeSelectNode.deptIds = new Array();
         checkedData.checkedNodes.forEach(node =>{
           if (node.type == 0) {
-            this.companyTreeSelectNode.companyIds.push(node.id);
+            this.companyTreeSelectNode.companyIds.push(node.businessId);
           }else{
-            this.companyTreeSelectNode.deptIds.push(node.deptParentId);
+            this.companyTreeSelectNode.deptIds.push(node.businessId);
           }
         })
       }
