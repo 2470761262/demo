@@ -43,13 +43,13 @@
             type="primary"
             style="margin-left:10px"
             size="mini"
-            @click="queryEmployeeByIsLocked(1)"
+            @click="queryEmployeeByIsLocked(0)"
           >查询锁定用户</el-button>
           <el-button
             type="primary"
             style="margin-left:10px"
             size="mini"
-            @click="queryEmployeeByIsLocked(0)"
+            @click="queryEmployeeByIsLocked(1)"
           >查询正常用户</el-button>
           <el-button
             type="primary"
@@ -210,7 +210,7 @@ export default {
       params.type = this.queryData.type;
       this.$api
         .post({
-          url: "/employee/list",
+          url: "/employee/employeeList",
           data: params,
           token: false,
           headers: { "Content-Type": "application/json" }

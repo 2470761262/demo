@@ -17,7 +17,7 @@
 </style>
 <template>
   <div class="wrapper">
-    <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
+    <el-form ref="form" :model="DeptEntity" label-width="160px">
       <el-form-item label="姓名:">
         <el-input v-model="employeeEntity.perName" readonly="readonly"></el-input>
       </el-form-item>
@@ -25,312 +25,257 @@
         <img v-if="employeeEntity.userImage" :src="employeeEntity.userImage" class="avatar" />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-form-item>
+      <el-form-item label="身份证">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.cardId"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="性别">
+        <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" readonly="readonly">
+          <el-option label="男" :value="0" />
+          <el-option label="女" :value="1" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="状态">
+        <el-select
+          type="text"
+          placeholder="0实习，1试用，2正式，3离职"
+          v-model="employeeEntity.status"
+          readonly="readonly"
+        >
+          <el-option label="实习" :value="0" />
+          <el-option label="试用" :value="1" />
+          <el-option label="正式" :value="2" />
+          <el-option label="离职" :value="3" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="现居住地址">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.address"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="学历">
+        <el-select v-model="employeeEntity.education" readonly="readonly" placeholder="请选择">
+          <el-option
+            v-for="item in educationList"
+            :key="item.value"
+            :label="item.educationName"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="专业">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.speciality"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="Email">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.email"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="qq">
+        <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.qq" readonly="readonly"></el-input>
+      </el-form-item>
+      <el-form-item label="电话号码">
+        <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.tel" readonly="readonly"></el-input>
+      </el-form-item>
+      <el-form-item label="生日">
+        <el-date-picker
+          v-model="employeeEntity.birthday"
+          readonly="readonly"
+          type="date"
+          placeholder="选择日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="选择部门">
+        <el-input type="text" v-model="employeeEntity.deptName" readonly="readonly" show-word-limit></el-input>
+      </el-form-item>
+
+      <el-form-item label="角色">
+        <el-select v-model="employeeEntity.perPost" readonly="readonly" placeholder="请选择">
+          <el-option
+            v-for="item in positionNameList"
+            :key="item.value"
+            :label="item.positionName"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="岗位">
+        <el-select v-model="employeeEntity.perRole" readonly="readonly" placeholder="请选择">
+          <el-option
+            v-for="item in roleNameList"
+            :key="item.value"
+            :label="item.roleName"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="入职时间">
+        <el-date-picker
+          v-model="employeeEntity.regTime"
+          readonly="readonly"
+          type="date"
+          placeholder="选择日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="备注">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.remark"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="底薪">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.basicSalary"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="绩效">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.performancePay"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="现居住地邮编">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.zipCode"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="紧急人联系人">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.emergencyContact"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item label="关系">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.relationship"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="紧急联系人电话号码">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.contactTelephone"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="现居住地">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.living"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="毕业学校">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.graduateSchool"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="户口所在地邮编">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.residenceCode"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="户口所在地">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.accountAddress"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="银行卡">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.bankcard"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="星级编号">
+        <el-select v-model="employeeEntity.levelNo" readonly="readonly" placeholder="请选择">
+          <el-option
+            v-for="item in levelNameList"
+            :key="item.value"
+            :label="item.levelName"
+            :value="item.levelNo"
+          ></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="菁英">
+        <el-select
+          type="text"
+          placeholder="请选择"
+          v-model="employeeEntity.isGold"
+          readonly="readonly"
+          show-word-limit
+        >
+          <el-option label="默认" :value="0" />
+          <el-option label="是" :value="1" />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="岗位属性">
+        <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.sxId" readonly="readonly"></el-input>
+      </el-form-item>
+      <el-form-item label="毕业时间">
+        <el-date-picker
+          v-model="employeeEntity.graduation"
+          type="date"
+          readonly="readonly"
+          placeholder="选择日期"
+        ></el-date-picker>
+      </el-form-item>
+      <el-form-item label="岗位津贴">
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.postAllowance"
+          readonly="readonly"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item label="介绍人">
+        <el-input type="text" v-model="employeeEntity.jieShaoName" readonly="readonly"></el-input>
+      </el-form-item>
     </el-form>
-    
-    <div class="left-input-container">
-      <span>身份证</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.cardId"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>性别</span>
-      <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" readonly="readonly">
-        <el-option label="男" :value="0" />
-        <el-option label="女" :value="1" />
-      </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>状态</span>
-      <el-select
-        type="text"
-        placeholder="0实习，1试用，2正式，3离职"
-        v-model="employeeEntity.status"
-        readonly="readonly"
-      >
-        <el-option label="实习" :value="0" />
-        <el-option label="试用" :value="1" />
-        <el-option label="正式" :value="2" />
-        <el-option label="离职" :value="3" />
-      </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>现居住地址</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.address"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>学历ID</span>
-      <el-select v-model="employeeEntity.education" readonly="readonly" placeholder="请选择">
-        <el-option
-          v-for="item in educationList"
-          :key="item.value"
-          :label="item.educationName"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>专业</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.speciality"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>Email</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.email"
-     readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>qq</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.qq"
-       
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>电话号码</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.tel"
-       readonly="readonly"
-       
-      ></el-input>
-      
-    </div>
-    <div class="left-input-container">
-      <span>生日</span>
-      <el-date-picker v-model="employeeEntity.birthday" readonly="readonly" type="date" placeholder="选择日期"></el-date-picker>
-    </div>
-
-    <div class="left-input-container">
-      <span type="info" size="small" style="margin-top: 4px;">选择部门</span>  
-      <el-input type="text" v-model="employeeEntity.deptName" readonly="readonly" show-word-limit></el-input>
-    </div>
-
-    <div class="left-input-container">
-      <span>角色</span>
-      <el-select
-        v-model="employeeEntity.perPost"
-        readonly="readonly"
-        placeholder="请选择"
-      >
-        <el-option
-          v-for="item in positionNameList"
-          :key="item.value"
-          :label="item.positionName"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>岗位</span>
-      <el-select
-        v-model="employeeEntity.perRole"
-       
-        readonly="readonly"
-        placeholder="请选择"
-      >
-        <el-option
-          v-for="item in roleNameList"
-          :key="item.value"
-          :label="item.roleName"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-    </div>
-
-    <div class="left-input-container">
-      <span>入职时间</span>
-      <el-date-picker v-model="employeeEntity.regTime" readonly="readonly" type="date" placeholder="选择日期"></el-date-picker>
-    </div>
-    <div class="left-input-container">
-      <span>备注</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.remark"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>底薪</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.basicSalary"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>绩效</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.performancePay"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>现居住地邮编</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.zipCode"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>紧急人联系人</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.emergencyContact"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>关系</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.relationship"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>紧急联系人电话号码</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.contactTelephone"
-        readonly="readonly"
-      ></el-input>
-      
-    </div>
-    <div class="left-input-container">
-      <span>现居住地</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.living"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>毕业学校</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.graduateSchool"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>户口所在地邮编</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.residenceCode"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>户口所在地</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.accountAddress"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>银行卡</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.bankcard"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>星级编号</span>
-      <el-select
-        v-model="employeeEntity.levelNo"
-        
-        readonly="readonly"
-        placeholder="请选择"
-      >
-        <el-option
-          v-for="item in levelNameList"
-          :key="item.value"
-          :label="item.levelName"
-          :value="item.levelNo"
-        ></el-option>
-      </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>菁英</span>
-      <el-select
-        type="text"
-        placeholder="请选择"
-        v-model="employeeEntity.isGold"
-        readonly="readonly"
-        show-word-limit
-      >
-        <el-option label="默认" :value="0" />
-        <el-option label="是" :value="1" />
-      </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>岗位属性</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.sxId"
-       readonly="readonly"
-      ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>毕业时间</span>
-      <el-date-picker v-model="employeeEntity.graduation" type="date" readonly="readonly" placeholder="选择日期"></el-date-picker>
-    </div>
-    <div class="left-input-container">
-      <span>岗位津贴</span>
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.postAllowance"
-        readonly="readonly"
-      ></el-input>
-    </div>
-    
-    <div class="left-input-container">
-      <span type="info" size="small" style="margin-top: 4px;">介绍人</span>
-
-      <el-input type="text" v-model="employeeEntity.jieShaoName" readonly="readonly"></el-input>
-    </div>
-
     <div class="footerContainer el-top">
-     
       <el-button type="primary" @click="back()">返回</el-button>
     </div>
   </div>
@@ -459,8 +404,7 @@ export default {
       } else {
         this.$router.push({ path: "/sys/employeeList" });
       }
-    },
-   
+    }
   },
   created() {
     this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
@@ -474,8 +418,8 @@ export default {
     }
   },
   mounted() {
-      debugger;
-    let   id = this.$route.params.id;
+    debugger;
+    let id = this.$route.params.id;
     this.$api
       .get({
         url: "/employee/" + id,

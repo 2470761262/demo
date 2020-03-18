@@ -71,7 +71,7 @@ span {
             <div class='line'>
               <div class='selectType'>
                 <span>楼盘名称</span>
-                <el-select v-model="more.communityName"
+                <el-select v-model="more.comId"
                            style="width:60%"
                            @focus="remoteInput"
                            @change="queryCBId()"
@@ -81,7 +81,7 @@ span {
                            placeholder="请输入楼盘名称搜索"
                            :remote-method="remoteMethod">
                   <el-option v-for="item in moreOptions"
-                             :key="item.id"
+                             :key="item.value"
                              :label="item.name"
                              :value="item.value"></el-option>
                 </el-select>
@@ -95,7 +95,7 @@ span {
                            placeholder="请选择楼栋"
                            @change="queryRoomNo()">
                   <el-option v-for="item in moreCbIdList"
-                             :key="item.id"
+                             :key="item.value"
                              :label="item.name"
                              :value="item.value"></el-option>
                 </el-select>
@@ -105,7 +105,7 @@ span {
                            filterable
                            placeholder="请选择房间号">
                   <el-option v-for="item in moreRoomNoList"
-                             :key="item.id"
+                             :key="item.value"
                              :label="item.name"
                              :value="item.value"></el-option>
                 </el-select>
@@ -158,9 +158,9 @@ span {
                 <el-select v-model="more.property"
                            style="width:70%">
                   <el-option v-for='(item) in PropertyList'
-                             :key="item.id"
-                             :value='item.value'
-                             :label="item.label"></el-option>
+                             :key="item.value"
+                             :label="item.name"
+                             :value="item.value"></el-option>
                 </el-select>
               </div>
               <div class='selectType'>
@@ -175,15 +175,15 @@ span {
                 <span>物理区域</span>
                 <el-select v-model="more.physicalRegion"
                            style="width:70%">
-                  <el-option></el-option>
+                  <!-- <el-option></el-option> -->
                 </el-select>
               </div>
               <div class='selectType'>
                 <span>房源状态</span>
                 <el-select v-model="more.houseType"
                            style="width:30%">
-                  <el-option v-for='(item) in EntrustList'
-                             :key="item.id"
+                  <el-option v-for='(item) in houseTypeList'
+                             :key="item.value"
                              :value='item.value'
                              :label="item.label"></el-option>
                 </el-select>
@@ -191,7 +191,7 @@ span {
                 <el-select v-model="more.entrust"
                            style="width:30%">
                   <el-option v-for='(item) in EntrustList'
-                             :key="item.id"
+                             :key="item.value"
                              :value='item.value'
                              :label="item.label"></el-option>
                 </el-select>
@@ -203,7 +203,7 @@ span {
                 <el-select v-model="more.task"
                            style="width:70%">
                   <el-option v-for='(item) in taskList'
-                             :key="item.id"
+                             :key="item.value"
                              :value='item.value'
                              :label="item.label"></el-option>
                 </el-select>
@@ -213,7 +213,7 @@ span {
                 <el-select v-model="more.buildType"
                            style="width:70%">
                   <el-option v-for='(item) in buildTypeList'
-                             :key="item.id"
+                             :key="item.value"
                              :value='item.value'
                              :label="item.label"></el-option>
                 </el-select>
@@ -224,15 +224,15 @@ span {
               <span>区域</span>
               <el-select v-model="more.region"
                          style="width:35%">
-                <el-option></el-option>
+                <!-- <el-option></el-option> -->
               </el-select>
               <el-select v-model="more.store"
                          style="width:30%">
-                <el-option></el-option>
+                <!-- <el-option></el-option> -->
               </el-select>
               <el-select v-model="more.personnel"
                          style="width:20%">
-                <el-option></el-option>
+                <!-- <el-option></el-option> -->
               </el-select>
 
             </div>
@@ -257,18 +257,6 @@ span {
 <script>
 import sidebarList from './sidebarList';
 export default {
-  components: {
-    sidebarList,
-  },
-  watch: {
-    $attrs: {
-      deep: true,
-      immediate: true,
-      handler: function (val, oldVal) {
-        Object.assign(this.$data, val.parentData);
-      }
-    }
-  },
   data () {
     return {
       PropertyList: [
@@ -381,13 +369,13 @@ export default {
   methods: {
     remoteInput () {
 
-      if (this.more.communityName.length == 0) {
+      if (this.more.comId.length == 0) {
         this.remoteMethod();
       }
     },
     remove () {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.$emit("moreSlectChange", '');
+      this.$emit("moreSelectChange", '');
     },
     remoteMethod (query) {
       var that = this
@@ -421,7 +409,7 @@ export default {
         token: false,
         qs: true,
         data: {
-          comId: that.more.communityName,
+          comId: that.more.comId,
           page: 1,
           limit: 50
         }
@@ -443,7 +431,7 @@ export default {
           break
         }
       }
-      this.$emit("moreSlectChange", data);
+      this.$emit("moreSelectChange", data);
       this.visible = false;
     },
     queryRoomNo () {
@@ -454,7 +442,7 @@ export default {
         token: false,
         qs: true,
         data: {
-          comId: that.more.communityName,
+          comId: that.more.comId,
           cbId: that.more.cbId,
           page: 1,
           limit: 50

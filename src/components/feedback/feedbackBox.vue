@@ -58,9 +58,9 @@
               <div style="margin-left:18px;line-height: 0;">      微信扫码上传</div>
             </div>
 
-            <el-dialog :visible.sync="dialogVisible">
+            <!-- <el-dialog :visible.sync="dialogVisible">
               <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
+            </el-dialog> -->
 
           </el-form-item>
         </el-form>
@@ -114,12 +114,10 @@
       };
     },
     created () {
-
       this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
       this.myHeader = { tk: util.localStorageGet(TOKEN) };
       console.log("upload url ",this.uploadUrl);
       console.log("header data  ",this.myHeader);
-
     },
     mounted(){
 
@@ -260,10 +258,10 @@
         console.log(21)
         console.log(r,"消息内容");
         //。。。执行你需要的业务逻辑
-       this.dialogImageUrl = r.content.picUrl;
-       this.dialogVisible = true;
-       this.uploadUrl = r.content.picUrl + "/noticeManage/common/picture";
-       this.myHeader = { tk: util.localStorageGet(TOKEN) };
+        this.dialogImageUrl = r.content.picUrl;
+        this.dialogVisible = true;
+        this.uploadUrl = r.content.picUrl + "/noticeManage/common/picture";
+        this.myHeader = { tk: util.localStorageGet(TOKEN) };
         console.log(this.uploadUrl,this.form,"231");
       }
 

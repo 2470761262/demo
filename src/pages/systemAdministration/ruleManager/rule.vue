@@ -25,187 +25,161 @@
 .form .formItem {
   display: block;
 }
-
 </style>
 <template>
   <div>
     <template>
       <div class="elTree">
         关键字:
-        <el-input style="width: 200px;"
-                  placeholder="输入关键字进行过滤"
-                  @change="keywordChange"
-                  v-model="keyword"></el-input>
-        类型:
-        <el-select v-model="type"
-                   @change="typeChange"
-                   placeholder="请选择类型">
-          <el-option v-for="item in typeList"
-                     :key="item.id"
-                     :label="item.name"
-                     :value="item.type">
-          </el-option>
+        <el-input
+          style="width: 200px;"
+          placeholder="输入关键字进行过滤"
+          @change="keywordChange"
+          v-model="keyword"
+        ></el-input>类型:
+        <el-select v-model="type" @change="typeChange" placeholder="请选择类型">
+          <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.type"></el-option>
         </el-select>
-        <el-tree ref="tree2"
-                 :props="defaultProps"
-                 :load="loadNode"
-                 lazy
-                 :highlight-current="true"
-                 draggable
-                 @node-drag-end="handleDragEnd"
-                 @node-click="clickNode">
-        </el-tree>
+        <el-tree
+          ref="tree2"
+          :props="defaultProps"
+          :load="loadNode"
+          lazy
+          :highlight-current="true"
+          draggable
+          @node-drag-end="handleDragEnd"
+          @node-click="clickNode"
+        ></el-tree>
       </div>
     </template>
     <template>
       <el-card class="box-card">
         <div class="text item">
           <div class="formItem">
-            <el-button type="primary"
-                       @click="saveSubordinate">添加子级节点</el-button>
+            <el-button type="primary" @click="saveSubordinate">添加子级节点</el-button>
           </div>
           <div class="formItem">
-            <el-button type="primary"
-                       @click="saveSiblingRule">添加同级节点</el-button>
+            <el-button type="primary" @click="saveSiblingRule">添加同级节点</el-button>
           </div>
           <div class="formItem">
-            <el-button type="primary"
-                       @click="updateRule">修改</el-button>
+            <el-button type="primary" @click="updateRule">修改</el-button>
           </div>
           <div class="formItem">
-            <el-button type="primary"
-                       @click="delRule">删除</el-button>
+            <el-button type="primary" @click="delRule">删除</el-button>
           </div>
         </div>
       </el-card>
     </template>
 
     <template>
-      <el-card class="box-card"
-               v-show="showTable">
-        <div slot="header"
-             class="clearfix">
+      <el-card class="box-card" v-show="showTable">
+        <div slot="header" class="clearfix">
           <span>人员管理</span>
         </div>
         <div class="item form">
-          <div class="formItem ">
+          <div class="formItem">
             功能点名称:
-            <el-input v-model="ruleObj.rName"
-                      style="width: 200px;"
-                      placeholder="功能点名称"></el-input>
+            <el-input v-model="ruleObj.rName" style="width: 200px;" placeholder="功能点名称"></el-input>
           </div>
-          <div class="formItem ">
+          <div class="formItem">
             链接地址:
-            <el-input v-model="ruleObj.rUrl"
-                      style="width: 200px;"
-                      placeholder="链接地址"></el-input>
+            <el-input v-model="ruleObj.rUrl" style="width: 200px;" placeholder="链接地址"></el-input>
           </div>
-          <div class="formItem ">
+          <div class="formItem">
             post参数:
-            <el-input v-model="ruleObj.postData"
-                      style="width: 200px;"
-                      placeholder="post参数"></el-input>
+            <el-input v-model="ruleObj.postData" style="width: 200px;" placeholder="post参数"></el-input>
           </div>
-          <div class="formItem ">
+          <div class="formItem">
             图片地址:
-            <el-input v-model="ruleObj.picUrl"
-                      style="width: 200px;"
-                      placeholder="图片地址"></el-input>
+            <el-input v-model="ruleObj.picUrl" style="width: 200px;" placeholder="图片地址"></el-input>
           </div>
-          <div class="formItem ">
+          <div class="formItem">
             说明:
-            <el-input v-model="ruleObj.state"
-                      style="width: 200px;"
-                      placeholder="说明"></el-input>
+            <el-input v-model="ruleObj.state" style="width: 200px;" placeholder="说明"></el-input>
           </div>
           <div class="formItem">
             功能编号:
-            <el-input v-model="ruleObj.rNo"
-                      style="width: 200px;"
-                      placeholder="功能编号"></el-input>
+            <el-input v-model="ruleObj.rNo" style="width: 200px;" placeholder="功能编号"></el-input>
           </div>
           <div class="formItem">
             菜单类型:
-            <el-select v-model="ruleObj.rType"
-                       placeholder="请选择类型">
-              <el-option v-for="item in rTypeList"
-                         :key="item.id"
-                         :label="item.name"
-                         :value="item.type">
-              </el-option>
+            <el-select v-model="ruleObj.rType" placeholder="请选择类型">
+              <el-option
+                v-for="item in rTypeList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.type"
+              ></el-option>
             </el-select>
           </div>
           <div class="formItem">
             是否有效:
-            <el-select v-model="ruleObj.del"
-                       placeholder="是否有效">
-              <el-option v-for="item in delList"
-                         :key="item.id"
-                         :label="item.name"
-                         :value="item.type">
-              </el-option>
+            <el-select v-model="ruleObj.del" placeholder="是否有效">
+              <el-option
+                v-for="item in delList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.type"
+              ></el-option>
             </el-select>
           </div>
           <div class="formItem">
             范围:
-            <el-select v-model="ruleObj.area"
-                       placeholder="范围">
-              <el-option v-for="item in areaList"
-                         :key="item.id"
-                         :label="item.name"
-                         :value="item.type">
-              </el-option>
+            <el-select v-model="ruleObj.area" placeholder="范围">
+              <el-option
+                v-for="item in areaList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.type"
+              ></el-option>
             </el-select>
           </div>
           <div class="formItem">
             是否超级:
-            <el-select v-model="ruleObj.isSuper"
-                       placeholder="范围">
-              <el-option v-for="item in isSuperList"
-                         :key="item.id"
-                         :label="item.name"
-                         :value="item.type">
-              </el-option>
+            <el-select v-model="ruleObj.isSuper" placeholder="范围">
+              <el-option
+                v-for="item in isSuperList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.type"
+              ></el-option>
             </el-select>
           </div>
           <div class="formItem">
             类型:
-            <el-select v-model="ruleObj.rulesType"
-                       placeholder="范围">
-              <el-option v-for="item in typeList"
-                         :key="item.id"
-                         :label="item.name"
-                         :value="item.type">
-              </el-option>
+            <el-select v-model="ruleObj.rulesType" placeholder="范围">
+              <el-option
+                v-for="item in typeList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.type"
+              ></el-option>
             </el-select>
           </div>
 
           <div class="formItem">
             关联接口:
-
-            <el-select v-model="ruleObj.ruleUrls"
-                       multiple
-                       filterable
-                       allow-create
-                       default-first-option
-                       placeholder="请选择接口">
-              <el-option v-for="item in ruleUrlList"
-                         :key="item.url"
-                         :label="item.name"
-                         :value="item.tag">
-              </el-option>
+            <el-select
+              v-model="ruleObj.ruleUrls"
+              multiple
+              filterable
+              allow-create
+              default-first-option
+              placeholder="请选择接口"
+            >
+              <el-option
+                v-for="item in ruleUrlList"
+                :key="item.url"
+                :label="item.name"
+                :value="item.tag"
+              ></el-option>
             </el-select>
-
           </div>
-
         </div>
         <div class="text item">
-          <div class="formItem"
-               style="float: right;margin-right: 230px;">
-            <el-button type="primary"
-                       @click="saveRuleObj">保存</el-button>
-            <el-button type="primary"
-                       @click="cancel">取消</el-button>
+          <div class="formItem" style="float: right;margin-right: 230px;">
+            <el-button type="primary" @click="saveRuleObj">保存</el-button>
+            <el-button type="primary" @click="cancel">取消</el-button>
           </div>
         </div>
       </el-card>
@@ -213,7 +187,7 @@
   </div>
 </template>
 <script>
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
   watch: {
@@ -222,13 +196,13 @@ export default {
     // }
   },
   components: {},
-  data () {
+  data() {
     return {
       treeData: [],
       keyword: "",
       defaultProps: {
         children: "children",
-        label: "rName",
+        label: "rName"
       },
       typeList: [
         {
@@ -245,7 +219,7 @@ export default {
           id: 2,
           name: "WAP端",
           type: 2
-        },
+        }
       ],
       rTypeList: [
         {
@@ -267,7 +241,7 @@ export default {
           id: 3,
           name: "主目录",
           type: "主目录"
-        },
+        }
       ],
       delList: [
         {
@@ -312,34 +286,34 @@ export default {
         rulesType: 0,
         del: 1,
         isSuper: 0,
-        area: 0,
+        area: 0
       },
       type: 0,
       node: [],
       showTable: false,
-      saveType: "update",
+      saveType: "update"
     };
   },
-  mounted: function () {
-    this.$nextTick(function () {
+  mounted: function() {
+    this.$nextTick(function() {
       console.log("init...");
-    })
+    });
   },
   methods: {
     //change keyword
-    keywordChange (e) {
+    keywordChange(e) {
       console.log(e, "keywrodChange");
       this.node.childNodes = [];
       this.loadNode(this.node, this.resolve);
     },
-    typeChange (e) {
+    typeChange(e) {
       console.log(e, "typeChange");
       this.node.childNodes = [];
       this.loadNode(this.node, this.resolve);
     },
 
     //动态加载节点
-    loadNode (node, resolve) {
+    loadNode(node, resolve) {
       if (node.level == 0) {
         this.node = node;
         this.node.id = 0;
@@ -347,7 +321,7 @@ export default {
       }
       console.log(node, resolve, "load tree node");
       //读取功能点数据
-      debugger;
+      //debugger;
       var pId = node.id;
       if (node.data) {
         pId = node.data.id;
@@ -355,7 +329,7 @@ export default {
       this.$api
         .post({
           url: "/sys/rule/tree",
-          data: "type=" + this.type + "&pId=" + pId + "&keyword=" + this.keyword,
+          data: "type=" + this.type + "&pId=" + pId + "&keyword=" + this.keyword
         })
         .then(e => {
           console.log(e.data);
@@ -372,7 +346,7 @@ export default {
           console.log(e);
         });
     },
-    treeCheck (e, data) {
+    treeCheck(e, data) {
       //判断如果未选中，则清空用户列表；
       if (data && data.checkedKeys) {
         if (data.checkedKeys.length < 1) {
@@ -406,43 +380,43 @@ export default {
         });
       console.log(this.$refs.tree2.getNode(44), "getNode");
     },
-    getCurrentKey () {
+    getCurrentKey() {
       console.log(this.$refs.tree2.getCurrentKey(), "getCurrentKey");
       //  this.$refs.tree2.setCurrentKey(44);
     },
-    checkChange (e, data, childData) {
+    checkChange(e, data, childData) {
       console.log(e, data, childData, "checkChange");
     },
     //树输入筛选
-    filterNode (value, data) {
+    filterNode(value, data) {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
-    handleDragEnd (draggingNode, dropNode, dropType, ev) {
-      console.log('tree drag end: ', dropNode && dropNode.label, dropType);
+    handleDragEnd(draggingNode, dropNode, dropType, ev) {
+      console.log("tree drag end: ", dropNode && dropNode.label, dropType);
       console.log(draggingNode, dropNode, dropType, ev);
     },
     //选中节点
-    clickNode (data, node, obj) {
+    clickNode(data, node, obj) {
       this.ruleObj = data;
       this.$forceUpdate();
       console.log(data, node, obj, "selected...");
     },
     //更新功能点
-    updateRule () {
+    updateRule() {
       let that = this;
       if (!that.ruleObj || !that.ruleObj.id) {
         alert("请选择节点进行操作");
         return;
       }
-      debugger;
+      //debugger;
       that.saveType = "update";
       that.showTable = true;
       this.selectRuleUrlConfig();
     },
     //删除功能点
-    delRule () {
+    delRule() {
       if (!this.ruleObj || !this.ruleObj.id) {
         alert("请选择节点进行操作");
         return;
@@ -451,43 +425,42 @@ export default {
         distinguishCancelAndClose: true,
         confirmButtonText: "确定",
         cancelButtonText: "取消"
-      })
-        .then(() => {
-          this.$api
-            .delete({
-              url: "/sys/rule/" + this.ruleObj.id,
-              data: this.ruleObj,
-              headers: { "Content-Type": "application/json;charset=UTF-8" },
-            })
-            .then(e => {
-              console.log(e.data);
-              let result = e.data;
-              if (result.code == 200) {
-                console.log(result.message);
-                console.log(result.data);
-                this.$message.info("操作成功");
-                this.showTable = false;
-                this.node.childNodes = [];
-                this.loadNode(this.node, this.resolve);
-              } else {
-                console.log("删除操作失败：" + result.message);
-                this.$message.error("删除操作失败：" + result.message);
-              }
-            })
-            .catch(e => {
-              console.log("删除操作失败异常");
-              console.log(e);
-            });
-          this.$message.error("删除操作失败异常" + e);
-        });
+      }).then(() => {
+        this.$api
+          .delete({
+            url: "/sys/rule/" + this.ruleObj.id,
+            data: this.ruleObj,
+            headers: { "Content-Type": "application/json;charset=UTF-8" }
+          })
+          .then(e => {
+            console.log(e.data);
+            let result = e.data;
+            if (result.code == 200) {
+              console.log(result.message);
+              console.log(result.data);
+              this.$message.info("操作成功");
+              this.showTable = false;
+              this.node.childNodes = [];
+              this.loadNode(this.node, this.resolve);
+            } else {
+              console.log("删除操作失败：" + result.message);
+              this.$message.error("删除操作失败：" + result.message);
+            }
+          })
+          .catch(e => {
+            console.log("删除操作失败异常");
+            console.log(e);
+          });
+        this.$message.error("删除操作失败异常" + e);
+      });
     },
     //添加子级功能点
-    saveSubordinate () {
+    saveSubordinate() {
       if (!this.ruleObj || !this.ruleObj.id) {
         alert("请选择节点进行操作");
         return;
       }
-      console.log(this.ruleObj, "rule object。。。")
+      console.log(this.ruleObj, "rule object。。。");
       this.saveType = "saveSub";
       let pId = this.ruleObj.id;
       let rule = this.defaultRule;
@@ -497,7 +470,7 @@ export default {
       this.selectRuleUrlConfig();
     },
     //添加同级功能点
-    saveSiblingRule () {
+    saveSiblingRule() {
       if (!this.ruleObj || !this.ruleObj.id) {
         alert("请选择节点进行操作");
         return;
@@ -511,13 +484,13 @@ export default {
       this.selectRuleUrlConfig();
     },
     //取消
-    cancel () {
+    cancel() {
       this.ruleObj = {};
       this.ruleObj = this.defaultRule;
       this.showTable = false;
     },
     //保存节点信息
-    saveRuleObj () {
+    saveRuleObj() {
       //获取参数进行保存;
       if (!this.ruleObj) {
         this.$message.info("请填充内容后进行保存");
@@ -528,7 +501,7 @@ export default {
         url = "sys/rule/update";
       } else if (this.saveType == "saveSib") {
         url = "/sys/rule/add/sib";
-      } else if (this.saveType = "saveSub") {
+      } else if ((this.saveType = "saveSub")) {
         url = "/sys/rule/add/sub";
       }
       if (!url) {
@@ -539,7 +512,7 @@ export default {
         .put({
           url: url,
           data: this.ruleObj,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           console.log(e.data);
@@ -563,7 +536,7 @@ export default {
         });
     },
     //请求url列表
-    selectRuleUrlConfig () {
+    selectRuleUrlConfig() {
       let that = this;
       //请求功能点URL
       that.$api
@@ -580,9 +553,9 @@ export default {
             console.log(result.data);
             this.ruleUrlList = result.data.ruleUrlConfig;
             if (result.data.urlList) {
-              this.$set(this.ruleObj,'ruleUrls',result.data.urlList);
+              this.$set(this.ruleObj, "ruleUrls", result.data.urlList);
             }
-            console.log( this.ruleObj);
+            console.log(this.ruleObj);
           } else {
             console.log("获取接口列表失败：" + result.message);
           }
@@ -592,7 +565,7 @@ export default {
           console.log("获取接口列表失败异常");
           console.log(e);
         });
-    },
+    }
   }
 };
 </script>
