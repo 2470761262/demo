@@ -77,45 +77,45 @@
     </template>
     <template v-slot:top>
       <div class="page-form-inline ">
-       
-          <el-select v-model="queryData.CommunityName"
-                     @focus="remoteInput"
-                     @change="queryCBId()"
-                     filterable
-                     remote
-                     clearable
-                     placeholder="请输入楼盘名称搜索"
-                     :remote-method="remoteMethod"
-                     :loading="loading">
-            <el-option v-for="item in optionsList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-       
-          <el-select v-model="queryData.BuildingName"
-                     filterable
-                     clearable
-                     placeholder="请选择楼栋"
-                     @change="queryRoomNo()">
-            <el-option v-for="item in cbIdList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-       
-          <el-select v-model="queryData.RoomNo"
-                     filterable
-                     placeholder="请选择房间号">
-            <el-option v-for="item in roomNoList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value">
-            </el-option>
-          </el-select>
-       
+
+        <el-select v-model="queryData.CommunityName"
+                   @focus="remoteInput"
+                   @change="queryCBId()"
+                   filterable
+                   remote
+                   clearable
+                   placeholder="请输入楼盘名称搜索"
+                   :remote-method="remoteMethod"
+                   :loading="loading">
+          <el-option v-for="item in optionsList"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value">
+          </el-option>
+        </el-select>
+
+        <el-select v-model="queryData.BuildingName"
+                   filterable
+                   clearable
+                   placeholder="请选择楼栋"
+                   @change="queryRoomNo()">
+          <el-option v-for="item in cbIdList"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value">
+          </el-option>
+        </el-select>
+
+        <el-select v-model="queryData.RoomNo"
+                   filterable
+                   placeholder="请选择房间号">
+          <el-option v-for="item in roomNoList"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value">
+          </el-option>
+        </el-select>
+
         <el-input placeholder="业主姓名"
                   v-model="queryData.Customers"
                   style="margin-left:25px;width:240px"
@@ -159,11 +159,13 @@
                         end-placeholder="结束日期">
         </el-date-picker>
         <span>
-          <input type="checkbox" style='margin-left:10px'
-                       @click="keySelect" /> 钥匙</span>
+          <input type="checkbox"
+                 style='margin-left:10px'
+                 @click="keySelect" /> 钥匙</span>
         <span>
-         <input type="checkbox" style='margin-left:10px;background:#fff'
-                       @click="onlySelect" /> 独家</span>
+          <input type="checkbox"
+                 style='margin-left:10px;background:#fff'
+                 @click="onlySelect" /> 独家</span>
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
               @click="remove">
           清除
@@ -172,6 +174,11 @@
                    style="margin-left:30px"
                    size="mini"
                    @click="querylistByParams">查询</el-button>
+        <el-button style="width:50px;height:30px;border:0"
+                   size="mini">
+          <moreSelect @moreSlectChange="moreSlectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
       </div>
     </template>
 
@@ -265,10 +272,12 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import moreSelect from '@/components/moreSelect';
 export default {
   mixins: [getMenuRid],
   components: {
-    listPage
+    listPage,
+    moreSelect
   },
   data () {
     return {
@@ -277,7 +286,7 @@ export default {
       roomNoList: [],
       imtag: false,
       imdataimdata: '',
-      moreSlect:'',
+      moreSlect: '',
       addList: [],
       imdata: '',
       showImpression: true,
@@ -420,7 +429,7 @@ export default {
           if (e.data.code == 200) {
             that.loading = false;
             that.MyImpressionList = e.data.data.data;
-            console.log("印象数据===================="+e.data.data.data);
+            console.log("印象数据====================" + e.data.data.data);
             that.dynamicTags = e.data.data.data;
           }
         })
@@ -523,7 +532,7 @@ export default {
             console.log(e.data.code);
             if (e.data.code == 200) {
               that.ImpressionList = e.data.data;
-              console.log("房源印象              "+e.data.data)
+              console.log("房源印象              " + e.data.data)
               this.querylistByParams();
             }
           })
@@ -543,50 +552,50 @@ export default {
       this.querylist(1, 'id', 'ascending');
     },
     querylist (currentPage, column, type) {
-    let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
-      let that = this;
-      if (this.ImpressionList != null && this.ImpressionList != '') {
-        that.addList = [];
-        for (var j = 0; j < that.ImpressionList.length; j++) {
-          var houseid = that.ImpressionList[j].houseId;
-          var newList = [houseid];
-          that.addList = that.addList.concat(newList);
-        }
-        params.list = that.addList;
-      }
-      if (Object.keys(this.moreSlect).length != 0) {
-        for (let key in this.moreSlect) {
-          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
-            params.biginTime = this.moreSlect[key][0];
-            params.endTime = this.moreSlect[key][1];
-          }
-          else if (this.key == 'followTime' && this.moreSlect[key] !== '') {
-            params.biginFollowTime = this.moreSlect[key][0];
-            params.endFollowTime = this.moreSlect[key][1];
-          }
-          else {
-            params[key] = this.moreSlect[key]
-          }
-        }
-      }
-      else {
-      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-      if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
-      if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
-      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
-      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
-      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
-      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
-      if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
-      if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
-      if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
-      if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
-      
-}params.isOnly=that.queryData.isOnly;
-      params.keyOwner=that.queryData.keyOwner;
-       if (column == '' || type == null || type == undefined) {
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
+      let that = this;
+      if (this.ImpressionList != null && this.ImpressionList != '') {
+        that.addList = [];
+        for (var j = 0; j < that.ImpressionList.length; j++) {
+          var houseid = that.ImpressionList[j].houseId;
+          var newList = [houseid];
+          that.addList = that.addList.concat(newList);
+        }
+        params.list = that.addList;
+      }
+      if (Object.keys(this.moreSlect).length != 0) {
+        for (let key in this.moreSlect) {
+          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
+            params.biginTime = this.moreSlect[key][0];
+            params.endTime = this.moreSlect[key][1];
+          }
+          else if (this.key == 'followTime' && this.moreSlect[key] !== '') {
+            params.biginFollowTime = this.moreSlect[key][0];
+            params.endFollowTime = this.moreSlect[key][1];
+          }
+          else {
+            params[key] = this.moreSlect[key]
+          }
+        }
+      }
+      else {
+        if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
+        if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
+        if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
+        if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
+        if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
+        if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
+        if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
+        if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
+        if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
+        if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
+        if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
+        if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
+        if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
+
+      } params.isOnly = that.queryData.isOnly;
+      params.keyOwner = that.queryData.keyOwner;
+      if (column == '' || type == null || type == undefined) {
         params.sortColumn = 'id';
       } else {
         params.sortColumn = column;

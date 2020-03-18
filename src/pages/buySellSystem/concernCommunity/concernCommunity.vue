@@ -1,3 +1,8 @@
+<style>
+.div {
+  position: absolute;
+}
+</style>
 <template>
   <list-page :parentData="$data"
              @sort-change="sortMethod"
@@ -71,46 +76,55 @@
     <template v-slot:top>
 
       <div class="page-inline budingMarinSet"
-           style='width:500px'>
+           style="width:500px">
 
-        <el-select v-model="comId"
-                   @focus="remoteInput"
-                   @change="queryCBId()"
-                   filterable
-                   remote
-                   clearable
-                   placeholder="请输入楼盘名称搜索"
-                   :remote-method="remoteMethod"
-                   :loading="loading">
-          <el-option v-for="item in options"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value">
-          </el-option>
-        </el-select>
-
-        <el-select v-model="cbId"
-                   filterable
-                   clearable
-                   placeholder="请选择楼栋"
-                   @change="queryRoomNo()">
-          <el-option v-for="item in cbIdList"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value">
-          </el-option>
-        </el-select>
-
-        <el-select v-model="roomNo"
-                   filterable
-                   placeholder="请选择房间号">
-          <el-option v-for="item in roomNoList"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value">
-          </el-option>
-        </el-select>
-
+        <el-item label="楼盘名称"
+                 prop="comId">
+          <el-select v-model="comId"
+                     @focus="remoteInput"
+                     @change="queryCBId()"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="请输入楼盘名称搜索"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
+        <el-item label="栋座"
+                 prop="cbId"
+                 class="page-label-center">
+          <el-select v-model="cbId"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
+        <el-item label="房间号"
+                 prop="roomNo"
+                 clearable
+                 class="page-label-center">
+          <el-select v-model="roomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-item>
         <span>
           房源状态
         </span>
@@ -125,11 +139,11 @@
         <span>
           <input type="checkbox"
                  style='margin-left:10px'
-                 @click="keySelect" /> 钥匙</span>
+                 @click="keySelect()" /> 钥匙</span>
         <span>
           <input type="checkbox"
                  style='margin-left:10px;background:#fff'
-                 @click="onlySelect" /> 独家</span>
+                 @click="onlySelect()" /> 独家</span>
       </div>
       <div style="width:550px">
         <el-input placeholder="姓名"
@@ -168,7 +182,7 @@
                   style="margin-left:3px;width:100px"></el-input>
       </div>
       <el-button type="primary"
-                 style="margin-left:30px"
+                 style="height:40px;margin-right:5px;margin-top:10px"
                  size="mini"
                  @click="querylistByParams()">查询</el-button>
       <el-button style="width:50px;height:30px;border:0"
@@ -267,12 +281,14 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
+import moreSelect from '@/components/moreSelect';
 import getMenuRid from '@/minxi/getMenuRid';
 import houseContrast from '@/minxi/houseContrast';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
-    listPage
+    listPage,
+    moreSelect
   },
   data () {
 
@@ -292,10 +308,10 @@ export default {
         { value: '3', label: "房源编号3" },
       ],
       tableDataColumn: [
-        { prop: 'houseNo', label: "房源编号", width: '110px', order: false, disabled: false, default: true },
-        { prop: 'communityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
-        { prop: 'price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
-        { prop: 'inArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: 'HouseNo', label: "房源编号", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'CommunityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.Price + '万元' },
+        { prop: 'inArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.InArea + 'm²' },
         { prop: 'unitpaice', label: "均价(元/平)", width: '130px', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
         { prop: 'decoration', label: "装修程度", width: '110px', order: false, disabled: false, default: true },
         { prop: 'seenNum', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
@@ -303,9 +319,10 @@ export default {
         { prop: 'notLookNum', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
-        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.Rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
       ],
-      tableData: [],
+      tableData: {},
+      moreSlect: [],
       elTabs: {
         activeName: "tab1",
         list: [
@@ -325,7 +342,6 @@ export default {
       roomNo: '',
       queryData: {
         communityName: '',
-        selectCommunity: '',
         isOnly: '',
         keyOwner: '',
       }
@@ -340,7 +356,12 @@ export default {
   methods: {
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryVerifyHouseDatas(1, e.prop, e.order);
+      this.queryVerifyHouseDatas(1, 'id', 'ascending');
+    },
+    moreSlectChange (e) {
+
+      this.moreSlect = e;
+      console.log(Object.keys(this.moreSlect).length);
     },
     keySelect () {
       if (this.queryData.keyOwner != '') {
@@ -348,7 +369,6 @@ export default {
       } else {
         this.queryData.keyOwner = '1';
       }
-      this.queryVerifyHouseDatas(1, 'id', 'ascending');
     },
     onlySelect () {
       if (this.queryData.isOnly != '') {
@@ -356,7 +376,7 @@ export default {
       } else {
         this.queryData.isOnly = '1';
       }
-      this.queryVerifyHouseDatas(1, 'id', 'ascending');
+
     },
     selectedCommunity (e) {
       this.$confirm('是否确定关注该楼盘?', '提示', {
@@ -445,7 +465,7 @@ export default {
       })
     },
     queryVerifyHouseDatas (currentPage, column, type) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
       if (Object.keys(this.moreSlect).length != 0) {
         for (let key in this.moreSlect) {
@@ -459,7 +479,9 @@ export default {
             params[key] = this.moreSlect[key]
           }
         }
-      } else {        if (this.comId != null && this.comId != '') { params.Comid = this.comId; }
+      }
+      else {
+        if (this.comId != null && this.comId != '') { params.Comid = this.comId; }
         if (this.cbId != null && this.cbId != '') { params.CBid = this.cbId; }
         if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
         if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
@@ -471,22 +493,11 @@ export default {
         if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
         if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
       }
-      params.isOnly = that.queryData.isOnly;
-      params.keyOwner = that.queryData.keyOwner;
-      if (column == '' || type == null || type == undefined) {
-        params.sortColumn = 'id';
-      } else {
-        params.sortColumn = column;
-      }
-      if (type == '' || type == null || type == undefined) {
-        params.sortType = 'ascending';
-      } else {
-        params.sortType = type;
-      }
       this.$api.post({
-        url: '/myHouse/getMyKernelHouse',
+        url: '/concern_community/list',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
-        qs: true
+        token: false
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
@@ -494,8 +505,9 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-          that.pageJson.total = result.data.dataCount;
-          that.tableData = result.data.data;
+          that.pageJson.total = result.data.totalCount;
+          that.pageJson.currentPage = result.data.currPage;
+          that.tableData = result.data.list;
         } else {
           console.log("查询我的核心盘列表结果：" + result.message);
           alert(result.message);
@@ -507,19 +519,22 @@ export default {
     },
     queryConcernCount () {
       this.$api.post({
-        url: '/myHouse/getCommunityNum',
-        qs: true
+        url: '/concern_community/CommunityCount',
+        token: false
       }).then((e) => {
+        console.log(e.data);
         let result = e.data;
         if (result.code == 200) {
-          this.array = result.data.data;
+          console.log(result.message);
+          console.log("统计结果" + result.data);
+          var array = result.data;
+          this.array = array;
           var countConcern = 0;
           var countEffectiveNum = 0;
           var countAll = 0;
-          for (var j = 0; j < this.array.length; j++) {
-            countConcern = countConcern + parseInt(this.array[j].countConcernCommunity);
-            console.log(parseInt(this.array[j].countConcernCommunity) + "                    =====================")
-            countEffectiveNum = countEffectiveNum + parseInt(this.array[j].effectiveNum);
+          for (var j = 0; j < array.length; j++) {
+            countConcern = countConcern + parseInt(array[j].countConcernCommunity);
+            countEffectiveNum = countEffectiveNum + parseInt(array[j].effectiveNum);
             countAll++;
           }
           this.countConcern = countConcern;
@@ -544,16 +559,20 @@ export default {
       // if(communityName!=null&&communityName!=''&&communityName!='undefined'){
       this.hasClassA
       this.$api.post({
-        url: '/concern_community/notConcernCommunityList',
-        data: { CommunityName: communityName },
-        qs: true
+        url: '/concern_community/notConcernCommunityList?CommunityName=' + communityName,
+        token: false
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
         if (result.code == 200) {
+          console.log(result.message);
+          console.log("楼盘列表" + result.data);
           var that = this;
-          that.list = result.data;
-
+          var arrayCommunity = result.data;
+          this.list = arrayCommunity;
+          return list.forEach(item => {
+            return item.list;
+          });
         } else {
           console.log("查询未关注楼盘then：" + result.message);
         }
