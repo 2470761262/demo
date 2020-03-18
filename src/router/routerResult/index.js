@@ -745,5 +745,19 @@ export default [
         component: () =>
           import(/* webpackChunkName: "editBaseCustomersDetail" */ "@/pages/systemAdministration/employee/editBaseCustomersDetail.vue")
     },
+    {
+      //系统管理 公司权限设置
+      path: "/sys/authorityConfiguration",
+      name: "authorityConfiguration",
+      component: () =>
+        import(/* webpackChunkName: "authorityConfiguration" */ "@/pages/systemAdministration/authorityConfiguration/configList.vue")
+    },
+    {
+      //系统管理 公司权限配置
+      path: "/sys/authorityConfiguration/setAuthority",
+      name: "authorityConfigurationSetAuthority",
+      component: () =>
+        import(/* webpackChunkName: "authorityConfigurationSetAuthority" */ "@/pages/systemAdministration/authorityConfiguration/setAuthority.vue")
+    },
 
 ]

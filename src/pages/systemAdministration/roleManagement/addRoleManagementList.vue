@@ -52,8 +52,11 @@ export default {
   props: {},
   data () {
     return {
-      roleEntity: {        RoleName: null,
-        RoleDesc: null      }
+      roleEntity: {
+        RoleName: null,
+        RoleDesc: null
+      },
+      companyId:null,
     };
   },
   watch: {},
@@ -62,8 +65,10 @@ export default {
     saveRole () {
       this.$api.post({
         url: '/role/add',
-        data: {          RoleName: this.roleEntity.RoleName,
-          RoleDesc: this.roleEntity.RoleDesc
+        data: {
+          RoleName: this.roleEntity.RoleName,
+          RoleDesc: this.roleEntity.RoleDesc,
+          companyId: this.companyId
         },
         token: false,
         headers: { "Content-Type": "application/json" }
@@ -74,7 +79,7 @@ export default {
           this.$alert('', '添加成功', {
             dangerouslyUseHTMLString: false
           });
-          this.$router.push({ path: "/sys/roleManagementList" });
+          this.$router.go(-1);
           console.log(result.data);
           this.$message({ message: result.message });
         }
@@ -88,7 +93,10 @@ export default {
     }
   },
   created () { },
-  mounted () { }
+  mounted () {
+    let companyId = JSON.parse(this.$route.query.companyId);
+    this.companyId = companyId;
+  }
 
 };
 </script>

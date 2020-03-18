@@ -48,16 +48,8 @@
             <span>
               <el-button type="text"
                          size="mini"
-                         :class="{'selected_btn':node.data.dataType == '0' }"
-                         @click.stop="() => operationSelf(node,data)"> 自己</el-button>
-              <el-button type="text"
-                         size="mini"
-                         :class="{'selected_btn':node.data.dataType == '1'}"
-                         @click.stop="() => operationDept(node, data)"> 部门权限</el-button>
-              <el-button type="text"
-                         size="mini"
                          :class="{'selected_btn':node.data.dataType == '2'}"
-                         @click.stop="() => operationCompany(node, data)">跨部门权限</el-button>
+                         @click.stop="() => operationCompany(node, data)">权限设置</el-button>
             </span>
           </span>
         </el-tree>
@@ -77,34 +69,47 @@
         <div class="text item"
              style="margin-top: 10px;">
           <template>
-            <div class="formItem"
-                 v-show="showSave">
-              <el-button type="primary"
-                         size="mini"
-                         @click="saveCompanyRule">保存</el-button>
-            </div>
-            <div class="elTree" v-show="showCompanyTree">
 
-              <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
-              <el-tree
-                ref="companyTree"
-                :data="companyTreeData"
-                node-key="businessId"
-                show-checkbox
-                :props="companyProps"
-                @check="checkNode"
-                :highlight-current="true"
-                :filter-node-method="filterNode"
-                check-strictly
-                :action="''"
-                empty-text="暂无数据，请检查权限"
-                auto-expand-parent
-                :default-checked-keys="companyGather"
-                :default-expanded-keys="companyGather"
-                v-loading="treeLoading"
-              ></el-tree>
+            <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
+            <el-tree
+              ref="companyTree"
+              :data="companyTreeData"
+              node-key="businessId"
+              show-checkbox
+              :props="companyProps"
+              @check="checkNode"
+              :highlight-current="true"
+              :filter-node-method="filterNode"
+              check-strictly
+              :action="''"
+              empty-text="暂无数据，请检查权限"
+              auto-expand-parent
+              :default-checked-keys="companyGather"
+              :default-expanded-keys="companyGather"
+              v-loading="treeLoading"
+            ></el-tree>
 
-            </div>
+<!--            <div class="formItem"-->
+<!--                 v-show="showSave">-->
+<!--&lt;!&ndash;              <el-button type="primary"&ndash;&gt;-->
+<!--&lt;!&ndash;                         size="mini"&ndash;&gt;-->
+<!--&lt;!&ndash;                         @click="saveCompanyRule">保存</el-button>&ndash;&gt;-->
+<!--            </div>-->
+<!--            <div class="elTree" v-show="showCompanyTree">-->
+<!--              <el-tree  :data="companyTreeData"-->
+<!--                       show-checkbox-->
+<!--                       :load="loadCompanyTreeNode"-->
+<!--                       lazy-->
+<!--                       node-key="id"-->
+<!--                       ref="companyTree"-->
+<!--                       highlight-current-->
+<!--                       :props="companyProps"-->
+<!--                       @check="checkNode"-->
+<!--                       :default-checked-keys="companyGather"-->
+<!--                       :default-expanded-keys="companyGather">-->
+
+<!--              </el-tree>-->
+<!--            </div>-->
           </template>
         </div>
       </el-card>
@@ -136,12 +141,9 @@ export default {
         label: "labelName"
       },
       showSave: false,
-      showCompanyTree: false,
+      showCompanyTree: true,
       companyGather: [],
-      ruleParamsObj: {
-        postId: null,
-        accountId: null,
-      },
+      ruleParamsObj: {},
       paramsObj: {},
       companyTreeSelectNode:{
         companyIds: [],
@@ -150,16 +152,16 @@ export default {
     }
   },
   mounted () {
-    let postId = JSON.parse(this.$route.query.postId);
-    let accountId = JSON.parse(this.$route.query.accountId);
-    this.ruleParamsObj.accountId = accountId;
-    this.ruleParamsObj.postId = postId;
-    this.paramsObj.accountId = accountId;
+    let companyId = JSON.parse(this.$route.query.companyId);
+    // this.ruleParamsObj.accountId = accountId;
+    // this.ruleParamsObj.postId = postId;
+    // this.paramsObj.accountId = accountId;
+    this.ruleParamsObj.companyId = companyId;
     //读取功能点数据
     this.$api
       .post({
-        url: "/sys/rule/employee/tree/checked",
-        data: { accountId: accountId },
+        url: "/sys/rule/company/authorityConfiguration/tree/checked",
+        data: { companyId: companyId },
         qs: true,
       })
       .then(e => {
@@ -181,7 +183,7 @@ export default {
     //读取树数据
     this.$api
       .post({
-        url: "/sys/tree/person/set/unit"
+        url: "/sys/tree/companyAuthority/set/unit"
       })
       .then(e => {
         console.log(e.data);
@@ -213,6 +215,7 @@ export default {
       .finally(e => {
         this.treeLoading = false;
       });
+
   },
   methods: {
     operationCompany (node, data) {
@@ -228,6 +231,9 @@ export default {
         this.companyGather = arrayGather;
       } else {
         this.$refs.companyTree.setCheckedKeys([]);
+        // this.companyGather = new Array();
+        // this.node.childNodes = [];
+        // this.loadCompanyTreeNode(this.node, this.resolve);
       }
     },
     operationSelf (node, data) {
@@ -256,10 +262,23 @@ export default {
       });
       keys = keys.substr(1, keys.length);
       console.log(keys, "checkedKeys///");
-      that.ruleParamsObj.ruleIds = keys;
+      that.ruleParamsObj.rIds = keys;
+
+      let companyGather = "";
+      that.companyTreeSelectNode.companyIds.forEach(id => {
+        companyGather = companyGather + "," + id;
+      });
+      companyGather = companyGather.substr(1, companyGather.length);
+      that.ruleParamsObj.companyGather = companyGather;
+      // let deptGather = "";
+      // that.companyTreeSelectNode.deptIds.forEach(id => {
+      //   deptGather = deptGather + "," + id;
+      // });
+      //deptGather = deptGather.substr(1, deptGather.length);
+      //that.ruleParamsObj.deptGather = deptGather;
       this.$api
         .post({
-          url: "/sys/rule/employee/set",
+          url: "/sys/rule/save/authorityConfiguration",
           data: that.ruleParamsObj,
           qs: true
         })
@@ -267,7 +286,7 @@ export default {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            this.$message.info("重新登录后生效，操作成功");
+            this.$message.info("操作成功");
           } else {
             console.log("保存结果：" + result.message);
             this.$message.error("保存失败" + result.message);
@@ -313,35 +332,6 @@ export default {
         });
     },
 
-    // //动态加载节点
-    // loadCompanyTreeNode (node, resolve) {
-    //   if (node.level == 0) {
-    //     this.node = node;
-    //     this.resolve = resolve;
-    //   }
-    //   console.log(node, resolve, "load tree node");
-    //   //读取功能点数据
-    //   var pId = node.id;
-    //   var type = null;
-    //   if (node.data) {
-    //     pId = node.data.id;
-    //     type = node.data.type;
-    //   }
-    //   this.$api
-    //     .post({
-    //       url: "/sys/tree/unit",
-    //     })
-    //     .then(e => {
-    //       console.log(e.data);
-    //       let result = e.data;
-    //       if (result.code == 200) {
-    //         resolve(result.data); //动态加载时
-    //       } else {
-    //         console.log("发送公告结果：" + result.message);
-    //         alert(result.message);
-    //       }
-    //     });
-    // },
 
     //选中节点
     checkNode (data, checkedData) {
@@ -350,9 +340,9 @@ export default {
         this.companyTreeSelectNode.deptIds = new Array();
         checkedData.checkedNodes.forEach(node =>{
           if (node.type == 0) {
-            this.companyTreeSelectNode.companyIds.push(node.id);
+            this.companyTreeSelectNode.companyIds.push(node.businessId);
           }else{
-            this.companyTreeSelectNode.deptIds.push(node.deptParentId);
+            this.companyTreeSelectNode.deptIds.push(node.businessId);
           }
         })
       }
@@ -373,8 +363,7 @@ export default {
         return data.labelName.indexOf(value) !== -1;
       }
     },
-  }
-  ,
+  },
   watch: {
     filterText(val) {
       this.$refs.companyTree.filter(val);
