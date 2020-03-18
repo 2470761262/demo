@@ -76,7 +76,7 @@
     <template v-slot:top>
 
       <div class="page-inline budingMarinSet"
-           style="width:500px">
+           style="width:480px">
 
         <el-item label="楼盘名称"
                  prop="comId">
@@ -145,7 +145,7 @@
                  style='margin-left:10px;background:#fff'
                  @click="onlySelect()" /> 独家</span>
       </div>
-      <div style="width:550px">
+      <div style="width:540px">
         <el-input placeholder="姓名"
                   style="width:240px"
                   v-model="queryData.Customers"
@@ -185,9 +185,9 @@
                  style="height:40px;margin-right:5px;margin-top:10px"
                  size="mini"
                  @click="querylistByParams()">查询</el-button>
-      <el-button style="width:50px;height:30px;border:0"
+      <el-button style="width:100px;height:30px;border:0"
                  size="mini">
-        <moreSelect @moreSlectChange="moreSlectChange"
+        <moreSelect @moreSelectChange="moreSelectChange"
                     style="height:40px;margin-right:5px;"></moreSelect>
       </el-button>
 
@@ -284,11 +284,13 @@ import listPage from '@/components/listPage';
 import moreSelect from '@/components/moreSelect';
 import getMenuRid from '@/minxi/getMenuRid';
 import houseContrast from '@/minxi/houseContrast';
+import definitionmenu from '@/components/definitionMenu';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
-    moreSelect
+    moreSelect,
+    definitionmenu
   },
   data () {
 
@@ -321,8 +323,9 @@ export default {
         { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
         { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.Rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
       ],
+      tableColumn: [],
       tableData: {},
-      moreSlect: [],
+      moreSelect: [],
       elTabs: {
         activeName: "tab1",
         list: [
@@ -358,10 +361,15 @@ export default {
       console.log(e, "eeee排序");
       this.queryVerifyHouseDatas(1, 'id', 'ascending');
     },
-    moreSlectChange (e) {
+    tabColumnChange (e) {
+      let that = this;
+      that.tableColumn = e;
+      console.log(this.tableColum);
+    },
+    moreSelectChange (e) {
 
-      this.moreSlect = e;
-      console.log(Object.keys(this.moreSlect).length);
+      this.moreSelect = e;
+      console.log(Object.keys(this.moreSelect).length);
     },
     keySelect () {
       if (this.queryData.keyOwner != '') {
@@ -467,16 +475,16 @@ export default {
     queryVerifyHouseDatas (currentPage, column, type) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
       let that = this;
-      if (Object.keys(this.moreSlect).length != 0) {
-        for (let key in this.moreSlect) {
-          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
-            params.biginTime = this.moreSlect[key][0];
-            params.endTime = this.moreSlect[key][1];
-          } else if (this.key == 'followTime' && this.moreSlect[key] !== '') {
-            params.biginFollowTime = this.moreSlect[key][0];
-            params.endFollowTime = this.moreSlect[key][1];
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          } else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
           } else {
-            params[key] = this.moreSlect[key]
+            params[key] = this.moreSelect[key]
           }
         }
       }

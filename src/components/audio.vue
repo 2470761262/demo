@@ -35,22 +35,57 @@
   width: 20px;
   height: 20px;
 }
+.audio-contenr-fixed {
+  position: absolute;
+  top: 80px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 8px 10px;
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
+  z-index: 200;
+  color: #fff;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  .icon {
+    margin-right: 8px;
+    font-size: 24px;
+  }
+}
 </style>
 <template>
-  <div class="audio-contenr">
-    <audio :src="url"
-           v-if="url"
-           ref="audio"
-           v-audioLoad></audio>
-    <div :class="['audio-contenr-but',audioPlay.icon]"
-         @click="openVideo"></div>
-    <el-slider v-model="audioPlay.nowTime"
-               :format-tooltip="formatTooltip"
-               @input="audioSliderChange"
-               ref="audioSlider"
-               :max="audioPlay.endTime"
-               :disabled="url ? false : true"></el-slider>
-    <div class="autio-time">{{audioPlay.nowTime | timefomat}} / {{audioPlay.endTime | timefomat}}</div>
+  <div>
+    <div class="audio-contenr"
+         v-if="!fixed">
+      <audio :src="url"
+             v-if="url"
+             ref="audio"
+             v-audioLoad></audio>
+      <div :class="['audio-contenr-but',audioPlay.icon]"
+           @click="openVideo"></div>
+      <el-slider v-model="audioPlay.nowTime"
+                 :format-tooltip="formatTooltip"
+                 @input="audioSliderChange"
+                 ref="audioSlider"
+                 :max="audioPlay.endTime"
+                 :disabled="url ? false : true"></el-slider>
+      <div class="autio-time">{{audioPlay.nowTime | timefomat}} / {{audioPlay.endTime | timefomat}}</div>
+    </div>
+    <div class="audio-contenr-fixed"
+         @click="openVideo"
+         v-if="fixed">
+      <audio :src="url"
+             v-if="url"
+             ref="audio"
+             v-audioLoad></audio>
+      <i class="icon"
+         :class="audioPlay.playType ? 'el-icon-phone-outline' : 'el-icon-phone'"></i>
+      <span>
+        <slot></slot>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -61,6 +96,10 @@ export default {
     url: {
       type: String,
       default: ''
+    },
+    fixed: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -69,6 +108,7 @@ export default {
         playOrEnd: true,
         nowTime: 0,
         endTime: 0,
+        playType: false,
         icon: "el-icon-video-play"
       },
     }
@@ -106,11 +146,14 @@ export default {
         if (audio.paused) {
           audio.play();
           this.audioPlay.icon = "el-icon-video-pause";
+          this.audioPlay.playType = true;
         } else {
           audio.pause();
           this.audioPlay.icon = "el-icon-video-play";
+          this.audioPlay.playType = false;
         }
       } catch (error) {
+        console.log(error, audio);
         this.$message.error("是不是没有音频阿!");
       }
     },

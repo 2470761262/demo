@@ -19,10 +19,10 @@
   <div class="wrapper">
     <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
       <el-form-item label="部门名称:">
-        <el-input v-model="DeptEntity.deptName"></el-input>
+        <el-input v-model="DeptEntity.deptName" readonly="readonly"></el-input>
       </el-form-item>
       <el-form-item label="部门首拼">
-        <el-input v-model="DeptEntity.header"></el-input>
+        <el-input v-model="DeptEntity.header"  readonly="readonly"></el-input>
       </el-form-item>
     </el-form>
     <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
@@ -57,13 +57,14 @@
       </el-form-item>
     </el-form>
     <el-form ref="form" :model="DeptEntity" :inline="true">
-      <el-button type="info" @click="getDialogVisible()" size="small" style="margin-top: 4px;">选择负责人</el-button>
+      <el-button type="info" @click="getDialogVisible()" size="small" style="margin-top: 4px;" disabled="disabled">选择负责人</el-button>
       <el-form-item>
         <el-dialog
           title="请选择:"
           :visible.sync="dialogVisible"
           width="50%"
           :before-close="handleClose"
+          
         >
           <list-page
             :parentData="$data"
@@ -84,7 +85,7 @@
             </template>
           </list-page>
         </el-dialog>
-        <el-input type="text" v-model="DeptEntity.managerPerName"></el-input>
+        <el-input type="text" v-model="DeptEntity.perName"  readonly="readonly"></el-input>
       </el-form-item>
       <el-form-item label="加入类型">
         <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.joinType" show-word-limit>
@@ -128,7 +129,7 @@
             </template>
           </list-page>
         </el-dialog>
-        <el-input type="text" v-model="DeptEntity.storeName" show-word-limit></el-input>
+        <el-input type="text" v-model="DeptEntity.storeName"  readonly="readonly"></el-input>
       </el-form-item>
     </el-form>
     <el-form ref="form" :model="DeptEntity" label-width="80px" :inline="true">
@@ -197,7 +198,7 @@ export default {
         deptDesc: null,
         isArea: null,
         backUrl: null,
-        managerPerName: null,
+        perName: null,
         sId: null,
         storeName: null
       },
@@ -318,7 +319,7 @@ export default {
     handleChange(row) {
       console.log(row);
       this.DeptEntity.managerPer = row.accountId;
-      this.DeptEntity.managerPerName = row.perName;
+      this.DeptEntity.perName = row.perName;
     },
     getStores(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
@@ -335,7 +336,7 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            debugger;
+            //debugger;
             if (result.data.list != null && result.data.list.length > 0) {
               this.pageJson.total = result.data.totalCount;
               this.pageJson.currentPage = result.data.currPage;

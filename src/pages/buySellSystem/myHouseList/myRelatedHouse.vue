@@ -71,7 +71,7 @@
         </template>
         <el-button style="margin-left:30px;width:150px;height:30px;border:0"
                    size="mini">
-          <moreSelect @moreSlectChange="moreSlectChange"
+          <moreSelect @moreSelectChange="moreSelectChange"
                       style="height:40px;margin-right:5px;"></moreSelect>
         </el-button>
 
@@ -182,7 +182,7 @@ export default {
       ],
       tableColumn: [],
       tableData: [],
-      moreSlect: {},
+      moreSelect: {},
     }
   },
   mounted () {
@@ -193,9 +193,9 @@ export default {
       console.log(e, "eeee排序");
       this.querySaleNotTrack(1, e.prop, e.order);
     },
-    moreSlectChange (e) {
+    moreSelectChange (e) {
       if (e != '')
-        this.moreSlect = e;
+        this.moreSelect = e;
       this.querySaleNotTrack(1, 'id', 'ascending')
 
 
@@ -318,13 +318,13 @@ export default {
       }
       params.sortColumn = column;
       params.sortType = type;
-      if (Object.keys(this.moreSlect).length != 0) {
-        for (let key in this.moreSlect) {
-          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
-            params.biginTime = this.moreSlect[key][0];
-            params.endTime = this.moreSlect[key][1];
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
           } else {
-            params[key] = this.moreSlect[key]
+            params[key] = this.moreSelect[key]
           }
         }
       } else {
