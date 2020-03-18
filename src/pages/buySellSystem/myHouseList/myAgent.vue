@@ -65,11 +65,13 @@
         </span>
         <span>
 
-          <el-checkbox style='margin-left:10px'
-                       @click="keySelect()" /> 钥匙</span>
+          <input type='checkbox'
+                 style='margin-left:10px'
+                 @click="keySelect()" /> 钥匙</span>
         <span>
-          <el-checkbox style='margin-left:10px;background:#fff'
-                       @click="onlySelect()" /> 独家</span>
+          <input type='checkbox'
+                 style='margin-left:10px;background:#fff'
+                 @click="onlySelect()" /> 独家</span>
 
         <el-button type="primary"
                    style="margin-left:30px"
@@ -77,7 +79,7 @@
                    @click="queryMyAgentParams">查询</el-button>
         <el-button style="margin-left:30px;width:50px;height:30px;border:0"
                    size="mini">
-          <moreSelect @moreSlectChange="moreSlectChange"
+          <moreSelect @moreSelectChange="moreSelectChange"
                       style="height:40px;margin-right:5px;"></moreSelect>
         </el-button>
         <el-button style="margin-left:80px;width:50px;height:30px;border:0"
@@ -131,7 +133,7 @@
           {{scope.row.AddTime}}
         </template>
       </el-table-column> -->
-      <template v-for="(item) in tableColumnField">
+      <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
@@ -278,7 +280,7 @@ export default {
         value: '选项6',
         label: '已过期'
       }],
-      moreSlect: {},
+      moreSelect: {},
       queryData: {
         CommunityName: '',
         timeSelect: '',
@@ -295,10 +297,10 @@ export default {
 
   },
   methods: {
-    moreSlectChange (e) {
+    moreSelectChange (e) {
       if (e != '')
-        this.moreSlect = e;
-      this.queryMyAgent(1, e.prop, e.order)
+        this.moreSelect = e;
+      this.queryMyAgent(1, 'id', 'ascending')
 
 
     },
@@ -336,23 +338,37 @@ export default {
       console.log("==========" + this.newAgentName)
     },
     querylist (currentPage, column, type) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage-1 };
+      let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
       let that = this;
-
-      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.comId = this.queryData.CommunityName; }
-      if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
-      if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
-      if (this.queryData.Customers != null && this.queryData.Customers != '') { params.customName = this.queryData.Customers; }
-      if (this.queryData.Tel != null && this.queryData.Tel != '') { params.tel = this.queryData.Tel; }
-      if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
-      if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
-      if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
-      if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.beginTime = this.queryData.timeSelect[0]; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.endTime = this.queryData.timeSelect[1]; }
-params.isOnly=that.queryData.isOnly;
-      params.keyOwner=that.queryData.keyOwner;
-       if (column == '' || type == null || type == undefined) {
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          } else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          } else {
+            params[key] = this.moreSelect[key]
+          }
+        }
+      }
+      else {
+        if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.comId = this.queryData.CommunityName; }
+        if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
+        if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
+        if (this.queryData.Customers != null && this.queryData.Customers != '') { params.customName = this.queryData.Customers; }
+        if (this.queryData.Tel != null && this.queryData.Tel != '') { params.tel = this.queryData.Tel; }
+        if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
+        if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
+        if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
+        if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
+        if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.beginTime = this.queryData.timeSelect[0]; }
+        if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.endTime = this.queryData.timeSelect[1]; }
+      }
+      params.isOnly = that.queryData.isOnly;
+      params.keyOwner = that.queryData.keyOwner;
+      if (column == '' || type == null || type == undefined) {
         params.sortColumn = 'id';
       } else {
         params.sortColumn = column;
@@ -577,16 +593,16 @@ params.isOnly=that.queryData.isOnly;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
       params.sortColumn = column;
       params.sortType = type;
-      if (Object.keys(this.moreSlect).length != 0) {
-        for (let key in this.moreSlect) {
-          if (this.key == 'addTime' && this.moreSlect[key] !== '') {
-            params.biginTime = this.moreSlect[key][0];
-            params.endTime = this.moreSlect[key][1];
-          } else if (this.key == 'followTime' && this.moreSlect[key] !== '') {
-            params.biginFollowTime = this.moreSlect[key][0];
-            params.endFollowTime = this.moreSlect[key][1];
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          } else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
           } else {
-            params[key] = this.moreSlect[key]
+            params[key] = this.moreSelect[key]
           }
         }
       }

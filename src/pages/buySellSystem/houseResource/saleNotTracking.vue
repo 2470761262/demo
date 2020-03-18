@@ -59,10 +59,18 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
-        <definitionmenu class="menuMarin"
-                        :renderList="tableColumnField"
-                        :tableColumn="tableColumn"
-                        @change="tabColumnChange"></definitionmenu>
+        <el-button style="margin-left:30px;width:170px;height:30px;border:0"
+                   size="mini">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </el-button>
+        <el-button style="margin-left:30px;width:170px;height:30px;border:0"
+                   size="mini">
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
               @click="Remove">
           清除
@@ -106,12 +114,14 @@
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 import houseContrast from '@/minxi/houseContrast';
+import moreSelect from '@/components/moreSelect';
 import definitionmenu from '@/components/definitionMenu';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
-    definitionmenu
+    definitionmenu,
+    moreSelect
   },
   data () {
 
@@ -138,6 +148,7 @@ export default {
         total: 0, //总记录数
         pageSize: 10 //每页条数
       },
+      moreSelect: [],
       tableColumnField: [
         { prop: 'houseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true },
         { prop: 'communityName', label: '小区名称', order: false, width: '150', disabled: true, default: true },
@@ -165,6 +176,11 @@ export default {
     this.queryVerifyHouseDatas(1, 'id', 'ascending');
   },
   methods: {
+    moreSelectChange (e) {
+      if (e != '')
+        this.moreSelect = e;
+      this.queryVerifyHouseDatas(1, 'id', 'ascending')
+    },
     sortMethod (e) {
       console.log(e, "eeee排序");
       this.queryVerifyHouseDatas(1, e.prop, e.order);
@@ -279,17 +295,32 @@ export default {
       var that = this;
       that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.beginTime = that.data.timeSelect[0];
-      params.endTime = that.data.timeSelect[1];
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.minInArea = that.data.minInArea;
-      params.maxInArea = that.data.maxInArea;
-      params.minPrice = that.data.minPrice;
-      params.maxPrice = that.data.maxPrice;
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          } else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          } else {
+            params[key] = this.moreSelect[key]
+          }
+        }
+      }
+      else {
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.roomNo = that.data.roomNo;
+        params.beginTime = that.data.timeSelect[0];
+        params.endTime = that.data.timeSelect[1];
+        params.customName = that.data.customName;
+        params.tel = that.data.tel;
+        params.minInArea = that.data.minInArea;
+        params.maxInArea = that.data.maxInArea;
+        params.minPrice = that.data.minPrice;
+        params.maxPrice = that.data.maxPrice;
+      }
       if (column == '' || type == null || type == undefined) {
         params.sortColumn = 'id';
       } else {

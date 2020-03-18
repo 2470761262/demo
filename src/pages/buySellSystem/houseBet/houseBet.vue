@@ -120,29 +120,30 @@
           </el-form-item>
 
           <el-form-item label="对赌人"
-                        prop="empName" style="position: relative;">
+                        prop="empName"
+                        style="position: relative;">
             <el-input clearable
                       v-model="data.empName"
                       placeholder="对赌人公司/部门/姓名"
                       v-on:click.native="showHrTree = true"
-                      readonly/>
-            <div class="elTree" style="position: absolute;z-index: 2;min-width: 280px" v-show="showHrTree">
-              <el-tree
-                ref="treeForm"
-                :data="treeData"
-                node-key="nodeId"
-                show-checkbox
-                :props="defaultProps"
-                @check-change="handleCheckChange"
-                :highlight-current="true"
-                :filter-node-method="filterNode"
-                check-strictly
-                :action="''"
-                empty-text="暂无数据，请检查权限"
-                auto-expand-parent
-                :default-expanded-keys="curNodeId"
-                :default-checked-keys="curNodeId"
-              ></el-tree>
+                      readonly />
+            <div class="elTree"
+                 style="position: absolute;z-index: 2;min-width: 280px"
+                 v-show="showHrTree">
+              <el-tree ref="treeForm"
+                       :data="treeData"
+                       node-key="nodeId"
+                       show-checkbox
+                       :props="defaultProps"
+                       @check-change="handleCheckChange"
+                       :highlight-current="true"
+                       :filter-node-method="filterNode"
+                       check-strictly
+                       :action="''"
+                       empty-text="暂无数据，请检查权限"
+                       auto-expand-parent
+                       :default-expanded-keys="curNodeId"
+                       :default-checked-keys="curNodeId"></el-tree>
             </div>
           </el-form-item>
           <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
@@ -153,6 +154,11 @@
                      style="margin-left:10px"
                      size="mini"
                      @click="queryHouseBetParams">查询
+          </el-button>
+          <el-button style="margin-left:30px;width:50px;height:30px;border:0"
+                     size="mini">
+            <moreSelect @moreSelectChange="moreSelectChange"
+                        style="height:40px;margin-right:5px;"></moreSelect>
           </el-button>
         </el-form>
       </div>
@@ -218,10 +224,11 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
-
+import moreSelect from '@/components/moreSelect';
 export default {
   components: {
-    listPage
+    listPage,
+    moreSelect,
   },
   data () {
 
@@ -232,6 +239,7 @@ export default {
         children: "childrenNodes",
         label: "labelName"
       },
+      moreSelect: [],
       treeData: [],
       curNodeId: [],
       data: {
@@ -285,6 +293,7 @@ export default {
     }
   },
   mounted () {
+
     this.queryHouseBet(1);
     //读取树数据
     this.$api
@@ -320,12 +329,21 @@ export default {
       });
   },
   methods: {
+    moreSelectChange (e) {
+      debugger
+      if (e != '')
+
+        this.moreSelect = e;
+      this.queryHouseBet(1, 'id', 'ascending')
+
+
+    },
     Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryHouseBet(1);
 
     },
-    handleCheckChange(data, checked, node) {
+    handleCheckChange (data, checked, node) {
       this.showHrTree = false;
       if (checked == true) {
         this.data.empName = data.labelName;
@@ -337,15 +355,15 @@ export default {
         );
         //  0公司，1部门，2员工，3职位
         if (this.checkedType === 0) {
-          this.data.coId=data.businessId;
+          this.data.coId = data.businessId;
         } else if (this.checkedType === 1) {
-          this.data.deptId=data.businessId;
+          this.data.deptId = data.businessId;
         } else if (this.checkedType === 2) {
-          this.data.empId=data.businessId;
+          this.data.empId = data.businessId;
         }
       }
     },
-    filterNode(value, data) {
+    filterNode (value, data) {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
@@ -476,25 +494,39 @@ export default {
       var that = this;
       that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage };
-
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.status = that.data.status;
-      params.customerName = that.data.customerName;
-      params.empId = that.data.empId;
-      params.coId = that.data.coId;
-      params.deptId = that.data.deptId;
-      params.tel = that.data.tel;
-      params.minMoney = that.data.minMoney;
-      params.maxMoney = that.data.maxMoney;
-      if (that.data.timeSelect.length > 0)
-        params.beginTime = that.data.timeSelect[0];
-      if (that.data.timeSelect.length > 1)
-        params.endTime = that.data.timeSelect[1];
-      params.order = that.data.order;
-      params.orderAsc = that.data.orderAsc;
-
+      if (Object.keys(this.moreSelect).length != 0) {
+        debugger
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          } else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          } else {
+            params[key] = this.moreSelect[key]
+          }
+        }
+      }
+      else {
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.roomNo = that.data.roomNo;
+        params.status = that.data.status;
+        params.customerName = that.data.customerName;
+        params.empId = that.data.empId;
+        params.coId = that.data.coId;
+        params.deptId = that.data.deptId;
+        params.tel = that.data.tel;
+        params.minMoney = that.data.minMoney;
+        params.maxMoney = that.data.maxMoney;
+        if (that.data.timeSelect.length > 0)
+          params.beginTime = that.data.timeSelect[0];
+        if (that.data.timeSelect.length > 1)
+          params.endTime = that.data.timeSelect[1];
+        params.order = that.data.order;
+        params.orderAsc = that.data.orderAsc;
+      }
       console.log(params);
       this.$api.get({
         url: '/house/bet/list',

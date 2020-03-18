@@ -405,6 +405,9 @@ export default {
     },
     //远程排序
     sortMethod (item) {
+      this.form.sortColumn = item.prop;
+      this.form.sortType = item.order;
+      this.getHouseData(JSON.parse(JSON.stringify(value)));
       console.log(item);
     },
     keySelect () {
