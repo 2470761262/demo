@@ -92,7 +92,7 @@
       align-items: center;
       border-right: 1px solid #cccccc;
       box-sizing: border-box;
-      justify-content: space-around;
+      //justify-content: space-around;
       &:last-child {
         border-right: none;
       }
@@ -105,6 +105,8 @@
       .cell-pro-detail {
         //padding: 0 17px;
         text-align: center;
+        flex: 1;
+        width: 0;
         .cell-pro-detail-name {
           font-size: 24px;
           color: #515151;
@@ -127,6 +129,9 @@
         outline: none;
         position: relative;
         overflow: hidden;
+        &:first-of-type {
+          margin-right: 10px;
+        }
         &::after {
           content: "";
           display: block;
@@ -155,54 +160,54 @@
   <div class="detail-content">
     <div class="detail-price-content">
       <div class="detail-price">
-        <span>128</span>
-        <span>万元</span>
+        <span>{{resultData.Price}}</span>
+        <span v-if="resultData.Price">万元</span>
       </div>
-      <div class="detail-price-avg">14300元/㎡</div>
+      <div class="detail-price-avg">{{resultData.averagePrice | emptyRead('元/㎡')}}</div>
     </div>
     <div class="content-flex content-pad">
       <div class="cell-item">
-        <div class="cell-item-head">3室2厅2卫</div>
-        <div class="cell-tiem-floot">16层/共21层</div>
+        <div class="cell-item-head">{{resultData.houseType | emptyRead}}</div>
+        <div class="cell-tiem-floot">开发中</div>
       </div>
       <div class="cell-item">
-        <div class="cell-item-head">南北</div>
-        <div class="cell-tiem-floot">平层/精装</div>
+        <div class="cell-item-head">{{resultData.Face | emptyRead}}</div>
+        <div class="cell-tiem-floot">开发中</div>
       </div>
       <div class="cell-item">
-        <div class="cell-item-head">89平米</div>
-        <div class="cell-tiem-floot">2011年建</div>
+        <div class="cell-item-head">{{resultData.InArea | emptyRead('平米')}}</div>
+        <div class="cell-tiem-floot">开发中</div>
       </div>
     </div>
     <div class="cell-tabs-content">
       <div class="flex-row">
         <div class="cell-tabs">
           <div class="cell-tabs-title">看房方式</div>
-          <div class="cell-tabs-detail">有钥匙</div>
+          <div class="cell-tabs-detail">开发中...</div>
         </div>
         <div class="cell-tabs">
           <div class="cell-tabs-title">存放门店</div>
-          <div class="cell-tabs-detail">博士圆点</div>
+          <div class="cell-tabs-detail">开发中...</div>
         </div>
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">小区名称</div>
-        <div class="cell-tabs-detail">夏鑫博士哥</div>
+        <div class="cell-tabs-detail">开发中...</div>
         <div class="cell-tabs-nav">楼栋号</div>
       </div>
       <div class="cell-tabs">
-        <div class="cell-tabs-title">被砍次数</div>
-        <div class="cell-tabs-detail">5次</div>
+        <div class="cell-tabs-title">被看次数</div>
+        <div class="cell-tabs-detail">开发中...</div>
       </div>
       <div class="cell-tabs">
-        <div class="cell-tabs-title">未跟进次数</div>
-        <div class="cell-tabs-detail">3天</div>
+        <div class="cell-tabs-title">未跟进天数</div>
+        <div class="cell-tabs-detail">开发中...</div>
       </div>
     </div>
     <div class="cell-pro">
       <div class="cell-pro-item">
         <el-image class="cell-pro-left-img"
-                  src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190811/20190811111530328_34985.jpg?x-oss-process=style/thumb"
+                  :src="resultData.agentPerHeadImg"
                   fit="cover">
           <div slot="placeholder"
                class="image-slot">
@@ -210,15 +215,16 @@
           </div>
         </el-image>
         <div class="cell-pro-detail">
-          <div class="cell-pro-detail-name">无受困</div>
-          <div class="cell-pro-detail-other">直径二点</div>
+          <div class="cell-pro-detail-name overText">{{resultData.agentPerName | emptyRead}}</div>
+          <div class="cell-pro-detail-other overText">{{resultData.agentPerDepartmentName | emptyRead}}</div>
         </div>
-        <button class="cell-pro-but">一键拨号</button>
+        <button class="cell-pro-but"
+                v-if="resultData.agentPerName">一键拨号</button>
       </div>
       <div class="cell-pro-item">
         <div class="cell-pro-detail">
-          <div class="cell-pro-detail-name">章节</div>
-          <div class="cell-pro-detail-other">业主称呼</div>
+          <div class="cell-pro-detail-name overText">{{resultData.Customers | emptyRead}}</div>
+          <div class="cell-pro-detail-other overText">业主称呼</div>
         </div>
         <button class="cell-pro-but">查看号码</button>
         <button class="cell-pro-but">一键拨号</button>
@@ -229,6 +235,15 @@
 
 <script>
 export default {
-
+  inject: ["houseDetails"],
+  computed: {
+    resultData () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        return this.houseDetails.data
+      } else {
+        return {};
+      }
+    }
+  },
 }
 </script>

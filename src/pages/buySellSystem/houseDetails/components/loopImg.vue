@@ -64,14 +64,16 @@
 <template>
   <div>
     <section class="loog-body">
-      <el-image class="img-item"
-                :src="activeImgUrl"
-                fit="cover">
-        <div slot="placeholder"
-             class="image-slot">
-          加载中<span>...</span>
-        </div>
-      </el-image>
+      <template v-if="loopBig.typeStr == 'picUrl'">
+        <el-image class="img-item"
+                  :src="loopBig.src"
+                  fit="cover">
+          <div slot="placeholder"
+               class="image-slot">
+            加载中<span>...</span>
+          </div>
+        </el-image>
+      </template>
     </section>
     <section class="img-list"
              :class="{'scrolPad':scrollBar}">
@@ -88,17 +90,18 @@
            ref="itemOver">
         <div class="img-scroll-translateX"
              :style="moveX">
-          <el-image @click.native="changeImg(item)"
-                    v-for="item in 6"
-                    :key="item"
-                    class="img-item"
-                    src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190811/20190811111530328_34985.jpg?x-oss-process=style/thumb"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
-            </div>
-          </el-image>
+          <template v-for="item in loopList">
+            <el-image @click.native="changeImg(item)"
+                      :key="item.id"
+                      class="img-item"
+                      :src="item.picUrl"
+                      fit="cover">
+              <div slot="placeholder"
+                   class="image-slot">
+                加载中<span>...</span>
+              </div>
+            </el-image>
+          </template>
         </div>
       </div>
     </section>
@@ -108,6 +111,7 @@
 <script>
 import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
 export default {
+  inject: ["houseDetails"],
   mounted () {
     addResizeListener(this.$refs.itemOver, this.update);
   },
@@ -117,14 +121,25 @@ export default {
   computed: {
     moveX () {
       return `transform: translateX(${this.renderX}px)`
+    },
+    //轮播
+    loopList () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        let saleUploadPicDtoList = this.houseDetails.data.saleUploadPicDtoList ? this.houseDetails.data.saleUploadPicDtoList : [];
+        let saleUploadVideoDtoList = this.houseDetails.data.saleUploadVideoDtoList ? this.houseDetails.data.saleUploadVideoDtoList : [];
+        let resultList = [...saleUploadPicDtoList, ...saleUploadVideoDtoList];
+        this.changeImg(resultList[0]);
+        return resultList;
+      }
+      return [];
     }
   },
   data () {
     return {
+      loopBig: {},
       scrollBar: true,
       translateX: 0,
-      renderX: '0',
-      activeImgUrl: 'http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190811/20190811111530328_34985.jpg?x-oss-process=style/thumb'
+      renderX: '0'
     }
   },
   methods: {
@@ -163,8 +178,13 @@ export default {
       this.renderX = -this.translateX
     },
     changeImg (item) {
-      this.activeImgUrl = 'http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190819/20190819174109196_34936.jpg?x-oss-process=style/thumb';
-      this.$message.info('选择了' + item);
+      if ('picUrl' in item) {
+        this.$set(this.loopBig, 'typeStr', 'picUrl')
+        this.$set(this.loopBig, 'src', item.picUrl)
+      } else if ('videoUrl' in item) {
+        this.$set(this.loopBig, 'typeStr', 'videoUrl')
+        this.$set(this.loopBig, 'src', item.videoUrl)
+      }
     }
   },
 }

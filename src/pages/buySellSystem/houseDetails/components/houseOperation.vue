@@ -14,7 +14,7 @@
   }
   .list-content {
     padding: 15px;
-    max-height: 710px;
+    max-height: 800px;
     overflow-x: hidden;
     overflow-y: auto;
     &::-webkit-scrollbar {

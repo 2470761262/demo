@@ -4,7 +4,7 @@ import {
   TREMEDEFTULTCOLOR
 } from '@/util/constMap';
 import api from '@/api/require';
-const version = require('element-ui/package.json').version // element-ui version from node_modules
+//const version = require('element-ui/package.json').version // element-ui version from node_modules
 const defaultColor = "#409EFF"; // 不可修改
 let themeData = {
   chalk: '',
@@ -18,7 +18,6 @@ let themeData = {
       }
       newVal = storeColor;
     }
-    // 皮肤是基于style内容匹配,打包完之后被压缩成文件
     // if (process.env.NODE_ENV != 'development') {
     // themeData.createStyle(newVal, ordVal);
     // }

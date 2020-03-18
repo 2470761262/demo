@@ -1,3 +1,4 @@
+
 <style lang="less" scoped>
 .other-title {
   font-size: 30px;
@@ -16,9 +17,9 @@
     border: none;
     padding-bottom: 0;
   }
-  &:first-of-type {
-    padding-bottom: 5px;
-  }
+  //   &:first-of-type {
+  //     padding-bottom: 5px;
+  //   }
   .message-row-title {
     width: 117px;
     font-size: 18px;
@@ -65,122 +66,150 @@
     <h3 class="other-title">房源描述</h3>
     <section class="message-row">
       <h5 class="message-row-title">小区介绍</h5>
-      <div class="message-row-right"> 小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍小区介绍
+      <div class="message-row-right">{{resultData.communityPresentation | emptyRead}}
       </div>
     </section>
     <section class="message-row">
       <h5 class="message-row-title">户型介绍</h5>
-      <div class="message-row-right"> 南北通透,主卧,客厅,阳台朝南,电梯入户</div>
+      <div class="message-row-right">{{resultData.houseTypePresentation | emptyRead}}</div>
+    </section>
+    <section class="message-row ">
+      <h5 class="message-row-title">税费情况</h5>
+      <div class="message-row-right">{{resultData.taxParsing | emptyRead}}</div>
     </section>
     <section class="message-row last-row">
-      <h5 class="message-row-title">税费情况</h5>
-      <div class="message-row-right">满二,税费2万,车位1.3万</div>
+      <h5 class="message-row-title">核心卖点</h5>
+      <div class="message-row-right">{{resultData.coreSellingPoint | emptyRead}}</div>
     </section>
-
     <h3 class="other-title">房屋概况</h3>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">房屋用途</h5>
-        <div class="message-row-right">普通住宅</div>
+        <div class="message-row-right">{{resultData.buildtype | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">电梯配套</h5>
-        <div class="message-row-right">有</div>
+        <div class="message-row-right">{{resultData.elevator | elevatorFilter}}</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">房屋证件</h5>
-        <div class="message-row-right">不动产权证</div>
+        <div class="message-row-right">{{resultData.certificateType | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">产权性质</h5>
-        <div class="message-row-right">商品房</div>
+        <div class="message-row-right">{{resultData.HouseProperty | emptyRead}}</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">户口占用</h5>
-        <div class="message-row-right">占用</div>
+        <div class="message-row-right">{{resultData.sign | signFilter}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">附属配套</h5>
-        <div class="message-row-right">-1层车位</div>
+        <div class="message-row-right">{{resultData.houseBelong | houseBelongFilter}}</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">小学划片</h5>
-        <div class="message-row-right">联动小学</div>
+        <div class="message-row-right">{{resultData.primarySchool | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">学籍占用</h5>
-        <div class="message-row-right">一年级</div>
+        <div class="message-row-right">发开中...</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">中学划片</h5>
-        <div class="message-row-right">联动中学</div>
+        <div class="message-row-right">{{resultData.middleSchool | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">学籍情况</h5>
-        <div class="message-row-right">未占用</div>
+        <div class="message-row-right">发开中...</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">物业公司</h5>
-        <div class="message-row-right">建发物业</div>
+        <div class="message-row-right">发开中...</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">评估价</h5>
-        <div class="message-row-right">9000元/平</div>
+        <div class="message-row-right">发开中...</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">物业费</h5>
-        <div class="message-row-right">1.6元/平方</div>
+        <div class="message-row-right">发开中...</div>
       </div>
     </section>
-
     <h3 class="other-title">交易信息</h3>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">挂牌时间</h5>
-        <div class="message-row-right">2019-9-11</div>
+        <div class="message-row-right">{{resultData.AddTime | emptyRead}}</div>
       </div>
       <div class="message-row">
-        <h5 class="message-row-title">上次交易时间</h5>
-        <div class="message-row-right">暂无</div>
+        <h5 class="message-row-title">上次交易金额</h5>
+        <div class="message-row-right">{{ resultData.LastTransactionAmount | emptyRead}}</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">上次交易</h5>
-        <div class="message-row-right">暂无</div>
+        <div class="message-row-right">{{resultData.IsTwoYears | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">土地性质</h5>
-        <div class="message-row-right">出让</div>
+        <div class="message-row-right">{{resultData.LandCharacteristic | landCharacterFilter}}</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">抵押信息</h5>
-        <div class="message-row-right">有抵押</div>
+        <div class="message-row-right">{{resultData.mortgage | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">剩余贷款</h5>
-        <div class="message-row-right">45万</div>
+        <div class="message-row-right">{{resultData.balance | emptyRead('万元')}}</div>
       </div>
+      {{resultID}}
     </section>
   </div>
 </template>
 
 <script>
+import { HOUSEBELONGLIST } from "@/util/constMap";
+import util from "@/util/util";
 export default {
-
+  inject: ["houseDetails"],
+  computed: {
+    resultData () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        return this.houseDetails.data
+      } else {
+        return {};
+      }
+    }
+  },
+  filters: {
+    elevatorFilter (value) {
+      return util.analysisElevator(value);
+    },
+    signFilter (value) {
+      return util.analysisSign(value);
+    },
+    houseBelongFilter (value) {
+      return util.analysisHouseBelong(HOUSEBELONGLIST, value);
+    },
+    landCharacterFilter (value) {
+      return util.analysisLandCharacteristic(value);
+    }
+  }
 }
 </script>
