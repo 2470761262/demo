@@ -178,7 +178,6 @@
         <h5 class="message-row-title">剩余贷款</h5>
         <div class="message-row-right">{{resultData.balance | emptyRead('万元')}}</div>
       </div>
-      {{resultID}}
     </section>
   </div>
 </template>
