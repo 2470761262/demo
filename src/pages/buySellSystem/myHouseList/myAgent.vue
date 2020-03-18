@@ -298,7 +298,7 @@ export default {
     moreSlectChange (e) {
       if (e != '')
         this.moreSlect = e;
-      this.queryMyAgent(1, 'id', 'ascending')
+      this.queryMyAgent(1, e.prop, e.order)
 
 
     },
@@ -335,8 +335,8 @@ export default {
       this.newAgentName = name;
       console.log("==========" + this.newAgentName)
     },
-    querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', sortColumn: 'id' };
+    querylist (currentPage, column, type) {
+      let params = { limit: this.pageJson.pageSize, page: currentPage-1 };
       let that = this;
 
       if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.comId = this.queryData.CommunityName; }
@@ -350,7 +350,18 @@ export default {
       if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.beginTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.endTime = this.queryData.timeSelect[1]; }
-
+params.isOnly=that.queryData.isOnly;
+      params.keyOwner=that.queryData.keyOwner;
+       if (column == '' || type == null || type == undefined) {
+        params.sortColumn = 'id';
+      } else {
+        params.sortColumn = column;
+      }
+      if (type == '' || type == null || type == undefined) {
+        params.sortType = 'ascending';
+      } else {
+        params.sortType = type;
+      }
       this.$api.post({
         url: '/myHouse/getMyAgent',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -363,8 +374,7 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-          that.pageJson.total = result.data.totalCount;
-          that.pageJson.currentPage = result.data.currPage;
+          that.pageJson.total = result.data.dataCount;
           that.tableData = result.data.data;
         } else {
           console.log("查询我的跟单列表结果：" + result.message);
