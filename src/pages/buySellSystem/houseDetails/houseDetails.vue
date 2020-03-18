@@ -364,8 +364,11 @@ input[type="number"]::-webkit-outer-spin-button {
                style="margin-right: 13px;">
             <span>{{addBetResult.err}}</span>
           </div>
-          <div v-if="addBetResult.status" style="text-align: center;">
-            <el-image style="margin-left: 20px" :src="require('../../../assets/images/beton.png')" lazy></el-image>
+          <div v-if="addBetResult.status"
+               style="text-align: center;">
+            <el-image style="margin-left: 20px"
+                      :src="require('../../../assets/images/beton.png')"
+                      lazy></el-image>
             <p style="">对赌已生效</p>
             <p style="margin-bottom: 10px;font-size: x-large;color: black;">{{betAmount}}鑫币已支付</p>
             <button style="margin-bottom: -10px;width: 80px;font-size: medium;border: 0px;background-color: #0d824b;border-radius:5px;">加油</button>
@@ -1659,9 +1662,9 @@ export default {
         lefth = Math.floor(lefttime / (1000 * 60 * 60) % 24),  //计算小时数
         leftm = Math.floor(lefttime / (1000 * 60) % 60), //计算分钟数
         lefts = Math.floor(lefttime / 1000 % 60);
-      this.betExpireStr = leftd + "天" + this.zerofill(lefth ,2)+ "时" + this.zerofill(leftm,2) + "分";  //返回倒计时的字符串
+      this.betExpireStr = leftd + "天" + this.zerofill(lefth, 2) + "时" + this.zerofill(leftm, 2) + "分";  //返回倒计时的字符串
     },
-    zerofill(number,length){
+    zerofill (number, length) {
       return (Array(length).join(0) + number).slice(-length);
     },
     showBetView () {
@@ -2694,7 +2697,7 @@ export default {
     getArea () {
       let that = this;
       let params = {
-        id: 10
+        id: util.localStorageGet("logindata").companyId
       };
       that.keyStorageDept = "";
       this.$api
@@ -2918,7 +2921,7 @@ export default {
             this.$message("成交公司未未填");
             return;
           }
-          if (this.dealPrice1 != "" && util.isNumber(this.dealPrice)) {
+          if (this.dealPrice != "" && util.isNumber(this.dealPrice)) {
             this.$message("只能填入数字");
             return;
           }
