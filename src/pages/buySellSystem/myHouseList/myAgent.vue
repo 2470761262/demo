@@ -126,7 +126,7 @@
           {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
         </template>
       </el-table-column>
-      <el-table-column label="录入时间">
+      <el-table-column label ="录入时间">
         <template v-slot="scope">
           {{scope.row.AddTime}}
         </template>

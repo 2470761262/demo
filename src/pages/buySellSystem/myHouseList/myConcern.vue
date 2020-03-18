@@ -571,7 +571,12 @@ export default {
           if (this.key == 'addTime' && this.moreSlect[key] !== '') {
             params.biginTime = this.moreSlect[key][0];
             params.endTime = this.moreSlect[key][1];
-          } else {
+          }
+          else if (this.key == 'followTime' && this.moreSlect[key] !== '') {
+            params.biginFollowTime = this.moreSlect[key][0];
+            params.endFollowTime = this.moreSlect[key][1];
+          }
+          else {
             params[key] = this.moreSlect[key]
           }
         }
