@@ -99,9 +99,9 @@ export default {
   components: {
     listPage
   },
-
   data() {
     return {
+      sidebarFlag:false,
       company: {},
       department: {},
       loading: false, //控制表格加载动画提示
@@ -127,19 +127,19 @@ export default {
       },
       tableDataColumn: [
         
-        { prop: "CompanyName", label: "公司名" },
-        { prop: "CoDesc", label: "公司描述" },
-        { prop: "Tel", label: "电话" },
+        { prop: "companyName", label: "公司名" },
+        { prop: "coDesc", label: "公司描述" },
+        { prop: "tel", label: "电话" },
         { prop: "addDate", label: "添加时间" }
       ],
       tableData: []
-    };
+    }
   },
   mounted() {
     //读取公司，部门数据
     this.$api
       .post({
-        url: "/sys/account/company/tree",
+        url: "/company/companyTree",
         token: false
       })
       .then(e => {
@@ -176,7 +176,7 @@ export default {
       }
       this.$api
         .post({
-          url: "/company/list",
+          url: "/company/companyList",
           data: params,
           token: false,
           headers: { "Content-Type": "application/json" }

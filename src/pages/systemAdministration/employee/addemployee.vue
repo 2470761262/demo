@@ -17,19 +17,17 @@
 }
 </style>
 <template>
-  <div class="wrapper">
-          <div class="left-input-container">
-            <span>登录账号</span>
+      <el-form ref="form" :rules="rules" :model="employeeEntity" label-width="160px" >
+          <el-form-item label="登录账号:" required ="true" prop="loginUser">
             <el-input
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.loginUser"
-          
               show-word-limit
             ></el-input>
-          </div>
-            <div class="left-input-container">
-            <span>密码</span>
+          </el-form-item>
+            <el-form-item label="密码:" required ="true" prop="loginPwd">
+            
             <el-input
               type="text"
               placeholder="请输入内容"
@@ -37,9 +35,9 @@
               
               show-word-limit
             ></el-input>
-          </div>
-          <div class="left-input-container">
-            <span>重复密码</span>
+          </el-form-item>
+          <el-form-item label="重复密码:" required ="true" prop="loginPwd">
+            
             <el-input
               type="text"
               placeholder="请输入内容"
@@ -47,9 +45,9 @@
            
               show-word-limit
             ></el-input>
-          </div>
-           <div class="left-input-container">
-            <span>姓名</span>
+          </el-form-item>
+           <el-form-item label="姓名:" required ="true" prop="perName">
+            
             <el-input
               type="text"
               placeholder="请输入内容"
@@ -57,34 +55,34 @@
            
               show-word-limit
             ></el-input>
-          </div>
-        <div class="left-input-container">
-            <span>身份证</span>
+          </el-form-item>
+        <el-form-item label="身份证:" required ="true" prop="cardId">
+            
             <el-input
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.cardId"
               @change="iscardId()"
             ></el-input>
-        </div>
-        <div class="left-input-container">
-            <span>性别</span>
+        </el-form-item>
+        <el-form-item label="性别:" required ="true" prop="sex">
+            
             <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" show-word-limit >
               <el-option label="男" :value="0" />
               <el-option label="女" :value="1" />
             </el-select>
-        </div>
-        <div class="left-input-container">
-            <span>状态</span>
+        </el-form-item>
+        <el-form-item label="状态:" required ="true" prop="status">
+            
             <el-select type="text" placeholder="0实习，1试用，2正式，3离职" v-model="employeeEntity.status" show-word-limit >
               <el-option label="实习" :value="0" />
               <el-option label="试用" :value="1" />
               <el-option label="正式" :value="2" />
               <el-option label="离职" :value="3" />
             </el-select>
-        </div>
-        <div class="left-input-container">
-            <span>现居住地址</span>
+        </el-form-item>
+        <el-form-item label="现居住地址:" >
+            
             <el-input
               type="text"
               placeholder="请输入内容"
@@ -92,9 +90,9 @@
               maxlength="100"
               show-word-limit
             ></el-input>
-        </div>
-        <div class="left-input-container">
-            <span>学历</span>
+        </el-form-item>
+        <el-form-item label="学历:" required ="true" prop="education">
+            
              <el-select v-model="employeeEntity.education"  @focus="findByParams4()"  placeholder="请选择">
             <el-option
               v-for="item in educationList"
@@ -104,18 +102,18 @@
             </el-option>
           </el-select>
          
-        </div>
-        <div class="left-input-container">
-            <span>专业</span>
+        </el-form-item>
+        <el-form-item label="专业:">
+            
             <el-input
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.speciality"
             ></el-input>
       
-        </div>
-        <div class="left-input-container">
-            <span>邮箱</span>
+        </el-form-item>
+        <el-form-item label="邮箱:">
+            
             <el-input
               type="text"
               placeholder="请输入内容"
@@ -123,9 +121,9 @@
               maxlength="100"
               show-word-limit
             ></el-input>
-        </div>
-        <div class="left-input-container">
-            <span>qq</span>
+        </el-form-item>
+        <el-form-item label="qq:">
+            
             <el-input
               type="text"
               placeholder="请输入内容"
@@ -133,20 +131,17 @@
               maxlength="100"
               show-word-limit
             ></el-input>
-        </div>
-        <div class="left-input-container">
-            <span>电话号码</span>
+        </el-form-item>
+        <el-form-item label="电话号码:"  required ="true" prop="tel">
             <el-input
               type="text"
               placeholder="请输入内容"
               v-model="employeeEntity.tel"
-              data-vv-name="tel"
-              data-vv-as="电话号码"
-              v-validate="'required|phone'"></el-input>
-              {{errorBags.first('tel')}}
-        </div>
-        <div class="left-input-container">
-            <span>生日</span>
+             ></el-input>
+              
+        </el-form-item>
+        <el-form-item label="生日:" required ="true" prop="birthday">
+            
             <el-input
               type="date"
               placeholder="birthday"
@@ -154,9 +149,9 @@
               maxlength="10"
               show-word-limit
             ></el-input>
-        </div>
-    <div class="left-input-container">
-       <el-button type="info" @click="getDialogVisible()" size="small" style="margin-top: 4px;">选择部门</el-button>
+        </el-form-item>
+    <el-form-item label="选择部门:" required ="true" prop="deptName">
+       <!-- <el-button type="info" @click="getDialogVisible()" size="small" style="margin-top: 4px;">选择部门</el-button> -->
        <el-dialog title="请选择:" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
           <template>
             <div class="elTree">
@@ -173,10 +168,9 @@
             </div>
           </template>
        </el-dialog>
-      <el-input type="text" v-model="employeeEntity.deptName" show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>角色</span>
+      <el-input type="text" v-model="employeeEntity.deptName" @focus="getDialogVisible()"></el-input>
+    </el-form-item>
+    <el-form-item label="角色:" required ="true" prop="perPost">
           <el-select v-model="employeeEntity.perPost"  @focus="findByParams()" @change="initposition()"  placeholder="请选择">
             <el-option
               v-for="item in positionNameList"
@@ -185,9 +179,9 @@
               :value="item.id">
             </el-option>
           </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>岗位</span>
+    </el-form-item>
+    <el-form-item label="岗位:" required ="true" prop="perRole">
+      
        <el-select v-model="employeeEntity.perRole"  @focus="findByParams1()"  placeholder="请选择">
             <el-option
               v-for="item in roleNameList"
@@ -196,117 +190,113 @@
               :value="item.id">
             </el-option>
           </el-select>
-    </div>
+    </el-form-item>
 
-    <div class="left-input-container">
-      <span>入职时间</span>
+    <el-form-item label="入职时间:"  required ="true" prop="regTime">
+      
       <el-input type="date"
                 placeholder="请输入内容"
                 v-model="employeeEntity.regTime"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>备注</span>
+    </el-form-item>
+    <el-form-item label="备注:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.remark"
                
                 ></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>底薪</span>
+    </el-form-item>
+    <el-form-item label="底薪:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.basicSalary"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>绩效</span>
+    </el-form-item>
+    <el-form-item label="绩效:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.performancePay"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>现居住地邮编</span>
+    </el-form-item>
+    <el-form-item label="现居住地邮编:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.zipCode"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>紧急人联系人</span>
+    </el-form-item>
+    <el-form-item label="紧急人联系人:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.emergencyContact"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>关系</span>
+    </el-form-item>
+    <el-form-item label="关系:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.relationship"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>紧急联系人电话号码</span>
+    </el-form-item>
+    <el-form-item label="紧急联系人电话号码:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.contactTelephone"
-                data-vv-name="tel"
-                data-vv-as="电话号码"
-                v-validate="'required|phone'"
       ></el-input>
-               {{errorBags.first('tel')}}
-    </div>
-    <div class="left-input-container">
-      <span>现居住地</span>
+              
+    </el-form-item>
+    <el-form-item label="现居住地:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.living"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>毕业学校</span>
+    </el-form-item>
+    <el-form-item label="毕业学校:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.graduateSchool"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>户口所在地邮编</span>
+    </el-form-item>
+    <el-form-item label="户口所在地邮编:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.residenceCode"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>户口所在地</span>
+    </el-form-item>
+    <el-form-item label="户口所在地:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.accountAddress"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>银行卡</span>
+    </el-form-item>
+    <el-form-item label="银行卡:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.bankcard"
-                maxlength="10"
-                show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>星级编号</span>
+              ></el-input>
+    </el-form-item>
+    <el-form-item label="星级编号:" required ="true" prop="levelNo">
+      
       <el-select v-model="employeeEntity.levelNo"  @focus="findByParams2()"  placeholder="请选择">
             <el-option
               v-for="item in levelNameList"
@@ -315,9 +305,9 @@
               :value="item.levelNo">
             </el-option>
           </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>是否菁英</span>
+    </el-form-item>
+    <el-form-item label="是否菁英:"  required ="true" prop="isGold">
+      
       <el-select type="text"
                  placeholder="请选择"
                  v-model="employeeEntity.isGold"
@@ -325,32 +315,32 @@
         <el-option label="默认" :value="0" />
         <el-option label="是" :value="1" />
       </el-select>
-    </div>
-    <div class="left-input-container">
-      <span>岗位属性</span>
+    </el-form-item>
+    <el-form-item label="岗位属性:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.sxId"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>毕业时间</span>
+    </el-form-item>
+    <el-form-item label="毕业时间:">
+      
       <el-input type="date"
                 placeholder="请输入内容"
                 v-model="employeeEntity.graduation"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
-      <span>岗位津贴</span>
+    </el-form-item>
+    <el-form-item label="岗位津贴:">
+      
       <el-input type="text"
                 placeholder="请输入内容"
                 v-model="employeeEntity.postAllowance"
                 maxlength="10"
                 show-word-limit></el-input>
-    </div>
-    <div class="left-input-container">
+    </el-form-item>
+    <el-form-item label="头像:">
       <el-upload
         class="avatar-uploader"
         :action="uploadUrl"
@@ -358,19 +348,13 @@
         :show-file-list="false"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload">
-        <span>头像</span>
+        
         <img v-if="imageUrl" :src="imageUrl" class="avatar">
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-upload>
-    </div>
-    <div class="left-input-container">
-      <!-- <span>介绍人</span>
-      <el-input type="text"
-                placeholder="请输入内容"
-                v-model="employeeEntity.jieShaoName"
-                maxlength="10"
-                show-word-limit></el-input> -->
-      <el-button type="info" @click="getDialogVisible1()" size="small" style="margin-top: 4px;">介绍人</el-button>
+    </el-form-item>
+    <el-form-item label="介绍人:" required ="true" prop="jieShaoName">
+      <!-- <el-button type="info" @click="getDialogVisible1()" size="small" style="margin-top: 4px;">介绍人</el-button> -->
        <el-dialog title="请选择:" :visible.sync="dialogVisible1" width="50%" :before-close="handleClose">
           <list-page :parentData="$data"
           highlight-current-row
@@ -389,8 +373,8 @@
             </template>
           </list-page>
        </el-dialog>
-      <el-input type="text" v-model="employeeEntity.jieShaoName" show-word-limit></el-input>
-    </div>
+      <el-input type="text" v-model="employeeEntity.jieShaoName"  @focus="getDialogVisible1()"></el-input>
+    </el-form-item>
     
 
     <div class="footerContainer el-top">
@@ -399,7 +383,7 @@
       <el-button type="primary"
                  @click="back()">返回</el-button>
     </div>
-  </div>
+ </el-form>
 </template>
 
 <script>
@@ -414,10 +398,83 @@ export default {
   },
   props: {},
   data () {
+    var checkCardId = (rule, value, callback) => {
+         if (!value) {
+          return callback(new Error('身份证不能为空'));
+        }
+        if ((!/(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/.test(this.employeeEntity.cardId))) {
+          callback(new Error('身份证不合法'));
+        } else {
+          callback();
+        }
+          
+      }
+    var checkTel = (rule, value, callback) => {
+         if (!value) {
+          return callback(new Error('电话号码不能为空'));
+        }
+        if (/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.employeeEntity.tel)) {
+          callback();
+        } else {
+          callback(new Error('电话号码不正确'));
+        }
+          
+      }
     return {
       sidebarFlag:false,
       treeData: [],
       filterText: "",
+      rules: {
+          loginUser: [
+            { required: true, message: '请输入登录账号', trigger: 'blur' },
+          ],
+          loginPwd: [
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ],
+          perName: [
+            { required: true, message: '请输入姓名', trigger: 'blur' },
+          ],
+          cardId: [
+            { validator: checkCardId, trigger: 'blur' }
+          ],
+          sex: [
+            { required: true, message: '请选择性别', trigger: 'blur' },
+          ],
+          status: [
+            { required: true, message: '请选择状态', trigger: 'blur' }
+          ],
+          education: [
+            { required: true, message: '请选择学历', trigger: 'blur' },
+          ],
+          tel: [
+            {  validator: checkTel, trigger: 'blur' }
+          ],
+          birthday: [
+            { required: true, message: '请选择生日', trigger: 'blur' }
+          ],
+          perDept: [
+            { required: true, message: '请选择部门', trigger: 'blur' },
+          ],
+          perPost: [
+            { required: true, message: '请选择角色', trigger: 'blur' }
+          ],
+          perRole: [
+            { required: true, message: '请选择岗位', trigger: 'blur' },
+          ],
+          regTime: [
+            { required: true, message: '请选择入职时间', trigger: 'blur' }
+          ],
+          levelNo: [
+            { required: true, message: '请选择星级', trigger: 'blur' },
+          ],
+          isGold: [
+            { required: true, message: '请选择是否菁英', trigger: 'blur' }
+          ],
+          jieShaoNameId: [
+            { required: true, message: '请选择介绍人', trigger: 'blur' }
+          ]
+          
+        },
       defaultProps: {
         children: "childrenNodes",
         label: "labelName"
@@ -469,6 +526,7 @@ export default {
         positionName:null,
         perRole: null,
         roleName:null,
+        regTime:null,
         remark: null,
         basicSalary: null,
         performancePay: null,
@@ -674,7 +732,7 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            this.employeeEntity.perDeptId = result.data.id;
+            this.employeeEntity.perDept = result.data.id;
             this.employeeEntity.deptName = result.data.deptName;
           } else {
             console.log("查询部门详情结果：" + result.message);
@@ -709,9 +767,10 @@ export default {
     },
     getDept(){
     //读取公司，部门数据
+     //读取公司，部门数据
     this.$api
       .post({
-        url: "/sys/account/company/tree",
+        url: "/department/departmentTree",
         token: false
       })
       .then(e => {
@@ -735,9 +794,9 @@ export default {
       
       if(this.iscardId()){
         if(/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.employeeEntity.tel)){
-           this.employeeEntity.birthday=this.employeeEntity.birthday.toLocaleString();
-           this.employeeEntity.regTime=this.employeeEntity.regTime.toLocaleString();
-           this.employeeEntity.graduation=this.employeeEntity.graduation.toLocaleString();
+           //this.employeeEntity.birthday=this.employeeEntity.birthday.toLocaleString();
+           //this.employeeEntity.regTime=this.employeeEntity.regTime.toLocaleString();
+           //this.employeeEntity.graduation=this.employeeEntity.graduation.toLocaleString();
            let params = this.employeeEntity;
            this.$api.post({
              url: '/employee/add',
@@ -765,7 +824,7 @@ export default {
             });
         }
       }else{
-          this.$alert("","请填写正确的身份证号!!!", {
+          this.$alert("","请填写正确的身份证号或银行卡号!!!", {
               dangerouslyUseHTMLString: false
             });
         }
@@ -789,15 +848,17 @@ export default {
     },
     iscardId(){
       console.log(this.employeeEntity.cardId);
-//debugger;
-      if(!/^([1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2})$/.test(this.employeeEntity.cardId)){
+      debugger;
+      if((!/(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/.test(this.employeeEntity.cardId))){
         return false;
       }else{
-         if(!/^([1-9]{1})(\d{14}|\d{18})$/.test(this.employeeEntity.bankcard)){
-           return false;
-        }else{
-        return true;
-        }
+        //  if(!/^([1-9]{1})(\d{14}|\d{18})$/.test(this.employeeEntity.bankcard)){
+        //     this.$alert("","请填写正确的银行卡号!!!", {
+        //       dangerouslyUseHTMLString: false
+        //     });
+        // }else{
+         return true;
+         //}
       }
       
     },

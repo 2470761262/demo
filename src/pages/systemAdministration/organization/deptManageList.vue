@@ -57,10 +57,10 @@
                      @click="toAddDeptPage(1)">添加子级部门</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="queryDeptByIsLocked(0)">查询锁定部门</el-button>
+                     @click="queryDeptByIsLocked(1)">查询锁定部门</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button>
+                     @click="queryDeptByIsLocked(0)">查询未锁定部门</el-button>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
@@ -79,7 +79,7 @@
             <div v-if="scope.row.operation!=''">
               <el-button type="info"
                          size="mini"
-                         @click="distributeEvent(item.methosName,scope.row.id)"
+                         @click="distributeEvent(item.methosName,scope.row)"
                          v-for="(item,index) in getOpeBtns(scope.row.operation)"
                          :key="index">{{item.name}}</el-button>
             </div>
@@ -122,10 +122,10 @@ export default {
       },
       tableDataColumn: [
         { prop: "deptName", label: "部门名" , width: "160px"},      
-        { prop: "managerPer", label: "负责人" , width:"160px"},
-        { prop: "joinType", label: "加入类型" , width:"160px"},
-        { prop: "deptType", label: "部门类型" , width:"160px"},
-        { prop: "isLocked", label: "部门状态" ,width: "160px" },
+        { prop: "perName", label: "负责人" , width:"160px"},
+        { prop: "joinType", label: "加入类型" , width:"120px"},
+        { prop: "deptType", label: "部门类型" , width:"120px"},
+        { prop: "isLocked", label: "部门状态" ,width: "150px" },
         { prop: "address", label: "部门地址" , },
       ],
       tableData: [],
@@ -141,7 +141,7 @@ export default {
     //读取公司，部门数据
     this.$api
       .post({
-        url: "/sys/account/company/tree",
+        url: "/department/departmentTree",
         token: false
       })
       .then(e => {
@@ -178,7 +178,7 @@ export default {
       }
       params.del = this.queryData.del;
       this.$api.post({
-        url: '/department/list',
+        url: '/department/departmentList',
         data: params,
         token: false,
         headers: { "Content-Type": "application/json" }
@@ -191,10 +191,10 @@ export default {
           for (var i = 0; i < result.data.list.length; i++) {
             switch (result.data.list[i].isLocked) {
               case 0:
-                result.data.list[i].isLocked = "锁定";
+                result.data.list[i].isLocked = "正常";
                 break;
               case 1:
-                result.data.list[i].isLocked = "正常";
+                result.data.list[i].isLocked = "锁定";
                 break;
 
             }
@@ -270,18 +270,33 @@ export default {
         });
       } 
     },
-    editDeptDetail (id) {
-      this.$router.push({ path: "/sys/editDeptDetail", query: { id: id } });
+    editDeptDetail (row) {
+      this.$router.push({ path: "/sys/editDeptDetail", query: { id: row.id } });
     },
-    delDeptDetail (id) {
+    distributeEvent (e, row) {
+       console.log(row);
+      this[e](row);
+    },
+    delDeptDetail (row) {
+     this.handle(row.id,1,"del",row.deptName)
+    },
+    lockDeptDetail(row){
+      this.handle(row.id,1,"isLocked",row.deptName)
+    },
+    unlockDeptDetail(row){
+      this.handle(row.id,0,"isLocked",row.deptName)
+    },
+    handle(id,upValue,upType,deptName){
+      let params ={id:id,upValue:upValue,upType:upType,deptName:deptName}
       this.$api.post({
-        url: '/department/del/' + id,
-        token: false,
+        url: '/department/handle',
+        data:params,
+        token: true,
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
-          this.$alert('', '删除成功', {
+          this.$alert('', result.message, {
             dangerouslyUseHTMLString: false
           });
           this.$router.push({ path: "/sys/deptManageList" });
@@ -295,12 +310,6 @@ export default {
         console.log(e);
       })
     },
-    distributeEvent (e, id) {
-      this[e](id);
-    },
-    // querySubsidiary(DeptId){
-    //   this.queryDeptDatas(1,DeptId);
-    // },
     getOpeBtns (type) {
       let array = [
         { name: '编辑', isType: '1', methosName: 'editDeptDetail' },

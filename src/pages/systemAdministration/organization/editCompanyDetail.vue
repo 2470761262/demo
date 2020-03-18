@@ -21,9 +21,8 @@
       <el-input
         type="text"
         placeholder="请输入内容"
-        v-model="companyEntity.CompanyName"
-        maxlength="10"
-        show-word-limit
+        v-model="companyEntity.companyName"
+        readonly="readonly"
       ></el-input>
     </div>
     <div class="left-input-container">
@@ -31,9 +30,8 @@
       <el-input
         type="text"
         placeholder="请输入内容"
-        v-model="companyEntity.Header"
-        maxlength="10"
-        show-word-limit
+        v-model="companyEntity.header"
+        readonly="readonly"
       ></el-input>
     </div>
     <div class="left-input-container">
@@ -41,7 +39,7 @@
       <el-input
         type="text"
         placeholder="请输入内容"
-        v-model="companyEntity.Tel"
+        v-model="companyEntity.tel"
         data-vv-name="tel"
         data-vv-as="电话号码"
         v-validate="'required|phone'"
@@ -50,7 +48,7 @@
     </div>
     <div class="left-input-container">
       <span>加入类型</span>
-      <el-select type="text" placeholder="请输入内容" v-model="companyEntity.JoinType" show-word-limit>
+      <el-select type="text" placeholder="请输入内容" v-model="companyEntity.joinType" show-word-limit>
         <el-option label="直营" :value="1" />
         <el-option label="加盟" :value="2" />
       </el-select>
@@ -67,7 +65,7 @@
     </div>
     <div class="left-input-container">
       <span>公司类型</span>
-      <el-select type="text" placeholder="请输入内容" v-model="companyEntity.ComType" show-word-limit>
+      <el-select type="text" placeholder="请输入内容" v-model="companyEntity.comType" show-word-limit>
         <el-option label="经纪" :value="1" />
         <el-option label="物业" :value="2" />
         <el-option label="平台" :value="3" />
@@ -110,7 +108,7 @@
       <el-input
         type="text"
         placeholder="请输入内容"
-        v-model="companyEntity.managerPerName"
+        v-model="companyEntity.perName"
         maxlength="100"
         show-word-limit
       ></el-input>
@@ -120,7 +118,7 @@
       <el-input
         type="text"
         placeholder="请输入内容"
-        v-model="companyEntity.Address"
+        v-model="companyEntity.address"
         maxlength="100"
         show-word-limit
       ></el-input>
@@ -130,7 +128,7 @@
       <el-input
         type="text"
         placeholder="请输入内容"
-        v-model="companyEntity.CoDesc"
+        v-model="companyEntity.coDesc"
         maxlength="100"
         show-word-limit
       ></el-input>
@@ -160,7 +158,7 @@
           </el-checkbox-group>
         </template>
       </el-dialog>
-      <el-input type="text" placeholder="请输入内容" v-model="companyEntity.RegionName" show-word-limit></el-input>
+      <el-input type="text" placeholder="请输入内容" v-model="companyEntity.regionName" show-word-limit></el-input>
     </div>
 
     <div class="footerContainer el-top">
@@ -355,11 +353,7 @@ export default {
       }
     },
     savecompany() {
-      if (
-        /^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(
-          this.companyEntity.Tel
-        )
-      ) {
+      if (/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.companyEntity.tel)) {
         let params = this.companyEntity;
         this.$api
           .put({
