@@ -75,7 +75,8 @@
     </template>
     <template v-slot:top>
 
-      <div class="page-inline budingMarinSet">
+      <div class="page-inline budingMarinSet"
+           style='width:500px'>
 
         <el-item label="楼盘名称"
                  prop="comId">
@@ -144,7 +145,7 @@
                  style='margin-left:10px;background:#fff'
                  @click="onlySelect()" /> 独家</span>
       </div>
-      <div style="width:1000px">
+      <div style="width:550px">
         <el-input placeholder="姓名"
                   style="width:240px"
                   v-model="queryData.Customers"
@@ -184,11 +185,12 @@
                  style="height:40px;margin-right:5px;margin-top:10px"
                  size="mini"
                  @click="querylistByParams()">查询</el-button>
-      <moreSelect @moreSlectChange="moreSlectChange"
-                  style="height:40px;margin-right:5px;margin-top:10px"></moreSelect>
-      <div class="div">
+      <el-button style="width:50px;height:30px;border:0"
+                 size="mini">
+        <moreSelect @moreSlectChange="moreSlectChange"
+                    style="height:40px;margin-right:5px;"></moreSelect>
+      </el-button>
 
-      </div>
     </template>
 
     <template #tableColumn="">
@@ -470,6 +472,9 @@ export default {
           if (this.key == 'addTime' && this.moreSlect[key] !== '') {
             params.biginTime = this.moreSlect[key][0];
             params.endTime = this.moreSlect[key][1];
+          } else if (this.key == 'followTime' && this.moreSlect[key] !== '') {
+            params.biginFollowTime = this.moreSlect[key][0];
+            params.endFollowTime = this.moreSlect[key][1];
           } else {
             params[key] = this.moreSlect[key]
           }
