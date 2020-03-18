@@ -54,7 +54,6 @@
   </div>
 </template>
 <script>
-import { HOUSEBELONGLIST } from "@/util/constMap";
 import util from "@/util/util";
 import getMenuRid from '@/minxi/getMenuRid';
 import houseDetailsHead from './components/houseDetailsHead';
@@ -68,7 +67,7 @@ import houseTask from './components/houseTask';
 export default {
   provide () {
     return {
-      id: this.forID,
+      houseId: this.forID,
       houseDetails: this.houseDetails
     }
   },

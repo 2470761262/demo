@@ -175,17 +175,18 @@ span {
                 <span>物理区域</span>
                 <el-select v-model="more.physicalRegion"
                            style="width:70%">
-                  <el-option></el-option>
+                  <el-option value=""
+                             label=""></el-option>
                 </el-select>
               </div>
               <div class='selectType'>
                 <span>房源状态</span>
                 <el-select v-model="more.houseType"
                            style="width:30%">
-                  <el-option v-for='(item) in EntrustList'
+                  <!-- <el-option v-for='(item) in EntrustList'
                              :key="item.id"
                              :value='item.value'
-                             :label="item.label"></el-option>
+                             :label="item.label"></el-option> -->
                 </el-select>
                 <span>委托</span>
                 <el-select v-model="more.entrust"
@@ -224,15 +225,18 @@ span {
               <span>区域</span>
               <el-select v-model="more.region"
                          style="width:35%">
-                <el-option></el-option>
+                <el-option value=""
+                           label=""></el-option>
               </el-select>
               <el-select v-model="more.store"
                          style="width:30%">
-                <el-option></el-option>
+                <el-option value=""
+                           label=""></el-option>
               </el-select>
               <el-select v-model="more.personnel"
                          style="width:20%">
-                <el-option></el-option>
+                <el-option value=""
+                           label=""></el-option>
               </el-select>
 
             </div>

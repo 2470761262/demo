@@ -105,11 +105,11 @@
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">户口占用</h5>
-        <div class="message-row-right">{{resultData.sign | signFilter}}</div>
+        <div class="message-row-right">{{resultData.sign | mapFilter('SIGN')  | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">附属配套</h5>
-        <div class="message-row-right">{{resultData.houseBelong | houseBelongFilter}}</div>
+        <div class="message-row-right">{{resultData.HouseBelong | mapFilter('HOUSEBELONGLIST') | emptyRead}}</div>
       </div>
     </section>
     <section class="message-row-group">
@@ -166,7 +166,7 @@
       </div>
       <div class="message-row">
         <h5 class="message-row-title">土地性质</h5>
-        <div class="message-row-right">{{resultData.LandCharacteristic | landCharacterFilter}}</div>
+        <div class="message-row-right">{{resultData.LandCharacteristic | mapFilter('LANDCHARACTERISTIC')}}</div>
       </div>
     </section>
     <section class="message-row-group">
@@ -183,7 +183,6 @@
 </template>
 
 <script>
-import { HOUSEBELONGLIST } from "@/util/constMap";
 import util from "@/util/util";
 export default {
   inject: ["houseDetails"],
@@ -200,14 +199,8 @@ export default {
     elevatorFilter (value) {
       return util.analysisElevator(value);
     },
-    signFilter (value) {
-      return util.analysisSign(value);
-    },
-    houseBelongFilter (value) {
-      return util.analysisHouseBelong(HOUSEBELONGLIST, value);
-    },
-    landCharacterFilter (value) {
-      return util.analysisLandCharacteristic(value);
+    mapFilter (value, ListName) {
+      return util.countMapFilter(value, ListName);
     }
   }
 }
