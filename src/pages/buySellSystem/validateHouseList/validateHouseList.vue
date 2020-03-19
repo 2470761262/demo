@@ -255,7 +255,7 @@
         <div class="div-line">
           <div class="span-width">
             <span class="font-small-title">面积：</span>
-            <span>{{nowRow.area}}/㎡</span>
+            <span>{{nowRow.area||0}}/㎡</span>
           </div>
           <div class="span-width">
             <span class="font-small-title">户型：</span>
@@ -387,14 +387,14 @@ export default {
         {
           prop: "area",
           label: "面积(㎡)",
-          formart: row => row.area,
+          formart: row => row.area||0,
           width: "120",
           order: true
         },
         {
           prop: "unit_price",
           label: "单价(元/㎡)",
-          formart: row => row.unitPrice,
+          formart: row => row.unitPrice||0,
           width: "120",
           order: true
         },
@@ -441,7 +441,7 @@ export default {
         {
           prop: "checkTel",
           label: "验真电话",
-          formart: row => row.checkTel,
+          formart: row => row.checkTel||'暂无',
           width: "120",
           order: false
         }

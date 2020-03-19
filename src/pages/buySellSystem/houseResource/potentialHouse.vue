@@ -155,7 +155,7 @@ export default {
   },
   mounted () {
     this.data.type = 'build';
-    this.queryPotentialHouse(1, 'id', 'ascending');
+    this.queryPotentialHouse(1, 'id', 'descending');
   },
   methods: {
     sortMethod (e) {
@@ -177,7 +177,7 @@ export default {
       that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId, 'cbId': cbId, 'bhId': bhId, "communityName": communityName, "buildingName": buildingName, 'roomNo': roomNo, "flag": 'potentia', "customerName": customers, tel: tel } });
     },
     queryPotentialHouseParams () {
-      this.queryPotentialHouse(1, 'id', 'ascending');
+      this.queryPotentialHouse(1, 'id', 'descending');
     },
     remoteInput () {
 
@@ -253,7 +253,7 @@ export default {
     },
     Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryPotentialHouse(1, 'id', 'ascending');
+      this.queryPotentialHouse(1, 'id', 'descending');
 
     },
   
@@ -315,14 +315,14 @@ export default {
       console.log(this.queryData);
       this.queryPotentialHouseParams(1);
     },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`);
+      this.queryPotentialHouse(val, 'id', 'descending');
+    },
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryPotentialHouse(1, 'id', 'ascending');
-    },
-    handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
-      this.queryPotentialHouse(val, 'id', 'ascending');
+      this.queryPotentialHouse(1, 'id', 'descending');
     }
   },
 }

@@ -318,7 +318,7 @@ export default {
         { prop: 'decoration', label: "装修程度", width: '110px', order: false, disabled: false, default: true },
         { prop: 'seenNum', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
         { prop: 'outfollow', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: 'notLookNum', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
         { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.Rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
