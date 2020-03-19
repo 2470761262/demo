@@ -184,7 +184,7 @@
                 <div class="list-content-item"
                      v-if="!item.isTellFollow">
                   <div class="content-item-head ">
-                    <div class="content-item-time">2020-02-14&nbsp;&nbsp;&nbsp;&nbsp;11:04:21</div>
+                    <div class="content-item-time">{{item.FollowTime}}</div>
                     <button class="content-item-but">删除</button>
                   </div>
                   <div class="content-item-body">
@@ -194,7 +194,7 @@
                 <div class="list-content-item"
                      v-if="item.isTellFollow">
                   <div class="content-item-head ">
-                    <div class="content-item-time">2020-02-15&nbsp;&nbsp;&nbsp;&nbsp;11:04:21</div>
+                    <div class="content-item-time">{{item.FollowTime}}</div>
                     <button class="content-item-but">删除</button>
                   </div>
                   <div class="content-item-body">
@@ -208,9 +208,47 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="被看详情"
-                   name="1"></el-tab-pane>
+                   name="pair">
+        <div class="list-content"
+             infinite-scroll-immediate="false"
+             v-infinite-scroll="load">
+          <transition-group name="el">
+            <template v-for="item in pair.list">
+              <div :key="item.id">
+                <div class="list-content-item">
+                  <div class="content-item-head ">
+                    <div class="content-item-time">{{item.FollowTime}}</div>
+                  </div>
+                  <div class="content-item-body">
+                    <div class="item-body-text">{{item.lookPerName | emptyRead}}({{item.lookPerNameDepartmentName | emptyRead}}),{{item.Memo}}</div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </transition-group>
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="电话修改记录"
-                   name="2"></el-tab-pane>
+                   name="tel">
+        <div class="list-content"
+             infinite-scroll-immediate="false"
+             v-infinite-scroll="load">
+          <transition-group name="el">
+            <template v-for="item in tel.list">
+              <div :key="item">
+                <div class="list-content-item">
+                  <div class="content-item-head ">
+                    <div class="content-item-time">{{item.FollowTime}}</div>
+                  </div>
+                  <div class="content-item-body">
+                    <div class="item-body-text">{{item.followName | emptyRead}}({{item.followDepartment | emptyRead}}),{{item.Memo}}</div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </transition-group>
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -229,6 +267,18 @@ export default {
   data () {
     return {
       follow: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+
+      },
+      pair: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+
+      },
+      tel: {
         list: [],
         totalPage: 0,
         page: 1,
@@ -260,14 +310,19 @@ export default {
         case "follow":
           this.getHouseFollow();
           break;
+        case "pair":
+          this.getHousePairFollowList();
+          break;
+        case "tel":
+          this.getTelFollowList();
+          break
       }
     },
     getHouseFollow () {
-      console.log(22222);
       let that = this;
       let params = {
         page: that.follow.page,
-        limit: 6,
+        limit: 7,
         houseId: that.houseId.id
       };
       this.$api
@@ -290,6 +345,52 @@ export default {
             });
             that.follow.list = [...that.follow.list, ...result.data.list];
             that.follow.totalPage = result.data.totalPage;
+          }
+        })
+        .catch();
+    },
+    getHousePairFollowList () {
+      let that = this;
+      let params = {
+        page: that.pair.page,
+        limit: 7,
+        houseId: that.houseId.id
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/pairFollow/getHousePairFollowList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.pair.list = [...that.pair.list, ...result.data.list];
+            that.pair.totalPage = result.data.totalPage;
+          }
+        })
+        .catch();
+    },
+    getTelFollowList () {
+      let that = this;
+      let params = {
+        page: that.tel.page,
+        limit: 7,
+        houseId: that.houseId.id
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/telUpdate/getTelFollowList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.tel.list = [...that.tel.list, ...result.data.list];
+            that.tel.totalPage = result.data.totalPage;
           }
         })
         .catch();

@@ -173,11 +173,11 @@
       </div>
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.Face | emptyRead}}</div>
-        <div class="cell-tiem-floot">{{resultData.FamilyStructure  | familyStructureFiletr('ROOMTYPE') }}</div>
+        <div class="cell-tiem-floot">{{resultData.FamilyStructure  | familyStructureFiletr('ROOMTYPE') }}/{{resultData.Decoration}}</div>
       </div>
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.InArea | emptyRead('平米')}}</div>
-        <div class="cell-tiem-floot">开发中</div>
+        <div class="cell-tiem-floot">{{resultData.BuildingTime | emptyRead('年建')}}</div>
       </div>
     </div>
     <div class="cell-tabs-content">
@@ -199,11 +199,11 @@
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">被看次数</div>
-        <div class="cell-tabs-detail">开发中...</div>
+        <div class="cell-tabs-detail">{{resultData.seenNum | emptyRead('次')}}</div>
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">未跟进天数</div>
-        <div class="cell-tabs-detail">开发中...</div>
+        <div class="cell-tabs-detail">{{resultData.outfollow |emptyRead('天')}}</div>
       </div>
     </div>
     <div class="cell-pro">

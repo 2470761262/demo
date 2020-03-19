@@ -382,3 +382,18 @@ export const FOLLOWWAY = [//跟进类型 followWay
     }
 ]
 
+export const CERTIFICATETYPE = [//产权证类型
+    {
+        key: "不动产权证",
+        value: 1
+    },
+    {
+        key: "购房合同",
+        value: 2
+    },
+    {
+        key: "拆迁安置协议书",
+        value: 3
+    }
+]
+
