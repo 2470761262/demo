@@ -167,7 +167,11 @@
         <el-button>申请实勘人</el-button>
       </div>
     </div>
-
+    <!--取代 -->
+    <replacePop :visible.sync="replacePopFlag"
+                v-if="replacePopFlag"
+                width="620px"
+                title=""></replacePop>
     <!-- <el-dialog :visible.sync="supplementflag">
       <supplement></supplement>
     </el-dialog> -->
@@ -176,13 +180,17 @@
 
 <script>
 import supplement from '@/pages/buySellSystem/addHouse/components/supplement.vue';
+//取代
+import replacePop from '../didLog/replacePop';
 export default {
   components: {
-    supplement
+    supplement,
+    replacePop
   },
   data () {
     return {
-      supplementflag: false
+      supplementflag: false,
+      replacePopFlag: true
     }
   },
   methods: {
