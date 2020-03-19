@@ -203,7 +203,7 @@ export default {
   data () {
 
     return {
-      loading: false,
+      loading: true,
 
       data: {
         comId: "",
@@ -242,7 +242,7 @@ export default {
         { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
         { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true },
         { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'notLookNum', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
+        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: false },
         { prop: 'AgentName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
         { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
@@ -293,7 +293,7 @@ export default {
     }
   },
   mounted () {
-    this.queryMyAgent(1, 'id', 'ascending');
+    this.queryMyAgent(1, 'id', 'descending');
 
   },
   methods: {
@@ -317,7 +317,7 @@ export default {
     },
     querylistByParams () {
       console.log(this.queryData.timeSelect);
-      this.querylist(1, 'id', 'ascending');
+      this.querylist(1, 'id', 'descending');
     },
     keySelect () {
       if (this.queryData.keyOwner != '') {
@@ -340,6 +340,7 @@ export default {
     querylist (currentPage, column, type) {
       let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
       let that = this;
+      that.loading=true;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (this.key == 'addTime' && this.moreSelect[key] !== '') {
@@ -374,7 +375,7 @@ export default {
         params.sortColumn = column;
       }
       if (type == '' || type == null || type == undefined) {
-        params.sortType = 'ascending';
+        params.sortType = 'descending';
       } else {
         params.sortType = type;
       }
@@ -407,7 +408,7 @@ export default {
       } else {
         this.data.isOnly = '1';
       }
-      this.queryMyAgent(1, 'id', 'ascending');
+      this.queryMyAgent(1, 'id', 'descending');
     },
     queryAddPerId (row) {
       let data = JSON.stringify(row)
@@ -441,7 +442,7 @@ export default {
       this.data.maxPrice = "";
       this.data.keyOwner = "";
       this.data.isOnly = "";
-      this.queryMyAgent(1, 'id', 'ascending');
+      this.queryMyAgent(1, 'id', 'descending');
     },
     queryCompanyPerList () {
       var that = this
@@ -512,7 +513,7 @@ export default {
       that.$router.push({ name: 'houseDetails', params: { "houseId": id } });
     },
     queryMyAgentParams () {
-      this.queryMyAgent(1, 'id', 'ascending');
+      this.queryMyAgent(1, 'id', 'descending');
     },
     remoteInput () {
 
@@ -590,6 +591,7 @@ export default {
     },
     queryMyAgent (currentPage, column, type) {
       var that = this;
+      that.loading=true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
       params.sortColumn = column;
       params.sortType = type;
@@ -625,6 +627,7 @@ export default {
         data: params,
       }).then((e) => {
         console.log(e.data);
+        that.loading=false;
         let data = e.data
         if (data.code == 200) {
           that.pageJson.total = data.data.dataCount;
@@ -650,11 +653,11 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryMyAgent(1, 'id', 'ascending');
+      this.queryMyAgent(1, 'id', 'descending');
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryMyAgent(val, 'id', 'ascending');
+      this.queryMyAgent(val, 'id', 'descending');
     },
   },
 }

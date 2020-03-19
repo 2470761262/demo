@@ -40,7 +40,9 @@
 
 <script>
 import '../less/didLogCss.less';
+import but from "@/evenBus/but.js";
 export default {
+  inject: ["houseId"],
   data () {
     return {
       sumitButClass: '',
@@ -48,20 +50,45 @@ export default {
       cancelFlag: false,
       text: '请真实了解后如实填写,应付/弄虚作假将敬畏扣分5/条',
       pop: {
-        model: 0,
+        model: 27,
         textarea: '',
         loading: false,
         checkList: [
-          { title: '出售条件变化', value: 0 },
-          { title: '业主心理状态', value: 1 },
-          { title: '其他', value: 2 }
+          { title: '出售条件变化', value: 27 },
+          { title: '业主心理状态', value: 28 },
+          { title: '其他', value: 11 }
         ]
       }
     }
   },
   methods: {
     result () {
-      console.log(this.pop);
+      let that = this;
+      let params = {
+        memo: this.pop.textarea,
+        houseId: that.houseId.id,
+        followWay: this.pop.model,
+        followType: "常态跟进"
+      };
+      if (this.pop.textarea.length < 10) {
+        that.$message("跟进内容不能少于10个字");
+        return;
+      }
+      this.$emit('update:visible', false)
+      this.$api
+        .post({
+          url: "/agentHouse/follow/insertFollow",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          that.$message(e.data.message);
+          if (e.data.code == 200) {
+            that.pop.textarea = "";
+            but.$emit("followReolad", true);
+          }
+        });
     },
     cancel () {
       this.$emit('update:visible', false)

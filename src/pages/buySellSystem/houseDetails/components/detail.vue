@@ -75,6 +75,7 @@
         color: #606060;
       }
       .cell-tabs-nav {
+        align-self: center;
         color: #0e834e;
         font-size: 18px;
         margin-left: 15px;
@@ -168,11 +169,11 @@
     <div class="content-flex content-pad">
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.houseType | emptyRead}}</div>
-        <div class="cell-tiem-floot">开发中</div>
+        <div class="cell-tiem-floot">{{resultData.Floor| emptyRead('层')}}/{{resultData.FloorNum | emptyRead('层','共')}}</div>
       </div>
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.Face | emptyRead}}</div>
-        <div class="cell-tiem-floot">开发中</div>
+        <div class="cell-tiem-floot">{{resultData.FamilyStructure  | familyStructureFiletr('ROOMTYPE') }}</div>
       </div>
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.InArea | emptyRead('平米')}}</div>
@@ -192,7 +193,8 @@
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">小区名称</div>
-        <div class="cell-tabs-detail">开发中...</div>
+        <div class="cell-tabs-detail">{{resultData.CommunityName}}</div>
+        <!-- <div class="cell-tabs-nav">B-20103</div> -->
         <div class="cell-tabs-nav">楼栋号</div>
       </div>
       <div class="cell-tabs">
@@ -234,6 +236,7 @@
 </template>
 
 <script>
+import util from '@/util/util';
 export default {
   inject: ["houseDetails"],
   computed: {
@@ -243,7 +246,12 @@ export default {
       } else {
         return {};
       }
-    }
+    },
   },
+  filters: {
+    familyStructureFiletr (value, listName) {
+      return util.countMapFilter(value, listName);
+    }
+  }
 }
 </script>

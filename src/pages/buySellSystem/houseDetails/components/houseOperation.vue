@@ -164,9 +164,11 @@
 </style>
 <template>
   <div class="operation-content">
-    <el-tabs type="border-card">
+    <el-tabs type="border-card"
+             @tab-click="changeTabsEvent"
+             v-model="changeTabsValue">
       <el-tab-pane label="跟进记录"
-                   name="0">
+                   name="follow">
         <div class="list-content"
              infinite-scroll-immediate="false"
              v-infinite-scroll="load">
@@ -177,25 +179,28 @@
                       title=""></followUp>
           </div>
           <transition-group name="el">
-            <template v-for="item in count">
-              <!-- <div class="list-content-item">
+            <template v-for="item in follow.list">
+              <div :key="item.id">
+                <div class="list-content-item"
+                     v-if="!item.isTellFollow">
                   <div class="content-item-head ">
                     <div class="content-item-time">2020-02-14&nbsp;&nbsp;&nbsp;&nbsp;11:04:21</div>
                     <button class="content-item-but">删除</button>
                   </div>
                   <div class="content-item-body">
-                    <div class="item-body-text">吴寿坤(紫金二店),房源稳定在售,价格不变</div>
+                    <div class="item-body-text">{{item.followPerName | emptyRead}}({{item.followPerDepartmentName | emptyRead}}),{{item.Memo}}</div>
                   </div>
-                </div> -->
-              <div class="list-content-item"
-                   :key="item">
-                <div class="content-item-head ">
-                  <div class="content-item-time">2020-02-15&nbsp;&nbsp;&nbsp;&nbsp;11:04:21</div>
-                  <button class="content-item-but">删除</button>
                 </div>
-                <div class="content-item-body">
-                  <playAudio url="http://imgtest.0be.cn/FileUpload/SaleHouseDescAudio2020/2/20/4856d245d71542c1b0d2405bfe40f55b.mp3"></playAudio>
-                  <div class="pad-line"></div>
+                <div class="list-content-item"
+                     v-if="item.isTellFollow">
+                  <div class="content-item-head ">
+                    <div class="content-item-time">2020-02-15&nbsp;&nbsp;&nbsp;&nbsp;11:04:21</div>
+                    <button class="content-item-but">删除</button>
+                  </div>
+                  <div class="content-item-body">
+                    <playAudio :url="item.Memo"></playAudio>
+                    <div class="pad-line"></div>
+                  </div>
                 </div>
               </div>
             </template>
@@ -214,20 +219,86 @@
 //写跟进弹出层 
 import followUp from '../didLog/followUp';
 import playAudio from '@/components/audio';
+import but from "@/evenBus/but.js";
 export default {
+  inject: ["houseId"],
   components: {
     playAudio,
     followUp
   },
   data () {
     return {
-      count: 8,
-      followUpFlag: true
+      follow: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+
+      },
+      followUpFlag: true,
+      changeTabsValue: 'follow'
     }
   },
+  created () {
+    this.getList();
+    but.$on('followReolad', () => {
+      Object.assign(this.$data.follow, this.$options.data().follow);
+      this.getHouseFollow();
+    })
+  },
+  destroyed () {
+    but.$off('followReolad');
+  },
   methods: {
+    changeTabsEvent (e) {
+      if (this[this.changeTabsValue].list.length > 0) {
+        return;
+      }
+      this.getList();
+    },
+    getList () {
+      switch (this.changeTabsValue) {
+        case "follow":
+          this.getHouseFollow();
+          break;
+      }
+    },
+    getHouseFollow () {
+      console.log(22222);
+      let that = this;
+      let params = {
+        page: that.follow.page,
+        limit: 6,
+        houseId: that.houseId.id
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/follow/getHouseFollowList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            result.data.list.forEach(item => {
+              if (item.FollowType.includes("电话")) {
+                item.Memo = item.Memo.replace("voice:", "");
+                item.isTellFollow = true;
+              } else {
+                item.isTellFollow = false;
+              }
+            });
+            that.follow.list = [...that.follow.list, ...result.data.list];
+            that.follow.totalPage = result.data.totalPage;
+          }
+        })
+        .catch();
+    },
     load () {
-      this.count += 3;
+      if (this[this.changeTabsValue].page < this[this.changeTabsValue].totalPage) {
+        ++this[this.changeTabsValue].page;
+        this.getList();
+      }
     }
   },
 }
