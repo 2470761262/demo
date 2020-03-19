@@ -150,10 +150,10 @@ export default {
     }
   },
   mounted () {
-    let postId = JSON.parse(this.$route.query.postId);
+    //let postId = JSON.parse(this.$route.query.postId);
     let accountId = JSON.parse(this.$route.query.accountId);
     this.ruleParamsObj.accountId = accountId;
-    this.ruleParamsObj.postId = postId;
+    //this.ruleParamsObj.postId = postId;
     this.paramsObj.accountId = accountId;
     //读取功能点数据
     this.$api
