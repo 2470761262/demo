@@ -146,9 +146,10 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.keyOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.keyOwnerDepartmentName}}</div>
           </div>
-          <el-button> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button @click="openPop('replacePopFlag',4)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
         </template>
-        <el-button v-else><span>申请钥匙人</span> </el-button>
+        <el-button v-else
+                   @click="openPop('replacePopFlag',0)"><span>申请钥匙人</span> </el-button>
       </div>
       <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
            data-detail="委托人">
@@ -192,7 +193,8 @@
       </div>
     </div>
     <!--取代 -->
-    <replacePop :visible.sync="replacePopFlag"
+    <replacePop :replaceType="replaceType"
+                :visible.sync="replacePopFlag"
                 v-if="replacePopFlag"
                 width="620px"
                 title=""></replacePop>
@@ -226,12 +228,19 @@ export default {
   data () {
     return {
       supplementflag: false,
-      replacePopFlag: true
+      replacePopFlag: false,//取代弹出开关
+      replaceType: null//取代人类型
     }
   },
   methods: {
-    openSupplement () {
-
+    /**
+     * 取代打开弹出层
+     * @param {String} popName 弹出层的Flag名字 
+     * @param {number} type 打开类型
+     */
+    openPop (popName, type) {
+      this.replaceType = type;
+      this[popName] = true;
     }
   },
 }
