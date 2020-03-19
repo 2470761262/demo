@@ -77,7 +77,10 @@
 
 <script>
 import '../less/didLogCss.less';
+//发布外网
+import release from "../common/releaseHouse.js"
 export default {
+  inject: ["houseDetails", "houseId"],
   watch: {
     'pop.model' (newValue, oldValue) {
       if (newValue != 0) {
@@ -85,22 +88,49 @@ export default {
       }
     }
   },
+  computed: {
+    resultData () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        return this.houseDetails.data
+      } else {
+        return {};
+      }
+    }
+  },
   data () {
     return {
       pop: {
         inputValue: '',
-        model: 0,
+        model: 1,
         loading: false,
         checkList: [
-          { title: '有', value: 0 },
-          { title: '无', value: 1 }
+          { title: '有', value: 1 },
+          { title: '无', value: 0 }
         ]
       }
     }
   },
   methods: {
-    result () {
+    async  result () {
       let that = this;
+      if (that.pop.model == 0) {
+        this.$message("房屋未出证,无法发布到外网");
+        this.$emit('update:visible', false)
+      }
+      else {
+        let params = {
+          houseId: this.houseId.id,
+          houseType: 0,
+          certificateType: 1,
+          certificateNo: this.pop.inputValue
+        };
+        let result = false;
+        if (this.pop.inputValue.length == 0) {
+          this.$message("产权证号未填");
+          return;
+        }
+        result = await release.releaseOutsideHouse(params);
+      }
 
     },
     hidePop () {

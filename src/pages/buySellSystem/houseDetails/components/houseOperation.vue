@@ -208,7 +208,7 @@
           <template v-if="follow.loading">
             <i class="el-icon-loading"></i> 加载中...
           </template>
-          <template v-if="follow.loadPageEnd">
+          <template v-if="follow.loadPageEnd || follow.list.length==0">
             暂无数据~
           </template>
         </div>
@@ -232,6 +232,12 @@
               </div>
             </template>
           </transition-group>
+          <template v-if="pair.loading">
+            <i class="el-icon-loading"></i> 加载中...
+          </template>
+          <template v-if="pair.loadPageEnd || pair.list.length==0">
+            暂无数据~
+          </template>
         </div>
       </el-tab-pane>
       <el-tab-pane label="电话修改记录"
@@ -253,6 +259,12 @@
               </div>
             </template>
           </transition-group>
+          <template v-if="tel.loading">
+            <i class="el-icon-loading"></i> 加载中...
+          </template>
+          <template v-if="tel.loadPageEnd || tel.list.length==0">
+            暂无数据~
+          </template>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -283,13 +295,15 @@ export default {
         list: [],
         totalPage: 0,
         page: 1,
-
+        loading: false,
+        loadPageEnd: false
       },
       tel: {
         list: [],
         totalPage: 0,
         page: 1,
-
+        loading: false,
+        loadPageEnd: false
       },
       followUpFlag: true,
       changeTabsValue: 'follow'
@@ -312,6 +326,7 @@ export default {
       }
       this.getList();
     },
+    //获取列表数据
     getList () {
       switch (this.changeTabsValue) {
         case "follow":
@@ -325,6 +340,7 @@ export default {
           break
       }
     },
+    //获取跟进列表
     getHouseFollow () {
       let that = this;
       let params = {
@@ -361,6 +377,7 @@ export default {
           this.follow.loading = false;
         });
     },
+    //获取被看列表
     getHousePairFollowList () {
       let that = this;
       let params = {
@@ -382,8 +399,11 @@ export default {
             that.pair.totalPage = result.data.totalPage;
           }
         })
-        .catch();
+        .catch(() => { }).finally(() => {
+          this.pair.loading = false;
+        });
     },
+    //获取电话修改记录列表
     getTelFollowList () {
       let that = this;
       let params = {
@@ -405,8 +425,11 @@ export default {
             that.tel.totalPage = result.data.totalPage;
           }
         })
-        .catch();
+        .catch(() => { }).finally(() => {
+          this.tel.loading = false;
+        });
     },
+    //滚动分页
     load () {
       if (this[this.changeTabsValue].page < this[this.changeTabsValue].totalPage) {
         ++this[this.changeTabsValue].page;

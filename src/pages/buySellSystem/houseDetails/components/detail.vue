@@ -194,8 +194,11 @@
       <div class="cell-tabs">
         <div class="cell-tabs-title">小区名称</div>
         <div class="cell-tabs-detail">{{resultData.CommunityName}}</div>
-        <!-- <div class="cell-tabs-nav">B-20103</div> -->
-        <div class="cell-tabs-nav">楼栋号</div>
+        <div class="cell-tabs-nav"
+             v-if="isShowBuilding">{{resultData.BuildingName | emptyRead}}-{{resultData.RoomNo | emptyRead}}</div>
+        <div class="cell-tabs-nav"
+             v-if="!isShowBuilding"
+             @click="getShowBuliding">楼栋号</div>
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">被看次数</div>
@@ -238,7 +241,7 @@
 <script>
 import util from '@/util/util';
 export default {
-  inject: ["houseDetails"],
+  inject: ["houseDetails", "houseId"],
   computed: {
     resultData () {
       if (Object.keys(this.houseDetails).length > 0) {
@@ -247,6 +250,37 @@ export default {
         return {};
       }
     },
+  },
+  data () {
+    return {
+      isShowBuilding: false
+    }
+  },
+  methods: {
+    getShowBuliding () {
+      let that = this;
+      this.$api
+        .get({
+          url: "/agent_house/isShowBuilding",
+          data: {
+            houseId: that.houseId.id
+          },
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.isShowBuilding = true;
+          }
+          else {
+            that.isShowBuilding = false;
+            that.$message(e.data.message);
+          }
+        })
+        .catch(e => {
+        });
+    }
   },
   filters: {
     familyStructureFiletr (value, listName) {
