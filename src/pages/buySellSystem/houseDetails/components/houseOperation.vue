@@ -310,7 +310,7 @@ export default {
         ++this[this.changeTabsValue].page;
         this.getList();
       } else {
-        this.follow.loadPageEnd = true;
+        this[[this.changeTabsValue]].loadPageEnd = true;
       }
     }
   },
