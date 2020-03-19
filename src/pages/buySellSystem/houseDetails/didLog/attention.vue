@@ -68,7 +68,7 @@
         <el-button size="small"
                    class="button-back"
                    :loading="pop.loading"
-                   @click="result">确定</el-button>
+                   @click="updateSendNotice">确定</el-button>
       </div>
     </template>
   </fixedPopup>
@@ -77,21 +77,39 @@
 <script>
 import '../less/didLogCss.less';
 export default {
+  inject: ["houseId"],
   data () {
     return {
       pop: {
-        model: 0,
+        model: 1,
         loading: false,
         checkList: [
-          { title: '通知', value: 0 },
-          { title: '不通知', value: 1 },
+          { title: '通知', value: 1 },
+          { title: '不通知', value: 0 },
         ]
       }
     }
   },
   methods: {
-    result () {
+    //修改下发通知标记
+    updateSendNotice () {
+      let that = this;
+      let ajaxurl = "";
+      let params = {
+        houseId: that.houseId.id,
+        isSendNotice: that.pop.model
+      };
+      this.$emit('update:visible', false)
+      this.$api
+        .post({
+          url: "/agentHouse/collect/updateSendNotice",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
 
+        });
     },
     hidePop () {
       this.$emit('update:visible', false)

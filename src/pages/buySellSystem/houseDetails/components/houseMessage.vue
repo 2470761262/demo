@@ -95,7 +95,7 @@
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">房屋证件</h5>
-        <div class="message-row-right">{{resultData.certificateType | emptyRead}}</div>
+        <div class="message-row-right">{{resultData.certificateType | mapFilter('CERTIFICATETYPE') | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">产权性质</h5>
@@ -119,7 +119,7 @@
       </div>
       <div class="message-row">
         <h5 class="message-row-title">学籍占用</h5>
-        <div class="message-row-right">发开中...</div>
+        <div class="message-row-right">{{resultData.primarySchoolGrade | mapFilter('PRIMARYSCHOOLUSE','未占用')}}</div>
       </div>
     </section>
     <section class="message-row-group">
@@ -129,23 +129,23 @@
       </div>
       <div class="message-row">
         <h5 class="message-row-title">学籍情况</h5>
-        <div class="message-row-right">发开中...</div>
+        <div class="message-row-right">{{resultData.middleSchoolGrade | mapFilter('MIDDLESCHOOLUSE','未占用')  }}</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">物业公司</h5>
-        <div class="message-row-right">发开中...</div>
+        <div class="message-row-right">{{resultData.propertyCompany | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">评估价</h5>
-        <div class="message-row-right">发开中...</div>
+        <div class="message-row-right">{{resultData.valuation | emptyRead("元/平")}}</div>
       </div>
     </section>
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">物业费</h5>
-        <div class="message-row-right">发开中...</div>
+        <div class="message-row-right">{{resultData.PropertyFee | emptyRead("元/平") }}</div>
       </div>
     </section>
     <h3 class="other-title">交易信息</h3>
@@ -172,7 +172,7 @@
     <section class="message-row-group">
       <div class="message-row">
         <h5 class="message-row-title">抵押信息</h5>
-        <div class="message-row-right">{{resultData.mortgage | emptyRead}}</div>
+        <div class="message-row-right">{{resultData.mortgage| mapFilter('MORTGAGE') | emptyRead}}</div>
       </div>
       <div class="message-row">
         <h5 class="message-row-title">剩余贷款</h5>
@@ -199,8 +199,8 @@ export default {
     elevatorFilter (value) {
       return util.analysisElevator(value);
     },
-    mapFilter (value, ListName) {
-      return util.countMapFilter(value, ListName);
+    mapFilter (value, ListName, resultValue = null) {
+      return util.countMapFilter(value, ListName, resultValue);
     }
   }
 }

@@ -252,6 +252,15 @@ export default {
             methodName: "setPosition"
           }
         ];
+      } else if (row.type == "TREE_TYPE_PERSON") {
+        return [
+          {
+            name: "权限设置",
+            isType: "1",
+            style: "warning",
+            methodName: "setPersonPosition"
+          }
+        ];
       } else {
         console.log(row.parentId, "xxxxxx............");
         if (row.parentId == 0 && array.length == 1) {
@@ -303,6 +312,12 @@ export default {
         path: "/sys/roleManagementList",
         query: { id: e.id }
       });
+    },
+    //跳转个人权限设置
+    setPersonPosition(e){
+      let that = this;
+      that.$router.push({ path: '/sys/authority/setAuthority', query: { "accountId": e.id} });
+
     }
   }
 };

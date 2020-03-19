@@ -31,9 +31,9 @@ export default {
             return "无配套";
         }
     },
-    countMapFilter (value, ListName = 'ROOMTYPE') {
+    countMapFilter (value, ListName = 'ROOMTYPE', resultValue = null) {
         let result = constMap[ListName].filter(item => item.value == parseInt(value))
-        return result.length > 0 ? result[0].key : null;
+        return result.length > 0 ? result[0].key : resultValue;
     },
     //添加房源数据对比
     diffGet (rData, nowData) {

@@ -157,7 +157,7 @@
       </section>
       <!-- 举报 -->
       <section class="heard-item"
-               @click="openPopUp('reportFlag')">
+               @click="openReport">
         <i class="el-icon-sunny icon"></i>
         <span>举报</span>
       </section>
@@ -200,6 +200,8 @@ import report from '../didLog/report';
 import attention from '../didLog/attention';
 //二维码
 import QRCode from "qrcodejs2";
+//房源审核
+import houseCheck from "../common/houseCheck";
 export default {
   inject: ["houseDetails", "houseId"],
   components: {
@@ -240,6 +242,7 @@ export default {
     }
   },
   methods: {
+    //关注或者取消关注
     changCollectHouse () {
       let that = this;
       let ajaxurl = "";
@@ -262,7 +265,7 @@ export default {
           if (result.code == 200) {
             that.isCollect = !that.isCollect;
             if (ajaxurl == "/agentHouse/collect/collectHouse") {
-              //that.isShowSendNotice = true;
+              this.attentionFlag = true;
             }
           } else {
             that.$message(result.message);
@@ -274,6 +277,7 @@ export default {
           }
         });
     },
+    //获取是否关注标记
     getisCollect () {
       let that = this;
       this.$api
@@ -292,6 +296,7 @@ export default {
         })
         .catch(e => { });
     },
+    //删除印象
     deleteImpression (impressionId, index) {
       let that = this;
       let params = {
@@ -310,6 +315,7 @@ export default {
           }
         });
     },
+    //添加印象
     insertImpression (impression) {
       let that = this;
       let params = {
@@ -334,6 +340,7 @@ export default {
           }
         });
     },
+    //获取印象数组
     getImpressionList () {
       let that = this;
       let params = {
@@ -352,6 +359,16 @@ export default {
           }
 
         });
+    },
+    //打开举报弹窗
+    async  openReport () {
+      let isChecking = await houseCheck.isChecking(11, 0, this.houseId.id);
+      if (isChecking) {
+        this.$message("该房源已被举报，当前正在审核中");
+      }
+      else {
+        this.reportFlag = true;
+      }
     },
     openPopUp (PopName) {
       this[PopName] = true;

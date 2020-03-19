@@ -36,8 +36,13 @@
     <div class="page-button-group">
       <!-- 发布外网 -->
       <div class="button-set">
-        <el-button @click="openPopUp('releasePopFlag')">
+        <el-button @click="certificateType"
+                   v-if="resultData.isReleaseOutside!=1&&(resultData.AgentPer==perId||isShowButton.releaseOutsideHouse)">
           <i class="el-icon-s-promotion el-icon--left"></i>发布外网
+        </el-button>
+        <el-button v-if="resultData.isReleaseOutside==1&&(resultData.AgentPer==perId||isShowButton.cancelOutsideHouse)"
+                   @click="cancelOutsideHouse">
+          <i class="el-icon-s-promotion el-icon--left"></i>取消发布
         </el-button>
       </div>
       <!-- 成交对赌 -->
@@ -100,7 +105,7 @@
 </template>
 
 <script>
-//举报弹出层
+//发布外网弹出层
 import releasePop from '../didLog/releasePop';
 //成交对赌
 import betPop from '../didLog/betPop';
@@ -108,12 +113,25 @@ import betPop from '../didLog/betPop';
 import changeHouseType from '../didLog/changeHouseType';
 //取消作业方
 import cancelTask from '../didLog/cancelTask';
+import util from "@/util/util";
+//发布外网
+import release from "../common/releaseHouse.js"
 export default {
+  inject: ["houseDetails", "houseId", "load"],
   components: {
     releasePop,
     betPop,
     changeHouseType,
     cancelTask
+  },
+  computed: {
+    resultData () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        return this.houseDetails.data
+      } else {
+        return {};
+      }
+    }
   },
   data () {
     return {
@@ -121,9 +139,62 @@ export default {
       betPopFlag: false,
       typeFlag: false,
       cencelTaskFlag: false,
+      isShowButton: {
+        locking: false,
+        releaseOutsideHouse: false,
+        cancelOutsideHouse: false,
+        cancelMethod: false,
+        deleteFollow: false,
+        updateKeyStorageDept: false
+      },//是否显示按钮
+      perId: "",//登录人id
+    }
+  },
+  mounted () {
+    this.getAgentRules();
+    if (util.localStorageGet("logindata")) {
+      this.perId = util.localStorageGet("logindata").accountId;
     }
   },
   methods: {
+    //获取按钮权限
+    getAgentRules () {
+      let that = this;
+      this.$api.get({
+        url: '/sys/rule/function/list',
+        data: {
+        },
+        token: false
+      }).then((e) => {
+        e.data.data.functionRuleList.forEach(element => {
+          if (that.isShowButton.hasOwnProperty(element.rUrl)) {
+            that.isShowButton[element.rUrl] = true;
+          }
+        })
+      }).catch((e) => {
+      })
+    },
+    //是否展示产权证号弹窗
+    async certificateType () {
+      this.load.loadingMessage = "正在发布";
+      this.load.loading = true;
+      //   if (parseInt(this.resultData.certificateType != 1)) {
+      //     this.releasePopFlag = true;
+      //   }
+      //   else {
+      //     let params = {
+      //       houseId: this.houseId.id,
+      //       houseType: 0
+      //     }
+      //     let reslut = await release.releaseOutsideHouse(params);
+      //     if (reslut) {
+      //       this.resultData.isReleaseOutside = 1;
+      //     }
+      //     else {
+      //       this.$message("操作失败");
+      //     }
+      //   }
+    },
     openPopUp (PopName) {
       this[PopName] = true;
     },

@@ -93,13 +93,15 @@
 }
 </style>
 <template>
-  <div class="task-content">
+  <div class="task-content"
+       v-if="resultData.agentHouseMethod">
     <h3 class="other-title">房源作业方</h3>
     <div class="task-pro-flex">
       <div class="task-pro-content"
            data-detail="录入人">
         <el-image class="task-pro-img"
-                  src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190811/20190811111530328_34985.jpg?x-oss-process=style/thumb"
+                  v-if="resultData"
+                  :src=" resultData.agentHouseMethod.addPerHeadImg | defaultImg"
                   fit="cover">
           <div slot="placeholder"
                class="image-slot">
@@ -107,14 +109,15 @@
           </div>
         </el-image>
         <div class="task-pro-message">
-          <div class="task-pro-name overText">张三</div>
-          <div class="task-pro-options overText">天晴玩点</div>
+          <div class="task-pro-name overText">{{resultData.agentHouseMethod.addPerName | emptyRead}}</div>
+          <div class="task-pro-options overText">{{resultData.agentHouseMethod.addPerDepartmentName | emptyRead}}</div>
         </div>
       </div>
       <div class="task-pro-content"
-           data-detail="委托人">
+           data-detail="跟单人"
+           v-if="resultData.agentPerName!=null ">
         <el-image class="task-pro-img"
-                  src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190811/20190811111530328_34985.jpg?x-oss-process=style/thumb"
+                  :src="resultData.agentPerHeadImg |  defaultImg"
                   fit="cover">
           <div slot="placeholder"
                class="image-slot">
@@ -122,49 +125,70 @@
           </div>
         </el-image>
         <div class="task-pro-message">
-          <div class="task-pro-name overText">龙王</div>
-          <div class="task-pro-options overText">紫荆二店</div>
+          <div class="task-pro-name overText">{{resultData.agentPerName}}</div>
+          <div class="task-pro-options overText">{{resultData.agentPerDepartmentName}}</div>
         </div>
       </div>
     </div>
     <div class="task-pro-flex">
-      <div class="task-pro-content"
-           data-detail="跟单人">
-        <el-image class="task-pro-img"
-                  src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190811/20190811111530328_34985.jpg?x-oss-process=style/thumb"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
-            加载中<span>...</span>
-          </div>
-        </el-image>
-        <div class="task-pro-message">
-          <div class="task-pro-name overText">李四</div>
-          <div class="task-pro-options overText">紫荆二店</div>
-        </div>
-        <el-button> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
-      </div>
-      <div class="task-pro-content"
+      <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.keyOwnerName==null}]"
            data-detail="钥匙人">
-        <el-image class="task-pro-img"
-                  src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190811/20190811111530328_34985.jpg?x-oss-process=style/thumb"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
-            加载中<span>...</span>
+        <template v-if="resultData.agentHouseMethod.keyOwnerName!=null">
+          <el-image class="task-pro-img"
+                    :src="resultData.agentHouseMethod.keyOwnerHeadImg |  defaultImg"
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="task-pro-message">
+            <div class="task-pro-name overText">{{resultData.agentHouseMethod.keyOwnerName}}</div>
+            <div class="task-pro-options overText">{{resultData.agentHouseMethod.keyOwnerDepartmentName}}</div>
           </div>
-        </el-image>
-        <div class="task-pro-message">
-          <div class="task-pro-name overText">朱国武</div>
-          <div class="task-pro-options overText">宇宙懂点</div>
-        </div>
-        <el-button> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+        </template>
+        <el-button v-else><span>申请钥匙人</span> </el-button>
+      </div>
+      <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
+           data-detail="委托人">
+        <template v-if="resultData.agentHouseMethod.onlyOwnerName!=null">
+          <el-image class="task-pro-img"
+                    :src="resultData.agentHouseMethod.onlyOwnerHeadImg | defaultImg "
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="task-pro-message">
+            <div class="task-pro-name overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
+            <div class="task-pro-options overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
+          </div>
+          <el-button> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+        </template>
+        <el-button v-else><span>申请委托人</span> </el-button>
       </div>
     </div>
     <div class="task-pro-flex seat">
-      <div class="task-pro-content flex-center"
+      <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.realOwnerName==null}]"
            data-detail="实勘人">
-        <el-button>申请实勘人</el-button>
+        <template v-if="resultData.agentHouseMethod.realOwnerName!=null">
+          <el-image class="task-pro-img"
+                    :src="resultData.agentHouseMethod.realOwnerHeadImg | defaultImg "
+                    fit="cover">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+          <div class="task-pro-message">
+            <div class="task-pro-name overText">{{resultData.agentHouseMethod.realOwnerName}}</div>
+            <div class="task-pro-options overText">{{resultData.agentHouseMethod.realOwnerDepartmentName}}</div>
+          </div>
+          <el-button> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+        </template>
+        <el-button v-else>申请实勘人</el-button>
       </div>
     </div>
     <!--取代 -->
@@ -173,7 +197,8 @@
                 width="620px"
                 title=""></replacePop>
     <!-- <el-dialog :visible.sync="supplementflag">
-      <supplement></supplement>
+      <supplement></supplement> 
+      <houseUploadExtends></houseUploadExtends>
     </el-dialog> -->
   </div>
 </template>
@@ -182,7 +207,18 @@
 import supplement from '@/pages/buySellSystem/addHouse/components/supplement.vue';
 //取代
 import replacePop from '../didLog/replacePop';
+import houseUploadExtends from './houseUploadExtends';
 export default {
+  inject: ["houseDetails", "houseId"],
+  computed: {
+    resultData () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        return this.houseDetails.data
+      } else {
+        return {};
+      }
+    }
+  },
   components: {
     supplement,
     replacePop

@@ -51,5 +51,12 @@ export default {
             }
             return beforeCompany + value + afterCompany;
         })
+
+        Vue.filter('defaultImg', (value) => {
+            if (value == '' || value == null) {
+                return 'http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190811/20190811111530328_34985.jpg?x-oss-process=style/thumb';
+            }
+            return value;
+        })
     }
 }
