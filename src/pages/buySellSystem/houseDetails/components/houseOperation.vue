@@ -33,11 +33,11 @@
     .list-content-item {
       padding-left: 40px;
       position: relative;
-      &:last-child {
-        .pad-line {
-          display: none;
-        }
-      }
+      //   &:last-child {
+      //     .pad-line {
+      //       display: none;
+      //     }
+      //   }
       &:after {
         content: "";
         height: 100%;
@@ -205,6 +205,12 @@
               </div>
             </template>
           </transition-group>
+          <template v-if="follow.loading">
+            <i class="el-icon-loading"></i> 加载中...
+          </template>
+          <template v-if="follow.loadPageEnd">
+            暂无数据~
+          </template>
         </div>
       </el-tab-pane>
       <el-tab-pane label="被看详情"
@@ -232,7 +238,8 @@ export default {
         list: [],
         totalPage: 0,
         page: 1,
-
+        loading: false,
+        loadPageEnd: false
       },
       followUpFlag: true,
       changeTabsValue: 'follow'
@@ -263,13 +270,13 @@ export default {
       }
     },
     getHouseFollow () {
-      console.log(22222);
       let that = this;
       let params = {
         page: that.follow.page,
         limit: 6,
         houseId: that.houseId.id
       };
+      this.follow.loading = true;
       this.$api
         .get({
           url: "/agentHouse/follow/getHouseFollowList",
@@ -292,12 +299,18 @@ export default {
             that.follow.totalPage = result.data.totalPage;
           }
         })
-        .catch();
+        .catch(() => {
+
+        }).finally(() => {
+          this.follow.loading = false;
+        });
     },
     load () {
       if (this[this.changeTabsValue].page < this[this.changeTabsValue].totalPage) {
         ++this[this.changeTabsValue].page;
         this.getList();
+      } else {
+        this.follow.loadPageEnd = true;
       }
     }
   },
