@@ -184,6 +184,11 @@
             v-if="reportFlag"
             typeClass="error"
             title="!举报"></report>
+    <attention :visible.sync="attentionFlag"
+               v-if="attentionFlag"
+               width="450px"
+               titleDirection="center"
+               title="关注房源变动通知"></attention>
   </section>
 </template>
 <script>
@@ -191,13 +196,16 @@
 import followUp from '../didLog/followUp';
 //举报弹出层
 import report from '../didLog/report';
+//关注弹出层
+import attention from '../didLog/attention';
 //二维码
 import QRCode from "qrcodejs2";
 export default {
   inject: ["houseDetails", "houseId"],
   components: {
     followUp,
-    report
+    report,
+    attention
   },
   created () {
     this.getImpressionList();
@@ -226,9 +234,9 @@ export default {
     return {
       followUpFlag: false, //跟进开关
       reportFlag: false, //举报开关
-      vvsd: '',
       impressionList: [],//印象数组
       isCollect: false,
+      attentionFlag: false //关注开关
     }
   },
   methods: {
