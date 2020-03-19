@@ -120,7 +120,8 @@ export default {
         { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
         { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true },
         { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
-        { prop: "agenName", label: "跟单人", order: false,disabled: false, default: true  }
+        { prop: "agenName", label: "跟单人", order: false,disabled: false, default: true  },
+         { prop: 'id', label: "成交人", order: false,disabled: false, default: true , formart: item => item.agenName  }
       ],
       tableData: []
     };

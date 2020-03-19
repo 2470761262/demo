@@ -38,8 +38,10 @@
     </template>
     <list-page
       :parentData="$data"
+      highlight-current-row
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
+      @current-change="handleChange"
     >
       <template v-slot:top>
         <div class="query-cell">
@@ -57,6 +59,7 @@
           <el-button type="primary" size="mini" @click="toAddDeptPage">添加子级部门</el-button>
           <el-button type="primary" size="mini" @click="queryCompanyByIsLocked(0)">查询锁定公司</el-button>
           <el-button type="primary" size="mini" @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button>
+          <el-button icon="el-icon-s-platform" size="mini" @click="setUp()" title="设置网站"  round></el-button>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
@@ -101,8 +104,9 @@ export default {
   },
   data() {
     return {
-      sidebarFlag:false,
+      sidebarFlag: false,
       company: {},
+      companyEntity:null,
       department: {},
       loading: false, //控制表格加载动画提示
       queryData: {
@@ -126,14 +130,13 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        
         { prop: "companyName", label: "公司名" },
         { prop: "coDesc", label: "公司描述" },
         { prop: "tel", label: "电话" },
         { prop: "addDate", label: "添加时间" }
       ],
       tableData: []
-    }
+    };
   },
   mounted() {
     //读取公司，部门数据
@@ -204,40 +207,55 @@ export default {
       this.queryData.isLocked = isLocked;
       this.queryCompanyDatas(1);
     },
-    toAddCompanyPage (saveType) {
-      if(this.queryData.type == null ){
-        this.$alert('', '请选择一个节点', {
-            dangerouslyUseHTMLString: false
-          });
-      }else {
-        if(this.queryData.type != 1){
-          if (saveType == 0){
-            this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.ParentId} });
-          }else if(saveType == 1){
-            this.$router.push({ name: "addCompanyManage", params:{ParentId:this.company.id}  });
+    toAddCompanyPage(saveType) {
+      if (this.queryData.type == null) {
+        this.$alert("", "请选择一个节点", {
+          dangerouslyUseHTMLString: false
+        });
+      } else {
+        if (this.queryData.type != 1) {
+          if (saveType == 0) {
+            this.$router.push({
+              name: "addCompanyManage",
+              params: { ParentId: this.company.ParentId }
+            });
+          } else if (saveType == 1) {
+            this.$router.push({
+              name: "addCompanyManage",
+              params: { ParentId: this.company.id }
+            });
           }
-      }else if(this.department != null && this.queryData.type != 0){
-          if(saveType == 1){
-            this.$router.push({ name: "addCompanyManage", params:{deptParentID:this.department.id,ParentId:this.department.coId}  });
+        } else if (this.department != null && this.queryData.type != 0) {
+          if (saveType == 1) {
+            this.$router.push({
+              name: "addCompanyManage",
+              params: {
+                deptParentID: this.department.id,
+                ParentId: this.department.coId
+              }
+            });
           }
-      }
-      this.company=null;
+        }
+        this.company = null;
       }
     },
-    toAddDeptPage () {
-      if(this.queryData.type == null){
-        this.$alert('', '请选择一个节点', {
+    toAddDeptPage() {
+      if (this.queryData.type == null) {
+        this.$alert("", "请选择一个节点", {
+          dangerouslyUseHTMLString: false
+        });
+      } else {
+        if (this.company != null && this.queryData.type != 1) {
+          var coId = this.company.id;
+          this.$router.push({
+            name: "addDeptManage",
+            params: { ParentId: coId }
+          });
+        } else {
+          this.$alert("", "请选择一个公司!!!", {
             dangerouslyUseHTMLString: false
           });
-      }else{
-        if(this.company != null && this.queryData.type != 1){
-        var coId = this.company.id;
-      this.$router.push({ name: "addDeptManage", params: { ParentId: coId } });
-      }else{
-         this.$alert('', '请选择一个公司!!!', {
-            dangerouslyUseHTMLString: false
-          });
-      }
+        }
       }
     },
     editCompanyDetail(companyId) {
@@ -260,8 +278,8 @@ export default {
               dangerouslyUseHTMLString: false
             });
             this.$router.push({ path: "/sys/companyList" });
-          }else{
-             this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
+          } else {
+            this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
               dangerouslyUseHTMLString: false
             });
           }
@@ -277,29 +295,32 @@ export default {
     // querySubsidiary(CompanyId){
     //   this.queryCompanyDatas(1,CompanyId);
     // },
-    lockCompanyDetail(id){
-      this.isLockedCompanyDetail(id,0)
+    lockCompanyDetail(id) {
+      this.isLockedCompanyDetail(id, 0);
     },
-    unlockCompanyDetail(id){
-      this.isLockedCompanyDetail(id,1)
+    unlockCompanyDetail(id) {
+      this.isLockedCompanyDetail(id, 1);
     },
-    isLockedCompanyDetail(id,isLocked){
-        this.$api.get({
-          url:"/company/isLocked?id="+id+"&isLocked="+isLocked,
-          token:true,
-        }).then(e=>{
+    isLockedCompanyDetail(id, isLocked) {
+      this.$api
+        .get({
+          url: "/company/isLocked?id=" + id + "&isLocked=" + isLocked,
+          token: true
+        })
+        .then(e => {
           let result = e.data;
           if (result.code == 200) {
             this.$alert("", "锁定成功", {
               dangerouslyUseHTMLString: false
             });
             this.$router.push({ path: "/sys/companyList" });
-          }else{
-             this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
+          } else {
+            this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
               dangerouslyUseHTMLString: false
             });
           }
-        }).catch(e => {
+        })
+        .catch(e => {
           console.log("操作失败");
           console.log(e);
         });
@@ -309,7 +330,7 @@ export default {
         { name: "编辑", isType: "1", methosName: "editCompanyDetail" },
         { name: "删除", isType: "1", methosName: "delCompanyDetail" },
         { name: "锁定", isType: "1", methosName: "lockCompanyDetail" },
-        { name: "解锁", isType: "1", methosName: "unlockCompanyDetail" },
+        { name: "解锁", isType: "1", methosName: "unlockCompanyDetail" }
       ];
       // return array.filter((item) => {
       //   return item.isType.includes(type)
@@ -380,6 +401,25 @@ export default {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
+    },
+    handleChange(row) {
+      console.log(row,"row");
+      this.companyEntity=row;
+      console.log(this.companyEntity,"this.companyEntity");
+    },
+    setUp(){
+     
+      if(this.companyEntity != null){
+          console.log("设置网站")
+          this.$router.push({
+        path: "/sys/setCompanyWebsite",
+        query: { companyId: this.companyEntity.companyId }
+      });
+      }else{
+        this.$alert("", "请选择操作记录", {
+              dangerouslyUseHTMLString: false
+            });
+      }
     }
   }
 };
