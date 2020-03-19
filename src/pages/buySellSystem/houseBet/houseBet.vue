@@ -1,5 +1,6 @@
 <template>
   <list-page :parentData="$data"
+             @sort-change="sortMethod"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
@@ -175,16 +176,19 @@
       <!--      房源编号、楼盘名称、售价（可排序）、面积（可排序）、单价（可排序）、户型（X室X厅X卫）、对赌鑫币值、预期奖励鑫币值、对赌时间（对赌成功当日）、对赌结果、剩余天数、对赌人、操作（查看）-->
       <el-table-column prop="price"
                        label="售价(万元)"
-                       :render-header="customFieldColumn">
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
       </el-table-column>
       <el-table-column prop="inArea"
                        label="面积(m²)"
-                       :render-header="customFieldColumn">
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
       </el-table-column>
       <el-table-column prop="price/inArea"
                        label="单价(元/㎡)"
                        :formatter="unitPrice"
-                       :render-header="customFieldColumn">
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
       </el-table-column>
       <el-table-column prop=""
                        label="户型"
@@ -192,11 +196,14 @@
       </el-table-column>
       <el-table-column prop="amount"
                        label="对赌鑫币"
-                       :render-header="customFieldColumn">
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
       </el-table-column>
       <el-table-column prop="createTime"
                        label="对赌时间"
-                       :render-header="customFieldColumn">
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
+<!--                       :render-header="customFieldColumn"-->
       </el-table-column>
       <el-table-column prop="status"
                        label="对赌结果"
@@ -335,8 +342,10 @@ export default {
 
         this.moreSelect = e;
       this.queryHouseBet(1, 'id', 'ascending')
-
-
+    },
+    sortMethod (e) {
+      console.log(e, "eeee排序");
+      this.queryHouseBet(1, e.prop, e.order);
     },
     Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
@@ -400,16 +409,16 @@ export default {
           break;
       }
     },
-    customFieldColumn (h, params) {
-      var that = this
-      return h('span', {}, [
-        h('span', {}, params.column.label),
-        h('span', {          style: { 'color': params.column.property == that.data.order && that.data.orderAsc == 'DESC' ? 'red' : '', float: 'right' },
-          on: { click: () => { that.orderBy(params.column.property, "DESC") } }        }, '↓'),
-        h('span', {          style: { 'color': params.column.property == that.data.order && that.data.orderAsc == 'ASC' ? 'red' : '', float: 'right' },
-          on: { click: () => { that.orderBy(params.column.property, "ASC") } }        }, '↑')
-      ])
-    },
+    // customFieldColumn (h, params) {
+    //   var that = this
+    //   return h('span', {}, [
+    //     h('span', {}, params.column.label),
+    //     h('span', {          style: { 'color': params.column.property == that.data.order && that.data.orderAsc == 'DESC' ? 'red' : '', float: 'right' },
+    //       on: { click: () => { that.orderBy(params.column.property, "DESC") } }        }, '↓'),
+    //     h('span', {          style: { 'color': params.column.property == that.data.order && that.data.orderAsc == 'ASC' ? 'red' : '', float: 'right' },
+    //       on: { click: () => { that.orderBy(params.column.property, "ASC") } }        }, '↑')
+    //   ])
+    // },
     orderBy (o, Asc) {
       this.data.order = o;
       this.data.orderAsc = Asc;
@@ -490,12 +499,13 @@ export default {
         }
       })
     },
-    queryHouseBet (currentPage) {
+    queryHouseBet (currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage };
+      params.sortColumn = column;
+      params.sortType = type;
       if (Object.keys(this.moreSelect).length != 0) {
-        debugger
         for (let key in this.moreSelect) {
           if (this.key == 'addTime' && this.moreSelect[key] !== '') {
             params.biginTime = this.moreSelect[key][0];
@@ -524,8 +534,6 @@ export default {
           params.beginTime = that.data.timeSelect[0];
         if (that.data.timeSelect.length > 1)
           params.endTime = that.data.timeSelect[1];
-        params.order = that.data.order;
-        params.orderAsc = that.data.orderAsc;
       }
       console.log(params);
       this.$api.get({

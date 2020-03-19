@@ -59,7 +59,8 @@
       </div>
       <!-- 取消作业方 -->
       <div class="button-set">
-        <el-button @click="openPopUp('cencelTaskFlag')">
+        <el-button @click="openPopUp('cencelTaskFlag')"
+                   v-if="isShowButton.cancelMethod">
           <i class="el-icon-s-promotion el-icon--left"></i>取消作业方
         </el-button>
       </div>
@@ -174,26 +175,42 @@ export default {
       }).catch((e) => {
       })
     },
+    async  cancelOutsideHouse () {
+      let params = {
+        HouseNo: this.resultData.HouseNo
+      }
+      let reslut = await release.cancelOutsideHouse(params);
+      if (reslut) {
+        this.resultData.isReleaseOutside = 0;
+        this.$message("操作成功");
+      }
+      else {
+        this.$message("操作失败");
+      }
+    },
     //是否展示产权证号弹窗
     async certificateType () {
-      this.load.loadingMessage = "正在发布";
-      this.load.loading = true;
-      //   if (parseInt(this.resultData.certificateType != 1)) {
-      //     this.releasePopFlag = true;
-      //   }
-      //   else {
-      //     let params = {
-      //       houseId: this.houseId.id,
-      //       houseType: 0
-      //     }
-      //     let reslut = await release.releaseOutsideHouse(params);
-      //     if (reslut) {
-      //       this.resultData.isReleaseOutside = 1;
-      //     }
-      //     else {
-      //       this.$message("操作失败");
-      //     }
-      //   }
+
+      if (parseInt(this.resultData.certificateType) != 1) {
+        this.releasePopFlag = true;
+      }
+      else {
+        let params = {
+          houseId: this.houseId.id,
+          houseType: 0
+        }
+        this.load.loadingMessage = "正在发布";
+        this.load.loading = true;
+        let reslut = await release.releaseOutsideHouse(params);
+        this.load.loading = false;
+        if (reslut) {
+          this.resultData.isReleaseOutside = 1;
+          this.$message("操作成功");
+        }
+        else {
+          this.$message("操作失败");
+        }
+      }
     },
     openPopUp (PopName) {
       this[PopName] = true;

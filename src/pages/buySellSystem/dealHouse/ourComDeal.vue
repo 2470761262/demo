@@ -97,7 +97,11 @@ export default {
         minArea: "",
         maxArea: "",
         minPrice: "",
-        maxPrice: ""
+        maxPrice: "",
+        cbId: "",
+        bhId: "",
+        customName: "",
+        tel: ""
       },
       options: [],
       cbIdList: [],
@@ -108,16 +112,16 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "houseNo", label: "房源编号" },
-        { prop: "communityName", label: "楼盘名称" },
-        { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true },
-        { prop: "area", label: "面积(m²)", order: 'custom', disabled: false, default: true },
-        { prop: "unitPrice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true },
-        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },//自己补充
+         { prop: "houseNo", label: "房源编号" ,width: '170', order: false, disabled: true, default: true },
+        { prop: "communityName", label: "楼盘名称", width: '170', order: false, disabled: true, default: true  },
+        { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true , formart: item => item.price + '万元'},
+        { prop: "inArea", label: "面积(m²)", order: 'custom', disabled: false, default: true , formart: item => item.inArea + 'm²'},
+        { prop: "unitPrice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true , format: item => item.unitpaice + '元/㎡'},
+        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
         { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true },
         { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
-        { prop: "tradePerName", label: "成交人" },
-        { prop: "followPerName", label: "跟单人" }
+        { prop: "agenName", label: "跟单人", order: false,disabled: false, default: true  },
+         { prop: 'id', label: "成交人", order: false,disabled: false, default: true , formart: item => item.agenName  }
       ],
       tableData: []
     };
@@ -128,7 +132,7 @@ export default {
   methods: {
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryOurComDeal(1, 'id', 'ascending');
+      this.queryOurComDeal(1, e.prop, e.order);
     },
     queryTabData () {
       console.log(this, "111");
@@ -142,7 +146,7 @@ export default {
       });
     },
     queryDatalist () {
-      this.queryOurComDeal(1);
+      this.queryOurComDeal(1,'id', 'ascending');
     },
     remoteMethod (query) {
       var that = this;
@@ -179,19 +183,19 @@ export default {
     queryOurComDeal (currentPage, column, type) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage };
+      let params = { limit: that.pageJson.pageSize, page: currentPage-1 };
       if (that.data.comId != null && that.data.comId.length > 0) {
-        params.comid = that.data.comId;
+        params.comId = that.data.comId;
       }
       if (that.data.timeSelect != null && that.data.timeSelect.length > 0) {
-        params.minDate = that.data.timeSelect[0];
-        params.maxDate = that.data.timeSelect[1];
+        params.beginTime = that.data.timeSelect[0];
+        params.endTime = that.data.timeSelect[1];
       }
       if (that.data.minArea != null && that.data.minArea.length > 0) {
-        params.minArea = that.data.minArea;
+        params.minInArea = that.data.minArea;
       }
       if (that.data.maxArea != null && that.data.maxArea.length > 0) {
-        params.maxArea = that.data.maxArea;
+        params.maxInArea = that.data.maxArea;
       }
       if (that.data.minPrice != null && that.data.minPrice.length > 0) {
         params.minPrice = that.data.minPrice;
@@ -199,10 +203,20 @@ export default {
       if (that.data.maxPrice != null && that.data.maxPrice.length > 0) {
         params.maxPrice = that.data.maxPrice;
       }
+      if (column == "" || type == null || type == undefined) {
+        params.sortColumn = "id";
+      } else {
+        params.sortColumn = column;
+      }
+      if (type == "" || type == null || type == undefined) {
+        params.sortType = "ascending";
+      } else {
+        params.sortType = type;
+      }
       console.log(params);
       this.$api
         .post({
-          url: "/dealHouse/ourComDeal",
+          url: "/tradeHouse/getTradeHouse",
           data: params,
           qs: true
         })
@@ -211,9 +225,8 @@ export default {
           let data = e.data;
           that.loading = false;
           if (data.code == 200) {
-            that.pageJson.total = data.data.totalCount;
-            that.pageJson.currentPage = data.data.currPage;
-            that.tableData = data.data.list;
+            that.pageJson.total = data.data.dataCount;
+            that.tableData = data.data.data;
           } else {
             console.log("查询我司成交列表结果：" + result.message);
             alert(result.message);
@@ -278,31 +291,6 @@ export default {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryOurComDeal(1, 'id', 'ascending');
-    },
-    formatData (row, column) {
-      if (column.property == "unitPrice") {
-        if (
-          row.price == null ||
-          row.area == null ||
-          row.price == 0 ||
-          row.area == 0
-        ) {
-          return "";
-        } else {
-          return parseFloat((row.price / row.area) * 10000).toFixed(2);
-        }
-      }
-      if (column.property == "houseType") {
-        return row.rooms + "室" + row.hall + "厅" + row.toilet + "卫";
-      }
-      if (column.property == "tradeTime") {
-        if (row.tradeTime.length > 19) {
-          return row.tradeTime.substring(0, 19);
-        } else {
-          return row.tradeTime;
-        }
-      }
-      return row[column.property];
     }
   }
 };
