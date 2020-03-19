@@ -59,7 +59,7 @@
         </div>
       </div>
       <div class="text-flex"
-           v-if="pop.model == 0">
+           v-if="pop.model == 1">
         <span>证号:</span>
         <el-input v-model="pop.inputValue"></el-input>
       </div>
@@ -80,7 +80,7 @@ import '../less/didLogCss.less';
 //发布外网
 import release from "../common/releaseHouse.js"
 export default {
-  inject: ["houseDetails", "houseId"],
+  inject: ["houseDetails", "houseId", "load"],
   watch: {
     'pop.model' (newValue, oldValue) {
       if (newValue != 0) {
@@ -129,7 +129,18 @@ export default {
           this.$message("产权证号未填");
           return;
         }
+        this.$emit('update:visible', false)
+        this.load.loadingMessage = "正在发布";
+        this.load.loading = true;
         result = await release.releaseOutsideHouse(params);
+        this.load.loading = false;
+        if (result) {
+          this.resultData.isReleaseOutside = 1;
+          this.$message("操作成功");
+        }
+        else {
+          this.$message("操作失败");
+        }
       }
 
     },
