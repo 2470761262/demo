@@ -738,7 +738,7 @@ export default {
     toHouseDetail (id) {
       console.log(id);
       var that = this;
-     that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
 
     handleClick () { },

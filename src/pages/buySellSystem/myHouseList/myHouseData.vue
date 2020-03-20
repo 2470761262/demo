@@ -73,7 +73,7 @@ export default {
   },
   data () {
     return {
-      loading: true, //控制表格加载动画提示
+      loading: false, //控制表格加载动画提示
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
@@ -135,29 +135,29 @@ export default {
         // params.communityName = this.queryData.communityName;
         console.log("参数");
       }
-      this.$api.post({
-        url: '/agent_house/myHouseList',
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: params,
-        token: false
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        that.loading = false;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          that.pageJson.total = result.data.totalCount;
-          that.pageJson.currentPage = result.data.currPage;
-          that.tableData = result.data.list;
-        } else {
-          console.log("查询我的房源列表结果：" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询我的房源列表失败");
-        console.log(e);
-      })
+      // this.$api.post({
+      //   url: '/agent_house/myHouseList',
+      //   headers: { "Content-Type": "application/json;charset=UTF-8" },
+      //   data: params,
+      //   token: false
+      // }).then((e) => {
+      //   console.log(e.data);
+      //   let result = e.data;
+      //   that.loading = false;
+      //   if (result.code == 200) {
+      //     console.log(result.message);
+      //     console.log(result.data);
+      //     that.pageJson.total = result.data.totalCount;
+      //     that.pageJson.currentPage = result.data.currPage;
+      //     that.tableData = result.data.list;
+      //   } else {
+      //     console.log("查询我的房源列表结果：" + result.message);
+      //     alert(result.message);
+      //   }
+      // }).catch((e) => {
+      //   console.log("查询我的房源列表失败");
+      //   console.log(e);
+      // })
     },
     open () {
       this.$alert('<img src="https://lsxjytestimgs.oss-cn-shenzhen.aliyuncs.com/verifyHouseShare/b25076270b8248509e9fe815005ced60.jpg"></img>', 'HTML 片段', {

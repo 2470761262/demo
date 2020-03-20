@@ -153,55 +153,12 @@ export default {
         pageSize: 10 //每页条数
       },
       tableColumnField: [
-        {
-          prop: "communityName",
-          label: "小区名称",
-          order: false,
-          width: "",
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "comBuildingName",
-          label: "楼栋号",
-          width: "120",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "roomNo",
-          label: "房间号",
-          width: "170",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "inArea",
-          label: "面积(m²)",
-          width: "170",
-          order: "custom",
-          disabled: false,
-          default: true,
-          format: item => item.inArea + "㎡"
-        },
-        {
-          prop: "customers",
-          label: "业主",
-          width: "170",
-          order: "custom",
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "tel",
-          label: "业主电话",
-          width: "",
-          order: false,
-          disabled: false,
-          default: true
-        }
+        { prop: 'communityName', label: '小区名称', order: false, width: '', disabled: true, default: true },
+        { prop: 'comBuildingName', label: '楼栋号', width: '120', order: false, disabled: true, default: true },
+        { prop: 'roomNo', label: '房间号', width: '170', order: false, disabled: true, default: true },
+        { prop: 'inArea', label: '面积(m²)', width: '170', order: 'custom', disabled: false, default: true, format: item => (item.inArea||0) + '㎡'},
+        { prop: 'customers', label: '业主', width: '170', order: false, disabled: false, default: true },
+        { prop: 'tel', label: '业主电话', width: '', order: false, disabled: false, default: true }
       ],
       tableColumn: [],
       tableData: []
@@ -232,10 +189,7 @@ export default {
     },
     toLook (id) {
       var that = this;
-      that.$router.push({
-        path: "/buySellSystem/houseDetails",
-        query: { houseId: id }
-      });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     toSale (
       comId,

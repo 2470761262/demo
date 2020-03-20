@@ -164,7 +164,7 @@ export default {
 
     toLook (id) {
       var that = this;
-      that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     queryChiefHouseParams () {
       this.queryChiefHouse(1, 'id', 'ascending');

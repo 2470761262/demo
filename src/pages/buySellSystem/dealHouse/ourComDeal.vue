@@ -109,85 +109,16 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        {
-          prop: "houseNo",
-          label: "房源编号",
-          width: "170",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "communityName",
-          label: "楼盘名称",
-          width: "170",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "price",
-          label: "成交价(万元)",
-          order: "custom",
-          disabled: false,
-          default: true,
-          formart: item => item.price + "万元"
-        },
-        {
-          prop: "inArea",
-          label: "面积(m²)",
-          order: "custom",
-          disabled: false,
-          default: true,
-          formart: item => item.inArea + "m²"
-        },
-        {
-          prop: "unitPrice",
-          label: "单价(元/m²)",
-          order: "custom",
-          disabled: false,
-          default: true,
-          format: item => item.unitpaice + "元/㎡"
-        },
-        {
-          prop: "",
-          label: "户型",
-          width: "150",
-          order: false,
-          disabled: false,
-          default: true,
-          formart: item =>
-            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
-        },
-        {
-          prop: "seenNum",
-          label: "被看次数",
-          order: "custom",
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "tradeTime",
-          label: "成交时间",
-          order: "custom",
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "agenName",
-          label: "跟单人",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "id",
-          label: "成交人",
-          order: false,
-          disabled: false,
-          default: true,
-          formart: item => item.agenName
-        }
+         { prop: "houseNo", label: "房源编号" ,width: '170', order: false, disabled: true, default: true },
+        { prop: "communityName", label: "楼盘名称", width: '170', order: false, disabled: true, default: true  },
+        { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true , formart: item => item.price + '万元'},
+        { prop: "inArea", label: "面积(m²)", order: 'custom', disabled: false, default: true , formart: item => item.inArea + 'm²'},
+        { prop: "unitPrice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true , format: item => item.unitpaice + '元/㎡'},
+        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item =>  (item.rooms||0) + '室' + (item.hall||0) + '厅' + (item.toilet||0) + '卫' },
+        { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true ,formart: item => item.seenNum||0},
+        { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
+        { prop: "agenName", label: "跟单人", order: false,disabled: false, default: true  },
+         { prop: 'id', label: "成交人", order: false,disabled: false, default: true , formart: item => item.agenName  }
       ],
       tableData: []
     };
@@ -206,10 +137,7 @@ export default {
     toLook (id) {
       console.log(id);
       var that = this;
-      that.$router.push({
-        path: "/buySellSystem/houseDetails",
-        query: { houseId: id }
-      });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     queryDatalist () {
       this.queryOurComDeal(1, "id", "ascending");

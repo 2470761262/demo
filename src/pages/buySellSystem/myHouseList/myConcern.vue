@@ -73,54 +73,58 @@
     </template>
     <template v-slot:top>
       <div class="page-form-inline">
-        <el-item label="楼盘名称"
-                 prop="comId">
-          <el-select v-model="queryData.CommunityName"
-                     @focus="remoteInput"
-                     @change="queryCBId()"
-                     filterable
-                     remote
-                     clearable
-                     placeholder="请输入楼盘名称搜索"
-                     :remote-method="remoteMethod"
-                     :loading="loading">
-            <el-option v-for="item in optionsList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value"></el-option>
-          </el-select>
-        </el-item>
-        <el-item label="栋座"
-                 prop="cbId"
-                 class="page-label-center">
-          <el-select v-model="queryData.BuildingName"
-                     filterable
-                     clearable
-                     placeholder="请选择楼栋"
-                     @change="queryRoomNo()">
-            <el-option v-for="item in cbIdList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value"></el-option>
-          </el-select>
-        </el-item>
-        <el-item label="房间号"
-                 prop="roomNo"
-                 clearable
-                 class="page-label-center">
-          <el-select v-model="queryData.RoomNo"
-                     filterable
-                     placeholder="请选择房间号">
-            <el-option v-for="item in roomNoList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value"></el-option>
-          </el-select>
-        </el-item>
-        <el-input placeholder="业主姓名"
-                  v-model="queryData.Customers"
-                  style="margin-left:25px;width:240px"
-                  clearable>
+        <!-- <el-item label="楼盘名称" prop="comId"> -->
+        <el-select
+          v-model="queryData.CommunityName"
+          @focus="remoteInput"
+          @change="queryCBId()"
+          filterable
+          remote
+          clearable
+          placeholder="请输入楼盘名称搜索"
+          :remote-method="remoteMethod"
+          :loading="loading"
+        >
+          <el-option
+            v-for="item in optionsList"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <!-- </el-item>
+        <el-item label="栋座" prop="cbId" class="page-label-center">-->
+        <el-select
+          v-model="queryData.BuildingName"
+          filterable
+          clearable
+          placeholder="请选择楼栋"
+          @change="queryRoomNo()"
+        >
+          <el-option
+            v-for="item in cbIdList"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <!-- </el-item>
+        <el-item label="房间号" prop="roomNo" clearable class="page-label-center">-->
+        <el-select v-model="queryData.RoomNo" filterable placeholder="请选择房间号">
+          <el-option
+            v-for="item in roomNoList"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+        <!-- </el-item> -->
+        <el-input
+          placeholder="业主姓名"
+          v-model="queryData.Customers"
+          style="margin-left:25px;width:240px"
+          clearable
+        >
           <template slot="prepend">业主姓名</template>
         </el-input>
 
@@ -192,62 +196,6 @@
     </template>
 
     <template #tableColumn>
-      <!-- <el-table-column label="房源编号">
-        <template v-slot="scope">
-          {{scope.row.HouseNo}}
-        </template>
-      </el-table-column>
-      <el-table-column label="楼盘名称">
-        <template v-slot="scope">
-          {{scope.row.CommunityName}}
-        </template>
-      </el-table-column>
-      <el-table-column label="栋座">
-        <template v-slot="scope">
-          {{scope.row.BuildingName}}
-        </template>
-      </el-table-column>
-      <el-table-column label="房间号">
-        <template v-slot="scope">
-          {{scope.row.RoomNo}}
-        </template>
-      </el-table-column>
-
-      <el-table-column label="售价(万元)">
-        <template v-slot="scope">
-          {{scope.row.Price}}
-        </template>
-      </el-table-column>
-      <el-table-column label="面积(㎡)">
-        <template v-slot="scope">
-          {{scope.row.InArea}}
-        </template>
-      </el-table-column>
-      <el-table-column label="单价(元/㎡)">
-        <template v-slot="scope">
-          {{Math.round(scope.row.Price*10000/scope.row.InArea)+"元/m²"}}
-        </template>
-      </el-table-column>
-      <el-table-column label="户型">
-        <template v-slot="scope">
-          {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
-        </template>
-      </el-table-column>
-      <el-table-column label="被看次数">
-        <template v-slot="scope">
-          {{scope.row.seenNum}}
-        </template>
-      </el-table-column>
-      <el-table-column label="未被看天数">
-        <template v-slot="scope">
-          {{scope.row.noSeenDay}}
-        </template>
-      </el-table-column>
-      <el-table-column label="跟单人">
-        <template v-slot="scope">
-          {{scope.row.AgentPerName}}
-        </template>
-      </el-table-column>-->
       <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
@@ -261,15 +209,14 @@
                        fixed="right"
                        key="operation">
         <template v-slot="scope">
-          <el-button type="info"
-                     style="background:green"
-                     @click="toHouseDetail(scope.row.id)"
-                     size="mini">查看</el-button>
-          <div v-if="scope.row.CollectID != null && scope.row.CollectID!= '' ">
-            <el-button type="info"
-                       slot="reference"
-                       @click="ifOFF(scope.row.id)"
-                       size="mini">取消关注</el-button>
+          <el-button
+            type="info"
+            style="background:green"
+            @click="toHouseDetail(scope.row.id)"
+            size="mini"
+          >查看</el-button>
+          <div v-if="scope.row.collectID != null && scope.row.collectID!= '' ">
+            <el-button type="info" slot="reference" @click="ifOFF(scope.row.id)" size="mini">取消关注</el-button>
           </div>
         </template>
       </el-table-column>
@@ -312,7 +259,7 @@ export default {
       },
       tableDataColumn: [
         {
-          prop: "HouseNo",
+          prop: "houseNo",
           label: "房源编号",
           width: "110px",
           order: false,
@@ -320,7 +267,7 @@ export default {
           default: true
         },
         {
-          prop: "CommunityName",
+          prop: "communityName",
           label: "楼盘名称",
           width: "110px",
           order: false,
@@ -328,7 +275,7 @@ export default {
           default: true
         },
         {
-          prop: "BuildingName",
+          prop: "buildingName",
           label: "栋座",
           width: "110px",
           order: false,
@@ -336,7 +283,7 @@ export default {
           default: true
         },
         {
-          prop: "RoomNo",
+          prop: "roomNo",
           label: "房间号",
           width: "110px",
           order: false,
@@ -344,31 +291,31 @@ export default {
           default: true
         },
         {
-          prop: "Price",
+          prop: "price",
           label: "售价(万元)",
           width: "120px",
           order: "custom",
           disabled: false,
           default: true,
-          formart: item => item.Price + "万元"
+          formart: item => item.price + "万元"
         },
         {
-          prop: "InArea",
+          prop: "inArea",
           label: "面积(m²)",
           width: "110px",
           order: "custom",
           disabled: false,
           default: true,
-          formart: item => item.InArea + "m²"
+          formart: item => item.inArea + "m²"
         },
         {
-          prop: "unitpaice",
+          prop: "unitPrice",
           label: "单价(元/平)",
           width: "130px",
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         {
           prop: "seenNum",
@@ -379,7 +326,7 @@ export default {
           default: true
         }, //自己补充
         {
-          prop: "notLookNum",
+          prop: "noSeenDay",
           label: "未被带看天数",
           width: "130px",
           order: "custom",
@@ -410,7 +357,12 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            item.Rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+            (item.rooms || 0) +
+            "室" +
+            (item.hall || 0) +
+            "厅" +
+            (item.toilet || 0) +
+            "卫"
         }
       ],
       tableData: [],
@@ -419,32 +371,6 @@ export default {
         list: []
       },
       ImpressionList: [],
-      options: [
-        {
-          value: "选项1",
-          label: "全部"
-        },
-        {
-          value: "选项2",
-          label: "待验真"
-        },
-        {
-          value: "选项3",
-          label: "客户验真"
-        },
-        {
-          value: "选项4",
-          label: "店长验真"
-        },
-        {
-          value: "选项5",
-          label: "验真失败"
-        },
-        {
-          value: "选项6",
-          label: "已过期"
-        }
-      ],
       tableColumn: [],
       queryData: {
         CommunityName: "",
@@ -458,14 +384,14 @@ export default {
       moreSelect: {}
     };
   },
-  mounted () {
-    this.querylist(1, "id", "ascending");
+  mounted() {
+    this.querylist(1, "id", "descending");
     this.queryMyImpression();
   },
   methods: {
     moreSelectChange (e) {
       if (e != "") this.moreSelect = e;
-      this.querylist(1, "id", "ascending");
+      this.querylist(1, "id", "descending");
     },
     tabColumnChange (e) {
       this.tableColumn = e;
@@ -615,11 +541,9 @@ export default {
         });
     },
     //跳转房源详情页面
-    toHouseDetail (id) {
-      this.$router.push({
-        path: "/buySellSystem/houseDetails",
-        query: { houseId: id }
-      });
+    toHouseDetail(id) {
+      let that = this;
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //清除
     show (msg) {
@@ -771,9 +695,19 @@ export default {
           params.maxAddTime = this.queryData.timeSelect[1];
         }
       }
+      if (column == "" || type == null || type == undefined) {
+        params.sortColumn = "id";
+      } else {
+        params.sortColumn = column;
+      }
+      if (type == "" || type == null || type == undefined) {
+        params.sortType = "descending";
+      } else {
+        params.sortType = type;
+      }
       this.$api
         .post({
-          url: "/agent_house/myCollectHouseList",
+          url: "/myHouse/getMyAttention",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params,
           token: false
@@ -783,9 +717,13 @@ export default {
           let result = e.data;
           that.loading = false;
           if (result.code == 200) {
-            that.pageJson.total = result.data.totalCount;
-            that.pageJson.currentPage = result.data.currPage;
-            that.tableData = result.data.list;
+            // that.pageJson.total = result.data.totalCount;
+            // that.pageJson.currentPage = result.data.currPage;
+            // that.tableData = result.data.list;
+
+            that.pageJson.total = result.data.dataCount;
+
+            that.tableData = result.data.data;
           } else {
             console.log("查询我的关注列表结果：" + result.message);
             alert(result.message);
