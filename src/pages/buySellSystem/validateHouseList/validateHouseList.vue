@@ -24,12 +24,14 @@
 </style>
 <template>
   <div style="height:100%">
-    <list-page @sort-change="sortMethod" 
-               :parentData="$data"
-               @queryTabData="queryTabData"
-               @handleClick="handleClick"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      @sort-change="sortMethod"
+      :parentData="$data"
+      @queryTabData="queryTabData"
+      @handleClick="handleClick"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:top>
         <div class="page-form-inline budingMarinSet">
           <el-item label="楼盘名称" prop="comId">
@@ -111,39 +113,32 @@
           >
             <template slot="prepend">价格</template>
           </el-input>-
-          <el-input placeholder="最大值"
-                    v-model="data.maxPrice"
-                    style="width:120px"
-                    clearable />
-          <span style="margin-left:30px">
-              验真状态：
-            </span>
-            <el-select filterable
-                       v-model="data.checkStatusValue"
-                       placeholder="请选择">
-              <el-option v-for="item in checkStatusList"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value">
-              </el-option>
-            </el-select>
-            <span style="margin-left:30px">
-              电话检索：
-            </span>
-            <el-select filterable
-                       v-model="data.phoneStatusValue"
-                       placeholder="请选择">
-              <el-option v-for="item in phoneStatusList"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value">
-              </el-option>
-            </el-select>
-          <el-date-picker v-model="data.timeSelect"
-                          type="daterange"
-                          range-separator="至"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期">
+          <el-input placeholder="最大值" v-model="data.maxPrice" style="width:120px" clearable />
+          <span style="margin-left:30px">验真状态：</span>
+          <el-select filterable v-model="data.checkStatusValue" placeholder="请选择">
+            <el-option
+              v-for="item in checkStatusList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <span style="margin-left:30px">电话检索：</span>
+          <el-select filterable v-model="data.phoneStatusValue" placeholder="请选择">
+            <el-option
+              v-for="item in phoneStatusList"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <el-date-picker
+            v-model="data.timeSelect"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+          >
             <template slot="prepend">录入时间</template>
           </el-date-picker>
           <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px" @click="Remove">清除</span>
@@ -156,19 +151,18 @@
         </div>
       </template>
       <template #tableColumn>
-        <el-table-column :width="item.width"
-                         :formatter="item.formart"
-                         :label="item.label"
-                         show-overflow-tooltip
-                         v-for="(item,index) in tableDataColumn"
-                         :key="index"
-                         :prop="item.prop"
-                         :sort-orders="['ascending', 'descending']"
-                         :sortable="item.order"></el-table-column>
-        <el-table-column prop="operation"
-                         label="操作"
-                         fixed="right"
-                         key="992">
+        <el-table-column
+          :width="item.width"
+          :formatter="item.formart"
+          :label="item.label"
+          show-overflow-tooltip
+          v-for="(item,index) in tableDataColumn"
+          :key="index"
+          :prop="item.prop"
+          :sort-orders="['ascending', 'descending']"
+          :sortable="item.order"
+        ></el-table-column>
+        <el-table-column prop="operation" label="操作" fixed="right" key="992">
           <template v-slot="scope">
             <el-button
               :type="item.buttonType"
@@ -335,8 +329,8 @@ export default {
         maxInArea: "",
         minPrice: "",
         maxPrice: "",
-        checkStatusValue:"",
-        phoneStatusValue:""
+        checkStatusValue: "",
+        phoneStatusValue: ""
       },
       cbIdList: [],
       roomNoList: [],
@@ -387,14 +381,14 @@ export default {
         {
           prop: "area",
           label: "面积(㎡)",
-          formart: row => row.area||0,
+          formart: row => row.area || 0,
           width: "120",
           order: true
         },
         {
           prop: "unit_price",
           label: "单价(元/㎡)",
-          formart: row => row.unitPrice||0,
+          formart: row => row.unitPrice || 0,
           width: "120",
           order: true
         },
@@ -441,7 +435,7 @@ export default {
         {
           prop: "checkTel",
           label: "验真电话",
-          formart: row => row.checkTel||'暂无',
+          formart: row => row.checkTel || "暂无",
           width: "120",
           order: false
         }
@@ -506,30 +500,30 @@ export default {
       },
       nowRow: {},
       checkStatusList: [
-        { key: "1",label:"待验真", value: "1" },
-        { key: "2",label: "验真成功", value: "2" },
-        { key: "3",label: "验真失败", value: "3" },
-        { key: "4",label: "已过期", value: "4" }
+        { key: "1", label: "待验真", value: "1" },
+        { key: "2", label: "验真成功", value: "2" },
+        { key: "3", label: "验真失败", value: "3" },
+        { key: "4", label: "已过期", value: "4" }
       ],
       phoneStatusList: [
-        { key: "1", label: "号码正常" , value: "0" },
+        { key: "1", label: "号码正常", value: "0" },
         { key: "2", label: "号码异常", value: "1" }
       ],
-      checkStatusValue:"",
-      phoneStatusValue:""
+      checkStatusValue: "",
+      phoneStatusValue: ""
     };
   },
   created() {
     console.log("===========" + JSON.stringify(this.GetRequest()));
   },
-  mounted () {
-    this.queryVerifyHouseByParams(1, 'id', 'descending');
+  mounted() {
+    this.queryVerifyHouseByParams(1, "id", "descending");
   },
   methods: {
-    sortMethod (e) {
+    sortMethod(e) {
       this.queryVerifyHouseByParams(1, e.prop, e.order);
     },
-    GetRequest () {
+    GetRequest() {
       var url = location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", location);
       var theRequest = new URLSearchParams(
@@ -540,15 +534,14 @@ export default {
       return token;
     },
 
-    queryVerifyHouseByParams (currentPage, column, type) {
+    queryVerifyHouseByParams(currentPage, column, type) {
       this.queryVerifyHouseDatas(currentPage, column, type);
     },
     Remove() {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryVerifyHouseDatas(1,'id', 'descending');
-
+      this.queryVerifyHouseDatas(1, "id", "descending");
     },
-    queryVerifyHouseDatas (currentPage, column, type) {
+    queryVerifyHouseDatas(currentPage, column, type) {
       let that = this;
       that.loading = true;
 
@@ -565,8 +558,8 @@ export default {
       params.maxInArea = that.data.maxInArea;
       params.minPrice = that.data.minPrice;
       params.maxPrice = that.data.maxPrice;
-      params.checkStatusValue=that.data.checkStatusValue;
-      params.phoneStatusValue=that.data.phoneStatusValue;
+      params.checkStatusValue = that.data.checkStatusValue;
+      params.phoneStatusValue = that.data.phoneStatusValue;
       params.sortColumn = column;
       params.sortType = type;
       this.$api
@@ -651,7 +644,7 @@ export default {
 
         this.$api
           .get({
-            url: "/mateHouse/queryCommunity",
+            url: "/community/validate",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             qs: true,

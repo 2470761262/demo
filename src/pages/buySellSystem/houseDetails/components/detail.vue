@@ -225,15 +225,37 @@
           <div class="cell-pro-detail-other overText">{{resultData.agentPerDepartmentName | emptyRead}}</div>
         </div>
         <button class="cell-pro-but"
-                v-if="resultData.agentPerName">一键拨号</button>
+                v-if="resultData.agentPerName"
+                @click="oneTouchDialPhone">一键拨号</button>
       </div>
       <div class="cell-pro-item">
         <div class="cell-pro-detail">
           <div class="cell-pro-detail-name overText">{{resultData.Customers | emptyRead}}</div>
           <div class="cell-pro-detail-other overText">业主称呼</div>
         </div>
-        <button class="cell-pro-but">查看号码</button>
-        <button class="cell-pro-but">一键拨号</button>
+        <el-dropdown @command="contactOwer">
+          <el-button type="primary"
+                     class="cell-pro-but">
+            查看号码<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item v-if="resultData.Tel!=''"
+                              v-text="resultData.Tel"
+                              command=""></el-dropdown-item>
+            <el-dropdown-item v-if="resultData.Tel1!=''"
+                              v-text="resultData.Tel1"
+                              command="1"></el-dropdown-item>
+            <el-dropdown-item v-if="resultData.Tel2!=''"
+                              v-text="resultData.Tel2"
+                              command="2"></el-dropdown-item>
+            <el-dropdown-item v-if="resultData.Tel3!=''"
+                              v-text="resultData.Tel3"
+                              command="3"></el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+        <!-- <button>查看号码</button> -->
+        <button class="cell-pro-but"
+                @click="dialPhoneToFD">一键拨号</button>
       </div>
     </div>
   </div>
@@ -282,6 +304,99 @@ export default {
           }
         })
         .catch(e => {
+        });
+    },
+    oneTouchDialPhone () {
+      let phone = this.resultData.agentPerTel;
+      if (!phone) {
+        this.$message({
+          message: "该经纪人号码为空"
+        })
+        return;
+      }
+      let p = {
+        "contactPhone": phone
+      }
+      this.dailPhone(0, p);
+    },
+    dialPhoneToFD () {
+      let p = {
+        "contactPhone": this.resultData.Tel,
+        "contactPhone1": this.resultData.Tel1,
+        "contactPhone2": this.resultData.Tel2,
+        "contactPhone3": this.resultData.Tel3
+      }
+      this.dailPhone(1, p);
+    },
+    contactOwer (cmd) {
+      console.log(cmd);
+      let p = {};
+      p["contactPhone" + cmd] = this.resultData["Tel" + cmd];
+      p["isLookPhone"] = true;
+      this.dailPhone(1, p);
+    },
+    dailPhone (contactPerType, phoneObj) {
+      let that = this;
+      //console.log(that.houseDetails);
+      this.$confirm("确定一键拨号吗？", "友情提醒", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(() => {
+          console.log(that.houseDetails);
+          let oldParams = {
+            "houseId": that.houseId.id,
+            "houseType": 0,
+            "housePrice": that.resultData.Price,
+            "houseArea": that.resultData.InArea,
+            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主
+            "remark": that.resultData.Title          };
+          let dailParams = {};
+          Object.assign(dailParams, oldParams, phoneObj);
+          if (contactPerType == 0) {//联系人类型如果是经纪人，才需要联系人id
+            dailParams.contactPerId = that.resultData.AgentPer;//联系人id
+            dailParams.unitName = that.resultData.agentPerDepartmentName;
+            dailParams.contactPerName = that.resultData.agentPerName;
+          } else {
+            dailParams.unitName = that.resultData.CommunityName;//联系人是业主，名称取小区名
+            dailParams.contactPerName = that.resultData.Customers;
+          }
+          that.$api
+            .post({
+              url: "/noticeManage/common/OneTouchDialPhone",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              data: dailParams
+            })
+            .then(e => {
+              let result = e.data;
+              console.log(result);
+              if (result.code == 200) {
+                this.$message({
+                  type: "info",
+                  message: "请注意查收微信消息"
+                });
+              } else {
+                this.$message({
+                  type: "info",
+                  message: result.message
+                });
+              }
+            })
+            .catch(e => {
+              console.log("【【【【uups,一键拨号失败】】】】");
+              console.log(e);
+              this.$message({
+                type: "info",
+                message: "一键拨号失败"
+              });
+            });
+        })
+        .catch(action => {
+          this.$message({
+            type: "info",
+            message: "取消拨号"
+          });
         });
     }
   },

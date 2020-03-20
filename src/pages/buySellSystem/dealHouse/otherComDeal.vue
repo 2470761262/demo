@@ -73,21 +73,17 @@
                         range-separator="至"
                         start-placeholder="录入开始日期"
                         end-placeholder="录入结束日期"></el-date-picker>
-        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-              @click="Remove">
-          清除
-        </span>
+        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
+              @click="Remove">清除</span>
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
                    @click="queryDatalist">查询</el-button>
-        <div style='color:red;font-size:16px;margin:10px 0 10px 10px'>本列表仅供查询使用，本列表房源在'在资源库-暂不售'内同步显示，转在售请到'暂不售'页面</div>
+        <div style="color:red;font-size:16px;margin:10px 0 10px 10px">本列表仅供查询使用，本列表房源在'在资源库-暂不售'内同步显示，转在售请到'暂不售'页面</div>
       </div>
-
     </template>
 
     <template #tableColumn="cell">
-
       <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"
@@ -111,7 +107,7 @@
 </template>
 <script>
 import listPage from "@/components/listPage";
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -142,22 +138,83 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "houseNo", label: "房源编号" ,width: '170', order: false, disabled: true, default: true },
-        { prop: "communityName", label: "楼盘名称", width: '170', order: false, disabled: true, default: true  },
-        { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true , formart: item => item.price + '万元'},
-        { prop: "inArea", label: "面积(m²)", order: 'custom', disabled: false, default: true , formart: item => item.inArea + 'm²'},
-        { prop: "unitpaice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true , format: item => item.unitpaice + '元/㎡'},
-        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
-        { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true },
-        { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
-        { prop: "tradeCompany", label: "成交公司",disabled: false, default: true  },
-        { prop: "agenName", label: "跟单人",disabled: false, default: true  }
+        {
+          prop: "houseNo",
+          label: "房源编号",
+          width: "170",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "communityName",
+          label: "楼盘名称",
+          width: "170",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "price",
+          label: "成交价(万元)",
+          order: "custom",
+          disabled: false,
+          default: true,
+          formart: item => item.price + "万元"
+        },
+        {
+          prop: "inArea",
+          label: "面积(m²)",
+          order: "custom",
+          disabled: false,
+          default: true,
+          formart: item => item.inArea + "m²"
+        },
+        {
+          prop: "unitpaice",
+          label: "单价(元/m²)",
+          order: "custom",
+          disabled: false,
+          default: true,
+          format: item => item.unitpaice + "元/㎡"
+        },
+        {
+          prop: "",
+          label: "户型",
+          width: "150",
+          order: false,
+          disabled: false,
+          default: true,
+          formart: item =>
+            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+        },
+        {
+          prop: "seenNum",
+          label: "被看次数",
+          order: "custom",
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "tradeTime",
+          label: "成交时间",
+          order: "custom",
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "tradeCompany",
+          label: "成交公司",
+          disabled: false,
+          default: true
+        },
+        { prop: "agenName", label: "跟单人", disabled: false, default: true }
       ],
       tableData: []
     };
   },
   mounted () {
-    this.queryOurComDeal(1, 'id', 'ascending');
+    this.queryOurComDeal(1, "id", "ascending");
   },
   methods: {
     sortMethod (e) {
@@ -176,10 +233,9 @@ export default {
       });
     },
     queryDatalist () {
-      this.queryOurComDeal(1, 'id', 'ascending');
+      this.queryOurComDeal(1, "id", "ascending");
     },
     remoteInput () {
-
       if (this.data.comId == 0) {
         this.remoteMethod();
       }
@@ -187,12 +243,11 @@ export default {
     remoteMethod (query) {
       var that = this;
       if (query !== "") {
-        
         that.loading = true;
 
         that.$api
           .get({
-            url: "/mateHouse/queryCommunity",
+            url: "/community/otherComDeal",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             qs: true,
@@ -228,8 +283,8 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-            that.data.cbId = '';
-            that.data.bhId = '';
+            that.data.cbId = "";
+            that.data.bhId = "";
             that.cbIdList = e.data.data.list;
           }
         });
@@ -249,21 +304,22 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-
-            that.data.bhId = '';
+            that.data.bhId = "";
             that.roomNoList = e.data.data.list;
           }
         });
     },
     Remove () {
+      let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
       this.queryOurComDeal(1, 'id', 'ascending');
 
     },
     queryOurComDeal (currentPage, column, type) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage-1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (that.data.comId != null && that.data.comId.length > 0) {
         params.comId = that.data.comId;
       }
@@ -295,13 +351,13 @@ export default {
       if (that.data.maxPrice != null && that.data.maxPrice.length > 0) {
         params.maxPrice = that.data.maxPrice;
       }
-      if (column == '' || type == null || type == undefined) {
-        params.sortColumn = 'id';
+      if (column == "" || type == null || type == undefined) {
+        params.sortColumn = "id";
       } else {
         params.sortColumn = column;
       }
-      if (type == '' || type == null || type == undefined) {
-        params.sortType = 'ascending';
+      if (type == "" || type == null || type == undefined) {
+        params.sortType = "ascending";
       } else {
         params.sortType = type;
       }
@@ -340,16 +396,16 @@ export default {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryOurComDeal(1, 'id', 'ascending');
+      this.queryOurComDeal(1, "id", "ascending");
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryOurComDeal(val, 'id', 'ascending');
+      this.queryOurComDeal(val, "id", "ascending");
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryOurComDeal(1, 'id', 'ascending');
+      this.queryOurComDeal(1, "id", "ascending");
     }
   }
 };

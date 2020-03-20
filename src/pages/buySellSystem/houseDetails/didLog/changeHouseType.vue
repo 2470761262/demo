@@ -119,7 +119,7 @@ export default {
             Eid: that.houseId.id,
             Type: 8,
             NewSaleTag: that.pop.model,
-            followMemo: result.title
+            followMemo: result[0].title
           };
           if (that.pop.model == 4) {
             params.dealCompany = this.type0.val0;
