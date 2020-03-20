@@ -126,14 +126,14 @@ export default {
         { prop: 'communityName', label: '小区名称', order: false, width: '150', disabled: true, default: true },
         { prop: 'buildingName', label: '楼栋号', width: '90', order: false, disabled: true, default: true },
         { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true },
-        { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true, formart: item => this.notNull(item.inArea, 'm²') },
         { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
         { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
+        { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true, formart: item => this.notNull(item.outfollow, '') },
+        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true, formart: item => this.notNull(item.noSeenDay, '') },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: true },
         { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => houseType(item.rooms, item.hall, rooms.toilet) },
         { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
         { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
         { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },
@@ -148,6 +148,30 @@ export default {
     this.querySoleHouse(1, 'id', 'ascending');
   },
   methods: {
+    notNull (item, memo) {
+      if (item != null && item != '' && item != undefined) {
+        return item.substring(0, item.indexOf(".") + 3) + memo;
+      } else {
+        return '——' + memo;
+      }
+    },
+    houseType (rooms, hall, toilet) {
+      if (rooms != null && rooms != '' && rooms != undefined) {
+        romms = rooms + '室';
+      } else {
+        rooms = '0' + '室'
+      }
+      if (hall != null && hall != '' && hall != undefined) {
+        hall = hall + '厅';
+      } else {
+        hall = '0' + '厅'
+      }
+      if (toilet != null && toilet != '' && toilet != undefined) {
+        toilet = toilet + '厅';
+      } else {
+        toilet = '0' + '厅'
+      }
+    },
     sortMethod (e) {
       console.log(e, "eeee排序");
       this.querySoleHouse(1, e.prop, e.order);
