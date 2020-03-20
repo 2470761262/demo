@@ -36,8 +36,13 @@
     <div class="page-button-group">
       <!-- 发布外网 -->
       <div class="button-set">
-        <el-button @click="openPopUp('releasePopFlag')">
+        <el-button @click="certificateType"
+                   v-if="resultData.isReleaseOutside!=1&&(resultData.AgentPer==perId||isShowButton.releaseOutsideHouse)">
           <i class="el-icon-s-promotion el-icon--left"></i>发布外网
+        </el-button>
+        <el-button v-if="resultData.isReleaseOutside==1&&(resultData.AgentPer==perId||isShowButton.cancelOutsideHouse)"
+                   @click="cancelOutsideHouse">
+          <i class="el-icon-s-promotion el-icon--left"></i>取消发布
         </el-button>
       </div>
       <!-- 成交对赌 -->
@@ -48,20 +53,22 @@
       </div>
       <!-- 转房源状态 -->
       <div class="button-set">
-        <el-button @click="openPopUp('typeFlag')">
+        <el-button @click="changePopUp">
           <i class="el-icon-s-promotion el-icon--left"></i>转房源状态
         </el-button>
       </div>
       <!-- 取消作业方 -->
       <div class="button-set">
-        <el-button @click="openPopUp('cencelTaskFlag')">
+        <el-button @click="openPopUp('cencelTaskFlag')"
+                   v-if="isShowButton.cancelMethod">
           <i class="el-icon-s-promotion el-icon--left"></i>取消作业方
         </el-button>
       </div>
       <!-- 锁定房源 -->
       <div class="button-set">
-        <el-button>
-          <i class="el-icon-s-promotion el-icon--left"></i>锁定房源
+        <el-button v-if="isShowButton.locking"
+                   @click="houseLock">
+          <i class="el-icon-s-promotion el-icon--left"></i>{{resultData.isLocking==1 ?"解锁房源":"锁定房源"}}
         </el-button>
       </div>
       <!-- 修改钥匙存放门店 -->
@@ -100,7 +107,7 @@
 </template>
 
 <script>
-//举报弹出层
+//发布外网弹出层
 import releasePop from '../didLog/releasePop';
 //成交对赌
 import betPop from '../didLog/betPop';
@@ -108,12 +115,28 @@ import betPop from '../didLog/betPop';
 import changeHouseType from '../didLog/changeHouseType';
 //取消作业方
 import cancelTask from '../didLog/cancelTask';
+import util from "@/util/util";
+//发布外网
+import release from "../common/releaseHouse.js"
+//房源审核
+import houseCheck from "../common/houseCheck";
+import but from "@/evenBus/but.js";
 export default {
+  inject: ["houseDetails", "houseId", "load"],
   components: {
     releasePop,
     betPop,
     changeHouseType,
     cancelTask
+  },
+  computed: {
+    resultData () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        return this.houseDetails.data
+      } else {
+        return {};
+      }
+    }
   },
   data () {
     return {
@@ -121,9 +144,124 @@ export default {
       betPopFlag: false,
       typeFlag: false,
       cencelTaskFlag: false,
+      isShowButton: {
+        locking: false,
+        releaseOutsideHouse: false,
+        cancelOutsideHouse: false,
+        cancelMethod: false,
+        deleteFollow: false,
+        updateKeyStorageDept: false,
+        telFollow: false
+      },//是否显示按钮
+      perId: "",//登录人id
+    }
+  },
+  mounted () {
+    this.getAgentRules();
+    if (util.localStorageGet("logindata")) {
+      this.perId = util.localStorageGet("logindata").accountId;
     }
   },
   methods: {
+    //锁定或解锁房源
+    houseLock () {
+      let that = this;
+      let isLocking = this.resultData.isLocking == 1 ? 0 : 1;
+      if (this.resultData.isLocking == undefined) {
+        this.$message("操作失败");
+        return;
+      }
+      let params = {
+        Eid: this.houseId.id,
+        Islocking: isLocking
+      };
+      this.$api
+        .post({
+          url: "/agentHouse/property/locking",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.$message(result.message);
+          if (result.code == 200) {
+            that.resultData.isLocking = isLocking;
+          }
+        })
+        .catch(e => {
+
+        });
+    },
+    //获取按钮权限
+    getAgentRules () {
+      let that = this;
+      this.$api.get({
+        url: '/sys/rule/function/list',
+        data: {
+        },
+        token: false
+      }).then((e) => {
+        e.data.data.functionRuleList.forEach(element => {
+          if (that.isShowButton.hasOwnProperty(element.rUrl)) {
+            that.isShowButton[element.rUrl] = true;
+            if (element.rUrl == 'deleteFollow') {
+              but.$emit("deleteFollow");
+            }
+            if (element.rUrl == "telFollow") {
+              but.$emit("telFollow");
+            }
+          }
+        })
+      }).catch((e) => {
+      })
+    },
+    async  cancelOutsideHouse () {
+      let params = {
+        HouseNo: this.resultData.HouseNo
+      }
+      let reslut = await release.cancelOutsideHouse(params);
+      if (reslut) {
+        this.resultData.isReleaseOutside = 0;
+        this.$message("操作成功");
+      }
+      else {
+        this.$message("操作失败");
+      }
+    },
+    //是否展示产权证号弹窗
+    async certificateType () {
+      if (parseInt(this.resultData.certificateType) != 1) {
+        this.releasePopFlag = true;
+      }
+      else {
+        let params = {
+          houseId: this.houseId.id,
+          houseType: 0
+        }
+        this.load.loadingMessage = "正在发布";
+        this.load.loading = true;
+        let reslut = await release.releaseOutsideHouse(params);
+        this.load.loading = false;
+        if (reslut) {
+          this.resultData.isReleaseOutside = 1;
+          this.$message("操作成功");
+        }
+        else {
+          this.$message("操作失败");
+        }
+      }
+    },
+    //是否显示转状态弹窗
+    async  changePopUp () {
+      let reslut = await houseCheck.isChecking(8, 0, this.houseId.id);
+      if (reslut) {
+        this.$message("当前正在审核");
+      }
+      else {
+        this.typeFlag = true;
+      }
+    },
     openPopUp (PopName) {
       this[PopName] = true;
     },

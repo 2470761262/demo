@@ -125,36 +125,15 @@
     <section class="page-content-heard">
       <!-- 房源信息 -->
       <section class="heard-message">
-        <h3 class="heard-message-title overText">89平琴瑟金装 中搞成 3房2厅 车位零售16万</h3>
-        <div class="heard-message-position overText"><i class="el-icon-map-location icon"></i> 新罗区-夏新博士管</div>
+        <h3 class="heard-message-title overText">{{resultData.Title | emptyRead}}</h3>
+        <div class="heard-message-position overText"><i class="el-icon-map-location icon"></i> {{resultData.areaName | emptyRead }}-{{resultData.CommunityName |emptyRead}}</div>
         <div class="heard-scroll-tag">
-          <div class="tag-content">
-            <span>装修漂亮</span>
-            <i class="el-icon-close icon"></i>
-          </div>
-          <div class="tag-content">
-            <span>较适合年轻人居住</span>
-            <i class="el-icon-close icon"></i>
-          </div>
-          <div class="tag-content">
-            <span>较适合年轻人居住</span>
-            <i class="el-icon-close icon"></i>
-          </div>
-          <div class="tag-content">
-            <span>无心</span>
-            <i class="el-icon-close icon"></i>
-          </div>
-          <div class="tag-content">
-            <span>流行</span>
-            <i class="el-icon-close icon"></i>
-          </div>
-          <div class="tag-content">
-            <span>流行</span>
-            <i class="el-icon-close icon"></i>
-          </div>
-          <div class="tag-content">
-            <span>流行</span>
-            <i class="el-icon-close icon"></i>
+          <div class="tag-content"
+               v-for="(item,index) in  impressionList "
+               :key="index">
+            <span>{{item.impression}}</span>
+            <i class="el-icon-close icon"
+               @click="deleteImpression(item.id,index)"></i>
           </div>
         </div>
       </section>
@@ -171,26 +150,28 @@
         <span>写跟进</span>
       </section>
       <!-- 已关注 -->
-      <section class="heard-item">
+      <section class="heard-item"
+               @click="changCollectHouse">
         <i class="el-icon-sunny icon"></i>
-        <span>已关注</span>
+        <span>{{isCollect? '已关注':'关注'}}</span>
       </section>
       <!-- 举报 -->
       <section class="heard-item"
-               @click="openPopUp('reportFlag')">
+               @click="openReport">
         <i class="el-icon-sunny icon"></i>
         <span>举报</span>
       </section>
       <!-- 二维码 -->
       <article class="heard-item">
         <div class="qr-content">
-          <img class="qr-img"
+          <!-- <img class="qr-img"
                src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-               alt="">
+               alt=""> -->
+          <div id="qrcode"></div>
           <div class="qr-code-msg">
             <h3 class="qr-title">房源编号:</h3>
-            <div class="qr-NO">X+CS2008GFSDFDF</div>
-            <div class="qr-tips">微信扫一扫,立即分享房源</div>
+            <div class="qr-NO">{{resultData.HouseNo}}</div>
+            <div class="qr-tips">{{resultData.shareQRCode ?'微信扫一扫,立即分享房源':'请先完善信息后，才可以扫码分享房源'}} </div>
           </div>
         </div>
       </article>
@@ -203,6 +184,11 @@
             v-if="reportFlag"
             typeClass="error"
             title="!举报"></report>
+    <attention :visible.sync="attentionFlag"
+               v-if="attentionFlag"
+               width="450px"
+               titleDirection="center"
+               title="关注房源变动通知"></attention>
   </section>
 </template>
 <script>
@@ -210,40 +196,207 @@
 import followUp from '../didLog/followUp';
 //举报弹出层
 import report from '../didLog/report';
+//关注弹出层
+import attention from '../didLog/attention';
+//二维码
+import QRCode from "qrcodejs2";
+//房源审核
+import houseCheck from "../common/houseCheck";
 export default {
+  inject: ["houseDetails", "houseId"],
   components: {
     followUp,
-    report
+    report,
+    attention
+  },
+  created () {
+    this.getImpressionList();
+    this.getisCollect();
+  },
+  mounted () {
+    let that = this;
+    this.qrData = new QRCode("qrcode", {
+      width: 65,
+      height: 65,
+      text: that.resultData.shareQRCode,
+      colorDark: "#000",
+      colorLight: "#fff"
+    })
+  },
+  computed: {
+    resultData () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        return this.houseDetails.data
+      } else {
+        return {};
+      }
+    }
   },
   data () {
     return {
       followUpFlag: false, //跟进开关
       reportFlag: false, //举报开关
-      vvsd: ''
+      impressionList: [],//印象数组
+      isCollect: false,
+      attentionFlag: false //关注开关
     }
   },
   methods: {
+    //关注或者取消关注
+    changCollectHouse () {
+      let that = this;
+      let ajaxurl = "";
+      let params = {
+        houseId: that.houseId.id
+      };
+      if (that.isCollect) {
+        ajaxurl = "/agentHouse/collect/cancelCollectHouse";
+      } else {
+        ajaxurl = "/agentHouse/collect/collectHouse";
+      }
+      this.$api
+        .post({
+          url: ajaxurl,
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.isCollect = !that.isCollect;
+            if (ajaxurl == "/agentHouse/collect/collectHouse") {
+              this.attentionFlag = true;
+            }
+          } else {
+            that.$message(result.message);
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
+    //获取是否关注标记
+    getisCollect () {
+      let that = this;
+      this.$api
+        .get({
+          url: "/agentHouse/collect/isCollectHouse",
+          data: {
+            houseId: that.houseId.id
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.isCollect = result.data;
+          }
+        })
+        .catch(e => { });
+    },
+    //删除印象
+    deleteImpression (impressionId, index) {
+      let that = this;
+      let params = {
+        impressionId: impressionId
+      };
+      this.$api
+        .post({
+          url: "/agentHouse/impression/deleteImpression",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+        })
+        .then(e => {
+          that.$message(e.data.message);
+          if (e.data.code == 200) {
+            that.impressionList.splice(index, 1);
+          }
+        });
+    },
+    //添加印象
+    insertImpression (impression) {
+      let that = this;
+      let params = {
+        houseId: this.houseId.id,
+        impression: impression
+      };
+      this.$api
+        .post({
+          url: "/agentHouse/impression/insertImpression",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+        })
+        .then(e => {
+          that.$message(e.data.message);
+          if (e.data.code == 200) {
+            that.getImpressionList();
+          }
+
+        }).catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
+    //获取印象数组
+    getImpressionList () {
+      let that = this;
+      let params = {
+        houseId: this.houseId.id
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/impression/getImpressionList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.impressionList = result.data;
+          }
+
+        });
+    },
+    //打开举报弹窗
+    async  openReport () {
+      let isChecking = await houseCheck.isChecking(11, 0, this.houseId.id);
+      if (isChecking) {
+        this.$message("该房源已被举报，当前正在审核中");
+      }
+      else {
+        this.reportFlag = true;
+      }
+    },
     openPopUp (PopName) {
       this[PopName] = true;
     },
     nodePop () {
+      let that = this;
       this.$prompt(null, '房源印象显示在房源左上角,仅自己可见', {
         confirmButtonText: '添加',
         cancelButtonText: '取消',
         inputPlaceholder: '推荐5个字以内',
         lockScroll: false,
         inputValidator: (e) => {
-          if (e && e.length > 10)
-            return '精简点.'
+          if (!e || e.length > 10)
+            return '不能是空, 或者不能大于10个字';
+          if (!e || /(.+)\1{2,}/.test(e)) {
+            return '不能连续输入重复的字符';
+          }
+
         },
         beforeClose (action, instance, done) {
           if (action === 'confirm') {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = '执行中...';
+            that.insertImpression(instance.inputValue)
             setTimeout(() => {
               done();
               instance.confirmButtonLoading = false;
-            }, 3000);
+            }, 500);
           } else {
             done();
           }

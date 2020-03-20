@@ -378,7 +378,7 @@ export default {
         { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
         { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true },
         { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'notLookNum', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
+        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: true },
         { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
         { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
@@ -493,11 +493,11 @@ export default {
       }
       //面积
       if (this.Slider.areaSlider[1] != 20) {
-        this.dynamicTags.push({ title: `面积:${value.minInArea}-${value.maxInArea}万`, field: "area", arr: false })
+        this.dynamicTags.push({ title: `面积:${value.minInArea}-${value.maxInArea}㎡`, field: "area", arr: false })
       }
       //楼层
       if (this.Slider.flootSlider[1] != -2) {
-        this.dynamicTags.push({ title: `面积:${value.minFloor}-${value.maxFloor}层`, field: "floot", arr: false })
+        this.dynamicTags.push({ title: `楼层:${value.minFloor}-${value.maxFloor}层`, field: "floot", arr: false })
       }
 
       //房源类型

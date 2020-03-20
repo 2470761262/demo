@@ -27,9 +27,9 @@
 </style>
 <template>
   <div class="page-content"
-       v-loading="loading"
+       v-loading="load.loading"
        element-loading-custom-class="loadingTop"
-       element-loading-text="来了,老弟~">
+       :element-loading-text="load.loadingMessage">
     <house-details-head></house-details-head>
     <section class="page-house-cell">
       <!-- 轮播图 -->
@@ -54,7 +54,6 @@
   </div>
 </template>
 <script>
-import { HOUSEBELONGLIST } from "@/util/constMap";
 import util from "@/util/util";
 import getMenuRid from '@/minxi/getMenuRid';
 import houseDetailsHead from './components/houseDetailsHead';
@@ -68,8 +67,9 @@ import houseTask from './components/houseTask';
 export default {
   provide () {
     return {
-      id: this.forID,
-      houseDetails: this.houseDetails
+      houseId: this.forID,
+      houseDetails: this.houseDetails,
+      load: this.load
     }
   },
   mixins: [getMenuRid],
@@ -85,11 +85,15 @@ export default {
   },
   data () {
     return {
-      loading: true,
+
       forID: {
         id: null
       },
-      houseDetails: {}
+      houseDetails: {},
+      load: {
+        loading: true,
+        loadingMessage: "来了,老弟~",
+      }
     };
   },
   created () {
@@ -105,7 +109,7 @@ export default {
   methods: {
     getHouseDetails () {
       let that = this;
-      this.loading = true;
+      this.load.loading = true;
       this.$api
         .post({
           url: "/agent_house//getHouseDetail",
@@ -147,7 +151,7 @@ export default {
             that.$message(e.response.data.message);
           }
         }).finally(() => {
-          this.loading = false;
+          this.load.loading = false;
         });
     }
   },

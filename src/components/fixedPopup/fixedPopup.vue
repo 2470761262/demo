@@ -6,6 +6,9 @@
   right: 0;
   bottom: 0;
   z-index: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   .didLog-content-mask {
     position: absolute;
     height: 100%;
@@ -13,12 +16,8 @@
     background-color: rgba(129, 148, 148, 0.3);
   }
   .didLog-content-body {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-
+    position: relative;
+    z-index: 200;
     &.info {
       background: rgba(105, 154, 132, 0.5);
     }
@@ -30,15 +29,21 @@
       background: #fff;
       padding: 15px;
       .didLog-content-box-title {
-        display: flex;
-        justify-content: space-between;
+        // display: flex;
+        // justify-content: space-between;
+        position: relative;
         h3 {
           font-size: 20px;
           font-weight: 500;
+          text-align: center;
         }
         .el-icon-close {
           font-size: 20px;
           cursor: pointer;
+          position: absolute;
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
         }
       }
     }
@@ -56,7 +61,7 @@
            :style="{'width':width}">
         <div class="didLog-content-box">
           <div class="didLog-content-box-title">
-            <h3>{{title}}</h3>
+            <h3 :style="{'text-align':titleDirection}">{{title}}</h3>
             <i class="el-icon-close"
                @click="close"></i>
           </div>
@@ -78,6 +83,10 @@ export default {
     title: {
       type: String,
       default: '提示'
+    },
+    titleDirection: {
+      type: String,
+      default: 'left'
     },
     width: {
       type: String,

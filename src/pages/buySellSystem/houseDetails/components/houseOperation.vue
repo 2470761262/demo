@@ -33,11 +33,11 @@
     .list-content-item {
       padding-left: 40px;
       position: relative;
-      &:last-child {
-        .pad-line {
-          display: none;
-        }
-      }
+      //   &:last-child {
+      //     .pad-line {
+      //       display: none;
+      //     }
+      //   }
       &:after {
         content: "";
         height: 100%;
@@ -164,9 +164,11 @@
 </style>
 <template>
   <div class="operation-content">
-    <el-tabs type="border-card">
+    <el-tabs type="border-card"
+             @tab-click="changeTabsEvent"
+             v-model="changeTabsValue">
       <el-tab-pane label="跟进记录"
-                   name="0">
+                   name="follow">
         <div class="list-content"
              infinite-scroll-immediate="false"
              v-infinite-scroll="load">
@@ -177,35 +179,97 @@
                       title=""></followUp>
           </div>
           <transition-group name="el">
-            <template v-for="item in count">
-              <!-- <div class="list-content-item">
+            <template v-for="item in follow.list">
+              <div :key="item.id">
+                <div class="list-content-item"
+                     v-if="!item.isTellFollow">
                   <div class="content-item-head ">
-                    <div class="content-item-time">2020-02-14&nbsp;&nbsp;&nbsp;&nbsp;11:04:21</div>
+                    <div class="content-item-time">{{item.FollowTime}}</div>
+                    <button class="content-item-but"
+                            v-if="deleteFollow"
+                            @click="deleteFollowById(item.id)">删除</button>
+                  </div>
+                  <div class="content-item-body">
+                    <div class="item-body-text">{{item.followPerName | emptyRead}}({{item.followPerDepartmentName | emptyRead}}),{{item.Memo}}</div>
+                  </div>
+                </div>
+                <div class="list-content-item"
+                     v-if="item.isTellFollow">
+                  <div class="content-item-head ">
+                    <div class="content-item-time">{{item.FollowTime}}</div>
                     <button class="content-item-but">删除</button>
                   </div>
                   <div class="content-item-body">
-                    <div class="item-body-text">吴寿坤(紫金二店),房源稳定在售,价格不变</div>
+                    <playAudio :url="item.Memo"></playAudio>
+                    <div class="pad-line"></div>
                   </div>
-                </div> -->
-              <div class="list-content-item"
-                   :key="item">
-                <div class="content-item-head ">
-                  <div class="content-item-time">2020-02-15&nbsp;&nbsp;&nbsp;&nbsp;11:04:21</div>
-                  <button class="content-item-but">删除</button>
-                </div>
-                <div class="content-item-body">
-                  <playAudio url="http://imgtest.0be.cn/FileUpload/SaleHouseDescAudio2020/2/20/4856d245d71542c1b0d2405bfe40f55b.mp3"></playAudio>
-                  <div class="pad-line"></div>
                 </div>
               </div>
             </template>
           </transition-group>
+          <template v-if="follow.loading">
+            <i class="el-icon-loading"></i> 加载中...
+          </template>
+          <template v-if="follow.loadPageEnd || follow.list.length==0">
+            暂无数据~
+          </template>
         </div>
       </el-tab-pane>
       <el-tab-pane label="被看详情"
-                   name="1"></el-tab-pane>
+                   name="pair">
+        <div class="list-content"
+             infinite-scroll-immediate="false"
+             v-infinite-scroll="load">
+          <transition-group name="el">
+            <template v-for="item in pair.list">
+              <div :key="item.id">
+                <div class="list-content-item">
+                  <div class="content-item-head ">
+                    <div class="content-item-time">{{item.FollowTime}}</div>
+                  </div>
+                  <div class="content-item-body">
+                    <div class="item-body-text">{{item.lookPerName | emptyRead}}({{item.lookPerNameDepartmentName | emptyRead}}),{{item.Memo}}</div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </transition-group>
+          <template v-if="pair.loading">
+            <i class="el-icon-loading"></i> 加载中...
+          </template>
+          <template v-if="pair.loadPageEnd || pair.list.length==0">
+            暂无数据~
+          </template>
+        </div>
+      </el-tab-pane>
       <el-tab-pane label="电话修改记录"
-                   name="2"></el-tab-pane>
+                   name="tel"
+                   v-if="telFollow">
+        <div class="list-content"
+             infinite-scroll-immediate="false"
+             v-infinite-scroll="load">
+          <transition-group name="el">
+            <template v-for="item in tel.list">
+              <div :key="item">
+                <div class="list-content-item">
+                  <div class="content-item-head ">
+                    <div class="content-item-time">{{item.FollowTime}}</div>
+                  </div>
+                  <div class="content-item-body">
+                    <div class="item-body-text">{{item.followName | emptyRead}}({{item.followDepartment | emptyRead}}),{{item.Memo}}</div>
+                  </div>
+                </div>
+              </div>
+            </template>
+          </transition-group>
+          <template v-if="tel.loading">
+            <i class="el-icon-loading"></i> 加载中...
+          </template>
+          <template v-if="tel.loadPageEnd || tel.list.length==0">
+            暂无数据~
+          </template>
+        </div>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -214,20 +278,201 @@
 //写跟进弹出层 
 import followUp from '../didLog/followUp';
 import playAudio from '@/components/audio';
+import but from "@/evenBus/but.js";
 export default {
+  inject: ["houseId"],
   components: {
     playAudio,
     followUp
   },
   data () {
     return {
-      count: 8,
-      followUpFlag: true
+      follow: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+        loading: false,
+        loadPageEnd: false
+      },
+      pair: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+        loading: false,
+        loadPageEnd: false
+      },
+      tel: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+        loading: false,
+        loadPageEnd: false
+      },
+      followUpFlag: true,
+      changeTabsValue: 'follow',
+      deleteFollow: false,
+      telFollow: false,
     }
   },
+  created () {
+    this.getList();
+    but.$on('followReolad', () => {
+      Object.assign(this.$data.follow, this.$options.data().follow);
+      this.getHouseFollow();
+    });
+    but.$on("deleteFollow", () => {
+      this.deleteFollow = true;
+    });
+    but.$on("telFollow", () => {
+      this.telFollow = true;
+    });
+  },
+  destroyed () {
+    but.$off('followReolad');
+    but.$off('deleteFollow');
+    but.$off('telFollow');
+  },
   methods: {
+    changeTabsEvent (e) {
+      if (this[this.changeTabsValue].list.length > 0) {
+        return;
+      }
+      this.getList();
+    },
+    //获取列表数据
+    getList () {
+      switch (this.changeTabsValue) {
+        case "follow":
+          this.getHouseFollow();
+          break;
+        case "pair":
+          this.getHousePairFollowList();
+          break;
+        case "tel":
+          this.getTelFollowList();
+          break
+      }
+    },
+    //获取跟进列表
+    getHouseFollow () {
+      let that = this;
+      let params = {
+        page: that.follow.page,
+        limit: 7,
+        houseId: that.houseId.id
+      };
+      this.follow.loading = true;
+      this.$api
+        .get({
+          url: "/agentHouse/follow/getHouseFollowList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            result.data.list.forEach(item => {
+              if (item.FollowType.includes("电话")) {
+                item.Memo = item.Memo.replace("voice:", "");
+                item.isTellFollow = true;
+              } else {
+                item.isTellFollow = false;
+              }
+            });
+            that.follow.list = [...that.follow.list, ...result.data.list];
+            that.follow.totalPage = result.data.totalPage;
+          }
+        })
+        .catch(() => {
+
+        }).finally(() => {
+          this.follow.loading = false;
+        });
+    },
+    //删除跟进
+    deleteFollowById (followId) {
+      let that = this;
+      let params = { followId: followId, houseId: that.houseId.id };
+      this.$api
+        .post({
+          url: "/agentHouse/follow/deleteFollow",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.follow.page = 1;
+            that.follow.list = [];
+            that.getHouseFollow();
+          }
+          else {
+            that.$message(e.data.message)
+          }
+        }).catch(e => {
+        });
+    },
+    //获取被看列表
+    getHousePairFollowList () {
+      let that = this;
+      let params = {
+        page: that.pair.page,
+        limit: 7,
+        houseId: that.houseId.id
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/pairFollow/getHousePairFollowList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.pair.list = [...that.pair.list, ...result.data.list];
+            that.pair.totalPage = result.data.totalPage;
+          }
+        })
+        .catch(() => { }).finally(() => {
+          this.pair.loading = false;
+        });
+    },
+    //获取电话修改记录列表
+    getTelFollowList () {
+      let that = this;
+      let params = {
+        page: that.tel.page,
+        limit: 7,
+        houseId: that.houseId.id
+      };
+      this.$api
+        .get({
+          url: "/agentHouse/telUpdate/getTelFollowList",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.tel.list = [...that.tel.list, ...result.data.list];
+            that.tel.totalPage = result.data.totalPage;
+          }
+        })
+        .catch(() => { }).finally(() => {
+          this.tel.loading = false;
+        });
+    },
+    //滚动分页
     load () {
-      this.count += 3;
+      if (this[this.changeTabsValue].page < this[this.changeTabsValue].totalPage) {
+        ++this[this.changeTabsValue].page;
+        this.getList();
+      } else {
+        this[[this.changeTabsValue]].loadPageEnd = true;
+      }
     }
   },
 }

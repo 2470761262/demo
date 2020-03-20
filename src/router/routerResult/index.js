@@ -585,6 +585,13 @@ export default [
             import(/* webpackChunkName: "editCompanyDetail" */ "@/pages/systemAdministration/organization/editCompanyDetail.vue")
     },
     {
+        //系统管理 公司管理-设置网站
+        path: "/sys/setCompanyWebsite",
+        name: "setCompanyWebsite",
+        component: () =>
+            import(/* webpackChunkName: "setCompanyWebsite" */ "@/pages/systemAdministration/organization/setCompanyWebsite.vue")
+    },
+    {
         //系统管理 部门管理
         path: "/sys/deptManageList",
         name: "deptManageList",

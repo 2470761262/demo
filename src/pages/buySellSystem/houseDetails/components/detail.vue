@@ -75,6 +75,7 @@
         color: #606060;
       }
       .cell-tabs-nav {
+        align-self: center;
         color: #0e834e;
         font-size: 18px;
         margin-left: 15px;
@@ -168,40 +169,45 @@
     <div class="content-flex content-pad">
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.houseType | emptyRead}}</div>
-        <div class="cell-tiem-floot">开发中</div>
+        <div class="cell-tiem-floot">{{resultData.Floor| emptyRead('层')}}/{{resultData.FloorNum | emptyRead('层','共')}}</div>
       </div>
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.Face | emptyRead}}</div>
-        <div class="cell-tiem-floot">开发中</div>
+        <div class="cell-tiem-floot">{{resultData.FamilyStructure  | familyStructureFiletr('ROOMTYPE') }}/{{resultData.Decoration}}</div>
       </div>
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.InArea | emptyRead('平米')}}</div>
-        <div class="cell-tiem-floot">开发中</div>
+        <div class="cell-tiem-floot">{{resultData.BuildingTime | emptyRead('年建')}}</div>
       </div>
     </div>
     <div class="cell-tabs-content">
-      <div class="flex-row">
+      <div class="flex-row"
+           v-if="resultData.agentHouseMethod">
         <div class="cell-tabs">
           <div class="cell-tabs-title">看房方式</div>
-          <div class="cell-tabs-detail">开发中...</div>
+          <div class="cell-tabs-detail">{{resultData.agentHouseMethod.keyOwnerName | lookHouseModeFiletr}}</div>
         </div>
         <div class="cell-tabs">
           <div class="cell-tabs-title">存放门店</div>
-          <div class="cell-tabs-detail">开发中...</div>
+          <div class="cell-tabs-detail">{{resultData.agentHouseMethod.keyStorageDeptName | keyStorageFilter(resultData.agentHouseMethod.keyOwnerName) | emptyRead }}</div>
         </div>
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">小区名称</div>
-        <div class="cell-tabs-detail">开发中...</div>
-        <div class="cell-tabs-nav">楼栋号</div>
+        <div class="cell-tabs-detail">{{resultData.CommunityName}}</div>
+        <div class="cell-tabs-nav"
+             v-if="isShowBuilding">{{resultData.BuildingName | emptyRead}}-{{resultData.RoomNo | emptyRead}}</div>
+        <div class="cell-tabs-nav"
+             v-if="!isShowBuilding"
+             @click="getShowBuliding">楼栋号</div>
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">被看次数</div>
-        <div class="cell-tabs-detail">开发中...</div>
+        <div class="cell-tabs-detail">{{resultData.seenNum | emptyRead('次')}}</div>
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">未跟进天数</div>
-        <div class="cell-tabs-detail">开发中...</div>
+        <div class="cell-tabs-detail">{{resultData.outfollow |emptyRead('天')}}</div>
       </div>
     </div>
     <div class="cell-pro">
@@ -234,8 +240,9 @@
 </template>
 
 <script>
+import util from '@/util/util';
 export default {
-  inject: ["houseDetails"],
+  inject: ["houseDetails", "houseId"],
   computed: {
     resultData () {
       if (Object.keys(this.houseDetails).length > 0) {
@@ -243,7 +250,52 @@ export default {
       } else {
         return {};
       }
+    },
+  },
+  data () {
+    return {
+      isShowBuilding: false,
     }
   },
+  mounted () {
+  },
+  methods: {
+    getShowBuliding () {
+      let that = this;
+      this.$api
+        .get({
+          url: "/agent_house/isShowBuilding",
+          data: {
+            houseId: that.houseId.id
+          },
+          headers: {
+            "Content-Type": "application/json;charset=UTF-8"
+          },
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.isShowBuilding = true;
+          }
+          else {
+            that.isShowBuilding = false;
+            that.$message(e.data.message);
+          }
+        })
+        .catch(e => {
+        });
+    }
+  },
+  filters: {
+    familyStructureFiletr (value, listName) {
+      return util.countMapFilter(value, listName);
+    },
+    lookHouseModeFiletr (value) {
+      return value != null ? '有钥匙' : '无钥匙'
+    },
+    keyStorageFilter (value, keyOwnerName) {
+
+      return keyOwnerName == null ? '暂无' : value
+    }
+  }
 }
 </script>

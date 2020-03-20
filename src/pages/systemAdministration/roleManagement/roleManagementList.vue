@@ -93,7 +93,7 @@ export default {
     }
   },
   mounted () {
-    let companyId = JSON.parse(this.$route.query.id);
+    let companyId = this.$route.query.id;
     this.companyId = companyId;
     this.sidebarFlag = true;
     this.queryRoleDatas(1);
