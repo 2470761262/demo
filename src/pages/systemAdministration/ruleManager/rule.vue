@@ -402,6 +402,9 @@ export default {
       this.ruleObj = data;
       this.$forceUpdate();
       console.log(data, node, obj, "selected...");
+      if(this.showTable){
+        this.selectRuleUrlConfig();
+      }
     },
     //更新功能点
     updateRule() {
@@ -518,12 +521,11 @@ export default {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            console.log(result.message);
-            console.log(result.data);
+            console.log(result);
             this.$message.info("保存成功");
-            this.node.childNodes = [];
             this.showTable = false;
-            this.loadNode(this.node, this.resolve);
+            //this.node.childNodes = [];
+            //this.loadNode(this.node, this.resolve);
           } else {
             console.log("保存失败：" + result.message);
             this.$message.error("保存失败：" + result.message);

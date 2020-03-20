@@ -14,6 +14,17 @@
   float: left;
 }
 
+/deep/.is-current{
+  .el-tree-node__content{
+    .custom-tree-node{
+      span{
+        .el-button:last-child{
+          color: #ff1300;
+        }
+      }
+    }
+  }
+}
 .personSelect {
   float: left;
 }
@@ -24,7 +35,7 @@
 }
 
 .selected_btn{
-  color: red;
+  color: #ffa6a4;
   cursor: pointer;
 }
 
@@ -240,9 +251,9 @@ export default {
         let arrayGather = gather.split(",");
         this.companyGather = arrayGather;
       } else {
-        this.companyGather = new Array();
-        this.node.childNodes = [];
-        this.loadCompanyTreeNode(this.node, this.resolve);
+        this.$refs.companyTree.setCheckedKeys([]);
+        //this.node.childNodes = [];
+        //this.loadCompanyTreeNode(this.node, this.resolve);
       }
       console.log(this.companyGather,"--------------------------------------->");
     },

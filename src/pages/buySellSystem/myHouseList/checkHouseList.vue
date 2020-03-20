@@ -605,6 +605,7 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
+      this.querylist(1, 'id', 'ascending')
     },
     queryCBId () {
       var that = this
