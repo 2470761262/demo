@@ -78,8 +78,7 @@
       <div class="page-inline budingMarinSet"
            style="width:480px">
 
-        <el-item label="楼盘名称"
-                 prop="comId">
+        
           <el-select v-model="comId"
                      @focus="remoteInput"
                      @change="queryCBId()"
@@ -95,10 +94,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </el-item>
-        <el-item label="栋座"
-                 prop="cbId"
-                 class="page-label-center">
+      
           <el-select v-model="cbId"
                      filterable
                      clearable
@@ -110,11 +106,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </el-item>
-        <el-item label="房间号"
-                 prop="roomNo"
-                 clearable
-                 class="page-label-center">
+    
           <el-select v-model="roomNo"
                      filterable
                      placeholder="请选择房间号">
@@ -124,7 +116,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-        </el-item>
+      
         <span>
           房源状态
         </span>
@@ -310,18 +302,18 @@ export default {
         { value: '3', label: "房源编号3" },
       ],
       tableDataColumn: [
-        { prop: 'HouseNo', label: "房源编号", width: '110px', order: false, disabled: false, default: true },
-        { prop: 'CommunityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
-        { prop: 'price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.Price + '万元' },
-        { prop: 'inArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.InArea + 'm²' },
+        { prop: 'houseNo', label: "房源编号", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'communityName', label: "楼盘名称", width: '110px', order: false, disabled: false, default: true },
+        { prop: 'price', label: "售价(万元)", width: '120px', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
+        { prop: 'inArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
         { prop: 'unitpaice', label: "均价(元/平)", width: '130px', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
         { prop: 'decoration', label: "装修程度", width: '110px', order: false, disabled: false, default: true },
         { prop: 'seenNum', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
         { prop: 'outfollow', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
         { prop: 'noSeenDay', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
-        { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
-        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.Rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: 'brokerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
+        { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
       ],
       tableColumn: [],
       tableData: {},
@@ -359,7 +351,7 @@ export default {
   methods: {
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryVerifyHouseDatas(1, 'id', 'ascending');
+      this.queryVerifyHouseDatas(1, e.prop, e.order);
     },
     tabColumnChange (e) {
       let that = this;
@@ -422,11 +414,11 @@ export default {
         });
       });
     },
-    deleteConcern (id) {
+    deleteConcern (comId) {
       this.$api.post({
-        url: '/concern_community/concernOFF/' + id,
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false
+        url: '/concern_community/concernOFF',
+          qs: true,
+        data:{comId:comId}
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
@@ -473,7 +465,7 @@ export default {
       })
     },
     queryVerifyHouseDatas (currentPage, column, type) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
+      let params = { limit: this.pageJson.pageSize , page: currentPage-1};
       let that = this;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
@@ -501,24 +493,29 @@ export default {
         if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
         if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
       }
+       if (column == '' || type == null || type == undefined) {
+        params.sortColumn = 'id';
+      } else {
+        params.sortColumn = column;
+      }
+      if (type == '' || type == null || type == undefined) {
+        params.sortType = 'descending';
+      } else {
+        params.sortType = type;
+      }
       this.$api.post({
-        url: '/concern_community/list',
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        url: '/myHouse/getMyKernelHouse',
         data: params,
-        token: false
+       qs: true
       }).then((e) => {
         console.log(e.data);
-        let result = e.data;
         that.loading = false;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          that.pageJson.total = result.data.totalCount;
-          that.pageJson.currentPage = result.data.currPage;
-          that.tableData = result.data.list;
+        if (e.data.code == 200) {
+          that.pageJson.total = e.data.data.dataCount;
+          that.tableData = e.data.data.data;
         } else {
-          console.log("查询我的核心盘列表结果：" + result.message);
-          alert(result.message);
+          console.log("查询我的核心盘列表结果：" + e.data.message);
+          alert(e.data.message);
         }
       }).catch((e) => {
         console.log("查询我的核心盘失败");
@@ -527,22 +524,21 @@ export default {
     },
     queryConcernCount () {
       this.$api.post({
-        url: '/concern_community/CommunityCount',
-        token: false
+        url: '/myHouse/getCommunityNum',
+         qs: true
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
         if (result.code == 200) {
           console.log(result.message);
           console.log("统计结果" + result.data);
-          var array = result.data;
-          this.array = array;
+          this.array = result.data.data;
           var countConcern = 0;
           var countEffectiveNum = 0;
           var countAll = 0;
-          for (var j = 0; j < array.length; j++) {
-            countConcern = countConcern + parseInt(array[j].countConcernCommunity);
-            countEffectiveNum = countEffectiveNum + parseInt(array[j].effectiveNum);
+          for (var j = 0; j < this.array.length; j++) {
+            countConcern = countConcern + parseInt(this.array[j].countConcernCommunity);
+            countEffectiveNum = countEffectiveNum + parseInt(this.array[j].effectiveNum);
             countAll++;
           }
           this.countConcern = countConcern;
@@ -563,12 +559,10 @@ export default {
       })
     },
     queryNotConcernCommunityList () {
-      var communityName = this.queryData.selectCommunity;
-      // if(communityName!=null&&communityName!=''&&communityName!='undefined'){
-      this.hasClassA
       this.$api.post({
-        url: '/concern_community/notConcernCommunityList?CommunityName=' + communityName,
-        token: false
+        url: '/concern_community/notConcernCommunityList',
+        data:{CommunityName:''},
+        qs: true
       }).then((e) => {
         console.log(e.data);
         let result = e.data;
