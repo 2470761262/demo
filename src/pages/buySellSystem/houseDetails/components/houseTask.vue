@@ -91,6 +91,10 @@
     }
   }
 }
+.text-middle {
+  text-align: center;
+  padding-bottom: 15px;
+}
 </style>
 <template>
   <div class="task-content"
@@ -188,9 +192,12 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.realOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.realOwnerDepartmentName}}</div>
           </div>
-          <el-button> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button @click="openPop('houseUploadflag',4,'houseUploadType')">
+            <i class="el-icon-sunny icon"></i> <span>取代</span>
+          </el-button>
         </template>
-        <el-button v-else>申请实勘人</el-button>
+        <el-button v-else
+                   @click="openPop('houseUploadflag',12,'houseUploadType')">申请实勘人</el-button>
       </div>
     </div>
     <!--取代 -->
@@ -206,20 +213,31 @@
                 title=""
                 :visible.sync="entrustPopFlag">
     </entrustPop>
-    <!-- <el-dialog :visible.sync="supplementflag">
-      <supplement></supplement> 
-      <houseUploadExtends></houseUploadExtends>
-    </el-dialog> -->
+    <!-- 上传 -->
+    <fixedPopup :visible.sync="houseUploadflag"
+                title=""
+                width="960px">
+      <houseUploadExtends ref="houseUpload"
+                          :replaceType="houseUploadType"></houseUploadExtends>
+      <template v-slot:floot>
+        <div class="text-middle">
+          <el-button size="mini"
+                     @click="submitUpload"
+                     :loading="houseUploadLoading">{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
+        </div>
+      </template>
+    </fixedPopup>
   </div>
 </template>
 
 <script>
-import supplement from '@/pages/buySellSystem/addHouse/components/supplement.vue';
 //取代
 import replacePop from '../didLog/replacePop';
 //委托人
 import entrustPop from '../didLog/entrustPop';
+//上传
 import houseUploadExtends from './houseUploadExtends';
+import houseCheck from '../common/houseCheck';
 export default {
   inject: ["houseDetails", "houseId"],
   computed: {
@@ -232,17 +250,20 @@ export default {
     }
   },
   components: {
-    supplement,
+    houseUploadExtends,
     replacePop,
     entrustPop
   },
   data () {
     return {
-      supplementflag: false,
+      houseUploadLoading: false,
+      houseUploadflag: false,
+      houseUploadType: null,
       keyPopFlag: false,//钥匙弹出开关
       entrustPopFlag: false,//委托人开关
       keyType: null,//钥匙人类型
       entrustType: null,//委托人类型
+      tsttinpit: ''
     }
   },
   methods: {
@@ -254,6 +275,80 @@ export default {
     openPop (popName, type, typeName) {
       this[typeName] = type;
       this[popName] = true;
+    },
+    /**
+     * refs 获取上传组件实例并且验证非空
+     */
+    submitUpload () {
+      let _that = this;
+      let verifyFieldMap = new Map([
+        ['outdoorImgList', '外景图'],
+        ['livingRoomImgList', '客厅'],
+        ['bedroomImgList', '卧室'],
+        ['kitchenImgList', '厨房'],
+        ['toiletImgList', '卫生间'],
+        ['layoutImgList', '户型图'],
+        ['houseVideo', '房源视频']
+      ]);
+      if (this.$validator.fields.length == 0) {
+        verifyFieldMap.forEach((_value, _key) => {
+          this.$validator.attach({
+            name: _key,
+            alias: _value,
+            rules: 'required',
+            getter: function () {
+              if (_that.$refs.houseUpload[_key] instanceof Array) {
+                return _that.$refs.houseUpload[_key];
+              } else {
+                if (Object.keys(_that.$refs.houseUpload[_key]).length == 0) {
+                  return '';
+                } else {
+                  return _that.$refs.houseUpload[_key];
+                }
+              }
+            }
+          });
+        })
+      }
+      this.$validator.validateAll().then((e) => {
+        if (!e) {
+          this.$message.warning(this.errorBags.all()[0]);
+        } else {
+
+          let url = `/agentHouse/propertyCheck/${this.houseUploadType == 12 ? 'insertApplyFor' : 'insertReplace'}`;
+          let resultIdList = [];
+          verifyFieldMap.forEach((_value, _key) => {
+            if (_that.$refs.houseUpload[_key] instanceof Array) {
+              _that.$refs.houseUpload[_key].forEach((item) => {
+                resultIdList.push(item.id);
+              })
+            } else {
+              resultIdList.push(_that.$refs.houseUpload[_key].id);
+            }
+          })
+          console.log(resultIdList);
+          let params = {
+            Eid: this.houseId.id,
+            Type: this.houseUploadType,
+            picList: resultIdList,
+            followMemo: "提交了实勘申请"
+          }
+          if (this.houseUploadType == 4) {
+            params.ReplaceType = 5;
+          }
+          this.houseUploadLoading = true;
+          houseCheck.insertCheck(url, params).then((e) => {
+            if (e.data.code == 200) {
+              this.$message.success(e.data.message);
+            }
+          }).catch((e) => {
+
+          }).finally(() => {
+            this.houseUploadLoading = false;
+            this.houseUploadflag = false;
+          })
+        }
+      })
     }
   },
 }
