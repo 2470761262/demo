@@ -1,5 +1,6 @@
 <script>
-import exploration from '@/pages/buySellSystem/addHouse/components/exploration'
+import exploration from '@/pages/buySellSystem/addHouse/components/exploration';
+import houseCheck from '../common/houseCheck';
 let enumUpload = new Map();
 let houseEnum = [1, 2, 3, 4, 5, 6];//上传类型 => 添加房源
 let detailEnum = [1, 4, 2, 3, 5, 6];// 上传类型 =>房源详情
@@ -49,6 +50,24 @@ export default {
         })
       }).finally(() => {
         this[fileListName + 'Loading'] = false;
+      })
+    },
+    //删除视频
+    deleteVideo (item) {
+      houseCheck.removeImg(item.id, item.url).then((e) => {
+        if (e.data.code == 200) {
+          this.houseVideo = {}
+          this.$message.success(e.data.message);
+        }
+      })
+    },
+    //删除图片
+    deleteImg (id, url, index, listName) {
+      houseCheck.removeImg(id, url).then((e) => {
+        if (e.data.code == 200) {
+          this.$message.success(e.data.message);
+          this[listName].splice(index, 1)
+        }
       })
     }
   }
