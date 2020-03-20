@@ -92,52 +92,43 @@
     </template>
     <template v-slot:top>
       <div class="page-inline budingMarinSet" style="width:480px">
-        <el-item label="楼盘名称" prop="comId">
-          <el-select
-            v-model="comId"
-            @focus="remoteInput"
-            @change="queryCBId()"
-            filterable
-            remote
-            clearable
-            placeholder="请输入楼盘名称搜索"
-            :remote-method="remoteMethod"
-            :loading="loading"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-item>
-        <el-item label="栋座" prop="cbId" class="page-label-center">
-          <el-select
-            v-model="cbId"
-            filterable
-            clearable
-            placeholder="请选择楼栋"
-            @change="queryRoomNo()"
-          >
-            <el-option
-              v-for="item in cbIdList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-item>
-        <el-item label="房间号" prop="roomNo" clearable class="page-label-center">
-          <el-select v-model="roomNo" filterable placeholder="请选择房间号">
-            <el-option
-              v-for="item in roomNoList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-item>
+        <el-select
+          v-model="comId"
+          @focus="remoteInput"
+          @change="queryCBId()"
+          filterable
+          remote
+          clearable
+          placeholder="请输入楼盘名称搜索"
+          :remote-method="remoteMethod"
+          :loading="loading"
+        >
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+
+        <el-select v-model="cbId" filterable clearable placeholder="请选择楼栋" @change="queryRoomNo()">
+          <el-option
+            v-for="item in cbIdList"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+
+        <el-select v-model="roomNo" filterable placeholder="请选择房间号">
+          <el-option
+            v-for="item in roomNoList"
+            :key="item.value"
+            :label="item.name"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+
         <span>房源状态</span>
         <el-select style="width:100px">
           <el-option
@@ -306,7 +297,7 @@ export default {
       ],
       tableDataColumn: [
         {
-          prop: "HouseNo",
+          prop: "houseNo",
           label: "房源编号",
           width: "110px",
           order: false,
@@ -314,7 +305,7 @@ export default {
           default: true
         },
         {
-          prop: "CommunityName",
+          prop: "communityName",
           label: "楼盘名称",
           width: "110px",
           order: false,
@@ -328,7 +319,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          formart: item => item.Price + "万元"
+          formart: item => item.price + "万元"
         },
         {
           prop: "inArea",
@@ -337,7 +328,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          formart: item => item.InArea + "m²"
+          formart: item => item.inArea + "m²"
         },
         {
           prop: "unitpaice",
@@ -382,7 +373,7 @@ export default {
         },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         {
-          prop: "agentPerName",
+          prop: "brokerName",
           label: "跟单人",
           width: "110px",
           order: false,
@@ -397,7 +388,7 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            item.Rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
         }
       ],
       tableColumn: [],
@@ -433,7 +424,7 @@ export default {
   methods: {
     sortMethod(e) {
       console.log(e, "eeee排序");
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1, e.prop, e.order);
     },
     tabColumnChange(e) {
       let that = this;
@@ -497,12 +488,12 @@ export default {
           });
         });
     },
-    deleteConcern(id) {
+    deleteConcern(comId) {
       this.$api
         .post({
-          url: "/concern_community/concernOFF/" + id,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false
+          url: "/concern_community/concernOFF",
+          qs: true,
+          data: { comId: comId }
         })
         .then(e => {
           let result = e.data;
@@ -552,10 +543,7 @@ export default {
         });
     },
     queryVerifyHouseDatas(currentPage, column, type) {
-      let params = {
-        limit: this.pageJson.pageSize + "",
-        page: currentPage + ""
-      };
+      let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
       let that = this;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
@@ -613,26 +601,31 @@ export default {
           params.maxInArea = this.queryData.maxInArea;
         }
       }
+      if (column == "" || type == null || type == undefined) {
+        params.sortColumn = "id";
+      } else {
+        params.sortColumn = column;
+      }
+      if (type == "" || type == null || type == undefined) {
+        params.sortType = "descending";
+      } else {
+        params.sortType = type;
+      }
       this.$api
         .post({
-          url: "/concern_community/list",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          url: "/myHouse/getMyKernelHouse",
           data: params,
-          token: false
+          qs: true
         })
         .then(e => {
           console.log(e.data);
-          let result = e.data;
           that.loading = false;
-          if (result.code == 200) {
-            console.log(result.message);
-            console.log(result.data);
-            that.pageJson.total = result.data.totalCount;
-            that.pageJson.currentPage = result.data.currPage;
-            that.tableData = result.data.list;
+          if (e.data.code == 200) {
+            that.pageJson.total = e.data.data.dataCount;
+            that.tableData = e.data.data.data;
           } else {
-            console.log("查询我的核心盘列表结果：" + result.message);
-            alert(result.message);
+            console.log("查询我的核心盘列表结果：" + e.data.message);
+            alert(e.data.message);
           }
         })
         .catch(e => {
@@ -643,8 +636,8 @@ export default {
     queryConcernCount() {
       this.$api
         .post({
-          url: "/concern_community/CommunityCount",
-          token: false
+          url: "/myHouse/getCommunityNum",
+          qs: true
         })
         .then(e => {
           console.log(e.data);
@@ -652,16 +645,15 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log("统计结果" + result.data);
-            var array = result.data;
-            this.array = array;
+            this.array = result.data.data;
             var countConcern = 0;
             var countEffectiveNum = 0;
             var countAll = 0;
-            for (var j = 0; j < array.length; j++) {
+            for (var j = 0; j < this.array.length; j++) {
               countConcern =
-                countConcern + parseInt(array[j].countConcernCommunity);
+                countConcern + parseInt(this.array[j].countConcernCommunity);
               countEffectiveNum =
-                countEffectiveNum + parseInt(array[j].effectiveNum);
+                countEffectiveNum + parseInt(this.array[j].effectiveNum);
               countAll++;
             }
             this.countConcern = countConcern;
@@ -683,15 +675,11 @@ export default {
         });
     },
     queryNotConcernCommunityList() {
-      var communityName = this.queryData.selectCommunity;
-      // if(communityName!=null&&communityName!=''&&communityName!='undefined'){
-      this.hasClassA;
       this.$api
         .post({
-          url:
-            "/concern_community/notConcernCommunityList?CommunityName=" +
-            communityName,
-          token: false
+          url: "/concern_community/notConcernCommunityList",
+          data: { CommunityName: "" },
+          qs: true
         })
         .then(e => {
           console.log(e.data);
