@@ -500,7 +500,6 @@ export default {
       })
     },
     queryHouseBet (currentPage, column, type) {
-      debugger
       if(!column){
         column="id"
       }
