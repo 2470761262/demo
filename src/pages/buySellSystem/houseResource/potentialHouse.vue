@@ -74,7 +74,7 @@
                    @click="queryPotentialHouseParams">查询</el-button>
         <el-button style="border:0">
           <definitionmenu class="menuMarin"
-                          :renderList="tableDataColumn"
+                          :renderList="tableColumnField"
                           :tableColumn="tableColumn"
                           @change="tabColumnChange"></definitionmenu>
         </el-button>
@@ -119,7 +119,7 @@ import getMenuRid from '@/minxi/getMenuRid';
 import definitionmenu from '@/components/definitionMenu';
 import moreSelect from '@/components/moreSelect';
 export default {
-  mixins: [getMenuRid, houseContrast],
+  mixins: [getMenuRid],
   components: {
     listPage,
     definitionmenu,
@@ -175,8 +175,6 @@ export default {
     sortMethod (e) {
       console.log(e, "eeee排序");
       this.queryPotentialHouse(1, e.prop, e.order);
-    },
-    tabColumnChange (e) {
     },
     queryTabData () {
       console.log(this, '111');
