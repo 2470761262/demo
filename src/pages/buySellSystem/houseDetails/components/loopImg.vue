@@ -5,7 +5,7 @@
   margin-bottom: 8px;
   position: relative;
   &:after {
-    content: "验证通过";
+    content: "验真通过";
     background: #0d824b;
     color: #fff;
     font-size: 16px;

@@ -1,6 +1,7 @@
 
 <template>
-  <list-page :parentData="$data"
+  <list-page @sort-change="sortMethod"
+             :parentData="$data"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
@@ -9,6 +10,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
+        
         <el-select v-model="data.comId"
                    @focus="remoteInput"
                    @change="queryCBId()"
@@ -69,30 +71,29 @@
                    @click="queryPotentialHouseParams">查询</el-button>
       </div>
     </template>
-
-    <template #tableColumn="cell">
-      <template v-for="(item) in cell.tableData">
+    <!-- :formatter="item.format" -->
+    <template #tableColumn>
+      <template v-for="(item) in tableColumnField">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
-                         :key="item.prop">
+                         :key="item.prop"
+                         :formatter="item.formart"
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order">
         </el-table-column>
       </template>
-
-      <el-table-column label="操作"
-                       fixed="right"
+      <el-table-column label="操作"                   
+                       width="230"
                        key="operation">
         <template v-slot="scope">
-
           <el-button type="info"
                      size="mini"
                      @click="toLook(scope.row.id)"
-                     v-if="scope.row.housetype!==1">查看</el-button>
-
-             <el-button type="info"
-                       size="mini"
+                     v-if="scope.row.houseType!==1">查看</el-button>
+          <el-button type="info"
+                     size="mini"
                      @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
-                     
         </template>
 
       </el-table-column>
@@ -103,16 +104,19 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import houseContrast from '@/minxi/houseContrast';
+import definitionmenu from '@/components/definitionMenu';
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, houseContrast],
   components: {
-    listPage
+    listPage,
+    definitionmenu
   },
   data () {
 
     return {
       loading: true,
-      option: [
+       option: [
         {
           value: 'build',
           label: '楼盘数据'
@@ -128,6 +132,7 @@ export default {
         tel: '',
         type: ''
       },
+      moreSelect:'',
       options: [],
       cbIdList: [],
       roomNoList: [],
@@ -136,50 +141,43 @@ export default {
         total: 0, //总记录数
         pageSize: 10 //每页条数
       },
-      tableDataColumn: [
-        { prop: 'CommunityName', label: "小区名称" },
-        { prop: 'buildingName', label: "楼栋号" },
-        { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)" },
-        { prop: 'customers', label: "业主" },
-        { prop: 'tel', label: "业主电话" }
-
+      tableColumnField: [
+        { prop: 'communityName', label: '小区名称', order: false, width: '', disabled: true, default: true },
+        { prop: 'comBuildingName', label: '楼栋号', width: '120', order: false, disabled: true, default: true },
+        { prop: 'roomNo', label: '房间号', width: '170', order: false, disabled: true, default: true },
+        { prop: 'inArea', label: '面积(m²)', width: '170', order: 'custom', disabled: false, default: true, format: item => item.inArea + '㎡'},
+        { prop: 'customers', label: '业主', width: '170', order: 'custom', disabled: false, default: true },
+        { prop: 'tel', label: '业主电话', width: '', order: false, disabled: false, default: true }
       ],
-      tableData: [{
-        // house: '龙腾花园-16栋-604室',
-        // priceArea: '234万/100平',
-        // type: '3室2厅1卫',
-        // levae: '精装修',
-        // economicPro: '周杰伦',
-
-        // validateType: '通过',
-        // cutPro: '周杰伦1',
-        // addTime: '2019-01-01 18:00:00',
-        // cellType: '号码异常',
-        // operation: '3',
-      }],
+      tableColumn: [],
+      tableData: [],
     }
   },
   mounted () {
     this.data.type = 'build';
-    this.queryPotentialHouse(1);
+    this.queryPotentialHouse(1, 'id', 'descending');
   },
   methods: {
+    sortMethod (e) {
+      console.log(e, "eeee排序");
+      this.queryPotentialHouse(1, e.prop, e.order);
+    },
+    tabColumnChange (e) {
+     },
     queryTabData () {
       console.log(this, '111');
     },
+   
     toLook (id) {
-      console.log(id);
       var that = this;
       that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
     },
     toSale (comId, cbId, bhId, communityName, buildingName, roomNo, customers, tel) {
       var that = this
       that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId, 'cbId': cbId, 'bhId': bhId, "communityName": communityName, "buildingName": buildingName, 'roomNo': roomNo, "flag": 'potentia', "customerName": customers, tel: tel } });
-
     },
     queryPotentialHouseParams () {
-      this.queryPotentialHouse(1);
+      this.queryPotentialHouse(1, 'id', 'descending');
     },
     remoteInput () {
 
@@ -187,16 +185,13 @@ export default {
         this.remoteMethod();
       }
     },
-
     remoteMethod (query) {
       var that = this
       if (query !== '') {
         that.loading = true;
 
-        that.$api.get({
+        that.$api.post({
           url: "/mateHouse/queryCommunity",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
           qs: true,
           data: {
             communityName: query,
@@ -258,20 +253,39 @@ export default {
     },
     Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryPotentialHouse(1);
+      this.queryPotentialHouse(1, 'id', 'descending');
 
     },
-    queryPotentialHouse (currentPage) {
+  
+     queryPotentialHouse (currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
-
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.type = that.data.type;
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          }
+          else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          }
+          else {
+            params[key] = this.moreSelect[key]
+          }
+        }
+      }
+      else {
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.roomNo = that.data.roomNo;
+        params.customName = that.data.customName;
+        params.tel = that.data.tel;
+        params.type = that.data.type;
+      }
+      params.sortColumn = column;
+      params.sortType = type;
       console.log(params);
       this.$api.post({
         url: '/houseResource/potentialHouse',
@@ -280,11 +294,9 @@ export default {
       }).then((e) => {
         console.log(e.data);
         that.loading = false;
-        let data = e.data
-        if (data.code == 200) {
-          that.pageJson.total = data.dataCount;
-
-          that.tableData = data.data;
+        if (e.data.code == 200) {
+          that.pageJson.total = e.data.data.dataCount;
+          that.tableData = e.data.data.data;
         } else {
           console.log("查询潜在出售列表结果：" + result.message);
           alert(result.message);
@@ -294,32 +306,24 @@ export default {
         console.log(e);
       })
     },
-    isForBut (type) {
-      let array = [
-        { name: '查看', isType: '3', methosName: '' }
-      ]
-      return array.filter((item) => {
-        return item.isType.includes(type)
-      })
-    },
+
     handleClick () {
 
     },
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.querySaleNotTracking(2);
       this.queryPotentialHouseParams(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryPotentialHouse(val);
+      this.queryPotentialHouse(val, 'id', 'descending');
     },
     handleSizeChange (val) {
-      console.log(`每1页 ${val} 条`);
+      console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryPotentialHouse(1);
+      this.queryPotentialHouse(1, 'id', 'descending');
     }
   },
 }
-</script>  
+</script>
