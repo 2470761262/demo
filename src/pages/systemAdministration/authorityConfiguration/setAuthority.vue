@@ -14,6 +14,18 @@
   float: left;
 }
 
+/deep/.is-current{
+  .el-tree-node__content{
+    .custom-tree-node{
+      span{
+        .el-button:last-child{
+          color: #ff1300;
+        }
+      }
+    }
+  }
+}
+
 .personSelect {
   float: left;
 }
@@ -24,7 +36,7 @@
 }
 
 .selected_btn{
-  color: red;
+  color: #ffa6a4;
   cursor: pointer;
 }
 </style>
