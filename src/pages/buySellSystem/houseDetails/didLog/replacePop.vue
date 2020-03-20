@@ -91,8 +91,28 @@
     }
   }
   .replace-qr {
+    position: relative;
     width: 80px;
     height: 80px;
+    .icon {
+      position: absolute;
+      color: black;
+      top: -5px;
+      right: -5px;
+      font-size: 14px;
+      background: black;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      z-index: 10;
+      color: #fff;
+      text-align: center;
+      line-height: 20px;
+      display: none;
+    }
+    &:hover .icon {
+      display: block;
+    }
   }
 }
 .fieldError {
@@ -194,14 +214,17 @@
           </div>
         </div>
         <div class="replace-qr">
-          <el-image :src="fileLoad.url"
+          <el-image :src="fileLoad.url || fileLoad.qrImg"
                     fit="cover"
-                    :preview-src-list="[fileLoad.url]">
+                    :preview-src-list="[fileLoad.url ? fileLoad.url : fileLoad.qrImg]">
             <div slot="placeholder"
                  class="image-slot">
               加载中<span>...</span>
             </div>
           </el-image>
+          <i class="el-icon-close icon"
+             v-if="fileLoad.url"
+             @click="removeImg"></i>
         </div>
       </div>
       <div class="fieldError">{{ errorBags.all()[0] }}</div>
@@ -221,6 +244,7 @@
 import '../less/didLogCss.less';
 import util from '@/util/util';
 import { LOGINDATA } from '@/util/constMap';
+import houseCheck from '../common/houseCheck';
 export default {
   inject: ["houseId"],
   props: {
@@ -254,7 +278,8 @@ export default {
       },
       fileLoad: {//上传文件
         id: null,
-        url: 'http://sys.lsxjy.com.cn/images/androidDownload.png'
+        qrImg: 'http://sys.lsxjy.com.cn/images/androidDownload.png',
+        url: ''
       },
     }
   },
@@ -271,8 +296,47 @@ export default {
     result () {
       this.$validator
         .validateAll().then((e) => {
-          console.log(e);
+          if (e) {
+            let url = `/agentHouse/propertyCheck/${this.replaceType == 0 ? 'insertApplyFor' : 'insertReplace'}`;
+            let params = {
+              Eid: this.houseId.id,
+              Type: this.replaceType,
+              picList: [this.fileLoad.id],
+              keyType: this.pop.model,
+              KeyStorageDept: this.stores.model, // 门店ID
+              followMemo: '提交了钥匙申请'
+            }
+            if (this.replaceType == 4) {
+              params.ReplaceType = 3;
+            }
+            //密码锁密码
+            if (this.pop.model == 2) {
+              params.keyCode = this.password;
+            }
+            this.hidePop();
+            houseCheck.insertCheck(url, params).then((e) => {
+              if (e.data.code == 200) {
+                this.$message.success(e.data.message);
+              }
+            }).catch((e) => {
+              this.$message.error(e.data.message);
+            })
+          }
         })
+    },
+    /**
+     *  删除图片
+     */
+    removeImg () {
+      houseCheck.removeImg(this.fileLoad.id, this.fileLoad.url).then((e) => {
+        if (e.data.code == 200) {
+          this.fileLoad.id = null;
+          this.fileLoad.url = this.fileLoad.qrImg;
+          this.$message.success('删除成功~');
+        }
+      }).catch(() => {
+        this.$message.error('删除失败~');
+      })
     },
     /**
     * 上传文件
@@ -308,7 +372,8 @@ export default {
         })
         .then(json => {
           if (json.data.code == 200) {
-            this.fileLoad = json.data.data;
+            this.fileLoad.id = json.data.data.id;
+            this.fileLoad.url = json.data.data.url;
           }
         })
         .catch(() => {

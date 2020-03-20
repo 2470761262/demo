@@ -291,7 +291,7 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            that.isCollect = true;
+            that.isCollect = result.data;
           }
         })
         .catch(e => { });
