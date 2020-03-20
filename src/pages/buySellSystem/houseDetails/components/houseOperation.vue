@@ -185,7 +185,9 @@
                      v-if="!item.isTellFollow">
                   <div class="content-item-head ">
                     <div class="content-item-time">{{item.FollowTime}}</div>
-                    <button class="content-item-but">删除</button>
+                    <button class="content-item-but"
+                            v-if="deleteFollow"
+                            @click="deleteFollowById(item.id)">删除</button>
                   </div>
                   <div class="content-item-body">
                     <div class="item-body-text">{{item.followPerName | emptyRead}}({{item.followPerDepartmentName | emptyRead}}),{{item.Memo}}</div>
@@ -241,7 +243,8 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="电话修改记录"
-                   name="tel">
+                   name="tel"
+                   v-if="telFollow">
         <div class="list-content"
              infinite-scroll-immediate="false"
              v-infinite-scroll="load">
@@ -306,7 +309,9 @@ export default {
         loadPageEnd: false
       },
       followUpFlag: true,
-      changeTabsValue: 'follow'
+      changeTabsValue: 'follow',
+      deleteFollow: false,
+      telFollow: false,
     }
   },
   created () {
@@ -314,10 +319,18 @@ export default {
     but.$on('followReolad', () => {
       Object.assign(this.$data.follow, this.$options.data().follow);
       this.getHouseFollow();
-    })
+    });
+    but.$on("deleteFollow", () => {
+      this.deleteFollow = true;
+    });
+    but.$on("telFollow", () => {
+      this.telFollow = true;
+    });
   },
   destroyed () {
     but.$off('followReolad');
+    but.$off('deleteFollow');
+    but.$off('telFollow');
   },
   methods: {
     changeTabsEvent (e) {
@@ -375,6 +388,29 @@ export default {
 
         }).finally(() => {
           this.follow.loading = false;
+        });
+    },
+    //删除跟进
+    deleteFollowById (followId) {
+      let that = this;
+      let params = { followId: followId, houseId: that.houseId.id };
+      this.$api
+        .post({
+          url: "/agentHouse/follow/deleteFollow",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.follow.page = 1;
+            that.follow.list = [];
+            that.getHouseFollow();
+          }
+          else {
+            that.$message(e.data.message)
+          }
+        }).catch(e => {
         });
     },
     //获取被看列表

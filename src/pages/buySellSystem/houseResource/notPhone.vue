@@ -11,6 +11,7 @@
       <div class="page-form-inline budingMarinSet">
 
         <el-select v-model="data.comId"
+                   style='width: 175px;'
                    @focus="remoteInput"
                    @change="queryCBId()"
                    filterable
@@ -29,6 +30,7 @@
         <el-select v-model="data.cbId"
                    filterable
                    clearable
+                   style='width: 120px;'
                    placeholder="请选择楼栋"
                    @change="queryRoomNo()">
           <el-option v-for="item in cbIdList"
@@ -40,6 +42,7 @@
 
         <el-select v-model="data.roomNo"
                    filterable
+                   style='width: 120px;'
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
                      :key="item.value"
@@ -64,11 +67,21 @@
                    style="margin-left:10px"
                    size="mini"
                    @click="queryNotPhoneParams">查询</el-button>
+        <el-button style="border:0">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableDataColumn"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </el-button>
+        <el-button style="border:0">
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
       </div>
     </template>
 
-    <template #tableColumn="cell">
-      <template v-for="(item) in cell.tableData">
+    <template #tableColumn="">
+      <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
@@ -103,10 +116,14 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import definitionmenu from '@/components/definitionMenu';
+import moreSelect from '@/components/moreSelect';
 export default {
   mixins: [getMenuRid],
   components: {
-    listPage
+    listPage,
+    definitionmenu,
+    moreSelect
   },
   data () {
 
@@ -126,16 +143,18 @@ export default {
       options: [],
       cbIdList: [],
       roomNoList: [],
+      tableColumn: [],
+      moreSelect: [],
       pageJson: {
         currentPage: 1, //当前页码
         total: 0, //总记录数
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: 'communityName', label: "小区名称", width: '170', order: "custom", disabled: true, default: true },
-        { prop: 'buildingName', label: "楼栋号", width: '170', order: "custom", disabled: true, default: true },
-        { prop: 'roomNo', label: "房间号", width: '170', order: "custom", disabled: true, default: true },
-        { prop: 'inArea', label: "面积(m²)", width: '170', order: "custom", disabled: true, default: true }
+        { prop: 'communityName', label: "小区名称", width: '170', order: "custom", disabled: false, default: true },
+        { prop: 'buildingName', label: "楼栋号", width: '170', order: "custom", disabled: false, default: true },
+        { prop: 'roomNo', label: "房间号", width: '170', order: "custom", disabled: false, default: true },
+        { prop: 'inArea', label: "面积(m²)", width: '170', order: "custom", disabled: false, default: true }
 
 
       ],
@@ -162,6 +181,14 @@ export default {
     queryTabData () {
       console.log(this, '111');
     },
+    tabColumnChange (e) {
+      this.tableColumn = e;
+    },
+    moreSelectChange (e) {
+      if (e != '')
+        this.moreSelect = e;
+      this.queryNotPhone(1, 'id', 'ascending')
+    },
     formatHouseType (row, column) {
       if (row.Rooms != null && row.Rooms != '') {
         return row.Rooms + '室';
@@ -180,7 +207,7 @@ export default {
     },
     Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryNotPhone(1);
+      this.queryNotPhone(1, 'id', 'ascending')
 
     },
     addPhone (id, esId) {
@@ -309,16 +336,32 @@ export default {
       var that = this;
       that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
-
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.beginTime = that.data.timeSelect[0];
-      params.endTime = that.data.timeSelect[1];
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.minInArea = that.data.minInArea;
-      params.maxInArea = that.data.maxInArea;
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          }
+          else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          }
+          else {
+            params[key] = this.moreSelect[key]
+          }
+        }
+      }
+      else {
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.roomNo = that.data.roomNo;
+        params.beginTime = that.data.timeSelect[0];
+        params.endTime = that.data.timeSelect[1];
+        params.customName = that.data.customName;
+        params.tel = that.data.tel;
+        params.minInArea = that.data.minInArea;
+        params.maxInArea = that.data.maxInArea;
+      }
       console.log(params);
       this.$api.get({
         url: '/houseResource/getNotPhone',
@@ -355,16 +398,16 @@ export default {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryNotPhoneParams(1);
+      this.queryNotPhone(1, 'id', 'ascending')
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryNotPhone(val);
+      this.queryNotPhone(1, 'id', 'ascending')
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryNotPhone(1);
+      this.queryNotPhone(1, 'id', 'ascending')
     }
   },
 }

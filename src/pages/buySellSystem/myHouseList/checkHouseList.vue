@@ -98,6 +98,11 @@
                        style="margin-left:30px"
                        size="mini"
                        @click="querylistByParams">查询</el-button>
+            <el-button style="margin-left:30px;width:150px;height:30px;border:0"
+                       size="mini">
+              <moreSelect @moreSelectChange="moreSelectChange"
+                          style="height:40px;margin-right:5px;"></moreSelect>
+            </el-button>
           </div>
 
         </div>
@@ -296,11 +301,13 @@
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 import util from "@/util/util";
+import moreSelect from '@/components/moreSelect';
 export default {
   mixins: [getMenuRid],
 
   components: {
-    listPage
+    listPage,
+    moreSelect
   },
   data () {
     return {
@@ -310,6 +317,7 @@ export default {
       cbIdList: '',
       roomNoList: '',
       comList: '',
+      moreSelect: [],
       dialogVisible: false,
       value: '',
       input: '',
@@ -475,6 +483,11 @@ export default {
     this.querylist(1);
   },
   methods: {
+    moreSelectChange (e) {
+      if (e != '')
+        this.moreSelect = e;
+      this.querylist(1, 'id', 'ascending')
+    },
     changeFile (e, index) {
       let typeList = this.accessoryMoldList[index].list;
       let activeIndex = typeList[e].activeIndex;
@@ -661,14 +674,31 @@ export default {
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
       let that = this;
-      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-      if (this.queryData.cbId != null && this.queryData.cbId != '') { params.cbId = this.queryData.cbId; }
-      if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomNo = this.queryData.roomNo; }
-      if (this.status != null && this.status != '') { params.status = this.status; }
-      if (this.type != null && this.type != '') { params.type = this.type; }
-      if (this.value != null && this.value != '') { params.value = this.value; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          }
+          else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          }
+          else {
+            params[key] = this.moreSelect[key]
+          }
+        }
+      }
+      else {
+        if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
+        if (this.queryData.cbId != null && this.queryData.cbId != '') { params.cbId = this.queryData.cbId; }
+        if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomNo = this.queryData.roomNo; }
+        if (this.status != null && this.status != '') { params.status = this.status; }
+        if (this.type != null && this.type != '') { params.type = this.type; }
+        if (this.value != null && this.value != '') { params.value = this.value; }
+        if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
+        if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
+      }
       this.$api.post({
         url: '/agentHouse/propertyCheck/myHousePropertyCheckList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },

@@ -96,10 +96,7 @@
 </template>
 <script>
 import listPage from '@/components/listPage';
-import getMenuRid from '@/minxi/getMenuRid';
-import but from '@/evenBus/but'
 export default {
-  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -328,6 +325,12 @@ export default {
     handleClick () {
 
     },
+     created() {
+      this.configId=this.$route.query.configId;
+
+    console.log(this.configId);
+
+  },
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;

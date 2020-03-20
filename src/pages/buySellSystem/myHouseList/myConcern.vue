@@ -324,8 +324,8 @@ export default {
         { prop: 'InArea', label: "面积(m²)", width: '110px', order: 'custom', disabled: false, default: true, formart: item => item.InArea + 'm²' },
         { prop: 'unitpaice', label: "单价(元/平)", width: '130px', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
         { prop: 'seenNum', label: "被看次数", width: '110px', order: 'custom', disabled: false, default: true },//自己补充
-        { prop: '', label: "未被带看天数", width: '130px', order: 'custom', disabled: false, default: true },//自己补充
-        { prop: '', label: "未跟进天数", width: '130px', order: 'custom', disabled: false, default: true },//自己补充
+        { prop: 'notLookNum', label: "未被带看天数", width: '130px', order: 'custom', disabled: false, default: true },//自己补充
+        { prop: 'outfollow', label: "未跟进天数", width: '130px', order: 'custom', disabled: false, default: true },//自己补充
         { prop: 'agentPerName', label: "跟单人", width: '110px', order: false, disabled: false, default: true },
         { prop: '', label: "户型", width: '110px', order: false, disabled: false, default: true, formart: item => item.Rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
       ],

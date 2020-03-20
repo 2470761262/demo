@@ -181,14 +181,15 @@
       </div>
     </div>
     <div class="cell-tabs-content">
-      <div class="flex-row">
+      <div class="flex-row"
+           v-if="resultData.agentHouseMethod">
         <div class="cell-tabs">
           <div class="cell-tabs-title">看房方式</div>
-          <div class="cell-tabs-detail">开发中...</div>
+          <div class="cell-tabs-detail">{{resultData.agentHouseMethod.keyOwnerName | lookHouseModeFiletr}}</div>
         </div>
         <div class="cell-tabs">
           <div class="cell-tabs-title">存放门店</div>
-          <div class="cell-tabs-detail">开发中...</div>
+          <div class="cell-tabs-detail">{{resultData.agentHouseMethod.keyStorageDeptName | keyStorageFilter(resultData.agentHouseMethod.keyOwnerName) | emptyRead }}</div>
         </div>
       </div>
       <div class="cell-tabs">
@@ -253,8 +254,10 @@ export default {
   },
   data () {
     return {
-      isShowBuilding: false
+      isShowBuilding: false,
     }
+  },
+  mounted () {
   },
   methods: {
     getShowBuliding () {
@@ -285,6 +288,13 @@ export default {
   filters: {
     familyStructureFiletr (value, listName) {
       return util.countMapFilter(value, listName);
+    },
+    lookHouseModeFiletr (value) {
+      return value != null ? '有钥匙' : '无钥匙'
+    },
+    keyStorageFilter (value, keyOwnerName) {
+
+      return keyOwnerName == null ? '暂无' : value
     }
   }
 }

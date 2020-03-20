@@ -69,24 +69,27 @@
                        :value="item.value"></el-option>
           </el-select>
         </template>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+              @click="remove">
+          清除
+        </span>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="querySaleNotTrackParams">查询</el-button>
+
         <el-button style="margin-left:30px;width:150px;height:30px;border:0"
                    size="mini">
           <moreSelect @moreSelectChange="moreSelectChange"
                       style="height:40px;margin-right:5px;"></moreSelect>
         </el-button>
-
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="querySaleNotTrackParams">查询</el-button>
-        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-              @click="remove">
-          清除
-        </span>
-        <definitionmenu class="menuMarin"
-                        :renderList="tableColumnField"
-                        :tableColumn="tableColumn"
-                        @change="tabColumnChange"></definitionmenu>
+        <el-button style="margin-left:30px;width:150px;height:30px;border:0"
+                   size="mini">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </el-button>
       </div>
     </template>
     <!-- :formatter="item.format" -->
@@ -171,10 +174,10 @@ export default {
         { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
         { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true },
         { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'notLookNum', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
+        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: false },
         { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
         { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
         { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
         { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },
