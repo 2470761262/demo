@@ -146,10 +146,10 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.keyOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.keyOwnerDepartmentName}}</div>
           </div>
-          <el-button @click="openPop('replacePopFlag',4)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button @click="openPop('keyPopFlag',4,'keyType')"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
         </template>
         <el-button v-else
-                   @click="openPop('replacePopFlag',0)"><span>申请钥匙人</span> </el-button>
+                   @click="openPop('keyPopFlag',0,'keyType')"><span>申请钥匙人</span> </el-button>
       </div>
       <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
            data-detail="委托人">
@@ -166,9 +166,10 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
           </div>
-          <el-button> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button @click="openPop('entrustPopFlag',4,'entrustType')"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
         </template>
-        <el-button v-else><span>申请委托人</span> </el-button>
+        <el-button v-else
+                   @click="openPop('entrustPopFlag',1,'entrustType')"><span>申请委托人</span> </el-button>
       </div>
     </div>
     <div class="task-pro-flex seat">
@@ -193,11 +194,18 @@
       </div>
     </div>
     <!--取代 -->
-    <replacePop :replaceType="replaceType"
-                :visible.sync="replacePopFlag"
-                v-if="replacePopFlag"
+    <replacePop :replaceType="keyType"
+                :visible.sync="keyPopFlag"
+                v-if="keyPopFlag"
                 width="620px"
                 title=""></replacePop>
+    <!-- 委托人 -->
+    <entrustPop :replaceType="entrustType"
+                v-if="entrustPopFlag"
+                width="640px"
+                title=""
+                :visible.sync="entrustPopFlag">
+    </entrustPop>
     <!-- <el-dialog :visible.sync="supplementflag">
       <supplement></supplement> 
       <houseUploadExtends></houseUploadExtends>
@@ -209,6 +217,8 @@
 import supplement from '@/pages/buySellSystem/addHouse/components/supplement.vue';
 //取代
 import replacePop from '../didLog/replacePop';
+//委托人
+import entrustPop from '../didLog/entrustPop';
 import houseUploadExtends from './houseUploadExtends';
 export default {
   inject: ["houseDetails", "houseId"],
@@ -223,13 +233,16 @@ export default {
   },
   components: {
     supplement,
-    replacePop
+    replacePop,
+    entrustPop
   },
   data () {
     return {
       supplementflag: false,
-      replacePopFlag: false,//取代弹出开关
-      replaceType: null//取代人类型
+      keyPopFlag: false,//钥匙弹出开关
+      entrustPopFlag: false,//委托人开关
+      keyType: null,//钥匙人类型
+      entrustType: null,//委托人类型
     }
   },
   methods: {
@@ -238,8 +251,8 @@ export default {
      * @param {String} popName 弹出层的Flag名字 
      * @param {number} type 打开类型
      */
-    openPop (popName, type) {
-      this.replaceType = type;
+    openPop (popName, type, typeName) {
+      this[typeName] = type;
       this[popName] = true;
     }
   },
