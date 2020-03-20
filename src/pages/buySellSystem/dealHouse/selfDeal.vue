@@ -62,7 +62,7 @@
                   clearable />万
         <el-input placeholder="最小面积"
                   v-model="data.minArea"
-                  style="margin-left:30px;width:120px"
+                  style="margin-left:30px;width:120px;margin-top:10px"
                   clearable />------
         <el-input placeholder="最大面积"
                   v-model="data.maxArea"
