@@ -37,6 +37,7 @@
                  show-checkbox
                  node-key="id"
                  ref="tree"
+                 check-strictly
                  highlight-current
                  :props="defaultProps">
           <span class="custom-tree-node"

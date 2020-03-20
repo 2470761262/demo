@@ -198,9 +198,6 @@
                        label="对赌结果"
                        :formatter="formatHouseBetStatus">
       </el-table-column>
-      <el-table-column prop="status"
-                       label="对赌结果"
-                       :formatter="formatHouseBetStatus"></el-table-column>
       <el-table-column prop="brokerName"
                        label="对赌人"></el-table-column>
       <el-table-column prop="endTime"
@@ -324,7 +321,6 @@ export default {
   },
   methods: {
     moreSelectChange (e) {
-      debugger;
       if (e != "") this.moreSelect = e;
       this.queryHouseBet(1, "id", "ascending");
     },

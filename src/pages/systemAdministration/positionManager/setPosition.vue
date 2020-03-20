@@ -53,6 +53,7 @@
                  show-checkbox
                  node-key="id"
                  ref="tree"
+                 check-strictly
                  :check-on-click-node=false
                  highlight-current
                  :expand-on-click-node=false

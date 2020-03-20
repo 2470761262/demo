@@ -162,7 +162,8 @@ export default {
           this.$alert('', '删除成功', {
             dangerouslyUseHTMLString: false
           });
-          this.$router.go(-1);
+          this.queryRoleByParams();
+          //this.$router.go(-1);
         }
       }).catch((e) => {
         console.log("删除失败");
