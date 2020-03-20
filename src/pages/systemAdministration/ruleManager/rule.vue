@@ -355,7 +355,7 @@ export default {
         }
       }
       console.log(e, data, "check..");
-      //读取公司或部门下面的员工
+      //读取公司或部门下面的用户
       this.$api
         .post({
           url: "/sys/account/employees/" + e.type + "/" + e.businessId,
@@ -369,14 +369,14 @@ export default {
             console.log(result.data);
             this.employeeList = result.data;
           } else {
-            console.log("获取员工失败：" + result.message);
-            this.$message.error("获取员工失败：" + result.message);
+            console.log("获取用户失败：" + result.message);
+            this.$message.error("获取用户失败：" + result.message);
           }
         })
         .catch(e => {
-          console.log("获取员工异常");
+          console.log("获取用户异常");
           console.log(e);
-          this.$message.error("获取员工异常" + e);
+          this.$message.error("获取用户异常" + e);
         });
       console.log(this.$refs.tree2.getNode(44), "getNode");
     },
