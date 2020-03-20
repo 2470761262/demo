@@ -1,7 +1,7 @@
 <script>
 import followUp from './followUp.vue';
 export default {
-  inject: ["houseId"],
+  inject: ["houseId", "houseDetails"],
   extends: followUp,
   data () {
     return {
@@ -16,19 +16,28 @@ export default {
       }
     }
   },
+  computed: {
+    resultData () {
+      if (Object.keys(this.houseDetails).length > 0) {
+        return this.houseDetails.data
+      } else {
+        return {};
+      }
+    }
+  },
   methods: {
     result () {
       let that = this;
-      if (this.cancelMemo == undefined) {
+      let params = {
+        Eid: this.houseId.id,
+        cancelType: this.pop.model,
+        cancelMemo: this.pop.textarea
+      };
+      if (this.pop.textarea.length == 0) {
         this.$message("取消原因未填");
         return;
       }
-      let params = {
-        Eid: this.houseId,
-        cancelType: this.cancelMethodType,
-        cancelMemo: this.cancelMemo
-      };
-      that.isShowCancelMethod = false;
+      this.$emit('update:visible', false)
       this.$api
         .post({
           url: "/agentHouse/property/cancelMethod",
@@ -40,8 +49,17 @@ export default {
           let result = e.data;
           that.$message(result.message);
           if (result.code == 200) {
-            that.getHouseDetails();
-            that.cancelMemo = "";
+            switch (that.pop.model) {
+              case 0:
+                this.resultData.agentHouseMethod.onlyOwnerName = null;
+                break;
+              case 1:
+                this.resultData.agentHouseMethod.keyOwnerName;
+                break;
+              case 2:
+                this.resultData.agentHouseMethod.realOwnerName;
+                break;
+            }
           }
         })
         .catch(e => {
