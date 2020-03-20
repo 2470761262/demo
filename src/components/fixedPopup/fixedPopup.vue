@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 500;
+  z-index: 1950;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,11 +27,11 @@
     padding: 10px;
     .didLog-content-box {
       background: #fff;
-      padding: 15px;
+      overflow: hidden;
+      padding-top: 15px;
       .didLog-content-box-title {
-        // display: flex;
-        // justify-content: space-between;
         position: relative;
+        margin: 0px 15px;
         h3 {
           font-size: 20px;
           font-weight: 500;
@@ -42,8 +42,27 @@
           cursor: pointer;
           position: absolute;
           right: 0;
-          top: 50%;
-          transform: translateY(-50%);
+          top: 0;
+        }
+      }
+      .didLog-content-sroll {
+        max-height: 85vh;
+        max-width: 85vw;
+        overflow: auto;
+        padding: 15px;
+        box-sizing: border-box;
+        &::-webkit-scrollbar {
+          width: 8px;
+          height: 8px;
+        }
+        &::-webkit-scrollbar-button,
+        &::-webkit-scrollbar-track,
+        &::-webkit-scrollbar-track-piece {
+          display: none;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: #c9c9c9;
+          border-radius: 50px;
         }
       }
     }
@@ -65,8 +84,11 @@
             <i class="el-icon-close"
                @click="close"></i>
           </div>
-          <slot>
-          </slot>
+          <div class="didLog-content-sroll">
+            <slot>
+            </slot>
+          </div>
+          <slot name="floot"></slot>
         </div>
       </div>
     </div>
