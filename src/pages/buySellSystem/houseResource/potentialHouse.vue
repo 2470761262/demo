@@ -2,6 +2,7 @@
 <template>
   <list-page :parentData="$data"
              @queryTabData="queryTabData"
+             @sort-change="sortMethod"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
@@ -12,6 +13,7 @@
         <el-select v-model="data.comId"
                    @focus="remoteInput"
                    @change="queryCBId()"
+                   style="width;175px"
                    filterable
                    remote
                    clearable
@@ -28,6 +30,7 @@
         <el-select v-model="data.cbId"
                    filterable
                    clearable
+                   style="width:120px"
                    placeholder="请选择楼栋"
                    @change="queryRoomNo()">
           <el-option v-for="item in cbIdList"
@@ -39,6 +42,7 @@
 
         <el-select v-model="data.roomNo"
                    filterable
+                   style="width:140px"
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
                      :key="item.value"
@@ -48,6 +52,7 @@
         </el-select>
 
         <el-select v-model="data.type"
+                   style="width:150px"
                    placeholder="请选择"
                    clearable>
           <el-option v-for="item in option"
@@ -56,9 +61,9 @@
                      :value="item.value">
           </el-option>
         </el-select>
-        <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable />
+        <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:170px" clearable />
          
-        <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
+        <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:170px" clearable />
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
               @click="Remove">
           清除
@@ -67,14 +72,26 @@
                    style="margin-left:10px"
                    size="mini"
                    @click="queryPotentialHouseParams">查询</el-button>
+        <el-button style="border:0">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableDataColumn"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </el-button>
+        <el-button style="border:0">
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
       </div>
     </template>
 
-    <template #tableColumn="cell">
-      <template v-for="(item) in cell.tableData">
+    <template #tableColumn="">
+      <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
+                         :sortable="item.order"
+                         :sort-orders="['ascending', 'descending']"
                          :key="item.prop">
         </el-table-column>
       </template>
@@ -89,10 +106,10 @@
                      @click="toLook(scope.row.id)"
                      v-if="scope.row.housetype!==1">查看</el-button>
 
-             <el-button type="info"
-                       size="mini"
+          <el-button type="info"
+                     size="mini"
                      @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
-                     
+
         </template>
 
       </el-table-column>
@@ -103,10 +120,14 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
+import definitionmenu from '@/components/definitionMenu';
+import moreSelect from '@/components/moreSelect';
 export default {
   mixins: [getMenuRid],
   components: {
-    listPage
+    listPage,
+    definitionmenu,
+    moreSelect
   },
   data () {
 
@@ -130,6 +151,7 @@ export default {
       },
       options: [],
       cbIdList: [],
+      tableColumn: [],
       roomNoList: [],
       pageJson: {
         currentPage: 1, //当前页码
@@ -137,12 +159,12 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: 'CommunityName', label: "小区名称" },
-        { prop: 'buildingName', label: "楼栋号" },
-        { prop: 'roomNo', label: "房间号" },
-        { prop: 'inArea', label: "面积(m²)" },
-        { prop: 'customers', label: "业主" },
-        { prop: 'tel', label: "业主电话" }
+        { prop: 'CommunityName', label: "小区名称", width: '170', order: "custom", disabled: false, default: true },
+        { prop: 'buildingName', label: "楼栋号", width: '170', order: "custom", disabled: false, default: true },
+        { prop: 'roomNo', label: "房间号", width: '170', order: "custom", disabled: false, default: true },
+        { prop: 'inArea', label: "面积(m²)", width: '170', order: "custom", disabled: false, default: true },
+        { prop: 'customers', label: "业主", width: '170', order: "custom", disabled: false, default: true },
+        { prop: 'tel', label: "业主电话", width: '170', order: "custom", disabled: false, default: true }
 
       ],
       tableData: [{
@@ -167,6 +189,18 @@ export default {
   methods: {
     queryTabData () {
       console.log(this, '111');
+    },
+    sortMethod (e) {
+      console.log(e.prop, e.order);
+      this.queryPotentialHouse(1, e.prop, e.order);
+    },
+    tabColumnChange (e) {
+      this.tableColumn = e;
+    },
+    moreSelectChange (e) {
+      if (e != '')
+        this.moreSelect = e;
+      this.queryPotentialHouse(1, 'id', 'ascending')
     },
     toLook (id) {
       console.log(id);
@@ -265,13 +299,29 @@ export default {
       var that = this;
       that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
-
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.type = that.data.type;
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          }
+          else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          }
+          else {
+            params[key] = this.moreSelect[key]
+          }
+        }
+      }
+      else {
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.roomNo = that.data.roomNo;
+        params.customName = that.data.customName;
+        params.tel = that.data.tel;
+        params.type = that.data.type;
+      }
       console.log(params);
       this.$api.post({
         url: '/houseResource/potentialHouse',

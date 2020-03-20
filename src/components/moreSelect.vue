@@ -100,7 +100,7 @@ span {
                              :value="item.value"></el-option>
                 </el-select>
                 <span>房号</span>
-                <el-select v-model="more.roomNo"
+                <el-select v-model="more.bhId"
                            style="width:30%"
                            filterable
                            placeholder="请选择房间号">
@@ -155,11 +155,11 @@ span {
             <div class='line'>
               <div class='selectType'>
                 <span>产权年限</span>
-                <el-select v-model="more.property"
+                <el-select v-model="more.propertyYear"
                            style="width:70%">
                   <el-option v-for='(item) in PropertyList'
                              :key="item.value"
-                             :label="item.name"
+                             :label="item.label"
                              :value="item.value"></el-option>
                 </el-select>
               </div>
@@ -173,7 +173,7 @@ span {
             <div class="line">
               <div class='selectType'>
                 <span>物理区域</span>
-                <el-select v-model="more.physicalRegion"
+                <el-select v-model="more.area"
                            style="width:70%">
                   <!-- <el-option></el-option> -->
                 </el-select>
@@ -188,7 +188,7 @@ span {
                              :label="item.label"></el-option>
                 </el-select>
                 <span>委托</span>
-                <el-select v-model="more.entrust"
+                <el-select v-model="more.entrustType"
                            style="width:30%">
                   <el-option v-for='(item) in EntrustList'
                              :key="item.value"
@@ -200,7 +200,7 @@ span {
             <div class="line">
               <div class='selectType'>
                 <span>作业类型</span>
-                <el-select v-model="more.task"
+                <el-select v-model="more.taskType"
                            style="width:70%">
                   <el-option v-for='(item) in taskList'
                              :key="item.value"
@@ -222,7 +222,7 @@ span {
             <div class="line"
                  style="display:flex;align-items:center">
               <span>区域</span>
-              <el-select v-model="more.region"
+              <el-select v-model="more.deptParentId"
                          style="width:35%">
                 <!-- <el-option></el-option> -->
               </el-select>
@@ -332,17 +332,17 @@ export default {
       loding: true,
 
       more: {
-        communityName: '',
-        roomNo: '',
-        task: '',
-        entrust: '',
-        property: '',
+        comId: '',
+        bhId: '',
+        taskType: '',
+        entrustType: '',
+        propertyYear: '',
         buildType: '',
         cbId: '',
-        region: '',
+        deptParentId: '',
         store: '',
         personnel: '',
-        physicalRegion: '',
+        area: '',
         minFloor: '',
         maxFloor: '',
         addTime: '',
@@ -415,7 +415,7 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.more.roomNo = '';
+          that.more.bhId = '';
           that.more.cbId = '';
           that.moreCbIdList = e.data.data.list;
         }
@@ -449,7 +449,7 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
-          that.more.roomNo = '';
+          that.more.bhId = '';
           that.moreRoomNoList = e.data.data.list;
         }
       })
