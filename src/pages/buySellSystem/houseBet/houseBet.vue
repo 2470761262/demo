@@ -543,7 +543,8 @@ export default {
       }
       console.log(params);
       this.$api.post({
-        url: '/house/bet/getBetHouse',
+        // url: '/house/bet/list', // sql
+        url: '/house/bet/getBetHouse',// es
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false
