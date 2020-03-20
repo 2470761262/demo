@@ -52,10 +52,11 @@ http.interceptors.response.use((response) => {
   return response;
 }, (error) => {
   if (error.message.includes('timeout')) { // 判断请求异常信息中是否含有超时timeout字符串
-    Message({
-      message: '居然请求超时了~',
-      type: 'error'
-    });
+    // Message({
+    //   message: '居然请求超时了~',
+    //   type: 'error'
+    // });
+    console.log("接口请求超时");
     return Promise.reject(error);
   }
   switch (error.response.status) {

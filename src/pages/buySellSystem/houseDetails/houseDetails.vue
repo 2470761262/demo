@@ -92,7 +92,7 @@ export default {
       houseDetails: {},
       load: {
         loading: true,
-        loadingMessage: "来了,老弟~",
+        loadingMessage: "努力加载中~",
       }
     };
   },
