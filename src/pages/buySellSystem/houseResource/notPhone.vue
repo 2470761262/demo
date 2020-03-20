@@ -346,7 +346,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-        @change="querySaleNotTrackParams()"
+        this.querySaleNotTrackParams();
     },
     queryRoomNo () {
       var that = this;
@@ -369,7 +369,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-        @change="querySaleNotTrackParams()"
+       this.querySaleNotTrackParams();
     },
     queryNotPhone (currentPage) {
       var that = this;

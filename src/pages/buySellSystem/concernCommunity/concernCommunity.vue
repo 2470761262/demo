@@ -76,7 +76,7 @@
     <template v-slot:top>
       <div class="page-inline budingMarinSet"
            style="width:480px">
-        <el-select v-model="comId"
+        <!-- <el-select v-model="comId"
                    @focus="remoteInput"
                    @change="queryCBId()"
                    filterable
@@ -89,7 +89,7 @@
                      :key="item.value"
                      :label="item.name"
                      :value="item.value"></el-option>
-        </el-select>
+        </el-select> -->
 
 
           <el-select v-model="comId"

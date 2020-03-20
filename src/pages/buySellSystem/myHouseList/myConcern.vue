@@ -418,7 +418,7 @@ export default {
       } else {
         this.queryData.keyOwner = "1";
       }
-      @change="querylistByParams()"
+      this.querylistByParams();
     },
     onlySelect () {
       if (this.queryData.isOnly != "") {
@@ -426,7 +426,7 @@ export default {
       } else {
         this.queryData.isOnly = "1";
       }
-      @change="querylistByParams()"
+      this.querylistByParams();
     },
     handleClose (tag) {
       console.log("删除前：", this.ImpressionList);
