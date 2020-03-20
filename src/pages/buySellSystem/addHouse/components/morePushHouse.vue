@@ -216,7 +216,7 @@
                   <el-option
                     v-for="item in selectPageRoom.list"
                     :key="item.value"
-                    :disabled="filterRoomDisabled().includes(item.value)"
+                    :disabled="filterRoomDisabled().includes(tableFor[index].buildingId+'$'+item.value)"
                     :label="item.name"
                     :value="item.value"
                   ></el-option>
@@ -632,7 +632,7 @@ export default {
     filterRoomDisabled() {
       return this.tableFor
         .map(item => {
-          return item.roomId;
+          return item.buildingId + "$" + item.roomId;
         })
         .join(",");
     },
