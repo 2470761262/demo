@@ -14,6 +14,17 @@
   float: left;
 }
 
+/deep/.is-current{
+  .el-tree-node__content{
+    .custom-tree-node{
+      span{
+        .el-button:last-child{
+          color: #ff1300;
+        }
+      }
+    }
+  }
+}
 .personSelect {
   float: left;
 }
@@ -24,7 +35,7 @@
 }
 
 .selected_btn{
-  color: red;
+  color: #ffa6a4;
   cursor: pointer;
 }
 
@@ -42,6 +53,7 @@
                  show-checkbox
                  node-key="id"
                  ref="tree"
+                 check-strictly
                  :check-on-click-node=false
                  highlight-current
                  :expand-on-click-node=false
@@ -240,9 +252,9 @@ export default {
         let arrayGather = gather.split(",");
         this.companyGather = arrayGather;
       } else {
-        this.companyGather = new Array();
-        this.node.childNodes = [];
-        this.loadCompanyTreeNode(this.node, this.resolve);
+        this.$refs.companyTree.setCheckedKeys([]);
+        //this.node.childNodes = [];
+        //this.loadCompanyTreeNode(this.node, this.resolve);
       }
       console.log(this.companyGather,"--------------------------------------->");
     },

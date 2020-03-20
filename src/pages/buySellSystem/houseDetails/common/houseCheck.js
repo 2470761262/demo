@@ -5,12 +5,12 @@ export default {
      * @param {number} replaceType 接口参数
      * @param {number} houseId 接口参数
      */
-    isChecking (type, replaceType, houseId) {
+    isChecking (type, replaceType, houseId, memo = "") {
         let that = this;
         let params = {
             houseId: houseId,
             type: type,
-            memo: ""
+            memo: memo
         };
         if (replaceType != 0) {
             params.replaceType = replaceType;

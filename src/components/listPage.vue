@@ -42,6 +42,7 @@
 .query-center {
   display: flex;
   margin-top: 20px;
+  margin-bottom: 20px;
   @media (max-width: 1300px) {
     flex-wrap: wrap;
   }
