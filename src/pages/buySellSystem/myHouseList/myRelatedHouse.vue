@@ -204,15 +204,9 @@ export default {
 
     },
     remove () {
-      this.data.comId = '';
-      this.data.cbId = '';
-      this.data.roomNo = '';
-      this.data.Customers = '';
-      this.data.Tel = '';
-      this.data.minPrice = '';
-      this.data.maxPrice = '';
-      this.data.timeSelect = '';
-      this.workType = '';
+      let tab = this.tableColumn;
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
       this.querySaleNotTrack(1, 'id', 'ascending');
     },
     distributeEvent (e, id) {

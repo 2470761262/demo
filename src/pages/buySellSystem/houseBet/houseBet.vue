@@ -203,7 +203,7 @@
                        label="对赌时间"
                        :sort-orders="['ascending', 'descending']"
                        sortable="custom">
-<!--                       :render-header="customFieldColumn"-->
+        <!--                       :render-header="customFieldColumn"-->
       </el-table-column>
       <el-table-column prop="status"
                        label="对赌结果"
@@ -348,8 +348,10 @@ export default {
       this.queryHouseBet(1, e.prop, e.order);
     },
     Remove () {
+      let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryHouseBet(1);
+      this.tabColumnChange(tab);
+      this.queryHouseBet(1, 'id', 'ascending');
 
     },
     handleCheckChange (data, checked, node) {

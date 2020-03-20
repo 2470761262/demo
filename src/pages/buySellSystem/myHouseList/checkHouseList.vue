@@ -602,15 +602,9 @@ export default {
       }
     },
     Remove () {
-      this.cbId = '';
-      this.type = '';
-      this.status = '';
-      this.value = '';
-      this.queryData.roomNo = '';
-      this.queryData.CommunityName = '';
-      this.queryData.cbId = '';
-      this.queryData.timeSelect = '';
-      this.querylist(1);
+      let tab = this.tableColumn;
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
     },
     queryCBId () {
       var that = this

@@ -275,7 +275,9 @@ export default {
       })
     },
     Remove () {
+      let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
       this.queryPotentialHouse(1, 'id', 'descending');
 
     },

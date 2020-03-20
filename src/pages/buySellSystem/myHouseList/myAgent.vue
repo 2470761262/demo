@@ -245,7 +245,7 @@ export default {
         { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: false },
         { prop: 'AgentName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => this.houseType(item.rooms, item.hall, item.toilet) },
         { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
         { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
         { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },
@@ -297,6 +297,24 @@ export default {
 
   },
   methods: {
+    houseType (rooms, hall, toilet) {
+      if (rooms != null && rooms != '' && rooms != undefined) {
+        romms = rooms + '室';
+      } else {
+        rooms = '0' + '室'
+      }
+      if (hall != null && hall != '' && hall != undefined) {
+        hall = hall + '厅';
+      } else {
+        hall = '0' + '厅'
+      }
+      if (toilet != null && toilet != '' && toilet != undefined) {
+        toilet = toilet + '厅';
+      } else {
+        toilet = '0' + '卫'
+      }
+      return rooms + hall + toilet;
+    },
     moreSelectChange (e) {
       if (e != '')
         this.moreSelect = e;
@@ -320,10 +338,13 @@ export default {
       this.querylist(1, 'id', 'descending');
     },
     keySelect () {
-      if (this.queryData.keyOwner != '') {
-        this.queryData.keyOwner = '';
+      debugger
+      let that = this;
+      if (that.queryData.keyOwner != '') {
+
+        that.queryData.keyOwner = '';
       } else {
-        this.queryData.keyOwner = '1';
+        that.queryData.keyOwner = '1';
       }
     },
     onlySelect () {
@@ -367,8 +388,9 @@ export default {
         if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.beginTime = this.queryData.timeSelect[0]; }
         if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.endTime = this.queryData.timeSelect[1]; }
       }
-      params.isOnly = that.queryData.isOnly;
-      params.keyOwner = that.queryData.keyOwner;
+      debugger
+      params.isOnly = this.queryData.isOnly;
+      params.keyOwner = this.queryData.keyOwner;
       if (column == '' || type == null || type == undefined) {
         params.sortColumn = 'id';
       } else {
@@ -429,19 +451,9 @@ export default {
       })
     },
     remove () {
-      this.data.comId = "";
-      this.data.cbId = "";
-      this.data.roomNo = "";
-      this.data.timeSelect = "";
-      this.data.timeSelect = '';
-      this.data.customName = "";
-      this.data.tel = "";
-      this.data.minInArea = "";
-      this.data.maxInArea = "";
-      this.data.minPrice = "";
-      this.data.maxPrice = "";
-      this.data.keyOwner = "";
-      this.data.isOnly = "";
+      let tab = this.tableColumn;
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
       this.queryMyAgent(1, 'id', 'descending');
     },
     queryCompanyPerList () {
@@ -609,17 +621,17 @@ export default {
         }
       }
       else {
-        params.comId = that.data.comId;
-        params.cbId = that.data.cbId;
-        params.roomNo = that.data.roomNo;
-        params.beginTime = that.data.timeSelect[0];
-        params.endTime = that.data.timeSelect[1];
-        params.customName = that.data.customName;
-        params.tel = that.data.tel;
-        params.minInArea = that.data.minInArea;
-        params.maxInArea = that.data.maxInArea;
-        params.keyOwner = this.data.keyOwner;
-        params.isOnly = this.data.isOnly;
+        params.comId = that.queryData.comId;
+        params.cbId = that.queryData.cbId;
+        params.roomNo = that.queryData.roomNo;
+        params.beginTime = that.queryData.timeSelect[0];
+        params.endTime = that.queryData.timeSelect[1];
+        params.customName = that.queryData.customName;
+        params.tel = that.queryData.tel;
+        params.minInArea = that.queryData.minInArea;
+        params.maxInArea = that.queryData.maxInArea;
+        params.keyOwner = that.queryData.keyOwner;
+        params.isOnly = that.queryData.isOnly;
       }
       this.$api.post({
         url: '/myHouse/getMyAgent',

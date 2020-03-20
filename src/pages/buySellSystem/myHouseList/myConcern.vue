@@ -166,11 +166,13 @@
                         end-placeholder="结束日期">
         </el-date-picker>
         <span>
-          <el-checkbox style='margin-left:10px'
-                       @click="keySelect()" /> 钥匙</span>
+          <input type="checkbox"
+                 style='margin-left:10px'
+                 @click="keySelect()" /> 钥匙</span>
         <span>
-          <el-checkbox style='margin-left:10px;background:#fff'
-                       @click="onlySelect()" /> 独家</span>
+          <input type="checkbox"
+                 style='margin-left:10px;background:#fff'
+                 @click="onlySelect()" /> 独家</span>
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
               @click="remove">
           清除
@@ -413,8 +415,10 @@ export default {
       this.querylistByParams();
     },
     remove () {
+      let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
-      this.querylist(1);
+      this.tabColumnChange(tab);
+      this.querylist(1, 'id', 'ascending');
     },
     selectImpression (e) {
       let that = this;

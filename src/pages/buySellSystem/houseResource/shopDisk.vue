@@ -253,19 +253,10 @@ export default {
       })
     },
     Remove () {
-      let that = this;
-      that.data.comId = '';
-      that.data.cbId = '';
-      that.data.roomNo = '';
-      that.data.timeSelect[0] = '';
-      that.data.timeSelect[1] = '';
-      that.data.customName = '';
-      that.data.tel = '';
-      that.data.minInArea = '';
-      that.data.maxInArea = '';
-      that.data.minPrice = '';
-      that.data.maxPrice = '';
-
+      let tab = this.tableColumn;
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
+      this.queryVerifyHouseDatas(1, 'id', 'ascending')
     },
     queryRoomNo () {
       var that = this

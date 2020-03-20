@@ -140,16 +140,16 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "houseNo", label: "房源编号" ,width: '170', order: false, disabled: true, default: true },
-        { prop: "communityName", label: "楼盘名称", width: '170', order: false, disabled: true, default: true  },
-        { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true , formart: item => item.price + '万元'},
-        { prop: "inArea", label: "面积(m²)", order: 'custom', disabled: false, default: true , formart: item => item.inArea + 'm²'},
-        { prop: "unitpaice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true , format: item => item.unitpaice + '元/㎡'},
+        { prop: "houseNo", label: "房源编号", width: '170', order: false, disabled: true, default: true },
+        { prop: "communityName", label: "楼盘名称", width: '170', order: false, disabled: true, default: true },
+        { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
+        { prop: "inArea", label: "面积(m²)", order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
+        { prop: "unitpaice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
         { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
         { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true },
         { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
-        { prop: "selfSaleType", label: "成交方式",  order: 'custom', disabled: false, default: true ,formart: item =>item.selfSaleType=1? '亲朋好友':'疑似跳单'},
-        { prop: "agenName", label: "跟单人", order: false,disabled: false, default: true  }
+        { prop: "selfSaleType", label: "成交方式", order: 'custom', disabled: false, default: true, formart: item => item.selfSaleType = 1 ? '亲朋好友' : '疑似跳单' },
+        { prop: "agenName", label: "跟单人", order: false, disabled: false, default: true }
       ],
       tableData: []
     };
@@ -160,7 +160,7 @@ export default {
   methods: {
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryOurComDeal(1, e.prop, e.order    );
+      this.queryOurComDeal(1, e.prop, e.order);
     },
     queryTabData () {
       console.log(this, "111");
@@ -249,14 +249,16 @@ export default {
         });
     },
     Remove () {
+      let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
       this.queryOurComDeal(1, 'id', 'ascending');
 
     },
     queryOurComDeal (currentPage, column, type) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage-1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (that.data.comId != null && that.data.comId.length > 0) {
         params.comId = that.data.comId;
       }
