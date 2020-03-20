@@ -32,163 +32,161 @@
 }
 </style>
 <template>
-  <list-page
-    :parentData="$data"
-    @sort-change="sortMethod"
-    @handleClick="handleClick"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
+  <list-page :parentData="$data"
+             @sort-change="sortMethod"
+             @handleClick="handleClick"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
     <template v-slot:left>
       <div class="Impression-body">
         <div style="height:30px">
-          <el-select
-            v-model="imdataimdata"
-            @change="selectImpression($event)"
-            filterable
-            placeholder="请输入您添加过的房源印象"
-          >
-            <el-option
-              v-for="item in MyImpressionList"
-              :key="item.id"
-              :label="item.impression"
-              :value="item"
-            ></el-option>
+          <el-select v-model="imdataimdata"
+                     @change="selectImpression($event)"
+                     filterable
+                     placeholder="请输入您添加过的房源印象">
+            <el-option v-for="item in MyImpressionList"
+                       :key="item.id"
+                       :label="item.impression"
+                       :value="item"></el-option>
           </el-select>
         </div>
         <div style="height:30px">
-          <el-button class="opset" type="text" @click="show(1)">一键还原</el-button>
-          <el-button class="opset" type="text" @click="show(0)">一键清除</el-button>
+          <el-button class="opset"
+                     type="text"
+                     @click="show(1)">一键还原</el-button>
+          <el-button class="opset"
+                     type="text"
+                     @click="show(0)">一键清除</el-button>
         </div>
-        <div class="tag-all" v-if="showImpression">
-          <span v-for="item in ImpressionList" :key="item.id">
-            <el-tag
-              class="Impression-tag"
-              size="mini"
-              @close="handleClose(item.id)"
-              type="success"
-              closable
-            >{{item.impression}}</el-tag>
+        <div class="tag-all"
+             v-if="showImpression">
+          <span v-for="item in ImpressionList"
+                :key="item.id">
+            <el-tag class="Impression-tag"
+                    size="mini"
+                    @close="handleClose(item.id)"
+                    type="success"
+                    closable>{{item.impression}}</el-tag>
           </span>
         </div>
       </div>
     </template>
     <template v-slot:top>
       <div class="page-form-inline">
-        <el-item label="楼盘名称" prop="comId">
-          <el-select
-            v-model="queryData.CommunityName"
-            @focus="remoteInput"
-            @change="queryCBId()"
-            filterable
-            remote
-            clearable
-            placeholder="请输入楼盘名称搜索"
-            :remote-method="remoteMethod"
-            :loading="loading"
-          >
-            <el-option
-              v-for="item in optionsList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+        <el-item label="楼盘名称"
+                 prop="comId">
+          <el-select v-model="queryData.CommunityName"
+                     @focus="remoteInput"
+                     @change="queryCBId()"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="请输入楼盘名称搜索"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in optionsList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
         </el-item>
-        <el-item label="栋座" prop="cbId" class="page-label-center">
-          <el-select
-            v-model="queryData.BuildingName"
-            filterable
-            clearable
-            placeholder="请选择楼栋"
-            @change="queryRoomNo()"
-          >
-            <el-option
-              v-for="item in cbIdList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+        <el-item label="栋座"
+                 prop="cbId"
+                 class="page-label-center">
+          <el-select v-model="queryData.BuildingName"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo()">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
         </el-item>
-        <el-item label="房间号" prop="roomNo" clearable class="page-label-center">
-          <el-select v-model="queryData.RoomNo" filterable placeholder="请选择房间号">
-            <el-option
-              v-for="item in roomNoList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+        <el-item label="房间号"
+                 prop="roomNo"
+                 clearable
+                 class="page-label-center">
+          <el-select v-model="queryData.RoomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
         </el-item>
-        <el-input
-          placeholder="业主姓名"
-          v-model="queryData.Customers"
-          style="margin-left:25px;width:240px"
-          clearable
-        >
+        <el-input placeholder="业主姓名"
+                  v-model="queryData.Customers"
+                  style="margin-left:25px;width:240px"
+                  clearable>
           <template slot="prepend">业主姓名</template>
         </el-input>
 
-        <el-input
-          placeholder="业主电话"
-          v-model="queryData.Tel"
-          style="margin-left:30px;width:240px"
-          clearable
-        >
+        <el-input placeholder="业主电话"
+                  v-model="queryData.Tel"
+                  style="margin-left:30px;width:240px"
+                  clearable>
           <template slot="prepend">电话</template>
         </el-input>
 
-        <el-input
-          placeholder="最小值"
-          v-model="queryData.minPrice"
-          style="margin-left:25px;width:160px"
-          clearable
-        >
+        <el-input placeholder="最小值"
+                  v-model="queryData.minPrice"
+                  style="margin-left:25px;width:160px"
+                  clearable>
           <template slot="prepend">价格</template>
         </el-input>
-        <el-input
-          placeholder="最大值"
-          v-model="queryData.maxPrice"
-          style="margin-left:10px;width:100px"
-        ></el-input>
+        <el-input placeholder="最大值"
+                  v-model="queryData.maxPrice"
+                  style="margin-left:10px;width:100px"></el-input>
         <br />
-        <el-input placeholder="最小值" v-model="queryData.minInArea" style="width:160px" clearable>
+        <el-input placeholder="最小值"
+                  v-model="queryData.minInArea"
+                  style="width:160px"
+                  clearable>
           <template slot="prepend">面积</template>
         </el-input>
-        <el-input
-          placeholder="最大值"
-          v-model="queryData.maxInArea"
-          style="margin-left:10px;width:100px"
-        ></el-input>
+        <el-input placeholder="最大值"
+                  v-model="queryData.maxInArea"
+                  style="margin-left:10px;width:100px"></el-input>
 
         <template slot="prepend">房源状态</template>
-        <el-date-picker
-          v-model="queryData.timeSelect"
-          type="daterange"
-          range-separator="至"
-          value-format="yyyy-MM-dd"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        ></el-date-picker>
+        <el-date-picker v-model="queryData.timeSelect"
+                        type="daterange"
+                        range-separator="至"
+                        value-format="yyyy-MM-dd"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"></el-date-picker>
         <span>
-          <el-checkbox style="margin-left:10px" @click="keySelect()" />钥匙
-        </span>
+          <input type="checkbox"
+                 style='margin-left:10px'
+                 @click="keySelect()" /> 钥匙</span>
         <span>
-          <el-checkbox style="margin-left:10px;background:#fff" @click="onlySelect()" />独家
+          <input type="checkbox"
+                 style='margin-left:10px;background:#fff'
+                 @click="onlySelect()" /> 独家</span>
+        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+              @click="remove">
+          清除
         </span>
-        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px" @click="remove">清除</span>
-        <el-button type="primary" style="margin-left:30px" size="mini" @click="querylistByParams">查询</el-button>
-        <el-button style="margin-left:30px;width:50px;height:30px;border:0" size="mini">
-          <moreSelect @moreSelectChange="moreSelectChange" style="height:40px;margin-right:5px;"></moreSelect>
+        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
+              @click="remove">清除</span>
+        <el-button type="primary"
+                   style="margin-left:30px"
+                   size="mini"
+                   @click="querylistByParams">查询</el-button>
+        <el-button style="margin-left:30px;width:50px;height:30px;border:0"
+                   size="mini">
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
         </el-button>
-        <el-button style="margin-left:80px;width:50px;height:30px;border:0" size="mini">
-          <definitionmenu
-            class="menuMarin"
-            :renderList="tableDataColumn"
-            :tableColumn="tableColumn"
-            @change="tabColumnChange"
-          ></definitionmenu>
+        <el-button style="margin-left:80px;width:50px;height:30px;border:0"
+                   size="mini">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableDataColumn"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
         </el-button>
       </div>
     </template>
@@ -251,26 +249,27 @@
         </template>
       </el-table-column>-->
       <template v-for="(item) in tableColumn">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-          :key="item.prop"
-          :formatter="item.formart"
-          :sort-orders="['ascending', 'descending']"
-          :sortable="item.order"
-        ></el-table-column>
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop"
+                         :formatter="item.formart"
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order"></el-table-column>
       </template>
-      <el-table-column label="操作" fixed="right" key="operation">
+      <el-table-column label="操作"
+                       fixed="right"
+                       key="operation">
         <template v-slot="scope">
-          <el-button
-            type="info"
-            style="background:green"
-            @click="toHouseDetail(scope.row.id)"
-            size="mini"
-          >查看</el-button>
+          <el-button type="info"
+                     style="background:green"
+                     @click="toHouseDetail(scope.row.id)"
+                     size="mini">查看</el-button>
           <div v-if="scope.row.CollectID != null && scope.row.CollectID!= '' ">
-            <el-button type="info" slot="reference" @click="ifOFF(scope.row.id)" size="mini">取消关注</el-button>
+            <el-button type="info"
+                       slot="reference"
+                       @click="ifOFF(scope.row.id)"
+                       size="mini">取消关注</el-button>
           </div>
         </template>
       </el-table-column>
@@ -289,7 +288,7 @@ export default {
     moreSelect,
     definitionmenu
   },
-  data() {
+  data () {
     return {
       optionsList: [],
       cbIdList: [],
@@ -459,37 +458,37 @@ export default {
       moreSelect: {}
     };
   },
-  mounted() {
+  mounted () {
     this.querylist(1, "id", "ascending");
     this.queryMyImpression();
   },
   methods: {
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       if (e != "") this.moreSelect = e;
       this.querylist(1, "id", "ascending");
     },
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.querylist(1, e.prop, e.order);
     },
-    keySelect() {
+    keySelect () {
       if (this.queryData.keyOwner != "") {
         this.queryData.keyOwner = "";
       } else {
         this.queryData.keyOwner = "1";
       }
     },
-    onlySelect() {
+    onlySelect () {
       if (this.queryData.isOnly != "") {
         this.queryData.isOnly = "";
       } else {
         this.queryData.isOnly = "1";
       }
     },
-    handleClose(tag) {
+    handleClose (tag) {
       console.log("删除前：", this.ImpressionList);
       for (let i = 0; i < this.ImpressionList.length; i++) {
         if (this.ImpressionList[i].id == tag) {
@@ -499,11 +498,12 @@ export default {
       console.log("删除后：", this.ImpressionList);
       this.querylistByParams();
     },
-    remove() {
+    remove () {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.querylist(1);
+      this.tabColumnChange(tab);
+      this.querylist(1, 'id', 'ascending');
     },
-    selectImpression(e) {
+    selectImpression (e) {
       let that = this;
       var selecti = 0;
       for (var i = 0; i < that.ImpressionList.length; i++) {
@@ -521,7 +521,7 @@ export default {
       }
       this.querylistByParams();
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -547,7 +547,7 @@ export default {
         this.options = [];
       }
     },
-    queryHouseImpression() {
+    queryHouseImpression () {
       var that = this;
       this.$api
         .get({
@@ -563,7 +563,7 @@ export default {
           }
         });
     },
-    ifOFF(id) {
+    ifOFF (id) {
       this.$confirm("是否确定取消关注?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -584,16 +584,16 @@ export default {
           });
         });
     },
-    concernOFF(id) {
+    concernOFF (id) {
       this.$api
         .post({
           url: "/agent_house/concernHouseOFF/" + id,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
         })
-        .then(e => {});
+        .then(e => { });
     },
-    queryMyImpression() {
+    queryMyImpression () {
       var that = this;
       var impression = this.imdata;
       this.$api
@@ -615,14 +615,14 @@ export default {
         });
     },
     //跳转房源详情页面
-    toHouseDetail(id) {
+    toHouseDetail (id) {
       this.$router.push({
         path: "/buySellSystem/houseDetails",
         query: { houseId: id }
       });
     },
     //清除
-    show(msg) {
+    show (msg) {
       var that = this;
       if (msg == 0) {
         this.$confirm("清除当前所有房源印象?", "提示", {
@@ -677,10 +677,10 @@ export default {
           });
       }
     },
-    querylistByParams() {
+    querylistByParams () {
       this.querylist(1, "id", "ascending");
     },
-    querylist(currentPage, column, type) {
+    querylist (currentPage, column, type) {
       let params = {
         limit: this.pageJson.pageSize + "",
         page: currentPage + ""
@@ -796,12 +796,12 @@ export default {
           console.log(e);
         });
     },
-    remoteInput() {
+    remoteInput () {
       if (this.queryData.CommunityName.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         console.log(query);
@@ -832,7 +832,7 @@ export default {
         "remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId
       );
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -853,7 +853,7 @@ export default {
         });
       console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -873,13 +873,13 @@ export default {
           }
         });
     },
-    handleClick() {},
-    handleSizeChange(val) {
+    handleClick () { },
+    handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.querylist(1, "id", "ascending");
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.querylist(val, "id", "ascending");
     }

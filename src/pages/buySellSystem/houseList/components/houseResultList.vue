@@ -204,11 +204,13 @@
       <div class="select-tabs-cell"
            v-if="querySelectFlag">
         <label class="select-checkbox">
-          <input type="checkbox">
+          <input type="checkbox"
+                 @click="keySelect()">
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
-          <input type="checkbox">
+          <input type="checkbox"
+                 @click="onlySelect()">
           <span>独家</span>
         </label>
       </div>

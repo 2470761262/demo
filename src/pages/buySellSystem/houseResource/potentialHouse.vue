@@ -1,127 +1,109 @@
 
 <template>
-  <list-page
-    @sort-change="sortMethod"
-    :parentData="$data"
-    @queryTabData="queryTabData"
-    @handleClick="handleClick"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
+  <list-page @sort-change="sortMethod"
+             :parentData="$data"
+             @queryTabData="queryTabData"
+             @handleClick="handleClick"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
-        <el-select
-          v-model="data.comId"
-          @focus="remoteInput"
-          @change="queryCBId()"
-          style="width;175px"
-          filterable
-          remote
-          clearable
-          placeholder="请输入楼盘名称搜索"
-          :remote-method="remoteMethod"
-          :loading="loading"
-        >
-          <el-option
-            v-for="item in options"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          ></el-option>
+        <el-select v-model="data.comId"
+                   @focus="remoteInput"
+                   @change="queryCBId()"
+                   style="width;175px"
+                   filterable
+                   remote
+                   clearable
+                   placeholder="请输入楼盘名称搜索"
+                   :remote-method="remoteMethod"
+                   :loading="loading">
+          <el-option v-for="item in options"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value"></el-option>
         </el-select>
 
-        <el-select
-          v-model="data.cbId"
-          filterable
-          clearable
-          style="width:120px"
-          placeholder="请选择楼栋"
-          @change="queryRoomNo()"
-        >
-          <el-option
-            v-for="item in cbIdList"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          ></el-option>
+        <el-select v-model="data.cbId"
+                   filterable
+                   clearable
+                   style="width:120px"
+                   placeholder="请选择楼栋"
+                   @change="queryRoomNo()">
+          <el-option v-for="item in cbIdList"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value"></el-option>
         </el-select>
 
-        <el-select v-model="data.roomNo" filterable style="width:140px" placeholder="请选择房间号">
-          <el-option
-            v-for="item in roomNoList"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          ></el-option>
+        <el-select v-model="data.roomNo"
+                   filterable
+                   style="width:140px"
+                   placeholder="请选择房间号">
+          <el-option v-for="item in roomNoList"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value"></el-option>
         </el-select>
 
-        <el-select v-model="data.type" style="width:150px" placeholder="请选择" clearable>
-          <el-option
-            v-for="item in option"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
+        <el-select v-model="data.type"
+                   style="width:150px"
+                   placeholder="请选择"
+                   clearable>
+          <el-option v-for="item in option"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value"></el-option>
         </el-select>
-        <el-input
-          placeholder="业主姓名"
-          v-model="data.customName"
-          style="margin-left:30px;width:170px"
-          clearable
-        />
+        <el-input placeholder="业主姓名"
+                  v-model="data.customName"
+                  style="margin-left:30px;width:170px"
+                  clearable />
 
-        <el-input
-          placeholder="业主电话"
-          v-model="data.tel"
-          style="margin-left:30px;width:170px"
-          clearable
-        />
-        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px" @click="Remove">清除</span>
-        <el-button
-          type="primary"
-          style="margin-left:10px"
-          size="mini"
-          @click="queryPotentialHouseParams"
-        >查询</el-button>
+        <el-input placeholder="业主电话"
+                  v-model="data.tel"
+                  style="margin-left:30px;width:170px"
+                  clearable />
+        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
+              @click="Remove">清除</span>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="queryPotentialHouseParams">查询</el-button>
         <el-button style="border:0">
-          <definitionmenu
-            class="menuMarin"
-            :renderList="tableColumnField"
-            :tableColumn="tableColumn"
-            @change="tabColumnChange"
-          ></definitionmenu>
+          <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
         </el-button>
         <el-button style="border:0">
-          <moreSelect @moreSelectChange="moreSelectChange" style="height:40px;margin-right:5px;"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
         </el-button>
       </div>
     </template>
 
     <template #tableColumn>
       <template v-for="(item) in tableColumn">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-          :sortable="item.order"
-          :sort-orders="['ascending', 'descending']"
-          :key="item.prop"
-        ></el-table-column>
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :sortable="item.order"
+                         :sort-orders="['ascending', 'descending']"
+                         :key="item.prop"></el-table-column>
       </template>
-      <el-table-column label="操作" width="230" key="operation">
+      <el-table-column label="操作"
+                       width="230"
+                       key="operation">
         <template v-slot="scope">
-          <el-button
-            type="info"
-            size="mini"
-            @click="toLook(scope.row.id)"
-            v-if="scope.row.houseType!==1"
-          >查看</el-button>
-          <el-button
-            type="info"
-            size="mini"
-            @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)"
-          >转在售</el-button>
+          <el-button type="info"
+                     size="mini"
+                     @click="toLook(scope.row.id)"
+                     v-if="scope.row.houseType!==1">查看</el-button>
+          <el-button type="info"
+                     size="mini"
+                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
         </template>
       </el-table-column>
     </template>
@@ -139,7 +121,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
       option: [
@@ -225,37 +207,37 @@ export default {
       tableData: []
     };
   },
-  mounted() {
+  mounted () {
     this.data.type = "build";
     this.queryPotentialHouse(1, "id", "descending");
   },
   methods: {
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.queryPotentialHouse(1, e.prop, e.order);
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e.prop, e.order);
       this.queryPotentialHouse(1, e.prop, e.order);
     },
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       if (e != "") this.moreSelect = e;
       this.queryPotentialHouse(1, "id", "ascending");
     },
-    toLook(id) {
+    toLook (id) {
       var that = this;
       that.$router.push({
         path: "/buySellSystem/houseDetails",
         query: { houseId: id }
       });
     },
-    toSale(
+    toSale (
       comId,
       cbId,
       bhId,
@@ -281,15 +263,15 @@ export default {
         }
       });
     },
-    queryPotentialHouseParams() {
+    queryPotentialHouseParams () {
       this.queryPotentialHouse(1, "id", "descending");
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -315,7 +297,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -337,7 +319,7 @@ export default {
           }
         });
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -359,12 +341,15 @@ export default {
           }
         });
     },
-    Remove() {
+    Remove () {
+      let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryPotentialHouse(1, "id", "descending");
+      this.tabColumnChange(tab);
+      this.queryPotentialHouse(1, 'id', 'descending');
+
     },
 
-    queryPotentialHouse(currentPage, column, type) {
+    queryPotentialHouse (currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -414,17 +399,17 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryPotentialHouseParams(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.queryPotentialHouse(val, "id", "descending");
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryPotentialHouse(1, "id", "descending");

@@ -74,15 +74,15 @@
   margin-bottom: 11%;
 }
 .image2 {
-  border-radius: 2rem;
-  width: 85%;
-  height: 10rem;
-  margin-top: 3%;
+  border-radius: 20px;
+  width: 240px;
+  height: 200px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 11%;
+  margin-bottom: 10px;
 }
 .text {
   margin-left: 5%;

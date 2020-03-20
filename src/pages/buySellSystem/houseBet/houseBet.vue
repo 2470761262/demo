@@ -1,152 +1,155 @@
 <template>
-  <list-page
-    :parentData="$data"
-    @sort-change="sortMethod"
-    @queryTabData="queryTabData"
-    @handleClick="handleClick"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
+  <list-page :parentData="$data"
+             @sort-change="sortMethod"
+             @queryTabData="queryTabData"
+             @handleClick="handleClick"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
-        <el-form inline :model="data" ref="data" size="medium">
-          <el-form-item label="楼盘" prop="customerName">
-            <el-select
-              v-model="data.comId"
-              @change="queryCBId()"
-              filterable
-              remote
-              style="width: 180px"
-              clearable
-              placeholder="请选择楼盘进行搜索"
-              @focus="remoteCommunityNameInput"
-              :remote-method="remoteMethod"
-              :loading="loading"
-            >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+        <el-form inline
+                 :model="data"
+                 ref="data"
+                 size="medium">
+          <el-form-item label="楼盘"
+                        prop="customerName">
+            <el-select v-model="data.comId"
+                       @change="queryCBId()"
+                       filterable
+                       remote
+                       style="width: 180px"
+                       clearable
+                       placeholder="请选择楼盘进行搜索"
+                       @focus="remoteCommunityNameInput"
+                       :remote-method="remoteMethod"
+                       :loading="loading">
+              <el-option v-for="item in options"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
 
-            <el-select
-              v-model="data.cbId"
-              filterable
-              style="width: 132px"
-              placeholder="请选择楼栋"
-              clearable
-              @change="queryRoomNo()"
-            >
-              <el-option
-                v-for="item in cbIdList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="data.cbId"
+                       filterable
+                       style="width: 132px"
+                       placeholder="请选择楼栋"
+                       clearable
+                       @change="queryRoomNo()">
+              <el-option v-for="item in cbIdList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
-            <el-select
-              v-model="data.roomNo"
-              filterable
-              style="width: 132px"
-              clearable
-              placeholder="请选择房间号"
-            >
-              <el-option
-                v-for="item in roomNoList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="data.roomNo"
+                       filterable
+                       style="width: 132px"
+                       clearable
+                       placeholder="请选择房间号">
+              <el-option v-for="item in roomNoList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="业主" prop="customerName">
-            <el-input clearable v-model="data.customerName" placeholder="业主姓名" />
+          <el-form-item label="业主"
+                        prop="customerName">
+            <el-input clearable
+                      v-model="data.customerName"
+                      placeholder="业主姓名" />
           </el-form-item>
 
-          <el-form-item label="电话" prop="tel">
-            <el-input clearable v-model="data.tel" placeholder="业主电话" />
+          <el-form-item label="电话"
+                        prop="tel">
+            <el-input clearable
+                      v-model="data.tel"
+                      placeholder="业主电话" />
           </el-form-item>
 
-          <el-form-item label="价格" prop="minMoney">
+          <el-form-item label="价格"
+                        prop="minMoney">
             <el-col :span="8">
-              <el-input clearable v-model="data.minMoney" placeholder="最小值" />
+              <el-input clearable
+                        v-model="data.minMoney"
+                        placeholder="最小值" />
             </el-col>
-            <el-col class="line" :span="2" align="center">-</el-col>
+            <el-col class="line"
+                    :span="2"
+                    align="center">-</el-col>
             <el-col :span="8">
               <el-form-item prop="money_to">
-                <el-input clearable v-model="data.maxMoney" placeholder="最大值" />
+                <el-input clearable
+                          v-model="data.maxMoney"
+                          placeholder="最大值" />
               </el-form-item>
             </el-col>
-            <el-col class="line" :span="1" align="center">万</el-col>
+            <el-col class="line"
+                    :span="1"
+                    align="center">万</el-col>
           </el-form-item>
 
-          <el-form-item label="对赌日期" prop="timeSelect">
-            <el-date-picker
-              v-model="data.timeSelect"
-              type="daterange"
-              unlink-panels
-              value-format="yyyy-MM-dd"
-              range-separator="至"
-              start-placeholder="起"
-              end-placeholder="止"
-            ></el-date-picker>
+          <el-form-item label="对赌日期"
+                        prop="timeSelect">
+            <el-date-picker v-model="data.timeSelect"
+                            type="daterange"
+                            unlink-panels
+                            value-format="yyyy-MM-dd"
+                            range-separator="至"
+                            start-placeholder="起"
+                            end-placeholder="止"></el-date-picker>
           </el-form-item>
 
-          <el-form-item label="对赌结果" prop="status">
-            <el-select v-model="data.status" clearable style="width: 120px" placeholder="对赌结果">
-              <el-option
-                v-for="item in betStatusList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+          <el-form-item label="对赌结果"
+                        prop="status">
+            <el-select v-model="data.status"
+                       clearable
+                       style="width: 120px"
+                       placeholder="对赌结果">
+              <el-option v-for="item in betStatusList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
           </el-form-item>
 
-          <el-form-item label="对赌人" prop="empName" style="position: relative;">
-            <el-input
-              clearable
-              v-model="data.empName"
-              placeholder="对赌人公司/部门/姓名"
-              v-on:click.native="showHrTree = true"
-              readonly
-            />
-            <div
-              class="elTree"
-              style="position: absolute;z-index: 2;min-width: 280px"
-              v-show="showHrTree"
-            >
-              <el-tree
-                ref="treeForm"
-                :data="treeData"
-                node-key="nodeId"
-                show-checkbox
-                :props="defaultProps"
-                @check-change="handleCheckChange"
-                :highlight-current="true"
-                :filter-node-method="filterNode"
-                check-strictly
-                :action="''"
-                empty-text="暂无数据，请检查权限"
-                auto-expand-parent
-                :default-expanded-keys="curNodeId"
-                :default-checked-keys="curNodeId"
-              ></el-tree>
+          <el-form-item label="对赌人"
+                        prop="empName"
+                        style="position: relative;">
+            <el-input clearable
+                      v-model="data.empName"
+                      placeholder="对赌人公司/部门/姓名"
+                      v-on:click.native="showHrTree = true"
+                      readonly />
+            <div class="elTree"
+                 style="position: absolute;z-index: 2;min-width: 280px"
+                 v-show="showHrTree">
+              <el-tree ref="treeForm"
+                       :data="treeData"
+                       node-key="nodeId"
+                       show-checkbox
+                       :props="defaultProps"
+                       @check-change="handleCheckChange"
+                       :highlight-current="true"
+                       :filter-node-method="filterNode"
+                       check-strictly
+                       :action="''"
+                       empty-text="暂无数据，请检查权限"
+                       auto-expand-parent
+                       :default-expanded-keys="curNodeId"
+                       :default-checked-keys="curNodeId"></el-tree>
             </div>
           </el-form-item>
-          <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px" @click="Remove">清除</span>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryHouseBetParams"
-          >查询</el-button>
-          <el-button style="margin-left:30px;width:50px;height:30px;border:0" size="mini">
-            <moreSelect @moreSelectChange="moreSelectChange" style="height:40px;margin-right:5px;"></moreSelect>
+          <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
+                @click="Remove">清除</span>
+          <el-button type="primary"
+                     style="margin-left:10px"
+                     size="mini"
+                     @click="queryHouseBetParams">查询</el-button>
+          <el-button style="margin-left:30px;width:50px;height:30px;border:0"
+                     size="mini">
+            <moreSelect @moreSelectChange="moreSelectChange"
+                        style="height:40px;margin-right:5px;"></moreSelect>
           </el-button>
         </el-form>
       </div>
@@ -154,49 +157,61 @@
 
     <template #tableColumn="cell">
       <template v-for="(item) in cell.tableData">
-        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop"></el-table-column>
       </template>
       <!--      房源编号、楼盘名称、售价（可排序）、面积（可排序）、单价（可排序）、户型（X室X厅X卫）、对赌鑫币值、预期奖励鑫币值、对赌时间（对赌成功当日）、对赌结果、剩余天数、对赌人、操作（查看）-->
-      <el-table-column
-        prop="price"
-        label="售价(万元)"
-        :sort-orders="['ascending', 'descending']"
-        sortable="custom"
-      ></el-table-column>
-      <el-table-column
-        prop="inArea"
-        label="面积(m²)"
-        :sort-orders="['ascending', 'descending']"
-        sortable="custom"
-      ></el-table-column>
-      <el-table-column
-        prop="price/inArea"
-        label="单价(元/㎡)"
-        :formatter="unitPrice"
-        :sort-orders="['ascending', 'descending']"
-        sortable="custom"
-      ></el-table-column>
-      <el-table-column prop label="户型" :formatter="formatHouseType"></el-table-column>
-      <el-table-column
-        prop="amount"
-        label="对赌鑫币"
-        :sort-orders="['ascending', 'descending']"
-        sortable="custom"
-      ></el-table-column>
-      <el-table-column
-        prop="createTime"
-        label="对赌时间"
-        :sort-orders="['ascending', 'descending']"
-        sortable="custom"
-      >
+      <el-table-column prop="price"
+                       label="售价(万元)"
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
+      </el-table-column>
+      <el-table-column prop="inArea"
+                       label="面积(m²)"
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
+      </el-table-column>
+      <el-table-column prop="price/inArea"
+                       label="单价(元/㎡)"
+                       :formatter="unitPrice"
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
+      </el-table-column>
+      <el-table-column prop=""
+                       label="户型"
+                       :formatter="formatHouseType">
+      </el-table-column>
+      <el-table-column prop="amount"
+                       label="对赌鑫币"
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
+      </el-table-column>
+      <el-table-column prop="createTime"
+                       label="对赌时间"
+                       :sort-orders="['ascending', 'descending']"
+                       sortable="custom">
         <!--                       :render-header="customFieldColumn"-->
       </el-table-column>
-      <el-table-column prop="status" label="对赌结果" :formatter="formatHouseBetStatus"></el-table-column>
-      <el-table-column prop="brokerName" label="对赌人"></el-table-column>
-      <el-table-column prop="endTime" label="到期时间"></el-table-column>
-      <el-table-column label="操作" fixed="right" key="operation">
+      <el-table-column prop="status"
+                       label="对赌结果"
+                       :formatter="formatHouseBetStatus">
+      </el-table-column>
+      <el-table-column prop="status"
+                       label="对赌结果"
+                       :formatter="formatHouseBetStatus"></el-table-column>
+      <el-table-column prop="brokerName"
+                       label="对赌人"></el-table-column>
+      <el-table-column prop="endTime"
+                       label="到期时间"></el-table-column>
+      <el-table-column label="操作"
+                       fixed="right"
+                       key="operation">
         <template v-slot="scope">
-          <el-button type="info" size="mini" @click="toLook(scope.row)">查看</el-button>
+          <el-button type="info"
+                     size="mini"
+                     @click="toLook(scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </template>
@@ -210,7 +225,7 @@ export default {
     listPage,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
       showHrTree: false,
@@ -272,7 +287,7 @@ export default {
       ]
     };
   },
-  mounted() {
+  mounted () {
     this.queryHouseBet(1, "id", "ascending");
     //读取树数据
     this.$api
@@ -308,20 +323,23 @@ export default {
       });
   },
   methods: {
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       debugger;
       if (e != "") this.moreSelect = e;
       this.queryHouseBet(1, "id", "ascending");
     },
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.queryHouseBet(1, e.prop, e.order);
     },
-    Remove() {
+    Remove () {
+      let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryHouseBet(1, "id", "ascending");
+      this.tabColumnChange(tab);
+      this.queryHouseBet(1, 'id', 'ascending');
+
     },
-    handleCheckChange(data, checked, node) {
+    handleCheckChange (data, checked, node) {
       this.showHrTree = false;
       if (checked == true) {
         this.data.empName = data.labelName;
@@ -341,25 +359,25 @@ export default {
         }
       }
     },
-    filterNode(value, data) {
+    filterNode (value, data) {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    formatHouseType(row, column) {
+    formatHouseType (row, column) {
       if (row.rooms) {
         return row.rooms + "室" + row.hall + "厅" + row.toilet + "卫";
       }
     },
-    unitPrice(row, column) {
+    unitPrice (row, column) {
       if (row.rooms) {
         return Math.round((row.price * 1000) / row.inArea);
       }
     },
-    formatHouseBetStatus(row, column) {
+    formatHouseBetStatus (row, column) {
       switch (row.status) {
         case 0:
           return "努力中";
@@ -388,29 +406,29 @@ export default {
     //       on: { click: () => { that.orderBy(params.column.property, "ASC") } }        }, '↑')
     //   ])
     // },
-    orderBy(o, Asc) {
+    orderBy (o, Asc) {
       this.data.order = o;
       this.data.orderAsc = Asc;
       this.queryHouseBetParams();
     },
-    toLook(row) {
+    toLook (row) {
       var that = this;
       that.$router.push({
         name: "houseDetails",
         params: { houseId: row.houseId }
       });
     },
-    queryHouseBetParams() {
+    queryHouseBetParams () {
       this.queryHouseBet(1, "id", "ascending");
     },
     //楼盘获取焦点 第一次点击就进行查询
 
-    remoteCommunityNameInput() {
+    remoteCommunityNameInput () {
       if (this.options.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -436,7 +454,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       that.data.cbId = "";
       that.data.roomNo = "";
@@ -456,7 +474,7 @@ export default {
           }
         });
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       that.data.roomNo = "";
       this.$api
@@ -476,7 +494,7 @@ export default {
           }
         });
     },
-    queryHouseBet(currentPage, column, type) {
+    queryHouseBet (currentPage, column, type) {
       if (!column) {
         column = "id";
       }
@@ -543,23 +561,23 @@ export default {
           console.log(e);
         });
     },
-    isForBut(type) {
+    isForBut (type) {
       let array = [{ name: "查看", isType: "3", methosName: "" }];
       return array.filter(item => {
         return item.isType.includes(type);
       });
     },
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryHouseBetParams();
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.queryHouseBet(val, "id", "descending");
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryHouseBet(1, "id", "ascending");
