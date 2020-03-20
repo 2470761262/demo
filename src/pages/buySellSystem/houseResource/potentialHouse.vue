@@ -10,10 +10,10 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
 
-        
         <el-select v-model="data.comId"
                    @focus="remoteInput"
                    @change="queryCBId()"
+                   style="width;175px"
                    filterable
                    remote
                    clearable
@@ -30,6 +30,7 @@
         <el-select v-model="data.cbId"
                    filterable
                    clearable
+                   style="width:120px"
                    placeholder="请选择楼栋"
                    @change="queryRoomNo()">
           <el-option v-for="item in cbIdList"
@@ -41,6 +42,7 @@
 
         <el-select v-model="data.roomNo"
                    filterable
+                   style="width:140px"
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
                      :key="item.value"
@@ -50,6 +52,7 @@
         </el-select>
 
         <el-select v-model="data.type"
+                   style="width:150px"
                    placeholder="请选择"
                    clearable>
           <el-option v-for="item in option"
@@ -58,9 +61,9 @@
                      :value="item.value">
           </el-option>
         </el-select>
-        <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:240px" clearable />
+        <el-input placeholder="业主姓名" v-model="data.customName"  style="margin-left:30px;width:170px" clearable />
          
-        <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:240px" clearable />
+        <el-input placeholder="业主电话" v-model="data.tel"  style="margin-left:30px;width:170px" clearable />
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
               @click="Remove">
           清除
@@ -69,21 +72,30 @@
                    style="margin-left:10px"
                    size="mini"
                    @click="queryPotentialHouseParams">查询</el-button>
+        <el-button style="border:0">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </el-button>
+        <el-button style="border:0">
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
       </div>
     </template>
-    <!-- :formatter="item.format" -->
-    <template #tableColumn>
-      <template v-for="(item) in tableColumnField">
+
+    <template #tableColumn="">
+      <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
-                         :key="item.prop"
-                         :formatter="item.formart"
+                         :sortable="item.order"
                          :sort-orders="['ascending', 'descending']"
-                         :sortable="item.order">
+                         :key="item.prop">
         </el-table-column>
       </template>
-      <el-table-column label="操作"                   
+      <el-table-column label="操作"
                        width="230"
                        key="operation">
         <template v-slot="scope">
@@ -104,19 +116,20 @@
 <script>
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
-import houseContrast from '@/minxi/houseContrast';
 import definitionmenu from '@/components/definitionMenu';
+import moreSelect from '@/components/moreSelect';
 export default {
-  mixins: [getMenuRid, houseContrast],
+  mixins: [getMenuRid],
   components: {
     listPage,
-    definitionmenu
+    definitionmenu,
+    moreSelect
   },
   data () {
 
     return {
       loading: true,
-       option: [
+      option: [
         {
           value: 'build',
           label: '楼盘数据'
@@ -132,9 +145,10 @@ export default {
         tel: '',
         type: ''
       },
-      moreSelect:'',
+      moreSelect: '',
       options: [],
       cbIdList: [],
+      tableColumn: [],
       roomNoList: [],
       pageJson: {
         currentPage: 1, //当前页码
@@ -145,7 +159,7 @@ export default {
         { prop: 'communityName', label: '小区名称', order: false, width: '', disabled: true, default: true },
         { prop: 'comBuildingName', label: '楼栋号', width: '120', order: false, disabled: true, default: true },
         { prop: 'roomNo', label: '房间号', width: '170', order: false, disabled: true, default: true },
-        { prop: 'inArea', label: '面积(m²)', width: '170', order: 'custom', disabled: false, default: true, format: item => item.inArea + '㎡'},
+        { prop: 'inArea', label: '面积(m²)', width: '170', order: 'custom', disabled: false, default: true, format: item => item.inArea + '㎡' },
         { prop: 'customers', label: '业主', width: '170', order: 'custom', disabled: false, default: true },
         { prop: 'tel', label: '业主电话', width: '', order: false, disabled: false, default: true }
       ],
@@ -162,12 +176,21 @@ export default {
       console.log(e, "eeee排序");
       this.queryPotentialHouse(1, e.prop, e.order);
     },
-    tabColumnChange (e) {
-     },
     queryTabData () {
       console.log(this, '111');
     },
-   
+    sortMethod (e) {
+      console.log(e.prop, e.order);
+      this.queryPotentialHouse(1, e.prop, e.order);
+    },
+    tabColumnChange (e) {
+      this.tableColumn = e;
+    },
+    moreSelectChange (e) {
+      if (e != '')
+        this.moreSelect = e;
+      this.queryPotentialHouse(1, 'id', 'ascending')
+    },
     toLook (id) {
       var that = this;
       that.$router.push({ path: '/buySellSystem/houseDetails', query: { "houseId": id } });
@@ -256,8 +279,8 @@ export default {
       this.queryPotentialHouse(1, 'id', 'descending');
 
     },
-  
-     queryPotentialHouse (currentPage, column, type) {
+
+    queryPotentialHouse (currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };

@@ -14,6 +14,18 @@
   float: left;
 }
 
+/deep/.is-current{
+  .el-tree-node__content{
+    .custom-tree-node{
+      span{
+        .el-button:last-child{
+          color: #ff1300;
+        }
+      }
+    }
+  }
+}
+
 .personSelect {
   float: left;
 }
@@ -24,7 +36,7 @@
 }
 
 .selected_btn{
-  color: red;
+  color: #ffa6a4;
   cursor: pointer;
 }
 </style>
@@ -40,7 +52,9 @@
                  show-checkbox
                  node-key="id"
                  ref="tree"
+                 :check-on-click-node=false
                  highlight-current
+                 :expand-on-click-node=false
                  :props="defaultProps">
           <span class="custom-tree-node"
                 slot-scope="{ node, data }">
@@ -48,16 +62,19 @@
             <span>
               <el-button type="text"
                          size="mini"
+                         style="cursor: pointer;"
                          :class="{'selected_btn':node.data.dataType == '0' }"
                          @click.stop="() => operationSelf(node,data)"> 自己</el-button>
               <el-button type="text"
                          size="mini"
+                         style="cursor: pointer;"
                          :class="{'selected_btn':node.data.dataType == '1'}"
                          @click.stop="() => operationDept(node, data)"> 部门权限</el-button>
               <el-button type="text"
                          size="mini"
+                         style="cursor: pointer;"
                          :class="{'selected_btn':node.data.dataType == '2'}"
-                         @click.stop="() => operationCompany(node, data)">跨部门权限</el-button>
+                         @click="operationCompany(node, data)">跨部门权限</el-button>
             </span>
           </span>
         </el-tree>

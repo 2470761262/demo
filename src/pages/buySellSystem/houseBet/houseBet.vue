@@ -301,7 +301,7 @@ export default {
   },
   mounted () {
 
-    this.queryHouseBet(1);
+    this.queryHouseBet(1, 'id', 'ascending');
     //读取树数据
     this.$api
       .post({
@@ -349,7 +349,7 @@ export default {
     },
     Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.queryHouseBet(1);
+      this.queryHouseBet(1, 'id', 'ascending');
 
     },
     handleCheckChange (data, checked, node) {
@@ -429,7 +429,7 @@ export default {
       that.$router.push({ name: 'houseDetails', params: { "houseId": row.houseId } });
     },
     queryHouseBetParams () {
-      this.queryHouseBet(1);
+      this.queryHouseBet(1, 'id', 'ascending');
     },
     //楼盘获取焦点 第一次点击就进行查询
 
@@ -500,6 +500,12 @@ export default {
       })
     },
     queryHouseBet (currentPage, column, type) {
+      if(!column){
+        column="id"
+      }
+      if(!type){
+        type="ascending"
+      }
       var that = this;
       that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage };
@@ -536,8 +542,9 @@ export default {
           params.endTime = that.data.timeSelect[1];
       }
       console.log(params);
-      this.$api.get({
-        url: '/house/bet/list',
+      this.$api.post({
+        url: '/house/bet/getBetHouse',
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false
       }).then((e) => {
@@ -575,12 +582,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryHouseBet(val);
+      this.queryHouseBet(val, 'id', 'descending');
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryHouseBet(1);
+      this.queryHouseBet(1, 'id', 'ascending');
     }
   },
 }

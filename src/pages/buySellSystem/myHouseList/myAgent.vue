@@ -245,7 +245,7 @@ export default {
         { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: false },
         { prop: 'AgentName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => (item.rooms==null?0:item.rooms) + '室' + (item.hall==null?0:item.hall) + '厅' + (item.toilet==null?0:item.toilet) + '卫' },
+        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
         { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
         { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
         { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },
@@ -340,7 +340,7 @@ export default {
     querylist (currentPage, column, type) {
       let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
       let that = this;
-      that.loading=true;
+      that.loading = true;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (this.key == 'addTime' && this.moreSelect[key] !== '') {
@@ -591,7 +591,7 @@ export default {
     },
     queryMyAgent (currentPage, column, type) {
       var that = this;
-      that.loading=true;
+      that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
       params.sortColumn = column;
       params.sortType = type;
@@ -627,7 +627,7 @@ export default {
         data: params,
       }).then((e) => {
         console.log(e.data);
-        that.loading=false;
+        that.loading = false;
         let data = e.data
         if (data.code == 200) {
           that.pageJson.total = data.data.dataCount;

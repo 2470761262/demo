@@ -59,10 +59,6 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
-        <definitionmenu class="menuMarin"
-                        :renderList="tableColumnField"
-                        :tableColumn="tableColumn"
-                        @change="tabColumnChange"></definitionmenu>
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
               @click="Remove">
           清除
@@ -71,6 +67,16 @@
                    style="margin-left:10px"
                    size="mini"
                    @click="queryShopDiskParams">查询</el-button>
+        <el-button style="border:0">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </el-button>
+        <el-button style="border:0">
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      style="height:40px;margin-right:5px;"></moreSelect>
+        </el-button>
       </div>
     </template>
     <!-- :formatter="item.format" -->
@@ -106,12 +112,14 @@
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 import houseContrast from '@/minxi/houseContrast';
+import moreSelect from '@/components/moreSelect';
 import definitionmenu from '@/components/definitionMenu';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
-    definitionmenu
+    definitionmenu,
+    moreSelect
   },
   data () {
 
@@ -133,6 +141,7 @@ export default {
       options: [],
       cbIdList: [],
       roomNoList: [],
+      moreSelect: [],
       pageJson: {
         currentPage: 1, //当前页码
         total: 0, //总记录数
@@ -150,7 +159,7 @@ export default {
         { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: true },
         { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
+        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
         { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
         { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
         { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },
@@ -171,6 +180,11 @@ export default {
     },
     tabColumnChange (e) {
       this.tableColumn = e;
+    },
+    moreSelectChange (e) {
+      if (e != '')
+        this.moreSelect = e;
+      this.queryVerifyHouseDatas(1, 'id', 'ascending')
     },
     queryTabData () {
       console.log(this, '111');
@@ -275,19 +289,34 @@ export default {
     },
     queryVerifyHouseDatas (currentPage, column, type) {
       var that = this;
-      that.loading=true;
+      that.loading = true;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.beginTime = that.data.timeSelect[0];
-      params.endTime = that.data.timeSelect[1];
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.minInArea = that.data.minInArea;
-      params.maxInArea = that.data.maxInArea;
-      params.minPrice = that.data.minPrice;
-      params.maxPrice = that.data.maxPrice;
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
+            params.biginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          } else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
+            params.biginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          } else {
+            params[key] = this.moreSelect[key]
+          }
+        }
+      }
+      else {
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.roomNo = that.data.roomNo;
+        params.beginTime = that.data.timeSelect[0];
+        params.endTime = that.data.timeSelect[1];
+        params.customName = that.data.customName;
+        params.tel = that.data.tel;
+        params.minInArea = that.data.minInArea;
+        params.maxInArea = that.data.maxInArea;
+        params.minPrice = that.data.minPrice;
+        params.maxPrice = that.data.maxPrice;
+      }
       if (column == '' || type == null || type == undefined) {
         params.sortColumn = 'id';
       } else {
@@ -304,7 +333,7 @@ export default {
         qs: true
       }).then((e) => {
         console.log(e.data);
-        that.loading=false;
+        that.loading = false;
         let data = e.data
         if (data.code == 200) {
           that.pageJson.total = data.data.dataCount;
