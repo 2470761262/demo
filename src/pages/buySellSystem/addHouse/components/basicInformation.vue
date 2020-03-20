@@ -143,7 +143,7 @@
           v-model="formData.tel"
           data-vv-name="tel"
           data-vv-as="电话号码"
-          v-validate="'required|phone'"
+          v-validate="'required|phoneLen|phone'"
         >
           <div slot="prepend" class="item-before" data-before="*">手机号</div>
           <div slot="append" @click="addTelToList" class="item-after item-before-col">
@@ -428,7 +428,7 @@
 </template>
 <script>
 let sex = [
-  { title: "女生", label: 0 },
+  { title: "女士", label: 0 },
   { title: "先生", label: 1 }
 ];
 let certificateType = [
