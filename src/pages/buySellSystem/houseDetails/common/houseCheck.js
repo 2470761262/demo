@@ -1,11 +1,11 @@
 import api from "@/api/require.js"
 export default {
-    isChecking (type, replaceType, houseId) {
+    isChecking (type, replaceType, houseId, memo = "") {
         let that = this;
         let params = {
             houseId: houseId,
             type: type,
-            memo: ""
+            memo: memo
         };
         if (replaceType != 0) {
             params.replaceType = replaceType;

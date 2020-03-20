@@ -72,8 +72,10 @@
         </el-button>
       </div>
       <!-- 修改钥匙存放门店 -->
-      <div class="button-set">
-        <el-button @click="keyStorage">
+      <div class="button-set"
+           v-if="resultData.agentHouseMethod">
+        <el-button @click="openPopUp('keyStorageFlag')"
+                   v-if="resultData.agentHouseMethod.keyOwner==perId||isShowButton.updateKeyStorageDept">
           <i class="el-icon-s-promotion el-icon--left"></i>修改钥匙存放门店
         </el-button>
       </div>
@@ -103,6 +105,13 @@
                 maskHideEvent
                 v-if="cencelTaskFlag">
     </cancelTask>
+    <keyStorage title='修改存放门店'
+                :visible.sync="keyStorageFlag"
+                width="320px"
+                maskHideEvent
+                v-if="keyStorageFlag">
+
+    </keyStorage>
   </section>
 </template>
 
@@ -115,6 +124,8 @@ import betPop from '../didLog/betPop';
 import changeHouseType from '../didLog/changeHouseType';
 //取消作业方
 import cancelTask from '../didLog/cancelTask';
+//存放门店
+import keyStorage from '../didLog/keyStorage';
 import util from "@/util/util";
 //发布外网
 import release from "../common/releaseHouse.js"
@@ -127,7 +138,8 @@ export default {
     releasePop,
     betPop,
     changeHouseType,
-    cancelTask
+    cancelTask,
+    keyStorage
   },
   computed: {
     resultData () {
@@ -144,6 +156,7 @@ export default {
       betPopFlag: false,
       typeFlag: false,
       cencelTaskFlag: false,
+      keyStorageFlag: false,
       isShowButton: {
         locking: false,
         releaseOutsideHouse: false,
@@ -254,11 +267,8 @@ export default {
     },
     //是否显示转状态弹窗
     async  changePopUp () {
-      let reslut = await houseCheck.isChecking(8, 0, this.houseId.id);
-      if (reslut) {
-        this.$message("当前正在审核");
-      }
-      else {
+      let reslut = await houseCheck.isChecking(8, 0, this.houseId.id, "当前正在审核");
+      if (!reslut) {
         this.typeFlag = true;
       }
     },
@@ -302,7 +312,7 @@ export default {
       }).catch(() => {
 
       })
-    }
+    },
   },
 }
 </script>
