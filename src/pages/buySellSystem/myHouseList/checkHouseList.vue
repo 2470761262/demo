@@ -47,6 +47,7 @@
                    class="page-label-center">
             <el-select v-model="queryData.roomNo"
                        filterable
+                       @change="querylistByParams()"
                        placeholder="请选择房间号">
               <el-option v-for="item in roomNoList"
                          :key="item.value"
@@ -59,6 +60,7 @@
           <template slot="prepend">房源状态</template>
           <el-date-picker v-model="queryData.timeSelect"
                           type="daterange"
+                          @change="querylistByParams()"
                           range-separator="至"
                           value-format="yyyy-MM-dd"
                           start-placeholder="开始日期"
@@ -75,6 +77,7 @@
             </span>
             <el-select filterable
                        v-model="type"
+                       @change="querylistByParams()"
                        placeholder="请选择">
               <el-option v-for="item in typeList"
                          :key="item.value"
@@ -87,6 +90,7 @@
             </span>
             <el-select filterable
                        v-model="status"
+                       @change="querylistByParams()"
                        placeholder="请选择">
               <el-option v-for="item in stateList"
                          :key="item.value"
@@ -626,7 +630,7 @@ export default {
           that.cbIdList = e.data.data.list;
         }
       })
-
+      this.querylistByParams();
     },
     getTitle (row) {
       this.titleList.forEach(element => {
@@ -657,6 +661,7 @@ export default {
           that.roomNoList = e.data.data.list;
         }
       })
+      this.querylistByParams();
     },
     //跳转房源详情页面
     toHouseDetail (id) {

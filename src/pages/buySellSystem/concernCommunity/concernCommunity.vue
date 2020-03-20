@@ -27,6 +27,7 @@
               <div style="color:white;float: left;margin-left:10px;">在售总套数</div>
               <div style="color:white;float: right;margin-right:10px;">{{countEffectiveNum}}套</div>
             </div>
+
           </div>
           <div style="height:50px;margin-top:10px;">
             <el-select style="width:270px"
@@ -90,7 +91,7 @@
                      :value="item.value"></el-option>
         </el-select>
 
-        
+
           <el-select v-model="comId"
                      @focus="remoteInput"
                      @change="queryCBId()"
@@ -106,7 +107,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-      
+
           <el-select v-model="cbId"
                      filterable
                      clearable
@@ -118,7 +119,7 @@
                        :value="item.value">
             </el-option>
           </el-select>
-    
+
           <el-select v-model="roomNo"
                      filterable
                      placeholder="请选择房间号">
@@ -128,8 +129,8 @@
                        :value="item.value">
             </el-option>
           </el-select>
-      
-      
+
+
         <span>
           <input type="checkbox"
                  style="margin-left:10px"
@@ -145,6 +146,7 @@
         <el-input placeholder="姓名"
                   style="width:240px"
                   v-model="queryData.Customers"
+                  @change="querylistByParams()"
                   clearable>
           <template slot="prepend">业主</template>
         </el-input>
@@ -152,6 +154,7 @@
         <el-input placeholder="业主电话"
                   v-model="queryData.Tel"
                   style="margin-left:10px;width:240px"
+                  @change="querylistByParams()"
                   clearable>
           <template slot="prepend">电话</template>
         </el-input>
@@ -160,21 +163,26 @@
         <el-input placeholder="最小值"
                   v-model="queryData.minPrice"
                   style="width:160px;margin-top:10px"
+                  @change="querylistByParams()"
+
                   clearable>
           <template slot="prepend">价格</template>
         </el-input>
         <el-input placeholder="最大值"
                   v-model="queryData.maxPrice"
+                  @change="querylistByParams()"
                   style="width:100px"></el-input>
 
         <el-input placeholder="最小值"
                   v-model="queryData.minInArea"
+                  @change="querylistByParams()"
                   style="width:160px"
                   clearable>
           <template slot="prepend">面积</template>
         </el-input>
         <el-input placeholder="最大值"
                   v-model="queryData.maxInArea"
+                  @change="querylistByParams()"
                   style="margin-left:3px;width:100px"></el-input>
       </div>
       <el-button type="primary"
@@ -570,7 +578,7 @@ export default {
             params[key] = this.moreSelect[key];
           }
         }
-      } 
+      }
       else {
         if (this.comId != null && this.comId != '') { params.comId = this.comId; }
         if (this.cbId != null && this.cbId != '') { params.cbId = this.cbId; }
@@ -713,7 +721,9 @@ export default {
           }
         });
       console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
-    }},
+    }
+      this.querylistByParams();
+    },
     queryRoomNo () {
       var that = this;
       this.$api
@@ -733,6 +743,23 @@ export default {
             this.roomNoList = e.data.data.list;
           }
         });
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryBuildIngHouses",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: this.comId,
+          cbId: this.cbId
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.roomNo = '';
+          this.roomNoList = e.data.data.list;
+        }
+      })
+      this.querylistByParams();
     },
     //跳转房源详情页面
     toHouseDetail (id) {

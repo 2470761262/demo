@@ -63,71 +63,87 @@
                          :value="item.value"></el-option>
             </el-select>
           </el-item>
-          <el-item label="房间号"
-                   prop="roomNo"
-                   clearable
-                   class="page-label-center">
-            <el-select v-model="data.roomNo"
-                       filterable
-                       placeholder="请选择房间号">
-              <el-option v-for="item in roomNoList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
+          <el-item label="房间号" prop="roomNo" clearable class="page-label-center">
+            <el-select v-model="data.roomNo" filterable placeholder="请选择房间号" @change="queryVerifyHouseByParams()">
+              <el-option
+                v-for="item in roomNoList"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-item>
-          <el-input placeholder="姓名"
-                    v-model="data.customName"
-                    style="margin-left:30px;width:240px"
-                    clearable>
+          <el-input
+            placeholder="姓名"
+            v-model="data.customName"
+            @change="queryVerifyHouseByParams()"
+            style="margin-left:30px;width:240px"
+            clearable
+          >
             <template slot="prepend">业主</template>
           </el-input>
-          <el-input placeholder="电话"
-                    v-model="data.tel"
-                    style="margin-left:30px;width:240px"
-                    clearable>
+          <el-input
+            @change="queryVerifyHouseByParams()"
+            placeholder="电话"
+            v-model="data.tel"
+            style="margin-left:30px;width:240px"
+            clearable
+          >
             <template slot="prepend">业主电话</template>
           </el-input>
-          <el-input placeholder="最小面积"
-                    v-model="data.minInArea"
-                    style="margin-left:30px;width:120px"
-                    clearable>
+          <el-input
+            placeholder="最小面积"
+            @change="queryVerifyHouseByParams()"
+            v-model="data.minInArea"
+            style="margin-left:30px;width:120px"
+            clearable
+          >
             <template slot="prepend">面积</template>
           </el-input>-
-          <el-input placeholder="最大面积"
-                    v-model="data.maxInArea"
-                    style="width:120px"
-                    clearable />
-          <el-input placeholder="最小值"
-                    v-model="data.minPrice"
-                    style="margin-left:30px;width:180px"
-                    clearable>
+          <el-input placeholder="最大面积" @change="queryVerifyHouseByParams()" v-model="data.maxInArea" style="width:120px" clearable />
+          <el-input
+            placeholder="最小值"
+            @change="queryVerifyHouseByParams()"
+            v-model="data.minPrice"
+            style="margin-left:30px;width:180px"
+            clearable
+          >
             <template slot="prepend">价格</template>
           </el-input>-
           <el-input placeholder="最大值"
+                    @change="queryVerifyHouseByParams()"
                     v-model="data.maxPrice"
                     style="width:120px;margin-top:10px"
                     clearable />
-          <span style="margin-left:30px">验真状态：</span>
-          <el-select filterable
-                     v-model="data.checkStatusValue"
-                     placeholder="请选择">
-            <el-option v-for="item in checkStatusList"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value"></el-option>
-          </el-select>
-          <span style="margin-left:30px">电话检索：</span>
-          <el-select filterable
-                     v-model="data.phoneStatusValue"
-                     placeholder="请选择">
-            <el-option v-for="item in phoneStatusList"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value"></el-option>
-          </el-select>
+          <span style="margin-left:30px">
+              验真状态：
+            </span>
+            <el-select filterable
+                       v-model="data.checkStatusValue"
+                       @change="queryVerifyHouseByParams()"
+                       placeholder="请选择">
+              <el-option v-for="item in checkStatusList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
+            <span style="margin-left:30px">
+              电话检索：
+            </span>
+            <el-select filterable
+                       v-model="data.phoneStatusValue"
+                       @change="queryVerifyHouseByParams()"
+                       placeholder="请选择">
+              <el-option v-for="item in phoneStatusList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
           <el-date-picker v-model="data.timeSelect"
                           type="daterange"
+                          @change="queryVerifyHouseByParams()"
                           range-separator="至"
                           start-placeholder="开始日期"
                           end-placeholder="结束日期">
@@ -677,6 +693,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
+        this.queryVerifyHouseByParams();
     },
     queryRoomNo () {
       var that = this;
@@ -699,6 +716,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
+        this.queryVerifyHouseByParams();
     },
     queryTabData () {
       console.log(this.queryData);

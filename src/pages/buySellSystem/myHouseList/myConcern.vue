@@ -1,7 +1,9 @@
 ﻿<style scoped>
 .Impression-body {
-  width: 300px;
+  width: 265px;
   background-color: white;
+  /* margin-top:150px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); */
   height: 500px;
 }
 .tag-all {
@@ -40,6 +42,7 @@
     <template v-slot:left>
       <div class="Impression-body">
         <div style="height:30px">
+          <i icon="el-icon-search"></i>
           <el-select v-model="imdataimdata"
                      @change="selectImpression($event)"
                      filterable
@@ -110,7 +113,7 @@
         </el-select>
         <!-- </el-item>
         <el-item label="房间号" prop="roomNo" clearable class="page-label-center">-->
-        <el-select v-model="queryData.RoomNo" filterable placeholder="请选择房间号">
+        <el-select v-model="queryData.RoomNo" @change="querylistByParams()" filterable placeholder="请选择房间号">
           <el-option
             v-for="item in roomNoList"
             :key="item.value"
@@ -121,6 +124,7 @@
         <!-- </el-item> -->
         <el-input
           placeholder="业主姓名"
+          @change="querylistByParams()"
           v-model="queryData.Customers"
           style="margin-left:25px;width:240px"
           clearable
@@ -129,6 +133,7 @@
         </el-input>
 
         <el-input placeholder="业主电话"
+                  @change="querylistByParams()"
                   v-model="queryData.Tel"
                   style="margin-left:30px;width:240px"
                   clearable>
@@ -136,27 +141,32 @@
         </el-input>
 
         <el-input placeholder="最小值"
+                  @change="querylistByParams()"
                   v-model="queryData.minPrice"
                   style="margin-left:25px;width:160px"
                   clearable>
           <template slot="prepend">价格</template>
         </el-input>
         <el-input placeholder="最大值"
+                  @change="querylistByParams()"
                   v-model="queryData.maxPrice"
                   style="margin-left:10px;width:100px"></el-input>
         <br />
         <el-input placeholder="最小值"
+                  @change="querylistByParams()"
                   v-model="queryData.minInArea"
                   style="width:160px"
                   clearable>
           <template slot="prepend">面积</template>
         </el-input>
         <el-input placeholder="最大值"
+                  @change="querylistByParams()"
                   v-model="queryData.maxInArea"
                   style="margin-left:10px;width:100px"></el-input>
 
         <template slot="prepend">房源状态</template>
         <el-date-picker v-model="queryData.timeSelect"
+                        @change="querylistByParams()"
                         type="daterange"
                         range-separator="至"
                         value-format="yyyy-MM-dd"
@@ -165,10 +175,12 @@
         <span>
           <input type="checkbox"
                  style='margin-left:10px'
+
                  @click="keySelect()" /> 钥匙</span>
         <span>
           <input type="checkbox"
                  style='margin-left:10px;background:#fff'
+
                  @click="onlySelect()" /> 独家</span>
         <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
               @click="remove">
@@ -406,6 +418,7 @@ export default {
       } else {
         this.queryData.keyOwner = "1";
       }
+      @change="querylistByParams()"
     },
     onlySelect () {
       if (this.queryData.isOnly != "") {
@@ -413,6 +426,7 @@ export default {
       } else {
         this.queryData.isOnly = "1";
       }
+      @change="querylistByParams()"
     },
     handleClose (tag) {
       console.log("删除前：", this.ImpressionList);
@@ -425,6 +439,8 @@ export default {
       this.querylistByParams();
     },
     remove () {
+      this.queryData.keyOwner = '';
+      this.queryData.isOnly = '';
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.querylist(1, 'id', 'ascending');
@@ -789,6 +805,7 @@ export default {
             this.cbIdList = e.data.data.list;
           }
         });
+         this.querylistByParams();
       console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
     queryRoomNo () {
@@ -810,6 +827,7 @@ export default {
             this.roomNoList = e.data.data.list;
           }
         });
+         this.querylistByParams();
     },
     handleClick () { },
     handleSizeChange (val) {

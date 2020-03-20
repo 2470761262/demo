@@ -10,7 +10,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
         <el-select v-model="data.comId"
-                   @change="queryCBId()"
+                   @change="queryDatalist()"
                    filterable
                    remote
                    @focus="remoteInput"
@@ -25,22 +25,27 @@
         </el-select>
         <el-input placeholder="最低售价"
                   v-model="data.minPrice"
+                  @change="queryDatalist()"
                   style="margin-left:30px;width:120px"
                   clearable />------
         <el-input placeholder="最高售价"
                   v-model="data.maxPrice"
+                  @change="queryDatalist()"
                   style="width:120px"
                   clearable />万
         <el-input placeholder="最小面积"
                   v-model="data.minArea"
+                  @change="queryDatalist()"
                   style="margin-left:30px;width:120px"
                   clearable />------
         <el-input placeholder="最大面积"
                   v-model="data.maxArea"
+                  @change="queryDatalist()"
                   style="width:120px"
                   clearable />平方
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
+                        @change="queryDatalist()"
                         range-separator="至"
                         start-placeholder="成交开始日期"
                         end-placeholder="成交结束日期"></el-date-picker>

@@ -44,6 +44,7 @@
             <el-select v-model="data.roomNo"
                        filterable
                        style="width: 132px"
+                       @change="queryHouseBetParams()"
                        clearable
                        placeholder="请选择房间号">
               <el-option v-for="item in roomNoList"
@@ -56,6 +57,7 @@
           <el-form-item label="业主"
                         prop="customerName">
             <el-input clearable
+                      @change="queryHouseBetParams()"
                       v-model="data.customerName"
                       placeholder="业主姓名" />
           </el-form-item>
@@ -63,6 +65,7 @@
           <el-form-item label="电话"
                         prop="tel">
             <el-input clearable
+                      @change="queryHouseBetParams()"
                       v-model="data.tel"
                       placeholder="业主电话" />
           </el-form-item>
@@ -71,6 +74,7 @@
                         prop="minMoney">
             <el-col :span="8">
               <el-input clearable
+                        @change="queryHouseBetParams()"
                         v-model="data.minMoney"
                         placeholder="最小值" />
             </el-col>
@@ -80,6 +84,7 @@
             <el-col :span="8">
               <el-form-item prop="money_to">
                 <el-input clearable
+                          @change="queryHouseBetParams()"
                           v-model="data.maxMoney"
                           placeholder="最大值" />
               </el-form-item>
@@ -92,6 +97,7 @@
           <el-form-item label="对赌日期"
                         prop="timeSelect">
             <el-date-picker v-model="data.timeSelect"
+                            @change="queryHouseBetParams()"
                             type="daterange"
                             unlink-panels
                             value-format="yyyy-MM-dd"
@@ -103,6 +109,7 @@
           <el-form-item label="对赌结果"
                         prop="status">
             <el-select v-model="data.status"
+                       @change="queryHouseBetParams()"
                        clearable
                        style="width: 120px"
                        placeholder="对赌结果">
@@ -354,6 +361,7 @@ export default {
           this.data.empId = data.businessId;
         }
       }
+      this.queryHouseBetParams();
     },
     filterNode (value, data) {
       console.log(value, data);
@@ -469,6 +477,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
+         this.queryHouseBetParams();
     },
     queryRoomNo () {
       var that = this;
@@ -489,6 +498,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
+        this.queryHouseBetParams();
     },
     queryHouseBet (currentPage, column, type) {
       if (!column) {

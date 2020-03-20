@@ -17,7 +17,7 @@
 </style>
 <template>
   <el-form ref="form" :rules="rules" :model="companyEntity" label-width="160px" >
-    <el-form-item label="公司名称:" required ="true" prop="companyName">
+    <el-form-item label="公司名称:" :required ="true" prop="companyName">
       
       <el-input
         type="text"
@@ -72,7 +72,7 @@
         <el-option label="代理" :value="5" />
       </el-select>
     </el-form-item>
-    <el-form-item label="选择负责人:" required ="true" prop="managerPer">
+    <el-form-item label="选择负责人:" :required ="true" prop="managerPer">
       <el-dialog
         title="请选择:"
         :visible.sync="dialogVisible1"
@@ -125,7 +125,7 @@
         show-word-limit
       ></el-input>
     </el-form-item>
-    <el-form-item label="设置管辖区域:" required ="true" prop="region">
+    <el-form-item label="设置管辖区域:" :required ="true" prop="region">
       <el-dialog title="提示" :visible.sync="dialogVisible" width="30%" :before-close="handleClose">
         <template>
           <el-checkbox
@@ -137,8 +137,8 @@
           <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
             <el-checkbox v-for="city in regionName" :label="city" :key="city.Name">
               <el-popover placement="top-start" trigger="hover">
-                <el-checkbox v-for="city in region" :label="city" :key="city.Name">{{city.Name}}</el-checkbox>
-                <button slot="reference" @mouseover="checked(city.id)">{{city.Name}}</button>
+                <el-checkbox v-for="(childCity) in region" :label="childCity" :key="childCity.Name" @change="handleCheckedCitiesChange1($event,city)">{{childCity.Name}}</el-checkbox>
+                <button slot="reference" @mouseover="checked(city.id)" >{{city.Name}}</button>
               </el-popover>
             </el-checkbox>
           </el-checkbox-group>
@@ -207,12 +207,14 @@ export default {
         companyDesc: null,
         parentId: null,
         deptParentId: null,
-        backUrl: null
+        backUrl: null,
+        region:""
       },
       dialogVisible: false,
       regionName: [],
       region: [],
       checkAll: false,
+      cityCheckAll: false,
       checkedCities: [],
       isIndeterminate: true,
       jumpNodeId: ""
@@ -302,8 +304,24 @@ export default {
     handleCheckedCitiesChange(value) {
       let checkedCount = value.length;
       this.checkAll = checkedCount === this.regionName.length;
+      console.log(this.cityCheckAll);
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.regionName.length;
+    },
+     handleCheckedCitiesChange1(value,parentValue) {
+       let  result = true;
+       if(this.checkedCities.length==0){
+         this.checkedCities.push(parentValue);
+       }
+      this.checkedCities.forEach((item)=>{
+        if(item.ShortName == parentValue.ShortName){
+           result = false;
+        }
+      })
+      if(result){
+            this.checkedCities.push(parentValue);
+      }
+     console.log( this.checkedCities," this.checkedCities");
     },
     getDialogVisible(id) {
       this.dialogVisible = true;
@@ -340,22 +358,22 @@ export default {
       console.log(this.checkedCities);
       this.companyEntity.regionName = "";
       this.dialogVisible = false;
-      if (this.checkedCities.length == this.regionName.length) {
-        this.companyEntity.regionName = "全部";
-      } else {
+      
         for (let index in this.checkedCities) {
           console.log(this.checkedCities[index]);
           if (index == this.checkedCities.length - 1) {
             this.companyEntity.regionName += this.checkedCities[index].Name;
+            this.companyEntity.region += this.checkedCities[index].id;
           } else {
-            this.companyEntity.regionName +=
-              this.checkedCities[index].Name + ",";
+            this.companyEntity.regionName +=this.checkedCities[index].Name + ",";
+             this.companyEntity.region += this.checkedCities[index].id+",";
           }
         }
-      }
+        console.log(this.companyEntity.region)
+      
     },
     savecompany() {
-      if (/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.companyEntity.Tel)) {
+      if (!(!/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.companyEntity.tel))) {
         let params = this.companyEntity;
         this.$api
           .post({

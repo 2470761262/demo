@@ -36,6 +36,7 @@
         </el-select>
         <el-select v-model="data.roomNo"
                    filterable
+                   @change="querySaleNotTrackParams()"
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
                      :key="item.value"
@@ -44,37 +45,45 @@
         </el-select>
         <el-input placeholder="业主姓名"
                   v-model="data.customName"
+                  @change="querySaleNotTrackParams()"
                   style="margin-left:30px;width:240px"
                   clearable />
 
         <el-input placeholder="业主电话"
                   v-model="data.tel"
                   style="margin-left:30px;width:240px"
+                  @change="querySaleNotTrackParams()"
                   clearable />
         <el-input placeholder="最小面积"
                   v-model="data.minInArea"
+                  @change="querySaleNotTrackParams()"
                   style="margin-left:30px;width:120px"
                   clearable />------
         <el-input placeholder="最大面积"
                   v-model="data.maxInArea"
+                  @change="querySaleNotTrackParams()"
                   style="width:120px"
                   clearable />
         <el-input placeholder="最低售价"
                   v-model="data.minPrice"
+                  @change="querySaleNotTrackParams()"
                   style="margin-left:30px;width:120px"
                   clearable />------
         <el-input placeholder="最高售价"
                   v-model="data.maxPrice"
+                  @change="querySaleNotTrackParams()"
                   style="width:120px"
                   clearable />
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
+                        @change="querySaleNotTrackParams()"
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"></el-date-picker>
         <template>
           <el-select v-model="workType"
                      value-key="item.value"
+                     @change="querySaleNotTrackParams()"
                      placeholder="请选择作业方">
             <el-option v-for="item in option"
                        :key="item.value"
@@ -349,7 +358,7 @@ export default {
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     querySaleNotTrackParams () {
-      this.querySaleNotTrack(1, "id", "ascending");
+      this.querySaleNotTrack(1, 'id', 'ascending');
     },
     remoteInput () {
       if (this.data.comId.length == 0) {
@@ -411,28 +420,28 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
+        @change="querySaleNotTrackParams()"
     },
     queryRoomNo () {
-      var that = this;
-      this.$api
-        .get({
-          url: "/mateHouse/queryBuildIngHouses",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: that.data.comId,
-            cbId: that.data.cbId,
-            page: 1,
-            limit: 50
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.data.roomNo = "";
-            that.roomNoList = e.data.data.list;
-          }
-        });
+      var that = this
+      this.$api.get({
+        url: "/mateHouse/queryBuildIngHouses",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          comId: that.data.comId,
+          cbId: that.data.cbId,
+          page: 1,
+          limit: 50
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.data.roomNo = '';
+          that.roomNoList = e.data.data.list;
+        }
+      })
+      @change="querySaleNotTrackParams()"
     },
     querySaleNotTrack (currentPage, column, type) {
       var that = this;

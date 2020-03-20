@@ -40,6 +40,8 @@
         <el-select v-model="data.roomNo"
                    filterable
                    style="width: 120px;"
+                   @change="queryNotPhoneParams()"
+
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
                      :key="item.value"
@@ -47,16 +49,11 @@
                      :value="item.value"></el-option>
         </el-select>
 
-        <el-input placeholder="最小面积"
-                  v-model="data.minInArea"
-                  style="margin-left:30px;width:120px"
-                  clearable />------
-        <el-input placeholder="最大面积"
-                  v-model="data.maxInArea"
-                  style="width:120px"
-                  clearable />
+        <el-input placeholder="最小面积" v-model="data.minInArea" @change="queryNotPhoneParams()" style="margin-left:30px;width:120px" clearable />------
+        <el-input placeholder="最大面积" v-model="data.maxInArea" @change="queryNotPhoneParams()" style="width:120px" clearable />
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
+                        @change="queryNotPhoneParams()"
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"></el-date-picker>
@@ -349,6 +346,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
+        @change="querySaleNotTrackParams()"
     },
     queryRoomNo () {
       var that = this;
@@ -371,6 +369,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
+        @change="querySaleNotTrackParams()"
     },
     queryNotPhone (currentPage) {
       var that = this;
@@ -447,4 +446,4 @@ export default {
     }
   }
 };
-</script>  
+</script>

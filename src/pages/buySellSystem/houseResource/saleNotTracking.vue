@@ -36,39 +36,23 @@
         </el-select>
         <el-select v-model="data.roomNo"
                    filterable
+                   @change="querySaleNotTrackParams()"
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
                      :key="item.value"
                      :label="item.name"
                      :value="item.value"></el-option>
         </el-select>
-        <el-input placeholder="业主姓名"
-                  v-model="data.customName"
-                  style="margin-left:30px;width:240px"
-                  clearable />
-
-        <el-input placeholder="业主电话"
-                  v-model="data.tel"
-                  style="margin-left:30px;width:240px"
-                  clearable />
-        <el-input placeholder="最小面积"
-                  v-model="data.minInArea"
-                  style="margin-left:30px;width:120px"
-                  clearable />------
-        <el-input placeholder="最大面积"
-                  v-model="data.maxInArea"
-                  style="width:120px"
-                  clearable />
-        <el-input placeholder="最低售价"
-                  v-model="data.minPrice"
-                  style="margin-left:30px;width:120px"
-                  clearable />------
-        <el-input placeholder="最高售价"
-                  v-model="data.maxPrice"
-                  style="width:120px"
-                  clearable />
+        <el-input placeholder="业主姓名" v-model="data.customName" @change="querySaleNotTrackParams()" style="margin-left:30px;width:240px" clearable />
+         
+        <el-input placeholder="业主电话" v-model="data.tel" @change="querySaleNotTrackParams()" style="margin-left:30px;width:240px" clearable />
+        <el-input placeholder="最小面积" v-model="data.minInArea" @change="querySaleNotTrackParams()" style="margin-left:30px;width:120px" clearable />------
+        <el-input placeholder="最大面积" v-model="data.maxInArea" @change="querySaleNotTrackParams()" style="width:120px" clearable />
+        <el-input placeholder="最低售价" v-model="data.minPrice" @change="querySaleNotTrackParams()" style="margin-left:30px;width:120px" clearable />------
+        <el-input placeholder="最高售价" v-model="data.maxPrice" @change="querySaleNotTrackParams()" style="width:120px" clearable />
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
+                        @change="querySaleNotTrackParams()"
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"></el-date-picker>
@@ -386,6 +370,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
+        this.querySaleNotTrackParams();
     },
     queryRoomNo () {
       var that = this;
@@ -408,6 +393,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
+        this.querySaleNotTrackParams();
     },
     Remove () {
       let tab = this.tableColumn;

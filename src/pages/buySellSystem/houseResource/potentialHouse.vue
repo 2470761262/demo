@@ -39,6 +39,7 @@
 
         <el-select v-model="data.roomNo"
                    filterable
+                   @change="queryPotentialHouseParams()"
                    style="width:140px"
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
@@ -49,6 +50,7 @@
 
         <el-select v-model="data.type"
                    style="width:150px"
+                   @change="queryPotentialHouseParams()"
                    placeholder="请选择"
                    clearable>
           <el-option v-for="item in option"
@@ -56,17 +58,13 @@
                      :label="item.label"
                      :value="item.value"></el-option>
         </el-select>
-        <el-input placeholder="业主姓名"
-                  v-model="data.customName"
-                  style="margin-left:30px;width:170px"
-                  clearable />
-
-        <el-input placeholder="业主电话"
-                  v-model="data.tel"
-                  style="margin-left:30px;width:170px"
-                  clearable />
+        <el-input placeholder="业主姓名" v-model="data.customName" @change="queryPotentialHouseParams()" style="margin-left:30px;width:170px" clearable />
+         
+        <el-input placeholder="业主电话" v-model="data.tel" @change="queryPotentialHouseParams()" style="margin-left:30px;width:170px" clearable />
         <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
-              @click="Remove">清除</span>
+              @click="Remove">
+          清除
+        </span>
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
@@ -272,6 +270,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
+        this.queryPotentialHouseParams();
     },
     queryRoomNo () {
       var that = this;
@@ -294,6 +293,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
+        this.queryPotentialHouseParams();
     },
     Remove () {
       let tab = this.tableColumn;

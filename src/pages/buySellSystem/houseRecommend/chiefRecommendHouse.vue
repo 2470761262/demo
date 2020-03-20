@@ -39,6 +39,7 @@
         </el-select>
         <el-select v-model="data.roomNo"
                    filterable
+                   @change="queryChiefHouseParams()"
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
                      :key="item.value"
@@ -49,6 +50,7 @@
 
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
+                        @change="queryChiefHouseParams()"
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
@@ -222,6 +224,7 @@ export default {
           that.cbIdList = e.data.data.list;
         }
       })
+      this.queryChiefHouseParams();
     },
     queryRoomNo () {
       var that = this
@@ -242,6 +245,7 @@ export default {
           that.roomNoList = e.data.data.list;
         }
       })
+      this.queryChiefHouseParams();
     },
     queryChiefHouse (currentPage, column, type) {
       var that = this;

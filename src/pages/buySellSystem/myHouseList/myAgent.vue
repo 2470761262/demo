@@ -36,6 +36,7 @@
         </el-select>
         <el-select v-model="data.roomNo"
                    filterable
+                   @change="querylistByParams()"
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
                      :key="item.value"
@@ -43,32 +44,39 @@
                      :value="item.value"></el-option>
         </el-select>
         <el-input placeholder="业主姓名"
+                  @change="querylistByParams()"
                   v-model="data.customName"
                   style="margin-left:30px;width:240px"
                   clearable />
 
         <el-input placeholder="业主电话"
                   v-model="data.tel"
+                  @change="querylistByParams()"
                   style="margin-left:30px;width:240px"
                   clearable />
         <el-input placeholder="最小面积"
                   v-model="data.minInArea"
+                  @change="querylistByParams()"
                   style="margin-left:30px;width:120px"
                   clearable />------
         <el-input placeholder="最大面积"
                   v-model="data.maxInArea"
+                  @change="querylistByParams()"
                   style="width:120px"
                   clearable />
         <el-input placeholder="最低售价"
                   v-model="data.minPrice"
+                  @change="querylistByParams()"
                   style="margin-left:30px;width:120px"
                   clearable />------
         <el-input placeholder="最高售价"
                   v-model="data.maxPrice"
+                  @change="querylistByParams()"
                   style="width:120px"
                   clearable />
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
+                        @change="querylistByParams()"
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"></el-date-picker>
@@ -360,7 +368,7 @@ export default {
             params[key] = this.moreSelect[key];
           }
         }
-      } 
+      }
       else {
         if (that.data.comId != null && that.data.comId != '') { params.comId = that.data.comId; }
         if (that.data.cbId != null && that.data.cbId != '') { params.cbId = this.data.cbId; }
@@ -589,6 +597,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
+        this.querylistByParams();
     },
     queryRoomNo () {
       var that = this;
@@ -611,6 +620,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
+         this.querylistByParams();
     },
     queryMyAgent (currentPage, column, type) {
       var that = this;
