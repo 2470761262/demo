@@ -48,9 +48,9 @@
     <template>
       <div class="bet-content">
         <div class="bet-tips">
-          <p>1，对赌鑫币值封顶为1000个</p>
-          <p>2，7天内成交可获得5倍鑫币</p>
-          <p>3，合同审核通过前24小时提交为有效</p>
+          <p>1，对赌鑫币值封顶为{{betConf.upper}}个</p>
+          <p>2，{{betConf.expireDay}}天内成交可获得{{betConf.odds}}倍鑫币</p>
+          <p>3，合同审核通过前{{betConf.startHour}}小时提交为有效</p>
         </div>
         <div class="bet-input">
           <div class="bet-input-text">对赌鑫币值</div>
@@ -58,11 +58,11 @@
             <el-input v-model="butValue"
                       data-vv-name="butValue"
                       data-vv-as="鑫币值"
-                      v-validate="'min_value:100|max_value:1000'"
+                      v-validate="'min_value:'+betConf.lower"
                       v-number
                       placeholder="输入对赌鑫币值"></el-input>
             <div v-if="errorBags.has('butValue')">{{errorBags.first('butValue')}}</div>
-            <div v-else>(对赌鑫币100起投)</div>
+            <div v-else>(对赌鑫币{{betConf.lower}}起投)</div>
           </div>
           <div class="bet-input-text">个</div>
         </div>
@@ -79,19 +79,51 @@
   </fixedPopup>
 </template>
 <script>
+import but from "@/evenBus/but.js";
 export default {
+  inject: ["houseId"],
   data () {
     return {
       butValue: '',
-      loading: false
+      loading: false,
+      betConf: {
+        startHour: 0,
+        expireDay: 0,
+        odds: 0,
+        upper: 0,
+        lower: 0,
+      },
     }
+  },
+  created () {
+    but.$on("betConf", (value) => {
+      this.betConf = value;
+    })
+  },
+  destroyed () {
+    but.$off('betConf');
   },
   methods: {
     result () {
       this.$validator
         .validateAll().then((e) => {
           if (e) {
-
+            var that = this;
+            let params = { "HouseId": that.houseId.id, "Amount": that.butValue };
+            this.$api.post({
+              url: '/house/bet/add',
+              data: params,
+              token: false,
+              headers: { "Content-Type": "application/json" }
+            }).then((e) => {
+              let data = e.data
+              if (data.code == 200) {
+                but.$emit("getBetInfo")
+              } else {
+                this.$message.error(data.message);
+              }
+            }).catch((e) => {
+            })
           }
         })
     },

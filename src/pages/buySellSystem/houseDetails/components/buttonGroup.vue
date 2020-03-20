@@ -37,17 +37,30 @@
       <!-- 发布外网 -->
       <div class="button-set">
         <el-button @click="certificateType"
-                   v-if="resultData.isReleaseOutside!=1&&(resultData.AgentPer==perId||isShowButton.releaseOutsideHouse)">
+                   v-if="resultData.isReleaseOutside!=1&&(resultData.AgentPer==perId||isShowButton.releaseOutsideHouse)&&resultData.plate!=4&&resultData.plate!=1">
           <i class="el-icon-s-promotion el-icon--left"></i>发布外网
         </el-button>
-        <el-button v-if="resultData.isReleaseOutside==1&&(resultData.AgentPer==perId||isShowButton.cancelOutsideHouse)"
+        <el-button v-if="resultData.isReleaseOutside==1&&(resultData.AgentPer==perId||isShowButton.cancelOutsideHouse)&&resultData.plate!=4&&resultData.plate!=1"
                    @click="cancelOutsideHouse">
           <i class="el-icon-s-promotion el-icon--left"></i>取消发布
         </el-button>
       </div>
-      <!-- 成交对赌 -->
+      <!-- 总监推荐 -->
       <div class="button-set">
-        <el-button @click="openPopUp('betPopFlag')">
+        <el-button @click="nodePop"
+                   v-if="!isRecommend">
+          <i class="el-icon-s-promotion el-icon--left"></i>总监推荐
+        </el-button>
+        <el-button v-if="isRecommend"
+                   @click="nodePop">
+          <i class="el-icon-s-promotion el-icon--left"></i>取消推荐
+        </el-button>
+      </div>
+      <!-- 成交对赌 -->
+      <div class="button-set"
+           v-if=" resultData.agentHouseMethod">
+        <el-button @click="showBetView"
+                   v-if="!isBet&&resultData.agentHouseMethod.AgentPer==perId&&resultData.plate!=4&&resultData.plate!=1">
           <i class="el-icon-s-promotion el-icon--left"></i>成交对赌
         </el-button>
       </div>
@@ -105,6 +118,7 @@
                 maskHideEvent
                 v-if="cencelTaskFlag">
     </cancelTask>
+    <!-- 修改存放门店 -->
     <keyStorage title='修改存放门店'
                 :visible.sync="keyStorageFlag"
                 width="320px"
@@ -167,15 +181,151 @@ export default {
         telFollow: false
       },//是否显示按钮
       perId: "",//登录人id
+      isRecommend: false,//是否推荐
+      isBet: true,//是否正在对赌
+
     }
   },
   mounted () {
     this.getAgentRules();
+    this.getisRecommend();
+    this.getBetInfo();
     if (util.localStorageGet("logindata")) {
       this.perId = util.localStorageGet("logindata").accountId;
     }
   },
+  created () {
+    but.$on("getBetInfo", () => {
+      this.getBetInfo
+    })
+  },
+  destroyed () {
+    but.$off('getBetInfo');
+  },
   methods: {
+    //获取对赌结束时间
+    getBetInfo () {
+      var that = this;
+      this.$api.get({
+        url: '/house/bet/inBet/' + that.houseId.id,
+        data: null
+      }).then((e) => {
+        let data = e.data
+        if (data.data) {
+          that.isBet = true;
+          but.$.$emit("betExpire", betExpire);
+        } else {
+          that.isBet = false;
+        }
+      }).catch((e) => {
+      })
+    },
+    //获取对赌配置参数
+    showBetView () {
+      var that = this;
+      this.$api.get({
+        url: '/house/bet/conf',
+        data: null,
+        token: false
+      }).then((e) => {
+        let data = e.data
+        if (data.code == 200) {
+          this.betPopFlag = true;
+          this.$nextTick(() => {
+            but.$emit("betConf", data.data);
+          })
+        } else {
+          this.$message.error({ message: data.message, offset: 400 });
+        }
+      }).catch((e) => {
+      })
+    },
+    //推荐或者取消推荐房源
+    insertOrCancelRecommend (value) {
+      let that = this;
+      let url = "/agentHouse/recommend/insertRecommend"
+      if (this.isRecommend) {
+        url = "/agentHouse/recommend/cancelRecommend";
+      }
+      this.$api
+        .post({
+          url: url,
+          data: {
+            Eid: that.houseId.id,
+            Memo: value
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.isRecommend = !that.isRecommend;
+          }
+          else {
+            that.$message(result.message);
+          }
+        })
+        .catch(e => {
+        });
+    },
+    //打开推荐弹窗
+    nodePop () {
+      let that = this;
+      this.$prompt(null, this.isRecommend ? '取消推荐' : '推荐房源', {
+        confirmButtonText: '提交',
+        cancelButtonText: '取消',
+        inputPlaceholder: '请输入原因',
+        inputType: 'textarea',
+        lockScroll: false,
+        inputValidator: (e) => {
+          if (!e)
+            return '理由不能为空';
+        },
+        beforeClose (action, instance, done) {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true;
+            instance.confirmButtonText = '执行中...';
+            that.insertOrCancelRecommend(instance.inputValue)
+            setTimeout(() => {
+              done();
+              instance.confirmButtonLoading = false;
+            }, 500);
+          } else {
+            done();
+          }
+        }
+      }).then((value) => {
+        console.log(action, instance, done);
+      }).catch(() => {
+
+      })
+    },
+    /**
+     * 是否已经推荐
+     */
+    getisRecommend () {
+      let that = this;
+      this.$api
+        .get({
+          url: "/agentHouse/recommend/isRecommend",
+          data: {
+            houseId: this.houseId.id
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.data) {
+            that.isRecommend = true;
+          }
+          else {
+            that.isRecommend = false;
+          }
+        })
+        .catch(e => {
+        });
+    },
     //锁定或解锁房源
     houseLock () {
       let that = this;
