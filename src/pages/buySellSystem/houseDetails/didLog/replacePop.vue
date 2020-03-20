@@ -35,6 +35,9 @@
         & + .replace-select {
           margin-left: 20px;
         }
+        /deep/.el-input__icon {
+          line-height: 27px;
+        }
         /deep/.el-input__inner {
           height: 27px;
           padding: 0;
@@ -92,6 +95,10 @@
     height: 80px;
   }
 }
+.fieldError {
+  font-size: 15px;
+  color: red;
+}
 .pop-but {
   /deep/span {
     font-size: 12px !important;
@@ -102,6 +109,9 @@
       color: #fff;
     }
   }
+}
+#uploadFile {
+  display: none;
 }
 </style>
 <template>
@@ -128,38 +138,41 @@
                v-if="pop.model==2">
             <h3>密码</h3>
             <el-input v-model="password"
+                      data-vv-as="密码锁"
+                      data-vv-name="password"
+                      v-validate="{required:pop.model==2}"
                       placeholder="请输入密码锁密码"></el-input>
           </div>
           <div class="replace-left-row">
             <h3>存放门店</h3>
-            <el-select class="replace-select"
+            <el-select data-vv-as="区域"
+                       data-vv-name="region"
+                       v-validate="'required'"
+                       class="replace-select"
                        v-model="region.model"
                        filterable
-                       :remote-method="getRegionList"
                        :loading="region.loading"
-                       remote
+                       @focus="getRegionList"
                        @change="changeRegionValue"
-                       value-key="value"
                        placeholder="请选择区域">
               <el-option v-for="item in region.list"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item">
+                         :key="item.id"
+                         :label="item.deptName"
+                         :value="item.id">
               </el-option>
             </el-select>
-            <el-select class="replace-select"
+            <el-select data-vv-as="门店"
+                       data-vv-name="stores"
+                       v-validate="'required'"
+                       class="replace-select"
                        v-model="stores.model"
                        filterable
-                       :remote-method="getStoresList"
                        :loading="stores.loading"
-                       remote
-                       @change="changeStoresValue"
-                       value-key="value"
                        placeholder="请选择门店">
               <el-option v-for="item in stores.list"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item">
+                         :key="item.id"
+                         :label="item.deptName"
+                         :value="item.id">
               </el-option>
             </el-select>
           </div>
@@ -168,14 +181,22 @@
           <div class="replace-upload">
             <i class="el-icon-upload icon"></i>
             <label class="replace-upload-but">
-              <input type="file" />
+              <input type="file"
+                     @change="getFileChange" />
+              <input type="text"
+                     v-model="fileLoad.id"
+                     data-vv-as="文件"
+                     data-vv-name="fileLoad"
+                     v-validate="'required'"
+                     id="uploadFile" />
               <span>请上传委托文件</span>
             </label>
           </div>
         </div>
         <div class="replace-qr">
-          <el-image src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-                    fit="cover">
+          <el-image :src="fileLoad.url"
+                    fit="cover"
+                    :preview-src-list="[fileLoad.url]">
             <div slot="placeholder"
                  class="image-slot">
               加载中<span>...</span>
@@ -183,6 +204,7 @@
           </el-image>
         </div>
       </div>
+      <div class="fieldError">{{ errorBags.all()[0] }}</div>
       <div class="pop-but">
         <el-button size="small"
                    @click="hidePop">取消</el-button>
@@ -198,8 +220,14 @@
 <script>
 import '../less/didLogCss.less';
 import util from '@/util/util';
+import { LOGINDATA } from '@/util/constMap';
 export default {
-  inject: ["houseDetails"],
+  inject: ["houseId"],
+  props: {
+    replaceType: {
+      type: Number
+    }
+  },
   data () {
     return {
       pop: {
@@ -213,7 +241,6 @@ export default {
       //区域
       region: {
         model: '',
-        regionName: '',
         list: [],
         loading: false
       },
@@ -222,10 +249,13 @@ export default {
       //门店
       stores: {
         model: '',
-        storeName: '',
         list: [],
         loading: false
-      }
+      },
+      fileLoad: {//上传文件
+        id: null,
+        url: 'http://sys.lsxjy.com.cn/images/androidDownload.png'
+      },
     }
   },
   methods: {
@@ -239,16 +269,85 @@ export default {
      * submit
      */
     result () {
+      this.$validator
+        .validateAll().then((e) => {
+          console.log(e);
+        })
+    },
+    /**
+    * 上传文件
+    * @param {e} event  
+    */
+    getFileChange (event) {
+      let file = event.target.files;
+      let isImgType = ["image/jpeg", "image/png"];
+      if (this.fileLoad.id != null) {
+        this.$message.error("最多一次上传1张图片");
+        return;
+      }
 
+      if (!isImgType.includes(file[0].type)) {
+        this.$message.error("上传的图片只能是jpg,jpeg格式!");
+        return;
+      }
+      this.upLoadFile(file[0]);
+    },
+    /**
+     * 上传文件
+     * @param {file} file 
+     */
+    upLoadFile (file) {
+      let formData = new FormData();
+      formData.append("type", this.replaceType);
+      formData.append("file", file);
+      this.$api
+        .post({
+          url: "/agentHouse/followPic/upload",
+          headers: { "Content-Type": "multipart/form-data" },
+          data: formData,
+        })
+        .then(json => {
+          if (json.data.code == 200) {
+            this.fileLoad = json.data.data;
+          }
+        })
+        .catch(() => {
+          that.$message({
+            message: "不晓得为什么,反正失败了",
+            type: "warning"
+          });
+        });
     },
     /**
      * 区域远程搜素
      * @Date: 2020-03-19 15:20:48
      * @param {string} fitlerField  
-     * @return{Array}
      */
     getRegionList (fitlerField) {
-      return [];
+      let _that = this;
+      if (this.region.list.length != 0) {
+        return;
+      }
+      this.region.loading = true;
+      this.$api.get({
+        url: "/department/isArea",
+        data: {
+          id: 10 // util.localStorageGet(LOGINDATA).companyId
+        }
+      }).then(e => {
+        let result = e.data;
+        if (result.code == 200) {
+          this.region.list = result.data;
+        }
+      }).catch(e => {
+        if (e.response != undefined) {
+          this.$message(e.response.data.message);
+        } else {
+          this.$message("获取失败");
+        }
+      }).finally(() => {
+        this.region.loading = false;
+      })
     },
     /**
      * 区域选择改变 
@@ -256,23 +355,36 @@ export default {
      * @param {string} changeField
      */
     changeRegionValue (changeField) {
-
+      this.stores.model = '';
+      this.getStoresList(changeField);
     },
     /**
      * 门店远程搜索
      * @param {string} fitlerField
-     * @return: [Array]
      */
     getStoresList (fitlerField) {
-      return [];
+      let _that = this;
+      this.stores.loading = true;
+      this.$api.get({
+        url: "/department/byParId",
+        data: {
+          id: fitlerField
+        }
+      }).then(e => {
+        let result = e.data;
+        if (result.code == 200) {
+          this.stores.list = result.data;
+        }
+      }).catch(e => {
+        if (e.response != undefined) {
+          this.$message(e.response.data.message);
+        } else {
+          this.$message("获取失败");
+        }
+      }).finally(() => {
+        this.stores.loading = false;
+      })
     },
-    /**
-     * 门店选择改变 
-     * @param {string} changeField 
-     */
-    changeStoresValue (changeField) {
-
-    }
   },
 }
 

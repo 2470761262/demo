@@ -6,6 +6,9 @@
   right: 0;
   bottom: 0;
   z-index: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   .didLog-content-mask {
     position: absolute;
     height: 100%;
@@ -13,12 +16,8 @@
     background-color: rgba(129, 148, 148, 0.3);
   }
   .didLog-content-body {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-
+    position: relative;
+    z-index: 200;
     &.info {
       background: rgba(105, 154, 132, 0.5);
     }
