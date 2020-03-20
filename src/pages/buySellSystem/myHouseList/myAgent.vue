@@ -320,18 +320,20 @@ export default {
       this.querylist(1, 'id', 'descending');
     },
     keySelect () {
-      if (this.queryData.keyOwner != '') {
-        this.queryData.keyOwner = '';
+      if (this.data.keyOwner != '') {
+        this.data.keyOwner = '';
       } else {
-        this.queryData.keyOwner = '1';
+        this.data.keyOwner = '1';
       }
+        this.queryMyAgent(1, 'id', 'descending');
     },
     onlySelect () {
-      if (this.queryData.isOnly != '') {
-        this.queryData.isOnly = '';
+      if (this.data.isOnly != '') {
+        this.data.isOnly = '';
       } else {
-        this.queryData.isOnly = '1';
+        this.data.isOnly = '1';
       }
+        this.queryMyAgent(1, 'id', 'descending');
     },
     getName (name) {
       this.newAgentName = name;
@@ -355,20 +357,20 @@ export default {
         }
       }
       else {
-        if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.comId = this.queryData.CommunityName; }
-        if (this.queryData.BuildingName != null && this.queryData.BuildingName != '') { params.BuildingName = this.queryData.BuildingName; }
-        if (this.queryData.RoomNo != null && this.queryData.RoomNo != '') { params.RoomNo = this.queryData.RoomNo; }
-        if (this.queryData.Customers != null && this.queryData.Customers != '') { params.customName = this.queryData.Customers; }
-        if (this.queryData.Tel != null && this.queryData.Tel != '') { params.tel = this.queryData.Tel; }
-        if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
-        if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
-        if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
-        if (this.queryData.maxInArea != null && this.queryData.maxInArea != '') { params.maxInArea = this.queryData.maxInArea; }
-        if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.beginTime = this.queryData.timeSelect[0]; }
-        if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.endTime = this.queryData.timeSelect[1]; }
+        if (that.data.comId != null && that.data.comId != '') { params.comId = that.data.comId; }
+        if (that.data.cbId != null && that.data.cbId != '') { params.cbId = this.data.cbId; }
+        if (that.data.roomNo != null && this.data.RoomNo != '') { params.roomNo = this.data.roomNo; }
+        if (that.data.customName != null && that.data.customName != '') { params.customName = that.data.customName; }
+        if (that.data.tel != null && that.data.tel != '') { params.tel = this.data.tel; }
+        if (that.data.minPrice != null && that.data.minPrice != '') { params.minPrice = that.data.minPrice; }
+        if (that.data.maxPrice != null && that.data.maxPrice != '') { params.maxPrice = that.data.maxPrice; }
+        if (that.data.minInArea != null && that.data.minInArea != '') { params.minInArea = that.data.minInArea; }
+        if (that.data.maxInArea != null && that.data.maxInArea != '') { params.maxInArea = that.data.maxInArea; }
+        if (that.data.timeSelect != null && that.data.timeSelect[0] != null && that.data.timeSelect[0] != '') { params.beginTime = that.data.timeSelect[0]; }
+        if (that.data.timeSelect != null && that.data.timeSelect[1] != null && that.data.timeSelect[1] != '') { params.endTime = that.data.timeSelect[1]; }
       }
-      params.isOnly = that.queryData.isOnly;
-      params.keyOwner = that.queryData.keyOwner;
+      params.isOnly = that.data.isOnly;
+      params.keyOwner = that.data.keyOwner;
       if (column == '' || type == null || type == undefined) {
         params.sortColumn = 'id';
       } else {
@@ -527,7 +529,7 @@ export default {
         this.loading = true;
 
         this.$api.get({
-          url: "/mateHouse/queryCommunity",
+          url: "/community/concern",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           qs: true,

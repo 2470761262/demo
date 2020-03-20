@@ -117,17 +117,7 @@
             </el-option>
           </el-select>
       
-        <span>
-          房源状态
-        </span>
-        <el-select style="width:100px">
-          <el-option v-for="item in state"
-                     :key="item.value"
-                     :label="item.label"
-                     :value="item.value">
-
-          </el-option>
-        </el-select>
+      
         <span>
           <input type="checkbox"
                  style='margin-left:10px'
@@ -261,7 +251,8 @@
                        min-width="12.8%">
         <template v-slot="scope">
           <el-button type="info"
-                     size="mini">转在售</el-button>
+                     size="mini"
+                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
           <el-button type="success"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
@@ -358,6 +349,11 @@ export default {
       that.tableColumn = e;
       console.log(this.tableColum);
     },
+    toSale (comId, cbId, bhId, communityName, buildingName, roomNo) {
+      var that = this
+      that.$router.push({ path: '/buySellSystem/addHouse', query: { "comId": comId, 'cbId': cbId, 'bhId': bhId, "communityName": communityName, "buildingName": buildingName, 'roomNo': roomNo, "flag": 'potentia', "customerName": null, tel: null } });
+
+    },
     moreSelectChange (e) {
 
       this.moreSelect = e;
@@ -369,6 +365,7 @@ export default {
       } else {
         this.queryData.keyOwner = '1';
       }
+            this.queryVerifyHouseDatas(1, 'id', 'ascending');
     },
     onlySelect () {
       if (this.queryData.isOnly != '') {
@@ -376,7 +373,7 @@ export default {
       } else {
         this.queryData.isOnly = '1';
       }
-
+            this.queryVerifyHouseDatas(1, 'id', 'ascending');
     },
     selectedCommunity (e) {
       this.$confirm('是否确定关注该楼盘?', '提示', {
@@ -481,13 +478,13 @@ export default {
         }
       }
       else {
-        if (this.comId != null && this.comId != '') { params.Comid = this.comId; }
-        if (this.cbId != null && this.cbId != '') { params.CBid = this.cbId; }
+        if (this.comId != null && this.comId != '') { params.comId = this.comId; }
+        if (this.cbId != null && this.cbId != '') { params.cbId = this.cbId; }
         if (this.queryData.isOnly != null && this.queryData.isOnly != '') { params.isOnly = this.queryData.isOnly; }
         if (this.queryData.keyOwner != null && this.queryData.keyOwner != '') { params.keyOwner = this.queryData.keyOwner; }
-        if (this.roomNo != null && this.roomNo != '') { params.BHID = this.roomNo; }
-        if (this.queryData.Customers != null && this.queryData.Customers != '') { params.Customers = this.queryData.Customers; }
-        if (this.queryData.Tel != null && this.queryData.Tel != '') { params.Tel = this.queryData.Tel; }
+        if (this.roomNo != null && this.roomNo != '') { params.roomNo = this.roomNo; }
+        if (this.queryData.Customers != null && this.queryData.Customers != '') { params.customName = this.queryData.Customers; }
+        if (this.queryData.Tel != null && this.queryData.Tel != '') { params.tel = this.queryData.Tel; }
         if (this.queryData.minPrice != null && this.queryData.minPrice != '') { params.minPrice = this.queryData.minPrice; }
         if (this.queryData.maxPrice != null && this.queryData.maxPrice != '') { params.maxPrice = this.queryData.maxPrice; }
         if (this.queryData.minInArea != null && this.queryData.minInArea != '') { params.minInArea = this.queryData.minInArea; }
@@ -596,7 +593,7 @@ export default {
         console.log(query);
         this.loading = true;
         this.$api.get({
-          url: "/mateHouse/queryCommunity",
+          url: "/community/concern",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           qs: true,
@@ -659,10 +656,7 @@ export default {
     toHouseDetail (id) {
       console.log(id);
       var that = this;
-      that.$router.push({
-        path: "/buySellSystem/houseDetails",
-        query: { houseId: id }
-      });
+     that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
 
     handleClick () {
