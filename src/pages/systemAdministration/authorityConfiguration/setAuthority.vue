@@ -14,17 +14,6 @@
   float: left;
 }
 
-/deep/.is-current{
-  .el-tree-node__content{
-    .custom-tree-node{
-      span{
-        .el-button:last-child{
-          color: #ff1300;
-        }
-      }
-    }
-  }
-}
 
 .personSelect {
   float: left;
@@ -35,10 +24,6 @@
   display: inline-block;
 }
 
-.selected_btn{
-  color: #ffa6a4;
-  cursor: pointer;
-}
 </style>
 <template>
   <div>
@@ -100,27 +85,6 @@
               v-loading="treeLoading"
             ></el-tree>
 
-<!--            <div class="formItem"-->
-<!--                 v-show="showSave">-->
-<!--&lt;!&ndash;              <el-button type="primary"&ndash;&gt;-->
-<!--&lt;!&ndash;                         size="mini"&ndash;&gt;-->
-<!--&lt;!&ndash;                         @click="saveCompanyRule">保存</el-button>&ndash;&gt;-->
-<!--            </div>-->
-<!--            <div class="elTree" v-show="showCompanyTree">-->
-<!--              <el-tree  :data="companyTreeData"-->
-<!--                       show-checkbox-->
-<!--                       :load="loadCompanyTreeNode"-->
-<!--                       lazy-->
-<!--                       node-key="id"-->
-<!--                       ref="companyTree"-->
-<!--                       highlight-current-->
-<!--                       :props="companyProps"-->
-<!--                       @check="checkNode"-->
-<!--                       :default-checked-keys="companyGather"-->
-<!--                       :default-expanded-keys="companyGather">-->
-
-<!--              </el-tree>-->
-<!--            </div>-->
           </template>
         </div>
       </el-card>
@@ -181,6 +145,7 @@ export default {
         if (result.code == 200) {
           this.ruleTreeData = result.data.allRule;
           this.$refs.tree.setCheckedKeys(result.data.selectedRule);
+          this.companyGather = result.data.allRule[result.data.selectedRule[0]].companyGather.split(",");
         } else {
           console.log("查询错误: ", result.message);
           this.$message.error("查询错误: " + result.message);
