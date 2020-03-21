@@ -18,18 +18,17 @@
       style="width: 100%"
       row-key="keyId"
       stripe
-      lazy
-      :load="load"
       :row-style="tableRowClassName"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       :parentData="$data"
+      :expand-row-keys="expandKey"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
       <template v-slot:top>
         <div class="query-cell">
-          <el-input placeholder="公司名称" v-model="queryData.CompanyName" clearable>
-            <template slot="prepend">公司名</template>
+          <el-input placeholder="关键字搜索" v-model="queryData.keyword" clearable>
+            <template slot="prepend">关键字</template>
           </el-input>
           <el-button
             type="primary"
@@ -59,12 +58,14 @@
                 v-for="(item,index) in getOpeBtns(scope.row)"
                 :type="item.style"
                 :key="index"
-              >{{item.name}}</el-button>
+              >{{item.name}}
+              </el-button>
             </div>
           </template>
         </el-table-column>
       </template>
     </list-page>
+
   </div>
 </template >
 
@@ -95,14 +96,14 @@ export default {
   components: {
     listPage
   },
-
   data() {
     return {
+      expandKey:[],
       company: {},
       department: {},
       loading: false, //控制表格加载动画提示
       queryData: {
-        CompanyName: "",
+        keyword: "",
         isLocked: null,
         type: null
       },
@@ -144,24 +145,14 @@ export default {
       }
       return "";
     },
-    load(tree, treeNode, resolve) {
-      console.log(
-        tree,
-        treeNode,
-        resolve,
-        ",,,,,,,,,,,,,,,,,,,,,,,,,,................."
-      );
+    queryCompanyByParams() {
       let that = this;
-      let params = {
-        limit: 100,
-        page: 1,
-        type: tree.type,
-        operationId: tree.id
-      };
+      that.loading = true;
+      //读取树数据
       that.$api
         .post({
-          url: "/company/authority/list",
-          data: params,
+          url: "/company/authority/list/query",
+          data: {keyword: that.queryData.keyword},
           qs: true
         })
         .then(e => {
@@ -170,28 +161,24 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            //debugger;
-            resolve(result.data.list);
+            that.expandKey = result.data;
+            that.loading = false;
           } else {
-            console.log("查询公司管理列表结果：" + result.message);
+            console.log("载入结果" + +result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询公司管理列表失败");
+          console.log("读取失败");
           console.log(e);
         });
-    },
-    queryCompanyByParams() {
-      this.queryData.isLocked = null;
-      this.queryCompanyDatas(1);
     },
     queryCompanyDatas(currentPage) {
       //debugger;
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
-      if (that.queryData.CompanyName != null) {
-        params.companyName = that.queryData.CompanyName;
+      if (that.queryData.keyword != null) {
+        params.operationName = that.queryData.keyword;
       }
       that.$api
         .post({
@@ -262,7 +249,7 @@ export default {
           }
         ];
       } else {
-        console.log(row.parentId, "xxxxxx............");
+        // console.log(row.parentId, "xxxxxx............");
         if (row.parentId == 0 && array.length == 1) {
           array.push({
             name: "设置权限",
@@ -270,7 +257,7 @@ export default {
             style: "primary",
             methodName: "editCompanyDetail"
           });
-          console.log(array, "............");
+          // console.log(array, "............");
         }
         return array;
       }
