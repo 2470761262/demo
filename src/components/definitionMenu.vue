@@ -66,6 +66,7 @@
         </div>
       </div>
       <el-button slot="reference"
+      size="mini"
                  type="primary">自定义菜单</el-button>
     </el-popover>
   </div>

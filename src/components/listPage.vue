@@ -41,6 +41,7 @@
 }
 .query-center {
   display: flex;
+  margin-left: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
   @media (max-width: 1300px) {
@@ -90,6 +91,7 @@
           </div>
           <el-table :data="tableData"
                     border
+                    ref="table"
                     v-bind="$attrs"
                     v-on="$listeners"
                     v-loading="loading">

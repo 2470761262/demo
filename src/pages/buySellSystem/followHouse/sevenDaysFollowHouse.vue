@@ -55,8 +55,8 @@
         <template slot="prepend">房源类型</template>
         <el-button type="primary"
                    style="margin-left:30px"
-                   @change="querylistByParams()"
                    size="mini"
+                   @change="querylistByParams()"
                    @click="querylistByParams()">查询</el-button>
       </div>
     </template>

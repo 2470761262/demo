@@ -48,7 +48,7 @@
         <el-input placeholder="业主电话" v-model="data.tel" @change="queryShopDiskParams()" style="margin-left:30px;width:240px" clearable />
         <el-input placeholder="最小面积" v-model="data.minInArea" @change="queryShopDiskParams()" style="margin-left:30px;width:120px" clearable />------
         <el-input placeholder="最大面积" v-model="data.maxInArea" @change="queryShopDiskParams()" style="width:120px" clearable />
-        <el-input placeholder="最低售价" v-model="data.minPrice" @change="queryShopDiskParams()" style="margin-left:30px;width:120px" clearable />------
+        <el-input placeholder="最低售价" v-model="data.minPrice" @change="queryShopDiskParams()" style="width:120px" clearable />------
         <el-input placeholder="最高售价" v-model="data.maxPrice" @change="queryShopDiskParams()" style="width:120px" clearable />
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
@@ -59,8 +59,8 @@
         <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
               @click="Remove">清除</span>
         <el-button type="primary"
+        size="mini"
                    style="margin-left:10px"
-                   size="mini"
                    @click="queryShopDiskParams">查询</el-button>
         <el-button style="border:0"  >
           <definitionmenu class="menuMarin"

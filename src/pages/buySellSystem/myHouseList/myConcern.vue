@@ -2,9 +2,10 @@
 .Impression-body {
   width: 265px;
   background-color: white;
-  /* margin-top:150px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1); */
-  height: 500px;
+  height: 6.8rem;
+  margin-top: 0.2rem;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  margin-right: 5px;
 }
 .tag-all {
   margin-top: 8px;
@@ -32,6 +33,20 @@
   margin-left: 10px;
   vertical-align: bottom;
 }
+.querySelectFlag {
+  flex: 0 !important;
+  margin-right: 0px !important;
+  position: relative;
+  padding-right: 40px;
+}
+.hide-query {
+    position: absolute;
+    right: 0;
+    padding-right: 10px;
+    top: 500px;
+    font-size: 20px;
+    cursor: pointer;
+  }
 </style>
 <template>
   <list-page
@@ -41,48 +56,12 @@
     @handleSizeChange="handleSizeChange"
     @handleCurrentChange="handleCurrentChange"
   >
-    <template v-slot:left>
-      <div class="Impression-body">
-        <div style="height:30px">
-          <i icon="el-icon-search"></i>
-          <el-select
-            v-model="imdataimdata"
-            @focus="removeImpressionInput"
-            @change="selectImpression($event)"
-            filterable
-            placeholder="请输入您添加过的房源印象"
-            :loading="loading"
-          >
-            <el-option
-              v-for="item in MyImpressionList"
-              :key="item.id"
-              :label="item.impression"
-              :value="item"
-            ></el-option>
-          </el-select>
-        </div>
-        <div style="height:30px">
-          <el-button class="opset" type="text" @click="show(1)">一键还原</el-button>
-          <el-button class="opset" type="text" @click="show(0)">一键清除</el-button>
-        </div>
-        <div class="tag-all" v-if="showImpression">
-          <span v-for="item in ImpressionList" :key="item.id">
-            <el-tag
-              class="Impression-tag"
-              size="mini"
-              @close="handleClose(item.id)"
-              type="success"
-              closable
-            >{{item.impression}}</el-tag>
-          </span>
-        </div>
-      </div>
-    </template>
+    
     <template v-slot:top>
       <div class="page-form-inline">
         <!-- <el-item label="楼盘名称" prop="comId"> -->
         <el-select
-          v-model="queryData.CommunityName"
+          v-model="data.comId"
           @focus="remoteInput"
           @change="queryCBId()"
           filterable
@@ -102,11 +81,12 @@
         <!-- </el-item>
         <el-item label="栋座" prop="cbId" class="page-label-center">-->
         <el-select
-          v-model="queryData.BuildingName"
+          v-model="data.cbId"
           filterable
           clearable
           placeholder="请选择楼栋"
           @change="queryRoomNo()"
+          style="width: 130px;"
         >
           <el-option
             v-for="item in cbIdList"
@@ -118,10 +98,11 @@
         <!-- </el-item>
         <el-item label="房间号" prop="roomNo" clearable class="page-label-center">-->
         <el-select
-          v-model="queryData.RoomNo"
+          v-model="data.roomNo"
           @change="querylistByParams()"
           filterable
           placeholder="请选择房间号"
+           style="width: 130px;"
         >
           <el-option
             v-for="item in roomNoList"
@@ -134,8 +115,8 @@
         <el-input
           placeholder="业主姓名"
           @change="querylistByParams()"
-          v-model="queryData.Customers"
-          style="margin-left:25px;width:240px"
+          v-model="data.customName"
+          style="margin-left:25px;width:200px"
           clearable
         >
           <template slot="prepend">业主姓名</template>
@@ -144,8 +125,8 @@
         <el-input
           placeholder="业主电话"
           @change="querylistByParams()"
-          v-model="queryData.Tel"
-          style="margin-left:30px;width:240px"
+          v-model="data.tel"
+          style="margin-left:30px;width:200px"
           clearable
         >
           <template slot="prepend">电话</template>
@@ -154,7 +135,7 @@
         <el-input
           placeholder="最小值"
           @change="querylistByParams()"
-          v-model="queryData.minPrice"
+          v-model="data.minPrice"
           style="margin-left:25px;width:160px"
           clearable
         >
@@ -163,15 +144,14 @@
         <el-input
           placeholder="最大值"
           @change="querylistByParams()"
-          v-model="queryData.maxPrice"
+          v-model="data.maxPrice"
           style="margin-left:10px;width:100px"
         ></el-input>
-        <br />
         <el-input
           placeholder="最小值"
           @change="querylistByParams()"
-          v-model="queryData.minInArea"
-          style="width:160px"
+          v-model="data.minInArea"
+          style="width:160px;margin-top:5px;"
           clearable
         >
           <template slot="prepend">面积</template>
@@ -179,13 +159,13 @@
         <el-input
           placeholder="最大值"
           @change="querylistByParams()"
-          v-model="queryData.maxInArea"
+          v-model="data.maxInArea"
           style="margin-left:10px;width:100px"
         ></el-input>
 
-        <template slot="prepend">房源状态</template>
+        录入时间：
         <el-date-picker
-          v-model="queryData.timeSelect"
+          v-model="data.timeSelect"
           @change="querylistByParams()"
           type="daterange"
           range-separator="至"
@@ -200,12 +180,11 @@
           <input type="checkbox" style="margin-left:10px;background:#fff" @click="onlySelect()" /> 独家
         </span>
         <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px" @click="remove">清除</span>
-        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px" @click="remove">清除</span>
-        <el-button type="primary" style="margin-left:30px" size="mini" @click="querylistByParams">查询</el-button>
-        <el-button style="margin-left:30px;width:50px;height:30px;border:0" size="mini">
+        <el-button type="primary" style="margin-left:10px" size="mini" @click="querylistByParams">查询</el-button>
+        <el-button style="margin-left:10px;height:30px;border:0" size="mini">
           <moreSelect @moreSelectChange="moreSelectChange" style="height:40px;margin-right:5px;"></moreSelect>
         </el-button>
-        <el-button style="margin-left:80px;width:50px;height:30px;border:0" size="mini">
+        <el-button style="margin-left:10px;height:30px;border:0" size="mini">
           <definitionmenu
             class="menuMarin"
             :renderList="tableDataColumn"
@@ -213,6 +192,52 @@
             @change="tabColumnChange"
           ></definitionmenu>
         </el-button>
+      </div>
+    </template>
+
+    <template v-slot:left>
+      <div :class="{'querySelectFlag':querySelectFlag}">
+        <div class="Impression-body">
+          <div style="height:30px;margin-top:10px;width:inherit;">
+            <i icon="el-icon-search"></i>
+            <el-select
+              v-model="imdataimdata"
+              @focus="removeImpressionInput"
+              @change="selectImpression($event)"
+              filterable
+              placeholder="请输入您添加过的房源印象"
+              :loading="loading"
+              style="width: -webkit-fill-available;margin: 10px 10px;"
+            >
+              <el-option
+                v-for="item in MyImpressionList"
+                :key="item.id"
+                :label="item.impression"
+                :value="item"
+              ></el-option>
+            </el-select>
+          </div>
+          <div style="height:30px;margin-top: inherit;">
+            <el-button class="opset" type="text" @click="show(1)">一键还原</el-button>
+            <el-button class="opset" type="text" @click="show(0)">一键清除</el-button>
+          </div>
+          <div class="tag-all" v-if="showImpression">
+            <span v-for="item in ImpressionList" :key="item.id">
+              <el-tag
+                class="Impression-tag"
+                size="mini"
+                @close="handleClose(item.id)"
+                type="success"
+                closable
+              >{{item.impression}}</el-tag>
+            </span>
+          </div>
+        </div>
+        <div
+          class="hide-query"
+          @click="()=> querySelectFlag = !querySelectFlag "
+          :class="querySelectFlag ? 'el-icon-d-arrow-right': 'el-icon-d-arrow-left'  "
+        ></div>
       </div>
     </template>
 
@@ -236,7 +261,7 @@
             @click="toHouseDetail(scope.row.id)"
             size="mini"
           >查看</el-button>
-          <div v-if="scope.row.collectID != null && scope.row.collectID!= '' ">
+          <div v-if="scope.row.collectId != null && scope.row.collectId!= '' ">
             <el-button type="info" slot="reference" @click="ifOFF(scope.row.id)" size="mini">取消关注</el-button>
           </div>
         </template>
@@ -256,8 +281,9 @@ export default {
     moreSelect,
     definitionmenu
   },
-  data () {
+  data() {
     return {
+      querySelectFlag: false,
       optionsList: [],
       cbIdList: [],
       roomNoList: [],
@@ -393,6 +419,20 @@ export default {
       },
       ImpressionList: [],
       tableColumn: [],
+      data: {
+        comId: "",
+        cbId: "",
+        roomNo: "",
+        timeSelect: "",
+        customName: "",
+        tel: "",
+        minInArea: "",
+        maxInArea: "",
+        minPrice: "",
+        maxPrice: "",
+        keyOwner: "",
+        isOnly: ""
+      },
       queryData: {
         CommunityName: "",
         BuildingName: "",
@@ -408,38 +448,38 @@ export default {
   mounted() {
     // this.querylist(1, "id", "descending");
     // this.queryMyImpression();
-    let that=this;
+    let that = this;
     that.show(1);
   },
   methods: {
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       if (e != "") this.moreSelect = e;
       this.querylist(1, "id", "descending");
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    sortMethod (e) {
+    sortMethod(e) {
       console.log(e, "eeee排序");
       this.querylist(1, e.prop, e.order);
     },
-    keySelect () {
-      if (this.queryData.keyOwner != "") {
-        this.queryData.keyOwner = "";
+    keySelect() {
+      if (this.data.keyOwner != "") {
+        this.data.keyOwner = "";
       } else {
-        this.queryData.keyOwner = "1";
+        this.data.keyOwner = "1";
       }
-      this.querylistByParams();
+      this.querylistByParams(1, "id", "descending");
     },
-    onlySelect () {
-      if (this.queryData.isOnly != "") {
-        this.queryData.isOnly = "";
+    onlySelect() {
+      if (this.data.isOnly != "") {
+        this.data.isOnly = "";
       } else {
-        this.queryData.isOnly = "1";
+        this.data.isOnly = "1";
       }
-      this.querylistByParams();
+      this.querylistByParams(1, "id", "descending");
     },
-    handleClose (tag) {
+    handleClose(tag) {
       console.log("删除前：", this.ImpressionList);
       for (let i = 0; i < this.ImpressionList.length; i++) {
         if (this.ImpressionList[i].id == tag) {
@@ -449,14 +489,16 @@ export default {
       console.log("删除后：", this.ImpressionList);
       this.querylistByParams();
     },
-    remove () {
-      this.queryData.keyOwner = '';
-      this.queryData.isOnly = '';
+    remove() {
+      this.queryData.keyOwner = "";
+      this.queryData.isOnly = "";
+      let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.querylist(1, 'id', 'descending');
+      //this.querylist(1, "id", "descending");
+      this.show(1);
     },
-    selectImpression (e) {
+    selectImpression(e) {
       let that = this;
       //that.queryMyImpression();
       var selecti = 0;
@@ -475,7 +517,7 @@ export default {
       }
       this.querylistByParams();
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -501,7 +543,7 @@ export default {
         this.options = [];
       }
     },
-    queryHouseImpression () {
+    queryHouseImpression() {
       var that = this;
       this.$api
         .get({
@@ -517,7 +559,7 @@ export default {
           }
         });
     },
-    ifOFF (id) {
+    ifOFF(id) {
       this.$confirm("是否确定取消关注?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -538,16 +580,16 @@ export default {
           });
         });
     },
-    concernOFF (id) {
+    concernOFF(id) {
       this.$api
         .post({
           url: "/agent_house/concernHouseOFF/" + id,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
         })
-        .then(e => { });
+        .then(e => {});
     },
-    queryMyImpression () {
+    queryMyImpression() {
       var that = this;
       var impression = this.imdata;
       this.$api
@@ -574,7 +616,7 @@ export default {
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //清除
-    show (msg) {
+    show(msg) {
       var that = this;
       if (msg == 0) {
         this.$confirm("清除当前所有房源印象?", "提示", {
@@ -603,36 +645,37 @@ export default {
         //   type: "warning"
         // })
         //   .then(() => {
-            this.$api
-              .get({
-                url: "/agentHouse/impression/getHouseImpressionList",
-                headers: { "Content-Type": "application/json;charset=UTF-8" },
-                token: false
-              })
-              .then(e => {
-                console.log(e.data.code);
-                if (e.data.code == 200) {
-                  that.ImpressionList = e.data.data;
-                  this.querylistByParams();
-                }
-              });
-            // this.$message({
-            //   type: "success",
-            //   message: "还原成功!"
-            // });
-          // })
-          // .catch(() => {
-          //   this.$message({
-          //     type: "info",
-          //     message: "已取消"
-          //   });
-          // });
+        this.$api
+          .get({
+            url: "/agentHouse/impression/getHouseImpressionList",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false
+          })
+          .then(e => {
+            console.log(e.data.code);
+            if (e.data.code == 200) {
+              that.ImpressionList = e.data.data;
+              this.querylistByParams();
+            }
+          });
+        // this.$message({
+        //   type: "success",
+        //   message: "还原成功!"
+        // });
+        // })
+        // .catch(() => {
+        //   this.$message({
+        //     type: "info",
+        //     message: "已取消"
+        //   });
+        // });
       }
     },
-    querylistByParams () {
-      this.querylist(1, "id", "descending");
+    querylistByParams() {
+      let that = this;
+      that.querylist(1, "id", "descending");
     },
-    querylist (currentPage, column, type) {
+    querylist(currentPage, column, type) {
       let params = {
         limit: this.pageJson.pageSize + "",
         page: currentPage + ""
@@ -660,69 +703,50 @@ export default {
           }
         }
       } else {
-        if (
-          this.queryData.CommunityName != null &&
-          this.queryData.CommunityName != ""
-        ) {
-          params.CommunityName = this.queryData.CommunityName;
+        if (that.data.comId != null && that.data.comId != "") {
+          params.comId = that.data.comId;
         }
-        if (this.queryData.isOnly != null && this.queryData.isOnly != "") {
-          params.isOnly = this.queryData.isOnly;
+        if (that.data.cbId != null && that.data.cbId != "") {
+          params.cbId = this.data.cbId;
         }
-        if (this.queryData.keyOwner != null && this.queryData.keyOwner != "") {
-          params.keyOwner = this.queryData.keyOwner;
+        if (that.data.roomNo != null && this.data.RoomNo != "") {
+          params.roomNo = this.data.roomNo;
         }
-        if (
-          this.queryData.BuildingName != null &&
-          this.queryData.BuildingName != ""
-        ) {
-          params.BuildingName = this.queryData.BuildingName;
+        if (that.data.customName != null && that.data.customName != "") {
+          params.customName = that.data.customName;
         }
-        if (this.queryData.RoomNo != null && this.queryData.RoomNo != "") {
-          params.RoomNo = this.queryData.RoomNo;
+        if (that.data.tel != null && that.data.tel != "") {
+          params.tel = this.data.tel;
         }
-        if (
-          this.queryData.Customers != null &&
-          this.queryData.Customers != ""
-        ) {
-          params.Customers = this.queryData.Customers;
+        if (that.data.minPrice != null && that.data.minPrice != "") {
+          params.minPrice = that.data.minPrice;
         }
-        if (this.queryData.Tel != null && this.queryData.Tel != "") {
-          params.Tel = this.queryData.Tel;
+        if (that.data.maxPrice != null && that.data.maxPrice != "") {
+          params.maxPrice = that.data.maxPrice;
         }
-        if (this.queryData.minPrice != null && this.queryData.minPrice != "") {
-          params.minPrice = this.queryData.minPrice;
+        if (that.data.minInArea != null && that.data.minInArea != "") {
+          params.minInArea = that.data.minInArea;
         }
-        if (this.queryData.maxPrice != null && this.queryData.maxPrice != "") {
-          params.maxPrice = this.queryData.maxPrice;
+        if (that.data.maxInArea != null && that.data.maxInArea != "") {
+          params.maxInArea = that.data.maxInArea;
         }
         if (
-          this.queryData.minInArea != null &&
-          this.queryData.minInArea != ""
+          that.data.timeSelect != null &&
+          that.data.timeSelect[0] != null &&
+          that.data.timeSelect[0] != ""
         ) {
-          params.minInArea = this.queryData.minInArea;
+          params.beginTime = that.data.timeSelect[0];
         }
         if (
-          this.queryData.maxInArea != null &&
-          this.queryData.maxInArea != ""
+          that.data.timeSelect != null &&
+          that.data.timeSelect[1] != null &&
+          that.data.timeSelect[1] != ""
         ) {
-          params.maxInArea = this.queryData.maxInArea;
-        }
-        if (
-          this.queryData.timeSelect != null &&
-          this.queryData.timeSelect[0] != null &&
-          this.queryData.timeSelect[0] != ""
-        ) {
-          params.minAddTime = this.queryData.timeSelect[0];
-        }
-        if (
-          this.queryData.timeSelect != null &&
-          this.queryData.timeSelect[1] != null &&
-          this.queryData.timeSelect[1] != ""
-        ) {
-          params.maxAddTime = this.queryData.timeSelect[1];
+          params.endTime = that.data.timeSelect[1];
         }
       }
+      params.isOnly = that.data.isOnly;
+      params.keyOwner = that.data.keyOwner;
       if (column == "" || type == null || type == undefined) {
         params.sortColumn = "id";
       } else {
@@ -762,12 +786,12 @@ export default {
           console.log(e);
         });
     },
-    remoteInput () {
+    remoteInput() {
       if (this.queryData.CommunityName.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         console.log(query);
@@ -798,15 +822,16 @@ export default {
         "remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId
       );
     },
-    removeImpressionInput(){
-       let that = this;
-       console.log("removeImpressionInput->",that.imdataimdata)
+    removeImpressionInput() {
+      let that = this;
+      console.log("removeImpressionInput->", that.imdataimdata);
       // if(that.imdataimdata!="")
-         that.queryMyImpression();
-       //  else 
+      that.imdataimdata = "";
+      that.queryMyImpression();
+      //  else
       //  that.imdataimdata="";
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -825,10 +850,10 @@ export default {
             this.cbIdList = e.data.data.list;
           }
         });
-         this.querylistByParams();
+      this.querylistByParams();
       console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -847,15 +872,15 @@ export default {
             this.roomNoList = e.data.data.list;
           }
         });
-         this.querylistByParams();
+      this.querylistByParams();
     },
-    handleClick () { },
-    handleSizeChange (val) {
+    handleClick() {},
+    handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.querylist(1, "id", "ascending");
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.querylist(val, "id", "ascending");
     }
