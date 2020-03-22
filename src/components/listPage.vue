@@ -91,6 +91,7 @@
           </div>
           <el-table :data="tableData"
                     border
+                    ref="table"
                     v-bind="$attrs"
                     v-on="$listeners"
                     v-loading="loading">
