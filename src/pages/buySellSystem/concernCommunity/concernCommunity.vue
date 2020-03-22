@@ -701,7 +701,7 @@ export default {
       }
       this.$api
         .post({
-          url: "/myHouse/getMyAgent",
+          url: "/myHouse/getMyKernelHouse",
           data: params,
           qs: true
         })
