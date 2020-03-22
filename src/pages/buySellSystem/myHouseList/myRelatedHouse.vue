@@ -67,7 +67,7 @@
         <el-input placeholder="最低售价"
                   v-model="data.minPrice"
                   @change="querySaleNotTrackParams()"
-                  style="margin-left:30px;width:120px"
+                  style="margin-top:10px;width:120px"
                   clearable />------
         <el-input placeholder="最高售价"
                   v-model="data.maxPrice"

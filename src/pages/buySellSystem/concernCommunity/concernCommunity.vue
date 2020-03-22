@@ -110,13 +110,13 @@
             class="list"
           >
             <div class="communityName" >{{item.communityName}}</div>
-            <div class="countNum">
-              <div>存量套数</div>
-              <div class="cNum">{{item.countConcernCommunity}}套</div>
-            </div>
             <div class="effectiveNum">
               <div>在售套数</div>
               <div class="eNum">{{item.effectiveNum}}套</div>
+            </div>
+            <div class="countNum">
+              <div>存量套数</div>
+              <div class="cNum">{{item.countConcernCommunity}}套</div>
             </div>
             <div class="concernOff" @click="concernOFF(item.id)" >
               <el-tooltip placement="right">
@@ -228,6 +228,8 @@
         <span>
           <input type="checkbox" style="margin-left:10px;background:#fff" @click="onlySelect()" /> 独家
         </span>
+        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
+              @click="remove">清除</span>
         <el-button
           type="primary"
           size="mini"
@@ -476,11 +478,17 @@ export default {
     };
   },
   mounted() {
-    this.queryVerifyHouseDatas(1, "id", "ascending");
+    this.queryVerifyHouseDatas(1, "id", "descending");
     this.queryConcernCount();
     this.queryNotConcernCommunityList();
   },
   methods: {
+    remove () {
+      let tab = this.tableColumn;
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
+      this.queryVerifyHouseDatas(1, 'id', 'descending');
+    },
     sortMethod(e) {
       console.log(e, "eeee排序");
       this.queryVerifyHouseDatas(1, e.prop, e.order);

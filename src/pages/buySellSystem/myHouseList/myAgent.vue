@@ -67,7 +67,7 @@
         <el-input placeholder="最低售价"
                   v-model="data.minPrice"
                   @change="querylistByParams()"
-                  style="margin-left:30px;width:120px"
+                  style="width:120px;margin-top:5px;"
                   clearable />------
         <el-input placeholder="最高售价"
                   v-model="data.maxPrice"
@@ -80,8 +80,7 @@
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"></el-date-picker>
-        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
-              @click="remove">清除</span>
+        
         <span>
           <input type="checkbox"
                  style="margin-left:10px"
@@ -92,7 +91,8 @@
                  style="margin-left:10px;background:#fff"
                  @click="onlySelect()" /> 独家
         </span>
-
+        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
+              @click="remove">清除</span>
         <el-button type="primary"
                    style="margin-left:30px"
                    size="mini"

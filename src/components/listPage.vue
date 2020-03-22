@@ -41,6 +41,7 @@
 }
 .query-center {
   display: flex;
+  margin-left: 10px;
   margin-top: 20px;
   margin-bottom: 20px;
   @media (max-width: 1300px) {

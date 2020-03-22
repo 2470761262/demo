@@ -105,7 +105,7 @@
             placeholder="最小值"
             @change="queryVerifyHouseByParams()"
             v-model="data.minPrice"
-            style="margin-left:30px;width:180px"
+            style="margin-top:10px;width:180px"
             clearable
           >
             <template slot="prepend">价格</template>
