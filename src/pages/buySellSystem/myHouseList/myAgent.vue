@@ -654,6 +654,12 @@ export default {
         params.keyOwner = that.data.keyOwner;
         params.isOnly = that.data.isOnly;
       }
+
+
+
+
+
+      
 if (column == "" || type == null || type == undefined) {
         params.sortColumn = "id";
       } else {
