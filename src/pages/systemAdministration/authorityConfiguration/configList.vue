@@ -10,6 +10,11 @@
 .el-table .success-row {
   color: #f0f9eb;
 }
+/deep/.el-table__body {
+  .el-table_1_column_1 {
+    cursor: pointer;
+  }
+}
 </style>
 
 <template>
