@@ -66,8 +66,8 @@
           清除
         </span>
         <el-button type="primary"
+        size="mini"
                    style="margin-left:10px"
-                   size="mini"
                    @click="queryPotentialHouseParams">查询</el-button>
         <el-button style="border:0">
           <definitionmenu class="menuMarin"

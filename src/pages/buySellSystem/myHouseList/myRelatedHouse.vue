@@ -94,8 +94,8 @@
         <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
               @click="remove">清除</span>
         <el-button type="primary"
+        size="mini"
                    style="margin-left:10px"
-                   size="mini"
                    @click="querySaleNotTrackParams">查询</el-button>
 
         <el-button style="margin-left:30px;width:150px;height:30px;border:0"

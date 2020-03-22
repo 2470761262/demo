@@ -60,8 +60,8 @@
                         :tableColumn="tableColumn"
                         @change="tabColumnChange"></definitionmenu>
         <el-button type="primary"
+        size="mini"
                    style="margin-left:10px"
-                   size="mini"
                    @click="queryShopownerHouseParams">查询</el-button>
       </div>
     </template>

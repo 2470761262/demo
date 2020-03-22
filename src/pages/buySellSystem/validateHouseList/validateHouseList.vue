@@ -31,7 +31,7 @@
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
-        <div class="page-form-inline budingMarinSet">
+        <div class="page-form-inline budingMarinSet" style="margin-left:10px;">
           <el-item label="楼盘名称"
                    prop="comId">
             <el-select v-model="data.comId"
@@ -95,7 +95,7 @@
             placeholder="最小面积"
             @change="queryVerifyHouseByParams()"
             v-model="data.minInArea"
-            style="margin-left:30px;width:120px"
+            style="width:180px"
             clearable
           >
             <template slot="prepend">面积</template>

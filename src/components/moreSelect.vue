@@ -249,6 +249,7 @@ span {
         </div>
       </div>
       <el-button slot="reference"
+                 size="mini"
                  type="primary">更多筛选</el-button>
     </el-popover>
   </div>
