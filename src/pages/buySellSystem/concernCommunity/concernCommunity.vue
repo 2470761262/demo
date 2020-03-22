@@ -392,7 +392,7 @@ export default {
           formart: item => item.inArea + "m²"
         },
         {
-          prop: "unitpaice",
+          prop: "unitPrice",
           label: "均价(元/平)",
           width: "130px",
           order: "custom",
@@ -400,14 +400,14 @@ export default {
           default: true,
           format: item => item.unitpaice + "元/㎡"
         },
-        {
-          prop: "decoration",
-          label: "装修程度",
-          width: "110px",
-          order: false,
-          disabled: false,
-          default: true
-        },
+        //{
+         // prop: "decoration",
+         // label: "装修程度",
+        //  width: "110px",
+        //  order: false,
+        //  disabled: false,
+        //  default: true
+       // },
         {
           prop: "seenNum",
           label: "被看次数",
