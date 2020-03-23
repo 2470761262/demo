@@ -397,3 +397,21 @@ export const CERTIFICATETYPE = [//产权证类型
     }
 ]
 
+export const REMARK = [//备注
+    {
+        key: "小区介绍",
+        value: "communityDesc"
+    },
+    {
+        key: "户型介绍",
+        value: "roomDesc"
+    },
+    {
+        key: "税费解析",
+        value: "taxDesc"
+    },
+    {
+        key: "核心卖点",
+        value: "saleDesc"
+    }
+]

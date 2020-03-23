@@ -57,8 +57,7 @@
         </el-button>
       </div>
       <!-- 成交对赌 -->
-      <div class="button-set"
-           v-if=" resultData.agentHouseMethod">
+      <div class="button-set">
         <el-button @click="showBetView"
                    v-if="!isBet&&resultData.AgentPer==perId&&resultData.plate!=4&&resultData.plate!=1">
           <i class="el-icon-s-promotion el-icon--left"></i>成交对赌

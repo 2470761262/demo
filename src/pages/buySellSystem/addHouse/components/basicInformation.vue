@@ -614,8 +614,8 @@ export default {
       that.selectPageCommunit.loading = true;
       this.$api
         .post({
-          url: "/mateHouse/queryCommunity",
-          //url: "/community/addHouse", //带权限
+          //url: "/mateHouse/queryCommunity",
+          url: "/community/addHouse", //带权限
           data: {
             page: 1,
             limit: 50,

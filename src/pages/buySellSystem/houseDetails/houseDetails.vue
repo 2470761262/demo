@@ -66,6 +66,7 @@ import buttonGroup from './components/buttonGroup';
 import houseMessage from './components/houseMessage';
 import houseOperation from './components/houseOperation';
 import houseTask from './components/houseTask';
+import { REMARK } from '@/util/constMap';
 export default {
   provide () {
     return {
@@ -95,7 +96,8 @@ export default {
       load: {
         loading: true,
         loadingMessage: "努力加载中~",
-      }
+      },
+
     };
   },
   created () {
@@ -130,16 +132,28 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     result.data.communityPresentation = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.communityDesc = Arry2[1];
                     break;
                   case "户型介绍":
                     result.data.houseTypePresentation = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.roomDesc = Arry2[1];
                     break;
                   case "税费解析":
                     result.data.taxParsing = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.taxDesc = Arry2[1];
                     break;
                   case "核心卖点":
                     result.data.coreSellingPoint = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.saleDesc = Arry2[1];
                     break;
+                }
+                if (result.data.applyAgentVo != null) {
+                  REMARK.forEach(element => {
+                    if (element.key == Arry2[0]) {
+                      let obj = element.value;
+                      result.data.applyAgentVo[obj] = Arry2[1]
+                    }
+                  });
                 }
               }
             }

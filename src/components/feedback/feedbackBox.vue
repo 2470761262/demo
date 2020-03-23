@@ -38,13 +38,12 @@
               :action="uploadUrl"
               :headers="myHeader"
               accept="image"
+              :file-list="form.pics"
               list-type="picture-card"         
               :on-success="uploadFinished"
-              :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove">   
               <i class="el-icon-plus"></i>
             </el-upload>
-            <!-- <img width="100%" :src="dialogImageUrl" class="avatar"> -->
             <div class="upLoadFile-file-phone" style="display:inherit;margin-left:10px;float:left;padding:0px">
               <el-image style="width:125px;margin:0px"
                         :src="qrCodeImg"
@@ -151,11 +150,9 @@
           if(!that.form.pics){
             that.form.pics = [];
           }
-           this.dialogImageUrl = response.data.url;
-           this.dialogVisible = true;
           that.form.pics.push(response.data.url);
         }
-        console.log(response,file,fileList,"file list ....");
+        console.log(this.uploadUrl,file,fileList,"file list ....");
       },
       cleanFiles(){
         this.$refs.upload.clearFiles();
@@ -199,6 +196,7 @@
               done();
             })
             .catch(_ => {});
+            this.form.pics = [];
         }else{
           done();
         }
@@ -253,14 +251,10 @@
       },
       receiveMessage(r){
         //回调函数，用于接收扫码后发送的消息
-        console.log(21)
         console.log(r,"消息内容");
-        //。。。执行你需要的业务逻辑
-        this.dialogImageUrl = r.content.picUrl;
-        this.form.pics.push( r.content.picUrl);
-        
-        this.dialogVisible = true;
-        console.log(response,file,fileList,"231");
+        //。。。执行你需要的业务逻辑        
+        this.form.pics.push({name: "picUrl", url: r.content.picUrl});  
+        console.log(this.form.pics,"231");
         
       }
 
