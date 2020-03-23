@@ -101,7 +101,7 @@ export default {
         subType: resourceType == "vedio" ? 7 : detailEnum[picClass - 1]
       };
       console.log(params);
-      that.insertPic(params, str, picClass);
+      that.insertFile(params, str, picClass);
     },
     //添加文件
     insertFile (params, str, picClass) {
