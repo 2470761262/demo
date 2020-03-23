@@ -387,7 +387,7 @@ export default {
         .post({
           url: "/agentHouse/followPic/insert",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: formData,
+          data: params,
         })
         .then(json => {
           if (json.data.code == 200) {
