@@ -99,28 +99,11 @@ export default {
         Type: that.replaceType,
         subType: resourceType == "vedio" ? that.detailEnum[picClass - 1] : 7
       };
-      that.insertPic(params, (json) => {
-        if (json.data.code == 200) {
-          let fileobj = {
-            id: json.data.data.id,
-            url: str
-          }
-          listMap.forEach((value, key) => {
-            console.log(value, key, "value,key");
-            if (value == "vedio") {
-              this[key] = fileobj;
-            }
-            else {
-              if (value = picClass) {
-                this[value].push(fileobj);
-              }
-            }
-          });
-        }
-      });
+      console.log(params);
+      that.insertPic(params, str, picClass);
     },
     //添加文件
-    insertFile (params, callback) {
+    insertFile (params, str, picClass) {
       this.$api
         .post({
           url: "/agentHouse/followPic/insert",
@@ -128,7 +111,23 @@ export default {
           data: params,
         })
         .then(json => {
-          callback(json);
+          if (json.data.code == 200) {
+            let fileobj = {
+              id: json.data.data.id,
+              url: str
+            }
+            listMap.forEach((value, key) => {
+              console.log(value, key, "value,key");
+              if (value == "vedio") {
+                this[key] = fileobj;
+              }
+              else {
+                if (value = picClass) {
+                  this[value].push(fileobj);
+                }
+              }
+            });
+          }
         })
         .catch(() => {
           that.$message({
