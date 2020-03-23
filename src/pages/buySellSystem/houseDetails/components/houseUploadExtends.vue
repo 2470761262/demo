@@ -130,7 +130,7 @@ export default {
           data: params,
         })
         .then(json => {
-          return callback(json);
+          callback(json);
         })
         .catch(() => {
           that.$message({
