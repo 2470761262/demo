@@ -76,7 +76,7 @@
     </el-form-item>
     <el-form-item label="学历:" required ="true" prop="education">
 
-      <el-select v-model="employeeEntity.education" @focus="findByParams4()" placeholder="请选择">
+      <el-select v-model="employeeEntity.educationName" @focus="findByParams4()" placeholder="请选择">
         <el-option
           v-for="item in educationList"
           :key="item.value"
@@ -149,7 +149,7 @@
 
     <el-form-item label="角色:" required ="true" prop="perPost">
       <el-select
-        v-model="employeeEntity.perPost"
+        v-model="employeeEntity.positionName"
         @focus="findByParams()"
         disabled="disabled"
         placeholder="请选择"
@@ -164,7 +164,7 @@
     </el-form-item>
     <el-form-item label="岗位:" required ="true" prop="perRole">
       <el-select
-        v-model="employeeEntity.perRole"
+        v-model="employeeEntity.roleName"
         @focus="findByParams1()"
         disabled="disabled"
         placeholder="请选择"
@@ -291,7 +291,7 @@
     </el-form-item>
     <el-form-item label="星级编号:" required ="true" prop="levelNo">
       <el-select
-        v-model="employeeEntity.levelNo"
+        v-model="employeeEntity.levelName"
         @focus="findByParams2()"
         disabled="disabled"
         placeholder="请选择"
@@ -363,7 +363,7 @@
           </template>
         </list-page>
       </el-dialog>
-      <el-input type="text" v-model="employeeEntity.jieShaoName" show-word-limit></el-input>
+      <el-input type="text" v-model="employeeEntity.jieShaoName" @focus="getDialogVisible1()"></el-input>
     </el-form-item>
     </el-form>
     <div class="footerContainer el-top">
