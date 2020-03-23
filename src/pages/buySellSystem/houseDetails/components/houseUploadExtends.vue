@@ -124,7 +124,7 @@ export default {
               }
               else {
                 if (value == picClass) {
-                  this[value].push(fileobj);
+                  this[key].push(fileobj);
                 }
               }
             });
