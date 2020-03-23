@@ -37,7 +37,9 @@
       <!-- 房屋详情 -->
       <detail class="cell-right"></detail>
       <!-- 右侧功能按钮 -->
-      <sidebarList></sidebarList>
+      <sidebarList lastItemSet
+                   lastTitle="编辑"
+                   :lastQuery='{id:forID.id,method:"reset"}'></sidebarList>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -156,7 +158,7 @@ export default {
     }
   },
   destroyed () {
-    this.$store.commit("resetFormData");
+    // this.$store.commit("resetFormData");
   },
 };
 </script>
