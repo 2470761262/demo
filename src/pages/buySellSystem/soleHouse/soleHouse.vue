@@ -173,9 +173,9 @@ export default {
         ha = '0' + '厅'
       }
       if (toilet != null && toilet != '' && toilet != undefined) {
-        to = toilet + '厅';
+        to = toilet + '卫';
       } else {
-        to = '0' + '厅'
+        to = '0' + '卫'
       }
       return ro + ha + to
     },

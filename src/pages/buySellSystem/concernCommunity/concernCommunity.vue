@@ -377,13 +377,13 @@ export default {
           format: item => item.unitpaice + "元/㎡"
         },
         //{
-         // prop: "decoration",
-         // label: "装修程度",
+        // prop: "decoration",
+        // label: "装修程度",
         //  width: "110px",
         //  order: false,
         //  disabled: false,
         //  default: true
-       // },
+        // },
         {
           prop: "seenNum",
           label: "被看次数",
@@ -472,9 +472,9 @@ export default {
         ha = '0' + '厅'
       }
       if (toilet != null && toilet != '' && toilet != undefined) {
-        to = toilet + '厅';
+        to = toilet + '卫';
       } else {
-        to = '0' + '厅'
+        to = '0' + '卫'
       }
       return ro + ha + to
     },
@@ -559,7 +559,7 @@ export default {
       })
         .then(() => {
           this.deleteConcern(id);
-          
+
         })
         .catch(() => {
           this.$message({
