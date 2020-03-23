@@ -98,7 +98,7 @@ export default {
         FileStr: str.substring(thirdIndex + 1, lastIndex),
         PicName: str.substring(lastIndex + 1, str.length - 1),
         Type: that.replaceType,
-        subType: resourceType == "vedio" ? 7 : that.detailEnum[picClass - 1]
+        subType: resourceType == "vedio" ? 7 : detailEnum[picClass - 1]
       };
       console.log(params);
       that.insertPic(params, str, picClass);
