@@ -38,13 +38,13 @@
               :action="uploadUrl"
               :headers="myHeader"
               accept="image"
-              list-type="picture-card"
+              list-type="picture-card"         
               :on-success="uploadFinished"
               :on-preview="handlePictureCardPreview"
-              :on-remove="handleRemove">
+              :on-remove="handleRemove">   
               <i class="el-icon-plus"></i>
             </el-upload>
-
+            <!-- <img width="100%" :src="dialogImageUrl" class="avatar"> -->
             <div class="upLoadFile-file-phone" style="display:inherit;margin-left:10px;float:left;padding:0px">
               <el-image style="width:125px;margin:0px"
                         :src="qrCodeImg"
@@ -57,11 +57,6 @@
               </el-image>
               <div style="margin-left:18px;line-height: 0;">      微信扫码上传</div>
             </div>
-
-            <!-- <el-dialog :visible.sync="dialogVisible">
-              <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog> -->
-
           </el-form-item>
         </el-form>
       </div>
@@ -141,6 +136,7 @@
               }
             })
             this.form.pics = that.form.pics;
+            this.dialogVisible = false;
           }
         }
       },
@@ -155,6 +151,8 @@
           if(!that.form.pics){
             that.form.pics = [];
           }
+           this.dialogImageUrl = response.data.url;
+           this.dialogVisible = true;
           that.form.pics.push(response.data.url);
         }
         console.log(response,file,fileList,"file list ....");
@@ -259,10 +257,11 @@
         console.log(r,"消息内容");
         //。。。执行你需要的业务逻辑
         this.dialogImageUrl = r.content.picUrl;
+        this.form.pics.push( r.content.picUrl);
+        
         this.dialogVisible = true;
-        this.uploadUrl = r.content.picUrl + "/noticeManage/common/picture";
-        this.myHeader = { tk: util.localStorageGet(TOKEN) };
-        console.log(this.uploadUrl,this.form,"231");
+        console.log(response,file,fileList,"231");
+        
       }
 
     },
