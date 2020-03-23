@@ -92,7 +92,7 @@ export default {
       let thirdIndex = str.indexOf("/", secondIndex + 1);
       let lastIndex = str.lastIndexOf("/");
       let picClass = r.content.picClass;
-      let resourceType = r.content.receiveMessage;
+      let resourceType = r.content.resourceType;
       let params = {
         IpStr: str.substring(0, thirdIndex),
         FileStr: str.substring(thirdIndex + 1, lastIndex),
