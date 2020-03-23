@@ -69,7 +69,19 @@
                       v-model="data.tel"
                       placeholder="业主电话" />
           </el-form-item>
-
+          <el-form-item label="对赌结果"
+                        prop="status">
+            <el-select v-model="data.status"
+                       @change="queryHouseBetParams()"
+                       clearable
+                       style="width: 120px"
+                       placeholder="对赌结果">
+              <el-option v-for="item in betStatusList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="价格"
                         prop="minMoney">
             <el-col :span="8">
@@ -104,20 +116,6 @@
                             range-separator="至"
                             start-placeholder="起"
                             end-placeholder="止"></el-date-picker>
-          </el-form-item>
-
-          <el-form-item label="对赌结果"
-                        prop="status">
-            <el-select v-model="data.status"
-                       @change="queryHouseBetParams()"
-                       clearable
-                       style="width: 120px"
-                       placeholder="对赌结果">
-              <el-option v-for="item in betStatusList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
-            </el-select>
           </el-form-item>
 
           <el-form-item label="对赌人"
@@ -477,7 +475,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-         this.queryHouseBetParams();
+      this.queryHouseBetParams();
     },
     queryRoomNo () {
       var that = this;
@@ -498,7 +496,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-        this.queryHouseBetParams();
+      this.queryHouseBetParams();
     },
     queryHouseBet (currentPage, column, type) {
       if (!column) {
