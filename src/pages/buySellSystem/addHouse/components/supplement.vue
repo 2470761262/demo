@@ -766,6 +766,7 @@ export default {
   },
   mounted() {
     let that = this;
+    this.isLeavePage=false;
     //true 则去获取数据
     if (this.getData) {
       this.loading = true;
@@ -781,10 +782,18 @@ export default {
     this.getQrCode(
       { remark: "录入房源-上传音频", resourceType: "audio" },
       function(data) {
-        that.audioQrCodeImage = data.url;
-        that.contactSocket(data.qrCode);
+        if(!this.isLeavePage){//还没等请求完毕就下一步录入了，那么不需要回调这个了
+          that.audioQrCodeImage = data.url;
+          that.contactSocket(data.qrCode);
+        }      
       }
     );
+  },
+  beforeRouteLeave(to, from, next){
+    console.log('离开了供给页面，不需要执行任何请求回调');
+    this.isLeavePage=true;
+    next();
+    
   },
   watch: {
     formData: {
@@ -809,6 +818,7 @@ export default {
   },
   data() {
     return {
+      isLeavePage:false,
       audioPlay: {
         playOrEnd: true,
         nowTime: 0,
