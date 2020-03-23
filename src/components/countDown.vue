@@ -209,7 +209,7 @@ export default {
     }
   },
   destroyed () {
-    clearTimeout(timeID);
+    clearTimeout(this.timeID);
   },
 }
 </script>
