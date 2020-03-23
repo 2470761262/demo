@@ -766,6 +766,7 @@ export default {
   },
   mounted() {
     let that = this;
+    that.isLeavePage=false;
     //true 则去获取数据
     if (this.getData) {
       this.loading = true;
@@ -781,7 +782,7 @@ export default {
     this.getQrCode(
       { remark: "录入房源-上传音频", resourceType: "audio" },
       function(data) {
-        if(!this.isLeavePage){//还没等请求完毕就下一步录入了，那么不需要回调这个了
+        if(!that.isLeavePage){//还没等请求完毕就下一步录入了，那么不需要回调这个了
           that.audioQrCodeImage = data.url;
           that.contactSocket(data.qrCode);
         }      
