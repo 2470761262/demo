@@ -7,6 +7,15 @@ let detailEnum = [1, 4, 2, 3, 5, 6];// 上传类型 =>房源详情
 houseEnum.forEach((item, index) => {
   enumUpload.set(item, detailEnum[index]);
 })
+let listMap = new Map([
+  ['outdoorImgList', '1'],
+  ['livingRoomImgList', '2'],
+  ['bedroomImgList', '3'],
+  ['kitchenImgList', '4'],
+  ['toiletImgList', '5'],
+  ['layoutImgList', '6'],
+  ['houseVideo', 'vedio']
+]);
 export default {
   inject: ["houseId"],
   extends: exploration,
@@ -14,6 +23,9 @@ export default {
     replaceType: {
       type: Number
     }
+  },
+  destroyed () {
+    this.socketApi.closeSocket();
   },
   methods: {
     /**
@@ -69,6 +81,63 @@ export default {
           this[listName].splice(index, 1)
         }
       })
+    },
+    //扫码上传回显
+    receiveMessage (r) {
+      let that = this;
+      if (that.fileLoad.id == null) {
+        let str = r.content.picUrl;
+        let firstIndex = str.indexOf("/");
+        let secondIndex = str.indexOf("/", firstIndex + 1);
+        let thirdIndex = str.indexOf("/", secondIndex + 1);
+        let lastIndex = str.lastIndexOf("/");
+        let picClass = r.content.picClass;
+        let resourceType = r.content.receiveMessage;
+        let params = {
+          IpStr: str.substring(0, thirdIndex),
+          FileStr: str.substring(thirdIndex + 1, lastIndex),
+          PicName: str.substring(lastIndex + 1, str.length - 1),
+          Type: that.replaceType,
+          subType: resourceType == "vedio" ? that.detailEnum[picClass - 1] : 7
+        };
+        that.insertPic(params, (json) => {
+          if (json.data.code == 200) {
+            let fileobj = {
+              id: json.data.data.id,
+              url: str
+            }
+            listMap.forEach((value, key) => {
+              console.log(value, key, "value,key");
+              if (value == "vedio") {
+                this[key] = fileobj;
+              }
+              else {
+                if (value = picClass) {
+                  this[value].push(fileobj);
+                }
+              }
+            });
+          }
+        });
+      }
+    },
+    //添加文件
+    insertFile (params, callback) {
+      this.$api
+        .post({
+          url: "/agentHouse/followPic/insert",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params,
+        })
+        .then(json => {
+          return callback(json);
+        })
+        .catch(() => {
+          that.$message({
+            message: "不晓得为什么,反正失败了",
+            type: "warning"
+          });
+        });
     }
   }
 }
