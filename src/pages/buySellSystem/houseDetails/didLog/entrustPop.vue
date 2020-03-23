@@ -231,6 +231,9 @@ export default {
   mounted () {
     this.requestQrCode();
   },
+  destroyed () {
+    this.socketApi.closeSocket();
+  },
   methods: {
     /**
      * 关闭弹窗
@@ -401,7 +404,7 @@ export default {
             type: "warning"
           });
         });
-    },
+    }
   }
 }
 
