@@ -158,21 +158,23 @@ export default {
       }
     },
     houseType (rooms, hall, toilet) {
+      let ro, ha, to = '';
       if (rooms != null && rooms != '' && rooms != undefined) {
-        romms = rooms + '室';
+        ro = rooms + '室';
       } else {
-        rooms = '0' + '室'
+        ro = '0' + '室'
       }
       if (hall != null && hall != '' && hall != undefined) {
-        hall = hall + '厅';
+        ha = hall + '厅';
       } else {
-        hall = '0' + '厅'
+        ha = '0' + '厅'
       }
       if (toilet != null && toilet != '' && toilet != undefined) {
-        toilet = toilet + '厅';
+        to = toilet + '厅';
       } else {
-        toilet = '0' + '厅'
+        to = '0' + '厅'
       }
+      return ro + ha + to
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
@@ -190,7 +192,7 @@ export default {
 
     toLook (id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     querySoleHouseParams () {
       this.querySoleHouse(1, 'id', 'ascending');
