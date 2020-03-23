@@ -66,10 +66,7 @@
                           start-placeholder="开始日期"
                           end-placeholder="结束日期">
           </el-date-picker>
-          <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-                @click="Remove">
-            清除
-          </span>
+
           <div style="margin-top:15px">
 
             <span style="margin-left:30px">
@@ -98,6 +95,10 @@
                          :value="item.value">
               </el-option>
             </el-select>
+            <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+                  @click="Remove">
+              清除
+            </span>
             <el-button type="primary"
                        style="margin-left:30px"
                        size="mini"
