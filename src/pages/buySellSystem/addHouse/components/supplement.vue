@@ -766,7 +766,6 @@ export default {
   },
   mounted() {
     let that = this;
-    this.isLeavePage=false;
     //true 则去获取数据
     if (this.getData) {
       this.loading = true;
