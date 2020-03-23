@@ -55,14 +55,17 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
-        <definitionmenu class="menuMarin"
-                        :renderList="tableColumnField"
-                        :tableColumn="tableColumn"
-                        @change="tabColumnChange"></definitionmenu>
+
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
                    @click="querySoleHouseParams()">查询</el-button>
+        <el-button style="border:0">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </el-button>
       </div>
     </template>
     <!-- :formatter="item.format" -->
@@ -135,7 +138,7 @@ export default {
         { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true, formart: item => this.notNull(item.noSeenDay, '') },
         { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: true },
         { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => houseType(item.rooms, item.hall, rooms.toilet) },
+        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => this.houseType(item.rooms, item.hall, item.toilet) },
         { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
         { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
         { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },

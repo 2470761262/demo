@@ -55,14 +55,17 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
         </el-date-picker>
-        <definitionmenu class="menuMarin"
-                        :renderList="tableColumnField"
-                        :tableColumn="tableColumn"
-                        @change="tabColumnChange"></definitionmenu>
+
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
                    @click="queryChiefHouseParams">查询</el-button>
+        <el-button style="border:0">
+          <definitionmenu class="menuMarin"
+                          :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </el-button>
       </div>
     </template>
     <!-- :formatter="item.format" -->
@@ -166,7 +169,7 @@ export default {
 
     toLook (id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     queryChiefHouseParams () {
       this.queryChiefHouse(1, 'id', 'ascending');
