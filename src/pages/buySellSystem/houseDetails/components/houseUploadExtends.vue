@@ -85,6 +85,7 @@ export default {
     //扫码上传回显
     receiveMessage (r) {
       let that = this;
+      console.log(r, "rdsasad");
       let str = r.content.picUrl;
       let firstIndex = str.indexOf("/");
       let secondIndex = str.indexOf("/", firstIndex + 1);
