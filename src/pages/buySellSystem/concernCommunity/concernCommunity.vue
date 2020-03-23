@@ -90,11 +90,12 @@
             >
               <el-option
                 style="width:270px"
-                v-for="item in list"
+                v-for="(item,index) in list"
                 :key="item.id"
                 :label="item.communityName"
                 :value="item.id"
                 :text="item.communityName"
+                :disabled="filterRoomDisabled().includes(list[index].communityName+'$'+item.id)"
               >
                 <span style="float: left">{{item.communityName}}</span>
                 <span style="float: right; color: #8492a6; font-size: 13px">
@@ -477,6 +478,14 @@ export default {
     this.queryNotConcernCommunityList();
   },
   methods: {
+    //当前选择已经关注这个这个核心盘则不让在重复选择
+    filterRoomDisabled() {   
+      return this.array
+        .map(item => {
+          return item.communityName + "$" + item.id;
+        })
+        .join(",");
+    },
     houseType(rooms, hall, toilet) {
       let ro,
         ha,
@@ -517,6 +526,7 @@ export default {
       var that = this;
       that.$router.push({
         path: "/buySellSystem/addHouse",
+        disabledStatus:false,
         query: {
           comId: comId,
           cbId: cbId,
@@ -551,6 +561,7 @@ export default {
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
     selectedCommunity(e) {
+
       this.$confirm("是否确定关注该楼盘?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
