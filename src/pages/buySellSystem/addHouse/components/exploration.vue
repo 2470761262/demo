@@ -356,12 +356,12 @@ export default {
     pa.webSocketUser = that.webSocketUser;
     that.getQrCode2(pa, function (data) {
       that.qrCodeImg = data.url;
-      console.log(that.qrCodeImg,"图片二维码地址");
-      that.getQrCodeForVedio(function(data){
+      console.log(that.qrCodeImg, "图片二维码地址");
+      that.getQrCodeForVedio(function (data) {
         that.qrCodeImgVedio = data;
-        console.log(that.qrCodeImgVedio,"视频二维码地址");
+        console.log(that.qrCodeImgVedio, "视频二维码地址");
       });
-    });    
+    });
   },
   data () {
     return {
@@ -415,7 +415,7 @@ export default {
         let name = temp.picContainer;
         console.log(that[name], "找到了指定用户");
         console.log(r.content.picUrl, "接受到消息的图片地址");
-        that.uploadFileInfo(temp.picClass, r.content.picUrl, function (data) {
+        that.uploadFileInfo(r.content.picClass, r.content.picUrl, function (data) {
           that[name].push(data);
         });
       }
@@ -428,11 +428,11 @@ export default {
     },
     getQrCodeForVedio (callback) {
       let that = this;
-      let loginUser=util.localStorageGet(LOGINDATA);
+      let loginUser = util.localStorageGet(LOGINDATA);
 
       that.$api.post({
         url: '/scanUpload/getUploadQrCode',
-        data: {'operatePerId':loginUser.accountId,'operatePerName':loginUser.userName, 'remark': "录入房源-上传视频", "resourceType": "vedio", "webSocketUser": that.webSocketUser, "businessParams": JSON.stringify({ "test": "闭环参数" }) },
+        data: { 'operatePerId': loginUser.accountId, 'operatePerName': loginUser.userName, 'remark': "录入房源-上传视频", "resourceType": "vedio", "webSocketUser": that.webSocketUser, "businessParams": JSON.stringify({ "test": "闭环参数" }) },
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
         let result = e.data;

@@ -173,7 +173,7 @@
       </div>
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.Face | emptyRead}}</div>
-        <div class="cell-tiem-floot">{{resultData.FamilyStructure  | familyStructureFiletr('ROOMTYPE') }}/{{resultData.Decoration}}</div>
+        <div class="cell-tiem-floot">{{resultData.FamilyStructure  | familyStructureFiletr('ROOMTYPE') | emptyRead }}/{{resultData.Decoration}}</div>
       </div>
       <div class="cell-item">
         <div class="cell-item-head">{{resultData.InArea | emptyRead('平米')}}</div>
@@ -211,7 +211,8 @@
       </div>
     </div>
     <div class="cell-pro">
-      <div class="cell-pro-item">
+      <div class="cell-pro-item"
+           v-if="resultData.agentPerName!=null&& resultData.plate!=1&&resultData.plate!=4">
         <el-image class="cell-pro-left-img"
                   :src="resultData.agentPerHeadImg"
                   fit="cover">
@@ -227,6 +228,10 @@
         <button class="cell-pro-but"
                 v-if="resultData.agentPerName"
                 @click="oneTouchDialPhone">一键拨号</button>
+      </div>
+      <div class="cell-pro-item"
+           v-else>
+        <span> 暂无</span>
       </div>
       <div class="cell-pro-item">
         <div class="cell-pro-detail">
