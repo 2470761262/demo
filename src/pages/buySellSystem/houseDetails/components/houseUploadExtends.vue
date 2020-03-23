@@ -123,7 +123,7 @@ export default {
                 this[key] = fileobj;
               }
               else {
-                if (value = picClass) {
+                if (value == picClass) {
                   this[value].push(fileobj);
                 }
               }
@@ -131,7 +131,7 @@ export default {
           }
         })
         .catch(() => {
-          that.$message({
+          this.$message({
             message: "不晓得为什么,反正失败了",
             type: "warning"
           });
