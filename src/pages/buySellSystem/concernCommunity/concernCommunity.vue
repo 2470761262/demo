@@ -368,7 +368,7 @@ export default {
           formart: item => item.inArea + "m²"
         },
         {
-          prop: "unitpaice",
+          prop: "unitPrice",
           label: "均价(元/平)",
           width: "130px",
           order: "custom",
@@ -376,14 +376,14 @@ export default {
           default: true,
           format: item => item.unitpaice + "元/㎡"
         },
-        {
-          prop: "decoration",
-          label: "装修程度",
-          width: "110px",
-          order: false,
-          disabled: false,
-          default: true
-        },
+        //{
+         // prop: "decoration",
+         // label: "装修程度",
+        //  width: "110px",
+        //  order: false,
+        //  disabled: false,
+        //  default: true
+       // },
         {
           prop: "seenNum",
           label: "被看次数",
@@ -559,8 +559,7 @@ export default {
       })
         .then(() => {
           this.deleteConcern(id);
-          this.queryConcernCount();
-          this.querylistByParams();
+          
         })
         .catch(() => {
           this.$message({
@@ -583,6 +582,8 @@ export default {
               type: "success",
               message: result.message
             });
+            this.queryConcernCount();
+            this.querylistByParams();
           } else {
             this.$message({
               type: "success",
@@ -612,6 +613,7 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             this.queryConcernCount();
+            this.querylistByParams();
             console.log(123);
           } else {
             console.log("添加关注" + result.message);
@@ -717,7 +719,7 @@ export default {
     queryConcernCount () {
       this.$api
         .post({
-          url: "/myHouse/getCommunityNum",
+          url: "/concern_community/CommunityCount",
           qs: true
         })
         .then(e => {
@@ -726,7 +728,7 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log("统计结果" + result.data);
-            this.array = result.data.data;
+            this.array = result.data;
             var countConcern = 0;
             var countEffectiveNum = 0;
             var countAll = 0;
@@ -741,7 +743,7 @@ export default {
             this.countAll = countAll;
             this.countEffectiveNum = countEffectiveNum;
             console.log("总数：" + countConcern);
-            return array.forEach(item => {
+            return this.array.forEach(item => {
               return item.array;
             });
             this.querylist(1);
@@ -770,8 +772,8 @@ export default {
             console.log("楼盘列表" + result.data);
             var that = this;
             var arrayCommunity = result.data;
-            this.list = arrayCommunity;
-            return list.forEach(item => {
+            that.list = arrayCommunity;
+            return that.list.forEach(item => {
               return item.list;
             });
           } else {

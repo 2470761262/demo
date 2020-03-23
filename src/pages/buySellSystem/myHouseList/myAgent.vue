@@ -319,7 +319,7 @@ export default {
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.querylist(1, e.prop, e.order);
+      this.queryMyAgent(1, e.prop, e.order);
     },
     toHouseData (id, CommunityName) {
       var that = this;
@@ -330,7 +330,7 @@ export default {
     },
     querylistByParams () {
       console.log(this.queryData.timeSelect);
-      this.querylist(1, "id", "descending");
+      this.queryMyAgent(1, "id", "descending");
     },
     keySelect () {
       if (this.data.keyOwner != '') {
@@ -654,10 +654,26 @@ export default {
         params.keyOwner = that.data.keyOwner;
         params.isOnly = that.data.isOnly;
       }
+
+
+
+
+
+      
+if (column == "" || type == null || type == undefined) {
+        params.sortColumn = "id";
+      } else {
+        params.sortColumn = column;
+      }
+      if (type == "" || type == null || type == undefined) {
+        params.sortType = "descending";
+      } else {
+        params.sortType = type;
+      }
       this.$api
         .post({
           url: "/myHouse/getMyAgent",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+         qs: true,
           data: params
         })
         .then(e => {

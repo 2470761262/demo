@@ -241,7 +241,7 @@ export default {
             item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
         },
         {
-          prop: "unitpaice",
+          prop: "unitPrice",
           label: "单价(元/㎡)",
           width: "120",
           order: "custom",
