@@ -6,7 +6,6 @@
   padding-bottom: 60px;
   .button-set {
     margin-left: 0;
-    margin-right: 30px;
     &:last-child {
       margin-right: 0;
     }
@@ -15,6 +14,7 @@
     }
   }
   /deep/ .el-button {
+    margin-right: 30px;
     /deep/span {
       font-size: 22px;
     }
@@ -60,7 +60,7 @@
       <div class="button-set"
            v-if=" resultData.agentHouseMethod">
         <el-button @click="showBetView"
-                   v-if="!isBet&&resultData.agentHouseMethod.AgentPer==perId&&resultData.plate!=4&&resultData.plate!=1">
+                   v-if="!isBet&&resultData.AgentPer==perId&&resultData.plate!=4&&resultData.plate!=1">
           <i class="el-icon-s-promotion el-icon--left"></i>成交对赌
         </el-button>
       </div>
@@ -207,13 +207,12 @@ export default {
     getBetInfo () {
       var that = this;
       this.$api.get({
-        url: '/house/bet/inBet/' + that.houseId.id,
-        data: null
+        url: '/house/bet/inBet/' + that.houseId.id
       }).then((e) => {
         let data = e.data
         if (data.data) {
           that.isBet = true;
-          but.$.$emit("betExpire", betExpire);
+          but.$emit("betExpire", data.data.EndTime);
         } else {
           that.isBet = false;
         }
@@ -224,9 +223,7 @@ export default {
     showBetView () {
       var that = this;
       this.$api.get({
-        url: '/house/bet/conf',
-        data: null,
-        token: false
+        url: '/house/bet/conf'
       }).then((e) => {
         let data = e.data
         if (data.code == 200) {
@@ -312,7 +309,6 @@ export default {
             houseId: this.houseId.id
           },
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false
         })
         .then(e => {
           let result = e.data;
@@ -360,10 +356,7 @@ export default {
     getAgentRules () {
       let that = this;
       this.$api.get({
-        url: '/sys/rule/function/list',
-        data: {
-        },
-        token: false
+        url: '/sys/rule/function/list'
       }).then((e) => {
         e.data.data.functionRuleList.forEach(element => {
           if (that.isShowButton.hasOwnProperty(element.rUrl)) {
