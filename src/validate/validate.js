@@ -16,9 +16,16 @@ const config = {
 //手机号码
 Validator.extend('phone', {
     messages: {
-        zh_CN: (field, args) => field + '必须是11位手机号码',
+        zh_CN: (field, args) => field + '格式有误',
     },
     validate: value => !!/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(value)
+});
+//手机号码长度
+Validator.extend('phoneLen', {
+    messages: {
+        zh_CN: (field, args) => field + '必须是11位',
+    },
+    validate: value => !!/^(\d{11})$/.test(value)
 });
 //正整数
 Validator.extend('noZero', {

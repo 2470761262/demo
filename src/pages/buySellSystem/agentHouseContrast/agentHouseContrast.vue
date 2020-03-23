@@ -1,7 +1,7 @@
 <style>
 .flex {
   display: flex;
-  width: 100%;
+  width: 500px;
   height: 100%;
 }
 .width {
@@ -10,9 +10,8 @@
   color: #219167;
 }
 .titleBox {
-  width: 10%;
-
-  height: 50rem;
+  width: 150px;
+  height: 50px;
 }
 .msgBox {
   width: 80%;
@@ -20,8 +19,8 @@
 }
 .cancelButton {
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 25px;
   display: flex;
   font-size: 16px;
   justify-content: center;
@@ -29,9 +28,9 @@
   border: black 1px solid;
 }
 .detailBox {
-  width: 15rem;
+  width: 270px;
   height: 1000px;
-  padding-right: 1rem;
+  padding-right: 30px;
   border-right: rgb(242, 242, 242) 1px solid;
   display: inline-block;
 }
@@ -43,7 +42,7 @@
 .houseName {
   background: rgb(242, 242, 242);
   display: flex;
-  width: 200px;
+  width: 300px;
   margin-right: 5%;
   height: 100%;
   justify-content: center;
@@ -74,15 +73,15 @@
   margin-bottom: 11%;
 }
 .image2 {
-  border-radius: 2rem;
-  width: 85%;
-  height: 10rem;
-  margin-top: 3%;
+  border-radius: 20px;
+  width: 240px;
+  height: 200px;
+  margin-top: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  margin-bottom: 11%;
+  margin-bottom: 10px;
 }
 .text {
   margin-left: 5%;
@@ -126,7 +125,7 @@
 
   <div class="flex">
     <div class="msgBox">
-      <el-scrollbar style="height:100%;width:105rem">
+      <el-scrollbar style="height:100%;width:1650px">
         <div class="detailBox"
              style="width:100px;margin-top:1rem;loat: left;">
           <div class="house">

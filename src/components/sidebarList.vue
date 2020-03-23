@@ -40,9 +40,9 @@
         <span class="item-title">返回</span>
       </div>
       <div class="sldebar-content-item"
-           @click="add">
+           @click="lastClick">
         <i class="el-icon-plus icon"></i>
-        <span class="item-title">新增</span>
+        <span class="item-title">{{lastItemSet ? lastTitle : '新增'}}</span>
       </div>
     </div>
   </div>
@@ -50,6 +50,23 @@
 
 <script>
 export default {
+  props: {
+    lastItemSet: {
+      type: Boolean,
+      default: false
+    },
+    lastTitle: {
+      type: String,
+    },
+    lastUrl: {
+      type: String,
+      default: '/buySellSystem/addHouse'
+    },
+    lastQuery: {
+      type: Object,
+      default: () => { }
+    }
+  },
   methods: {
     goHome () {
       this.$router.push({ path: '/buySellSystem/houseList' });
@@ -57,8 +74,14 @@ export default {
     goBack () {
       this.$router.go(-1);
     },
-    add () {
-      this.$router.push({ path: '/buySellSystem/addHouse' })
+    lastClick () {
+      let routerData = {
+        path: this.lastUrl
+      }
+      if (this.lastQuery) {
+        routerData.query = this.lastQuery;
+      }
+      this.$router.push(routerData)
     }
   },
 }

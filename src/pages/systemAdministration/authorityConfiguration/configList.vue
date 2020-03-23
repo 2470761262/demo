@@ -10,63 +10,62 @@
 .el-table .success-row {
   color: #f0f9eb;
 }
+/deep/.el-table__body {
+  .el-table_1_column_1 {
+    cursor: pointer;
+  }
+}
 </style>
 
-<template >
-  <div>
-    <list-page
-      style="width: 100%"
-      row-key="keyId"
-      stripe
-      lazy
-      :load="load"
-      :row-style="tableRowClassName"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      :parentData="$data"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
-      <template v-slot:top>
-        <div class="query-cell">
-          <el-input placeholder="公司名称" v-model="queryData.CompanyName" clearable>
-            <template slot="prepend">公司名</template>
-          </el-input>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryCompanyByParams"
-          >查询</el-button>
-        </div>
+<template>
+  <list-page style="width: 100%"
+             row-key="keyId"
+             stripe
+             ref="listTable"
+             :row-style="tableRowClassName"
+             :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+             :parentData="$data"
+             @cell-click="rowClick"
+             :expand-row-keys="expandKey"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
+    <template v-slot:top>
+      <div class="query-cell">
+        <el-input placeholder="关键字搜索"
+                  v-model="queryData.keyword"
+                  clearable>
+          <template slot="prepend">关键字</template>
+        </el-input>
+        <el-button type="primary"
+                   style="margin-left:10px"
+                   size="mini"
+                   @click="queryCompanyByParams">查询</el-button>
+      </div>
+    </template>
+    <template v-slot:tableColumn="cell">
+      <template v-for="item in cell.tableData">
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop"
+                         :formatter="item.formater"></el-table-column>
       </template>
-      <template v-slot:tableColumn="cell">
-        <template v-for="item in cell.tableData">
-          <el-table-column
-            :prop="item.prop"
-            :label="item.label"
-            :width="item.width"
-            :key="item.prop"
-            :formatter="item.formater"
-          ></el-table-column>
+      <el-table-column label="操作">
+        <template v-slot="scope">
+          <div v-if="scope.row.operation!=''">
+            <el-button plain
+                       size="mini"
+                       @click="distributeEvent(item.methodName,scope.row)"
+                       v-for="(item,index) in getOpeBtns(scope.row)"
+                       :type="item.style"
+                       :key="index">{{item.name}}
+            </el-button>
+          </div>
         </template>
-        <el-table-column prop="operation" label="操作" fixed="right" key="operation">
-          <template v-slot="scope">
-            <div v-if="scope.row.operation!=''">
-              <el-button
-                plain
-                size="mini"
-                @click="distributeEvent(item.methodName,scope.row)"
-                v-for="(item,index) in getOpeBtns(scope.row)"
-                :type="item.style"
-                :key="index"
-              >{{item.name}}</el-button>
-            </div>
-          </template>
-        </el-table-column>
-      </template>
-    </list-page>
-  </div>
-</template >
+      </el-table-column>
+    </template>
+  </list-page>
+</template>
 
 <script>
 let rowType = {
@@ -88,21 +87,21 @@ let array = [
 import listPage from "@/components/listPage";
 export default {
   watch: {
-    filterText(val) {
+    filterText (val) {
       this.$refs.tree2.filter(val);
     }
   },
   components: {
     listPage
   },
-
-  data() {
+  data () {
     return {
+      expandKey: [],
       company: {},
       department: {},
       loading: false, //控制表格加载动画提示
       queryData: {
-        CompanyName: "",
+        keyword: "",
         isLocked: null,
         type: null
       },
@@ -122,7 +121,7 @@ export default {
         {
           prop: "type",
           label: "类型",
-          formater: function(row) {
+          formater: function (row) {
             return rowType[row.type];
           }
         },
@@ -131,12 +130,18 @@ export default {
       tableData: []
     };
   },
-  mounted() {
+  mounted () {
     //读取公司数据
     this.queryCompanyDatas(1);
   },
   methods: {
-    tableRowClassName({ row, rowIndex }) {
+    rowClick (row, column, event) {
+      let _that_tab = this.$refs.listTable.$refs.table;
+      if (column.label == '名称') {
+        _that_tab.toggleRowExpansion(row);
+      }
+    },
+    tableRowClassName ({ row, rowIndex }) {
       if (row.type == "TREE_TYPE_POSITION") {
         return { color: "green" };
       } else if (row.type == "TREE_TYPE_ROLE") {
@@ -144,24 +149,14 @@ export default {
       }
       return "";
     },
-    load(tree, treeNode, resolve) {
-      console.log(
-        tree,
-        treeNode,
-        resolve,
-        ",,,,,,,,,,,,,,,,,,,,,,,,,,................."
-      );
+    queryCompanyByParams () {
       let that = this;
-      let params = {
-        limit: 100,
-        page: 1,
-        type: tree.type,
-        operationId: tree.id
-      };
+      that.loading = true;
+      //读取树数据
       that.$api
         .post({
-          url: "/company/authority/list",
-          data: params,
+          url: "/company/authority/list/query",
+          data: { keyword: that.queryData.keyword },
           qs: true
         })
         .then(e => {
@@ -170,28 +165,24 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            //debugger;
-            resolve(result.data.list);
+            that.expandKey = result.data;
+            that.loading = false;
           } else {
-            console.log("查询公司管理列表结果：" + result.message);
+            console.log("载入结果" + +result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询公司管理列表失败");
+          console.log("读取失败");
           console.log(e);
         });
     },
-    queryCompanyByParams() {
-      this.queryData.isLocked = null;
-      this.queryCompanyDatas(1);
-    },
-    queryCompanyDatas(currentPage) {
+    queryCompanyDatas (currentPage) {
       //debugger;
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
-      if (that.queryData.CompanyName != null) {
-        params.companyName = that.queryData.CompanyName;
+      if (that.queryData.keyword != null) {
+        params.operationName = that.queryData.keyword;
       }
       that.$api
         .post({
@@ -218,16 +209,16 @@ export default {
           console.log(e);
         });
     },
-    editCompanyDetail(e) {
+    editCompanyDetail (e) {
       this.$router.push({
         path: "/sys/authorityConfiguration/setAuthority",
         query: { companyId: e.id }
       });
     },
-    distributeEvent(e, companyId) {
+    distributeEvent (e, companyId) {
       this[e](companyId);
     },
-    getOpeBtns(row) {
+    getOpeBtns (row) {
       if (row.type == "TREE_TYPE_POSITION") {
         return [
           {
@@ -262,7 +253,7 @@ export default {
           }
         ];
       } else {
-        console.log(row.parentId, "xxxxxx............");
+        // console.log(row.parentId, "xxxxxx............");
         if (row.parentId == 0 && array.length == 1) {
           array.push({
             name: "设置权限",
@@ -270,27 +261,27 @@ export default {
             style: "primary",
             methodName: "editCompanyDetail"
           });
-          console.log(array, "............");
+          // console.log(array, "............");
         }
         return array;
       }
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryCompanyDatas(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.queryCompanyDatas(val);
     },
-    showRoleDetail(row) {
+    showRoleDetail (row) {
       this.$router.push({
         path: "/sys/positionManager",
         query: { id: row.id }
       });
     },
     //个人权限设置
-    setEmployeeAuthority(e) {
+    setEmployeeAuthority (e) {
       //debugger;
       let that = this;
       //跳转页面
@@ -300,12 +291,12 @@ export default {
       });
     },
     //设置权限
-    setPosition(e) {
+    setPosition (e) {
       var that = this;
       //跳转页面
       that.$router.push({ path: "/sys/setPosition", query: { id: e.id } });
     },
-    showPositionList(e) {
+    showPositionList (e) {
       var that = this;
       //跳转页面
       that.$router.push({
@@ -314,9 +305,9 @@ export default {
       });
     },
     //跳转个人权限设置
-    setPersonPosition(e){
+    setPersonPosition (e) {
       let that = this;
-      that.$router.push({ path: '/sys/authority/setAuthority', query: { "accountId": e.id} });
+      that.$router.push({ path: '/sys/authority/setAuthority', query: { "accountId": e.id } });
 
     }
   }

@@ -28,6 +28,7 @@
           <div class="item-before"
                data-before="*">楼盘</div>
           <el-select filterable
+                     v-addHouse
                      remote
                      :remote-method="remoteCommunityName"
                      data-vv-name="communityId"
@@ -128,7 +129,7 @@
                   v-model="formData.tel"
                   data-vv-name="tel"
                   data-vv-as="电话号码"
-                  v-validate="'required|phone'">
+                  v-validate="'required|phoneLen|phone'">
           <div slot="prepend"
                class="item-before"
                data-before="*">手机号</div>
@@ -385,7 +386,7 @@
 </template>
 <script>
 let sex = [
-  { title: "女生", label: 0 },
+  { title: "女士", label: 0 },
   { title: "先生", label: 1 }
 ];
 let certificateType = [
@@ -404,6 +405,19 @@ export default {
     },
     houseType: {
       type: String
+    }
+  },
+  directives: {
+    addHouse: {
+      bind (el, value, vnode) {
+        let addedbuilding = document.createElement('div');
+        addedbuilding.style.cssText = 'padding:4px 10px;text-align: right;color:#67C23A;cursor: pointer;';
+        addedbuilding.innerText = '补充楼盘';
+        addedbuilding.onclick = function () {
+          vnode.context.addedbuilding();
+        }
+        el.querySelector('.el-scrollbar').after(addedbuilding)
+      }
     }
   },
   computed: {
@@ -489,6 +503,10 @@ export default {
     this.addHouseType = this.houseType;
   },
   methods: {
+    //补充楼盘
+    addedbuilding () {
+      this.$router.push({ path: '/buySellSystem/addFloorList' })
+    },
     houseTypeChange (e) {
       this.$emit("update:houseType", e);
     },
@@ -596,7 +614,8 @@ export default {
       that.selectPageCommunit.loading = true;
       this.$api
         .post({
-          url: "/mateHouse/queryCommunity",
+          //url: "/mateHouse/queryCommunity",
+          url: "/community/addHouse", //带权限
           data: {
             page: 1,
             limit: 50,

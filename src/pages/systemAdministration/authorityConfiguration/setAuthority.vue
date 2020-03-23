@@ -14,6 +14,7 @@
   float: left;
 }
 
+
 .personSelect {
   float: left;
 }
@@ -23,10 +24,6 @@
   display: inline-block;
 }
 
-.selected_btn{
-  color: red;
-  cursor: pointer;
-}
 </style>
 <template>
   <div>
@@ -40,6 +37,7 @@
                  show-checkbox
                  node-key="id"
                  ref="tree"
+                 check-strictly
                  highlight-current
                  :props="defaultProps">
           <span class="custom-tree-node"
@@ -88,27 +86,6 @@
               v-loading="treeLoading"
             ></el-tree>
 
-<!--            <div class="formItem"-->
-<!--                 v-show="showSave">-->
-<!--&lt;!&ndash;              <el-button type="primary"&ndash;&gt;-->
-<!--&lt;!&ndash;                         size="mini"&ndash;&gt;-->
-<!--&lt;!&ndash;                         @click="saveCompanyRule">保存</el-button>&ndash;&gt;-->
-<!--            </div>-->
-<!--            <div class="elTree" v-show="showCompanyTree">-->
-<!--              <el-tree  :data="companyTreeData"-->
-<!--                       show-checkbox-->
-<!--                       :load="loadCompanyTreeNode"-->
-<!--                       lazy-->
-<!--                       node-key="id"-->
-<!--                       ref="companyTree"-->
-<!--                       highlight-current-->
-<!--                       :props="companyProps"-->
-<!--                       @check="checkNode"-->
-<!--                       :default-checked-keys="companyGather"-->
-<!--                       :default-expanded-keys="companyGather">-->
-
-<!--              </el-tree>-->
-<!--            </div>-->
           </template>
         </div>
       </el-card>
@@ -169,6 +146,7 @@ export default {
         if (result.code == 200) {
           this.ruleTreeData = result.data.allRule;
           this.$refs.tree.setCheckedKeys(result.data.selectedRule);
+          this.companyGather = result.data.allRule[result.data.selectedRule[0]].companyGather.split(",");
         } else {
           console.log("查询错误: ", result.message);
           this.$message.error("查询错误: " + result.message);

@@ -31,21 +31,7 @@
         }
       }
       .replace-select {
-        width: 120px;
-        & + .replace-select {
-          margin-left: 20px;
-        }
-        /deep/.el-input__icon {
-          line-height: 27px;
-        }
-        /deep/.el-input__inner {
-          height: 27px;
-          padding: 0;
-          line-height: 27px;
-          border: 1px solid #d5d5d5;
-          text-indent: 10px;
-          box-sizing: border-box;
-        }
+        width: 150px;
       }
       &.passWord-input {
         h3 {
@@ -155,47 +141,18 @@
               </label>
             </div>
           </div>
-          <div class="replace-left-row passWord-input"
-               v-if="pop.model==2">
-            <h3>密码</h3>
-            <el-input v-model="password"
-                      data-vv-as="密码锁"
-                      data-vv-name="password"
-                      v-validate="{required:pop.model==2}"
-                      placeholder="请输入密码锁密码"></el-input>
-          </div>
           <div class="replace-left-row">
-            <h3>存放门店</h3>
-            <el-select data-vv-as="区域"
-                       data-vv-name="region"
-                       v-validate="'required'"
-                       class="replace-select"
-                       v-model="region.model"
-                       filterable
-                       :loading="region.loading"
-                       @focus="getRegionList"
-                       @change="changeRegionValue"
-                       placeholder="请选择区域">
-              <el-option v-for="item in region.list"
-                         :key="item.id"
-                         :label="item.deptName"
-                         :value="item.id">
-              </el-option>
-            </el-select>
-            <el-select data-vv-as="门店"
-                       data-vv-name="stores"
-                       v-validate="'required'"
-                       class="replace-select"
-                       v-model="stores.model"
-                       filterable
-                       :loading="stores.loading"
-                       placeholder="请选择门店">
-              <el-option v-for="item in stores.list"
-                         :key="item.id"
-                         :label="item.deptName"
-                         :value="item.id">
-              </el-option>
-            </el-select>
+            <h3>委托截止时间</h3>
+            <el-date-picker class="replace-select"
+                            size="mini"
+                            v-model="entrustTime"
+                            type="date"
+                            value-format="yyyy-MM-dd hh:mm:ss"
+                            data-vv-as="委托时间"
+                            data-vv-name="fileLoad"
+                            v-validate="'required'"
+                            placeholder="选择日期">
+            </el-date-picker>
           </div>
         </div>
         <div class="replace-right">
@@ -258,25 +215,12 @@ export default {
       pop: {
         model: 0,
         checkList: [
-          { title: '钥匙', value: 0 },
-          { title: '指纹锁', value: 1 },
-          { title: '密码锁', value: 2 }
+          { title: '普通委托', value: 2 },
+          { title: '独家委托', value: 1 },
+          { title: '限时委托', value: 3 }
         ]
       },
-      //区域
-      region: {
-        model: '',
-        list: [],
-        loading: false
-      },
-      //密码锁密码
-      password: '',
-      //门店
-      stores: {
-        model: '',
-        list: [],
-        loading: false
-      },
+      entrustTime: '',//委托时间
       fileLoad: {//上传文件
         id: null,
         qrImg: '',
@@ -304,21 +248,17 @@ export default {
       this.$validator
         .validateAll().then((e) => {
           if (e) {
-            let url = `/agentHouse/propertyCheck/${this.replaceType == 0 ? 'insertApplyFor' : 'insertReplace'}`;
+            let url = `/agentHouse/propertyCheck/${this.replaceType == 1 ? 'insertApplyFor' : 'insertReplace'}`;
             let params = {
               Eid: this.houseId.id,
               Type: this.replaceType,
+              onlyType: this.pop.model,
               picList: [this.fileLoad.id],
-              keyType: this.pop.model,
-              KeyStorageDept: this.stores.model, // 门店ID
-              followMemo: '提交了钥匙申请'
+              ProxyMaxTime: this.entrustTime,
+              followMemo: "提交了委托申请"
             }
             if (this.replaceType == 4) {
-              params.ReplaceType = 3;
-            }
-            //密码锁密码
-            if (this.pop.model == 2) {
-              params.keyCode = this.password;
+              params.ReplaceType = 2;
             }
             this.hidePop();
             houseCheck.insertCheck(url, params).then((e) => {
@@ -390,73 +330,6 @@ export default {
           });
         });
     },
-    /**
-     * 区域远程搜素
-     * @Date: 2020-03-19 15:20:48
-     * @param {string} fitlerField  
-     */
-    getRegionList (fitlerField) {
-      let _that = this;
-      if (this.region.list.length != 0) {
-        return;
-      }
-      this.region.loading = true;
-      this.$api.get({
-        url: "/department/isArea",
-        data: {
-          id: 10 // util.localStorageGet(LOGINDATA).companyId
-        }
-      }).then(e => {
-        let result = e.data;
-        if (result.code == 200) {
-          this.region.list = result.data;
-        }
-      }).catch(e => {
-        if (e.response != undefined) {
-          this.$message(e.response.data.message);
-        } else {
-          this.$message("获取失败");
-        }
-      }).finally(() => {
-        this.region.loading = false;
-      })
-    },
-    /**
-     * 区域选择改变 
-     * @Date: 2020-03-19 15:22:29
-     * @param {string} changeField
-     */
-    changeRegionValue (changeField) {
-      this.stores.model = '';
-      this.getStoresList(changeField);
-    },
-    /**
-     * 门店远程搜索
-     * @param {string} fitlerField
-     */
-    getStoresList (fitlerField) {
-      let _that = this;
-      this.stores.loading = true;
-      this.$api.get({
-        url: "/department/byParId",
-        data: {
-          id: fitlerField
-        }
-      }).then(e => {
-        let result = e.data;
-        if (result.code == 200) {
-          this.stores.list = result.data;
-        }
-      }).catch(e => {
-        if (e.response != undefined) {
-          this.$message(e.response.data.message);
-        } else {
-          this.$message("获取失败");
-        }
-      }).finally(() => {
-        this.stores.loading = false;
-      })
-    },
     contactSocket (user) {
       console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""), user);
@@ -478,7 +351,7 @@ export default {
       //webSocketUser:默认是二维码标识，可以不传。发消息就是基于这个标识发送的；如果一个页面有多个二维码需要自己生成全球唯一（见guid()函数实例）
       that.$api.post({
         url: '/scanUpload/getUploadQrCode',
-        data: { 'remark': "", "resourceType": "picture", "businessParams": JSON.stringify({ "test": "钥匙人" }) },
+        data: { 'remark': "", "resourceType": "picture", "businessParams": JSON.stringify({ "test": "委托人" }) },
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
         let result = e.data;
@@ -532,7 +405,7 @@ export default {
           });
         });
     }
-  },
+  }
 }
 
 </script>

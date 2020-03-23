@@ -100,6 +100,9 @@
       <template v-if="loopBig.typeStr == 'videoUrl'">
         <el-video :src="loopBig.src"></el-video>
       </template>
+      <!-- 对赌倒计时 -->
+      <elCountDown :endTime="betExpire"
+                   v-if="betExpire"></elCountDown>
     </section>
     <section class="img-list"
              :class="{'scrolPad':scrollBar}">
@@ -148,17 +151,26 @@
 import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
 import elVideo from '@/components/elVideo';
 import elAudio from '@/components/audio';
+import elCountDown from '@/components/countDown';
+import but from "@/evenBus/but.js";
 export default {
   inject: ["houseDetails"],
   components: {
     elVideo,
-    elAudio
+    elAudio,
+    elCountDown
+  },
+  created () {
+    but.$on("betExpire", (value) => {
+      this.betExpire = value
+    })
   },
   mounted () {
     addResizeListener(this.$refs.itemOver, this.update);
   },
   destroyed () {
     removeResizeListener(this.$refs.itemOver, this.update);
+    but.$off('betExpire');
   },
   computed: {
     moveX () {
@@ -188,7 +200,8 @@ export default {
       loopBig: {},
       scrollBar: true,
       translateX: 0,
-      renderX: '0'
+      renderX: '0',
+      betExpire: ""//对赌结束时间
     }
   },
   methods: {

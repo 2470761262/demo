@@ -362,13 +362,11 @@ export default {
     },
     //打开举报弹窗
     async  openReport () {
-      let isChecking = await houseCheck.isChecking(11, 0, this.houseId.id);
-      if (isChecking) {
-        this.$message("该房源已被举报，当前正在审核中");
-      }
-      else {
+      let isChecking = await houseCheck.isChecking(11, 0, this.houseId.id, "该房源已被举报，当前正在审核中");
+      if (!isChecking) {
         this.reportFlag = true;
       }
+
     },
     openPopUp (PopName) {
       this[PopName] = true;

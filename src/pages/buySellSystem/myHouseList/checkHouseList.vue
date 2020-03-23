@@ -47,6 +47,7 @@
             <el-select v-model="queryData.roomNo"
                        filterable
                        clearable
+                       @change="querylistByParams()"
                        placeholder="请选择房间号">
               <el-option v-for="item in roomNoList"
                          :key="item.value"
@@ -59,6 +60,7 @@
           <template slot="prepend">房源状态</template>
           <el-date-picker v-model="queryData.timeSelect"
                           type="datetimerange"
+                          @change="querylistByParams()"
                           range-separator="至"
                            align="right"
                           value-format="yyyy-MM-dd HH:mm:ss"
@@ -66,10 +68,7 @@
                           end-placeholder="结束日期"
                           :default-time="['00:00:00', '23:00:00']">
           </el-date-picker>
-          <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-                @click="Remove">
-            清除
-          </span>
+
           <div style="margin-top:15px">
 
             <span style="margin-left:30px">
@@ -78,6 +77,7 @@
             <el-select filterable
                        v-model="type"
                        clearable
+                       @change="querylistByParams()"
                        placeholder="请选择">
               <el-option v-for="item in typeList"
                          :key="item.value"
@@ -91,6 +91,7 @@
             <el-select filterable
                        v-model="status"
                        clearable
+                       @change="querylistByParams()"
                        placeholder="请选择">
               <el-option v-for="item in stateList"
                          :key="item.value"
@@ -98,10 +99,19 @@
                          :value="item.value">
               </el-option>
             </el-select>
+            <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
+                  @click="Remove">
+              清除
+            </span>
             <el-button type="primary"
                        style="margin-left:30px"
                        size="mini"
                        @click="querylistByParams">查询</el-button>
+            <el-button style="margin-left:30px;width:150px;height:30px;border:0"
+                       size="mini">
+              <moreSelect @moreSelectChange="moreSelectChange"
+                          style="height:40px;margin-right:5px;"></moreSelect>
+            </el-button>
           </div>
 
         </div>
@@ -300,11 +310,13 @@
 import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 import util from "@/util/util";
+import moreSelect from '@/components/moreSelect';
 export default {
   mixins: [getMenuRid],
 
   components: {
-    listPage
+    listPage,
+    moreSelect
   },
   data () {
     return {
@@ -314,6 +326,7 @@ export default {
       cbIdList: '',
       roomNoList: '',
       comList: '',
+      moreSelect: [],
       dialogVisible: false,
       value: '',
       input: '',
@@ -479,6 +492,11 @@ export default {
     this.querylist(1);
   },
   methods: {
+    moreSelectChange (e) {
+      if (e != '')
+        this.moreSelect = e;
+      this.querylist(1, 'id', 'ascending')
+    },
     changeFile (e, index) {
       let typeList = this.accessoryMoldList[index].list;
       let activeIndex = typeList[e].activeIndex;
@@ -593,15 +611,10 @@ export default {
       }
     },
     Remove () {
-      this.cbId = '';
-      this.type = '';
-      this.status = '';
-      this.value = '';
-      this.queryData.roomNo = '';
-      this.queryData.CommunityName = '';
-      this.queryData.cbId = '';
-      this.queryData.timeSelect = '';
-      this.querylist(1);
+      let tab = this.tableColumn;
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
+      this.querylist(1, 'id', 'ascending')
     },
     queryCBId () {
       var that = this
@@ -622,7 +635,7 @@ export default {
           that.cbIdList = e.data.data.list;
         }
       })
-
+      this.querylistByParams();
     },
     getTitle (row) {
       this.titleList.forEach(element => {
@@ -653,6 +666,7 @@ export default {
           that.roomNoList = e.data.data.list;
         }
       })
+      this.querylistByParams();
     },
     //跳转房源详情页面
     toHouseDetail (id) {

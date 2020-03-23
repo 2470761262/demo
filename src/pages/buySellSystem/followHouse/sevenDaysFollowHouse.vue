@@ -7,23 +7,27 @@
       <div class="page-form-inline ">
         <el-input placeholder="楼盘名称"
                   style="width:280px"
+                  @change="querylistByParams()"
                   v-model="queryData.CommunityName">
           <template slot="prepend">楼盘名称 </template>
         </el-input>
 
         <el-input placeholder="开始日期"
+                  @change="querylistByParams()"
                   style="margin-left:30px;width:240px"
                   v-model="queryData.minFollowEndTime"
                   clearable>
           <template slot="prepend">最后带看时间</template>
         </el-input>
         <el-input placeholder="结束时期"
+                  @change="querylistByParams()"
                   style="margin-left:30px;width:240px"
                   v-model="queryData.maxFollowEndTime "
                   clearable> </el-input>
 
         <el-input placeholder="姓名"
                   style="margin-left:30px;width:240px"
+                  @change="querylistByParams()"
                   v-model="queryData.Customers"
                   clearable>
           <template slot="prepend">业主</template>
@@ -31,6 +35,7 @@
 
         <el-input placeholder="业主电话"
                   v-model="queryData.Tel "
+                  @change="querylistByParams()"
                   style="margin-left:30px;width:240px"
                   clearable>
           <template slot="prepend">电话</template>
@@ -38,6 +43,7 @@
 
         <el-select v-model="queryData.houseStates"
                    style="margin-left:10px"
+                   @change="querylistByParams()"
                    placeholder="请选择"
                    clearable>
           <el-option v-for="item in options"
@@ -50,6 +56,7 @@
         <el-button type="primary"
                    style="margin-left:30px"
                    size="mini"
+                   @change="querylistByParams()"
                    @click="querylistByParams()">查询</el-button>
       </div>
     </template>

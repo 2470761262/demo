@@ -10,7 +10,7 @@
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
         <el-select v-model="data.comId"
-                   @change="queryCBId()"
+                   @change="queryDatalist()"
                    filterable
                    remote
                    @focus="remoteInput"
@@ -25,39 +25,41 @@
         </el-select>
         <el-input placeholder="最低售价"
                   v-model="data.minPrice"
+                  @change="queryDatalist()"
                   style="margin-left:30px;width:120px"
                   clearable />------
         <el-input placeholder="最高售价"
                   v-model="data.maxPrice"
+                  @change="queryDatalist()"
                   style="width:120px"
                   clearable />万
         <el-input placeholder="最小面积"
                   v-model="data.minArea"
+                  @change="queryDatalist()"
                   style="margin-left:30px;width:120px"
                   clearable />------
         <el-input placeholder="最大面积"
                   v-model="data.maxArea"
+                  @change="queryDatalist()"
                   style="width:120px"
                   clearable />平方
         <el-date-picker v-model="data.timeSelect"
                         type="daterange"
+                        @change="queryDatalist()"
                         range-separator="至"
                         start-placeholder="成交开始日期"
                         end-placeholder="成交结束日期"></el-date-picker>
-        <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-              @click="Remove">
-          清除
-        </span>
+        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
+              @click="Remove">清除</span>
         <el-button type="primary"
                    style="margin-left:10px"
                    size="mini"
                    @click="queryDatalist">查询</el-button>
-        <div style='color:red;font-size:16px;margin:10px 0 10px 0'>①非作业方在签订合同15天后才可查询；②成交房源将锁定90天，90天后会在'资源库=潜在房源'中显示；③90天内有出售请重新录入</div>
+        <div style="color:red;font-size:16px;margin:10px 0 10px 0">①非作业方在签订合同15天后才可查询；②成交房源将锁定90天，90天后会在'资源库=潜在房源'中显示；③90天内有出售请重新录入</div>
       </div>
     </template>
 
     <template #tableColumn="cell">
-
       <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
                          :label="item.label"
@@ -81,7 +83,7 @@
 </template>
 <script>
 import listPage from "@/components/listPage";
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -117,8 +119,8 @@ export default {
         { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true , formart: item => item.price + '万元'},
         { prop: "inArea", label: "面积(m²)", order: 'custom', disabled: false, default: true , formart: item => item.inArea + 'm²'},
         { prop: "unitPrice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true , format: item => item.unitpaice + '元/㎡'},
-        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
-        { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true },
+        { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item =>  (item.rooms||0) + '室' + (item.hall||0) + '厅' + (item.toilet||0) + '卫' },
+        { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true ,formart: item => item.seenNum||0},
         { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
         { prop: "agenName", label: "跟单人", order: false,disabled: false, default: true  },
          { prop: 'id', label: "成交人", order: false,disabled: false, default: true , formart: item => item.agenName  }
@@ -127,7 +129,7 @@ export default {
     };
   },
   mounted () {
-    this.queryOurComDeal(1, 'id', 'ascending');
+    this.queryOurComDeal(1, "id", "ascending");
   },
   methods: {
     sortMethod (e) {
@@ -140,13 +142,10 @@ export default {
     toLook (id) {
       console.log(id);
       var that = this;
-      that.$router.push({
-        path: "/buySellSystem/houseDetails",
-        query: { houseId: id }
-      });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     queryDatalist () {
-      this.queryOurComDeal(1,'id', 'ascending');
+      this.queryOurComDeal(1, "id", "ascending");
     },
     remoteMethod (query) {
       var that = this;
@@ -155,7 +154,7 @@ export default {
 
         this.$api
           .get({
-            url: "/mateHouse/queryCommunity",
+            url: "/community/ourComDeal",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             qs: true,
@@ -176,14 +175,16 @@ export default {
       }
     },
     Remove () {
+      let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.tabColumnChange(tab);
       this.queryOurComDeal(1, 'id', 'ascending');
 
     },
     queryOurComDeal (currentPage, column, type) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage-1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (that.data.comId != null && that.data.comId.length > 0) {
         params.comId = that.data.comId;
       }
@@ -244,7 +245,6 @@ export default {
       });
     },
     remoteInput () {
-
       if (this.data.comId == 0) {
         this.remoteMethod();
       }
@@ -256,7 +256,7 @@ export default {
 
         this.$api
           .get({
-            url: "/mateHouse/queryCommunity",
+            url: "/community/ourComDeal",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             qs: true,
@@ -285,12 +285,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryOurComDeal(val, 'id', 'ascending');
+      this.queryOurComDeal(val, "id", "ascending");
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryOurComDeal(1, 'id', 'ascending');
+      this.queryOurComDeal(1, "id", "ascending");
     }
   }
 };

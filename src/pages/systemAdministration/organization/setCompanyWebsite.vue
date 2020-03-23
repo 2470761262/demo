@@ -52,7 +52,8 @@
           ref="upLoad"
           :action="uploadUrl"
           :headers="myHeader"
-          :show-file-list="false"
+          :limit=1
+          :show-file-list="true"
           list-type="picture-card"
           :on-success="handleAvatarSuccess">
           <img v-if="setEntity.siteLogo" :src="setEntity.siteLogo" class="avatar">
@@ -78,7 +79,8 @@
           ref="upLoad1"
           :action="uploadUrl"
           :headers="myHeader"
-          :show-file-list="false"
+          :limit=1
+          :show-file-list="true"
           list-type="picture-card"
           :on-success="handleSuccess">
           <img v-if="setEntity.sitebLogo" :src="setEntity.sitebLogo" class="avatar">
@@ -90,7 +92,8 @@
             ref="upLoad2"
           :action="uploadUrl"
           :headers="myHeader"
-          :show-file-list="false"
+          :limit=1
+          :show-file-list="true"
           list-type="picture-card"
           :on-success="handleSuccess2">
           <img v-if="setEntity.sitemLogo" :src="setEntity.sitemLogo" class="avatar">
@@ -102,7 +105,9 @@
            ref="upLoad3"
            :action="uploadUrl"
            :headers="myHeader"
-           :show-file-list="false"
+           :limit=1
+           :show-file-list="true"
+           list-type="picture-card"
            :on-success="handleAvatarSuccess3">        
            <img v-if="setEntity.siteHeadImg" :src="setEntity.siteHeadImg" class="avatar">
            <i v-else class="el-icon-plus avatar-uploader-icon" upLoad3></i>
@@ -113,7 +118,8 @@
         ref="upLoad4"
           :action="uploadUrl"
           :headers="myHeader"
-          :show-file-list="false"
+          :show-file-list="true"
+          :limit=1
           list-type="picture-card"
           :on-success="handleAvatarSuccess4">
           <img v-if="setEntity.loginBackground" :src="setEntity.loginBackground" class="avatar">
