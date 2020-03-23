@@ -80,7 +80,7 @@
                         range-separator="至"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"></el-date-picker>
-        
+
         <span>
           <input type="checkbox"
                  style="margin-left:10px"
@@ -257,17 +257,17 @@ export default {
         { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true },
         { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
         { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
-        { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: false },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
+        { prop: 'seenNum', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'outfollow', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'addTime', label: '添加时间', width: '120', order: 'custom', disabled: false, default: true },
         { prop: 'AgentName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => (item.rooms||0) + '室' + (item.hall||0) + '厅' + (item.toilet||0) + '卫' },
-        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
-        { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
-        { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },
-        { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: false },
-        { prop: 'addName', label: '添加人', width: '120', order: false, disabled: false, default: false }
+        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => (item.rooms || 0) + '室' + (item.hall || 0) + '厅' + (item.toilet || 0) + '卫' },
+        { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: true },
+        { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: true },
+        { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: true },
+        { prop: 'addName', label: '添加人', width: '120', order: false, disabled: false, default: true }
 
       ],
       tableColumn: [],
@@ -338,7 +338,7 @@ export default {
       } else {
         this.data.keyOwner = '1';
       }
-        this.queryMyAgent(1, 'id', 'descending');
+      this.queryMyAgent(1, 'id', 'descending');
     },
     onlySelect () {
       if (this.data.isOnly != '') {
@@ -346,7 +346,7 @@ export default {
       } else {
         this.data.isOnly = '1';
       }
-        this.queryMyAgent(1, 'id', 'descending');
+      this.queryMyAgent(1, 'id', 'descending');
     },
     getName (name) {
       this.newAgentName = name;
@@ -597,7 +597,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-        this.querylistByParams();
+      this.querylistByParams();
     },
     queryRoomNo () {
       var that = this;
@@ -620,7 +620,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-         this.querylistByParams();
+      this.querylistByParams();
     },
     queryMyAgent (currentPage, column, type) {
       var that = this;
@@ -659,8 +659,8 @@ export default {
 
 
 
-      
-if (column == "" || type == null || type == undefined) {
+
+      if (column == "" || type == null || type == undefined) {
         params.sortColumn = "id";
       } else {
         params.sortColumn = column;
@@ -673,7 +673,7 @@ if (column == "" || type == null || type == undefined) {
       this.$api
         .post({
           url: "/myHouse/getMyAgent",
-         qs: true,
+          qs: true,
           data: params
         })
         .then(e => {
