@@ -60,7 +60,7 @@
         <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
               @click="Remove">清除</span>
         <el-button type="primary"
-        size="mini"
+                   size="mini"
                    style="margin-left:10px"
                    @click="querySoleAllParams">查询</el-button>
         <el-button style="border:0">
@@ -291,7 +291,7 @@ export default {
   },
   methods: {
     moreSelectChange (e) {
-      if (e != "") this.moreSelect = e;
+      this.moreSelect = e;
       this.queryPotentialHouse(1, "id", "ascending");
     },
     sortMethod (e) {
@@ -310,7 +310,7 @@ export default {
 
     toLook (id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     querySoleAllParams () {
       this.queryVerifyHouseDatas(1, "id", "ascending");
@@ -377,7 +377,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-        this.querySoleAllParams();
+      this.querySoleAllParams();
     },
     queryRoomNo () {
       var that = this;
@@ -400,12 +400,12 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-        this.querySoleAllParams();
+      this.querySoleAllParams();
     },
     queryVerifyHouseDatas (currentPage, column, type) {
       var that = this;
       that.loading = true;
-let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (this.key == "addTime" && this.moreSelect[key] !== "") {

@@ -326,7 +326,7 @@ export default {
   },
   methods: {
     moreSelectChange (e) {
-      if (e != "") this.moreSelect = e;
+      this.moreSelect = e;
       this.queryHouseBet(1, "id", "ascending");
     },
     sortMethod (e) {
