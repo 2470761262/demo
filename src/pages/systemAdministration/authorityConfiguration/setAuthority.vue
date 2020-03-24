@@ -24,11 +24,22 @@
   display: inline-block;
 }
 
+.selected_btn{
+  color: #ffa6a4;
+  cursor: pointer;
+}
+
 </style>
 <template>
   <div>
     <template>
       <div class="elTree">
+        <el-select v-model="ruleParamsObj.type" @change="loadFunctionPoint" placeholder="请选择功能点类型">
+          <el-option label="PC端" value="0"></el-option>
+          <el-option label="Client端" value="1"></el-option>
+          <el-option label="Wap端" value="2"></el-option>
+        </el-select>
+
         <el-button style="margin:10px 45px;"
                    type="primary"
                    size="mini"
@@ -46,6 +57,7 @@
             <span>
 <!--              <el-button type="text"-->
 <!--                         size="mini"-->
+<!--                         style="cursor: pointer;"-->
 <!--                         :class="{'selected_btn':node.data.dataType == '2'}"-->
 <!--                         @click.stop="() => operationCompany(node, data)">权限设置</el-button>-->
             </span>
@@ -119,7 +131,9 @@ export default {
       showSave: false,
       showCompanyTree: true,
       companyGather: [],
-      ruleParamsObj: {},
+      ruleParamsObj: {
+        type: "0",
+      },
       paramsObj: {},
       companyTreeSelectNode:{
         companyIds: [],
@@ -130,72 +144,75 @@ export default {
   mounted () {
     let that = this;
     let companyId = JSON.parse(that.$route.query.companyId);
-    // this.ruleParamsObj.accountId = accountId;
-    // this.ruleParamsObj.postId = postId;
-    // this.paramsObj.accountId = accountId;
     that.ruleParamsObj.companyId = companyId;
-    //读取功能点数据
-    that.$api
-      .post({
-        url: "/sys/rule/company/authorityConfiguration/tree/checked",
-        data: { companyId: companyId },
-        qs: true,
-      })
-      .then(e => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          that.ruleTreeData = result.data.allRule;
-          that.$refs.tree.setCheckedKeys(result.data.selectedRule);
-          that.companyGather = result.data.allRule[result.data.selectedRule[0]].companyGather.split(",");
-        } else {
-          console.log("查询错误: ", result.message);
-          that.$message.error("查询错误: " + result.message);
-        }
-      })
-      .catch(e => {
-        console.log("查询树节点");
-        console.log(e);
-      });
-
-    //读取树数据
-    that.$api
-      .post({
-        url: "/sys/tree/companyAuthority/set/unit"
-      })
-      .then(e => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          that.companyTreeData = result.data;
-        } else {
-          console.log("载入结果" + +result.message);
-          alert(result.message);
-        }
-      })
-      .then(() => {
-        if (this.$route.query.cur != null) {
-          this.curNodeId = [this.$route.query.cur];
-          this.$nextTick(() => {
-            this.handleCheckChange(
-              this.$refs.companyTreeData.getNode(...this.curNodeId).data,
-              true
-            );
-          });
-        }
-      })
-      .catch(e => {
-        console.log("读取失败");
-        console.log(e);
-      })
-      .finally(e => {
-        this.treeLoading = false;
-      });
-
+    that.loadFunctionPoint();
+    that.loadUnitTree();
   },
   methods: {
+    loadFunctionPoint(){
+      let that = this;
+      //读取功能点数据
+      that.$api
+        .post({
+          url: "/sys/rule/company/authorityConfiguration/tree/checked",
+          data: that.ruleParamsObj,
+          qs: true,
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            that.ruleTreeData = result.data.allRule;
+            that.$refs.tree.setCheckedKeys(result.data.selectedRule);
+            that.companyGather = result.data.allRule[result.data.selectedRule[0]].companyGather.split(",");
+          } else {
+            console.log("查询错误: ", result.message);
+            that.$message.error("查询错误: " + result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询树节点");
+          console.log(e);
+        });
+    },
+    loadUnitTree(){
+      let that = this;
+      //读取树数据
+      that.$api
+        .post({
+          url: "/sys/tree/companyAuthority/set/unit"
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            that.companyTreeData = result.data;
+          } else {
+            console.log("载入结果" + +result.message);
+            alert(result.message);
+          }
+        })
+        .then(() => {
+          if (this.$route.query.cur != null) {
+            this.curNodeId = [this.$route.query.cur];
+            this.$nextTick(() => {
+              this.handleCheckChange(
+                this.$refs.companyTreeData.getNode(...this.curNodeId).data,
+                true
+              );
+            });
+          }
+        })
+        .catch(e => {
+          console.log("读取失败");
+          console.log(e);
+        })
+        .finally(e => {
+          this.treeLoading = false;
+        });
+    },
     operationCompany (node, data) {
       this.showCompanyTree = true;
       this.showSave = true;
@@ -232,7 +249,7 @@ export default {
     },
     //应用
     savePosition () {
-      var that = this;
+      let that = this;
       let checkedKeys = that.$refs.tree.getCheckedKeys();
       let keys = "";
       checkedKeys.forEach(key => {
@@ -241,20 +258,14 @@ export default {
       keys = keys.substr(1, keys.length);
       console.log(keys, "checkedKeys///");
       that.ruleParamsObj.rIds = keys;
-
       let companyGather = "";
       that.companyTreeSelectNode.companyIds.forEach(id => {
         companyGather = companyGather + "," + id;
       });
       companyGather = companyGather.substr(1, companyGather.length);
       that.ruleParamsObj.companyGather = companyGather;
-      // let deptGather = "";
-      // that.companyTreeSelectNode.deptIds.forEach(id => {
-      //   deptGather = deptGather + "," + id;
-      // });
-      //deptGather = deptGather.substr(1, deptGather.length);
-      //that.ruleParamsObj.deptGather = deptGather;
-      this.$api
+      //传入类型
+      that.$api
         .post({
           url: "/sys/rule/save/authorityConfiguration",
           data: that.ruleParamsObj,
@@ -264,10 +275,10 @@ export default {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            this.$message.info("操作成功");
+            that.$message.info("操作成功");
           } else {
             console.log("保存结果：" + result.message);
-            this.$message.error("保存失败" + result.message);
+            that.$message.error("保存失败" + result.message);
           }
         });
     },
