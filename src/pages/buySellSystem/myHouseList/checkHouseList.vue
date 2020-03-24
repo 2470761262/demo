@@ -146,7 +146,7 @@
         </el-table-column>
         <el-table-column label="提交时间">
           <template v-slot="scope">
-            {{scope.row.addTime}}
+            {{scope.row.AddTime}}
           </template>
         </el-table-column>
         <el-table-column label="审核状态">

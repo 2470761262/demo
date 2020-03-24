@@ -505,7 +505,7 @@ export default {
   methods: {
     //补充楼盘
     addedbuilding () {
-      this.$router.push({ path: '/buySellSystem/addFloorList' })
+      this.$router.push({ path: '/buySellSystem/CommunityReplenish' })
     },
     houseTypeChange (e) {
       this.$emit("update:houseType", e);

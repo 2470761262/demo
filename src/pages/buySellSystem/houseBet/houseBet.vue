@@ -370,12 +370,12 @@ export default {
       console.log(this, "111");
     },
     formatHouseType (row, column) {
-      if (row.rooms) {
-        return row.rooms + "室" + row.hall + "厅" + row.toilet + "卫";
-      }
+      //if (row.rooms) {
+        return (row.rooms||0) + "室" + (row.hall||0) + "厅" + (row.toilet||0) + "卫";
+      //}
     },
     unitPrice (row, column) {
-      if (row.rooms) {
+      if (row.inArea>0) {
         return Math.round((row.price * 1000) / row.inArea);
       }
     },
