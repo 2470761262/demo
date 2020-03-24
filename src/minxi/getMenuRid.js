@@ -5,7 +5,7 @@ import util from '@/util/util';
 export default {
   created() {
 
-    this.resultRid(util.localStorageGet(LOGINDATA).menuNodes, this.$route.path);
+   // this.resultRid(util.localStorageGet(LOGINDATA).menuNodes, this.$route.path);
   },
   methods: {
     deepGetRid(list, nowPathName) {
