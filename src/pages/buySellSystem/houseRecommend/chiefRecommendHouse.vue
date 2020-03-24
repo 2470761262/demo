@@ -150,12 +150,12 @@ export default {
     }
   },
   mounted () {
-    this.queryChiefHouse(1, 'id', 'ascending');
+    this.queryVerifyHouseDatas(1, 'id', 'ascending');
   },
   methods: {
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryChiefHouse(1, e.prop, e.order);
+      this.queryVerifyHouseDatas(1, e.prop, e.order);
     },
     tabColumnChange (e) {
       this.tableColumn = e;
@@ -172,7 +172,7 @@ export default {
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     queryChiefHouseParams () {
-      this.queryChiefHouse(1, 'id', 'ascending');
+      this.queryVerifyHouseDatas(1, 'id', 'ascending');
     },
     remoteInput () {
 
@@ -250,7 +250,7 @@ export default {
       })
       this.queryChiefHouseParams();
     },
-    queryChiefHouse (currentPage, column, type) {
+    queryVerifyHouseDatas (currentPage, column, type) {
       var that = this;
       let params = { "limit": that.pageJson.pageSize, "page": currentPage - 1 };
       params.comId = that.data.comId;
@@ -258,8 +258,16 @@ export default {
       params.roomNo = that.data.roomNo;
       params.beginTime = that.data.timeSelect[0];
       params.endTime = that.data.timeSelect[1];
-      params.sortColumn = column;
-      params.sortType = type;
+      if (column == '' || type == null || type == undefined) {
+        params.sortColumn = 'id';
+      } else {
+        params.sortColumn = column;
+      }
+      if (type == "" || type == null || type == undefined) {
+        params.sortType = "descending";
+      } else {
+        params.sortType = type;
+      }
       this.$api.post({
         url: '/houseRecommend/chiefRecommendHouse',
         data: params,
@@ -292,11 +300,11 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryChiefHouse(1, 'id', 'ascending');
+      this.queryVerifyHouseDatas(1, 'id', 'ascending');
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryChiefHouse(val, 'id', 'ascending');
+      this.queryVerifyHouseDatas(val, 'id', 'ascending');
     }
   },
 }
