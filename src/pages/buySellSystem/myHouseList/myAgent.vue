@@ -1,108 +1,5 @@
 
 <style lang="less" scoped>
-.query-row {
-  display: flex;
-  &:last-child {
-    margin-top: 25px;
-    margin-bottom: 25px;
-  }
-  .query-content-cell {
-    display: flex;
-    align-items: center;
-    .query-cell-title {
-      font-size: 15px;
-      font-weight: normal;
-      margin-right: 10px;
-    }
-    /deep/.el-select {
-      width: 110px;
-      margin-right: 20px;
-      .el-input__inner {
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-      }
-      .el-select__caret {
-        line-height: 30px;
-      }
-    }
-    /deep/.el-select:first-of-type {
-      width: 150px;
-    }
-    /deep/.el-select:last-of-type {
-      margin-right: 0;
-    }
-    .set-input-content {
-      /deep/.el-input__inner {
-        height: 30px;
-        line-height: 30px;
-        text-align: center;
-      }
-      /deep/i {
-        line-height: 30px;
-      }
-    }
-    .set-input90 {
-      width: 90px;
-      .set-input-content;
-    }
-    .set-input120 {
-      width: 120px;
-      .set-input-content;
-    }
-    .set-input200 {
-      width: 200px;
-      .set-input-content;
-    }
-    .handlebut {
-      color: rgb(90, 159, 203);
-      cursor: pointer;
-    }
-    .query-checkbox {
-      &:last-of-type {
-        margin-left: 25px;
-      }
-      input {
-        vertical-align: middle;
-        width: 15px;
-        height: 15px;
-      }
-      span {
-        vertical-align: middle;
-        font-size: 15px;
-        margin-left: 5px;
-      }
-    }
-    .set-data-pricker {
-      height: 30px;
-      line-height: 30px;
-      /deep/.el-input__icon,
-      /deep/.el-range-separator {
-        line-height: 30px;
-        height: auto;
-      }
-    }
-    .query-cell-suffix {
-      margin-left: 10px;
-      font-size: 15px;
-    }
-    .cut-off-rule {
-      margin: 0 8px;
-      background: #dcdfe6;
-      height: 1px;
-      width: 8px;
-    }
-    &.cell-interval75 {
-      margin-left: 75px;
-    }
-    &.cell-interval25 {
-      margin-left: 25px;
-    }
-    &.cell-interval45 {
-      margin-left: 45px;
-    }
-  }
-}
 </style>
 <template>
   <list-page @sort-change="sortMethod"
@@ -113,129 +10,126 @@
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
       <!-- 楼盘 -->
-      <div class="page-form-inline budingMarinSet">
-        <div class="query-row">
-          <div class="query-content-cell">
-            <h3 class="query-cell-title">楼盘</h3>
-            <el-select v-model="data.comId"
-                       @focus="remoteInput"
-                       @change="queryCBId"
-                       filterable
-                       remote
-                       clearable
-                       placeholder="楼盘名称"
-                       :remote-method="remoteMethod"
-                       :loading="loading">
-              <el-option v-for="item in options"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
-            </el-select>
-            <el-select v-model="data.cbId"
-                       filterable
-                       clearable
-                       placeholder="楼栋"
-                       @change="queryRoomNo">
-              <el-option v-for="item in cbIdList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
-            </el-select>
-            <el-select v-model="data.roomNo"
-                       filterable
-                       @change="querylistByParams"
-                       placeholder="房间号">
-              <el-option v-for="item in roomNoList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
-            </el-select>
-          </div>
-          <div class="query-content-cell cell-interval75">
-            <h3 class="query-cell-title">业主</h3>
-            <el-input placeholder="姓名"
-                      class="set-input120"
-                      @change="querylistByParams"
-                      v-model="data.customName"
-                      clearable />
-          </div>
-          <div class="query-content-cell cell-interval45">
-            <h3 class="query-cell-title">电话</h3>
-            <el-input placeholder="业主电话"
-                      v-model="data.tel"
-                      class="set-input200"
-                      @change="querylistByParams"
-                      clearable />
-          </div>
-          <div class="query-content-cell cell-interval45">
-            <h3 class="query-cell-title">价格</h3>
-            <el-input placeholder="最小值"
-                      v-model="data.minPrice"
-                      class="set-input90"
-                      @change="querylistByParams"
-                      clearable />
-            <span class="cut-off-rule"></span>
-            <el-input placeholder="最大值"
-                      v-model="data.maxPrice"
-                      class="set-input90"
-                      @change="querylistByParams"
-                      clearable />
-          </div>
-          <div class="query-content-cell cell-interval45">
-            <definitionmenu class="menuMarin"
-                            :renderList="tableColumnField"
-                            :tableColumn="tableColumn"
-                            @change="tabColumnChange"></definitionmenu>
-          </div>
+      <div class="page-list-query-row">
+        <div class="query-content-cell">
+          <h3 class="query-cell-title">楼盘</h3>
+          <el-select v-model="data.comId"
+                     @focus="remoteInput"
+                     @change="queryCBId"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="楼盘名称"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+          <el-select v-model="data.cbId"
+                     filterable
+                     clearable
+                     placeholder="楼栋"
+                     @change="queryRoomNo">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+          <el-select v-model="data.roomNo"
+                     filterable
+                     @change="querylistByParams"
+                     placeholder="房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
         </div>
-        <div class="query-row">
-          <div class="query-content-cell">
-            <h3 class="query-cell-title">面积</h3>
-            <el-input placeholder="最小值"
-                      v-model="data.minInArea"
-                      class="set-input90"
-                      @change="querylistByParams"
-                      clearable />
-            <span class="cut-off-rule"></span>
-            <el-input placeholder="最大值"
-                      v-model="data.maxInArea"
-                      class="set-input90"
-                      @change="querylistByParams"
-                      clearable />
-            <span class="query-cell-suffix">平方</span>
-          </div>
-          <div class="query-content-cell cell-interval75">
-            <h3 class="query-cell-title">录入时间</h3>
-            <el-date-picker v-model="data.timeSelect"
-                            type="daterange"
-                            class="set-data-pricker"
-                            @change="querylistByParams"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"></el-date-picker>
-            <span class="query-cell-suffix handlebut"
-                  @click="remove">清除</span>
-          </div>
-          <div class="query-content-cell cell-interval45">
-            <label class="query-checkbox">
-              <input type="checkbox"
-                     @click="keySelect" />
-              <span>钥匙</span>
-            </label>
-            <label class="query-checkbox">
-              <input type="checkbox"
-                     @click="onlySelect" />
-              <span>独家</span>
-            </label>
-          </div>
-          <div class="query-content-cell cell-interval45">
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryMyAgentParams">查询</el-button>
-          </div>
-          <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
-          </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">业主</h3>
+          <el-input placeholder="姓名"
+                    class="set-input120"
+                    @change="querylistByParams"
+                    v-model="data.customName"
+                    clearable />
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">电话</h3>
+          <el-input placeholder="业主电话"
+                    v-model="data.tel"
+                    class="set-input200"
+                    @change="querylistByParams"
+                    clearable />
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">价格</h3>
+          <el-input placeholder="最小值"
+                    v-model="data.minPrice"
+                    class="set-input90"
+                    @change="querylistByParams"
+                    clearable />
+          <span class="cut-off-rule"></span>
+          <el-input placeholder="最大值"
+                    v-model="data.maxPrice"
+                    class="set-input90"
+                    @change="querylistByParams"
+                    clearable />
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <definitionmenu :renderList="tableColumnField"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
+        </div>
+      </div>
+      <div class="page-list-query-row">
+        <div class="query-content-cell">
+          <h3 class="query-cell-title">面积</h3>
+          <el-input placeholder="最小值"
+                    v-model="data.minInArea"
+                    class="set-input90"
+                    @change="querylistByParams"
+                    clearable />
+          <span class="cut-off-rule"></span>
+          <el-input placeholder="最大值"
+                    v-model="data.maxInArea"
+                    class="set-input90"
+                    @change="querylistByParams"
+                    clearable />
+          <span class="query-cell-suffix">平方</span>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">录入时间</h3>
+          <el-date-picker v-model="data.timeSelect"
+                          type="daterange"
+                          class="set-data-pricker"
+                          @change="querylistByParams"
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"></el-date-picker>
+          <span class="query-cell-suffix handlebut"
+                @click="remove">清除</span>
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <label class="query-checkbox">
+            <input type="checkbox"
+                   @click="keySelect" />
+            <span>钥匙</span>
+          </label>
+          <label class="query-checkbox">
+            <input type="checkbox"
+                   @click="onlySelect" />
+            <span>独家</span>
+          </label>
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <el-button type="primary"
+                     size="mini"
+                     @click="queryMyAgentParams">查询</el-button>
+        </div>
+        <div class="query-content-cell cell-interval25">
+          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
         </div>
       </div>
     </template>
@@ -247,6 +141,7 @@
                          :width="item.width"
                          :key="item.prop"
                          :formatter="item.formart"
+                         show-overflow-tooltip
                          :sort-orders="['ascending', 'descending']"
                          :sortable="item.order"></el-table-column>
       </template>
@@ -298,6 +193,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
+import '@/assets/publicLess/pageListQuery.less';
 export default {
   mixins: [getMenuRid],
   components: {
