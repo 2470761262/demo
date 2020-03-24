@@ -393,7 +393,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         //{
         // prop: "decoration",
@@ -415,7 +415,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: "custom",
+         
           disabled: false,
           default: true
         },
@@ -423,13 +423,13 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: "custom",
+         
           disabled: false,
           default: true
         },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         {
-          prop: "brokerName",
+          prop: "agenName",
           label: "跟单人",
           width: "110px",
           order: false,
@@ -551,6 +551,7 @@ export default {
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
     selectedCommunity(e) {
+      console.log("777777777777777777                                "+e)
       this.$confirm("是否确定关注该楼盘?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -816,21 +817,19 @@ export default {
         console.log(query);
         this.loading = true;
         this.$api
-          .get({
-            url: "/community/concern",
+          .post({
+            url: "/concern_community/queryCommunityConcern",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
             data: {
               comId: this.comId
             }
           })
           .then(e => {
+            console.log("========================="+e.data);
             if (e.data.code == 200) {
               //   that.roomNo = "";
               //   that.cbId = "";
               //   this.cbIdList = e.data.data.list;
-
               that.loading = false;
               that.options = e.data.data.list;
             }
