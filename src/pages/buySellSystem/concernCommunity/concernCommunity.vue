@@ -291,7 +291,6 @@
                          :sortable="item.order"></el-table-column>
       </template>
       <el-table-column label="操作"
-                       fixed="right"
                        width="170">
         <template v-slot="scope">
           <el-button type="info"
