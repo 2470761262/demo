@@ -65,47 +65,42 @@
 <template>
   <div class="page-body">
     <div class="page-steps">
-      <el-steps :active="stepsActiveIndex+1" finish-status="success">
-        <el-step
-          :title="item.title"
-          icon="el-icon-edit"
-          v-for="(item, index) in stepsList"
-          :key="index"
-        ></el-step>
+      <el-steps :active="stepsActiveIndex+1"
+                finish-status="success">
+        <el-step :title="item.title"
+                 icon="el-icon-edit"
+                 v-for="(item, index) in stepsList"
+                 :key="index"></el-step>
       </el-steps>
     </div>
-    <div class="page-contenr" v-loading="butLoading" element-loading-text="已经在努力加载了~">
+    <div class="page-contenr"
+         v-loading="butLoading"
+         element-loading-text="已经在努力加载了~">
       <div :class="['page-contenr-com',{'page-contenr-com-over':butLoading}]">
         <div class="page-contenr-com-posi">
           <keep-alive>
-            <component
-              :houseType.sync="componentName"
-              :getData="formDataGet"
-              :is="componentName"
-              ref="com"
-            ></component>
+            <component :houseType.sync="componentName"
+                       :getData="formDataGet"
+                       :is="componentName"
+                       ref="com"></component>
           </keep-alive>
           <div class="page-contenr-but">
             <el-button-group>
-              <el-button
-                v-if="stepsActiveIndex != 0 && stepsActiveIndex != 3 "
-                type="primary"
-                @click="prevPage"
-                class="page-previous"
-              >
-                {{
-                prevText
-                }}
+              <el-button v-if="stepsActiveIndex != 0 && stepsActiveIndex != 3 "
+                         type="primary"
+                         @click="prevPage"
+                         class="page-previous">
+                {{prevText}}
               </el-button>
-              <el-button
-                v-if="stepsActiveIndex < 3 ||  reSetMethod"
-                type="primary"
-                @click="nextPage"
-                class="page-next"
-                :loading="butLoading"
-              >{{ nextText }}</el-button>
-              <!-- <el-button type="info"
-              :loading="butLoading">保存草稿</el-button>-->
+              <el-button v-if="stepsActiveIndex < 3 ||  reSetMethod"
+                         type="primary"
+                         @click="nextPage"
+                         class="page-next"
+                         :loading="butLoading">{{ nextText }}</el-button>
+              <el-button type="info"
+                         v-if="stepsActiveIndex < 3 ||  reSetMethod"
+                         @click="nextPage('draft')"
+                         :loading="butLoading">保存草稿</el-button>
             </el-button-group>
           </div>
         </div>
@@ -136,7 +131,7 @@ export default {
     morePushHouse: () =>
       componentsFactory("pages/buySellSystem/addHouse/components/morePushHouse") //多套录入
   },
-  created() {
+  created () {
     let { method, id } = this.$route.query;
     if (method && id) {
       this.$store.commit("updateId", id);
@@ -145,11 +140,11 @@ export default {
     }
   },
   watch: {
-    stepsActiveIndex(val) {
+    stepsActiveIndex (val) {
       if (val < this.stepsList.length - 1) this.nextText = "下一步";
       else this.nextText = "邀请验真";
     },
-    componentName(val) {
+    componentName (val) {
       if (val == "morePushHouse") {
         this.nextText = "邀请验真";
       } else if (val == "exploration") {
@@ -159,7 +154,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       reSetMethod: false,
       componentName: "basicInformation", //morePushHouse
@@ -176,7 +171,7 @@ export default {
       formDataGet: false
     };
   },
-  beforeRouteLeave(to, from, next) {
+  beforeRouteLeave (to, from, next) {
     if (this.$store.state.addHouse.isformDataNoCommit) {
       this.$confirm("您的表单还未提交,确定离开吗?", "提示", {
         confirmButtonText: "确定",
@@ -200,13 +195,13 @@ export default {
       next();
     }
   },
-  destroyed() {
+  destroyed () {
     this.$store.commit("updateIsformDataNoCommit", false);
     this.$store.commit("resetFormData");
   },
   methods: {
     //上一步
-    prevPage() {
+    prevPage () {
       if (this.stepsActiveIndex > 0) {
         this.componentName = this.stepsList[
           --this.stepsActiveIndex
@@ -214,7 +209,7 @@ export default {
       }
     },
     //下一步
-    async nextPage() {
+    async nextPage (parmse) {
       let comName = this.$refs.com.$options.name;
       let flag = false;
       this.butLoading = true;
@@ -244,6 +239,11 @@ export default {
           return;
       }
       this.butLoading = false;
+      if (parmse && flag) {
+        this.stepsActiveIndex = 3;
+        this.componentName = this.stepsList[this.stepsActiveIndex].componentName;
+        return
+      }
       if (this.stepsActiveIndex < this.stepsList.length && flag) {
         this.componentName = this.stepsList[
           ++this.stepsActiveIndex

@@ -22,12 +22,6 @@ export default {
                     }
                 }
             }
-            return flag;
-        },
-        resultRid (list, nowPathName) {
-            if (!this.deepGetRid(list, nowPathName)) {
-                this.$store.commit("setNowRid", 15); //null);
-            }
         }
     }
 }

@@ -1,6 +1,6 @@
 import util from "@/util/util";
 import {
-  TOKEN
+  TOKEN,LOGINDATA
 } from '@/util/constMap';
 export default {
   created() {
@@ -18,8 +18,10 @@ export default {
 
     if(token!=null)
     util.localStorageSet(TOKEN, token);
+    if(!util.localStorageGet(LOGINDATA)){
+      util.localStorageSet("logindata",{sessionId:null});
+    }
 
-    util.localStorageSet("logindata",{sessionId:null});
 
   }
 }
