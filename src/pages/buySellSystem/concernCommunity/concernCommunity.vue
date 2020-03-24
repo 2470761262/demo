@@ -291,8 +291,7 @@
                          :sortable="item.order"></el-table-column>
       </template>
       <el-table-column label="操作"
-                       min-width="12.8%"
-                       fixed="right">
+                       min-width="12.8%">
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
@@ -376,7 +375,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         //{
         // prop: "decoration",
@@ -390,7 +389,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: "custom",
+         
           disabled: false,
           default: true
         },
@@ -398,7 +397,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: "custom",
+         
           disabled: false,
           default: true
         },
@@ -406,13 +405,13 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: "custom",
+          
           disabled: false,
           default: true
         },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         {
-          prop: "brokerName",
+          prop: "agentName",
           label: "跟单人",
           width: "110px",
           order: false,
@@ -809,13 +808,12 @@ export default {
         console.log(query);
         this.loading = true;
         this.$api
-          .get({
-            url: "/community/concern",
+          .post({
+            url: "/concern_community/queryCommunityConcern",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
-            qs: true,
             data: {
-              comId: this.comId
+              comId: this.comId//公司名
             }
           })
           .then(e => {
