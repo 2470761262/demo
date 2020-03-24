@@ -375,7 +375,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         //{
         // prop: "decoration",
@@ -389,7 +389,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: "custom",
+         
           disabled: false,
           default: true
         },
@@ -397,7 +397,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: "custom",
+         
           disabled: false,
           default: true
         },
@@ -405,13 +405,13 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: "custom",
+          
           disabled: false,
           default: true
         },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         {
-          prop: "brokerName",
+          prop: "agenName",
           label: "跟单人",
           width: "110px",
           order: false,
