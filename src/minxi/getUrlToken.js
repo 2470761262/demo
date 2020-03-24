@@ -1,4 +1,7 @@
 import util from "@/util/util";
+import {
+  TOKEN
+} from '@/util/constMap';
 export default {
   created() {
     //console.log(window.location.href);
@@ -14,7 +17,9 @@ export default {
     console.log("getUrlToken---->"+token);
 
     if(token!=null)
-    util.localStorageSet("tk", token);
+    util.localStorageSet(TOKEN, token);
+
+    util.localStorageSet("logindata",{sessionId:null});
 
   }
 }
