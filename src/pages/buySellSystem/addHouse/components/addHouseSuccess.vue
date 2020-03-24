@@ -57,7 +57,11 @@
     </div>
     <div class="cell-flex">
       <div class="qr-img">
-        <img :src="url" />
+        <el-image :src="url"
+                  fit="cover"
+                  :preview-src-list="[url]">
+
+        </el-image>
       </div>
       <div class="text-center">
         <div class="text-center-tips">微信扫一扫</div>
