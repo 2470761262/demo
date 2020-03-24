@@ -166,30 +166,15 @@
           </div>
           <div class="replace-left-row">
             <h3>存放门店</h3>
-            <el-select data-vv-as="区域"
-                       data-vv-name="region"
-                       v-validate="'required'"
-                       class="replace-select"
-                       v-model="region.model"
+            <el-select v-model="stores.model"
                        filterable
-                       :loading="region.loading"
-                       @focus="getRegionList"
-                       @change="changeRegionValue"
-                       placeholder="请选择区域">
-              <el-option v-for="item in region.list"
-                         :key="item.id"
-                         :label="item.deptName"
-                         :value="item.id">
-              </el-option>
-            </el-select>
-            <el-select data-vv-as="门店"
+                       remote
+                       :remote-method="getStroeDepartment"
+                       placeholder="请选择"
+                       @change="change"
+                       data-vv-as="门店"
                        data-vv-name="stores"
-                       v-validate="'required'"
-                       class="replace-select"
-                       v-model="stores.model"
-                       filterable
-                       :loading="stores.loading"
-                       placeholder="请选择门店">
+                       v-validate="'required'">
               <el-option v-for="item in stores.list"
                          :key="item.id"
                          :label="item.deptName"
@@ -292,6 +277,32 @@ export default {
   },
   methods: {
     /**
+     * 选择存放门店
+     */
+    getStroeDepartment (value) {
+      console.log(value, "value");
+      this.$api
+        .get({
+          url: "/department/getByCompanyId",
+          data: {
+            keyWord: value
+          },
+        })
+        .then(e => {
+          this.stores.list = e.data.data;
+
+        })
+        .catch(e => {
+
+        });
+    },
+    /**
+     *选择存放门店
+     */
+    change (e) {
+      this.stores.model = e;
+    },
+    /**
      * 关闭弹窗
      */
     hidePop () {
@@ -389,73 +400,6 @@ export default {
             type: "warning"
           });
         });
-    },
-    /**
-     * 区域远程搜素
-     * @Date: 2020-03-19 15:20:48
-     * @param {string} fitlerField  
-     */
-    getRegionList (fitlerField) {
-      let _that = this;
-      if (this.region.list.length != 0) {
-        return;
-      }
-      this.region.loading = true;
-      this.$api.get({
-        url: "/department/isArea",
-        data: {
-          id: 10 // util.localStorageGet(LOGINDATA).companyId
-        }
-      }).then(e => {
-        let result = e.data;
-        if (result.code == 200) {
-          this.region.list = result.data;
-        }
-      }).catch(e => {
-        if (e.response != undefined) {
-          this.$message(e.response.data.message);
-        } else {
-          this.$message("获取失败");
-        }
-      }).finally(() => {
-        this.region.loading = false;
-      })
-    },
-    /**
-     * 区域选择改变 
-     * @Date: 2020-03-19 15:22:29
-     * @param {string} changeField
-     */
-    changeRegionValue (changeField) {
-      this.stores.model = '';
-      this.getStoresList(changeField);
-    },
-    /**
-     * 门店远程搜索
-     * @param {string} fitlerField
-     */
-    getStoresList (fitlerField) {
-      let _that = this;
-      this.stores.loading = true;
-      this.$api.get({
-        url: "/department/byParId",
-        data: {
-          id: fitlerField
-        }
-      }).then(e => {
-        let result = e.data;
-        if (result.code == 200) {
-          this.stores.list = result.data;
-        }
-      }).catch(e => {
-        if (e.response != undefined) {
-          this.$message(e.response.data.message);
-        } else {
-          this.$message("获取失败");
-        }
-      }).finally(() => {
-        this.stores.loading = false;
-      })
     },
     contactSocket (user) {
       console.log("用户【" + user + "】开始接入");

@@ -110,6 +110,7 @@ export default {
           if (e) {
             var that = this;
             let params = { "HouseId": that.houseId.id, "Amount": that.butValue };
+            this.$emit('update:visible', false)
             this.$api.post({
               url: '/house/bet/add',
               data: params,
@@ -117,10 +118,9 @@ export default {
               headers: { "Content-Type": "application/json" }
             }).then((e) => {
               let data = e.data
+              this.$message.error(data.message);
               if (data.code == 200) {
                 but.$emit("getBetInfo")
-              } else {
-                this.$message.error(data.message);
               }
             }).catch((e) => {
             })
