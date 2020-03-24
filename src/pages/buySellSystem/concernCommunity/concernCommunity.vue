@@ -411,7 +411,7 @@ export default {
         },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         {
-          prop: "agenName",
+          prop: "agentName",
           label: "跟单人",
           width: "110px",
           order: false,
@@ -808,13 +808,12 @@ export default {
         console.log(query);
         this.loading = true;
         this.$api
-          .get({
-            url: "/community/concern",
+          .post({
+            url: "/concern_community/queryCommunityConcern",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
-            qs: true,
             data: {
-              comId: this.comId
+              comId: this.comId//公司名
             }
           })
           .then(e => {
