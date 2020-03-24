@@ -58,6 +58,21 @@
       color: rgb(90, 159, 203);
       cursor: pointer;
     }
+    .query-checkbox {
+      &:last-of-type {
+        margin-left: 25px;
+      }
+      input {
+        vertical-align: middle;
+        width: 15px;
+        height: 15px;
+      }
+      span {
+        vertical-align: middle;
+        font-size: 15px;
+        margin-left: 5px;
+      }
+    }
     .set-data-pricker {
       height: 30px;
       line-height: 30px;
@@ -79,6 +94,9 @@
     }
     &.cell-interval75 {
       margin-left: 75px;
+    }
+    &.cell-interval25 {
+      margin-left: 25px;
     }
     &.cell-interval45 {
       margin-left: 45px;
@@ -199,7 +217,24 @@
                   @click="remove">清除</span>
           </div>
           <div class="query-content-cell cell-interval45">
-
+            <label class="query-checkbox">
+              <input type="checkbox"
+                     @click="keySelect" />
+              <span>钥匙</span>
+            </label>
+            <label class="query-checkbox">
+              <input type="checkbox"
+                     @click="onlySelect" />
+              <span>独家</span>
+            </label>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryMyAgentParams">查询</el-button>
+          </div>
+          <div class="query-content-cell cell-interval25">
+            <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
           </div>
         </div>
       </div>
