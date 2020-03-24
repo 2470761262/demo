@@ -811,7 +811,9 @@ export default {
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             data: {
-              comId: this.comId//公司名
+              comId: query,
+              page: 1,
+              limit: 50
             }
           })
           .then(e => {
