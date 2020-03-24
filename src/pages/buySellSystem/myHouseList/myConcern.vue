@@ -1,56 +1,71 @@
-﻿<style scoped>
-/* .Impression-body {
-  width: 265px;
-  background-color: white;
-  height: 100%;
-  margin-top: 0.2rem;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  margin-right: 5px;
-}
-.tag-all {
-  margin-top: 8px;
-}
-.Impression-tag {
-  margin-top: 12px;
-  margin-left: 12px;
-}
-.opset {
-  float: right;
-  margin-right: 10px;
-}
-.el-tag + .el-tag {
-  margin-left: 10px;
-}
-.button-new-tag {
-  margin-left: 10px;
-  height: 32px;
-  line-height: 30px;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.input-new-tag {
-  width: 90px;
-  margin-left: 10px;
-  vertical-align: bottom;
-}
-.querySelectFlag {
-  flex: 0 !important;
-  margin-right: 0px !important;
-  position: relative;
-  padding-right: 40px;
-  height: 100%;
-}
-.hide-query {
-  position: absolute;
-  right: 0;
-  padding-right: 10px;
-  top: 500px;
-  font-size: 20px;
-  cursor: pointer;
-}*/
+﻿<style lang="less" scoped>
 .flex-cell-content {
   display: flex;
   justify-content: space-around;
+}
+.attention-content {
+  margin-right: 15px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  padding: 15px 15px 0;
+  box-sizing: border-box;
+  .attention-select {
+    width: 100%;
+    /deep/.el-select {
+      width: 100%;
+    }
+  }
+  .but-group {
+    text-align: right;
+    padding-right: 20px;
+    /deep/.el-button {
+      span {
+        color: var(--color--primary);
+      }
+    }
+  }
+  .attention-scroll-content {
+    flex: 1 0 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 0;
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-track-piece {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--color--primary);
+      border-radius: 50px;
+    }
+    .scroll-content-tag {
+      margin-right: 20px;
+      margin-bottom: 10px;
+    }
+  }
+}
+.hide-query {
+  position: absolute;
+  height: 100%;
+  color: var(--color--primary);
+  right: -10px;
+  top: 0;
+  font-size: 20px;
+  cursor: pointer;
+  &::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  }
 }
 </style>
 <template>
@@ -184,50 +199,43 @@
         </div>
       </div>
     </template>
-
     <template v-slot:left>
-      <div class="">1</div>
-      <!-- <div :class="{'querySelectFlag':querySelectFlag}">
-        <div class="Impression-body">
-          <div style="height:30px;margin-top:10px;width:inherit;">
-            <i icon="el-icon-search"></i>
-            <el-select v-model="imdataimdata"
-                       @focus="removeImpressionInput"
-                       @change="selectImpression($event)"
-                       filterable
-                       placeholder="请输入您添加过的房源印象"
-                       :loading="loading"
-                       style="width: -webkit-fill-available;margin: 10px 10px;">
-              <el-option v-for="item in MyImpressionList"
-                         :key="item.id"
-                         :label="item.impression"
-                         :value="item"></el-option>
-            </el-select>
-          </div>
-          <div style="height:30px;margin-top: inherit;">
-            <el-button class="opset"
-                       type="text"
-                       @click="show(1)">一键还原</el-button>
-            <el-button class="opset"
-                       type="text"
-                       @click="show(0)">一键清除</el-button>
-          </div>
-          <div class="tag-all"
-               v-if="showImpression">
-            <span v-for="item in ImpressionList"
-                  :key="item.id">
-              <el-tag class="Impression-tag"
-                      size="mini"
-                      @close="handleClose(item.id)"
-                      type="success"
-                      closable>{{item.impression}}</el-tag>
-            </span>
-          </div>
+      <div class="attention-content"
+           v-if="!querySelectFlag">
+        <div class="attention-select">
+          <el-select v-model="imdataimdata"
+                     @focus="removeImpressionInput"
+                     @change="selectImpression($event)"
+                     filterable
+                     placeholder="请输入您添加过的房源印象"
+                     :loading="loading">
+            <el-option v-for="item in MyImpressionList"
+                       :key="item.id"
+                       :label="item.impression"
+                       :value="item"></el-option>
+          </el-select>
         </div>
-        <div class="hide-query"
-             @click="()=> querySelectFlag = !querySelectFlag "
-             :class="querySelectFlag ? 'el-icon-d-arrow-right': 'el-icon-d-arrow-left'  "></div>
-      </div> -->
+        <div class="but-group">
+          <el-button type="text"
+                     @click="show(1)">一键还原</el-button>
+          <el-button type="text"
+                     @click="show(0)">一键清除</el-button>
+        </div>
+        <div class="attention-scroll-content"
+             v-if="showImpression">
+          <div></div>
+          <span v-for="item in ImpressionList"
+                :key="item.id">
+            <el-tag class="scroll-content-tag"
+                    @close="handleClose(item.id)"
+                    closable>{{item.impression}}</el-tag>
+          </span>
+        </div>
+      </div>
+      <div class="hide-query"
+           @click="()=> querySelectFlag = !querySelectFlag "
+           :class="querySelectFlag ? 'el-icon-d-arrow-right':'el-icon-d-arrow-left'">
+      </div>
     </template>
 
     <template v-slot:tableColumn>
@@ -370,7 +378,7 @@ export default {
         {
           prop: "noSeenDay",
           label: "未被带看天数",
-          width: "130px",
+          width: "150px",
           order: "custom",
           disabled: false,
           default: true

@@ -241,7 +241,7 @@ export default {
         { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true },
         { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
         { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
-        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '130', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
         { prop: 'seenNum', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
         { prop: 'outfollow', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
         { prop: 'noSeenDay', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },

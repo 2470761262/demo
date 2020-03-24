@@ -307,7 +307,7 @@ export default {
         {
           prop: "unitpaice",
           label: "单价(元/㎡)",
-          width: "120",
+          width: "130",
           order: "custom",
           disabled: false,
           default: true,
