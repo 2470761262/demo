@@ -70,6 +70,20 @@
           </el-date-picker>
 
           <div style="margin-top:15px">
+            <span style="margin-left:30px">
+              审核项目：
+            </span>
+            <el-select filterable
+                       v-model="checkProject"
+                       clearable
+                       @change="querylistByParams()"
+                       placeholder="请选择">
+              <el-option v-for="item in checkProjectList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value">
+              </el-option>
+            </el-select>
 
             <span style="margin-left:30px">
               审核类型：
@@ -146,7 +160,7 @@
         </el-table-column>
         <el-table-column label="提交时间">
           <template v-slot="scope">
-            {{scope.row.addTime}}
+            {{scope.row.AddTime}}
           </template>
         </el-table-column>
         <el-table-column label="审核状态">
@@ -321,6 +335,7 @@ export default {
   data () {
     return {
       type: '',
+      checkProject:"",
       option: '',
       status: '',
       cbIdList: '',
@@ -384,43 +399,40 @@ export default {
         value: '选项6',
         label: '已过期'
       }],
-      projectList: [{
+      checkProjectList: [{
         value: '1',
         label: '作业人申请'
       }, {
-        value: '2',
+        value: '4',
         label: '取代申请'
-      }, {
-        value: '3',
-        label: '房源转状态'
-      }, {
-        value: '4',
-        label: '建楼申请'
-      }, {
-        value: '5',
-        label: '举报'
-      }, {
-        value: '6',
-        label: '录入修改'
-      }],
-      typeList: [{
-        value: '0',
-        label: '钥匙人申请'
-      }, {
-        value: '1',
-        label: '委托申请'
-      }, {
-        value: '4',
-        label: '取代'
       }, {
         value: '8',
         label: '房源转状态'
       }, {
+        value: '12',
+        label: '建楼申请'
+      }, {
         value: '11',
         label: '举报'
       }, {
-        value: "12",
-        label: "实勘人申请"
+        value: '10',
+        label: '录入修改'
+      }],
+      typeList: [{
+        value: '0',
+        label: '钥匙人'
+      }, {
+        value: '1',
+        label: '独家委托审核'
+      }, {
+        value: '2',
+        label: '他司售'
+      }, {
+        value: '3',
+        label: '补充楼盘'
+      }, {
+        value: '4',
+        label: '虚假实勘'
       }],
       queryData: {
         CommunityName: '',
@@ -498,8 +510,8 @@ export default {
       this.querylist(1, 'id', 'ascending')
     },
     changeFile (e, index) {
-      let typeList = this.accessoryMoldList[index].list;
-      let activeIndex = typeList[e].activeIndex;
+      let checkProjectList = this.accessoryMoldList[index].list;
+      let activeIndex = checkProjectList[e].activeIndex;
       this.cutPic(activeIndex);
     },
     cutPic (index) {
@@ -683,6 +695,7 @@ export default {
       if (this.queryData.cbId != null && this.queryData.cbId != '') { params.buildingId = this.queryData.cbId; }
       if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomId = this.queryData.roomNo; }
       if (this.status != null && this.status != '') { params.status = this.status; }
+      if (this.checkProject != null && this.checkProject != '') { params.checkProject = this.checkProject; }
       if (this.type != null && this.type != '') { params.checkType = this.type; }
       if (this.value != null && this.value != '') { params.value = this.value; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }

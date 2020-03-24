@@ -101,7 +101,7 @@ export default {
       expandKey: [],
       company: {},
       department: {},
-      loading: false, //控制表格加载动画提示
+      loading: true, //控制表格加载动画提示
       queryData: {
         keyword: "",
         isLocked: null,
@@ -209,6 +209,9 @@ export default {
         .catch(e => {
           console.log("查询公司管理列表失败");
           console.log(e);
+        })
+        .finally(e => {
+          that.loading = false;
         });
     },
     editCompanyDetail (e) {
