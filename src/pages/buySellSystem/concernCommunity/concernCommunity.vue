@@ -411,7 +411,7 @@ export default {
         },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         {
-          prop: "agenName",
+          prop: "agentName",
           label: "跟单人",
           width: "110px",
           order: false,
