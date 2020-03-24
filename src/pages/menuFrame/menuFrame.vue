@@ -95,7 +95,8 @@ export default {
     return {
       resultRouteArray: this.$route.meta.routeArray,
       asideNavFlag: true,
-      loginUserData: {}
+      loginUserData: {},
+      menuDatasInParent: []
     }
   },
   created () {

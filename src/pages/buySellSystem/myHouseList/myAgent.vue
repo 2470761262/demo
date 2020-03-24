@@ -286,7 +286,8 @@ export default {
         minPrice: "",
         maxPrice: "",
         keyOwner: "",
-        isOnly: ""
+        isOnly: "",
+        agentName: ""
       },
       AgentPerId: "",
       dialogVisible: false,
@@ -433,6 +434,7 @@ export default {
         if (that.data.maxInArea != null && that.data.maxInArea != '') { params.maxInArea = that.data.maxInArea; }
         if (that.data.timeSelect != null && that.data.timeSelect[0] != null && that.data.timeSelect[0] != '') { params.beginTime = that.data.timeSelect[0]; }
         if (that.data.timeSelect != null && that.data.timeSelect[1] != null && that.data.timeSelect[1] != '') { params.endTime = that.data.timeSelect[1]; }
+        if (that.data.agentName != null && that.data.agentName != '') { params.agentName = that.data.agentName; }
       }
       params.isOnly = that.data.isOnly;
       params.keyOwner = that.data.keyOwner;
@@ -705,6 +707,7 @@ export default {
         params.maxInArea = that.data.maxInArea;
         params.keyOwner = that.data.keyOwner;
         params.isOnly = that.data.isOnly;
+        params.agentName = that.data.agentName;
       }
 
 
