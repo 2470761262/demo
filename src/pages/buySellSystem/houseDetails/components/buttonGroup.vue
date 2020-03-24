@@ -355,7 +355,7 @@ export default {
     getAgentRules () {
       let that = this;
       this.$api.get({
-        url: '/sys/rule/function/list'
+        url: '/agent_house/detailsFunction'
       }).then((e) => {
         e.data.data.functionRuleList.forEach(element => {
           if (that.isShowButton.hasOwnProperty(element.rUrl)) {
