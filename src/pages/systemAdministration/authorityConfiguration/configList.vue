@@ -85,7 +85,9 @@ let array = [
 ];
 
 import listPage from "@/components/listPage";
+import getToken from "@/minxi/getUrlToken";
 export default {
+  mixins: [getToken],
   watch: {
     filterText (val) {
       this.$refs.tree2.filter(val);

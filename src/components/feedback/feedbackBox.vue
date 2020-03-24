@@ -41,6 +41,7 @@
               :file-list="form.pics"
               list-type="picture-card"         
               :on-success="uploadFinished"
+              :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove">   
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -59,7 +60,9 @@
           </el-form-item>
         </el-form>
       </div>
-
+      <el-dialog :visible.sync="dialogVisible">
+        <img width="100%" :src="dialogImageUrl" alt="">
+      </el-dialog>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="goSubmit">提交</el-button>
       </div>

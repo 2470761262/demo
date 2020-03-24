@@ -66,7 +66,7 @@
           清除
         </span>
         <el-button type="primary"
-        size="mini"
+                   size="mini"
                    style="margin-left:10px"
                    @click="queryPotentialHouseParams">查询</el-button>
         <el-button style="border:0">
@@ -154,7 +154,7 @@ export default {
         { prop: 'communityName', label: '小区名称', order: false, width: '', disabled: true, default: true },
         { prop: 'comBuildingName', label: '楼栋号', width: '120', order: false, disabled: true, default: true },
         { prop: 'roomNo', label: '房间号', width: '170', order: false, disabled: true, default: true },
-        { prop: 'inArea', label: '面积(m²)', width: '170', order: 'custom', disabled: false, default: true, format: item => (item.inArea||0) + '㎡'},
+        { prop: 'inArea', label: '面积(m²)', width: '170', order: 'custom', disabled: false, default: true, format: item => (item.inArea || 0) + '㎡' },
         { prop: 'customers', label: '业主', width: '170', order: false, disabled: false, default: true },
         { prop: 'tel', label: '业主电话', width: '', order: false, disabled: false, default: true }
       ],
@@ -182,12 +182,12 @@ export default {
       this.tableColumn = e;
     },
     moreSelectChange (e) {
-      if (e != "") this.moreSelect = e;
+      this.moreSelect = e;
       this.queryPotentialHouse(1, "id", "ascending");
     },
     toLook (id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     toSale (
       comId,
@@ -270,7 +270,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-        this.queryPotentialHouseParams();
+      this.queryPotentialHouseParams();
     },
     queryRoomNo () {
       var that = this;
@@ -293,7 +293,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-        this.queryPotentialHouseParams();
+      this.queryPotentialHouseParams();
     },
     Remove () {
       let tab = this.tableColumn;

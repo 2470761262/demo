@@ -75,7 +75,7 @@
             size="mini"
             @click="queryEmployeeByDel(2)"
           >查询待离职用户</el-button>
-          <el-button  icon="el-icon-refresh" circle @click="switchUser()"></el-button>
+          <!-- <el-button  icon="el-icon-refresh" title="切换用户" circle @click="switchUser()"></el-button> -->
       
         </div>
       </template>
@@ -163,13 +163,13 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "perName", label: "姓名" ,width:"150px"},
-        { prop: "loginUser", label: "登录名",width:"160px" },
-        { prop: "deptName", label: "部门",width:"200px" },
-        { prop: "postName", label: "角色" ,width:"160px"},
-        { prop: "companyName", label: "公司" ,width:"200px"},
-        { prop: "roleName", label: "岗位" ,width:"160px"},
-        { prop: "del", label: "状态",width:"160px" }
+        { prop: "perName", label: "姓名" ,width:"120px"},
+        { prop: "loginUser", label: "登录名",width:"150px" },
+        { prop: "deptName", label: "部门",width:"180px" },
+        { prop: "postName", label: "角色" ,width:"150px"},
+        { prop: "companyName", label: "公司" ,width:"180px"},
+        { prop: "roleName", label: "岗位" ,width:"150px"},
+        { prop: "del", label: "状态",width:"80px" }
       ],
       tableData: [],
 
@@ -297,10 +297,10 @@ export default {
       console.log(id);
     },
     lockEmployee(id) { 
-    this.operation(id,"locked",1)
+    this.operation(id,"locked",0)
     },
     unLockEmployee(id) {
-    this.operation(id,"locked",0)
+    this.operation(id,"locked",1)
     },
     delEmployee(id) {
      this.dialogVisible = true;

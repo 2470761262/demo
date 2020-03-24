@@ -1,8 +1,10 @@
 <style lang="less" scoped>
 .page-body {
-  min-height: 100%;
+  // min-height: 100%;
   display: flex;
   background: #fff;
+
+  flex: 1;
   .page-body-warp {
     flex: 1;
     display: flex;
@@ -41,9 +43,8 @@
 }
 .query-center {
   display: flex;
-  margin-left: 10px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  padding-top: 30px;
+  padding-left: 20px;
   @media (max-width: 1300px) {
     flex-wrap: wrap;
   }

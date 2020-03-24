@@ -279,10 +279,16 @@ export default {
       },
       fileLoad: {//上传文件
         id: null,
-        qrImg: 'http://sys.lsxjy.com.cn/images/androidDownload.png',
+        qrImg: '',
         url: ''
       },
     }
+  },
+  mounted () {
+    this.requestQrCode();
+  },
+  destroyed () {
+    this.socketApi.closeSocket();
   },
   methods: {
     /**
@@ -451,6 +457,81 @@ export default {
         this.stores.loading = false;
       })
     },
+    contactSocket (user) {
+      console.log("用户【" + user + "】开始接入");
+      this.socketApi.initWebSocket(this.$api.baseUrl().replace("http", ""), user);
+      this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
+      console.log("用户【" + user + "】接入完毕");
+    },
+    guid () {
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+    },
+    requestQrCode () {
+      let that = this;
+      //请求二维码参数说明，是一个js对象
+      //remark 标题，用于显示在小程序上传资源页面标题；
+      //resourceType 资源类型 默认picture,还有vedio,audio分别代表视频和音频--扫码后自动适应时选择图片还是视频还是音频
+      //businessParams：闭环参数 传过来什么接受消息时回传，注意是一个json字符串，请利用JSON.stringify(js对象)转换
+      //webSocketUser:默认是二维码标识，可以不传。发消息就是基于这个标识发送的；如果一个页面有多个二维码需要自己生成全球唯一（见guid()函数实例）
+      that.$api.post({
+        url: '/scanUpload/getUploadQrCode',
+        data: { 'remark': "", "resourceType": "picture", "businessParams": JSON.stringify({ "test": "钥匙人" }) },
+        headers: { "Content-Type": "application/json" }
+      }).then((e) => {
+        let result = e.data;
+        if (result.code == 200) {
+          this.fileLoad.qrImg = result.data.url;
+          this.contactSocket(result.data.qrCode)
+        } else {
+          alert(result.message);
+        }
+      }).catch((e) => {
+      })
+    },
+    receiveMessage (r) {
+      //回调函数，用于接收扫码后发送的消息
+      console.log(r.content, "消息内容");
+      let that = this;
+      if (that.fileLoad.id == null) {
+        let str = r.content.picUrl;
+        let firstIndex = str.indexOf("/");
+        let secondIndex = str.indexOf("/", firstIndex + 1);
+        let thirdIndex = str.indexOf("/", secondIndex + 1);
+        let lastIndex = str.lastIndexOf("/");
+        let params = {
+          IpStr: str.substring(0, thirdIndex),
+          FileStr: str.substring(thirdIndex + 1, lastIndex),
+          PicName: str.substring(lastIndex + 1, str.length - 1),
+          Type: that.replaceType
+        }
+        that.insertPic(params, str);
+      }
+      //。。。执行你需要的业务逻辑
+    },
+    //添加图片
+    insertPic (params, picUrl) {
+      this.$api
+        .post({
+          url: "/agentHouse/followPic/insert",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params,
+        })
+        .then(json => {
+          if (json.data.code == 200) {
+            this.fileLoad.id = json.data.data.id;
+            this.fileLoad.url = picUrl;
+          }
+        })
+        .catch(() => {
+          that.$message({
+            message: "不晓得为什么,反正失败了",
+            type: "warning"
+          });
+        });
+    }
   },
 }
 

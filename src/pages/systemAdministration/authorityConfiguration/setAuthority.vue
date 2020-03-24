@@ -128,13 +128,14 @@ export default {
     }
   },
   mounted () {
-    let companyId = JSON.parse(this.$route.query.companyId);
+    let that = this;
+    let companyId = JSON.parse(that.$route.query.companyId);
     // this.ruleParamsObj.accountId = accountId;
     // this.ruleParamsObj.postId = postId;
     // this.paramsObj.accountId = accountId;
-    this.ruleParamsObj.companyId = companyId;
+    that.ruleParamsObj.companyId = companyId;
     //读取功能点数据
-    this.$api
+    that.$api
       .post({
         url: "/sys/rule/company/authorityConfiguration/tree/checked",
         data: { companyId: companyId },
@@ -144,12 +145,12 @@ export default {
         console.log(e.data);
         let result = e.data;
         if (result.code == 200) {
-          this.ruleTreeData = result.data.allRule;
-          this.$refs.tree.setCheckedKeys(result.data.selectedRule);
-          this.companyGather = result.data.allRule[result.data.selectedRule[0]].companyGather.split(",");
+          that.ruleTreeData = result.data.allRule;
+          that.$refs.tree.setCheckedKeys(result.data.selectedRule);
+          that.companyGather = result.data.allRule[result.data.selectedRule[0]].companyGather.split(",");
         } else {
           console.log("查询错误: ", result.message);
-          this.$message.error("查询错误: " + result.message);
+          that.$message.error("查询错误: " + result.message);
         }
       })
       .catch(e => {
@@ -158,7 +159,7 @@ export default {
       });
 
     //读取树数据
-    this.$api
+    that.$api
       .post({
         url: "/sys/tree/companyAuthority/set/unit"
       })
@@ -168,7 +169,7 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-          this.companyTreeData = result.data;
+          that.companyTreeData = result.data;
         } else {
           console.log("载入结果" + +result.message);
           alert(result.message);

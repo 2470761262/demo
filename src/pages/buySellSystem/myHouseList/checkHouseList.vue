@@ -43,10 +43,10 @@
           </el-item>
           <el-item label="房间号"
                    prop="roomNo"
-                   clearable
                    class="page-label-center">
             <el-select v-model="queryData.roomNo"
                        filterable
+                       clearable
                        @change="querylistByParams()"
                        placeholder="请选择房间号">
               <el-option v-for="item in roomNoList"
@@ -59,12 +59,14 @@
 
           <template slot="prepend">房源状态</template>
           <el-date-picker v-model="queryData.timeSelect"
-                          type="daterange"
+                          type="datetimerange"
                           @change="querylistByParams()"
                           range-separator="至"
-                          value-format="yyyy-MM-dd"
+                           align="right"
+                          value-format="yyyy-MM-dd HH:mm:ss"
                           start-placeholder="开始日期"
-                          end-placeholder="结束日期">
+                          end-placeholder="结束日期"
+                          :default-time="['00:00:00', '23:00:00']">
           </el-date-picker>
 
           <div style="margin-top:15px">
@@ -74,6 +76,7 @@
             </span>
             <el-select filterable
                        v-model="type"
+                       clearable
                        @change="querylistByParams()"
                        placeholder="请选择">
               <el-option v-for="item in typeList"
@@ -87,6 +90,7 @@
             </span>
             <el-select filterable
                        v-model="status"
+                       clearable
                        @change="querylistByParams()"
                        placeholder="请选择">
               <el-option v-for="item in stateList"
@@ -142,7 +146,7 @@
         </el-table-column>
         <el-table-column label="提交时间">
           <template v-slot="scope">
-            {{scope.row.AddTime}}
+            {{scope.row.addTime}}
           </template>
         </el-table-column>
         <el-table-column label="审核状态">
@@ -152,7 +156,7 @@
         </el-table-column>
         <el-table-column label="备注说明">
           <template v-slot="scope">
-            {{scope.row.CheckMemo}}
+            {{scope.row.checkMemo}}
           </template>
         </el-table-column>
         <el-table-column label="附件">
@@ -675,31 +679,14 @@ export default {
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
       let that = this;
-      if (Object.keys(this.moreSelect).length != 0) {
-        for (let key in this.moreSelect) {
-          if (this.key == 'addTime' && this.moreSelect[key] !== '') {
-            params.biginTime = this.moreSelect[key][0];
-            params.endTime = this.moreSelect[key][1];
-          }
-          else if (this.key == 'followTime' && this.moreSelect[key] !== '') {
-            params.biginFollowTime = this.moreSelect[key][0];
-            params.endFollowTime = this.moreSelect[key][1];
-          }
-          else {
-            params[key] = this.moreSelect[key]
-          }
-        }
-      }
-      else {
-        if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-        if (this.queryData.cbId != null && this.queryData.cbId != '') { params.cbId = this.queryData.cbId; }
-        if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomNo = this.queryData.roomNo; }
-        if (this.status != null && this.status != '') { params.status = this.status; }
-        if (this.type != null && this.type != '') { params.type = this.type; }
-        if (this.value != null && this.value != '') { params.value = this.value; }
-        if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
-        if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
-      }
+      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.communityId = this.queryData.CommunityName; }
+      if (this.queryData.cbId != null && this.queryData.cbId != '') { params.buildingId = this.queryData.cbId; }
+      if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomId = this.queryData.roomNo; }
+      if (this.status != null && this.status != '') { params.status = this.status; }
+      if (this.type != null && this.type != '') { params.checkType = this.type; }
+      if (this.value != null && this.value != '') { params.value = this.value; }
+      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
+      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
       this.$api.post({
         url: '/agentHouse/propertyCheck/myHousePropertyCheckList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },

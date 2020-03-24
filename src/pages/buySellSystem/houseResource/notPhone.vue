@@ -41,7 +41,6 @@
                    filterable
                    style="width: 120px;"
                    @change="queryNotPhoneParams()"
-
                    placeholder="请选择房间号">
           <el-option v-for="item in roomNoList"
                      :key="item.value"
@@ -60,7 +59,7 @@
         <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
               @click="Remove">清除</span>
         <el-button type="primary"
-        size="mini"
+                   size="mini"
                    style="margin-left:10px"
                    @click="queryNotPhoneParams">查询</el-button>
         <el-button style="border:0">
@@ -203,7 +202,7 @@ export default {
       this.tableColumn = e;
     },
     moreSelectChange (e) {
-      if (e != "") this.moreSelect = e;
+      this.moreSelect = e;
       this.queryNotPhone(1, "id", "ascending");
     },
     formatHouseType (row, column) {
@@ -346,7 +345,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-        this.querySaleNotTrackParams();
+      this.querySaleNotTrackParams();
     },
     queryRoomNo () {
       var that = this;
@@ -369,9 +368,9 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-       this.querySaleNotTrackParams();
+      this.querySaleNotTrackParams();
     },
-    queryNotPhone (currentPage) {
+    queryNotPhone (currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -397,6 +396,16 @@ export default {
         params.tel = that.data.tel;
         params.minInArea = that.data.minInArea;
         params.maxInArea = that.data.maxInArea;
+      }
+      if (column == "" || type == null || type == undefined) {
+        params.sortColumn = "id";
+      } else {
+        params.sortColumn = column;
+      }
+      if (type == "" || type == null || type == undefined) {
+        params.sortType = "descending";
+      } else {
+        params.sortType = type;
       }
       console.log(params);
       this.$api

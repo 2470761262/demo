@@ -69,6 +69,9 @@
           font-size: 18px;
           color: #fff;
           display: block;
+          border-bottom: 1px solid #fff;
+          box-sizing: border-box;
+          height: 100%;
         }
       }
     }

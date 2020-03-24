@@ -58,7 +58,7 @@
         <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
               @click="Remove">清除</span>
         <el-button type="primary"
-        size="mini"
+                   size="mini"
                    style="margin-left:10px"
                    @click="queryNotSaleParams">查询</el-button>
         <el-button style="border:0">
@@ -252,7 +252,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         },
         {
           prop: "floor",
@@ -260,7 +260,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         },
         {
           prop: "decoration",
@@ -268,7 +268,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         },
         {
           prop: "addName",
@@ -276,7 +276,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         }
       ],
       tableColumn: [],
@@ -295,7 +295,7 @@ export default {
       this.tableColumn = e;
     },
     moreSelectChange (e) {
-      if (e != "") this.moreSelect = e;
+      this.moreSelect = e;
       this.queryNotSale(1, "id", "ascending");
     },
     queryTabData () {
@@ -307,7 +307,7 @@ export default {
 
     toLook (id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     toSale (
       comId,
@@ -391,7 +391,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-        this.queryNotSaleParams();
+      this.queryNotSaleParams();
     },
     queryRoomNo () {
       var that = this;
@@ -414,7 +414,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-        this.queryNotSaleParams();
+      this.queryNotSaleParams();
     },
     Remove () {
       let tab = this.tableColumn;

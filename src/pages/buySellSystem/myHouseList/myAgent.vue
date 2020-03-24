@@ -1,4 +1,109 @@
 
+<style lang="less" scoped>
+.query-row {
+  display: flex;
+  &:last-child {
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+  .query-content-cell {
+    display: flex;
+    align-items: center;
+    .query-cell-title {
+      font-size: 15px;
+      font-weight: normal;
+      margin-right: 10px;
+    }
+    /deep/.el-select {
+      width: 110px;
+      margin-right: 20px;
+      .el-input__inner {
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+      }
+      .el-select__caret {
+        line-height: 30px;
+      }
+    }
+    /deep/.el-select:first-of-type {
+      width: 150px;
+    }
+    /deep/.el-select:last-of-type {
+      margin-right: 0;
+    }
+    .set-input-content {
+      /deep/.el-input__inner {
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+      }
+      /deep/i {
+        line-height: 30px;
+      }
+    }
+    .set-input90 {
+      width: 90px;
+      .set-input-content;
+    }
+    .set-input120 {
+      width: 120px;
+      .set-input-content;
+    }
+    .set-input200 {
+      width: 200px;
+      .set-input-content;
+    }
+    .handlebut {
+      color: rgb(90, 159, 203);
+      cursor: pointer;
+    }
+    .query-checkbox {
+      &:last-of-type {
+        margin-left: 25px;
+      }
+      input {
+        vertical-align: middle;
+        width: 15px;
+        height: 15px;
+      }
+      span {
+        vertical-align: middle;
+        font-size: 15px;
+        margin-left: 5px;
+      }
+    }
+    .set-data-pricker {
+      height: 30px;
+      line-height: 30px;
+      /deep/.el-input__icon,
+      /deep/.el-range-separator {
+        line-height: 30px;
+        height: auto;
+      }
+    }
+    .query-cell-suffix {
+      margin-left: 10px;
+      font-size: 15px;
+    }
+    .cut-off-rule {
+      margin: 0 8px;
+      background: #dcdfe6;
+      height: 1px;
+      width: 8px;
+    }
+    &.cell-interval75 {
+      margin-left: 75px;
+    }
+    &.cell-interval25 {
+      margin-left: 25px;
+    }
+    &.cell-interval45 {
+      margin-left: 45px;
+    }
+  }
+}
+</style>
 <template>
   <list-page @sort-change="sortMethod"
              :parentData="$data"
@@ -9,150 +114,133 @@
     <template v-slot:top>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
-        <el-select v-model="data.comId"
-                   @focus="remoteInput"
-                   @change="queryCBId()"
-                   filterable
-                   remote
-                   clearable
-                   placeholder="请输入楼盘名称搜索"
-                   :remote-method="remoteMethod"
-                   :loading="loading">
-          <el-option v-for="item in options"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-
-        <el-select v-model="data.cbId"
-                   filterable
-                   clearable
-                   placeholder="请选择楼栋"
-                   @change="queryRoomNo()">
-          <el-option v-for="item in cbIdList"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-        <el-select v-model="data.roomNo"
-                   filterable
-                   @change="querylistByParams()"
-                   placeholder="请选择房间号">
-          <el-option v-for="item in roomNoList"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-        <el-input placeholder="业主姓名"
-                  @change="querylistByParams()"
-                  v-model="data.customName"
-                  style="margin-left:30px;width:240px"
-                  clearable />
-
-        <el-input placeholder="业主电话"
-                  v-model="data.tel"
-                  @change="querylistByParams()"
-                  style="margin-left:30px;width:240px"
-                  clearable />
-        <el-input placeholder="最小面积"
-                  v-model="data.minInArea"
-                  @change="querylistByParams()"
-                  style="margin-left:30px;width:120px"
-                  clearable />------
-        <el-input placeholder="最大面积"
-                  v-model="data.maxInArea"
-                  @change="querylistByParams()"
-                  style="width:120px"
-                  clearable />
-        <el-input placeholder="最低售价"
-                  v-model="data.minPrice"
-                  @change="querylistByParams()"
-                  style="width:120px;margin-top:5px;"
-                  clearable />------
-        <el-input placeholder="最高售价"
-                  v-model="data.maxPrice"
-                  @change="querylistByParams()"
-                  style="width:120px"
-                  clearable />
-        <el-date-picker v-model="data.timeSelect"
-                        type="daterange"
-                        @change="querylistByParams()"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"></el-date-picker>
-        
-        <span>
-          <input type="checkbox"
-                 style="margin-left:10px"
-                 @click="keySelect()" /> 钥匙
-        </span>
-        <span>
-          <input type="checkbox"
-                 style="margin-left:10px;background:#fff"
-                 @click="onlySelect()" /> 独家
-        </span>
-        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
-              @click="remove">清除</span>
-        <el-button type="primary"
-                   style="margin-left:30px"
-                   size="mini"
-                   @click="queryMyAgentParams">查询</el-button>
-        <el-button style="margin-left:30px;width:50px;height:30px;border:0"
-                   size="mini">
-          <moreSelect @moreSelectChange="moreSelectChange"
-                      style="height:40px;margin-right:5px;"></moreSelect>
-        </el-button>
-        <el-button style="margin-left:80px;width:50px;height:30px;border:0"
-                   size="mini">
-          <definitionmenu class="menuMarin"
-                          :renderList="tableColumnField"
-                          :tableColumn="tableColumn"
-                          @change="tabColumnChange"></definitionmenu>
-        </el-button>
+        <div class="query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">楼盘</h3>
+            <el-select v-model="data.comId"
+                       @focus="remoteInput"
+                       @change="queryCBId"
+                       filterable
+                       remote
+                       clearable
+                       placeholder="楼盘名称"
+                       :remote-method="remoteMethod"
+                       :loading="loading">
+              <el-option v-for="item in options"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
+            </el-select>
+            <el-select v-model="data.cbId"
+                       filterable
+                       clearable
+                       placeholder="楼栋"
+                       @change="queryRoomNo">
+              <el-option v-for="item in cbIdList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
+            </el-select>
+            <el-select v-model="data.roomNo"
+                       filterable
+                       @change="querylistByParams"
+                       placeholder="房间号">
+              <el-option v-for="item in roomNoList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
+            </el-select>
+          </div>
+          <div class="query-content-cell cell-interval75">
+            <h3 class="query-cell-title">业主</h3>
+            <el-input placeholder="姓名"
+                      class="set-input120"
+                      @change="querylistByParams"
+                      v-model="data.customName"
+                      clearable />
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">电话</h3>
+            <el-input placeholder="业主电话"
+                      v-model="data.tel"
+                      class="set-input200"
+                      @change="querylistByParams"
+                      clearable />
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">价格</h3>
+            <el-input placeholder="最小值"
+                      v-model="data.minPrice"
+                      class="set-input90"
+                      @change="querylistByParams"
+                      clearable />
+            <span class="cut-off-rule"></span>
+            <el-input placeholder="最大值"
+                      v-model="data.maxPrice"
+                      class="set-input90"
+                      @change="querylistByParams"
+                      clearable />
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <definitionmenu class="menuMarin"
+                            :renderList="tableColumnField"
+                            :tableColumn="tableColumn"
+                            @change="tabColumnChange"></definitionmenu>
+          </div>
+        </div>
+        <div class="query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">面积</h3>
+            <el-input placeholder="最小值"
+                      v-model="data.minInArea"
+                      class="set-input90"
+                      @change="querylistByParams"
+                      clearable />
+            <span class="cut-off-rule"></span>
+            <el-input placeholder="最大值"
+                      v-model="data.maxInArea"
+                      class="set-input90"
+                      @change="querylistByParams"
+                      clearable />
+            <span class="query-cell-suffix">平方</span>
+          </div>
+          <div class="query-content-cell cell-interval75">
+            <h3 class="query-cell-title">录入时间</h3>
+            <el-date-picker v-model="data.timeSelect"
+                            type="daterange"
+                            class="set-data-pricker"
+                            @change="querylistByParams"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"></el-date-picker>
+            <span class="query-cell-suffix handlebut"
+                  @click="remove">清除</span>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <label class="query-checkbox">
+              <input type="checkbox"
+                     @click="keySelect" />
+              <span>钥匙</span>
+            </label>
+            <label class="query-checkbox">
+              <input type="checkbox"
+                     @click="onlySelect" />
+              <span>独家</span>
+            </label>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryMyAgentParams">查询</el-button>
+          </div>
+          <div class="query-content-cell cell-interval25">
+            <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          </div>
+        </div>
       </div>
     </template>
 
     <template #tableColumn>
-      <!-- <el-table-column label="房源编号">
-        <template v-slot="scope">
-          {{scope.row.HouseNo}}
-        </template>
-      </el-table-column>
-      <el-table-column label="楼盘名称">
-        <template v-slot="scope">
-          {{scope.row.CommunityName}}
-        </template>
-      </el-table-column>
-      <el-table-column label="栋座">
-        <template v-slot="scope">
-          {{scope.row.BuildingName}}栋 — {{scope.row.RoomNo}}室
-        </template>
-      </el-table-column>
-      <el-table-column label="售价(万元)">
-        <template v-slot="scope">
-          {{scope.row.Price}}
-        </template>
-      </el-table-column>
-      <el-table-column label="面积(㎡)">
-        <template v-slot="scope">
-          {{scope.row.InArea}}
-        </template>
-      </el-table-column>
-      <el-table-column label="单价(元/㎡)">
-        <template v-slot="scope">
-          {{Math.round(scope.row.Price*10000/scope.row.InArea)+"元/m²"}}
-        </template>
-      </el-table-column>
-      <el-table-column label="户型">
-        <template v-slot="scope">
-          {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
-        </template>
-      </el-table-column>
-      <el-table-column label ="录入时间">
-        <template v-slot="scope">
-          {{scope.row.AddTime}}
-        </template>
-      </el-table-column>-->
       <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
@@ -164,8 +252,7 @@
       </template>
       <el-table-column label="操作"
                        fixed="right"
-                       width="150"
-                       key="operation">
+                       width="150">
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
@@ -234,7 +321,8 @@ export default {
         minPrice: "",
         maxPrice: "",
         keyOwner: "",
-        isOnly: ""
+        isOnly: "",
+        agentName: ""
       },
       AgentPerId: "",
       dialogVisible: false,
@@ -257,17 +345,17 @@ export default {
         { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true },
         { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
         { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
-        { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: false },
+        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
+        { prop: 'seenNum', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'outfollow', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
+        { prop: 'addTime', label: '添加时间', width: '120', order: 'custom', disabled: false, default: true },
         { prop: 'AgentName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => (item.rooms||0) + '室' + (item.hall||0) + '厅' + (item.toilet||0) + '卫' },
-        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
-        { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
-        { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },
-        { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: false },
-        { prop: 'addName', label: '添加人', width: '120', order: false, disabled: false, default: false }
+        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => (item.rooms || 0) + '室' + (item.hall || 0) + '厅' + (item.toilet || 0) + '卫' },
+        { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: true },
+        { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: true },
+        { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: true },
+        { prop: 'addName', label: '添加人', width: '120', order: false, disabled: false, default: true }
 
       ],
       tableColumn: [],
@@ -338,7 +426,7 @@ export default {
       } else {
         this.data.keyOwner = '1';
       }
-        this.queryMyAgent(1, 'id', 'descending');
+      this.queryMyAgent(1, 'id', 'descending');
     },
     onlySelect () {
       if (this.data.isOnly != '') {
@@ -346,7 +434,7 @@ export default {
       } else {
         this.data.isOnly = '1';
       }
-        this.queryMyAgent(1, 'id', 'descending');
+      this.queryMyAgent(1, 'id', 'descending');
     },
     getName (name) {
       this.newAgentName = name;
@@ -381,6 +469,7 @@ export default {
         if (that.data.maxInArea != null && that.data.maxInArea != '') { params.maxInArea = that.data.maxInArea; }
         if (that.data.timeSelect != null && that.data.timeSelect[0] != null && that.data.timeSelect[0] != '') { params.beginTime = that.data.timeSelect[0]; }
         if (that.data.timeSelect != null && that.data.timeSelect[1] != null && that.data.timeSelect[1] != '') { params.endTime = that.data.timeSelect[1]; }
+        if (that.data.agentName != null && that.data.agentName != '') { params.agentName = that.data.agentName; }
       }
       params.isOnly = that.data.isOnly;
       params.keyOwner = that.data.keyOwner;
@@ -597,7 +686,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-        this.querylistByParams();
+      this.querylistByParams();
     },
     queryRoomNo () {
       var that = this;
@@ -620,7 +709,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-         this.querylistByParams();
+      this.querylistByParams();
     },
     queryMyAgent (currentPage, column, type) {
       var that = this;
@@ -653,14 +742,15 @@ export default {
         params.maxInArea = that.data.maxInArea;
         params.keyOwner = that.data.keyOwner;
         params.isOnly = that.data.isOnly;
+        params.agentName = that.data.agentName;
       }
 
 
 
 
 
-      
-if (column == "" || type == null || type == undefined) {
+
+      if (column == "" || type == null || type == undefined) {
         params.sortColumn = "id";
       } else {
         params.sortColumn = column;
@@ -673,7 +763,7 @@ if (column == "" || type == null || type == undefined) {
       this.$api
         .post({
           url: "/myHouse/getMyAgent",
-         qs: true,
+          qs: true,
           data: params
         })
         .then(e => {

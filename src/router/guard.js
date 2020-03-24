@@ -18,12 +18,17 @@ export default (router) => {
           next();
         }else{
 
-          Notification({
-            title: '提示',
-            message: '您没有进行登录,将跳转登录页面!',
-            type: "warning"
-          })
-          next({ path: '/' })
+          if(util.localStorageGet(TOKEN))
+          {
+            next();
+          }else{
+            Notification({
+              title: '提示',
+              message: '您没有进行登录,将跳转登录页面!',
+              type: "warning"
+            })
+            next({ path: '/' })
+          }
         }
       }
     }

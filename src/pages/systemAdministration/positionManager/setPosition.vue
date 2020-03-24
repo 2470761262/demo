@@ -66,12 +66,12 @@
                          size="mini"
                          style="cursor: pointer;"
                          :class="{'selected_btn':node.data.dataType == '0' }"
-                         @click="operationSelf(node,data)"> 自己</el-button>
+                         @click.stop="() => operationSelf(node,data)"> 自己</el-button>
               <el-button type="text"
                          size="mini"
                          style="cursor: pointer;"
                          :class="{'selected_btn':node.data.dataType == '1'}"
-                         @click="operationDept(node, data)"> 部门权限</el-button>
+                         @click.stop="() => operationDept(node, data)"> 部门权限</el-button>
                 <el-button type="text"
                            size="mini"
                            style="cursor: pointer;"

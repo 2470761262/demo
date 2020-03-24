@@ -439,7 +439,7 @@ export default {
         this.$validator.validateAll();
         this.loginLoadding = true;
         loginParams.userName = this.loginData.account;
-        loginParams.passWord = this.loginData.password;
+        loginParams.passWord =this.md5Util.hex_md5(this.loginData.password).toUpperCase();
       } else {
         loginParams.clientId = 4;
         loginParams.accountId = this.accountId;
