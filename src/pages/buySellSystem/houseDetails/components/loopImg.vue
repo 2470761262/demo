@@ -88,6 +88,17 @@
           </div>
         </el-image>
       </template>
+      <!-- 不存在 -->
+      <template v-if="!loopBig.typeStr">
+        <el-image class="loop-item"
+                  :src="''|defaultImg"
+                  fit="cover">
+          <div slot="placeholder"
+               class="image-slot">
+            加载中<span>...</span>
+          </div>
+        </el-image>
+      </template>
       <!-- 音频 -->
       <template v-if="loopBig.typeStr == 'picUrl' && resultData.saleUploadAudioList">
         <el-audio fixed

@@ -44,6 +44,11 @@
   <div>
     <template>
       <div class="elTree">
+        <el-select v-model="type" @change="loadFunctionPoint" placeholder="请选择功能点类型">
+          <el-option label="PC端" value="0"></el-option>
+          <el-option label="Client端" value="1"></el-option>
+          <el-option label="Wap端" value="2"></el-option>
+        </el-select>
         <el-button style="margin:10px 45px;"
                    type="primary"
                    size="mini"
@@ -129,7 +134,6 @@
                 v-loading="treeLoading"
               ></el-tree>
 
-
             </div>
           </template>
         </div>
@@ -147,6 +151,7 @@ export default {
     return {
       filterText: "",
       treeLoading: true,
+      type: "0",
       postId: null,
       ruleTreeData: [],
       companyTreeData: [],
@@ -176,69 +181,74 @@ export default {
   mounted () {
     let id = JSON.parse(this.$route.query.id);
     this.postId = id;
-    console.log(id);
-    //读取功能点数据
-    this.$api
-      .post({
-        url: "/sys/rule/position/tree/checked",
-        data: { postId: id },
-        qs: true,
-      })
-      .then(e => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          this.ruleTreeData = result.data.allRule;
-          this.$refs.tree.setCheckedKeys(result.data.selectedRule);
-        } else {
-          console.log("查询错误: ", result.message);
-          this.$message.error("查询错误: " + result.message);
-        }
-      })
-      .catch(e => {
-        console.log("查询树节点");
-        console.log(e);
-      });
-
+    this.loadFunctionPoint();
     //读取树数据
-    this.$api
-      .post({
-        url: "/sys/tree/role/set/unit"
-      })
-      .then(e => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          this.companyTreeData = result.data;
-        } else {
-          console.log("载入结果" + +result.message);
-          alert(result.message);
-        }
-      })
-      .then(() => {
-        if (this.$route.query.cur != null) {
-          this.curNodeId = [this.$route.query.cur];
-          this.$nextTick(() => {
-            this.handleCheckChange(
-              this.$refs.companyTreeData.getNode(...this.curNodeId).data,
-              true
-            );
-          });
-        }
-      })
-      .catch(e => {
-        console.log("读取失败");
-        console.log(e);
-      })
-      .finally(e => {
-        this.treeLoading = false;
-      });
-
+    this.loadUnitTree();
   },
   methods: {
-
+    loadFunctionPoint(){
+      let that = this;
+      //读取功能点数据
+      that.$api
+        .post({
+          url: "/sys/rule/position/tree/checked",
+          data: { postId: that.postId,type: that.type },
+          qs: true,
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            that.ruleTreeData = result.data.allRule;
+            that.$refs.tree.setCheckedKeys(result.data.selectedRule);
+          } else {
+            console.log("查询错误: ", result.message);
+            that.$message.error("查询错误: " + result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询树节点");
+          console.log(e);
+        });
+    },
+    loadUnitTree(){
+      let that = this;
+      //读取树数据
+      that.$api
+        .post({
+          url: "/sys/tree/role/set/unit"
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            that.companyTreeData = result.data;
+          } else {
+            console.log("载入结果" + +result.message);
+            alert(result.message);
+          }
+        })
+        .then(() => {
+          if (this.$route.query.cur != null) {
+            this.curNodeId = [this.$route.query.cur];
+            this.$nextTick(() => {
+              this.handleCheckChange(
+                this.$refs.companyTreeData.getNode(...this.curNodeId).data,
+                true
+              );
+            });
+          }
+        })
+        .catch(e => {
+          console.log("读取失败");
+          console.log(e);
+        })
+        .finally(e => {
+          that.treeLoading = false;
+        });
+    },
     operationCompany (node, data) {
       this.showCompanyTree = true;
       this.showSave = true;

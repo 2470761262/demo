@@ -95,10 +95,10 @@
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
-                     @click="addPhone(scope.row.bhid,scope.row.id)">录入号码</el-button>
+                     @click="addPhone(scope.row.bhId,scope.row.id)">录入号码</el-button>
           <el-button type="info"
                      size="mini"
-                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhid,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
+                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
         </template>
       </el-table-column>
     </template>
@@ -389,7 +389,7 @@ export default {
       } else {
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
-        params.roomNo = that.data.roomNo;
+        params.bhId = that.data.roomNo;
         params.beginTime = that.data.timeSelect[0];
         params.endTime = that.data.timeSelect[1];
         params.customName = that.data.customName;
@@ -417,10 +417,9 @@ export default {
         .then(e => {
           console.log(e.data);
           that.loading = false;
-          let data = e.data;
-          if (data.code == 200) {
-            that.pageJson.total = data.dataCount;
-            that.tableData = data.data;
+          if (e.data.code == 200) {
+            that.pageJson.total = e.data.data.dataCount;
+            that.tableData = e.data.data.data;
           } else {
             console.log("查询无号码列表结果：" + result.message);
 

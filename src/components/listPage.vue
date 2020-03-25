@@ -13,6 +13,11 @@
   .page-body-conter {
     flex: 1;
     display: flex;
+    padding-left: 20px;
+    .page-body-conter-left-slot {
+      position: relative;
+      display: flex;
+    }
     .page-body-conter-right {
       flex: 1;
       overflow: hidden;
@@ -42,7 +47,7 @@
   }
 }
 .query-center {
-  display: flex;
+  //display: flex;
   padding-top: 30px;
   padding-left: 20px;
   @media (max-width: 1300px) {
@@ -78,18 +83,22 @@
     display: none;
   }
 }
+.tabIsMar {
+  padding-left: 20px;
+}
 </style>
 <template>
   <div class="page-body">
     <div class="page-body-warp">
+      <div class="query-center">
+        <slot name="top"></slot>
+      </div>
       <div class="page-body-conter">
         <div class="page-body-conter-left-slot">
           <slot name="left"></slot>
         </div>
-        <div class="page-body-conter-right">
-          <div class="query-center">
-            <slot name="top"></slot>
-          </div>
+        <div class="page-body-conter-right"
+             :class='{"tabIsMar": $scopedSlots.left}'>
           <el-table :data="tableData"
                     border
                     ref="table"

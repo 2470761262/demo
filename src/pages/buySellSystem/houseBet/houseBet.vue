@@ -290,7 +290,7 @@ export default {
     };
   },
   mounted () {
-    this.queryHouseBet(1, "id", "ascending");
+    this.queryHouseBet(0, "id", "descending");
     //读取树数据
     this.$api
       .post({
@@ -327,7 +327,7 @@ export default {
   methods: {
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryHouseBet(1, "id", "ascending");
+      this.queryHouseBet(1, "id", "descending");
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
@@ -337,7 +337,7 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryHouseBet(1, 'id', 'ascending');
+      this.queryHouseBet(1, 'id', 'descending');
 
     },
     handleCheckChange (data, checked, node) {
@@ -370,12 +370,12 @@ export default {
       console.log(this, "111");
     },
     formatHouseType (row, column) {
-      if (row.rooms) {
-        return row.rooms + "室" + row.hall + "厅" + row.toilet + "卫";
-      }
+      //if (row.rooms) {
+        return (row.rooms||0) + "室" + (row.hall||0) + "厅" + (row.toilet||0) + "卫";
+      //}
     },
     unitPrice (row, column) {
-      if (row.rooms) {
+      if (row.inArea>0) {
         return Math.round((row.price * 1000) / row.inArea);
       }
     },
@@ -421,7 +421,7 @@ export default {
       });
     },
     queryHouseBetParams () {
-      this.queryHouseBet(1, "id", "ascending");
+      this.queryHouseBet(1, "id", "descending");
     },
     //楼盘获取焦点 第一次点击就进行查询
 
@@ -503,7 +503,7 @@ export default {
         column = "id";
       }
       if (!type) {
-        type = "ascending";
+        type = "descending";
       }
       var that = this;
       that.loading = true;
@@ -554,7 +554,7 @@ export default {
           if (data.code == 200) {
             that.pageJson.total = data.data.totalCount;
             that.pageJson.currentPage = data.data.currPage;
-            that.tableData = data.data.list;
+            that.tableData = data.data.data;
           } else {
             console.log("查询对赌房源列表结果：" + result.message);
             alert(result.message);
@@ -584,7 +584,7 @@ export default {
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryHouseBet(1, "id", "ascending");
+      this.queryHouseBet(1, "id", "descending");
     }
   }
 };
