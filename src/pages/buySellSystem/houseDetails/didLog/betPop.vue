@@ -58,7 +58,7 @@
             <el-input v-model="butValue"
                       data-vv-name="butValue"
                       data-vv-as="鑫币值"
-                      v-validate="'min_value:'+betConf.lower"
+                      v-validate="{'min_value':betConf.lower,'max_value':betConf.upper}"
                       v-number
                       placeholder="输入对赌鑫币值"></el-input>
             <div v-if="errorBags.has('butValue')">{{errorBags.first('butValue')}}</div>
