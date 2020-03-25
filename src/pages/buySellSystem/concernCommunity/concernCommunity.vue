@@ -2,6 +2,32 @@
 .div {
   position: absolute;
 }
+.el-scrollbar__thumb {
+  background: black;
+}
+.attention-scroll-content {
+  flex: 1 0 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 0;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-track-piece {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color--primary);
+    border-radius: 50px;
+  }
+  .scroll-content-tag {
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+}
 .list {
   display: flex;
   flex-direction: row;
@@ -72,13 +98,14 @@
               <div style="color:white;float: right;margin-right:10px;">{{countEffectiveNum}}套</div>
             </div>
           </div>
-          <div style="height:50px;margin-top:10px;">
-            <el-select style="width:270px"
+          <div style="height:50px;margin-top:10px;margin-bottom:270px"
+               class="attention-scroll-content">
+            <el-select style="width:270px;scrollbar-face-color:black;"
                        v-model="queryData.selectCommunity"
                        @change="selectedCommunity($event)"
                        filterable
                        placeholder="请输入您想添加的核心盘">
-              <el-option style="width:270px"
+              <el-option style="width:270px;"
                          v-for="(item,index) in list"
                          :key="item.id"
                          :label="item.communityName"
@@ -187,8 +214,15 @@
         <el-input placeholder="最小值"
                   v-model="queryData.minInArea"
                   @change="querylistByParams()"
+                  key="area"
+                  maxlength="8"
+                  @click.stop
+                  data-vv-name="area"
+                  data-vv-as="面积"
+                  v-validate="'decimal:2|noZero1'"
                   style="width:160px"
                   clearable>
+
           <template slot="prepend">面积</template>
         </el-input>
         <el-input placeholder="最大值"
@@ -495,13 +529,11 @@ export default {
       this.queryVerifyHouseDatas(1, "id", "descending");
     },
     sortMethod (e) {
-      console.log(e, "eeee排序");
       this.queryVerifyHouseDatas(1, e.prop, e.order);
     },
     tabColumnChange (e) {
       let that = this;
       that.tableColumn = e;
-      console.log(this.tableColum);
     },
     toSale (comId, cbId, bhId, communityName, buildingName, roomNo) {
       var that = this;
@@ -523,7 +555,6 @@ export default {
     },
     moreSelectChange (e) {
       this.moreSelect = e;
-      console.log(Object.keys(this.moreSelect).length);
     },
     keySelect () {
       if (this.queryData.keyOwner != "") {
@@ -625,7 +656,6 @@ export default {
           if (result.code == 200) {
             this.queryConcernCount();
             this.querylistByParams();
-            console.log(123);
           } else {
             console.log("添加关注" + result.message);
             alert(result.message);
@@ -712,13 +742,11 @@ export default {
           qs: true
         })
         .then(e => {
-          console.log(e.data);
           that.loading = false;
           if (e.data.code == 200) {
             that.pageJson.total = e.data.data.dataCount;
             that.tableData = e.data.data.data;
           } else {
-            console.log("查询我的核心盘列表结果：" + e.data.message);
             alert(e.data.message);
           }
         })
@@ -734,10 +762,8 @@ export default {
           qs: true
         })
         .then(e => {
-          console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            console.log(result.message);
             console.log("统计结果" + result.data);
             this.array = result.data;
             var countConcern = 0;
@@ -753,7 +779,6 @@ export default {
             this.countConcern = countConcern;
             this.countAll = countAll;
             this.countEffectiveNum = countEffectiveNum;
-            console.log("总数：" + countConcern);
             return this.array.forEach(item => {
               return item.array;
             });
@@ -772,7 +797,10 @@ export default {
       this.$api
         .post({
           url: "/concern_community/notConcernCommunityList",
-          data: { CommunityName: "" },
+          data: {            CommunityName: "",
+            page: 1,
+            limit: 50
+          },
           qs: true
         })
         .then(e => {
@@ -803,7 +831,6 @@ export default {
     remoteMethod (query) {
       var that = this;
       if (query !== "") {
-        console.log(query);
         this.loading = true;
         this.$api
           .post({
@@ -831,7 +858,6 @@ export default {
       this.querylistByParams();
     },
     queryCBId () {
-      console.log(this);
       var that = this;
       this.$api
         .get({
@@ -893,19 +919,16 @@ export default {
     },
     //跳转房源详情页面
     toHouseDetail (id) {
-      console.log(id);
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
 
     handleClick () { },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
       this.queryVerifyHouseDatas(val, "id", "ascending");
     }
   }

@@ -179,14 +179,14 @@ span {
                 </el-select>
               </div>
               <div class='selectType'>
-                <span>房源状态</span>
+                <!-- <span>房源状态</span>
                 <el-select v-model="more.houseType"
                            style="width:30%">
-                  <!-- <el-option v-for='(item) in houseTypeList'
+                  <el-option v-for='(item) in houseTypeList'
                              :key="item.value"
                              :value='item.value'
-                             :label="item.label"></el-option>  -->
-                </el-select>
+                             :label="item.label"></el-option>  
+                </el-select> -->
                 <span>委托</span>
                 <el-select v-model="more.entrustType"
                            style="width:30%">
