@@ -339,7 +339,8 @@
                          :sortable="item.order"></el-table-column>
       </template>
       <el-table-column label="操作"
-                       width="170">
+                       width="170"
+                       fixed="right">
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
@@ -477,7 +478,7 @@ export default {
         }
       ],
       tableColumn: [],
-      tableData: {},
+      tableData: [],
       moreSelect: [],
       elTabs: {
         activeName: "tab1",
@@ -758,6 +759,7 @@ export default {
         .then(e => {
           that.loading = false;
           if (e.data.code == 200) {
+            typeof (e.data.data.data)
             that.pageJson.total = e.data.data.dataCount;
             that.tableData = e.data.data.data;
           } else {
@@ -820,7 +822,6 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            console.log("楼盘列表" + result.data);
             var that = this;
             var arrayCommunity = result.data;
             that.list = arrayCommunity;

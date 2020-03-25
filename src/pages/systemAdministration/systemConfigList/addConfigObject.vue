@@ -66,8 +66,8 @@
                          :label="item.CompanyName"
                          :value="item.value"></el-option>
               <el-option v-for="item in tableData"
-                         :key="item.value"
-                         :label="item.CompanyName"
+                         :key="item.id"
+                         :label="item.companyName"
                          :value="item.id"></el-option>
             </el-select>
           </div>
@@ -345,7 +345,7 @@ export default {
 
       this.$api
         .post({
-          url: "/company/list",
+          url: "/company/companyList",
           data: params,
           token: false,
           headers: { "Content-Type": "application/json" }
