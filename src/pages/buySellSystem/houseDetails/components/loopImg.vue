@@ -200,7 +200,8 @@ export default {
         let saleUploadPicDtoList = this.resultData.saleUploadPicDtoList ? this.resultData.saleUploadPicDtoList : [];
         let saleUploadVideoDtoList = this.resultData.saleUploadVideoDtoList ? this.resultData.saleUploadVideoDtoList : [];
         let resultList = [...saleUploadVideoDtoList, ...saleUploadPicDtoList];
-        this.changeLoop(resultList[0]);
+        if (resultList[0])
+          this.changeLoop(resultList[0]);
         return resultList;
       }
       return [];

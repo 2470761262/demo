@@ -1,0 +1,29 @@
+@font-face {
+    font-family: "iconfont";
+    src: url('//at.alicdn.com/t/font_1713842_s6j9vav57r7.eot?t=1585130529104');
+    /* IE9 */
+    src: url('//at.alicdn.com/t/font_1713842_s6j9vav57r7.eot?t=1585130529104#iefix') format('embedded-opentype'),
+        /* IE6-IE8 */
+        url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAO4AAsAAAAAB7QAAANpAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDBgqDHIJYATYCJAMMCwgABCAFhG0HNRudBsiemjwJKBbTZAL4BwCQFBGQusiVrfMTEYRw+pQAVKe+69d+ItZgZ0gqdrLv/L+bd4s1ryQSWRtNQ7QEVat4pFOKAKVlU3G2z3M5vdUQnB8op7GG78FHvQDjgAIdc4LkWYEk6A1jV17EagIKqy6Hf9/+PSN+YSKjU0BYukiT/MJSDrGmOCgoyEpGRuGknILJoeQznPC/H/7TOhQkkUsZPUfOb1X9Gv5s8mfzdGc+U12Ccjwf2DhSNOUnEqaXBiYKDGNNBSqsGILqszNRkIwVzOfxFaouM//wSARCxigsChqieMKfTWxFbGwOVWe9UgoyFMJWfu4x1K/ktVJZ0aIlY7OYFSu65fPfx37xx7iv/prw5Z8b77///MaTd957ZueHE84+LBtx/nH5qfUnRYoceaRAwTKFlt59WXf/y/qH3yx7/Hml5OIXjc69VaRExY0rHH1VOa1zo/Le24Xvfl7//uv6l33Hlh2OFRmW3X3W4Oj5zDc7nje9/2LCO1+1+OrLsYn0m89HPfriqyakvGa685tYs2b8xrTVrOkoED/39X7FznQaKA/blL9wak75tIsV/ou3+bnuz22K1xmf+llhoP1W1rDj06ddfWh8KdP2h3oaqmRU1Tr2tXSpR7US/sjnrJ5ePXz96aBy332Tv7ffvrvVfMBCz59STM2M3TvjwuER53rVOJ2YNXUSO882F2c9cxoq7e23FzberXdV+Gjb40FlOsLvpg8duGUYA/xJxTada8yIrfm/YJEIvr2llt8xX5TuREFJD+UvUbasiKracKZRVtgKPZkaK+SGZVDGjX5EKZT22N9S7rYTQUHlYiQKqIZUQXXJyGmKnCLaIlNQDxTWRPv4IsoQAoVYCI1tAwQlnSBR3CdIlXRLRs4Dcsr7QKZkSFHY+JA4YxH1w6LCzatRIlRBXgVD4T5muSkiKB5CbdGWRFLtC8ZQeEYQCpu3zCbb0YdijD7eklZExIAJ7kAbWA9tm4MruIkK5elEblV+i/llT8pTuOMXoQ8BSQhSAdkqYFBwPsytTSJynx+CNItsElHDqkiPQYLHaBwUylPQgmw3+FqxruUczxJNEUIYwAicA7QBH7LNGAfc8mYmpCB59B4RV5V8VI21NeTNb3Kebx0UZiyUhiSkIcotXidLPLB/XL+fHwAAAA==') format('woff2'),
+        url('//at.alicdn.com/t/font_1713842_s6j9vav57r7.woff?t=1585130529104') format('woff'),
+        url('//at.alicdn.com/t/font_1713842_s6j9vav57r7.ttf?t=1585130529104') format('truetype'),
+        /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+        url('//at.alicdn.com/t/font_1713842_s6j9vav57r7.svg?t=1585130529104#iconfont') format('svg');
+    /* iOS 4.1- */
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.iconjubao:before {
+    content: "\e62e";
+}
+
+.iconOUO:before {
+    content: "\e62b";
+}
