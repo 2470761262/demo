@@ -6,6 +6,7 @@
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
   padding: 15px 15px 15px;
   border-radius: 10px;
+  font-size: 14px;
 
   /deep/ .el-input {
     margin: 10px 0 10px;
@@ -294,9 +295,8 @@ export default {
         return;
       }
       var that = this;
-      that.paramsObj.ruleType = 0;
       that.paramsObj.postId = that.postId;
-      that.paramsObj.ruleType = 0;
+      that.paramsObj.ruleType = that.type;
       that.paramsObj.type = type;
       let companyId = "";
       that.companyTreeSelectNode.companyIds.forEach(id => {

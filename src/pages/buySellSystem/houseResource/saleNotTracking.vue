@@ -7,91 +7,132 @@
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
-      <!-- 楼盘 -->
-      <div class="page-form-inline budingMarinSet">
-        <el-select v-model="data.comId"
-                   @focus="remoteInput"
-                   @change="queryCBId()"
-                   filterable
-                   remote
-                   clearable
-                   placeholder="请输入楼盘名称搜索"
-                   :remote-method="remoteMethod"
-                   :loading="loading">
-          <el-option v-for="item in options"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-
-        <el-select v-model="data.cbId"
-                   filterable
-                   clearable
-                   placeholder="请选择楼栋"
-                   @change="queryRoomNo()">
-          <el-option v-for="item in cbIdList"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-        <el-select v-model="data.roomNo"
-                   filterable
-                   @change="querySaleNotTrackParams()"
-                   placeholder="请选择房间号">
-          <el-option v-for="item in roomNoList"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-        <el-input placeholder="业主姓名" v-model="data.customName" @change="querySaleNotTrackParams()" style="margin-left:30px;width:240px" clearable />
-         
-        <el-input placeholder="业主电话" v-model="data.tel" @change="querySaleNotTrackParams()" style="margin-left:30px;width:240px" clearable />
-        <el-input placeholder="最小面积" v-model="data.minInArea" @change="querySaleNotTrackParams()" style="margin-left:30px;width:120px" clearable />------
-        <el-input placeholder="最大面积" v-model="data.maxInArea" @change="querySaleNotTrackParams()" style="width:120px" clearable />
-        <el-input placeholder="最低售价" v-model="data.minPrice" @change="querySaleNotTrackParams()" style="margin-top:10px;width:120px" clearable />------
-        <el-input placeholder="最高售价" v-model="data.maxPrice" @change="querySaleNotTrackParams()" style="width:120px" clearable />
-        <el-date-picker v-model="data.timeSelect"
-                        type="daterange"
-                        @change="querySaleNotTrackParams()"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"></el-date-picker>
-
-        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
-              @click="Remove">清除</span>
-        <el-button type="primary"
-                   size="mini"
-                   style="margin-left:10px"
-                   @click="querySaleNotTrackParams">查询</el-button>
-        <el-button style="height:30px;border:0"
-                   size="mini">
-          <definitionmenu class="menuMarin"
-                          :renderList="tableColumnField"
+      <div class="page-list-query-row">
+        <div class="query-content-cell">
+          <h3 class="query-cell-title">楼盘</h3>
+          <el-select v-model="data.comId"
+                     @focus="remoteInput"
+                     @change="queryCBId"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="楼盘名称"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+          <el-select v-model="data.cbId"
+                     filterable
+                     clearable
+                     placeholder="楼栋"
+                     @change="queryRoomNo">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+          <el-select v-model="data.roomNo"
+                     filterable
+                     @change="querySaleNotTrackParams"
+                     placeholder="房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">业主</h3>
+          <el-input placeholder="姓名"
+                    v-model="data.customName"
+                    class="set-input120"
+                    @change="querySaleNotTrackParams"
+                    clearable />
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">电话</h3>
+          <el-input placeholder="业主电话"
+                    v-model="data.tel"
+                    class="set-input200"
+                    @change="querySaleNotTrackParams"
+                    clearable />
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">价格</h3>
+          <el-input placeholder="最小值"
+                    v-model="data.minPrice"
+                    class="set-input90"
+                    @change="querySaleNotTrackParams"
+                    clearable />
+          <span class="cut-off-rule"></span>
+          <el-input placeholder="最大值"
+                    v-model="data.maxPrice"
+                    class="set-input90"
+                    @change="querySaleNotTrackParams"
+                    clearable />
+          <span class="query-cell-suffix">万</span>
+        </div>
+      </div>
+      <div class="page-list-query-row">
+        <div class="query-content-cell">
+          <h3 class="query-cell-title">面积</h3>
+          <el-input placeholder="最小值"
+                    v-model="data.minInArea"
+                    class="set-input90"
+                    @change="querySaleNotTrackParams"
+                    clearable />
+          <span class="cut-off-rule"></span>
+          <el-input placeholder="最大值"
+                    v-model="data.maxInArea"
+                    class="set-input90"
+                    @change="querySaleNotTrackParams"
+                    clearable />
+          <span class="query-cell-suffix">平方</span>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">录入时间</h3>
+          <el-date-picker v-model="data.timeSelect"
+                          type="daterange"
+                          class="set-data-pricker"
+                          @change="querySaleNotTrackParams"
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"></el-date-picker>
+          <span class="query-cell-suffix handlebut"
+                @click="Remove">清除</span>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <el-button type="primary"
+                     size="mini"
+                     @click="querySaleNotTrackParams">查询</el-button>
+        </div>
+        <div class="query-content-cell cell-interval25">
+          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+        </div>
+        <div class="query-content-cell cell-interval25">
+          <definitionmenu :renderList="tableColumnField"
                           :tableColumn="tableColumn"
                           @change="tabColumnChange"></definitionmenu>
-        </el-button>
-        <el-button style="height:30px;border:0"
-                   size="mini">
-          <moreSelect @moreSelectChange="moreSelectChange"
-                      style="height:40px;margin-right:5px;"></moreSelect>
-        </el-button>
+        </div>
       </div>
     </template>
-    <!-- :formatter="item.format" -->
     <template #tableColumn>
       <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
                          :key="item.prop"
+                         show-overflow-tooltip
                          :formatter="item.formart"
                          :sort-orders="['ascending', 'descending']"
                          :sortable="item.order"></el-table-column>
       </template>
       <el-table-column label="操作"
                        fixed="right"
-                       width="150"
-                       key="operation">
+                       width="170">
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
@@ -109,6 +150,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
+import '@/assets/publicLess/pageListQuery.less';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -245,7 +287,7 @@ export default {
         {
           prop: "unitpaice",
           label: "单价(元/㎡)",
-          width: "120",
+          width: "140",
           order: "custom",
           disabled: false,
           default: true,

@@ -86,6 +86,13 @@
 .tabIsMar {
   padding-left: 20px;
 }
+.queryIsPad {
+  padding-top: 10px;
+}
+.division-line {
+  height: 6px;
+  background: #f4f4f4;
+}
 </style>
 <template>
   <div class="page-body">
@@ -93,12 +100,14 @@
       <div class="query-center">
         <slot name="top"></slot>
       </div>
+      <div class="division-line"
+           v-if="$scopedSlots.top"></div>
       <div class="page-body-conter">
         <div class="page-body-conter-left-slot">
           <slot name="left"></slot>
         </div>
         <div class="page-body-conter-right"
-             :class='{"tabIsMar": $scopedSlots.left}'>
+             :class='{"tabIsMar": $scopedSlots.left,"queryIsPad":$scopedSlots.top}'>
           <el-table :data="tableData"
                     border
                     ref="table"
@@ -109,6 +118,7 @@
                   :tableData="tableDataColumn"></slot>
           </el-table>
         </div>
+        <sidebarList v-if="sidebarFlag"></sidebarList>
       </div>
       <div class="page-body-floot">
         <el-pagination @size-change="handleSizeChange"
@@ -121,7 +131,6 @@
         </el-pagination>
       </div>
     </div>
-    <sidebarList v-if="sidebarFlag"></sidebarList>
   </div>
 </template>
 <script>

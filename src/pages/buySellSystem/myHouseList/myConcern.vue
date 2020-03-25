@@ -223,7 +223,6 @@
         </div>
         <div class="attention-scroll-content"
              v-if="showImpression">
-          <div></div>
           <span v-for="item in ImpressionList"
                 :key="item.id">
             <el-tag class="scroll-content-tag"
