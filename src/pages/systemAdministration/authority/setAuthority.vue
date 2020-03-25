@@ -1,5 +1,6 @@
 <style lang="less" scoped>
 .elTree {
+  font-size: 14px;
   width: 500px;
   margin-right: 20px;
   margin-bottom: 10px;
@@ -49,10 +50,10 @@
           <el-option label="Client端" value="1"></el-option>
           <el-option label="Wap端" value="2"></el-option>
         </el-select>
-        <el-button style="margin:10px 45px;"
-                   type="primary"
-                   size="mini"
-                   @click="savePosition">保存</el-button>
+<!--        <el-button style="margin:10px 45px;"-->
+<!--                   type="primary"-->
+<!--                   size="mini"-->
+<!--                   @click="savePosition">保存</el-button>-->
         <el-tree :data="ruleTreeData"
                  show-checkbox
                  node-key="id"

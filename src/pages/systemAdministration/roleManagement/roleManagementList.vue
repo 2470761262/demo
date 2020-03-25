@@ -1,6 +1,7 @@
 <style lang="less" scoped>
 .query-cell {
   display: flex;
+  margin-bottom: 10px;
 }
 </style>
 <template>
