@@ -119,6 +119,9 @@
     }
   }
 }
+.qrcode {
+  margin-right: 10px;
+}
 </style>
 <template>
   <section>
@@ -164,10 +167,8 @@
       <!-- 二维码 -->
       <article class="heard-item">
         <div class="qr-content">
-          <!-- <img class="qr-img"
-               src="http://sys.lsxjy.com.cn/images/androidDownload.png"
-               alt=""> -->
-          <div id="qrcode"></div>
+          <div id="qrcode"
+               :class="{'qrcode':qrData}"></div>
           <div class="qr-code-msg">
             <h3 class="qr-title">房源编号:</h3>
             <div class="qr-NO">{{resultData.HouseNo}}</div>
@@ -204,6 +205,23 @@ import QRCode from "qrcodejs2";
 import houseCheck from "../common/houseCheck";
 export default {
   inject: ["houseDetails", "houseId"],
+  watch: {
+    houseDetails: {
+      deep: true,
+      handler: function (newValue) {
+        let _that = this;
+        if (Object.keys(newValue).length > 0) {
+          this.qrData = new QRCode("qrcode", {
+            width: 65,
+            height: 65,
+            text: newValue.data.shareQRCode,
+            colorDark: "#000",
+            colorLight: "#fff"
+          })
+        }
+      }
+    },
+  },
   components: {
     followUp,
     report,
@@ -212,16 +230,6 @@ export default {
   created () {
     this.getImpressionList();
     this.getisCollect();
-  },
-  mounted () {
-    let that = this;
-    this.qrData = new QRCode("qrcode", {
-      width: 65,
-      height: 65,
-      text: that.resultData.shareQRCode,
-      colorDark: "#000",
-      colorLight: "#fff"
-    })
   },
   computed: {
     resultData () {
@@ -234,6 +242,7 @@ export default {
   },
   data () {
     return {
+      qrData: null,
       followUpFlag: false, //跟进开关
       reportFlag: false, //举报开关
       impressionList: [],//印象数组
