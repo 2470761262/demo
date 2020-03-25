@@ -397,7 +397,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-
+         
           disabled: false,
           default: true
         },
@@ -405,7 +405,6 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-
           disabled: false,
           default: true
         },
@@ -811,15 +810,17 @@ export default {
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             data: {
-              comId: this.comId//公司名
+              comId: query,
+              page: 1,
+              limit: 50
             }
           })
           .then(e => {
+            console.log("========================="+e.data);
             if (e.data.code == 200) {
               //   that.roomNo = "";
               //   that.cbId = "";
               //   this.cbIdList = e.data.data.list;
-
               that.loading = false;
               that.options = e.data.data.list;
             }
