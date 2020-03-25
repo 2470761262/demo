@@ -19,7 +19,7 @@
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
-            <el-select v-model="queryData.CommunityName"
+            <el-select v-model="queryData.comId"
                        @focus="remoteInput"
                        @change="queryCBId"
                        filterable
@@ -43,7 +43,7 @@
                          :label="item.name"
                          :value="item.value"></el-option>
             </el-select>
-            <el-select v-model="queryData.roomNo"
+            <el-select v-model="queryData.roomId"
                        filterable
                        @change="querylistByParams"
                        placeholder="房间号">
@@ -164,7 +164,7 @@
         </el-table-column>
         <el-table-column label="备注说明">
           <template v-slot="scope">
-            {{scope.row.checkMemo}}
+            {{scope.row.CheckMemo}}
           </template>
         </el-table-column>
         <el-table-column label="附件">
@@ -404,7 +404,7 @@ export default {
         value: '8',
         label: '房源转状态'
       }, {
-        value: '12',
+        value: '13',
         label: '建楼申请'
       }, {
         value: '11',
@@ -420,20 +420,23 @@ export default {
         value: '1',
         label: '独家委托审核'
       }, {
-        value: '2',
+        value: '4',
         label: '他司售'
       }, {
         value: '3',
         label: '补充楼盘'
       }, {
-        value: '4',
+        value: '2',
         label: '虚假实勘'
       }],
       queryData: {
+        comId:"",
         CommunityName: '',
         timeSelect: '',
         roomNo: '',
+        roomId:"",
         cbId: '',
+        cbName:"",
       },
       accessoryUrl: require('../../../assets/images/accessory.png'),
       showPopUp: false,
@@ -631,7 +634,7 @@ export default {
         token: false,
         qs: true,
         data: {
-          comId: that.queryData.CommunityName,
+          comId: that.queryData.comId,
           page: 1,
           limit: 50
         }
@@ -642,7 +645,13 @@ export default {
           that.cbIdList = e.data.data.list;
         }
       })
+      let obj = {};
+      obj = this.comList.find((item)=>{
+         return item.value === that.queryData.comId;
+      });
+      this.queryData.CommunityName = obj.name;
       this.querylistByParams();
+
     },
     getTitle (row) {
       this.titleList.forEach(element => {
@@ -673,6 +682,11 @@ export default {
           that.roomNoList = e.data.data.list;
         }
       })
+      let obj = {};
+      obj = this.cbIdList.find((item)=>{
+         return item.value === that.queryData.cbId;
+      });
+      this.queryData.cbName = obj.name;
       this.querylistByParams();
     },
     //跳转房源详情页面
@@ -686,12 +700,34 @@ export default {
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
       let that = this;
-      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.communityId = this.queryData.CommunityName; }
-      if (this.queryData.cbId != null && this.queryData.cbId != '') { params.buildingId = this.queryData.cbId; }
-      if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomId = this.queryData.roomNo; }
+      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
+      if (this.queryData.cbName != null && this.queryData.cbName != '') { params.cbName = this.queryData.cbName; }
+      if (this.queryData.roomId != null && this.queryData.roomId != '') {
+        let obj = {};
+          obj = this.roomNoList.find((item)=>{
+         return item.value === that.queryData.roomId;
+      });
+        params.roomNo = obj.name;
+        }
       if (this.status != null && this.status != '') { params.status = this.status; }
       if (this.checkProject != null && this.checkProject != '') { params.checkProject = this.checkProject; }
-      if (this.type != null && this.type != '') { params.checkType = this.type; }
+      if (this.type != null && this.type != '') {
+        if(this.type == 0){
+          params.checkProject = 0;
+        }else if(this.type == 1){
+          params.checkProject = 1;
+          params.checkType = this.type;
+        }else if(this.type == 4){
+          params.checkProject = 8;
+          params.checkType = this.type;
+        }else if(this.type == 3){
+          params.checkProject = 13;
+          //params.checkType = this.type;
+        }else if(this.type == 2){
+          params.checkProject = 11;
+          params.checkType = 1;
+        }
+        }
       if (this.value != null && this.value != '') { params.value = this.value; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
