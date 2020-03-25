@@ -397,11 +397,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-<<<<<<< HEAD
          
-=======
-
->>>>>>> 23127bfeb566889be91ef8591fc5101dde25e664
           disabled: false,
           default: true
         },
@@ -409,21 +405,12 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-<<<<<<< HEAD
-         
-=======
-
->>>>>>> 23127bfeb566889be91ef8591fc5101dde25e664
           disabled: false,
           default: true
         },
         // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
         {
-<<<<<<< HEAD
-          prop: "agenName",
-=======
           prop: "agentName",
->>>>>>> 23127bfeb566889be91ef8591fc5101dde25e664
           label: "跟单人",
           width: "110px",
           order: false,
@@ -821,10 +808,7 @@ export default {
           .post({
             url: "/concern_community/queryCommunityConcern",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
-<<<<<<< HEAD
-=======
             token: false,
->>>>>>> 23127bfeb566889be91ef8591fc5101dde25e664
             data: {
               comId: query,
               page: 1,
