@@ -136,10 +136,11 @@
                        fixed="right"
                        width="205">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
-                     @click="addPhone(scope.row.bhId,scope.row.id)">录入号码</el-button>
-          <el-button type="info"
+                     @click="addPhone(scope.row.bhid,scope.row.id)"
+                     style="">录入号码</el-button>
+          <el-button type="primary"
                      size="mini"
                      @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
         </template>
