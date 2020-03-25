@@ -6,157 +6,118 @@
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
-      <!-- 楼盘 -->
-      <div class="page-form-inline budingMarinSet">
-        <el-form inline
-                 :model="data"
-                 ref="data"
-                 size="medium">
-          <el-form-item label="楼盘"
-                        prop="customerName">
-            <el-select v-model="data.comId"
-                       @change="queryCBId()"
-                       filterable
-                       remote
-                       style="width: 180px"
-                       clearable
-                       placeholder="请选择楼盘进行搜索"
-                       @focus="remoteCommunityNameInput"
-                       :remote-method="remoteMethod"
-                       :loading="loading">
-              <el-option v-for="item in options"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
-            </el-select>
-
-            <el-select v-model="data.cbId"
-                       filterable
-                       style="width: 132px"
-                       placeholder="请选择楼栋"
-                       clearable
-                       @change="queryRoomNo()">
-              <el-option v-for="item in cbIdList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
-            </el-select>
-            <el-select v-model="data.roomNo"
-                       filterable
-                       style="width: 132px"
-                       @change="queryHouseBetParams()"
-                       clearable
-                       placeholder="请选择房间号">
-              <el-option v-for="item in roomNoList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="业主"
-                        prop="customerName">
-            <el-input clearable
-                      @change="queryHouseBetParams()"
-                      v-model="data.customerName"
-                      placeholder="业主姓名" />
-          </el-form-item>
-
-          <el-form-item label="电话"
-                        prop="tel">
-            <el-input clearable
-                      @change="queryHouseBetParams()"
-                      v-model="data.tel"
-                      placeholder="业主电话" />
-          </el-form-item>
-          <el-form-item label="对赌结果"
-                        prop="status">
-            <el-select v-model="data.status"
-                       @change="queryHouseBetParams()"
-                       clearable
-                       style="width: 120px"
-                       placeholder="对赌结果">
-              <el-option v-for="item in betStatusList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="价格"
-                        prop="minMoney">
-            <el-col :span="8">
-              <el-input clearable
-                        @change="queryHouseBetParams()"
-                        v-model="data.minMoney"
-                        placeholder="最小值" />
-            </el-col>
-            <el-col class="line"
-                    :span="2"
-                    align="center">-</el-col>
-            <el-col :span="8">
-              <el-form-item prop="money_to">
-                <el-input clearable
-                          @change="queryHouseBetParams()"
-                          v-model="data.maxMoney"
-                          placeholder="最大值" />
-              </el-form-item>
-            </el-col>
-            <el-col class="line"
-                    :span="1"
-                    align="center">万</el-col>
-          </el-form-item>
-
-          <el-form-item label="对赌日期"
-                        prop="timeSelect">
-            <el-date-picker v-model="data.timeSelect"
-                            @change="queryHouseBetParams()"
-                            type="daterange"
-                            unlink-panels
-                            value-format="yyyy-MM-dd"
-                            range-separator="至"
-                            start-placeholder="起"
-                            end-placeholder="止"></el-date-picker>
-          </el-form-item>
-
-          <el-form-item label="对赌人"
-                        prop="empName"
-                        style="position: relative;">
-            <el-input clearable
-                      v-model="data.empName"
-                      placeholder="对赌人公司/部门/姓名"
-                      v-on:click.native="showHrTree = true"
-                      readonly />
-            <div class="elTree"
-                 style="position: absolute;z-index: 2;min-width: 280px"
-                 v-show="showHrTree">
-              <el-tree ref="treeForm"
-                       :data="treeData"
-                       node-key="nodeId"
-                       show-checkbox
-                       :props="defaultProps"
-                       @check-change="handleCheckChange"
-                       :highlight-current="true"
-                       :filter-node-method="filterNode"
-                       check-strictly
-                       :action="''"
-                       empty-text="暂无数据，请检查权限"
-                       auto-expand-parent
-                       :default-expanded-keys="curNodeId"
-                       :default-checked-keys="curNodeId"></el-tree>
-            </div>
-          </el-form-item>
-          <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
-                @click="Remove">清除</span>
+      <div class="page-list-query-row">
+        <div class="query-content-cell">
+          <h3 class="query-cell-title">楼盘</h3>
+          <el-select v-model="data.comId"
+                     @change="queryCBId"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="楼盘名称"
+                     @focus="remoteCommunityNameInput"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+          <el-select v-model="data.cbId"
+                     filterable
+                     placeholder="楼栋"
+                     clearable
+                     @change="queryRoomNo">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+          <el-select v-model="data.roomNo"
+                     filterable
+                     @change="queryHouseBetParams"
+                     clearable
+                     placeholder="房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">业主</h3>
+          <el-input placeholder="姓名"
+                    class="set-input120"
+                    @change="queryHouseBetParams"
+                    v-model="data.customerName"
+                    clearable />
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">电话</h3>
+          <el-input placeholder="业主电话"
+                    v-model="data.tel"
+                    class="set-input200"
+                    @change="queryHouseBetParams"
+                    clearable />
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">价格</h3>
+          <el-input placeholder="最小值"
+                    v-model="data.minMoney"
+                    class="set-input90"
+                    @change="queryHouseBetParams"
+                    clearable />
+          <span class="cut-off-rule"></span>
+          <el-input placeholder="最大值"
+                    v-model="data.maxMoney"
+                    class="set-input90"
+                    @change="queryHouseBetParams"
+                    clearable />
+          <span class="query-cell-suffix">万</span>
+        </div>
+      </div>
+      <div class="page-list-query-row">
+        <div class="query-content-cell">
+          <h3 class="query-cell-title">面积</h3>
+          <el-input placeholder="开发中"
+                    class="set-input90"
+                    clearable />
+          <span class="cut-off-rule"></span>
+          <el-input placeholder="开发中"
+                    class="set-input90"
+                    clearable />
+          <span class="query-cell-suffix">平方</span>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">对赌结果</h3>
+          <el-select v-model="data.status"
+                     @change="queryHouseBetParams()"
+                     clearable
+                     class="set-select100"
+                     placeholder="全部">
+            <el-option v-for="item in betStatusList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">对赌人</h3>
+          <el-select clearable
+                     value="开发中"
+                     class="set-select100"
+                     placeholder="全部">
+            <el-option value="开发中">开发中...</el-option>
+          </el-select>
+        </div>
+        <div class="query-content-cell cell-interval75">
           <el-button type="primary"
-                     style="margin-left:10px"
                      size="mini"
                      @click="queryHouseBetParams">查询</el-button>
-          <el-button style="margin-left:30px;width:50px;height:30px;border:0"
-                     size="mini">
-            <moreSelect @moreSelectChange="moreSelectChange"
-                        style="height:40px;margin-right:5px;"></moreSelect>
-          </el-button>
-        </el-form>
+        </div>
+        <div class="query-content-cell cell-interval25">
+          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+        </div>
       </div>
     </template>
 
@@ -165,6 +126,7 @@
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
+                         show-overflow-tooltip
                          :key="item.prop"></el-table-column>
       </template>
       <!--      房源编号、楼盘名称、售价（可排序）、面积（可排序）、单价（可排序）、户型（X室X厅X卫）、对赌鑫币值、预期奖励鑫币值、对赌时间（对赌成功当日）、对赌结果、剩余天数、对赌人、操作（查看）-->
@@ -208,8 +170,7 @@
       <el-table-column prop="endTime"
                        label="到期时间"></el-table-column>
       <el-table-column label="操作"
-                       fixed="right"
-                       key="operation">
+                       fixed="right">
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
@@ -222,6 +183,7 @@
 <script>
 import listPage from "@/components/listPage";
 import moreSelect from "@/components/moreSelect";
+import '@/assets/publicLess/pageListQuery.less';
 export default {
   components: {
     listPage,
@@ -273,20 +235,7 @@ export default {
         { prop: "houseNo", label: "房源编号" },
         { prop: "communityName", label: "楼盘名称" }
       ],
-      tableData: [
-        {
-          // house: '龙腾花园-16栋-604室',
-          // priceArea: '234万/100平',
-          // type: '3室2厅1卫',
-          // levae: '精装修',
-          // economicPro: '周杰伦',
-          // validateType: '通过',
-          // cutPro: '周杰伦1',
-          // addTime: '2019-01-01 18:00:00',
-          // cellType: '号码异常',
-          // operation: '3',
-        }
-      ]
+      tableData: []
     };
   },
   mounted () {
@@ -371,11 +320,11 @@ export default {
     },
     formatHouseType (row, column) {
       //if (row.rooms) {
-        return (row.rooms||0) + "室" + (row.hall||0) + "厅" + (row.toilet||0) + "卫";
+      return (row.rooms || 0) + "室" + (row.hall || 0) + "厅" + (row.toilet || 0) + "卫";
       //}
     },
     unitPrice (row, column) {
-      if (row.inArea>0) {
+      if (row.inArea > 0) {
         return Math.round((row.price * 1000) / row.inArea);
       }
     },

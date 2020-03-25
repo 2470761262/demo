@@ -1,133 +1,127 @@
+<style lang="less" scoped>
+.flex-cell-content {
+  display: flex;
+  justify-content: space-around;
+}
+.page-row-flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+</style>
 <template>
-  <div>
+  <div class="page-row-flex">
     <list-page :parentData="$data"
                @handleClick="handleClick"
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
-        <div class="page-form-inline ">
-          <el-item label="楼盘名称"
-                   prop="comId">
+        <div class="page-list-query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">楼盘</h3>
             <el-select v-model="queryData.CommunityName"
                        @focus="remoteInput"
-                       @change="queryCBId()"
+                       @change="queryCBId"
                        filterable
                        remote
                        clearable
-                       placeholder="请输入楼盘名称搜索"
+                       placeholder="楼盘名称"
                        :remote-method="remoteMethod"
                        :loading="loading">
               <el-option v-for="item in comList"
                          :key="item.value"
                          :label="item.name"
-                         :value="item.value">
-              </el-option>
+                         :value="item.value"></el-option>
             </el-select>
-          </el-item>
-
-          <el-item label="栋座"
-                   prop="cbId"
-                   class="page-label-center">
             <el-select v-model="queryData.cbId"
                        filterable
                        clearable
-                       placeholder="请选择楼栋"
-                       @change="queryRoomNo()">
+                       placeholder="楼栋"
+                       @change="queryRoomNo">
               <el-option v-for="item in cbIdList"
                          :key="item.value"
                          :label="item.name"
-                         :value="item.value">
-                <!--如果接口是模糊搜索，value改成item.name就行 -->
-              </el-option>
+                         :value="item.value"></el-option>
             </el-select>
-          </el-item>
-          <el-item label="房间号"
-                   prop="roomNo"
-                   class="page-label-center">
             <el-select v-model="queryData.roomNo"
                        filterable
-                       clearable
-                       @change="querylistByParams()"
-                       placeholder="请选择房间号">
+                       @change="querylistByParams"
+                       placeholder="房间号">
               <el-option v-for="item in roomNoList"
                          :key="item.value"
                          :label="item.name"
-                         :value="item.value">
-              </el-option>
+                         :value="item.value"></el-option>
             </el-select>
-          </el-item>
-
-          <template slot="prepend">房源状态</template>
-          <el-date-picker v-model="queryData.timeSelect"
-                          type="datetimerange"
-                          @change="querylistByParams()"
-                          range-separator="至"
-                           align="right"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
-                          :default-time="['00:00:00', '23:00:00']">
-          </el-date-picker>
-
-          <div style="margin-top:15px">
-            <span style="margin-left:30px">
-              审核项目：
-            </span>
+          </div>
+          <div class="query-content-cell cell-interval75">
+            <h3 class="query-cell-title">提交时间</h3>
+            <el-date-picker v-model="queryData.timeSelect"
+                            type="daterange"
+                            class="set-data-pricker"
+                            @change="querylistByParams"
+                            range-separator="至"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            start-placeholder="开始日期"
+                            :default-time="['00:00:00', '23:00:00']"
+                            end-placeholder="结束日期"></el-date-picker>
+            <span class="query-cell-suffix handlebut"
+                  @click="Remove">清除</span>
+          </div>
+        </div>
+        <div class="page-list-query-row">
+          <div class="query-content-cell ">
+            <h3 class="query-cell-title">审核项目</h3>
             <el-select filterable
                        v-model="checkProject"
                        clearable
-                       @change="querylistByParams()"
-                       placeholder="请选择">
+                       class="set-select90"
+                       @change="querylistByParams"
+                       placeholder="全部">
               <el-option v-for="item in checkProjectList"
                          :key="item.value"
                          :label="item.label"
                          :value="item.value">
               </el-option>
             </el-select>
-
-            <span style="margin-left:30px">
-              审核类型：
-            </span>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">审核类型</h3>
             <el-select filterable
                        v-model="type"
                        clearable
-                       @change="querylistByParams()"
-                       placeholder="请选择">
+                       class="set-select90"
+                       @change="querylistByParams"
+                       placeholder="全部">
               <el-option v-for="item in typeList"
                          :key="item.value"
                          :label="item.label"
                          :value="item.value">
               </el-option>
             </el-select>
-            <span style="margin-left:30px">
-              审核状态：
-            </span>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">审核状态</h3>
             <el-select filterable
                        v-model="status"
                        clearable
-                       @change="querylistByParams()"
-                       placeholder="请选择">
+                       class="set-select90"
+                       @change="querylistByParams"
+                       placeholder="全部">
               <el-option v-for="item in stateList"
                          :key="item.value"
                          :label="item.label"
                          :value="item.value">
               </el-option>
             </el-select>
-            <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-                  @click="Remove">
-              清除
-            </span>
+          </div>
+          <div class="query-content-cell cell-interval75">
             <el-button type="primary"
-                       style="margin-left:30px"
                        size="mini"
                        @click="querylistByParams">查询</el-button>
-            <el-button style="margin-left:30px;width:150px;height:30px;border:0"
-                       size="mini">
-              <moreSelect @moreSelectChange="moreSelectChange"
-                          style="height:40px;margin-right:5px;"></moreSelect>
-            </el-button>
           </div>
-
+          <div class="query-content-cell cell-interval25">
+            <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          </div>
         </div>
       </template>
 
@@ -325,6 +319,7 @@ import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 import util from "@/util/util";
 import moreSelect from '@/components/moreSelect';
+import '@/assets/publicLess/pageListQuery.less';
 export default {
   mixins: [getMenuRid],
 
@@ -335,7 +330,7 @@ export default {
   data () {
     return {
       type: '',
-      checkProject:"",
+      checkProject: "",
       option: '',
       status: '',
       cbIdList: '',
