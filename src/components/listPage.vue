@@ -113,6 +113,21 @@
   font-size: 15px;
   text-align: center;
 }
+/deep/.el-table__body-wrapper {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-track-piece {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color--primary);
+    border-radius: 50px;
+  }
+}
 </style>
 <template>
   <div class="page-body">
