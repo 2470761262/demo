@@ -242,10 +242,10 @@ span {
         <div class="center-but">
           <el-button type="primary"
                      size="mini"
-                     @click="setTabRender">确定</el-button>
+                     @click="setTabRender">搜索</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="remove">删除</el-button>
+                     @click="remove">清空</el-button>
         </div>
       </div>
       <el-button slot="reference"

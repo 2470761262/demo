@@ -214,7 +214,7 @@
           <span class="query-cell-suffix">万</span>
         </div>
         <div class="query-content-cell cell-interval45">
-          <definitionmenu :renderList="tableColumnField"
+          <definitionmenu :renderList="tableDataColumn"
                           :tableColumn="tableColumn"
                           @change="tabColumnChange"></definitionmenu>
         </div>
@@ -223,15 +223,16 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">面积</h3>
           <el-input placeholder="最小值"
+                    v-validate="'decimal:2|noZero1'"
                     v-model="queryData.minInArea"
                     class="set-input90"
-                    @change="querylistByParams"
+                    @change="changeAreaBut"
                     clearable />
           <span class="cut-off-rule"></span>
           <el-input placeholder="最大值"
                     v-model="queryData.maxInArea"
                     class="set-input90"
-                    @change="querylistByParams"
+                    @change="changeAreaBut"
                     clearable />
           <span class="query-cell-suffix">平方</span>
         </div>
@@ -259,7 +260,7 @@
         <div class="query-content-cell cell-interval45">
           <el-button type="primary"
                      size="mini"
-                     @click="querylistByParams">查询</el-button>
+                     @click="changeAreaBut">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
           <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
@@ -328,7 +329,7 @@
           {{scope.row.agentPerName}}
         </template>
       </el-table-column>-->
-      <template v-for="(item) in tableDataColumn">
+      <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
@@ -354,6 +355,7 @@
   </list-page>
 </template>
 <script>
+import util from "@/util/util";
 import listPage from "@/components/listPage";
 import moreSelect from "@/components/moreSelect";
 import getMenuRid from "@/minxi/getMenuRid";
@@ -498,6 +500,7 @@ export default {
       queryData: {
         communityName: "",
         isOnly: "",
+        minInArea: '',
         keyOwner: ""
       }
     };
@@ -508,6 +511,25 @@ export default {
     this.queryNotConcernCommunityList();
   },
   methods: {
+    async changeAreaBut () {
+      let that = this;
+
+      if (util.isNumber(that.queryData.minInArea) || util.isNumber(that.queryData.maxInArea)) {
+        that.$message({
+          message: "两个值必须为大于等于0的正数",
+          type: "warning"
+        });
+      } else if (that.queryData.minInArea > that.queryData.maxInArea) {
+        that.$message({
+          message: "最小值必须大于最大值",
+          type: "warning"
+        });
+      } else {
+        this.querylistByParams();
+      }
+
+
+    },
     //当前选择已经关注这个这个核心盘则不让在重复选择
     filterRoomDisabled () {
       return this.array
