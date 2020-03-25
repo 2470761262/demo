@@ -232,11 +232,11 @@ export default {
         token: false,
         qs: true,
         data: {
-          communityName: that.form.communityName,
-          comBuildingName: that.form.comBuildingName,
-          buildIngHouses: that.form.buildIngHouses,
-          ReplenishRemark: that.form.ReplenishRemark,
-          proveImg: that.form.prove.join(',')
+          communityName: that.form.communityName,//楼盘名称
+          comBuildingName: that.form.comBuildingName,//楼栋名称
+          buildIngHouses: that.form.buildIngHouses,//房间号
+          ReplenishRemark: that.form.ReplenishRemark,//材料说明
+          proveImg: that.form.prove.join(',')//证明材料
         }
       }).then((e) => {
         if (e.data.code == 200) {

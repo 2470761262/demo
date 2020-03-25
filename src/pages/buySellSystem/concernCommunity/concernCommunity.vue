@@ -291,7 +291,7 @@
                          :sortable="item.order"></el-table-column>
       </template>
       <el-table-column label="操作"
-                       min-width="12.8%">
+                       width="170">
         <template v-slot="scope">
           <el-button type="info"
                      size="mini"
@@ -389,7 +389,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-         
+
           disabled: false,
           default: true
         },
@@ -397,7 +397,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-         
+
           disabled: false,
           default: true
         },
@@ -405,7 +405,7 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          
+
           disabled: false,
           default: true
         },
@@ -776,10 +776,8 @@ export default {
           qs: true
         })
         .then(e => {
-          console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            console.log(result.message);
             console.log("楼盘列表" + result.data);
             var that = this;
             var arrayCommunity = result.data;
@@ -813,7 +811,9 @@ export default {
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             data: {
-              comId: this.comId//公司名
+              comId: query,
+              page: 1,
+              limit: 50
             }
           })
           .then(e => {

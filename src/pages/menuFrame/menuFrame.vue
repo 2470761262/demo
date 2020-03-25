@@ -8,8 +8,11 @@
     min-width: 1280px;
   }
   .page-cell-main {
-    height: calc(100% - 60px);
-    // width: 1920px;
+     height:calc(100% - 60PX) ;
+    @media screen and(max-width: 1280px){
+      height:calc(100% - 80PX) ;
+    }
+  
     .el-aside,
     .el-main {
       height: 100%;

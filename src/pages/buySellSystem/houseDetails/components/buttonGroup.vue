@@ -191,6 +191,7 @@ export default {
     this.getBetInfo();
     if (util.localStorageGet("logindata")) {
       this.perId = util.localStorageGet("logindata").accountId;
+      console.log(this.perId ,"this.perId ");
     }
   },
   created () {

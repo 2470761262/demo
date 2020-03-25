@@ -18,160 +18,162 @@ legend,
 input,
 textarea,
 select {
-  margin: 0;
-  padding: 0
+    margin: 0;
+    padding: 0
 }
 
 body {
-  font: 12px"宋体", "Arial Narrow", HELVETICA;
-  background: #fff;
-  -webkit-text-size-adjust: 100%;
+    font: 12px"SimHei",
+        "Arial Narrow",
+        HELVETICA;
+    background: #fff;
+    -webkit-text-size-adjust: 100%;
 }
 
 a {
-  color: #2d374b;
-  text-decoration: none
+    color: #2d374b;
+    text-decoration: none
 }
 
 a:hover {
-  color: #cd0200;
-  text-decoration: underline
+    color: #cd0200;
+    text-decoration: underline
 }
 
 em {
-  font-style: normal
+    font-style: normal
 }
 
 li {
-  list-style: none
+    list-style: none
 }
 
 img {
-  border: 0;
-  vertical-align: middle
+    border: 0;
+    vertical-align: middle
 }
 
 table {
-  border-collapse: collapse;
-  border-spacing: 0
+    border-collapse: collapse;
+    border-spacing: 0
 }
 
 p {
-  word-wrap: break-word
+    word-wrap: break-word
 }
 
 div {
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    font-family: 'SimHei', sans-serif;
 }
 
 .overText {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .loadingTop {
-  .el-loading-spinner {
-    top: 20%;
-  }
+    .el-loading-spinner {
+        top: 20%;
+    }
 }
 
 :root {
-  --color--primary: #409EFF;
+    --color--primary: #409EFF;
 }
 
 .font-small-title {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .font-middle-title {
-  font-size: 18px;
+    font-size: 18px;
 }
 
 .font-big-title {
-  font-size: 20px;
+    font-size: 20px;
 }
 
 html {
-  min-width: 1280px;
-  max-width: 1920px;
+    min-width: 1280px;
+    max-width: 1920px;
 
-  @media screen and (max-width: 1280px) {
-    font-size: 66.66px;
-  }
+    @media screen and (max-width: 1280px) {
+        font-size: 66.66px;
+    }
 
-  @media screen and (min-width: 1280px) and (max-width: 1369px) {
-    font-size: 66.66px;
-  }
+    @media screen and (min-width: 1280px) and (max-width: 1369px) {
+        font-size: 66.66px;
+    }
 
-  @media screen and (min-width: 1369px) and (max-width: 1440px) {
-    font-size: 71.3px;
-  }
+    @media screen and (min-width: 1369px) and (max-width: 1440px) {
+        font-size: 71.3px;
+    }
 
-  @media screen and (min-width: 1441px) and (max-width: 1600px) {
-    font-size: 75.05px;
-  }
+    @media screen and (min-width: 1441px) and (max-width: 1600px) {
+        font-size: 75.05px;
+    }
 
-  @media screen and (min-width: 1601px) and (max-width: 1800px) {
-    font-size: 83.38px;
-  }
+    @media screen and (min-width: 1601px) and (max-width: 1800px) {
+        font-size: 83.38px;
+    }
 
-  @media screen and (min-width: 1801px) and (max-width: 1919px) {
-    font-size: 93.8px;
-  }
+    @media screen and (min-width: 1801px) and (max-width: 1919px) {
+        font-size: 93.8px;
+    }
 
-  @media screen and (min-width: 1920px) {
-    font-size: 100px;
-  }
+    @media screen and (min-width: 1920px) {
+        font-size: 100px;
+    }
 }
 
 body {
-  overflow-x: auto !important;
-  overflow-y: hidden !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
 }
 
 .mini-message-box {
-  width: 200px;
+    width: 200px;
 
-  &.but-center {
-    .el-message-box__btns {
-      text-align: center;
+    &.but-center {
+        .el-message-box__btns {
+            text-align: center;
+        }
     }
-  }
 }
 
 .el-enter-active,
 .el-leave-active {
-  transition: all 0.5s;
+    transition: all 0.5s;
 }
 
 .el-enter,
 .el-leave-active {
-  opacity: 0;
-  transform: translateX(20px);
+    opacity: 0;
+    transform: translateX(20px);
 }
 
 .el-leave-active {
-  position: absolute;
-  width: 100%;
+    position: absolute;
+    width: 100%;
 }
 
 .dadlog-enter-active {
-  animation: dadlog-in 0.3s;
+    animation: dadlog-in 0.3s;
 }
 
 .dadlog-leave-active {
-  animation: dadlog-in 0.3s reverse;
+    animation: dadlog-in 0.3s reverse;
 }
 
 @keyframes dadlog-in {
-  0% {
-    transform: translate3d(0, -20px, 0);
-    opacity: 0;
-  }
+    0% {
+        transform: translate3d(0, -20px, 0);
+        opacity: 0;
+    }
 
-  100% {
-    transform: translate3d(0, 0px, 0);
-    opacity: 1;
-  }
+    100% {
+        transform: translate3d(0, 0px, 0);
+        opacity: 1;
+    }
 }
