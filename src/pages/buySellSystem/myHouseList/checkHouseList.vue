@@ -8,6 +8,9 @@
   flex-direction: column;
   height: 100%;
 }
+/deep/.el-dialog__headerbtn{
+  z-index: 10;
+}
 </style>
 <template>
   <div class="page-row-flex">
@@ -171,7 +174,7 @@
           <template v-slot="scope">
             <el-image v-if="scope.row.accessory==1"
                       :src="accessoryUrl"
-                      @click="getAccessory(scope.row.id)">
+                      @click="getAccessory(scope.row)">
             </el-image>
           </template>
         </el-table-column>
@@ -519,17 +522,21 @@ export default {
     getFile (list) {
       this.accessoryMoldList.forEach(item => {
         item.list = [];//清空数组
-        list.forEach((element, index) => {
+        if(list != null){
+           list.forEach((element, index) => {
           if (element.subType == item.type) {
             element.activeIndex = index;
             item.list.push(element)
           }
         });
+        }
+       
       });
       this.file8 = list;
       this.showAccessory = true;
     },
-    getAccessory (checkId) {
+    getAccessory (row) {
+      let checkId = row.id;
       let that = this;
       let exists = false;
       this.accessoryAllList.forEach(element => {
@@ -550,7 +557,12 @@ export default {
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
+          if(row.Type ==13){
+           result.data.push({"CheckID":checkId ,"url":row.picUrl}) 
+          }
+          console.log(result.data)
           that.accessoryAllList.push({ "key": checkId, "value": result.data });
+          
           that.getFile(result.data);
         }
       }).catch((e) => {
@@ -564,11 +576,17 @@ export default {
         CheckMemo: this.checkMemo,
         Tag: this.checkStatus
       }
-      if (!util.isNotNull(this.checkMemo)) {
-        this.$.message("审核说明未填")
+      if(params.Tag == 2){
+        if (!util.isNotNull(this.checkMemo)) {
+         this.$alert("", "请填写审核失败理由!!!", {
+          dangerouslyUseHTMLString: false
+        });
         return true;
+        }
       }
+      
       this.showPopUp = false;
+      this.loading = true;
       this.$api.post({
         url: '/agentHouse/propertyCheck/checkHouse',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
