@@ -110,7 +110,7 @@
     padding-bottom: 35px;
   }
   .pad-line {
-    padding-top: 25px;
+    //padding-top: 25px;
     height: 1px;
     background: #d5d5d5;
     background-clip: content-box;

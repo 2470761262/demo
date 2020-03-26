@@ -4,6 +4,7 @@
   display: flex;
   flex: 1;
   align-items: center;
+  height: 107px;
   .audio-contenr-but {
     cursor: pointer;
     width: 50px;
@@ -95,14 +96,14 @@ export default {
   props: {
     url: {
       type: String,
-      default: ''
+      default: ""
     },
     fixed: {
       type: Boolean,
       default: false
     }
   },
-  data () {
+  data() {
     return {
       audioPlay: {
         playOrEnd: true,
@@ -110,17 +111,17 @@ export default {
         endTime: 0,
         playType: false,
         icon: "el-icon-video-play"
-      },
-    }
+      }
+    };
   },
   filters: {
-    timefomat (value) {
+    timefomat(value) {
       return util.timeToStr(value);
     }
   },
   directives: {
     audioLoad: {
-      bind (el, binding, vnode) {
+      bind(el, binding, vnode) {
         el.addEventListener("loadedmetadata", () => {
           vnode.context.audioPlay.endTime = parseInt(el.duration);
         });
@@ -136,11 +137,11 @@ export default {
   },
   methods: {
     //格式化slider时间
-    formatTooltip (val) {
+    formatTooltip(val) {
       return util.timeToStr(val);
     },
     //播放 or 暂停音频
-    openVideo () {
+    openVideo() {
       let audio = this.$refs.audio;
       try {
         if (audio.paused) {
@@ -157,11 +158,11 @@ export default {
         this.$message.error("是不是没有音频阿!");
       }
     },
-    audioSliderChange (e) {
+    audioSliderChange(e) {
       if (this.$refs.audioSlider.dragging) {
         this.$refs.audio.currentTime = e;
       }
     }
-  },
-}
+  }
+};
 </script>
