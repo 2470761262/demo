@@ -258,14 +258,16 @@ export default {
       this.paramsObj.rId = data.id;
       this.paramsObj.dataType = 2;
       node.data.dataType = "2";
-      if (data.companyGather) {
+      this.$refs.companyTree.setCheckedKeys([]);
+      if(data.companyGather){
         let gather = data.companyGather;
         let arrayGather = gather.split(",");
         this.companyGather = arrayGather;
-      } else {
-        this.$refs.companyTree.setCheckedKeys([]);
-        //this.node.childNodes = [];
-        //this.loadCompanyTreeNode(this.node, this.resolve);
+      }
+      if(data.deptGather){
+        let gather = data.deptGather;
+        let arrayGather = gather.split(",");
+        this.companyGather = arrayGather;
       }
       console.log(this.companyGather,"--------------------------------------->");
     },

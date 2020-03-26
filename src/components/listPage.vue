@@ -150,8 +150,8 @@
                :class='{"tabIsMar": $scopedSlots.left,"queryIsPad":$scopedSlots.top && !$scopedSlots.title}'>
             <el-table :data="tableData"
                       border
-                      header-cell-class-name="headerCellSet"
-                      cell-class-name="cellItemSet"
+                      :header-cell-class-name="( $attrs.headerClass || $attrs.headerClass == '') ? $attrs.headerClass: 'headerCellSet' "
+                      :cell-class-name="( $attrs.cellClass || $attrs.cellClass == '')  ? $attrs.cellClass: 'cellItemSet'"
                       ref="table"
                       v-bind="$attrs"
                       v-on="$listeners"
@@ -202,6 +202,9 @@ export default {
       tableDataColumn: [],
       tableData: [],
     };
+  },
+  mounted () {
+    console.log(this.$attrs, "attrs");
   },
   methods: {
     //每页数据设置事件

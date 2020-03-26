@@ -8,14 +8,20 @@
     min-width: 1280px;
   }
   .page-cell-main {
-     height:calc(100% - 60PX) ;
-    @media screen and(max-width: 1280px){
-      height:calc(100% - 80PX) ;
+    height: calc(100% - 60px);
+    @media screen and(max-width: 1280px) {
+      height: calc(100% - 80px);
     }
-  
+
     .el-aside,
     .el-main {
       height: 100%;
+      &::-webkit-scrollbar,
+      &::-webkit-scrollbar-button,
+      &::-webkit-scrollbar-track,
+      &::-webkit-scrollbar-track-piece {
+        display: none;
+      }
     }
     .el-main {
       background: #f4f4f4;
@@ -83,40 +89,44 @@
 </template>
 <script>
 //左侧菜单
-import asideNav from '@/components/asideNav';
-import headerContent from '@/components/headerContent';
-import util from '@/util/util';
-import { LOGINDATA } from '@/util/constMap';
-import but from '@/evenBus/but';
+import asideNav from "@/components/asideNav";
+import headerContent from "@/components/headerContent";
+import util from "@/util/util";
+import { LOGINDATA } from "@/util/constMap";
+import but from "@/evenBus/but";
 export default {
   name: "menuFrame",
   components: {
     asideNav,
     headerContent
   },
-  data () {
+  data() {
     return {
       resultRouteArray: this.$route.meta.routeArray,
       asideNavFlag: true,
       loginUserData: {},
       menuDatasInParent: []
-    }
+    };
   },
-  created () {
-    but.$on('asideNav', (e) => {
+  created() {
+    but.$on("asideNav", e => {
       console.log(111111, e);
       this.asideNavFlag = e;
-    })
-    window.addEventListener('message', (e) => {
-      //  console.log("-------------------", e);
-      if (e.data.isXinIfram) {
-        this.asideNavFlag = false;
-      }
-    }, false);
+    });
+    window.addEventListener(
+      "message",
+      e => {
+        //  console.log("-------------------", e);
+        if (e.data.isXinIfram) {
+          this.asideNavFlag = false;
+        }
+      },
+      false
+    );
     this.loginUserData = util.localStorageGet(LOGINDATA);
     if (this.loginUserData.menuNodes) {
       this.menuDatasInParent = this.loginUserData.menuNodes;
     }
-  },
-}
+  }
+};
 </script>

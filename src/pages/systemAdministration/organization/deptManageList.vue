@@ -57,10 +57,10 @@
                      @click="toAddDeptPage(1)">添加子级部门</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="queryDeptByIsLocked(1)">查询锁定部门</el-button>
+                     @click="queryDeptByIsLocked(0)">查询锁定部门</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="queryDeptByIsLocked(0)">查询未锁定部门</el-button>
+                     @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
@@ -190,10 +190,10 @@ export default {
           console.log(result.data);
           for (var i = 0; i < result.data.list.length; i++) {
             switch (result.data.list[i].isLocked) {
-              case 0:
+              case 1:
                 result.data.list[i].isLocked = "正常";
                 break;
-              case 1:
+              case 0:
                 result.data.list[i].isLocked = "锁定";
                 break;
 
@@ -281,10 +281,10 @@ export default {
      this.handle(row.id,1,"del",row.deptName)
     },
     lockDeptDetail(row){
-      this.handle(row.id,1,"isLocked",row.deptName)
+      this.handle(row.id,0,"isLocked",row.deptName)
     },
     unlockDeptDetail(row){
-      this.handle(row.id,0,"isLocked",row.deptName)
+      this.handle(row.id,1,"isLocked",row.deptName)
     },
     handle(id,upValue,upType,deptName){
       let params ={id:id,upValue:upValue,upType:upType,deptName:deptName}
