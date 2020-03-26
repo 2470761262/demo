@@ -256,7 +256,7 @@ export default {
         maxPrice: '',
         face: [],
         sortColumn: 'id',
-        sortType: 'ascending',
+        sortType: 'descending',
         searchInfo: '',
         isOnly: '',
         keyOwner: ''

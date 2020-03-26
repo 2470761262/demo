@@ -1,133 +1,130 @@
+<style lang="less" scoped>
+.flex-cell-content {
+  display: flex;
+  justify-content: space-around;
+}
+.page-row-flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+/deep/.el-dialog__headerbtn{
+  z-index: 10;
+}
+</style>
 <template>
-  <div>
+  <div class="page-row-flex">
     <list-page :parentData="$data"
                @handleClick="handleClick"
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
-        <div class="page-form-inline ">
-          <el-item label="楼盘名称"
-                   prop="comId">
-            <el-select v-model="queryData.CommunityName"
+        <div class="page-list-query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">楼盘</h3>
+            <el-select v-model="queryData.comId"
                        @focus="remoteInput"
-                       @change="queryCBId()"
+                       @change="queryCBId"
                        filterable
                        remote
                        clearable
-                       placeholder="请输入楼盘名称搜索"
+                       placeholder="楼盘名称"
                        :remote-method="remoteMethod"
                        :loading="loading">
               <el-option v-for="item in comList"
                          :key="item.value"
                          :label="item.name"
-                         :value="item.value">
-              </el-option>
+                         :value="item.value"></el-option>
             </el-select>
-          </el-item>
-
-          <el-item label="栋座"
-                   prop="cbId"
-                   class="page-label-center">
             <el-select v-model="queryData.cbId"
                        filterable
                        clearable
-                       placeholder="请选择楼栋"
-                       @change="queryRoomNo()">
+                       placeholder="楼栋"
+                       @change="queryRoomNo">
               <el-option v-for="item in cbIdList"
                          :key="item.value"
                          :label="item.name"
-                         :value="item.value">
-                <!--如果接口是模糊搜索，value改成item.name就行 -->
-              </el-option>
+                         :value="item.value"></el-option>
             </el-select>
-          </el-item>
-          <el-item label="房间号"
-                   prop="roomNo"
-                   class="page-label-center">
-            <el-select v-model="queryData.roomNo"
+            <el-select v-model="queryData.roomId"
                        filterable
-                       clearable
-                       @change="querylistByParams()"
-                       placeholder="请选择房间号">
+                       @change="querylistByParams"
+                       placeholder="房间号">
               <el-option v-for="item in roomNoList"
                          :key="item.value"
                          :label="item.name"
-                         :value="item.value">
-              </el-option>
+                         :value="item.value"></el-option>
             </el-select>
-          </el-item>
-
-          <template slot="prepend">房源状态</template>
-          <el-date-picker v-model="queryData.timeSelect"
-                          type="datetimerange"
-                          @change="querylistByParams()"
-                          range-separator="至"
-                           align="right"
-                          value-format="yyyy-MM-dd HH:mm:ss"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期"
-                          :default-time="['00:00:00', '23:00:00']">
-          </el-date-picker>
-
-          <div style="margin-top:15px">
-            <span style="margin-left:30px">
-              审核项目：
-            </span>
+          </div>
+          <div class="query-content-cell cell-interval75">
+            <h3 class="query-cell-title">提交时间</h3>
+            <el-date-picker v-model="queryData.timeSelect"
+                            type="daterange"
+                            class="set-data-pricker"
+                            @change="querylistByParams"
+                            range-separator="至"
+                            value-format="yyyy-MM-dd HH:mm:ss"
+                            start-placeholder="开始日期"
+                            :default-time="['00:00:00', '23:00:00']"
+                            end-placeholder="结束日期"></el-date-picker>
+            <span class="query-cell-suffix handlebut"
+                  @click="Remove">清除</span>
+          </div>
+        </div>
+        <div class="page-list-query-row">
+          <div class="query-content-cell ">
+            <h3 class="query-cell-title">审核项目</h3>
             <el-select filterable
                        v-model="checkProject"
                        clearable
-                       @change="querylistByParams()"
-                       placeholder="请选择">
+                       class="set-select90"
+                       @change="querylistByParams"
+                       placeholder="全部">
               <el-option v-for="item in checkProjectList"
                          :key="item.value"
                          :label="item.label"
                          :value="item.value">
               </el-option>
             </el-select>
-
-            <span style="margin-left:30px">
-              审核类型：
-            </span>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">审核类型</h3>
             <el-select filterable
                        v-model="type"
                        clearable
-                       @change="querylistByParams()"
-                       placeholder="请选择">
+                       class="set-select90"
+                       @change="querylistByParams"
+                       placeholder="全部">
               <el-option v-for="item in typeList"
                          :key="item.value"
                          :label="item.label"
                          :value="item.value">
               </el-option>
             </el-select>
-            <span style="margin-left:30px">
-              审核状态：
-            </span>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">审核状态</h3>
             <el-select filterable
                        v-model="status"
                        clearable
-                       @change="querylistByParams()"
-                       placeholder="请选择">
+                       class="set-select90"
+                       @change="querylistByParams"
+                       placeholder="全部">
               <el-option v-for="item in stateList"
                          :key="item.value"
                          :label="item.label"
                          :value="item.value">
               </el-option>
             </el-select>
-            <span style='color:rgb(90,159,203);cursor:pointer;margin-left:20px'
-                  @click="Remove">
-              清除
-            </span>
+          </div>
+          <div class="query-content-cell cell-interval75">
             <el-button type="primary"
-                       style="margin-left:30px"
                        size="mini"
                        @click="querylistByParams">查询</el-button>
-            <el-button style="margin-left:30px;width:150px;height:30px;border:0"
-                       size="mini">
-              <moreSelect @moreSelectChange="moreSelectChange"
-                          style="height:40px;margin-right:5px;"></moreSelect>
-            </el-button>
           </div>
-
+          <div class="query-content-cell cell-interval25">
+            <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          </div>
         </div>
       </template>
 
@@ -170,14 +167,14 @@
         </el-table-column>
         <el-table-column label="备注说明">
           <template v-slot="scope">
-            {{scope.row.checkMemo}}
+            {{scope.row.CheckMemo}}
           </template>
         </el-table-column>
         <el-table-column label="附件">
           <template v-slot="scope">
             <el-image v-if="scope.row.accessory==1"
                       :src="accessoryUrl"
-                      @click="getAccessory(scope.row.id)">
+                      @click="getAccessory(scope.row)">
             </el-image>
           </template>
         </el-table-column>
@@ -325,6 +322,7 @@ import listPage from '@/components/listPage';
 import getMenuRid from '@/minxi/getMenuRid';
 import util from "@/util/util";
 import moreSelect from '@/components/moreSelect';
+import '@/assets/publicLess/pageListQuery.less';
 export default {
   mixins: [getMenuRid],
 
@@ -335,7 +333,7 @@ export default {
   data () {
     return {
       type: '',
-      checkProject:"",
+      checkProject: "",
       option: '',
       status: '',
       cbIdList: '',
@@ -409,7 +407,7 @@ export default {
         value: '8',
         label: '房源转状态'
       }, {
-        value: '12',
+        value: '13',
         label: '建楼申请'
       }, {
         value: '11',
@@ -425,20 +423,23 @@ export default {
         value: '1',
         label: '独家委托审核'
       }, {
-        value: '2',
+        value: '4',
         label: '他司售'
       }, {
         value: '3',
         label: '补充楼盘'
       }, {
-        value: '4',
+        value: '2',
         label: '虚假实勘'
       }],
       queryData: {
+        comId:"",
         CommunityName: '',
         timeSelect: '',
         roomNo: '',
+        roomId:"",
         cbId: '',
+        cbName:"",
       },
       accessoryUrl: require('../../../assets/images/accessory.png'),
       showPopUp: false,
@@ -521,17 +522,21 @@ export default {
     getFile (list) {
       this.accessoryMoldList.forEach(item => {
         item.list = [];//清空数组
-        list.forEach((element, index) => {
+        if(list != null){
+           list.forEach((element, index) => {
           if (element.subType == item.type) {
             element.activeIndex = index;
             item.list.push(element)
           }
         });
+        }
+       
       });
       this.file8 = list;
       this.showAccessory = true;
     },
-    getAccessory (checkId) {
+    getAccessory (row) {
+      let checkId = row.id;
       let that = this;
       let exists = false;
       this.accessoryAllList.forEach(element => {
@@ -552,7 +557,12 @@ export default {
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
+          if(row.Type ==13){
+           result.data.push({"CheckID":checkId ,"url":row.picUrl}) 
+          }
+          console.log(result.data)
           that.accessoryAllList.push({ "key": checkId, "value": result.data });
+          
           that.getFile(result.data);
         }
       }).catch((e) => {
@@ -566,11 +576,17 @@ export default {
         CheckMemo: this.checkMemo,
         Tag: this.checkStatus
       }
-      if (!util.isNotNull(this.checkMemo)) {
-        this.$.message("审核说明未填")
+      if(params.Tag == 2){
+        if (!util.isNotNull(this.checkMemo)) {
+         this.$alert("", "请填写审核失败理由!!!", {
+          dangerouslyUseHTMLString: false
+        });
         return true;
+        }
       }
+      
       this.showPopUp = false;
+      this.loading = true;
       this.$api.post({
         url: '/agentHouse/propertyCheck/checkHouse',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -636,7 +652,7 @@ export default {
         token: false,
         qs: true,
         data: {
-          comId: that.queryData.CommunityName,
+          comId: that.queryData.comId,
           page: 1,
           limit: 50
         }
@@ -647,7 +663,13 @@ export default {
           that.cbIdList = e.data.data.list;
         }
       })
+      let obj = {};
+      obj = this.comList.find((item)=>{
+         return item.value === that.queryData.comId;
+      });
+      this.queryData.CommunityName = obj.name;
       this.querylistByParams();
+
     },
     getTitle (row) {
       this.titleList.forEach(element => {
@@ -678,6 +700,11 @@ export default {
           that.roomNoList = e.data.data.list;
         }
       })
+      let obj = {};
+      obj = this.cbIdList.find((item)=>{
+         return item.value === that.queryData.cbId;
+      });
+      this.queryData.cbName = obj.name;
       this.querylistByParams();
     },
     //跳转房源详情页面
@@ -691,12 +718,34 @@ export default {
     querylist (currentPage) {
       let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
       let that = this;
-      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.communityId = this.queryData.CommunityName; }
-      if (this.queryData.cbId != null && this.queryData.cbId != '') { params.buildingId = this.queryData.cbId; }
-      if (this.queryData.roomNo != null && this.queryData.roomNo != '') { params.roomId = this.queryData.roomNo; }
+      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
+      if (this.queryData.cbName != null && this.queryData.cbName != '') { params.cbName = this.queryData.cbName; }
+      if (this.queryData.roomId != null && this.queryData.roomId != '') {
+        let obj = {};
+          obj = this.roomNoList.find((item)=>{
+         return item.value === that.queryData.roomId;
+      });
+        params.roomNo = obj.name;
+        }
       if (this.status != null && this.status != '') { params.status = this.status; }
       if (this.checkProject != null && this.checkProject != '') { params.checkProject = this.checkProject; }
-      if (this.type != null && this.type != '') { params.checkType = this.type; }
+      if (this.type != null && this.type != '') {
+        if(this.type == 0){
+          params.checkProject = 0;
+        }else if(this.type == 1){
+          params.checkProject = 1;
+          params.checkType = this.type;
+        }else if(this.type == 4){
+          params.checkProject = 8;
+          params.checkType = this.type;
+        }else if(this.type == 3){
+          params.checkProject = 13;
+          //params.checkType = this.type;
+        }else if(this.type == 2){
+          params.checkProject = 11;
+          params.checkType = 1;
+        }
+        }
       if (this.value != null && this.value != '') { params.value = this.value; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }

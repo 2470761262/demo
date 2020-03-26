@@ -191,7 +191,7 @@ export default {
     this.getBetInfo();
     if (util.localStorageGet("logindata")) {
       this.perId = util.localStorageGet("logindata").accountId;
-      console.log(this.perId ,"this.perId ");
+      console.log(this.perId, "this.perId ");
     }
   },
   created () {
@@ -312,8 +312,12 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          if (result.data) {
-            that.isRecommend = true;
+          if (result.data.length > 0) {
+            result.data.forEach(element => {
+              if (element.RecommendPer == that.perId) {
+                that.isRecommend = true;
+              }
+            });
           }
           else {
             that.isRecommend = false;

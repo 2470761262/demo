@@ -12,4 +12,5 @@ export default {
 
 <style lang="less">
 @import url("./assets/publicLess/public.less");
+@import url("../static/iconfont.css");
 </style>

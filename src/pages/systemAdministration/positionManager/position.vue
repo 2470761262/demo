@@ -13,7 +13,7 @@
                @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
         <div class="page-form-inline budingMarinSet"
-             style="margin: 10px;">
+             style="margin-bottom: 10px;">
           <el-input style="width: 400px;"
                     placeholder="角色名称搜索"
                     v-model="queryData.keyword">
@@ -79,19 +79,19 @@
               <template slot="prepend">角色描述:</template>
             </el-input>
           </div>
-          <div class="formItem ">
-            <el-input v-model="positionObj.positionLevel"
-                      placeholder="角色级别">
-              <template slot="prepend">角色级别:</template>
-            </el-input>
-          </div>
-          <div class="formItem " v-if="role">
-            <el-input v-model="positionObj.roleName"
-                      readonly="readonly"
-                      placeholder="岗位">
-              <template slot="prepend">关联岗位:</template>
-            </el-input>
-          </div>
+<!--          <div class="formItem ">-->
+<!--            <el-input v-model="positionObj.positionLevel"-->
+<!--                      placeholder="角色级别">-->
+<!--              <template slot="prepend">角色级别:</template>-->
+<!--            </el-input>-->
+<!--          </div>-->
+<!--          <div class="formItem " v-if="role">-->
+<!--            <el-input v-model="positionObj.roleName"-->
+<!--                      readonly="readonly"-->
+<!--                      placeholder="岗位">-->
+<!--              <template slot="prepend">关联岗位:</template>-->
+<!--            </el-input>-->
+<!--          </div>-->
         </div>
         <div class="text item">
           <div class="formItem"
@@ -196,7 +196,7 @@ export default {
           });
           this.$router.push({ path: "/sys/roleManagementList" });
       }
-     
+
     },
     //取消
     cancel () {
@@ -224,7 +224,7 @@ export default {
       if(this.queryData.oldRoleId != null){
          this.positionObj.oldRoleId =this.queryData.oldRoleId;
          this.positionObj.roleName = this.queryData.roleName;
-      } 
+      }
       this.showForm = true;
       this.saveType = "add";
     },
@@ -245,7 +245,7 @@ export default {
             if(this.queryData.oldRoleId != null){
                this.positionObj.oldRoleId =this.queryData.oldRoleId;
                this.positionObj.roleName = this.queryData.roleName;
-            } 
+            }
             this.showForm = true;
             this.saveType = "update";
           } else {
@@ -306,10 +306,10 @@ export default {
         this.$message.error("角色描述未填写");
         return;
       }
-      if (!this.positionObj.positionLevel) {
-        this.$message.error("角色级别未填写");
-        return;
-      }
+      // if (!this.positionObj.positionLevel) {
+      //   this.$message.error("角色级别未填写");
+      //   return;
+      // }
       if (!this.saveType) {
         this.$message.error("保存信息saveType错误");
         return;

@@ -35,9 +35,10 @@
           style="width: 200px;"
           placeholder="输入关键字进行过滤"
           @change="keywordChange"
-          v-model="keyword"
-        ></el-input>类型:
-        <el-select v-model="type" @change="typeChange" placeholder="请选择类型">
+          v-model="keyword">
+        </el-input>
+        类型:
+        <el-select v-model="type" @change="typeChange" placeholder="请选择类型" style="width: 150px">
           <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.type"></el-option>
         </el-select>
         <el-tree

@@ -7,98 +7,142 @@
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
-      <!-- 楼盘 -->
-      <div class="page-form-inline budingMarinSet">
-        <el-select v-model="data.comId"
-                   style="width: 175px;"
-                   @focus="remoteInput"
-                   @change="queryCBId()"
-                   filterable
-                   remote
-                   clearable
-                   placeholder="请输入楼盘名称搜索"
-                   :remote-method="remoteMethod"
-                   :loading="loading">
-          <el-option v-for="item in options"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-
-        <el-select v-model="data.cbId"
-                   filterable
-                   clearable
-                   style="width: 120px;"
-                   placeholder="请选择楼栋"
-                   @change="queryRoomNo()">
-          <el-option v-for="item in cbIdList"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-
-        <el-select v-model="data.roomNo"
-                   filterable
-                   style="width: 120px;"
-                   @change="queryNotPhoneParams()"
-                   placeholder="请选择房间号">
-          <el-option v-for="item in roomNoList"
-                     :key="item.value"
-                     :label="item.name"
-                     :value="item.value"></el-option>
-        </el-select>
-
-        <el-input placeholder="最小面积" v-model="data.minInArea" @change="queryNotPhoneParams()" style="margin-left:30px;width:120px" clearable />------
-        <el-input placeholder="最大面积" v-model="data.maxInArea" @change="queryNotPhoneParams()" style="width:120px" clearable />
-        <el-date-picker v-model="data.timeSelect"
-                        type="daterange"
-                        @change="queryNotPhoneParams()"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"></el-date-picker>
-        <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
-              @click="Remove">清除</span>
-        <el-button type="primary"
-                   size="mini"
-                   style="margin-left:10px"
-                   @click="queryNotPhoneParams">查询</el-button>
-        <el-button style="border:0">
-          <definitionmenu class="menuMarin"
-                          :renderList="tableDataColumn"
+      <div class="page-list-query-row">
+        <div class="query-content-cell">
+          <h3 class="query-cell-title">楼盘</h3>
+          <el-select v-model="data.comId"
+                     @focus="remoteInput"
+                     @change="queryCBId"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="楼盘名称"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+          <el-select v-model="data.cbId"
+                     filterable
+                     clearable
+                     placeholder="楼栋"
+                     @change="queryRoomNo">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+          <el-select v-model="data.roomNo"
+                     filterable
+                     @change="queryNotPhoneParams"
+                     placeholder="房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
+          </el-select>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">业主</h3>
+          <el-input placeholder="姓名"
+                    v-model="data.customName"
+                    class="set-input120"
+                    @change="queryNotPhoneParams"
+                    clearable />
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">电话</h3>
+          <el-input placeholder="业主电话"
+                    v-model="data.tel"
+                    class="set-input200"
+                    @change="queryNotPhoneParams"
+                    clearable />
+        </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">价格</h3>
+          <el-input placeholder="最小值"
+                    v-model="data.minPrice"
+                    class="set-input90"
+                    @change="queryNotPhoneParams"
+                    clearable />
+          <span class="cut-off-rule"></span>
+          <el-input placeholder="最大值"
+                    v-model="data.maxPrice"
+                    class="set-input90"
+                    @change="queryNotPhoneParams"
+                    clearable />
+          <span class="query-cell-suffix">万</span>
+        </div>
+      </div>
+      <div class="page-list-query-row">
+        <div class="query-content-cell">
+          <h3 class="query-cell-title">面积</h3>
+          <el-input placeholder="最小值"
+                    v-model="data.minInArea"
+                    class="set-input90"
+                    @change="queryNotPhoneParams"
+                    clearable />
+          <span class="cut-off-rule"></span>
+          <el-input placeholder="最大值"
+                    v-model="data.maxInArea"
+                    class="set-input90"
+                    @change="queryNotPhoneParams"
+                    clearable />
+          <span class="query-cell-suffix">平方</span>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">录入时间</h3>
+          <el-date-picker v-model="data.timeSelect"
+                          type="daterange"
+                          class="set-data-pricker"
+                          @change="queryNotPhoneParams"
+                          range-separator="至"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"></el-date-picker>
+          <span class="query-cell-suffix handlebut"
+                @click="Remove">清除</span>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <el-button type="primary"
+                     size="mini"
+                     @click="queryNotPhoneParams">查询</el-button>
+        </div>
+        <div class="query-content-cell cell-interval25">
+          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+        </div>
+        <div class="query-content-cell cell-interval25">
+          <definitionmenu :renderList="tableDataColumn"
                           :tableColumn="tableColumn"
                           @change="tabColumnChange"></definitionmenu>
-        </el-button>
-        <el-button style="border:0">
-          <moreSelect @moreSelectChange="moreSelectChange"
-                      style="height:40px;margin-right:5px;"></moreSelect>
-        </el-button>
+        </div>
       </div>
     </template>
-
     <template #tableColumn>
       <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
                          :width="item.width"
                          :sortable="item.order"
+                         show-overflow-tooltip
                          :sort-orders="['ascending', 'descending']"
                          :key="item.prop"></el-table-column>
       </template>
-
       <el-table-column prop
                        label="户型"
                        :formatter="formatHouseType"></el-table-column>
-
       <el-table-column label="操作"
                        fixed="right"
-                       key="operation">
+                       width="205">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
-                     @click="addPhone(scope.row.bhid,scope.row.id)">录入号码</el-button>
-          <el-button type="info"
+                     @click="addPhone(scope.row.bhid,scope.row.id)"
+                     style="">录入号码</el-button>
+          <el-button type="primary"
                      size="mini"
-                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhid,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
+                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
         </template>
       </el-table-column>
     </template>
@@ -109,6 +153,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
+import '@/assets/publicLess/pageListQuery.less';
 export default {
   mixins: [getMenuRid],
   components: {
@@ -144,7 +189,7 @@ export default {
         {
           prop: "communityName",
           label: "小区名称",
-          width: "170",
+          width: "",
           order: "custom",
           disabled: false,
           default: true
@@ -152,7 +197,7 @@ export default {
         {
           prop: "buildingName",
           label: "楼栋号",
-          width: "170",
+          width: "",
           order: "custom",
           disabled: false,
           default: true
@@ -160,7 +205,7 @@ export default {
         {
           prop: "roomNo",
           label: "房间号",
-          width: "170",
+          width: "",
           order: "custom",
           disabled: false,
           default: true
@@ -168,30 +213,16 @@ export default {
         {
           prop: "inArea",
           label: "面积(m²)",
-          width: "170",
+          width: "",
           order: "custom",
           disabled: false,
           default: true
         }
       ],
-      tableData: [
-        {
-          // house: '龙腾花园-16栋-604室',
-          // priceArea: '234万/100平',
-          // type: '3室2厅1卫',
-          // levae: '精装修',
-          // economicPro: '周杰伦',
-          // validateType: '通过',
-          // cutPro: '周杰伦1',
-          // addTime: '2019-01-01 18:00:00',
-          // cellType: '号码异常',
-          // operation: '3',
-        }
-      ]
+      tableData: []
     };
   },
   mounted () {
-    console.log(1111111111111111);
     this.queryNotPhone(1);
   },
   methods: {
@@ -389,7 +420,7 @@ export default {
       } else {
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
-        params.roomNo = that.data.roomNo;
+        params.bhId = that.data.roomNo;
         params.beginTime = that.data.timeSelect[0];
         params.endTime = that.data.timeSelect[1];
         params.customName = that.data.customName;
@@ -417,10 +448,9 @@ export default {
         .then(e => {
           console.log(e.data);
           that.loading = false;
-          let data = e.data;
-          if (data.code == 200) {
-            that.pageJson.total = data.dataCount;
-            that.tableData = data.data;
+          if (e.data.code == 200) {
+            that.pageJson.total = e.data.data.dataCount;
+            that.tableData = e.data.data.data;
           } else {
             console.log("查询无号码列表结果：" + result.message);
 

@@ -1,6 +1,7 @@
 <style lang="less" scoped>
 .query-cell {
   display: flex;
+  margin-bottom: 10px;
 }
 
 .el-table .warning-row {
@@ -22,6 +23,8 @@
              row-key="keyId"
              stripe
              ref="listTable"
+             headerClass
+             cellClass
              :row-style="tableRowClassName"
              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
              :parentData="$data"

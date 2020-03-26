@@ -21,9 +21,18 @@
     margin-bottom: 10px;
   }
 }
+.page-row-flex {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.flex-cell-content {
+  display: flex;
+  justify-content: space-between;
+}
 </style>
 <template>
-  <div style="height:100%">
+  <div class="page-row-flex">
     <list-page @sort-change="sortMethod"
                :parentData="$data"
                @queryTabData="queryTabData"
@@ -31,16 +40,16 @@
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
-        <div class="page-form-inline budingMarinSet" style="margin-left:10px;">
-          <el-item label="楼盘名称"
-                   prop="comId">
+        <div class="page-list-query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">楼盘</h3>
             <el-select v-model="data.comId"
                        @focus="remoteInput"
-                       @change="queryCBId()"
+                       @change="queryCBId"
                        filterable
                        remote
                        clearable
-                       placeholder="请输入楼盘名称搜索"
+                       placeholder="楼盘名称"
                        :remote-method="remoteMethod"
                        :loading="loading">
               <el-option v-for="item in options"
@@ -48,113 +57,94 @@
                          :label="item.name"
                          :value="item.value"></el-option>
             </el-select>
-          </el-item>
-          <el-item label="栋座"
-                   prop="cbId"
-                   class="page-label-center">
             <el-select v-model="data.cbId"
                        filterable
                        clearable
-                       placeholder="请选择楼栋"
-                       @change="queryRoomNo()">
+                       placeholder="楼栋"
+                       @change="queryRoomNo">
               <el-option v-for="item in cbIdList"
                          :key="item.value"
                          :label="item.name"
                          :value="item.value"></el-option>
             </el-select>
-          </el-item>
-          <el-item label="房间号" prop="roomNo" clearable class="page-label-center">
-            <el-select v-model="data.roomNo" filterable placeholder="请选择房间号" @change="queryVerifyHouseByParams()">
-              <el-option
-                v-for="item in roomNoList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-item>
-          <el-input
-            placeholder="姓名"
-            v-model="data.customName"
-            @change="queryVerifyHouseByParams()"
-            style="margin-left:30px;width:240px"
-            clearable
-          >
-            <template slot="prepend">业主</template>
-          </el-input>
-          <el-input
-            @change="queryVerifyHouseByParams()"
-            placeholder="电话"
-            v-model="data.tel"
-            style="margin-left:30px;width:240px"
-            clearable
-          >
-            <template slot="prepend">业主电话</template>
-          </el-input>
-          <el-input
-            placeholder="最小面积"
-            @change="queryVerifyHouseByParams()"
-            v-model="data.minInArea"
-            style="width:180px"
-            clearable
-          >
-            <template slot="prepend">面积</template>
-          </el-input>-
-          <el-input placeholder="最大面积" @change="queryVerifyHouseByParams()" v-model="data.maxInArea" style="width:120px" clearable />
-          <el-input
-            placeholder="最小值"
-            @change="queryVerifyHouseByParams()"
-            v-model="data.minPrice"
-            style="margin-top:10px;width:180px"
-            clearable
-          >
-            <template slot="prepend">价格</template>
-          </el-input>-
-          <el-input placeholder="最大值"
-                    @change="queryVerifyHouseByParams()"
-                    v-model="data.maxPrice"
-                    style="width:120px;margin-top:10px"
-                    clearable />
-          <span style="margin-left:30px">
-              验真状态：
-            </span>
-            <el-select filterable
-                       v-model="data.checkStatusValue"
-                       @change="queryVerifyHouseByParams()"
-                       placeholder="请选择">
-              <el-option v-for="item in checkStatusList"
+            <el-select v-model="data.roomNo"
+                       filterable
+                       @change="queryVerifyHouseByParams"
+                       placeholder="房间号">
+              <el-option v-for="item in roomNoList"
                          :key="item.value"
-                         :label="item.label"
-                         :value="item.value">
-              </el-option>
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
-            <span style="margin-left:30px">
-              电话检索：
-            </span>
-            <el-select filterable
-                       v-model="data.phoneStatusValue"
-                       @change="queryVerifyHouseByParams()"
-                       placeholder="请选择">
-              <el-option v-for="item in phoneStatusList"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value">
-              </el-option>
-            </el-select>
-          <el-date-picker v-model="data.timeSelect"
-                          type="daterange"
-                          @change="queryVerifyHouseByParams()"
-                          range-separator="至"
-                          start-placeholder="开始日期"
-                          end-placeholder="结束日期">
-            <template slot="prepend">录入时间</template>
-          </el-date-picker>
-          <span style="color:rgb(90,159,203);cursor:pointer;margin-left:20px"
-                @click="Remove">清除</span>
-          <el-button type="primary"
-                     style="margin-left:10px"
-                     size="mini"
-                     @click="queryVerifyHouseByParams">查询</el-button>
+          </div>
+          <div class="query-content-cell cell-interval75">
+            <h3 class="query-cell-title">业主</h3>
+            <el-input placeholder="姓名"
+                      v-model="data.customName"
+                      class="set-input120"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">电话</h3>
+            <el-input placeholder="业主电话"
+                      v-model="data.tel"
+                      class="set-input200"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">价格</h3>
+            <el-input placeholder="最小值"
+                      v-model="data.minPrice"
+                      class="set-input90"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
+            <span class="cut-off-rule"></span>
+            <el-input placeholder="最大值"
+                      v-model="data.maxPrice"
+                      class="set-input90"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
+            <span class="query-cell-suffix">万</span>
+          </div>
+        </div>
+        <div class="page-list-query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">面积</h3>
+            <el-input placeholder="最小值"
+                      v-model="data.minInArea"
+                      class="set-input90"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
+            <span class="cut-off-rule"></span>
+            <el-input placeholder="最大值"
+                      v-model="data.maxInArea"
+                      class="set-input90"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
+            <span class="query-cell-suffix">平方</span>
+          </div>
+          <div class="query-content-cell cell-interval75">
+            <h3 class="query-cell-title">录入时间</h3>
+            <el-date-picker v-model="data.timeSelect"
+                            type="daterange"
+                            class="set-data-pricker"
+                            @change="queryVerifyHouseByParams"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"></el-date-picker>
+            <span class="query-cell-suffix handlebut"
+                  @click="Remove">清除</span>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryVerifyHouseByParams">查询</el-button>
+          </div>
+          <div class="query-content-cell cell-interval25">
+            <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          </div>
         </div>
       </template>
       <template #tableColumn>
@@ -167,16 +157,17 @@
                          :prop="item.prop"
                          :sort-orders="['ascending', 'descending']"
                          :sortable="item.order"></el-table-column>
-        <el-table-column prop="operation"
-                         label="操作"
-                         fixed="right"
-                         key="992">
+        <el-table-column label="操作"
+                         width="240"
+                         fixed="right">
           <template v-slot="scope">
-            <el-button :type="item.buttonType"
-                       size="mini"
-                       @click="distributeEvent(item.methosName,scope.row)"
-                       v-for="(item,index) in isForBut(scope.row.checkStatus)"
-                       :key="index">{{item.name}}</el-button>
+            <div class="flex-cell-content">
+              <el-button :type="item.buttonType"
+                         size="mini"
+                         @click="distributeEvent(item.methosName,scope.row)"
+                         v-for="(item,index) in isForBut(scope.row.checkStatus)"
+                         :key="index">{{item.name}}</el-button>
+            </div>
           </template>
         </el-table-column>
       </template>
@@ -299,12 +290,14 @@
 <script>
 import listPage from "@/components/listPage";
 import util from "@/util/util";
-
 import getMenuRid from "@/minxi/getMenuRid";
+import '@/assets/publicLess/pageListQuery.less';
+import moreSelect from "@/components/moreSelect";
 export default {
   mixins: [getMenuRid],
   components: {
-    listPage
+    listPage,
+    moreSelect
   },
   computed: {
     avgPrice () {
@@ -323,6 +316,7 @@ export default {
         total: 9, //总记录数
         pageSize: 10 //每页条数
       },
+      options: [],
       data: {
         comId: "",
         cbId: "",
@@ -366,7 +360,7 @@ export default {
           formart: row => {
             return row.communityName;
           },
-          width: "",
+          width: "170",
           order: false
         },
         {
@@ -375,7 +369,7 @@ export default {
           formart: row => {
             return row.buildingNo + "-" + row.roomNo;
           },
-          width: "",
+          width: "170",
           order: false
         },
         {
@@ -396,7 +390,7 @@ export default {
           prop: "unit_price",
           label: "单价(元/㎡)",
           formart: row => row.unitPrice || 0,
-          width: "120",
+          width: "140",
           order: true
         },
         {
@@ -540,7 +534,9 @@ export default {
       util.localStorageSet("token", token);
       return token;
     },
+    moreSelectChange () {
 
+    },
     queryVerifyHouseByParams (currentPage, column, type) {
       this.queryVerifyHouseDatas(currentPage, column, type);
     },
@@ -693,7 +689,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-        this.queryVerifyHouseByParams();
+      this.queryVerifyHouseByParams();
     },
     queryRoomNo () {
       var that = this;
@@ -716,7 +712,7 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-        this.queryVerifyHouseByParams();
+      this.queryVerifyHouseByParams();
     },
     queryTabData () {
       console.log(this.queryData);

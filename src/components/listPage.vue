@@ -1,9 +1,7 @@
 <style lang="less" scoped>
 .page-body {
-  // min-height: 100%;
   display: flex;
   background: #fff;
-
   flex: 1;
   .page-body-warp {
     flex: 1;
@@ -12,16 +10,23 @@
   }
   .page-body-conter {
     flex: 1;
-    display: flex;
     padding-left: 20px;
-    .page-body-conter-left-slot {
-      position: relative;
-      display: flex;
+
+    .page-body-conter-title {
+      padding: 15px 0;
     }
-    .page-body-conter-right {
-      flex: 1;
-      overflow: hidden;
-      width: 0;
+    .page-body-conter-flex {
+      display: flex;
+      height: 100%;
+      .page-body-conter-left-slot {
+        position: relative;
+        display: flex;
+      }
+      .page-body-conter-right {
+        flex: 1;
+        overflow: hidden;
+        width: 0;
+      }
     }
   }
   .page-body-floot {
@@ -48,7 +53,7 @@
 }
 .query-center {
   //display: flex;
-  padding-top: 30px;
+  //padding-top: 30px;
   padding-left: 20px;
   @media (max-width: 1300px) {
     flex-wrap: wrap;
@@ -57,7 +62,6 @@
 
 .page-cell-append {
   display: flex;
-  // align-items: center;
   &::before {
     content: attr(data-before);
     flex-shrink: 0;
@@ -86,6 +90,44 @@
 .tabIsMar {
   padding-left: 20px;
 }
+.queryIsPad {
+  padding-top: 10px;
+}
+.division-line {
+  height: 6px;
+  background: #f4f4f4;
+}
+/deep/.headerCellSet {
+  background: #fafafa;
+  text-align: center;
+  color: #262626;
+  font-weight: normal;
+  height: 50px;
+  padding: 0;
+}
+/deep/.cellItemSet {
+  color: #262626;
+  padding: 0;
+  vertical-align: middle;
+  height: 50px;
+  font-size: 15px;
+  text-align: center;
+}
+/deep/.el-table__body-wrapper {
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-track-piece {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color--primary);
+    border-radius: 50px;
+  }
+}
 </style>
 <template>
   <div class="page-body">
@@ -93,21 +135,32 @@
       <div class="query-center">
         <slot name="top"></slot>
       </div>
+      <div class="division-line"
+           v-if="$scopedSlots.top"></div>
       <div class="page-body-conter">
-        <div class="page-body-conter-left-slot">
-          <slot name="left"></slot>
+        <div class="page-body-conter-title"
+             v-if="$scopedSlots.title">
+          <slot name="title"></slot>
         </div>
-        <div class="page-body-conter-right"
-             :class='{"tabIsMar": $scopedSlots.left}'>
-          <el-table :data="tableData"
-                    border
-                    ref="table"
-                    v-bind="$attrs"
-                    v-on="$listeners"
-                    v-loading="loading">
-            <slot name="tableColumn"
-                  :tableData="tableDataColumn"></slot>
-          </el-table>
+        <div class="page-body-conter-flex">
+          <div class="page-body-conter-left-slot">
+            <slot name="left"></slot>
+          </div>
+          <div class="page-body-conter-right"
+               :class='{"tabIsMar": $scopedSlots.left,"queryIsPad":$scopedSlots.top && !$scopedSlots.title}'>
+            <el-table :data="tableData"
+                      border
+                      :header-cell-class-name="( $attrs.headerClass || $attrs.headerClass == '') ? $attrs.headerClass: 'headerCellSet' "
+                      :cell-class-name="( $attrs.cellClass || $attrs.cellClass == '')  ? $attrs.cellClass: 'cellItemSet'"
+                      ref="table"
+                      v-bind="$attrs"
+                      v-on="$listeners"
+                      v-loading="loading">
+              <slot name="tableColumn"
+                    :tableData="tableDataColumn"></slot>
+            </el-table>
+          </div>
+          <sidebarList v-if="sidebarFlag"></sidebarList>
         </div>
       </div>
       <div class="page-body-floot">
@@ -121,7 +174,6 @@
         </el-pagination>
       </div>
     </div>
-    <sidebarList v-if="sidebarFlag"></sidebarList>
   </div>
 </template>
 <script>
@@ -150,6 +202,9 @@ export default {
       tableDataColumn: [],
       tableData: [],
     };
+  },
+  mounted () {
+    console.log(this.$attrs, "attrs");
   },
   methods: {
     //每页数据设置事件

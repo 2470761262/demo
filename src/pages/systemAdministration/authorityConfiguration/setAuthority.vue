@@ -6,6 +6,7 @@
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
   padding: 15px 15px 15px;
   border-radius: 10px;
+  font-size: 14px;
 
   /deep/ .el-input {
     margin: 10px 0 10px;
@@ -288,45 +289,6 @@ export default {
           }
         });
     },
-    //保存跨部门权限
-    saveCompanyRule () {
-      if (!this.paramsObj && !this.paramsObj.rId) {
-        this.$message.info("请选择节点进行保存");
-        return;
-      }
-      var that = this;
-
-      let companyId = "";
-      that.companyTreeSelectNode.companyIds.forEach(id => {
-        companyId = companyId + "," + id;
-      });
-      let deptId = "";
-      that.companyTreeSelectNode.deptIds.forEach(id => {
-        deptId = deptId + "," + id;
-      });
-      companyId = companyId.substr(1, companyId.length);
-      deptId = deptId.substr(1, deptId.length);
-      that.paramsObj.companyId = companyId;
-      that.paramsObj.deptId = deptId;
-      console.log(that.paramsObj, "save company ...");
-      this.$api
-        .post({
-          url: "/sys/rule/employee/company/set",
-          data: that.paramsObj,
-          qs: true
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            this.$message.info("重新登录后生效，操作成功");
-          } else {
-            console.log("保存结果：" + result.message);
-            this.$message.error("保存失败" + result.message);
-          }
-        });
-    },
-
 
     //选中节点
     checkNode (data, checkedData) {
