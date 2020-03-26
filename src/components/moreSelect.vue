@@ -175,7 +175,10 @@ span {
                 <span>物理区域</span>
                 <el-select v-model="more.area"
                            style="width:70%">
-                  <!-- <el-option></el-option> -->
+                  <el-option v-for='(item) in RegionList'
+                             :key="item.value"
+                             :label="item.name"
+                             :value="item.value"></el-option>
                 </el-select>
               </div>
               <div class='selectType'>
@@ -223,16 +226,29 @@ span {
                  style="display:flex;align-items:center">
               <span>区域</span>
               <el-select v-model="more.deptParentId"
+                         :remote-method="remoteArea"
+                         @focus="remoteSelect"
+                         @change="queryShop"
                          style="width:35%">
-                <!-- <el-option></el-option> -->
+                <el-option v-for='(item) in deptParentList'
+                           :key="item.depId"
+                           :value='item.depId'
+                           :label="item.depName"></el-option>
               </el-select>
               <el-select v-model="more.store"
+                         @change="queryPer"
                          style="width:30%">
-                <!-- <el-option></el-option> -->
+                <el-option v-for='(item) in storeList'
+                           :key="item.depId"
+                           :value='item.depId'
+                           :label="item.depName"></el-option>
               </el-select>
               <el-select v-model="more.personnel"
                          style="width:20%">
-                <!-- <el-option></el-option> -->
+                <el-option v-for='(item) in perList'
+                           :key="item.accountId"
+                           :value='item.accountId'
+                           :label="item.perName"></el-option>
               </el-select>
 
             </div>
@@ -331,7 +347,10 @@ export default {
       visible: false,
 
       loding: true,
-
+      RegionList: [],
+      perList: [],
+      deptParentList: [],
+      storeList: [],
       more: {
         comId: '',
         bhId: '',
@@ -366,8 +385,16 @@ export default {
       moreCbIdList: []
     };
   },
-
+  mounted () {
+    this.queryConstant();
+  },
   methods: {
+    remoteSelect () {
+
+      if (this.more.deptParentId.length == 0) {
+        this.remoteArea();
+      }
+    },
     remoteInput () {
 
       if (this.more.comId.length == 0) {
@@ -455,8 +482,77 @@ export default {
         }
       })
     },
+    queryConstant () {
+      return this.$api
+        .get({
+          url: "/mateHouse/queryConstant",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            constant: 'Region'
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.RegionList = e.data.data;
+          }
+        });
+    },
+    remoteArea (query) {
+      var that = this
+      if (query !== '') {
+        this.$api.post({
+          url: "moreSelect/dep/area",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
 
+          }
+        }).then((e) => {
+          console.log(e.data)
+          if (e.data.code == 200) {
+            that.deptParentList = e.data.data;
 
+          }
+        })
+      } else {
+        this.deptParentList = [];
+      }
+    },
+    queryShop () {
+      var that = this
+      this.$api.get({
+        url: "moreSelect/dep/shop",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          depId: this.more.deptParentId
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.storeList = e.data.data;
+        }
+      })
+    },
+    queryPer () {
+      var that = this
+      this.$api.get({
+        url: "moreSelect/dep/per",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          depId: this.more.store
+        }
+      }).then((e) => {
+        if (e.data.code == 200) {
+          that.perList = e.data.data;
+        }
+      })
+    },
   }
 };
 </script>
