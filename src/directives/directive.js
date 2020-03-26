@@ -58,5 +58,12 @@ export default {
             }
             return value;
         })
+
+        Vue.filter('houseMiniImg', (value) => {
+            if (value == '' || value == null) {
+                return 'https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png';
+            }
+            return value;
+        })
     }
 }

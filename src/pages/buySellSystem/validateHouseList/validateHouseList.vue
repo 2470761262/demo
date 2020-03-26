@@ -291,7 +291,7 @@
 import listPage from "@/components/listPage";
 import util from "@/util/util";
 import getMenuRid from "@/minxi/getMenuRid";
-import '@/assets/publicLess/pageListQuery.less';
+import "@/assets/publicLess/pageListQuery.less";
 import moreSelect from "@/components/moreSelect";
 export default {
   mixins: [getMenuRid],
@@ -300,14 +300,14 @@ export default {
     moreSelect
   },
   computed: {
-    avgPrice () {
+    avgPrice() {
       if (!this.nowRow.price || this.nowRow.area == 0) {
         return "-";
       }
       return (this.nowRow.price / this.nowRow.area).toFixed(4) * 10000;
     }
   },
-  data () {
+  data() {
     return {
       loading: true, //控制表格加载动画提示
       showVeryfyDetail: false, //验真详情弹出层
@@ -459,30 +459,7 @@ export default {
         //   width: "160"
         // }
       ],
-      tableData: [
-        {
-          house: "龙腾花园-16栋-604室",
-          price: "234",
-          area: "1252",
-          type: "3室2厅1卫",
-          levae: "精装修",
-          economicPro: "周杰伦",
-          addTime: "2019-01-01 18:00:00",
-          cellType: "待店长验真",
-          operation: "1"
-        },
-        {
-          house: "龙腾花园-16栋-604室",
-          price: "234",
-          area: "12",
-          type: "3室2厅1卫",
-          levae: "精装修",
-          economicPro: "周杰伦1",
-          addTime: "2019-01-01 18:00:00",
-          cellType: "待店长验真",
-          operation: "3"
-        }
-      ],
+      tableData: [],
       elTabs: {
         activeName: "tab1",
         list: [
@@ -514,17 +491,17 @@ export default {
       phoneStatusValue: ""
     };
   },
-  created () {
+  created() {
     console.log("===========" + JSON.stringify(this.GetRequest()));
   },
-  mounted () {
+  mounted() {
     this.queryVerifyHouseByParams(1, "id", "descending");
   },
   methods: {
-    sortMethod (e) {
+    sortMethod(e) {
       this.queryVerifyHouseByParams(1, e.prop, e.order);
     },
-    GetRequest () {
+    GetRequest() {
       var url = location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", location);
       var theRequest = new URLSearchParams(
@@ -534,17 +511,15 @@ export default {
       util.localStorageSet("token", token);
       return token;
     },
-    moreSelectChange () {
-
-    },
-    queryVerifyHouseByParams (currentPage, column, type) {
+    moreSelectChange() {},
+    queryVerifyHouseByParams(currentPage, column, type) {
       this.queryVerifyHouseDatas(currentPage, column, type);
     },
-    Remove () {
+    Remove() {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryVerifyHouseDatas(1, "id", "descending");
     },
-    queryVerifyHouseDatas (currentPage, column, type) {
+    queryVerifyHouseDatas(currentPage, column, type) {
       let that = this;
       that.loading = true;
 
@@ -592,7 +567,7 @@ export default {
           console.log(e);
         });
     },
-    getVerifyImg (row) {
+    getVerifyImg(row) {
       let trueId = row.id;
       if (row.isMul != null && row.isMul !== 0) {
         trueId = row.isMul;
@@ -635,12 +610,12 @@ export default {
           that.loading = false;
         });
     },
-    remoteInput () {
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -668,7 +643,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -691,7 +666,7 @@ export default {
         });
       this.queryVerifyHouseByParams();
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -714,13 +689,13 @@ export default {
         });
       this.queryVerifyHouseByParams();
     },
-    queryTabData () {
+    queryTabData() {
       console.log(this.queryData);
     },
-    distributeEvent (e, row) {
+    distributeEvent(e, row) {
       this[e](row);
     },
-    isForBut (type) {
+    isForBut(type) {
       let array = [
         {
           name: "邀请验真",
@@ -751,7 +726,7 @@ export default {
         return item.isType.includes(type);
       });
     },
-    getResult (row) {
+    getResult(row) {
       let that = this;
       that.showVeryfyDetail = true;
       that.nowRow = row;
@@ -801,14 +776,14 @@ export default {
           break;
       }
     },
-    getCheckStatus (key) {
+    getCheckStatus(key) {
       let that = this;
       console.log("key=" + key);
       return that.checkStatusList.filter(item => {
         return item.key.includes(key);
       });
     },
-    getVerifyDiff (id, perType) {
+    getVerifyDiff(id, perType) {
       this.$api
         .get({
           url: "/verifyHouse/diffrent/" + id,
@@ -835,22 +810,22 @@ export default {
           console.log(e);
         });
     },
-    handleClick () {
+    handleClick() {
       console.log(this.queryData);
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.queryVerifyHouseDatas(val);
     },
-    edit (val) {
+    edit(val) {
       this.$router.push({
         path: "/buySellSystem/addHouse?method=edit&id=" + val.id
       });
     },
-    reVerify (val) {
+    reVerify(val) {
       this.$router.push({
         path: "/buySellSystem/addHouse?method=reset&id=" + val.id
       });
