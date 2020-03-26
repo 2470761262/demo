@@ -191,6 +191,8 @@ export default {
   methods: {
     loadFunctionPoint(){
       let that = this;
+      that.currentNode = null;
+      that.paramsObj.functionPointArray = new Array();
       //读取功能点数据
       that.$api
         .post({
