@@ -1,13 +1,13 @@
 <style lang="less" scoped>
 .operation-content {
-  padding: 0 20px;
+  padding: 0 20px 0 48px;
   /deep/.el-tabs__content {
     padding: 0;
   }
   /deep/.el-tabs__item {
     height: 48px;
     line-height: 48px;
-    font-size: 18px;
+    font-size: 22px;
     &.is-active {
       color: black;
     }
@@ -33,11 +33,6 @@
     .list-content-item {
       padding-left: 40px;
       position: relative;
-      //   &:last-child {
-      //     .pad-line {
-      //       display: none;
-      //     }
-      //   }
       &:after {
         content: "";
         height: 100%;
@@ -67,7 +62,7 @@
   display: flex;
   justify-content: space-between;
   .content-item-time {
-    font-size: 20px;
+    font-size: 25px;
     color: black;
   }
   .content-item-but {
@@ -79,7 +74,7 @@
     font-size: 17px;
     border-radius: 4px;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
     position: relative;
     border: none;
     outline: none;
@@ -107,12 +102,12 @@
 }
 .content-item-body {
   .item-body-text {
-    margin-top: 8px;
-    font-size: 18px;
+    margin-top: 22px;
+    font-size: 21px;
     color: #b5b5b5;
     word-wrap: break-word;
     line-height: 30px;
-    padding-bottom: 25px;
+    padding-bottom: 35px;
   }
   .pad-line {
     padding-top: 25px;
@@ -140,9 +135,18 @@
         .didLog-content-box-title {
           display: none;
         }
+        .didLog-content-sroll {
+          padding: 0;
+        }
         .raido-group {
           margin-top: 0;
+          span {
+            font-size: 22px;
+          }
         }
+      }
+      .el-textarea {
+        font-size: 17px;
       }
       .pop-but {
         text-align: right;
@@ -151,7 +155,8 @@
           height: 37px;
           background: #0d824b;
           border-radius: 4px;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+          border: none;
+          // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
           span {
             color: #fff;
             font-size: 17px;
@@ -159,6 +164,11 @@
         }
       }
     }
+  }
+}
+.spacing {
+  &:first-child {
+    margin-top: 48px;
   }
 }
 </style>
@@ -178,9 +188,12 @@
                       width="100%"
                       title=""></followUp>
           </div>
-          <transition-group name="el">
+          <transition-group name="el"
+                            tag="div">
             <template v-for="item in follow.list">
-              <div :key="item.id">
+              <div :key="item.id"
+                   class="spacing"
+                   v-if="follow.list.length > 0">
                 <div class="list-content-item"
                      v-if="!item.isTellFollow">
                   <div class="content-item-head ">
@@ -275,9 +288,9 @@
 </template>
 
 <script>
-//写跟进弹出层 
-import followUp from '../didLog/followUp';
-import playAudio from '@/components/audio';
+//写跟进弹出层
+import followUp from "../didLog/followUp";
+import playAudio from "@/components/audio";
 import but from "@/evenBus/but.js";
 export default {
   inject: ["houseId"],
@@ -285,7 +298,7 @@ export default {
     playAudio,
     followUp
   },
-  data () {
+  data() {
     return {
       follow: {
         list: [],
@@ -309,14 +322,14 @@ export default {
         loadPageEnd: false
       },
       followUpFlag: true,
-      changeTabsValue: 'follow',
+      changeTabsValue: "follow",
       deleteFollow: false,
-      telFollow: false,
-    }
+      telFollow: false
+    };
   },
-  created () {
+  created() {
     this.getList();
-    but.$on('followReolad', () => {
+    but.$on("followReolad", () => {
       Object.assign(this.$data.follow, this.$options.data().follow);
       this.getHouseFollow();
     });
@@ -327,20 +340,20 @@ export default {
       this.telFollow = true;
     });
   },
-  destroyed () {
-    but.$off('followReolad');
-    but.$off('deleteFollow');
-    but.$off('telFollow');
+  destroyed() {
+    but.$off("followReolad");
+    but.$off("deleteFollow");
+    but.$off("telFollow");
   },
   methods: {
-    changeTabsEvent (e) {
+    changeTabsEvent(e) {
       if (this[this.changeTabsValue].list.length > 0) {
         return;
       }
       this.getList();
     },
     //获取列表数据
-    getList () {
+    getList() {
       switch (this.changeTabsValue) {
         case "follow":
           this.getHouseFollow();
@@ -350,11 +363,11 @@ export default {
           break;
         case "tel":
           this.getTelFollowList();
-          break
+          break;
       }
     },
     //获取跟进列表
-    getHouseFollow () {
+    getHouseFollow() {
       let that = this;
       let params = {
         page: that.follow.page,
@@ -384,14 +397,13 @@ export default {
             that.follow.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => {
-
-        }).finally(() => {
+        .catch(() => {})
+        .finally(() => {
           this.follow.loading = false;
         });
     },
     //删除跟进
-    deleteFollowById (followId) {
+    deleteFollowById(followId) {
       let that = this;
       let params = { followId: followId, houseId: that.houseId.id };
       this.$api
@@ -406,15 +418,14 @@ export default {
             that.follow.page = 1;
             that.follow.list = [];
             that.getHouseFollow();
+          } else {
+            that.$message(e.data.message);
           }
-          else {
-            that.$message(e.data.message)
-          }
-        }).catch(e => {
-        });
+        })
+        .catch(e => {});
     },
     //获取被看列表
-    getHousePairFollowList () {
+    getHousePairFollowList() {
       let that = this;
       let params = {
         page: that.pair.page,
@@ -435,12 +446,13 @@ export default {
             that.pair.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => { }).finally(() => {
+        .catch(() => {})
+        .finally(() => {
           this.pair.loading = false;
         });
     },
     //获取电话修改记录列表
-    getTelFollowList () {
+    getTelFollowList() {
       let that = this;
       let params = {
         page: that.tel.page,
@@ -461,19 +473,22 @@ export default {
             that.tel.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => { }).finally(() => {
+        .catch(() => {})
+        .finally(() => {
           this.tel.loading = false;
         });
     },
     //滚动分页
-    load () {
-      if (this[this.changeTabsValue].page < this[this.changeTabsValue].totalPage) {
+    load() {
+      if (
+        this[this.changeTabsValue].page < this[this.changeTabsValue].totalPage
+      ) {
         ++this[this.changeTabsValue].page;
         this.getList();
       } else {
         this[[this.changeTabsValue]].loadPageEnd = true;
       }
     }
-  },
-}
+  }
+};
 </script>

@@ -6,9 +6,9 @@
   align-items: center;
   margin: 0 30px;
   .sldebar-content-list {
-    //align-self: flex-start;
-    padding: 10px;
     border-radius: 4px;
+    width: 48px;
+    padding: 10px 0;
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
     .sldebar-content-item {
       cursor: pointer;
@@ -19,8 +19,12 @@
       &:last-child {
         margin-bottom: 0;
       }
-      .icon {
-        font-size: 40px;
+      .nav-image {
+        width: 31px;
+        height: 31px;
+      }
+      .item-title {
+        margin-top: 5px;
       }
     }
   }
@@ -31,17 +35,23 @@
     <div class="sldebar-content-list">
       <div class="sldebar-content-item"
            @click="goHome">
-        <i class="el-icon-s-home icon"></i>
+        <img class="nav-image"
+             src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/8d7ff13733c34e6b9020a137150ad2bc.png"
+             alt="">
         <span class="item-title">首页</span>
       </div>
       <div class="sldebar-content-item"
            @click="goBack">
-        <i class="el-icon-d-arrow-left icon"></i>
+        <img class="nav-image"
+             src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/cfca816db35642d483ad4dc5e889288a.png"
+             alt="">
         <span class="item-title">返回</span>
       </div>
       <div class="sldebar-content-item"
            @click="lastClick">
-        <i class="el-icon-plus icon"></i>
+        <!-- <i class="el-icon-plus icon"></i> -->
+        <img class="nav-image"
+             src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/43c6bb2152e647ec825a754fd3817fbb.png">
         <span class="item-title">{{lastItemSet ? lastTitle : '新增'}}</span>
       </div>
     </div>
@@ -56,34 +66,34 @@ export default {
       default: false
     },
     lastTitle: {
-      type: String,
+      type: String
     },
     lastUrl: {
       type: String,
-      default: '/buySellSystem/addHouse'
+      default: "/buySellSystem/addHouse"
     },
     lastQuery: {
       type: Object,
-      default: () => { }
+      default: () => {}
     }
   },
   methods: {
-    goHome () {
-      this.$router.push({ path: '/buySellSystem/houseList' });
+    goHome() {
+      this.$router.push({ path: "/buySellSystem/houseList" });
     },
-    goBack () {
+    goBack() {
       this.$router.go(-1);
     },
-    lastClick () {
+    lastClick() {
       let routerData = {
         path: this.lastUrl
-      }
+      };
       if (this.lastQuery) {
         routerData.query = this.lastQuery;
       }
-      this.$router.push(routerData)
+      this.$router.push(routerData);
     }
-  },
-}
+  }
+};
 </script>
 

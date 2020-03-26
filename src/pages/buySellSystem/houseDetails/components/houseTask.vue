@@ -1,10 +1,10 @@
 <style lang="less" scoped>
 .task-content {
-  margin-left: 20px;
+  margin-left: 48px;
 }
 .other-title {
   font-size: 30px;
-  font-weight: 600;
+  font-weight: 400;
   margin-top: 80px;
 }
 .task-pro-flex {
@@ -252,21 +252,21 @@
 
 <script>
 //取代
-import replacePop from '../didLog/replacePop';
+import replacePop from "../didLog/replacePop";
 //委托人
-import entrustPop from '../didLog/entrustPop';
+import entrustPop from "../didLog/entrustPop";
 //上传
-import houseUploadExtends from './houseUploadExtends';
-import houseCheck from '../common/houseCheck';
+import houseUploadExtends from "./houseUploadExtends";
+import houseCheck from "../common/houseCheck";
 //选填信息
-import supplement from "@/pages/buySellSystem/addHouse/components/supplement"
+import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
 import util from "@/util/util";
 export default {
   inject: ["houseDetails", "houseId"],
   computed: {
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
-        return this.houseDetails.data
+        return this.houseDetails.data;
       } else {
         return {};
       }
@@ -278,32 +278,32 @@ export default {
     entrustPop,
     supplement
   },
-  data () {
+  data() {
     return {
       houseUploadLoading: false,
       houseUploadflag: false,
       houseUploadType: null,
-      keyPopFlag: false,//钥匙弹出开关
-      entrustPopFlag: false,//委托人开关
-      keyType: null,//钥匙人类型
-      entrustType: null,//委托人类型
-      tsttinpit: '',
-      required: true,//判断非空
-      middleRadio: 0,//中学占用级
-      primaryRadio: 0,//小学占用年级
-      audioList: [],//音频文件
-      showFollow: true,//是否显示组件的跟进
-      applyAgentFlag: false,//申请跟单开关
-    }
+      keyPopFlag: false, //钥匙弹出开关
+      entrustPopFlag: false, //委托人开关
+      keyType: null, //钥匙人类型
+      entrustType: null, //委托人类型
+      tsttinpit: "",
+      required: true, //判断非空
+      middleRadio: 0, //中学占用级
+      primaryRadio: 0, //小学占用年级
+      audioList: [], //音频文件
+      showFollow: true, //是否显示组件的跟进
+      applyAgentFlag: false //申请跟单开关
+    };
   },
   methods: {
     /**
      * 申请跟单人
      */
-    applyAgent () {
+    applyAgent() {
       let params = this.$refs.com.formData;
       let that = this;
-      this.$refs.com.validateAllNotUpdata().then((e) => {
+      this.$refs.com.validateAllNotUpdata().then(e => {
         if (e) {
           params.houseId = that.houseId.id;
           if (that.$refs.com.audioFile.id) {
@@ -321,37 +321,38 @@ export default {
               let result = e.data;
               if (result.code == 200) {
                 this.resultData.plate = 0;
-                this.resultData.agentPerName = util.localStorageGet("logindata").userName;
-                this.resultData.agentPerDepartmentName = util.localStorageGet("logindata").deptName;
-                this.resultData.agentPerHeadImg = util.localStorageGet("logindata").headImgUrl;
-              }
-              else {
-                that.$message(result.message)
+                this.resultData.agentPerName = util.localStorageGet(
+                  "logindata"
+                ).userName;
+                this.resultData.agentPerDepartmentName = util.localStorageGet(
+                  "logindata"
+                ).deptName;
+                this.resultData.agentPerHeadImg = util.localStorageGet(
+                  "logindata"
+                ).headImgUrl;
+              } else {
+                that.$message(result.message);
               }
             })
-            .catch(e => {
-            });
+            .catch(e => {});
         }
       });
-
     },
     /**
      * 申请跟单人打开弹窗
      */
-    openAgentPop () {
+    openAgentPop() {
       if (this.resultData.applyAgentVo != null) {
         this.$store.commit("updateStep2", this.resultData.applyAgentVo);
         this.audioList = this.resultData.applyAgentVo.saleUploadAudioList;
         if (this.resultData.applyAgentVo.middleSchoolUse) {
           this.middleRadio = 1;
-        }
-        else {
+        } else {
           this.middleRadio = 0;
         }
         if (this.resultData.applyAgentVo.primarySchoolUse) {
           this.primaryRadio = 1;
-        }
-        else {
+        } else {
           this.middleRadio = 0;
         }
       }
@@ -359,92 +360,99 @@ export default {
     },
     /**
      * 取代打开弹出层
-     * @param {String} popName 弹出层的Flag名字 
+     * @param {String} popName 弹出层的Flag名字
      * @param {number} type 打开类型
      */
-    async  openPop (popName, type, typeName, replaceType) {
-      let result = await houseCheck.isChecking(type, replaceType, this.houseId.id, "正在审核");
+    async openPop(popName, type, typeName, replaceType) {
+      let result = await houseCheck.isChecking(
+        type,
+        replaceType,
+        this.houseId.id,
+        "正在审核"
+      );
       if (!result) {
         this[typeName] = type;
         this[popName] = true;
       }
-
     },
     /**
      * refs 获取上传组件实例并且验证非空
      */
-    submitUpload () {
+    submitUpload() {
       let _that = this;
       let verifyFieldMap = new Map([
-        ['outdoorImgList', '外景图'],
-        ['livingRoomImgList', '客厅'],
-        ['bedroomImgList', '卧室'],
-        ['kitchenImgList', '厨房'],
-        ['toiletImgList', '卫生间'],
-        ['layoutImgList', '户型图'],
-        ['houseVideo', '房源视频']
+        ["outdoorImgList", "外景图"],
+        ["livingRoomImgList", "客厅"],
+        ["bedroomImgList", "卧室"],
+        ["kitchenImgList", "厨房"],
+        ["toiletImgList", "卫生间"],
+        ["layoutImgList", "户型图"],
+        ["houseVideo", "房源视频"]
       ]);
       if (this.$validator.fields.length == 0) {
         verifyFieldMap.forEach((_value, _key) => {
           this.$validator.attach({
             name: _key,
             alias: _value,
-            rules: 'required',
-            getter: function () {
+            rules: "required",
+            getter: function() {
               if (_that.$refs.houseUpload[_key] instanceof Array) {
                 return _that.$refs.houseUpload[_key];
               } else {
                 if (Object.keys(_that.$refs.houseUpload[_key]).length == 0) {
-                  return '';
+                  return "";
                 } else {
                   return _that.$refs.houseUpload[_key];
                 }
               }
             }
           });
-        })
+        });
       }
-      this.$validator.validateAll().then((e) => {
+      this.$validator.validateAll().then(e => {
         if (!e) {
           this.$message.warning(this.errorBags.all()[0]);
         } else {
-
-          let url = `/agentHouse/propertyCheck/${this.houseUploadType == 12 ? 'insertApplyFor' : 'insertReplace'}`;
+          let url = `/agentHouse/propertyCheck/${
+            this.houseUploadType == 12 ? "insertApplyFor" : "insertReplace"
+          }`;
           let resultIdList = [];
           verifyFieldMap.forEach((_value, _key) => {
             if (_that.$refs.houseUpload[_key] instanceof Array) {
-              _that.$refs.houseUpload[_key].forEach((item) => {
+              _that.$refs.houseUpload[_key].forEach(item => {
                 resultIdList.push(item.id);
-              })
+              });
             } else {
               resultIdList.push(_that.$refs.houseUpload[_key].id);
             }
-          })
+          });
           console.log(resultIdList);
           let params = {
             Eid: this.houseId.id,
             Type: this.houseUploadType,
             picList: resultIdList,
             followMemo: "提交了实勘申请"
-          }
+          };
           if (this.houseUploadType == 4) {
             params.ReplaceType = 5;
           }
           this.houseUploadLoading = true;
-          houseCheck.insertCheck(url, params).then((e) => {
-            if (e.data.code == 200) {
-              this.$message.success(e.data.message);
-            }
-          }).catch((e) => {
-
-          }).finally(() => {
-            this.houseUploadLoading = false;
-            this.houseUploadflag = false;
-          })
+          houseCheck
+            .insertCheck(url, params)
+            .then(e => {
+              if (e.data.code == 200) {
+                this.$message.success(e.data.message);
+              }
+            })
+            .catch(e => {})
+            .finally(() => {
+              this.houseUploadLoading = false;
+              this.houseUploadflag = false;
+            });
         }
-      })
+      });
     }
-  },
-}
+  }
+};
 </script>
 

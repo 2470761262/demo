@@ -1,7 +1,7 @@
 
 <style lang="less" scoped>
 .page-content {
-  padding: 35px 0 35px 35px;
+  padding: 40px 0 35px 33px;
   background: #fff;
   min-height: 100%;
   box-sizing: border-box;
@@ -9,12 +9,15 @@
 }
 .page-house-cell {
   display: flex;
-  margin-top: 20px;
+  margin-top: 18px;
   &.marginTop {
     margin-top: 0;
   }
   .cell-left {
     width: 860px;
+  }
+  .cell-msg {
+    width: 760px;
   }
   .cell-right {
     flex: 1;
@@ -45,7 +48,7 @@
     <buttonGroup></buttonGroup>
     <section class="page-house-cell marginTop">
       <!-- 房屋其他信息 -->
-      <houseMessage class="cell-left"></houseMessage>
+      <houseMessage class="cell-msg"></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->
         <houseOperation></houseOperation>
@@ -57,61 +60,58 @@
 </template>
 <script>
 import util from "@/util/util";
-import getMenuRid from '@/minxi/getMenuRid';
-import houseDetailsHead from './components/houseDetailsHead';
-import loopImg from './components/loopImg';
-import detail from './components/detail';
-import sidebarList from '@/components/sidebarList';
-import buttonGroup from './components/buttonGroup';
-import houseMessage from './components/houseMessage';
-import houseOperation from './components/houseOperation';
-import houseTask from './components/houseTask';
-import { REMARK } from '@/util/constMap';
+import getMenuRid from "@/minxi/getMenuRid";
+import houseDetailsHead from "./components/houseDetailsHead";
+import loopImg from "./components/loopImg";
+import detail from "./components/detail";
+import sidebarList from "@/components/sidebarList";
+import buttonGroup from "./components/buttonGroup";
+import houseMessage from "./components/houseMessage";
+import houseOperation from "./components/houseOperation";
+import houseTask from "./components/houseTask";
+import { REMARK } from "@/util/constMap";
 export default {
-  provide () {
+  provide() {
     return {
       houseId: this.forID,
       houseDetails: this.houseDetails,
       load: this.load
-    }
+    };
   },
   mixins: [getMenuRid],
   components: {
-    houseDetailsHead,//房源详情头部
+    houseDetailsHead, //房源详情头部
     loopImg, // 轮播
     detail, // 右边的详情
     sidebarList,
-    buttonGroup,// 按钮群
+    buttonGroup, // 按钮群
     houseMessage,
     houseOperation,
     houseTask //房源任务方
   },
-  data () {
+  data() {
     return {
-
       forID: {
         id: null
       },
       houseDetails: {},
       load: {
         loading: true,
-        loadingMessage: "努力加载中~",
-      },
-
+        loadingMessage: "努力加载中~"
+      }
     };
   },
-  created () {
+  created() {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
       util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
-    }
-    else {
+    } else {
       this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
     }
     this.getHouseDetails();
   },
   methods: {
-    getHouseDetails () {
+    getHouseDetails() {
       let that = this;
       this.load.loading = true;
       this.$api
@@ -125,39 +125,46 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            if (result.data.remark != null && result.data.remark.indexOf("$") != -1) {
+            if (
+              result.data.remark != null &&
+              result.data.remark.indexOf("$") != -1
+            ) {
               var Arry1 = result.data.remark.split("$");
               for (var i = 0; i < Arry1.length; i++) {
                 var Arry2 = Arry1[i].split("@");
                 switch (Arry2[0]) {
                   case "小区介绍":
                     result.data.communityPresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.communityDesc = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.communityDesc =
+                      Arry2[1];
                     break;
                   case "户型介绍":
                     result.data.houseTypePresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.roomDesc = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.roomDesc =
+                      Arry2[1];
                     break;
                   case "税费解析":
                     result.data.taxParsing = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.taxDesc = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.taxDesc =
+                      Arry2[1];
                     break;
                   case "核心卖点":
                     result.data.coreSellingPoint = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.saleDesc = Arry2[1];
+                    that.$store.state.addHouse.formData.step2.saleDesc =
+                      Arry2[1];
                     break;
                 }
                 if (result.data.applyAgentVo != null) {
                   REMARK.forEach(element => {
                     if (element.key == Arry2[0]) {
                       let obj = element.value;
-                      result.data.applyAgentVo[obj] = Arry2[1]
+                      result.data.applyAgentVo[obj] = Arry2[1];
                     }
                   });
                 }
               }
             }
-            this.$set(this.houseDetails, 'data', result.data);
+            this.$set(this.houseDetails, "data", result.data);
           } else {
             that.$message.error(result.message);
           }
@@ -166,14 +173,15 @@ export default {
           if (e.response != undefined) {
             that.$message(e.response.data.message);
           }
-        }).finally(() => {
+        })
+        .finally(() => {
           this.load.loading = false;
         });
     }
   },
-  destroyed () {
+  destroyed() {
     // this.$store.commit("resetFormData");
-  },
+  }
 };
 </script>
 

@@ -1,18 +1,20 @@
 
 <style lang="less" scoped>
 .loog-body {
-  height: 406px;
+  height: 411px;
   margin-bottom: 8px;
   position: relative;
   &:after {
     content: "验真通过";
     background: #0d824b;
     color: #fff;
-    font-size: 16px;
+    font-size: 20px;
     right: 0;
     top: 0;
     border-radius: 4px;
-    padding: 4px 8px;
+    padding: 0px 8px;
+    height: 26px;
+    line-height: 26px;
     position: absolute;
   }
   .loop-item {
@@ -41,8 +43,8 @@
       .loop-item {
         display: inline-block;
         margin-left: 8px;
-        width: 150px;
-        height: 90px;
+        width: 147px;
+        height: 91px;
         cursor: pointer;
         &:first-child {
           margin-left: 0px;
@@ -130,19 +132,14 @@
            ref="itemOver">
         <div class="img-scroll-translateX"
              :style="moveX">
-          <template v-for="item in loopList">
+          <template v-for="(item,index) in loopList">
             <!-- 循环图片 -->
             <template v-if="item.picUrl">
-              <el-image @click.native.stop="changeLoop(item)"
-                        :key="item.id"
-                        class="loop-item"
-                        :src="item.picUrl"
-                        fit="cover">
-                <div slot="placeholder"
-                     class="image-slot">
-                  加载中<span>...</span>
-                </div>
-              </el-image>
+              <img :src="item.picUrl"
+                   @click.stop="changeLoop(item)"
+                   :key="index"
+                   alt=""
+                   class="loop-item">
             </template>
             <!-- 视频 -->
             <template v-if="item.videoUrl">
@@ -159,10 +156,13 @@
 </template>
 
 <script>
-import { addResizeListener, removeResizeListener } from 'element-ui/src/utils/resize-event';
-import elVideo from '@/components/elVideo';
-import elAudio from '@/components/audio';
-import elCountDown from '@/components/countDown';
+import {
+  addResizeListener,
+  removeResizeListener
+} from "element-ui/src/utils/resize-event";
+import elVideo from "@/components/elVideo";
+import elAudio from "@/components/audio";
+import elCountDown from "@/components/countDown";
 import but from "@/evenBus/but.js";
 export default {
   inject: ["houseDetails"],
@@ -171,53 +171,68 @@ export default {
     elAudio,
     elCountDown
   },
-  created () {
-    but.$on("betExpire", (value) => {
-      this.betExpire = value
-    })
+  created() {
+    but.$on("betExpire", value => {
+      this.betExpire = value;
+    });
   },
-  mounted () {
+  mounted() {
     addResizeListener(this.$refs.itemOver, this.update);
   },
-  destroyed () {
+  destroyed() {
     removeResizeListener(this.$refs.itemOver, this.update);
-    but.$off('betExpire');
+    but.$off("betExpire");
   },
   computed: {
-    moveX () {
-      return `transform: translateX(${this.renderX}px)`
+    moveX() {
+      return `transform: translateX(${this.renderX}px)`;
     },
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
-        return this.houseDetails.data
+        return this.houseDetails.data;
       } else {
         return {};
       }
     },
     //轮播
-    loopList () {
+    loopList() {
       if (Object.keys(this.houseDetails).length > 0) {
-        let saleUploadPicDtoList = this.resultData.saleUploadPicDtoList ? this.resultData.saleUploadPicDtoList : [];
-        let saleUploadVideoDtoList = this.resultData.saleUploadVideoDtoList ? this.resultData.saleUploadVideoDtoList : [];
+        let saleUploadPicDtoList = this.resultData.saleUploadPicDtoList
+          ? this.resultData.saleUploadPicDtoList
+          : [];
+        let saleUploadVideoDtoList = this.resultData.saleUploadVideoDtoList
+          ? this.resultData.saleUploadVideoDtoList
+          : [];
         let resultList = [...saleUploadVideoDtoList, ...saleUploadPicDtoList];
-        if (resultList[0])
+        if (!resultList[0]) {
+          for (let i = 0; i < 7; i++) {
+            resultList.push({
+              typeStr: "picUrl",
+              picUrl:
+                "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png",
+              default: true
+            });
+          }
+          // this.changeLoop(defaultImgList[0]);
+        } else {
           this.changeLoop(resultList[0]);
+        }
         return resultList;
       }
       return [];
     }
   },
-  data () {
+  data() {
     return {
       loopBig: {},
       scrollBar: true,
       translateX: 0,
-      renderX: '0',
-      betExpire: ""//对赌结束时间
-    }
+      renderX: "0",
+      betExpire: "" //对赌结束时间
+    };
   },
   methods: {
-    update () {
+    update() {
       let listFor = this.$refs.itemOver;
       if (listFor)
         if (listFor.clientWidth < listFor.scrollWidth) {
@@ -226,21 +241,23 @@ export default {
           this.scrollBar = false;
         }
     },
-    scrollMove (direction) {
+    scrollMove(direction) {
       if (!this.scrollBar) {
-        return
+        return;
       }
       let listFor = this.$refs.itemOver;
-      let scrollWidth = listFor.querySelector('.img-scroll-translateX').scrollWidth - listFor.clientWidth;
+      let scrollWidth =
+        listFor.querySelector(".img-scroll-translateX").scrollWidth -
+        listFor.clientWidth;
       switch (direction) {
-        case 'left':
+        case "left":
           if (this.translateX - listFor.clientWidth > 0) {
             this.translateX -= listFor.clientWidth;
           } else {
             this.translateX = 0;
           }
           break;
-        case 'right':
+        case "right":
           if (this.translateX + listFor.clientWidth < scrollWidth) {
             this.translateX += listFor.clientWidth;
           } else {
@@ -249,26 +266,29 @@ export default {
           break;
       }
 
-      this.renderX = -this.translateX
+      this.renderX = -this.translateX;
     },
     //预览大图
-    previewList () {
+    previewList() {
       if (this.resultData.saleUploadPicDtoList) {
-        return this.resultData.saleUploadPicDtoList.map((item) => {
+        return this.resultData.saleUploadPicDtoList.map(item => {
           return item.picUrl;
-        })
+        });
       }
       return [];
     },
-    changeLoop (item) {
-      if ('picUrl' in item) {
-        this.$set(this.loopBig, 'typeStr', 'picUrl')
-        this.$set(this.loopBig, 'src', item.picUrl)
-      } else if ('videoUrl' in item) {
-        this.$set(this.loopBig, 'typeStr', 'videoUrl')
-        this.$set(this.loopBig, 'src', item.videoUrl)
+    changeLoop(item) {
+      if (item.default) {
+        return;
+      }
+      if ("picUrl" in item) {
+        this.$set(this.loopBig, "typeStr", "picUrl");
+        this.$set(this.loopBig, "src", item.picUrl);
+      } else if ("videoUrl" in item) {
+        this.$set(this.loopBig, "typeStr", "videoUrl");
+        this.$set(this.loopBig, "src", item.videoUrl);
       }
     }
-  },
-}
+  }
+};
 </script>
