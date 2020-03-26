@@ -205,6 +205,7 @@ export default {
           : [];
         let resultList = [...saleUploadVideoDtoList, ...saleUploadPicDtoList];
         if (!resultList[0]) {
+          //设置默认的itemImg
           for (let i = 0; i < 7; i++) {
             resultList.push({
               typeStr: "picUrl",
@@ -213,7 +214,6 @@ export default {
               default: true
             });
           }
-          // this.changeLoop(defaultImgList[0]);
         } else {
           this.changeLoop(resultList[0]);
         }
