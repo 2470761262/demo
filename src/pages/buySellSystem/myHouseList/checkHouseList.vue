@@ -257,6 +257,7 @@
             </el-dialog>
 
             <el-button type="success"
+                       v-if="!(scope.row.Type==13)"
                        @click="toHouseDetail(scope.row.Eid)"
                        size="mini">查看</el-button>
           </template>
@@ -533,6 +534,7 @@ export default {
 
       });
       this.file8 = list;
+      console.log(this.file8);
       this.showAccessory = true;
     },
     getAccessory (row) {

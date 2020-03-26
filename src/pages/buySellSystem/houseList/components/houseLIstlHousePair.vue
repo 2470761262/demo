@@ -429,16 +429,22 @@
         <el-form-item label="小学划片" prop="primarySchool">
           <el-checkbox-group v-model="form.primarySchool" class="checkbox-flex" size="small">
             <div v-for="(item,index) in primarySchoolList" :key="index" class="checkbox-flex-pad">
-              <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top">
+              <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top" v-if ="(index < 5)">
                 <el-checkbox :label="item.value" name="primarySchool" border>{{item.name}}</el-checkbox>
               </el-tooltip>
             </div>
             <div class="marLeft20">
-              <el-input
-                placeholder="添加自定义小学"
-                v-model="primarySchoolInput"
-                @keyup.enter.native="addInputToList('primarySchool','primarySchoolInput')"
-              ></el-input>
+              <el-select placeholder="更多选择" clearable v-model="primarySchoolInput"  @change="addInputToList('primarySchool','primarySchoolInput')">                
+                <template  v-for="(item,index) in primarySchoolList">
+                  <el-option
+                    v-if="index > 5"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"                 
+                  >
+                </el-option>
+                </template>               
+              </el-select>
             </div>
           </el-checkbox-group>
         </el-form-item>
@@ -447,16 +453,22 @@
         <el-form-item label="中学划片" prop="middleSchool">
           <el-checkbox-group v-model="form.middleSchool" class="checkbox-flex" size="small">
             <div v-for="(item,index) in middleSchoolList" :key="index" class="checkbox-flex-pad">
-              <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top">
+              <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top"  v-if ="(index < 5)">
                 <el-checkbox :label="item.value" name="middleSchool" border>{{item.name}}</el-checkbox>
               </el-tooltip>
             </div>
             <div class="marLeft20">
-              <el-input
-                placeholder="添加自定义中学"
-                v-model="middleSchoolInput"
-                @keyup.enter.native="addInputToList('middleSchool','middleSchoolInput')"
-              ></el-input>
+              <el-select placeholder="更多选择" clearable v-model="middleSchoolInput"   @change="addInputToList('middleSchool','middleSchoolInput')" >
+                <template  v-for="(item,index) in middleSchoolList">
+                  <el-option                
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                    v-if="index > 5"
+                  >
+                  </el-option>
+                </template>     
+              </el-select>
             </div>
           </el-checkbox-group>
         </el-form-item>
