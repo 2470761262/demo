@@ -8,7 +8,7 @@
   flex-direction: column;
   height: 100%;
 }
-/deep/.el-dialog__headerbtn{
+/deep/.el-dialog__headerbtn {
   z-index: 10;
 }
 </style>
@@ -180,7 +180,7 @@
         </el-table-column>
         <el-table-column label="操作"
                          fixed="right"
-                         key="operation">
+                         width="190">
           <template v-slot="scope">
             <el-button type="success"
                        size="mini"
@@ -433,13 +433,13 @@ export default {
         label: '虚假实勘'
       }],
       queryData: {
-        comId:"",
+        comId: "",
         CommunityName: '',
         timeSelect: '',
         roomNo: '',
-        roomId:"",
+        roomId: "",
         cbId: '',
-        cbName:"",
+        cbName: "",
       },
       accessoryUrl: require('../../../assets/images/accessory.png'),
       showPopUp: false,
@@ -522,15 +522,15 @@ export default {
     getFile (list) {
       this.accessoryMoldList.forEach(item => {
         item.list = [];//清空数组
-        if(list != null){
-           list.forEach((element, index) => {
-          if (element.subType == item.type) {
-            element.activeIndex = index;
-            item.list.push(element)
-          }
-        });
+        if (list != null) {
+          list.forEach((element, index) => {
+            if (element.subType == item.type) {
+              element.activeIndex = index;
+              item.list.push(element)
+            }
+          });
         }
-       
+
       });
       this.file8 = list;
       this.showAccessory = true;
@@ -557,12 +557,12 @@ export default {
       }).then((e) => {
         let result = e.data;
         if (result.code == 200) {
-          if(row.Type ==13){
-           result.data.push({"CheckID":checkId ,"url":row.picUrl}) 
+          if (row.Type == 13) {
+            result.data.push({ "CheckID": checkId, "url": row.picUrl })
           }
           console.log(result.data)
           that.accessoryAllList.push({ "key": checkId, "value": result.data });
-          
+
           that.getFile(result.data);
         }
       }).catch((e) => {
@@ -576,15 +576,15 @@ export default {
         CheckMemo: this.checkMemo,
         Tag: this.checkStatus
       }
-      if(params.Tag == 2){
+      if (params.Tag == 2) {
         if (!util.isNotNull(this.checkMemo)) {
-         this.$alert("", "请填写审核失败理由!!!", {
-          dangerouslyUseHTMLString: false
-        });
-        return true;
+          this.$alert("", "请填写审核失败理由!!!", {
+            dangerouslyUseHTMLString: false
+          });
+          return true;
         }
       }
-      
+
       this.showPopUp = false;
       this.loading = true;
       this.$api.post({
@@ -664,8 +664,8 @@ export default {
         }
       })
       let obj = {};
-      obj = this.comList.find((item)=>{
-         return item.value === that.queryData.comId;
+      obj = this.comList.find((item) => {
+        return item.value === that.queryData.comId;
       });
       this.queryData.CommunityName = obj.name;
       this.querylistByParams();
@@ -701,8 +701,8 @@ export default {
         }
       })
       let obj = {};
-      obj = this.cbIdList.find((item)=>{
-         return item.value === that.queryData.cbId;
+      obj = this.cbIdList.find((item) => {
+        return item.value === that.queryData.cbId;
       });
       this.queryData.cbName = obj.name;
       this.querylistByParams();
@@ -722,30 +722,30 @@ export default {
       if (this.queryData.cbName != null && this.queryData.cbName != '') { params.cbName = this.queryData.cbName; }
       if (this.queryData.roomId != null && this.queryData.roomId != '') {
         let obj = {};
-          obj = this.roomNoList.find((item)=>{
-         return item.value === that.queryData.roomId;
-      });
+        obj = this.roomNoList.find((item) => {
+          return item.value === that.queryData.roomId;
+        });
         params.roomNo = obj.name;
-        }
+      }
       if (this.status != null && this.status != '') { params.status = this.status; }
       if (this.checkProject != null && this.checkProject != '') { params.checkProject = this.checkProject; }
       if (this.type != null && this.type != '') {
-        if(this.type == 0){
+        if (this.type == 0) {
           params.checkProject = 0;
-        }else if(this.type == 1){
+        } else if (this.type == 1) {
           params.checkProject = 1;
           params.checkType = this.type;
-        }else if(this.type == 4){
+        } else if (this.type == 4) {
           params.checkProject = 8;
           params.checkType = this.type;
-        }else if(this.type == 3){
+        } else if (this.type == 3) {
           params.checkProject = 13;
           //params.checkType = this.type;
-        }else if(this.type == 2){
+        } else if (this.type == 2) {
           params.checkProject = 11;
           params.checkType = 1;
         }
-        }
+      }
       if (this.value != null && this.value != '') { params.value = this.value; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
       if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
