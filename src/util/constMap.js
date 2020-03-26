@@ -43,6 +43,10 @@ export const DECORATION = [{ //装修 decoration
 {
     key: "精装修",
     value: 3
+},
+{
+    key: "豪华装修",
+    value: 4
 }
 ]
 

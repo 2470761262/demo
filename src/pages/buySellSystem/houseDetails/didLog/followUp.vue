@@ -19,7 +19,7 @@
         <el-input type="textarea"
                   :placeholder="text"
                   v-model="pop.textarea"
-                  maxlength="200"
+                  maxlength="10"
                   resize="none"
                   show-word-limit>
         </el-input>
@@ -71,8 +71,8 @@ export default {
         followWay: this.pop.model,
         followType: "常态跟进"
       };
-      if (this.pop.textarea.length < 10) {
-        that.$message("跟进内容不能少于10个字");
+      if (this.pop.textarea.length > 10) {
+        that.$message("跟进内容不能多于10个字,添加跟进失败!!!");
         return;
       }
       this.$emit('update:visible', false)

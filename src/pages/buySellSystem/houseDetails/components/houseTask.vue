@@ -363,17 +363,29 @@ export default {
      * @param {String} popName 弹出层的Flag名字
      * @param {number} type 打开类型
      */
-    async openPop(popName, type, typeName, replaceType) {
-      let result = await houseCheck.isChecking(
-        type,
-        replaceType,
-        this.houseId.id,
-        "正在审核"
-      );
-      if (!result) {
-        this[typeName] = type;
-        this[popName] = true;
+    async  openPop (popName, type, typeName, replaceType) {
+      if(type != 4){
+          let result = await houseCheck.isChecking(type, replaceType, this.houseId.id, "正在审核");
+        if (!result) {
+          this[typeName] = type;
+          this[popName] = true;
+        }
+      }else{
+        if(this.resultData.agentHouseMethod.onlyOwnerName != util.localStorageGet("logindata").userName ){
+           let result = await houseCheck.isChecking(type, replaceType, this.houseId.id, "正在审核");
+        if (!result) {
+          this[typeName] = type;
+          this[popName] = true;
+        }
+      }else{
+        this.$alert("", "不能取代自己!!!", {
+          dangerouslyUseHTMLString: false
+        });
       }
+     }
+
+
+
     },
     /**
      * refs 获取上传组件实例并且验证非空

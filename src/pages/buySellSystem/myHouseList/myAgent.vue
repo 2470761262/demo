@@ -173,7 +173,7 @@
                      :visible.sync="dialogVisible"
                      :modal-append-to-body="false"
                      width="20%">
-            <el-select v-model="AgentPerId"
+            <el-select v-model="newAgentName"
                        @change="queryAddPerId"
                        key-value="accountID"
                        filterable
@@ -598,9 +598,10 @@ export default {
       }
       this.queryMyAgent(1, "id", "descending");
     },
-    queryAddPerId(row) {
-      let data = JSON.stringify(row);
+    queryAddPerId (row) {
+      let data = row;
       var that = this;
+      this.AgentPerId= data;
       that.newAgentName = data.perName;
       this.$api
         .get({
@@ -658,7 +659,7 @@ export default {
       let params = {
         houseId: parseInt(that.toHouseId) + "",
         newAgentPer: parseInt(JSON.stringify(that.AgentPerId.accountID)),
-        oldAgentPer: parseInt(that.agentper),
+        oldAgentPer: parseInt(that.agentper !=null ? that.agentper:""),
         newAgentName: that.AgentPerId.perName
       };
 

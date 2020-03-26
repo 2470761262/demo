@@ -756,11 +756,11 @@ export default {
       })
         .then(() => {
           this.loading = true;
-          let params = { id: id };
+          //let params = { id: id };
           this.$api
             .post({
               url: "/" + type + "/lock",
-              data: params,
+              data: id,
               qs: true
             })
             .then(e => {
