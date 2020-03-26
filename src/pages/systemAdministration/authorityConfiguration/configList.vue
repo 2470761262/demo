@@ -23,6 +23,8 @@
              row-key="keyId"
              stripe
              ref="listTable"
+             headerClass
+             cellClass
              :row-style="tableRowClassName"
              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
              :parentData="$data"

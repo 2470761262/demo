@@ -167,11 +167,16 @@ export default {
         postId: null,
         accountId: null,
       },
-      paramsObj: {},
+      paramsObj: {
+        functionPointArray: new Array(),
+        accountId: null,
+        ruleType: null,
+      },
       companyTreeSelectNode:{
         companyIds: [],
         deptIds:[],
       },
+      currentNode: null,
     }
   },
   mounted () {
@@ -182,7 +187,6 @@ export default {
     this.loadFunctionPoint();
     this.loadUnitTree();
     //this.ruleParamsObj.postId = postId;
-
   },
   methods: {
     loadFunctionPoint(){
@@ -252,85 +256,100 @@ export default {
       this.showCompanyTree = true;
       this.showSave = true;
       console.log(node, data, "operationCompany..");
-      this.paramsObj.rId = data.id;
-      this.paramsObj.dataType = 2;
       node.data.dataType = "2";
-      if (data.companyGather) {
+      this.$refs.companyTree.setCheckedKeys([]);
+      if(data.companyGather){
         let gather = data.companyGather;
         let arrayGather = gather.split(",");
         this.companyGather = arrayGather;
-      } else {
-        this.$refs.companyTree.setCheckedKeys([]);
       }
+      if(data.deptGather){
+        let gather = data.deptGather;
+        let arrayGather = gather.split(",");
+        this.companyGather = arrayGather;
+      }
+      //设置参数
+      //this.putParams(node);
+      this.currentNode = node;
     },
     operationSelf (node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
-      this.paramsObj.rId = data.id;
-      this.paramsObj.dataType = 0;
       node.data.dataType = "0";
+      //设置参数
+      this.putParams(node);
       console.log(node, data, "operationSelf..");
     },
     operationDept (node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
-      this.paramsObj.rId = data.id;
-      this.paramsObj.dataType = 1;
       node.data.dataType = "1";
+      //设置参数
+      this.putParams(node);
       console.log(node, data, "operationDept..");
     },
     //应用
-    savePosition () {
-      var that = this;
-      let checkedKeys = that.$refs.tree.getCheckedKeys();
-      let keys = "";
-      checkedKeys.forEach(key => {
-        keys = keys + "," + key;
-      });
-      keys = keys.substr(1, keys.length);
-      console.log(keys, "checkedKeys///");
-      that.ruleParamsObj.ruleIds = keys;
-      this.$api
-        .post({
-          url: "/sys/rule/employee/set",
-          data: that.ruleParamsObj,
-          qs: true
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            this.$message.info("重新登录后生效，操作成功");
-          } else {
-            console.log("保存结果：" + result.message);
-            this.$message.error("保存失败" + result.message);
-          }
-        });
-    },
+    // savePosition () {
+    //   var that = this;
+    //   let checkedKeys = that.$refs.tree.getCheckedKeys();
+    //   let keys = "";
+    //   checkedKeys.forEach(key => {
+    //     keys = keys + "," + key;
+    //   });
+    //   keys = keys.substr(1, keys.length);
+    //   console.log(keys, "checkedKeys///");
+    //   that.ruleParamsObj.ruleIds = keys;
+    //   this.$api
+    //     .post({
+    //       url: "/sys/rule/employee/set",
+    //       data: that.ruleParamsObj,
+    //       qs: true
+    //     })
+    //     .then(e => {
+    //       console.log(e.data);
+    //       let result = e.data;
+    //       if (result.code == 200) {
+    //         this.$message.info("重新登录后生效，操作成功");
+    //       } else {
+    //         console.log("保存结果：" + result.message);
+    //         this.$message.error("保存失败" + result.message);
+    //       }
+    //     });
+    // },
     //保存跨部门权限
+    putParams(node){
+      let data = node.data;
+      let dataType = node.data.dataType;
+      //设置参数
+      let that = this;
+      let functionPointObj = that.paramsObj.functionPointArray[new String(data.id)];
+      debugger;
+      if(!functionPointObj){
+        functionPointObj = {};
+      }
+      functionPointObj.rId = data.id;
+      functionPointObj.dataType = dataType;
+      let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
+      functionPointObj.companyId = companyId;
+      let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
+      functionPointObj.deptId = deptId;
+      that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
+    },
     saveCompanyRule () {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
       }
       var that = this;
-
-      let companyId = "";
-      that.companyTreeSelectNode.companyIds.forEach(id => {
-        companyId = companyId + "," + id;
-      });
-      let deptId = "";
-      that.companyTreeSelectNode.deptIds.forEach(id => {
-        deptId = deptId + "," + id;
-      });
-      companyId = companyId.substr(1, companyId.length);
-      deptId = deptId.substr(1, deptId.length);
-      that.paramsObj.companyId = companyId;
-      that.paramsObj.deptId = deptId;
+      that.paramsObj.ruleType = this.ruleParamsObj.type;
+      let functionPointList = [];
+      that.paramsObj.functionPointArray.forEach(obj => {functionPointList.push(new Object(obj))})
+      that.paramsObj.functionPointList = functionPointList;
+      that.paramsObj.functionPointArray = new Array();
       console.log(that.paramsObj, "save company ...");
       this.$api
         .post({
-          url: "/sys/rule/employee/company/set",
+          url: "/sys/rule/employee/company/set/gather",
           data: that.paramsObj,
           qs: true
         })
@@ -345,36 +364,14 @@ export default {
           }
         });
     },
-
-    // //动态加载节点
-    // loadCompanyTreeNode (node, resolve) {
-    //   if (node.level == 0) {
-    //     this.node = node;
-    //     this.resolve = resolve;
-    //   }
-    //   console.log(node, resolve, "load tree node");
-    //   //读取功能点数据
-    //   var pId = node.id;
-    //   var type = null;
-    //   if (node.data) {
-    //     pId = node.data.id;
-    //     type = node.data.type;
-    //   }
-    //   this.$api
-    //     .post({
-    //       url: "/sys/tree/unit",
-    //     })
-    //     .then(e => {
-    //       console.log(e.data);
-    //       let result = e.data;
-    //       if (result.code == 200) {
-    //         resolve(result.data); //动态加载时
-    //       } else {
-    //         console.log("发送公告结果：" + result.message);
-    //         alert(result.message);
-    //       }
-    //     });
-    // },
+    foreachList(list){
+      let temp = "";
+      list.forEach(id => {
+        temp = temp + "," + id;
+      });
+      temp = temp.substr(1, temp.length);
+      return temp;
+    },
 
     //选中节点
     checkNode (data, checkedData) {
@@ -388,6 +385,10 @@ export default {
             this.companyTreeSelectNode.deptIds.push(node.businessId);
           }
         })
+        //设置节点数据权限
+        this.currentNode.data.companyGather = this.foreachList(this.companyTreeSelectNode.companyIds);
+        this.currentNode.data.deptGather = this.foreachList(this.companyTreeSelectNode.deptIds);
+        this.putParams(this.currentNode);
       }
 
     },

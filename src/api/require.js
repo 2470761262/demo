@@ -88,7 +88,7 @@ let ApiData = {
             token: true
         }, arg);
         if (sendConfig.qs && sendConfig.qs == true) // 格式化表单数据
-            sendConfig.data = qs.stringify(sendConfig.data);
+            sendConfig.data = qs.stringify(sendConfig.data,{ allowDots: true });
         return new Promise((resolve, reject) => {
             http(sendConfig).then((e) => {
                 resolve(e)
