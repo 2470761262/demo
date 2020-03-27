@@ -54,7 +54,7 @@
                     clearable />
         </div>
         <div class="query-content-cell cell-interval75">
-          <h3 class="query-cell-title">业主</h3>
+          <h3 class="query-cell-title">电话</h3>
           <el-input placeholder="业主电话"
                     v-model="data.tel"
                     class="set-input200"

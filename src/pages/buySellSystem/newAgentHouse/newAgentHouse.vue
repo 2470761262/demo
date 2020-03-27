@@ -67,19 +67,19 @@
   </list-page>
 </template>
 <script>
-import listPage from '@/components/listPage';
-import Vue from 'Vue'
-import VueCookies from 'vue-cookies';
+import listPage from "@/components/listPage";
+import Vue from "Vue";
+import VueCookies from "vue-cookies";
 
 import houseContrast from "@/minxi/houseContrast";
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
-  mixins: [getMenuRid,houseContrast],
+  mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
     houseContrast
   },
-  data () {
+  data() {
     return {
       loading: true, //控制表格加载动画提示
       pageJson: {
@@ -88,15 +88,15 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: 'HouseNo', label: "房源编号" },
-        { prop: 'CommunityName', label: "楼盘名称" },
-        { prop: 'Price', label: "售价(万元)" },
-        { prop: 'InArea', label: "面积(m²)" },
-        { prop: 'PropertyFee', label: "均价(元/平)" },
-        { prop: 'hall', label: "户型" },
-        { prop: 'Decoration', label: "装修程度" },
-        { prop: 'AgentPer', label: "跟单人" },
-        { prop: 'AddTime', label: "录入时间" }
+        { prop: "HouseNo", label: "房源编号" },
+        { prop: "CommunityName", label: "楼盘名称" },
+        { prop: "Price", label: "售价(万元)" },
+        { prop: "InArea", label: "面积(m²)" },
+        { prop: "PropertyFee", label: "均价(元/平)" },
+        { prop: "hall", label: "户型" },
+        { prop: "Decoration", label: "装修程度" },
+        { prop: "AgentPer", label: "跟单人" },
+        { prop: "AddTime", label: "录入时间" }
       ],
       tableData: [],
       elTabs: {
@@ -115,87 +115,101 @@ export default {
             { label: '草稿房源', name: 'tab11' },*/
         ]
       },
-      options: [{
-        value: '选项1',
-        label: '全部'
-      }, {
-        value: '选项2',
-        label: '待验真'
-      }, {
-        value: '选项3',
-        label: '客户验真'
-      }, {
-        value: '选项4',
-        label: '店长验真'
-      }, {
-        value: '选项5',
-        label: '验真失败'
-      }, {
-        value: '选项6',
-        label: '已过期'
-      }],
+      options: [
+        {
+          value: "选项1",
+          label: "全部"
+        },
+        {
+          value: "选项2",
+          label: "待验真"
+        },
+        {
+          value: "选项3",
+          label: "客户验真"
+        },
+        {
+          value: "选项4",
+          label: "店长验真"
+        },
+        {
+          value: "选项5",
+          label: "验真失败"
+        },
+        {
+          value: "选项6",
+          label: "已过期"
+        }
+      ],
       queryData: {
-        communityName: ''
+        communityName: ""
       }
-    }
+    };
   },
-  mounted () {
+  mounted() {
     this.queryVerifyHouseByParams(1);
   },
   methods: {
-    queryVerifyHouseByParams () {
+    queryVerifyHouseByParams() {
       this.queryVerifyHouseDatas(1);
     },
-    queryVerifyHouseDatas (currentPage) {
-
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '' };
+    handleClick() {},
+    queryVerifyHouseDatas(currentPage) {
+      let params = {
+        limit: this.pageJson.pageSize + "",
+        page: currentPage + ""
+      };
       let that = this;
       if (this.queryData.communityName != null) {
         // params.communityName = this.queryData.communityName;
         console.log("参数");
       }
-      this.$api.post({
-        url: '/agent_house/queryNewHouse',
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: params,
-        token: false
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        that.loading = false;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          that.pageJson.total = result.data.totalCount;
-          that.pageJson.currentPage = result.data.currPage;
-          this.tableData = result.data.list;
-          console.log(result.data.list);
-        } else {
-          console.log("查询我的房源列表结果：" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询我的房源列表失败");
-        console.log(e);
-      })
+      this.$api
+        .post({
+          url: "/agent_house/queryNewHouse",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params,
+          token: false
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          that.loading = false;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            that.pageJson.total = result.data.totalCount;
+            that.pageJson.currentPage = result.data.currPage;
+            this.tableData = result.data.list;
+            console.log(result.data.list);
+          } else {
+            console.log("查询我的房源列表结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询我的房源列表失败");
+          console.log(e);
+        });
     },
 
-    queryTabData () { },
-    distributeEvent (e, noticeId) {
+    queryTabData() {},
+    distributeEvent(e, noticeId) {
       this[e](noticeId);
     },
 
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    showNoticeDetail (noticeId) {
-      this.$router.push({ name: "houseDetails", params: { houseId: noticeId } });
+    showNoticeDetail(noticeId) {
+      this.$router.push({
+        name: "houseDetails",
+        params: { houseId: noticeId }
+      });
     }
-
-
-  },
-}
+  }
+};
 </script>

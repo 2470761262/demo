@@ -119,20 +119,24 @@ export default {
   },
   mounted() {
     document.querySelector("body").addEventListener("mousemove", this.move);
-
-   this.$once('hook:beforeDestroy', () => {            
-        clearInterval(timer); 
-         document.querySelector("body").removeEventListener("mousemove",this.move)                                  
-    })
+  },
+  destroyed() {
+    document.querySelector("body").removeEventListener("mousemove", this.move);
   },
   methods: {
-      move(e){
-   let rotateX = -(window.innerWidth / 2 - e.pageX) / 100;
-      let rotateY = -(80 / 2 - e.pageY) / 80;
-      document.querySelector(
-        ".happy-day-contet"
-      ).style.cssText = `transform:rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      },
+    move(e) {
+      try {
+        let rotateX = -(window.innerWidth / 2 - e.pageX) / 100;
+        let rotateY = -(80 / 2 - e.pageY) / 80;
+        document.querySelector(
+          ".happy-day-contet"
+        ).style.cssText = `transform:rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      } catch (error) {
+        document
+          .querySelector("body")
+          .removeEventListener("mousemove", this.move);
+      }
+    },
     handleCommand(command) {
       this.$message("item " + command);
     },

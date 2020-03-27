@@ -22,16 +22,16 @@
     background: none;
     border: none;
   }
-  &::after {
-    content: attr(data-tips);
-    line-height: 40px;
-    font-size: 14px;
-    margin-left: 20px;
-    color: #606266;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
+  //   &::after {
+  //     content: attr(data-tips);
+  //     line-height: 40px;
+  //     font-size: 14px;
+  //     margin-left: 20px;
+  //     color: #606266;
+  //     overflow: hidden;
+  //     white-space: nowrap;
+  //     text-overflow: ellipsis;
+  //   }
 }
 .page-form-tips {
   height: 50px;
@@ -97,7 +97,7 @@
     justify-content: center;
     align-items: center;
     color: black;
-    padding: 0 14px;
+    width: 115px;
     border: 2px solid var(--color--primary);
     cursor: pointer;
     .reset-icon {
@@ -124,6 +124,21 @@
 }
 /deep/.vue-slider-process {
   background-color: var(--color--primary);
+}
+/deep/.vue-slider-ltr {
+  height: 8px !important;
+  .vue-slider-mark {
+    width: 8px !important;
+    .vue-slider-mark-step {
+      background: #fff;
+    }
+  }
+  .vue-slider-rail {
+    .vue-slider-marks {
+      background-color: var(--color--primary);
+      opacity: 0.4;
+    }
+  }
 }
 .tooltipsItem {
   width: 100%;
@@ -198,114 +213,97 @@
 </style>
 <template >
   <div class="query-warp">
-    <el-form
-      ref="form"
-      @submit.native.prevent
-      :model="form"
-      label-width="75px"
-      label-position="left"
-    >
-      <el-form-item prop="type" class="ohter-item">
+    <el-form ref="form"
+             @submit.native.prevent
+             :model="form"
+             label-width="75px"
+             label-position="left">
+      <el-form-item prop="type"
+                    class="ohter-item">
         <div class="select-input">
           <div class="select-input-set">
             <i class="el-icon-search"></i>
-            <input type="text" class="select-input-sub" placeholder="请输入关键字" v-model="searchData" />
+            <input type="text"
+                   class="select-input-sub"
+                   placeholder="请输入关键字"
+                   v-model="searchData" />
           </div>
-          <div class="select-but-sub" @click="search">开始搜索</div>
-          <div class="select-but-reset" @click="resetForm('form')">
+          <div class="select-but-sub"
+               @click="search">开始搜索</div>
+          <div class="select-but-reset"
+               @click="resetForm('form')">
             <i class="el-icon-refresh reset-icon"></i>
             <span class="select-but-reset-title">重置</span>
           </div>
         </div>
       </el-form-item>
-      <!-- <div class="select-input">
-        <div class="select-input-set">
-          <i class="el-icon-search"></i> <input type="text"
-                 class="select-input-sub"
-                 placeholder="请输入关键字"
-                 v-model="searchData" />
-        </div>
-        <div class="select-but-sub"
-             @click="search">开始搜索</div>
-        <div class="select-but-reset"
-             @click="resetForm('form')">
-          <i class="el-icon-refresh reset-icon"></i>
-          <span class="select-but-reset-title">重置</span>
-        </div>
-      </div>-->
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
-        <el-form-item label="楼盘名称" prop="comId">
-          <el-select
-            v-model="form.comId"
-            @focus="remoteInput"
-            @change="queryCBId()"
-            filterable
-            remote
-            clearable
-            placeholder="请输入楼盘进行搜索"
-            :remote-method="remoteMethod"
-            :loading="loading"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+        <el-form-item label="楼盘名称"
+                      prop="comId">
+          <el-select v-model="form.comId"
+                     @focus="remoteInput"
+                     @change="queryCBId"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="请输入楼盘进行搜索"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in options"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="栋座" prop="cbId" class="page-label-center">
-          <el-select
-            v-model="form.cbId"
-            filterable
-            clearable
-            placeholder="请选择楼栋"
-            @change="queryRoomNo()"
-          >
-            <el-option
-              v-for="item in cbIdList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+        <el-form-item label="栋座"
+                      prop="cbId"
+                      class="page-label-center">
+          <el-select v-model="form.cbId"
+                     filterable
+                     clearable
+                     placeholder="请选择楼栋"
+                     @change="queryRoomNo">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="房间号" prop="roomNo" clearable class="page-label-center">
-          <el-select v-model="form.roomNo" filterable placeholder="请选择房间号">
-            <el-option
-              v-for="item in roomNoList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+        <el-form-item label="房间号"
+                      prop="roomNo"
+                      clearable
+                      class="page-label-center">
+          <el-select v-model="form.roomNo"
+                     filterable
+                     placeholder="请选择房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
         </el-form-item>
       </div>
       <!-- 售价 -->
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="售价">
-          <vue-slider
-            v-model="Slider.priceSlider"
-            :min="sliderMinMax.min"
-            :marks="priceSliderMarks"
-            tooltip="none"
-            :lazy="true"
-            @change="priceSliderChange"
-            :contained="true"
-            :dot-size="[25,25]"
-            :max="sliderMinMax.max"
-          >
+          <vue-slider v-model="Slider.priceSlider"
+                      :data="['20','60','80','100','120','140','200','300','9999']"
+                      :marks="priceSliderMarks"
+                      tooltip="none"
+                      :lazy="true"
+                      @change="priceSliderChange"
+                      :contained="true"
+                      :dot-size="[25,25]">
             <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process" :style="style">
-                <div
-                  v-show="end !=0"
-                  :class="[
+              <div class="vue-slider-process"
+                   :style="style">
+                <div v-show="end !=0"
+                     :class="[
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
-            ]"
-                >{{ Slider.priceSlider[index] }}￥ - {{ Slider.priceSlider[index + 1] }}￥</div>
+            ]">{{ Slider.priceSlider[index] }}￥ - {{ Slider.priceSlider[index + 1]  == '9999' ? '无限' : Slider.priceSlider[index + 1] }}￥</div>
               </div>
             </template>
             <template v-slot:dot>
@@ -314,31 +312,26 @@
           </vue-slider>
         </el-form-item>
       </div>
-      <!-- 面积 -->
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="面积">
-          <vue-slider
-            class="vue-slider-index1"
-            v-model="Slider.areaSlider"
-            :min="sliderMinMax.min"
-            :marks="areaSliderMarks"
-            tooltip="none"
-            :lazy="true"
-            @change="areaSliderChange"
-            :contained="true"
-            :dot-size="[25,25]"
-            :max="sliderMinMax.max"
-          >
+          <vue-slider class="vue-slider-index1"
+                      v-model="Slider.areaSlider"
+                      :data="['20','60','80','100','120','140','200','300','9999']"
+                      :marks="areaSliderMarks"
+                      tooltip="none"
+                      :lazy="true"
+                      @change="areaSliderChange"
+                      :contained="true"
+                      :dot-size="[25,25]">
             <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process" :style="style">
-                <div
-                  v-show="end !=0"
-                  :class="[
+              <div class="vue-slider-process"
+                   :style="style">
+                <div v-show="end !=0"
+                     :class="[
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
-            ]"
-                >{{ Slider.areaSlider[index] }}㎡ - {{ Slider.areaSlider[index + 1] }}㎡</div>
+            ]">{{ Slider.areaSlider[index] }}㎡ - {{ Slider.areaSlider[index + 1] == '9999' ? '无限' : Slider.areaSlider[index + 1]  }}㎡</div>
               </div>
             </template>
             <template v-slot:dot>
@@ -350,28 +343,24 @@
       <!-- 楼层 -->
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="楼层">
-          <vue-slider
-            class="vue-slider-index2"
-            v-model="Slider.flootSlider"
-            :min="flootMinMax.min"
-            :marks="flootSliderMarks"
-            tooltip="none"
-            :lazy="true"
-            :contained="true"
-            :dot-size="[25,25]"
-            @change="flootSliderChange"
-            :max="flootMinMax.max"
-          >
+          <vue-slider class="vue-slider-index2"
+                      v-model="Slider.flootSlider"
+                      :data="['-2','5','10','15','20','25','30','40','9999']"
+                      :marks="flootSliderMarks"
+                      tooltip="none"
+                      :lazy="true"
+                      :contained="true"
+                      :dot-size="[25,25]"
+                      @change="flootSliderChange">
             <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process" :style="style">
-                <div
-                  v-show="end !=0"
-                  :class="[
+              <div class="vue-slider-process"
+                   :style="style">
+                <div v-show="end !=0"
+                     :class="[
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
-            ]"
-                >{{ Slider.flootSlider[index] }}层 - {{ Slider.flootSlider[index + 1] }}层</div>
+            ]">{{ Slider.flootSlider[index] }}层 - {{ Slider.flootSlider[index + 1] == '9999' ? '无限' : Slider.flootSlider[index + 1]  }}层</div>
               </div>
             </template>
             <template v-slot:dot>
@@ -380,105 +369,156 @@
           </vue-slider>
         </el-form-item>
       </div>
-      <el-form-item label="商圈" prop="business">
-        <el-checkbox-group class="checkbox-flex" v-model="form.business" size="small">
-          <div v-for="(item,index) in businessList" :key="index" class="checkbox-flex-pad">
-            <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top">
-              <el-checkbox :label="item.value" name="business" border>{{item.name}}</el-checkbox>
+      <el-form-item label="商圈"
+                    prop="business">
+        <el-checkbox-group class="checkbox-flex"
+                           v-model="form.business"
+                           size="small">
+          <div v-for="(item,index) in businessList"
+               :key="index"
+               class="checkbox-flex-pad">
+            <el-tooltip :content="item.name"
+                        :disabled="item.name.length < 4"
+                        placement="top">
+              <el-checkbox :label="item.value"
+                           name="business"
+                           border>{{item.name}}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="房型" prop="houseType">
-        <el-checkbox-group v-model="form.houseType" class="checkbox-flex" size="small">
-          <div v-for="(item,index) in houseTypeList" :key="index" class="checkbox-flex-pad">
-            <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top">
-              <el-checkbox :label="item.value" name="houseType" border>{{item.name}}</el-checkbox>
+      <el-form-item label="房型"
+                    prop="houseType">
+        <el-checkbox-group v-model="form.houseType"
+                           class="checkbox-flex"
+                           size="small">
+          <div v-for="(item,index) in houseTypeList"
+               :key="index"
+               class="checkbox-flex-pad">
+            <el-tooltip :content="item.name"
+                        :disabled="item.name.length < 4"
+                        placement="top">
+              <el-checkbox :label="item.value"
+                           name="houseType"
+                           border>{{item.name}}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="装修" prop="renovation">
-        <el-checkbox-group v-model="form.renovation" class="checkbox-flex" size="small">
-          <div v-for="(item,index) in renovationList" :key="index" class="checkbox-flex-pad">
-            <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top">
-              <el-checkbox :label="item.value" name="renovation" border>{{item.name}}</el-checkbox>
+      <el-form-item label="装修"
+                    prop="renovation">
+        <el-checkbox-group v-model="form.renovation"
+                           class="checkbox-flex"
+                           size="small">
+          <div v-for="(item,index) in renovationList"
+               :key="index"
+               class="checkbox-flex-pad">
+            <el-tooltip :content="item.name"
+                        :disabled="item.name.length < 4"
+                        placement="top">
+              <el-checkbox :label="item.value"
+                           name="renovation"
+                           border>{{item.name}}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="房源用途" prop="purpose">
-        <el-checkbox-group v-model="form.purpose" class="checkbox-flex" size="small">
-          <div class="checkbox-flex-pad" v-for="(item,index) in purposeList" :key="index">
-            <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top">
-              <el-checkbox :label="item.value" name="purpose" border>{{item.name}}</el-checkbox>
+      <el-form-item label="房源用途"
+                    prop="purpose">
+        <el-checkbox-group v-model="form.purpose"
+                           class="checkbox-flex"
+                           size="small">
+          <div class="checkbox-flex-pad"
+               v-for="(item,index) in purposeList"
+               :key="index">
+            <el-tooltip :content="item.name"
+                        :disabled="item.name.length < 4"
+                        placement="top">
+              <el-checkbox :label="item.value"
+                           name="purpose"
+                           border>{{item.name}}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="朝向" prop="face">
-        <el-checkbox-group v-model="form.face" class="checkbox-flex" size="small">
-          <div v-for="(item,index) in faceList" :key="index" class="checkbox-flex-pad">
-            <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top">
-              <el-checkbox :label="item.value" name="face" border>{{item.name}}</el-checkbox>
+      <el-form-item label="朝向"
+                    prop="face">
+        <el-checkbox-group v-model="form.face"
+                           class="checkbox-flex"
+                           size="small">
+          <div v-for="(item,index) in faceList"
+               :key="index"
+               class="checkbox-flex-pad">
+            <el-tooltip :content="item.name"
+                        :disabled="item.name.length < 4"
+                        placement="top">
+              <el-checkbox :label="item.value"
+                           name="face"
+                           border>{{item.name}}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <div class="page-form-inline marginBotEmp">
-        <el-form-item label="小学划片" prop="primarySchool">
-          <el-checkbox-group v-model="form.primarySchool" class="checkbox-flex" size="small">
-            <div v-for="(item,index) in primarySchoolList" :key="index" class="checkbox-flex-pad">
-              <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top" v-if ="(index < 5)">
-                <el-checkbox :label="item.value" name="primarySchool" border>{{item.name}}</el-checkbox>
-              </el-tooltip>
-            </div>
-            <div class="marLeft20">
-              <el-select placeholder="更多选择" clearable v-model="primarySchoolInput"  @change="addInputToList('primarySchool','primarySchoolInput')">                
-                <template  v-for="(item,index) in primarySchoolList">
-                  <el-option
-                    v-if="index > 5"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"                 
-                  >
+      <el-form-item label="小学划片"
+                    prop="primarySchool">
+        <el-checkbox-group v-model="form.primarySchool"
+                           class="checkbox-flex"
+                           size="small">
+          <div v-for="(item,index) in MathPrimarySchoolListfirst"
+               :key="index"
+               class="checkbox-flex-pad">
+            <el-tooltip :content="item.name"
+                        placement="top">
+              <el-checkbox :label="item.value"
+                           name="primarySchool"
+                           border>{{item.name}}</el-checkbox>
+            </el-tooltip>
+          </div>
+          <div class="marLeft20">
+            <el-select placeholder="更多选择"
+                       clearable
+                       v-model="primarySchoolInput"
+                       @change="addInputToList('primarySchool','primarySchoolInput')">
+              <template v-for="item in MathPrimarySchoolListLast">
+                <el-option :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
                 </el-option>
-                </template>               
-              </el-select>
-            </div>
-          </el-checkbox-group>
-        </el-form-item>
-      </div>
-      <div class="page-form-inline marginBotEmp">
-        <el-form-item label="中学划片" prop="middleSchool">
-          <el-checkbox-group v-model="form.middleSchool" class="checkbox-flex" size="small">
-            <div v-for="(item,index) in middleSchoolList" :key="index" class="checkbox-flex-pad">
-              <el-tooltip :content="item.name" :disabled="item.name.length < 4" placement="top"  v-if ="(index < 5)">
-                <el-checkbox :label="item.value" name="middleSchool" border>{{item.name}}</el-checkbox>
-              </el-tooltip>
-            </div>
-            <div class="marLeft20">
-              <el-select placeholder="更多选择" clearable v-model="middleSchoolInput"   @change="addInputToList('middleSchool','middleSchoolInput')" >
-                <template  v-for="(item,index) in middleSchoolList">
-                  <el-option                
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                    v-if="index > 5"
-                  >
-                  </el-option>
-                </template>     
-              </el-select>
-            </div>
-          </el-checkbox-group>
-        </el-form-item>
-      </div>
-      <!-- <el-button-group>
-        <el-button type="info"
-                   @click="resetForm('form')">重置</el-button>
-        <el-button type="primary"
-                   @click="mateHouse()">配对</el-button>
-      </el-button-group>-->
+              </template>
+            </el-select>
+          </div>
+        </el-checkbox-group>
+      </el-form-item>
+      <el-form-item label="中学划片"
+                    prop="middleSchool">
+        <el-checkbox-group v-model="form.middleSchool"
+                           class="checkbox-flex"
+                           size="small">
+          <div v-for="(item,index) in MathMiddleSchoolListfirst"
+               :key="index"
+               class="checkbox-flex-pad">
+            <el-tooltip :content="item.name"
+                        placement="top">
+              <el-checkbox :label="item.value"
+                           name="middleSchool"
+                           border>{{item.name}}</el-checkbox>
+            </el-tooltip>
+          </div>
+          <div class="marLeft20">
+            <el-select placeholder="更多选择"
+                       clearable
+                       v-model="middleSchoolInput"
+                       @change="addInputToList('middleSchool','middleSchoolInput')">
+              <template v-for="item in MathMiddleSchoolListLast">
+                <el-option :key="item.value"
+                           :label="item.label"
+                           :value="item.value">
+                </el-option>
+              </template>
+            </el-select>
+          </div>
+        </el-checkbox-group>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -491,7 +531,8 @@ const areaSliderMarks = {
   "120": "120㎡",
   "140": "140㎡",
   "200": "200㎡",
-  "300": "300㎡"
+  "300": "300㎡",
+  "9999": "∞"
 };
 const priceSliderMarks = {
   "20": "20万",
@@ -501,7 +542,8 @@ const priceSliderMarks = {
   "120": "120万",
   "140": "140万",
   "200": "200万",
-  "300": "300万"
+  "300": "300万",
+  "9999": "∞"
 };
 const flootSliderMarks = {
   "-2": "-2层",
@@ -511,7 +553,8 @@ const flootSliderMarks = {
   "20": "20层",
   "25": "25层",
   "30": "30层",
-  "40": "40层"
+  "40": "40层",
+  "9999": "∞"
 };
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";
@@ -521,17 +564,23 @@ export default {
   components: {
     VueSlider
   },
+  computed: {
+    MathPrimarySchoolListfirst() {
+      return this.primarySchoolList.slice(0, 5);
+    },
+    MathPrimarySchoolListLast() {
+      return this.primarySchoolList.slice(5);
+    },
+    MathMiddleSchoolListfirst() {
+      return this.middleSchoolList.slice(0, 5);
+    },
+    MathMiddleSchoolListLast() {
+      return this.middleSchoolList.slice(5);
+    }
+  },
   data() {
     return {
       searchData: "",
-      flootMinMax: {
-        min: -2,
-        max: 40
-      },
-      sliderMinMax: {
-        min: 20,
-        max: 300
-      },
       areaSliderMarks: areaSliderMarks,
       priceSliderMarks: priceSliderMarks,
       flootSliderMarks: flootSliderMarks,

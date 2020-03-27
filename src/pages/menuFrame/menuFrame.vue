@@ -63,12 +63,15 @@
 <template >
   <section class="page-cell-conter">
     <el-container>
-      <el-header v-if="asideNavFlag" height="80px">
+      <el-header v-if="asideNavFlag"
+                 height="80px">
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
-    <el-container class="page-cell-main">
-      <el-aside class="el-background" v-if="asideNavFlag">
+    <el-container class="page-cell-main"
+                  id="page-cell-main">
+      <el-aside class="el-background"
+                v-if="asideNavFlag">
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
