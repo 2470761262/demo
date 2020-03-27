@@ -120,6 +120,9 @@ export default {
               let data = e.data
               this.$message.error(data.message);
               if (data.code == 200) {
+                 this.$alert('对赌已生效', '支付成功', {
+                   confirmButtonText: '加油',
+                 });
                 but.$emit("getBetInfo")
               }
             }).catch((e) => {

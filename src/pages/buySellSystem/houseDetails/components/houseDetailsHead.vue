@@ -4,12 +4,12 @@
   .heard-message {
     width: 480px;
     .heard-message-title {
-      font-size: 24px;
+      font-size: 23px;
       color: black;
       font-weight: 600;
     }
     .heard-message-position {
-      font-size: 14px;
+      font-size: 15px;
       margin: 8px 0;
       .icon {
         font-size: 16px;
@@ -49,7 +49,7 @@
         span {
           color: #fff;
           line-height: 1;
-          font-size: 14px;
+          font-size: 15px;
           white-space: nowrap;
         }
         .icon {
@@ -68,22 +68,22 @@
   }
   .heard-item {
     display: flex;
-    flex: 1;
+    width: 210px;
     height: 70px;
     align-self: center;
     border-right: 1px solid #d5d5d5;
     box-sizing: border-box;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
     &:nth-child(2) {
       border-left: 1px solid #d5d5d5;
-      margin-left: 25px;
+      // margin-left: 25px;
     }
     &:last-child {
       border-right: none;
-      flex: 0 0 300px;
-      cursor: auto;
+      flex: 1;
+      cursor: pointer;
     }
     > .icon {
       font-size: 50px;
@@ -92,7 +92,7 @@
     }
     > span {
       color: #b8b8b8;
-      font-size: 20px;
+      font-size: 23px;
       font-weight: 600;
     }
     .qr-content {
@@ -106,7 +106,9 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        font-size: 15px;
         .qr-title {
+          font-size: inherit;
           color: #8f8f8f;
         }
         .qr-NO {
@@ -121,6 +123,14 @@
 }
 .qrcode {
   margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.colorOrange {
+  color: #f4ea29 !important;
+}
+.colorRed {
+  color: #da1d07 !important;
 }
 </style>
 <template>
@@ -143,7 +153,7 @@
       <!-- 房源印象 -->
       <section class="heard-item"
                @click="nodePop">
-        <i class="el-icon-sunny icon"></i>
+        <i class="iconyinxiang iconfont icon"></i>
         <span>房源印象</span>
       </section>
       <!-- 写跟进 -->
@@ -155,20 +165,22 @@
       <!-- 已关注 -->
       <section class="heard-item"
                @click="changCollectHouse">
-        <i class="el-icon-sunny icon"></i>
+        <i class="iconfont icon colorOrange"
+           :class="isCollect ? 'iconguanzhu' : 'iconguanzhu1'"></i>
         <span>{{isCollect? '已关注':'关注'}}</span>
       </section>
       <!-- 举报 -->
       <section class="heard-item"
                @click="openReport">
-        <i class="el-icon-sunny icon"></i>
+        <i class=" iconfont colorRed icon iconjubao"></i>
         <span>举报</span>
       </section>
       <!-- 二维码 -->
       <article class="heard-item">
         <div class="qr-content">
           <div id="qrcode"
-               :class="{'qrcode':qrData}"></div>
+               :class="{'qrcode':qrData}"
+               v-text="qrData ? '':'二维码失败'"></div>
           <div class="qr-code-msg">
             <h3 class="qr-title">房源编号:</h3>
             <div class="qr-NO">{{resultData.HouseNo}}</div>
@@ -193,12 +205,12 @@
   </section>
 </template>
 <script>
-//写跟进弹出层 
-import followUp from '../didLog/followUp';
+//写跟进弹出层
+import followUp from "../didLog/followUp";
 //举报弹出层
-import report from '../didLog/report';
+import report from "../didLog/report";
 //关注弹出层
-import attention from '../didLog/attention';
+import attention from "../didLog/attention";
 //二维码
 import QRCode from "qrcodejs2";
 //房源审核
@@ -208,7 +220,7 @@ export default {
   watch: {
     houseDetails: {
       deep: true,
-      handler: function (newValue) {
+      handler: function(newValue) {
         let _that = this;
         if (Object.keys(newValue).length > 0) {
           this.qrData = new QRCode("qrcode", {
@@ -217,42 +229,42 @@ export default {
             text: newValue.data.shareQRCode,
             colorDark: "#000",
             colorLight: "#fff"
-          })
+          });
         }
       }
-    },
+    }
   },
   components: {
     followUp,
     report,
     attention
   },
-  created () {
+  created() {
     this.getImpressionList();
     this.getisCollect();
   },
   computed: {
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
-        return this.houseDetails.data
+        return this.houseDetails.data;
       } else {
         return {};
       }
     }
   },
-  data () {
+  data() {
     return {
       qrData: null,
       followUpFlag: false, //跟进开关
       reportFlag: false, //举报开关
-      impressionList: [],//印象数组
+      impressionList: [], //印象数组
       isCollect: false,
       attentionFlag: false //关注开关
-    }
+    };
   },
   methods: {
     //关注或者取消关注
-    changCollectHouse () {
+    changCollectHouse() {
       let that = this;
       let ajaxurl = "";
       let params = {
@@ -267,7 +279,7 @@ export default {
         .post({
           url: ajaxurl,
           data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           let result = e.data;
@@ -287,7 +299,7 @@ export default {
         });
     },
     //获取是否关注标记
-    getisCollect () {
+    getisCollect() {
       let that = this;
       this.$api
         .get({
@@ -295,7 +307,7 @@ export default {
           data: {
             houseId: that.houseId.id
           },
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           let result = e.data;
@@ -303,10 +315,10 @@ export default {
             that.isCollect = result.data;
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     //删除印象
-    deleteImpression (impressionId, index) {
+    deleteImpression(impressionId, index) {
       let that = this;
       let params = {
         impressionId: impressionId
@@ -315,7 +327,7 @@ export default {
         .post({
           url: "/agentHouse/impression/deleteImpression",
           data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           that.$message(e.data.message);
@@ -325,7 +337,7 @@ export default {
         });
     },
     //添加印象
-    insertImpression (impression) {
+    insertImpression(impression) {
       let that = this;
       let params = {
         houseId: this.houseId.id,
@@ -335,22 +347,22 @@ export default {
         .post({
           url: "/agentHouse/impression/insertImpression",
           data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           that.$message(e.data.message);
           if (e.data.code == 200) {
             that.getImpressionList();
           }
-
-        }).catch(e => {
+        })
+        .catch(e => {
           if (e.response != undefined) {
             that.$message(e.response.data.message);
           }
         });
     },
     //获取印象数组
-    getImpressionList () {
+    getImpressionList() {
       let that = this;
       let params = {
         houseId: this.houseId.id
@@ -359,47 +371,48 @@ export default {
         .get({
           url: "/agentHouse/impression/getImpressionList",
           data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
             that.impressionList = result.data;
           }
-
         });
     },
     //打开举报弹窗
-    async  openReport () {
-      let isChecking = await houseCheck.isChecking(11, 0, this.houseId.id, "该房源已被举报，当前正在审核中");
+    async openReport() {
+      let isChecking = await houseCheck.isChecking(
+        11,
+        0,
+        this.houseId.id,
+        "该房源已被举报，当前正在审核中"
+      );
       if (!isChecking) {
         this.reportFlag = true;
       }
-
     },
-    openPopUp (PopName) {
+    openPopUp(PopName) {
       this[PopName] = true;
     },
-    nodePop () {
+    nodePop() {
       let that = this;
-      this.$prompt(null, '房源印象显示在房源左上角,仅自己可见', {
-        confirmButtonText: '添加',
-        cancelButtonText: '取消',
-        inputPlaceholder: '推荐5个字以内',
+      this.$prompt(null, "房源印象显示在房源左上角,仅自己可见", {
+        confirmButtonText: "添加",
+        cancelButtonText: "取消",
+        inputPlaceholder: "推荐5个字以内",
         lockScroll: false,
-        inputValidator: (e) => {
-          if (!e || e.length > 10)
-            return '不能是空, 或者不能大于10个字';
+        inputValidator: e => {
+          if (!e || e.length > 10) return "不能是空, 或者不能大于10个字";
           if (!e || /(.+)\1{2,}/.test(e)) {
-            return '不能连续输入重复的字符';
+            return "不能连续输入重复的字符";
           }
-
         },
-        beforeClose (action, instance, done) {
-          if (action === 'confirm') {
+        beforeClose(action, instance, done) {
+          if (action === "confirm") {
             instance.confirmButtonLoading = true;
-            instance.confirmButtonText = '执行中...';
-            that.insertImpression(instance.inputValue)
+            instance.confirmButtonText = "执行中...";
+            that.insertImpression(instance.inputValue);
             setTimeout(() => {
               done();
               instance.confirmButtonLoading = false;
@@ -408,12 +421,12 @@ export default {
             done();
           }
         }
-      }).then((value) => {
-        console.log(action, instance, done);
-      }).catch(() => {
-
       })
+        .then(value => {
+          console.log(action, instance, done);
+        })
+        .catch(() => {});
     }
-  },
-}
+  }
+};
 </script>

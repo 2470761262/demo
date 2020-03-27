@@ -1,8 +1,8 @@
 <style lang="less" scoped>
 .detail-content {
-  padding: 0 0px 0 70px;
+  padding-left: 68px;
   .detail-price-content {
-    padding-bottom: 10px;
+    padding-bottom: 23px;
     border-bottom: 1px solid #cccccc;
     font-size: 0;
     line-height: 1;
@@ -13,7 +13,7 @@
         font-size: 60px;
       }
       span:last-child {
-        font-size: 22px;
+        font-size: 23px;
         vertical-align: text-bottom;
         font-weight: 600;
       }
@@ -21,10 +21,10 @@
     .detail-price-avg {
       display: inline-block;
       vertical-align: text-bottom;
-      font-size: 18px;
+      font-size: 23px;
       font-weight: 600;
       color: #878787;
-      margin-left: 35px;
+      margin-left: 40px;
     }
   }
   .content-flex {
@@ -32,18 +32,18 @@
     justify-content: space-between;
     border-bottom: 1px solid #cccccc;
     &.content-pad {
-      padding: 15px 0;
+      padding: 26px 0;
     }
     .cell-item {
       text-align: center;
       .cell-item-head {
-        font-size: 28px;
+        font-size: 31px;
         color: #515151;
         font-weight: 600;
       }
       .cell-tiem-floot {
-        margin-top: 5px;
-        font-size: 18px;
+        margin-top: 9px;
+        font-size: 21px;
         color: #999999;
       }
     }
@@ -51,7 +51,7 @@
   .cell-tabs-content {
     // display: flex;
     border-bottom: 1px solid #cccccc;
-    padding: 15px 0;
+    padding: 19px 0 25px 11px;
     .flex-row {
       display: flex;
       .cell-tabs {
@@ -64,20 +64,23 @@
     }
     .cell-tabs {
       display: flex;
-      margin-top: 20px;
+      margin-top: 25px;
       .cell-tabs-title {
         color: #a7a7a7;
-        font-size: 18px;
-        width: 120px;
+        font-size: 20px;
+        width: 150px;
+        &.last-tabs-title {
+          width: 120px;
+        }
       }
       .cell-tabs-detail {
-        font-size: 18px;
+        font-size: 20px;
         color: #606060;
       }
       .cell-tabs-nav {
         align-self: center;
         color: #0e834e;
-        font-size: 18px;
+        font-size: 20px;
         margin-left: 15px;
         text-decoration: underline;
         cursor: pointer;
@@ -109,13 +112,13 @@
         flex: 1;
         width: 0;
         .cell-pro-detail-name {
-          font-size: 24px;
+          font-size: 26px;
           color: #515151;
           font-weight: 600;
         }
         .cell-pro-detail-other {
           color: #bbbbbb;
-          font-size: 16px;
+          font-size: 18px;
           margin-top: 5px;
         }
       }
@@ -130,6 +133,12 @@
         outline: none;
         position: relative;
         overflow: hidden;
+        &.el-button {
+          line-height: normal !important;
+          i {
+            display: none;
+          }
+        }
         &:first-of-type {
           margin-right: 10px;
         }
@@ -188,7 +197,7 @@
           <div class="cell-tabs-detail">{{resultData.agentHouseMethod.keyOwnerName | lookHouseModeFiletr}}</div>
         </div>
         <div class="cell-tabs">
-          <div class="cell-tabs-title">存放门店</div>
+          <div class="cell-tabs-title last-tabs-title">存放门店</div>
           <div class="cell-tabs-detail">{{resultData.agentHouseMethod.keyStorageDeptName | keyStorageFilter(resultData.agentHouseMethod.keyOwnerName) | emptyRead }}</div>
         </div>
       </div>
@@ -215,7 +224,7 @@
            v-if="resultData.agentPerName!=null&& resultData.plate!=1&&resultData.plate!=4">
         <el-image class="cell-pro-left-img"
                   :src="resultData.agentPerHeadImg"
-                  fit="cover">
+                  fit="fill">
           <div slot="placeholder"
                class="image-slot">
             加载中<span>...</span>
@@ -239,8 +248,7 @@
           <div class="cell-pro-detail-other overText">业主称呼</div>
         </div>
         <el-dropdown @command="contactOwer">
-          <el-button type="primary"
-                     class="cell-pro-but">
+          <el-button class="cell-pro-but">
             查看号码<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
@@ -267,27 +275,26 @@
 </template>
 
 <script>
-import util from '@/util/util';
+import util from "@/util/util";
 export default {
   inject: ["houseDetails", "houseId"],
   computed: {
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
-        return this.houseDetails.data
+        return this.houseDetails.data;
       } else {
         return {};
       }
-    },
-  },
-  data () {
-    return {
-      isShowBuilding: false,
     }
   },
-  mounted () {
+  data() {
+    return {
+      isShowBuilding: false
+    };
   },
+  mounted() {},
   methods: {
-    getShowBuliding () {
+    getShowBuliding() {
       let that = this;
       this.$api
         .get({
@@ -297,50 +304,48 @@ export default {
           },
           headers: {
             "Content-Type": "application/json;charset=UTF-8"
-          },
+          }
         })
         .then(e => {
           if (e.data.code == 200) {
             that.isShowBuilding = true;
-          }
-          else {
+          } else {
             that.isShowBuilding = false;
             that.$message(e.data.message);
           }
         })
-        .catch(e => {
-        });
+        .catch(e => {});
     },
-    oneTouchDialPhone () {
+    oneTouchDialPhone() {
       let phone = this.resultData.agentPerTel;
       if (!phone) {
         this.$message({
           message: "该经纪人号码为空"
-        })
+        });
         return;
       }
       let p = {
-        "contactPhone": phone
-      }
+        contactPhone: phone
+      };
       this.dailPhone(0, p);
     },
-    dialPhoneToFD () {
+    dialPhoneToFD() {
       let p = {
-        "contactPhone": this.resultData.Tel,
-        "contactPhone1": this.resultData.Tel1,
-        "contactPhone2": this.resultData.Tel2,
-        "contactPhone3": this.resultData.Tel3
-      }
+        contactPhone: this.resultData.Tel,
+        contactPhone1: this.resultData.Tel1,
+        contactPhone2: this.resultData.Tel2,
+        contactPhone3: this.resultData.Tel3
+      };
       this.dailPhone(1, p);
     },
-    contactOwer (cmd) {
+    contactOwer(cmd) {
       console.log(cmd);
       let p = {};
       p["contactPhone" + cmd] = this.resultData["Tel" + cmd];
       p["isLookPhone"] = true;
       this.dailPhone(1, p);
     },
-    dailPhone (contactPerType, phoneObj) {
+    dailPhone(contactPerType, phoneObj) {
       let that = this;
       //console.log(that.houseDetails);
       this.$confirm("确定一键拨号吗？", "友情提醒", {
@@ -351,20 +356,22 @@ export default {
         .then(() => {
           console.log(that.houseDetails);
           let oldParams = {
-            "houseId": that.houseId.id,
-            "houseType": 0,
-            "housePrice": that.resultData.Price,
-            "houseArea": that.resultData.InArea,
-            "contactPerType": contactPerType,//电话联系人类型，0为经纪人，1为业主
-            "remark": that.resultData.Title          };
+            houseId: that.houseId.id,
+            houseType: 0,
+            housePrice: that.resultData.Price,
+            houseArea: that.resultData.InArea,
+            contactPerType: contactPerType, //电话联系人类型，0为经纪人，1为业主
+            remark: that.resultData.Title
+          };
           let dailParams = {};
           Object.assign(dailParams, oldParams, phoneObj);
-          if (contactPerType == 0) {//联系人类型如果是经纪人，才需要联系人id
-            dailParams.contactPerId = that.resultData.AgentPer;//联系人id
+          if (contactPerType == 0) {
+            //联系人类型如果是经纪人，才需要联系人id
+            dailParams.contactPerId = that.resultData.AgentPer; //联系人id
             dailParams.unitName = that.resultData.agentPerDepartmentName;
             dailParams.contactPerName = that.resultData.agentPerName;
           } else {
-            dailParams.unitName = that.resultData.CommunityName;//联系人是业主，名称取小区名
+            dailParams.unitName = that.resultData.CommunityName; //联系人是业主，名称取小区名
             dailParams.contactPerName = that.resultData.Customers;
           }
           that.$api
@@ -406,16 +413,15 @@ export default {
     }
   },
   filters: {
-    familyStructureFiletr (value, listName) {
+    familyStructureFiletr(value, listName) {
       return util.countMapFilter(value, listName);
     },
-    lookHouseModeFiletr (value) {
-      return value != null ? '有钥匙' : '无钥匙'
+    lookHouseModeFiletr(value) {
+      return value != null ? "有钥匙" : "无钥匙";
     },
-    keyStorageFilter (value, keyOwnerName) {
-
-      return keyOwnerName == null ? '暂无' : value
+    keyStorageFilter(value, keyOwnerName) {
+      return keyOwnerName == null ? "暂无" : value;
     }
   }
-}
+};
 </script>

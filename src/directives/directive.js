@@ -54,7 +54,14 @@ export default {
 
         Vue.filter('defaultImg', (value) => {
             if (value == '' || value == null) {
-                return 'http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201908/20190811/20190811111530328_34985.jpg?x-oss-process=style/thumb';
+                return 'https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/f537f61ed8e6459ba4efb25415c22740.jpg';
+            }
+            return value;
+        })
+
+        Vue.filter('houseMiniImg', (value) => {
+            if (value == '' || value == null) {
+                return 'https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png';
             }
             return value;
         })

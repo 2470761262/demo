@@ -2,7 +2,7 @@
 <style lang="less" scoped>
 .other-title {
   font-size: 30px;
-  font-weight: 600;
+  font-weight: 400;
   margin-top: 80px;
   &:first-child {
     margin-top: 0;
@@ -21,9 +21,10 @@
   //     padding-bottom: 5px;
   //   }
   .message-row-title {
-    width: 117px;
+    margin-right: 50px;
     font-size: 18px;
     color: #b5b5b5;
+    align-self: center;
   }
   .message-row-right {
     flex: 1;
@@ -50,6 +51,7 @@
     margin-top: 0;
     .message-row-title {
       width: 150px;
+      align-self: center;
     }
     .message-row-right {
       display: block;
@@ -187,21 +189,21 @@ import util from "@/util/util";
 export default {
   inject: ["houseDetails"],
   computed: {
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
-        return this.houseDetails.data
+        return this.houseDetails.data;
       } else {
         return {};
       }
     }
   },
   filters: {
-    elevatorFilter (value) {
+    elevatorFilter(value) {
       return util.analysisElevator(value);
     },
-    mapFilter (value, ListName, resultValue = null) {
+    mapFilter(value, ListName, resultValue = null) {
       return util.countMapFilter(value, ListName, resultValue);
     }
   }
-}
+};
 </script>

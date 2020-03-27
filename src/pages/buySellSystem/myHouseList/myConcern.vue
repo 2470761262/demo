@@ -320,7 +320,7 @@ export default {
           label: "楼盘名称",
           width: "170px",
           order: false,
-          disabled: false,
+          disabled: true,
           default: true
         },
         {
@@ -344,7 +344,7 @@ export default {
           label: "售价(万元)",
           width: "120px",
           order: "custom",
-          disabled: false,
+          disabled: true,
           default: true,
           formart: item => item.price + "万元"
         },
@@ -353,7 +353,7 @@ export default {
           label: "面积(m²)",
           width: "110px",
           order: "custom",
-          disabled: false,
+          disabled: true,
           default: true,
           formart: item => item.inArea + "m²"
         },
@@ -403,7 +403,7 @@ export default {
           label: "户型",
           width: "110px",
           order: false,
-          disabled: false,
+          disabled: true,
           default: true,
           formart: item =>
             (item.rooms || 0) +

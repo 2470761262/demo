@@ -8,14 +8,20 @@
     min-width: 1280px;
   }
   .page-cell-main {
-     height:calc(100% - 60PX) ;
-    @media screen and(max-width: 1280px){
-      height:calc(100% - 80PX) ;
+    height: calc(100% - 80PX);
+    @media screen and(max-width: 1280px) {
+      height: calc(100% - 100PX);
     }
-  
+
     .el-aside,
     .el-main {
       height: 100%;
+      &::-webkit-scrollbar,
+      &::-webkit-scrollbar-button,
+      &::-webkit-scrollbar-track,
+      &::-webkit-scrollbar-track-piece {
+        display: none;
+      }
     }
     .el-main {
       background: #f4f4f4;
@@ -50,17 +56,19 @@
     display: none !important;
   }
 }
+/deep/.el-header {
+  background: var(--color--primary);
+}
 </style>
 <template >
   <section class="page-cell-conter">
     <el-container>
-      <el-header v-if="asideNavFlag">
+      <el-header v-if="asideNavFlag" height="80px">
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
     <el-container class="page-cell-main">
-      <el-aside class="el-background"
-                v-if="asideNavFlag">
+      <el-aside class="el-background" v-if="asideNavFlag">
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
@@ -69,7 +77,7 @@
           <el-breadcrumb-item :to="{path:meta.path}"
                               v-for="(meta, index) in resultRouteArray"
                               :key="index">{{ meta.name }}</el-breadcrumb-item>
-        </el-breadcrumb> -->
+        </el-breadcrumb>-->
         <feedback />
         <div class="children-page">
           <!-- 二级页面 router-view -->
@@ -83,40 +91,44 @@
 </template>
 <script>
 //左侧菜单
-import asideNav from '@/components/asideNav';
-import headerContent from '@/components/headerContent';
-import util from '@/util/util';
-import { LOGINDATA } from '@/util/constMap';
-import but from '@/evenBus/but';
+import asideNav from "@/components/asideNav";
+import headerContent from "@/components/headerContent";
+import util from "@/util/util";
+import { LOGINDATA } from "@/util/constMap";
+import but from "@/evenBus/but";
 export default {
   name: "menuFrame",
   components: {
     asideNav,
     headerContent
   },
-  data () {
+  data() {
     return {
       resultRouteArray: this.$route.meta.routeArray,
       asideNavFlag: true,
       loginUserData: {},
       menuDatasInParent: []
-    }
+    };
   },
-  created () {
-    but.$on('asideNav', (e) => {
+  created() {
+    but.$on("asideNav", e => {
       console.log(111111, e);
       this.asideNavFlag = e;
-    })
-    window.addEventListener('message', (e) => {
-      //  console.log("-------------------", e);
-      if (e.data.isXinIfram) {
-        this.asideNavFlag = false;
-      }
-    }, false);
+    });
+    window.addEventListener(
+      "message",
+      e => {
+        //  console.log("-------------------", e);
+        if (e.data.isXinIfram) {
+          this.asideNavFlag = false;
+        }
+      },
+      false
+    );
     this.loginUserData = util.localStorageGet(LOGINDATA);
     if (this.loginUserData.menuNodes) {
       this.menuDatasInParent = this.loginUserData.menuNodes;
     }
-  },
-}
+  }
+};
 </script>

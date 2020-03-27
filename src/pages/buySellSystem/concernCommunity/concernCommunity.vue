@@ -151,7 +151,6 @@
           <el-select v-model="comId"
                      @focus="remoteInput"
                      @change="queryCBId"
-                     filterable
                      remote
                      clearable
                      placeholder="楼盘名称"
@@ -239,10 +238,15 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">房源状态</h3>
           <el-select clearable
-                     value="开发中"
+                     placeholder="房源状态"
                      class="set-select100"
-                     placeholder="全部">
-            <el-option value="开发中">开发中...</el-option>
+                     value=""
+                     v-model="houseType"
+                     >
+            <el-option  v-for="item in houseTypeList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
         </div>
         <div class="query-content-cell cell-interval45">
@@ -380,6 +384,13 @@ export default {
         total: 9, //总记录数
         pageSize: 10 //每页条数
       },
+      houseTypeList: [
+        { value: "店公共盘", label: "店公共盘" },
+        { value: "在售无跟单", label: "在售无跟单" },
+        { value: "暂不售", label: "暂不售" },
+        { value: "无号码", label: "无号码" },
+        { value: "潜在出售", label: "5" }
+      ],
       state: [
         { value: "1", label: "房源编号1" },
         { value: "2", label: "房源编号2" },
@@ -392,7 +403,8 @@ export default {
           width: "190",
           order: false,
           disabled: false,
-          default: true
+          default: true,
+          formart: item => this.houseNoFormat(item.houseNo)
         },
         {
           prop: "communityName",
@@ -445,22 +457,8 @@ export default {
           disabled: false,
           default: true
         },
-        {
-          prop: "outfollow",
-          label: "未跟进天数",
-          width: "120",
-
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "noSeenDay",
-          label: "未被看天数",
-          width: "120",
-          disabled: false,
-          default: true
-        },
-        // { prop: '', label: "房源状态", width: '110px', order: false, disabled: false, default: true },//自己补充
+      
+        { prop: 'houseType', label: "房源状态", width: '110px', order: false, disabled: false, default: true ,formart: item => this.houseTypeFormat(item.houseType)},//自己补充
         {
           prop: "agentName",
           label: "跟单人",
@@ -476,7 +474,7 @@ export default {
           order: false,
           disabled: false,
           default: true,
-          formart: item => this.houseType(item.rooms, item.hall, item.toilet)
+          formart: item => this.houseFormat(item.rooms, item.hall, item.toilet)
         }
       ],
       tableColumn: [],
@@ -497,6 +495,7 @@ export default {
       comId: "",
       cbId: "",
       roomNo: "",
+      houseType:"",
       queryData: {
         communityName: "",
         isOnly: "",
@@ -538,7 +537,17 @@ export default {
         })
         .join(",");
     },
-    houseType (rooms, hall, toilet) {
+    houseNoFormat(houseNo){
+      let type;
+      if(houseNo==null&&houseNo==''){
+        type='--';
+      }else{
+        type=houseNo;
+      }
+      return type;
+    },
+
+    houseFormat (rooms, hall, toilet) {
       let ro,
         ha,
         to = "";
@@ -558,6 +567,25 @@ export default {
         to = "0" + "卫";
       }
       return ro + ha + to;
+    },
+    houseTypeFormat(houseType){
+      let type;
+      if(houseType==1){
+        type="无号码";
+      }else if(houseType==2){
+        type="暂不售";
+      }else if(houseType==3){
+        type="店公共盘";
+      }else if(houseType==4){
+        type="在售无跟单";
+      }else if(houseType==5){
+        type="潜在出售";
+      }else if(houseType==6){
+        type="--";
+      }else{
+        type="--";
+      }
+      return type;
     },
     remove () {
       let tab = this.tableColumn;
@@ -761,6 +789,12 @@ export default {
         ) {
           params.maxInArea = this.queryData.maxInArea;
         }
+        if (
+          this.houseType != null &&
+          this.houseType != ""
+        ) {
+          params.houseType = this.houseType;
+        }
       }
       if (column == "" || type == null || type == undefined) {
         params.sortColumn = "id";
@@ -780,6 +814,7 @@ export default {
         })
         .then(e => {
           that.loading = false;
+          console.log(e.data)
           if (e.data.code == 200) {
             typeof (e.data.data.data)
             that.pageJson.total = e.data.data.dataCount;
@@ -881,18 +916,14 @@ export default {
             }
           })
           .then(e => {
-            console.log("=========================" + e.data);
+            console.log("=========================" + e);
             if (e.data.code == 200) {
-              //   that.roomNo = "";
-              //   that.cbId = "";
-              //   this.cbIdList = e.data.data.list;
+              console.log("=========================" + e.data.code);
               that.loading = false;
-              that.options = e.data.data.list;
+              that.options = e.data.data;
             }
           });
-        console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
       }
-      this.querylistByParams();
     },
     queryCBId () {
       var that = this;
