@@ -118,15 +118,21 @@ export default {
     ThemePicker
   },
   mounted() {
-    document.querySelector("body").addEventListener("mousemove", e => {
-      let rotateX = -(window.innerWidth / 2 - e.pageX) / 100;
+    document.querySelector("body").addEventListener("mousemove", this.move);
+
+   this.$once('hook:beforeDestroy', () => {            
+        clearInterval(timer); 
+         document.querySelector("body").removeEventListener("mousemove",this.move)                                  
+    })
+  },
+  methods: {
+      move(e){
+   let rotateX = -(window.innerWidth / 2 - e.pageX) / 100;
       let rotateY = -(80 / 2 - e.pageY) / 80;
       document.querySelector(
         ".happy-day-contet"
       ).style.cssText = `transform:rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-    });
-  },
-  methods: {
+      },
     handleCommand(command) {
       this.$message("item " + command);
     },
