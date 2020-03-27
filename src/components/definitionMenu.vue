@@ -140,6 +140,8 @@ export default {
       });
       //确定按钮提交时把标记关闭
       this.submitFlag = false;
+      //关闭弹框
+      this.visible = false;
       //提交数据到父级
       this.$emit("change", result);
     },
