@@ -232,7 +232,7 @@
           <el-input placeholder="最大值"
                     v-model="queryData.maxInArea"
                     class="set-input90"
-                    @change="changeAreaBut"
+                    @change="changeAreaButMax"
                     clearable />
           <span class="query-cell-suffix">平方</span>
         </div>
@@ -260,7 +260,7 @@
         <div class="query-content-cell cell-interval45">
           <el-button type="primary"
                      size="mini"
-                     @click="changeAreaBut">查询</el-button>
+                     @click="querylistByParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
           <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
@@ -511,24 +511,39 @@ export default {
     this.queryNotConcernCommunityList();
   },
   methods: {
-    async changeAreaBut () {
+    changeAreaBut () {
       let that = this;
 
-      if (util.isNumber(that.queryData.minInArea) || util.isNumber(that.queryData.maxInArea)) {
+      if (util.isNumber(that.queryData.minInArea)) {
         that.$message({
-          message: "两个值必须为大于等于0的正数",
+          message: "值必须为大于等于0的正数",
           type: "warning"
         });
-      } else if (that.queryData.minInArea > that.queryData.maxInArea) {
+      } else if (that.queryData.maxInArea != '' && that.queryData.minInArea > that.queryData.maxInArea) {
         that.$message({
-          message: "最小值必须大于最大值",
+          message: "最大值必须大于最小值",
           type: "warning"
         });
       } else {
         this.querylistByParams();
       }
+    },
+    changeAreaButMax () {
+      let that = this;
 
-
+      if (util.isNumber(that.queryData.maxInArea)) {
+        that.$message({
+          message: "值必须为大于等于0的正数",
+          type: "warning"
+        });
+      } else if (that.queryData.minInArea != '' && that.queryData.minInArea > that.queryData.maxInArea) {
+        that.$message({
+          message: "最大值必须大于最小值",
+          type: "warning"
+        });
+      } else {
+        this.querylistByParams();
+      }
     },
     //当前选择已经关注这个这个核心盘则不让在重复选择
     filterRoomDisabled () {
