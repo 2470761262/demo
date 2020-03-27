@@ -4,6 +4,8 @@
   align-items: center;
   justify-content: flex-end;
   height: 100%;
+  transform-style: preserve-3d;
+  perspective: 800px;
   .per-img {
     width: 40px;
     height: 40px;
@@ -19,6 +21,7 @@
     margin-left: 20px;
     .el-dropdown-link {
       font-size: 18px;
+      color: #fff;
     }
   }
   .per-exit {
@@ -33,16 +36,59 @@
   &::before {
     content: "选择主题:";
     font-size: 14px;
+    color: #fff;
+  }
+}
+.per-exit {
+  color: #fff;
+}
+.happy-day-contet {
+  width: 490px;
+  height: 100%;
+  margin: 0 40px;
+  position: relative;
+  overflow: hidden;
+  transform-origin: center center;
+  img {
+    width: 490px;
+    position: absolute;
+    bottom: 0;
+    height: 100%;
+  }
+  .happy-day-per {
+    position: absolute;
+    bottom: 13PX;
+    width: 100%;
+    text-align: center;
+    > span {
+      margin-left: -20px;
+      display: inline-flex;
+      width: 230px;
+      justify-content: space-between;
+      span {
+        font-family: "MingLiU";
+        color: #fff;
+        font-size: 15px;
+      }
+    }
   }
 }
 </style>
 <template>
   <div class="page-cell-header">
+    <div class="happy-day-contet">
+      <img src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9d2a1dc5647d4e51a5ab5857a110be87.png"
+           alt="">
+      <div class="happy-day-per">
+        <span> <span>钟丽娟</span> <span> 钟丽娟</span> <span>钟丽娟</span> </span>
+      </div>
+    </div>
     <div class="page-theme">
       <ThemePicker />
     </div>
     <div class="per-img">
-      <img :src="userInfoData.headImgUrl" alt="头像" />
+      <img :src="userInfoData.headImgUrl"
+           alt="头像" />
     </div>
     <div class="per-name-nav">
       <el-dropdown @command="handleCommand">
@@ -57,7 +103,8 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <div class="per-exit el-icon-switch-button" @click="exitLogin"></div>
+    <div class="per-exit el-icon-switch-button"
+         @click="exitLogin"></div>
   </div>
 </template>
 <script>
@@ -70,8 +117,22 @@ export default {
   components: {
     ThemePicker
   },
-  created() {},
+  mounted() {
+    document.querySelector("body").addEventListener("mousemove", this.move);
+
+   this.$once('hook:beforeDestroy', () => {            
+        clearInterval(timer); 
+         document.querySelector("body").removeEventListener("mousemove",this.move)                                  
+    })
+  },
   methods: {
+      move(e){
+   let rotateX = -(window.innerWidth / 2 - e.pageX) / 100;
+      let rotateY = -(80 / 2 - e.pageY) / 80;
+      document.querySelector(
+        ".happy-day-contet"
+      ).style.cssText = `transform:rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      },
     handleCommand(command) {
       this.$message("item " + command);
     },

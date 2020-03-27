@@ -128,6 +128,12 @@
     border-radius: 50px;
   }
 }
+/deep/.el-table__fixed-right {
+  height: 100% !important;
+}
+/deep/.hover-row {
+  color: #262626;
+}
 </style>
 <template>
   <div class="page-body">
@@ -177,21 +183,22 @@
   </div>
 </template>
 <script>
-import sidebarList from './sidebarList';
+import sidebarList from "./sidebarList";
 export default {
+  inheritAttrs: false,
   components: {
-    sidebarList,
+    sidebarList
   },
   watch: {
     $attrs: {
       deep: true,
       immediate: true,
-      handler: function (val, oldVal) {
+      handler: function(val, oldVal) {
         Object.assign(this.$data, val.parentData);
       }
     }
   },
-  data () {
+  data() {
     return {
       sidebarFlag: true,
       loading: true,
@@ -200,19 +207,19 @@ export default {
         size: 10
       },
       tableDataColumn: [],
-      tableData: [],
+      tableData: []
     };
   },
-  mounted () {
+  mounted() {
     console.log(this.$attrs, "attrs");
   },
   methods: {
     //每页数据设置事件
-    handleSizeChange (e) {
+    handleSizeChange(e) {
       this.$emit("handleSizeChange", e);
     },
     //前往多少页事件
-    handleCurrentChange (e) {
+    handleCurrentChange(e) {
       console.log("1");
       this.$emit("handleCurrentChange", e);
     }

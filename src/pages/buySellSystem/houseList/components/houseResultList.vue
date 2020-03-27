@@ -185,6 +185,9 @@
     margin-left: 20px;
   }
 }
+.image-slot {
+  height: 100%;
+}
 </style>
 <template>
   <div class="query-data-pad">
@@ -261,6 +264,11 @@
                 <div slot="placeholder"
                      class="image-slot">
                   加载中<span>...</span>
+                </div>
+                <div slot="error"
+                     fit="cover"
+                     class="image-slot">
+                  <el-image :src="''|houseMiniImg"></el-image>
                 </div>
               </el-image>
             </div>
@@ -339,11 +347,11 @@
 </template>
 
 <script>
-import definitionmenu from '@/components/definitionMenu';
+import definitionmenu from "@/components/definitionMenu";
 export default {
   inject: ["form", "Slider"],
   components: {
-    definitionmenu,
+    definitionmenu
   },
   props: {
     querySelectFlag: {
@@ -355,14 +363,14 @@ export default {
     form: {
       deep: true,
       immediate: true,
-      handler: function (value, ordvalue) {
+      handler: function(value, ordvalue) {
         this.renderTag(value);
-        console.log(JSON.stringify(value))
+        console.log(JSON.stringify(value));
         this.getHouseData(JSON.parse(JSON.stringify(value)));
       }
     }
   },
-  data () {
+  data() {
     return {
       dynamicTags: [],
       renderList: [],
@@ -372,196 +380,346 @@ export default {
         currentPage: 1
       },
       tableColumnField: [
-        { prop: 'houseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true },
-        { prop: 'communityName', label: '小区名称', order: false, width: '150', disabled: true, default: true },
-        { prop: 'buildingName', label: '楼栋号', width: '90', order: false, disabled: true, default: true },
-        { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true },
-        { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
-        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
-        { prop: 'seenNum', label: '被看次数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'outfollow', label: '未跟进天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: false, disabled: false, default: true },
-        { prop: 'addTime', label: '添加时间', width: '120', order: false, disabled: false, default: true },
-        { prop: 'brokerName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => item.rooms + '室' + item.hall + '厅' + item.toilet + '卫' },
-        { prop: 'unitpaice', label: '单价(元/㎡)', width: '120', order: 'custom', disabled: false, default: false, format: item => item.unitpaice + '元/㎡' },
-        { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: false },
-        { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: false },
-        { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: false },
-        { prop: 'addName', label: '录入人', width: '120', order: false, disabled: false, default: false }
+        {
+          prop: "houseNo",
+          label: "房源编号",
+          width: "170",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "communityName",
+          label: "小区名称",
+          order: false,
+          width: "150",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "buildingName",
+          label: "楼栋号",
+          width: "90",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "roomNo",
+          label: "房间号",
+          width: "110",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "inArea",
+          label: "面积(m²)",
+          width: "110",
+          order: "custom",
+          disabled: false,
+          default: true,
+          formart: item => item.inArea + "m²"
+        },
+        {
+          prop: "price",
+          label: "售价(万元)",
+          width: "120",
+          order: "custom",
+          disabled: false,
+          default: true,
+          formart: item => item.price + "万元"
+        },
+        {
+          prop: "seenNum",
+          label: "被看次数",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "outfollow",
+          label: "未跟进天数",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "noSeenDay",
+          label: "未被看天数",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "addTime",
+          label: "添加时间",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "brokerName",
+          label: "跟单人",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "houseType",
+          label: "户型",
+          width: "150",
+          order: false,
+          disabled: false,
+          default: true,
+          formart: item =>
+            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+        },
+        {
+          prop: "unitpaice",
+          label: "单价(元/㎡)",
+          width: "120",
+          order: "custom",
+          disabled: false,
+          default: false,
+          format: item => item.unitpaice + "元/㎡"
+        },
+        {
+          prop: "face",
+          label: "朝向",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: false
+        },
+        {
+          prop: "floor",
+          label: "楼层",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: false
+        },
+        {
+          prop: "decoration",
+          label: "装修",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: false
+        },
+        {
+          prop: "addName",
+          label: "录入人",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: false
+        }
       ],
       tableColumn: []
-    }
+    };
   },
   methods: {
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    navTabItem (index, row) {
+    navTabItem(index, row) {
       console.log(index, row);
     },
-    toHouseDetail (id) {
-      this.$router.push({        name: "houseDetails",
-        params: { houseId: id }      });
-
+    toHouseDetail(id) {
+      this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //远程排序
-    sortMethod (item) {
+    sortMethod(item) {
       this.form.sortColumn = item.prop;
       this.form.sortType = item.order;
       this.getHouseData(JSON.parse(JSON.stringify(value)));
       console.log(item);
     },
-    keySelect () {
-      if (this.form.keyOwner != '') {
-        this.form.keyOwner = '';
+    keySelect() {
+      if (this.form.keyOwner != "") {
+        this.form.keyOwner = "";
       } else {
-        this.form.keyOwner = '1';
+        this.form.keyOwner = "1";
       }
-
-
     },
-    onlySelect () {
-      if (this.form.isOnly != '') {
-        this.form.isOnly = '';
+    onlySelect() {
+      if (this.form.isOnly != "") {
+        this.form.isOnly = "";
       } else {
-        this.form.isOnly = '1';
+        this.form.isOnly = "1";
       }
-
-
     },
-    defaultSelect () {
-      this.form.sortColumn = 'id';
+    defaultSelect() {
+      this.form.sortColumn = "id";
       this.form.sortType = "ascending";
     },
-    priceSelect () {
-      this.form.sortColumn = 'price';
+    priceSelect() {
+      this.form.sortColumn = "price";
       if (this.form.sortType == "ascending") {
-        this.form.sortType = "descending"
+        this.form.sortType = "descending";
       } else {
-        this.form.sortType = "ascending"
+        this.form.sortType = "ascending";
       }
       console.log(this.form.sortType);
     },
-    inAreaSelect () {
-      this.form.sortColumn = 'inArea';
+    inAreaSelect() {
+      this.form.sortColumn = "inArea";
       if (this.form.sortType == "ascending") {
-        this.form.sortType = "descending"
+        this.form.sortType = "descending";
       } else {
-        this.form.sortType = "ascending"
+        this.form.sortType = "ascending";
       }
       console.log(this.form.sortType);
     },
-    InitPageJson () {
-      this.pageJson = { total: 1, currentPage: 1 }
+    InitPageJson() {
+      this.pageJson = { total: 1, currentPage: 1 };
     },
-    getHouseData (value, initPage = true) {
+    getHouseData(value, initPage = true) {
       let that = this;
       this.loading = true;
-      Object.keys(value).forEach((item) => {
+      Object.keys(value).forEach(item => {
         if (value[item] instanceof Array) {
-          value[item] = value[item].join(',')
+          value[item] = value[item].join(",");
         }
       });
       let actionUrl = value.action;
       value.action = "";
       console.log(value, "==============>?");
-      let restuleParms = Object.assign({}, value, { page: that.pageJson.currentPage, limit: 8 });
-      return this.$api.get({
-        url: actionUrl,
-        token: false,
-        data: restuleParms,
-      }).then((e) => {
-        let data = e.data;
-        if (initPage)
-          that.InitPageJson();
-        if (data.code == 200) {
-          console.log(data);
-          that.renderList = data.data.data;
-          that.pageJson.total = data.data.dataCount;
-        }
-      }).finally(() => {
-        that.loading = false;
-      })
+      let restuleParms = Object.assign({}, value, {
+        page: that.pageJson.currentPage,
+        limit: 8
+      });
+      return this.$api
+        .get({
+          url: actionUrl,
+          token: false,
+          data: restuleParms
+        })
+        .then(e => {
+          let data = e.data;
+          if (initPage) that.InitPageJson();
+          if (data.code == 200) {
+            console.log(data);
+            that.renderList = data.data.data;
+            that.pageJson.total = data.data.dataCount;
+          }
+        })
+        .finally(() => {
+          that.loading = false;
+        });
     },
     //创建需要渲染的标签
-    renderTag (value) {
+    renderTag(value) {
       let that = this;
       //清空
       this.dynamicTags = [];
       //价格
       if (this.Slider.priceSlider[1] != 20) {
-        this.dynamicTags.push({ title: `价格:${value.minPrice}-${value.maxPrice}万`, field: "price", arr: false })
+        this.dynamicTags.push({
+          title: `价格:${value.minPrice}-${value.maxPrice}万`,
+          field: "price",
+          arr: false
+        });
       }
       //面积
       if (this.Slider.areaSlider[1] != 20) {
-        this.dynamicTags.push({ title: `面积:${value.minInArea}-${value.maxInArea}㎡`, field: "area", arr: false })
+        this.dynamicTags.push({
+          title: `面积:${value.minInArea}-${value.maxInArea}㎡`,
+          field: "area",
+          arr: false
+        });
       }
       //楼层
       if (this.Slider.flootSlider[1] != -2) {
-        this.dynamicTags.push({ title: `楼层:${value.minFloor}-${value.maxFloor}层`, field: "floot", arr: false })
+        this.dynamicTags.push({
+          title: `楼层:${value.minFloor}-${value.maxFloor}层`,
+          field: "floot",
+          arr: false
+        });
       }
 
       //房源类型
-      if (value.title != null && value.title != '') {
-        this.dynamicTags.push({ title: `房源类型:${value.title}`, field: "type", arr: false })
+      if (value.title != null && value.title != "") {
+        this.dynamicTags.push({
+          title: `房源类型:${value.title}`,
+          field: "type",
+          arr: false
+        });
       } else {
-        this.dynamicTags.push({ title: `房源类型:全部在售`, field: "type", arr: false })
+        this.dynamicTags.push({
+          title: `房源类型:全部在售`,
+          field: "type",
+          arr: false
+        });
       }
       //商圈
-      this.appendFormTag(value.business, '商圈', 'business');
+      this.appendFormTag(value.business, "商圈", "business");
       //房型
-      this.appendFormTag(value.houseType, '房型', 'houseType');
+      this.appendFormTag(value.houseType, "房型", "houseType");
       //装修
-      this.appendFormTag(value.renovation, '装修', 'renovation');
+      this.appendFormTag(value.renovation, "装修", "renovation");
       //房屋用途
-      this.appendFormTag(value.purpose, '房屋用途', 'purpose');
+      this.appendFormTag(value.purpose, "房屋用途", "purpose");
       //朝向
-      this.appendFormTag(value.face, '朝向', 'face');
+      this.appendFormTag(value.face, "朝向", "face");
       //小学
-      this.appendFormTag(value.primarySchool, '小学', 'primarySchool');
+      this.appendFormTag(value.primarySchool, "小学", "primarySchool");
       //中学
-      this.appendFormTag(value.middleSchool, '中学', 'middleSchool');
+      this.appendFormTag(value.middleSchool, "中学", "middleSchool");
     },
-    appendFormTag (to, titleName, fieldName) {
+    appendFormTag(to, titleName, fieldName) {
       //房型
-      to.forEach((item) => {
-        this.dynamicTags.push({ title: `${titleName}:`, value: `${item}`, field: `${fieldName}`, arr: true })
-      })
+      to.forEach(item => {
+        this.dynamicTags.push({
+          title: `${titleName}:`,
+          value: `${item}`,
+          field: `${fieldName}`,
+          arr: true
+        });
+      });
     },
-    filterSplice (e) {
-      return this.form[e.field].findIndex((item) => {
+    filterSplice(e) {
+      return this.form[e.field].findIndex(item => {
         return item == e.value;
-      })
+      });
     },
     //标签关闭
-    handleClose (e) {
-      if (e.arr) { // 删除多选
+    handleClose(e) {
+      if (e.arr) {
+        // 删除多选
         this.form[e.field].splice(this.filterSplice(e), 1);
-      } else { // 删除 slider
+      } else {
+        // 删除 slider
 
-        if (e.field == 'price') {
+        if (e.field == "price") {
           this.Slider.priceSlider = [20, 20];
-          this.form.maxPrice = '';
-          this.form.minPrice = '';
+          this.form.maxPrice = "";
+          this.form.minPrice = "";
         }
-        if (e.field == 'area') {
+        if (e.field == "area") {
           this.Slider.areaSlider = [20, 20];
-          this.form.maxInArea = '';
-          this.form.minInArea = '';
+          this.form.maxInArea = "";
+          this.form.minInArea = "";
         }
-        if (e.field == 'floot') {
+        if (e.field == "floot") {
           this.Slider.flootSlider = [-2, -2];
-          this.form.maxFloor = '';
-          this.form.minFloor = '';
+          this.form.maxFloor = "";
+          this.form.minFloor = "";
         }
       }
     },
     //跳转第几页
-    handleCurrentChange (e) {
+    handleCurrentChange(e) {
       this.pageJson.currentPage = e;
-      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false)
-    },
-  },
-}
+      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
+    }
+  }
+};
 </script>

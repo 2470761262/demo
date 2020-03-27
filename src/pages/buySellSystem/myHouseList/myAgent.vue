@@ -1,9 +1,22 @@
 
 <style lang="less" scoped>
+/deep/.cellRed {
+  background: #e13d3d;
+  color: #fff;
+}
+/deep/.defaultCell {
+  background: #fff;
+}
+/dee/.cellOrange {
+  background: #cdca1a;
+  color: #fff;
+}
 </style>
 <template>
   <list-page @sort-change="sortMethod"
              :parentData="$data"
+             :cellClass="defaultCell"
+             :row-class-name="setRowClass"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
@@ -404,6 +417,22 @@ export default {
     this.queryMyAgent(1, "id", "descending");
   },
   methods: {
+    defaultCell({ column }) {
+      if (column.label == "操作") {
+        return "defaultCell";
+      }
+    },
+    setRowClass({ row }) {
+      if (row.lastFollowTime) {
+        let lastFollowTime = new Date(row.lastFollowTime).getTime();
+        let nowTime = new Date().getTime();
+        if (nowTime - lastFollowTime > 1000 * 60 * 60 * 24 * 4) {
+          return "cellOrange";
+        }
+      }
+      //console.log(row);
+      // return "cellRed";
+    },
     houseType(rooms, hall, toilet) {
       if (rooms != null && rooms != "" && rooms != undefined) {
         romms = rooms + "室";
