@@ -97,7 +97,7 @@
     justify-content: center;
     align-items: center;
     color: black;
-    padding: 0 14px;
+    width: 115px;
     border: 2px solid var(--color--primary);
     cursor: pointer;
     .reset-icon {
@@ -124,6 +124,15 @@
 }
 /deep/.vue-slider-process {
   background-color: var(--color--primary);
+}
+/deep/.vue-slider-ltr {
+  height: 8px !important;
+  .vue-slider-mark {
+    width: 8px !important;
+    .vue-slider-mark-step {
+      background: #fff;
+    }
+  }
 }
 .tooltipsItem {
   width: 100%;
@@ -273,7 +282,7 @@
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="售价">
           <vue-slider v-model="Slider.priceSlider"
-                      :data="['20','60','80','100','120','140','200','300']"
+                      :data="['20','60','80','100','120','140','200','300','9999']"
                       :marks="priceSliderMarks"
                       tooltip="none"
                       :lazy="true"
@@ -288,7 +297,7 @@
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
-            ]">{{ Slider.priceSlider[index] }}￥ - {{ Slider.priceSlider[index + 1] }}￥</div>
+            ]">{{ Slider.priceSlider[index] }}￥ - {{ Slider.priceSlider[index + 1]  == '9999' ? '无限' : Slider.priceSlider[index + 1] }}￥</div>
               </div>
             </template>
             <template v-slot:dot>
@@ -301,7 +310,7 @@
         <el-form-item label="面积">
           <vue-slider class="vue-slider-index1"
                       v-model="Slider.areaSlider"
-                      :data="['20','60','80','100','120','140','200','300']"
+                      :data="['20','60','80','100','120','140','200','300','9999']"
                       :marks="areaSliderMarks"
                       tooltip="none"
                       :lazy="true"
@@ -316,7 +325,7 @@
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
-            ]">{{ Slider.areaSlider[index] }}㎡ - {{ Slider.areaSlider[index + 1] }}㎡</div>
+            ]">{{ Slider.areaSlider[index] }}㎡ - {{ Slider.areaSlider[index + 1] == '9999' ? '无限' : Slider.areaSlider[index + 1]  }}㎡</div>
               </div>
             </template>
             <template v-slot:dot>
@@ -330,7 +339,7 @@
         <el-form-item label="楼层">
           <vue-slider class="vue-slider-index2"
                       v-model="Slider.flootSlider"
-                      :data="['-2','5','10','15','20','25','30','40']"
+                      :data="['-2','5','10','15','20','25','30','40','9999']"
                       :marks="flootSliderMarks"
                       tooltip="none"
                       :lazy="true"
@@ -345,7 +354,7 @@
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
-            ]">{{ Slider.flootSlider[index] }}层 - {{ Slider.flootSlider[index + 1] }}层</div>
+            ]">{{ Slider.flootSlider[index] }}层 - {{ Slider.flootSlider[index + 1] == '9999' ? '无限' : Slider.flootSlider[index + 1]  }}层</div>
               </div>
             </template>
             <template v-slot:dot>
@@ -516,7 +525,8 @@ const areaSliderMarks = {
   "120": "120㎡",
   "140": "140㎡",
   "200": "200㎡",
-  "300": "300㎡"
+  "300": "300㎡",
+  "9999": "∞"
 };
 const priceSliderMarks = {
   "20": "20万",
@@ -526,7 +536,8 @@ const priceSliderMarks = {
   "120": "120万",
   "140": "140万",
   "200": "200万",
-  "300": "300万"
+  "300": "300万",
+  "9999": "∞"
 };
 const flootSliderMarks = {
   "-2": "-2层",
@@ -536,7 +547,8 @@ const flootSliderMarks = {
   "20": "20层",
   "25": "25层",
   "30": "30层",
-  "40": "40层"
+  "40": "40层",
+  "9999": "∞"
 };
 import VueSlider from "vue-slider-component";
 import "vue-slider-component/theme/default.css";

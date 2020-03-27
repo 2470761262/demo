@@ -6,15 +6,13 @@
 }
 .nav-back {
   background: #fff;
-  padding-bottom: 20px;
+  padding-bottom: 17px;
 }
 .page-house-cell {
   display: flex;
   .house-left-tips {
     width: 120px;
-    //  height: 200px;
     display: flex;
-    //align-items: center;
     > span {
       writing-mode: vertical-lr;
       color: var(--color--primary);
@@ -29,16 +27,20 @@
   &.for-house-cell {
     flex-wrap: wrap;
     flex: 1;
-    margin: 0 -25px;
+    margin: 0 -26px;
+    padding-top: 20px;
     .house-cell-item {
       flex: 0 0 16.666%;
       height: 60px;
       margin-top: 25px;
-      padding: 0 25px;
+      padding: 0 26px;
       box-sizing: border-box;
       position: relative;
       min-width: 0;
       cursor: pointer;
+      &.no-cell-top {
+        margin-top: 0;
+      }
       &.item-hot {
         &:after {
           position: absolute;
@@ -85,7 +87,7 @@
     .house-cell-but {
       width: 170px;
       background: var(--color--primary);
-      height: 70px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -116,6 +118,8 @@
     &.com-cell-posi {
       position: relative;
       padding-right: 40px;
+      flex: 0 0 815px;
+      box-sizing: border-box;
       .hide-query {
         position: absolute;
         right: 0;
@@ -149,7 +153,7 @@
         <div class="house-cell-item"
              v-for="(item,index) in houseMenuList"
              :key="index"
-             :class="{'item-hot':item.hot}">
+             :class="[item.cellTop,{'item-hot':item.hot}]">
           <div :class="['for-house-item',{'item-opacity':item.flag}]"
                @click="setSelectNav(item)"
                @dblclick="navToPath(item.path)">
@@ -193,32 +197,133 @@
 
 import houselistlhousepair from "@/pages/buySellSystem/houseList/components/houseLIstlHousePair";
 //展示列表
-import houseresultlist from '@/pages/buySellSystem/houseList/components/houseResultList';
+import houseresultlist from "@/pages/buySellSystem/houseList/components/houseResultList";
 const HosueList = [
-  { title: "我的房源", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false, type: 1, url: "/mateHouse/getMateHouse/myHouse" },
-  { title: "7天被带看", icon: "el-icon-zoom-in", path: "/buySellSystem/sevenDaysFollowHouse", hot: true, flag: false, type: 2, url: "/mateHouse/getMateHouse/sevenDayHouse" },
-  { title: "新增房源", icon: "el-icon-zoom-in", path: "/buySellSystem/newAgentHouse", hot: false, flag: false, type: 3, url: "/mateHouse/getMateHouse/addHouse" },
-  { title: "我的核心盘", icon: "el-icon-zoom-in", path: "/buySellSystem/concernCommunity", hot: false, flag: false, type: 4, url: "/mateHouse/getMateHouse/myKernelHouse" },
-  { title: "成交对赌", icon: "el-icon-zoom-in", path: "/buySellSystem/houseBet", hot: true, flag: false, type: 5, url: "/mateHouse/getMateHouse/gambling" },
-  { title: "总监推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/chiefRecommendHouse", hot: true, flag: false, type: 6, url: "/mateHouse/getMateHouse/chiefRecommendHouse" },
+  {
+    title: "我的房源",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/concernCommunity",
+    hot: false,
+    flag: false,
+    type: 1,
+    url: "/mateHouse/getMateHouse/myHouse",
+    cellTop: "no-cell-top"
+  },
+  {
+    title: "7天被带看",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/sevenDaysFollowHouse",
+    hot: true,
+    flag: false,
+    type: 2,
+    url: "/mateHouse/getMateHouse/sevenDayHouse",
+    cellTop: "no-cell-top"
+  },
+  {
+    title: "新增房源",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/newAgentHouse",
+    hot: false,
+    flag: false,
+    type: 3,
+    url: "/mateHouse/getMateHouse/addHouse",
+    cellTop: "no-cell-top"
+  },
+  {
+    title: "我的核心盘",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/concernCommunity",
+    hot: false,
+    flag: false,
+    type: 4,
+    url: "/mateHouse/getMateHouse/myKernelHouse",
+    cellTop: "no-cell-top"
+  },
+  {
+    title: "成交对赌",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/houseBet",
+    hot: true,
+    flag: false,
+    type: 5,
+    url: "/mateHouse/getMateHouse/gambling",
+    cellTop: "no-cell-top"
+  },
+  {
+    title: "总监推荐",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/chiefRecommendHouse",
+    hot: true,
+    flag: false,
+    type: 6,
+    url: "/mateHouse/getMateHouse/chiefRecommendHouse",
+    cellTop: "no-cell-top"
+  },
   // { title: "钥匙房源", icon: "el-icon-zoom-in", path: "", hot: false, flag: false ,url:"/mateHouse/getMateHouse/keyHouse"},
-  { title: "独家房源", icon: "el-icon-zoom-in", path: "/buySellSystem/soleHouse", hot: false, flag: false, type: 8, url: "/mateHouse/getMateHouse/soleHouse" },
-  { title: "店公共盘", icon: "el-icon-zoom-in", path: "/buySellSystem/shopDisk", hot: false, type: 9, url: "/mateHouse/getMateHouse/shopDisk" },
-  { title: "我的关注", icon: "el-icon-zoom-in", path: "/buySellSystem/myConcern", hot: false, flag: false, type: 10, url: "/mateHouse/getMateHouse/myAttention" },
-  { title: "在售无跟单", icon: "el-icon-zoom-in", path: "/buySellSystem/saleNotTracking", hot: false, flag: false, type: 11, url: "/mateHouse/getMateHouse/saleNotTrack" },
-  { title: "全部在售", icon: "el-icon-zoom-in", path: "/buySellSystem/saleAll", hot: false, flag: false, type: 12, url: "/mateHouse/getMateHouse/soleAllHouse" },
-  { title: "店长推荐", icon: "el-icon-zoom-in", path: "/buySellSystem/shopownerRecommendHouse", hot: false, flag: false, type: 13, url: "/mateHouse/getMateHouse/shopOwnerRecommendHouse" },
+  {
+    title: "独家房源",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/soleHouse",
+    hot: false,
+    flag: false,
+    type: 8,
+    url: "/mateHouse/getMateHouse/soleHouse"
+  },
+  {
+    title: "店公共盘",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/shopDisk",
+    hot: false,
+    type: 9,
+    url: "/mateHouse/getMateHouse/shopDisk"
+  },
+  {
+    title: "我的关注",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/myConcern",
+    hot: false,
+    flag: false,
+    type: 10,
+    url: "/mateHouse/getMateHouse/myAttention"
+  },
+  {
+    title: "在售无跟单",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/saleNotTracking",
+    hot: false,
+    flag: false,
+    type: 11,
+    url: "/mateHouse/getMateHouse/saleNotTrack"
+  },
+  {
+    title: "全部在售",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/saleAll",
+    hot: false,
+    flag: false,
+    type: 12,
+    url: "/mateHouse/getMateHouse/soleAllHouse"
+  },
+  {
+    title: "店长推荐",
+    icon: "el-icon-zoom-in",
+    path: "/buySellSystem/shopownerRecommendHouse",
+    hot: false,
+    flag: false,
+    type: 13,
+    url: "/mateHouse/getMateHouse/shopOwnerRecommendHouse"
+  }
 ];
 import getToken from "@/minxi/getUrlToken";
-import getMenuRid from "@/minxi/getMenuRid"
+import getMenuRid from "@/minxi/getMenuRid";
 import { TOKEN } from "@/util/constMap";
 import util from "@/util/util";
 export default {
-  provide () {
+  provide() {
     return {
       form: this.form,
       Slider: this.Slider
-    }
+    };
   },
   name: "houseList",
   mixins: [getToken, getMenuRid],
@@ -226,18 +331,18 @@ export default {
     houselistlhousepair,
     houseresultlist
   },
-  data () {
+  data() {
     return {
       querySelectFlag: false,
       houseMenuList: HosueList,
       Slider: {
         priceSlider: [20, 20],
         areaSlider: [20, 20],
-        flootSlider: [-2, -2],
+        flootSlider: [-2, -2]
       },
       form: {
-        type: '13',
-        title: '店长推荐',
+        type: "13",
+        title: "店长推荐",
         business: [],
         houseType: [],
         renovation: [],
@@ -245,37 +350,37 @@ export default {
         orientation: [],
         primarySchool: [],
         middleSchool: [],
-        comId: '',
-        cbId: '',
-        roomNo: '',
-        minFloor: '',
-        maxFloor: '',
-        minInArea: '',
-        maxInArea: '',
-        minPrice: '',
-        maxPrice: '',
+        comId: "",
+        cbId: "",
+        roomNo: "",
+        minFloor: "",
+        maxFloor: "",
+        minInArea: "",
+        maxInArea: "",
+        minPrice: "",
+        maxPrice: "",
         face: [],
-        sortColumn: 'id',
-        sortType: 'descending',
-        searchInfo: '',
-        isOnly: '',
-        keyOwner: ''
+        sortColumn: "id",
+        sortType: "descending",
+        searchInfo: "",
+        isOnly: "",
+        keyOwner: ""
       }
     };
   },
-  created () {
-    this.form.type = '12';
-    this.form.title = '全部在售';
-    this.form.action = '/mateHouse/getMateHouse/soleAllHouse';
+  created() {
+    this.form.type = "12";
+    this.form.title = "全部在售";
+    this.form.action = "/mateHouse/getMateHouse/soleAllHouse";
   },
   methods: {
-    setSelectNav (item) {
+    setSelectNav(item) {
       console.log("11111111111" + JSON.stringify(item));
       item.flag = !item.flag;
       if (this.form.type == item.type) {
-        this.form.type = '12';
-        this.form.title = '全部在售';
-        this.form.action = '/mateHouse/getMateHouse/soleAllHouse';
+        this.form.type = "12";
+        this.form.title = "全部在售";
+        this.form.action = "/mateHouse/getMateHouse/soleAllHouse";
       } else {
         this.form.type = item.type;
         this.form.title = item.title;
@@ -283,11 +388,11 @@ export default {
       }
     },
     //跳转页面
-    navToPath (path) {
+    navToPath(path) {
       this.$router.push({ path: path });
     },
 
-    GetRequest () {
+    GetRequest() {
       var href = window.location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", href);
       var str = href.substring(href.indexOf("?"));
@@ -301,10 +406,10 @@ export default {
       console.log("傻逼傻逼：从地址tk获取到后放到storage:" + token);
       return token;
     },
-    handleClick (e) {
+    handleClick(e) {
       console.log(e);
     },
-    addHouse () {
+    addHouse() {
       this.$router.push({ path: "/buySellSystem/addHouse" });
     }
   }

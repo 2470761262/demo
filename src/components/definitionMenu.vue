@@ -51,7 +51,7 @@
                  :key="index">
             <input type="checkbox"
                    @click="setListCheck(item)"
-                   :checked="item.flag"
+                   :checked="item.default"
                    :disabled="item.disabled">
             <span>{{item.label}}</span>
           </label>
@@ -66,14 +66,14 @@
         </div>
       </div>
       <el-button slot="reference"
-      size="mini"
+                 size="mini"
                  type="primary">自定义菜单</el-button>
     </el-popover>
   </div>
 </template>
 
 <script>
-import util from '@/util/util';
+import util from "@/util/util";
 export default {
   props: {
     renderList: {
@@ -89,81 +89,66 @@ export default {
     renderList: {
       immediate: true,
       deep: true,
-      handler (newValue, oldValue) {
+      handler(newValue, oldValue) {
+        //深度复制父组件数据
         this.thatRenderList = util.deepCopy(newValue);
+        //备份
+        this.backupsRenderList = util.deepCopy(this.thatRenderList);
+        //把列表返回给父组件
+        this.setTabRender();
       }
     },
-    tableColumn: {
-      immediate: true,
-      deep: true,
-      handler (newValue, oldValue) {
-        this.thatTableColumn = util.deepCopy(newValue);
-      }
-    },
-    visible (newVal) {
-      if (newVal) {
-        this.ordThatRenderList = util.deepCopy(this.thatRenderList);
-        this.ordThatTableColumn = util.deepCopy(this.thatTableColumn);
+    visible(newVal) {
+      if (!newVal && this.submitFlag && this.backupsRenderList.length > 0) {
+        this.thatRenderList = this.backupsRenderList;
+        this.submitFlag = false;
+        this.backupsRenderList = [];
       } else {
-        if (this.submitFlag == false) {
-          this.thatRenderList = util.deepCopy(this.ordThatRenderList);
-          this.thatTableColumn = util.deepCopy(this.ordThatTableColumn);
-        }
+        //关闭时在次备份
+        this.backupsRenderList = util.deepCopy(this.thatRenderList);
       }
     }
   },
-  data () {
+  data() {
     return {
       visible: false, //  弹出框开关
-      thatRenderList: [],  //checkbox渲染list
-      thatTableColumn: [], //表格渲染list
-      ordThatRenderList: [], //checkbox渲染list 如果修改了之后没有提交则保存 关闭的时候覆盖给thatRenderList
-      ordThatTableColumn: [],//表格渲染list 如果修改了之后没有提交则保存 关闭的时候覆盖给thatTableColumn
-      submitFlag: true//修改了是否有提交
-    }
+      thatRenderList: [], //checkbox渲染list
+      backupsRenderList: [], //存储备份用于恢复除开按钮以外的关闭
+      submitFlag: false //修改了是否有提交
+    };
   },
-  created () {
-    if (this.thatTableColumn.length == 0) {
-      this.resetTabRender();
-    }
-
-  },
+  created() {},
   methods: {
-    setListCheck (item) {
-      if (item.disabled)
-        return false;
-      this.submitFlag = false;
-      item.flag = !item.flag;
-      if (item.flag == true) {
-        this.thatTableColumn.push(item);
-      } else {
-        let Index = this.thatTableColumn.findIndex((coLitem) => {
-          return coLitem.prop == item.prop;
-        })
-        this.thatTableColumn.splice(Index, 1);
-      }
-      this.$forceUpdate();
-    },
-    setTabRender () {
-      this.$emit("change", this.thatTableColumn);
-      this.visible = false;
+    setListCheck(item) {
+      item.default = !item.default;
+      //如果进行了修改把标记修改为true
       this.submitFlag = true;
     },
-    resetTabRender () {
-      this.thatTableColumn = [];
-      this.thatRenderList.forEach((parItem, parindex) => {
-        parItem.flag = false;
-        if (parItem.default) {
-          parItem.flag = true;
-          this.thatTableColumn.push(parItem);
+    setTabRender() {
+      let rendelOptions = ["prop", "label", "width", "order", "formart"];
+      let result = [];
+      this.thatRenderList.forEach((item, index) => {
+        let newObj = {};
+        if (item.default) {
+          for (let options of rendelOptions) {
+            if (options in item) {
+              newObj[options] = item[options];
+            }
+          }
+          result.push(newObj);
         }
-      })
-      this.$forceUpdate();
-      this.$emit("change", this.thatTableColumn);
-      this.visible = false;
-      this.submitFlag = true;
+      });
+      //确定按钮提交时把标记关闭
+      this.submitFlag = false;
+      //提交数据到父级
+      this.$emit("change", result);
+    },
+    resetTabRender() {
+      //重置默认数据
+      this.thatRenderList = util.deepCopy(this.renderList);
+      //再次渲染
+      this.setTabRender();
     }
-  },
-
-}
+  }
+};
 </script>

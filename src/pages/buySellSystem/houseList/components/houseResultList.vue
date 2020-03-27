@@ -32,7 +32,7 @@
   .select-tabs-item {
     display: flex;
     align-items: center;
-    margin-right: 80px;
+    margin-right: 98px;
     cursor: pointer;
     &:last-child {
       margin-right: 0;
@@ -83,7 +83,7 @@
   min-height: 400px;
   .select-for-item {
     display: flex;
-    padding: 15px 0;
+    padding: 12px 0;
     border-bottom: 1px solid #dbdbdb;
     .select-for-item-img {
       width: 140px;
@@ -282,7 +282,7 @@
               </div>
               <div class="item-data-middle overText">{{item.title}}</div>
               <div class="item-data-bottom">
-                <div class="item-data-bottom-detali overText">{{item.communityName}}/{{item.inArea}}㎡/{{item.rooms}}房2厅1卫</div>
+                <div class="item-data-bottom-detali overText">{{item.communityName}} &nbsp;/&nbsp;{{item.inArea}}㎡ &nbsp;/&nbsp;{{item.rooms}}房2厅1卫</div>
                 <div class="item-data-bottom-price overText">￥{{item.price}}万</div>
                 <div class="item-data-bottom-avgPirce overText">{{item.unitpaice}}元/平</div>
               </div>
@@ -320,6 +320,7 @@
                                show-overflow-tooltip>
               </el-table-column>
               <el-table-column label="操作"
+                               fixed="right"
                                width="80px">
                 <template slot-scope="scope">
                   <el-button size="mini"
@@ -623,7 +624,9 @@ export default {
       //价格
       if (this.Slider.priceSlider[1] != 20) {
         this.dynamicTags.push({
-          title: `价格:${value.minPrice}-${value.maxPrice}万`,
+          title: `价格:${value.minPrice}-${
+            value.maxPrice == "9999" ? "无限" : value.maxPrice
+          }万`,
           field: "price",
           arr: false
         });
@@ -631,7 +634,9 @@ export default {
       //面积
       if (this.Slider.areaSlider[1] != 20) {
         this.dynamicTags.push({
-          title: `面积:${value.minInArea}-${value.maxInArea}㎡`,
+          title: `面积:${value.minInArea}-${
+            value.maxInArea == "9999" ? "无限" : value.maxInArea
+          }㎡`,
           field: "area",
           arr: false
         });
@@ -639,7 +644,9 @@ export default {
       //楼层
       if (this.Slider.flootSlider[1] != -2) {
         this.dynamicTags.push({
-          title: `楼层:${value.minFloor}-${value.maxFloor}层`,
+          title: `楼层:${value.minFloor}-${
+            value.maxFloor == "9999" ? "无限" : value.maxFloor
+          }层`,
           field: "floot",
           arr: false
         });
