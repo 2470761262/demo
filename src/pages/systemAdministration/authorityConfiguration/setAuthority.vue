@@ -171,7 +171,12 @@ export default {
           if (result.code == 200) {
             that.ruleTreeData = result.data.allRule;
             that.$refs.tree.setCheckedKeys(result.data.selectedRule);
-            that.companyGather = result.data.allRule[result.data.selectedRule[0]].companyGather.split(",");
+            result.data.allRule.forEach(obj => {
+              if(obj.id == result.data.selectedRule[0]){
+                that.companyGather = obj.companyGather.split(",");
+              }
+            })
+
           } else {
             console.log("查询错误: ", result.message);
             that.$message.error("查询错误: " + result.message);
