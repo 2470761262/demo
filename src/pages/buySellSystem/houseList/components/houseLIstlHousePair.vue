@@ -133,6 +133,12 @@
       background: #fff;
     }
   }
+  .vue-slider-rail {
+    .vue-slider-marks {
+      background-color: var(--color--primary);
+      opacity: 0.4;
+    }
+  }
 }
 .tooltipsItem {
   width: 100%;
