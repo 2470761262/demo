@@ -59,7 +59,6 @@
                  node-key="id"
                  ref="tree"
                  check-strictly
-                 :check-on-click-node=false
                  highlight-current
                  :expand-on-click-node=false
                  :props="defaultProps">
@@ -101,15 +100,23 @@
         <div class="text item"
              style="margin-top: 10px;">
           <template>
-            <div class="formItem"
-                 v-show="showSave">
-              <el-button type="primary"
-                         size="mini"
-                         @click="saveCompanyRule">保存</el-button>
+            <div class="formItem">
+
+              <el-form :inline="true" class="demo-form-inline" style="!important;align-content: center">
+                <el-form-item label="关键字过滤"  v-show="showCompanyTree">
+                  <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
+                </el-form-item>
+                <el-form-item label="子节点选中"  v-show="showCompanyTree">
+                  <el-switch v-model="checkStrictly"></el-switch>
+                </el-form-item>
+                <el-form-item label="功能操作" v-show="showSave" >
+                  <el-button type="primary" size="mini" @click="saveCompanyRule">保存</el-button>
+                </el-form-item>
+              </el-form>
+
+
             </div>
             <div class="elTree" v-show="showCompanyTree">
-
-              <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
               <el-tree
                 ref="companyTree"
                 :data="companyTreeData"
@@ -119,7 +126,7 @@
                 @check="checkNode"
                 :highlight-current="true"
                 :filter-node-method="filterNode"
-                check-strictly
+                :check-strictly="checkStrictly"
                 :action="''"
                 empty-text="暂无数据，请检查权限"
                 auto-expand-parent
@@ -143,6 +150,7 @@ export default {
   components: {},
   data () {
     return {
+      checkStrictly:true,
       filterText: "",
       treeLoading: true,
       ruleTreeData: [],
@@ -176,6 +184,8 @@ export default {
         companyIds: [],
         deptIds:[],
       },
+      currentCompanyGather: "",
+      currentDeptGather: "",
       currentNode: null,
     }
   },
@@ -279,7 +289,7 @@ export default {
       this.showSave = true;
       node.data.dataType = "0";
       //设置参数
-      this.putParams(node);
+      this.putParams(node,"0");
       console.log(node, data, "operationSelf..");
     },
     operationDept (node, data) {
@@ -287,7 +297,7 @@ export default {
       this.showSave = true;
       node.data.dataType = "1";
       //设置参数
-      this.putParams(node);
+      this.putParams(node,"1");
       console.log(node, data, "operationDept..");
     },
     //应用
@@ -319,9 +329,11 @@ export default {
     //     });
     // },
     //保存跨部门权限
-    putParams(node){
+    putParams(node,dataType){
       let data = node.data;
-      let dataType = node.data.dataType;
+      if(!data){
+        data = node;
+      }
       //设置参数
       let that = this;
       let functionPointObj = that.paramsObj.functionPointArray[new String(data.id)];
@@ -336,6 +348,23 @@ export default {
       let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
       functionPointObj.deptId = deptId;
       that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
+      if(data.children){
+        if(data.children.length > 0){
+          this.foreachChildren(data.children,dataType);
+        }
+      }
+      //设置当前对象的值
+      let currentNode = that.$refs.tree.getNode(data.id);
+      currentNode.data.dataType = dataType;
+      currentNode.data.companyGather = this.currentCompanyGather;
+      currentNode.data.deptGather = this.currentDeptGather;
+    },
+    //遍历子节点
+    foreachChildren(childrenData,dataType){
+      let that = this;
+      if(childrenData){
+        childrenData.forEach(data =>{that.putParams(data,dataType)})
+      }
     },
     saveCompanyRule () {
       if (!this.paramsObj && !this.paramsObj.rId) {
@@ -388,9 +417,11 @@ export default {
           }
         })
         //设置节点数据权限
-        this.currentNode.data.companyGather = this.foreachList(this.companyTreeSelectNode.companyIds);
-        this.currentNode.data.deptGather = this.foreachList(this.companyTreeSelectNode.deptIds);
-        this.putParams(this.currentNode);
+        //this.currentNode.data.companyGather = this.foreachList(this.companyTreeSelectNode.companyIds);
+        //this.currentNode.data.deptGather = this.foreachList(this.companyTreeSelectNode.deptIds);
+        this.currentCompanyGather = this.foreachList(this.companyTreeSelectNode.companyIds);
+        this.currentDeptGather = this.foreachList(this.companyTreeSelectNode.deptIds);
+        this.putParams(this.currentNode,this.currentNode.data.dataType);
       }
 
     },
