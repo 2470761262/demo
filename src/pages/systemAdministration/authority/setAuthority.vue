@@ -42,7 +42,7 @@
 }
 </style>
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="fullscreenLoading">
     <template>
       <div class="elTree">
         <el-select v-model="ruleParamsObj.type" @change="loadFunctionPoint" placeholder="请选择功能点类型">
@@ -150,6 +150,7 @@ export default {
   components: {},
   data () {
     return {
+      fullscreenLoading: false,
       checkStrictly:true,
       filterText: "",
       treeLoading: true,
@@ -371,6 +372,7 @@ export default {
         this.$message.info("请选择节点进行保存");
         return;
       }
+      this.fullscreenLoading = true;
       var that = this;
       that.paramsObj.ruleType = this.ruleParamsObj.type;
       let functionPointList = [];
@@ -393,6 +395,7 @@ export default {
             console.log("保存结果：" + result.message);
             this.$message.error("保存失败" + result.message);
           }
+          that.fullscreenLoading = false;
         });
     },
     foreachList(list){
