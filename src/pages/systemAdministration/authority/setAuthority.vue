@@ -277,9 +277,14 @@ export default {
         this.companyGather = arrayGather;
       }
       if(data.deptGather){
-        let gather = data.deptGather;
-        let arrayGather = gather.split(",");
-        this.companyGather = arrayGather;
+        let deptGather = data.deptGather;
+        let deptArrayGather = deptGather.split(",");
+        if(this.companyGather){
+          deptArrayGather.forEach(deptId => {this.companyGather.push(deptId)})
+          //this.companyGather = this.companyGather + deptArrayGather;
+        }else{
+          this.companyGather = deptArrayGather;
+        }
       }
       //设置参数
       //this.putParams(node);

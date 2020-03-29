@@ -275,6 +275,16 @@ export default {
         companyGather = companyGather + "," + id;
       });
       companyGather = companyGather.substr(1, companyGather.length);
+      //判断如果没有则选择左边数的节点
+      if(companyGather == ""){
+        let companyCheckedKeys = that.$refs.companyTree.getCheckedKeys();
+        let keys = "";
+        companyCheckedKeys.forEach(key => {
+          keys = keys + "," + key;
+        });
+        keys = keys.substr(1, keys.length);
+        companyGather = keys;
+      }
       that.ruleParamsObj.companyGather = companyGather;
       //传入类型
       that.$api
