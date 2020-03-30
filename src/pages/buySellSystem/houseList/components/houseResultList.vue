@@ -344,7 +344,7 @@
                 <template slot-scope="scope">
                   <el-button size="mini"
                              type="primary"
-                             @click="navTabItem(scope.$index, scope.row)">查看</el-button>
+                             @click="toHouseDetail(scope.row.id)">查看</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -548,9 +548,6 @@ export default {
   methods: {
     tabColumnChange(e) {
       this.tableColumn = e;
-    },
-    navTabItem(index, row) {
-      console.log(index, row);
     },
     toHouseDetail(id) {
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
