@@ -287,7 +287,7 @@ export default {
         }
       }
       //设置参数
-      //this.putParams(node);
+      this.putParams(node,"2");
       this.currentNode = node;
     },
     operationSelf (node, data) {
