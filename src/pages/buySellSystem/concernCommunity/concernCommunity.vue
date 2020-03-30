@@ -120,10 +120,12 @@
             </div>
           </div>
           <div class="query-body-select">
-            <paging-select v-if="list.length > 0"
+            <paging-select 
                            v-model="queryData.selectCommunity"
                            isKey="communityName"
                            isValue="id"
+                           @load="queryNotConcernCommunityList"
+                           @change="queryNotConcernCommunityList"
                            :data="list"></paging-select>
           </div>
           <template v-for="(item,i) in array">
@@ -447,6 +449,7 @@ export default {
       cbId: "",
       roomNo: "",
       houseType: "",
+      selectPage:1,
       queryData: {
         communityName: "",
         isOnly: "",
@@ -458,7 +461,7 @@ export default {
   mounted() {
     this.queryVerifyHouseDatas(1, "id", "descending");
     this.queryConcernCount();
-    this.queryNotConcernCommunityList();
+  //  this.queryNotConcernCommunityList();
   },
   methods: {
     changeAreaBut() {
@@ -834,22 +837,26 @@ export default {
           console.log(e);
         });
     },
-    queryNotConcernCommunityList() {
+    queryNotConcernCommunityList(name,type) {
+      let _that = this;
+    
       this.$api
         .post({
           url: "/concern_community/notConcernCommunityList",
-          data: { CommunityName: "", page: 1, limit: 50 },
+          data: { CommunityName: name, page: _that.selectPage, limit: 10},
           qs: true
         })
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            var that = this;
-            var arrayCommunity = result.data;
-            that.list = arrayCommunity;
-            return that.list.forEach(item => {
-              return item.list;
-            });
+            if(type == 'change'){
+                 this.list = []
+              }
+            if(this.selectPage< result.data.totalPage ){
+              ++this.selectPage;
+            }
+            var arrayCommunity = result.data.list;
+            this.list = [...this.list,...arrayCommunity];
           } else {
             console.log("查询未关注楼盘then：" + result.message);
           }
@@ -857,7 +864,7 @@ export default {
         .catch(e => {
           console.log("查询未关注楼盘失败catch");
           console.log(e);
-        });
+        })
       // }
     },
     remoteInput() {

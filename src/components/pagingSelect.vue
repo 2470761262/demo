@@ -48,7 +48,7 @@
 </style>
 <template>
   <el-popover popper-class="poperSet"
-              trigger="click"
+              trigger="hover"
               v-model="visible"
               :width="popoverWidth">
     <el-input size="mini"
@@ -156,11 +156,10 @@ export default {
       }, 400);
     },
     filterInputChange() {
-      console.log("wioww");
-      this.$emit("change", this.filterInput);
+      this.$emit("change", this.filterInput,'change');
     },
     load() {
-      this.$emit("load");
+      this.$emit("load", this.filterInput,'load');
     },
     //提交选中
     emitPitchOn() {
