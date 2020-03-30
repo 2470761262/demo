@@ -220,7 +220,7 @@ export default {
   watch: {
     houseDetails: {
       deep: true,
-      handler: function(newValue) {
+      handler: function (newValue) {
         let _that = this;
         if (Object.keys(newValue).length > 0) {
           this.qrData = new QRCode("qrcode", {
@@ -239,12 +239,12 @@ export default {
     report,
     attention
   },
-  created() {
+  created () {
     this.getImpressionList();
     this.getisCollect();
   },
   computed: {
-    resultData() {
+    resultData () {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
@@ -252,7 +252,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       qrData: null,
       followUpFlag: false, //跟进开关
@@ -264,7 +264,7 @@ export default {
   },
   methods: {
     //关注或者取消关注
-    changCollectHouse() {
+    changCollectHouse () {
       let that = this;
       let ajaxurl = "";
       let params = {
@@ -285,9 +285,9 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             that.isCollect = !that.isCollect;
-            if (ajaxurl == "/agentHouse/collect/collectHouse") {
-              this.attentionFlag = true;
-            }
+            // if (ajaxurl == "/agentHouse/collect/collectHouse") {
+            //   this.attentionFlag = true;
+            // }
           } else {
             that.$message(result.message);
           }
@@ -299,7 +299,7 @@ export default {
         });
     },
     //获取是否关注标记
-    getisCollect() {
+    getisCollect () {
       let that = this;
       this.$api
         .get({
@@ -315,10 +315,10 @@ export default {
             that.isCollect = result.data;
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     //删除印象
-    deleteImpression(impressionId, index) {
+    deleteImpression (impressionId, index) {
       let that = this;
       let params = {
         impressionId: impressionId
@@ -337,7 +337,7 @@ export default {
         });
     },
     //添加印象
-    insertImpression(impression) {
+    insertImpression (impression) {
       let that = this;
       let params = {
         houseId: this.houseId.id,
@@ -362,7 +362,7 @@ export default {
         });
     },
     //获取印象数组
-    getImpressionList() {
+    getImpressionList () {
       let that = this;
       let params = {
         houseId: this.houseId.id
@@ -381,7 +381,7 @@ export default {
         });
     },
     //打开举报弹窗
-    async openReport() {
+    async openReport () {
       let isChecking = await houseCheck.isChecking(
         11,
         0,
@@ -392,10 +392,10 @@ export default {
         this.reportFlag = true;
       }
     },
-    openPopUp(PopName) {
+    openPopUp (PopName) {
       this[PopName] = true;
     },
-    nodePop() {
+    nodePop () {
       let that = this;
       this.$prompt(null, "房源印象显示在房源左上角,仅自己可见", {
         confirmButtonText: "添加",
@@ -408,7 +408,7 @@ export default {
             return "不能连续输入重复的字符";
           }
         },
-        beforeClose(action, instance, done) {
+        beforeClose (action, instance, done) {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = "执行中...";
@@ -425,7 +425,7 @@ export default {
         .then(value => {
           console.log(action, instance, done);
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }
 };

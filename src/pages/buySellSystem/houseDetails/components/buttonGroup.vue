@@ -177,7 +177,7 @@ export default {
     keyStorage
   },
   computed: {
-    resultData() {
+    resultData () {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
@@ -185,7 +185,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       releasePopFlag: false,
       betPopFlag: false,
@@ -206,7 +206,7 @@ export default {
       isBet: true //是否正在对赌
     };
   },
-  mounted() {
+  mounted () {
     this.getAgentRules();
     this.getisRecommend();
     this.getBetInfo();
@@ -215,17 +215,17 @@ export default {
       console.log(this.perId, "this.perId ");
     }
   },
-  created() {
+  created () {
     but.$on("getBetInfo", () => {
       this.getBetInfo;
     });
   },
-  destroyed() {
+  destroyed () {
     but.$off("getBetInfo");
   },
   methods: {
     //获取对赌结束时间
-    getBetInfo() {
+    getBetInfo () {
       var that = this;
       this.$api
         .get({
@@ -233,17 +233,19 @@ export default {
         })
         .then(e => {
           let data = e.data;
-          if (data.data) {
-            that.isBet = true;
-            but.$emit("betExpire", data.data.EndTime);
+          if (data.data != null) {
+            if (data.data.EndTime != null && Date.parse(data.data.EndTime) < new Date()) {
+              that.isBet = true;
+              but.$emit("betExpire", data.data.EndTime);
+            }
           } else {
             that.isBet = false;
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     //获取对赌配置参数
-    showBetView() {
+    showBetView () {
       var that = this;
       this.$api
         .get({
@@ -260,10 +262,10 @@ export default {
             this.$message.error({ message: data.message, offset: 400 });
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     //推荐或者取消推荐房源
-    insertOrCancelRecommend(value) {
+    insertOrCancelRecommend (value) {
       let that = this;
       let url = "/agentHouse/recommend/insertRecommend";
       if (this.isRecommend) {
@@ -286,10 +288,10 @@ export default {
             that.$message(result.message);
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     //打开推荐弹窗
-    nodePop() {
+    nodePop () {
       let that = this;
       this.$prompt(null, this.isRecommend ? "取消推荐" : "推荐房源", {
         confirmButtonText: "提交",
@@ -300,7 +302,7 @@ export default {
         inputValidator: e => {
           if (!e) return "理由不能为空";
         },
-        beforeClose(action, instance, done) {
+        beforeClose (action, instance, done) {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = "执行中...";
@@ -317,12 +319,12 @@ export default {
         .then(value => {
           console.log(action, instance, done);
         })
-        .catch(() => {});
+        .catch(() => { });
     },
     /**
      * 是否已经推荐
      */
-    getisRecommend() {
+    getisRecommend () {
       let that = this;
       this.$api
         .get({
@@ -344,10 +346,10 @@ export default {
             that.isRecommend = false;
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     //锁定或解锁房源
-    houseLock() {
+    houseLock () {
       let that = this;
       let isLocking = this.resultData.isLocking == 1 ? 0 : 1;
       if (this.resultData.isLocking == undefined) {
@@ -372,10 +374,10 @@ export default {
             that.resultData.isLocking = isLocking;
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     //获取按钮权限
-    getAgentRules() {
+    getAgentRules () {
       let that = this;
       this.$api
         .get({
@@ -394,9 +396,9 @@ export default {
             }
           });
         })
-        .catch(e => {});
+        .catch(e => { });
     },
-    async cancelOutsideHouse() {
+    async cancelOutsideHouse () {
       let params = {
         HouseNo: this.resultData.HouseNo
       };
@@ -409,7 +411,7 @@ export default {
       }
     },
     //是否展示产权证号弹窗
-    async certificateType() {
+    async certificateType () {
       if (parseInt(this.resultData.certificateType) != 1) {
         this.releasePopFlag = true;
       } else {
@@ -430,7 +432,7 @@ export default {
       }
     },
     //是否显示转状态弹窗
-    async changePopUp() {
+    async changePopUp () {
       let reslut = await houseCheck.isChecking(
         8,
         0,
@@ -441,11 +443,11 @@ export default {
         this.typeFlag = true;
       }
     },
-    openPopUp(PopName) {
+    openPopUp (PopName) {
       this[PopName] = true;
     },
     //钥匙存储
-    keyStorage() {
+    keyStorage () {
       this.$prompt(null, "您的钥匙要存放哪个门店?", {
         confirmButtonText: "确定",
         showCancelButton: false,
@@ -454,9 +456,9 @@ export default {
         .then(value => {
           console.log(value);
         })
-        .catch(() => {});
+        .catch(() => { });
     },
-    message(icon, text) {
+    message (icon, text) {
       const h = this.$createElement;
       return this.$msgbox({
         title: "",
@@ -481,8 +483,8 @@ export default {
         showCancelButton: false,
         confirmButtonText: "确定"
       })
-        .then(() => {})
-        .catch(() => {});
+        .then(() => { })
+        .catch(() => { });
     }
   }
 };
