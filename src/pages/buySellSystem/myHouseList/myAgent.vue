@@ -167,7 +167,7 @@
                      @click="toLook(scope.row.id)">查看</el-button>
           <el-button type="info"
                      size="mini"
-                     @click="toHouseData(scope.row.id,scope.row.communityName,scope.row.AgentName,scope.row.agentper)">调配</el-button>
+                     @click="toHouseData(scope.row.id,scope.row.communityName,scope.row.agentName,scope.row.agentPer)">调配</el-button>
 
           <el-dialog title="跟单人将调配至本公司人员"
                      :visible.sync="dialogVisible"
