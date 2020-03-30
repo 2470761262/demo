@@ -183,7 +183,8 @@
              infinite-scroll-immediate="false"
              v-infinite-scroll="load">
           <div class="fixed">
-            <followUp :visible.sync="followUpFlag"
+            <followUp :isCancel="false"
+                      :visible.sync="followUpFlag"
                       v-if="followUpFlag"
                       width="100%"
                       title=""></followUp>

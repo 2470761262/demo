@@ -171,7 +171,12 @@ export default {
           if (result.code == 200) {
             that.ruleTreeData = result.data.allRule;
             that.$refs.tree.setCheckedKeys(result.data.selectedRule);
-            that.companyGather = result.data.allRule[result.data.selectedRule[0]].companyGather.split(",");
+            result.data.allRule.forEach(obj => {
+              if(obj.id == result.data.selectedRule[0]){
+                that.companyGather = obj.companyGather.split(",");
+              }
+            })
+
           } else {
             console.log("查询错误: ", result.message);
             that.$message.error("查询错误: " + result.message);
@@ -270,6 +275,16 @@ export default {
         companyGather = companyGather + "," + id;
       });
       companyGather = companyGather.substr(1, companyGather.length);
+      //判断如果没有则选择左边数的节点
+      if(companyGather == ""){
+        let companyCheckedKeys = that.$refs.companyTree.getCheckedKeys();
+        let keys = "";
+        companyCheckedKeys.forEach(key => {
+          keys = keys + "," + key;
+        });
+        keys = keys.substr(1, keys.length);
+        companyGather = keys;
+      }
       that.ruleParamsObj.companyGather = companyGather;
       //传入类型
       that.$api
