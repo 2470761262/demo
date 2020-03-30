@@ -5,7 +5,7 @@
 .page-query-data {
   display: flex;
   .page-query-data-title {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 32px;
     margin-right: 15px;
   }
@@ -14,6 +14,7 @@
     .query-tag {
       margin-right: 10px;
       margin-bottom: 10px;
+      font-size: 16px;
     }
   }
 }
@@ -38,10 +39,10 @@
       margin-right: 0;
     }
     .tabs-item-title {
-      font-size: 16px;
+      font-size: 18px;
     }
     .el-icon-sort {
-      font-size: 16px;
+      font-size: 18px;
     }
   }
 }
@@ -56,7 +57,7 @@
   span {
     display: flex;
     align-items: center;
-    font-size: 16px;
+    font-size: 18px;
     &::after {
       content: "";
       border: 1px solid #767676;
@@ -111,7 +112,7 @@
         align-items: center;
         .item-data-top-no {
           color: #adadad;
-          font-size: 16px;
+          font-size: 14px;
           margin-right: 80px;
         }
         .item-data-top-tag {
@@ -129,14 +130,14 @@
         cursor: pointer;
       }
       .item-data-middle {
-        font-size: 22px;
+        font-size: 20px;
         color: #636363;
       }
       .item-data-bottom {
         display: flex;
         .item-data-bottom-detali {
           color: #636363;
-          font-size: 14px;
+          font-size: 16px;
           align-self: flex-end;
           flex: 1;
           width: 0;
@@ -150,6 +151,7 @@
           align-self: flex-end;
           margin-left: 10px;
           color: #636363;
+          font-size: 14px;
         }
       }
     }
@@ -170,8 +172,25 @@
 }
 .select-page-nav {
   display: flex;
-  margin-top: 15px;
+  margin-top: 30px;
   justify-content: center;
+  /deep/.el-pagination {
+    .el-pagination__total {
+      font-size: 15px;
+    }
+    li {
+      font-size: 15px;
+      border: 1px solid #dcdfe6;
+      border-radius: 4px;
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    .el-pagination__jump {
+      font-size: 15px;
+    }
+  }
 }
 .flex-cell {
   display: flex;
@@ -193,7 +212,7 @@
   <div class="query-data-pad">
     <div class="page-query-data"
          v-if="dynamicTags.length>0 || querySelectFlag">
-      <div class="page-query-data-title">所有房源></div>
+      <div class="page-query-data-title">所有房源&nbsp;></div>
       <div class="page-query-data-tag">
         <el-tag :key="index"
                 class="query-tag"
