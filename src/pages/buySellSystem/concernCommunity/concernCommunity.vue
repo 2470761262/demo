@@ -121,7 +121,7 @@
           </div>
           <div class="query-body-select">
             <paging-select v-if="list.length > 0"
-                           v-model="testmodel"
+                           v-model="queryData.selectCommunity"
                            isKey="communityName"
                            isValue="id"
                            :data="list"></paging-select>

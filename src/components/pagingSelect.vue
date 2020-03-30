@@ -52,7 +52,8 @@
               v-model="visible"
               :width="popoverWidth">
     <el-input size="mini"
-              v-model="filterInput"
+              v-model.lazy="filterInput"
+              @input="debounce('filterInputChange')"
               placeholder="输入您需要筛选的关键字"></el-input>
     <div class="text-centent"
          v-if="loading">加载中...</div>
@@ -131,7 +132,8 @@ export default {
       pitchOn: this.value.slice(0), //选中
       visible: false,
       popoverWidth: 0,
-      filterInput: ""
+      filterInput: "",
+      time: null //用于input防抖
     };
   },
   mounted() {
@@ -142,10 +144,21 @@ export default {
   beforeDestroy() {
     removeResizeListener(this.$refs.onlayInput.$el, this.resetPopWdith);
   },
-  destroyed() {
-    console.log("destroyed", this);
-  },
   methods: {
+    //防抖
+    debounce(funName) {
+      if (this.time) {
+        clearTimeout(this.time);
+      }
+      this.time = setTimeout(() => {
+        this.time = null;
+        this[funName]();
+      }, 400);
+    },
+    filterInputChange() {
+      console.log("wioww");
+      this.$emit("change", this.filterInput);
+    },
     load() {
       this.$emit("load");
     },
