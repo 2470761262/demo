@@ -52,7 +52,7 @@
               v-model="visible"
               :width="popoverWidth">
     <el-input size="mini"
-              v-model.lazy="filterInput"
+              v-model="filterInput"
               @input="debounce('filterInputChange')"
               placeholder="输入您需要筛选的关键字"></el-input>
     <div class="text-centent"
