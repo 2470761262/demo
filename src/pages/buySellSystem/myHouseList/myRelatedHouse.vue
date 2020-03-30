@@ -287,7 +287,7 @@ export default {
           default: true
         },
         {
-          prop: "brokerName",
+          prop: "agentPerName",
           label: "跟单人",
           width: "120",
           order: false,
@@ -305,7 +305,7 @@ export default {
             item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
         },
         {
-          prop: "unitpaice",
+          prop: "unitPrice",
           label: "单价(元/㎡)",
           width: "130",
           order: "custom",

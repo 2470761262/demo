@@ -18,6 +18,7 @@
     filter: opacity(0.7);
     span {
       color: #fff !important;
+      font-size: 15px;
     }
   }
   /deep/.is-active {
@@ -41,7 +42,7 @@
     padding-left: 15px;
   }
   /deep/.el-tabs__item {
-    font-size: 12px;
+    font-size: 15px;
   }
 }
 </style>
@@ -80,30 +81,29 @@ export default {
     //   },
     routerTab: {
       type: Array
-    },
+    }
     // activeParent: {
     //    type: String,
     //    default: '0'
     // },
   },
   watch: {
-    $route (newValue, oldValue) {
+    $route(newValue, oldValue) {
       this.initUrlTab();
     }
   },
-  created () {
+  created() {
     this.initUrlTab();
-
   },
-  data () {
+  data() {
     return {
       renderTab: this.routerTab,
-      renderActive: '1',
-      renderChild: ''
-    }
+      renderActive: "1",
+      renderChild: ""
+    };
   },
   methods: {
-    initUrlTab () {
+    initUrlTab() {
       let routerTab = this.routerTab;
       for (let i = 0; i < routerTab.length; i++) {
         for (let y = 0; y < routerTab[i].children.length; y++) {
@@ -114,23 +114,22 @@ export default {
           }
         }
       }
-
     },
-    childChange () {
-      this.$router.push({ path: this.renderChild })
+    childChange() {
+      this.$router.push({ path: this.renderChild });
       // this.$emit('input', this.renderChild);
-      this.$emit('change', this.renderChild);
+      this.$emit("change", this.renderChild);
     },
     //父级切换
-    parentChange (e) {
+    parentChange(e) {
       let resultIndex = this.routerTab.findIndex((item, index) => {
-        return item.active == e.name
-      })
+        return item.active == e.name;
+      });
       if (this.routerTab[resultIndex].children) {
         this.renderChild = this.routerTab[resultIndex].children[0].active;
         this.childChange();
       }
     }
-  },
-}
+  }
+};
 </script>
