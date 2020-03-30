@@ -572,7 +572,7 @@ export default {
             type: "success",
             message: "操作成功!"
           });
-          this.querylist(1);
+
         })
         .catch(() => {
           this.$message({
@@ -607,6 +607,7 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            this.querylist(1);
             that.MyImpressionList = e.data.data;
           }
         });
