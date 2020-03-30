@@ -120,6 +120,8 @@
                           @change="querylistByParams"
                           range-separator="至"
                           start-placeholder="开始日期"
+                          value-format="yyyy-MM-ddTHH:mm:sssZ"
+                         :default-time="['00:00:00', '23:59:59']"
                           end-placeholder="结束日期"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="remove">清除</span>
@@ -821,6 +823,8 @@ export default {
         params.tel = that.data.tel;
         params.minInArea = that.data.minInArea;
         params.maxInArea = that.data.maxInArea;
+        params.minPrice = that.data.minPrice;
+        params.maxPrice = that.data.maxPrice;
         params.keyOwner = that.data.keyOwner;
         params.isOnly = that.data.isOnly;
         params.agentName = that.data.agentName;
