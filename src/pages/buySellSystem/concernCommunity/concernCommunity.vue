@@ -41,6 +41,7 @@
     }
     .query-body-select {
       flex: 1;
+      margin-top: 20px;
     }
     .query-item-attention {
       display: flex;
@@ -121,10 +122,10 @@
             </div>
           </div>
           <div class="query-body-select">
-            <paging-select 
-                           v-model="queryData.selectCommunity"
+            <paging-select v-model="queryData.selectCommunity"
                            isKey="communityName"
                            isValue="id"
+                           :loading="loadingSelect"
                            @load="queryNotConcernCommunityList"
                            @change="queryNotConcernCommunityList"
                            :data="list"></paging-select>
@@ -322,6 +323,7 @@ export default {
   data() {
     return {
       list: [],
+      loadingSelect: false,
       addComId: [],
       input: "",
       loading: true, //控制表格加载动画提示
@@ -450,7 +452,7 @@ export default {
       cbId: "",
       roomNo: "",
       houseType: "",
-      selectPage:1,
+      selectPage: 1,
       queryData: {
         communityName: "",
         isOnly: "",
@@ -462,7 +464,7 @@ export default {
   mounted() {
     this.queryVerifyHouseDatas(1, "id", "descending");
     this.queryConcernCount();
-  //  this.queryNotConcernCommunityList();
+    //  this.queryNotConcernCommunityList();
   },
   methods: {
     changeAreaBut() {
@@ -838,26 +840,27 @@ export default {
           console.log(e);
         });
     },
-    queryNotConcernCommunityList(name,type) {
+    queryNotConcernCommunityList(name, type) {
       let _that = this;
-    
+      this.loadingSelect = true;
       this.$api
         .post({
           url: "/concern_community/notConcernCommunityList",
-          data: { CommunityName: name, page: _that.selectPage, limit: 10},
+          data: { CommunityName: name, page: _that.selectPage, limit: 10 },
           qs: true
         })
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            if(type == 'change'){
-                 this.list = []
-              }
-            if(this.selectPage< result.data.totalPage ){
+            if (type == "change") {
+              this.selectPage = 1;
+              this.list = [];
+            }
+            if (this.selectPage < result.data.totalPage) {
               ++this.selectPage;
             }
             var arrayCommunity = result.data.list;
-            this.list = [...this.list,...arrayCommunity];
+            this.list = [...this.list, ...arrayCommunity];
           } else {
             console.log("查询未关注楼盘then：" + result.message);
           }
@@ -866,6 +869,9 @@ export default {
           console.log("查询未关注楼盘失败catch");
           console.log(e);
         })
+        .finally(() => {
+          this.loadingSelect = false;
+        });
       // }
     },
     remoteInput() {

@@ -156,10 +156,10 @@ export default {
       }, 400);
     },
     filterInputChange() {
-      this.$emit("change", this.filterInput,'change');
+      this.$emit("change", this.filterInput, "change");
     },
     load() {
-      this.$emit("load", this.filterInput,'load');
+      this.$emit("load", this.filterInput, "load");
     },
     //提交选中
     emitPitchOn() {
