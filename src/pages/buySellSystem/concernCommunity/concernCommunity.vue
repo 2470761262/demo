@@ -10,6 +10,7 @@
   .query-body {
     display: flex;
     flex-direction: column;
+    height: 100%;
     .query-body-cell {
       display: flex;
       padding: 10px 55px 10px 30px;
@@ -39,7 +40,7 @@
       }
     }
     .query-body-select {
-      height: 250px;
+      flex: 1;
     }
     .query-item-attention {
       display: flex;
