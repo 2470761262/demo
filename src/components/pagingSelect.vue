@@ -142,7 +142,7 @@
              @focus.stop="triggerSelect">
       <span class="el-icon-circle-close result-clearable"
             v-if="clearable"
-            @click="resultPitchOn = []"></span>
+            @click.stop="resultPitchOn = []"></span>
     </div>
   </el-popover>
 </template>
@@ -229,10 +229,15 @@ export default {
         this.type == "checkbox"
           ? this.$emit("input", [...value])
           : this.$emit("input", [value]);
-        this.$emit(
-          "valueChange",
-          this.type == "checkbox" ? [...value] : [value]
-        );
+        if (value.length != 0) {
+          this.$emit(
+            "valueChange",
+            this.type == "checkbox" ? [...value] : [value]
+          );
+        }
+        if (this.type !== "checkbox") {
+          this.visible = false;
+        }
       }
     }
   },
