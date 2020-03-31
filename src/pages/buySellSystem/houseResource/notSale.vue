@@ -134,10 +134,10 @@
                        fixed="right"
                        width="170">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toLook(scope.row.id)">查看</el-button>
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
         </template>

@@ -253,12 +253,12 @@
                        fixed="right">
         <template v-slot="scope">
           <div class="flex-cell-content">
-            <el-button type="info"
+            <el-button type="primary"
                        style="background:green"
                        @click="toHouseDetail(scope.row.id)"
                        size="mini">查看</el-button>
             <div v-if="scope.row.collectId != null && scope.row.collectId!= '' ">
-              <el-button type="info"
+              <el-button type="primary"
                          slot="reference"
                          @click="ifOFF(scope.row.id)"
                          size="mini">取消关注</el-button>

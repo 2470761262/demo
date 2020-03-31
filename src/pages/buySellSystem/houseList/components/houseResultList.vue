@@ -295,7 +295,7 @@
         </template>
         <template v-else>
           <el-alert title="暂无数据"
-                    type="info"
+                    type="primary"
                     center
                     show-icon>
           </el-alert>
@@ -364,14 +364,14 @@ export default {
     form: {
       deep: true,
       immediate: true,
-      handler: function(value, ordvalue) {
+      handler: function (value, ordvalue) {
         this.renderTag(value);
         console.log(JSON.stringify(value));
         this.getHouseData(JSON.parse(JSON.stringify(value)));
       }
     }
   },
-  data() {
+  data () {
     return {
       dynamicTags: [],
       renderList: [],
@@ -527,41 +527,41 @@ export default {
     };
   },
   methods: {
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    navTabItem(index, row) {
+    navTabItem (index, row) {
       console.log(index, row);
     },
-    toHouseDetail(id) {
+    toHouseDetail (id) {
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //远程排序
-    sortMethod(item) {
+    sortMethod (item) {
       this.form.sortColumn = item.prop;
       this.form.sortType = item.order;
       this.getHouseData(JSON.parse(JSON.stringify(value)));
       console.log(item);
     },
-    keySelect() {
+    keySelect () {
       if (this.form.keyOwner != "") {
         this.form.keyOwner = "";
       } else {
         this.form.keyOwner = "1";
       }
     },
-    onlySelect() {
+    onlySelect () {
       if (this.form.isOnly != "") {
         this.form.isOnly = "";
       } else {
         this.form.isOnly = "1";
       }
     },
-    defaultSelect() {
+    defaultSelect () {
       this.form.sortColumn = "id";
       this.form.sortType = "ascending";
     },
-    priceSelect() {
+    priceSelect () {
       this.form.sortColumn = "price";
       if (this.form.sortType == "ascending") {
         this.form.sortType = "descending";
@@ -570,7 +570,7 @@ export default {
       }
       console.log(this.form.sortType);
     },
-    inAreaSelect() {
+    inAreaSelect () {
       this.form.sortColumn = "inArea";
       if (this.form.sortType == "ascending") {
         this.form.sortType = "descending";
@@ -579,10 +579,10 @@ export default {
       }
       console.log(this.form.sortType);
     },
-    InitPageJson() {
+    InitPageJson () {
       this.pageJson = { total: 1, currentPage: 1 };
     },
-    getHouseData(value, initPage = true) {
+    getHouseData (value, initPage = true) {
       let that = this;
       this.loading = true;
       Object.keys(value).forEach(item => {
@@ -617,7 +617,7 @@ export default {
         });
     },
     //创建需要渲染的标签
-    renderTag(value) {
+    renderTag (value) {
       let that = this;
       //清空
       this.dynamicTags = [];
@@ -626,7 +626,7 @@ export default {
         this.dynamicTags.push({
           title: `价格:${value.minPrice}-${
             value.maxPrice == "9999" ? "无限" : value.maxPrice
-          }万`,
+            }万`,
           field: "price",
           arr: false
         });
@@ -636,7 +636,7 @@ export default {
         this.dynamicTags.push({
           title: `面积:${value.minInArea}-${
             value.maxInArea == "9999" ? "无限" : value.maxInArea
-          }㎡`,
+            }㎡`,
           field: "area",
           arr: false
         });
@@ -646,7 +646,7 @@ export default {
         this.dynamicTags.push({
           title: `楼层:${value.minFloor}-${
             value.maxFloor == "9999" ? "无限" : value.maxFloor
-          }层`,
+            }层`,
           field: "floot",
           arr: false
         });
@@ -681,7 +681,7 @@ export default {
       //中学
       this.appendFormTag(value.middleSchool, "中学", "middleSchool");
     },
-    appendFormTag(to, titleName, fieldName) {
+    appendFormTag (to, titleName, fieldName) {
       //房型
       to.forEach(item => {
         this.dynamicTags.push({
@@ -692,13 +692,13 @@ export default {
         });
       });
     },
-    filterSplice(e) {
+    filterSplice (e) {
       return this.form[e.field].findIndex(item => {
         return item == e.value;
       });
     },
     //标签关闭
-    handleClose(e) {
+    handleClose (e) {
       if (e.arr) {
         // 删除多选
         this.form[e.field].splice(this.filterSplice(e), 1);
@@ -723,7 +723,7 @@ export default {
       }
     },
     //跳转第几页
-    handleCurrentChange(e) {
+    handleCurrentChange (e) {
       this.pageJson.currentPage = e;
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
     }

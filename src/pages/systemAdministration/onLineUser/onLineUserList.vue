@@ -53,7 +53,7 @@
                        key="operation">
         <template v-slot="scope">
           <div v-if="scope.row.operation!=''">
-            <el-button type="info"
+            <el-button type="primary"
                        size="mini"
                        @click="distributeEvent(item.methosName,scope.row.perId,scope.row.perType)"
                        v-for="(item,index) in getOpeBtns(scope.row.operation)"

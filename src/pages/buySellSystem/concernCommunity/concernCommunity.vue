@@ -241,11 +241,10 @@
                      placeholder="房源状态"
                      class="set-select100"
                      value=""
-                     v-model="houseType"
-                     >
-            <el-option  v-for="item in houseTypeList"
+                     v-model="houseType">
+            <el-option v-for="item in houseTypeList"
                        :key="item.value"
-                       :label="item.name"
+                       :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
         </div>
@@ -347,10 +346,10 @@
                        width="170"
                        fixed="right">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
-          <el-button type="success"
+          <el-button type="primary"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
         </template>
@@ -385,11 +384,11 @@ export default {
         pageSize: 10 //每页条数
       },
       houseTypeList: [
-        { value: "店公共盘", label: "店公共盘" },
-        { value: "在售无跟单", label: "在售无跟单" },
-        { value: "暂不售", label: "暂不售" },
-        { value: "无号码", label: "无号码" },
-        { value: "潜在出售", label: "5" }
+        { value: "1", label: "店公共盘" },
+        { value: "2", label: "在售无跟单" },
+        { value: "3", label: "暂不售" },
+        { value: "4", label: "无号码" },
+        { value: "5", label: "潜在出售" }
       ],
       state: [
         { value: "1", label: "房源编号1" },
@@ -457,8 +456,8 @@ export default {
           disabled: false,
           default: true
         },
-      
-        { prop: 'houseType', label: "房源状态", width: '110px', order: false, disabled: false, default: true ,formart: item => this.houseTypeFormat(item.houseType)},//自己补充
+
+        { prop: 'houseType', label: "房源状态", width: '110px', order: false, disabled: false, default: true, formart: item => this.houseTypeFormat(item.houseType) },//自己补充
         {
           prop: "agentName",
           label: "跟单人",
@@ -495,7 +494,7 @@ export default {
       comId: "",
       cbId: "",
       roomNo: "",
-      houseType:"",
+      houseType: "",
       queryData: {
         communityName: "",
         isOnly: "",
@@ -552,12 +551,12 @@ export default {
         })
         .join(",");
     },
-    houseNoFormat(houseNo){
+    houseNoFormat (houseNo) {
       let type;
-      if(houseNo==null&&houseNo==''){
-        type='--';
-      }else{
-        type=houseNo;
+      if (houseNo == null && houseNo == '') {
+        type = '--';
+      } else {
+        type = houseNo;
       }
       return type;
     },
@@ -583,22 +582,22 @@ export default {
       }
       return ro + ha + to;
     },
-    houseTypeFormat(houseType){
+    houseTypeFormat (houseType) {
       let type;
-      if(houseType==1){
-        type="无号码";
-      }else if(houseType==2){
-        type="暂不售";
-      }else if(houseType==3){
-        type="店公共盘";
-      }else if(houseType==4){
-        type="在售无跟单";
-      }else if(houseType==5){
-        type="潜在出售";
-      }else if(houseType==6){
-        type="--";
-      }else{
-        type="--";
+      if (houseType == 1) {
+        type = "无号码";
+      } else if (houseType == 2) {
+        type = "暂不售";
+      } else if (houseType == 3) {
+        type = "店公共盘";
+      } else if (houseType == 4) {
+        type = "在售无跟单";
+      } else if (houseType == 5) {
+        type = "潜在出售";
+      } else if (houseType == 6) {
+        type = "--";
+      } else {
+        type = "--";
       }
       return type;
     },

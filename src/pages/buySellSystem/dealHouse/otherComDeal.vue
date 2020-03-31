@@ -137,7 +137,7 @@
                        width="90"
                        fixed="right">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toLook(scope.row.id)">查看</el-button>
         </template>

@@ -182,12 +182,12 @@
                          fixed="right"
                          width="190">
           <template v-slot="scope">
-            <el-button type="success"
+            <el-button type="primary"
                        size="mini"
                        v-if="scope.row.Tag==0"
                        @click="getTitle(scope.row)">审核</el-button>
             <el-button size="mini"
-                       type="info"
+                       type=""
                        v-else>已审核</el-button>
             <el-dialog :title="title"
                        :visible.sync="showPopUp"
@@ -256,7 +256,7 @@
               </span>
             </el-dialog>
 
-            <el-button type="success"
+            <el-button type="primary"
                        v-if="!(scope.row.Type==13)"
                        @click="toHouseDetail(scope.row.Eid)"
                        size="mini">查看</el-button>

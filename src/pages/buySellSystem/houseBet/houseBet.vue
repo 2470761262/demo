@@ -172,7 +172,7 @@
       <el-table-column label="操作"
                        fixed="right">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toLook(scope.row)">查看</el-button>
         </template>

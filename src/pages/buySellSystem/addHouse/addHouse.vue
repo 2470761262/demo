@@ -97,7 +97,7 @@
                          @click="nextPage(null)"
                          class="page-next"
                          :loading="butLoading">{{ nextText }}</el-button>
-              <el-button type="info"
+              <el-button type="primary"
                          v-if="stepsActiveIndex < 3 ||  reSetMethod"
                          @click="nextPage('draft')"
                          :loading="butLoading">保存草稿</el-button>

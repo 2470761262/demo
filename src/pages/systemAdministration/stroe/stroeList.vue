@@ -65,7 +65,7 @@
                          key="operation">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
-              <el-button type="info"
+              <el-button type="primary"
                          size="mini"
                          @click="distributeEvent(item.methosName,scope.row.id)"
                          v-for="(item,index) in getOpeBtns(scope.row.operation)"
@@ -74,7 +74,7 @@
           </template>
         </el-table-column>
       </template>
-      
+
     </list-page>
   </div>
 </template>
@@ -120,13 +120,13 @@ export default {
       this.showList = true;
       this.tableData = [];
       this.tableDataColumn = [//{ prop: "id", label: "门店id", width: "70px" },
-      { prop: "storeName", label: "店面", width: "165px" },
-      { prop: "flagSale", label: "职务", width: "150px" },
-      { prop: "shoreAddress", label: "地址" },
-      { prop: "shoreTel", label: "电话" },
-      { prop: "shoreType", label: "类型",width: "165px" },
-      { prop: "storeDesc", label: "描述" },
-      { prop: "regDate", label: "开业时间", },
+        { prop: "storeName", label: "店面", width: "165px" },
+        { prop: "flagSale", label: "职务", width: "150px" },
+        { prop: "shoreAddress", label: "地址" },
+        { prop: "shoreTel", label: "电话" },
+        { prop: "shoreType", label: "类型", width: "165px" },
+        { prop: "storeDesc", label: "描述" },
+        { prop: "regDate", label: "开业时间", },
       ]
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
@@ -144,39 +144,39 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-          if(result.data.list != null && result.data.list.length >0){
-          for (var i = 0; i < result.data.list.length; i++) {
-            switch (result.data.list[i].flagSale) {
-              case "0":
-                result.data.list[i].flagSale = "文职";
-                break;
-              case "1":
-                result.data.list[i].flagSale = "职务";
-                break;
+          if (result.data.list != null && result.data.list.length > 0) {
+            for (var i = 0; i < result.data.list.length; i++) {
+              switch (result.data.list[i].flagSale) {
+                case "0":
+                  result.data.list[i].flagSale = "文职";
+                  break;
+                case "1":
+                  result.data.list[i].flagSale = "职务";
+                  break;
 
-            }
-            switch (result.data.list[i].shoreType) {
-              case 0:
-                result.data.list[i].shoreType = "加盟店";
-                break;
-              case 1:
-                result.data.list[i].shoreType = "直营店";
-                break;
+              }
+              switch (result.data.list[i].shoreType) {
+                case 0:
+                  result.data.list[i].shoreType = "加盟店";
+                  break;
+                case 1:
+                  result.data.list[i].shoreType = "直营店";
+                  break;
 
+              }
+              switch (result.data.list[i].shoreTel) {
+                case 0:
+                  result.data.list[i].shoreTel = "暂无电话";
+                  break;
+              }
             }
-            switch (result.data.list[i].shoreTel) {
-              case 0:
-                result.data.list[i].shoreTel = "暂无电话";
-                break;
-            }
-          }
-          this.pageJson.total = result.data.totalCount;
-          this.pageJson.currentPage = result.data.currPage;
-          this.tableData = result.data.list;
-          }else{
-              this.$alert('', '请检查你的权限范围!!!', {
-            dangerouslyUseHTMLString: false
-          });
+            this.pageJson.total = result.data.totalCount;
+            this.pageJson.currentPage = result.data.currPage;
+            this.tableData = result.data.list;
+          } else {
+            this.$alert('', '请检查你的权限范围!!!', {
+              dangerouslyUseHTMLString: false
+            });
           }
 
         } else {
@@ -218,32 +218,32 @@ export default {
         if (result.code == 200) {
           console.log(result.message);
           console.log(result.data);
-          if(result.data.list != null && result.data.list.length >0){
-             for (var i = 0; i < result.data.list.length; i++) {
-            switch (result.data.list[i].flagSale) {
-              case "0":
-                result.data.list[i].flagSale = "文职";
-                break;
-              case "1":
-                result.data.list[i].flagSale = "职务";
-                break;
+          if (result.data.list != null && result.data.list.length > 0) {
+            for (var i = 0; i < result.data.list.length; i++) {
+              switch (result.data.list[i].flagSale) {
+                case "0":
+                  result.data.list[i].flagSale = "文职";
+                  break;
+                case "1":
+                  result.data.list[i].flagSale = "职务";
+                  break;
+
+              }
+              switch (result.data.list[i].shoreType) {
+                case 0:
+                  result.data.list[i].shoreType = "加盟店";
+                  break;
+                case 1:
+                  result.data.list[i].shoreType = "直营店";
+                  break;
+              }
 
             }
-            switch (result.data.list[i].shoreType) {
-              case 0:
-                result.data.list[i].shoreType = "加盟店";
-                break;
-              case 1:
-                result.data.list[i].shoreType = "直营店";
-                break;
-            }
+            this.pageJson.total = result.data.totalCount;
+            this.pageJson.currentPage = result.data.currPage;
+            this.tableData = result.data.list;
+          }
 
-          }
-          this.pageJson.total = result.data.totalCount;
-          this.pageJson.currentPage = result.data.currPage;
-          this.tableData = result.data.list;
-          }
-         
         } else {
           console.log("查询门店管理列表结果：" + result.message);
           alert(result.message);
