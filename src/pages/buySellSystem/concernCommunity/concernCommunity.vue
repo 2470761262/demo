@@ -1,74 +1,91 @@
-<style lang="less">
-.div {
-  position: absolute;
-}
-.el-scrollbar__thumb {
-  background: black;
-}
-.attention-scroll-content {
-  flex: 1 0 auto;
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: 0;
-  &::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-  &::-webkit-scrollbar-button,
-  &::-webkit-scrollbar-track,
-  &::-webkit-scrollbar-track-piece {
-    display: none;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: var(--color--primary);
-    border-radius: 50px;
-  }
-  .scroll-content-tag {
-    margin-right: 20px;
-    margin-bottom: 10px;
-  }
-}
-.list {
-  display: flex;
-  flex-direction: row;
-  height: 40px;
-  width: 270px;
-  background: CornflowerBlue;
-  font-weight: bold;
-  margin-top: 10px;
-  color: #fff;
-  flex-wrap: wrap;
-  -webkit-align-content: center;
-  .communityName {
-    width: 40%;
+<style lang="less" scoped>
+.left-query-content {
+  width: 357px;
+  .query-title {
+    padding-top: 25px;
+    padding-bottom: 5px;
+    font-weight: normal;
     font-size: 15px;
-    padding: 5px 5px;
-    white-space: nowrap; /*设置不换行*/
-    overflow: hidden; /*设置隐藏*/
-    text-overflow: ellipsis; /*设置隐藏部分为省略号*/
   }
-  .countNum {
-    width: 25%;
-    font-size: 12px;
-    text-align: center;
-    .cNum {
-      margin: 0px 6px;
-      border-radius: 50px;
-      background-color: #fff;
-      border-color: #fff;
-      color: #000;
+  .query-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .query-body-cell {
+      display: flex;
+      padding: 10px 55px 10px 30px;
+      justify-content: space-between;
+      font-size: 15px;
+      .cell-title {
+        color: #fff;
+      }
+      .cell-data {
+        color: #fff;
+        .cell-data-value {
+          font-size: 18px;
+          text-decoration: underline;
+        }
+        &::after {
+          content: attr(data-suffix);
+        }
+      }
+      &:nth-child(1) {
+        background-image: linear-gradient(to right, #533fee, #4685ef);
+      }
+      &:nth-child(2) {
+        background-image: linear-gradient(to right, #ff8b00, #ffb818);
+      }
+      &:nth-child(3) {
+        background-image: linear-gradient(to right, #c1542d, #fc4e11);
+      }
     }
-  }
-  .effectiveNum {
-    width: 25%;
-    font-size: 12px;
-    text-align: center;
-    .eNum {
-      margin: 0px 6px;
-      border-radius: 50px;
-      background-color: #fff;
-      border-color: #fff;
-      color: #000;
+    .query-body-select {
+      flex: 1;
+      margin-top: 20px;
+    }
+    .query-item-attention {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-image: linear-gradient(to right, #1b86bc, #4e46cd);
+      font-size: 15px;
+      padding: 5px 15px 5px 20px;
+      margin-bottom: 5px;
+      position: relative;
+      &:hover .attention-cell-remove {
+        display: block;
+      }
+      .attention-cell-remove {
+        position: absolute;
+        right: 0px;
+        padding-left: 4px;
+        top: 50%;
+        font-size: 18px;
+        transform: translate(100%, -50%);
+        cursor: pointer;
+        display: none;
+      }
+      &:last-child {
+        margin-bottom: 0;
+      }
+      .attention-middel,
+      .attention-right {
+        text-align: center;
+      }
+      .attention-left {
+        font-size: 18px;
+      }
+      .attention-left,
+      .attention-middel-title {
+        color: #fff;
+      }
+      .attention-middel-data {
+        margin-top: 5px;
+        background: #fff;
+        border-radius: 30px;
+        padding: 5px 0;
+        font-weight: 600;
+      }
     }
   }
 }
@@ -80,68 +97,58 @@
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:left>
-      <div style="width:300px;height:560px;background:white;">
-        <div style="margin-left:10px;margin-top:px;background:white;">
-          <div style="height:20px;"></div>
-          <h2>核心盘总览</h2>
-          <div>
-            <div style="margin-top:10px;height:30px;width:270px;background:RoyalBlue;font-weight:bold;font-size:20px;">
-              <div style="color:white;float: left;margin-left:10px;">我的核心盘</div>
-              <div style="color:white;float: right;margin-right:10px;">{{countAll}}套</div>
-            </div>
-            <div style="height:30px;width:270px;background:DarkOrange;font-weight:bold;font-size:20px;">
-              <div style="color:white;float: left;margin-left:10px;">存量房总套数</div>
-              <div style="color:white;float: right;margin-right:10px;">{{countConcern}}套</div>
-            </div>
-            <div style="height:30px;width:270px;background:LightCoral;font-weight:bold;font-size:20px;">
-              <div style="color:white;float: left;margin-left:10px;">在售总套数</div>
-              <div style="color:white;float: right;margin-right:10px;">{{countEffectiveNum}}套</div>
+      <section class="left-query-content">
+        <h3 class="query-title">核心盘总览</h3>
+        <div class="query-body">
+          <div class="query-body-cell">
+            <div class="cell-title">我的核心盘</div>
+            <div class="cell-data">
+              <span class="cell-data-value">{{countAll}}</span>
+              <span calss="cell-data-suffix">个</span>
             </div>
           </div>
-          <div style="height:50px;margin-top:10px;margin-bottom:270px"
-               class="attention-scroll-content">
-            <el-select style="width:270px;scrollbar-face-color:black;"
-                       v-model="queryData.selectCommunity"
-                       @change="selectedCommunity($event)"
-                       filterable
-                       placeholder="请输入您想添加的核心盘">
-              <el-option style="width:270px;"
-                         v-for="(item,index) in list"
-                         :key="item.id"
-                         :label="item.communityName"
-                         :value="item.id"
-                         :text="item.communityName"
-                         :disabled="filterRoomDisabled().includes(list[index].communityName+'$'+item.id)">
-                <span style="float: left">{{item.communityName}}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">
-                  <i class="el-icon-plus"></i>
-                </span>
-              </el-option>
-            </el-select>
-          </div>
-
-          <div v-for="(item,i) in array"
-               :key="i"
-               class="list">
-            <div class="communityName">{{item.communityName}}</div>
-            <div class="effectiveNum">
-              <div>在售套数</div>
-              <div class="eNum">{{item.effectiveNum}}套</div>
-            </div>
-            <div class="countNum">
-              <div>存量套数</div>
-              <div class="cNum">{{item.countConcernCommunity}}套</div>
-            </div>
-            <div class="concernOff"
-                 @click="concernOFF(item.id)">
-              <el-tooltip placement="right">
-                <div slot="content">取消关注</div>
-                <i class="el-icon-delete"></i>
-              </el-tooltip>
+          <div class="query-body-cell">
+            <div class="cell-title">存量房总套数</div>
+            <div class="cell-data">
+              <span class="cell-data-value">{{countConcern}}</span>
+              <span calss="cell-data-suffix">套</span>
             </div>
           </div>
+          <div class="query-body-cell">
+            <div class="cell-title">在售总套数</div>
+            <div class="cell-data">
+              <span class="cell-data-value">{{countEffectiveNum}}</span>
+              <span calss="cell-data-suffix">套</span>
+            </div>
+          </div>
+          <div class="query-body-select">
+            <paging-select v-model="queryData.selectCommunity"
+                           isKey="communityName"
+                           isValue="id"
+                           :loading="loadingSelect"
+                           @load="queryNotConcernCommunityList"
+                           @change="queryNotConcernCommunityList"
+                           :data="list"></paging-select>
+          </div>
+          <template v-for="(item,i) in array">
+            <div class="query-item-attention"
+                 :key="i">
+              <div class="attention-left">{{item.communityName}}</div>
+              <div class="attention-middel">
+                <div class="attention-middel-title">在售套数</div>
+                <div class="attention-middel-data">{{item.effectiveNum}}套</div>
+              </div>
+              <div class="attention-right">
+                <div class="attention-middel-title">存量套数</div>
+                <div class="attention-middel-data">{{item.countConcernCommunity}}套</div>
+              </div>
+              <div title="取消关注"
+                   @click="concernOFF(item.id)"
+                   class="attention-cell-remove el-icon-circle-close"></div>
+            </div>
+          </template>
         </div>
-      </div>
+      </section>
     </template>
     <template v-slot:top>
       <!-- 楼盘 -->
@@ -241,9 +248,8 @@
                      placeholder="房源状态"
                      class="set-select100"
                      value=""
-                     v-model="houseType"
-                     >
-            <el-option  v-for="item in houseTypeList"
+                     v-model="houseType">
+            <el-option v-for="item in houseTypeList"
                        :key="item.value"
                        :label="item.name"
                        :value="item.value"></el-option>
@@ -271,68 +277,7 @@
         </div>
       </div>
     </template>
-
     <template v-slot:tableColumn>
-      <!-- <el-table-column label="房源编号"
-                       min-width="13%">
-        <template v-slot="scope">
-          {{scope.row.HouseNo}}
-        </template>
-      </el-table-column>
-      <el-table-column label="楼盘名称"
-                       min-width="12.588%">
-        <template v-slot="scope">
-          {{scope.row.CommunityName}}
-        </template>
-      </el-table-column>
-      <el-table-column label="售价(万元)"
-                       min-width="7.3%">
-        <template v-slot="scope">
-          {{scope.row.Price}}
-        </template>
-      </el-table-column>
-      <el-table-column label="面积(㎡)"
-                       min-width="6.7%">
-        <template v-slot="scope">
-          {{scope.row.InArea}}
-        </template>
-      </el-table-column>
-      <el-table-column label="单价(元/㎡)"
-                       min-width="9%">
-        <template v-slot="scope">
-          {{Math.round(scope.row.Price*10000/scope.row.InArea)+"元/m²"}}
-        </template>
-      </el-table-column>
-      <el-table-column label="户型"
-                       min-width="9.2%">
-        <template v-slot="scope">
-          {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
-        </template>
-      </el-table-column>
-      <el-table-column label="装修程度"
-                       min-width="9.2%">
-        <template v-slot="scope">
-          {{scope.row.Decoration}}
-        </template>
-      </el-table-column>
-      <el-table-column label="被看次数"
-                       min-width="7.3%">
-        <template v-slot="scope">
-          {{scope.row.Rooms}}
-        </template>
-      </el-table-column>
-      <el-table-column label="房源状态"
-                       min-width="7.3%">
-        <template v-slot="scope">
-          {{scope.row.Rooms}}
-        </template>
-      </el-table-column>
-      <el-table-column label="跟单人"
-                       min-width="7.3%">
-        <template v-slot="scope">
-          {{scope.row.agentPerName}}
-        </template>
-      </el-table-column>-->
       <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
@@ -365,17 +310,20 @@ import moreSelect from "@/components/moreSelect";
 import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
-import '@/assets/publicLess/pageListQuery.less';
+import pagingSelect from "@/components/pagingSelect";
+import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
     moreSelect,
-    definitionmenu
+    definitionmenu,
+    pagingSelect
   },
-  data () {
+  data() {
     return {
       list: [],
+      loadingSelect: false,
       addComId: [],
       input: "",
       loading: true, //控制表格加载动画提示
@@ -457,8 +405,16 @@ export default {
           disabled: false,
           default: true
         },
-      
-        { prop: 'houseType', label: "房源状态", width: '110px', order: false, disabled: false, default: true ,formart: item => this.houseTypeFormat(item.houseType)},//自己补充
+
+        {
+          prop: "houseType",
+          label: "房源状态",
+          width: "110px",
+          order: false,
+          disabled: false,
+          default: true,
+          formart: item => this.houseTypeFormat(item.houseType)
+        }, //自己补充
         {
           prop: "agentName",
           label: "跟单人",
@@ -495,22 +451,23 @@ export default {
       comId: "",
       cbId: "",
       roomNo: "",
-      houseType:"",
+      houseType: "",
+      selectPage: 1,
       queryData: {
         communityName: "",
         isOnly: "",
-        minInArea: '',
+        minInArea: "",
         keyOwner: ""
       }
     };
   },
-  mounted () {
+  mounted() {
     this.queryVerifyHouseDatas(1, "id", "descending");
     this.queryConcernCount();
-    this.queryNotConcernCommunityList();
+    //  this.queryNotConcernCommunityList();
   },
   methods: {
-    changeAreaBut () {
+    changeAreaBut() {
       let that = this;
 
       if (util.isNumber(that.queryData.minInArea)) {
@@ -518,7 +475,10 @@ export default {
           message: "值必须为大于等于0的正数",
           type: "warning"
         });
-      } else if (that.queryData.maxInArea != '' && that.queryData.minInArea > that.queryData.maxInArea) {
+      } else if (
+        that.queryData.maxInArea != "" &&
+        that.queryData.minInArea > that.queryData.maxInArea
+      ) {
         that.$message({
           message: "最大值必须大于最小值",
           type: "warning"
@@ -527,7 +487,7 @@ export default {
         this.querylistByParams();
       }
     },
-    changeAreaButMax () {
+    changeAreaButMax() {
       let that = this;
 
       if (util.isNumber(that.queryData.maxInArea)) {
@@ -535,7 +495,10 @@ export default {
           message: "值必须为大于等于0的正数",
           type: "warning"
         });
-      } else if (that.queryData.minInArea != '' && that.queryData.minInArea > that.queryData.maxInArea) {
+      } else if (
+        that.queryData.minInArea != "" &&
+        that.queryData.minInArea > that.queryData.maxInArea
+      ) {
         that.$message({
           message: "最大值必须大于最小值",
           type: "warning"
@@ -545,24 +508,24 @@ export default {
       }
     },
     //当前选择已经关注这个这个核心盘则不让在重复选择
-    filterRoomDisabled () {
+    filterRoomDisabled() {
       return this.array
         .map(item => {
           return item.communityName + "$" + item.id;
         })
         .join(",");
     },
-    houseNoFormat(houseNo){
+    houseNoFormat(houseNo) {
       let type;
-      if(houseNo==null&&houseNo==''){
-        type='--';
-      }else{
-        type=houseNo;
+      if (houseNo == null && houseNo == "") {
+        type = "--";
+      } else {
+        type = houseNo;
       }
       return type;
     },
 
-    houseFormat (rooms, hall, toilet) {
+    houseFormat(rooms, hall, toilet) {
       let ro,
         ha,
         to = "";
@@ -583,39 +546,39 @@ export default {
       }
       return ro + ha + to;
     },
-    houseTypeFormat(houseType){
+    houseTypeFormat(houseType) {
       let type;
-      if(houseType==1){
-        type="无号码";
-      }else if(houseType==2){
-        type="暂不售";
-      }else if(houseType==3){
-        type="店公共盘";
-      }else if(houseType==4){
-        type="在售无跟单";
-      }else if(houseType==5){
-        type="潜在出售";
-      }else if(houseType==6){
-        type="--";
-      }else{
-        type="--";
+      if (houseType == 1) {
+        type = "无号码";
+      } else if (houseType == 2) {
+        type = "暂不售";
+      } else if (houseType == 3) {
+        type = "店公共盘";
+      } else if (houseType == 4) {
+        type = "在售无跟单";
+      } else if (houseType == 5) {
+        type = "潜在出售";
+      } else if (houseType == 6) {
+        type = "--";
+      } else {
+        type = "--";
       }
       return type;
     },
-    remove () {
+    remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.queryVerifyHouseDatas(1, "id", "descending");
     },
-    sortMethod (e) {
+    sortMethod(e) {
       this.queryVerifyHouseDatas(1, e.prop, e.order);
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       let that = this;
       that.tableColumn = e;
     },
-    toSale (comId, cbId, bhId, communityName, buildingName, roomNo) {
+    toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
       var that = this;
       that.$router.push({
         path: "/buySellSystem/addHouse",
@@ -633,10 +596,10 @@ export default {
         }
       });
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       this.moreSelect = e;
     },
-    keySelect () {
+    keySelect() {
       if (this.queryData.keyOwner != "") {
         this.queryData.keyOwner = "";
       } else {
@@ -644,7 +607,7 @@ export default {
       }
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    onlySelect () {
+    onlySelect() {
       if (this.queryData.isOnly != "") {
         this.queryData.isOnly = "";
       } else {
@@ -652,8 +615,7 @@ export default {
       }
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    selectedCommunity (e) {
-
+    selectedCommunity(e) {
       this.$confirm("是否确定关注该楼盘?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -674,7 +636,7 @@ export default {
           });
         });
     },
-    concernOFF (id) {
+    concernOFF(id) {
       this.$confirm("是否确定取消关注该楼盘?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -690,7 +652,7 @@ export default {
           });
         });
     },
-    deleteConcern (comId) {
+    deleteConcern(comId) {
       this.$api
         .post({
           url: "/concern_community/concernOFF",
@@ -719,10 +681,10 @@ export default {
           console.log(e);
         });
     },
-    querylistByParams () {
+    querylistByParams() {
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    addCommunity (id) {
+    addCommunity(id) {
       let params = { CommunityID: id + "" };
       this.$api
         .post({
@@ -746,7 +708,7 @@ export default {
           console.log(e);
         });
     },
-    queryVerifyHouseDatas (currentPage, column, type) {
+    queryVerifyHouseDatas(currentPage, column, type) {
       let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
       let that = this;
       if (Object.keys(this.moreSelect).length != 0) {
@@ -804,10 +766,7 @@ export default {
         ) {
           params.maxInArea = this.queryData.maxInArea;
         }
-        if (
-          this.houseType != null &&
-          this.houseType != ""
-        ) {
+        if (this.houseType != null && this.houseType != "") {
           params.houseType = this.houseType;
         }
       }
@@ -829,9 +788,9 @@ export default {
         })
         .then(e => {
           that.loading = false;
-          console.log(e.data)
+          console.log(e.data);
           if (e.data.code == 200) {
-            typeof (e.data.data.data)
+            typeof e.data.data.data;
             that.pageJson.total = e.data.data.dataCount;
             that.tableData = e.data.data.data;
           } else {
@@ -843,7 +802,7 @@ export default {
           console.log(e);
         });
     },
-    queryConcernCount () {
+    queryConcernCount() {
       this.$api
         .post({
           url: "/concern_community/CommunityCount",
@@ -881,25 +840,27 @@ export default {
           console.log(e);
         });
     },
-    queryNotConcernCommunityList () {
+    queryNotConcernCommunityList(name, type) {
+      let _that = this;
+      this.loadingSelect = true;
       this.$api
         .post({
           url: "/concern_community/notConcernCommunityList",
-          data: {            CommunityName: "",
-            page: 1,
-            limit: 50
-          },
+          data: { CommunityName: name, page: _that.selectPage, limit: 10 },
           qs: true
         })
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            var that = this;
-            var arrayCommunity = result.data;
-            that.list = arrayCommunity;
-            return that.list.forEach(item => {
-              return item.list;
-            });
+            if (type == "change") {
+              this.selectPage = 1;
+              this.list = [];
+            }
+            if (this.selectPage < result.data.totalPage) {
+              ++this.selectPage;
+            }
+            var arrayCommunity = result.data.list;
+            this.list = [...this.list, ...arrayCommunity];
           } else {
             console.log("查询未关注楼盘then：" + result.message);
           }
@@ -907,15 +868,18 @@ export default {
         .catch(e => {
           console.log("查询未关注楼盘失败catch");
           console.log(e);
+        })
+        .finally(() => {
+          this.loadingSelect = false;
         });
       // }
     },
-    remoteInput () {
+    remoteInput() {
       if (this.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -940,7 +904,7 @@ export default {
           });
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -961,7 +925,7 @@ export default {
         });
       console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -1001,17 +965,17 @@ export default {
       this.querylistByParams();
     },
     //跳转房源详情页面
-    toHouseDetail (id) {
+    toHouseDetail(id) {
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
 
-    handleClick () { },
-    handleSizeChange (val) {
+    handleClick() {},
+    handleSizeChange(val) {
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.queryVerifyHouseDatas(val, "id", "ascending");
     }
   }

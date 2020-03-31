@@ -6,13 +6,22 @@
 .page-form-inline {
   display: flex;
   //margin-top: 20px;
-  margin-bottom: 22px;
+  margin-bottom: 50px;
+  /deep/.el-form-item__content {
+    margin-left: 105px !important;
+  }
   &.form-item-flex1 {
     .el-form-item {
       flex: 1;
     }
   }
   .page-label-center {
+    /deep/.el-form-item__label {
+      width: 90px !important;
+    }
+    /deep/.el-form-item__content {
+      margin-left: 90px !important;
+    }
     /deep/ label {
       text-align: center;
     }
@@ -168,6 +177,8 @@
     //margin-bottom: 15px;
     padding: 0 15px;
     box-sizing: border-box;
+    line-height: normal;
+    margin-bottom: 10px;
     /deep/.el-checkbox__input {
       width: 0 !important;
       height: 0 !important;
@@ -181,6 +192,7 @@
       width: 100%;
       text-align: center;
       vertical-align: middle;
+      font-size: 15px;
     }
     .is-checked {
       background: var(--color--primary);
@@ -198,6 +210,13 @@
 .budingMarinSet {
   margin-bottom: 0;
   margin-top: 30px;
+  /deep/.el-form-item__label {
+    margin-right: 0 !important;
+    //width: 105px !important;
+  }
+  /deep/.el-form-item {
+    margin-bottom: 50px;
+  }
 }
 .marginBotEmp {
   margin-bottom: 0;
@@ -209,6 +228,26 @@
   /deep/.select-input {
     .marginBotEmp !important;
   }
+}
+/deep/.el-form-item {
+  .el-form-item__label {
+    font-size: 15px;
+    text-align: justify;
+    line-height: 40px;
+    height: 40px;
+    overflow: hidden;
+    margin-right: 16px;
+    padding-right: 0;
+    &:after {
+      display: inline-block;
+      width: 100%;
+      height: 0;
+      content: "";
+    }
+  }
+}
+.frist-width-select {
+  width: 180px;
 }
 </style>
 <template >
@@ -241,7 +280,8 @@
       <div class="page-form-inline budingMarinSet">
         <el-form-item label="楼盘名称"
                       prop="comId">
-          <el-select v-model="form.comId"
+          <el-select class="frist-width-select"
+                     v-model="form.comId"
                      @focus="remoteInput"
                      @change="queryCBId"
                      filterable
