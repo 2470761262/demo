@@ -276,11 +276,8 @@ export default {
   },
   methods: {
     clear() {
-      if (this.type == "checkbox") {
-        this.resultPitchOn = [];
-      } else {
-        this.resultPitchOn = "";
-      }
+      if (this.type == "checkbox") this.resultPitchOn = [];
+      else this.resultPitchOn = "";
     },
     resultDisabled(item, index) {
       if (!this.disabled) return false;
