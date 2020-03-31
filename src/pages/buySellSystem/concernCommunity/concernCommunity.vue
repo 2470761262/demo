@@ -709,7 +709,7 @@ export default {
           this.$router.push({ path: "/buySellSystem/concernCommunity" });
         })
         .catch(e => {
-          alert("取消关注失败");
+          this.$message.error("取消关注失败");
           console.log(e);
         });
     },
@@ -732,11 +732,11 @@ export default {
             this.querylistByParams();
           } else {
             console.log("添加关注" + result.message);
-            alert(result.message);
+            this.$message.error(result.message);
           }
         })
         .catch(e => {
-          alert("添加关注 失败");
+          this.$message.error("添加关注 失败");
           console.log(e);
         });
     },
@@ -827,7 +827,8 @@ export default {
             that.pageJson.total = e.data.data.dataCount;
             that.tableData = e.data.data.data;
           } else {
-            alert(e.data.message);
+            this.$message.error(e.data.message);
+            this.$message.error;
           }
         })
         .catch(e => {
@@ -865,7 +866,7 @@ export default {
             this.querylist(1);
           } else {
             console.log("查询核心盘统计结果then：" + result.message);
-            alert(result.message);
+            this.$message.error(result.message);
           }
         })
         .catch(e => {
