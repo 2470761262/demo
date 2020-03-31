@@ -41,10 +41,12 @@
 </style>
 <template>
   <div v-loading.fullscreen.lock="fullscreenLoading">
-    <template>
-      <div class="elTree">
+    <el-form :inline="true"
+             class="demo-form-inline"
+             style="align-content: center">
+      <el-form-item label="类型">
         <el-select v-model="ruleParamsObj.type"
-                   @change="loadFunctionPoint"
+                   style="width: 130px;" @change="loadFunctionPoint"
                    placeholder="请选择功能点类型">
           <el-option label="PC端"
                      value="0"></el-option>
@@ -53,16 +55,39 @@
           <el-option label="Wap端"
                      value="2"></el-option>
         </el-select>
-        <el-button style="margin:10px 45px;"
-                   type="primary"
+      </el-form-item>
+      <el-form-item label="子节点选中">
+        <el-switch v-model="treeCheckStrictly"></el-switch>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary"
                    size="mini"
                    @click="savePosition">保存</el-button>
+      </el-form-item>
+    </el-form>
+    <template>
+      <div class="elTree">
+<!--        <el-select v-model="ruleParamsObj.type"-->
+<!--                   @change="loadFunctionPoint"-->
+<!--                   placeholder="请选择功能点类型">-->
+<!--          <el-option label="PC端"-->
+<!--                     value="0"></el-option>-->
+<!--          <el-option label="Client端"-->
+<!--                     value="1"></el-option>-->
+<!--          <el-option label="Wap端"-->
+<!--                     value="2"></el-option>-->
+<!--        </el-select>-->
+<!--        <el-button style="margin:10px 45px;"-->
+<!--                   type="primary"-->
+<!--                   size="mini"-->
+<!--                   @click="savePosition">保存</el-button>-->
         <el-tree :data="ruleTreeData"
                  show-checkbox
                  node-key="id"
                  ref="tree"
                  check-strictly
                  highlight-current
+                 :check-strictly="treeCheckStrictly"
                  :expand-on-click-node=false
                  :props="defaultProps">
           <span class="custom-tree-node"
@@ -156,6 +181,7 @@ export default {
   components: {},
   data() {
     return {
+      treeCheckStrictly: true,
       fullscreenLoading: false,
       checkStrictly: true,
       filterText: "",
