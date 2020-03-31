@@ -1,6 +1,8 @@
 <style lang="less" scoped>
 .left-query-content {
   width: 357px;
+  display: flex;
+  flex-direction: column;
   .query-title {
     padding-top: 25px;
     padding-bottom: 5px;
@@ -74,6 +76,7 @@
       }
       .attention-left {
         font-size: 18px;
+        width: 18px * 7;
       }
       .attention-left,
       .attention-middel-title {
@@ -88,6 +91,9 @@
       }
     }
   }
+}
+.page-num-center {
+  text-align: center;
 }
 </style>
 <template>
@@ -122,18 +128,24 @@
             </div>
           </div>
           <div class="query-body-select">
-            <paging-select v-model="queryData.selectCommunity"
-                           isKey="communityName"
-                           isValue="id"
-                           :loading="loadingSelect"
-                           @load="queryNotConcernCommunityList"
-                           @change="queryNotConcernCommunityList"
-                           :data="list"></paging-select>
+            <el-paging-select v-model="queryData.selectCommunity"
+                              keyValue="communityName"
+                              valueKey="id"
+                              clearable
+                              type="radio"
+                              placeholder="输入您想添加的核心盘"
+                              @load="queryNotConcernCommunityList"
+                              @change="queryNotConcernCommunityList"
+                              @valueChange="selectChangeValue"
+                              :isPageEnd="isPageEnd"
+                              :loading="loadingSelect"
+                              :disabled="(item,index)=>{return filterRoomDisabled().includes(list[index].communityName+'$'+item.id)}"
+                              :data="list"></el-paging-select>
           </div>
-          <template v-for="(item,i) in array">
+          <template v-for="(item,i) in resultArray">
             <div class="query-item-attention"
                  :key="i">
-              <div class="attention-left">{{item.communityName}}</div>
+              <div class="attention-left overText">{{item.communityName || '暂无'}}</div>
               <div class="attention-middel">
                 <div class="attention-middel-title">在售套数</div>
                 <div class="attention-middel-data">{{item.effectiveNum}}套</div>
@@ -147,6 +159,16 @@
                    class="attention-cell-remove el-icon-circle-close"></div>
             </div>
           </template>
+          <div class="page-num-center">
+            <el-pagination background
+                           :page-size="4"
+                           :hide-on-single-page="array.length < 4"
+                           small
+                           :current-page.sync="paginationCurrentPage"
+                           layout="prev, pager, next"
+                           :total="array.length">
+            </el-pagination>
+          </div>
         </div>
       </section>
     </template>
@@ -310,18 +332,19 @@ import moreSelect from "@/components/moreSelect";
 import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
-import pagingSelect from "@/components/pagingSelect";
 import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
     moreSelect,
-    definitionmenu,
-    pagingSelect
+    definitionmenu
   },
   data() {
     return {
+      paginationCurrentPage: 1,
+      selectCommunityNum: 1,
+      isPageEnd: false,
       list: [],
       loadingSelect: false,
       addComId: [],
@@ -457,9 +480,18 @@ export default {
         communityName: "",
         isOnly: "",
         minInArea: "",
-        keyOwner: ""
+        keyOwner: "",
+        selectCommunity: []
       }
     };
+  },
+  computed: {
+    resultArray() {
+      return this.array.slice(
+        (this.paginationCurrentPage - 1) * 4,
+        this.paginationCurrentPage * 4
+      );
+    }
   },
   mounted() {
     this.queryVerifyHouseDatas(1, "id", "descending");
@@ -840,9 +872,20 @@ export default {
           console.log(e);
         });
     },
+    selectChangeValue(value) {
+      //  console.log(value, "value");
+      this.addCommunity(value[0]);
+      this.querylistByParams();
+      this.$message({
+        message: "关注成功",
+        type: "success"
+      });
+    },
     queryNotConcernCommunityList(name, type) {
       let _that = this;
-      this.loadingSelect = true;
+      if (!this.isPageEnd) {
+        this.loadingSelect = true;
+      }
       this.$api
         .post({
           url: "/concern_community/notConcernCommunityList",
@@ -855,9 +898,14 @@ export default {
             if (type == "change") {
               this.selectPage = 1;
               this.list = [];
+              this.queryData.selectCommunity = [];
+              this.isPageEnd = false;
             }
             if (this.selectPage < result.data.totalPage) {
               ++this.selectPage;
+            } else {
+              this.isPageEnd = true;
+              return false;
             }
             var arrayCommunity = result.data.list;
             this.list = [...this.list, ...arrayCommunity];
