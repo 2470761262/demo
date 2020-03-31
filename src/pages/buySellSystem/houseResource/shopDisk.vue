@@ -471,10 +471,10 @@ export default {
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
-          if (this.key == "addTime" && this.moreSelect[key] !== "") {
+          if (key == "addTime" && this.moreSelect[key] !== "") {
             params.biginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } else if (this.key == "followTime" && this.moreSelect[key] !== "") {
+          } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.biginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {

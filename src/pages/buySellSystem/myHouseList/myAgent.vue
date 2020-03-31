@@ -121,7 +121,7 @@
                           range-separator="至"
                           start-placeholder="开始日期"
                           value-format="yyyy-MM-ddTHH:mm:sssZ"
-                         :default-time="['00:00:00', '23:59:59']"
+                          :default-time="['00:00:00', '23:59:59']"
                           end-placeholder="结束日期"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="remove">清除</span>
@@ -370,10 +370,10 @@ export default {
       that.loading = true;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
-          if (this.key == "addTime" && this.moreSelect[key] !== "") {
+          if (key == "addTime" && this.moreSelect[key] !== "") {
             params.biginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } else if (this.key == "followTime" && this.moreSelect[key] !== "") {
+          } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.biginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {
@@ -675,10 +675,10 @@ export default {
       params.sortType = type;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
-          if (this.key == "addTime" && this.moreSelect[key] !== "") {
+          if (key == "addTime" && this.moreSelect[key] !== "") {
             params.biginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } else if (this.key == "followTime" && this.moreSelect[key] !== "") {
+          } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.biginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {
