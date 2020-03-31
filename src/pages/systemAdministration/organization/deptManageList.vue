@@ -64,7 +64,7 @@
         </div>
       </template>
       <template v-slot:tableColumn="cell">
-        <template v-for="item in cell.tableData"  >
+        <template v-for="item in cell.tableData">
           <el-table-column :prop="item.prop"
                            :label="item.label"
                            :width="item.width"
@@ -77,7 +77,7 @@
                          key="operation">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
-              <el-button type="info"
+              <el-button type="primary"
                          size="mini"
                          @click="distributeEvent(item.methosName,scope.row)"
                          v-for="(item,index) in getOpeBtns(scope.row.operation)"
@@ -109,7 +109,7 @@ export default {
         del: 0,
         isLocked: null,
         flag: false,
-        type : null,
+        type: null,
       },
       configSet: {
         selectToTime: false,
@@ -121,12 +121,12 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "deptName", label: "部门名" , width: "160px"},      
-        { prop: "perName", label: "负责人" , width:"160px"},
-        { prop: "joinType", label: "加入类型" , width:"120px"},
-        { prop: "deptType", label: "部门类型" , width:"120px"},
-        { prop: "isLocked", label: "部门状态" ,width: "150px" },
-        { prop: "address", label: "部门地址" , },
+        { prop: "deptName", label: "部门名", width: "160px" },
+        { prop: "perName", label: "负责人", width: "160px" },
+        { prop: "joinType", label: "加入类型", width: "120px" },
+        { prop: "deptType", label: "部门类型", width: "120px" },
+        { prop: "isLocked", label: "部门状态", width: "150px" },
+        { prop: "address", label: "部门地址", },
       ],
       tableData: [],
       treeData: [],
@@ -223,7 +223,7 @@ export default {
               case 2:
                 result.data.list[i].joinType = "加盟";
                 break;
-              case 3:  
+              case 3:
                 result.data.list[i].joinType = "联营";
                 break;
             }
@@ -247,50 +247,50 @@ export default {
     toAddDeptPage (saveType) {
       if (this.queryData.flag) {
         if (saveType == 0) {
-          if(this.queryData.type ==1){
+          if (this.queryData.type == 1) {
             this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.deptParentID, ParentId: this.department.coId } });
             this.department = null;
-          }else if(this.queryData.type == 0){
+          } else if (this.queryData.type == 0) {
             this.$alert('', '请选择一个部门节点', {
-            dangerouslyUseHTMLString: false
+              dangerouslyUseHTMLString: false
             });
           }
         } else if (saveType == 1) {
-          if(this.queryData.type ==1){
+          if (this.queryData.type == 1) {
             this.$router.push({ name: "addDeptManage", params: { deptParentID: this.department.id, ParentId: this.department.coId } });
             this.department = null;
-          }else if(this.queryData.type == 0){
-            this.$router.push({ name: "addDeptManage", params: {  ParentId: this.company.id } });
+          } else if (this.queryData.type == 0) {
+            this.$router.push({ name: "addDeptManage", params: { ParentId: this.company.id } });
             this.company = null;
           }
         }
-      }else {
+      } else {
         this.$alert('', '请选择一个节点', {
           dangerouslyUseHTMLString: false
         });
-      } 
+      }
     },
     editDeptDetail (row) {
       this.$router.push({ path: "/sys/editDeptDetail", query: { id: row.id } });
     },
     distributeEvent (e, row) {
-       console.log(row);
+      console.log(row);
       this[e](row);
     },
     delDeptDetail (row) {
-     this.handle(row.id,1,"del",row.deptName)
+      this.handle(row.id, 1, "del", row.deptName)
     },
-    lockDeptDetail(row){
-      this.handle(row.id,0,"isLocked",row.deptName)
+    lockDeptDetail (row) {
+      this.handle(row.id, 0, "isLocked", row.deptName)
     },
-    unlockDeptDetail(row){
-      this.handle(row.id,1,"isLocked",row.deptName)
+    unlockDeptDetail (row) {
+      this.handle(row.id, 1, "isLocked", row.deptName)
     },
-    handle(id,upValue,upType,deptName){
-      let params ={id:id,upValue:upValue,upType:upType,deptName:deptName}
+    handle (id, upValue, upType, deptName) {
+      let params = { id: id, upValue: upValue, upType: upType, deptName: deptName }
       this.$api.post({
         url: '/department/handle',
-        data:params,
+        data: params,
         token: true,
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
@@ -300,10 +300,10 @@ export default {
             dangerouslyUseHTMLString: false
           });
           this.$router.push({ path: "/sys/deptManageList" });
-        }else{
-             this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
-              dangerouslyUseHTMLString: false
-            });
+        } else {
+          this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
+            dangerouslyUseHTMLString: false
+          });
         }
       }).catch((e) => {
         console.log("删除失败");

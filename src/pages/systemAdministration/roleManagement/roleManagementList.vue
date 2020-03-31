@@ -7,50 +7,50 @@
 <template>
   <div>
     <template>
-    <list-page :parentData="$data"
-             @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
-    <template v-slot:top>
-      <div class="query-cell">
-        <el-input placeholder="岗位名称"
-                  v-model="queryData.RoleName"
-                  clearable>
-          <template slot="prepend">岗位名</template>
-        </el-input>
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="queryRoleByParams">查询</el-button>
-        <el-button type="primary"
-                   size="mini"
-                   @click="toAddRolePage">添加岗位</el-button>
-      </div>
-    </template>
-    <template v-slot:tableColumn="cell">
-      <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
-                         :width="item.width"
-                         :key="item.prop">
-        </el-table-column>
-      </template>
-      <el-table-column prop="operation"
-                       label="操作"
-                       fixed="right"
-                       key="operation">
-        <template v-slot="scope">
-          <div v-if="scope.row.operation!=''">
-            <el-button type="info"
+      <list-page :parentData="$data"
+                 @handleSizeChange="handleSizeChange"
+                 @handleCurrentChange="handleCurrentChange">
+        <template v-slot:top>
+          <div class="query-cell">
+            <el-input placeholder="岗位名称"
+                      v-model="queryData.RoleName"
+                      clearable>
+              <template slot="prepend">岗位名</template>
+            </el-input>
+            <el-button type="primary"
+                       style="margin-left:10px"
                        size="mini"
-                       @click="distributeEvent(item.methosName,scope.row)"
-                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                       :key="index">{{item.name}}</el-button>
+                       @click="queryRoleByParams">查询</el-button>
+            <el-button type="primary"
+                       size="mini"
+                       @click="toAddRolePage">添加岗位</el-button>
           </div>
         </template>
-      </el-table-column>
+        <template v-slot:tableColumn="cell">
+          <template v-for="item in cell.tableData">
+            <el-table-column :prop="item.prop"
+                             :label="item.label"
+                             :width="item.width"
+                             :key="item.prop">
+            </el-table-column>
+          </template>
+          <el-table-column prop="operation"
+                           label="操作"
+                           fixed="right"
+                           key="operation">
+            <template v-slot="scope">
+              <div v-if="scope.row.operation!=''">
+                <el-button type="primary"
+                           size="mini"
+                           @click="distributeEvent(item.methosName,scope.row)"
+                           v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                           :key="index">{{item.name}}</el-button>
+              </div>
+            </template>
+          </el-table-column>
+        </template>
+      </list-page>
     </template>
-  </list-page>
-  </template>
 
   </div>
 </template>
@@ -78,12 +78,12 @@ export default {
         total: 9, //总记录数
         pageSize: 10//每页条数
       },
-      companyId : null,
+      companyId: null,
       tableDataColumn: [
-       // { prop: "id", label: "岗位" },
+        // { prop: "id", label: "岗位" },
         { prop: "RoleName", label: "岗位名" },
         { prop: "ModDate", label: "修改时间" },
-        { prop: "del", label: "有效状态",width:"100px" },
+        { prop: "del", label: "有效状态", width: "100px" },
         { prop: "RoleDesc", label: "岗位描述" },
         { prop: "AddName", label: "添加人" },
         { prop: "AddTime", label: "添加时间" },
@@ -109,7 +109,7 @@ export default {
       if (this.queryData.RoleName != null) {
         params.RoleName = this.queryData.RoleName;
       }
-      if(this.companyId){
+      if (this.companyId) {
         params.companyId = this.companyId;
       }
       this.$api.post({
@@ -126,10 +126,10 @@ export default {
           this.pageJson.total = result.data.totalCount;
           this.pageJson.currentPage = result.data.currPage;
 
-          for(var i=0;i<result.data.list.length;i++){
-            switch (result.data.list[i].del){
+          for (var i = 0; i < result.data.list.length; i++) {
+            switch (result.data.list[i].del) {
               case 0:
-                result.data.list[i].del= " 有效 ";
+                result.data.list[i].del = " 有效 ";
                 break;
               case 1:
                 result.data.list[i].del = "无效";
@@ -147,14 +147,14 @@ export default {
       })
     },
     toAddRolePage () {
-      this.$router.push({ path: "/sys/addRoleManagementList",query:{companyId: this.companyId}});
+      this.$router.push({ path: "/sys/addRoleManagementList", query: { companyId: this.companyId } });
     },
     editRoleDetail (row) {
       this.$router.push({ path: "/sys/editRoleDetail", query: { RoleId: row.id } });
     },
     delRoleDetail (row) {
       this.$api.post({
-        url: '/role/delete/' + row.id ,
+        url: '/role/delete/' + row.id,
         token: false,
         headers: { "Content-Type": "application/json" }
       }).then((e) => {
@@ -171,8 +171,8 @@ export default {
         console.log(e);
       })
     },
-    distributeEvent (e, row ) {
-      this[e](row );
+    distributeEvent (e, row) {
+      this[e](row);
     },
     getOpeBtns (type) {
       let array = [
@@ -193,8 +193,8 @@ export default {
     handleCurrentChange (val) {
       this.queryRoleDatas(val);
     },
-    PositionDetail(row){
-      this.$router.push({ path: "/sys/positionManager", query: { id: row.id  ,name:row.RoleName} });
+    PositionDetail (row) {
+      this.$router.push({ path: "/sys/positionManager", query: { id: row.id, name: row.RoleName } });
     },
 
   }

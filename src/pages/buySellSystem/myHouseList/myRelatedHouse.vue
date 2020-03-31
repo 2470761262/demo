@@ -146,7 +146,7 @@
                        fixed="right"
                        width="150">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="distributeEvent(item.methosName,scope.row.id)"
                      v-for="(item,index) in isForBut(2)"
@@ -474,7 +474,7 @@ export default {
       params.sortType = type;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
-          if (this.key == "addTime" && this.moreSelect[key] !== "") {
+          if (key == "addTime" && this.moreSelect[key] !== "") {
             params.biginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
           } else {

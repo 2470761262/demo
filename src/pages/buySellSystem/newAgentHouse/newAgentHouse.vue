@@ -55,7 +55,7 @@
                        key="992">
         <template v-slot="scope">
           <!-- <div v-if="scope.row.operation!=''"> -->
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="distributeEvent(item.methosName,scope.row.id)"
                      v-for="(item,index) in isForBut(scope.row.id)"
@@ -79,7 +79,7 @@ export default {
     listPage,
     houseContrast
   },
-  data() {
+  data () {
     return {
       loading: true, //控制表格加载动画提示
       pageJson: {
@@ -146,15 +146,15 @@ export default {
       }
     };
   },
-  mounted() {
+  mounted () {
     this.queryVerifyHouseByParams(1);
   },
   methods: {
-    queryVerifyHouseByParams() {
+    queryVerifyHouseByParams () {
       this.queryVerifyHouseDatas(1);
     },
-    handleClick() {},
-    queryVerifyHouseDatas(currentPage) {
+    handleClick () { },
+    queryVerifyHouseDatas (currentPage) {
       let params = {
         limit: this.pageJson.pageSize + "",
         page: currentPage + ""
@@ -193,18 +193,18 @@ export default {
         });
     },
 
-    queryTabData() {},
-    distributeEvent(e, noticeId) {
+    queryTabData () { },
+    distributeEvent (e, noticeId) {
       this[e](noticeId);
     },
 
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
     },
-    showNoticeDetail(noticeId) {
+    showNoticeDetail (noticeId) {
       this.$router.push({
         name: "houseDetails",
         params: { houseId: noticeId }

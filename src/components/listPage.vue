@@ -155,6 +155,7 @@
           <div class="page-body-conter-right"
                :class='{"tabIsMar": $scopedSlots.left,"queryIsPad":$scopedSlots.top && !$scopedSlots.title}'>
             <el-table :data="tableData"
+                      @cell-dblclick="toHouseDetail"
                       border
                       :header-cell-class-name="( $attrs.headerClass || $attrs.headerClass == '') ? $attrs.headerClass: 'headerCellSet' "
                       :cell-class-name="( $attrs.cellClass || $attrs.cellClass == '')  ? $attrs.cellClass: 'cellItemSet'"
@@ -193,12 +194,12 @@ export default {
     $attrs: {
       deep: true,
       immediate: true,
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         Object.assign(this.$data, val.parentData);
       }
     }
   },
-  data() {
+  data () {
     return {
       sidebarFlag: true,
       loading: true,
@@ -210,16 +211,22 @@ export default {
       tableData: []
     };
   },
-  mounted() {
+  mounted () {
     console.log(this.$attrs, "attrs");
   },
   methods: {
+    toHouseDetail (row) {
+      var that = this;
+      console.log(row);
+      if (row.communityName)
+        that.$router.push({ name: "houseDetails", params: { houseId: row.id } });
+    },
     //每页数据设置事件
-    handleSizeChange(e) {
+    handleSizeChange (e) {
       this.$emit("handleSizeChange", e);
     },
     //前往多少页事件
-    handleCurrentChange(e) {
+    handleCurrentChange (e) {
       console.log("1");
       this.$emit("handleCurrentChange", e);
     }

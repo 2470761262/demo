@@ -1,7 +1,7 @@
 <style lang="less" scoped>
 .query-cell {
   display: flex;
-  /deep/.el-input-group{
+  /deep/.el-input-group {
     width: auto;
   }
 }
@@ -15,7 +15,7 @@
         <el-input placeholder=""
                   v-model="queryData.keyWord"
                   clearable>
-        <template slot="prepend">姓名</template>
+          <template slot="prepend">姓名</template>
         </el-input>
         <el-button type="primary"
                    style="margin-left:10px"
@@ -37,7 +37,7 @@
                        key="operation">
         <template v-slot="scope">
           <div v-if="scope.row.operation!=''">
-            <el-button type="info"
+            <el-button type="primary"
                        size="mini"
                        @click="distributeEvent(item.methosName,scope.row.id)"
                        v-for="(item,index) in getOpeBtns(scope.row.operation)"
@@ -96,7 +96,7 @@ export default {
       if (this.queryData.keyWord != null) {
         params.keyWord = this.queryData.keyWord;
       }
-    
+
       this.$api.post({
         url: '/customers/customersList',
         data: params,
@@ -111,16 +111,16 @@ export default {
           this.pageJson.total = result.data.totalElements;
           this.tableData = result.data.content;
 
-            for (var i = 0; i < result.data.content.length; i++) {
-              switch (result.data.content[i].sex) {
-                case 0:
-                  result.data.content[i].sex = "男";
-                  break;
-                case 1:
-                  result.data.content[i].sex = "女";
-                  break;
-              }
+          for (var i = 0; i < result.data.content.length; i++) {
+            switch (result.data.content[i].sex) {
+              case 0:
+                result.data.content[i].sex = "男";
+                break;
+              case 1:
+                result.data.content[i].sex = "女";
+                break;
             }
+          }
         } else {
           console.log("查询客户列表结果：" + result.message);
           alert(result.message);

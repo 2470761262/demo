@@ -1,6 +1,8 @@
 <style lang="less" scoped>
 .left-query-content {
   width: 357px;
+  display: flex;
+  flex-direction: column;
   .query-title {
     padding-top: 25px;
     padding-bottom: 5px;
@@ -74,6 +76,7 @@
       }
       .attention-left {
         font-size: 18px;
+        width: 18px * 7;
       }
       .attention-left,
       .attention-middel-title {
@@ -88,6 +91,9 @@
       }
     }
   }
+}
+.page-num-center {
+  text-align: center;
 }
 </style>
 <template>
@@ -122,18 +128,24 @@
             </div>
           </div>
           <div class="query-body-select">
-            <paging-select v-model="queryData.selectCommunity"
-                           isKey="communityName"
-                           isValue="id"
-                           :loading="loadingSelect"
-                           @load="queryNotConcernCommunityList"
-                           @change="queryNotConcernCommunityList"
-                           :data="list"></paging-select>
+            <el-paging-select v-model="queryData.selectCommunity"
+                              keyValue="communityName"
+                              valueKey="id"
+                              clearable
+                              type="radio"
+                              placeholder="输入您想添加的核心盘"
+                              @load="queryNotConcernCommunityList"
+                              @change="queryNotConcernCommunityList"
+                              @valueChange="selectChangeValue"
+                              :isPageEnd="isPageEnd"
+                              :loading="loadingSelect"
+                              :disabled="(item,index)=>{return filterRoomDisabled().includes(list[index].communityName+'$'+item.id)}"
+                              :data="list"></el-paging-select>
           </div>
-          <template v-for="(item,i) in array">
+          <template v-for="(item,i) in resultArray">
             <div class="query-item-attention"
                  :key="i">
-              <div class="attention-left">{{item.communityName}}</div>
+              <div class="attention-left overText">{{item.communityName || '暂无'}}</div>
               <div class="attention-middel">
                 <div class="attention-middel-title">在售套数</div>
                 <div class="attention-middel-data">{{item.effectiveNum}}套</div>
@@ -147,6 +159,16 @@
                    class="attention-cell-remove el-icon-circle-close"></div>
             </div>
           </template>
+          <div class="page-num-center">
+            <el-pagination background
+                           :page-size="4"
+                           :hide-on-single-page="array.length < 4"
+                           small
+                           :current-page.sync="paginationCurrentPage"
+                           layout="prev, pager, next"
+                           :total="array.length">
+            </el-pagination>
+          </div>
         </div>
       </section>
     </template>
@@ -251,7 +273,7 @@
                      v-model="houseType">
             <el-option v-for="item in houseTypeList"
                        :key="item.value"
-                       :label="item.name"
+                       :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
         </div>
@@ -292,10 +314,10 @@
                        width="170"
                        fixed="right">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
-          <el-button type="success"
+          <el-button type="primary"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
         </template>
@@ -310,18 +332,19 @@ import moreSelect from "@/components/moreSelect";
 import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
-import pagingSelect from "@/components/pagingSelect";
 import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
     moreSelect,
-    definitionmenu,
-    pagingSelect
+    definitionmenu
   },
   data() {
     return {
+      paginationCurrentPage: 1,
+      selectCommunityNum: 1,
+      isPageEnd: false,
       list: [],
       loadingSelect: false,
       addComId: [],
@@ -333,11 +356,11 @@ export default {
         pageSize: 10 //每页条数
       },
       houseTypeList: [
-        { value: "店公共盘", label: "店公共盘" },
-        { value: "在售无跟单", label: "在售无跟单" },
-        { value: "暂不售", label: "暂不售" },
-        { value: "无号码", label: "无号码" },
-        { value: "潜在出售", label: "5" }
+        { value: "1", label: "店公共盘" },
+        { value: "2", label: "在售无跟单" },
+        { value: "3", label: "暂不售" },
+        { value: "4", label: "无号码" },
+        { value: "5", label: "潜在出售" }
       ],
       state: [
         { value: "1", label: "房源编号1" },
@@ -457,9 +480,18 @@ export default {
         communityName: "",
         isOnly: "",
         minInArea: "",
-        keyOwner: ""
+        keyOwner: "",
+        selectCommunity: []
       }
     };
+  },
+  computed: {
+    resultArray() {
+      return this.array.slice(
+        (this.paginationCurrentPage - 1) * 4,
+        this.paginationCurrentPage * 4
+      );
+    }
   },
   mounted() {
     this.queryVerifyHouseDatas(1, "id", "descending");
@@ -677,7 +709,7 @@ export default {
           this.$router.push({ path: "/buySellSystem/concernCommunity" });
         })
         .catch(e => {
-          alert("取消关注失败");
+          this.$message.error("取消关注失败");
           console.log(e);
         });
     },
@@ -700,11 +732,11 @@ export default {
             this.querylistByParams();
           } else {
             console.log("添加关注" + result.message);
-            alert(result.message);
+            this.$message.error(result.message);
           }
         })
         .catch(e => {
-          alert("添加关注 失败");
+          this.$message.error("添加关注 失败");
           console.log(e);
         });
     },
@@ -713,10 +745,11 @@ export default {
       let that = this;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
-          if (this.key == "addTime" && this.moreSelect[key] !== "") {
+          console.log(this.moreSelect);
+          if (key == "addTime" && this.moreSelect[key] !== "") {
             params.biginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } else if (this.key == "followTime" && this.moreSelect[key] !== "") {
+          } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.biginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {
@@ -794,7 +827,8 @@ export default {
             that.pageJson.total = e.data.data.dataCount;
             that.tableData = e.data.data.data;
           } else {
-            alert(e.data.message);
+            this.$message.error(e.data.message);
+            this.$message.error;
           }
         })
         .catch(e => {
@@ -832,7 +866,7 @@ export default {
             this.querylist(1);
           } else {
             console.log("查询核心盘统计结果then：" + result.message);
-            alert(result.message);
+            this.$message.error(result.message);
           }
         })
         .catch(e => {
@@ -840,9 +874,20 @@ export default {
           console.log(e);
         });
     },
+    selectChangeValue(value) {
+      //  console.log(value, "value");
+      this.addCommunity(value[0]);
+      this.querylistByParams();
+      this.$message({
+        message: "关注成功",
+        type: "success"
+      });
+    },
     queryNotConcernCommunityList(name, type) {
       let _that = this;
-      this.loadingSelect = true;
+      if (!this.isPageEnd) {
+        this.loadingSelect = true;
+      }
       this.$api
         .post({
           url: "/concern_community/notConcernCommunityList",
@@ -855,9 +900,14 @@ export default {
             if (type == "change") {
               this.selectPage = 1;
               this.list = [];
+              this.queryData.selectCommunity = [];
+              this.isPageEnd = false;
             }
             if (this.selectPage < result.data.totalPage) {
               ++this.selectPage;
+            } else {
+              this.isPageEnd = true;
+              return false;
             }
             var arrayCommunity = result.data.list;
             this.list = [...this.list, ...arrayCommunity];

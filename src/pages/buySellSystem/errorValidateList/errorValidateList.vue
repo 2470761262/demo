@@ -19,7 +19,7 @@
                        key="operation">
         <template v-slot="scope">
           <div v-if="scope.row.operation!=''">
-            <el-button type="info"
+            <el-button type="primary"
                        size="mini"
                        v-for="(item,index) in isForBut(scope.row.operation)"
                        :key="index">{{item.name}}</el-button>

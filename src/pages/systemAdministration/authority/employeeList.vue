@@ -32,10 +32,10 @@
                      style="margin-left:10px"
                      size="mini"
                      @click="queryEmployee()">查询</el-button>
-<!--          <el-button type="primary"-->
-<!--                     style="margin-left:10px"-->
-<!--                     size="mini"-->
-<!--                     @click="cancel()">返回</el-button>-->
+          <!--          <el-button type="primary"-->
+          <!--                     style="margin-left:10px"-->
+          <!--                     size="mini"-->
+          <!--                     @click="cancel()">返回</el-button>-->
         </div>
       </template>
 
@@ -53,7 +53,7 @@
                          key="operation">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
-              <el-button type="info"
+              <el-button type="primary"
                          size="mini"
                          @click="setAuthority(scope.row)">权限设置</el-button>
             </div>
