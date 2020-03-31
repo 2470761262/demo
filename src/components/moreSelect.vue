@@ -403,6 +403,7 @@ export default {
     },
     remove () {
       Object.assign(this.$data, this.$options.data.call(this));
+      this.queryConstant();
       this.$emit("moreSelectChange", '');
     },
     remoteMethod (query) {
