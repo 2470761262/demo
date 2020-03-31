@@ -53,10 +53,10 @@
           <el-option label="Wap端"
                      value="2"></el-option>
         </el-select>
-        <!--        <el-button style="margin:10px 45px;"-->
-        <!--                   type="primary"-->
-        <!--                   size="mini"-->
-        <!--                   @click="savePosition">保存</el-button>-->
+        <el-button style="margin:10px 45px;"
+                   type="primary"
+                   size="mini"
+                   @click="savePosition">保存</el-button>
         <el-tree :data="ruleTreeData"
                  show-checkbox
                  node-key="id"
@@ -101,7 +101,6 @@
              style="margin-top: 10px;">
           <template>
             <div class="formItem">
-
               <el-form :inline="true"
                        class="demo-form-inline"
                        style="!important;align-content: center">
@@ -111,7 +110,7 @@
                             v-model="filterText"
                             class="treeSearch"></el-input>
                 </el-form-item>
-                <el-form-item label="子节点选中"
+                <el-form-item label="不选子节点"
                               v-show="showCompanyTree">
                   <el-switch v-model="checkStrictly"></el-switch>
                 </el-form-item>
@@ -316,33 +315,33 @@ export default {
       console.log(node, data, "operationDept..");
     },
     //应用
-    // savePosition () {
-    //   var that = this;
-    //   let checkedKeys = that.$refs.tree.getCheckedKeys();
-    //   let keys = "";
-    //   checkedKeys.forEach(key => {
-    //     keys = keys + "," + key;
-    //   });
-    //   keys = keys.substr(1, keys.length);
-    //   console.log(keys, "checkedKeys///");
-    //   that.ruleParamsObj.ruleIds = keys;
-    //   this.$api
-    //     .post({
-    //       url: "/sys/rule/employee/set",
-    //       data: that.ruleParamsObj,
-    //       qs: true
-    //     })
-    //     .then(e => {
-    //       console.log(e.data);
-    //       let result = e.data;
-    //       if (result.code == 200) {
-    //         this.$message.info("重新登录后生效，操作成功");
-    //       } else {
-    //         console.log("保存结果：" + result.message);
-    //         this.$message.error("保存失败" + result.message);
-    //       }
-    //     });
-    // },
+    savePosition () {
+      var that = this;
+      let checkedKeys = that.$refs.tree.getCheckedKeys();
+      let keys = "";
+      checkedKeys.forEach(key => {
+        keys = keys + "," + key;
+      });
+      keys = keys.substr(1, keys.length);
+      console.log(keys, "checkedKeys///");
+      that.ruleParamsObj.ruleIds = keys;
+      this.$api
+        .post({
+          url: "/sys/rule/employee/set",
+          data: that.ruleParamsObj,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            this.$message.info("重新登录后生效，操作成功");
+          } else {
+            console.log("保存结果：" + result.message);
+            this.$message.error("保存失败" + result.message);
+          }
+        });
+    },
     //保存跨部门权限
     putParams(node, dataType) {
       let data = node.data;
@@ -415,7 +414,12 @@ export default {
             this.$message.error("保存失败" + result.message);
           }
           that.fullscreenLoading = false;
-        });
+        })
+      .finally(
+        function(){
+          that.fullscreenLoading = false;
+        }
+      );
     },
     foreachList(list) {
       let temp = "";
