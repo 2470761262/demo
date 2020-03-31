@@ -133,7 +133,8 @@
                               valueKey="id"
                               clearable
                               type="radio"
-                              placeholder="输入您想添加的核心盘"
+                              frist
+                              placeholder="选择您想添加的核心盘"
                               @load="queryNotConcernCommunityList"
                               @change="queryNotConcernCommunityList"
                               @valueChange="selectChangeValue"
@@ -481,7 +482,7 @@ export default {
         isOnly: "",
         minInArea: "",
         keyOwner: "",
-        selectCommunity: []
+        selectCommunity: ""
       }
     };
   },
@@ -876,12 +877,14 @@ export default {
     },
     selectChangeValue(value) {
       //  console.log(value, "value");
-      this.addCommunity(value[0]);
-      this.querylistByParams();
-      this.$message({
-        message: "关注成功",
-        type: "success"
-      });
+      if (value) {
+        this.addCommunity(value);
+        this.querylistByParams();
+        this.$message({
+          message: "关注成功",
+          type: "success"
+        });
+      }
     },
     queryNotConcernCommunityList(name, type) {
       let _that = this;
@@ -900,7 +903,7 @@ export default {
             if (type == "change") {
               this.selectPage = 1;
               this.list = [];
-              this.queryData.selectCommunity = [];
+              this.queryData.selectCommunity = "";
               this.isPageEnd = false;
             }
             if (this.selectPage < result.data.totalPage) {

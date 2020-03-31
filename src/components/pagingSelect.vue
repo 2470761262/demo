@@ -98,13 +98,12 @@
               trigger="click"
               v-model="visible"
               :width="popoverWidth">
-    <el-input size="mini"
+    <!-- <el-input size="mini"
               v-model="filterInput"
               clearable
               @input="debounce('filterInputChange')"
-              placeholder="输入您需要筛选的关键字"></el-input>
+              placeholder="输入您需要筛选的关键字"></el-input> -->
     <ul class="poper-ui"
-        infinite-scroll-immediate="false"
         v-infinite-scroll="load">
       <li v-for="(item,index) in data"
           :key="index"
@@ -135,14 +134,18 @@
          slot="reference"
          ref="onlayInput"
          @click="visible = !visible">
-      <input :placeholder="$attrs.placeholder || '选中您的数据'"
+      <!-- <input :placeholder="$attrs.placeholder || '选中您的数据'"
              readonly
              :value="resultValue"
              clearable
+             @focus.stop="triggerSelect"> -->
+      <input :placeholder="$attrs.placeholder || '选中您的数据'"
+             @input="debounce('filterInputChange')"
+             v-model="filterInput"
              @focus.stop="triggerSelect">
       <span class="el-icon-circle-close result-clearable"
             v-if="clearable"
-            @click.stop="resultPitchOn = []"></span>
+            @click.stop="clear"></span>
     </div>
   </el-popover>
 </template>
@@ -156,8 +159,17 @@ export default {
   inheritAttrs: false,
   props: {
     /**
+     * 是否第一次加载触发
+     */
+
+    frist: {
+      type: Boolean,
+      default: false
+    },
+    /**
      * 是否可以删除
      */
+
     clearable: {
       type: Boolean,
       default: false
@@ -165,16 +177,19 @@ export default {
     /**
      *  指定value的name
      */
+
     valueKey: {
       type: String,
       default: "value"
     },
+
     disabled: {
       type: Function
     },
     /**
      *  指定key的name
      */
+
     keyValue: {
       type: String,
       default: "key"
@@ -182,6 +197,7 @@ export default {
     /**
      *  checkbox 或者 radio
      */
+
     type: {
       type: String,
       default: "checkbox"
@@ -189,20 +205,23 @@ export default {
     /**
      *  渲染的数据
      */
+
     data: {
       type: Array,
       default: () => []
     },
     /**
-     *  v-model 需要传递一个数组
+     *  v-model
      */
+
     value: {
-      type: Array,
+      type: [Array, String, Number],
       default: () => []
     },
     /**
      *  加载中开关
      */
+
     loading: {
       type: Boolean,
       default: false
@@ -210,6 +229,7 @@ export default {
     /**
      *  是否分页结束
      */
+
     isPageEnd: {
       type: Boolean,
       default: false
@@ -228,13 +248,8 @@ export default {
       set(value) {
         this.type == "checkbox"
           ? this.$emit("input", [...value])
-          : this.$emit("input", [value]);
-        if (value.length != 0) {
-          this.$emit(
-            "valueChange",
-            this.type == "checkbox" ? [...value] : [value]
-          );
-        }
+          : this.$emit("input", value);
+        this.$emit("valueChange", this.type == "checkbox" ? [...value] : value);
         if (this.type !== "checkbox") {
           this.visible = false;
         }
@@ -243,7 +258,7 @@ export default {
   },
   data() {
     return {
-      inputName: Date.now().toString(36),
+      inputName: Date.now().toString(36), //input创建唯一群组name
       visible: false,
       popoverWidth: 0,
       filterInput: "",
@@ -254,17 +269,22 @@ export default {
     this.$nextTick(() => {
       addResizeListener(this.$refs.onlayInput, this.resetPopWdith);
     });
+    if (this.frist) this.load();
   },
   beforeDestroy() {
     removeResizeListener(this.$refs.onlayInput, this.resetPopWdith);
   },
   methods: {
-    resultDisabled(item, index) {
-      if (!this.disabled) {
-        return false;
+    clear() {
+      if (this.type == "checkbox") {
+        this.resultPitchOn = [];
       } else {
-        return this.disabled(item, index);
+        this.resultPitchOn = "";
       }
+    },
+    resultDisabled(item, index) {
+      if (!this.disabled) return false;
+      else return this.disabled(item, index);
     },
     //防抖
     debounce(funName) {
