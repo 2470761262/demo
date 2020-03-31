@@ -81,7 +81,7 @@
                        key="992">
         <template v-slot="scope">
           <!-- <div v-if="scope.row.operation!=''"> -->
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="distributeEvent(item.methosName,scope.row.id,scope.row.sysParNo,scope.row.sysParName,scope.row.sysParType,scope.row.memo)"
                      v-for="(item,index) in isForBut(2)"
@@ -325,12 +325,12 @@ export default {
     handleClick () {
 
     },
-     created() {
-      this.configId=this.$route.query.configId;
+    created () {
+      this.configId = this.$route.query.configId;
 
-    console.log(this.configId);
+      console.log(this.configId);
 
-  },
+    },
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;

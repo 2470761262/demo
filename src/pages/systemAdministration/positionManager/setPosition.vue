@@ -39,24 +39,28 @@
 }
 </style>
 <template>
-  <div>
+  <div v-loading.fullscreen.lock="fullscreenLoading">
     <template>
+      <el-form :inline="true"
+               class="demo-form-inline"
+               style="align-content: center">
+        <el-form-item label="类型">
+          <el-select v-model="type"
+                     @change="loadFunctionPoint"
+                     placeholder="请选择功能点类型">
+            <el-option label="PC端" value="0"></el-option>
+            <el-option label="Client端" value="1"></el-option>
+            <el-option label="Wap端" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="不选中子节点">
+          <el-switch v-model="checkStrictly"></el-switch>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" size="mini" @click="savePositionRule">保存</el-button>
+        </el-form-item>
+      </el-form>
       <div class="elTree">
-        <el-select v-model="type"
-                   @change="loadFunctionPoint"
-                   placeholder="请选择功能点类型">
-          <el-option label="PC端"
-                     value="0"></el-option>
-          <el-option label="Client端"
-                     value="1"></el-option>
-          <el-option label="Wap端"
-                     value="2"></el-option>
-        </el-select>
-        <el-button style="margin:10px 45px;"
-                   type="primary"
-                   size="mini"
-                   @click="savePositionRule">保存</el-button>
-
         <el-tree :data="ruleTreeData"
                  show-checkbox
                  node-key="id"
@@ -64,6 +68,7 @@
                  check-strictly
                  :check-on-click-node=false
                  highlight-current
+                 :check-strictly="checkStrictly"
                  :expand-on-click-node=false
                  :props="defaultProps">
           <span class="custom-tree-node"
@@ -100,29 +105,45 @@
         <div class="text item">
           <!--          <el-button type="primary"-->
           <!--                     @click="cancel">返回</el-button>-->
-          <div class="formItem"
-               style="margin-left: 230px;"
-               v-show="showSave">
-            <el-button type="primary"
-                       @click="savePosition(0)">应用到角色</el-button>
-            <el-button type="primary"
-                       @click="savePosition(1)">应用到个人</el-button>
-            <div v-show="showOperationCompany"
-                 style="display: inline-block;margin-left: 10px">
-              <el-button type="primary"
-                         @click="savePosition(2)">应用到公司</el-button>
-            </div>
-          </div>
+<!--          <div class="formItem"-->
+<!--               style="margin-left: 230px;"-->
+<!--               v-show="showSave">-->
+<!--            <el-button type="primary"-->
+<!--                       @click="savePosition(0)">应用到角色</el-button>-->
+<!--            <el-button type="primary"-->
+<!--                       @click="savePosition(1)">应用到个人</el-button>-->
+<!--            <div v-show="showOperationCompany"-->
+<!--                 style="display: inline-block;margin-left: 10px">-->
+<!--              <el-button type="primary"-->
+<!--                         @click="savePosition(2)">应用到公司</el-button>-->
+<!--            </div>-->
+<!--          <div class="formItem" style="margin-left: 230px;" v-show="showSave">-->
+<!--            <el-button type="primary" @click="saveRolePermission">保存</el-button>-->
+<!--          </div>-->
         </div>
         <div class="text item"
              v-show="true">
           <template>
+            <div class="formItem">
+              <el-form :inline="true"
+                       class="demo-form-inline"
+                       style="!important;align-content: center">
+                <el-form-item label="关键字过滤"
+                              v-show="showCompanyTree">
+                  <el-input placeholder="输入关键字进行过滤"
+                            v-model="filterText"
+                            class="treeSearch"></el-input>
+                </el-form-item>
+                <el-form-item label="功能操作"
+                              v-show="showSave">
+                  <el-button type="primary"
+                             size="mini"
+                             @click="saveRolePermission">保存</el-button>
+                </el-form-item>
+              </el-form>
+            </div>
             <div class="elTree"
                  v-show="showCompanyTree">
-
-              <el-input placeholder="输入关键字进行过滤"
-                        v-model="filterText"
-                        class="treeSearch"></el-input>
               <el-tree ref="companyTree"
                        :data="companyTreeData"
                        node-key="businessId"
@@ -138,7 +159,6 @@
                        :default-checked-keys="companyGather"
                        :default-expanded-keys="companyGather"
                        v-loading="treeLoading"></el-tree>
-
             </div>
           </template>
         </div>
@@ -154,6 +174,8 @@ export default {
   components: {},
   data() {
     return {
+      checkStrictly: true,
+      fullscreenLoading: false,
       filterText: "",
       treeLoading: true,
       type: "0",
@@ -175,17 +197,25 @@ export default {
       showSave: false,
       showCompanyTree: false,
       companyGather: [],
-      paramsObj: {},
+      paramsObj: {
+        functionPointArray: new Array(),
+        postId: null,
+        ruleType: null
+      },
       showOperationCompany: false,
       companyTreeSelectNode: {
         companyIds: [],
         deptIds: []
-      }
+      },
+      currentCompanyGather: "",
+      currentDeptGather: "",
+      currentNode: null
     };
   },
   mounted() {
     let id = JSON.parse(this.$route.query.id);
     this.postId = id;
+    this.paramsObj.postId = id;
     this.loadFunctionPoint();
     //读取树数据
     this.loadUnitTree();
@@ -259,8 +289,8 @@ export default {
       this.showSave = true;
       this.showOperationCompany = true;
       console.log(node, data, "operationCompany..");
-      this.paramsObj.rId = data.id;
-      this.paramsObj.dataType = 2;
+      // this.paramsObj.rId = data.id;
+      // this.paramsObj.dataType = 2;
       node.data.dataType = "2";
       this.$refs.companyTree.setCheckedKeys([]);
       if (data.companyGather) {
@@ -277,24 +307,30 @@ export default {
         this.companyGather,
         "--------------------------------------->"
       );
+      this.putParams(node, "2");
+      this.currentNode = node;
     },
     operationSelf(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
-      this.paramsObj.rId = data.id;
-      this.paramsObj.dataType = 0;
+      // this.paramsObj.rId = data.id;
+      // this.paramsObj.dataType = 0;
       node.data.dataType = "0";
       console.log(node, data, "operationSelf..");
+      //设置参数
+      this.putParams(node, "0");
     },
     operationDept(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
-      this.paramsObj.rId = data.id;
-      this.paramsObj.dataType = 1;
+      // this.paramsObj.rId = data.id;
+      // this.paramsObj.dataType = 1;
       node.data.dataType = "1";
       console.log(node, data, "operationDept..");
+      //设置参数
+      this.putParams(node, "1");
     },
 
     //应用
@@ -320,8 +356,8 @@ export default {
       that.paramsObj.companyId = companyId;
       that.paramsObj.deptId = deptId;
       console.log(that.paramsObj, "save company ...");
-
-      this.$api
+      that.fullscreenLoading = true;
+      that.$api
         .post({
           url: "/sys/position/set/rules",
           data: that.paramsObj,
@@ -331,11 +367,12 @@ export default {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            this.$message.info("重新登录后生效，操作成功");
+            that.$message.info("重新登录后生效，操作成功");
           } else {
             console.log("保存结果：" + result.message);
-            this.$message.error("保存失败" + result.message);
+            that.$message.error("保存失败" + result.message);
           }
+          that.fullscreenLoading = false;
         });
     },
     //保存角色rule
@@ -343,7 +380,7 @@ export default {
       var that = this;
       let paramsObj = {};
       paramsObj.id = that.postId;
-      paramsObj.ruleType = 0;
+      paramsObj.type = that.type;
       let checkedKeys = that.$refs.tree.getCheckedKeys();
       let keys = "";
       checkedKeys.forEach(key => {
@@ -352,10 +389,20 @@ export default {
       console.log(keys, "before ...");
       keys = keys.substr(1, keys.length);
       console.log(keys, "after ...");
-      paramsObj.postRuleCode = keys;
+      if(that.type == 1){
+        //默认端 client 端
+        paramsObj.postClientRuleCode = keys;
+      }else if (that.type == 2){
+        //默认 wap端
+        paramsObj.postWapRuleCode = keys;
+      }else if(that.type == 0){
+        //默认 pc端
+        paramsObj.postRuleCode = keys;
+      }
+      that.fullscreenLoading = true;
       this.$api
         .put({
-          url: "/sys/position/update",
+          url: "/sys/position/update/authority",
           data: paramsObj,
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
@@ -368,9 +415,104 @@ export default {
             console.log("保存结果：" + result.message);
             this.$message.error("保存失败" + result.message);
           }
+          that.fullscreenLoading = false;
+        })
+        .finally(function(){
+          that.fullscreenLoading = false
         });
     },
 
+    /**
+     * 批量保存角色设置
+     */
+    saveRolePermission(){
+      if (!this.paramsObj && !this.paramsObj.rId) {
+        this.$message.info("请选择节点进行保存");
+        return;
+      }
+      this.fullscreenLoading = true;
+      var that = this;
+      that.paramsObj.ruleType = this.type;
+      let functionPointList = [];
+      that.paramsObj.functionPointArray.forEach(obj => {
+        functionPointList.push(new Object(obj));
+      });
+      that.paramsObj.functionPointList = functionPointList;
+      that.paramsObj.functionPointArray = new Array();
+      console.log(that.paramsObj, "save company ...");
+      this.$api
+        .post({
+          url: "/sys/position/set/role/permission",
+          data: that.paramsObj,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            this.$message.info("重新登录后生效，操作成功");
+          } else {
+            console.log("保存结果：" + result.message);
+            this.$message.error("保存失败" + result.message);
+          }
+          that.fullscreenLoading = false;
+        })
+        .finally(
+          function(){
+            that.fullscreenLoading = false;
+          }
+        );
+    },
+    //保存跨部门权限
+    putParams(node, dataType) {
+      let data = node.data;
+      if (!data) {
+        data = node;
+      }
+      //设置参数
+      let that = this;
+      let functionPointObj =
+        that.paramsObj.functionPointArray[new String(data.id)];
+      debugger;
+      if (!functionPointObj) {
+        functionPointObj = {};
+      }
+      functionPointObj.rId = data.id;
+      functionPointObj.dataType = dataType;
+      let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
+      functionPointObj.companyId = companyId;
+      let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
+      functionPointObj.deptId = deptId;
+      that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
+      if (data.children) {
+        if (data.children.length > 0) {
+          this.foreachChildren(data.children, dataType);
+        }
+      }
+      //设置当前对象的值
+      let currentNode = that.$refs.tree.getNode(data.id);
+      currentNode.data.dataType = dataType;
+      currentNode.data.companyGather = this.currentCompanyGather;
+      currentNode.data.deptGather = this.currentDeptGather;
+    },
+
+    foreachList(list) {
+      let temp = "";
+      list.forEach(id => {
+        temp = temp + "," + id;
+      });
+      temp = temp.substr(1, temp.length);
+      return temp;
+    },
+    //遍历子节点
+    foreachChildren(childrenData, dataType) {
+      let that = this;
+      if (childrenData) {
+        childrenData.forEach(data => {
+          that.putParams(data, dataType);
+        });
+      }
+    },
     //动态加载节点
     loadCompanyTreeNode(node, resolve) {
       if (node.level == 0) {
@@ -415,6 +557,13 @@ export default {
             this.companyTreeSelectNode.deptIds.push(node.businessId);
           }
         });
+        this.currentCompanyGather = this.foreachList(
+          this.companyTreeSelectNode.companyIds
+        );
+        this.currentDeptGather = this.foreachList(
+          this.companyTreeSelectNode.deptIds
+        );
+        this.putParams(this.currentNode, this.currentNode.data.dataType);
       }
     },
     //取消

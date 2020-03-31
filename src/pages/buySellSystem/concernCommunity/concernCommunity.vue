@@ -273,7 +273,7 @@
                      v-model="houseType">
             <el-option v-for="item in houseTypeList"
                        :key="item.value"
-                       :label="item.name"
+                       :label="item.label"
                        :value="item.value"></el-option>
           </el-select>
         </div>
@@ -314,10 +314,10 @@
                        width="170"
                        fixed="right">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
-          <el-button type="success"
+          <el-button type="primary"
                      @click="toHouseDetail(scope.row.id)"
                      size="mini">查看</el-button>
         </template>
@@ -356,11 +356,11 @@ export default {
         pageSize: 10 //每页条数
       },
       houseTypeList: [
-        { value: "店公共盘", label: "店公共盘" },
-        { value: "在售无跟单", label: "在售无跟单" },
-        { value: "暂不售", label: "暂不售" },
-        { value: "无号码", label: "无号码" },
-        { value: "潜在出售", label: "5" }
+        { value: "1", label: "店公共盘" },
+        { value: "2", label: "在售无跟单" },
+        { value: "3", label: "暂不售" },
+        { value: "4", label: "无号码" },
+        { value: "5", label: "潜在出售" }
       ],
       state: [
         { value: "1", label: "房源编号1" },
@@ -745,10 +745,11 @@ export default {
       let that = this;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
-          if (this.key == "addTime" && this.moreSelect[key] !== "") {
+          console.log(this.moreSelect);
+          if (key == "addTime" && this.moreSelect[key] !== "") {
             params.biginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } else if (this.key == "followTime" && this.moreSelect[key] !== "") {
+          } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.biginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {

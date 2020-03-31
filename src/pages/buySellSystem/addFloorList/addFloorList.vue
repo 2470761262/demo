@@ -56,7 +56,7 @@
                        key="operation">
         <template v-slot="scope">
 
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toCheck(scope.row.id)">审核</el-button>
         </template>

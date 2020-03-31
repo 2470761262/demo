@@ -85,7 +85,7 @@
                        width="150"
                        key="operation">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="distributeEvent(item.methosName,scope.row.id)"
                      v-for="(item,index) in isForBut(scope.row.id)"

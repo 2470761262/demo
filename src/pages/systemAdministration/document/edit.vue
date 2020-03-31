@@ -62,7 +62,7 @@
       <el-button type="success"
                  @click="saveData"
                  plain>确定</el-button>
-      <el-button type="info"
+      <el-button type="primary"
                  @click="$router.back(-1)"
                  plain>取消</el-button>
     </div>

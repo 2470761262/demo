@@ -134,10 +134,10 @@
                        fixed="right"
                        width="170">
         <template v-slot="scope">
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toLook(scope.row.id)">查看</el-button>
-          <el-button type="info"
+          <el-button type="primary"
                      size="mini"
                      @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo,scope.row.customers,scope.row.tel)">转在售</el-button>
         </template>
@@ -474,10 +474,10 @@ export default {
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
-          if (this.key == "addTime" && this.moreSelect[key] !== "") {
+          if (key == "addTime" && this.moreSelect[key] !== "") {
             params.biginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } else if (this.key == "followTime" && this.moreSelect[key] !== "") {
+          } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.biginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {
