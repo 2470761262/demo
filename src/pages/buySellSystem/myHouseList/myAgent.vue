@@ -120,7 +120,6 @@
                           @change="querylistByParams"
                           range-separator="至"
                           start-placeholder="开始日期"
-                          value-format="yyyy-MM-ddTHH:mm:sssZ"
                           :default-time="['00:00:00', '23:59:59']"
                           end-placeholder="结束日期"></el-date-picker>
           <span class="query-cell-suffix handlebut"
@@ -144,7 +143,7 @@
                      @click="queryMyAgentParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/getMyAgent"></moreSelect>
         </div>
       </div>
     </template>
@@ -231,7 +230,7 @@ export default {
         maxInArea: "",
         minPrice: "",
         maxPrice: "",
-        keyOwner: "",
+        isKey: "",
         isOnly: "",
         agentName: ""
       },
@@ -283,7 +282,7 @@ export default {
         roomNo: "",
         cbId: "",
         isOnly: "",
-        keyOwner: ""
+        isKey: ""
       }
     };
   },
@@ -345,10 +344,10 @@ export default {
       this.queryMyAgent(1, "id", "descending");
     },
     keySelect () {
-      if (this.data.keyOwner != "") {
-        this.data.keyOwner = "";
+      if (this.data.isKey != "") {
+        this.data.isKey = "";
       } else {
-        this.data.keyOwner = "1";
+        this.data.isKey = "1";
       }
       this.queryMyAgent(1, "id", "descending");
     },
@@ -371,10 +370,10 @@ export default {
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.biginTime = this.moreSelect[key][0];
+            params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
           } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.biginFollowTime = this.moreSelect[key][0];
+            params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {
             params[key] = this.moreSelect[key];
@@ -427,7 +426,7 @@ export default {
         }
       }
       params.isOnly = that.data.isOnly;
-      params.keyOwner = that.data.keyOwner;
+      params.isKey = that.data.isKey;
       if (column == "" || type == null || type == undefined) {
         params.sortColumn = "id";
       } else {
@@ -676,10 +675,10 @@ export default {
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.biginTime = this.moreSelect[key][0];
+            params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
           } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.biginFollowTime = this.moreSelect[key][0];
+            params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {
             params[key] = this.moreSelect[key];
@@ -697,7 +696,7 @@ export default {
         params.maxInArea = that.data.maxInArea;
         params.minPrice = that.data.minPrice;
         params.maxPrice = that.data.maxPrice;
-        params.keyOwner = that.data.keyOwner;
+        params.isKey = that.data.isKey;
         params.isOnly = that.data.isOnly;
         params.agentName = that.data.agentName;
       }
