@@ -3,6 +3,7 @@
   max-height: 200px;
   overflow-x: hidden;
   overflow-y: auto;
+  margin-top: 8px;
   &::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -17,6 +18,12 @@
     border-radius: 50px;
   }
   .poper-li {
+    &.is-disabled {
+      background: #f2f2f2;
+      label {
+        cursor: no-drop;
+      }
+    }
     .poper-li-label {
       > input {
         display: none;
@@ -26,14 +33,19 @@
         .label-pitchOn-type {
           color: var(--color--primary);
           font-weight: 600;
+          display: block;
         }
       }
       .poper-li-label-body {
         display: flex;
         padding: 5px 10px;
         font-size: 15px;
-        cursor: pointer;
-        &.hover {
+        align-items: center;
+        justify-content: space-between;
+        .label-pitchOn-type {
+          display: none;
+        }
+        &:hover {
           background: #f2f2f2;
         }
       }
@@ -45,47 +57,96 @@
   font-size: 15px;
   text-align: center;
 }
+.ul-data-loading {
+  font-size: 13px;
+  padding: 0 10px;
+}
+.result-input-content {
+  position: relative;
+  height: 35px;
+  border: 1px solid #c0c4cc; // var(--color--primary);
+  border-radius: 6px;
+  overflow: hidden;
+  padding: 0 20px;
+  &:hover .result-clearable {
+    display: block;
+  }
+  > input {
+    width: 100%;
+    border: none;
+    outline: none;
+    height: 100%;
+    font-size: 14px;
+    &::-webkit-input-placeholder {
+      font-size: inherit;
+      color: #c0c4cc;
+    }
+  }
+  .result-clearable {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+  }
+}
 </style>
 <template>
   <el-popover popper-class="poperSet"
-              trigger="hover"
+              trigger="click"
               v-model="visible"
               :width="popoverWidth">
-    <el-input size="mini"
+    <!-- <el-input size="mini"
               v-model="filterInput"
+              clearable
               @input="debounce('filterInputChange')"
-              placeholder="输入您需要筛选的关键字"></el-input>
-    <div class="text-centent"
-         v-if="loading">加载中...</div>
-    <div class="text-centent"
-         v-if="data.length == 0 && !loading">暂无数据</div>
+              placeholder="输入您需要筛选的关键字"></el-input> -->
     <ul class="poper-ui"
-        infinite-scroll-immediate="false"
-        v-infinite-scroll="load"
-        @mouseleave.stop="hoverIndexID = -1">
+        v-infinite-scroll="load">
       <li v-for="(item,index) in data"
           :key="index"
-          @mouseenter.stop="hoverItem(item)"
-          class="poper-li">
+          class="poper-li"
+          :class="{'is-disabled':resultDisabled(item,index)}">
         <label class="poper-li-label">
           <input :type="type"
-                 :value="item[isValue]"
-                 v-model="pitchOn">
-          <div class="poper-li-label-body"
-               @click.stop="emitPitchOn(item)"
-               :class="{'hover':item[isValue] == hoverIndexID}">
-            <div class="label-title">{{item[isKey]}}</div>
-            <div class="label-pitchOn-type"></div>
+                 :name="inputName"
+                 :disabled="resultDisabled(item,index)"
+                 :value="item[valueKey]"
+                 v-model="resultPitchOn">
+          <div class="poper-li-label-body">
+            <div class="label-title">{{item[keyValue]}}</div>
+            <div class="label-pitchOn-type el-icon-check"></div>
           </div>
         </label>
       </li>
+      <li v-if="loading"
+          class="ul-data-loading">
+        <i class="el-icon-loading"></i> 加载中
+      </li>
+      <li class="text-centent"
+          v-if="data.length == 0 && !loading || isPageEnd">
+        没有更多数据了 <i class="el-icon-warning-outline"></i>
+      </li>
     </ul>
-    <el-input :value="resultValue"
-              placeholder="选择"
-              readonly
-              ref="onlayInput"
-              slot="reference"
-              @focus.native.stop="triggerSelect"></el-input>
+    <div class="result-input-content"
+         slot="reference"
+         ref="onlayInput"
+         @click="visible = !visible">
+      <!-- <input :placeholder="$attrs.placeholder || '选中您的数据'"
+             readonly
+             :value="resultValue"
+             clearable
+             @focus.stop="triggerSelect"> -->
+      <input :placeholder="$attrs.placeholder || '选中您的数据'"
+             @input="debounce('filterInputChange')"
+             v-model="filterInput"
+             @focus.stop="triggerSelect">
+      <span class="el-icon-circle-close result-clearable"
+            v-if="clearable"
+            @click.stop="clear"></span>
+    </div>
   </el-popover>
 </template>
 
@@ -95,41 +156,109 @@ import {
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
 export default {
+  inheritAttrs: false,
   props: {
-    isValue: {
+    /**
+     * 是否第一次加载触发
+     */
+
+    frist: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * 是否可以删除
+     */
+
+    clearable: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     *  指定value的name
+     */
+
+    valueKey: {
       type: String,
       default: "value"
     },
-    isKey: {
+
+    disabled: {
+      type: Function
+    },
+    /**
+     *  指定key的name
+     */
+
+    keyValue: {
       type: String,
       default: "key"
     },
+    /**
+     *  checkbox 或者 radio
+     */
+
     type: {
       type: String,
       default: "checkbox"
     },
+    /**
+     *  渲染的数据
+     */
+
     data: {
       type: Array,
       default: () => []
     },
+    /**
+     *  v-model
+     */
+
     value: {
-      type: Array,
+      type: [Array, String, Number],
       default: () => []
     },
+    /**
+     *  加载中开关
+     */
+
     loading: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     *  是否分页结束
+     */
+
+    isPageEnd: {
       type: Boolean,
       default: false
     }
   },
   computed: {
     resultValue() {
-      return this.filterPitchOn().join(",");
+      return this.type == "checkbox"
+        ? this.filterPitchOn().join(",")
+        : (this.filterPitchOn()[0] || {})[this.keyValue];
+    },
+    resultPitchOn: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.type == "checkbox"
+          ? this.$emit("input", [...value])
+          : this.$emit("input", value);
+        this.$emit("valueChange", this.type == "checkbox" ? [...value] : value);
+        if (this.type !== "checkbox") {
+          this.visible = false;
+        }
+      }
     }
   },
   data() {
     return {
-      hoverIndexID: -1, //当前hover的id用于添加hoverClass
-      pitchOn: this.value.slice(0), //选中
+      inputName: Date.now().toString(36), //input创建唯一群组name
       visible: false,
       popoverWidth: 0,
       filterInput: "",
@@ -138,13 +267,22 @@ export default {
   },
   mounted() {
     this.$nextTick(() => {
-      addResizeListener(this.$refs.onlayInput.$el, this.resetPopWdith);
+      addResizeListener(this.$refs.onlayInput, this.resetPopWdith);
     });
+    if (this.frist) this.load();
   },
   beforeDestroy() {
-    removeResizeListener(this.$refs.onlayInput.$el, this.resetPopWdith);
+    removeResizeListener(this.$refs.onlayInput, this.resetPopWdith);
   },
   methods: {
+    clear() {
+      if (this.type == "checkbox") this.resultPitchOn = [];
+      else this.resultPitchOn = "";
+    },
+    resultDisabled(item, index) {
+      if (!this.disabled) return false;
+      else return this.disabled(item, index);
+    },
     //防抖
     debounce(funName) {
       if (this.time) {
@@ -158,30 +296,33 @@ export default {
     filterInputChange() {
       this.$emit("change", this.filterInput, "change");
     },
+    /**
+     * 触发滚动到底分页
+     */
     load() {
       this.$emit("load", this.filterInput, "load");
     },
-    //提交选中
-    emitPitchOn() {
-      this.$emit("input", this.pitchOn);
-    },
     filterPitchOn() {
-      let result = [];
-      for (let i = 0; i < this.pitchOn.length; i++) {
-        for (let y = 0; y < this.data.length; y++) {
-          if (this.pitchOn[i] == this.data[y][this.isValue]) {
-            result.push(this.data[y][this.isKey]);
+      switch (this.type) {
+        case "checkbox":
+          let result = [];
+          for (let i = 0; i < this.resultPitchOn.length; i++) {
+            for (let y = 0; y < this.data.length; y++) {
+              if (this.resultPitchOn[i] == this.data[y][this.valueKey]) {
+                result.push(this.data[y][this.keyValue]);
+              }
+            }
           }
-        }
+          return result;
+        case "radio":
+          return this.data.filter(element => {
+            return element[this.valueKey] == this.value[0];
+          });
       }
-      return result;
-    },
-    hoverItem(item) {
-      this.hoverIndexID = item[this.isValue];
     },
     resetPopWdith() {
       this.$nextTick(() => {
-        this.popoverWidth = this.$refs.onlayInput.$el.clientWidth;
+        this.popoverWidth = this.$refs.onlayInput.clientWidth;
       });
     },
     triggerSelect() {

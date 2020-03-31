@@ -221,8 +221,24 @@ export default {
     },
     apply () {
       var that = this
-      if (that.form.prove == null) {
+      if (that.form.prove == '') {
         alert("证明材料不能为空");
+        return;
+      }
+      if (that.form.communityName == '') {
+        alert("楼盘名称");
+        return;
+      }
+      if (that.form.comBuildingName == '') {
+        alert("楼栋名称");
+        return;
+      }
+      if (that.form.buildIngHouses == '') {
+        alert("房间号");
+        return;
+      }
+      if (that.form.ReplenishRemark == '') {
+        alert("材料说明");
         return;
       }
 

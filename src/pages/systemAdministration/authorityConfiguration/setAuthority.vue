@@ -30,7 +30,7 @@
 }
 </style>
 <template>
-  <div>
+  <div  v-loading.fullscreen.lock="fullscreenLoading">
     <el-form :inline="true"
              class="demo-form-inline"
              style="align-content: center">
@@ -126,6 +126,7 @@ export default {
   components: {},
   data() {
     return {
+      fullscreenLoading: false,
       checkStrictly: true,
       filterText: "",
       treeLoading: true,
@@ -292,6 +293,7 @@ export default {
         keys = keys.substr(1, keys.length);
         companyGather = keys;
       }
+      that.fullscreenLoading = true;
       that.ruleParamsObj.companyGather = companyGather;
       //传入类型
       that.$api
@@ -309,6 +311,10 @@ export default {
             console.log("保存结果：" + result.message);
             that.$message.error("保存失败" + result.message);
           }
+          that.fullscreenLoading = false;
+        })
+        .finally(function () {
+          that.fullscreenLoading = false;
         });
     },
 
