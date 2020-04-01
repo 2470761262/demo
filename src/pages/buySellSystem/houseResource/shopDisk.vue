@@ -100,7 +100,8 @@
                           @change="queryShopDiskParams"
                           range-separator="至"
                           start-placeholder="开始日期"
-                          end-placeholder="结束日期"></el-date-picker>
+                          end-placeholder="结束日期"
+                          :default-time="['00:00:00', '23:59:59']"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="Remove">清除</span>
         </div>
@@ -285,13 +286,13 @@ export default {
             item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
         },
         {
-          prop: "unitpaice",
+          prop: "unitPrice",
           label: "单价(元/㎡)",
           width: "140",
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         {
           prop: "face",
@@ -327,7 +328,27 @@ export default {
         }
       ],
       tableColumn: [],
-      tableData: []
+      tableData: [],
+      transitionList: [
+        {
+          key: "bhId",
+          value: "roomNo",
+        },
+        {
+          key: "area",
+          value: "business",
+        },
+        {
+          key: "addTime",
+          value1: "beginTime",
+          value2: "endTime"
+        },
+        {
+          key: "followTime",
+          value1: "beginFollowTime",
+          value2: "endFollowTime"
+        }
+      ]
     };
   },
   mounted () {
@@ -343,6 +364,7 @@ export default {
     },
     moreSelectChange (e) {
       this.moreSelect = e;
+
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
     queryTabData () {
@@ -394,6 +416,10 @@ export default {
     },
     queryCBId () {
       var that = this;
+      if (that.data.comId == "") {
+        that.data.roomNo = "";
+        that.data.cbId = "";
+      }
       this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
@@ -403,7 +429,7 @@ export default {
           data: {
             comId: that.data.comId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -413,27 +439,6 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-      this.queryShopDiskParams();
-    },
-    queryCBId () {
-      var that = this
-      this.$api.get({
-        url: "/mateHouse/queryComBuilding",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          comId: that.data.comId,
-          page: 1,
-          limit: 50
-        }
-      }).then((e) => {
-        if (e.data.code == 200) {
-          that.data.roomNo = '';
-          that.data.cbId = '';
-          that.cbIdList = e.data.data.list;
-        }
-      })
       this.queryShopDiskParams();
     },
     Remove () {
@@ -454,7 +459,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -472,12 +477,19 @@ export default {
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.biginTime = this.moreSelect[key][0];
+            params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
           } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.biginFollowTime = this.moreSelect[key][0];
+            params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
-          } else {
+          }
+          else if (key == "bhId") {
+            params.roomNo = this.moreSelect.bhId;
+          }
+          else if (key == "area") {
+            params.business = this.moreSelect.area;
+          }
+          else {
             params[key] = this.moreSelect[key];
           }
         }

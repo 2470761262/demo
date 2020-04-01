@@ -38,12 +38,12 @@
   cursor: pointer;
 }
 
-.demo1-form-inline{
-  /deep/ .el-form-item{
+.demo1-form-inline {
+  /deep/ .el-form-item {
     margin-bottom: 0;
     vertical-align: middle;
-    &:first-child{
-      .el-form-item__content{
+    &:first-child {
+      .el-form-item__content {
         vertical-align: middle;
       }
     }
@@ -53,8 +53,10 @@
 <template>
   <div v-loading.fullscreen.lock="fullscreenLoading">
 
-    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin: 10px">
-      <el-breadcrumb-item v-for="item in navAuthority.navList">{{item.title}}</el-breadcrumb-item>
+    <el-breadcrumb separator-class="el-icon-arrow-right"
+                   style="margin: 10px">
+      <el-breadcrumb-item v-for="(item,index) in navAuthority.navList"
+                          :key="index">{{item.title}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <template>
@@ -67,16 +69,21 @@
                        @change="loadFunctionPoint"
                        style="width: 130px;"
                        placeholder="请选择功能点类型">
-              <el-option label="PC端" value="0"></el-option>
-              <el-option label="Client端" value="1"></el-option>
-              <el-option label="Wap端" value="2"></el-option>
+              <el-option label="PC端"
+                         value="0"></el-option>
+              <el-option label="Client端"
+                         value="1"></el-option>
+              <el-option label="Wap端"
+                         value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="不选中子节点">
             <el-switch v-model="checkStrictly"></el-switch>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" size="mini" @click="savePositionRule">保存</el-button>
+            <el-button type="primary"
+                       size="mini"
+                       @click="savePositionRule">保存</el-button>
           </el-form-item>
         </el-form>
         <el-tree :data="ruleTreeData"
@@ -123,21 +130,21 @@
         <div class="text item">
           <!--          <el-button type="primary"-->
           <!--                     @click="cancel">返回</el-button>-->
-<!--          <div class="formItem"-->
-<!--               style="margin-left: 230px;"-->
-<!--               v-show="showSave">-->
-<!--            <el-button type="primary"-->
-<!--                       @click="savePosition(0)">应用到角色</el-button>-->
-<!--            <el-button type="primary"-->
-<!--                       @click="savePosition(1)">应用到个人</el-button>-->
-<!--            <div v-show="showOperationCompany"-->
-<!--                 style="display: inline-block;margin-left: 10px">-->
-<!--              <el-button type="primary"-->
-<!--                         @click="savePosition(2)">应用到公司</el-button>-->
-<!--            </div>-->
-<!--          <div class="formItem" style="margin-left: 230px;" v-show="showSave">-->
-<!--            <el-button type="primary" @click="saveRolePermission">保存</el-button>-->
-<!--          </div>-->
+          <!--          <div class="formItem"-->
+          <!--               style="margin-left: 230px;"-->
+          <!--               v-show="showSave">-->
+          <!--            <el-button type="primary"-->
+          <!--                       @click="savePosition(0)">应用到角色</el-button>-->
+          <!--            <el-button type="primary"-->
+          <!--                       @click="savePosition(1)">应用到个人</el-button>-->
+          <!--            <div v-show="showOperationCompany"-->
+          <!--                 style="display: inline-block;margin-left: 10px">-->
+          <!--              <el-button type="primary"-->
+          <!--                         @click="savePosition(2)">应用到公司</el-button>-->
+          <!--            </div>-->
+          <!--          <div class="formItem" style="margin-left: 230px;" v-show="showSave">-->
+          <!--            <el-button type="primary" @click="saveRolePermission">保存</el-button>-->
+          <!--          </div>-->
         </div>
         <div class="text item"
              v-show="true">
@@ -187,13 +194,13 @@
 </template>
 <script>
 import getMenuRid from "@/minxi/getMenuRid";
-import {mapState} from "vuex";
+import { mapState } from "vuex";
 export default {
   mixins: [getMenuRid],
-  computed:{
+  computed: {
     ...mapState(['navAuthority'])
   },
-  data() {
+  data () {
     return {
       checkStrictly: true,
       fullscreenLoading: false,
@@ -233,10 +240,10 @@ export default {
       currentNode: null
     };
   },
-  created() {
+  created () {
     let id = JSON.parse(this.$route.query.id);
-    console.log(this.navAuthority.navList,'navAuthority.navList');
-    this.$store.dispatch('judgeNavList',id);
+    console.log(this.navAuthority.navList, 'navAuthority.navList');
+    this.$store.dispatch('judgeNavList', id);
     this.postId = id;
     this.paramsObj.postId = id;
     this.loadFunctionPoint();
@@ -244,7 +251,7 @@ export default {
     this.loadUnitTree();
   },
   methods: {
-    loadFunctionPoint() {
+    loadFunctionPoint () {
       let that = this;
       //读取功能点数据
       that.$api
@@ -269,7 +276,7 @@ export default {
           console.log(e);
         });
     },
-    loadUnitTree() {
+    loadUnitTree () {
       let that = this;
       //读取树数据
       that.$api
@@ -307,7 +314,7 @@ export default {
           that.treeLoading = false;
         });
     },
-    operationCompany(node, data) {
+    operationCompany (node, data) {
       this.showCompanyTree = true;
       this.showSave = true;
       this.showOperationCompany = true;
@@ -333,7 +340,7 @@ export default {
       this.putParams(node, "2");
       this.currentNode = node;
     },
-    operationSelf(node, data) {
+    operationSelf (node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
@@ -344,7 +351,7 @@ export default {
       //设置参数
       this.putParams(node, "0");
     },
-    operationDept(node, data) {
+    operationDept (node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
@@ -356,7 +363,7 @@ export default {
       this.putParams(node, "1");
     },
     //应用
-    savePosition(type) {
+    savePosition (type) {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -398,7 +405,7 @@ export default {
         });
     },
     //保存角色rule
-    savePositionRule() {
+    savePositionRule () {
       var that = this;
       let paramsObj = {};
       paramsObj.id = that.postId;
@@ -411,13 +418,13 @@ export default {
       console.log(keys, "before ...");
       keys = keys.substr(1, keys.length);
       console.log(keys, "after ...");
-      if(that.type == 1){
+      if (that.type == 1) {
         //默认端 client 端
         paramsObj.postClientRuleCode = keys;
-      }else if (that.type == 2){
+      } else if (that.type == 2) {
         //默认 wap端
         paramsObj.postWapRuleCode = keys;
-      }else if(that.type == 0){
+      } else if (that.type == 0) {
         //默认 pc端
         paramsObj.postRuleCode = keys;
       }
@@ -439,7 +446,7 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(function(){
+        .finally(function () {
           that.fullscreenLoading = false
         });
     },
@@ -447,7 +454,7 @@ export default {
     /**
      * 批量保存角色设置
      */
-    saveRolePermission(){
+    saveRolePermission () {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -480,13 +487,13 @@ export default {
           that.fullscreenLoading = false;
         })
         .finally(
-          function(){
+          function () {
             that.fullscreenLoading = false;
           }
         );
     },
     //保存跨部门权限
-    putParams(node, dataType) {
+    putParams (node, dataType) {
       let data = node.data;
       if (!data) {
         data = node;
@@ -518,7 +525,7 @@ export default {
       currentNode.data.deptGather = this.currentDeptGather;
     },
 
-    foreachList(list) {
+    foreachList (list) {
       let temp = "";
       list.forEach(id => {
         temp = temp + "," + id;
@@ -527,7 +534,7 @@ export default {
       return temp;
     },
     //遍历子节点
-    foreachChildren(childrenData, dataType) {
+    foreachChildren (childrenData, dataType) {
       let that = this;
       if (childrenData) {
         childrenData.forEach(data => {
@@ -536,7 +543,7 @@ export default {
       }
     },
     //动态加载节点
-    loadCompanyTreeNode(node, resolve) {
+    loadCompanyTreeNode (node, resolve) {
       if (node.level == 0) {
         this.node = node;
         this.resolve = resolve;
@@ -568,7 +575,7 @@ export default {
     },
 
     //选中节点
-    checkNode(data, checkedData) {
+    checkNode (data, checkedData) {
       if (checkedData.checkedNodes) {
         this.companyTreeSelectNode.companyIds = new Array();
         this.companyTreeSelectNode.deptIds = new Array();
@@ -589,12 +596,12 @@ export default {
       }
     },
     //取消
-    cancel() {
+    cancel () {
       var that = this;
       //跳转页面
       that.$router.push({ path: "/sys/positionManager" });
     },
-    filterNode(value, data) {
+    filterNode (value, data) {
       console.log("value：" + value);
       console.log(data);
       if (!value) return true;
@@ -604,7 +611,7 @@ export default {
     }
   },
   watch: {
-    filterText(val) {
+    filterText (val) {
       this.$refs.companyTree.filter(val);
     }
   }

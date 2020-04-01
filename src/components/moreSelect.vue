@@ -473,7 +473,7 @@ export default {
           data: {
             comId: that.more.comId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -509,7 +509,7 @@ export default {
             comId: that.more.comId,
             cbId: that.more.cbId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
