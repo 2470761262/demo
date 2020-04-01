@@ -25,6 +25,7 @@
              ref="listTable"
              headerClass
              cellClass
+             @expand-change="expandChange"
              :row-style="tableRowClassName"
              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
              :parentData="$data"
@@ -96,6 +97,7 @@ export default {
       this.$refs.tree2.filter(val);
     }
   },
+
   components: {
     listPage
   },
@@ -132,14 +134,23 @@ export default {
         },
         { prop: "createTime", label: "添加时间" }
       ],
-      tableData: []
+      tableData: [],
+
     };
   },
   mounted () {
+    this.$store.commit("resetNavList");
     //读取公司数据
     this.queryCompanyDatas(1);
   },
   methods: {
+    expandChange(row,expanded){
+      if(expanded){
+        let rowData = JSON.parse(JSON.stringify(row));
+        delete rowData.children;
+        this.$store.commit('setNavList',rowData);
+      }
+    },
     rowClick (row, column, event) {
       let _that_tab = this.$refs.listTable.$refs.table;
       if (column.label == '名称') {
@@ -301,6 +312,7 @@ export default {
     //设置权限
     setPosition (e) {
       var that = this;
+      this.$store.commit('setNavList',e);
       //跳转页面
       that.$router.push({ path: "/sys/setPosition", query: { id: e.id } });
     },
@@ -314,6 +326,7 @@ export default {
     },
     //跳转个人权限设置
     setPersonPosition (e) {
+      this.$store.commit('setNavList',e);
       let that = this;
       that.$router.push({ path: '/sys/authority/setAuthority', query: { "accountId": e.id } });
 
