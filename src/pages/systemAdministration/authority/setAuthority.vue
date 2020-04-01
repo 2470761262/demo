@@ -222,8 +222,8 @@ export default {
         companyIds: [],
         deptIds: []
       },
-      currentCompanyGather: "",
-      currentDeptGather: "",
+      currentCompanyGather: null,
+      currentDeptGather: null,
       currentNode: null,
     };
   },
@@ -328,6 +328,8 @@ export default {
           this.companyGather = deptArrayGather;
         }
       }
+      this.currentCompanyGather = null;
+      this.currentDeptGather = null;
       //设置参数
       this.putParams(node, "2");
       this.currentNode = node;
@@ -392,10 +394,13 @@ export default {
       }
       functionPointObj.rId = data.id;
       functionPointObj.dataType = dataType;
-      let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
-      functionPointObj.companyId = companyId;
-      let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
-      functionPointObj.deptId = deptId;
+      if((that.companyTreeSelectNode.companyIds && that.companyTreeSelectNode.companyIds.length > 0) ||
+        that.companyTreeSelectNode.deptIds && that.companyTreeSelectNode.deptIds.length > 0){
+        let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
+        functionPointObj.companyId = companyId;
+        let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
+        functionPointObj.deptId = deptId;
+      }
       that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
       if (data.children) {
         if (data.children.length > 0) {
@@ -405,8 +410,12 @@ export default {
       //设置当前对象的值
       let currentNode = that.$refs.tree.getNode(data.id);
       currentNode.data.dataType = dataType;
-      currentNode.data.companyGather = this.currentCompanyGather;
-      currentNode.data.deptGather = this.currentDeptGather;
+      if(this.currentCompanyGather != null){
+        currentNode.data.companyGather = this.currentCompanyGather;
+      }
+      if(this.currentDeptGather != null){
+        currentNode.data.deptGather = this.currentDeptGather;
+      }
     },
     //遍历子节点
     foreachChildren(childrenData, dataType) {
