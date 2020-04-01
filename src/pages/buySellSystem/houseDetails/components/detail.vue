@@ -133,6 +133,17 @@
         outline: none;
         position: relative;
         overflow: hidden;
+        &[disabled="disabled"] {
+          background: #fff;
+          color: #c0c4cc;
+          cursor: not-allowed;
+          border: 1px solid #ebeef5;
+          box-sizing: border-box;
+          border-radius: 4px;
+          &::after {
+            display: none;
+          }
+        }
         &.el-button {
           line-height: normal !important;
           i {
@@ -207,7 +218,7 @@
         <div class="cell-tabs-nav"
              v-if="isShowBuilding">{{resultData.BuildingName | emptyRead}}-{{resultData.RoomNo | emptyRead}}</div>
         <div class="cell-tabs-nav"
-             v-if="!isShowBuilding"
+             v-if="!isShowBuilding && !buttonDisabled"
              @click="getShowBuliding">楼栋号</div>
       </div>
       <div class="cell-tabs">
@@ -236,7 +247,8 @@
         </div>
         <button class="cell-pro-but"
                 v-if="resultData.agentPerName"
-                @click="oneTouchDialPhone">一键拨号</button>
+                @click="oneTouchDialPhone"
+                :disabled="isDisabled">一键拨号</button>
       </div>
       <div class="cell-pro-item"
            v-else>
@@ -248,7 +260,8 @@
           <div class="cell-pro-detail-other overText">业主称呼</div>
         </div>
         <el-dropdown @command="contactOwer">
-          <el-button class="cell-pro-but">
+          <el-button class="cell-pro-but"
+                     :disabled="isDisabled">
             查看号码<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
@@ -268,7 +281,8 @@
         </el-dropdown>
         <!-- <button>查看号码</button> -->
         <button class="cell-pro-but"
-                @click="dialPhoneToFD">一键拨号</button>
+                @click="dialPhoneToFD"
+                :disabled="isDisabled">一键拨号</button>
       </div>
     </div>
   </div>
@@ -277,8 +291,11 @@
 <script>
 import util from "@/util/util";
 export default {
-  inject: ["houseDetails", "houseId"],
+  inject: ["houseDetails", "houseId", "buttonDisabled"],
   computed: {
+    isDisabled() {
+      return this.buttonDisabled;
+    },
     resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;

@@ -1,12 +1,12 @@
 <style lang="less" scoped>
 .elTree {
-  font-size: 14px;
   width: 500px;
   margin-right: 20px;
   margin-bottom: 10px;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
   padding: 15px 15px 15px;
   border-radius: 10px;
+  font-size: 14px;
 
   /deep/ .el-input {
     margin: 10px 0 10px;
@@ -31,38 +31,65 @@
 
 .formItem {
   margin: 10px;
-  display: inline-block;
 }
 
 .selected_btn {
   color: #ffa6a4;
   cursor: pointer;
 }
+  .demo1-form-inline{
+   /deep/ .el-form-item{
+      margin-bottom: 0;
+    vertical-align: middle;
+     &:first-child{
+        .el-form-item__content{
+          vertical-align: middle;
+        }
+     }
+    }
+  }
 </style>
+
 <template>
   <div v-loading.fullscreen.lock="fullscreenLoading">
+
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin: 10px" >
+      <el-breadcrumb-item v-for="item in navAuthority.navList">{{item.title}}</el-breadcrumb-item>
+    </el-breadcrumb>
+
     <template>
       <div class="elTree">
-        <el-select v-model="ruleParamsObj.type"
-                   @change="loadFunctionPoint"
-                   placeholder="请选择功能点类型">
-          <el-option label="PC端"
-                     value="0"></el-option>
-          <el-option label="Client端"
-                     value="1"></el-option>
-          <el-option label="Wap端"
-                     value="2"></el-option>
-        </el-select>
-        <el-button style="margin:10px 45px;"
-                   type="primary"
-                   size="mini"
-                   @click="savePosition">保存</el-button>
+        <el-form :inline="true"
+                 class="demo1-form-inline"
+                 style="align-content: center">
+          <el-form-item label="类型">
+            <el-select v-model="ruleParamsObj.type"
+                       style="width: 130px;" @change="loadFunctionPoint"
+                       placeholder="请选择功能点类型">
+              <el-option label="PC端"
+                         value="0"></el-option>
+              <el-option label="Client端"
+                         value="1"></el-option>
+              <el-option label="Wap端"
+                         value="2"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="子节点选中">
+            <el-switch v-model="treeCheckStrictly"></el-switch>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary"
+                       size="mini"
+                       @click="savePosition">保存</el-button>
+          </el-form-item>
+        </el-form>
         <el-tree :data="ruleTreeData"
                  show-checkbox
                  node-key="id"
                  ref="tree"
                  check-strictly
                  highlight-current
+                 :check-strictly="treeCheckStrictly"
                  :expand-on-click-node=false
                  :props="defaultProps">
           <span class="custom-tree-node"
@@ -151,11 +178,15 @@
 </template>
 <script>
 import getMenuRid from "@/minxi/getMenuRid";
+import {mapState} from 'vuex';
 export default {
   mixins: [getMenuRid],
-  components: {},
+  computed:{
+    ...mapState(['navAuthority'])
+  },
   data() {
     return {
+      treeCheckStrictly: true,
       fullscreenLoading: false,
       checkStrictly: true,
       filterText: "",
@@ -193,17 +224,20 @@ export default {
       },
       currentCompanyGather: "",
       currentDeptGather: "",
-      currentNode: null
+      currentNode: null,
     };
   },
-  mounted() {
-    //let postId = JSON.parse(this.$route.query.postId);
+  destroyed() {
+    //销毁
+    this.$store.commit("resetNavList");
+  },
+  created() {
     let accountId = JSON.parse(this.$route.query.accountId);
+    this.$store.dispatch('judgeNavList',accountId);
     this.ruleParamsObj.accountId = accountId;
     this.paramsObj.accountId = accountId;
     this.loadFunctionPoint();
     this.loadUnitTree();
-    //this.ruleParamsObj.postId = postId;
   },
   methods: {
     loadFunctionPoint() {

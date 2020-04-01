@@ -100,6 +100,8 @@
   <list-page :parentData="$data"
              @sort-change="sortMethod"
              @handleClick="handleClick"
+             :dblclick="true"
+             @cellDblClick="toHouseDetail"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:left>
@@ -133,7 +135,8 @@
                               valueKey="id"
                               clearable
                               type="radio"
-                              placeholder="输入您想添加的核心盘"
+                              frist
+                              placeholder="选择您想添加的核心盘"
                               @load="queryNotConcernCommunityList"
                               @change="queryNotConcernCommunityList"
                               @valueChange="selectChangeValue"
@@ -316,9 +319,9 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
+                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">{{ scope.row.houseType | setRowButName}}</el-button>
           <el-button type="primary"
-                     @click="toHouseDetail(scope.row.id)"
+                     @click="toHouseDetail(scope.row)"
                      size="mini">查看</el-button>
         </template>
       </el-table-column>
@@ -481,7 +484,7 @@ export default {
         isOnly: "",
         minInArea: "",
         keyOwner: "",
-        selectCommunity: []
+        selectCommunity: ""
       }
     };
   },
@@ -491,6 +494,21 @@ export default {
         (this.paginationCurrentPage - 1) * 4,
         this.paginationCurrentPage * 4
       );
+    }
+  },
+  filters: {
+    setRowButName(value) {
+      switch (String(value)) {
+        case 2:
+          return "转跟单";
+        case 3:
+        case 5:
+          return "转在售";
+        case 4:
+          return "录入";
+        default:
+          return "转在售";
+      }
     }
   },
   mounted() {
@@ -876,12 +894,14 @@ export default {
     },
     selectChangeValue(value) {
       //  console.log(value, "value");
-      this.addCommunity(value[0]);
-      this.querylistByParams();
-      this.$message({
-        message: "关注成功",
-        type: "success"
-      });
+      if (value) {
+        this.addCommunity(value);
+        this.querylistByParams();
+        this.$message({
+          message: "关注成功",
+          type: "success"
+        });
+      }
     },
     queryNotConcernCommunityList(name, type) {
       let _that = this;
@@ -900,7 +920,7 @@ export default {
             if (type == "change") {
               this.selectPage = 1;
               this.list = [];
-              this.queryData.selectCommunity = [];
+              this.queryData.selectCommunity = "";
               this.isPageEnd = false;
             }
             if (this.selectPage < result.data.totalPage) {
@@ -1015,9 +1035,20 @@ export default {
       this.querylistByParams();
     },
     //跳转房源详情页面
-    toHouseDetail(id) {
+    toHouseDetail(row) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      //进入历史房源详情
+      if (row.houseType == 3 || row.houseType == 4 || row.houseType == 5) {
+        that.$router.push({
+          name: "historyDetails",
+          params: { houseId: row.id }
+        });
+      } else {
+        that.$router.push({
+          name: "houseDetails",
+          params: { houseId: row.id }
+        });
+      }
     },
 
     handleClick() {},
