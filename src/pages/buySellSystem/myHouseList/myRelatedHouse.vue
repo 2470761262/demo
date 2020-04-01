@@ -312,7 +312,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         {
           prop: "face",
