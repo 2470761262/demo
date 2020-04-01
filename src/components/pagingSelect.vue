@@ -95,7 +95,7 @@
 </style>
 <template>
   <el-popover popper-class="poperSet"
-              trigger="click"
+              trigger="hover"
               v-model="visible"
               :width="popoverWidth">
     <!-- <el-input size="mini"

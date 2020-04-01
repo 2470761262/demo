@@ -80,6 +80,12 @@
       padding: 0;
       background-image: linear-gradient(115deg, #0d8f51 60%, #10a65f);
       letter-spacing: 4px;
+      &[disabled="disabled"] {
+        background: #fff;
+        span {
+          color: #c0c4cc;
+        }
+      }
       .icon {
         font-size: 20px;
         vertical-align: middle;
@@ -134,6 +140,7 @@
           </div>
         </template>
         <el-button v-else
+                   :disabled="isDisabled"
                    @click="openAgentPop"><span>申请跟单人</span> </el-button>
       </div>
     </div>
@@ -153,9 +160,11 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.keyOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.keyOwnerDepartmentName}}</div>
           </div>
-          <el-button @click="openPop('keyPopFlag',4,'keyType',3)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button :disabled="isDisabled"
+                     @click="openPop('keyPopFlag',4,'keyType',3)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
         </template>
         <el-button v-else
+                   :disabled="isDisabled"
                    @click="openPop('keyPopFlag',0,'keyType',0)"><span>申请钥匙人</span> </el-button>
       </div>
       <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
@@ -173,9 +182,11 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
           </div>
-          <el-button @click="openPop('entrustPopFlag',4,'entrustType',2)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button :disabled="isDisabled"
+                     @click="openPop('entrustPopFlag',4,'entrustType',2)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
         </template>
         <el-button v-else
+                   :disabled="isDisabled"
                    @click="openPop('entrustPopFlag',1,'entrustType',0)"><span>申请委托人</span> </el-button>
       </div>
     </div>
@@ -195,11 +206,13 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.realOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.realOwnerDepartmentName}}</div>
           </div>
-          <el-button @click="openPop('houseUploadflag',4,'houseUploadType',5)">
+          <el-button :disabled="isDisabled"
+                     @click="openPop('houseUploadflag',4,'houseUploadType',5)">
             <i class="el-icon-sunny icon"></i> <span>取代</span>
           </el-button>
         </template>
         <el-button v-else
+                   :disabled="isDisabled"
                    @click="openPop('houseUploadflag',12,'houseUploadType',0)">申请实勘人</el-button>
       </div>
     </div>
@@ -225,6 +238,7 @@
       <template v-slot:floot>
         <div class="text-middle">
           <el-button size="mini"
+                     :disabled="isDisabled"
                      @click="submitUpload"
                      :loading="houseUploadLoading">{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
         </div>
@@ -243,6 +257,7 @@
       <template>
         <div class="text-middle">
           <el-button size="mini"
+                     :disabled="isDisabled"
                      @click="applyAgent"> 提交</el-button>
         </div>
       </template>
@@ -262,9 +277,12 @@ import houseCheck from "../common/houseCheck";
 import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
 import util from "@/util/util";
 export default {
-  inject: ["houseDetails", "houseId"],
+  inject: ["houseDetails", "houseId", "buttonDisabled"],
   computed: {
-    resultData () {
+    isDisabled() {
+      return this.buttonDisabled;
+    },
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
@@ -278,7 +296,7 @@ export default {
     entrustPop,
     supplement
   },
-  data () {
+  data() {
     return {
       houseUploadLoading: false,
       houseUploadflag: false,
@@ -300,7 +318,7 @@ export default {
     /**
      * 申请跟单人
      */
-    applyAgent () {
+    applyAgent() {
       let params = this.$refs.com.formData;
       let that = this;
       this.$refs.com.validateAllNotUpdata().then(e => {
@@ -334,14 +352,14 @@ export default {
                 that.$message(result.message);
               }
             })
-            .catch(e => { });
+            .catch(e => {});
         }
       });
     },
     /**
      * 申请跟单人打开弹窗
      */
-    openAgentPop () {
+    openAgentPop() {
       if (this.resultData.applyAgentVo != null) {
         this.$store.commit("updateStep2", this.resultData.applyAgentVo);
         this.audioList = this.resultData.applyAgentVo.saleUploadAudioList;
@@ -363,16 +381,29 @@ export default {
      * @param {String} popName 弹出层的Flag名字
      * @param {number} type 打开类型
      */
-    async  openPop (popName, type, typeName, replaceType) {
+    async openPop(popName, type, typeName, replaceType) {
       if (type != 4) {
-        let result = await houseCheck.isChecking(type, replaceType, this.houseId.id, "正在审核");
+        let result = await houseCheck.isChecking(
+          type,
+          replaceType,
+          this.houseId.id,
+          "正在审核"
+        );
         if (!result) {
           this[typeName] = type;
           this[popName] = true;
         }
       } else {
-        if (this.resultData.agentHouseMethod.onlyOwnerName != util.localStorageGet("logindata").userName) {
-          let result = await houseCheck.isChecking(type, replaceType, this.houseId.id, "正在审核");
+        if (
+          this.resultData.agentHouseMethod.onlyOwnerName !=
+          util.localStorageGet("logindata").userName
+        ) {
+          let result = await houseCheck.isChecking(
+            type,
+            replaceType,
+            this.houseId.id,
+            "正在审核"
+          );
           if (!result) {
             this[typeName] = type;
             this[popName] = true;
@@ -383,14 +414,11 @@ export default {
           });
         }
       }
-
-
-
     },
     /**
      * refs 获取上传组件实例并且验证非空
      */
-    submitUpload () {
+    submitUpload() {
       let _that = this;
       let verifyFieldMap = new Map([
         ["outdoorImgList", "外景图"],
@@ -407,7 +435,7 @@ export default {
             name: _key,
             alias: _value,
             rules: "required",
-            getter: function () {
+            getter: function() {
               if (_that.$refs.houseUpload[_key] instanceof Array) {
                 return _that.$refs.houseUpload[_key];
               } else {
@@ -427,7 +455,7 @@ export default {
         } else {
           let url = `/agentHouse/propertyCheck/${
             this.houseUploadType == 12 ? "insertApplyFor" : "insertReplace"
-            }`;
+          }`;
           let resultIdList = [];
           verifyFieldMap.forEach((_value, _key) => {
             if (_that.$refs.houseUpload[_key] instanceof Array) {
@@ -456,7 +484,7 @@ export default {
                 this.$message.success(e.data.message);
               }
             })
-            .catch(e => { })
+            .catch(e => {})
             .finally(() => {
               this.houseUploadLoading = false;
               this.houseUploadflag = false;

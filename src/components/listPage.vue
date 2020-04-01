@@ -194,12 +194,12 @@ export default {
     $attrs: {
       deep: true,
       immediate: true,
-      handler: function (val, oldVal) {
+      handler: function(val, oldVal) {
         Object.assign(this.$data, val.parentData);
       }
     }
   },
-  data () {
+  data() {
     return {
       sidebarFlag: true,
       loading: true,
@@ -211,22 +211,28 @@ export default {
       tableData: []
     };
   },
-  mounted () {
-    console.log(this.$attrs, "attrs");
-  },
+  mounted() {},
   methods: {
-    toHouseDetail (row) {
+    toHouseDetail(row) {
       var that = this;
-      console.log(row);
-      if (row.communityName)
-        that.$router.push({ name: "houseDetails", params: { houseId: row.id } });
+      if (!this.$attrs.dblclick) {
+        if (row.communityName)
+          that.$router.push({
+            name: `${
+              that.$attrs.pageName ? that.$attrs.pageName : "houseDetails"
+            }`,
+            params: { houseId: row.id }
+          });
+      } else {
+        this.$emit("cellDblClick", row);
+      }
     },
     //每页数据设置事件
-    handleSizeChange (e) {
+    handleSizeChange(e) {
       this.$emit("handleSizeChange", e);
     },
     //前往多少页事件
-    handleCurrentChange (e) {
+    handleCurrentChange(e) {
       console.log("1");
       this.$emit("handleCurrentChange", e);
     }

@@ -1,9 +1,5 @@
 export default {
     install (Vue) {
-        /**
-         *  指令
-         * 
-         */
         Vue.directive('number', {
             bind: (el, binding, vnode) => {
                 const input = el.getElementsByTagName('input')[0];
@@ -40,10 +36,34 @@ export default {
                 }
             }
         })
-        /**
-         *  过滤器
-         * 
-         */
+
+        Vue.directive("elDrag", {
+            bind (el) {
+                let drag = el.querySelector('.didLog-content-body');
+                let dragWarp = drag.querySelector('.didLog-content-box-title');
+                dragWarp.style.cursor = "all-scroll";
+                dragWarp.onmousedown = (e) => {
+                    if (e.target.tagName != 'I') {
+                        let disX = e.clientX - drag.offsetLeft;
+                        let disY = e.clientY - drag.offsetTop;
+                        drag.style.position = "absolute";
+                        document.onmousemove = (e) => {
+                            let left = e.clientX - disX;
+                            let top = e.clientY - disY;
+                            //移动当前元素
+                            drag.style.left = left + 'px';
+                            drag.style.top = top + 'px';
+                        };
+                        document.onmouseup = (e) => {
+                            document.onmousemove = null;
+                            document.onmouseup = null;
+                        };
+                    }
+                };
+            }
+        })
+
+
         Vue.filter('emptyRead', (value, afterCompany = '', beforeCompany = '') => {
             let result = ['', null, 0, '无'].every(item => item != value);
             if (!result) {

@@ -56,138 +56,138 @@ span {
 </style>
 <template>
   <div>
-    <el-popover placement="left" width="700" v-model="visible">
+    <el-popover placement="left"
+                width="700"
+                v-model="visible">
       <div class="definition-flex-warp">
         <div class="definition-flex-cell definition-back">
           <div class="pop-title">更多筛选</div>
-          <div class="el-icon-close" @click="visible = false"></div>
+          <div class="el-icon-close"
+               @click="visible = false"></div>
         </div>
         <div class="definition-checkBox">
           <div class="selectBox">
             <div class="line">
               <div class="selectType">
                 <span>楼盘名称</span>
-                <el-select
-                  v-model="more.comId"
-                  style="width:60%"
-                  @focus="remoteInput"
-                  @change="queryCBId()"
-                  filterable
-                  remote
-                  clearable
-                  placeholder="请输入楼盘名称搜索"
-                  :remote-method="remoteMethod"
-                >
-                  <el-option
-                    v-for="item in moreOptions"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.value"
-                  ></el-option>
+                <el-select v-model="more.comId"
+                           style="width:60%"
+                           @focus="remoteInput"
+                           @change="queryCBId()"
+                           filterable
+                           remote
+                           clearable
+                           placeholder="请输入楼盘名称搜索"
+                           :remote-method="remoteMethod">
+                  <el-option v-for="item in moreOptions"
+                             :key="item.value"
+                             :label="item.name"
+                             :value="item.value"></el-option>
                 </el-select>
               </div>
               <div class="selectType">
                 <span>栋座</span>
-                <el-select
-                  v-model="more.cbId"
-                  style="width:30%"
-                  filterable
-                  clearable
-                  placeholder="请选择楼栋"
-                  @change="queryRoomNo()"
-                >
-                  <el-option
-                    v-for="item in moreCbIdList"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.value"
-                  ></el-option>
+                <el-select v-model="more.cbId"
+                           style="width:30%"
+                           filterable
+                           clearable
+                           placeholder="请选择楼栋"
+                           @change="queryRoomNo()">
+                  <el-option v-for="item in moreCbIdList"
+                             :key="item.value"
+                             :label="item.name"
+                             :value="item.value"></el-option>
                 </el-select>
                 <span>房号</span>
-                <el-select
-                  v-model="more.bhId"
-                  style="width:30%"
-                  filterable
-                  placeholder="请选择房间号"
-                >clearable
-                  <el-option
-                    v-for="item in moreRoomNoList"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.value"
-                  ></el-option>
+                <el-select v-model="more.bhId"
+                           style="width:30%"
+                           filterable
+                           placeholder="请选择房间号">clearable
+                  <el-option v-for="item in moreRoomNoList"
+                             :key="item.value"
+                             :label="item.name"
+                             :value="item.value"></el-option>
                 </el-select>
               </div>
             </div>
             <div class="line">
               <div class="selectType">
                 <span>建筑面积</span>
-                <el-input style="width:30%" clearable v-model="more.minInArea"></el-input>
+                <el-input style="width:30%"
+                          clearable
+                          v-model="more.minInArea"></el-input>
                 <span>-</span>
-                <el-input style="width:30%" clearable v-model="more.maxInArea"></el-input>
+                <el-input style="width:30%"
+                          clearable
+                          v-model="more.maxInArea"></el-input>
                 <span>㎡</span>
               </div>
               <div class="selectType">
                 <span>总价</span>
-                <el-input style="width:30%" v-model="more.minPrice" clearable placeholder="最低"></el-input>万
-                <el-input v-model="more.maxPrice" style="width:30%" clearable placeholder="最高"></el-input>
+                <el-input style="width:30%"
+                          v-model="more.minPrice"
+                          clearable
+                          placeholder="最低"></el-input>万
+                <el-input v-model="more.maxPrice"
+                          style="width:30%"
+                          clearable
+                          placeholder="最高"></el-input>
                 <span>万</span>
               </div>
             </div>
             <div class="line">
               <div class="selectType">
                 <span>录入时间</span>
-                <el-date-picker
-                  v-model="more.addTime"
-                  type="daterange"
-                  range-separator="至"
-                  style="width:70%"
-                  :default-time="['00:00:00', '23:59:59']"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                ></el-date-picker>
+                <el-date-picker v-model="more.addTime"
+                                type="daterange"
+                                range-separator="至"
+                                style="width:70%"
+                                :default-time="['00:00:00', '23:59:59']"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"></el-date-picker>
               </div>
               <div class="selectType">
                 <span>跟进时间</span>
-                <el-date-picker
-                  v-model="more.followTime"
-                  type="daterange"
-                  style="width:70%"
-                  :default-time="['00:00:00', '23:59:59']"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                ></el-date-picker>
+                <el-date-picker v-model="more.followTime"
+                                type="daterange"
+                                style="width:70%"
+                                :default-time="['00:00:00', '23:59:59']"
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"></el-date-picker>
               </div>
             </div>
             <div class="line">
               <div class="selectType">
                 <span>产权年限</span>
-                <el-select v-model="more.propertyYear" clearable style="width:70%">
-                  <el-option
-                    v-for="(item) in PropertyList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
+                <el-select v-model="more.propertyYear"
+                           clearable
+                           style="width:70%">
+                  <el-option v-for="(item) in PropertyList"
+                             :key="item.value"
+                             :label="item.label"
+                             :value="item.value"></el-option>
                 </el-select>
               </div>
               <div class="selectType">
                 <span>楼层</span>
-                <el-input style="width:30%" clearable v-model="more.minFloor"></el-input>-
-                <el-input v-model="more.maxFloor" style="width:30%"></el-input>
+                <el-input style="width:30%"
+                          clearable
+                          v-model="more.minFloor"></el-input>-
+                <el-input v-model="more.maxFloor"
+                          style="width:30%"></el-input>
               </div>
             </div>
             <div class="line">
               <div class="selectType">
                 <span>物理区域</span>
-                <el-select v-model="more.area" clearable style="width:70%">
-                  <el-option
-                    v-for="(item) in RegionList"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.value"
-                  ></el-option>
+                <el-select v-model="more.area"
+                           clearable
+                           style="width:70%">
+                  <el-option v-for="(item) in RegionList"
+                             :key="item.value"
+                             :label="item.name"
+                             :value="item.value"></el-option>
                 </el-select>
               </div>
               <div class="selectType">
@@ -200,82 +200,86 @@ span {
                              :label="item.label"></el-option>  
                 </el-select>-->
                 <span>委托</span>
-                <el-select v-model="more.entrustType" clearable style="width:30%">
-                  <el-option
-                    v-for="(item) in EntrustList"
-                    :key="item.value"
-                    :value="item.value"
-                    :label="item.label"
-                  ></el-option>
+                <el-select v-model="more.entrustType"
+                           clearable
+                           style="width:30%">
+                  <el-option v-for="(item) in EntrustList"
+                             :key="item.value"
+                             :value="item.value"
+                             :label="item.label"></el-option>
                 </el-select>
               </div>
             </div>
             <div class="line">
               <div class="selectType">
                 <span>作业类型</span>
-                <el-select v-model="more.taskType" clearable style="width:70%">
-                  <el-option
-                    v-for="(item) in taskList"
-                    :key="item.value"
-                    :value="item.value"
-                    :label="item.label"
-                  ></el-option>
+                <el-select v-model="more.taskType"
+                           clearable
+                           style="width:70%">
+                  <el-option v-for="(item) in taskList"
+                             :key="item.value"
+                             :value="item.value"
+                             :label="item.label"></el-option>
                 </el-select>
               </div>
               <div class="selectType">
                 <span>房屋用途</span>
-                <el-select v-model="more.buildType" clearable style="width:70%">
-                  <el-option
-                    v-for="(item) in buildTypeList"
-                    :key="item.value"
-                    :value="item.value"
-                    :label="item.label"
-                  ></el-option>
+                <el-select v-model="more.buildType"
+                           clearable
+                           style="width:70%">
+                  <el-option v-for="(item) in buildTypeList"
+                             :key="item.value"
+                             :value="item.value"
+                             :label="item.label"></el-option>
                 </el-select>
               </div>
             </div>
-            <div class="line" style="display:flex;align-items:center">
+            <div class="line"
+                 style="display:flex;align-items:center">
               <span>区域</span>
-              <el-select
-                v-model="more.deptParentId"
-                :remote-method="remoteArea"
-                clearable
-                @focus="remoteSelect"
-                @change="queryShop"
-                style="width:35%"
-              >
-                <el-option
-                  v-for="(item) in deptParentList"
-                  :key="item.depId"
-                  :value="item.depId"
-                  :label="item.depName"
-                ></el-option>
+              <el-select v-model="more.deptParentId"
+                         :remote-method="remoteArea"
+                         clearable
+                         @focus="remoteSelect"
+                         @change="queryShop"
+                         style="width:35%">
+                <el-option v-for="(item) in deptParentList"
+                           :key="item.depId"
+                           :value="item.depId"
+                           :label="item.depName"></el-option>
               </el-select>
-              <el-select v-model="more.store" @change="queryPer" clearable style="width:30%">
-                <el-option
-                  v-for="(item) in storeList"
-                  :key="item.depId"
-                  :value="item.depId"
-                  :label="item.depName"
-                ></el-option>
+              <el-select v-model="more.store"
+                         @change="queryPer"
+                         clearable
+                         style="width:30%">
+                <el-option v-for="(item) in storeList"
+                           :key="item.depId"
+                           :value="item.depId"
+                           :label="item.depName"></el-option>
               </el-select>
-              <el-select v-model="more.personnel" clearable style="width:20%">
-                <el-option
-                  v-for="(item) in perList"
-                  :key="item.accountId"
-                  :value="item.accountId"
-                  :label="item.perName"
-                ></el-option>
+              <el-select v-model="more.personnel"
+                         clearable
+                         style="width:20%">
+                <el-option v-for="(item) in perList"
+                           :key="item.accountId"
+                           :value="item.accountId"
+                           :label="item.perName"></el-option>
               </el-select>
             </div>
           </div>
         </div>
         <div class="center-but">
-          <el-button type="primary" size="mini" @click="setTabRender">搜索</el-button>
-          <el-button type="primary" size="mini" @click="remove">清空</el-button>
+          <el-button type="primary"
+                     size="mini"
+                     @click="setTabRender">搜索</el-button>
+          <el-button type="primary"
+                     size="mini"
+                     @click="remove">清空</el-button>
         </div>
       </div>
-      <el-button slot="reference" size="mini" type="primary">更多筛选</el-button>
+      <el-button slot="reference"
+                 size="mini"
+                 type="primary">更多筛选</el-button>
     </el-popover>
   </div>
 </template>
@@ -283,7 +287,7 @@ span {
 import sidebarList from "./sidebarList";
 export default {
   inheritAttrs: false,
-  data() {
+  data () {
     return {
       PropertyList: [
         {
@@ -414,25 +418,26 @@ export default {
       moreCbIdList: []
     };
   },
-  mounted() {
+  mounted () {
     this.queryConstant();
   },
   methods: {
-    remoteSelect() {
+    remoteSelect () {
       if (this.more.deptParentId.length == 0) {
         this.remoteArea();
       }
     },
-    remoteInput() {
+    remoteInput () {
       if (this.more.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remove() {
+    remove () {
       Object.assign(this.$data, this.$options.data.call(this));
-      this.$emit("moreSelectChange", "");
+      this.queryConstant();
+      this.$emit("moreSelectChange", '');
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.$api
@@ -456,10 +461,8 @@ export default {
       } else {
         this.moreOptions = [];
       }
-      this.queryConstant();
-      this.$emit("moreSelectChange", '');
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -470,7 +473,7 @@ export default {
           data: {
             comId: that.more.comId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -481,7 +484,7 @@ export default {
           }
         });
     },
-    setTabRender() {
+    setTabRender () {
       console.log(111);
       let data = "";
       for (let key in this.more) {
@@ -494,7 +497,7 @@ export default {
       this.$emit("moreSelectChange", data);
       this.visible = false;
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -506,7 +509,7 @@ export default {
             comId: that.more.comId,
             cbId: that.more.cbId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -516,7 +519,7 @@ export default {
           }
         });
     },
-    queryConstant() {
+    queryConstant () {
       return this.$api
         .get({
           url: "/mateHouse/queryConstant",
@@ -533,14 +536,14 @@ export default {
           }
         });
     },
-    remoteArea(query) {
+    remoteArea (query) {
       var that = this;
       if (query !== "") {
         this.$api
           .post({
             url: `${
               that.$attrs.deptUrl ? that.$attrs.deptUrl : "moreSelect/dep/area"
-            }`,
+              }`,
             qs: true,
             data: {
               selectType: "MORE_SELECT_AREA"
@@ -556,13 +559,13 @@ export default {
         this.deptParentList = [];
       }
     },
-    queryShop() {
+    queryShop () {
       var that = this;
       this.$api
         .post({
           url: `${
             that.$attrs.deptUrl ? that.$attrs.deptUrl : "moreSelect/dep/area"
-          }`,
+            }`,
           qs: true,
           data: {
             selectType: "MORE_SELECT_SHOP",
@@ -575,13 +578,13 @@ export default {
           }
         });
     },
-    queryPer() {
+    queryPer () {
       var that = this;
       this.$api
         .post({
           url: `${
             that.$attrs.deptUrl ? that.$attrs.deptUrl : "moreSelect/dep/area"
-          }`,
+            }`,
           token: false,
           qs: true,
           data: {
