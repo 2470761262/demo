@@ -3,6 +3,7 @@
              :parentData="$data"
              @queryTabData="queryTabData"
              @handleClick="handleClick"
+             pageName="historyDetails"
              @handleSizeChange="handleSizeChange"
              @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
@@ -144,7 +145,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 //import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
-import '@/assets/publicLess/pageListQuery.less';
+import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -152,7 +153,7 @@ export default {
     // definitionmenu,
     moreSelect
   },
-  data () {
+  data() {
     return {
       loading: true,
       option: [
@@ -184,42 +185,85 @@ export default {
         pageSize: 10 //每页条数
       },
       tableColumnField: [
-        { prop: 'communityName', label: '小区名称', order: false, width: '', disabled: true, default: true },
-        { prop: 'comBuildingName', label: '楼栋号', width: '', order: false, disabled: true, default: true },
-        { prop: 'roomNo', label: '房间号', width: '', order: false, disabled: true, default: true },
-        { prop: 'inArea', label: '面积(m²)', width: '', order: 'custom', disabled: false, default: true, format: item => (item.inArea || 0) + '㎡' },
-        { prop: 'customers', label: '业主', width: '', order: false, disabled: false, default: true },
-        { prop: 'tel', label: '业主电话', width: '', order: false, disabled: false, default: true }
+        {
+          prop: "communityName",
+          label: "小区名称",
+          order: false,
+          width: "",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "comBuildingName",
+          label: "楼栋号",
+          width: "",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "roomNo",
+          label: "房间号",
+          width: "",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "inArea",
+          label: "面积(m²)",
+          width: "",
+          order: "custom",
+          disabled: false,
+          default: true,
+          format: item => (item.inArea || 0) + "㎡"
+        },
+        {
+          prop: "customers",
+          label: "业主",
+          width: "",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "tel",
+          label: "业主电话",
+          width: "",
+          order: false,
+          disabled: false,
+          default: true
+        }
       ],
       // tableColumn: [],
       tableData: []
     };
   },
-  mounted () {
+  mounted() {
     this.data.type = "build";
     this.queryPotentialHouse(1, "id", "descending");
   },
   methods: {
-    sortMethod (e) {
+    sortMethod(e) {
       console.log(e, "eeee排序");
       this.queryPotentialHouse(1, e.prop, e.order);
     },
-    queryTabData () {
+    queryTabData() {
       console.log(this, "111");
     },
-    sortMethod (e) {
+    sortMethod(e) {
       console.log(e.prop, e.order);
       this.queryPotentialHouse(1, e.prop, e.order);
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       this.moreSelect = e;
       this.queryPotentialHouse(1, "id", "ascending");
     },
-    toLook (id) {
+    toLook(id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      that.$router.push({ name: "historyDetails", params: { houseId: id } });
     },
-    toSale (
+    toSale(
       comId,
       cbId,
       bhId,
@@ -245,15 +289,15 @@ export default {
         }
       });
     },
-    queryPotentialHouseParams () {
+    queryPotentialHouseParams() {
       this.queryPotentialHouse(1, "id", "descending");
     },
-    remoteInput () {
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -279,7 +323,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -302,7 +346,7 @@ export default {
         });
       this.queryPotentialHouseParams();
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -325,15 +369,14 @@ export default {
         });
       this.queryPotentialHouseParams();
     },
-    Remove () {
+    Remove() {
       //  let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       //   this.tabColumnChange(tab);
-      this.queryPotentialHouse(1, 'id', 'descending');
-
+      this.queryPotentialHouse(1, "id", "descending");
     },
 
-    queryPotentialHouse (currentPage, column, type) {
+    queryPotentialHouse(currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -383,17 +426,17 @@ export default {
         });
     },
 
-    handleClick () { },
-    queryTabData () {
+    handleClick() {},
+    queryTabData() {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryPotentialHouseParams(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.queryPotentialHouse(val, "id", "descending");
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryPotentialHouse(1, "id", "descending");

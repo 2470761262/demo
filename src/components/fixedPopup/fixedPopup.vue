@@ -36,6 +36,7 @@
           font-size: 20px;
           font-weight: 500;
           text-align: center;
+          min-height: 20px;
         }
         .el-icon-close {
           font-size: 20px;
@@ -72,7 +73,8 @@
 <template>
   <transition name="dadlog">
     <div class="didLog-content"
-         v-if="visible">
+         v-if="visible"
+         v-elDrag>
       <div class="didLog-content-mask"
            @click.stop="maskHide"></div>
       <div class="didLog-content-body"
@@ -82,7 +84,7 @@
           <div class="didLog-content-box-title">
             <h3 :style="{'text-align':titleDirection}">{{title}}</h3>
             <i class="el-icon-close"
-               @click="close"></i>
+               @click.stop="close"></i>
           </div>
           <div class="didLog-content-sroll">
             <slot>
@@ -104,38 +106,35 @@ export default {
     },
     title: {
       type: String,
-      default: '提示'
+      default: "提示"
     },
     titleDirection: {
       type: String,
-      default: 'left'
+      default: "left"
     },
     width: {
       type: String,
-      default: '680px'
+      default: "680px"
     },
     typeClass: {
       type: String,
-      default: 'info'
+      default: "info"
     },
     maskHideEvent: {
       type: Boolean,
       default: false
     }
   },
-  data () {
-    return {
-
-    }
+  data() {
+    return {};
   },
   methods: {
-    maskHide () {
-      if (this.maskHideEvent)
-        this.close();
+    maskHide() {
+      if (this.maskHideEvent) this.close();
     },
-    close () {
-      this.$emit('update:visible', false);
+    close(e) {
+      this.$emit("update:visible", false);
     }
-  },
-}
+  }
+};
 </script>

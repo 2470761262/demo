@@ -76,7 +76,7 @@ export default {
       houseId: this.forID,
       houseDetails: this.houseDetails,
       load: this.load,
-      buttonDisabled: false
+      buttonDisabled: true
     };
   },
   mixins: [getMenuRid],
@@ -105,9 +105,9 @@ export default {
   created() {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
-      util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
+      util.localStorageSet("historyDetails.vue:houseId", this.forID.id);
     } else {
-      this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
+      this.forID.id = util.localStorageGet("historyDetails.vue:houseId");
     }
     this.getHouseDetails();
   },

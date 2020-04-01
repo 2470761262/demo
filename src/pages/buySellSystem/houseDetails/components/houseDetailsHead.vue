@@ -89,6 +89,12 @@
       font-size: 50px;
       color: #d2d2d2;
       margin-right: 25px;
+      &.colorOrange {
+        color: #f4ea29;
+      }
+      &.colorRed {
+        color: #da1d07;
+      }
     }
     > span {
       color: #b8b8b8;
@@ -125,13 +131,6 @@
   margin-right: 10px;
   flex-shrink: 0;
 }
-
-.colorOrange {
-  color: #f4ea29 !important;
-}
-.colorRed {
-  color: #da1d07 !important;
-}
 </style>
 <template>
   <section>
@@ -146,24 +145,28 @@
                :key="index">
             <span>{{item.impression}}</span>
             <i class="el-icon-close icon"
+               :class="{'isDisabled':buttonDisabled}"
                @click="deleteImpression(item.id,index)"></i>
           </div>
         </div>
       </section>
       <!-- 房源印象 -->
       <section class="heard-item"
+               :class="{'isDisabled':buttonDisabled}"
                @click="nodePop">
         <i class="iconyinxiang iconfont icon"></i>
         <span>房源印象</span>
       </section>
       <!-- 写跟进 -->
       <section class="heard-item"
+               :class="{'isDisabled':buttonDisabled}"
                @click="openPopUp('followUpFlag')">
         <i class="el-icon-edit icon"></i>
         <span>写跟进</span>
       </section>
       <!-- 已关注 -->
       <section class="heard-item"
+               :class="{'isDisabled':buttonDisabled}"
                @click="changCollectHouse">
         <i class="iconfont icon colorOrange"
            :class="isCollect ? 'iconguanzhu' : 'iconguanzhu1'"></i>
@@ -171,6 +174,7 @@
       </section>
       <!-- 举报 -->
       <section class="heard-item"
+               :class="{'isDisabled':buttonDisabled}"
                @click="openReport">
         <i class=" iconfont colorRed icon iconjubao"></i>
         <span>举报</span>
@@ -179,6 +183,7 @@
       <article class="heard-item">
         <div class="qr-content">
           <div id="qrcode"
+               v-if="!buttonDisabled"
                :class="{'qrcode':qrData}"
                v-text="qrData ? '':'二维码失败'"></div>
           <div class="qr-code-msg">
@@ -216,13 +221,13 @@ import QRCode from "qrcodejs2";
 //房源审核
 import houseCheck from "../common/houseCheck";
 export default {
-  inject: ["houseDetails", "houseId"],
+  inject: ["houseDetails", "houseId", "buttonDisabled"],
   watch: {
     houseDetails: {
       deep: true,
-      handler: function (newValue) {
+      handler: function(newValue) {
         let _that = this;
-        if (Object.keys(newValue).length > 0) {
+        if (Object.keys(newValue).length > 0 && !this.isDisabled) {
           this.qrData = new QRCode("qrcode", {
             width: 65,
             height: 65,
@@ -239,12 +244,15 @@ export default {
     report,
     attention
   },
-  created () {
+  created() {
     this.getImpressionList();
     this.getisCollect();
   },
   computed: {
-    resultData () {
+    isDisabled() {
+      return this.buttonDisabled;
+    },
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
@@ -252,7 +260,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       qrData: null,
       followUpFlag: false, //跟进开关
@@ -264,7 +272,10 @@ export default {
   },
   methods: {
     //关注或者取消关注
-    changCollectHouse () {
+    changCollectHouse() {
+      if (this.isDisabled) {
+        return;
+      }
       let that = this;
       let ajaxurl = "";
       let params = {
@@ -299,7 +310,7 @@ export default {
         });
     },
     //获取是否关注标记
-    getisCollect () {
+    getisCollect() {
       let that = this;
       this.$api
         .get({
@@ -315,10 +326,13 @@ export default {
             that.isCollect = result.data;
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     //删除印象
-    deleteImpression (impressionId, index) {
+    deleteImpression(impressionId, index) {
+      if (this.isDisabled) {
+        return;
+      }
       let that = this;
       let params = {
         impressionId: impressionId
@@ -337,7 +351,10 @@ export default {
         });
     },
     //添加印象
-    insertImpression (impression) {
+    insertImpression(impression) {
+      if (this.isDisabled) {
+        return;
+      }
       let that = this;
       let params = {
         houseId: this.houseId.id,
@@ -362,7 +379,7 @@ export default {
         });
     },
     //获取印象数组
-    getImpressionList () {
+    getImpressionList() {
       let that = this;
       let params = {
         houseId: this.houseId.id
@@ -381,7 +398,10 @@ export default {
         });
     },
     //打开举报弹窗
-    async openReport () {
+    async openReport() {
+      if (this.isDisabled) {
+        return;
+      }
       let isChecking = await houseCheck.isChecking(
         11,
         0,
@@ -392,10 +412,16 @@ export default {
         this.reportFlag = true;
       }
     },
-    openPopUp (PopName) {
+    openPopUp(PopName) {
+      if (this.isDisabled) {
+        return;
+      }
       this[PopName] = true;
     },
-    nodePop () {
+    nodePop() {
+      if (this.isDisabled) {
+        return;
+      }
       let that = this;
       this.$prompt(null, "房源印象显示在房源左上角,仅自己可见", {
         confirmButtonText: "添加",
@@ -408,7 +434,7 @@ export default {
             return "不能连续输入重复的字符";
           }
         },
-        beforeClose (action, instance, done) {
+        beforeClose(action, instance, done) {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = "执行中...";
@@ -425,7 +451,7 @@ export default {
         .then(value => {
           console.log(action, instance, done);
         })
-        .catch(() => { });
+        .catch(() => {});
     }
   }
 };

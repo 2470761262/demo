@@ -74,11 +74,21 @@
     font-size: 17px;
     border-radius: 4px;
     cursor: pointer;
-    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
     position: relative;
     border: none;
     outline: none;
     overflow: hidden;
+    &[disabled="disabled"] {
+      background: #fff;
+      color: #c0c4cc;
+      cursor: not-allowed;
+      border: 1px solid #ebeef5;
+      box-sizing: border-box;
+      border-radius: 4px;
+      &::after {
+        display: none;
+      }
+    }
     &::after {
       content: "";
       display: block;
@@ -182,7 +192,8 @@
         <div class="list-content"
              infinite-scroll-immediate="false"
              v-infinite-scroll="load">
-          <div class="fixed">
+          <div class="fixed"
+               v-if="!isDisabled">
             <followUp :isCancel="false"
                       :visible.sync="followUpFlag"
                       v-if="followUpFlag"
@@ -201,7 +212,8 @@
                     <div class="content-item-time">{{item.FollowTime}}</div>
                     <button class="content-item-but"
                             v-if="deleteFollow"
-                            @click="deleteFollowById(item.id)">删除</button>
+                            @click="deleteFollowById(item.id)"
+                            :disabled="isDisabled">删除</button>
                   </div>
                   <div class="content-item-body">
                     <div class="item-body-text">{{item.followPerName | emptyRead}}({{item.followPerDepartmentName | emptyRead}}),{{item.Memo}}</div>
@@ -211,7 +223,8 @@
                      v-if="item.isTellFollow">
                   <div class="content-item-head ">
                     <div class="content-item-time">{{item.FollowTime}}</div>
-                    <button class="content-item-but">删除</button>
+                    <button class="content-item-but"
+                            :disabled="isDisabled">删除</button>
                   </div>
                   <div class="content-item-body">
                     <playAudio :url="item.Memo"></playAudio>
@@ -294,10 +307,15 @@ import followUp from "../didLog/followUp";
 import playAudio from "@/components/audio";
 import but from "@/evenBus/but.js";
 export default {
-  inject: ["houseId"],
+  inject: ["houseId", "buttonDisabled"],
   components: {
     playAudio,
     followUp
+  },
+  computed: {
+    isDisabled() {
+      return this.buttonDisabled;
+    }
   },
   data() {
     return {

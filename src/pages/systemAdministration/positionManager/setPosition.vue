@@ -235,8 +235,8 @@ export default {
         companyIds: [],
         deptIds: []
       },
-      currentCompanyGather: "",
-      currentDeptGather: "",
+      currentCompanyGather: null,
+      currentDeptGather: null,
       currentNode: null
     };
   },
@@ -319,8 +319,6 @@ export default {
       this.showSave = true;
       this.showOperationCompany = true;
       console.log(node, data, "operationCompany..");
-      // this.paramsObj.rId = data.id;
-      // this.paramsObj.dataType = 2;
       node.data.dataType = "2";
       this.$refs.companyTree.setCheckedKeys([]);
       if (data.companyGather) {
@@ -329,14 +327,19 @@ export default {
         this.companyGather = arrayGather;
       }
       if (data.deptGather) {
-        let gather = data.deptGather;
-        let arrayGather = gather.split(",");
-        this.companyGather = arrayGather;
+        let deptGather = data.deptGather;
+        let deptArrayGather = deptGather.split(",");
+        if (this.companyGather) {
+          deptArrayGather.forEach(deptId => {
+            this.companyGather.push(deptId);
+          });
+          //this.companyGather = this.companyGather + deptArrayGather;
+        } else {
+          this.companyGather = deptArrayGather;
+        }
       }
-      console.log(
-        this.companyGather,
-        "--------------------------------------->"
-      );
+      this.currentCompanyGather = null;
+      this.currentDeptGather = null;
       this.putParams(node, "2");
       this.currentNode = node;
     },
@@ -508,10 +511,13 @@ export default {
       }
       functionPointObj.rId = data.id;
       functionPointObj.dataType = dataType;
-      let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
-      functionPointObj.companyId = companyId;
-      let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
-      functionPointObj.deptId = deptId;
+      if ((that.companyTreeSelectNode.companyIds && that.companyTreeSelectNode.companyIds.length > 0) ||
+        that.companyTreeSelectNode.deptIds && that.companyTreeSelectNode.deptIds.length > 0) {
+        let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
+        functionPointObj.companyId = companyId;
+        let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
+        functionPointObj.deptId = deptId;
+      }
       that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
       if (data.children) {
         if (data.children.length > 0) {
@@ -521,10 +527,13 @@ export default {
       //设置当前对象的值
       let currentNode = that.$refs.tree.getNode(data.id);
       currentNode.data.dataType = dataType;
-      currentNode.data.companyGather = this.currentCompanyGather;
-      currentNode.data.deptGather = this.currentDeptGather;
+      if (this.currentCompanyGather != null) {
+        currentNode.data.companyGather = this.currentCompanyGather;
+      }
+      if (this.currentDeptGather != null) {
+        currentNode.data.deptGather = this.currentDeptGather;
+      }
     },
-
     foreachList (list) {
       let temp = "";
       list.forEach(id => {
