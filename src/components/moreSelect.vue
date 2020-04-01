@@ -430,7 +430,6 @@ export default {
     },
     remove() {
       Object.assign(this.$data, this.$options.data.call(this));
-<<<<<<< HEAD
       this.$emit("moreSelectChange", "");
     },
     remoteMethod(query) {
@@ -457,10 +456,8 @@ export default {
       } else {
         this.moreOptions = [];
       }
-=======
       this.queryConstant();
       this.$emit("moreSelectChange", '');
->>>>>>> 772845bbb554c42face873d619e63bcebe025a04
     },
     queryCBId() {
       var that = this;
