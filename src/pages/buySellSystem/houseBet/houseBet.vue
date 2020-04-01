@@ -239,7 +239,7 @@ export default {
     };
   },
   mounted () {
-    this.queryHouseBet(0, "id", "descending");
+    this.queryHouseBet(0, "createTime", "descending");
     //读取树数据
     this.$api
       .post({
@@ -276,7 +276,7 @@ export default {
   methods: {
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryHouseBet(1, "id", "descending");
+      this.queryHouseBet(1, "createTime", "descending");
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
@@ -286,7 +286,7 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryHouseBet(1, 'id', 'descending');
+      this.queryHouseBet(1, 'createTime', 'descending');
 
     },
     handleCheckChange (data, checked, node) {
@@ -370,7 +370,7 @@ export default {
       });
     },
     queryHouseBetParams () {
-      this.queryHouseBet(1, "id", "descending");
+      this.queryHouseBet(1, "createTime", "descending");
     },
     //楼盘获取焦点 第一次点击就进行查询
 
@@ -449,7 +449,7 @@ export default {
     },
     queryHouseBet (currentPage, column, type) {
       if (!column) {
-        column = "id";
+        column = "createTime";
       }
       if (!type) {
         type = "descending";
@@ -528,12 +528,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryHouseBet(val, "id", "descending");
+      this.queryHouseBet(val, "createTime", "descending");
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryHouseBet(1, "id", "descending");
+      this.queryHouseBet(1, "createTime", "descending");
     }
   }
 };
