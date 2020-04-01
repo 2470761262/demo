@@ -23,10 +23,6 @@ export default {
       state.navList = [];
       util.sessionLocalStorageRemove('navAuthority');
     },
-    foreachData(id,thisNavList){
-
-    }
-
   },
   actions:{
     judgeNavList({commit,state}, id){
