@@ -144,7 +144,7 @@
                        label="单价(元/㎡)"
                        :formatter="unitPrice"
                        :sort-orders="['ascending', 'descending']"
-                       sortable="custom">
+                       sortable="false">
       </el-table-column>
       <el-table-column prop=""
                        label="户型"
@@ -239,7 +239,7 @@ export default {
     };
   },
   mounted () {
-    this.queryHouseBet(0, "createTime", "descending");
+    this.queryHouseBet(1, "createTime", "descending");
     //读取树数据
     this.$api
       .post({
@@ -452,11 +452,11 @@ export default {
         column = "createTime";
       }
       if (!type) {
-        type = "descending";
+        type = "ascending";
       }
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage };
+      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       params.sortColumn = column;
       params.sortType = type;
       if (Object.keys(this.moreSelect).length != 0) {
@@ -481,8 +481,8 @@ export default {
         params.coId = that.data.coId;
         params.deptId = that.data.deptId;
         params.tel = that.data.tel;
-        params.minMoney = that.data.minMoney;
-        params.maxMoney = that.data.maxMoney;
+        params.minPrice = that.data.minMoney;
+        params.maxPrice = that.data.maxMoney;
         if (that.data.timeSelect.length > 0)
           params.beginTime = that.data.timeSelect[0];
         if (that.data.timeSelect.length > 1)
@@ -501,8 +501,9 @@ export default {
           that.loading = false;
           let data = e.data;
           if (data.code == 200) {
-            that.pageJson.total = data.data.totalCount;
-            that.pageJson.currentPage = data.data.currPage;
+            that.pageJson.total = data.data.dataCount;
+            that.pageJson.pageSum = data.data.pageSum;
+            console.log(that.pageJson.pageSum);
             that.tableData = data.data.data;
           } else {
             console.log("查询对赌房源列表结果：" + result.message);

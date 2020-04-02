@@ -256,7 +256,14 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          this.$alert("", "补充楼盘申请提交成功，请尽快进行审核", {
+            dangerouslyUseHTMLString: false
+          });
           this.$router.push({ path: '/buySellSystem/addHouse' });
+        } else {
+          this.$alert("", "补充楼盘提交失败，请重新提交", {
+            dangerouslyUseHTMLString: false
+          });
         }
       })
     }
