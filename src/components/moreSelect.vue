@@ -236,7 +236,8 @@ span {
               </div>
             </div>
             <div class="line"
-                 style="display:flex;align-items:center" v-if="$attrs.deptUrl!=undifined">
+                 style="display:flex;align-items:center"
+                 v-if="$attrs.deptUrl!=null">
               <span>区域</span>
               <el-select v-model="more.deptParentId"
                          :remote-method="remoteArea"
@@ -288,7 +289,7 @@ span {
 import sidebarList from "./sidebarList";
 export default {
   inheritAttrs: false,
-  data () {
+  data() {
     return {
       PropertyList: [
         {
@@ -307,11 +308,11 @@ export default {
         },
         {
           label: "普通委托",
-          value: "1"
+          value: "2"
         },
         {
           label: "独家委托",
-          value: "2"
+          value: "1"
         },
         {
           label: "全部委托",
@@ -419,26 +420,26 @@ export default {
       moreCbIdList: []
     };
   },
-  mounted () {
+  mounted() {
     this.queryConstant();
   },
   methods: {
-    remoteSelect () {
+    remoteSelect() {
       if (this.more.deptParentId.length == 0) {
         this.remoteArea();
       }
     },
-    remoteInput () {
+    remoteInput() {
       if (this.more.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remove () {
+    remove() {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryConstant();
-      this.$emit("moreSelectChange", '');
+      this.$emit("moreSelectChange", "");
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.$api
@@ -463,7 +464,7 @@ export default {
         this.moreOptions = [];
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -485,7 +486,7 @@ export default {
           }
         });
     },
-    setTabRender () {
+    setTabRender() {
       console.log(111);
       let data = "";
       for (let key in this.more) {
@@ -498,7 +499,7 @@ export default {
       this.$emit("moreSelectChange", data);
       this.visible = false;
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -520,7 +521,7 @@ export default {
           }
         });
     },
-    queryConstant () {
+    queryConstant() {
       return this.$api
         .get({
           url: "/mateHouse/queryConstant",
@@ -537,14 +538,12 @@ export default {
           }
         });
     },
-    remoteArea (query) {
+    remoteArea(query) {
       var that = this;
       if (query !== "") {
         this.$api
           .post({
-            url: `${
-              that.$attrs.deptUrl
-              }`,
+            url: `${that.$attrs.deptUrl}`,
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             data: {
               selectType: "MORE_SELECT_AREA"
@@ -560,14 +559,12 @@ export default {
         this.deptParentList = [];
       }
     },
-    queryShop () {
+    queryShop() {
       var that = this;
       this.$api
         .post({
-          url: `${
-            that.$attrs.deptUrl
-            }`,
-          headers: { "Content-Type": "application/json;charset=UTF-8" }, 
+          url: `${that.$attrs.deptUrl}`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             selectType: "MORE_SELECT_SHOP",
             areaOrStoreId: this.more.deptParentId
@@ -579,13 +576,11 @@ export default {
           }
         });
     },
-    queryPer () {
+    queryPer() {
       var that = this;
       this.$api
         .post({
-          url: `${
-            that.$attrs.deptUrl
-            }`,
+          url: `${that.$attrs.deptUrl}`,
           token: false,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {

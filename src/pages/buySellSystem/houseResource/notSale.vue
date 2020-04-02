@@ -101,7 +101,8 @@
                           @change="queryNotSaleParams"
                           range-separator="至"
                           start-placeholder="开始日期"
-                          end-placeholder="结束日期"></el-date-picker>
+                          end-placeholder="结束日期"
+                          :default-time="['00:00:00', '23:59:59']"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="Remove">清除</span>
         </div>
@@ -153,6 +154,7 @@ import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
 import "@/assets/publicLess/pageListQuery.less";
+import common from "../houseResource/common/common"
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -160,7 +162,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
 
@@ -327,36 +329,59 @@ export default {
         }
       ],
       tableColumn: [],
-      tableData: []
+      tableData: [],
+      transitionList: [
+        {
+          key: "bhId",
+          value: [{ paramsKey: "roomNo", index: -1 }],
+        },
+        {
+          key: "area",
+          value: [{ paramsKey: "business", index: -1 }],
+        },
+        {
+          key: "buildType",
+          value: [{ paramsKey: "purpose", index: -1 }],
+        },
+        {
+          key: "addTime",
+          value: [{ paramsKey: "beginTime", index: 0 }, { paramsKey: "endTime", index: 1 }],
+        },
+        {
+
+          key: "followTime",
+          value: [{ paramsKey: "beginFollowTime", index: 0 }, { paramsKey: "endFollowTime", index: 1 }],
+        }
+      ]
     };
   },
-  mounted() {
+  mounted () {
     this.queryNotSale(1, "id", "ascending");
   },
   methods: {
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.queryNotSale(1, e.prop, e.order);
     },
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
       this.queryNotSale(1, "id", "ascending");
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    formatHouseType(row, column) {
+    formatHouseType (row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook(id) {
+    toLook (id) {
       var that = this;
       that.$router.push({ name: "historyDetails", params: { houseId: id } });
     },
-    toSale(
+    toSale (
       comId,
       cbId,
       bhId,
@@ -383,15 +408,15 @@ export default {
         }
       });
     },
-    queryNotSaleParams() {
+    queryNotSaleParams () {
       this.queryNotSale(1, "id", "ascending");
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -417,8 +442,12 @@ export default {
         that.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
+      if (that.data.comId == "") {
+        that.data.roomNo = "";
+        that.data.cbId = "";
+      }
       this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
@@ -428,7 +457,7 @@ export default {
           data: {
             comId: that.data.comId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -440,7 +469,7 @@ export default {
         });
       this.queryNotSaleParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -452,7 +481,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -463,28 +492,19 @@ export default {
         });
       this.queryNotSaleParams();
     },
-    Remove() {
+    Remove () {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.queryNotSale(1, "id", "ascending");
     },
-    queryNotSale(currentPage, column, type) {
+    queryNotSale (currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (Object.keys(this.moreSelect).length != 0) {
-        for (let key in this.moreSelect) {
-          if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.biginTime = this.moreSelect[key][0];
-            params.endTime = this.moreSelect[key][1];
-          } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.biginFollowTime = this.moreSelect[key][0];
-            params.endFollowTime = this.moreSelect[key][1];
-          } else {
-            params[key] = this.moreSelect[key];
-          }
-        }
+        let selectObject = common.getSelectParams(this.transitionList, this.moreSelect);
+        Object.assign(params, selectObject);
       } else {
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
@@ -495,6 +515,8 @@ export default {
         params.tel = that.data.tel;
         params.minInArea = that.data.minInArea;
         params.maxInArea = that.data.maxInArea;
+        params.minPrice = that.data.minPrice;
+        params.maxPrice = that.data.maxPrice;
       }
       params.sortColumn = column;
       params.sortType = type;
@@ -522,18 +544,18 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryNotSaleParams(1);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryNotSale(1, "id", "ascending");
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.queryNotSale(val, "id", "ascending");
     }

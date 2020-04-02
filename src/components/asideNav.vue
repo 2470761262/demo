@@ -10,11 +10,8 @@
 <template>
   <div>
     <el-menu :default-active="$route.path"
-             class="el-menu-vertical-demo"
-             background-color="#545c64"
-             text-color="#fff"
              :collapse="collapse"
-             active-text-color="#ffd04b"
+             background-color="#eeeeee"
              router>
       <el-submenu index="0123">
         <template slot="title">
@@ -50,7 +47,7 @@
         <el-menu-item index="/sys/logonRegPwd/view">授权器密码</el-menu-item>
         <el-menu-item index="/sys/personLogList">人员异动</el-menu-item>
         <el-menu-item index="/sys/baseCustomersList">客户管理</el-menu-item>
-        
+
       </el-submenu>
       <el-submenu :index="item.id+''"
                   :key="item.id"
@@ -69,12 +66,12 @@
 <script>
 export default {
   props: ["menuNodeDatas"],
-  data () {
+  data() {
     return {
       collapse: false
     };
   },
-  created () {
+  created() {
     let that = this;
     window.addEventListener("resize", e => {
       if (window.innerWidth < 1400) {

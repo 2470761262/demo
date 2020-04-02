@@ -3,6 +3,9 @@ export default [
     {
         //买卖系统房源列表
         path: "/buySellSystem/houseList",
+        meta: {
+            keepAlive: true
+        },
         component: () =>
             import(/* webpackChunkName: "houseList" */ "@/pages/buySellSystem/houseList/houseList.vue")
     },
@@ -68,6 +71,12 @@ export default [
         path: "/buySellSystem/sevenDaysFollowHouse",
         component: () =>
             import(/* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/followHouse/sevenDaysFollowHouse.vue")
+    },
+    {
+        //新增房源
+        path: "/buySellSystem/newAgentHouse",
+        component: () =>
+            import(/* webpackChunkName: "newAgentHouse" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
     },
     {
         //买卖系统三级路由
@@ -174,12 +183,6 @@ export default [
                 path: "/buySellSystem/loadDevelopment",
                 component: () =>
                     import(/* webpackChunkName: "loadDevelopment" */ "@/pages/buySellSystem/loadDevelopment/loadDevelopment.vue")
-            },
-            {
-                //新增房源
-                path: "/buySellSystem/newAgentHouse",
-                component: () =>
-                    import(/* webpackChunkName: "newAgentHouse" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
             },
             {
                 //我的房源
