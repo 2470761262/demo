@@ -215,6 +215,7 @@ export default {
   methods: {
     toHouseDetail(row) {
       var that = this;
+      console.log(11111);
       if (!this.$attrs.dblclick) {
         if (row.communityName)
           that.$router.push({
@@ -233,7 +234,6 @@ export default {
     },
     //前往多少页事件
     handleCurrentChange(e) {
-      console.log("1");
       this.$emit("handleCurrentChange", e);
     }
   }

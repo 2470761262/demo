@@ -90,7 +90,6 @@
                  show-checkbox
                  node-key="id"
                  ref="tree"
-                 check-strictly
                  :check-on-click-node=false
                  highlight-current
                  :check-strictly="checkStrictly"
@@ -198,9 +197,9 @@ import { mapState } from "vuex";
 export default {
   mixins: [getMenuRid],
   computed: {
-    ...mapState(['navAuthority'])
+    ...mapState(["navAuthority"])
   },
-  data () {
+  data() {
     return {
       checkStrictly: true,
       fullscreenLoading: false,
@@ -240,10 +239,10 @@ export default {
       currentNode: null
     };
   },
-  created () {
+  created() {
     let id = JSON.parse(this.$route.query.id);
-    console.log(this.navAuthority.navList, 'navAuthority.navList');
-    this.$store.dispatch('judgeNavList', id);
+    console.log(this.navAuthority.navList, "navAuthority.navList");
+    this.$store.dispatch("judgeNavList", id);
     this.postId = id;
     this.paramsObj.postId = id;
     this.loadFunctionPoint();
@@ -251,7 +250,7 @@ export default {
     this.loadUnitTree();
   },
   methods: {
-    loadFunctionPoint () {
+    loadFunctionPoint() {
       let that = this;
       //读取功能点数据
       that.$api
@@ -276,7 +275,7 @@ export default {
           console.log(e);
         });
     },
-    loadUnitTree () {
+    loadUnitTree() {
       let that = this;
       //读取树数据
       that.$api
@@ -314,7 +313,7 @@ export default {
           that.treeLoading = false;
         });
     },
-    operationCompany (node, data) {
+    operationCompany(node, data) {
       this.showCompanyTree = true;
       this.showSave = true;
       this.showOperationCompany = true;
@@ -343,7 +342,7 @@ export default {
       this.putParams(node, "2");
       this.currentNode = node;
     },
-    operationSelf (node, data) {
+    operationSelf(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
@@ -354,7 +353,7 @@ export default {
       //设置参数
       this.putParams(node, "0");
     },
-    operationDept (node, data) {
+    operationDept(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
@@ -366,7 +365,7 @@ export default {
       this.putParams(node, "1");
     },
     //应用
-    savePosition (type) {
+    savePosition(type) {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -408,7 +407,7 @@ export default {
         });
     },
     //保存角色rule
-    savePositionRule () {
+    savePositionRule() {
       var that = this;
       let paramsObj = {};
       paramsObj.id = that.postId;
@@ -449,15 +448,15 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(function () {
-          that.fullscreenLoading = false
+        .finally(function() {
+          that.fullscreenLoading = false;
         });
     },
 
     /**
      * 批量保存角色设置
      */
-    saveRolePermission () {
+    saveRolePermission() {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -489,14 +488,12 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(
-          function () {
-            that.fullscreenLoading = false;
-          }
-        );
+        .finally(function() {
+          that.fullscreenLoading = false;
+        });
     },
     //保存跨部门权限
-    putParams (node, dataType) {
+    putParams(node, dataType) {
       let data = node.data;
       if (!data) {
         data = node;
@@ -511,8 +508,12 @@ export default {
       }
       functionPointObj.rId = data.id;
       functionPointObj.dataType = dataType;
-      if ((that.companyTreeSelectNode.companyIds && that.companyTreeSelectNode.companyIds.length > 0) ||
-        that.companyTreeSelectNode.deptIds && that.companyTreeSelectNode.deptIds.length > 0) {
+      if (
+        (that.companyTreeSelectNode.companyIds &&
+          that.companyTreeSelectNode.companyIds.length > 0) ||
+        (that.companyTreeSelectNode.deptIds &&
+          that.companyTreeSelectNode.deptIds.length > 0)
+      ) {
         let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
         functionPointObj.companyId = companyId;
         let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
@@ -534,7 +535,7 @@ export default {
         currentNode.data.deptGather = this.currentDeptGather;
       }
     },
-    foreachList (list) {
+    foreachList(list) {
       let temp = "";
       list.forEach(id => {
         temp = temp + "," + id;
@@ -543,7 +544,7 @@ export default {
       return temp;
     },
     //遍历子节点
-    foreachChildren (childrenData, dataType) {
+    foreachChildren(childrenData, dataType) {
       let that = this;
       if (childrenData) {
         childrenData.forEach(data => {
@@ -552,7 +553,7 @@ export default {
       }
     },
     //动态加载节点
-    loadCompanyTreeNode (node, resolve) {
+    loadCompanyTreeNode(node, resolve) {
       if (node.level == 0) {
         this.node = node;
         this.resolve = resolve;
@@ -584,7 +585,7 @@ export default {
     },
 
     //选中节点
-    checkNode (data, checkedData) {
+    checkNode(data, checkedData) {
       if (checkedData.checkedNodes) {
         this.companyTreeSelectNode.companyIds = new Array();
         this.companyTreeSelectNode.deptIds = new Array();
@@ -605,12 +606,12 @@ export default {
       }
     },
     //取消
-    cancel () {
+    cancel() {
       var that = this;
       //跳转页面
       that.$router.push({ path: "/sys/positionManager" });
     },
-    filterNode (value, data) {
+    filterNode(value, data) {
       console.log("value：" + value);
       console.log(data);
       if (!value) return true;
@@ -620,7 +621,7 @@ export default {
     }
   },
   watch: {
-    filterText (val) {
+    filterText(val) {
       this.$refs.companyTree.filter(val);
     }
   }
