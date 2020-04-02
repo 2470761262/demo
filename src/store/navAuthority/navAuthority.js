@@ -27,15 +27,16 @@ export default {
   actions:{
     judgeNavList({commit,state}, id){
       commit('initNavList');
-      debugger;
       let thisNavList = [];
       thisNavList = foreachData(thisNavList,id);
       function foreachData(thisNavList,id) {
-        for (let key of state.navList) {
-          if(key.id == id){
-            thisNavList.push(key);
-            id = key.parentId;
-            foreachData(thisNavList,id);
+        if(state.navList){
+          for (let key of state.navList) {
+            if(key.id == id){
+              thisNavList.push(key);
+              id = key.parentId;
+              foreachData(thisNavList,id);
+            }
           }
         }
         return thisNavList;
