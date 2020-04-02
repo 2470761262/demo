@@ -102,7 +102,8 @@ span {
                 <el-select v-model="more.bhId"
                            style="width:30%"
                            filterable
-                           placeholder="请选择房间号">clearable
+                           clearable
+                           placeholder="请选择房间号">
                   <el-option v-for="item in moreRoomNoList"
                              :key="item.value"
                              :label="item.name"
@@ -235,7 +236,7 @@ span {
               </div>
             </div>
             <div class="line"
-                 style="display:flex;align-items:center">
+                 style="display:flex;align-items:center" v-if="$attrs.deptUrl!=undifined">
               <span>区域</span>
               <el-select v-model="more.deptParentId"
                          :remote-method="remoteArea"
@@ -542,9 +543,9 @@ export default {
         this.$api
           .post({
             url: `${
-              that.$attrs.deptUrl ? that.$attrs.deptUrl : "moreSelect/dep/area"
+              that.$attrs.deptUrl
               }`,
-            qs: true,
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
             data: {
               selectType: "MORE_SELECT_AREA"
             }
@@ -564,12 +565,12 @@ export default {
       this.$api
         .post({
           url: `${
-            that.$attrs.deptUrl ? that.$attrs.deptUrl : "moreSelect/dep/area"
+            that.$attrs.deptUrl
             }`,
-          qs: true,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }, 
           data: {
             selectType: "MORE_SELECT_SHOP",
-            deptId: this.more.deptParentId
+            areaOrStoreId: this.more.deptParentId
           }
         })
         .then(e => {
@@ -583,13 +584,13 @@ export default {
       this.$api
         .post({
           url: `${
-            that.$attrs.deptUrl ? that.$attrs.deptUrl : "moreSelect/dep/area"
+            that.$attrs.deptUrl
             }`,
           token: false,
-          qs: true,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             selectType: "MORE_SELECT_PER",
-            deptId: this.more.store
+            areaOrStoreId: this.more.store
           }
         })
         .then(e => {
