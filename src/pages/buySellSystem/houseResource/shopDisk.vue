@@ -111,7 +111,8 @@
                      @click="queryShopDiskParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      deptUrl="/houseResource/getShopDisk"></moreSelect>
         </div>
         <div class="query-content-cell cell-interval25">
           <definitionmenu :renderList="tableColumnField"
@@ -152,6 +153,7 @@ import houseContrast from "@/minxi/houseContrast";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
 import '@/assets/publicLess/pageListQuery.less';
+import common from "../houseResource/common/common"
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -332,27 +334,30 @@ export default {
       transitionList: [
         {
           key: "bhId",
-          value: "roomNo",
+          value: [{ paramsKey: "roomNo", index: -1 }],
         },
         {
           key: "area",
-          value: "business",
+          value: [{ paramsKey: "business", index: -1 }],
+        },
+        {
+          key: "buildType",
+          value: [{ paramsKey: "purpose", index: -1 }],
         },
         {
           key: "addTime",
-          value1: "beginTime",
-          value2: "endTime"
+          value: [{ paramsKey: "beginTime", index: 0 }, { paramsKey: "endTime", index: 1 }],
         },
         {
+
           key: "followTime",
-          value1: "beginFollowTime",
-          value2: "endFollowTime"
+          value: [{ paramsKey: "beginFollowTime", index: 0 }, { paramsKey: "endFollowTime", index: 1 }],
         }
       ]
     };
   },
   mounted () {
-    this.queryVerifyHouseDatas(1, "id", "ascending");
+    this.queryVerifyHouseDatas(1, "id", "descending");
   },
   methods: {
     sortMethod (e) {
@@ -364,8 +369,7 @@ export default {
     },
     moreSelectChange (e) {
       this.moreSelect = e;
-
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1, "id", "descending");
     },
     queryTabData () {
       console.log(this, "111");
@@ -379,7 +383,7 @@ export default {
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     queryShopDiskParams () {
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1, "id", "descending");
     },
     remoteInput () {
       if (this.data.comId.length == 0) {
@@ -475,24 +479,8 @@ export default {
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (Object.keys(this.moreSelect).length != 0) {
-        for (let key in this.moreSelect) {
-          if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.beginTime = this.moreSelect[key][0];
-            params.endTime = this.moreSelect[key][1];
-          } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.beginFollowTime = this.moreSelect[key][0];
-            params.endFollowTime = this.moreSelect[key][1];
-          }
-          else if (key == "bhId") {
-            params.roomNo = this.moreSelect.bhId;
-          }
-          else if (key == "area") {
-            params.business = this.moreSelect.area;
-          }
-          else {
-            params[key] = this.moreSelect[key];
-          }
-        }
+        let selectObject = common.getSelectParams(this.transitionList, this.moreSelect);
+        Object.assign(params, selectObject);
       } else {
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
@@ -550,11 +538,11 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1, "id", "descending");
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryVerifyHouseDatas(val, "id", "ascending");
+      this.queryVerifyHouseDatas(val, "id", "descending");
     }
   }
 };

@@ -8,9 +8,9 @@
     min-width: 1280px;
   }
   .page-cell-main {
-    height: calc(100% - 80PX);
+    height: calc(100% - 80px);
     @media screen and(max-width: 1280px) {
-      height: calc(100% - 100PX);
+      height: calc(100% - 100px);
     }
 
     .el-aside,
@@ -39,18 +39,8 @@
   background: #e2e2e2 !important;
   width: auto !important;
   max-width: 200px;
-  /deep/.el-submenu__title {
-    background: #e2e2e2 !important;
-    > span {
-      color: #323234 !important;
-    }
-  }
-  /deep/.el-menu--inline {
-    background: none !important;
-  }
   /deep/.el-menu-item {
     background: #dbdbdb !important;
-    color: #323234 !important;
   }
   /deep/.el-submenu__icon-arrow {
     display: none !important;
@@ -85,7 +75,12 @@
         <div class="children-page">
           <!-- 二级页面 router-view -->
           <transition name="el">
-            <router-view />
+            <keep-alive>
+              <router-view v-if="$route.meta.keepAlive" />
+            </keep-alive>
+          </transition>
+          <transition name="el">
+            <router-view v-if="!$route.meta.keepAlive" />
           </transition>
         </div>
       </el-main>

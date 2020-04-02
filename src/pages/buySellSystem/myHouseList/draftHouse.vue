@@ -136,7 +136,7 @@ export default {
         console.log("参数");
       }
       this.$api.post({
-        url: '/draft-house/page',
+        url: '/myHouse/myVerifyList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false
