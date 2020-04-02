@@ -79,6 +79,13 @@ export default [
             import(/* webpackChunkName: "mateHouseList" */ "@/pages/buySellSystem/mateHouseList/mateHouseList.vue")
     },
     {
+        //七天内被带看
+        path: "/buySellSystem/sevenDaysFollowHouse",
+        name: "concernCommunity",
+        component: () =>
+            import(/* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/followHouse/sevenDaysFollowHouse.vue")
+    },
+    {
         //买卖系统三级路由
         path: "/buySellSystem/otherIframe",
         name: "otherIframe",
@@ -99,13 +106,6 @@ export default [
                 name: "concernCommunity",
                 component: () =>
                     import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseBet/houseBet.vue")
-            },
-            {
-                //七天内被带看
-                path: "/buySellSystem/sevenDaysFollowHouse",
-                name: "concernCommunity",
-                component: () =>
-                    import(/* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/followHouse/sevenDaysFollowHouse.vue")
             },
             {
                 //我的跟单

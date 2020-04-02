@@ -31,7 +31,7 @@
       </el-table-column>
       <el-table-column label="户型">
         <template v-slot="scope">
-          {{scope.row.Rooms+"室"+scope.row.hall+"厅"+scope.row.toilet+"卫"}}
+          {{(scope.row.Rooms||0)+"室"+(scope.row.hall||0)+"厅"+(scope.row.toilet||0)+"卫"}}
         </template>
       </el-table-column>
       <el-table-column label="装修程度">
@@ -166,7 +166,7 @@ export default {
       }
       this.$api
         .post({
-          url: "/agent_house/queryNewHouse",
+          url: "/agent_house/newHouseList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params,
           token: false

@@ -172,6 +172,7 @@
                           class="set-data-pricker"
                           @change="querylistByParams"
                           range-separator="至"
+                          :default-time="['00:00:00', '23:59:59']"
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"></el-date-picker>
           <span class="query-cell-suffix handlebut"
@@ -431,7 +432,7 @@ export default {
         maxInArea: "",
         minPrice: "",
         maxPrice: "",
-        keyOwner: "",
+        isKey: "",
         isOnly: ""
       },
       queryData: {
@@ -441,7 +442,7 @@ export default {
         RoomNo: "",
         cbId: "",
         isOnly: "",
-        keyOwner: ""
+        isKey: ""
       },
       moreSelect: {}
     };
@@ -465,10 +466,10 @@ export default {
       this.querylist(1, e.prop, e.order);
     },
     keySelect () {
-      if (this.data.keyOwner != "") {
-        this.data.keyOwner = "";
+      if (this.data.isKey != "") {
+        this.data.isKey = "";
       } else {
-        this.data.keyOwner = "1";
+        this.data.isKey = "1";
       }
       this.querylistByParams(1, "id", "descending");
     },
@@ -491,7 +492,7 @@ export default {
       this.querylistByParams();
     },
     remove () {
-      this.queryData.keyOwner = "";
+      this.queryData.isKey = "";
       this.queryData.isOnly = "";
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
@@ -695,10 +696,10 @@ export default {
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.biginTime = this.moreSelect[key][0];
+            params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
           } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.biginFollowTime = this.moreSelect[key][0];
+            params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {
             params[key] = this.moreSelect[key];
@@ -748,7 +749,7 @@ export default {
         }
       }
       params.isOnly = that.data.isOnly;
-      params.keyOwner = that.data.keyOwner;
+      params.isKey = that.data.isKey;
       if (column == "" || type == null || type == undefined) {
         params.sortColumn = "id";
       } else {

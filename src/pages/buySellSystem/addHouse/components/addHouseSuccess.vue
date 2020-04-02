@@ -111,7 +111,7 @@ export default {
     };
   },
   created() {
-    // this.getQr();
+     this.getQr();
   },
   methods: {
     getQr() {

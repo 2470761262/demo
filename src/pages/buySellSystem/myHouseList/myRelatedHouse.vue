@@ -303,7 +303,7 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+            (item.rooms||0) + "室" + (item.hall||0) + "厅" + (item.toilet||0) + "卫"
         },
         {
           prop: "unitPrice",
@@ -312,7 +312,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         {
           prop: "face",

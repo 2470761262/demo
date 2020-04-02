@@ -37,24 +37,26 @@
   color: #ffa6a4;
   cursor: pointer;
 }
-  .demo1-form-inline{
-   /deep/ .el-form-item{
-      margin-bottom: 0;
+.demo1-form-inline {
+  /deep/ .el-form-item {
+    margin-bottom: 0;
     vertical-align: middle;
-     &:first-child{
-        .el-form-item__content{
-          vertical-align: middle;
-        }
-     }
+    &:first-child {
+      .el-form-item__content {
+        vertical-align: middle;
+      }
     }
   }
+}
 </style>
 
 <template>
   <div v-loading.fullscreen.lock="fullscreenLoading">
 
-    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin: 10px" >
-      <el-breadcrumb-item v-for="item in navAuthority.navList">{{item.title}}</el-breadcrumb-item>
+    <el-breadcrumb separator-class="el-icon-arrow-right"
+                   style="margin: 10px">
+      <el-breadcrumb-item v-for="(item,index) in navAuthority.navList"
+                          :key="index">{{item.title}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <template>
@@ -64,7 +66,8 @@
                  style="align-content: center">
           <el-form-item label="类型">
             <el-select v-model="ruleParamsObj.type"
-                       style="width: 130px;" @change="loadFunctionPoint"
+                       style="width: 130px;"
+                       @change="loadFunctionPoint"
                        placeholder="请选择功能点类型">
               <el-option label="PC端"
                          value="0"></el-option>
@@ -87,7 +90,6 @@
                  show-checkbox
                  node-key="id"
                  ref="tree"
-                 check-strictly
                  highlight-current
                  :check-strictly="treeCheckStrictly"
                  :expand-on-click-node=false
@@ -178,11 +180,11 @@
 </template>
 <script>
 import getMenuRid from "@/minxi/getMenuRid";
-import {mapState} from 'vuex';
+import { mapState } from "vuex";
 export default {
   mixins: [getMenuRid],
-  computed:{
-    ...mapState(['navAuthority'])
+  computed: {
+    ...mapState(["navAuthority"])
   },
   data() {
     return {
@@ -222,9 +224,9 @@ export default {
         companyIds: [],
         deptIds: []
       },
-      currentCompanyGather: "",
-      currentDeptGather: "",
-      currentNode: null,
+      currentCompanyGather: null,
+      currentDeptGather: null,
+      currentNode: null
     };
   },
   destroyed() {
@@ -233,7 +235,7 @@ export default {
   },
   created() {
     let accountId = JSON.parse(this.$route.query.accountId);
-    this.$store.dispatch('judgeNavList',accountId);
+    this.$store.dispatch("judgeNavList", accountId);
     this.ruleParamsObj.accountId = accountId;
     this.paramsObj.accountId = accountId;
     this.loadFunctionPoint();
@@ -328,6 +330,8 @@ export default {
           this.companyGather = deptArrayGather;
         }
       }
+      this.currentCompanyGather = null;
+      this.currentDeptGather = null;
       //设置参数
       this.putParams(node, "2");
       this.currentNode = node;
@@ -349,7 +353,7 @@ export default {
       console.log(node, data, "operationDept..");
     },
     //应用
-    savePosition () {
+    savePosition() {
       var that = this;
       let checkedKeys = that.$refs.tree.getCheckedKeys();
       let keys = "";
@@ -392,10 +396,17 @@ export default {
       }
       functionPointObj.rId = data.id;
       functionPointObj.dataType = dataType;
-      let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
-      functionPointObj.companyId = companyId;
-      let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
-      functionPointObj.deptId = deptId;
+      if (
+        (that.companyTreeSelectNode.companyIds &&
+          that.companyTreeSelectNode.companyIds.length > 0) ||
+        (that.companyTreeSelectNode.deptIds &&
+          that.companyTreeSelectNode.deptIds.length > 0)
+      ) {
+        let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
+        functionPointObj.companyId = companyId;
+        let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
+        functionPointObj.deptId = deptId;
+      }
       that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
       if (data.children) {
         if (data.children.length > 0) {
@@ -405,8 +416,12 @@ export default {
       //设置当前对象的值
       let currentNode = that.$refs.tree.getNode(data.id);
       currentNode.data.dataType = dataType;
-      currentNode.data.companyGather = this.currentCompanyGather;
-      currentNode.data.deptGather = this.currentDeptGather;
+      if (this.currentCompanyGather != null) {
+        currentNode.data.companyGather = this.currentCompanyGather;
+      }
+      if (this.currentDeptGather != null) {
+        currentNode.data.deptGather = this.currentDeptGather;
+      }
     },
     //遍历子节点
     foreachChildren(childrenData, dataType) {
@@ -449,11 +464,9 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-      .finally(
-        function(){
+        .finally(function() {
           that.fullscreenLoading = false;
-        }
-      );
+        });
     },
     foreachList(list) {
       let temp = "";
