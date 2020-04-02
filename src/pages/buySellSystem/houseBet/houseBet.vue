@@ -136,7 +136,7 @@
       <el-table-column prop="unitPrice"
                        label="单价(元/㎡)"
                        :sort-orders="['ascending', 'descending']"
-                       sortable="custom">
+                       sortable="false">
       </el-table-column>
       <el-table-column prop=""
                        label="户型"
@@ -451,7 +451,7 @@ export default {
       }
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage };
+      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       params.sortColumn = column;
       if(type == "descending"){
         params.sortType = 1;
