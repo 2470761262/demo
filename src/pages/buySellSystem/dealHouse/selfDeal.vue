@@ -212,7 +212,7 @@ export default {
     toLook (id) {
       console.log(id);
       var that = this;
-      this.$router.push({ name: "houseDetails", params: { houseId: id } });
+      this.$router.push({ name: "historyDetails", params: { houseId: id } });
     },
     queryDatalist () {
       this.queryOurComDeal(1, "id", "ascending");

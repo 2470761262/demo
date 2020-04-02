@@ -47,7 +47,7 @@
                      value="2"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="子节点选中">
+      <el-form-item label="不子节点选中">
         <el-switch v-model="checkStrictly"></el-switch>
       </el-form-item>
       <el-form-item>
