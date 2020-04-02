@@ -451,7 +451,7 @@ export default {
       }
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
       params.sortColumn = column;
       if(type == "descending"){
         params.sortType = 1;
