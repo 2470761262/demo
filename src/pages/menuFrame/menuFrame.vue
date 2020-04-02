@@ -39,18 +39,14 @@
   background: #e2e2e2 !important;
   width: auto !important;
   max-width: 200px;
-  /deep/.el-submenu__title {
-    background: #e2e2e2 !important;
-    > span {
-      color: #323234 !important;
-    }
-  }
-  /deep/.el-menu--inline {
-    background: none !important;
-  }
+  //   /deep/.el-submenu__title {
+  //     background: #e2e2e2 !important;
+  //     > span {
+  //       color: #323234 !important;
+  //     }
+  //   }
   /deep/.el-menu-item {
     background: #dbdbdb !important;
-    color: #323234 !important;
   }
   /deep/.el-submenu__icon-arrow {
     display: none !important;
