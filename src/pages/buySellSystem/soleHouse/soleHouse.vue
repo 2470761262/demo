@@ -79,15 +79,17 @@
                            :sortable="item.order">
           </el-table-column>
         </template>
-        <!-- <el-table-column label="操作"
+        <el-table-column label="操作"
                          fixed="right"
                          width="180">
-          <template v-slot>
+          <template v-slot="scope">
             <el-button type="primary"
-                       size="mini">查看</el-button>
+                       size="mini"
+                       @click="distributeEvent(item.methosName,scope.row.id)"
+                       v-for="(item,index) in isForBut(scope.row.id)"
+                       :key="index">{{item.name}}</el-button>
           </template>
-        </el-table-column> -->
-
+        </el-table-column>
       </template>
     </list-page>
   </div>
