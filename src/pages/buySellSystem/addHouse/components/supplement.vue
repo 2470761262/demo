@@ -417,6 +417,7 @@
                         v-validate="required?'required': ''"
                         data-vv-as="契税发票时间"
                         data-vv-name="lastSale"
+                        value-format="yyyy-MM-dd"
                         @change="changeOnly"
                         :picker-options="pickerOptions"></el-date-picker>
       </div>

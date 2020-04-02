@@ -115,6 +115,7 @@
                           type="daterange"
                           class="set-data-pricker"
                           @change="querySaleNotTrackParams"
+                          :default-time="['00:00:00', '23:59:59']"
                           range-separator="至"
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"></el-date-picker>
@@ -302,7 +303,7 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+            (item.rooms||0) + "室" + (item.hall||0) + "厅" + (item.toilet||0) + "卫"
         },
         {
           prop: "unitPrice",
@@ -311,7 +312,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         {
           prop: "face",
@@ -475,9 +476,14 @@ export default {
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.biginTime = this.moreSelect[key][0];
+            params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } else {
+          } 
+          else if (key == "followTime" && this.moreSelect[key] !== "") {
+            params.beginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          }
+          else {
             params[key] = this.moreSelect[key];
           }
         }

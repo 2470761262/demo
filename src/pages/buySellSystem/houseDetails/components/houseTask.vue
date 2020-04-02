@@ -80,6 +80,12 @@
       padding: 0;
       background-image: linear-gradient(115deg, #0d8f51 60%, #10a65f);
       letter-spacing: 4px;
+      &[disabled="disabled"] {
+        background: #fff;
+        span {
+          color: #c0c4cc;
+        }
+      }
       .icon {
         font-size: 20px;
         vertical-align: middle;
@@ -133,7 +139,9 @@
             <div class="task-pro-options overText">{{resultData.agentPerDepartmentName}}</div>
           </div>
         </template>
-        <el-button @click="openAgentPop"><span>申请跟单人</span> </el-button>
+        <el-button v-else
+                   :disabled="isDisabled"
+                   @click="openAgentPop"><span>申请跟单人</span> </el-button>
       </div>
     </div>
     <div class="task-pro-flex">
@@ -152,9 +160,11 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.keyOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.keyOwnerDepartmentName}}</div>
           </div>
-          <el-button @click="openPop('keyPopFlag',4,'keyType',3)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button :disabled="isDisabled"
+                     @click="openPop('keyPopFlag',4,'keyType',3)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
         </template>
         <el-button v-else
+                   :disabled="isDisabled"
                    @click="openPop('keyPopFlag',0,'keyType',0)"><span>申请钥匙人</span> </el-button>
       </div>
       <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
@@ -172,9 +182,11 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
           </div>
-          <el-button @click="openPop('entrustPopFlag',4,'entrustType',2)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button :disabled="isDisabled"
+                     @click="openPop('entrustPopFlag',4,'entrustType',2)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
         </template>
         <el-button v-else
+                   :disabled="isDisabled"
                    @click="openPop('entrustPopFlag',1,'entrustType',0)"><span>申请委托人</span> </el-button>
       </div>
     </div>
@@ -194,11 +206,13 @@
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.realOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.realOwnerDepartmentName}}</div>
           </div>
-          <el-button @click="openPop('houseUploadflag',4,'houseUploadType',5)">
+          <el-button :disabled="isDisabled"
+                     @click="openPop('houseUploadflag',4,'houseUploadType',5)">
             <i class="el-icon-sunny icon"></i> <span>取代</span>
           </el-button>
         </template>
         <el-button v-else
+                   :disabled="isDisabled"
                    @click="openPop('houseUploadflag',12,'houseUploadType',0)">申请实勘人</el-button>
       </div>
     </div>
@@ -224,6 +238,7 @@
       <template v-slot:floot>
         <div class="text-middle">
           <el-button size="mini"
+                     :disabled="isDisabled"
                      @click="submitUpload"
                      :loading="houseUploadLoading">{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
         </div>
@@ -242,6 +257,7 @@
       <template>
         <div class="text-middle">
           <el-button size="mini"
+                     :disabled="isDisabled"
                      @click="applyAgent"> 提交</el-button>
         </div>
       </template>
@@ -261,8 +277,11 @@ import houseCheck from "../common/houseCheck";
 import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
 import util from "@/util/util";
 export default {
-  inject: ["houseDetails", "houseId"],
+  inject: ["houseDetails", "houseId", "buttonDisabled"],
   computed: {
+    isDisabled () {
+      return this.buttonDisabled;
+    },
     resultData () {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
@@ -362,16 +381,29 @@ export default {
      * @param {String} popName 弹出层的Flag名字
      * @param {number} type 打开类型
      */
-    async  openPop (popName, type, typeName, replaceType) {
+    async openPop (popName, type, typeName, replaceType) {
       if (type != 4) {
-        let result = await houseCheck.isChecking(type, replaceType, this.houseId.id, "正在审核");
+        let result = await houseCheck.isChecking(
+          type,
+          replaceType,
+          this.houseId.id,
+          "正在审核"
+        );
         if (!result) {
           this[typeName] = type;
           this[popName] = true;
         }
       } else {
-        if (this.resultData.agentHouseMethod.onlyOwnerName != util.localStorageGet("logindata").userName) {
-          let result = await houseCheck.isChecking(type, replaceType, this.houseId.id, "正在审核");
+        if (
+          this.resultData.agentHouseMethod.onlyOwnerName !=
+          util.localStorageGet("logindata").userName
+        ) {
+          let result = await houseCheck.isChecking(
+            type,
+            replaceType,
+            this.houseId.id,
+            "正在审核"
+          );
           if (!result) {
             this[typeName] = type;
             this[popName] = true;
@@ -382,9 +414,6 @@ export default {
           });
         }
       }
-
-
-
     },
     /**
      * refs 获取上传组件实例并且验证非空

@@ -437,6 +437,31 @@ export default {
       this.queryConstant();
       this.$emit("moreSelectChange", '');
     },
+    remoteMethod (query) {
+      var that = this;
+      if (query !== "") {
+        this.$api
+          .get({
+            url: "/mateHouse/queryCommunity",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
+            data: {
+              communityName: query,
+              page: 1,
+              limit: 50
+            }
+          })
+          .then(e => {
+            console.log(e.data);
+            if (e.data.code == 200) {
+              that.moreOptions = e.data.data.list;
+            }
+          });
+      } else {
+        this.moreOptions = [];
+      }
+    },
     queryCBId () {
       var that = this;
       this.$api
@@ -448,7 +473,7 @@ export default {
           data: {
             comId: that.more.comId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -484,7 +509,7 @@ export default {
             comId: that.more.comId,
             cbId: that.more.cbId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {

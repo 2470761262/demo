@@ -144,7 +144,7 @@
                        label="单价(元/㎡)"
                        :formatter="unitPrice"
                        :sort-orders="['ascending', 'descending']"
-                       sortable="custom">
+                       sortable="false">
       </el-table-column>
       <el-table-column prop=""
                        label="户型"
@@ -239,7 +239,7 @@ export default {
     };
   },
   mounted () {
-    this.queryHouseBet(1, "id", "ascending");
+    this.queryHouseBet(1, "createTime", "descending");
     //读取树数据
     this.$api
       .post({
@@ -276,7 +276,7 @@ export default {
   methods: {
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryHouseBet(1, "id", "ascending");
+      this.queryHouseBet(1, "createTime", "descending");
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
@@ -286,7 +286,7 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryHouseBet(1, 'id', 'ascending');
+      this.queryHouseBet(1, 'createTime', 'descending');
 
     },
     handleCheckChange (data, checked, node) {
@@ -370,7 +370,7 @@ export default {
       });
     },
     queryHouseBetParams () {
-      this.queryHouseBet(1, "id", "ascending");
+      this.queryHouseBet(1, "createTime", "descending");
     },
     //楼盘获取焦点 第一次点击就进行查询
 
@@ -449,7 +449,7 @@ export default {
     },
     queryHouseBet (currentPage, column, type) {
       if (!column) {
-        column = "id";
+        column = "createTime";
       }
       if (!type) {
         type = "ascending";
@@ -462,10 +462,10 @@ export default {
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.biginTime = this.moreSelect[key][0];
+            params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
           } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.biginFollowTime = this.moreSelect[key][0];
+            params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {
             params[key] = this.moreSelect[key];
@@ -481,8 +481,8 @@ export default {
         params.coId = that.data.coId;
         params.deptId = that.data.deptId;
         params.tel = that.data.tel;
-        params.minMoney = that.data.minMoney;
-        params.maxMoney = that.data.maxMoney;
+        params.minPrice = that.data.minMoney;
+        params.maxPrice = that.data.maxMoney;
         if (that.data.timeSelect.length > 0)
           params.beginTime = that.data.timeSelect[0];
         if (that.data.timeSelect.length > 1)
@@ -529,12 +529,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryHouseBet(val, "id", "ascending");
+      this.queryHouseBet(val, "createTime", "descending");
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryHouseBet(1, "id", "ascending");
+      this.queryHouseBet(1, "createTime", "descending");
     }
   }
 };

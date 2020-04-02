@@ -18,12 +18,36 @@ export default {
             }
         }
     },
-    localStorageClear () {
+  localStorageClear () {
         localStorage.clear()
     },
     localStorageRemove (key) {
         localStorage.removeItem(key);
     },
+  sessionLocalStorageSet (key, value) {
+    if (typeof value == "object") {
+      sessionStorage.setItem(key, JSON.stringify(value));
+    } else {
+      sessionStorage.setItem(key, value);
+    }
+  },
+  sessionLocalStorageGet (key) {
+    if (sessionStorage.getItem(key) == null || sessionStorage.getItem(key) == '') {
+      return null;
+    } else {
+      try {
+        return JSON.parse(sessionStorage.getItem(key));
+      } catch (error) {
+        return sessionStorage.getItem(key);
+      }
+    }
+  },
+  sessionLocalStorageClear () {
+    sessionStorage.clear()
+  },
+  sessionLocalStorageRemove (key) {
+    sessionStorage.removeItem(key);
+  },
     analysisElevator (elevator) {
         if (parseInt(elevator) > 0) {
             return "有配套";
