@@ -133,8 +133,7 @@
             <div class="task-pro-options overText">{{resultData.agentPerDepartmentName}}</div>
           </div>
         </template>
-        <el-button v-else
-                   @click="openAgentPop"><span>申请跟单人</span> </el-button>
+        <el-button @click="openAgentPop"><span>申请跟单人</span> </el-button>
       </div>
     </div>
     <div class="task-pro-flex">

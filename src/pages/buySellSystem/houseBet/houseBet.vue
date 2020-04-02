@@ -239,7 +239,7 @@ export default {
     };
   },
   mounted () {
-    this.queryHouseBet(0, "id", "descending");
+    this.queryHouseBet(1, "id", "ascending");
     //读取树数据
     this.$api
       .post({
@@ -276,7 +276,7 @@ export default {
   methods: {
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryHouseBet(1, "id", "descending");
+      this.queryHouseBet(1, "id", "ascending");
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
@@ -286,7 +286,7 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryHouseBet(1, 'id', 'descending');
+      this.queryHouseBet(1, 'id', 'ascending');
 
     },
     handleCheckChange (data, checked, node) {
@@ -370,7 +370,7 @@ export default {
       });
     },
     queryHouseBetParams () {
-      this.queryHouseBet(1, "id", "descending");
+      this.queryHouseBet(1, "id", "ascending");
     },
     //楼盘获取焦点 第一次点击就进行查询
 
@@ -452,11 +452,11 @@ export default {
         column = "id";
       }
       if (!type) {
-        type = "descending";
+        type = "ascending";
       }
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage };
+      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       params.sortColumn = column;
       params.sortType = type;
       if (Object.keys(this.moreSelect).length != 0) {
@@ -501,8 +501,9 @@ export default {
           that.loading = false;
           let data = e.data;
           if (data.code == 200) {
-            that.pageJson.total = data.data.totalCount;
-            that.pageJson.currentPage = data.data.currPage;
+            that.pageJson.total = data.data.dataCount;
+            that.pageJson.pageSum = data.data.pageSum;
+            console.log(that.pageJson.pageSum);
             that.tableData = data.data.data;
           } else {
             console.log("查询对赌房源列表结果：" + result.message);
@@ -528,12 +529,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryHouseBet(val, "id", "descending");
+      this.queryHouseBet(val, "id", "ascending");
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryHouseBet(1, "id", "descending");
+      this.queryHouseBet(1, "id", "ascending");
     }
   }
 };
