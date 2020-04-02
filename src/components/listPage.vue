@@ -215,7 +215,6 @@ export default {
   methods: {
     toHouseDetail(row) {
       var that = this;
-      console.log(11111);
       if (!this.$attrs.dblclick) {
         if (row.communityName)
           that.$router.push({

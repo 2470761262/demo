@@ -68,6 +68,11 @@
                          :value="item.value"></el-option>
             </el-select>
           </div>
+          <div class="query-content-cell cell-interval45">
+            <el-button type="primary"
+                       size="mini"
+                       @click="querylist(null)">查询</el-button>
+          </div>
         </div>
       </template>
       <template v-slot:tableColumn>
@@ -152,7 +157,7 @@ export default {
       }
     };
   },
-  mounted() {
+  created() {
     this.querylist();
   },
   methods: {

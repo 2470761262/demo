@@ -70,6 +70,12 @@ export default [
             import(/* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/followHouse/sevenDaysFollowHouse.vue")
     },
     {
+        //新增房源
+        path: "/buySellSystem/newAgentHouse",
+        component: () =>
+            import(/* webpackChunkName: "newAgentHouse" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
+    },
+    {
         //买卖系统三级路由
         path: "/buySellSystem/otherIframe",
         name: "otherIframe",
@@ -174,12 +180,6 @@ export default [
                 path: "/buySellSystem/loadDevelopment",
                 component: () =>
                     import(/* webpackChunkName: "loadDevelopment" */ "@/pages/buySellSystem/loadDevelopment/loadDevelopment.vue")
-            },
-            {
-                //新增房源
-                path: "/buySellSystem/newAgentHouse",
-                component: () =>
-                    import(/* webpackChunkName: "newAgentHouse" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
             },
             {
                 //我的房源
