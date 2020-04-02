@@ -3,6 +3,9 @@ export default [
     {
         //买卖系统房源列表
         path: "/buySellSystem/houseList",
+        meta: {
+            keepAlive: true
+        },
         component: () =>
             import(/* webpackChunkName: "houseList" */ "@/pages/buySellSystem/houseList/houseList.vue")
     },
