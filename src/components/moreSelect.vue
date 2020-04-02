@@ -306,11 +306,11 @@ export default {
         },
         {
           label: "普通委托",
-          value: "1"
+          value: "2"
         },
         {
           label: "独家委托",
-          value: "2"
+          value: "1"
         },
         {
           label: "全部委托",
