@@ -357,7 +357,7 @@ export default {
     };
   },
   mounted () {
-    this.queryVerifyHouseDatas(1, "id", "ascending");
+    this.queryVerifyHouseDatas(1, "id", "descending");
   },
   methods: {
     sortMethod (e) {
@@ -369,8 +369,7 @@ export default {
     },
     moreSelectChange (e) {
       this.moreSelect = e;
-
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1, "id", "descending");
     },
     queryTabData () {
       console.log(this, "111");
@@ -384,7 +383,7 @@ export default {
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     queryShopDiskParams () {
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1, "id", "descending");
     },
     remoteInput () {
       if (this.data.comId.length == 0) {
@@ -539,11 +538,11 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1, "id", "descending");
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryVerifyHouseDatas(val, "id", "ascending");
+      this.queryVerifyHouseDatas(val, "id", "descending");
     }
   }
 };

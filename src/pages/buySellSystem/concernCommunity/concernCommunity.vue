@@ -3,6 +3,7 @@
   width: 357px;
   display: flex;
   flex-direction: column;
+  max-height: 600px;
   .query-title {
     padding-top: 25px;
     padding-bottom: 5px;
@@ -99,7 +100,6 @@
 <template>
   <list-page :parentData="$data"
              @sort-change="sortMethod"
-             @handleClick="handleClick"
              :dblclick="true"
              @cellDblClick="toHouseDetail"
              @handleSizeChange="handleSizeChange"
@@ -272,7 +272,6 @@
           <el-select clearable
                      placeholder="房源状态"
                      class="set-select100"
-                     value=""
                      v-model="houseType">
             <el-option v-for="item in houseTypeList"
                        :key="item.value"

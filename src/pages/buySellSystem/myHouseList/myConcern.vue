@@ -843,13 +843,13 @@ export default {
           token: false,
           qs: true,
           data: {
-            comId: this.queryData.CommunityName
+            comId: this.queryData.comId
           }
         })
         .then(e => {
           if (e.data.code == 200) {
             that.queryData.RoomNo = "";
-            that.queryData.BuildingName = "";
+            that.queryData.cbId = "";
             this.cbIdList = e.data.data.list;
           }
         });
@@ -865,8 +865,8 @@ export default {
           token: false,
           qs: true,
           data: {
-            comId: this.queryData.CommunityName,
-            cbId: this.queryData.BuildingName
+            comId: this.queryData.comId,
+            cbId: this.queryData.cbId
           }
         })
         .then(e => {

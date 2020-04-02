@@ -90,7 +90,6 @@
                  show-checkbox
                  node-key="id"
                  ref="tree"
-                 check-strictly
                  highlight-current
                  :check-strictly="treeCheckStrictly"
                  :expand-on-click-node=false
@@ -181,13 +180,13 @@
 </template>
 <script>
 import getMenuRid from "@/minxi/getMenuRid";
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
 export default {
   mixins: [getMenuRid],
   computed: {
-    ...mapState(['navAuthority'])
+    ...mapState(["navAuthority"])
   },
-  data () {
+  data() {
     return {
       treeCheckStrictly: true,
       fullscreenLoading: false,
@@ -227,23 +226,23 @@ export default {
       },
       currentCompanyGather: null,
       currentDeptGather: null,
-      currentNode: null,
+      currentNode: null
     };
   },
-  destroyed () {
+  destroyed() {
     //销毁
     this.$store.commit("resetNavList");
   },
-  created () {
+  created() {
     let accountId = JSON.parse(this.$route.query.accountId);
-    this.$store.dispatch('judgeNavList', accountId);
+    this.$store.dispatch("judgeNavList", accountId);
     this.ruleParamsObj.accountId = accountId;
     this.paramsObj.accountId = accountId;
     this.loadFunctionPoint();
     this.loadUnitTree();
   },
   methods: {
-    loadFunctionPoint () {
+    loadFunctionPoint() {
       let that = this;
       that.currentNode = null;
       that.paramsObj.functionPointArray = new Array();
@@ -270,7 +269,7 @@ export default {
           console.log(e);
         });
     },
-    loadUnitTree () {
+    loadUnitTree() {
       let that = this;
       //读取树数据
       that.$api
@@ -308,7 +307,7 @@ export default {
           that.treeLoading = false;
         });
     },
-    operationCompany (node, data) {
+    operationCompany(node, data) {
       this.showCompanyTree = true;
       this.showSave = true;
       console.log(node, data, "operationCompany..");
@@ -337,7 +336,7 @@ export default {
       this.putParams(node, "2");
       this.currentNode = node;
     },
-    operationSelf (node, data) {
+    operationSelf(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       node.data.dataType = "0";
@@ -345,7 +344,7 @@ export default {
       this.putParams(node, "0");
       console.log(node, data, "operationSelf..");
     },
-    operationDept (node, data) {
+    operationDept(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       node.data.dataType = "1";
@@ -354,7 +353,7 @@ export default {
       console.log(node, data, "operationDept..");
     },
     //应用
-    savePosition () {
+    savePosition() {
       var that = this;
       let checkedKeys = that.$refs.tree.getCheckedKeys();
       let keys = "";
@@ -382,7 +381,7 @@ export default {
         });
     },
     //保存跨部门权限
-    putParams (node, dataType) {
+    putParams(node, dataType) {
       let data = node.data;
       if (!data) {
         data = node;
@@ -397,8 +396,12 @@ export default {
       }
       functionPointObj.rId = data.id;
       functionPointObj.dataType = dataType;
-      if((that.companyTreeSelectNode.companyIds && that.companyTreeSelectNode.companyIds.length > 0) ||
-        that.companyTreeSelectNode.deptIds && that.companyTreeSelectNode.deptIds.length > 0){
+      if (
+        (that.companyTreeSelectNode.companyIds &&
+          that.companyTreeSelectNode.companyIds.length > 0) ||
+        (that.companyTreeSelectNode.deptIds &&
+          that.companyTreeSelectNode.deptIds.length > 0)
+      ) {
         let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
         functionPointObj.companyId = companyId;
         let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
@@ -413,15 +416,15 @@ export default {
       //设置当前对象的值
       let currentNode = that.$refs.tree.getNode(data.id);
       currentNode.data.dataType = dataType;
-      if(this.currentCompanyGather != null){
+      if (this.currentCompanyGather != null) {
         currentNode.data.companyGather = this.currentCompanyGather;
       }
-      if(this.currentDeptGather != null){
+      if (this.currentDeptGather != null) {
         currentNode.data.deptGather = this.currentDeptGather;
       }
     },
     //遍历子节点
-    foreachChildren (childrenData, dataType) {
+    foreachChildren(childrenData, dataType) {
       let that = this;
       if (childrenData) {
         childrenData.forEach(data => {
@@ -429,7 +432,7 @@ export default {
         });
       }
     },
-    saveCompanyRule () {
+    saveCompanyRule() {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -461,13 +464,11 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(
-          function () {
-            that.fullscreenLoading = false;
-          }
-        );
+        .finally(function() {
+          that.fullscreenLoading = false;
+        });
     },
-    foreachList (list) {
+    foreachList(list) {
       let temp = "";
       list.forEach(id => {
         temp = temp + "," + id;
@@ -477,7 +478,7 @@ export default {
     },
 
     //选中节点
-    checkNode (data, checkedData) {
+    checkNode(data, checkedData) {
       if (checkedData.checkedNodes) {
         this.companyTreeSelectNode.companyIds = new Array();
         this.companyTreeSelectNode.deptIds = new Array();
@@ -502,7 +503,7 @@ export default {
     },
 
     //取消
-    cancel () {
+    cancel() {
       var that = this;
       //跳转页面
       that.$router.push({
@@ -510,7 +511,7 @@ export default {
         query: { id: this.paramsObj.postId }
       });
     },
-    filterNode (value, data) {
+    filterNode(value, data) {
       console.log("value：" + value);
       console.log(data);
       if (!value) return true;
@@ -520,7 +521,7 @@ export default {
     }
   },
   watch: {
-    filterText (val) {
+    filterText(val) {
       this.$refs.companyTree.filter(val);
     }
   }

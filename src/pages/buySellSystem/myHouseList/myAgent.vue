@@ -714,7 +714,7 @@ export default {
       this.$api
         .post({
           url: "/myHouse/getMyAgent",
-          qs: true,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params
         })
         .then(e => {
