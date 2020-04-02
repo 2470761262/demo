@@ -63,13 +63,13 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">价格</h3>
           <el-input placeholder="最小值"
-                    v-model="data.minMoney"
+                    v-model="data.minPrice"
                     class="set-input90"
                     @change="queryHouseBetParams"
                     clearable />
           <span class="cut-off-rule"></span>
           <el-input placeholder="最大值"
-                    v-model="data.maxMoney"
+                    v-model="data.maxPrice"
                     class="set-input90"
                     @change="queryHouseBetParams"
                     clearable />
@@ -79,14 +79,16 @@
       <div class="page-list-query-row">
         <div class="query-content-cell">
           <h3 class="query-cell-title">面积</h3>
-          <el-input placeholder="开发中"
+          <el-input placeholder="最小值"
+                     v-model="data.minInArea"
                     class="set-input90"
                     clearable />
           <span class="cut-off-rule"></span>
-          <el-input placeholder="开发中"
+          <el-input placeholder="最大值"
+                    v-model="data.maxInArea"
                     class="set-input90"
                     clearable />
-          <span class="query-cell-suffix">平方</span>
+          <span class="query-cell-suffix">㎡</span>
         </div>
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">对赌结果</h3>
@@ -102,21 +104,12 @@
           </el-select>
         </div>
         <div class="query-content-cell cell-interval75">
-          <h3 class="query-cell-title">对赌人</h3>
-          <el-select clearable
-                     value="开发中"
-                     class="set-select100"
-                     placeholder="全部">
-            <el-option value="开发中">开发中...</el-option>
-          </el-select>
-        </div>
-        <div class="query-content-cell cell-interval75">
           <el-button type="primary"
                      size="mini"
                      @click="queryHouseBetParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/myBetList"></moreSelect>
         </div>
       </div>
     </template>
@@ -140,9 +133,8 @@
                        :sort-orders="['ascending', 'descending']"
                        sortable="custom">
       </el-table-column>
-      <el-table-column prop="price/inArea"
+      <el-table-column prop="unitPrice"
                        label="单价(元/㎡)"
-                       :formatter="unitPrice"
                        :sort-orders="['ascending', 'descending']"
                        sortable="false">
       </el-table-column>
@@ -207,8 +199,11 @@ export default {
         tel: "",
         customerName: "",
         status: "",
-        minMoney: "",
-        maxMoney: "",
+        minPrice: "",
+        maxprice: "",
+        minInArea: "",
+        maxInArea: "",  
+        stauts: "",  
         order: "",
         empId: "",
         deptId: "",
@@ -239,7 +234,7 @@ export default {
     };
   },
   mounted () {
-    this.queryHouseBet(1, "createTime", "descending");
+    this.queryHouseBet(1, "createTime", "1");
     //读取树数据
     this.$api
       .post({
@@ -276,7 +271,7 @@ export default {
   methods: {
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryHouseBet(1, "createTime", "descending");
+      this.queryHouseBet(1, "createTime", "1");
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
@@ -286,7 +281,7 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryHouseBet(1, 'createTime', 'descending');
+      this.queryHouseBet(1, 'createTime', '1');
 
     },
     handleCheckChange (data, checked, node) {
@@ -370,7 +365,7 @@ export default {
       });
     },
     queryHouseBetParams () {
-      this.queryHouseBet(1, "createTime", "descending");
+      this.queryHouseBet(1, "createTime", "1");
     },
     //楼盘获取焦点 第一次点击就进行查询
 
@@ -452,13 +447,19 @@ export default {
         column = "createTime";
       }
       if (!type) {
-        type = "ascending";
+        type = "1";
       }
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       params.sortColumn = column;
-      params.sortType = type;
+      if(type == "descending"){
+        params.sortType = 1;
+      }else if(type == "ascending"){
+        params.sortType = 0;
+      }else{
+        params.sortType = type;
+      }
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
@@ -481,8 +482,11 @@ export default {
         params.coId = that.data.coId;
         params.deptId = that.data.deptId;
         params.tel = that.data.tel;
-        params.minPrice = that.data.minMoney;
-        params.maxPrice = that.data.maxMoney;
+        params.minPrice = that.data.minPrice;
+        params.maxPrice = that.data.maxPrice;
+        params.minInArea = that.data.minInArea;
+        params.maxInArea = that.data.maxInArea;
+        params.status = that.data.status;
         if (that.data.timeSelect.length > 0)
           params.beginTime = that.data.timeSelect[0];
         if (that.data.timeSelect.length > 1)
@@ -491,7 +495,7 @@ export default {
       console.log(params);
       this.$api
         .post({
-          url: "/house/bet/getBetHouse",
+          url: "/myHouse/myBetList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params,
           token: false
@@ -501,10 +505,9 @@ export default {
           that.loading = false;
           let data = e.data;
           if (data.code == 200) {
-            that.pageJson.total = data.data.dataCount;
-            that.pageJson.pageSum = data.data.pageSum;
-            console.log(that.pageJson.pageSum);
-            that.tableData = data.data.data;
+            that.pageJson.total = data.data.totalCount;
+            that.pageJson.currentPage = data.data.currPage;
+            that.tableData = data.data.list;
           } else {
             console.log("查询对赌房源列表结果：" + result.message);
             alert(result.message);
@@ -529,12 +532,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryHouseBet(val, "createTime", "descending");
+      this.queryHouseBet(val, "createTime", "1");
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryHouseBet(1, "createTime", "descending");
+      this.queryHouseBet(1, "createTime", "1");
     }
   }
 };
