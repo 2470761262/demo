@@ -117,10 +117,7 @@ export default {
       this.load.loading = true;
       this.$api
         .post({
-          url: "/agent_house/getHouseDetail",
-          data: {
-            houseId: that.forID.id
-          },
+          url: "/history/agent_house/getHouseDetail/"+that.forID.id,
           qs: true
         })
         .then(e => {
