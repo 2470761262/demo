@@ -500,39 +500,50 @@ export default {
       }
       //设置参数
       let that = this;
+      //选中节点
+      let checkedKeys = that.$refs.tree.getCheckedKeys();
+      checkedKeys.push(data.id);
+      that.$refs.tree.setCheckedKeys(checkedKeys);
+
       let functionPointObj =
         that.paramsObj.functionPointArray[new String(data.id)];
-      debugger;
       if (!functionPointObj) {
         functionPointObj = {};
       }
       functionPointObj.rId = data.id;
       functionPointObj.dataType = dataType;
-      if (
-        (that.companyTreeSelectNode.companyIds &&
-          that.companyTreeSelectNode.companyIds.length > 0) ||
-        (that.companyTreeSelectNode.deptIds &&
-          that.companyTreeSelectNode.deptIds.length > 0)
-      ) {
-        let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
-        functionPointObj.companyId = companyId;
-        let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
-        functionPointObj.deptId = deptId;
-      }
-      that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
-      if (data.children) {
-        if (data.children.length > 0) {
-          this.foreachChildren(data.children, dataType);
-        }
-      }
       //设置当前对象的值
       let currentNode = that.$refs.tree.getNode(data.id);
       currentNode.data.dataType = dataType;
-      if (this.currentCompanyGather != null) {
-        currentNode.data.companyGather = this.currentCompanyGather;
+      if (that.currentCompanyGather == null) {
+        that.currentCompanyGather = data.companyGather;
       }
-      if (this.currentDeptGather != null) {
-        currentNode.data.deptGather = this.currentDeptGather;
+      if (that.currentDeptGather == null) {
+        that.currentDeptGather = data.deptGather;
+      }
+      //设置权限数据
+      functionPointObj.companyId = that.currentCompanyGather;
+      functionPointObj.deptId = that.currentDeptGather;
+      //设置树上的权限数据
+      currentNode.data.companyGather = that.currentCompanyGather;
+      currentNode.data.deptGather = that.currentDeptGather;
+      // if (
+      //   (that.companyTreeSelectNode.companyIds &&
+      //     that.companyTreeSelectNode.companyIds.length > 0) ||
+      //   (that.companyTreeSelectNode.deptIds &&
+      //     that.companyTreeSelectNode.deptIds.length > 0)
+      // ) {
+      //   let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
+      //   functionPointObj.companyId = companyId;
+      //   let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
+      //   functionPointObj.deptId = deptId;
+      // }
+
+      that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
+      if (data.children) {
+        if (data.children.length > 0) {
+          that.foreachChildren(data.children, dataType);
+        }
       }
     },
     foreachList(list) {
