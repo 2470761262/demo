@@ -131,6 +131,10 @@
   border-color: var(--color--primary);
   background-color: var(--color--primary);
 }
+/deep/.vue-slider-dot {
+  width: 25px !important;
+  height: 25px !important;
+}
 /deep/.vue-slider-process {
   background-color: var(--color--primary);
 }
@@ -336,8 +340,7 @@
                       tooltip="none"
                       :lazy="true"
                       @change="priceSliderChange"
-                      :contained="true"
-                      :dot-size="[25,25]">
+                      :contained="true">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
                    :style="style">
@@ -364,8 +367,7 @@
                       tooltip="none"
                       :lazy="true"
                       @change="areaSliderChange"
-                      :contained="true"
-                      :dot-size="[25,25]">
+                      :contained="true">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
                    :style="style">
@@ -393,7 +395,6 @@
                       tooltip="none"
                       :lazy="true"
                       :contained="true"
-                      :dot-size="[25,25]"
                       @change="flootSliderChange">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
