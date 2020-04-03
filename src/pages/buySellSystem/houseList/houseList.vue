@@ -381,9 +381,11 @@ export default {
   methods: {
     setSelectNav(item) {
       this.houseMenuList.forEach((items, index) => {
-        items.flag = false;
+        if (items.type != item.type) {
+          items.flag = false;
+        }
       });
-      item.flag = true;
+      item.flag = !item.flag;
       if (this.form.type == item.type) {
         this.form.type = "12";
         this.form.title = "全部在售";
