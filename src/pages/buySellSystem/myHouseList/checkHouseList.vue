@@ -63,9 +63,8 @@
                             class="set-data-pricker"
                             @change="querylistByParams"
                             range-separator="至"
-                            value-format="yyyy-MM-dd HH:mm:ss"
                             start-placeholder="开始日期"
-                            :default-time="['00:00:00', '23:00:00']"
+                            :default-time="['00:00:00', '23:59:59']"
                             end-placeholder="结束日期"></el-date-picker>
             <span class="query-cell-suffix handlebut"
                   @click="Remove">清除</span>
@@ -77,7 +76,7 @@
             <el-select filterable
                        v-model="checkProject"
                        clearable
-                       class="set-select90"
+                       class="set-select120"
                        @change="querylistByParams"
                        placeholder="全部">
               <el-option v-for="item in checkProjectList"
@@ -92,7 +91,7 @@
             <el-select filterable
                        v-model="type"
                        clearable
-                       class="set-select90"
+                       class="set-select120"
                        @change="querylistByParams"
                        placeholder="全部">
               <el-option v-for="item in typeList"
@@ -107,7 +106,7 @@
             <el-select filterable
                        v-model="status"
                        clearable
-                       class="set-select90"
+                       class="set-select120"
                        @change="querylistByParams"
                        placeholder="全部">
               <el-option v-for="item in stateList"
@@ -123,7 +122,7 @@
                        @click="querylistByParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+            <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/MyCheck"></moreSelect>
           </div>
         </div>
       </template>
@@ -152,12 +151,12 @@
         </el-table-column>
         <el-table-column label="提交人">
           <template v-slot="scope">
-            {{scope.row.addPerName}}
+            {{scope.row.checkAddPerName}}
           </template>
         </el-table-column>
         <el-table-column label="提交时间">
           <template v-slot="scope">
-            {{scope.row.AddTime}}
+            {{scope.row.addTime}}
           </template>
         </el-table-column>
         <el-table-column label="审核状态">
@@ -167,7 +166,7 @@
         </el-table-column>
         <el-table-column label="备注说明">
           <template v-slot="scope">
-            {{scope.row.CheckMemo}}
+            {{scope.row.checkMemo}}
           </template>
         </el-table-column>
         <el-table-column label="附件">
@@ -184,7 +183,7 @@
           <template v-slot="scope">
             <el-button type="primary"
                        size="mini"
-                       v-if="scope.row.Tag==0"
+                       v-if="scope.row.tag==0"
                        @click="getTitle(scope.row)">审核</el-button>
             <el-button size="mini"
                        type=""
@@ -202,11 +201,11 @@
                     <el-radio :label="2">不通过</el-radio>
                   </el-radio-group>
                 </div>
-                <div v-if="row.Type==1||row.ReplaceType==2">
+                <div v-if="row.checkProject==1||row.replaceType==2">
                   <span>委托截止时间:</span>
-                  <span>{{row.ProxyMaxTime}}</span>
+                  <span>{{row.proxyMaxTime}}</span>
                 </div>
-                <div v-if="row.Type==0||row.ReplaceType==3"
+                <div v-if="row.checkProject==0||row.replaceType==3"
                      style="display:flex">
                   <span>钥匙类型:</span>
                   <span v-if="row.keyType==0">钥匙</span>
@@ -218,8 +217,8 @@
                     <span>{{row.keyCode}}</span>
                   </div>
                 </div>
-                <div v-if="row.Type==8">
-                  <div v-if="row.NewSaleTag==4"
+                <div v-if="row.checkProject==8">
+                  <div v-if="row.newSaleTag==4"
                        style="display:flex">
                     <span>成交公司:</span>
                     <span>{{row.dealCompany}}</span>
@@ -228,7 +227,7 @@
                       <span>{{row.dealPrice}}</span>
                     </div>
                   </div>
-                  <div v-if="row.NewSaleTag==6">
+                  <div v-if="row.newSaleTag==6">
                     <span>子类型:</span>
                     <span v-if="row.subStatus==0">疑似跳单</span>
                     <span v-if="row.subStatus==1">亲朋好友</span>
@@ -257,7 +256,7 @@
             </el-dialog>
 
             <el-button type="primary"
-                       v-if="!(scope.row.Type==13)"
+                       v-if="!(scope.row.checkProject==13)"
                        @click="toHouseDetail(scope.row.Eid)"
                        size="mini">查看</el-button>
           </template>
@@ -408,9 +407,6 @@ export default {
         value: '8',
         label: '房源转状态'
       }, {
-        value: '13',
-        label: '建楼申请'
-      }, {
         value: '11',
         label: '举报'
       }, {
@@ -426,9 +422,6 @@ export default {
       }, {
         value: '4',
         label: '他司售'
-      }, {
-        value: '3',
-        label: '补充楼盘'
       }, {
         value: '2',
         label: '虚假实勘'
@@ -646,6 +639,9 @@ export default {
       this.tabColumnChange(tab);
       this.querylist(1, 'id', 'ascending')
     },
+    tabColumnChange (e) {
+      this.tableColumn = e;
+    },
     queryCBId () {
       var that = this
       this.$api.get({
@@ -718,51 +714,42 @@ export default {
       this.querylist(1);
     },
     querylist (currentPage) {
-      let params = { limit: this.pageJson.pageSize + '', page: currentPage + '', listType: 'myAgent' };
-      let that = this;
-      if (this.queryData.CommunityName != null && this.queryData.CommunityName != '') { params.CommunityName = this.queryData.CommunityName; }
-      if (this.queryData.cbName != null && this.queryData.cbName != '') { params.cbName = this.queryData.cbName; }
-      if (this.queryData.roomId != null && this.queryData.roomId != '') {
-        let obj = {};
-        obj = this.roomNoList.find((item) => {
-          return item.value === that.queryData.roomId;
-        });
-        params.roomNo = obj.name;
-      }
-      if (this.status != null && this.status != '') { params.status = this.status; }
-      if (this.checkProject != null && this.checkProject != '') { params.checkProject = this.checkProject; }
-      if (this.type != null && this.type != '') {
-        if (this.type == 0) {
-          params.checkProject = 0;
-        } else if (this.type == 1) {
-          params.checkProject = 1;
-          params.checkType = this.type;
-        } else if (this.type == 4) {
-          params.checkProject = 8;
-          params.checkType = this.type;
-        } else if (this.type == 3) {
-          params.checkProject = 13;
-          //params.checkType = this.type;
-        } else if (this.type == 2) {
-          params.checkProject = 11;
-          params.checkType = 1;
+      var that = this;
+      that.loading = true;
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
+
+      if (Object.keys(this.moreSelect).length != 0) {
+        for (let key in this.moreSelect) {
+          if (key == "addTime" && this.moreSelect[key] !== "") {
+            params.beginTime = this.moreSelect[key][0];
+            params.endTime = this.moreSelect[key][1];
+          } 
+          else if (key == "followTime" && this.moreSelect[key] !== "") {
+            params.beginFollowTime = this.moreSelect[key][0];
+            params.endFollowTime = this.moreSelect[key][1];
+          }
+          else {
+            params[key] = this.moreSelect[key];
+          }
         }
-      }
-      if (this.value != null && this.value != '') { params.value = this.value; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[0] != null && this.queryData.timeSelect[0] != '') { params.minAddTime = this.queryData.timeSelect[0]; }
-      if (this.queryData.timeSelect != null && this.queryData.timeSelect[1] != null && this.queryData.timeSelect[1] != '') { params.maxAddTime = this.queryData.timeSelect[1]; }
-      this.$api.post({
-        url: '/agentHouse/propertyCheck/myHousePropertyCheckList',
+      } else {
+        params.comId = that.queryData.comId;
+        params.cbId = that.queryData.cbId;
+        params.bhId = that.queryData.roomId;
+        params.beginTime = that.queryData.timeSelect[0];
+        params.endTime = that.queryData.timeSelect[1];
+        params.status = that.status;
+        params.checkProject = that.checkProject;
+        params.checkType = that.type;
+      }     this.$api.post({
+        url: '/myHouse/myCheckList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
         token: false
       }).then((e) => {
-        console.log(e.data);
         let result = e.data;
         that.loading = false;
         if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
           that.pageJson.total = result.data.totalCount;
           that.pageJson.currentPage = result.data.currPage;
           that.tableData = result.data.list;
