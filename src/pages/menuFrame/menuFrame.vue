@@ -41,6 +41,7 @@
   max-width: 200px;
   /deep/.el-menu-item {
     background: #dbdbdb !important;
+    min-width: auto;
   }
   /deep/.el-submenu__icon-arrow {
     display: none !important;

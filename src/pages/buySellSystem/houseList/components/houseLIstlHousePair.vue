@@ -152,11 +152,14 @@
 .tooltipsItem {
   width: 100%;
   height: 100%;
-  background: var(--color--primary);
+  background: #fff;
   border-radius: 50%;
-  color: #fff;
+  color: var(--color--primary);
   text-align: center;
-  line-height: 25px;
+  line-height: 21px;
+  border: 2px solid var(--color--primary);
+  box-sizing: border-box;
+  font-weight: 600;
 }
 .vue-slider-index1 {
   /deep/.vue-slider-rail {
@@ -404,7 +407,7 @@
               </div>
             </template>
             <template v-slot:dot>
-              <div class="tooltipsItem">层</div>
+              <div class="tooltipsItem iconxuanzelouceng iconfont"></div>
             </template>
           </vue-slider>
         </el-form-item>

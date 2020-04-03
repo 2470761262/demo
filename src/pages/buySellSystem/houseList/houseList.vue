@@ -69,7 +69,7 @@
         border-radius: 4px;
         .icon {
           color: #fff;
-          font-size: 22px;
+          font-size: 30px;
         }
         .for-house-item-title {
           color: #fff;
@@ -99,6 +99,9 @@
       > span {
         color: #fff;
         font-size: 24px;
+      }
+      i {
+        font-size: 34px;
       }
       &:last-child {
         margin-left: 0px;
@@ -171,7 +174,7 @@
         </div>
         <div class="house-cell-but"
              @click="navToPath('/buySellSystem/concernCommunity')">
-          <i class="el-icon-plus"></i>
+          <i class="iconguanli iconfont"></i>
           <span>管理入口</span>
         </div>
       </div>
@@ -201,7 +204,7 @@ import houseresultlist from "@/pages/buySellSystem/houseList/components/houseRes
 const HosueList = [
   {
     title: "我的房源",
-    icon: "el-icon-zoom-in",
+    icon: "iconwodefangyuan iconfont",
     path: "/buySellSystem/concernCommunity",
     hot: false,
     flag: false,
@@ -211,7 +214,7 @@ const HosueList = [
   },
   {
     title: "7天被带看",
-    icon: "el-icon-zoom-in",
+    icon: "iconqitianbeidaikan iconfont",
     path: "/buySellSystem/sevenDaysFollowHouse",
     hot: true,
     flag: false,
@@ -221,7 +224,7 @@ const HosueList = [
   },
   {
     title: "新增房源",
-    icon: "el-icon-zoom-in",
+    icon: "iconxinzeng iconfont",
     path: "/buySellSystem/newAgentHouse",
     hot: false,
     flag: false,
@@ -231,7 +234,7 @@ const HosueList = [
   },
   {
     title: "我的核心盘",
-    icon: "el-icon-zoom-in",
+    icon: "iconhexin iconfont",
     path: "/buySellSystem/concernCommunity",
     hot: false,
     flag: false,
@@ -241,7 +244,7 @@ const HosueList = [
   },
   {
     title: "成交对赌",
-    icon: "el-icon-zoom-in",
+    icon: "iconfangyuan iconfont",
     path: "/buySellSystem/houseBet",
     hot: true,
     flag: false,
@@ -251,7 +254,7 @@ const HosueList = [
   },
   {
     title: "总监推荐",
-    icon: "el-icon-zoom-in",
+    icon: "iconzongjian iconfont",
     path: "/buySellSystem/chiefRecommendHouse",
     hot: true,
     flag: false,
@@ -271,7 +274,7 @@ const HosueList = [
   },
   {
     title: "店公共盘",
-    icon: "el-icon-zoom-in",
+    icon: "icondiangonggongpan iconfont",
     path: "/buySellSystem/shopDisk",
     hot: false,
     type: 9,
@@ -279,7 +282,7 @@ const HosueList = [
   },
   {
     title: "我的关注",
-    icon: "el-icon-zoom-in",
+    icon: "iconwodeguanzhu iconfont",
     path: "/buySellSystem/myConcern",
     hot: false,
     flag: false,
@@ -288,7 +291,7 @@ const HosueList = [
   },
   {
     title: "在售无跟单",
-    icon: "el-icon-zoom-in",
+    icon: "iconzaishouwugendan iconfont",
     path: "/buySellSystem/saleNotTracking",
     hot: false,
     flag: false,
