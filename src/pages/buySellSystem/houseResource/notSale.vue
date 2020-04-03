@@ -524,7 +524,7 @@ export default {
         .post({
           url: "/houseResource/getNotSale",
           data: params,
-          qs: true
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           console.log(e.data);
