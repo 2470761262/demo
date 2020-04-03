@@ -168,7 +168,8 @@ export default {
     toLook (id) {
       console.log(id);
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+
+      this.$router.push({ name: "historyDetails", params: { houseId: id ,tradeType:0} });
     },
     queryDatalist () {
       this.queryOurComDeal(1, "id", "ascending");

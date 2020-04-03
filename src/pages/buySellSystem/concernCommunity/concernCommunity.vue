@@ -358,10 +358,10 @@ export default {
         pageSize: 10 //每页条数
       },
       houseTypeList: [
-        { value: "1", label: "店公共盘" },
-        { value: "2", label: "在售无跟单" },
-        { value: "3", label: "暂不售" },
-        { value: "4", label: "无号码" },
+        { value: "3", label: "店公共盘" },
+        { value: "4", label: "在售无跟单" },      
+        { value: "1", label: "无号码" },
+        { value: "2", label: "成交房源" },
         { value: "5", label: "潜在出售" }
       ],
       state: [
@@ -610,7 +610,7 @@ export default {
       } else if (houseType == 6) {
         type = "--";
       } else {
-        type = "--";
+        type = "状态未知";
       }
       return type;
     },
@@ -1045,17 +1045,43 @@ export default {
     //跳转房源详情页面
     toHouseDetail (row) {
       var that = this;
-      //进入历史房源详情
-      if (row.houseType == 3 || row.houseType == 4 || row.houseType == 5) {
-        that.$router.push({
-          name: "historyDetails",
-          params: { houseId: row.id }
-        });
-      } else {
+      console.log("房源状态："+row.houseType);
+      //店公共盘,在售无跟单, 进入BSAgentHouse房源详情
+      if (row.houseType == 3 || row.houseType == 4) {
+        console.log('进入bsagenthouse房源详情');
         that.$router.push({
           name: "houseDetails",
           params: { houseId: row.id }
         });
+      }else if(row.houseType == 2){ //暂不售
+        console.log('进入历史房源房源详情');
+        that.$router.push({
+          name: "historyDetails",
+          params: { houseId: row.id,tradeType:1 }
+        });   
+      }else if (row.houseType == 5) {//潜在出售
+           console.log('进入交易房源（tradeHouseTbl）详情');
+           that.$router.push({
+             name:"historyDetails",
+             params:{houseId:row.id,tradeType:0}
+           })
+           
+      }else if (row.houseType == 1|| row.houseType == 6) {//无号码
+           console.log('进入楼盘详情')
+           console.log("/building/geBuildingDetail/"+row.id);
+           that.$notify({
+            title: "警告",
+            message: '楼盘详情页面未实现，接口已经有了',
+            type: "warning",
+            offset: 60
+          });
+      }else {
+           that.$notify({
+            title: "警告",
+            message: '房源状态未知，无法查看',
+            type: "warning",
+            offset: 60
+          });
       }
     },
 
