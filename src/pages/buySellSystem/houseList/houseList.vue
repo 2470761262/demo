@@ -278,6 +278,7 @@ const HosueList = [
     icon: "icondiangonggongpan iconfont",
     path: "/buySellSystem/shopDisk",
     hot: false,
+    flag: false,
     type: 9,
     url: "/mateHouse/getMateHouse/shopDisk"
   },
@@ -379,7 +380,11 @@ export default {
   },
   methods: {
     setSelectNav(item) {
-      console.log("11111111111" + JSON.stringify(item));
+      this.houseMenuList.forEach((items, index) => {
+        if (items.type != item.type) {
+          items.flag = false;
+        }
+      });
       item.flag = !item.flag;
       if (this.form.type == item.type) {
         this.form.type = "12";

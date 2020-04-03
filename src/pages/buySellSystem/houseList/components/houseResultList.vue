@@ -392,7 +392,6 @@ export default {
       immediate: true,
       handler: function(value, ordvalue) {
         this.renderTag(value);
-        console.log(JSON.stringify(value));
         this.getHouseData(JSON.parse(JSON.stringify(value)));
       }
     }
