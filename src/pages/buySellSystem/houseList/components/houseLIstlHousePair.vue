@@ -79,15 +79,21 @@
     border: 2px solid var(--color--primary);
     height: 45px;
     box-sizing: border-box;
+    box-shadow: inset 0 0 3px black;
     .el-icon-search {
-      font-size: 20px;
+      font-size: 26px;
       margin: 0 10px;
+      color: #c3c3c3;
     }
     .select-input-sub {
       outline: none;
       border: none;
-      font-size: 20px;
+      font-size: 18px;
       flex: 1;
+      background: inherit;
+      &::-webkit-input-placeholder {
+        color: #c3c3c3;
+      }
     }
   }
   .select-but-sub {
