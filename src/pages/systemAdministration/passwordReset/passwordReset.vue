@@ -28,46 +28,43 @@
       <div class="elTree">
         <!--        <el-input placeholder="输入关键字进行过滤" v-model="filterText">-->
         <!--        </el-input>-->
-        <el-tree ref="tree2"
-                 :data="treeData"
-                 :default-expanded-keys="[1]"
-                 node-key="nodeId"
-                 show-checkbox
-                 :props="defaultProps"
-                 @check-change="checkChange"
-                 @check="treeCheck"
-                 :highlight-current="true"
-                 :filter-node-method="filterNode"></el-tree>
+        <el-tree
+          ref="tree2"
+          :data="treeData"
+          :default-expanded-keys="[1]"
+          node-key="nodeId"
+          show-checkbox
+          :props="defaultProps"
+          @check-change="checkChange"
+          @check="treeCheck"
+          :highlight-current="true"
+          :filter-node-method="filterNode"
+        ></el-tree>
       </div>
     </template>
     <template>
       <el-card class="box-card">
-        <div slot="header"
-             class="clearfix">
+        <div slot="header" class="clearfix">
           <span>人员密码重置</span>
         </div>
         <div class="text item">
           <div class="formItem">
             人员:
-            <el-select v-model="personBusinessId"
-                       placeholder="请选择">
-              <el-option v-for="item in employeeList"
-                         :key="item.nodeId"
-                         :label="item.labelName"
-                         :value="item.businessId">
-              </el-option>
+            <el-select v-model="personBusinessId" placeholder="请选择">
+              <el-option
+                v-for="item in employeeList"
+                :key="item.nodeId"
+                :label="item.labelName"
+                :value="item.businessId"
+              ></el-option>
             </el-select>
           </div>
           <div class="formItem">
             最新密码:
-            <el-input v-model="newPwd"
-                      style="width: 200px;"
-                      placeholder="最新密码"
-                      disabled></el-input>
+            <el-input v-model="newPwd" style="width: 200px;" placeholder="最新密码" disabled></el-input>
           </div>
           <div class="formItem">
-            <el-button type="primary"
-                       @click="resetPwd">重置密码</el-button>
+            <el-button type="primary" @click="resetPwd">重置密码</el-button>
           </div>
         </div>
       </el-card>
@@ -75,16 +72,17 @@
   </div>
 </template>
 <script>
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
+import getToken from "@/minxi/getUrlToken";
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, getToken],
   watch: {
-    filterText (val) {
+    filterText(val) {
       this.$refs.tree2.filter(val);
     }
   },
   components: {},
-  data () {
+  data() {
     return {
       treeData: [],
       filterText: "",
@@ -97,8 +95,8 @@ export default {
       personBusinessId: ""
     };
   },
-  mounted: function () {
-    this.$nextTick(function () {
+  mounted: function() {
+    this.$nextTick(function() {
       // 代码保证 this.$el 在 document 中
       console.log(this);
       //读取公司，部门数据
@@ -123,11 +121,10 @@ export default {
           console.log("发送公告结果");
           console.log(e);
         });
-
-    })
+    });
   },
   methods: {
-    treeCheck (e, data) {
+    treeCheck(e, data) {
       //判断如果未选中，则清空用户列表；
       if (data && data.checkedKeys) {
         if (data.checkedKeys.length < 1) {
@@ -161,23 +158,27 @@ export default {
         });
       console.log(this.$refs.tree2.getNode(44), "getNode");
     },
-    getCurrentKey () {
+    getCurrentKey() {
       console.log(this.$refs.tree2.getCurrentKey(), "getCurrentKey");
       //  this.$refs.tree2.setCurrentKey(44);
     },
-    checkChange (e, data, childData) {
+    checkChange(e, data, childData) {
       console.log(e, data, childData, "checkChange");
     },
     //树输入筛选
-    filterNode (value, data) {
+    filterNode(value, data) {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
     //重置密码
-    resetPwd () {
+    resetPwd() {
       //获取参数进行重置密码;
-      if (!this.personBusinessId || this.personBusinessId == "" || this.personBusinessId == null) {
+      if (
+        !this.personBusinessId ||
+        this.personBusinessId == "" ||
+        this.personBusinessId == null
+      ) {
         alert("请先选择人员");
         return;
       }

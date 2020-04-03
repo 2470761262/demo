@@ -64,9 +64,9 @@
 </template>
 <script>
 import listPage from "@/components/listPage";
-import getMenuRid from "@/minxi/getMenuRid";
+import getToken from "@/minxi/getUrlToken";
 export default {
-  mixins: [getMenuRid],
+  mixins: [getToken],
   components: {
     listPage
   },

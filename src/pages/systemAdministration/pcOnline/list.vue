@@ -1,65 +1,61 @@
 <template>
-  <list-page :parentData="$data"
-             @handleSizeChange="sizeChange"
-             @handleCurrentChange="currentChange">
+  <list-page
+    :parentData="$data"
+    @handleSizeChange="sizeChange"
+    @handleCurrentChange="currentChange"
+  >
     <template v-slot:top>
       <div class="query-cell">
-        <el-input placeholder="门店名称"
-                  size="small"
-                  v-model="queryData.remark"
-                  clearable>
+        <el-input placeholder="门店名称" size="small" v-model="queryData.remark" clearable>
           <template slot="prepend">门店名称</template>
         </el-input>
-        <el-input placeholder="账号"
-                  size="small"
-                  v-model="queryData.account"
-                  clearable>
+        <el-input placeholder="账号" size="small" v-model="queryData.account" clearable>
           <template slot="prepend">账号</template>
         </el-input>
-        <el-input placeholder="电脑IP地址"
-                  size="small"
-                  v-model="queryData.ip"
-                  clearable>
+        <el-input placeholder="电脑IP地址" size="small" v-model="queryData.ip" clearable>
           <template slot="prepend">电脑IP地址</template>
         </el-input>
-        <el-date-picker v-model="choiceDate"
-                        type="daterange"
-                        align="right"
-                        unlink-panels
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :picker-options="pickerOptions2">
+        <el-date-picker
+          v-model="choiceDate"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :picker-options="pickerOptions2"
+        >
           <template slot="prepend">登录时间</template>
         </el-date-picker>
-        <el-select v-model="selectTag"
-                   placeholder="全部"
-                   @change="SelectTag">
-          <el-option v-for="item in SelectOptions"
-                     :key="item.value"
-                     :label="item.label"
-                     :value="item.value"></el-option>
+        <el-select v-model="selectTag" placeholder="全部" @change="SelectTag">
+          <el-option
+            v-for="item in SelectOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          ></el-option>
         </el-select>
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="queryByParams">查询</el-button>
+        <el-button type="primary" style="margin-left:10px" size="mini" @click="queryByParams">查询</el-button>
         <el-tag type="danger">在线人数：{{onlineCount}}</el-tag>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
       <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
-                         :width="item.width"
-                         :key="item.prop"
-                         :formatter="onLineStr"></el-table-column>
+        <el-table-column
+          :prop="item.prop"
+          :label="item.label"
+          :width="item.width"
+          :key="item.prop"
+          :formatter="onLineStr"
+        ></el-table-column>
       </template>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     @click="Offline(scope.$index, scope.row)"
-                     v-if="scope.row.LineTag==1">下线</el-button>
+          <el-button
+            size="mini"
+            @click="Offline(scope.$index, scope.row)"
+            v-if="scope.row.LineTag==1"
+          >下线</el-button>
         </template>
       </el-table-column>
     </template>
@@ -67,13 +63,14 @@
 </template>
 <script>
 import listPage from "@/components/listPage";
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
+import getToken from "@/minxi/getUrlToken";
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, getToken],
   components: {
     listPage
   },
-  data () {
+  data() {
     return {
       loading: false,
       queryData: {
@@ -103,7 +100,7 @@ export default {
         shortcuts: [
           {
             text: "最近一周",
-            onClick (picker) {
+            onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
@@ -112,7 +109,7 @@ export default {
           },
           {
             text: "最近一个月",
-            onClick (picker) {
+            onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
@@ -121,7 +118,7 @@ export default {
           },
           {
             text: "最近三个月",
-            onClick (picker) {
+            onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
@@ -153,12 +150,12 @@ export default {
       onlineCount: ""
     };
   },
-  mounted () {
+  mounted() {
     this.queryPcOnlineDatas(1);
     this.queryPcOnlineCount();
   },
   methods: {
-    queryPcOnlineDatas (currentPage) {
+    queryPcOnlineDatas(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.remark != null) {
@@ -203,18 +200,18 @@ export default {
           console.log(e);
         });
     },
-    sizeChange (val) {
+    sizeChange(val) {
       console.log("每页 ${val} 条数据");
       this.pageJson.pageSize = val;
       this.queryPcOnlineDatas(1);
     },
-    currentChange (val) {
+    currentChange(val) {
       this.queryPcOnlineDatas(val);
     },
-    queryByParams () {
+    queryByParams() {
       this.queryPcOnlineDatas(1);
     },
-    onLineStr (row, column) {
+    onLineStr(row, column) {
       if (column.property == "LineTag") {
         return ["离线", "在线", "被强制下线"][row.LineTag];
       }
@@ -227,11 +224,11 @@ export default {
       }
       return row[column.property];
     },
-    SelectTag () {
+    SelectTag() {
       //console.log(this.selectTag);
       this.queryPcOnlineDatas(1);
     },
-    Offline (index, row) {
+    Offline(index, row) {
       this.$confirm(
         "注意！ 如果执行该操作，用户将强制下线。",
         "你确定要该用户下线？",
@@ -284,7 +281,7 @@ export default {
           });
         });
     },
-    queryPcOnlineCount () {
+    queryPcOnlineCount() {
       this.$api
         .post({
           url: "/PcOnline/count"
