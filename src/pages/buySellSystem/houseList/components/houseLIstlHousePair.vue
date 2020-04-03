@@ -79,7 +79,7 @@
     border: 2px solid var(--color--primary);
     height: 45px;
     box-sizing: border-box;
-    box-shadow: inset 0 0 3px black;
+    box-shadow: inset 0 0 7px var(--color--primary);
     .el-icon-search {
       font-size: 26px;
       margin: 0 10px;
