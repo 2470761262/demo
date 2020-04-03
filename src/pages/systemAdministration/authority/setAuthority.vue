@@ -52,130 +52,119 @@
 
 <template>
   <div v-loading.fullscreen.lock="fullscreenLoading">
-
-    <el-breadcrumb separator-class="el-icon-arrow-right"
-                   style="margin: 10px">
-      <el-breadcrumb-item v-for="(item,index) in navAuthority.navList"
-                          :key="index">{{item.title}}</el-breadcrumb-item>
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin: 10px">
+      <el-breadcrumb-item v-for="(item,index) in navAuthority.navList" :key="index">{{item.title}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <template>
       <div class="elTree">
-        <el-form :inline="true"
-                 class="demo1-form-inline"
-                 style="align-content: center">
+        <el-form :inline="true" class="demo1-form-inline" style="align-content: center">
           <el-form-item label="类型">
-            <el-select v-model="ruleParamsObj.type"
-                       style="width: 130px;"
-                       @change="loadFunctionPoint"
-                       placeholder="请选择功能点类型">
-              <el-option label="PC端"
-                         value="0"></el-option>
-              <el-option label="Client端"
-                         value="1"></el-option>
-              <el-option label="Wap端"
-                         value="2"></el-option>
+            <el-select
+              v-model="ruleParamsObj.type"
+              style="width: 130px;"
+              @change="loadFunctionPoint"
+              placeholder="请选择功能点类型"
+            >
+              <el-option label="PC端" value="0"></el-option>
+              <el-option label="Client端" value="1"></el-option>
+              <el-option label="Wap端" value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="子节点选中">
             <el-switch v-model="treeCheckStrictly"></el-switch>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary"
-                       size="mini"
-                       @click="savePosition">保存</el-button>
+            <el-button type="primary" size="mini" @click="savePosition">保存</el-button>
           </el-form-item>
         </el-form>
-        <el-tree :data="ruleTreeData"
-                 show-checkbox
-                 node-key="id"
-                 ref="tree"
-                 highlight-current
-                 :check-strictly="treeCheckStrictly"
-                 :expand-on-click-node=false
-                 :props="defaultProps">
-          <span class="custom-tree-node"
-                slot-scope="{ node, data }">
+        <el-tree
+          :data="ruleTreeData"
+          show-checkbox
+          node-key="id"
+          ref="tree"
+          highlight-current
+          :check-strictly="treeCheckStrictly"
+          :expand-on-click-node="false"
+          :props="defaultProps"
+        >
+          <span class="custom-tree-node" slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
             <span>
-              <el-button type="text"
-                         size="mini"
-                         :class="{'selected_btn':node.data.dataType == '0' }"
-                         @click="operationSelf(node,data)"> 自己</el-button>
-              <el-button type="text"
-                         size="mini"
-                         :class="{'selected_btn':node.data.dataType == '1'}"
-                         @click="operationDept(node, data)"> 部门权限</el-button>
-              <el-button type="text"
-                         size="mini"
-                         :class="{'selected_btn':node.data.dataType == '2'}"
-                         @click="operationCompany(node, data)">跨部门权限</el-button>
+              <el-button
+                type="text"
+                size="mini"
+                :class="{'selected_btn':node.data.dataType == '0' }"
+                @click="operationSelf(node,data)"
+              >自己</el-button>
+              <el-button
+                type="text"
+                size="mini"
+                :class="{'selected_btn':node.data.dataType == '1'}"
+                @click="operationDept(node, data)"
+              >部门权限</el-button>
+              <el-button
+                type="text"
+                size="mini"
+                :class="{'selected_btn':node.data.dataType == '2'}"
+                @click="operationCompany(node, data)"
+              >跨部门权限</el-button>
             </span>
           </span>
         </el-tree>
       </div>
-
     </template>
     <template>
       <el-card class="box-card">
-        <div slot="header"
-             class="clearfix">
+        <div slot="header" class="clearfix">
           <span>操作</span>
         </div>
         <div class="text item">
           <!--          <el-button type="primary"-->
           <!--                     @click="cancel">返回</el-button>-->
         </div>
-        <div class="text item"
-             style="margin-top: 10px;">
+        <div class="text item" style="margin-top: 10px;">
           <template>
             <div class="formItem">
-              <el-form :inline="true"
-                       class="demo-form-inline"
-                       style="!important;align-content: center">
-                <el-form-item label="关键字过滤"
-                              v-show="showCompanyTree">
-                  <el-input placeholder="输入关键字进行过滤"
-                            v-model="filterText"
-                            class="treeSearch"></el-input>
+              <el-form
+                :inline="true"
+                class="demo-form-inline"
+                style="!important;align-content: center"
+              >
+                <el-form-item label="关键字过滤" v-show="showCompanyTree">
+                  <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
                 </el-form-item>
-                <el-form-item label="不选子节点"
-                              v-show="showCompanyTree">
+                <el-form-item label="不选子节点" v-show="showCompanyTree">
                   <el-switch v-model="checkStrictly"></el-switch>
                 </el-form-item>
-                <el-form-item label="功能操作"
-                              v-show="showSave">
-                  <el-button type="primary"
-                             size="mini"
-                             @click="saveCompanyRule">保存</el-button>
+                <el-form-item label="功能操作" v-show="showSave">
+                  <el-button type="primary" size="mini" @click="saveCompanyRule">保存</el-button>
                 </el-form-item>
               </el-form>
-
             </div>
-            <div class="elTree"
-                 v-show="showCompanyTree">
-              <el-tree ref="companyTree"
-                       :data="companyTreeData"
-                       node-key="businessId"
-                       show-checkbox
-                       :props="companyProps"
-                       @check="checkNode"
-                       :highlight-current="true"
-                       :filter-node-method="filterNode"
-                       :check-strictly="checkStrictly"
-                       :action="''"
-                       empty-text="暂无数据，请检查权限"
-                       auto-expand-parent
-                       :default-checked-keys="companyGather"
-                       :default-expanded-keys="companyGather"
-                       v-loading="treeLoading"></el-tree>
-
+            <div class="elTree" v-show="showCompanyTree">
+              <el-tree
+                ref="companyTree"
+                :data="companyTreeData"
+                node-key="businessId"
+                show-checkbox
+                :props="companyProps"
+                @check="checkNode"
+                :highlight-current="true"
+                :filter-node-method="filterNode"
+                :check-strictly="checkStrictly"
+                :action="''"
+                empty-text="暂无数据，请检查权限"
+                auto-expand-parent
+                :default-checked-keys="companyGather"
+                :default-expanded-keys="companyGather"
+                v-loading="treeLoading"
+              ></el-tree>
             </div>
           </template>
         </div>
       </el-card>
     </template>
-
   </div>
 </template>
 <script>
@@ -390,7 +379,7 @@ export default {
       let that = this;
       let functionPointObj =
         that.paramsObj.functionPointArray[new String(data.id)];
-      debugger;
+      //debugger;
       if (!functionPointObj) {
         functionPointObj = {};
       }
