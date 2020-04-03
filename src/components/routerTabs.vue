@@ -123,11 +123,19 @@ export default {
       // this.$emit('input', this.renderChild);
       this.$emit("change", this.renderChild);
     },
+    setMetaTitle(resultIndex) {
+      //   this.$route.matched.forEach(item => {
+      //     if (item.path == "/buySellSystem/otherIframe") {
+      //       item.meta.title = this.routerTab[resultIndex].name;
+      //     }
+      //   });
+    },
     //父级切换
     parentChange(e) {
       let resultIndex = this.routerTab.findIndex((item, index) => {
         return item.active == e.name;
       });
+      this.setMetaTitle(resultIndex);
       if (this.routerTab[resultIndex].children) {
         this.renderChild = this.routerTab[resultIndex].children[0].active;
         this.childChange();
