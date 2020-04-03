@@ -100,7 +100,8 @@
                           @change="queryPotentialHouseParams"
                           range-separator="至"
                           start-placeholder="开始日期"
-                          end-placeholder="结束日期"></el-date-picker>
+                          end-placeholder="结束日期"
+                          :default-time="['00:00:00', '23:59:59']"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="Remove">清除</span>
         </div>
@@ -153,7 +154,7 @@ export default {
     // definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
       option: [
@@ -239,31 +240,31 @@ export default {
       tableData: []
     };
   },
-  mounted() {
+  mounted () {
     this.data.type = "build";
     this.queryPotentialHouse(1, "id", "descending");
   },
   methods: {
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.queryPotentialHouse(1, e.prop, e.order);
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e.prop, e.order);
       this.queryPotentialHouse(1, e.prop, e.order);
     },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
       this.queryPotentialHouse(1, "id", "ascending");
     },
-    toLook(id) {
+    toLook (id) {
       var that = this;
       that.$router.push({ name: "historyDetails", params: { houseId: id } });
     },
-    toSale(
+    toSale (
       comId,
       cbId,
       bhId,
@@ -289,15 +290,15 @@ export default {
         }
       });
     },
-    queryPotentialHouseParams() {
+    queryPotentialHouseParams () {
       this.queryPotentialHouse(1, "id", "descending");
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -323,8 +324,12 @@ export default {
         that.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
+      if (that.data.comId == "") {
+        that.data.roomNo = "";
+        that.data.cbId = "";
+      }
       this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
@@ -334,7 +339,7 @@ export default {
           data: {
             comId: that.data.comId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -346,7 +351,7 @@ export default {
         });
       this.queryPotentialHouseParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -358,7 +363,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -369,14 +374,14 @@ export default {
         });
       this.queryPotentialHouseParams();
     },
-    Remove() {
+    Remove () {
       //  let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       //   this.tabColumnChange(tab);
       this.queryPotentialHouse(1, "id", "descending");
     },
 
-    queryPotentialHouse(currentPage, column, type) {
+    queryPotentialHouse (currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -426,17 +431,17 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryPotentialHouseParams(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.queryPotentialHouse(val, "id", "descending");
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryPotentialHouse(1, "id", "descending");
