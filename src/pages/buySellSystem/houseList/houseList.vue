@@ -130,6 +130,7 @@
         top: 500px;
         font-size: 20px;
         cursor: pointer;
+        color: var(--color--primary);
       }
     }
     &:last-child {
