@@ -278,6 +278,7 @@ const HosueList = [
     icon: "icondiangonggongpan iconfont",
     path: "/buySellSystem/shopDisk",
     hot: false,
+    flag: false,
     type: 9,
     url: "/mateHouse/getMateHouse/shopDisk"
   },
@@ -379,8 +380,10 @@ export default {
   },
   methods: {
     setSelectNav(item) {
-      console.log("11111111111" + JSON.stringify(item));
-      item.flag = !item.flag;
+      this.houseMenuList.forEach((items, index) => {
+        items.flag = false;
+      });
+      item.flag = true;
       if (this.form.type == item.type) {
         this.form.type = "12";
         this.form.title = "全部在售";

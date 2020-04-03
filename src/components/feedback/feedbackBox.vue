@@ -9,6 +9,16 @@
   display: flex;
   justify-content: space-between;
 }
+/deep/.el-breadcrumb__item {
+  .el-breadcrumb__inner {
+    color: var(--color--primary);
+  }
+  &:last-child {
+    .el-breadcrumb__inner {
+      color: #606266;
+    }
+  }
+}
 </style>
 <template>
   <div class="nav-breadcrumb">
@@ -136,7 +146,7 @@ export default {
                 title: item.meta.title,
                 url: item.path
               });
-            }, 100 * index);
+            }, 300 * index);
           }
         });
       }
