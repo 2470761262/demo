@@ -26,6 +26,9 @@
     //filter: brightness(100%) !important;
     filter: opacity(1);
   }
+  .iconfont {
+    font-size: 22px;
+  }
 }
 .el-children-tabs {
   background: var(--color--primary);
@@ -55,7 +58,7 @@
       <el-tab-pane v-for="(item,index) in renderTab"
                    :key="index"
                    :name="item.active">
-        <span slot="label"><i class="el-icon-date"></i> {{item.name}}</span>
+        <span slot="label"><i :class="item.icon"></i> {{item.name}}</span>
       </el-tab-pane>
     </el-tabs>
     <template v-for="(item,index) in renderTab">
@@ -120,11 +123,19 @@ export default {
       // this.$emit('input', this.renderChild);
       this.$emit("change", this.renderChild);
     },
+    setMetaTitle(resultIndex) {
+      //   this.$route.matched.forEach(item => {
+      //     if (item.path == "/buySellSystem/otherIframe") {
+      //       item.meta.title = this.routerTab[resultIndex].name;
+      //     }
+      //   });
+    },
     //父级切换
     parentChange(e) {
       let resultIndex = this.routerTab.findIndex((item, index) => {
         return item.active == e.name;
       });
+      this.setMetaTitle(resultIndex);
       if (this.routerTab[resultIndex].children) {
         this.renderChild = this.routerTab[resultIndex].children[0].active;
         this.childChange();

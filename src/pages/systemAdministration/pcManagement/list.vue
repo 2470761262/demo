@@ -1,68 +1,54 @@
 <template>
-  <list-page :parentData="$data"
-             @handleSizeChange="sizeChange"
-             @handleCurrentChange="currentChange">
+  <list-page
+    :parentData="$data"
+    @handleSizeChange="sizeChange"
+    @handleCurrentChange="currentChange"
+  >
     <template v-slot:top>
       <div class="query-cell">
-        <el-input placeholder="电脑的MAC地址"
-                  size="small"
-                  v-model="queryData.mac"
-                  clearable>
+        <el-input placeholder="电脑的MAC地址" size="small" v-model="queryData.mac" clearable>
           <template slot="prepend">电脑的MAC地址</template>
         </el-input>
-        <el-input placeholder="硬盘编号"
-                  size="small"
-                  v-model="queryData.disk"
-                  clearable>
+        <el-input placeholder="硬盘编号" size="small" v-model="queryData.disk" clearable>
           <template slot="prepend">硬盘编号</template>
         </el-input>
-        <el-input placeholder="CPU编号"
-                  size="small"
-                  v-model="queryData.cpu"
-                  clearable>
+        <el-input placeholder="CPU编号" size="small" v-model="queryData.cpu" clearable>
           <template slot="prepend">CPU编号</template>
         </el-input>
-        <el-input placeholder="门店名称"
-                  size="small"
-                  v-model="queryData.remark"
-                  clearable>
+        <el-input placeholder="门店名称" size="small" v-model="queryData.remark" clearable>
           <template slot="prepend">门店名称</template>
         </el-input>
         <el-checkbox v-model="queryData.delChecked">查询已删除</el-checkbox>
-        <el-date-picker v-model="queryData.addDate"
-                        type="daterange"
-                        align="right"
-                        unlink-panels
-                        range-separator="至"
-                        start-placeholder="添加的开始时间"
-                        end-placeholder="添加的结束时间"
-                        :picker-options="pickerOptions2"></el-date-picker>
-        <el-date-picker v-model="queryData.loginDate"
-                        type="daterange"
-                        align="right"
-                        unlink-panels
-                        range-separator="至"
-                        start-placeholder="最后登录的开始时间"
-                        end-placeholder="最后登录的结束时间"
-                        :picker-options="pickerOptions2"></el-date-picker>
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="queryByParams">查询</el-button>
+        <el-date-picker
+          v-model="queryData.addDate"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="添加的开始时间"
+          end-placeholder="添加的结束时间"
+          :picker-options="pickerOptions2"
+        ></el-date-picker>
+        <el-date-picker
+          v-model="queryData.loginDate"
+          type="daterange"
+          align="right"
+          unlink-panels
+          range-separator="至"
+          start-placeholder="最后登录的开始时间"
+          end-placeholder="最后登录的结束时间"
+          :picker-options="pickerOptions2"
+        ></el-date-picker>
+        <el-button type="primary" style="margin-left:10px" size="mini" @click="queryByParams">查询</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
       <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
-                         :width="item.width"
-                         :key="item.prop"></el-table-column>
+        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
       </template>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button size="mini"
-                     @click="Del(scope.$index, scope.row)"
-                     v-if="scope.row.Del==0">删除</el-button>
+          <el-button size="mini" @click="Del(scope.$index, scope.row)" v-if="scope.row.Del==0">删除</el-button>
         </template>
       </el-table-column>
     </template>
@@ -70,13 +56,14 @@
 </template>
 <script>
 import listPage from "@/components/listPage";
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
+import getToken from "@/minxi/getUrlToken";
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, getToken],
   components: {
     listPage
   },
-  data () {
+  data() {
     return {
       loading: false,
       queryData: {
@@ -107,7 +94,7 @@ export default {
         shortcuts: [
           {
             text: "最近一周",
-            onClick (picker) {
+            onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
@@ -116,7 +103,7 @@ export default {
           },
           {
             text: "最近一个月",
-            onClick (picker) {
+            onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
@@ -125,7 +112,7 @@ export default {
           },
           {
             text: "最近三个月",
-            onClick (picker) {
+            onClick(picker) {
               const end = new Date();
               const start = new Date();
               start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
@@ -136,11 +123,11 @@ export default {
       }
     };
   },
-  mounted () {
+  mounted() {
     this.queryPcManagementDatas(1);
   },
   methods: {
-    queryPcManagementDatas (currentPage) {
+    queryPcManagementDatas(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.mac != null) {
@@ -192,28 +179,28 @@ export default {
           console.log(e);
         });
     },
-    sizeChange (val) {
+    sizeChange(val) {
       console.log("每页 ${val} 条数据");
       this.pageJson.pageSize = val;
       this.queryPcManagementDatas(1);
     },
-    currentChange (val) {
+    currentChange(val) {
       this.queryPcManagementDatas(val);
     },
-    queryByParams () {
+    queryByParams() {
       this.queryPcManagementDatas(1);
     },
-    onLineStr (row, column) {
+    onLineStr(row, column) {
       if (column.property == "LineTag") {
         return ["离线", "在线", "被强制下线"][row.LineTag];
       }
       return row[column.property];
     },
-    SelectTag () {
+    SelectTag() {
       //console.log(this.selectTag);
       this.queryPcManagementDatas(1);
     },
-    Del (index, row) {
+    Del(index, row) {
       this.$confirm("确定要删除该数据？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

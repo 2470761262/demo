@@ -35,9 +35,8 @@
           style="width: 200px;"
           placeholder="输入关键字进行过滤"
           @change="keywordChange"
-          v-model="keyword">
-        </el-input>
-        类型:
+          v-model="keyword"
+        ></el-input>类型:
         <el-select v-model="type" @change="typeChange" placeholder="请选择类型" style="width: 150px">
           <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.type"></el-option>
         </el-select>
@@ -189,8 +188,9 @@
 </template>
 <script>
 import getMenuRid from "@/minxi/getMenuRid";
+import getToken from "@/minxi/getUrlToken";
 export default {
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, getToken],
   watch: {
     // filterText (val) {
     //   this.$refs.tree2.filter(val);
@@ -403,7 +403,7 @@ export default {
       this.ruleObj = data;
       this.$forceUpdate();
       console.log(data, node, obj, "selected...");
-      if(this.showTable){
+      if (this.showTable) {
         this.selectRuleUrlConfig();
       }
     },

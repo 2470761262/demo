@@ -22,74 +22,65 @@
   <div>
     <template>
       <div class="elTree">
-        <el-tree ref="tree2"
-                 :data="treeData"
-                 :default-expanded-keys="[1]"
-                 node-key="nodeId"
-                 show-checkbox
-                 :props="defaultProps"
-                 @check-change="checkChange"
-                 @check="treeCheck"
-                 :highlight-current="true"
-                 :filter-node-method="filterNode"></el-tree>
+        <el-tree
+          ref="tree2"
+          :data="treeData"
+          :default-expanded-keys="[1]"
+          node-key="nodeId"
+          show-checkbox
+          :props="defaultProps"
+          @check-change="checkChange"
+          @check="treeCheck"
+          :highlight-current="true"
+          :filter-node-method="filterNode"
+        ></el-tree>
       </div>
     </template>
-    <list-page :parentData="$data"
-               highlight-current-row
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange"
-               @current-change="handleChange">
+    <list-page
+      :parentData="$data"
+      highlight-current-row
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+      @current-change="handleChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
-          <el-input placeholder="公司名称"
-                    v-model="queryData.CompanyName"
-                    clearable>
+          <el-input placeholder="公司名称" v-model="queryData.CompanyName" clearable>
             <template slot="prepend">公司名</template>
           </el-input>
-          <el-button type="primary"
-                     style="margin-left:10px"
-                     size="mini"
-                     @click="queryCompanyByParams">查询</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddCompanyPage(0)">添加同级公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddCompanyPage(1)">添加子公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddDeptPage">添加子级部门</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="queryCompanyByIsLocked(0)">查询锁定公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button>
-          <el-button icon="el-icon-s-platform"
-                     size="mini"
-                     @click="setUp()"
-                     title="设置网站"
-                     round></el-button>
+          <el-button
+            type="primary"
+            style="margin-left:10px"
+            size="mini"
+            @click="queryCompanyByParams"
+          >查询</el-button>
+          <el-button type="primary" size="mini" @click="toAddCompanyPage(0)">添加同级公司</el-button>
+          <el-button type="primary" size="mini" @click="toAddCompanyPage(1)">添加子公司</el-button>
+          <el-button type="primary" size="mini" @click="toAddDeptPage">添加子级部门</el-button>
+          <el-button type="primary" size="mini" @click="queryCompanyByIsLocked(0)">查询锁定公司</el-button>
+          <el-button type="primary" size="mini" @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button>
+          <el-button icon="el-icon-s-platform" size="mini" @click="setUp()" title="设置网站" round></el-button>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column prop="operation"
-                         label="操作"
-                         fixed="right"
-                         key="operation">
+        <el-table-column prop="operation" label="操作" fixed="right" key="operation">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
-              <el-button type="primary"
-                         size="mini"
-                         @click="distributeEvent(item.methosName,scope.row.id)"
-                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                         :key="index">{{item.name}}</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="distributeEvent(item.methosName,scope.row.id)"
+                v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                :key="index"
+              >{{item.name}}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -102,16 +93,18 @@
 
 <script>
 import listPage from "@/components/listPage";
+import getToken from "@/minxi/getUrlToken";
 export default {
   watch: {
-    filterText (val) {
+    filterText(val) {
       this.$refs.tree2.filter(val);
     }
   },
   components: {
     listPage
   },
-  data () {
+  mixins: [getToken],
+  data() {
     return {
       sidebarFlag: false,
       company: {},
@@ -147,7 +140,7 @@ export default {
       tableData: []
     };
   },
-  mounted () {
+  mounted() {
     //读取公司，部门数据
     this.$api
       .post({
@@ -173,11 +166,11 @@ export default {
     this.queryCompanyDatas(1);
   },
   methods: {
-    queryCompanyByParams () {
+    queryCompanyByParams() {
       this.queryData.isLocked = null;
       this.queryCompanyDatas(1);
     },
-    queryCompanyDatas (currentPage) {
+    queryCompanyDatas(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.CompanyName != null) {
@@ -212,11 +205,11 @@ export default {
           console.log(e);
         });
     },
-    queryCompanyByIsLocked (isLocked) {
+    queryCompanyByIsLocked(isLocked) {
       this.queryData.isLocked = isLocked;
       this.queryCompanyDatas(1);
     },
-    toAddCompanyPage (saveType) {
+    toAddCompanyPage(saveType) {
       if (this.queryData.type == null) {
         this.$alert("", "请选择一个节点", {
           dangerouslyUseHTMLString: false
@@ -248,7 +241,7 @@ export default {
         this.company = null;
       }
     },
-    toAddDeptPage () {
+    toAddDeptPage() {
       if (this.queryData.type == null) {
         this.$alert("", "请选择一个节点", {
           dangerouslyUseHTMLString: false
@@ -267,13 +260,13 @@ export default {
         }
       }
     },
-    editCompanyDetail (companyId) {
+    editCompanyDetail(companyId) {
       this.$router.push({
         path: "/sys/editCompanyDetail",
         query: { companyId: companyId }
       });
     },
-    delCompanyDetail (id) {
+    delCompanyDetail(id) {
       this.$api
         .post({
           url: "/company/del/" + id,
@@ -298,19 +291,19 @@ export default {
           console.log(e);
         });
     },
-    distributeEvent (e, companyId) {
+    distributeEvent(e, companyId) {
       this[e](companyId);
     },
     // querySubsidiary(CompanyId){
     //   this.queryCompanyDatas(1,CompanyId);
     // },
-    lockCompanyDetail (id) {
+    lockCompanyDetail(id) {
       this.isLockedCompanyDetail(id, 0);
     },
-    unlockCompanyDetail (id) {
+    unlockCompanyDetail(id) {
       this.isLockedCompanyDetail(id, 1);
     },
-    isLockedCompanyDetail (id, isLocked) {
+    isLockedCompanyDetail(id, isLocked) {
       this.$api
         .get({
           url: "/company/isLocked?id=" + id + "&isLocked=" + isLocked,
@@ -334,7 +327,7 @@ export default {
           console.log(e);
         });
     },
-    getOpeBtns (type) {
+    getOpeBtns(type) {
       let array = [
         { name: "编辑", isType: "1", methosName: "editCompanyDetail" },
         { name: "删除", isType: "1", methosName: "delCompanyDetail" },
@@ -346,18 +339,18 @@ export default {
       // })
       return array;
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryCompanyDatas(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.queryCompanyDatas(val);
     },
-    checkChange (e, data, childData) {
+    checkChange(e, data, childData) {
       console.log(e, "checkChange");
     },
-    treeCheck (e, data) {
+    treeCheck(e, data) {
       this.queryData.type = e.type;
       if (e.type == 0) {
         this.$api
@@ -406,20 +399,19 @@ export default {
       }
     },
     //树输入筛选
-    filterNode (value, data) {
+    filterNode(value, data) {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
-    handleChange (row) {
+    handleChange(row) {
       console.log(row, "row");
       this.companyEntity = row;
       console.log(this.companyEntity, "this.companyEntity");
     },
-    setUp () {
-
+    setUp() {
       if (this.companyEntity != null) {
-        console.log("设置网站")
+        console.log("设置网站");
         this.$router.push({
           path: "/sys/setCompanyWebsite",
           query: { companyId: this.companyEntity.companyId }

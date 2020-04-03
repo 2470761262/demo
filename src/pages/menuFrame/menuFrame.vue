@@ -41,6 +41,8 @@
   max-width: 200px;
   /deep/.el-menu-item {
     background: #dbdbdb !important;
+    min-width: auto;
+    padding: 0 0 0 40px !important;
   }
   /deep/.el-submenu__icon-arrow {
     display: none !important;
@@ -65,12 +67,6 @@
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
-        <!-- 面包导航 -->
-        <!-- <el-breadcrumb separator-class="el-icon-arrow-right">
-          <el-breadcrumb-item :to="{path:meta.path}"
-                              v-for="(meta, index) in resultRouteArray"
-                              :key="index">{{ meta.name }}</el-breadcrumb-item>
-        </el-breadcrumb>-->
         <feedback />
         <div class="children-page">
           <!-- 二级页面 router-view -->
@@ -102,7 +98,6 @@ export default {
   },
   data() {
     return {
-      resultRouteArray: this.$route.meta.routeArray,
       asideNavFlag: true,
       loginUserData: {},
       menuDatasInParent: []
@@ -110,7 +105,6 @@ export default {
   },
   created() {
     but.$on("asideNav", e => {
-      console.log(111111, e);
       this.asideNavFlag = e;
     });
     window.addEventListener(

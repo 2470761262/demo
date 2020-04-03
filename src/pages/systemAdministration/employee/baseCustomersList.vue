@@ -7,41 +7,38 @@
 }
 </style>
 <template>
-  <list-page :parentData="$data"
-             @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+  <list-page
+    :parentData="$data"
+    @handleSizeChange="handleSizeChange"
+    @handleCurrentChange="handleCurrentChange"
+  >
     <template v-slot:top>
       <div class="query-cell">
-        <el-input placeholder=""
-                  v-model="queryData.keyWord"
-                  clearable>
+        <el-input placeholder v-model="queryData.keyWord" clearable>
           <template slot="prepend">姓名</template>
         </el-input>
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="queryBaseCustomersByParams">查询</el-button>
+        <el-button
+          type="primary"
+          style="margin-left:10px"
+          size="mini"
+          @click="queryBaseCustomersByParams"
+        >查询</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
       <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
-                         :width="item.width"
-                         :key="item.prop">
-        </el-table-column>
+        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
       </template>
-      <el-table-column prop="operation"
-                       label="操作"
-                       fixed="right"
-                       key="operation">
+      <el-table-column prop="operation" label="操作" fixed="right" key="operation">
         <template v-slot="scope">
           <div v-if="scope.row.operation!=''">
-            <el-button type="primary"
-                       size="mini"
-                       @click="distributeEvent(item.methosName,scope.row.id)"
-                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                       :key="index">{{item.name}}</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="distributeEvent(item.methosName,scope.row.id)"
+              v-for="(item,index) in getOpeBtns(scope.row.operation)"
+              :key="index"
+            >{{item.name}}</el-button>
           </div>
         </template>
       </el-table-column>
@@ -51,16 +48,17 @@
 
 <script>
 import listPage from "@/components/listPage";
+import getToken from "@/minxi/getUrlToken";
 export default {
-  mixins: [],
+  mixins: [getToken],
   components: {
     listPage
   },
-  data () {
+  data() {
     return {
       loading: false, //控制表格加载动画提示
       queryData: {
-        keyWord: "",
+        keyWord: ""
       },
       configSet: {
         selectToTime: false,
@@ -69,7 +67,7 @@ export default {
       pageJson: {
         currentPage: 1, //当前页码
         total: 9, //总记录数
-        pageSize: 10//每页条数
+        pageSize: 10 //每页条数
       },
       tableDataColumn: [
         { prop: "customerName", label: "姓名" },
@@ -78,77 +76,83 @@ export default {
         { prop: "openId", label: "客户微信号" },
         { prop: "commonTel", label: "常用电话" },
         { prop: "addName", label: "添加人" },
-        { prop: "addTime", label: "添加时间" },
+        { prop: "addTime", label: "添加时间" }
       ],
-      tableData: [],
-    }
+      tableData: []
+    };
   },
-  mounted () {
+  mounted() {
     this.queryBaseCustomersDatas(1);
   },
   methods: {
-    queryBaseCustomersByParams () {
+    queryBaseCustomersByParams() {
       this.queryBaseCustomersDatas(1);
     },
-    queryBaseCustomersDatas (currentPage) {
+    queryBaseCustomersDatas(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.keyWord != null) {
         params.keyWord = this.queryData.keyWord;
       }
 
-      this.$api.post({
-        url: '/customers/customersList',
-        data: params,
-        token: false,
-        headers: { "Content-Type": "application/json" }
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          this.pageJson.total = result.data.totalElements;
-          this.tableData = result.data.content;
+      this.$api
+        .post({
+          url: "/customers/customersList",
+          data: params,
+          token: false,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.pageJson.total = result.data.totalElements;
+            this.tableData = result.data.content;
 
-          for (var i = 0; i < result.data.content.length; i++) {
-            switch (result.data.content[i].sex) {
-              case 0:
-                result.data.content[i].sex = "男";
-                break;
-              case 1:
-                result.data.content[i].sex = "女";
-                break;
+            for (var i = 0; i < result.data.content.length; i++) {
+              switch (result.data.content[i].sex) {
+                case 0:
+                  result.data.content[i].sex = "男";
+                  break;
+                case 1:
+                  result.data.content[i].sex = "女";
+                  break;
+              }
             }
+          } else {
+            console.log("查询客户列表结果：" + result.message);
+            alert(result.message);
           }
-        } else {
-          console.log("查询客户列表结果：" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询客户列表失败");
-        console.log(e);
-      })
+        })
+        .catch(e => {
+          console.log("查询客户列表失败");
+          console.log(e);
+        });
     },
-    editBaseCustomersDetail (customersId) {
-      this.$router.push({ name: "editBaseCustomersDetail", params: { customersId: customersId } });
+    editBaseCustomersDetail(customersId) {
+      this.$router.push({
+        name: "editBaseCustomersDetail",
+        params: { customersId: customersId }
+      });
     },
-    distributeEvent (e, customersId) {
+    distributeEvent(e, customersId) {
       console.log(e, customersId);
       this[e](customersId);
     },
-    getOpeBtns (type) {
+    getOpeBtns(type) {
       let array = [
-        { name: '详情', isType: '1', methosName: 'editBaseCustomersDetail' },
-      ]
+        { name: "详情", isType: "1", methosName: "editBaseCustomersDetail" }
+      ];
       return array;
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryBaseCustomersDatas(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.queryBaseCustomersDatas(val);
     }
   }

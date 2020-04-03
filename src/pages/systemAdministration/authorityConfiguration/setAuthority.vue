@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .elTree {
-  width: 500px;
+  width: 800px;
   margin-right: 20px;
   margin-bottom: 10px;
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
@@ -28,43 +28,58 @@
   color: #ffa6a4;
   cursor: pointer;
 }
+.demo1-form-inline {
+  /deep/ .el-form-item {
+    margin-bottom: 0;
+    vertical-align: middle;
+    &:first-child {
+      .el-form-item__content {
+        vertical-align: middle;
+      }
+    }
+  }
+}
 </style>
 <template>
   <div  v-loading.fullscreen.lock="fullscreenLoading">
-    <el-form :inline="true"
-             class="demo-form-inline"
-             style="align-content: center">
-      <el-form-item label="类型">
-        <el-select v-model="ruleParamsObj.type"
-                   style="width: 130px;"
-                   @change="loadFunctionPoint"
-                   placeholder="请选择功能点类型">
-          <el-option label="PC端"
-                     value="0"></el-option>
-          <el-option label="Client端"
-                     value="1"></el-option>
-          <el-option label="Wap端"
-                     value="2"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="不子节点选中">
-        <el-switch v-model="checkStrictly"></el-switch>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary"
-                   size="mini"
-                   @click="savePosition">保存</el-button>
-      </el-form-item>
-    </el-form>
+
     <template>
-      <div class="elTree">
-        <el-tree :data="ruleTreeData"
-                 show-checkbox
-                 node-key="id"
-                 ref="tree"
-                 :check-strictly="checkStrictly"
-                 highlight-current
-                 :props="defaultProps">
+
+      <el-card class="box-card elTree ">
+        <div slot="header">
+          <span>给公司配置拥有的功能点</span>
+        </div>
+        <div class="text item">
+          <el-form :inline="true"
+                   class="demo1-form-inline"
+                   style="align-content: center">
+            <el-form-item label="类型">
+              <el-select v-model="ruleParamsObj.type"
+                         style="width: 130px;"
+                         @change="loadFunctionPoint"
+                         placeholder="请选择功能点类型">
+                <el-option label="PC端"
+                           value="0"></el-option>
+                <el-option label="Client端"
+                           value="1"></el-option>
+                <el-option label="Wap端"
+                           value="2"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="不子节点选中">
+              <el-switch v-model="checkStrictly"></el-switch>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" size="mini" @click="savePosition">保存</el-button>
+            </el-form-item>
+          </el-form>
+          <el-tree :data="ruleTreeData"
+                   show-checkbox
+                   node-key="id"
+                   ref="tree"
+                   :check-strictly="checkStrictly"
+                   highlight-current
+                   :props="defaultProps">
           <span class="custom-tree-node"
                 slot-scope="{ node}">
             <span>{{ node.label }}</span>
@@ -76,19 +91,15 @@
               <!--                         @click.stop="() => operationCompany(node, data)">权限设置</el-button>-->
             </span>
           </span>
-        </el-tree>
-      </div>
+          </el-tree>
+        </div>
+      </el-card>
 
     </template>
     <template>
-      <el-card class="box-card">
-        <div slot="header"
-             class="clearfix">
-          <span>操作</span>
-        </div>
-        <div class="text item">
-          <!--          <el-button type="primary"-->
-          <!--                     @click="cancel">返回</el-button>-->
+      <el-card class="box-card elTree">
+        <div slot="header">
+          <span>给公司配置功能点所拥有的权限</span>
         </div>
         <div class="text item"
              style="margin-top: 10px;">
