@@ -19,6 +19,11 @@
     }
   }
 }
+/deep/.isBack {
+  .el-breadcrumb__inner {
+    cursor: pointer !important;
+  }
+}
 </style>
 <template>
   <div class="nav-breadcrumb">
@@ -81,10 +86,11 @@
     </el-dialog>
     <div class="nav-flex">
       <el-breadcrumb separator="/">
-        <!-- <el-breadcrumb-item :to="{path:'/menuFrame'}">1</el-breadcrumb-item> -->
         <transition-group name="el">
           <el-breadcrumb-item v-for="(item,index) in breadcrumbList"
                               :key="index"
+                              :class="{'isBack':item.isBack}"
+                              @click.native="goBack(item.isBack)"
                               :to="{path:item.url}">{{item.title}}</el-breadcrumb-item>
         </transition-group>
       </el-breadcrumb>
@@ -138,19 +144,34 @@ export default {
     breadcrumbSet(matched) {
       //需要过滤的Path;
       let filterPath = ["/buySellSystem/houseList"];
+
       if (matched.length > 0) {
-        matched.forEach((item, index) => {
-          if (!filterPath.includes(item.path)) {
+        let appendEnd = new Promise(r => {
+          matched.forEach((item, index) => {
+            if (!filterPath.includes(item.path)) {
+              setTimeout(() => {
+                if (index == matched.length - 1) {
+                  r();
+                }
+                this.breadcrumbList.push({
+                  title: item.meta.title,
+                  url: item.path
+                });
+              }, 300 * index);
+            }
+          });
+        });
+        appendEnd.then(() => {
+          if (this.breadcrumbList.length > 1) {
             setTimeout(() => {
               this.breadcrumbList.push({
-                title: item.meta.title,
-                url: item.path
+                title: "返回",
+                isBack: true
               });
-            }, 300 * index);
+            }, (this.breadcrumbList + 1) * 300);
           }
         });
       }
-      console.log(this.breadcrumbList);
     },
     hitOuterVisible() {
       this.outerVisible = true;
@@ -239,8 +260,8 @@ export default {
         done();
       }
     },
-    goBack() {
-      this.$router.go(-1);
+    goBack(back) {
+      if (back) this.$router.go(-1);
     },
     goHome() {
       this.$router.push({ path: this.homeUrl });
