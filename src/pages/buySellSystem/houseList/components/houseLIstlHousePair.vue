@@ -221,6 +221,9 @@
     margin-right: 0 !important;
     //width: 105px !important;
   }
+  /deep/.el-input__inner {
+    border-radius: 0;
+  }
   /deep/.el-form-item {
     margin-bottom: 50px;
   }
