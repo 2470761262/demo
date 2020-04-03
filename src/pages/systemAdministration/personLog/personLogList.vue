@@ -7,61 +7,69 @@
 }
 </style>
 <template>
-  <list-page :parentData="$data"
-             @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+  <list-page
+    :parentData="$data"
+    @handleSizeChange="handleSizeChange"
+    @handleCurrentChange="handleCurrentChange"
+  >
     <template v-slot:top>
       <div class="query-cell">
-        <el-input placeholder
-                  v-model="queryData.keyWord"
-                  clearable>
+        <el-input placeholder v-model="queryData.keyWord" clearable>
           <template slot="prepend">姓名</template>
         </el-input>
-        <el-date-picker value-format="yyyy-MM-dd"
-                        size="large"
-                        v-model="queryData.time"
-                        type="date"
-                        placeholder="选择查询日期"></el-date-picker>
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="queryPersonLogByParams(3)">查询</el-button>
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="queryPersonLogByParams(0)">未审核</el-button>
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="queryPersonLogByParams(1)">已通过</el-button>
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="queryPersonLogByParams(-1)">未通过</el-button>
-        <el-button type="primary"
-                   style="margin-left:10px"
-                   size="mini"
-                   @click="queryPersonLogByParams(2)">所有</el-button>
+        <el-date-picker
+          value-format="yyyy-MM-dd"
+          size="large"
+          v-model="queryData.time"
+          type="date"
+          placeholder="选择查询日期"
+        ></el-date-picker>
+        <el-button
+          type="primary"
+          style="margin-left:10px"
+          size="mini"
+          @click="queryPersonLogByParams(3)"
+        >查询</el-button>
+        <el-button
+          type="primary"
+          style="margin-left:10px"
+          size="mini"
+          @click="queryPersonLogByParams(0)"
+        >未审核</el-button>
+        <el-button
+          type="primary"
+          style="margin-left:10px"
+          size="mini"
+          @click="queryPersonLogByParams(1)"
+        >已通过</el-button>
+        <el-button
+          type="primary"
+          style="margin-left:10px"
+          size="mini"
+          @click="queryPersonLogByParams(-1)"
+        >未通过</el-button>
+        <el-button
+          type="primary"
+          style="margin-left:10px"
+          size="mini"
+          @click="queryPersonLogByParams(2)"
+        >所有</el-button>
       </div>
     </template>
     <template v-slot:tableColumn="cell">
       <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
-                         :width="item.width"
-                         :key="item.prop"></el-table-column>
+        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
       </template>
-      <el-table-column prop="operation"
-                       label="操作"
-                       fixed="right"
-                       key="operation">
+      <el-table-column prop="operation" label="操作" fixed="right" key="operation">
         <template v-slot="scope">
           <div v-if="scope.row.operation!=''">
-            <el-button type="primary"
-                       size="mini"
-                       @click="distributeEvent(item.methosName,scope.row.logId)"
-                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                       :key="index">{{item.name}}</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="distributeEvent(item.methosName,scope.row.logId)"
+              v-for="(item,index) in getOpeBtns(scope.row.operation)"
+              :key="index"
+            >{{item.name}}</el-button>
           </div>
         </template>
       </el-table-column>
@@ -71,12 +79,13 @@
 
 <script>
 import listPage from "@/components/listPage";
+import getToken from "@/minxi/getUrlToken";
 export default {
-  mixins: [],
+  mixins: [getToken],
   components: {
     listPage
   },
-  data () {
+  data() {
     return {
       loading: false, //控制表格加载动画提示
       queryData: {
@@ -106,11 +115,11 @@ export default {
       tableData: []
     };
   },
-  mounted () {
+  mounted() {
     this.queryPersonLogDatas(1);
   },
   methods: {
-    queryPersonLogByParams (tag) {
+    queryPersonLogByParams(tag) {
       if (tag != 2 && tag != 3) {
         this.queryData.tag = tag;
       } else if (tag == 2) {
@@ -118,7 +127,7 @@ export default {
       }
       this.queryPersonLogDatas(1);
     },
-    queryPersonLogDatas (currentPage) {
+    queryPersonLogDatas(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.keyWord != null) {
@@ -193,29 +202,29 @@ export default {
           console.log(e);
         });
     },
-    editPersonLogDetail (PersonLogId) {
+    editPersonLogDetail(PersonLogId) {
       //debugger;
       this.$router.push({
         name: "editPersonLogDetail",
         params: { PersonLogId: PersonLogId }
       });
     },
-    distributeEvent (e, PersonLogId) {
+    distributeEvent(e, PersonLogId) {
       console.log(e, PersonLogId);
       this[e](PersonLogId);
     },
-    getOpeBtns (type) {
+    getOpeBtns(type) {
       let array = [
         { name: "详情", isType: "1", methosName: "editPersonLogDetail" }
       ];
       return array;
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryPersonLogDatas(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.queryPersonLogDatas(val);
     }
   }
