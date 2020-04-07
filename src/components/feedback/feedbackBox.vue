@@ -86,13 +86,11 @@
     </el-dialog>
     <div class="nav-flex">
       <el-breadcrumb separator="/">
-        <transition-group name="el">
-          <el-breadcrumb-item v-for="item in breadcrumbList"
-                              :key="item.url"
-                              :class="{'isBack':item.isBack}"
-                              @click.native="goBack(item.isBack)"
-                              :to="{path:item.url}">{{item.title}}</el-breadcrumb-item>
-        </transition-group>
+        <el-breadcrumb-item v-for="(item,index) in breadcrumbList"
+                            :key="index"
+                            :to="{path:item.url}">{{item.title}}</el-breadcrumb-item>
+        <el-breadcrumb-item class="isBack"
+                            @click.native="goBack">返回</el-breadcrumb-item>
       </el-breadcrumb>
       <el-link slot="reference"
                @click="hitOuterVisible()"
@@ -117,7 +115,6 @@ export default {
   },
   watch: {
     $route(newValue, oldValue) {
-      this.breadcrumbList = [];
       this.breadcrumbSet(newValue.matched);
     }
   },
@@ -143,33 +140,24 @@ export default {
   methods: {
     breadcrumbSet(matched) {
       //需要过滤的Path;
+      this.breadcrumbList = [];
       let filterPath = ["/buySellSystem/houseList"];
 
       if (matched.length > 0) {
         let appendEnd = new Promise(r => {
           matched.forEach((item, index) => {
             if (!filterPath.includes(item.path)) {
-              setTimeout(() => {
-                if (index == matched.length - 1) {
-                  r();
-                }
-                this.breadcrumbList.push({
-                  title: item.meta.title,
-                  url: item.path
-                });
-              }, 300 * index);
+              // setTimeout(() => {
+              if (index == matched.length - 1) {
+                r();
+              }
+              this.breadcrumbList.push({
+                title: item.meta.title,
+                url: item.path
+              });
+              // }, 300 * index);
             }
           });
-        });
-        appendEnd.then(() => {
-          if (this.breadcrumbList.length > 1) {
-            setTimeout(() => {
-              this.breadcrumbList.push({
-                title: "返回",
-                isBack: true
-              });
-            }, (this.breadcrumbList + 1) * 300);
-          }
         });
       }
     },
@@ -261,7 +249,7 @@ export default {
       }
     },
     goBack(back) {
-      if (back) this.$router.go(-1);
+      this.$router.go(-1);
     },
     goHome() {
       this.$router.push({ path: this.homeUrl });
