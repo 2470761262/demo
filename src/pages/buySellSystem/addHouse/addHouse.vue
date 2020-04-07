@@ -100,7 +100,7 @@
               <el-button type="primary"
                          v-if="stepsActiveIndex < 3 ||  reSetMethod"
                          @click="nextPage('draft')"
-                         :loading="butLoading">保存草稿</el-button>
+                         :loading="butLoading">提交验真</el-button>
             </el-button-group>
           </div>
         </div>

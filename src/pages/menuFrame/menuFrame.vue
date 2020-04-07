@@ -8,9 +8,9 @@
     min-width: 1280px;
   }
   .page-cell-main {
-    height: calc(100% - 80px);
+    height: calc(100% - 80PX);
     @media screen and(max-width: 1280px) {
-      height: calc(100% - 100px);
+      height: calc(100% - 100PX);
     }
 
     .el-aside,
@@ -30,7 +30,7 @@
       background-color: rgb(84, 92, 100);
     }
     .children-page {
-      height: calc(100% - 55px);
+      height: calc(100% - 26px);
       box-sizing: border-box;
     }
   }

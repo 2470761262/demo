@@ -326,7 +326,7 @@ export default {
     },
     //跳转个人权限设置
     setPersonPosition (e) {
-      this.$store.commit('setNavList',e);
+      //this.$store.commit('setNavList',e);
       let that = this;
       that.$router.push({ path: '/sys/authority/setAuthority', query: { "accountId": e.id } });
 
