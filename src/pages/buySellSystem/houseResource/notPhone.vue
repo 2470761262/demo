@@ -101,7 +101,8 @@
                           @change="queryNotPhoneParams"
                           range-separator="至"
                           start-placeholder="开始日期"
-                          end-placeholder="结束日期"></el-date-picker>
+                          end-placeholder="结束日期"
+                          :default-time="['00:00:00', '23:59:59']"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="Remove">清除</span>
         </div>
@@ -364,6 +365,10 @@ export default {
     },
     queryCBId () {
       var that = this;
+      if (that.data.comId == "") {
+        that.data.roomNo = "";
+        that.data.cbId = "";
+      }
       this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
@@ -373,7 +378,7 @@ export default {
           data: {
             comId: that.data.comId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -397,7 +402,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {

@@ -69,7 +69,8 @@
                           @change="queryDatalist"
                           range-separator="至"
                           start-placeholder="开始日期"
-                          end-placeholder="结束日期"></el-date-picker>
+                          end-placeholder="结束日期"
+                          :default-time="['00:00:00', '23:59:59']"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="Remove">清除</span>
         </div>
@@ -148,8 +149,8 @@ export default {
         { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => (item.rooms || 0) + '室' + (item.hall || 0) + '厅' + (item.toilet || 0) + '卫' },
         { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true, formart: item => item.seenNum || 0 },
         { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
-        { prop: "agenName", label: "跟单人", order: false, disabled: false, default: true },
-        { prop: 'id', label: "成交人", order: false, disabled: false, default: true, formart: item => item.agenName }
+        { prop: "agentName", label: "跟单人", order: false, disabled: false, default: true },
+        { prop: 'id', label: "成交人", order: false, disabled: false, default: true, formart: item => item.agentName }
       ],
       tableData: []
     };
@@ -168,7 +169,8 @@ export default {
     toLook (id) {
       console.log(id);
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+
+      this.$router.push({ name: "historyDetails", params: { houseId: id ,tradeType:0} });
     },
     queryDatalist () {
       this.queryOurComDeal(1, "id", "ascending");
@@ -218,11 +220,11 @@ export default {
         params.beginTime = that.data.timeSelect[0];
         params.endTime = that.data.timeSelect[1];
       }
-      if (that.data.minArea != null && that.data.minArea.length > 0) {
-        params.minInArea = that.data.minArea;
+      if (that.data.minInArea != null && that.data.minInArea.length > 0) {
+        params.minInArea = that.data.minInArea;
       }
-      if (that.data.maxArea != null && that.data.maxArea.length > 0) {
-        params.maxInArea = that.data.maxArea;
+      if (that.data.maxInArea != null && that.data.maxInArea.length > 0) {
+        params.maxInArea = that.data.maxInArea;
       }
       if (that.data.minPrice != null && that.data.minPrice.length > 0) {
         params.minPrice = that.data.minPrice;
