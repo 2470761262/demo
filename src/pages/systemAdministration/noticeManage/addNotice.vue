@@ -60,8 +60,15 @@
       background-color: lightgray;
       border: 1px solid grey;
       float: left;
-      padding: 2px;
+      padding: 5px;
+      padding-right: 8px;
       margin: 2px;
+      img{        
+        cursor: pointer;
+        margin-left:5px;
+        width:15px;
+        height: 15px;
+      }
     }
   }
 }
@@ -84,6 +91,12 @@
 }
 .upload-demo {
   display: none;
+}
+.wrapper{
+  height: 100%;
+  /deep/.el-container{
+    height: 100%;
+  }
 }
 </style>
 <template>
@@ -171,7 +184,9 @@
             <div class="selectedNodeTip">已选择</div>
             <ul>
               <li v-for="item in selectedNodeDatas"
-                  :key="item.nodeId">{{item.labelName}}</li>
+                  :key="item.nodeId">{{item.labelName}}
+                  <img @click="deleteSelectedData(item.nodeId)" src="http://imgsrc.baidu.com/image/c0=shijue1,0,0,294,40/sign=684e81c3a9cc7cd9ee203c9a51684b4a/8c1001e93901213f7cefd4f25ee736d12e2e95c4.jpg"/>
+              </li>
             </ul>
           </div>
         </el-header>
@@ -374,13 +389,23 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    deleteSelectedData(nodeId){
+       let findIndex=this.selectedNodeDatas.findIndex(t => t.nodeId === nodeId);
+        if(findIndex>-1)
+        {
+            this.selectedNodeDatas.splice(findIndex,1);
+            let treeCheckedNode=this.$refs.treeNotice.getCheckedKeys();
+             treeCheckedNode.forEach((item,index)=>{
+              if(item==nodeId){
+                treeCheckedNode.splice(index,1);
+                this.$refs.treeNotice.setCheckedKeys(treeCheckedNode);    
+                return;
+              }
+            });
+        }        
+    },
     getTreeData (sendType) {
-      this.hasQueryAccountNode = [];
-      if (sendType == 3) {
-        //全员发送
-        this.treeData = [allPersonNode];
-        return this.treeData;
-      }
+      this.hasQueryAccountNode = [];     
       //读取公司，部门数据
       this.$api
         .post({
@@ -394,7 +419,18 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            this.treeData = result.data;
+            if (sendType == 3) {
+              //全员发送
+              this.treeData = [allPersonNode];
+              this.selectedNodeDatas=[];
+              this.notice.receiveAcountIds=[];
+              result.data.forEach((item,index,array)=>{
+                  this.selectedNodeDatas.push({nodeId:item.nodeId,labelName:item.labelName});
+                  this.notice.receiveAcountIds.push(item.businessId);
+              })
+            }else{
+              this.treeData = result.data;
+            }
           } else {
             console.log("发送公告结果：" + result.message);
             alert(result.message);
@@ -409,19 +445,22 @@ export default {
       this.checkStrictly = true;
       this.selectedNodeDatas = [];
       this.defaultCheckedNodeKey = [];
-      if (sendType == 3) {
-        this.defaultCheckedNodeKey = ["1,0"];
+      if (sendType == 3) {//全员发送
+        this.defaultCheckedNodeKey = ["1,0"];//设置选中节点
       }
+      this.treeData=[];
       this.getTreeData(sendType);
     },
     handleCheckChange (item, checked, indeterminate) {
       //console.log(data, checked, indeterminate);
       //去除勾选
       if (!checked) {
-        this.selectedNodeDatas.splice(
-          this.selectedNodeDatas.findIndex(t => t.nodeId === item.nodeId),
-          1
-        );
+        let findIndex=this.selectedNodeDatas.findIndex(t => t.nodeId === item.nodeId);
+        console.log(findIndex,"寻找索引");
+        if(findIndex>-1)
+        {
+            this.selectedNodeDatas.splice(findIndex,1);
+        }        
         return;
       }
       //已经有了，就不加进去
@@ -614,14 +653,25 @@ export default {
         return;
       }
       console.log("【【【】】】");
-      if (this.notice.sendType != 3 && !this.getCheckedData()) {
-        this.$message({
-          showClose: true,
-          message: "请在左侧树中勾选公告接收者",
-          type: "warning"
-        });
-        return;
-      }
+      if(this.notice.sendType==3){
+        if (!this.notice.receiveAcountIds||this.notice.receiveAcountIds.length==0) {
+            this.$message({
+              showClose: true,
+              message: "未指定公告的接收者",
+              type: "warning"
+            });
+            return;
+        }
+      }else{
+         if (!this.getCheckedData()) {
+            this.$message({
+              showClose: true,
+              message: "请在左侧人员树中指定公告的接收者",
+              type: "warning"
+            });
+            return;
+        }
+      }     
       this.notice.addPer = 44430; //发送人
       //this.notice.receiveAcountIds = [44430]; //接收人id
       this.$api
@@ -675,6 +725,7 @@ export default {
   },
   mounted () {
     this.quill = this.$refs.QuillEditor.quill;
+    this.getTreeData(3);
   }
 };
 </script>
