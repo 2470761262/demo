@@ -205,8 +205,8 @@ export default {
     editPersonLogDetail(PersonLogId) {
       //debugger;
       this.$router.push({
-        name: "editPersonLogDetail",
-        params: { PersonLogId: PersonLogId }
+        path: "editPersonLogDetail",
+        query: { PersonLogId: PersonLogId }
       });
     },
     distributeEvent(e, PersonLogId) {
