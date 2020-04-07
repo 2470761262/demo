@@ -14,338 +14,393 @@
 .el-top {
   margin-top: 50px;
 }
+.flex-row {
+  display: flex;
+  /deep/.el-form-item {
+    flex: 0 0 20%;
+    .el-select {
+      width: 100%;
+    }
+    .el-date-editor {
+      width: 100%;
+    }
+  }
+}
+.form-content {
+  background: #fff;
+  height: 100%;
+  padding-top: 20px;
+  padding-left: 20px;
+  box-sizing: border-box;
+}
 </style>
 <template>
-  <el-form ref="form" :rules="rules" :model="employeeEntity" label-width="160px">
-    <el-form-item label="登录账号:" required="true" prop="loginUser">
-      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.loginUser" show-word-limit></el-input>
-    </el-form-item>
-    <el-form-item label="密码:" required="true" prop="loginPwd">
-      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.loginPwd" show-word-limit></el-input>
-    </el-form-item>
-    <el-form-item label="重复密码:" required="true" prop="loginPwd">
-      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.loginPwd" show-word-limit></el-input>
-    </el-form-item>
-    <el-form-item label="姓名:" required="true" prop="perName">
-      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.perName" show-word-limit></el-input>
-    </el-form-item>
-    <el-form-item label="身份证:" required="true" prop="cardId">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.cardId"
-        @change="iscardId()"
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="性别:" required="true" prop="sex">
-      <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" show-word-limit>
-        <el-option label="男" :value="0" />
-        <el-option label="女" :value="1" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="状态:" required="true" prop="status">
-      <el-select
-        type="text"
-        placeholder="0实习，1试用，2正式，3离职"
-        v-model="employeeEntity.status"
-        show-word-limit
-      >
-        <el-option label="实习" :value="0" />
-        <el-option label="试用" :value="1" />
-        <el-option label="正式" :value="2" />
-        <el-option label="离职" :value="3" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="现居住地址:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.address"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="学历:" required="true" prop="education">
-      <el-select v-model="employeeEntity.education" @focus="findByParams4()" placeholder="请选择">
-        <el-option
-          v-for="item in educationList"
-          :key="item.value"
-          :label="item.educationName"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="专业:">
-      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.speciality"></el-input>
-    </el-form-item>
-    <el-form-item label="邮箱:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.email"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="qq:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.qq"
-        maxlength="100"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="电话号码:" required="true" prop="tel">
-      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.tel"></el-input>
-    </el-form-item>
-    <el-form-item label="生日:" required="true" prop="birthday">
-      <el-input
-        type="date"
-        placeholder="birthday"
-        v-model="employeeEntity.birthday"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="选择部门:" required="true" prop="deptName">
-      <!-- <el-button type="info" @click="getDialogVisible()" size="small" style="margin-top: 4px;">选择部门</el-button> -->
-      <el-dialog title="请选择:" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
-        <template>
-          <div class="elTree">
-            <el-tree
-              ref="tree2"
-              :data="treeData"
-              :default-expanded-keys="[1]"
-              node-key="nodeId"
-              show-checkbox
-              :props="defaultProps"
-              @check-change="checkChange"
-              @check="treeCheck"
-              :highlight-current="true"
-              :filter-node-method="filterNode"
-            ></el-tree>
-          </div>
-        </template>
-      </el-dialog>
-      <el-input type="text" v-model="employeeEntity.deptName" @focus="getDialogVisible()"></el-input>
-    </el-form-item>
-    <el-form-item label="角色:" required="true" prop="perPost">
-      <el-select
-        v-model="employeeEntity.perPost"
-        @focus="findByParams()"
-        @change="initposition()"
-        placeholder="请选择"
-      >
-        <el-option
-          v-for="item in positionNameList"
-          :key="item.value"
-          :label="item.positionName"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="岗位:" required="true" prop="perRole">
-      <el-select v-model="employeeEntity.perRole" @focus="findByParams1()" placeholder="请选择">
-        <el-option
-          v-for="item in roleNameList"
-          :key="item.value"
-          :label="item.roleName"
-          :value="item.id"
-        ></el-option>
-      </el-select>
-    </el-form-item>
-
-    <el-form-item label="入职时间:" required="true" prop="regTime">
-      <el-input
-        type="date"
-        placeholder="请输入内容"
-        v-model="employeeEntity.regTime"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="备注:">
-      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.remark"></el-input>
-    </el-form-item>
-    <el-form-item label="底薪:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.basicSalary"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="绩效:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.performancePay"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="现居住地邮编:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.zipCode"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="紧急人联系人:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.emergencyContact"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="关系:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.relationship"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="紧急联系人电话号码:">
-      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.contactTelephone"></el-input>
-    </el-form-item>
-    <el-form-item label="现居住地:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.living"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="毕业学校:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.graduateSchool"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="户口所在地邮编:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.residenceCode"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="户口所在地:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.accountAddress"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="银行卡:">
-      <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.bankcard"></el-input>
-    </el-form-item>
-    <el-form-item label="星级编号:" required="true" prop="levelNo">
-      <el-select v-model="employeeEntity.levelNo" @focus="findByParams2()" placeholder="请选择">
-        <el-option
-          v-for="item in levelNameList"
-          :key="item.value"
-          :label="item.levelName"
-          :value="item.levelNo"
-        ></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="是否菁英:" required="true" prop="isGold">
-      <el-select type="text" placeholder="请选择" v-model="employeeEntity.isGold" show-word-limit>
-        <el-option label="默认" :value="0" />
-        <el-option label="是" :value="1" />
-      </el-select>
-    </el-form-item>
-    <el-form-item label="岗位属性:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.sxId"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="毕业时间:">
-      <el-input
-        type="date"
-        placeholder="请输入内容"
-        v-model="employeeEntity.graduation"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="岗位津贴:">
-      <el-input
-        type="text"
-        placeholder="请输入内容"
-        v-model="employeeEntity.postAllowance"
-        maxlength="10"
-        show-word-limit
-      ></el-input>
-    </el-form-item>
-    <el-form-item label="头像:">
-      <el-upload
-        class="avatar-uploader"
-        :action="uploadUrl"
-        :headers="myHeader"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload"
-      >
-        <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
-    </el-form-item>
-    <el-form-item label="介绍人:" required="true" prop="jieShaoName">
-      <!-- <el-button type="info" @click="getDialogVisible1()" size="small" style="margin-top: 4px;">介绍人</el-button> -->
-      <el-dialog
-        title="请选择:"
-        :visible.sync="dialogVisible1"
-        width="50%"
-        :before-close="handleClose"
-      >
-        <list-page
-          :parentData="$data"
-          highlight-current-row
-          @handleSizeChange="handleSizeChange"
-          @handleCurrentChange="handleCurrentChange"
-          @current-change="handleChange"
-        >
-          <template v-slot:tableColumn="cell">
-            <template v-for="item in cell.tableData">
-              <el-table-column
-                :prop="item.prop"
-                :label="item.label"
-                :width="item.width"
-                :key="item.prop"
-              ></el-table-column>
+  <div class="form-content">
+    <el-form ref="form"
+             :rules="rules"
+             :model="employeeEntity"
+             label-width="130px">
+      <div class="flex-row">
+        <el-form-item label="登录账号:"
+                      prop="loginUser">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.loginUser"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="密码:"
+                      prop="loginPwd">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.loginPwd"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="重复密码:"
+                      prop="loginPwd">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.loginPwd"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="姓名:"
+                      prop="perName">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.perName"
+                    show-word-limit></el-input>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="qq:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.qq"
+                    maxlength="100"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="电话号码:"
+                      prop="tel">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.tel"></el-input>
+        </el-form-item>
+        <el-form-item label="现居住地址:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.address"
+                    maxlength="100"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="专业:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.speciality"></el-input>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="岗位:"
+                      prop="perRole">
+          <el-select v-model="employeeEntity.perRole"
+                     @focus="findByParams1()"
+                     placeholder="请选择">
+            <el-option v-for="item in roleNameList"
+                       :key="item.value"
+                       :label="item.roleName"
+                       :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="学历:"
+                      prop="education">
+          <el-select v-model="employeeEntity.education"
+                     @focus="findByParams4()"
+                     placeholder="请选择">
+            <el-option v-for="item in educationList"
+                       :key="item.value"
+                       :label="item.educationName"
+                       :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="性别:"
+                      prop="sex">
+          <el-select type="text"
+                     placeholder="请输入内容"
+                     v-model="employeeEntity.sex"
+                     show-word-limit>
+            <el-option label="男"
+                       :value="0" />
+            <el-option label="女"
+                       :value="1" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="状态:"
+                      prop="status">
+          <el-select type="text"
+                     placeholder="0实习，1试用，2正式，3离职"
+                     v-model="employeeEntity.status"
+                     show-word-limit>
+            <el-option label="实习"
+                       :value="0" />
+            <el-option label="试用"
+                       :value="1" />
+            <el-option label="正式"
+                       :value="2" />
+            <el-option label="离职"
+                       :value="3" />
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="身份证:"
+                      prop="cardId">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.cardId"
+                    @change="iscardId()"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.email"
+                    maxlength="100"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="角色:"
+                      prop="perPost">
+          <el-select v-model="employeeEntity.perPost"
+                     @focus="findByParams()"
+                     @change="initposition()"
+                     placeholder="请选择">
+            <el-option v-for="item in positionNameList"
+                       :key="item.value"
+                       :label="item.positionName"
+                       :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="生日:"
+                      prop="birthday">
+          <el-date-picker v-model="employeeEntity.birthday"
+                          type="date"
+                          placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="选择部门:"
+                      prop="deptName">
+          <!-- <el-button type="info" @click="getDialogVisible()" size="small" style="margin-top: 4px;">选择部门</el-button> -->
+          <el-dialog title="请选择:"
+                     :visible.sync="dialogVisible"
+                     width="50%"
+                     :before-close="handleClose">
+            <template>
+              <div class="elTree">
+                <el-tree ref="tree2"
+                         :data="treeData"
+                         :default-expanded-keys="[1]"
+                         node-key="nodeId"
+                         show-checkbox
+                         :props="defaultProps"
+                         @check-change="checkChange"
+                         @check="treeCheck"
+                         :highlight-current="true"
+                         :filter-node-method="filterNode"></el-tree>
+              </div>
             </template>
-          </template>
-        </list-page>
-      </el-dialog>
-      <el-input type="text" v-model="employeeEntity.jieShaoName" @focus="getDialogVisible1()"></el-input>
-    </el-form-item>
+          </el-dialog>
+          <el-input type="text"
+                    v-model="employeeEntity.deptName"
+                    @focus="getDialogVisible()"></el-input>
+        </el-form-item>
 
-    <div class="footerContainer el-top">
-      <el-button type="primary" @click="saveEmployee()">确定</el-button>
-      <el-button type="primary" @click="back()">返回</el-button>
-    </div>
-  </el-form>
+        <el-form-item label="入职时间:"
+                      prop="regTime">
+          <el-date-picker v-model="employeeEntity.regTime"
+                          type="date"
+                          placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="备注:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.remark"></el-input>
+        </el-form-item>
+        <el-form-item label="底薪:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.basicSalary"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="绩效:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.performancePay"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="邮编:">
+          <el-input type="text"
+                    placeholder="现居住地邮编"
+                    v-model="employeeEntity.zipCode"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="联系人:">
+          <el-input type="text"
+                    placeholder="紧急人联系人"
+                    v-model="employeeEntity.emergencyContact"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="关系:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.relationship"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="现居住地:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.living"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="毕业学校:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.graduateSchool"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="邮编:">
+          <el-input type="text"
+                    placeholder="户口所在地邮编"
+                    v-model="employeeEntity.residenceCode"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="户口所在地:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.accountAddress"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="电话号码">
+          <el-input type="text"
+                    placeholder="紧急联系人号码"
+                    v-model="employeeEntity.contactTelephone"></el-input>
+        </el-form-item>
+        <el-form-item label="银行卡:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.bankcard"></el-input>
+        </el-form-item>
+        <el-form-item label="星级编号:"
+                      prop="levelNo">
+          <el-select v-model="employeeEntity.levelNo"
+                     @focus="findByParams2()"
+                     placeholder="请选择">
+            <el-option v-for="item in levelNameList"
+                       :key="item.value"
+                       :label="item.levelName"
+                       :value="item.levelNo"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否菁英:"
+                      prop="isGold">
+          <el-select type="text"
+                     placeholder="请选择"
+                     v-model="employeeEntity.isGold"
+                     show-word-limit>
+            <el-option label="默认"
+                       :value="0" />
+            <el-option label="是"
+                       :value="1" />
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="岗位属性:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.sxId"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+        <el-form-item label="毕业时间:">
+          <el-date-picker v-model="employeeEntity.graduation"
+                          type="date"
+                          placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
+        <el-form-item label="岗位津贴:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="employeeEntity.postAllowance"
+                    maxlength="10"
+                    show-word-limit></el-input>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="头像:">
+          <el-upload class="avatar-uploader"
+                     :action="uploadUrl"
+                     :headers="myHeader"
+                     :show-file-list="false"
+                     :on-success="handleAvatarSuccess"
+                     :before-upload="beforeAvatarUpload">
+            <img v-if="imageUrl"
+                 :src="imageUrl"
+                 class="avatar" />
+            <i v-else
+               class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="介绍人:"
+                      prop="jieShaoName">
+          <!-- <el-button type="info" @click="getDialogVisible1()" size="small" style="margin-top: 4px;">介绍人</el-button> -->
+          <el-dialog title="请选择:"
+                     :visible.sync="dialogVisible1"
+                     width="50%"
+                     :before-close="handleClose">
+            <list-page :parentData="$data"
+                       highlight-current-row
+                       @handleSizeChange="handleSizeChange"
+                       @handleCurrentChange="handleCurrentChange"
+                       @current-change="handleChange">
+              <template v-slot:tableColumn="cell">
+                <template v-for="item in cell.tableData">
+                  <el-table-column :prop="item.prop"
+                                   :label="item.label"
+                                   :width="item.width"
+                                   :key="item.prop"></el-table-column>
+                </template>
+              </template>
+            </list-page>
+          </el-dialog>
+          <el-input type="text"
+                    v-model="employeeEntity.jieShaoName"
+                    @focus="getDialogVisible1()"></el-input>
+        </el-form-item>
+      </div>
+
+      <div class="footerContainer el-top">
+        <el-button type="primary"
+                   @click="saveEmployee()">确定</el-button>
+        <el-button type="primary"
+                   @click="back()">返回</el-button>
+      </div>
+    </el-form>
+  </div>
+
 </template>
 
 <script>
@@ -398,7 +453,10 @@ export default {
         ],
         loginPwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
         perName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
-        cardId: [{ validator: checkCardId, trigger: "blur" }],
+        cardId: [
+          { required: true, message: "身份证不能为空", trigger: "blur" },
+          { validator: checkCardId, trigger: "blur" }
+        ],
         sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
         status: [{ required: true, message: "请选择状态", trigger: "blur" }],
         education: [{ required: true, message: "请选择学历", trigger: "blur" }],
