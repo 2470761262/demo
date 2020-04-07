@@ -145,20 +145,13 @@ export default {
       let filterPath = ["/buySellSystem/houseList"];
 
       if (matched.length > 0) {
-        let appendEnd = new Promise(r => {
-          matched.forEach((item, index) => {
-            if (!filterPath.includes(item.path)) {
-              // setTimeout(() => {
-              if (index == matched.length - 1) {
-                r();
-              }
-              this.breadcrumbList.push({
-                title: item.meta.title,
-                url: item.path
-              });
-              // }, 300 * index);
-            }
-          });
+        matched.forEach((item, index) => {
+          if (!filterPath.includes(item.path)) {
+            this.breadcrumbList.push({
+              title: item.meta.title,
+              url: item.path
+            });
+          }
         });
       }
     },
