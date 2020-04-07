@@ -89,7 +89,7 @@
         <el-breadcrumb-item v-for="(item,index) in breadcrumbList"
                             :key="index"
                             :to="{path:item.url}">{{item.title}}</el-breadcrumb-item>
-        <el-breadcrumb-item :class="isBack"
+        <el-breadcrumb-item class="isBack"
                             @click.native="goBack">返回</el-breadcrumb-item>
       </el-breadcrumb>
       <el-link slot="reference"
