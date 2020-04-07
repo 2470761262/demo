@@ -395,6 +395,7 @@ export default {
         {
             this.selectedNodeDatas.splice(findIndex,1);
             let treeCheckedNode=this.$refs.treeNotice.getCheckedKeys();
+            //联动树，去除树的选择
              treeCheckedNode.forEach((item,index)=>{
               if(item==nodeId){
                 treeCheckedNode.splice(index,1);
@@ -402,7 +403,18 @@ export default {
                 return;
               }
             });
-        }        
+        }
+        //去除选中的
+        if(this.notice.sendType==3){//全员发送
+          let accountId=nodeId.split(',')[0];
+          this.notice.receiveAcountIds.forEach((item,index)=>{
+              if(item==accountId){
+                this.notice.receiveAcountIds.splice(index,1);
+                return;
+              }
+            });
+        }
+
     },
     getTreeData (sendType) {
       this.hasQueryAccountNode = [];     
