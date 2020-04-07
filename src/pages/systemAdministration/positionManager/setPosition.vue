@@ -55,8 +55,8 @@
 
     <el-breadcrumb separator-class="el-icon-arrow-right"
                    style="margin: 10px">
-      <el-breadcrumb-item v-for="(item,index) in navAuthority.navList"
-                          :key="index">{{item.title}}</el-breadcrumb-item>
+      <el-breadcrumb-item v-for="(item,index) in pathList"
+                          :key="index">{{item}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <template>
@@ -201,6 +201,7 @@ export default {
   },
   data() {
     return {
+      pathList: [],
       checkStrictly: true,
       fullscreenLoading: false,
       filterText: "",
@@ -242,14 +243,42 @@ export default {
   created() {
     let id = JSON.parse(this.$route.query.id);
     console.log(this.navAuthority.navList, "navAuthority.navList");
-    this.$store.dispatch("judgeNavList", id);
+    //this.$store.dispatch("judgeNavList", id);
     this.postId = id;
     this.paramsObj.postId = id;
     this.loadFunctionPoint();
     //读取树数据
     this.loadUnitTree();
+    this.loadPath();
   },
   methods: {
+    loadPath() {
+      let that = this;
+      let params = {
+        operationId: that.postId,
+        type: "TREE_TYPE_ROLE"
+      };
+      //读取功能点数据
+      that.$api
+        .post({
+          url: "/company/authority/path/query",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            that.pathList = result.data;
+          } else {
+            console.log("查询错误: ", result.message);
+            that.$message.error("查询错误: " + result.message);
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
     loadFunctionPoint() {
       let that = this;
       //读取功能点数据

@@ -34,4 +34,10 @@ export default (router) => {
             }
         }
     });
+    router.afterEach((to, from) => {
+        if (document.querySelector('.el-main')) {
+
+            document.querySelector('.el-main').scrollTop = 0;
+        }
+    })
 }

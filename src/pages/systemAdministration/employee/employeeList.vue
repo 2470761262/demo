@@ -20,6 +20,22 @@
 
 <template>
   <div>
+    <template>
+      <div class="elTree">
+        <el-tree
+          ref="tree2"
+          :data="treeData"
+          :default-expanded-keys="[1]"
+          node-key="nodeId"
+          show-checkbox
+          :props="defaultProps"
+          @check-change="checkChange"
+          :highlight-current="true"
+          auto-expand-parent
+          check-strictly
+        ></el-tree>
+      </div>
+    </template>
     <list-page
       highlight-current-row
       :parentData="$data"
@@ -162,11 +178,39 @@ export default {
         { prop: "del", label: "状态", width: "80px" }
       ],
       tableData: [],
-
-      dialogVisible: false
+      treeData: [],
+      dialogVisible: false,
+      defaultProps: {
+        children: "childrenNodes",
+        label: "labelName"
+      },
+      checkedId: null,
+      checkedType: null
     };
   },
   mounted() {
+    //读取公司，部门数据
+    this.$api
+      .post({
+        url: "/sys/tree/unit/user",
+        token: false
+      })
+      .then(e => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.treeData = result.data;
+        } else {
+          console.log("载入结果" + +result.message);
+          alert(result.message);
+        }
+      })
+      .catch(e => {
+        console.log("读取失败");
+        console.log(e);
+      });
     this.queryData.isLocked = null;
     this.queryData.del = null;
     this.queryEmployeeDatas(1);
@@ -186,6 +230,7 @@ export default {
       this.queryEmployeeDatas(1);
     },
     queryEmployeeDatas(currentPage) {
+      this.loading = true;
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.keyWord != null) {
@@ -196,6 +241,12 @@ export default {
       }
       if (this.queryData.del != null) {
         params.del = this.queryData.del;
+      }
+      if (this.checkedId != null) {
+        params.checkedId = this.checkedId;
+      }
+      if (this.checkedType != null) {
+        params.checkedType = this.checkedType;
       }
       params.type = this.queryData.type;
       this.$api
@@ -238,6 +289,9 @@ export default {
         .catch(e => {
           console.log("查询用户管理列表失败");
           console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
         });
     },
     toAddEmployeePage() {
@@ -280,8 +334,7 @@ export default {
     },
     handleChange(row) {
       console.log(row);
-      this.$router.push({ name: "employeedetails", params: { id: row.id } });
-
+      this.$router.push({ path: "/sys/editemployee", query: { id: row.id } });
       this.employeeEntity = row;
       console.log(this.employeeEntity, row.id);
     },
@@ -396,6 +449,19 @@ export default {
             console.log("失败");
             console.log(e);
           });
+      }
+    },
+    checkChange(data, checked, node) {
+      this.loading = true;
+      if (checked == true) {
+        this.checkedId = data.businessId;
+        this.checkedType = data.type;
+        this.$refs.tree2.setCheckedNodes([data]);
+        console.log(this.checkedId, this.checkedType);
+        this.queryEmployeeDatas(1);
+      } else {
+        this.checkedId = null;
+        this.checkedType = null;
       }
     }
   }

@@ -143,7 +143,8 @@
                      @click="queryMyAgentParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/getMyAgent"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      deptUrl="/myHouse/getMyAgent"></moreSelect>
         </div>
       </div>
     </template>
@@ -215,7 +216,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data () {
+  data() {
     return {
       loading: true,
 
@@ -249,24 +250,152 @@ export default {
         pageSize: 10 //每页条数
       },
       tableColumnField: [
-        { prop: 'houseNo', label: '房源编号', width: '170', order: false, disabled: true, default: true },
-        { prop: 'communityName', label: '小区名称', order: false, width: '150', disabled: true, default: true },
-        { prop: 'buildingName', label: '楼栋号', width: '90', order: false, disabled: true, default: true },
-        { prop: 'roomNo', label: '房间号', width: '110', order: false, disabled: true, default: true },
-        { prop: 'inArea', label: '面积(m²)', width: '110', order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
-        { prop: 'price', label: '售价(万元)', width: '120', order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
-        { prop: 'unitPrice', label: '单价(元/㎡)', width: '130', order: 'custom', disabled: false, default: true, format: item => item.unitPrice + '元/㎡' },
-        { prop: 'seenNum', label: '被看次数', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: 'outFollow', label: '未跟进天数', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: 'noSeenDay', label: '未被看天数', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: 'addTime', label: '添加时间', width: '120', order: 'custom', disabled: false, default: true },
-        { prop: 'agentName', label: '跟单人', width: '120', order: false, disabled: false, default: true },
-        { prop: 'houseType', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => (item.rooms || 0) + '室' + (item.hall || 0) + '厅' + (item.toilet || 0) + '卫' },
-        { prop: 'face', label: '朝向', width: '120', order: false, disabled: false, default: true },
-        { prop: 'floor', label: '楼层', width: '120', order: false, disabled: false, default: true },
-        { prop: 'decoration', label: '装修', width: '120', order: false, disabled: false, default: true },
-        { prop: 'addName', label: '添加人', width: '120', order: false, disabled: false, default: true }
-
+        {
+          prop: "houseNo",
+          label: "房源编号",
+          width: "170",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "communityName",
+          label: "小区名称",
+          order: false,
+          width: "150",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "buildingName",
+          label: "楼栋号",
+          width: "90",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "roomNo",
+          label: "房间号",
+          width: "110",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "inArea",
+          label: "面积(m²)",
+          width: "110",
+          order: "custom",
+          disabled: false,
+          default: true,
+          formart: item => item.inArea + "m²"
+        },
+        {
+          prop: "price",
+          label: "售价(万元)",
+          width: "120",
+          order: "custom",
+          disabled: false,
+          default: true,
+          formart: item => item.price + "万元"
+        },
+        {
+          prop: "unitPrice",
+          label: "单价(元/㎡)",
+          width: "130",
+          order: "custom",
+          disabled: false,
+          default: true,
+          format: item => item.unitPrice + "元/㎡"
+        },
+        {
+          prop: "seenNum",
+          label: "被看次数",
+          width: "120",
+          order: "custom",
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "outFollow",
+          label: "未跟进天数",
+          width: "120",
+          order: "custom",
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "noSeenDay",
+          label: "未被看天数",
+          width: "120",
+          order: "custom",
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "addTime",
+          label: "添加时间",
+          width: "120",
+          order: "custom",
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "agentName",
+          label: "跟单人",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "houseType",
+          label: "户型",
+          width: "150",
+          order: false,
+          disabled: false,
+          default: true,
+          formart: item =>
+            (item.rooms || 0) +
+            "室" +
+            (item.hall || 0) +
+            "厅" +
+            (item.toilet || 0) +
+            "卫"
+        },
+        {
+          prop: "face",
+          label: "朝向",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "floor",
+          label: "楼层",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "decoration",
+          label: "装修",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "addName",
+          label: "添加人",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true
+        }
       ],
       tableColumn: [],
       tableData: [],
@@ -286,16 +415,19 @@ export default {
       }
     };
   },
-  mounted () {
+  mounted() {
     this.queryMyAgent(1, "id", "descending");
   },
   methods: {
-    defaultCell ({ column }) {
+    defaultCell({ column }) {
       if (column.label == "操作") {
-        return "defaultCell";
+        return "defaultCell cellItemSet";
+      } else {
+        return "cellItemSet";
       }
     },
-    setRowClass ({ row }) {
+    setRowClass({ row }) {
+      console.log(row, "row");
       if (row.lastFollowTime) {
         let lastFollowTime = new Date(row.lastFollowTime).getTime();
         let nowTime = new Date().getTime();
@@ -303,10 +435,8 @@ export default {
           return "cellOrange";
         }
       }
-      //console.log(row);
-      // return "cellRed";
     },
-    houseType (rooms, hall, toilet) {
+    houseType(rooms, hall, toilet) {
       if (rooms != null && rooms != "" && rooms != undefined) {
         romms = rooms + "室";
       } else {
@@ -324,26 +454,26 @@ export default {
       }
       return rooms + hall + toilet;
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       if (e != "") this.moreSelect = e;
       this.queryMyAgent(1, "id", "ascending");
     },
-    sortMethod (e) {
+    sortMethod(e) {
       console.log(e, "eeee排序");
       this.queryMyAgent(1, e.prop, e.order);
     },
-    toHouseData (id, CommunityName) {
+    toHouseData(id, CommunityName) {
       var that = this;
       that.dialogVisible = true;
       console.log("得到房源id为:" + id + "------楼盘名称" + CommunityName);
       that.toHouseId = id;
       that.toComName = CommunityName;
     },
-    querylistByParams () {
+    querylistByParams() {
       console.log(this.queryData.timeSelect);
       this.queryMyAgent(1, "id", "descending");
     },
-    keySelect () {
+    keySelect() {
       if (this.data.isKey != "") {
         this.data.isKey = "";
       } else {
@@ -351,7 +481,7 @@ export default {
       }
       this.queryMyAgent(1, "id", "descending");
     },
-    onlySelect () {
+    onlySelect() {
       if (this.data.isOnly != "") {
         this.data.isOnly = "";
       } else {
@@ -359,11 +489,11 @@ export default {
       }
       this.queryMyAgent(1, "id", "descending");
     },
-    getName (name) {
+    getName(name) {
       this.newAgentName = name;
       console.log("==========" + this.newAgentName);
     },
-    querylist (currentPage, column, type) {
+    querylist(currentPage, column, type) {
       let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
       let that = this;
       that.loading = true;
@@ -463,7 +593,7 @@ export default {
           console.log(e);
         });
     },
-    queryOnly () {
+    queryOnly() {
       if (this.data.isOnly != "") {
         this.data.isOnly = "";
       } else {
@@ -471,7 +601,7 @@ export default {
       }
       this.queryMyAgent(1, "id", "descending");
     },
-    queryAddPerId (row) {
+    queryAddPerId(row) {
       let data = row;
       var that = this;
       this.AgentPerId = data;
@@ -492,13 +622,13 @@ export default {
           }
         });
     },
-    remove () {
+    remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.queryMyAgent(1, "id", "descending");
     },
-    queryCompanyPerList () {
+    queryCompanyPerList() {
       var that = this;
       this.$api
         .get({
@@ -517,14 +647,14 @@ export default {
           console.log("查询同公司下的所有经纪人失败");
         });
     },
-    updateAgentPer () {
+    updateAgentPer() {
       var that = this;
 
       console.log(
         "得到跟单人id为:" +
-        that.newAgentName +
-        "======" +
-        JSON.stringify(that.AgentPerId.accountID)
+          that.newAgentName +
+          "======" +
+          JSON.stringify(that.AgentPerId.accountID)
       );
       console.log(
         "得到房源id为:" + that.toHouseId + "------楼盘名称" + that.toComName
@@ -560,7 +690,7 @@ export default {
       that.dialogVisible = false;
       this.queryMyAgentParams();
     },
-    toHouseData (id, CommunityName, agentName, agentper) {
+    toHouseData(id, CommunityName, agentName, agentper) {
       var that = this;
       that.queryCompanyPerList();
       that.agentName = agentName;
@@ -570,29 +700,29 @@ export default {
       that.toHouseId = id;
       that.toComName = CommunityName;
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    queryTabData () {
+    queryTabData() {
       console.log(this, "111");
     },
-    formatHouseType (row, column) {
+    formatHouseType(row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook (id) {
+    toLook(id) {
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    queryMyAgentParams () {
+    queryMyAgentParams() {
       this.queryMyAgent(1, "id", "descending");
     },
-    remoteInput () {
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -620,7 +750,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -643,7 +773,7 @@ export default {
         });
       this.querylistByParams();
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -666,7 +796,7 @@ export default {
         });
       this.querylistByParams();
     },
-    queryMyAgent (currentPage, column, type) {
+    queryMyAgent(currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -735,18 +865,18 @@ export default {
         });
     },
 
-    handleClick () { },
-    queryTabData () {
+    handleClick() {},
+    queryTabData() {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryMyAgentParams(1);
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryMyAgent(1, "id", "descending");
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.queryMyAgent(val, "id", "descending");
     }
