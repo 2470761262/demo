@@ -34,6 +34,7 @@
           :default-expanded-keys="[1]"
           node-key="nodeId"
           show-checkbox
+          check-strictly
           :props="defaultProps"
           @check-change="checkChange"
           @check="treeCheck"
@@ -125,6 +126,7 @@ export default {
   },
   methods: {
     treeCheck(e, data) {
+      this.$refs.tree2.setCheckedKeys([e.nodeId]);
       //判断如果未选中，则清空用户列表；
       if (data && data.checkedKeys) {
         if (data.checkedKeys.length < 1) {

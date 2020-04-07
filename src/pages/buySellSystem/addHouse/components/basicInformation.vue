@@ -13,8 +13,10 @@
         <el-radio-group v-model="addHouseType"
                         @change="houseTypeChange"
                         size="mini">
-          <el-radio label="basicInformation">单套录入</el-radio>
-          <el-radio label="morePushHouse">多套录入</el-radio>
+          <el-radio label="basicInformation"
+                    :disabled="disabled">单套录入</el-radio>
+          <el-radio label="morePushHouse"
+                    :disabled="disabled">多套录入</el-radio>
         </el-radio-group>
         <span class="addhouse-tips">(多套录入仅支持同一小区同一业主)</span>
       </div>
@@ -38,7 +40,8 @@
                      placeholder="请选择楼盘名称"
                      @focus="remoteCommunityNameInput"
                      @change="remoteCommunityNameChange"
-                     :loading="selectPageCommunit.loading">
+                     :loading="selectPageCommunit.loading"
+                     :disabled="disabled">
             <el-option v-for="item in selectPageCommunit.list"
                        :key="item.value"
                        :label="item.name"
@@ -62,7 +65,8 @@
                      v-model="formData.buildingId"
                      @change="remoteBuildingNoChange"
                      :loading="selectPageeBuildingNo.loading"
-                     placeholder="请选择栋座">
+                     placeholder="请选择栋座"
+                     :disabled="disabled">
             <el-option v-for="item in selectPageeBuildingNo.list"
                        :key="item.value"
                        :label="item.name"
@@ -86,7 +90,8 @@
                      v-model="formData.roomId"
                      :loading="selectPageRoomNo.loading"
                      @change="remoteRoomNoChange"
-                     placeholder="请选择房间号">
+                     placeholder="请选择房间号"
+                     :disabled="disabled">
             <el-option v-for="item in selectPageRoomNo.list"
                        :key="item.value"
                        :label="item.name"
@@ -405,6 +410,10 @@ export default {
     },
     houseType: {
       type: String
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   directives: {

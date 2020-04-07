@@ -123,6 +123,7 @@
                          :width="item.width"
                          :sortable="item.order"
                          show-overflow-tooltip
+                         :formatter="item.formart"
                          :sort-orders="['ascending', 'descending']"
                          :key="item.prop"></el-table-column>
       </template>
@@ -147,6 +148,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 //import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
 import "@/assets/publicLess/pageListQuery.less";
+import common from "../houseResource/common/common"
 export default {
   mixins: [getMenuRid],
   components: {
@@ -173,7 +175,8 @@ export default {
         roomNo: "",
         customName: "",
         tel: "",
-        type: ""
+        type: "",
+        timeSelect: "",
       },
       moreSelect: "",
       options: [],
@@ -195,7 +198,7 @@ export default {
           default: true
         },
         {
-          prop: "comBuildingName",
+          prop: "buildingName",
           label: "楼栋号",
           width: "",
           order: false,
@@ -217,7 +220,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => (item.inArea || 0) + "㎡"
+          formart: item => (item.inArea || 0) + "㎡"
         },
         {
           prop: "customers",
@@ -237,7 +240,30 @@ export default {
         }
       ],
       // tableColumn: [],
-      tableData: []
+      tableData: [],
+      transitionList: [
+        {
+          key: "bhId",
+          value: [{ paramsKey: "roomNo", index: -1 }],
+        },
+        {
+          key: "area",
+          value: [{ paramsKey: "business", index: -1 }],
+        },
+        {
+          key: "buildType",
+          value: [{ paramsKey: "purpose", index: -1 }],
+        },
+        {
+          key: "addTime",
+          value: [{ paramsKey: "beginTime", index: 0 }, { paramsKey: "endTime", index: 1 }],
+        },
+        {
+
+          key: "followTime",
+          value: [{ paramsKey: "beginFollowTime", index: 0 }, { paramsKey: "endFollowTime", index: 1 }],
+        }
+      ]
     };
   },
   mounted () {
@@ -386,17 +412,8 @@ export default {
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (Object.keys(this.moreSelect).length != 0) {
-        for (let key in this.moreSelect) {
-          if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.biginTime = this.moreSelect[key][0];
-            params.endTime = this.moreSelect[key][1];
-          } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.biginFollowTime = this.moreSelect[key][0];
-            params.endFollowTime = this.moreSelect[key][1];
-          } else {
-            params[key] = this.moreSelect[key];
-          }
-        }
+        let selectObject = common.getSelectParams(this.transitionList, this.moreSelect);
+        Object.assign(params, selectObject);
       } else {
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
@@ -404,6 +421,12 @@ export default {
         params.customName = that.data.customName;
         params.tel = that.data.tel;
         params.type = that.data.type;
+        params.minPrice = that.data.minPrice;
+        params.maxPrice = that.data.maxPrice;
+        params.minInArea = that.data.minInArea;
+        params.maxInArea = that.data.maxInArea;
+        params.beginTime = that.data.timeSelect[0];
+        params.endTime = that.data.timeSelect[1];
       }
       params.sortColumn = column;
       params.sortType = type;
