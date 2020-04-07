@@ -87,8 +87,8 @@
     <div class="nav-flex">
       <el-breadcrumb separator="/">
         <transition-group name="el">
-          <el-breadcrumb-item v-for="(item,index) in breadcrumbList"
-                              :key="index"
+          <el-breadcrumb-item v-for="item in breadcrumbList"
+                              :key="item.url"
                               :class="{'isBack':item.isBack}"
                               @click.native="goBack(item.isBack)"
                               :to="{path:item.url}">{{item.title}}</el-breadcrumb-item>
