@@ -90,6 +90,7 @@
                             :key="index"
                             :to="{path:item.url}">{{item.title}}</el-breadcrumb-item>
         <el-breadcrumb-item class="isBack"
+                            v-if="breadcrumbList.length > 1"
                             @click.native="goBack">返回</el-breadcrumb-item>
       </el-breadcrumb>
       <el-link slot="reference"
