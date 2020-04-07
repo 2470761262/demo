@@ -28,6 +28,7 @@
           :default-expanded-keys="[1]"
           node-key="nodeId"
           show-checkbox
+          check-strictly
           :props="defaultProps"
           @check-change="checkChange"
           @check="treeCheck"
@@ -247,8 +248,8 @@ export default {
         if (saveType == 0) {
           if (this.queryData.type == 1) {
             this.$router.push({
-              name: "addDeptManage",
-              params: {
+              path: "addDeptManage",
+              query: {
                 deptParentID: this.department.deptParentID,
                 ParentId: this.department.coId
               }
@@ -262,8 +263,8 @@ export default {
         } else if (saveType == 1) {
           if (this.queryData.type == 1) {
             this.$router.push({
-              name: "addDeptManage",
-              params: {
+              path: "addDeptManage",
+              query: {
                 deptParentID: this.department.id,
                 ParentId: this.department.coId
               }
@@ -271,8 +272,8 @@ export default {
             this.department = null;
           } else if (this.queryData.type == 0) {
             this.$router.push({
-              name: "addDeptManage",
-              params: { ParentId: this.company.id }
+              path: "addDeptManage",
+              query: { ParentId: this.company.id }
             });
             this.company = null;
           }
