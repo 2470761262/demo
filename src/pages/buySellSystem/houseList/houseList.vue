@@ -347,7 +347,7 @@ export default {
       },
       form: {
         type: "13",
-        title: "店长推荐",
+        title: "全部在售",
         business: [],
         houseType: [],
         renovation: [],
@@ -379,12 +379,17 @@ export default {
     this.form.action = "/mateHouse/getMateHouse/soleAllHouse";
   },
   methods: {
-    setSelectNav(item) {
+    setSelectNav(item, resetAll) {
       this.houseMenuList.forEach((items, index) => {
-        if (items.type != item.type) {
+        if (resetAll) {
           items.flag = false;
+        } else {
+          if (items.type != item.type) items.flag = false;
         }
       });
+      if (resetAll) {
+        return;
+      }
       item.flag = !item.flag;
       if (this.form.type == item.type) {
         this.form.type = "12";
