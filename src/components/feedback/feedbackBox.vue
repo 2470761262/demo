@@ -90,6 +90,7 @@
                             :key="index"
                             :to="{path:item.url}">{{item.title}}</el-breadcrumb-item>
         <el-breadcrumb-item class="isBack"
+                            v-if="breadcrumbList.length > 1"
                             @click.native="goBack">返回</el-breadcrumb-item>
       </el-breadcrumb>
       <el-link slot="reference"
@@ -144,20 +145,13 @@ export default {
       let filterPath = ["/buySellSystem/houseList"];
 
       if (matched.length > 0) {
-        let appendEnd = new Promise(r => {
-          matched.forEach((item, index) => {
-            if (!filterPath.includes(item.path)) {
-              // setTimeout(() => {
-              if (index == matched.length - 1) {
-                r();
-              }
-              this.breadcrumbList.push({
-                title: item.meta.title,
-                url: item.path
-              });
-              // }, 300 * index);
-            }
-          });
+        matched.forEach((item, index) => {
+          if (!filterPath.includes(item.path)) {
+            this.breadcrumbList.push({
+              title: item.meta.title,
+              url: item.path
+            });
+          }
         });
       }
     },
