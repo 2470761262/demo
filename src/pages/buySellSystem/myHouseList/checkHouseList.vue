@@ -122,7 +122,7 @@
                        @click="querylistByParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/MyCheck"></moreSelect>
+            <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/myCheckList"></moreSelect>
           </div>
         </div>
       </template>
