@@ -45,7 +45,7 @@
                        :value="item.value"></el-option>
           </el-select>
         </div>
-        <div class="query-content-cell cell-interval75">
+        <!-- <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input placeholder="姓名"
                     v-model="data.customName"
@@ -60,8 +60,8 @@
                     class="set-input200"
                     @change="queryNotPhoneParams"
                     clearable />
-        </div>
-        <div class="query-content-cell cell-interval45">
+        </div> -->
+        <!-- <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">价格</h3>
           <el-input placeholder="最小值"
                     v-model="data.minPrice"
@@ -75,7 +75,7 @@
                     @change="queryNotPhoneParams"
                     clearable />
           <span class="query-cell-suffix">万</span>
-        </div>
+        </div> -->
       </div>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -101,7 +101,8 @@
                           @change="queryNotPhoneParams"
                           range-separator="至"
                           start-placeholder="开始日期"
-                          end-placeholder="结束日期"></el-date-picker>
+                          end-placeholder="结束日期"
+                          :default-time="['00:00:00', '23:59:59']"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="Remove">清除</span>
         </div>
@@ -110,9 +111,9 @@
                      size="mini"
                      @click="queryNotPhoneParams">查询</el-button>
         </div>
-        <div class="query-content-cell cell-interval25">
+        <!-- <div class="query-content-cell cell-interval25">
           <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
-        </div>
+        </div> -->
         <div class="query-content-cell cell-interval25">
           <definitionmenu :renderList="tableDataColumn"
                           :tableColumn="tableColumn"
@@ -128,7 +129,9 @@
                          :sortable="item.order"
                          show-overflow-tooltip
                          :sort-orders="['ascending', 'descending']"
-                         :key="item.prop"></el-table-column>
+                         :key="item.prop"
+                         :formatter="item.formart">
+        </el-table-column>
       </template>
       <el-table-column prop
                        label="户型"
@@ -162,7 +165,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
 
@@ -191,7 +194,6 @@ export default {
           prop: "communityName",
           label: "小区名称",
           width: "",
-          order: "custom",
           disabled: false,
           default: true
         },
@@ -199,7 +201,6 @@ export default {
           prop: "buildingName",
           label: "楼栋号",
           width: "",
-          order: "custom",
           disabled: false,
           default: true
         },
@@ -207,7 +208,6 @@ export default {
           prop: "roomNo",
           label: "房间号",
           width: "",
-          order: "custom",
           disabled: false,
           default: true
         },
@@ -217,48 +217,56 @@ export default {
           width: "",
           order: "custom",
           disabled: false,
-          default: true
+          default: true,
+          formart: item =>
+            item.inArea == null ? "---" : item.inArea
         }
       ],
       tableData: []
     };
   },
-  mounted() {
+  mounted () {
     this.queryNotPhone(1);
   },
   methods: {
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
       this.queryNotPhone(1, "id", "ascending");
     },
-    formatHouseType(row, column) {
+    formatHouseType (row, column) {
       if (row.Rooms != null && row.Rooms != "") {
         return row.Rooms + "室";
       } else {
         return "---";
       }
     },
-
-    formatOrientation(row, column) {
+    formatInArea (row, column) {
+      if (row.inArea != null && row.inArea != "") {
+        return row.inArea;
+      } else {
+        return "---";
+      }
+    },
+    formatOrientation (row, column) {
       if (row.orientation != null && row.orientation != "") {
         return row.orientation;
       } else {
         return "---";
       }
     },
-    Remove() {
+    Remove () {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.queryNotPhone(1, "id", "ascending");
     },
-    addPhone(id, esId) {
+    addPhone (id, esId) {
       console.log(id);
       this.$prompt("请输业主手机号码", "提示", {
         confirmButtonText: "确定",
@@ -297,7 +305,7 @@ export default {
         });
       //that.$router.push({ path: '/buySellSystem/updatePhone', query: { "id": id } });
     },
-    toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
+    toSale (comId, cbId, bhId, communityName, buildingName, roomNo) {
       var that = this;
       that.$router.push({
         path: "/buySellSystem/addHouse",
@@ -315,15 +323,15 @@ export default {
       });
     },
 
-    queryNotPhoneParams() {
+    queryNotPhoneParams () {
       this.queryNotPhone(1);
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -351,12 +359,16 @@ export default {
         that.options = [];
       }
     },
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e.prop, e.order);
       this.queryNotPhone(1, e.prop, e.order);
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
+      if (that.data.comId == "") {
+        that.data.roomNo = "";
+        that.data.cbId = "";
+      }
       this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
@@ -366,7 +378,7 @@ export default {
           data: {
             comId: that.data.comId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -376,9 +388,9 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-      this.querySaleNotTrackParams();
+      this.queryNotPhoneParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -390,7 +402,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
@@ -399,9 +411,9 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-      this.querySaleNotTrackParams();
+      this.queryNotPhoneParams();
     },
-    queryNotPhone(currentPage, column, type) {
+    queryNotPhone (currentPage, column, type) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -420,7 +432,7 @@ export default {
       } else {
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
-        params.bhId = that.data.roomNo;
+        params.roomNo = that.data.roomNo;
         params.beginTime = that.data.timeSelect[0];
         params.endTime = that.data.timeSelect[1];
         params.customName = that.data.customName;
@@ -462,23 +474,23 @@ export default {
           console.log(e);
         });
     },
-    isForBut(type) {
+    isForBut (type) {
       let array = [{ name: "查看", isType: "3", methosName: "" }];
       return array.filter(item => {
         return item.isType.includes(type);
       });
     },
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryNotPhone(1, "id", "ascending");
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryNotPhone(1, "id", "ascending");
+      this.queryNotPhone(val, "id", "ascending");
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryNotPhone(1, "id", "ascending");

@@ -14,139 +14,200 @@
 .el-top {
   margin-top: 50px;
 }
+.flex-row {
+  display: flex;
+  &.flex-row50 {
+    /deep/.el-form-item {
+      flex: 0 0 40%;
+    }
+  }
+  /deep/.el-form-item {
+    flex: 0 0 20%;
+    .el-select {
+      width: 100%;
+    }
+    .el-date-editor {
+      width: 100%;
+    }
+  }
+}
+.form-content {
+  background: #fff;
+  height: 100%;
+  padding-top: 20px;
+  padding-left: 20px;
+  box-sizing: border-box;
+}
+.flex-centent {
+  text-align: center;
+  padding: 5px 0;
+}
 </style>
 <template>
-  <div class="wrapper">
-    <el-form ref="form" :rules="rules" :model="DeptEntity" label-width="100px">
-      <el-form-item label="部门名称:" required ="true" prop="deptName">
-        <el-input v-model="DeptEntity.deptName"></el-input>
-      </el-form-item>
-      <el-form-item label="部门首拼" required ="true" prop="header">
-        <el-input v-model="DeptEntity.header"></el-input>
-      </el-form-item>
-   
-      <el-form-item label="电话:">
-        <el-input v-model="DeptEntity.tel"></el-input>
-      </el-form-item>
-      <el-form-item label="开业时间">
-        <el-date-picker v-model="DeptEntity.regDate" type="date" placeholder="选择日期"></el-date-picker>
-      </el-form-item>
-    
-      <el-form-item label="部门类型:" required ="true" prop="deptType">
-        <el-select type="text" v-model="DeptEntity.deptType">
-          <el-option label="综合" :value="1" />
-          <el-option label="业务" :value="2" />
-          <el-option label="行政" :value="3" />
-          <el-option label="联营" :value="4" />
-        </el-select>
-        <el-select type="text" placeholder="是否片区" v-model="DeptEntity.isArea" show-word-limit>
-          <el-option label="是片区" :value="1" />
-          <el-option label="不是片区" :value="0" />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="部门编码:">
-        <el-input
-          type="text"
-          placeholder="请输入内容"
-          v-model="DeptEntity.deptCode"
-          maxlength="100"
-          show-word-limit
-        ></el-input>
-      </el-form-item>
-    
-      
-      <el-form-item label="选择负责人:" required ="true" prop="perName">
-        <el-dialog
-          title="请选择:"
-          :visible.sync="dialogVisible"
-          width="50%"
-          :before-close="handleClose"
-        >
-          <list-page
-            :parentData="$data"
-            highlight-current-row
-            @handleSizeChange="handleSizeChange"
-            @handleCurrentChange="handleCurrentChange"
-            @current-change="handleChange"
-          >
-            <template v-slot:tableColumn="cell">
-              <template v-for="item in cell.tableData">
-                <el-table-column
-                  :prop="item.prop"
-                  :label="item.label"
-                  :width="item.width"
-                  :key="item.prop"
-                ></el-table-column>
+  <div class="form-content">
+    <el-form ref="form"
+             :rules="rules"
+             :model="DeptEntity"
+             label-width="130px">
+      <div class="flex-row">
+        <el-form-item label="部门名称:"
+                      prop="deptName">
+          <el-input v-model="DeptEntity.deptName"></el-input>
+        </el-form-item>
+        <el-form-item label="部门首拼"
+                      prop="header">
+          <el-input v-model="DeptEntity.header"></el-input>
+        </el-form-item>
+
+        <el-form-item label="电话:">
+          <el-input v-model="DeptEntity.tel"></el-input>
+        </el-form-item>
+        <el-form-item label="开业时间">
+          <el-date-picker v-model="DeptEntity.regDate"
+                          type="date"
+                          placeholder="选择日期"></el-date-picker>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="部门编码:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="DeptEntity.deptCode"
+                    maxlength="100"
+                    show-word-limit></el-input>
+        </el-form-item>
+
+        <el-form-item label="选择负责人:"
+                      prop="perName">
+          <el-dialog title="请选择:"
+                     :visible.sync="dialogVisible"
+                     width="50%"
+                     :before-close="handleClose">
+            <list-page :parentData="$data"
+                       highlight-current-row
+                       @handleSizeChange="handleSizeChange"
+                       @handleCurrentChange="handleCurrentChange"
+                       @current-change="handleChange">
+              <template v-slot:tableColumn="cell">
+                <template v-for="item in cell.tableData">
+                  <el-table-column :prop="item.prop"
+                                   :label="item.label"
+                                   :width="item.width"
+                                   :key="item.prop"></el-table-column>
+                </template>
               </template>
-            </template>
-          </list-page>
-        </el-dialog>
-        <el-input type="text" v-model="DeptEntity.managerPerName" @focus="getDialogVisible()"></el-input>
-      </el-form-item>
-      <el-form-item label="加入类型" required ="true" prop="joinType">
-        <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.joinType" show-word-limit>
-          <el-option label="直营" :value="1" />
-          <el-option label="加盟" :value="2" />
-          <el-option label="联营" :value="3" />
-        </el-select>
-      </el-form-item>
-    
-      <el-form-item label="部门属性:">
-        <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.isCom" show-word-limit>
-          <el-option label="运营期" :value="1" />
-          <el-option label="拓展期" :value="2" />
-        </el-select>
-      </el-form-item>
-     
-      <el-form-item label="选择店面:">
-        <el-dialog
-          title="请选择:"
-          :visible.sync="dialogVisible3"
-          width="40%"
-          :before-close="handleClose"
-        >
-          <list-page
-            :parentData="$data"
-            highlight-current-row
-            @handleSizeChange="handleSizeChange3"
-            @handleCurrentChange="handleCurrentChange3"
-            @current-change="handleChange3"
-          >
-            <template v-slot:tableColumn="cell">
-              <template v-for="item in cell.tableData">
-                <el-table-column
-                  :prop="item.prop"
-                  :label="item.label"
-                  :width="item.width"
-                  :key="item.prop"
-                ></el-table-column>
+            </list-page>
+          </el-dialog>
+          <el-input type="text"
+                    v-model="DeptEntity.managerPerName"
+                    @focus="getDialogVisible()"></el-input>
+        </el-form-item>
+        <el-form-item label="加入类型"
+                      prop="joinType">
+          <el-select type="text"
+                     placeholder="请输入内容"
+                     v-model="DeptEntity.joinType"
+                     show-word-limit>
+            <el-option label="直营"
+                       :value="1" />
+            <el-option label="加盟"
+                       :value="2" />
+            <el-option label="联营"
+                       :value="3" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="部门属性:">
+          <el-select type="text"
+                     placeholder="请输入内容"
+                     v-model="DeptEntity.isCom"
+                     show-word-limit>
+            <el-option label="运营期"
+                       :value="1" />
+            <el-option label="拓展期"
+                       :value="2" />
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="选择店面:">
+          <el-dialog title="请选择:"
+                     :visible.sync="dialogVisible3"
+                     width="40%"
+                     :before-close="handleClose">
+            <list-page :parentData="$data"
+                       highlight-current-row
+                       @handleSizeChange="handleSizeChange3"
+                       @handleCurrentChange="handleCurrentChange3"
+                       @current-change="handleChange3">
+              <template v-slot:tableColumn="cell">
+                <template v-for="item in cell.tableData">
+                  <el-table-column :prop="item.prop"
+                                   :label="item.label"
+                                   :width="item.width"
+                                   :key="item.prop"></el-table-column>
+                </template>
               </template>
-            </template>
-          </list-page>
-        </el-dialog>
-        <el-input type="text" v-model="DeptEntity.storeName" @focus="getDialogVisible3()"></el-input>
-      </el-form-item>
-    
-      <el-form-item label="地址:">
-        <el-input type="text" placeholder="请输入内容" v-model="DeptEntity.address"></el-input>
-      </el-form-item>
-      <el-form-item label="部门描述">
-        <el-input type="text" placeholder="请输入内容" v-model="DeptEntity.deptDesc"></el-input>
-      </el-form-item>
+            </list-page>
+          </el-dialog>
+          <el-input type="text"
+                    v-model="DeptEntity.storeName"
+                    @focus="getDialogVisible3()"></el-input>
+        </el-form-item>
+
+        <el-form-item label="地址:">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="DeptEntity.address"></el-input>
+        </el-form-item>
+        <el-form-item label="部门描述">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="DeptEntity.deptDesc"></el-input>
+        </el-form-item>
+      </div>
+      <div class="flex-row">
+        <el-form-item label="部门类型:"
+                      prop="deptType">
+          <el-select type="text"
+                     v-model="DeptEntity.deptType">
+            <el-option label="综合"
+                       :value="1" />
+            <el-option label="业务"
+                       :value="2" />
+            <el-option label="行政"
+                       :value="3" />
+            <el-option label="联营"
+                       :value="4" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否区片:"
+                      prop="isArea">
+          <el-select type="text"
+                     placeholder="请选择"
+                     v-model="DeptEntity.isArea"
+                     show-word-limit>
+            <el-option label="是片区"
+                       :value="1" />
+            <el-option label="不是片区"
+                       :value="0" />
+          </el-select>
+        </el-form-item>
+      </div>
     </el-form>
 
     <div class="footerContainer el-top">
-      <el-button type="primary" @click="saveDept()">确定</el-button>
-      <el-button type="primary" @click="back()">返回</el-button>
+      <el-button type="primary"
+                 @click="saveDept()">确定</el-button>
+      <el-button type="primary"
+                 @click="back()">返回</el-button>
     </div>
   </div>
 </template>
 
 <script>
 import listPage from "@/components/listPage";
-import getMenuRid from "@/minxi/getMenuRid";
 export default {
-  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -154,12 +215,21 @@ export default {
   data() {
     return {
       rules: {
-        deptName: [{ required: true, message: "请输入部门名", trigger: "blur" }],
-        header: [{required: true, message: "请输入部门首拼" , trigger: "blur" }],
-        managerPer: [{required: true, message: "请选择负责人" , trigger: "blur" }],
-        deptType: [{required: true, message: "请选择部门类型" , trigger: "blur" }],
-        joinType: [{required: true, message: "请选择加入类型" , trigger: "blur" }]
-        
+        deptName: [
+          { required: true, message: "请输入部门名", trigger: "blur" }
+        ],
+        header: [
+          { required: true, message: "请输入部门首拼", trigger: "blur" }
+        ],
+        managerPer: [
+          { required: true, message: "请选择负责人", trigger: "blur" }
+        ],
+        deptType: [
+          { required: true, message: "请选择部门类型", trigger: "blur" }
+        ],
+        joinType: [
+          { required: true, message: "请选择加入类型", trigger: "blur" }
+        ]
       },
       sidebarFlag: false,
       loading: false, //控制表格加载动画提示
@@ -224,7 +294,7 @@ export default {
       params.coId = this.DeptEntity.coId;
       this.$api
         .post({
-          url: "/employee/selectPrincipal",
+          url: "/employee/dept/selectPrincipal",
           data: params,
           token: false,
           headers: { "Content-Type": "application/json" }

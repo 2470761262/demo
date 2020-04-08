@@ -55,8 +55,8 @@
 
     <el-breadcrumb separator-class="el-icon-arrow-right"
                    style="margin: 10px">
-      <el-breadcrumb-item v-for="(item,index) in navAuthority.navList"
-                          :key="index">{{item.title}}</el-breadcrumb-item>
+      <el-breadcrumb-item v-for="(item,index) in pathList"
+                          :key="index">{{item}}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <template>
@@ -77,7 +77,7 @@
                          value="2"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="子节点选中">
+          <el-form-item label="不选中子节点">
             <el-switch v-model="treeCheckStrictly"></el-switch>
           </el-form-item>
           <el-form-item>
@@ -188,6 +188,7 @@ export default {
   },
   data() {
     return {
+      pathList: [],
       treeCheckStrictly: true,
       fullscreenLoading: false,
       checkStrictly: true,
@@ -226,7 +227,8 @@ export default {
       },
       currentCompanyGather: null,
       currentDeptGather: null,
-      currentNode: null
+      currentNode: null,
+      selectNodes : [],
     };
   },
   destroyed() {
@@ -235,13 +237,41 @@ export default {
   },
   created() {
     let accountId = JSON.parse(this.$route.query.accountId);
-    this.$store.dispatch("judgeNavList", accountId);
+    //this.$store.dispatch("judgeNavList", accountId);
     this.ruleParamsObj.accountId = accountId;
     this.paramsObj.accountId = accountId;
+    this.loadPath();
     this.loadFunctionPoint();
     this.loadUnitTree();
   },
   methods: {
+    loadPath() {
+      let that = this;
+      let params = {
+        operationId: that.paramsObj.accountId,
+        type: "TREE_TYPE_PERSON"
+      };
+      //读取功能点数据
+      that.$api
+        .post({
+          url: "/company/authority/path/query",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            that.pathList = result.data;
+          } else {
+            console.log("查询错误: ", result.message);
+            that.$message.error("查询错误: " + result.message);
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
     loadFunctionPoint() {
       let that = this;
       that.currentNode = null;
@@ -259,6 +289,7 @@ export default {
           if (result.code == 200) {
             that.ruleTreeData = result.data.allRule;
             that.$refs.tree.setCheckedKeys(result.data.selectedRule);
+            this.showCompanyTree = false;
           } else {
             console.log("查询错误: ", result.message);
             that.$message.error("查询错误: " + result.message);
@@ -388,40 +419,54 @@ export default {
       }
       //设置参数
       let that = this;
+      //选中节点
+      let checkedKeys = that.$refs.tree.getCheckedKeys();
+      checkedKeys.push(data.id);
+      that.$refs.tree.setCheckedKeys(checkedKeys);
+
       let functionPointObj =
         that.paramsObj.functionPointArray[new String(data.id)];
-      debugger;
       if (!functionPointObj) {
         functionPointObj = {};
       }
       functionPointObj.rId = data.id;
       functionPointObj.dataType = dataType;
-      if (
-        (that.companyTreeSelectNode.companyIds &&
-          that.companyTreeSelectNode.companyIds.length > 0) ||
-        (that.companyTreeSelectNode.deptIds &&
-          that.companyTreeSelectNode.deptIds.length > 0)
-      ) {
-        let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
-        functionPointObj.companyId = companyId;
-        let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
-        functionPointObj.deptId = deptId;
-      }
-      that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
-      if (data.children) {
-        if (data.children.length > 0) {
-          this.foreachChildren(data.children, dataType);
-        }
-      }
       //设置当前对象的值
       let currentNode = that.$refs.tree.getNode(data.id);
       currentNode.data.dataType = dataType;
-      if (this.currentCompanyGather != null) {
-        currentNode.data.companyGather = this.currentCompanyGather;
+      if (that.currentCompanyGather == null) {
+        that.currentCompanyGather = data.companyGather;
       }
-      if (this.currentDeptGather != null) {
-        currentNode.data.deptGather = this.currentDeptGather;
+      if (that.currentDeptGather == null) {
+        that.currentDeptGather = data.deptGather;
       }
+      //设置权限数据
+      functionPointObj.companyId = that.currentCompanyGather;
+      functionPointObj.deptId = that.currentDeptGather;
+      //设置树上的权限数据
+      currentNode.data.companyGather = that.currentCompanyGather;
+      currentNode.data.deptGather = that.currentDeptGather;
+
+
+      // if (
+      //   (that.companyTreeSelectNode.companyIds &&
+      //     that.companyTreeSelectNode.companyIds.length > 0) ||
+      //   (that.companyTreeSelectNode.deptIds &&
+      //     that.companyTreeSelectNode.deptIds.length > 0)
+      // ) {
+      //   let companyId = that.foreachList(that.companyTreeSelectNode.companyIds);
+      //   functionPointObj.companyId = companyId;
+      //   let deptId = that.foreachList(that.companyTreeSelectNode.deptIds);
+      //   functionPointObj.deptId = deptId;
+      // }
+
+      that.paramsObj.functionPointArray[new String(data.id)] = functionPointObj;
+      if (data.children) {
+        if (data.children.length > 0) {
+          that.foreachChildren(data.children, dataType);
+        }
+      }
+
     },
     //遍历子节点
     foreachChildren(childrenData, dataType) {

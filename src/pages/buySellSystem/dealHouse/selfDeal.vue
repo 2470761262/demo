@@ -106,7 +106,8 @@
                           @change="queryDatalist"
                           range-separator="至"
                           start-placeholder="开始日期"
-                          end-placeholder="结束日期"></el-date-picker>
+                          end-placeholder="结束日期"
+                          :default-time="['00:00:00', '23:59:59']"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="Remove">清除</span>
         </div>
@@ -150,6 +151,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import '@/assets/publicLess/pageListQuery.less';
+import common from "../houseResource/common/common"
 export default {
   mixins: [getMenuRid],
   components: {
@@ -185,22 +187,39 @@ export default {
         { prop: "communityName", label: "楼盘名称", width: '170', order: false, disabled: true, default: true },
         { prop: "price", label: "成交价(万元)", order: 'custom', disabled: false, default: true, formart: item => item.price + '万元' },
         { prop: "inArea", label: "面积(m²)", order: 'custom', disabled: false, default: true, formart: item => item.inArea + 'm²' },
-        { prop: "unitpaice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
+        { prop: "unitPrice", label: "单价(元/m²)", order: 'custom', disabled: false, default: true, format: item => item.unitpaice + '元/㎡' },
         { prop: '', label: '户型', width: '150', order: false, disabled: false, default: true, formart: item => (item.rooms || 0) + '室' + (item.hall || 0) + '厅' + (item.toilet || 0) + '卫' },
         { prop: "seenNum", label: "被看次数", order: 'custom', disabled: false, default: true, formart: item => item.seenNum || 0 },
         { prop: "tradeTime", label: "成交时间", order: 'custom', disabled: false, default: true },
         { prop: "selfSaleType", label: "成交方式", order: 'custom', disabled: false, default: true, formart: item => item.selfSaleType = 1 ? '亲朋好友' : '疑似跳单' },
-        { prop: "agenName", label: "跟单人", order: false, disabled: false, default: true }
+        { prop: "agentName", label: "跟单人", order: false, disabled: false, default: true }
       ],
-      tableData: []
+      tableData: [],
+      moreSelect: [],
+      transitionList: [
+        {
+          key: "addTime",
+          value: [{ paramsKey: "beginTime", index: 0 }, { paramsKey: "endTime", index: 1 }],
+        },
+        {
+
+          key: "followTime",
+          value: [{ paramsKey: "beginFollowTime", index: 0 }, { paramsKey: "endFollowTime", index: 1 }],
+        },
+        {
+          key: "area",
+          value: [{ paramsKey: "busy", index: -1 }]
+        }
+      ]
     };
   },
   mounted () {
     this.queryOurComDeal(1, "id", "ascending");
   },
   methods: {
-    moreSelectChange () {
-
+    moreSelectChange (e) {
+      this.moreSelect = e;
+      this.queryOurComDeal(1, "id", "descending");
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
@@ -212,7 +231,7 @@ export default {
     toLook (id) {
       console.log(id);
       var that = this;
-      this.$router.push({ name: "houseDetails", params: { houseId: id } });
+      this.$router.push({ name: "historyDetails", params: { houseId: id } });
     },
     queryDatalist () {
       this.queryOurComDeal(1, "id", "ascending");
@@ -250,6 +269,10 @@ export default {
     },
     queryCBId () {
       var that = this;
+      if (that.data.comId == "") {
+        that.data.roomNo = "";
+        that.data.cbId = "";
+      }
       that.$api
         .get({
           url: "/mateHouse/queryComBuilding",
@@ -257,7 +280,9 @@ export default {
           token: false,
           qs: true,
           data: {
-            comId: that.data.comId
+            comId: that.data.comId,
+            page: 1,
+            limit: 9999
           }
         })
         .then(e => {
@@ -278,7 +303,9 @@ export default {
           qs: true,
           data: {
             comId: that.data.comId,
-            cbId: that.data.cbId
+            cbId: that.data.cbId,
+            page: 1,
+            limit: 9999
           }
         })
         .then(e => {
@@ -299,36 +326,43 @@ export default {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
-      if (that.data.comId != null && that.data.comId.length > 0) {
-        params.comId = that.data.comId;
+
+      if (Object.keys(this.moreSelect).length != 0) {
+        let selectObject = common.getSelectParams(this.transitionList, this.moreSelect);
+        Object.assign(params, selectObject);
       }
-      if (that.data.cbId != null && that.data.cbId.length > 0) {
-        params.cbId = that.data.cbId;
-      }
-      if (that.data.bhId != null && that.data.bhId.length > 0) {
-        params.bhid = that.data.bhId;
-      }
-      if (that.data.customName != null && that.data.customName.length > 0) {
-        params.customName = that.data.customName;
-      }
-      if (that.data.tel != null && that.data.tel.length > 0) {
-        params.tel = that.data.tel;
-      }
-      if (that.data.timeSelect != null && that.data.timeSelect.length > 0) {
-        params.beginTime = that.data.timeSelect[0];
-        params.endTime = that.data.timeSelect[1];
-      }
-      if (that.data.minArea != null && that.data.minArea.length > 0) {
-        params.minInArea = that.data.minArea;
-      }
-      if (that.data.maxArea != null && that.data.maxArea.length > 0) {
-        params.maxInArea = that.data.maxArea;
-      }
-      if (that.data.minPrice != null && that.data.minPrice.length > 0) {
-        params.minPrice = that.data.minPrice;
-      }
-      if (that.data.maxPrice != null && that.data.maxPrice.length > 0) {
-        params.maxPrice = that.data.maxPrice;
+      else {
+        if (that.data.comId != null && that.data.comId.length > 0) {
+          params.comId = that.data.comId;
+        }
+        if (that.data.cbId != null && that.data.cbId.length > 0) {
+          params.cbId = that.data.cbId;
+        }
+        if (that.data.bhId != null && that.data.bhId.length > 0) {
+          params.bhId = that.data.bhId;
+        }
+        if (that.data.customName != null && that.data.customName.length > 0) {
+          params.customName = that.data.customName;
+        }
+        if (that.data.tel != null && that.data.tel.length > 0) {
+          params.tel = that.data.tel;
+        }
+        if (that.data.timeSelect != null && that.data.timeSelect.length > 0) {
+          params.beginTime = that.data.timeSelect[0];
+          params.endTime = that.data.timeSelect[1];
+        }
+        if (that.data.minInArea != null && that.data.minInArea.length > 0) {
+          params.minInArea = that.data.minInArea;
+        }
+        if (that.data.maxInArea != null && that.data.maxInArea.length > 0) {
+          params.maxInArea = that.data.maxInArea;
+        }
+        if (that.data.minPrice != null && that.data.minPrice.length > 0) {
+          params.minPrice = that.data.minPrice;
+        }
+        if (that.data.maxPrice != null && that.data.maxPrice.length > 0) {
+          params.maxPrice = that.data.maxPrice;
+        }
       }
       if (column == "" || type == null || type == undefined) {
         params.sortColumn = "id";
@@ -404,47 +438,6 @@ export default {
       } else {
         this.options = [];
       }
-    },
-
-    queryCBId () {
-      var that = this;
-      this.$api
-        .get({
-          url: "/mateHouse/queryComBuilding",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: that.data.comId
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.data.cbId = "";
-            that.data.bhId = "";
-            that.cbIdList = e.data.data.list;
-          }
-        });
-    },
-    queryRoomNo () {
-      var that = this;
-      this.$api
-        .get({
-          url: "/mateHouse/queryBuildIngHouses",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: that.data.comId,
-            cbId: that.data.cbId
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.data.bhId = "";
-            that.roomNoList = e.data.data.list;
-          }
-        });
     },
     handleClick () { },
     queryTabData () {

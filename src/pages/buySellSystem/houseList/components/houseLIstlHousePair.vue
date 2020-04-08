@@ -79,15 +79,21 @@
     border: 2px solid var(--color--primary);
     height: 45px;
     box-sizing: border-box;
+    box-shadow: inset 0 0 7px var(--color--primary);
     .el-icon-search {
-      font-size: 20px;
+      font-size: 26px;
       margin: 0 10px;
+      color: #c3c3c3;
     }
     .select-input-sub {
       outline: none;
       border: none;
-      font-size: 20px;
+      font-size: 18px;
       flex: 1;
+      background: inherit;
+      &::-webkit-input-placeholder {
+        color: #c3c3c3;
+      }
     }
   }
   .select-but-sub {
@@ -131,6 +137,10 @@
   border-color: var(--color--primary);
   background-color: var(--color--primary);
 }
+/deep/.vue-slider-dot {
+  width: 25px !important;
+  height: 25px !important;
+}
 /deep/.vue-slider-process {
   background-color: var(--color--primary);
 }
@@ -152,11 +162,14 @@
 .tooltipsItem {
   width: 100%;
   height: 100%;
-  background: var(--color--primary);
+  background: #fff;
   border-radius: 50%;
-  color: #fff;
+  color: var(--color--primary);
   text-align: center;
-  line-height: 25px;
+  line-height: 21px;
+  border: 2px solid var(--color--primary);
+  box-sizing: border-box;
+  font-weight: 600;
 }
 .vue-slider-index1 {
   /deep/.vue-slider-rail {
@@ -213,6 +226,9 @@
   /deep/.el-form-item__label {
     margin-right: 0 !important;
     //width: 105px !important;
+  }
+  /deep/.el-input__inner {
+    border-radius: 0;
   }
   /deep/.el-form-item {
     margin-bottom: 50px;
@@ -333,8 +349,7 @@
                       tooltip="none"
                       :lazy="true"
                       @change="priceSliderChange"
-                      :contained="true"
-                      :dot-size="[25,25]">
+                      :contained="true">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
                    :style="style">
@@ -361,8 +376,7 @@
                       tooltip="none"
                       :lazy="true"
                       @change="areaSliderChange"
-                      :contained="true"
-                      :dot-size="[25,25]">
+                      :contained="true">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
                    :style="style">
@@ -390,7 +404,6 @@
                       tooltip="none"
                       :lazy="true"
                       :contained="true"
-                      :dot-size="[25,25]"
                       @change="flootSliderChange">
             <template v-slot:process="{ start, end, style, index }">
               <div class="vue-slider-process"
@@ -404,7 +417,7 @@
               </div>
             </template>
             <template v-slot:dot>
-              <div class="tooltipsItem">层</div>
+              <div class="tooltipsItem iconxuanzelouceng iconfont"></div>
             </template>
           </vue-slider>
         </el-form-item>
@@ -708,9 +721,8 @@ export default {
     },
     //重置表单
     resetForm(formName) {
-      this.$refs[formName].resetFields();
-      this.searchData = "";
-      this.form.title = "全部在售";
+      this.$parent.setSelectNav(null, true);
+      Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
       this.Slider.priceSlider = [20, 20];
       this.Slider.areaSlider = [20, 20];
       this.Slider.flootSlider = [-2, -2];

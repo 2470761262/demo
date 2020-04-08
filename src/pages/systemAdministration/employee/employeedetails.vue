@@ -418,7 +418,7 @@ export default {
     }
   },
   mounted() {
-    debugger;
+    //debugger;
     let id = this.$route.params.id;
     this.$api
       .get({

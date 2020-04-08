@@ -433,9 +433,9 @@ td {
   </div>
 </template>
 <script>
-import getMenuRid from "@/minxi/getMenuRid";
+import getToken from "@/minxi/getUrlToken";
 export default {
-  mixins: [getMenuRid],
+  mixins: [getToken],
   data() {
     return {
       filterText: "",

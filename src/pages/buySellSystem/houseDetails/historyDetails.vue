@@ -95,6 +95,7 @@ export default {
       forID: {
         id: null
       },
+      tradeType:1,
       houseDetails: {},
       load: {
         loading: true,
@@ -105,9 +106,12 @@ export default {
   created() {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
+      this.tradeType=this.$route.params.tradeType;
       util.localStorageSet("historyDetails.vue:houseId", this.forID.id);
+      util.localStorageSet("historyDetails.vue:tradeType",this.tradeType);
     } else {
       this.forID.id = util.localStorageGet("historyDetails.vue:houseId");
+      this.tradeType=util.localStorageGet("historyDetails.vue:tradeType");
     }
     this.getHouseDetails();
   },
@@ -117,10 +121,8 @@ export default {
       this.load.loading = true;
       this.$api
         .post({
-          url: "/agent_house/getHouseDetail",
-          data: {
-            houseId: that.forID.id
-          },
+          url: "/history/agent_house/getHouseDetail/"+that.forID.id,
+          data:{tradeType:this.tradeType},
           qs: true
         })
         .then(e => {

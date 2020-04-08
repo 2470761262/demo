@@ -57,7 +57,7 @@
   }
   .happy-day-per {
     position: absolute;
-    bottom: 13PX;
+    bottom: 13px;
     width: 100%;
     text-align: center;
     > span {
@@ -76,6 +76,10 @@
 </style>
 <template>
   <div class="page-cell-header">
+    <el-button size="mini"
+               @click="trgerColor">
+      默哀主题
+    </el-button>
     <div class="happy-day-contet">
       <img src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9d2a1dc5647d4e51a5ab5857a110be87.png"
            alt="">
@@ -124,6 +128,15 @@ export default {
     document.querySelector("body").removeEventListener("mousemove", this.move);
   },
   methods: {
+    trgerColor() {
+      let html = document.querySelector("html");
+
+      if (!html.className.includes("gray")) {
+        html.classList.add("gray");
+      } else {
+        html.classList.remove("gray");
+      }
+    },
     move(e) {
       try {
         let rotateX = -(window.innerWidth / 2 - e.pageX) / 100;

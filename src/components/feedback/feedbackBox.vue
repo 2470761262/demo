@@ -1,23 +1,32 @@
 <style lang="less" scoped>
-.feedback_box {
-  text-align: right;
-  margin: 0px;
+.nav-breadcrumb {
+  padding: 0 0 10px;
 }
-
-.back_btn {
-  text-align: left;
-  margin: 0px;
-  display: inline-block;
-  float: left;
+.el-leave-active {
+  transform: translateX(-20px);
 }
-
-.feedback_divider {
-  margin: 10px 0 10px 0;
+.nav-flex {
+  display: flex;
+  justify-content: space-between;
+}
+/deep/.el-breadcrumb__item {
+  .el-breadcrumb__inner {
+    color: var(--color--primary);
+  }
+  &:last-child {
+    .el-breadcrumb__inner {
+      color: #606266;
+    }
+  }
+}
+/deep/.isBack {
+  .el-breadcrumb__inner {
+    cursor: pointer !important;
+  }
 }
 </style>
 <template>
-  <div>
-
+  <div class="nav-breadcrumb">
     <el-dialog title="功能点反馈"
                :visible.sync="outerVisible"
                :before-close="beforeClose">
@@ -75,22 +84,15 @@
                    @click="goSubmit">提交</el-button>
       </div>
     </el-dialog>
-
-    <div class="feedback_box">
-      <div class="back_btn">
-        <el-link slot="reference"
-                 @click="goHome"
-                 class="feedback_btn"
-                 type="primary"
-                 icon="el-icon-s-home">首页
-        </el-link>
-        <el-link slot="reference"
-                 @click="goBack"
-                 class="feedback_btn"
-                 type="primary"
-                 icon="el-icon-back">返回
-        </el-link>
-      </div>
+    <div class="nav-flex">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item v-for="(item,index) in breadcrumbList"
+                            :key="index"
+                            :to="{path:item.url}">{{item.title}}</el-breadcrumb-item>
+        <el-breadcrumb-item class="isBack"
+                            v-if="breadcrumbList.length > 1"
+                            @click.native="goBack">返回</el-breadcrumb-item>
+      </el-breadcrumb>
       <el-link slot="reference"
                @click="hitOuterVisible()"
                class="feedback_btn"
@@ -98,8 +100,6 @@
                icon="el-icon-edit-outline">功能反馈
       </el-link>
     </div>
-    <el-divider class="feedback_divider"></el-divider>
-
   </div>
 </template>
 
@@ -114,6 +114,11 @@ export default {
       default: "/buySellSystem/houseList"
     }
   },
+  watch: {
+    $route(newValue, oldValue) {
+      this.breadcrumbSet(newValue.matched);
+    }
+  },
   data() {
     return {
       form: {
@@ -124,17 +129,32 @@ export default {
       outerVisible: false,
       dialogImageUrl: "",
       qrCodeImg: null,
-      dialogVisible: false
+      dialogVisible: false,
+      breadcrumbList: []
     };
   },
   created() {
     this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
     this.myHeader = { tk: util.localStorageGet(TOKEN) };
-    console.log("upload url ", this.uploadUrl);
-    console.log("header data  ", this.myHeader);
+    this.breadcrumbSet(this.$route.matched);
   },
-  mounted() {},
   methods: {
+    breadcrumbSet(matched) {
+      //需要过滤的Path;
+      this.breadcrumbList = [];
+      let filterPath = ["/buySellSystem/houseList"];
+
+      if (matched.length > 0) {
+        matched.forEach((item, index) => {
+          if (!filterPath.includes(item.path)) {
+            this.breadcrumbList.push({
+              title: item.meta.title,
+              url: item.path
+            });
+          }
+        });
+      }
+    },
     hitOuterVisible() {
       this.outerVisible = true;
       this.requestQrCode();
@@ -222,7 +242,7 @@ export default {
         done();
       }
     },
-    goBack() {
+    goBack(back) {
       this.$router.go(-1);
     },
     goHome() {
