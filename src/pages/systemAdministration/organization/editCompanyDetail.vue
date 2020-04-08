@@ -15,6 +15,11 @@
 }
 .flex-row {
   display: flex;
+  &.flex-row40 {
+    /deep/.el-form-item {
+      flex: 0 0 40%;
+    }
+  }
   /deep/.el-form-item {
     flex: 0 0 20%;
     .el-select {
@@ -135,17 +140,17 @@
                     maxlength="100"></el-input>
         </el-form-item>
       </div>
-      <div class="flex-row">
+      <div class="flex-row flex-row40">
         <el-form-item label="公司描述:">
           <el-input type="text"
                     placeholder="请输入内容"
                     v-model="companyEntity.coDesc"></el-input>
         </el-form-item>
         <el-form-item label="设置管辖区域:"
-                      prop="regionName">
+                      prop="region">
           <el-input type="text"
                     placeholder="请输入内容"
-                    v-model="companyEntity.regionName"
+                    v-model="companyEntity.region"
                     @focus="getDialogVisible()"></el-input>
         </el-form-item>
       </div>
@@ -161,7 +166,6 @@
                  mask-hide-event
                  typeClass="system"
                  :visible.sync="dialogVisible"
-                 :before-close="closePop"
                  width="30%">
       <el-tree :props="props"
                :load="loadNode"
@@ -249,24 +253,18 @@ export default {
       isIndeterminate: true,
       backUrl: null,
       jumpNodeId: "",
-      id: 350000,
-      treeResolve: null
+      id: 350000
     };
   },
   watch: {},
   computed: {},
   methods: {
-    closePop() {
-      return Promise.resolve();
-    },
     loadNode(node, resolve) {
       if (node.level == 0) {
-        this.treeResolve = resolve;
         this.checked(this.id).then(e => {
           resolve(e);
         });
       } else if (node.level == 1) {
-        console.log(node, "nodenode");
         this.checked(node.data.id).then(e => {
           e.forEach(item => {
             item.leaf = true;

@@ -35,6 +35,7 @@
       .didLog-content-box-title {
         position: relative;
         margin: 0px 15px;
+        user-select: none;
         h3 {
           font-size: 20px;
           font-weight: 500;
