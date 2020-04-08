@@ -166,6 +166,8 @@
       <el-tree :props="props"
                :load="loadNode"
                lazy
+               :default-expanded-keys=" treeExpanded"
+               @check-change="treecheck"
                node-key="id"
                ref="tree"
                show-checkbox>
@@ -190,6 +192,7 @@ export default {
   },
   data() {
     return {
+      treeExpanded: [],
       props: {
         label: "Name",
         children: "children",
@@ -246,7 +249,8 @@ export default {
       isIndeterminate: true,
       backUrl: null,
       jumpNodeId: "",
-      id: 350000
+      id: 350000,
+      treeResolve: null
     };
   },
   watch: {},
@@ -256,13 +260,13 @@ export default {
       return Promise.resolve();
     },
     loadNode(node, resolve) {
-      console.log(node);
       if (node.level == 0) {
+        this.treeResolve = resolve;
         this.checked(this.id).then(e => {
           resolve(e);
-          throw new error("你返回不是一个promise");
         });
       } else if (node.level == 1) {
+        console.log(node, "nodenode");
         this.checked(node.data.id).then(e => {
           e.forEach(item => {
             item.leaf = true;
@@ -284,6 +288,15 @@ export default {
         })
         .join(",");
       this.dialogVisible = false;
+    },
+    treecheck(data, isChecked) {
+      if (isChecked && data.LevelType == 2) {
+        if (this.treeExpanded.length != 0) {
+          this.treeExpanded.splice(0, 1, data.id);
+        } else {
+          this.treeExpanded.push(data.id);
+        }
+      }
     },
     getDialogVisible1() {
       this.dialogVisible1 = true;
