@@ -25,6 +25,9 @@ export default {
     mounted () {
         if (window.self !== window.top) {
             document.querySelector('#page-cell-main').style.height = '100%';
+            util.localStorageSet('nest', true);
+        } else {
+            util.localStorageSet('nest', false);
         }
     },
     methods: {

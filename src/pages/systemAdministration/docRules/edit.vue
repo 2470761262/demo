@@ -29,61 +29,58 @@
   <div>
     <template>
       <div class="elTree">
-        <el-tree ref="treeForm"
-                 :data="treeData"
-                 :default-expanded-keys="defaultExpandedKeys"
-                 :default-checked-keys="defaultCheckedKeys"
-                 node-key="businessId"
-                 show-checkbox
-                 :props="defaultProps"
-                 @check-change="handleCheckChange"
-                 :highlight-current="true"
-                 :filter-node-method="filterNode"
-                 check-strictly
-                 :action="''"></el-tree>
+        <el-tree
+          ref="treeForm"
+          :data="treeData"
+          :default-expanded-keys="defaultExpandedKeys"
+          :default-checked-keys="defaultCheckedKeys"
+          node-key="businessId"
+          show-checkbox
+          :props="defaultProps"
+          @check-change="handleCheckChange"
+          :highlight-current="true"
+          :filter-node-method="filterNode"
+          check-strictly
+          :action="''"
+        ></el-tree>
       </div>
     </template>
     <div class="elControl">
-      <el-input placeholder="请在组织结构树选择所属单位"
-                v-model="unitName"
-                :disabled="true">
+      <el-input placeholder="请在组织结构树选择所属单位" v-model="unitName" :disabled="true">
         <template slot="prepend">所属单位</template>
       </el-input>
-      <el-input placeholder="请输入标题"
-                v-model="title">
+      <el-input placeholder="请输入标题" v-model="title">
         <template slot="prepend">规则标题</template>
       </el-input>
-      <el-select v-model="typeValue"
-                 placeholder="请选择规则类型">
-        <el-option v-for="item in options"
-                   :key="item.value"
-                   :label="item.label"
-                   :value="item.value"></el-option>
+      <el-select v-model="typeValue" placeholder="请选择规则类型">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value"
+        ></el-option>
       </el-select>
       <el-main>
         <div class="editorContainer">
-          <el-upload class="upload-demo"
-                     :action="uploadUrl"
-                     :headers="myHeader"
-                     :on-success="handleAvatarSuccess">
-            <el-button size="small"
-                       type="primary"
-                       id="btnUpload">点击上传</el-button>
-            <div slot="tip"
-                 class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          <el-upload
+            class="upload-demo"
+            :action="uploadUrl"
+            :headers="myHeader"
+            :on-success="handleAvatarSuccess"
+          >
+            <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
           </el-upload>
-          <quill-editor class="myQuillEditor"
-                        v-model="newsContent"
-                        :options="editorOption"
-                        ref="QuillEditor"></quill-editor>
+          <quill-editor
+            class="myQuillEditor"
+            v-model="newsContent"
+            :options="editorOption"
+            ref="QuillEditor"
+          ></quill-editor>
         </div>
       </el-main>
-      <el-button type="success"
-                 @click="saveData"
-                 plain>确定</el-button>
-      <el-button type="primary"
-                 @click="$router.back(-1)"
-                 plain>取消</el-button>
+      <el-button type="success" @click="saveData" plain>确定</el-button>
+      <el-button type="primary" @click="$router.back(-1)" plain>取消</el-button>
     </div>
   </div>
 </template>
@@ -113,11 +110,11 @@ const toolbarOptions = [
   ["link", "image"],
   ["clean"] // remove formatting button
 ];
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
   components: { quillEditor },
-  data () {
+  data() {
     return {
       treeData: [],
       defaultProps: {
@@ -142,7 +139,7 @@ export default {
           toolbar: {
             container: toolbarOptions, // 工具栏
             handlers: {
-              image: function (value) {
+              image: function(value) {
                 if (value) {
                   console.log(value);
                   document.getElementById("btnUpload").click();
@@ -150,12 +147,12 @@ export default {
                   this.quill.format("image", false);
                 }
               },
-              video: function (v) {
+              video: function(v) {
                 if (v) {
                   alert("不支持上传视频");
                 }
               },
-              link: function (v) {
+              link: function(v) {
                 if (v) {
                   var href = prompt("Enter the URL");
                   this.quill.format("link", href);
@@ -178,11 +175,11 @@ export default {
       typeValue: ""
     };
   },
-  mounted () {
+  mounted() {
     //读取树数据
     this.$api
       .post({
-        url: "/sys/account/company/tree",
+        url: "/sys/tree/doc",
         token: false
       })
       .then(e => {
@@ -205,7 +202,7 @@ export default {
     this.quill = this.$refs.QuillEditor.quill;
   },
   methods: {
-    handleCheckChange (data, checked, node) {
+    handleCheckChange(data, checked, node) {
       if (checked == true) {
         this.checkedId = data.businessId;
         this.checkedType = data.type;
@@ -214,15 +211,15 @@ export default {
         this.unitName = data.labelName;
       }
     },
-    handleNodeClick (data) { },
-    loadNode (node, resolve) { },
-    filterNode (value, data) {
+    handleNodeClick(data) {},
+    loadNode(node, resolve) {},
+    filterNode(value, data) {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
-    treeCheck (e, data) { },
-    saveData () {
+    treeCheck(e, data) {},
+    saveData() {
       let that = this;
       if (
         that.checkedId == null ||
@@ -295,7 +292,7 @@ export default {
           console.log(e);
         });
     },
-    handleAvatarSuccess (res, file) {
+    handleAvatarSuccess(res, file) {
       // 如果上传成功
       if (res.code == 200) {
         let imageUrl = res.data.url;
@@ -313,7 +310,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.uploadUrl = this.$api.baseUrl() + "/docRules/picture";
     this.myHeader = { tk: util.localStorageGet(TOKEN) };
     this.oldId = this.$route.query.id;

@@ -133,6 +133,9 @@
         color: var(--color--primary);
       }
     }
+    &.com-cell-posi-nest {
+      flex: 0 0 975px;
+    }
     &:last-child {
       margin-right: 0;
     }
@@ -182,7 +185,7 @@
     </div>
     <div class="com-flex">
       <div class="com-flex-cell com-cell-posi"
-           :class="{'querySelectFlag':querySelectFlag}">
+           :class="{'querySelectFlag':querySelectFlag,'com-cell-posi-nest':nest}">
         <div class="hide-warp">
           <houselistlhousepair></houselistlhousepair>
         </div>
@@ -329,6 +332,11 @@ export default {
       form: this.form,
       Slider: this.Slider
     };
+  },
+  computed: {
+    nest() {
+      return util.localStorageGet("nest");
+    }
   },
   name: "houseList",
   mixins: [getToken, getMenuRid],
