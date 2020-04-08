@@ -48,7 +48,7 @@
     <el-form ref="form"
              :rules="rules"
              :model="companyEntity"
-             label-width="160px">
+             label-width="130px">
 
       <div class="flex-row">
         <el-form-item label="公司名称:"
