@@ -15,9 +15,15 @@
   }
   .cell-left {
     width: 860px;
+    &.cell-left-nest {
+      width: 1020px;
+    }
   }
   .cell-msg {
     width: 760px;
+    &.cell-msg-nest {
+      width: 920px;
+    }
   }
   .cell-right {
     flex: 1;
@@ -36,7 +42,8 @@
     <house-details-head></house-details-head>
     <section class="page-house-cell">
       <!-- 轮播图 -->
-      <loopImg class="cell-left"></loopImg>
+      <loopImg class="cell-left"
+               :class="{'cell-left-nest':nest}"></loopImg>
       <!-- 房屋详情 -->
       <detail class="cell-right"></detail>
       <!-- 右侧功能按钮 -->
@@ -49,7 +56,8 @@
     <buttonGroup></buttonGroup>
     <section class="page-house-cell marginTop">
       <!-- 房屋其他信息 -->
-      <houseMessage class="cell-msg"></houseMessage>
+      <houseMessage class="cell-msg"
+                    :class="{'cell-msg-nest':nest}"></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->
         <houseOperation></houseOperation>
@@ -79,6 +87,11 @@ export default {
       load: this.load,
       buttonDisabled: false
     };
+  },
+  computed: {
+    nest() {
+      return util.localStorageGet("nest");
+    }
   },
   mixins: [getMenuRid],
   components: {

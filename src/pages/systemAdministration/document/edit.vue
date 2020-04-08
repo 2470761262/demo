@@ -20,59 +20,47 @@
   <div>
     <template>
       <div class="elTree">
-        <el-tree ref="treeForm"
-                 :data="treeData"
-                 :default-expanded-keys="defaultCheckedKeys"
-                 :default-checked-keys="defaultCheckedKeys"
-                 node-key="businessId"
-                 show-checkbox
-                 :props="defaultProps"
-                 @check-change="handleCheckChange"
-                 :highlight-current="true"
-                 :filter-node-method="filterNode"
-                 check-strictly
-                 :action="''"></el-tree>
+        <el-tree
+          ref="treeForm"
+          :data="treeData"
+          :default-expanded-keys="defaultCheckedKeys"
+          :default-checked-keys="defaultCheckedKeys"
+          node-key="businessId"
+          show-checkbox
+          :props="defaultProps"
+          @check-change="handleCheckChange"
+          :highlight-current="true"
+          :filter-node-method="filterNode"
+          check-strictly
+          :action="''"
+        ></el-tree>
       </div>
     </template>
     <div class="elControl">
-      <el-input placeholder="请在组织结构树选择所属单位"
-                v-model="unitName"
-                :disabled="true">
+      <el-input placeholder="请在组织结构树选择所属单位" v-model="unitName" :disabled="true">
         <template slot="prepend">所属单位</template>
       </el-input>
-      <el-input placeholder="请输入标题"
-                v-model="title">
+      <el-input placeholder="请输入标题" v-model="title">
         <template slot="prepend">标题</template>
       </el-input>
-      <el-upload class="upload"
-                 drag
-                 :http-request="uploadFile"
-                 :limit="1"
-                 :file-list="fileList">
+      <el-upload class="upload" drag :http-request="uploadFile" :limit="1" :file-list="fileList">
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">
           将文件拖到此处，或
           <em>点击上传</em>
         </div>
       </el-upload>
-      <el-input type="textarea"
-                autosize
-                placeholder="请输入备注"
-                v-model="remark"></el-input>
-      <el-button type="success"
-                 @click="saveData"
-                 plain>确定</el-button>
-      <el-button type="primary"
-                 @click="$router.back(-1)"
-                 plain>取消</el-button>
+      <el-input type="textarea" autosize placeholder="请输入备注" v-model="remark"></el-input>
+      <el-button type="success" @click="saveData" plain>确定</el-button>
+      <el-button type="primary" @click="$router.back(-1)" plain>取消</el-button>
     </div>
   </div>
 </template>
 <script>
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
-  data () {
+  data() {
     return {
       treeData: [],
       defaultProps: {
@@ -92,11 +80,11 @@ export default {
       defaultCheckedKeys: null
     };
   },
-  mounted () {
+  mounted() {
     //读取树数据
     this.$api
       .post({
-        url: "/sys/account/company/tree",
+        url: "/sys/tree/doc",
         token: false
       })
       .then(e => {
@@ -117,7 +105,7 @@ export default {
       });
   },
   methods: {
-    handleCheckChange (data, checked, node) {
+    handleCheckChange(data, checked, node) {
       if (checked == true) {
         this.checkedId = data.businessId;
         this.checkedType = data.type;
@@ -126,15 +114,15 @@ export default {
         this.unitName = data.labelName;
       }
     },
-    handleNodeClick (data) { },
-    loadNode (node, resolve) { },
-    filterNode (value, data) {
+    handleNodeClick(data) {},
+    loadNode(node, resolve) {},
+    filterNode(value, data) {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
-    treeCheck (e, data) { },
-    saveData () {
+    treeCheck(e, data) {},
+    saveData() {
       let that = this;
       if (
         that.checkedId == null ||
@@ -203,7 +191,7 @@ export default {
           console.log(e);
         });
     },
-    uploadFile (uploader) {
+    uploadFile(uploader) {
       let that = this;
       let formData = new FormData();
       formData.append("picClass", uploader.filename);
@@ -236,7 +224,7 @@ export default {
         });
     }
   },
-  created () {
+  created() {
     this.oldId = this.$route.query.id;
     console.log("传过来的id：" + this.oldId);
     if (typeof this.oldId === "undefined") {

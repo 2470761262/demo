@@ -167,7 +167,7 @@ export default {
         });
     },
     pageLoad() {
-      let id = this.$route.params.PersonLogId;
+      let id = this.$route.query.PersonLogId;
       this.$api
         .post({
           url: "/personLog/logList/" + id,

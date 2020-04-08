@@ -15,6 +15,11 @@
 }
 .flex-row {
   display: flex;
+  &.flex-row40 {
+    /deep/.el-form-item {
+      flex: 0 0 40%;
+    }
+  }
   /deep/.el-form-item {
     flex: 0 0 20%;
     .el-select {
@@ -135,17 +140,17 @@
                     maxlength="100"></el-input>
         </el-form-item>
       </div>
-      <div class="flex-row">
+      <div class="flex-row flex-row40">
         <el-form-item label="公司描述:">
           <el-input type="text"
                     placeholder="请输入内容"
                     v-model="companyEntity.coDesc"></el-input>
         </el-form-item>
         <el-form-item label="设置管辖区域:"
-                      prop="regionName">
+                      prop="region">
           <el-input type="text"
                     placeholder="请输入内容"
-                    v-model="companyEntity.regionName"
+                    v-model="companyEntity.region"
                     @focus="getDialogVisible()"></el-input>
         </el-form-item>
       </div>
@@ -161,11 +166,12 @@
                  mask-hide-event
                  typeClass="system"
                  :visible.sync="dialogVisible"
-                 :before-close="closePop"
                  width="30%">
       <el-tree :props="props"
                :load="loadNode"
                lazy
+               :default-expanded-keys=" treeExpanded"
+               @check-change="treecheck"
                node-key="id"
                ref="tree"
                show-checkbox>
@@ -190,6 +196,7 @@ export default {
   },
   data() {
     return {
+      treeExpanded: [],
       props: {
         label: "Name",
         children: "children",
@@ -252,15 +259,10 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    closePop() {
-      return Promise.resolve();
-    },
     loadNode(node, resolve) {
-      console.log(node);
       if (node.level == 0) {
         this.checked(this.id).then(e => {
           resolve(e);
-          throw new error("你返回不是一个promise");
         });
       } else if (node.level == 1) {
         this.checked(node.data.id).then(e => {
@@ -284,6 +286,15 @@ export default {
         })
         .join(",");
       this.dialogVisible = false;
+    },
+    treecheck(data, isChecked) {
+      if (isChecked && data.LevelType == 2) {
+        if (this.treeExpanded.length != 0) {
+          this.treeExpanded.splice(0, 1, data.id);
+        } else {
+          this.treeExpanded.push(data.id);
+        }
+      }
     },
     getDialogVisible1() {
       this.dialogVisible1 = true;
