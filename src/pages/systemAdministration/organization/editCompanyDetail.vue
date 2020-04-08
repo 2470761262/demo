@@ -142,7 +142,7 @@
                     v-model="companyEntity.coDesc"></el-input>
         </el-form-item>
         <el-form-item label="设置管辖区域:"
-                      prop="region">
+                      prop="regionName">
           <el-input type="text"
                     placeholder="请输入内容"
                     v-model="companyEntity.regionName"
@@ -275,7 +275,15 @@ export default {
       this.$refs.tree.setCheckedKeys([]);
     },
     getTreeCheck() {
-      console.log(this.$refs.tree.getCheckedNodes());
+      let arr = this.$refs.tree.getCheckedNodes().filter(item => {
+        return item.LevelType != 2;
+      });
+      this.companyEntity.regionName = arr
+        .map(item => {
+          return item.Name;
+        })
+        .join(",");
+      this.dialogVisible = false;
     },
     getDialogVisible1() {
       this.dialogVisible1 = true;
