@@ -274,16 +274,16 @@ export default {
                   result.data.list[i].del = "离职";
                   break;
                 case 2:
-                  result.data.list[i].del = "未带看锁定";
+                  result.data.list[i].del = "离职待审核";
                   break;
                 case 3:
                   result.data.list[i].del = "未审核";
                   break;
               }
-              if(result.data.list[i].isLocked==0){
-                result.data.list[i].isLocked = "锁定";
-              }else{
+              if(result.data.list[i].isLocked==1){
                 result.data.list[i].isLocked = "正常";
+              }else {
+                result.data.list[i].isLocked = "锁定";
               }
             }
             this.pageJson.total = result.data.totalCount;
@@ -312,16 +312,17 @@ export default {
       this.dialogVisible = false;     
     },
     delAccount() {
+      let that=this;
       if (
         this.leaveTime != null &&
         this.leaveMemo != ""
       ) {
        this.dialogVisible = false;
-        this.operation(this.id, "del", 1,function(result){
-            let index=that.tableData.findIndex((item) => {return item.id == id})
+        this.operation(that.id, "del", 1,function(result){
+            let index=that.tableData.findIndex((item) => {return item.id == that.id})
             if(index>-1){
               console.log("离职了用户");
-              that.tableData[index].del='离职';
+              that.tableData[index].del='离职待审核';
             }
           });
       } else {
@@ -432,7 +433,13 @@ export default {
     operation(id, upType, upValue,callBack) {
       let params = {perId: id, upType: upType, upValue: upValue };    
       params.leaveMemo = this.leaveMemo;
-      params.leaveTime = this.leaveTime;     
+      params.leaveTime = this.leaveTime; 
+      const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
       this.$api
         .post({
           url: "/employee/operation",
@@ -442,6 +449,7 @@ export default {
         })
         .then(e => {
           let result = e.data;
+          loading.close();
           if (result.code == 200) {
             this.$message({ message: result.message });
             callBack(result);
@@ -452,6 +460,7 @@ export default {
           }
         })
         .catch(e => {
+          loading.close();
           console.log("失败");
           console.log(e);
         });
