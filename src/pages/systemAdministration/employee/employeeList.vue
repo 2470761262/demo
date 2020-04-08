@@ -42,7 +42,6 @@
       @current-change="handleChange"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
-      @row-click="rowClick"
     >
       <template v-slot:top>
         <div class="query-cell">
@@ -159,7 +158,7 @@ export default {
         del: 0, //0 查询在职用户,1 查询离职用户,2 查询待离职用户
         type: 0 //0 内部  1 游客
       },
-      leaveTime:null,
+      leaveTime:"",
       leaveMemo:'',
       configSet: {
         selectToTime: false,
@@ -188,7 +187,8 @@ export default {
         label: "labelName"
       },
       checkedId: null,
-      checkedType: null
+      checkedType: null,
+      id:0
     };
   },
   mounted() {
@@ -317,7 +317,7 @@ export default {
         this.leaveMemo != ""
       ) {
        this.dialogVisible = false;
-        this.operation(id, "del", 1,function(result){
+        this.operation(this.id, "del", 1,function(result){
             let index=that.tableData.findIndex((item) => {return item.id == id})
             if(index>-1){
               console.log("离职了用户");
@@ -383,7 +383,8 @@ export default {
      
     },
     delEmployee(id) {
-      this.dialogVisible = true;      
+      this.dialogVisible = true;
+      this.id=id;   
     },
 
     resumeEmployee(id) {
@@ -393,7 +394,7 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       }).then(() => {
-          that.operation(id, "del", 0,function(result){
+          that.operation(id, "restoration", 0,function(result){
             let index=that.tableData.findIndex((item) => {return item.id == id})
             if(index>-1){
               console.log("复职了用户");
@@ -428,8 +429,8 @@ export default {
     handleCurrentChange(val) {
       this.queryEmployeeDatas(val);
     },    
-    operation(id, UpType, upValue,callBack) {
-      let params = { accountId: id, UpType: UpType, upValue: upValue };    
+    operation(id, upType, upValue,callBack) {
+      let params = {perId: id, upType: upType, upValue: upValue };    
       params.leaveMemo = this.leaveMemo;
       params.leaveTime = this.leaveTime;     
       this.$api
