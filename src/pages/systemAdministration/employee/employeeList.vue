@@ -42,6 +42,7 @@
       @current-change="handleChange"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
+      @row-click="rowClick"
     >
       <template v-slot:top>
         <div class="query-cell">
@@ -109,8 +110,8 @@
               <el-button
                 type="primary"
                 size="mini"
-                @click="distributeEvent(item.methosName,scope.row.id)"
-                v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                @click="distributeEvent(item.methodName,scope.row.id)"
+                v-for="(item,index) in getOpeBtns(scope.row.del,scope.row.isLocked)"
                 :key="index"
               >{{item.name}}</el-button>
             </div>
@@ -121,19 +122,19 @@
     <el-dialog title="提示" :visible.sync="dialogVisible" width="50%">
       <div class="left-input-container">
         <span>离职时间</span>
-        <el-input type="date" placeholder="birthday" v-model="employeeEntity.leaveTime"></el-input>
+        <el-input type="date" placeholder="birthday" v-model="leaveTime"></el-input>
         <span>离职原因</span>
         <el-input
           type="text"
           placeholder="请输入内容"
-          v-model="employeeEntity.leaveMemo"
+          v-model="leaveMemo"
           maxlength="100"
           show-word-limit
         ></el-input>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose()">取 消</el-button>
-        <el-button type="primary" @click="save()">确 定</el-button>
+        <el-button type="primary" @click="delAccount()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -158,7 +159,8 @@ export default {
         del: 0, //0 查询在职用户,1 查询离职用户,2 查询待离职用户
         type: 0 //0 内部  1 游客
       },
-      employeeEntity: { accountId: null, leaveTime: null, leaveMemo: null },
+      leaveTime:null,
+      leaveMemo:'',
       configSet: {
         selectToTime: false,
         selectTo: false
@@ -175,7 +177,8 @@ export default {
         { prop: "postName", label: "角色", width: "150px" },
         { prop: "companyName", label: "公司", width: "180px" },
         { prop: "roleName", label: "岗位", width: "150px" },
-        { prop: "del", label: "状态", width: "80px" }
+        { prop: "del", label: "状态", width: "80px" },
+        { prop: "isLocked", label: "情况", width: "80px" }
       ],
       tableData: [],
       treeData: [],
@@ -277,6 +280,11 @@ export default {
                   result.data.list[i].del = "未审核";
                   break;
               }
+              if(result.data.list[i].isLocked==0){
+                result.data.list[i].isLocked = "锁定";
+              }else{
+                result.data.list[i].isLocked = "正常";
+              }
             }
             this.pageJson.total = result.data.totalCount;
             this.pageJson.currentPage = result.data.currPage;
@@ -301,79 +309,116 @@ export default {
       this.$router.push({ path: "/sys/editemployee", query: { id: id } });
     },
     handleClose() {
-      this.dialogVisible = false;
-      this.employeeEntity = {};
+      this.dialogVisible = false;     
     },
-    save() {
-      this.dialogVisible = false;
-      let params = this.employeeEntity;
-      this.$api
-        .post({
-          url: "/employee/del",
-          data: params,
-          token: true,
-          headers: { "Content-Type": "application/json;charset=UTF-8" }
-        })
-        .then(e => {
-          let result = e.data;
-          if (result.code == 200) {
-            console.log(result.message);
-            this.$alert("", "成功", {
-              dangerouslyUseHTMLString: false
-            });
-            this.$router.push({ path: "/sys/employeeList" });
-            console.log(result.data);
-            this.$message({ message: result.message });
-            this.employeeEntity = {};
-          }
-        })
-        .catch(e => {
-          console.log("失败");
-          console.log(e);
-        });
-    },
-    handleChange(row) {
-      console.log(row);
-      this.$router.push({ path: "/sys/editemployee", query: { id: row.id } });
-      this.employeeEntity = row;
-      console.log(this.employeeEntity, row.id);
-    },
-    distributeEvent(e, id) {
-      this[e](id);
-      console.log(id);
-    },
-    lockEmployee(id) {
-      this.operation(id, "locked", 0);
-    },
-    unLockEmployee(id) {
-      this.operation(id, "locked", 1);
-    },
-    delEmployee(id) {
-      this.dialogVisible = true;
+    delAccount() {
       if (
-        this.employeeEntity.leaveTime != null &&
-        this.employeeEntity.leaveMemo != ""
+        this.leaveTime != null &&
+        this.leaveMemo != ""
       ) {
-        this.operation(id, "del", 1);
+       this.dialogVisible = false;
+        this.operation(id, "del", 1,function(result){
+            let index=that.tableData.findIndex((item) => {return item.id == id})
+            if(index>-1){
+              console.log("离职了用户");
+              that.tableData[index].del='离职';
+            }
+          });
       } else {
         this.$alert("", "请填写离职时间及原因!!!", {
           dangerouslyUseHTMLString: false
         });
       }
     },
+    handleChange(row) {
+      // console.log(row);
+      // this.$router.push({ path: "/sys/editemployee", query: { id: row.id } });
+       //this.employeeEntity = row;  
+    },
+    distributeEvent(e, id) {
+      this[e](id);
+      console.log(id);
+    },
+    lockEmployee(id) {
+       let that=this;
+       this.$confirm("确定锁定该用户吗？", "友情提醒", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(() => {
+          that.operation(id, "locked", 0,function(result){
+            let index=that.tableData.findIndex((item) => {return item.id == id})
+            if(index>-1){
+              console.log("锁定了用户");
+              that.tableData[index].isLocked='锁定';
+            }
+          });
+        }).catch(action => {
+          this.$message({
+            type: "info",
+            message: "取消锁定"
+          });
+        });      
+    },
+    unLockEmployee(id) {
+      let that=this;
+      this.$confirm("确定解锁该用户吗？", "友情提醒", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(() => {
+          that.operation(id, "locked", 1,function(result){
+            let index=that.tableData.findIndex((item) => {return item.id == id})
+            if(index>-1){
+              console.log("解锁了用户");
+              that.tableData[index].isLocked='正常';
+            }
+          });
+        }).catch(action => {
+          this.$message({
+            type: "info",
+            message: "取消解锁"
+          });
+        }); 
+     
+    },
+    delEmployee(id) {
+      this.dialogVisible = true;      
+    },
 
     resumeEmployee(id) {
-      this.operation(id, "del", 0);
+      let that=this;
+      this.$confirm("确定复职该用户吗？", "友情提醒", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(() => {
+          that.operation(id, "del", 0,function(result){
+            let index=that.tableData.findIndex((item) => {return item.id == id})
+            if(index>-1){
+              console.log("复职了用户");
+              that.tableData[index].del='在职';
+            }
+          });
+        }).catch(action => {
+          this.$message({
+            type: "info",
+            message: "取消复职"
+          });
+        });       
     },
-    getOpeBtns(type) {
+    getOpeBtns(del,locked) {
+      console.log(del,"【【【【【1】】】】】");
+      console.log(locked,"【【【【【2】】】】】");
       let array = [
-        { name: "编辑", isType: "1", methosName: "editEmployee" },
-        { name: "离职", isType: "1", methosName: "delEmployee" },
-        { name: "复职", isType: "1", methosName: "resumeEmployee" },
-        { name: "锁定", isType: "1", methosName: "lockEmployee" },
-        { name: "解锁", isType: "1", methosName: "unLockEmployee" }
+        { name: "编辑", delFilter: ['在职'],lockFilter: ['正常'], methodName: "editEmployee" },
+        { name: "离职", delFilter: ['在职'],lockFilter: ['正常'], methodName: "delEmployee" },
+        { name: "复职", delFilter: ['离职'],lockFilter: ['正常','锁定'], methodName: "resumeEmployee" },
+        { name: "锁定", delFilter: ['在职'],lockFilter: ['正常'], methodName: "lockEmployee" },
+        { name: "解锁", delFilter: ['在职','离职'],lockFilter: ['锁定'], methodName: "unLockEmployee" }
       ];
-      return array;
+      var newArr = array.filter(item => item.delFilter.includes(del)&&item.lockFilter.includes(locked)); 
+      return newArr;
     },
     handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
@@ -382,16 +427,11 @@ export default {
     },
     handleCurrentChange(val) {
       this.queryEmployeeDatas(val);
-    },
-    operation(id, UpType, upValue) {
-      let params = { accountId: id, UpType: UpType, upValue: upValue };
-      if (
-        this.employeeEntity.leaveMemo != null &&
-        this.employeeEntity.leaveMemo != ""
-      ) {
-        params.leaveMemo = this.employeeEntity.leaveMemo;
-        params.leaveTime = this.employeeEntity.leaveTime;
-      }
+    },    
+    operation(id, UpType, upValue,callBack) {
+      let params = { accountId: id, UpType: UpType, upValue: upValue };    
+      params.leaveMemo = this.leaveMemo;
+      params.leaveTime = this.leaveTime;     
       this.$api
         .post({
           url: "/employee/operation",
@@ -402,13 +442,8 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            console.log(result.message);
-            this.$alert("", "成功", {
-              dangerouslyUseHTMLString: false
-            });
-            this.$router.push({ path: "/sys/employeeList" });
-            console.log(result.data);
             this.$message({ message: result.message });
+            callBack(result);
           } else {
             this.$alert("", "人员未审核," + result.message + "!!!", {
               dangerouslyUseHTMLString: false
