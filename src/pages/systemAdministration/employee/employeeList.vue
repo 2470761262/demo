@@ -277,7 +277,7 @@ export default {
                   result.data.list[i].del = "离职待审核";
                   break;
                 case 3:
-                  result.data.list[i].del = "未审核";
+                  result.data.list[i].del = "待审核";
                   break;
               }
               if(result.data.list[i].isLocked==1){
@@ -399,7 +399,7 @@ export default {
             let index=that.tableData.findIndex((item) => {return item.id == id})
             if(index>-1){
               console.log("复职了用户");
-              that.tableData[index].del='在职';
+              that.tableData[index].del='待审核';
             }
           });
         }).catch(action => {
