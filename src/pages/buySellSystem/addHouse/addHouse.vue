@@ -81,6 +81,7 @@
           <keep-alive>
             <component :houseType.sync="componentName"
                        :getData="formDataGet"
+                       :disabled="disabled"
                        :is="componentName"
                        ref="com"></component>
           </keep-alive>
@@ -129,20 +130,21 @@ export default {
     morePushHouse: () =>
       componentsFactory("pages/buySellSystem/addHouse/components/morePushHouse") //多套录入
   },
-  created() {
+  created () {
     let { method, id } = this.$route.query;
     if (method && id) {
       this.$store.commit("updateId", id);
       this.formDataGet = true;
+      this.disabled = true;
       this.reSetMethod = method == "reset" ? true : false;
     }
   },
   watch: {
-    stepsActiveIndex(val) {
+    stepsActiveIndex (val) {
       if (val < this.stepsList.length - 1) this.nextText = "下一步";
       else this.nextText = "邀请验真";
     },
-    componentName(val) {
+    componentName (val) {
       if (val == "morePushHouse") {
         this.nextText = "邀请验真";
       } else if (val == "exploration") {
@@ -152,7 +154,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       reSetMethod: false,
       componentName: "basicInformation", //morePushHouse
@@ -166,10 +168,11 @@ export default {
       nextText: "下一步",
       stepsActiveIndex: 0,
       butLoading: false,
-      formDataGet: false
+      formDataGet: false,
+      disabled: false,//是否禁用楼盘选择和多套单套录入切换
     };
   },
-  beforeRouteLeave(to, from, next) {
+  beforeRouteLeave (to, from, next) {
     if (this.$store.state.addHouse.isformDataNoCommit) {
       this.$confirm("您的表单还未提交,确定离开吗?", "提示", {
         confirmButtonText: "确定",
@@ -193,13 +196,13 @@ export default {
       next();
     }
   },
-  destroyed() {
+  destroyed () {
     this.$store.commit("updateIsformDataNoCommit", false);
     this.$store.commit("resetFormData");
   },
   methods: {
     //上一步
-    prevPage() {
+    prevPage () {
       if (this.stepsActiveIndex > 0) {
         this.componentName = this.stepsList[
           --this.stepsActiveIndex
@@ -207,7 +210,7 @@ export default {
       }
     },
     //下一步
-    async nextPage(parmse) {
+    async nextPage (parmse) {
       let comName = this.$refs.com.$options.name;
       let flag = false;
       this.butLoading = true;

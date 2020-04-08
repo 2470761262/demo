@@ -339,7 +339,7 @@ export default {
           params.cbId = that.data.cbId;
         }
         if (that.data.bhId != null && that.data.bhId.length > 0) {
-          params.bhid = that.data.bhId;
+          params.bhId = that.data.bhId;
         }
         if (that.data.customName != null && that.data.customName.length > 0) {
           params.customName = that.data.customName;
@@ -438,47 +438,6 @@ export default {
       } else {
         this.options = [];
       }
-    },
-
-    queryCBId () {
-      var that = this;
-      this.$api
-        .get({
-          url: "/mateHouse/queryComBuilding",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: that.data.comId
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.data.cbId = "";
-            that.data.bhId = "";
-            that.cbIdList = e.data.data.list;
-          }
-        });
-    },
-    queryRoomNo () {
-      var that = this;
-      this.$api
-        .get({
-          url: "/mateHouse/queryBuildIngHouses",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: that.data.comId,
-            cbId: that.data.cbId
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.data.bhId = "";
-            that.roomNoList = e.data.data.list;
-          }
-        });
     },
     handleClick () { },
     queryTabData () {

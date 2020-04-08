@@ -28,6 +28,7 @@
           :default-expanded-keys="[1]"
           node-key="nodeId"
           show-checkbox
+          check-strictly
           :props="defaultProps"
           @check-change="checkChange"
           @check="treeCheck"
@@ -218,20 +219,20 @@ export default {
         if (this.queryData.type != 1) {
           if (saveType == 0) {
             this.$router.push({
-              name: "addCompanyManage",
-              params: { ParentId: this.company.ParentId }
+              path: "/sys/addCompanyManage",
+              query: { ParentId: this.company.ParentId }
             });
           } else if (saveType == 1) {
             this.$router.push({
-              name: "addCompanyManage",
-              params: { ParentId: this.company.id }
+              path: "/sys/addCompanyManage",
+              query: { ParentId: this.company.id }
             });
           }
         } else if (this.department != null && this.queryData.type != 0) {
           if (saveType == 1) {
             this.$router.push({
-              name: "addCompanyManage",
-              params: {
+              path: "/sys/addCompanyManage",
+              query: {
                 deptParentID: this.department.id,
                 ParentId: this.department.coId
               }
@@ -250,8 +251,8 @@ export default {
         if (this.company != null && this.queryData.type != 1) {
           var coId = this.company.id;
           this.$router.push({
-            name: "addDeptManage",
-            params: { ParentId: coId }
+            path: "addDeptManage",
+            query: { ParentId: coId }
           });
         } else {
           this.$alert("", "请选择一个公司!!!", {
@@ -351,6 +352,7 @@ export default {
       console.log(e, "checkChange");
     },
     treeCheck(e, data) {
+      this.$refs.tree2.setCheckedKeys([e.nodeId]);
       this.queryData.type = e.type;
       if (e.type == 0) {
         this.$api

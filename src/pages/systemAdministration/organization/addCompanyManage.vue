@@ -18,7 +18,7 @@
 <template>
   <el-form ref="form" :rules="rules" :model="companyEntity" label-width="160px" >
     <el-form-item label="公司名称:" :required ="true" prop="companyName">
-      
+
       <el-input
         type="text"
         placeholder="请输入内容"
@@ -28,7 +28,7 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="公司名首拼:">
-      
+
       <el-input
         type="text"
         placeholder="请输入内容"
@@ -38,23 +38,23 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="电话:" >
-      
+
       <el-input
         placeholder="请输入内容"
         v-model="companyEntity.tel"
       ></el-input>
-    
+
     </el-form-item>
 
     <el-form-item label="加入类型:" >
-      
+
       <el-select type="text" placeholder="请输入内容" v-model="companyEntity.joinType" show-word-limit>
         <el-option label="直营" :value="1" />
         <el-option label="加盟" :value="2" />
       </el-select>
     </el-form-item>
     <el-form-item label="开业时间:" >
-      
+
       <el-date-picker
       v-model="companyEntity.regDate"
       type="date"
@@ -63,7 +63,7 @@
 
     </el-form-item>
     <el-form-item label="公司类型:" >
-      
+
       <el-select type="text" placeholder="请输入内容" v-model="companyEntity.comType" show-word-limit>
         <el-option label="经纪" :value="1" />
         <el-option label="物业" :value="2" />
@@ -106,7 +106,7 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="地址:" >
-      
+
       <el-input
         type="text"
         placeholder="请输入内容"
@@ -116,7 +116,7 @@
       ></el-input>
     </el-form-item>
     <el-form-item label="公司描述:" >
-      
+
       <el-input
         type="text"
         placeholder="请输入内容"
@@ -269,9 +269,10 @@ export default {
       this.getPrincipal(val);
     },
     handleChange(row) {
-      console.log(row);
-      this.companyEntity.managerPer = row.accountId;
-      this.companyEntity.managerPerName = row.perName;
+      if(row != null){
+        this.companyEntity.managerPer = row.accountId;
+        this.companyEntity.managerPerName = row.perName;
+      }
     },
     checked(e) {
       console.log(e);
@@ -358,7 +359,7 @@ export default {
       console.log(this.checkedCities);
       this.companyEntity.regionName = "";
       this.dialogVisible = false;
-      
+
         for (let index in this.checkedCities) {
           console.log(this.checkedCities[index]);
           if (index == this.checkedCities.length - 1) {
@@ -370,7 +371,7 @@ export default {
           }
         }
         console.log(this.companyEntity.region)
-      
+
     },
     savecompany() {
       if (!(!/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.companyEntity.tel))) {
@@ -428,24 +429,24 @@ export default {
   },
   created() {},
   mounted() {
-    console.log(this.$route.params.ParentId, this.$route.params.deptParentID);
+    console.log(this.$route.query.ParentId, this.$route.query.deptParentID);
     if (
-      this.$route.params.ParentId != null &&
-      this.$route.params.deptParentID == null
+      this.$route.query.ParentId != null &&
+      this.$route.query.deptParentID == null
     ) {
-      this.companyEntity.ParentId = this.$route.params.ParentId;
+      this.companyEntity.ParentId = this.$route.query.ParentId;
       this.companyEntity.deptParentId = 0;
-    } else if (this.$route.params.deptParentID != null) {
-      this.companyEntity.ParentId = this.$route.params.ParentId;
-      this.companyEntity.deptParentId = this.$route.params.deptParentID;
+    } else if (this.$route.query.deptParentID != null) {
+      this.companyEntity.ParentId = this.$route.query.ParentId;
+      this.companyEntity.deptParentId = this.$route.query.deptParentID;
     }
 
     console.log(this.companyEntity.ParentId, this.companyEntity.deptParentId);
-    if (this.$route.params.back != null) {
-      this.backUrl = this.$route.params.back;
+    if (this.$route.query.back != null) {
+      this.backUrl = this.$route.query.back;
     }
-    if (this.$route.params.cur != null) {
-      this.jumpNodeId = this.$route.params.cur;
+    if (this.$route.query.cur != null) {
+      this.jumpNodeId = this.$route.query.cur;
     }
   }
 };

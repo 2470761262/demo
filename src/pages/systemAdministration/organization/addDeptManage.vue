@@ -24,14 +24,14 @@
       <el-form-item label="部门首拼" required ="true" prop="header">
         <el-input v-model="DeptEntity.header"></el-input>
       </el-form-item>
-   
+
       <el-form-item label="电话:">
         <el-input v-model="DeptEntity.tel"></el-input>
       </el-form-item>
       <el-form-item label="开业时间">
         <el-date-picker v-model="DeptEntity.regDate" type="date" placeholder="选择日期"></el-date-picker>
       </el-form-item>
-    
+
       <el-form-item label="部门类型:" required ="true" prop="deptType">
         <el-select type="text" v-model="DeptEntity.deptType">
           <el-option label="综合" :value="1" />
@@ -53,8 +53,8 @@
           show-word-limit
         ></el-input>
       </el-form-item>
-    
-      
+
+
       <el-form-item label="选择负责人:" required ="true" prop="perName">
         <el-dialog
           title="请选择:"
@@ -90,14 +90,14 @@
           <el-option label="联营" :value="3" />
         </el-select>
       </el-form-item>
-    
+
       <el-form-item label="部门属性:">
         <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.isCom" show-word-limit>
           <el-option label="运营期" :value="1" />
           <el-option label="拓展期" :value="2" />
         </el-select>
       </el-form-item>
-     
+
       <el-form-item label="选择店面:">
         <el-dialog
           title="请选择:"
@@ -126,7 +126,7 @@
         </el-dialog>
         <el-input type="text" v-model="DeptEntity.storeName" @focus="getDialogVisible3()"></el-input>
       </el-form-item>
-    
+
       <el-form-item label="地址:">
         <el-input type="text" placeholder="请输入内容" v-model="DeptEntity.address"></el-input>
       </el-form-item>
@@ -144,9 +144,7 @@
 
 <script>
 import listPage from "@/components/listPage";
-import getMenuRid from "@/minxi/getMenuRid";
 export default {
-  mixins: [getMenuRid],
   components: {
     listPage
   },
@@ -159,7 +157,7 @@ export default {
         managerPer: [{required: true, message: "请选择负责人" , trigger: "blur" }],
         deptType: [{required: true, message: "请选择部门类型" , trigger: "blur" }],
         joinType: [{required: true, message: "请选择加入类型" , trigger: "blur" }]
-        
+
       },
       sidebarFlag: false,
       loading: false, //控制表格加载动画提示
@@ -224,7 +222,7 @@ export default {
       params.coId = this.DeptEntity.coId;
       this.$api
         .post({
-          url: "/employee/selectPrincipal",
+          url: "/employee/dept/selectPrincipal",
           data: params,
           token: false,
           headers: { "Content-Type": "application/json" }
