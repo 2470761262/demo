@@ -15,9 +15,15 @@
   }
   .cell-left {
     width: 860px;
+    &.cell-left-nest {
+      width: 1020px;
+    }
   }
   .cell-msg {
     width: 760px;
+    &.cell-msg-nest {
+      width: 920px;
+    }
   }
   .cell-right {
     flex: 1;
@@ -36,7 +42,8 @@
     <house-details-head></house-details-head>
     <section class="page-house-cell">
       <!-- 轮播图 -->
-      <loopImg class="cell-left"></loopImg>
+      <loopImg class="cell-left"
+               :class="{'cell-left-nest':nest}"></loopImg>
       <!-- 房屋详情 -->
       <detail class="cell-right"></detail>
       <!-- 右侧功能按钮 -->
@@ -48,7 +55,8 @@
     <buttonGroup></buttonGroup>
     <section class="page-house-cell marginTop">
       <!-- 房屋其他信息 -->
-      <houseMessage class="cell-msg"></houseMessage>
+      <houseMessage class="cell-msg"
+                    :class="{'cell-msg-nest':nest}"></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->
         <houseOperation></houseOperation>
@@ -79,6 +87,11 @@ export default {
       buttonDisabled: true
     };
   },
+  computed: {
+    nest() {
+      return util.localStorageGet("nest");
+    }
+  },
   mixins: [getMenuRid],
   components: {
     houseDetailsHead, //房源详情头部
@@ -95,7 +108,7 @@ export default {
       forID: {
         id: null
       },
-      tradeType:1,
+      tradeType: 1,
       houseDetails: {},
       load: {
         loading: true,
@@ -106,12 +119,12 @@ export default {
   created() {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
-      this.tradeType=this.$route.params.tradeType;
+      this.tradeType = this.$route.params.tradeType;
       util.localStorageSet("historyDetails.vue:houseId", this.forID.id);
-      util.localStorageSet("historyDetails.vue:tradeType",this.tradeType);
+      util.localStorageSet("historyDetails.vue:tradeType", this.tradeType);
     } else {
       this.forID.id = util.localStorageGet("historyDetails.vue:houseId");
-      this.tradeType=util.localStorageGet("historyDetails.vue:tradeType");
+      this.tradeType = util.localStorageGet("historyDetails.vue:tradeType");
     }
     this.getHouseDetails();
   },
@@ -121,8 +134,8 @@ export default {
       this.load.loading = true;
       this.$api
         .post({
-          url: "/history/agent_house/getHouseDetail/"+that.forID.id,
-          data:{tradeType:this.tradeType},
+          url: "/history/agent_house/getHouseDetail/" + that.forID.id,
+          data: { tradeType: this.tradeType },
           qs: true
         })
         .then(e => {

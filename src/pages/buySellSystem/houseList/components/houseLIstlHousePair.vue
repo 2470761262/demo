@@ -265,13 +265,15 @@
 .frist-width-select {
   width: 180px;
 }
+/deep/.el-form-item__label {
+  width: 75px;
+}
 </style>
 <template >
   <div class="query-warp">
     <el-form ref="form"
              @submit.native.prevent
              :model="form"
-             label-width="75px"
              label-position="left">
       <el-form-item prop="type"
                     class="ohter-item">

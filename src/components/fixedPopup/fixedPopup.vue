@@ -24,6 +24,9 @@
     &.error {
       background: #ad1600;
     }
+    &.system {
+      background: var(--color--primary);
+    }
     padding: 10px;
     .didLog-content-box {
       background: #fff;
@@ -32,6 +35,7 @@
       .didLog-content-box-title {
         position: relative;
         margin: 0px 15px;
+        user-select: none;
         h3 {
           font-size: 20px;
           font-weight: 500;
@@ -73,7 +77,7 @@
 <template>
   <transition name="dadlog">
     <div class="didLog-content"
-         v-if="visible"
+         v-show="visible"
          v-elDrag>
       <div class="didLog-content-mask"
            @click.stop="maskHide"></div>
@@ -104,6 +108,9 @@ export default {
       type: Boolean,
       default: false
     },
+    beforeClose: {
+      type: Function
+    },
     title: {
       type: String,
       default: "提示"
@@ -130,7 +137,20 @@ export default {
   },
   methods: {
     maskHide() {
-      if (this.maskHideEvent) this.close();
+      if (this.maskHideEvent) {
+        if (this.beforeClose) {
+          let mise = this.beforeClose.bind(this.$parent)();
+          if (mise instanceof Promise) {
+            mise
+              .then(() => {
+                this.close();
+              })
+              .catch(() => {});
+          }
+        } else {
+          this.close();
+        }
+      }
     },
     close(e) {
       this.$emit("update:visible", false);

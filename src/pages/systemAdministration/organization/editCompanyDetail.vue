@@ -15,6 +15,11 @@
 }
 .flex-row {
   display: flex;
+  &.flex-row40 {
+    /deep/.el-form-item {
+      flex: 0 0 40%;
+    }
+  }
   /deep/.el-form-item {
     flex: 0 0 20%;
     .el-select {
@@ -31,6 +36,10 @@
   padding-top: 20px;
   padding-left: 20px;
   box-sizing: border-box;
+}
+.flex-centent {
+  text-align: center;
+  padding: 5px 0;
 }
 </style>
 <template>
@@ -131,7 +140,7 @@
                     maxlength="100"></el-input>
         </el-form-item>
       </div>
-      <div class="flex-row">
+      <div class="flex-row flex-row40">
         <el-form-item label="公司描述:">
           <el-input type="text"
                     placeholder="请输入内容"
@@ -139,35 +148,9 @@
         </el-form-item>
         <el-form-item label="设置管辖区域:"
                       prop="region">
-          <el-dialog title="提示"
-                     :visible.sync="dialogVisible"
-                     width="30%"
-                     :before-close="handleClose">
-            <template>
-              <el-checkbox :indeterminate="isIndeterminate"
-                           v-model="checkAll"
-                           @change="handleCheckAllChange">全选</el-checkbox>
-              <div style="margin: 15px 0;"></div>
-              <el-checkbox-group v-model="checkedCities"
-                                 @change="handleCheckedCitiesChange">
-                <el-checkbox v-for="city in regionName"
-                             :label="city"
-                             :key="city.Name">
-                  <el-popover placement="top-start"
-                              trigger="hover">
-                    <el-checkbox v-for="city in region"
-                                 :label="city"
-                                 :key="city.Name">{{city.Name}}</el-checkbox>
-                    <button slot="reference"
-                            @mouseover="checked(city.id)">{{city.Name}}</button>
-                  </el-popover>
-                </el-checkbox>
-              </el-checkbox-group>
-            </template>
-          </el-dialog>
           <el-input type="text"
                     placeholder="请输入内容"
-                    v-model="companyEntity.regionName"
+                    v-model="companyEntity.region"
                     @focus="getDialogVisible()"></el-input>
         </el-form-item>
       </div>
@@ -179,6 +162,29 @@
                    @click="back()">返回</el-button>
       </div>
     </el-form>
+    <fixed-popup title="鑫家区域"
+                 mask-hide-event
+                 typeClass="system"
+                 :visible.sync="dialogVisible"
+                 width="30%">
+      <el-tree :props="props"
+               :load="loadNode"
+               lazy
+               :default-expanded-keys=" treeExpanded"
+               @check-change="treecheck"
+               node-key="id"
+               ref="tree"
+               show-checkbox>
+      </el-tree>
+      <template v-slot:floot>
+        <div class="flex-centent">
+          <el-button size="mini"
+                     @click="resetTree">重置</el-button>
+          <el-button size="mini"
+                     @click="getTreeCheck">确定</el-button>
+        </div>
+      </template>
+    </fixed-popup>
   </div>
 </template>
 
@@ -188,9 +194,14 @@ export default {
   components: {
     listPage
   },
-  props: {},
   data() {
     return {
+      treeExpanded: [],
+      props: {
+        label: "Name",
+        children: "children",
+        isLeaf: "leaf"
+      },
       rules: {
         companyName: [
           {
@@ -234,19 +245,57 @@ export default {
       dialogVisible1: false,
       dialogVisible: false,
       companyID: 0,
-      companyEntity: null,
+      companyEntity: {},
       regionName: [],
       region: [],
       checkAll: false,
       checkedCities: [],
       isIndeterminate: true,
       backUrl: null,
-      jumpNodeId: ""
+      jumpNodeId: "",
+      id: 350000
     };
   },
   watch: {},
   computed: {},
   methods: {
+    loadNode(node, resolve) {
+      if (node.level == 0) {
+        this.checked(this.id).then(e => {
+          resolve(e);
+        });
+      } else if (node.level == 1) {
+        this.checked(node.data.id).then(e => {
+          e.forEach(item => {
+            item.leaf = true;
+          });
+          resolve(e);
+        });
+      }
+    },
+    resetTree() {
+      this.$refs.tree.setCheckedKeys([]);
+    },
+    getTreeCheck() {
+      let arr = this.$refs.tree.getCheckedNodes().filter(item => {
+        return item.LevelType != 2;
+      });
+      this.companyEntity.regionName = arr
+        .map(item => {
+          return item.Name;
+        })
+        .join(",");
+      this.dialogVisible = false;
+    },
+    treecheck(data, isChecked) {
+      if (isChecked && data.LevelType == 2) {
+        if (this.treeExpanded.length != 0) {
+          this.treeExpanded.splice(0, 1, data.id);
+        } else {
+          this.treeExpanded.push(data.id);
+        }
+      }
+    },
     getDialogVisible1() {
       this.dialogVisible1 = true;
       this.getPrincipal(1);
@@ -297,28 +346,23 @@ export default {
       this.companyEntity.managerPer = row.accountId;
       this.companyEntity.managerPerName = row.perName;
     },
-    checked(e) {
-      console.log(e);
-      this.$api
+    checked(id) {
+      return this.$api
         .get({
-          url: "/company/regionName?id=" + e,
-          token: false
+          url: "/company/regionName?id=" + id
         })
         .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            console.log(result.message);
-            console.log(result.data);
-            this.region = result.data;
+          if (e.data.code == 200) {
+            e.data.data.forEach((item, index) => {
+              item.children = [];
+            });
+            return e.data.data;
           } else {
-            console.log("载入结果" + +result.message);
-            alert(result.message);
+            return Promise.reject(result.message);
           }
         })
         .catch(e => {
-          console.log("读取失败");
-          console.log(e);
+          this.$message.error(e.message);
         });
     },
     handleCheckAllChange(val) {
@@ -333,31 +377,6 @@ export default {
     },
     getDialogVisible(id) {
       this.dialogVisible = true;
-      this.checkedCities = [];
-      if (id == null || id == undefined) {
-        id = 350000;
-      }
-      this.$api
-        .get({
-          url: "/company/regionName?id=" + id,
-          token: false
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            console.log(result.message);
-            console.log(result.data);
-            this.regionName = result.data;
-          } else {
-            console.log("载入结果" + +result.message);
-            alert(result.message);
-          }
-        })
-        .catch(e => {
-          console.log("读取失败");
-          console.log(e);
-        });
     },
     setDialogVisible() {
       this.dialogVisible = false;
