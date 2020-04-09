@@ -1,63 +1,105 @@
+<style lang="less" scoped>
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+</style>
 <template>
-  <list-page
-    :parentData="$data"
-    @handleSizeChange="sizeChange"
-    @handleCurrentChange="currentChange"
-  >
-    <template v-slot:top>
-      <div class="query-cell">
-        <el-input placeholder="电脑的MAC地址" size="small" v-model="queryData.mac" clearable>
-          <template slot="prepend">电脑的MAC地址</template>
-        </el-input>
-        <el-input placeholder="硬盘编号" size="small" v-model="queryData.disk" clearable>
-          <template slot="prepend">硬盘编号</template>
-        </el-input>
-        <el-input placeholder="CPU编号" size="small" v-model="queryData.cpu" clearable>
-          <template slot="prepend">CPU编号</template>
-        </el-input>
-        <el-input placeholder="门店名称" size="small" v-model="queryData.remark" clearable>
-          <template slot="prepend">门店名称</template>
-        </el-input>
-        <el-checkbox v-model="queryData.delChecked">查询已删除</el-checkbox>
-        <el-date-picker
-          v-model="queryData.addDate"
-          type="daterange"
-          align="right"
-          unlink-panels
-          range-separator="至"
-          start-placeholder="添加的开始时间"
-          end-placeholder="添加的结束时间"
-          :picker-options="pickerOptions2"
-        ></el-date-picker>
-        <el-date-picker
-          v-model="queryData.loginDate"
-          type="daterange"
-          align="right"
-          unlink-panels
-          range-separator="至"
-          start-placeholder="最后登录的开始时间"
-          end-placeholder="最后登录的结束时间"
-          :picker-options="pickerOptions2"
-        ></el-date-picker>
-        <el-button type="primary" style="margin-left:10px" size="mini" @click="queryByParams">查询</el-button>
-      </div>
-    </template>
-    <template v-slot:tableColumn="cell">
-      <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
+  <div class="page-content">
+    <list-page :parentData="$data"
+               @handleSizeChange="sizeChange"
+               @handleCurrentChange="currentChange">
+      <template v-slot:top>
+        <div class="page-list-query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">MAC地址：</h3>
+            <el-input placeholder="电脑的MAC地址"
+                      class="set-input120"
+                      v-model="queryData.mac"
+                      clearable />
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">硬盘编号:</h3>
+            <el-input placeholder="硬盘编号"
+                      class="set-input120"
+                      v-model="queryData.disk"
+                      clearable />
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">CPU编号:</h3>
+            <el-input placeholder="CPU编号"
+                      class="set-input120"
+                      v-model="queryData.cpu"
+                      clearable />
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">门店名称:</h3>
+            <el-input placeholder="门店名称"
+                      class="set-input120"
+                      v-model="queryData.remark"
+                      clearable />
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <el-checkbox v-model="queryData.delChecked">查询已删除</el-checkbox>
+          </div>
+        </div>
+        <div class="page-list-query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">添加时间:</h3>
+            <el-date-picker v-model="queryData.addDate"
+                            type="daterange"
+                            align="right"
+                            unlink-panels
+                            class="set-data-pricker"
+                            range-separator="至"
+                            start-placeholder="添加的开始时间"
+                            end-placeholder="添加的结束时间"
+                            :picker-options="pickerOptions2"></el-date-picker>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">添加时间:</h3>
+            <el-date-picker v-model="queryData.loginDate"
+                            type="daterange"
+                            align="right"
+                            class="set-data-pricker"
+                            unlink-panels
+                            range-separator="至"
+                            start-placeholder="最后登录的开始时间"
+                            end-placeholder="最后登录的结束时间"
+                            :picker-options="pickerOptions2"></el-date-picker>
+          </div>
+          <div class="query-content-cell cell-interval75">
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryByParams">查询</el-button>
+          </div>
+        </div>
       </template>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button size="mini" @click="Del(scope.$index, scope.row)" v-if="scope.row.Del==0">删除</el-button>
+      <template v-slot:tableColumn="cell">
+        <template v-for="item in cell.tableData">
+          <el-table-column :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :key="item.prop"></el-table-column>
         </template>
-      </el-table-column>
-    </template>
-  </list-page>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini"
+                       type="primary"
+                       @click="Del(scope.$index, scope.row)"
+                       v-if="scope.row.Del==0">删除</el-button>
+          </template>
+        </el-table-column>
+      </template>
+    </list-page>
+  </div>
 </template>
 <script>
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import getToken from "@/minxi/getUrlToken";
+import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid, getToken],
   components: {
@@ -65,6 +107,7 @@ export default {
   },
   data() {
     return {
+      sidebarFlag: false,
       loading: false,
       queryData: {
         mac: "",

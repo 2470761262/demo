@@ -1,56 +1,77 @@
 <style lang="less" scoped>
 .query-cell {
+  padding: 15px 0;
   display: flex;
+  align-items: center;
+  .query-right {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+    /deep/.el-input {
+      width: auto;
+    }
+  }
+}
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
 <template>
-  <list-page
-    :parentData="$data"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
-    <template v-slot:top>
-      <div class="query-cell">
-        <!-- <el-input placeholder="用户名"
+  <div class="page-content ">
+    <list-page :parentData="$data"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
+      <template v-slot:top>
+        <div class="query-cell">
+          <!-- <el-input placeholder="用户名"
                   v-model="queryData.newsTitle"
                   clearable>
           <template slot="prepend">用户名</template>
         </el-input>-->
-        <el-button
-          type="primary"
-          style="margin-left:10px"
-          size="mini"
-          @click="queryOnLineUserDatas(1)"
-        >刷新</el-button>
-      </div>
-    </template>
-    <template v-slot:tableColumn="cell">
-      <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
+          <el-button type="primary"
+                     size="mini"
+                     @click="queryOnLineUserDatas(1)">刷新</el-button>
+        </div>
       </template>
-      <el-table-column prop="userInfo.userImage" label="用户头像" width="90">
-        <!-- 图片的显示 -->
-        <template slot-scope="scope">
-          <img :src="scope.row.userInfo.userImage" width="50" height="50" />
+      <template v-slot:tableColumn="cell">
+        <template v-for="item in cell.tableData">
+          <el-table-column :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :key="item.prop"></el-table-column>
         </template>
-      </el-table-column>
-      <el-table-column prop="loginTime" :formatter="formatLoginTime" label="登录时间"></el-table-column>
-      <el-table-column prop="clientType" :formatter="formatClientType" label="登录终端" width="90"></el-table-column>
-      <el-table-column prop="operation" label="操作" fixed="right" key="operation">
-        <template v-slot="scope">
-          <div v-if="scope.row.operation!=''">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="distributeEvent(item.methosName,scope.row.perId,scope.row.perType)"
-              v-for="(item,index) in getOpeBtns(scope.row.operation)"
-              :key="index"
-            >{{item.name}}</el-button>
-          </div>
-        </template>
-      </el-table-column>
-    </template>
-  </list-page>
+        <el-table-column prop="userInfo.userImage"
+                         label="用户头像"
+                         width="90">
+          <!-- 图片的显示 -->
+          <template slot-scope="scope">
+            <img :src="scope.row.userInfo.userImage"
+                 width="50"
+                 height="50" />
+          </template>
+        </el-table-column>
+        <el-table-column prop="loginTime"
+                         :formatter="formatLoginTime"
+                         label="登录时间"></el-table-column>
+        <el-table-column prop="clientType"
+                         :formatter="formatClientType"
+                         label="登录终端"
+                         width="90"></el-table-column>
+        <el-table-column label="操作"
+                         fixed="right">
+          <template v-slot="scope">
+            <el-button type="primary"
+                       size="mini"
+                       @click="distributeEvent(item.methosName,scope.row.perId,scope.row.perType)"
+                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                       :key="index">{{item.name}}</el-button>
+          </template>
+        </el-table-column>
+      </template>
+    </list-page>
+  </div>
 </template>
 <script>
 import listPage from "@/components/listPage";
@@ -81,6 +102,7 @@ export default {
   },
   data() {
     return {
+      sidebarFlag: false,
       loading: false, //控制表格加载动画提示
       queryData: {
         newsTitle: ""
@@ -151,6 +173,7 @@ export default {
         );
         return;
       }
+      this.loading = true;
       this.$api
         .post({
           url: "/onLineUser/queryOnLineUsers",
@@ -180,6 +203,9 @@ export default {
         .catch(e => {
           console.log("查询在线用户列表失败");
           console.log(e);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
     getPageData(allData, currentPage, pageSize) {

@@ -1,70 +1,102 @@
+<style lang="less" scoped>
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+</style>
 <template>
-  <list-page
-    :parentData="$data"
-    @handleSizeChange="sizeChange"
-    @handleCurrentChange="currentChange"
-  >
-    <template v-slot:top>
-      <div class="query-cell">
-        <el-input placeholder="门店名称" size="small" v-model="queryData.remark" clearable>
-          <template slot="prepend">门店名称</template>
-        </el-input>
-        <el-input placeholder="账号" size="small" v-model="queryData.account" clearable>
-          <template slot="prepend">账号</template>
-        </el-input>
-        <el-input placeholder="电脑IP地址" size="small" v-model="queryData.ip" clearable>
-          <template slot="prepend">电脑IP地址</template>
-        </el-input>
-        <el-date-picker
-          v-model="choiceDate"
-          type="daterange"
-          align="right"
-          unlink-panels
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          :picker-options="pickerOptions2"
-        >
-          <template slot="prepend">登录时间</template>
-        </el-date-picker>
-        <el-select v-model="selectTag" placeholder="全部" @change="SelectTag">
-          <el-option
-            v-for="item in SelectOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-        <el-button type="primary" style="margin-left:10px" size="mini" @click="queryByParams">查询</el-button>
-        <el-tag type="danger">在线人数：{{onlineCount}}</el-tag>
-      </div>
-    </template>
-    <template v-slot:tableColumn="cell">
-      <template v-for="item in cell.tableData">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-          :key="item.prop"
-          :formatter="onLineStr"
-        ></el-table-column>
+  <div class="page-content">
+    <list-page :parentData="$data"
+               @handleSizeChange="sizeChange"
+               @handleCurrentChange="currentChange">
+      <template v-slot:top>
+        <div class="page-list-query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">门店名称:</h3>
+            <el-input placeholder="门店名称"
+                      class="set-input120"
+                      v-model="queryData.remark"
+                      clearable>
+            </el-input>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">账号:</h3>
+            <el-input placeholder="账号"
+                      class="set-input120"
+                      v-model="queryData.account"
+                      clearable>
+            </el-input>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">电脑IP地址:</h3>
+            <el-input placeholder="电脑IP地址"
+                      class="set-input120"
+                      v-model="queryData.ip"
+                      clearable>
+            </el-input>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title ">类型:</h3>
+            <el-select v-model="selectTag"
+                       placeholder="全部"
+                       @change="SelectTag">
+              <el-option v-for="item in SelectOptions"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value"></el-option>
+            </el-select>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <el-tag type="danger">在线人数：{{onlineCount}}</el-tag>
+          </div>
+        </div>
+        <div class="page-list-query-row">
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">登录时间:</h3>
+            <el-date-picker v-model="choiceDate"
+                            type="daterange"
+                            align="right"
+                            unlink-panels
+                            range-separator="至"
+                            class="set-data-pricker"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :picker-options="pickerOptions2">
+            </el-date-picker>
+          </div>
+          <div class="query-content-cell cell-interval45">
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryByParams">查询</el-button>
+          </div>
+        </div>
       </template>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            @click="Offline(scope.$index, scope.row)"
-            v-if="scope.row.LineTag==1"
-          >下线</el-button>
+      <template v-slot:tableColumn="cell">
+        <template v-for="item in cell.tableData">
+          <el-table-column :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :key="item.prop"
+                           show-overflow-tooltip
+                           :formatter="onLineStr"></el-table-column>
         </template>
-      </el-table-column>
-    </template>
-  </list-page>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button size="mini"
+                       @click="Offline(scope.$index, scope.row)"
+                       v-if="scope.row.LineTag==1">下线</el-button>
+          </template>
+        </el-table-column>
+      </template>
+    </list-page>
+  </div>
 </template>
 <script>
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import getToken from "@/minxi/getUrlToken";
+import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid, getToken],
   components: {
@@ -72,6 +104,7 @@ export default {
   },
   data() {
     return {
+      sidebarFlag: false,
       loading: false,
       queryData: {
         remark: "",
