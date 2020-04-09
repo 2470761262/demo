@@ -368,7 +368,7 @@
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">户型结构</div>
-        <div class="cell-tabs-item-data">{{formData.roomType}}</div>
+        <div class="cell-tabs-item-data">{{formData.roomType | mapFilter('ROOMTYPE')}}</div>
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">房屋结构</div>
@@ -420,6 +420,11 @@ export default {
       default: function () {
         return {}
       }
+    }
+  },
+  filters: {
+    mapFilter (value, ListName, resultValue = null) {
+      return util.countMapFilter(value, ListName, resultValue);
     }
   },
   directives: {
@@ -840,6 +845,7 @@ export default {
           this.formData.area = data.outArea;
           this.formData.face = data.orientation;
           this.formData.room = data.rooms || 0;
+          this.formData.roomType = data.roomType;
         }
       });
     },
@@ -939,12 +945,8 @@ export default {
       if (this.paramsObj.editUrl) {
         url = this.paramsObj.editUrl;
       }
-      if (that.$store.state.addHouse.formData.id != "" && that.$store.state.addHouse.formData.id != null) {
+      if (that.$store.state.addHouse.formData.id != "") {
         data.id = that.$store.state.addHouse.formData.id;
-        method = "put";
-      }
-      else if (util.sessionLocalStorageGet('editHouse')) {
-        data.id = util.sessionLocalStorageGet('editHouse').id;
         method = "put";
       }
       if (Object.keys(this.deffData).length == 0) {
@@ -1008,7 +1010,8 @@ export default {
         loading: false
       },
       loading: false,
-      deffData: {}
+      deffData: {},
+      roomTypeStr: ""
     };
   }
 };

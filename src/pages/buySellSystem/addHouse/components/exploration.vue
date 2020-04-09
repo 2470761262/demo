@@ -319,6 +319,10 @@ export default {
     getData: {
       type: Boolean,
       default: false
+    },
+    paramsObj: {
+      type: Object,
+      default: () => { }
     }
   },
   mounted () {
@@ -480,7 +484,11 @@ export default {
       })
     },
     getLoadDataVideo () {
-      this.$api.post({ url: `/draft-house/videos/${this.$store.state.addHouse.formData.id}` })
+      let url = `/draft-house/videos/${this.$store.state.addHouse.formData.id}`;
+      if (this.paramsObj.getVideoUrl) {
+        url = this.paramsObj.getVideoUrl + this.$store.state.addHouse.formData.id
+      }
+      this.$api.post({ url: url })
         .then((e) => {
           let data = e.data;
           if (data.code == 200 && data.data.length != 0) {
@@ -504,13 +512,18 @@ export default {
     },
     //获取上传的图片
     getLoadDataImg () {
-      return this.$api.post({ url: `/draft-house/pictures/${this.$store.state.addHouse.formData.id}` })
+      let url = `/draft-house/pictures/${this.$store.state.addHouse.formData.id}`;
+      if (this.paramsObj.getPicturesUrl) {
+        url = this.paramsObj.getPicturesUrl + this.$store.state.addHouse.formData.id;
+      }
+      return this.$api.post({ url: url })
         .then((e) => {
           let data = e.data;
           if (data.code == 200) {
             let imgList = data.data;
             imgList.forEach((item) => {
-              switch (item.picClass) {
+              let type = item.picClass ? item.picClass : item.PicClass;
+              switch (type) {
                 case 1:
                   this.outdoorImgList.push(item);
                   break;
@@ -613,7 +626,12 @@ export default {
       formData.IpStr = url;
       formData.FileStr = '';
       formData.PicName = '';
-      formData.DraftId = that.$store.state.addHouse.formData.id;
+      if (this.paramsObj.getEditUrl) {
+        formData.Eid = that.$store.state.addHouse.formData.id;
+      }
+      else {
+        formData.DraftId = that.$store.state.addHouse.formData.id;
+      }
       this.$api.post({
         url: `/draft-house/${picClass != undefined ? 'pictureDraft' : 'videoDraft'}`,
         headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -646,7 +664,12 @@ export default {
       if (picClass != undefined) {
         formData.append('picClass', picClass)
       }
-      formData.append('draftId', that.$store.state.addHouse.formData.id)
+      if (this.paramsObj.getEditUrl) {
+        formData.append('eid', that.$store.state.addHouse.formData.id)
+      }
+      else {
+        formData.append('draftId', that.$store.state.addHouse.formData.id)
+      }
       formData.append('file', uploader)
       this.$api.post({
         url: `/draft-house/${picClass != undefined ? 'picture' : 'video'}`,
