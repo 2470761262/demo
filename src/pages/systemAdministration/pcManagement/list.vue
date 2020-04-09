@@ -58,7 +58,7 @@
                             :picker-options="pickerOptions2"></el-date-picker>
           </div>
           <div class="query-content-cell cell-interval45">
-            <h3 class="query-cell-title">添加时间:</h3>
+            <h3 class="query-cell-title">最后登录:</h3>
             <el-date-picker v-model="queryData.loginDate"
                             type="daterange"
                             align="right"
