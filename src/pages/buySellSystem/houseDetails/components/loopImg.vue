@@ -4,19 +4,20 @@
   height: 411px;
   margin-bottom: 8px;
   position: relative;
-  &:after {
-    content: "验真通过";
-    background: #0d824b;
-    color: #fff;
-    font-size: 20px;
-    right: 0;
-    top: 0;
-    border-radius: 4px;
-    padding: 0px 8px;
-    height: 26px;
-    line-height: 26px;
-    position: absolute;
-  }
+    &:after {
+      content: attr(data-validate);
+      background: #0d824b;
+      color: #fff;
+      font-size: 20px;
+      right: 0;
+      top: 0;
+      border-radius: 4px;
+      padding: 0px 8px;
+      height: 26px;
+      line-height: 26px;
+      position: absolute;
+    }
+  
   .loop-item {
     width: 100%;
     height: 100%;
@@ -77,7 +78,7 @@
 </style>
 <template>
   <div>
-    <section class="loog-body">
+    <section class="loog-body" :data-validate="resultData.validateText || '验真通过'">
       <!-- 图片 -->
       <template v-if="loopBig.typeStr == 'picUrl'">
         <el-image class="loop-item"
