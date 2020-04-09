@@ -34,8 +34,8 @@
     overflow-y: auto;
     overflow-x: hidden;
     &::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 4px;
+      height: 4px;
     }
     &::-webkit-scrollbar-button,
     &::-webkit-scrollbar-track,
