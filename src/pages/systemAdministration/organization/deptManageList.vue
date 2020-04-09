@@ -58,78 +58,73 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page :parentData="$data"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:left>
         <div class="elTree">
           <div class="elTree-scroll">
-            <el-tree ref="tree2"
-                     :data="treeData"
-                     :default-expanded-keys="[1]"
-                     node-key="nodeId"
-                     show-checkbox
-                     check-strictly
-                     :props="defaultProps"
-                     @check-change="checkChange"
-                     @check="treeCheck"
-                     :highlight-current="true"
-                     :filter-node-method="filterNode"></el-tree>
+            <el-tree
+              ref="tree2"
+              :data="treeData"
+              :default-expanded-keys="[1]"
+              node-key="nodeId"
+              show-checkbox
+              check-strictly
+              :props="defaultProps"
+              @check-change="checkChange"
+              @check="treeCheck"
+              :highlight-current="true"
+              :filter-node-method="filterNode"
+            ></el-tree>
           </div>
         </div>
       </template>
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddDeptPage(0)">添加同级部门</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddDeptPage(1)">添加子级部门</el-button>
+          <el-button type="primary" size="mini" @click="toAddDeptPage(0)">添加同级部门</el-button>
+          <el-button type="primary" size="mini" @click="toAddDeptPage(1)">添加子级部门</el-button>
           <!-- <el-button type="primary"
                      size="mini"
                      @click="queryDeptByIsLocked(0)">查询锁定部门</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button> -->
-          <el-select v-model="selectTag"
-                     placeholder="全部"
-                     size="mini"
-                     @change="SelectTag">
-            <el-option v-for="item in SelectOptions"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value"></el-option>
+          @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button>-->
+          <el-select v-model="selectTag" placeholder="全部" size="mini" @change="SelectTag">
+            <el-option
+              v-for="item in SelectOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
           </el-select>
           <div class="query-right">
-            <el-input placeholder="部门名称"
-                      size="small"
-                      v-model="queryData.DeptName"
-                      clearable>
-            </el-input>
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryDeptByParams">查询</el-button>
+            <el-input placeholder="部门名称" size="small" v-model="queryData.DeptName" clearable></el-input>
+            <el-button type="primary" size="mini" @click="queryDeptByParams">查询</el-button>
           </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column label="操作"
-                         fixed="right"
-                         width="300">
+        <el-table-column label="操作" fixed="right" width="300">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
-              <el-button type="primary"
-                         size="mini"
-                         @click="distributeEvent(item.methosName,scope.row)"
-                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                         :key="index">{{item.name}}</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="distributeEvent(item.methosName,scope.row)"
+                v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                :key="index"
+              >{{item.name}}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -314,6 +309,9 @@ export default {
       if (this.queryData.flag) {
         if (saveType == 0) {
           if (this.queryData.type == 1) {
+            console.log("部门同级");
+            console.log(this.department.deptParentID);
+            console.log(this.department.coId);
             this.$router.push({
               path: "addDeptManage",
               query: {
