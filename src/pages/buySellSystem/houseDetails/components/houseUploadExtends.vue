@@ -3,7 +3,7 @@ import exploration from '@/pages/buySellSystem/addHouse/components/exploration';
 import houseCheck from '../common/houseCheck';
 let enumUpload = new Map();
 let houseEnum = [1, 2, 3, 4, 5, 6];//上传类型 => 添加房源
-let detailEnum = [1, 4, 2, 3, 5, 6];// 上传类型 =>房源详情
+let detailEnum = [1, 2, 3, 4, 5, 6];// 上传类型 =>房源详情
 houseEnum.forEach((item, index) => {
   enumUpload.set(item, detailEnum[index]);
 })

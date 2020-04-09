@@ -138,7 +138,10 @@ export default {
       params = this.$route.params;
       util.sessionLocalStorageSet('editHouse', params);//this.$route.query;
     } else {
-      params = util.sessionLocalStorageGet('editHouse');//this.$route.query;
+      if (util.sessionLocalStorageGet('editHouse')) {
+        params = util.sessionLocalStorageGet('editHouse');//this.$route.query;
+      }
+
     }
     if (Object.keys(this.$route.query).length > 0) {
       params = this.$route.query;
