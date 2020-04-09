@@ -3,6 +3,9 @@
   padding: 15px 0;
   display: flex;
   align-items: center;
+  .el-select {
+    margin-left: 10px;
+  }
   .query-right {
     flex: 1;
     text-align: right;
@@ -91,6 +94,7 @@
                      @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button> -->
           <el-select v-model="selectTag"
                      placeholder="全部"
+                     size="mini"
                      @change="SelectTag">
             <el-option v-for="item in SelectOptions"
                        :key="item.value"
@@ -116,10 +120,9 @@
                            :width="item.width"
                            :key="item.prop"></el-table-column>
         </template>
-        <el-table-column prop="operation"
-                         label="操作"
+        <el-table-column label="操作"
                          fixed="right"
-                         key="operation">
+                         width="300">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
               <el-button type="primary"

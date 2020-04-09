@@ -121,6 +121,7 @@
                            :key="item.prop"></el-table-column>
         </template>
         <el-table-column label="操作"
+                         width="300"
                          fixed="right">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
