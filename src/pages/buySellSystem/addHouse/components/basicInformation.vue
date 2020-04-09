@@ -414,6 +414,12 @@ export default {
     disabled: {
       type: Boolean,
       default: false
+    },
+    paramsObj: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   directives: {
@@ -876,9 +882,13 @@ export default {
     //获取
     getLoadData () {
       this.loading = true;
+      let url = `/draft-house/${this.$store.state.addHouse.formData.id}`;
+      if (this.paramsObj.getEditUrl) {
+        url = this.paramsObj.getEditUrl + this.$store.state.addHouse.formData.id;
+      }
       return this.$api
         .get({
-          url: `/draft-house/${this.$store.state.addHouse.formData.id}`
+          url: url
         })
         .then(e => {
           if (e.data.code == 200) {

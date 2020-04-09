@@ -42,7 +42,6 @@
       @current-change="handleChange"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
-      @row-click="rowClick"
     >
       <template v-slot:top>
         <div class="query-cell">
@@ -159,7 +158,7 @@ export default {
         del: 0, //0 查询在职用户,1 查询离职用户,2 查询待离职用户
         type: 0 //0 内部  1 游客
       },
-      leaveTime:null,
+      leaveTime:"",
       leaveMemo:'',
       configSet: {
         selectToTime: false,
@@ -188,7 +187,8 @@ export default {
         label: "labelName"
       },
       checkedId: null,
-      checkedType: null
+      checkedType: null,
+      id:0
     };
   },
   mounted() {
@@ -274,16 +274,16 @@ export default {
                   result.data.list[i].del = "离职";
                   break;
                 case 2:
-                  result.data.list[i].del = "未带看锁定";
+                  result.data.list[i].del = "离职待审核";
                   break;
                 case 3:
-                  result.data.list[i].del = "未审核";
+                  result.data.list[i].del = "待审核";
                   break;
               }
-              if(result.data.list[i].isLocked==0){
-                result.data.list[i].isLocked = "锁定";
-              }else{
+              if(result.data.list[i].isLocked==1){
                 result.data.list[i].isLocked = "正常";
+              }else {
+                result.data.list[i].isLocked = "锁定";
               }
             }
             this.pageJson.total = result.data.totalCount;
@@ -312,16 +312,17 @@ export default {
       this.dialogVisible = false;     
     },
     delAccount() {
+      let that=this;
       if (
         this.leaveTime != null &&
         this.leaveMemo != ""
       ) {
        this.dialogVisible = false;
-        this.operation(id, "del", 1,function(result){
-            let index=that.tableData.findIndex((item) => {return item.id == id})
+        this.operation(that.id, "del", 1,function(result){
+            let index=that.tableData.findIndex((item) => {return item.id == that.id})
             if(index>-1){
               console.log("离职了用户");
-              that.tableData[index].del='离职';
+              that.tableData[index].del='离职待审核';
             }
           });
       } else {
@@ -383,7 +384,8 @@ export default {
      
     },
     delEmployee(id) {
-      this.dialogVisible = true;      
+      this.dialogVisible = true;
+      this.id=id;   
     },
 
     resumeEmployee(id) {
@@ -393,11 +395,11 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       }).then(() => {
-          that.operation(id, "del", 0,function(result){
+          that.operation(id, "restoration", 0,function(result){
             let index=that.tableData.findIndex((item) => {return item.id == id})
             if(index>-1){
               console.log("复职了用户");
-              that.tableData[index].del='在职';
+              that.tableData[index].del='待审核';
             }
           });
         }).catch(action => {
@@ -428,10 +430,16 @@ export default {
     handleCurrentChange(val) {
       this.queryEmployeeDatas(val);
     },    
-    operation(id, UpType, upValue,callBack) {
-      let params = { accountId: id, UpType: UpType, upValue: upValue };    
+    operation(id, upType, upValue,callBack) {
+      let params = {perId: id, upType: upType, upValue: upValue };    
       params.leaveMemo = this.leaveMemo;
-      params.leaveTime = this.leaveTime;     
+      params.leaveTime = this.leaveTime; 
+      const loading = this.$loading({
+          lock: true,
+          text: '请等待..',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
       this.$api
         .post({
           url: "/employee/operation",
@@ -441,6 +449,7 @@ export default {
         })
         .then(e => {
           let result = e.data;
+          loading.close();
           if (result.code == 200) {
             this.$message({ message: result.message });
             callBack(result);
@@ -451,6 +460,7 @@ export default {
           }
         })
         .catch(e => {
+          loading.close();
           console.log("失败");
           console.log(e);
         });
