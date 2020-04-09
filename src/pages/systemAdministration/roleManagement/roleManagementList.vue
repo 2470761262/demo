@@ -30,11 +30,11 @@
                      @click="toAddRolePage">添加岗位</el-button>
           <div class="query-right">
             <el-input placeholder="岗位名称"
+                      size="small"
                       v-model="queryData.RoleName"
                       clearable>
             </el-input>
             <el-button type="primary"
-                       style="margin-left:10px"
                        size="mini"
                        @click="queryRoleByParams">查询</el-button>
 
@@ -48,15 +48,14 @@
                            :width="item.width"
                            :key="item.prop"></el-table-column>
         </template>
-        <el-table-column label="操作">
+        <el-table-column label="操作"
+                         width="250">
           <template v-slot="scope">
-            <div v-if="scope.row.operation!=''">
-              <el-button type="primary"
-                         size="mini"
-                         @click="distributeEvent(item.methosName,scope.row)"
-                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                         :key="index">{{item.name}}</el-button>
-            </div>
+            <el-button type="primary"
+                       size="mini"
+                       @click="distributeEvent(item.methosName,scope.row)"
+                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                       :key="index">{{item.name}}</el-button>
           </template>
         </el-table-column>
       </template>
@@ -107,7 +106,7 @@ export default {
   mounted() {
     let companyId = this.$route.query.id;
     this.companyId = companyId;
-    this.sidebarFlag = true;
+    // this.sidebarFlag = true;
     this.queryRoleDatas(1);
   },
   methods: {
