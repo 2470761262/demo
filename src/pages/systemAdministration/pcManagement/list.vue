@@ -126,7 +126,7 @@ export default {
         { prop: "ID", label: "PCMID" },
         { prop: "PCMAC", label: "电脑MAC地址" },
         { prop: "DiskID", label: "硬盘编号" },
-        { prop: "CpuID", label: "CPU编号" },
+        { prop: "CpuID", label: "CPU编号", width: "280" },
         { prop: "AddTime", label: "添加时间" },
         { prop: "LastLoginTime", label: "最后登录时间" },
         { prop: "Remark", label: "门店名称" },
