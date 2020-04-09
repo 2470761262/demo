@@ -90,12 +90,12 @@
           <el-button type="primary"
                      size="mini"
                      @click="toAddDeptPage">添加子级部门</el-button>
-          <el-button type="primary"
+          <!-- <el-button type="primary"
                      size="mini"
                      @click="queryCompanyByIsLocked(0)">查询锁定公司</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button>
+                     @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button> -->
           <el-button icon="el-icon-s-platform"
                      size="mini"
                      @click="setUp()"
@@ -136,8 +136,6 @@
     </list-page>
   </div>
 </template>
-
-
 
 <script>
 import listPage from "@/components/listPage";
@@ -185,35 +183,53 @@ export default {
         { prop: "tel", label: "电话" },
         { prop: "addDate", label: "添加时间" }
       ],
-      tableData: []
+      tableData: [],
+      selectTag: "",
+      SelectOptions: [
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "0",
+          label: "锁定"
+        },
+        {
+          value: "1",
+          label: "正常"
+        }
+      ]
     };
   },
   mounted() {
-    //读取公司，部门数据
-    this.$api
-      .post({
-        url: "/company/companyTree",
-        token: false
-      })
-      .then(e => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          this.treeData = result.data;
-        } else {
-          console.log("载入结果" + +result.message);
-          alert(result.message);
-        }
-      })
-      .catch(e => {
-        console.log("读取失败");
-        console.log(e);
-      });
+    this.getTree();
     this.queryCompanyDatas(1);
   },
   methods: {
+    getTree() {
+      //读取公司，部门数据
+      this.$api
+        .post({
+          url: "/company/companyTree",
+          token: false
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.treeData = result.data;
+          } else {
+            console.log("载入结果" + +result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("读取失败");
+          console.log(e);
+        });
+    },
     queryCompanyByParams() {
       this.queryData.isLocked = null;
       this.queryCompanyDatas(1);
@@ -228,6 +244,9 @@ export default {
         params.isLocked = this.queryData.isLocked;
       }
       this.loading = true;
+      if (this.selectTag != null && this.selectTag != "") {
+        params.isLocked = this.selectTag;
+      }
       this.$api
         .post({
           url: "/company/companyList",
@@ -267,10 +286,11 @@ export default {
         });
       } else {
         if (this.queryData.type != 1) {
+          console.dir(this.company.parentId, this.company.id);
           if (saveType == 0) {
             this.$router.push({
               path: "/sys/addCompanyManage",
-              query: { ParentId: this.company.ParentId }
+              query: { ParentId: this.company.parentId }
             });
           } else if (saveType == 1) {
             this.$router.push({
@@ -327,13 +347,23 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            this.$alert("", "删除成功", {
-              dangerouslyUseHTMLString: false
+            // this.$alert("", "删除成功", {
+            //   dangerouslyUseHTMLString: false
+            // });
+            this.$message({
+              type: "info",
+              message: "删除成功"
             });
-            this.$router.push({ path: "/sys/companyList" });
+            //this.$router.push({ path: "/sys/companyList" });
+            this.getTree();
+            this.queryCompanyDatas(1);
           } else {
-            this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
-              dangerouslyUseHTMLString: false
+            // this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
+            //   dangerouslyUseHTMLString: false
+            // });
+            this.$message({
+              type: "error",
+              message: "该公司有下级公司或部门,操作失败!!!"
             });
           }
         })
@@ -399,7 +429,7 @@ export default {
       this.queryCompanyDatas(val);
     },
     checkChange(e, data, childData) {
-      console.log(e, "checkChange");
+      //console.log(e, "checkChange");
     },
     treeCheck(e, data) {
       this.$refs.tree2.setCheckedKeys([e.nodeId]);
@@ -411,11 +441,11 @@ export default {
             token: false
           })
           .then(e => {
-            console.log(e.data);
+            //console.log(e.data);
             let result = e.data;
             if (result.code == 200) {
-              console.log(result.message);
-              console.log(result.data);
+              //   console.log(result.message);
+              //   console.log(result.data);
               this.company = result.data;
             } else {
               console.log("查询公司详情结果：" + result.message);
@@ -436,8 +466,8 @@ export default {
             console.log(e.data);
             let result = e.data;
             if (result.code == 200) {
-              console.log(result.message);
-              console.log(result.data);
+              //   console.log(result.message);
+              //   console.log(result.data);
               this.department = result.data;
             } else {
               console.log("查询部门详情结果：" + result.message);
@@ -449,6 +479,7 @@ export default {
             console.log(e);
           });
       }
+      console.log(this.company);
     },
     //树输入筛选
     filterNode(value, data) {
@@ -474,6 +505,9 @@ export default {
           dangerouslyUseHTMLString: false
         });
       }
+    },
+    SelectTag() {
+      this.queryCompanyDatas(1);
     }
   }
 };

@@ -163,7 +163,7 @@ export default {
         });
         return;
       }
-      this.$confirm("确定推出登录吗？", "友情提醒", {
+      this.$confirm("确定退出登录吗？", "友情提醒", {
         distinguishCancelAndClose: true,
         confirmButtonText: "确定",
         cancelButtonText: "取消"

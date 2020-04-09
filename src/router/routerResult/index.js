@@ -31,6 +31,16 @@ export default [
             import(/* webpackChunkName: "historyDetails" */ "@/pages/buySellSystem/houseDetails/historyDetails.vue")
     },
     {
+        //买卖系统验证房源
+        path: "/buySellSystem/validateHouseDetails",
+        name: "validateHouseDetails",
+        meta: {
+            title: '验真详情'
+        },
+        component: () =>
+            import(/* webpackChunkName: "validateHouseDetails" */ "@/pages/buySellSystem/houseDetails/validateHouseDetails.vue")
+    },
+    {
         path: "/buySellSystem/addHouse",
         name: 'addHouse',
         meta: {

@@ -83,12 +83,20 @@
           <el-button type="primary"
                      size="mini"
                      @click="toAddDeptPage(1)">添加子级部门</el-button>
-          <el-button type="primary"
+          <!-- <el-button type="primary"
                      size="mini"
                      @click="queryDeptByIsLocked(0)">查询锁定部门</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button>
+                     @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button> -->
+          <el-select v-model="selectTag"
+                     placeholder="全部"
+                     @change="SelectTag">
+            <el-option v-for="item in SelectOptions"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value"></el-option>
+          </el-select>
           <div class="query-right">
             <el-input placeholder="部门名称"
                       v-model="queryData.DeptName"
@@ -173,7 +181,22 @@ export default {
       defaultProps: {
         children: "childrenNodes",
         label: "labelName"
-      }
+      },
+      selectTag: "",
+      SelectOptions: [
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "0",
+          label: "锁定"
+        },
+        {
+          value: "1",
+          label: "正常"
+        }
+      ]
     };
   },
   mounted() {
@@ -452,6 +475,9 @@ export default {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
+    },
+    SelectTag() {
+      this.queryDeptDatas(1);
     }
   }
 };

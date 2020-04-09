@@ -40,6 +40,8 @@
       @handleClick="handleClick"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
+      :dblclick="true"
+      @cellDblClick="toHouseDetail"
     >
       <template v-slot:top>
         <div class="page-list-query-row">
@@ -560,6 +562,14 @@ export default {
     this.queryVerifyHouseByParams(1, "id", "descending");
   },
   methods: {
+    toHouseDetail (row) {
+      var that = this;
+      console.log(row,'进入验真房源（sale_house_draft）详情');
+      that.$router.push({
+        name:"validateHouseDetails",
+        params:{houseId:row.id}
+      })     
+    },
     sortMethod(e) {
       this.queryVerifyHouseByParams(1, e.prop, e.order);
     },
