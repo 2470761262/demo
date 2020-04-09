@@ -935,9 +935,16 @@ export default {
         ...that.deffData
       };
       let method = "post";
-
-      if (that.$store.state.addHouse.formData.id != "") {
+      let url = "/draft-house";
+      if (this.paramsObj.editUrl) {
+        url = this.paramsObj.editUrl;
+      }
+      if (that.$store.state.addHouse.formData.id != "" && that.$store.state.addHouse.formData.id != null) {
         data.id = that.$store.state.addHouse.formData.id;
+        method = "put";
+      }
+      else if (util.sessionLocalStorageGet('editHouse')) {
+        data.id = util.sessionLocalStorageGet('editHouse').id;
         method = "put";
       }
       if (Object.keys(this.deffData).length == 0) {
@@ -945,7 +952,7 @@ export default {
         return true;
       }
       return this.$api[method]({
-        url: "/draft-house",
+        url: url,
         data: data,
         headers: { "Content-Type": "application/json;charset=UTF-8" }
       })

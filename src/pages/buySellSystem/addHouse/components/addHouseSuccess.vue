@@ -54,51 +54,58 @@
   }
 }
 </style>
-<template>
-  <div class="page-cell-addHouse"
-       v-loading="loading"
-       element-loading-text="加载二维码中~">
-    <div class="page-cell-title max-title title-top"><i class="el-icon-circle-check"></i>房源保存成功</div>
-    <div class="page-cell-title title-top">房源录入成功后，需邀请业主对房源进行验真后方可发布房源成功。</div>
-    <div class="mindder-step">
-      <el-steps :active="stepsActiveIndex+1"
-                align-center
-                finish-status="success">
-        <el-step :title="item.title"
-                 v-for="(item, index) in stepsList"
-                 :key="index"></el-step>
-      </el-steps>
-    </div>
-    <div class="cell-flex">
-      <div class="qr-img">
-        <el-image :src="url"
-                  fit="cover"
-                  :preview-src-list="[url]">
+<template v-if="!edit">
+  <div>
+    <div class="page-cell-addHouse"
+         v-loading="loading"
+         element-loading-text="加载二维码中~"
+         v-if="!edit">
+      <div class="page-cell-title max-title title-top"><i class="el-icon-circle-check"></i>房源保存成功</div>
+      <div class="page-cell-title title-top">房源录入成功后，需邀请业主对房源进行验真后方可发布房源成功。</div>
+      <div class="mindder-step">
+        <el-steps :active="stepsActiveIndex+1"
+                  align-center
+                  finish-status="success">
+          <el-step :title="item.title"
+                   v-for="(item, index) in stepsList"
+                   :key="index"></el-step>
+        </el-steps>
+      </div>
+      <div class="cell-flex">
+        <div class="qr-img">
+          <el-image :src="url"
+                    fit="cover"
+                    :preview-src-list="[url]">
 
-        </el-image>
+          </el-image>
+        </div>
+        <div class="text-center">
+          <div class="text-center-tips">微信扫一扫</div>
+          <div class="text-center-tips">邀请业主进行验真</div>
+        </div>
       </div>
-      <div class="text-center">
-        <div class="text-center-tips">微信扫一扫</div>
-        <div class="text-center-tips">邀请业主进行验真</div>
+      <div class="text-col-centent">
+        <div class="inlne-text">
+          <p>1.请发给业主本人(与房源所录入号码一致的)进行验证</p>
+          <p>2.房源验证通过后，请在3天内完善房源信息,否则房源跟单资格会被取消</p>
+        </div>
+      </div>
+      <div class="text-col-centent">
+        <router-link class="link"
+                     to="/buySellSystem/validateHouseList"
+                     replace>前往驗證列表</router-link>
       </div>
     </div>
-    <div class="text-col-centent">
-      <div class="inlne-text">
-        <p>1.请发给业主本人(与房源所录入号码一致的)进行验证</p>
-        <p>2.房源验证通过后，请在3天内完善房源信息,否则房源跟单资格会被取消</p>
-      </div>
-    </div>
-    <div class="text-col-centent">
-      <router-link class="link"
-                   to="/buySellSystem/validateHouseList"
-                   replace>前往驗證列表</router-link>
+    <div v-else>
+      <div class="page-cell-title max-title title-top"><i class="el-icon-circle-check"></i>房源保存成功</div>
     </div>
   </div>
 </template>
 <script>
+import util from "@/util/util";
 export default {
   name: "addHouseSuccess",
-  data() {
+  data () {
     return {
       stepsActiveIndex: 1,
       stepsList: [
@@ -107,14 +114,20 @@ export default {
         { title: "发布成功", componentName: "exploration" }
       ],
       loading: false,
-      url: ""
+      url: "",
+      edit: false,
     };
   },
-  created() {
-     this.getQr();
+  created () {
+    this.getQr();
+  },
+  mounted () {
+    if (util.sessionLocalStorageGet('editHouse')) {
+      this.edit = true;
+    }
   },
   methods: {
-    getQr() {
+    getQr () {
       let that = this;
       this.$api
         .post({
@@ -142,7 +155,7 @@ export default {
           that.loading = false;
         });
     },
-    validateAll() {
+    validateAll () {
       let that = this;
       this.$api.put({
         url: "/draft-house/reset",
