@@ -136,9 +136,9 @@ export default {
     let params = {}
     if (Object.keys(this.$route.params).length > 0) {
       params = this.$route.params;
-      util.sessionLocalStorageSet('addHouse', params);//this.$route.query;
+      util.sessionLocalStorageSet('editHouse', params);//this.$route.query;
     } else {
-      params = util.sessionLocalStorageGet('addHouse');//this.$route.query;
+      params = util.sessionLocalStorageGet('editHouse');//this.$route.query;
     }
     if (Object.keys(this.$route.query).length > 0) {
       params = this.$route.query;
@@ -216,7 +216,7 @@ export default {
   destroyed () {
     this.$store.commit("updateIsformDataNoCommit", false);
     this.$store.commit("resetFormData");
-    util.sessionLocalStorageRemove('addHouse');
+    util.sessionLocalStorageRemove('editHouse');
   },
   methods: {
     //上一步

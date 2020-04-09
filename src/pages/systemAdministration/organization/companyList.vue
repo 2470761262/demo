@@ -80,7 +80,7 @@
             :key="item.prop"
           ></el-table-column>
         </template>
-        <el-table-column prop="operation" label="操作" fixed="right" key="operation">
+        <el-table-column prop="operation" label="操作" fixed="right">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
               <el-button
@@ -453,9 +453,10 @@ export default {
     setUp() {
       if (this.companyEntity != null) {
         console.log("设置网站");
+        console.log("this.companyEntity.companyId ,", this.companyEntity.id);
         this.$router.push({
           path: "/sys/setCompanyWebsite",
-          query: { companyId: this.companyEntity.companyId }
+          query: { companyId: this.companyEntity.id }
         });
       } else {
         this.$alert("", "请选择操作记录", {

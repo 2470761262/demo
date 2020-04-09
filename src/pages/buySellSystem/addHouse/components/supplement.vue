@@ -683,6 +683,12 @@ export default {
       default: function () {
         return [];
       }
+    },
+    paramsObj: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   computed: {
@@ -900,6 +906,8 @@ export default {
     },
     //根据ID获取已经上传的音频
     getAudio () {
+      let url = `/draft-house/audios/${this.$store.state.addHouse.formData.id}`;
+
       return this.$api
         .post({
           url: `/draft-house/audios/${this.$store.state.addHouse.formData.id}`
