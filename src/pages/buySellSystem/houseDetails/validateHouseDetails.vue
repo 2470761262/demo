@@ -59,9 +59,9 @@
                     :class="{'cell-msg-nest':nest}"></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->
-        <houseOperation></houseOperation>
+        <!-- <houseOperation></houseOperation> -->
         <!-- 房源任务方 -->
-        <houseTask></houseTask>
+        <!-- <houseTask></houseTask> -->
       </div>
     </section>
   </div>
@@ -73,10 +73,10 @@ import houseDetailsHead from "./components/houseDetailsHead";
 import loopImg from "./components/loopImg";
 import detail from "./components/detail";
 import sidebarList from "@/components/sidebarList";
-import buttonGroup from "./components/buttonGroup";
 import houseMessage from "./components/houseMessage";
-import houseOperation from "./components/houseOperation";
-import houseTask from "./components/houseTask";
+import buttonGroup from "./components/buttonGroup";
+// import houseOperation from "./components/houseOperation";
+// import houseTask from "./components/houseTask";
 import { REMARK } from "@/util/constMap";
 export default {
   provide () {
@@ -98,17 +98,16 @@ export default {
     loopImg, // 轮播
     detail, // 右边的详情
     sidebarList,
-    buttonGroup, // 按钮群
     houseMessage,
-    houseOperation,
-    houseTask //房源任务方
+    buttonGroup// 按钮群
+    // houseOperation,
+    // houseTask //房源任务方
   },
   data () {
     return {
       forID: {
         id: null
       },
-      tradeType: 1,
       houseDetails: {},
       load: {
         loading: true,
@@ -118,13 +117,10 @@ export default {
   },
   created () {
     if (this.$route.params.houseId) {
-      this.forID.id = this.$route.params.houseId;
-      this.tradeType = this.$route.params.tradeType;
-      util.localStorageSet("historyDetails.vue:houseId", this.forID.id);
-      util.localStorageSet("historyDetails.vue:tradeType", this.tradeType);
+      this.forID.id = this.$route.params.houseId;      
+      util.localStorageSet("validateHouseDetails.vue:houseId", this.forID.id);      
     } else {
-      this.forID.id = util.localStorageGet("historyDetails.vue:houseId");
-      this.tradeType = util.localStorageGet("historyDetails.vue:tradeType");
+      this.forID.id = util.localStorageGet("validateHouseDetails.vue:houseId");      
     }
     this.getHouseDetails();
   },
@@ -134,8 +130,8 @@ export default {
       this.load.loading = true;
       this.$api
         .post({
-          url: "/history/agent_house/getHouseDetail/" + that.forID.id,
-          data: { tradeType: this.tradeType },
+          url: "/validate/agent_house/getHouseDetail/" + that.forID.id,
+          data: { remark: 1 },
           qs: true
         })
         .then(e => {
@@ -180,6 +176,7 @@ export default {
                 }
               }
             }
+            result.data.validateText='待验真';
             this.$set(this.houseDetails, "data", result.data);
           } else {
             that.$message.error(result.message);

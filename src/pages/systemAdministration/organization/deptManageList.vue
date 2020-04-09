@@ -48,6 +48,14 @@
           <el-input placeholder="部门名称" v-model="queryData.DeptName" clearable>
             <template slot="prepend">部门名</template>
           </el-input>
+          <el-select v-model="selectTag" placeholder="全部" @change="SelectTag">
+            <el-option
+              v-for="item in SelectOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
           <el-button
             type="primary"
             style="margin-left:10px"
@@ -132,7 +140,22 @@ export default {
       defaultProps: {
         children: "childrenNodes",
         label: "labelName"
-      }
+      },
+      selectTag: "",
+      SelectOptions: [
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "0",
+          label: "锁定"
+        },
+        {
+          value: "1",
+          label: "正常"
+        }
+      ]
     };
   },
   mounted() {
@@ -411,6 +434,9 @@ export default {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
+    },
+    SelectTag() {
+      this.queryDeptDatas(1);
     }
   }
 };

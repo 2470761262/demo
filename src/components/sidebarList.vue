@@ -48,7 +48,8 @@
         <span class="item-title">返回</span>
       </div>
       <div class="sldebar-content-item"
-           @click="lastClick">
+           @click="lastClick"
+           v-if="showEidt">
         <!-- <i class="el-icon-plus icon"></i> -->
         <img class="nav-image"
              src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/43c6bb2152e647ec825a754fd3817fbb.png">
@@ -59,6 +60,8 @@
 </template>
 
 <script>
+import but from "@/evenBus/but.js";
+import util from "@/util/util";
 export default {
   props: {
     lastItemSet: {
@@ -68,28 +71,54 @@ export default {
     lastTitle: {
       type: String
     },
-    lastUrl: {
+    lastName: {
       type: String,
-      default: "/buySellSystem/addHouse"
+      default: "addHouse"
     },
-    lastQuery: {
+    lastParams: {
       type: Object,
-      default: () => {}
+      default: () => { }
+    },
+    judgeShowEidt: {
+      type: Boolean,
+      default: false
+    },
+    sissiontSet: {
+      type: Object
     }
+
+  },
+  data () {
+    return {
+      showEidt: false,
+    }
+
+  },
+  mounted () {
+    let that = this;
+    if (!this.judgeShowEidt) {
+      this.showEidt = true;
+    }
+    but.$on("editAgentHouse", () => {
+      that.showEidt = true;
+    });
+  },
+  destroyed () {
+    but.$off("editAgentHouse");
   },
   methods: {
-    goHome() {
+    goHome () {
       this.$router.push({ path: "/buySellSystem/houseList" });
     },
-    goBack() {
+    goBack () {
       this.$router.go(-1);
     },
-    lastClick() {
+    lastClick () {
       let routerData = {
-        path: this.lastUrl
+        name: this.lastName
       };
-      if (this.lastQuery) {
-        routerData.query = this.lastQuery;
+      if (this.lastParams) {
+        routerData.params = this.lastParams;
       }
       this.$router.push(routerData);
     }

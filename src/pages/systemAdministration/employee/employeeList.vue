@@ -1,6 +1,14 @@
 <style lang="less" scoped>
-.query-cell {
-  display: flex;
+
+.preKeyWordSelect {
+    width: 90px;
+}
+.keyWordInput{
+  width:500px;
+}
+.btnAddUser{
+  float:right;
+  margin-right: 5px;
 }
 .elTree {
   width: 200px;
@@ -45,53 +53,27 @@
     >
       <template v-slot:top>
         <div class="query-cell">
-          <el-input placeholder="登录名/姓名/公司/部门/岗位" v-model="queryData.keyWord" clearable>
-            <template slot="prepend">关键字</template>
+          <el-input placeholder="登录名/姓名/公司/部门/岗位" v-model="queryData.keyWord" class="keyWordInput">
+            <!-- <el-select v-model="queryData.keyWordType" slot="prepend" class="preKeyWordSelect" placeholder="请选择">
+              <el-option label="登录名" value="0"></el-option>
+              <el-option label="姓名" value="1"></el-option>
+              <el-option label="公司" value="2"></el-option>
+              <el-option label="部门" value="3"></el-option>
+              <el-option label="岗位" value="4"></el-option>
+            </el-select> -->
+            <el-button slot="append" icon="el-icon-search" @click="queryEmployeeByParams"></el-button>
           </el-input>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryEmployeeByParams"
-          >查询</el-button>
-          <el-button type="primary" size="mini" @click="toAddEmployeePage">添加用户</el-button>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryEmployeeByIsLocked(0)"
-          >查询锁定用户</el-button>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryEmployeeByIsLocked(1)"
-          >查询正常用户</el-button>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryEmployeeByIsLocked(2)"
-          >查询异常用户</el-button>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryEmployeeByDel(0)"
-          >查询在职用户</el-button>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryEmployeeByDel(1)"
-          >查询离职用户</el-button>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryEmployeeByDel(2)"
-          >查询待离职用户</el-button>
-          <!-- <el-button  icon="el-icon-refresh" title="切换用户" circle @click="switchUser()"></el-button> -->
+          <el-select v-model="queryData.isLocked" @change="queryEmployeeDatas(1)" clearable placeholder="情况过滤">
+            <el-option  key="1"  label="正常"  value="1"/>
+            <el-option  key="0"  label="锁定"  value="0"/>
+            <el-option  key="2"  label="异常"  value="2"/>
+          </el-select>
+          <el-select v-model="queryData.del" @change="queryEmployeeDatas(1)"  clearable placeholder="状态过滤">
+            <el-option  key="0"  label="在职"  value="0"/>
+            <el-option  key="1"  label="离职"  value="1"/>
+            <el-option  key="2"  label="离职待审核"  value="2"/>
+          </el-select>
+          <el-button type="primary"  round class="btnAddUser"  @click="toAddEmployeePage">添加用户</el-button>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
@@ -154,9 +136,9 @@ export default {
       loading: false, //控制表格加载动画提示
       queryData: {
         keyWord: "",
+        keyWordType:'登录名',
         isLocked: null, //0 查询锁定,1 查询未锁定,2 查询异常用户
-        del: 0, //0 查询在职用户,1 查询离职用户,2 查询待离职用户
-        type: 0 //0 内部  1 游客
+        del: 0 //0 查询在职用户,1 查询离职用户,2 查询待离职用户
       },
       leaveTime:"",
       leaveMemo:'',
@@ -219,16 +201,6 @@ export default {
     this.queryEmployeeDatas(1);
   },
   methods: {
-    queryEmployeeByIsLocked(isLocked) {
-      this.queryData.isLocked = isLocked;
-      this.queryData.del = 0;
-      this.queryEmployeeDatas(1);
-    },
-    queryEmployeeByDel(del) {
-      this.queryData.isLocked = null;
-      this.queryData.del = del;
-      this.queryEmployeeDatas(1);
-    },
     queryEmployeeByParams() {
       this.queryEmployeeDatas(1);
     },
@@ -251,7 +223,6 @@ export default {
       if (this.checkedType != null) {
         params.checkedType = this.checkedType;
       }
-      params.type = this.queryData.type;
       this.$api
         .post({
           url: "/employee/employeeList",
@@ -274,16 +245,18 @@ export default {
                   result.data.list[i].del = "离职";
                   break;
                 case 2:
-                  result.data.list[i].del = "未带看锁定";
+                  result.data.list[i].del = "离职待审核";
                   break;
                 case 3:
-                  result.data.list[i].del = "未审核";
+                  result.data.list[i].del = "待审核";
                   break;
               }
-              if(result.data.list[i].isLocked==0){
-                result.data.list[i].isLocked = "锁定";
-              }else{
+              if(result.data.list[i].isLocked==1){
                 result.data.list[i].isLocked = "正常";
+              }else if(result.data.list[i].isLocked==2){
+                result.data.list[i].isLocked='异常';
+              }else {
+                result.data.list[i].isLocked = "锁定";
               }
             }
             this.pageJson.total = result.data.totalCount;
@@ -312,16 +285,17 @@ export default {
       this.dialogVisible = false;     
     },
     delAccount() {
+      let that=this;
       if (
         this.leaveTime != null &&
         this.leaveMemo != ""
       ) {
        this.dialogVisible = false;
-        this.operation(this.id, "del", 1,function(result){
-            let index=that.tableData.findIndex((item) => {return item.id == id})
+        this.operation(that.id, "del", 1,function(result){
+            let index=that.tableData.findIndex((item) => {return item.id == that.id})
             if(index>-1){
               console.log("离职了用户");
-              that.tableData[index].del='离职';
+              that.tableData[index].del='离职待审核';
             }
           });
       } else {
@@ -398,7 +372,7 @@ export default {
             let index=that.tableData.findIndex((item) => {return item.id == id})
             if(index>-1){
               console.log("复职了用户");
-              that.tableData[index].del='在职';
+              that.tableData[index].del='待审核';
             }
           });
         }).catch(action => {
@@ -432,7 +406,13 @@ export default {
     operation(id, upType, upValue,callBack) {
       let params = {perId: id, upType: upType, upValue: upValue };    
       params.leaveMemo = this.leaveMemo;
-      params.leaveTime = this.leaveTime;     
+      params.leaveTime = this.leaveTime; 
+      const loading = this.$loading({
+          lock: true,
+          text: '请等待..',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
       this.$api
         .post({
           url: "/employee/operation",
@@ -442,6 +422,7 @@ export default {
         })
         .then(e => {
           let result = e.data;
+          loading.close();
           if (result.code == 200) {
             this.$message({ message: result.message });
             callBack(result);
@@ -452,6 +433,7 @@ export default {
           }
         })
         .catch(e => {
+          loading.close();
           console.log("失败");
           console.log(e);
         });

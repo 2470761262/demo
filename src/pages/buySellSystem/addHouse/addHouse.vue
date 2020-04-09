@@ -83,7 +83,8 @@
                        :getData="formDataGet"
                        :disabled="disabled"
                        :is="componentName"
-                       ref="com"></component>
+                       ref="com"
+                       :paramsObj="paramsObj"></component>
           </keep-alive>
           <div class="page-contenr-but">
             <el-button-group>
@@ -101,7 +102,7 @@
               <el-button type="primary"
                          v-if="stepsActiveIndex < 3 ||  reSetMethod"
                          @click="nextPage('draft')"
-                         :loading="butLoading">提交验真</el-button>
+                         :loading="butLoading">{{paramsObj.buttonText ||'提交验真' }}</el-button>
             </el-button-group>
           </div>
         </div>
@@ -115,6 +116,7 @@ import basicInformation from "@/pages/buySellSystem/addHouse/components/basicInf
 //异步组件工厂方法
 import componentsFactory from "@/util/componentsFactory";
 import getMenuRid from "@/minxi/getMenuRid";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -131,12 +133,26 @@ export default {
       componentsFactory("pages/buySellSystem/addHouse/components/morePushHouse") //多套录入
   },
   created () {
-    let { method, id } = this.$route.query;
+    let params = {}
+    if (Object.keys(this.$route.params).length > 0) {
+      params = this.$route.params;
+      util.sessionLocalStorageSet('editHouse', params);//this.$route.query;
+    } else {
+      params = util.sessionLocalStorageGet('editHouse');//this.$route.query;
+    }
+    if (Object.keys(this.$route.query).length > 0) {
+      params = this.$route.query;
+    }
+    let { method, id, paramsObj } = params;
+    console.log(method, id);
     if (method && id) {
       this.$store.commit("updateId", id);
       this.formDataGet = true;
       this.disabled = true;
       this.reSetMethod = method == "reset" ? true : false;
+      if (paramsObj) {
+        this.paramsObj = paramsObj;
+      }
     }
   },
   watch: {
@@ -170,6 +186,7 @@ export default {
       butLoading: false,
       formDataGet: false,
       disabled: false,//是否禁用楼盘选择和多套单套录入切换
+      paramsObj: {}
     };
   },
   beforeRouteLeave (to, from, next) {
@@ -199,6 +216,7 @@ export default {
   destroyed () {
     this.$store.commit("updateIsformDataNoCommit", false);
     this.$store.commit("resetFormData");
+    util.sessionLocalStorageRemove('editHouse');
   },
   methods: {
     //上一步

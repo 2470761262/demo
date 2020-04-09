@@ -49,7 +49,8 @@
       <!-- 右侧功能按钮 -->
       <sidebarList lastItemSet
                    lastTitle="编辑"
-                   :lastQuery='{id:forID.id,method:"reset"}'></sidebarList>
+                   :judgeShowEidt="true"
+                   :lastParams='lastParams'></sidebarList>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -79,7 +80,7 @@ import houseOperation from "./components/houseOperation";
 import houseTask from "./components/houseTask";
 import { REMARK } from "@/util/constMap";
 export default {
-  provide() {
+  provide () {
     return {
       houseId: this.forID,
       houseDetails: this.houseDetails,
@@ -88,7 +89,7 @@ export default {
     };
   },
   computed: {
-    nest() {
+    nest () {
       return util.localStorageGet("nest");
     }
   },
@@ -103,7 +104,7 @@ export default {
     houseOperation,
     houseTask //房源任务方
   },
-  data() {
+  data () {
     return {
       forID: {
         id: null
@@ -112,20 +113,33 @@ export default {
       load: {
         loading: true,
         loadingMessage: "努力加载中~"
+      },
+      lastParams: {
+        id: 0,
+        method: "edit",
+        paramsObj: {
+          getEditUrl: "/agent_house/getEditDetails/",
+          buttonText: "保存",
+          editUrl: "/agent_house/editAgentHouse"
+        },
       }
     };
   },
-  created() {
+  created () {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
       util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
     } else {
       this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
     }
+    this.lastParams.id = this.forID.id;
     this.getHouseDetails();
   },
   methods: {
-    getHouseDetails() {
+    /**
+     * 获取房源详情
+     */
+    getHouseDetails () {
       let that = this;
       this.load.loading = true;
       this.$api
@@ -193,7 +207,7 @@ export default {
         });
     }
   },
-  destroyed() {
+  destroyed () {
     // this.$store.commit("resetFormData");
   }
 };

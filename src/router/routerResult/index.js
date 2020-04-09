@@ -31,7 +31,18 @@ export default [
             import(/* webpackChunkName: "historyDetails" */ "@/pages/buySellSystem/houseDetails/historyDetails.vue")
     },
     {
+        //买卖系统验证房源
+        path: "/buySellSystem/validateHouseDetails",
+        name: "validateHouseDetails",
+        meta: {
+            title: '验真详情'
+        },
+        component: () =>
+            import(/* webpackChunkName: "validateHouseDetails" */ "@/pages/buySellSystem/houseDetails/validateHouseDetails.vue")
+    },
+    {
         path: "/buySellSystem/addHouse",
+        name: 'addHouse',
         meta: {
             title: '录入房源'
         },
@@ -423,6 +434,7 @@ export default [
     {
         //系统管理 添加系统参数配置对象
         path: "/sys/addConfigObject",
+        name: "addConfigObject",
         meta: {
             title: '添加系统参数配置对象'
         },
