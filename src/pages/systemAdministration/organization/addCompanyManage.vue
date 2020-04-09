@@ -107,7 +107,7 @@
             width="50%"
             :before-close="handleClose1"
           >
-            <list-page
+            <!-- <list-page
               :parentData="$data"
               highlight-current-row
               @handleSizeChange="handleSizeChange"
@@ -124,7 +124,25 @@
                   ></el-table-column>
                 </template>
               </template>
-            </list-page>
+            </list-page>-->
+            <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
+            <el-tree
+              ref="treeForm"
+              :data="treeData"
+              node-key="nodeId"
+              show-checkbox
+              :props="defaultProps"
+              @check-change="handleCheckChange"
+              :highlight-current="true"
+              :filter-node-method="filterNode"
+              check-strictly
+              :action="''"
+              empty-text="暂无数据，请检查权限"
+              auto-expand-parent
+              :default-expanded-keys="curNodeId"
+              :default-checked-keys="curNodeId"
+              v-loading="treeLoading"
+            ></el-tree>
           </el-dialog>
           <el-input
             type="text"
@@ -277,10 +295,27 @@ export default {
       checkedCities: [],
       isIndeterminate: true,
       jumpNodeId: "",
-      id: 350000
+      id: 350000,
+      treeData: [],
+      defaultProps: {
+        children: "childrenNodes",
+        label: "labelName"
+      },
+      curNodeId: [],
+      filterText: "",
+      treeLoading: true,
+      checkedId: null,
+      checkedType: null
     };
   },
-  watch: {},
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    },
+    filterTextChange(val) {
+      this.$refs.treeFormChange.filter(val);
+    }
+  },
   computed: {},
   methods: {
     loadNode(node, resolve) {
@@ -551,6 +586,35 @@ export default {
             console.log(e, "错误");
           });
       }
+    },
+    handleCheckChange(data, checked, node) {
+      if (checked == true) {
+        if (data.type !== 2) {
+          this.$message({
+            type: "error",
+            message: "请勾选人员"
+          });
+          this.$refs.treeForm.setCheckedNodes([]);
+        } else {
+          this.$message({
+            type: "success",
+            message: "已勾选【" + data.labelName + "】"
+          });
+          this.$refs.treeForm.setCheckedNodes([data]);
+          this.companyEntity.managerPer = data.businessId;
+          this.companyEntity.managerPerName = data.labelName;
+          this.companyEntity.perName = data.labelName;
+        }
+        console.log("当前类型：" + data.type + ",ID：" + data.businessId);
+      }
+    },
+    filterNode(value, data) {
+      console.log("value：" + value);
+      console.log(data);
+      if (!value) return true;
+      if (data.labelName != null) {
+        return data.labelName.indexOf(value) !== -1;
+      }
     }
   },
   created() {},
@@ -578,6 +642,41 @@ export default {
     if (this.$route.query.cur != null) {
       this.jumpNodeId = this.$route.query.cur;
     }
+    //读取树数据
+    this.$api
+      .post({
+        url: "/sys/tree/com/manager"
+      })
+      .then(e => {
+        console.log(e.data);
+        let result = e.data;
+        if (result.code == 200) {
+          console.log(result.message);
+          console.log(result.data);
+          this.treeData = result.data;
+        } else {
+          console.log("载入结果" + +result.message);
+          alert(result.message);
+        }
+      })
+      .then(() => {
+        if (this.$route.query.cur != null) {
+          this.curNodeId = [this.$route.query.cur];
+          this.$nextTick(() => {
+            this.handleCheckChange(
+              this.$refs.treeForm.getNode(...this.curNodeId).data,
+              true
+            );
+          });
+        }
+      })
+      .catch(e => {
+        console.log("读取失败");
+        console.log(e);
+      })
+      .finally(e => {
+        this.treeLoading = false;
+      });
   }
 };
 </script>

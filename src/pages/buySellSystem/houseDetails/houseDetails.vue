@@ -120,7 +120,10 @@ export default {
         paramsObj: {
           getEditUrl: "/agent_house/getEditDetails/",
           buttonText: "保存",
-          editUrl: "/agent_house/editAgentHouse"
+          editUrl: "/agent_house/editAgentHouse",
+          getAudioUrl: "/agentHouse/audio/getAudioList/",
+          getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
+          getVideoUrl: "/agentHouse/video/getVideoList/"
         },
       }
     };

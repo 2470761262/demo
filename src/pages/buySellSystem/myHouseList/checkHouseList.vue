@@ -122,7 +122,8 @@
                        @click="querylistByParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/MyCheck"></moreSelect>
+            <moreSelect @moreSelectChange="moreSelectChange"
+                        deptUrl="/myHouse/MyCheck"></moreSelect>
           </div>
         </div>
       </template>
@@ -472,9 +473,9 @@ export default {
       accessoryAllList: [],
       accessoryMoldList: [
         { title: "外景图", list: [], type: 1 },
-        { title: "卧室图", list: [], type: 2 },
-        { title: "厨房", list: [], type: 3 },
-        { title: "客厅", list: [], type: 4 },
+        { title: "客厅", list: [], type: 2 },
+        { title: "卧室图", list: [], type: 3 },
+        { title: "厨房", list: [], type: 4 },
         { title: "卫生间", list: [], type: 5 },
         { title: "户型", list: [], type: 6 },
         { title: "视频", list: [], type: 7 },
@@ -723,7 +724,7 @@ export default {
           if (key == "addTime" && this.moreSelect[key] !== "") {
             params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } 
+          }
           else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
@@ -741,7 +742,7 @@ export default {
         params.status = that.status;
         params.checkProject = that.checkProject;
         params.checkType = that.type;
-      }     this.$api.post({
+      } this.$api.post({
         url: '/myHouse/myCheckList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
