@@ -176,6 +176,7 @@ export default {
                 }
               }
             }
+            result.data.validateText='待验真';
             this.$set(this.houseDetails, "data", result.data);
           } else {
             that.$message.error(result.message);
