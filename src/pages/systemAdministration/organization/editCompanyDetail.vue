@@ -262,7 +262,6 @@ export default {
       checkedType: null
     };
   },
-  watch: {},
   computed: {},
   methods: {
     loadNode(node, resolve) {
