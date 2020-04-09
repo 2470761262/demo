@@ -1,19 +1,4 @@
 <style lang="less" scoped>
-.left-input-container {
-  padding: 10px;
-
-  border-radius: 0.5rem;
-  .el-input {
-    width: 80%;
-  }
-  span {
-    margin-right: 10px;
-    margin-left: 5px;
-  }
-}
-.el-top {
-  margin-top: 50px;
-}
 .flex-row {
   display: flex;
   &.flex-row40 {
@@ -47,141 +32,130 @@
   <div class="form-content">
     <el-form ref="form"
              :model="setEntity"
+             :rules="rules"
              label-width="130px">
       <div class="flex-row">
-        <el-form-item label="网站名称:">
+        <el-form-item label="网站名称:"
+                      prop="siteName">
           <el-input v-model="setEntity.siteName"></el-input>
         </el-form-item>
-        <el-form-item label="网站网址">
+        <el-form-item label="网站网址"
+                      prop="siteUrl">
           <el-input v-model="setEntity.siteUrl"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话:">
+        <el-form-item label="联系电话:"
+                      prop="sitePhone">
           <el-input v-model="setEntity.sitePhone"></el-input>
         </el-form-item>
-        <el-form-item label="联系QQ:">
+        <el-form-item label="联系QQ:"
+                      prop="siteQQ">
           <el-input v-model="setEntity.siteQQ"></el-input>
         </el-form-item>
       </div>
       <div class="flex-row">
-        <el-form-item label="业务范围">
+        <el-form-item label="业务范围"
+                      prop="siteKeyWord">
           <el-input v-model="setEntity.siteKeyWord"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱:">
+        <el-form-item label="邮箱:"
+                      prop="siteEmail">
           <el-input type="text"
                     v-model="setEntity.siteEmail"></el-input>
         </el-form-item>
-        <el-form-item label="备案信息:">
+        <el-form-item label="备案信息:"
+                      prop="siteBah">
           <el-input v-model="setEntity.siteBah"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
+        <el-form-item label="地址"
+                      prop="siteAddress">
           <el-input v-model="setEntity.siteAddress"></el-input>
         </el-form-item>
       </div>
       <div class="flex-row">
-        <el-form-item label="背景颜色(主)">
+        <el-form-item label="背景颜色(主)"
+                      porp="siteBgColor">
           <el-color-picker v-model="setEntity.siteBgColor"></el-color-picker>
         </el-form-item>
-        <el-form-item label="背景颜色(辅):">
+        <el-form-item label="背景颜色(辅):"
+                      porp="siteBgColor2">
           <el-color-picker v-model="setEntity.siteBgColor2"></el-color-picker>
         </el-form-item>
-        <el-form-item label="渐变色:">
+        <el-form-item label="渐变色:"
+                      porp="siteBgColor3">
           <el-color-picker v-model="setEntity.siteBgColor3"></el-color-picker>
         </el-form-item>
-        <el-form-item label="备用色:">
+        <el-form-item label="备用色:"
+                      porp="siteBgColor4">
           <el-color-picker v-model="setEntity.siteBgColor4"></el-color-picker>
         </el-form-item>
       </div>
-      <div class="flex-row">
+      <div class="flex-row flex-row40">
         <el-form-item label="logo(主页):">
-          <el-upload class="avatar-uploader"
-                     ref="upLoad"
-                     :action="uploadUrl"
-                     :headers="myHeader"
-                     :limit=1
+          <el-upload :action="uploadUrl"
+                     :limit='1'
+                     :on-exceed="exceed"
+                     :headers="header"
+                     :on-preview="preview"
                      :show-file-list="true"
                      list-type="picture-card"
-                     :on-success="handleAvatarSuccess">
-            <img v-if="setEntity.siteLogo"
-                 :src="setEntity.siteLogo"
-                 class="avatar">
-            <i v-else
-               class="el-icon-plus avatar-uploader-icon"
-               ref="upLoad"></i>
+                     :before-upload="beforeAvatarUpload"
+                     :on-success="resultImgNane('siteLogo')">
+            <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="大图Logo:">
-          <el-upload ref="upLoad1"
-                     :action="uploadUrl"
-                     :headers="myHeader"
-                     :limit=1
+          <el-upload :action="uploadUrl"
+                     :limit='1'
+                     :on-preview="preview"
+                     :on-exceed="exceed"
+                     :headers="header"
                      :show-file-list="true"
                      list-type="picture-card"
-                     :on-success="handleSuccess">
-            <img v-if="setEntity.sitebLogo"
-                 :src="setEntity.sitebLogo"
-                 class="avatar">
-            <i v-else
-               class="el-icon-plus avatar-uploader-icon"
-               upLoad1></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="中图Logo:">
-          <el-upload ref="upLoad2"
-                     :action="uploadUrl"
-                     :headers="myHeader"
-                     :limit=1
-                     :show-file-list="true"
-                     list-type="picture-card"
-                     :on-success="handleSuccess2">
-            <img v-if="setEntity.sitemLogo"
-                 :src="setEntity.sitemLogo"
-                 class="avatar">
-            <i v-else
-               class="el-icon-plus avatar-uploader-icon"
-               upLoad2></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="默认头像">
-          <el-upload ref="upLoad3"
-                     :action="uploadUrl"
-                     :headers="myHeader"
-                     :limit=1
-                     :show-file-list="true"
-                     list-type="picture-card"
-                     :on-success="handleAvatarSuccess3">
-            <img v-if="setEntity.siteHeadImg"
-                 :src="setEntity.siteHeadImg"
-                 class="avatar">
-            <i v-else
-               class="el-icon-plus avatar-uploader-icon"
-               upLoad3></i>
+                     :before-upload="beforeAvatarUpload"
+                     :on-success="resultImgNane('sitebLogo')">
+            <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
       </div>
-
-      <el-form-item label="首页背景图">
-        <el-upload ref="upLoad4"
-                   :action="uploadUrl"
-                   :headers="myHeader"
-                   :show-file-list="true"
-                   :limit=1
-                   list-type="picture-card"
-                   :on-success="handleAvatarSuccess4">
-          <img v-if="setEntity.loginBackground"
-               :src="setEntity.loginBackground"
-               class="avatar">
-          <i v-else
-             class="el-icon-plus avatar-uploader-icon"
-             upLoad4></i>
-        </el-upload>
-
-      </el-form-item>
+      <div class="flex-row flex-row40">
+        <el-form-item label="中图Logo:">
+          <el-upload :action="uploadUrl"
+                     :limit='1'
+                     :on-preview="preview"
+                     :on-exceed="exceed"
+                     :headers="header"
+                     :show-file-list="true"
+                     list-type="picture-card"
+                     :before-upload="beforeAvatarUpload"
+                     :on-success="resultImgNane('sitemLogo')">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="默认头像:">
+          <el-upload :action="uploadUrl"
+                     :limit='1'
+                     :on-preview="preview"
+                     :on-exceed="exceed"
+                     :headers="header"
+                     :show-file-list="true"
+                     list-type="picture-card"
+                     :before-upload="beforeAvatarUpload"
+                     :on-success="resultImgNane('siteHeadImg')">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+        </el-form-item>
+      </div>
       <div class="flex-row flex-row40">
         <el-form-item label="网站描述:">
-          <el-input v-model="setEntity.siteTitle"></el-input>
+          <el-input type="textarea"
+                    :autosize="{ minRows: 2, maxRows: 6 }"
+                    v-model="setEntity.siteTitle"></el-input>
         </el-form-item>
+      </div>
+      <div class="flex-row flex-row40">
         <el-form-item label="关于我们:">
-          <el-input type="text"
+          <el-input type="textarea"
+                    :autosize="{ minRows: 2, maxRows: 6 }"
                     placeholder="请输入内容"
                     v-model="setEntity.siteInfo"></el-input>
         </el-form-item>
@@ -193,43 +167,94 @@
       <el-button type="primary"
                  @click="back()">返回</el-button>
     </div>
+    <el-image-viewer v-if="showViewer"
+                     :on-close="()=>{this.showViewer = false  }"
+                     :url-list="[dialogImageUrl]">
+    </el-image-viewer>
   </div>
 </template>
 
 <script>
 import util from "@/util/util";
 import { TOKEN } from "@/util/constMap";
-import listPage from "@/components/listPage";
-import getMenuRid from "@/minxi/getMenuRid";
+import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 export default {
-  mixins: [getMenuRid],
   components: {
-    listPage
+    ElImageViewer
   },
-  props: {},
   data() {
     return {
-      queryData: {
-        companyId: null
-      },
-      dialogVisible: false,
-      imageUrl: null,
       uploadUrl: "",
-      myHeader: "",
-      setEntity: {}
+      header: {},
+      rules: {
+        siteUrl: [
+          {
+            pattern: /^(((ht|f)tps?):\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/,
+            message: "请输入正确的网站网址",
+            trigger: "change"
+          }
+        ],
+        sitePhone: [
+          {
+            pattern: /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-7|9])|(?:5[0-3|5-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[1|8|9]))\d{8}$/,
+            message: "请输入正确的手机号码",
+            trigger: "change"
+          }
+        ],
+        siteQQ: [
+          {
+            pattern: /^[1-9][0-9]{4,10}$/,
+            message: "请输入正确的qq",
+            trigger: "change"
+          }
+        ],
+        siteEmail: [
+          {
+            pattern: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+            message: "请输入正确的邮箱",
+            trigger: "change"
+          }
+        ]
+      },
+      setEntity: {
+        siteName: "",
+        siteUrl: "",
+        sitePhone: "",
+        siteQQ: "",
+        siteKeyWord: "",
+        siteEmail: "",
+        siteBah: "",
+        siteAddress: "",
+        siteBgColor: "",
+        siteBgColor2: "",
+        siteBgColor3: "",
+        siteBgColor4: "",
+        siteTitle: "",
+        siteInfo: "",
+        siteLogo: "",
+        sitebLogo: "",
+        sitemLogo: "",
+        siteHeadImg: ""
+      },
+      showViewer: false,
+      dialogImageUrl: ""
     };
   },
-  watch: {},
-  computed: {},
+  created() {
+    this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
+    this.header = { tk: util.localStorageGet(TOKEN) };
+  },
   methods: {
+    back() {
+      this.$router.push({ path: "/sys/companyList" });
+    },
     saveSiteInfo() {
       let params = this.setEntity;
-      params.companyId = this.queryData.companyId;
+      params.companyid = this.$route.query.companyId;
       this.$api
         .post({
           url: "/company/saveSiteInfo",
           data: params,
-          token: false,
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
@@ -249,39 +274,30 @@ export default {
           console.log(e);
         });
     },
-    back() {
-      this.$router.push({ path: "/sys/companyList" });
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
+      if (!isJPG) {
+        this.$message.error("上传头像图片只能是 JPG或者PNG 格式!");
+      }
+      return isJPG;
     },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
+    resultImgNane(ImgName) {
+      return function(res, file) {
+        if (res.code == 200) {
+          this.setEntity[ImgName] = res.data.url;
+        }
+      }.bind(this);
     },
-    handleAvatarSuccess(res, file) {
-      console.log(this.uploadUrl);
-      console.log(res, file, "handleAvatarSuccess");
-      this.setEntity.siteLogo = URL.createObjectURL(file.raw);
+    preview(file) {
+      if (file.response.code == 200) {
+        this.dialogImageUrl = file.response.data.url;
+        this.showViewer = true;
+      }
     },
-    handleSuccess(res, file) {
-      console.log(res, file, "handleSuccess");
-      this.setEntity.sitebLogo = URL.createObjectURL(file.raw);
-    },
-    handleSuccess2(res, file) {
-      console.log(res, file, "handleSuccess2");
-      this.setEntity.sitemLogo = URL.createObjectURL(file.raw);
-    },
-    handleAvatarSuccess3(res, file) {
-      console.log(res, file, "handleAvatarSuccess3");
-      this.setEntity.siteHeadImg = URL.createObjectURL(file.raw);
-    },
-    handleAvatarSuccess4(res, file) {
-      console.log(res, file, "handleAvatarSuccess4");
-      this.setEntity.loginBackground = URL.createObjectURL(file.raw);
-      console.log(this.setEntity.loginBackground);
+    exceed() {
+      this.$message.error("超出上传上限");
     }
-  },
-  created() {
-    this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
-    this.myHeader = { tk: util.localStorageGet(TOKEN) };
-  },
-  mounted() {}
+  }
 };
 </script>
+

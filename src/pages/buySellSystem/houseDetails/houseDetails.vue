@@ -89,7 +89,7 @@ export default {
     };
   },
   computed: {
-    nest() {
+    nest () {
       return util.localStorageGet("nest");
     }
   },
@@ -115,12 +115,13 @@ export default {
         loadingMessage: "努力加载中~"
       },
       lastParams: {
-        paramsObj: {
-          getEditUrl: "/agent_house/getEditDetails/",
-          buttonText: "保存"
-        },
         id: 0,
         method: "edit",
+        paramsObj: {
+          getEditUrl: "/agent_house/getEditDetails/",
+          buttonText: "保存",
+          editUrl: "/agent_house/editAgentHouse"
+        },
       }
     };
   },
