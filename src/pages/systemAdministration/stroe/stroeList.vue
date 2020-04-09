@@ -1,81 +1,70 @@
 <style lang="less" scoped>
 .query-cell {
+  padding: 15px 0;
   display: flex;
-}
-.elTree {
-  width: 200px;
-  margin-right: 20px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-  padding: 15px 15px 15px;
-  border-radius: 10px;
-
-  /deep/ .el-input {
-    margin: 10px 0 10px;
+  align-items: center;
+  .query-right {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+    /deep/.el-input {
+      width: auto;
+    }
   }
-
-  float: left;
+}
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
 
 
 <template>
-  <div>
-    <list-page
-      :parentData="$data"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
+  <div class="page-content">
+    <list-page :parentData="$data"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
         <div class="query-cell">
-          <el-input placeholder="门店名/部门/小组" v-model="queryData.keyWord" clearable>
-            <template slot="prepend">关键字</template>
-          </el-input>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryStroeByParams"
-          >查询</el-button>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="toAddStroePage"
-            v-if="showList"
-          >添加</el-button>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryStroeDatas(1)"
-          >实体店面</el-button>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryStroeDeptDatas(1)"
-          >行政小组</el-button>
+          <el-button type="primary"
+                     size="mini"
+                     @click="toAddStroePage"
+                     v-if="showList">添加</el-button>
+          <el-button type="primary"
+                     size="mini"
+                     @click="queryStroeDatas(1)">实体店面</el-button>
+          <el-button type="primary"
+                     size="mini"
+                     @click="queryStroeDeptDatas(1)">行政小组</el-button>
+          <div class="query-right">
+            <el-input placeholder="门店名/部门/小组"
+                      size="small"
+                      v-model="queryData.keyWord"
+                      clearable>
+            </el-input>
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryStroeByParams">查询</el-button>
+          </div>
         </div>
       </template>
-      <template v-slot:tableColumn="cell" id="cell">
+      <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column
-            :prop="item.prop"
-            :label="item.label"
-            :width="item.width"
-            :key="item.prop"
-          ></el-table-column>
+          <el-table-column :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :key="item.prop"></el-table-column>
         </template>
-        <el-table-column prop="operation" label="操作" fixed="right" key="operation">
+        <el-table-column label="操作"
+                         fixed="right">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
-              <el-button
-                type="primary"
-                size="mini"
-                @click="distributeEvent(item.methosName,scope.row.id)"
-                v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                :key="index"
-              >{{item.name}}</el-button>
+              <el-button type="primary"
+                         size="mini"
+                         @click="distributeEvent(item.methosName,scope.row.id)"
+                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                         :key="index">{{item.name}}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -97,6 +86,7 @@ export default {
 
   data() {
     return {
+      sidebarFlag: false,
       showList: true,
       loading: false, //控制表格加载动画提示
       queryData: {

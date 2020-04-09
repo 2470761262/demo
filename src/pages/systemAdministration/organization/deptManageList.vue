@@ -103,11 +103,11 @@
           </el-select>
           <div class="query-right">
             <el-input placeholder="部门名称"
+                      size="small"
                       v-model="queryData.DeptName"
                       clearable>
             </el-input>
             <el-button type="primary"
-                       style="margin-left:10px"
                        size="mini"
                        @click="queryDeptByParams">查询</el-button>
           </div>

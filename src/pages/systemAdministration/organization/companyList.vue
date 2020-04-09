@@ -103,11 +103,11 @@
                      round></el-button>
           <div class="query-right">
             <el-input placeholder="公司名称"
+                      size="small"
                       v-model="queryData.CompanyName"
                       clearable>
             </el-input>
             <el-button type="primary"
-                       style="margin-left:10px"
                        size="mini"
                        @click="queryCompanyByParams">查询</el-button>
           </div>
