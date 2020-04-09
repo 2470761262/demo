@@ -22,74 +22,74 @@
   <div>
     <template>
       <div class="elTree">
-        <el-tree ref="tree2"
-                 :data="treeData"
-                 :default-expanded-keys="[1]"
-                 node-key="nodeId"
-                 show-checkbox
-                 check-strictly
-                 :props="defaultProps"
-                 @check-change="checkChange"
-                 @check="treeCheck"
-                 :highlight-current="true"
-                 :filter-node-method="filterNode"></el-tree>
+        <el-tree
+          ref="tree2"
+          :data="treeData"
+          :default-expanded-keys="[1]"
+          node-key="nodeId"
+          show-checkbox
+          check-strictly
+          :props="defaultProps"
+          @check-change="checkChange"
+          @check="treeCheck"
+          :highlight-current="true"
+          :filter-node-method="filterNode"
+        ></el-tree>
       </div>
     </template>
-    <list-page :parentData="$data"
-               highlight-current-row
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange"
-               @current-change="handleChange">
+    <list-page
+      :parentData="$data"
+      highlight-current-row
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+      @current-change="handleChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
-          <el-input placeholder="公司名称"
-                    v-model="queryData.CompanyName"
-                    clearable>
+          <el-input placeholder="公司名称" v-model="queryData.CompanyName" clearable>
             <template slot="prepend">公司名</template>
           </el-input>
-          <el-button type="primary"
-                     style="margin-left:10px"
-                     size="mini"
-                     @click="queryCompanyByParams">查询</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddCompanyPage(0)">添加同级公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddCompanyPage(1)">添加子公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddDeptPage">添加子级部门</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="queryCompanyByIsLocked(0)">查询锁定公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button>
-          <el-button icon="el-icon-s-platform"
-                     size="mini"
-                     @click="setUp()"
-                     title="设置网站"
-                     round></el-button>
+          <el-select v-model="selectTag" placeholder="全部" @change="SelectTag">
+            <el-option
+              v-for="item in SelectOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <el-button
+            type="primary"
+            style="margin-left:10px"
+            size="mini"
+            @click="queryCompanyByParams"
+          >查询</el-button>
+          <el-button type="primary" size="mini" @click="toAddCompanyPage(0)">添加同级公司</el-button>
+          <el-button type="primary" size="mini" @click="toAddCompanyPage(1)">添加子公司</el-button>
+          <el-button type="primary" size="mini" @click="toAddDeptPage">添加子级部门</el-button>
+          <!-- <el-button type="primary" size="mini" @click="queryCompanyByIsLocked(0)">查询锁定公司</el-button>
+          <el-button type="primary" size="mini" @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button>-->
+          <el-button icon="el-icon-s-platform" size="mini" @click="setUp()" title="设置网站" round></el-button>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column prop="operation"
-                         label="操作"
-                         fixed="right">
+        <el-table-column prop="operation" label="操作" fixed="right">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
-              <el-button type="primary"
-                         size="mini"
-                         @click="distributeEvent(item.methosName,scope.row.id)"
-                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                         :key="index">{{item.name}}</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="distributeEvent(item.methosName,scope.row.id)"
+                v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                :key="index"
+              >{{item.name}}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -97,8 +97,6 @@
     </list-page>
   </div>
 </template>
-
-
 
 <script>
 import listPage from "@/components/listPage";
@@ -146,35 +144,53 @@ export default {
         { prop: "tel", label: "电话" },
         { prop: "addDate", label: "添加时间" }
       ],
-      tableData: []
+      tableData: [],
+      selectTag: "",
+      SelectOptions: [
+        {
+          value: "",
+          label: "全部"
+        },
+        {
+          value: "0",
+          label: "锁定"
+        },
+        {
+          value: "1",
+          label: "正常"
+        }
+      ]
     };
   },
   mounted() {
-    //读取公司，部门数据
-    this.$api
-      .post({
-        url: "/company/companyTree",
-        token: false
-      })
-      .then(e => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          this.treeData = result.data;
-        } else {
-          console.log("载入结果" + +result.message);
-          alert(result.message);
-        }
-      })
-      .catch(e => {
-        console.log("读取失败");
-        console.log(e);
-      });
+    this.getTree();
     this.queryCompanyDatas(1);
   },
   methods: {
+    getTree() {
+      //读取公司，部门数据
+      this.$api
+        .post({
+          url: "/company/companyTree",
+          token: false
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.treeData = result.data;
+          } else {
+            console.log("载入结果" + +result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("读取失败");
+          console.log(e);
+        });
+    },
     queryCompanyByParams() {
       this.queryData.isLocked = null;
       this.queryCompanyDatas(1);
@@ -187,6 +203,9 @@ export default {
       }
       if (this.queryData.isLocked != null) {
         params.isLocked = this.queryData.isLocked;
+      }
+      if (this.selectTag != null && this.selectTag != "") {
+        params.isLocked = this.selectTag;
       }
       this.$api
         .post({
@@ -225,10 +244,11 @@ export default {
         });
       } else {
         if (this.queryData.type != 1) {
+          console.dir(this.company.parentId, this.company.id);
           if (saveType == 0) {
             this.$router.push({
               path: "/sys/addCompanyManage",
-              query: { ParentId: this.company.ParentId }
+              query: { ParentId: this.company.parentId }
             });
           } else if (saveType == 1) {
             this.$router.push({
@@ -285,13 +305,23 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            this.$alert("", "删除成功", {
-              dangerouslyUseHTMLString: false
+            // this.$alert("", "删除成功", {
+            //   dangerouslyUseHTMLString: false
+            // });
+            this.$message({
+              type: "info",
+              message: "删除成功"
             });
-            this.$router.push({ path: "/sys/companyList" });
+            //this.$router.push({ path: "/sys/companyList" });
+            this.getTree();
+            this.queryCompanyDatas(1);
           } else {
-            this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
-              dangerouslyUseHTMLString: false
+            // this.$alert("", "该公司有下级公司或部门,操作失败!!!", {
+            //   dangerouslyUseHTMLString: false
+            // });
+            this.$message({
+              type: "error",
+              message: "该公司有下级公司或部门,操作失败!!!"
             });
           }
         })
@@ -357,7 +387,7 @@ export default {
       this.queryCompanyDatas(val);
     },
     checkChange(e, data, childData) {
-      console.log(e, "checkChange");
+      //console.log(e, "checkChange");
     },
     treeCheck(e, data) {
       this.$refs.tree2.setCheckedKeys([e.nodeId]);
@@ -369,11 +399,11 @@ export default {
             token: false
           })
           .then(e => {
-            console.log(e.data);
+            //console.log(e.data);
             let result = e.data;
             if (result.code == 200) {
-              console.log(result.message);
-              console.log(result.data);
+              //   console.log(result.message);
+              //   console.log(result.data);
               this.company = result.data;
             } else {
               console.log("查询公司详情结果：" + result.message);
@@ -394,8 +424,8 @@ export default {
             console.log(e.data);
             let result = e.data;
             if (result.code == 200) {
-              console.log(result.message);
-              console.log(result.data);
+              //   console.log(result.message);
+              //   console.log(result.data);
               this.department = result.data;
             } else {
               console.log("查询部门详情结果：" + result.message);
@@ -407,6 +437,7 @@ export default {
             console.log(e);
           });
       }
+      console.log(this.company);
     },
     //树输入筛选
     filterNode(value, data) {
@@ -432,6 +463,9 @@ export default {
           dangerouslyUseHTMLString: false
         });
       }
+    },
+    SelectTag() {
+      this.queryCompanyDatas(1);
     }
   }
 };

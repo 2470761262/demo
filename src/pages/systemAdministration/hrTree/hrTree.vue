@@ -725,8 +725,8 @@ export default {
     treeCheck(e, data) {},
     linkJump(jumpName, depId, coId) {
       this.$router.push({
-        name: jumpName,
-        params: {
+        path: "/sys/" + jumpName,
+        query: {
           deptParentID: depId,
           ParentId: coId,
           back: "hrTree",
