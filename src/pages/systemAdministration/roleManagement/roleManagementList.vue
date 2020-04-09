@@ -1,56 +1,66 @@
 <style lang="less" scoped>
 .query-cell {
+  padding: 15px 0;
   display: flex;
-  margin-bottom: 10px;
+  align-items: center;
+  .query-right {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+    /deep/.el-input {
+      width: auto;
+    }
+  }
+}
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
 <template>
-  <div>
-    <template>
-      <list-page
-        :parentData="$data"
-        @handleSizeChange="handleSizeChange"
-        @handleCurrentChange="handleCurrentChange"
-      >
-        <template v-slot:top>
-          <div class="query-cell">
-            <el-input placeholder="岗位名称" v-model="queryData.RoleName" clearable>
-              <template slot="prepend">岗位名</template>
+  <div class="page-content">
+    <list-page :parentData="$data"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
+      <template v-slot:top>
+        <div class="query-cell">
+          <el-button type="primary"
+                     size="mini"
+                     @click="toAddRolePage">添加岗位</el-button>
+          <div class="query-right">
+            <el-input placeholder="岗位名称"
+                      v-model="queryData.RoleName"
+                      clearable>
             </el-input>
-            <el-button
-              type="primary"
-              style="margin-left:10px"
-              size="mini"
-              @click="queryRoleByParams"
-            >查询</el-button>
-            <el-button type="primary" size="mini" @click="toAddRolePage">添加岗位</el-button>
+            <el-button type="primary"
+                       style="margin-left:10px"
+                       size="mini"
+                       @click="queryRoleByParams">查询</el-button>
+
           </div>
+        </div>
+      </template>
+      <template v-slot:tableColumn="cell">
+        <template v-for="item in cell.tableData">
+          <el-table-column :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :key="item.prop"></el-table-column>
         </template>
-        <template v-slot:tableColumn="cell">
-          <template v-for="item in cell.tableData">
-            <el-table-column
-              :prop="item.prop"
-              :label="item.label"
-              :width="item.width"
-              :key="item.prop"
-            ></el-table-column>
+        <el-table-column label="操作">
+          <template v-slot="scope">
+            <div v-if="scope.row.operation!=''">
+              <el-button type="primary"
+                         size="mini"
+                         @click="distributeEvent(item.methosName,scope.row)"
+                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                         :key="index">{{item.name}}</el-button>
+            </div>
           </template>
-          <el-table-column prop="operation" label="操作" fixed="right" key="operation">
-            <template v-slot="scope">
-              <div v-if="scope.row.operation!=''">
-                <el-button
-                  type="primary"
-                  size="mini"
-                  @click="distributeEvent(item.methosName,scope.row)"
-                  v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                  :key="index"
-                >{{item.name}}</el-button>
-              </div>
-            </template>
-          </el-table-column>
-        </template>
-      </list-page>
-    </template>
+        </el-table-column>
+      </template>
+    </list-page>
   </div>
 </template>
 
@@ -65,6 +75,7 @@ export default {
   },
   data() {
     return {
+      sidebarFlag: false,
       loading: false, //控制表格加载动画提示
       queryData: {
         RoleName: ""
