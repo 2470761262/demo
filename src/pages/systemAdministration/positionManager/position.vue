@@ -1,62 +1,92 @@
 <style lang="less" scoped>
-.formItem {
-  margin: 10px;
-  display: inline-block;
+.query-cell {
+  padding: 15px 0;
+  display: flex;
+  align-items: center;
+  .query-right {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+    /deep/.el-input {
+      width: auto;
+    }
+  }
+}
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
 <template>
-  <div>
-    <list-page
-      v-show="!showForm"
-      :parentData="$data"
-      @queryTabData="queryTabData"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
+  <div class="page-content">
+    <list-page v-show="!showForm"
+               :parentData="$data"
+               @queryTabData="queryTabData"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
-        <div class="page-form-inline budingMarinSet" style="margin-bottom: 10px;">
-          <el-input style="width: 400px;" placeholder="角色名称搜索" v-model="queryData.keyword">
-            <template slot="prepend">角色名称</template>
-          </el-input>
-          <el-button type="primary" style="margin-left:10px;" @click="queryAddFloorListParams">查询</el-button>
-          <el-button type="primary" style="margin-left:10px;" @click="addPosition">新增</el-button>
+        <div class="query-cell">
+          <el-button type="primary"
+                     size="mini"
+                     @click="addPosition">新增</el-button>
+          <div class="query-right">
+            <el-input placeholder="角色名称搜索"
+                      size="small"
+                      v-model="queryData.keyword">
+            </el-input>
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryAddFloorListParams">查询</el-button>
+          </div>
         </div>
       </template>
-
       <template #tableColumn="cell">
         <template v-for="(item) in cell.tableData">
-          <el-table-column
-            :prop="item.prop"
-            :label="item.label"
-            :width="item.width"
-            :formatter="item.formatClientType"
-            :key="item.prop"
-          ></el-table-column>
+          <el-table-column :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :formatter="item.formatClientType"
+                           :key="item.prop"></el-table-column>
         </template>
 
-        <el-table-column label="操作" fixed="right" key="operation" width="420px">
+        <el-table-column label="操作"
+                         fixed="right"
+                         width="420px">
           <template v-slot="scope">
-            <el-button type="primary" size="mini" @click="setEmployeeAuthority(scope.row)">个人权限设置</el-button>
-            <el-button type="warning" size="mini" @click="setPosition(scope.row)">权限设置</el-button>
-            <el-button type="primary" size="mini" @click="updatePosition(scope.row)">修改</el-button>
-            <el-button type="danger" size="mini" @click="delPosition(scope.row)">删除</el-button>
+            <el-button type="primary"
+                       size="mini"
+                       @click="setEmployeeAuthority(scope.row)">个人权限设置</el-button>
+            <el-button type="warning"
+                       size="mini"
+                       @click="setPosition(scope.row)">权限设置</el-button>
+            <el-button type="primary"
+                       size="mini"
+                       @click="updatePosition(scope.row)">修改</el-button>
+            <el-button type="danger"
+                       size="mini"
+                       @click="delPosition(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </template>
     </list-page>
     <template>
-      <el-card class="box-card" v-show="showForm">
-        <div slot="header" class="clearfix">
+      <el-card class="box-card"
+               v-show="showForm">
+        <div slot="header"
+             class="clearfix">
           <span>人员管理</span>
         </div>
         <div class="text item">
           <div class="formItem">
-            <el-input v-model="positionObj.positionName" placeholder="角色名称">
+            <el-input v-model="positionObj.positionName"
+                      placeholder="角色名称">
               <template slot="prepend">角色名称:</template>
             </el-input>
           </div>
           <div class="formItem">
-            <el-input v-model="positionObj.positionDesc" placeholder="角色描述">
+            <el-input v-model="positionObj.positionDesc"
+                      placeholder="角色描述">
               <template slot="prepend">角色描述:</template>
             </el-input>
           </div>
@@ -75,9 +105,12 @@
           <!--          </div>-->
         </div>
         <div class="text item">
-          <div class="formItem" style="float: right;margin-right: 230px;">
-            <el-button type="primary" @click="savePositionObj">保存</el-button>
-            <el-button type="primary" @click="cancel">取消</el-button>
+          <div class="formItem"
+               style="float: right;margin-right: 230px;">
+            <el-button type="primary"
+                       @click="savePositionObj">保存</el-button>
+            <el-button type="primary"
+                       @click="cancel">取消</el-button>
           </div>
         </div>
       </el-card>
@@ -95,6 +128,7 @@ export default {
   },
   data() {
     return {
+      sidebarFlag: false,
       role: false,
       loading: false,
       showForm: false,
