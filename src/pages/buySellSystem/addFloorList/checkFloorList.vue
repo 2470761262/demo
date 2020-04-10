@@ -109,7 +109,7 @@
 
       <el-button-group>
         <el-button type="primary"
-                   @click="apply()">调交审核</el-button>
+                   @click="apply()">提交审核</el-button>
       </el-button-group>
     </el-form>
     <el-dialog :visible.sync="dialogVisible">
