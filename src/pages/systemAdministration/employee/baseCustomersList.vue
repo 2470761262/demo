@@ -1,49 +1,67 @@
 <style lang="less" scoped>
 .query-cell {
+  padding: 15px 0;
   display: flex;
-  /deep/.el-input-group {
-    width: auto;
+  align-items: center;
+  .query-right {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+    /deep/.el-input {
+      width: auto;
+    }
   }
+}
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
 <template>
-  <list-page
-    :parentData="$data"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
-    <template v-slot:top>
-      <div class="query-cell">
-        <el-input placeholder v-model="queryData.keyWord" clearable>
-          <template slot="prepend">姓名</template>
-        </el-input>
-        <el-button
-          type="primary"
-          style="margin-left:10px"
-          size="mini"
-          @click="queryBaseCustomersByParams"
-        >查询</el-button>
-      </div>
-    </template>
-    <template v-slot:tableColumn="cell">
-      <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
-      </template>
-      <el-table-column prop="operation" label="操作" fixed="right" key="operation">
-        <template v-slot="scope">
-          <div v-if="scope.row.operation!=''">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="distributeEvent(item.methosName,scope.row.id)"
-              v-for="(item,index) in getOpeBtns(scope.row.operation)"
-              :key="index"
-            >{{item.name}}</el-button>
+  <div class="page-content">
+    <list-page :parentData="$data"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
+      <template v-slot:top>
+        <div class="query-cell">
+          <div class="query-right">
+            <el-input placeholder
+                      size="small"
+                      v-model="queryData.keyWord"
+                      clearable>
+            </el-input>
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryBaseCustomersByParams">查询</el-button>
           </div>
+        </div>
+      </template>
+      <template v-slot:tableColumn="cell">
+        <template v-for="item in cell.tableData">
+          <el-table-column :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :key="item.prop"></el-table-column>
         </template>
-      </el-table-column>
-    </template>
-  </list-page>
+        <el-table-column prop="operation"
+                         label="操作"
+                         fixed="right"
+                         key="operation">
+          <template v-slot="scope">
+            <div v-if="scope.row.operation!=''">
+              <el-button type="primary"
+                         size="mini"
+                         @click="distributeEvent(item.methosName,scope.row.id)"
+                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                         :key="index">{{item.name}}</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </template>
+    </list-page>
+  </div>
+
 </template>
 
 <script>

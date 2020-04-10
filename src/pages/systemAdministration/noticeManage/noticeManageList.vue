@@ -1,47 +1,65 @@
 <style lang="less" scoped>
 .query-cell {
+  padding: 15px 0;
   display: flex;
+  align-items: center;
+  .query-right {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+    /deep/.el-input {
+      width: auto;
+    }
+  }
+}
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 </style>
 <template>
-  <list-page
-    :parentData="$data"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
-    <template v-slot:top>
-      <div class="query-cell">
-        <el-input placeholder="标题名称" v-model="queryData.newsTitle" clearable>
-          <template slot="prepend">标题</template>
-        </el-input>
-        <el-button
-          type="primary"
-          style="margin-left:10px"
-          size="mini"
-          @click="queryNoticeByParams"
-        >查询</el-button>
-        <el-button type="primary" size="mini" @click="toAddNoticePage">添加公告</el-button>
-      </div>
-    </template>
-    <template v-slot:tableColumn="cell">
-      <template v-for="item in cell.tableData">
-        <el-table-column :prop="item.prop" :label="item.label" :width="item.width" :key="item.prop"></el-table-column>
-      </template>
-      <el-table-column prop="operation" label="操作" fixed="right" key="operation">
-        <template v-slot="scope">
-          <div v-if="scope.row.operation!=''">
-            <el-button
-              type="primary"
-              size="mini"
-              @click="distributeEvent(item.methosName,scope.row.id)"
-              v-for="(item,index) in getOpeBtns(scope.row.operation)"
-              :key="index"
-            >{{item.name}}</el-button>
+  <div class="page-content">
+    <list-page :parentData="$data"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
+      <template v-slot:top>
+        <div class="query-cell">
+          <el-button type="primary"
+                     size="mini"
+                     @click="toAddNoticePage">添加公告</el-button>
+          <div class="query-right ">
+            <el-input placeholder="标题名称"
+                      size="small"
+                      v-model="queryData.newsTitle"
+                      clearable>
+            </el-input>
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryNoticeByParams">查询</el-button>
           </div>
+        </div>
+      </template>
+      <template v-slot:tableColumn="cell">
+        <template v-for="item in cell.tableData">
+          <el-table-column :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :key="item.prop"></el-table-column>
         </template>
-      </el-table-column>
-    </template>
-  </list-page>
+        <el-table-column label="操作"
+                         fixed="right">
+          <template v-slot="scope">
+            <el-button type="primary"
+                       size="mini"
+                       @click="distributeEvent(item.methosName,scope.row.id)"
+                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                       :key="index">{{item.name}}</el-button>
+          </template>
+        </el-table-column>
+      </template>
+    </list-page>
+  </div>
 </template>
 <script>
 import listPage from "@/components/listPage";
@@ -53,6 +71,7 @@ export default {
   },
   data() {
     return {
+      sidebarFlag: false,
       loading: false, //控制表格加载动画提示
       queryData: {
         newsTitle: ""

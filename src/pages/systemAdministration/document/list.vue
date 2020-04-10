@@ -1,47 +1,70 @@
+<style lang="less" scoped>
+.query-cell {
+  padding: 15px 0;
+  display: flex;
+  align-items: center;
+  .query-right {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+    /deep/.el-input {
+      width: auto;
+    }
+  }
+}
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+</style>
 <template>
-  <list-page
-    :parentData="$data"
-    @handleSizeChange="sizeChange"
-    @handleCurrentChange="currentChange"
-  >
-    <template v-slot:top>
-      <div class="query-cell">
-        <el-input placeholder="关键字" size="small" v-model="queryData.keyword" clearable>
-          <template slot="prepend">关键字</template>
-        </el-input>
-        <el-button type="primary" style="margin-left:10px" size="mini" @click="queryByParams">查询</el-button>
-        <el-button type="primary" style="margin-left:10px" size="mini" @click="addDocument">添加</el-button>
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-          <el-tab-pane label="文档管理" name="first"></el-tab-pane>
-          <el-tab-pane label="规则管理" name="second"></el-tab-pane>
-        </el-tabs>
-      </div>
-    </template>
-    <template v-slot:tableColumn="cell">
-      <template v-for="item in cell.tableData">
-        <el-table-column
-          v-if="!item.show"
-          :key="item.prop"
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-          :formatter="downStr"
-        ></el-table-column>
-      </template>
-      <el-table-column label="操作">
-        <template v-slot="scope">
-          <div>
-            <el-button
-              size="mini"
-              @click="distributeEvent(item.methosName,scope.row.id)"
-              v-for="(item,index) in getOpeBtns(scope.row.operation)"
-              :key="index"
-            >{{item.name}}</el-button>
+  <div class="page-content">
+    <list-page :parentData="$data"
+               @handleSizeChange="sizeChange"
+               @handleCurrentChange="currentChange">
+      <template v-slot:top>
+        <div class="query-cell">
+          <el-button type="primary"
+                     size="mini"
+                     @click="addDocument">添加</el-button>
+          <el-button type="primary"
+                     size="mini"
+                     @click="handleClick">规则管理</el-button>
+          <div class="query-right">
+            <el-input placeholder="关键字"
+                      size="small"
+                      v-model="queryData.keyword"
+                      clearable>
+            </el-input>
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryByParams">查询</el-button>
           </div>
+        </div>
+      </template>
+      <template v-slot:tableColumn="cell">
+        <template v-for="item in cell.tableData">
+          <el-table-column v-if="!item.show"
+                           :key="item.prop"
+                           :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :formatter="downStr"></el-table-column>
         </template>
-      </el-table-column>
-    </template>
-  </list-page>
+        <el-table-column label="操作">
+          <template v-slot="scope">
+            <div>
+              <el-button size="mini"
+                         @click="distributeEvent(item.methosName,scope.row.id)"
+                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                         :key="index">{{item.name}}</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </template>
+    </list-page>
+  </div>
 </template>
 <script>
 import listPage from "@/components/listPage";
@@ -53,6 +76,7 @@ export default {
   },
   data() {
     return {
+      sidebarFlag: false,
       loading: false,
       queryData: {
         keyword: ""
@@ -202,9 +226,7 @@ export default {
         });
     },
     handleClick(tab, event) {
-      if (this.activeName == "second") {
-        this.$router.push({ path: "/sys/docRules/list" });
-      }
+      this.$router.push({ path: "/sys/docRules/list" });
     }
   }
 };

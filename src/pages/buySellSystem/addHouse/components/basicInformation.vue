@@ -368,7 +368,7 @@
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">户型结构</div>
-        <div class="cell-tabs-item-data">{{formData.roomType}}</div>
+        <div class="cell-tabs-item-data">{{formData.roomType | mapFilter('ROOMTYPE')}}</div>
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">房屋结构</div>
@@ -420,6 +420,11 @@ export default {
       default: function () {
         return {}
       }
+    }
+  },
+  filters: {
+    mapFilter (value, ListName, resultValue = null) {
+      return util.countMapFilter(value, ListName, resultValue);
     }
   },
   directives: {
@@ -840,6 +845,7 @@ export default {
           this.formData.area = data.outArea;
           this.formData.face = data.orientation;
           this.formData.room = data.rooms || 0;
+          this.formData.roomType = data.roomType;
         }
       });
     },
@@ -935,7 +941,10 @@ export default {
         ...that.deffData
       };
       let method = "post";
-
+      let url = "/draft-house";
+      if (this.paramsObj.editUrl) {
+        url = this.paramsObj.editUrl;
+      }
       if (that.$store.state.addHouse.formData.id != "") {
         data.id = that.$store.state.addHouse.formData.id;
         method = "put";
@@ -945,7 +954,7 @@ export default {
         return true;
       }
       return this.$api[method]({
-        url: "/draft-house",
+        url: url,
         data: data,
         headers: { "Content-Type": "application/json;charset=UTF-8" }
       })
@@ -1001,7 +1010,8 @@ export default {
         loading: false
       },
       loading: false,
-      deffData: {}
+      deffData: {},
+      roomTypeStr: ""
     };
   }
 };

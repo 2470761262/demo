@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+@import url("../../../assets/publicLess/pageListQuery.less");
 .div-line {
   display: flex;
   flex-wrap: wrap;
@@ -33,267 +34,236 @@
 </style>
 <template>
   <div class="page-row-flex">
-    <list-page
-      @sort-change="sortMethod"
-      :parentData="$data"
-      @queryTabData="queryTabData"
-      @handleClick="handleClick"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
+    <list-page @sort-change="sortMethod"
+               :parentData="$data"
+               @queryTabData="queryTabData"
+               @handleClick="handleClick"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange"
+               :dblclick="true"
+               @cellDblClick="toHouseDetail">
       <template v-slot:top>
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
-            <el-select
-              v-model="data.comId"
-              @focus="remoteInput"
-              @change="queryCBId"
-              filterable
-              remote
-              clearable
-              placeholder="楼盘名称"
-              :remote-method="remoteMethod"
-              :loading="loading"
-            >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="data.comId"
+                       @focus="remoteInput"
+                       @change="queryCBId"
+                       filterable
+                       remote
+                       clearable
+                       placeholder="楼盘名称"
+                       :remote-method="remoteMethod"
+                       :loading="loading">
+              <el-option v-for="item in options"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
-            <el-select
-              v-model="data.cbId"
-              filterable
-              clearable
-              placeholder="楼栋"
-              @change="queryRoomNo"
-            >
-              <el-option
-                v-for="item in cbIdList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="data.cbId"
+                       filterable
+                       clearable
+                       placeholder="楼栋"
+                       @change="queryRoomNo">
+              <el-option v-for="item in cbIdList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
-            <el-select
-              v-model="data.roomNo"
-              filterable
-              @change="queryVerifyHouseByParams"
-              placeholder="房间号"
-            >
-              <el-option
-                v-for="item in roomNoList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="data.roomNo"
+                       filterable
+                       @change="queryVerifyHouseByParams"
+                       placeholder="房间号">
+              <el-option v-for="item in roomNoList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
           </div>
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">业主</h3>
-            <el-input
-              placeholder="姓名"
-              v-model="data.customName"
-              class="set-input120"
-              @change="queryVerifyHouseByParams"
-              clearable
-            />
+            <el-input placeholder="姓名"
+                      v-model="data.customName"
+                      class="set-input120"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">电话</h3>
-            <el-input
-              placeholder="业主电话"
-              v-model="data.tel"
-              class="set-input200"
-              @change="queryVerifyHouseByParams"
-              clearable
-            />
+            <el-input placeholder="业主电话"
+                      v-model="data.tel"
+                      class="set-input200"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">价格</h3>
-            <el-input
-              placeholder="最小值"
-              v-model="data.minPrice"
-              class="set-input90"
-              @change="queryVerifyHouseByParams"
-              clearable
-            />
+            <el-input placeholder="最小值"
+                      v-model="data.minPrice"
+                      class="set-input90"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
             <span class="cut-off-rule"></span>
-            <el-input
-              placeholder="最大值"
-              v-model="data.maxPrice"
-              class="set-input90"
-              @change="queryVerifyHouseByParams"
-              clearable
-            />
+            <el-input placeholder="最大值"
+                      v-model="data.maxPrice"
+                      class="set-input90"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
             <span class="query-cell-suffix">万</span>
           </div>
         </div>
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">面积</h3>
-            <el-input
-              placeholder="最小值"
-              v-model="data.minInArea"
-              class="set-input90"
-              @change="queryVerifyHouseByParams"
-              clearable
-            />
+            <el-input placeholder="最小值"
+                      v-model="data.minInArea"
+                      class="set-input90"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
             <span class="cut-off-rule"></span>
-            <el-input
-              placeholder="最大值"
-              v-model="data.maxInArea"
-              class="set-input90"
-              @change="queryVerifyHouseByParams"
-              clearable
-            />
+            <el-input placeholder="最大值"
+                      v-model="data.maxInArea"
+                      class="set-input90"
+                      @change="queryVerifyHouseByParams"
+                      clearable />
             <span class="query-cell-suffix">平方</span>
           </div>
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">录入时间</h3>
-            <el-date-picker
-              v-model="data.timeSelect"
-              type="daterange"
-              class="set-data-pricker"
-              @change="queryVerifyHouseByParams"
-              range-separator="至"
-              :default-time="['00:00:00', '23:59:59']"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            ></el-date-picker>
+            <el-date-picker v-model="data.timeSelect"
+                            type="daterange"
+                            class="set-data-pricker"
+                            @change="queryVerifyHouseByParams"
+                            range-separator="至"
+                            :default-time="['00:00:00', '23:59:59']"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"></el-date-picker>
             <div class="query-content-cell cell-interval75">
               <h3 class="query-cell-title">验证状态</h3>
-              <el-select
-                v-model="data.checkStatusValue"
-                @change="queryVerifyHouseByParams"
-                clearable
-                class="set-select100"
-                placeholder="全部"
-              >
-                <el-option
-                  v-for="item in checkStatusList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+              <el-select v-model="data.checkStatusValue"
+                         @change="queryVerifyHouseByParams"
+                         clearable
+                         class="set-select100"
+                         placeholder="全部">
+                <el-option v-for="item in checkStatusList"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"></el-option>
               </el-select>
             </div>
             <div class="query-content-cell cell-interval25">
               <h3 class="query-cell-title">号码状态</h3>
-              <el-select
-                v-model="data.phoneStatusValue"
-                @change="queryVerifyHouseByParams"
-                clearable
-                class="set-select100"
-                placeholder="全部"
-              >
-                <el-option
-                  v-for="item in phoneStatusList"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
+              <el-select v-model="data.phoneStatusValue"
+                         @change="queryVerifyHouseByParams"
+                         clearable
+                         class="set-select100"
+                         placeholder="全部">
+                <el-option v-for="item in phoneStatusList"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"></el-option>
               </el-select>
             </div>
-            <span class="query-cell-suffix handlebut" @click="Remove">清除</span>
+            <span class="query-cell-suffix handlebut"
+                  @click="Remove">清除</span>
           </div>
           <div class="query-content-cell cell-interval25">
-            <el-button type="primary" size="mini" @click="queryVerifyHouseByParams">查询</el-button>
+            <el-button type="primary"
+                       size="mini"
+                       @click="queryVerifyHouseByParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/myVerifyList"></moreSelect>
+            <moreSelect @moreSelectChange="moreSelectChange"
+                        deptUrl="/myHouse/myVerifyList"></moreSelect>
           </div>
         </div>
       </template>
       <template #tableColumn>
-        <el-table-column
-          :width="item.width"
-          :formatter="item.formart"
-          :label="item.label"
-          show-overflow-tooltip
-          v-for="(item,index) in tableDataColumn"
-          :key="index"
-          :prop="item.prop"
-          :sort-orders="['ascending', 'descending']"
-          :sortable="item.order"
-        ></el-table-column>
-        <el-table-column label="操作" width="240" fixed="right">
+        <el-table-column :width="item.width"
+                         :formatter="item.formart"
+                         :label="item.label"
+                         show-overflow-tooltip
+                         v-for="(item,index) in tableDataColumn"
+                         :key="index"
+                         :prop="item.prop"
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order"></el-table-column>
+        <el-table-column label="操作"
+                         width="240"
+                         fixed="right">
           <template v-slot="scope">
             <div class="flex-cell-content">
-              <el-button
-                :type="item.buttonType"
-                size="mini"
-                @click="distributeEvent(item.methosName,scope.row)"
-                v-for="(item,index) in isForBut(scope.row.checkStatus)"
-                :key="index"
-              >{{item.name}}</el-button>
+              <el-button :type="item.buttonType"
+                         size="mini"
+                         @click="distributeEvent(item.methosName,scope.row)"
+                         v-for="(item,index) in isForBut(scope.row.checkStatus)"
+                         :key="index">{{item.name}}</el-button>
             </div>
           </template>
         </el-table-column>
       </template>
     </list-page>
-    <el-dialog
-      title="验真详情"
-      :visible.sync="showVeryfyDetail"
-      width="30%"
-      :before-close="()=> showVeryfyDetail = false"
-    >
+    <el-dialog title="验真详情"
+               :visible.sync="showVeryfyDetail"
+               width="30%"
+               :before-close="()=> showVeryfyDetail = false">
       <el-card class="box-card">
-        <div slot="header" class="clearfix">
+        <div slot="header"
+             class="clearfix">
           <span>步骤</span>
         </div>
-        <el-steps :active="stepNow" align-center :process-status="stepStatus">
-          <el-step
-            :title="item.title"
-            :description="item.description"
-            :key="item.index"
-            v-for="item in stepsListNow"
-          ></el-step>
+        <el-steps :active="stepNow"
+                  align-center
+                  :process-status="stepStatus">
+          <el-step :title="item.title"
+                   :description="item.description"
+                   :key="item.index"
+                   v-for="item in stepsListNow"></el-step>
         </el-steps>
       </el-card>
-      <el-card v-if="employeeDiff.show" class="box-card" style="line-height:30px">
-        <div slot="header" class="clearfix">
+      <el-card v-if="employeeDiff.show"
+               class="box-card"
+               style="line-height:30px">
+        <div slot="header"
+             class="clearfix">
           <span>店长异议</span>
         </div>
         <div>
           <div class="tag-group">
-            <el-tag
-              size="small"
-              type="danger"
-              v-for="item in employeeDiff.spanList"
-              :key="item.index"
-            >{{item}}</el-tag>
+            <el-tag size="small"
+                    type="danger"
+                    v-for="item in employeeDiff.spanList"
+                    :key="item.index">{{item}}</el-tag>
           </div>
           <div>{{employeeDiff.remark}}</div>
         </div>
       </el-card>
-      <el-card v-if="customerDiff.show" class="box-card" style="line-height:30px">
-        <div slot="header" class="clearfix">
+      <el-card v-if="customerDiff.show"
+               class="box-card"
+               style="line-height:30px">
+        <div slot="header"
+             class="clearfix">
           <span>客户异议</span>
         </div>
         <div>
           <div class="tag-group">
-            <el-tag
-              size="small"
-              type="danger"
-              v-for="item in customerDiff.spanList"
-              :key="item.index"
-            >{{item}}</el-tag>
+            <el-tag size="small"
+                    type="danger"
+                    v-for="item in customerDiff.spanList"
+                    :key="item.index">{{item}}</el-tag>
           </div>
           <div>{{customerDiff.remark}}</div>
         </div>
       </el-card>
-      <el-card class="box-card" style="line-height:30px">
-        <div slot="header" class="clearfix">
+      <el-card class="box-card"
+               style="line-height:30px">
+        <div slot="header"
+             class="clearfix">
           <span>房源详情</span>
         </div>
         <div>
           <span class="font-small-title">小区：</span>
-          <span
-            class="font-middle-title"
-          >{{nowRow.communityName+"-"+nowRow.buildingName+"-"+nowRow.roomNo}}</span>
+          <span class="font-middle-title">{{nowRow.communityName+"-"+nowRow.buildingName+"-"+nowRow.roomNo}}</span>
         </div>
         <div class="div-line">
           <div class="span-width">
@@ -327,18 +297,18 @@
         </div>
       </el-card>
       <el-card class="box-card">
-        <div slot="header" class="clearfix">
+        <div slot="header"
+             class="clearfix">
           <span>客户信息</span>
         </div>
         <div class="cus-box">
-          <img
-            width="55px"
-            height="55px"
-            :src="nowRow.headImg==null?'https://lsxjytestimgs.oss-cn-shenzhen.aliyuncs.com/FileUpload/default.jpg':nowRow.headImg"
-          >
+          <img width="55px"
+               height="55px"
+               :src="nowRow.headImg==null?'https://lsxjytestimgs.oss-cn-shenzhen.aliyuncs.com/FileUpload/default.jpg':nowRow.headImg">
           <div style="margin-left:20px">
             <span class="font-small-title">{{nowRow.customerName}}</span>
-            <el-tag type="warning" size="mini">vip</el-tag>
+            <el-tag type="warning"
+                    size="mini">vip</el-tag>
             <div>
               <span>{{nowRow.tel}}</span>
             </div>
@@ -352,7 +322,6 @@
 import listPage from "@/components/listPage";
 import util from "@/util/util";
 import getMenuRid from "@/minxi/getMenuRid";
-import "@/assets/publicLess/pageListQuery.less";
 import moreSelect from "@/components/moreSelect";
 export default {
   mixins: [getMenuRid],
@@ -560,6 +529,14 @@ export default {
     this.queryVerifyHouseByParams(1, "id", "descending");
   },
   methods: {
+    toHouseDetail(row) {
+      var that = this;
+      console.log(row, "进入验真房源（sale_house_draft）详情");
+      that.$router.push({
+        name: "validateHouseDetails",
+        params: { houseId: row.id }
+      });
+    },
     sortMethod(e) {
       this.queryVerifyHouseByParams(1, e.prop, e.order);
     },

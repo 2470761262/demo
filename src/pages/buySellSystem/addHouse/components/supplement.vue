@@ -683,6 +683,10 @@ export default {
       default: function () {
         return [];
       }
+    },
+    paramsObj: {
+      type: Object,
+      default: () => { }
     }
   },
   computed: {
@@ -873,7 +877,13 @@ export default {
       let that = this;
       this.audioFileLoading = true;
       let formData = {};
-      formData.DraftId = that.$store.state.addHouse.formData.id;
+      if (this.paramsObj.getEditUrl) {
+        formData.Eid = that.$store.state.addHouse.formData.id;
+      }
+      else {
+        formData.DraftId = that.$store.state.addHouse.formData.id;
+      }
+
       formData.IpStr = url;
       this.$api
         .post({
@@ -900,9 +910,13 @@ export default {
     },
     //根据ID获取已经上传的音频
     getAudio () {
+      let url = `/draft-house/audios/${this.$store.state.addHouse.formData.id}`;
+      if (this.paramsObj.getAudioUrl) {
+        url = this.paramsObj.getAudioUrl + this.$store.state.addHouse.formData.id
+      }
       return this.$api
         .post({
-          url: `/draft-house/audios/${this.$store.state.addHouse.formData.id}`
+          url: url
         })
         .then(e => {
           if (e.data.code == 200 && e.data.data.length != 0) {
@@ -954,7 +968,12 @@ export default {
       let that = this;
       this.audioFileLoading = true;
       let formData = new FormData();
-      formData.append("draftId", that.$store.state.addHouse.formData.id);
+      if (this.paramsObj.getEditUrl) {
+        formData.append("eid", that.$store.state.addHouse.formData.id);
+      }
+      else {
+        formData.append("draftId", that.$store.state.addHouse.formData.id);
+      }
       formData.append("file", uploader);
       this.$api
         .post({
@@ -979,9 +998,13 @@ export default {
     },
     getLoadData () {
       this.loading = true;
+      let url = `/draft-house/${this.$store.state.addHouse.formData.id}`;
+      if (this.paramsObj.getEditUrl) {
+        url = this.paramsObj.getEditUrl + this.$store.state.addHouse.formData.id;
+      }
       return this.$api
         .get({
-          url: `/draft-house/${this.$store.state.addHouse.formData.id}`
+          url: url
         })
         .then(e => {
           if (e.data.code == 200) {
@@ -998,6 +1021,18 @@ export default {
                 delete e.data.data[item];
               }
             });
+            if (e.data.data.mortgageBank) {
+              e.data.data.mortgageBank = parseInt(e.data.data.mortgageBank);
+            }
+            if (e.data.data.houseNow) {
+              e.data.data.houseNow = parseInt(e.data.data.houseNow);
+            }
+            if (e.data.data.middleSchoolUse) {
+              this.middleRadio = 1;
+            }
+            if (e.data.data.primarySchoolUse) {
+              this.primaryRadio = 1;
+            }
             this.$store.dispatch("InitFormData", {
               commitName: "updateStep2",
               json: e.data.data
@@ -1065,13 +1100,21 @@ export default {
         id: that.$store.state.addHouse.formData.id,
         ...that.deffData
       };
+      let url = "/draft-house";
+      if (this.paramsObj.editUrl) {
+        url = this.paramsObj.editUrl;
+        sendData.communityDesc = that.formData.communityDesc;
+        sendData.roomDesc = that.formData.roomDesc;
+        sendData.saleDesc = that.formData.saleDesc;
+        sendData.taxDesc = that.formData.taxDesc;
+      }
       if (Object.keys(this.deffData).length == 0) {
         //没有做出修改
         return true;
       }
       return this.$api
         .put({
-          url: "/draft-house",
+          url: url,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: sendData
         })
