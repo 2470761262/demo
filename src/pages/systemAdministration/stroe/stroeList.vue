@@ -319,7 +319,7 @@ export default {
     openDetails(row) {
       console.log(row);
 
-      this.$router.push({ name: "detailsStroe", params: { id: row } });
+      this.$router.push({ path: "detailsStroe", query: { id: row } });
     }
   }
 };

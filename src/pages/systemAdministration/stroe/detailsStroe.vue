@@ -142,7 +142,7 @@ export default {
     };
   },
   created () {
-    this.id = this.$route.params.id;
+    this.id = this.$route.query.id;
   },
   mounted () {
     this.list();
@@ -154,7 +154,7 @@ export default {
       let params = {
         limit: this.pageJson.pageSize,
         page: currentPage,
-        id: this.$route.params.id
+        id: this.$route.query.id
       };
       this.$api
         .post({
@@ -186,7 +186,7 @@ export default {
     list () {
       this.$api
         .post({
-          url: "/stroe/" + this.$route.params.id,
+          url: "/stroe/" + this.$route.query.id,
           token: false
         })
         .then(e => {
