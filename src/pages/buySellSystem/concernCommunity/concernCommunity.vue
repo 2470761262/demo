@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+@import url("../../../assets/publicLess/pageListQuery.less");
 .left-query-content {
   width: 357px;
   display: flex;
@@ -334,7 +335,6 @@ import moreSelect from "@/components/moreSelect";
 import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
-import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -342,7 +342,7 @@ export default {
     moreSelect,
     definitionmenu
   },
-  data () {
+  data() {
     return {
       paginationCurrentPage: 1,
       selectCommunityNum: 1,
@@ -359,7 +359,7 @@ export default {
       },
       houseTypeList: [
         { value: "3", label: "店公共盘" },
-        { value: "4", label: "在售无跟单" },      
+        { value: "4", label: "在售无跟单" },
         { value: "1", label: "无号码" },
         { value: "2", label: "成交房源" },
         { value: "5", label: "潜在出售" }
@@ -488,7 +488,7 @@ export default {
     };
   },
   computed: {
-    resultArray () {
+    resultArray() {
       return this.array.slice(
         (this.paginationCurrentPage - 1) * 4,
         this.paginationCurrentPage * 4
@@ -496,7 +496,7 @@ export default {
     }
   },
   filters: {
-    setRowButName (value) {
+    setRowButName(value) {
       switch (String(value)) {
         case 2:
           return "转跟单";
@@ -510,13 +510,13 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.queryVerifyHouseDatas(1, "id", "descending");
     this.queryConcernCount();
     //  this.queryNotConcernCommunityList();
   },
   methods: {
-    changeAreaBut () {
+    changeAreaBut() {
       let that = this;
 
       if (util.isNumber(that.queryData.minInArea)) {
@@ -536,7 +536,7 @@ export default {
         this.querylistByParams();
       }
     },
-    changeAreaButMax () {
+    changeAreaButMax() {
       let that = this;
 
       if (util.isNumber(that.queryData.maxInArea)) {
@@ -557,14 +557,14 @@ export default {
       }
     },
     //当前选择已经关注这个这个核心盘则不让在重复选择
-    filterRoomDisabled () {
+    filterRoomDisabled() {
       return this.array
         .map(item => {
           return item.communityName + "$" + item.id;
         })
         .join(",");
     },
-    houseNoFormat (houseNo) {
+    houseNoFormat(houseNo) {
       let type;
       if (houseNo == null && houseNo == "") {
         type = "--";
@@ -574,7 +574,7 @@ export default {
       return type;
     },
 
-    houseFormat (rooms, hall, toilet) {
+    houseFormat(rooms, hall, toilet) {
       let ro,
         ha,
         to = "";
@@ -595,7 +595,7 @@ export default {
       }
       return ro + ha + to;
     },
-    houseTypeFormat (houseType) {
+    houseTypeFormat(houseType) {
       let type;
       if (houseType == 1) {
         type = "无号码";
@@ -614,20 +614,20 @@ export default {
       }
       return type;
     },
-    remove () {
+    remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.queryVerifyHouseDatas(1, "id", "descending");
     },
-    sortMethod (e) {
+    sortMethod(e) {
       this.queryVerifyHouseDatas(1, e.prop, e.order);
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       let that = this;
       that.tableColumn = e;
     },
-    toSale (comId, cbId, bhId, communityName, buildingName, roomNo) {
+    toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
       var that = this;
       that.$router.push({
         path: "/buySellSystem/addHouse",
@@ -645,10 +645,10 @@ export default {
         }
       });
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       this.moreSelect = e;
     },
-    keySelect () {
+    keySelect() {
       if (this.queryData.keyOwner != "") {
         this.queryData.keyOwner = "";
       } else {
@@ -656,7 +656,7 @@ export default {
       }
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    onlySelect () {
+    onlySelect() {
       if (this.queryData.isOnly != "") {
         this.queryData.isOnly = "";
       } else {
@@ -664,7 +664,7 @@ export default {
       }
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    selectedCommunity (e) {
+    selectedCommunity(e) {
       this.$confirm("是否确定关注该楼盘?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -685,7 +685,7 @@ export default {
           });
         });
     },
-    concernOFF (id) {
+    concernOFF(id) {
       this.$confirm("是否确定取消关注该楼盘?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -701,7 +701,7 @@ export default {
           });
         });
     },
-    deleteConcern (comId) {
+    deleteConcern(comId) {
       this.$api
         .post({
           url: "/concern_community/concernOFF",
@@ -730,10 +730,10 @@ export default {
           console.log(e);
         });
     },
-    querylistByParams () {
+    querylistByParams() {
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    addCommunity (id) {
+    addCommunity(id) {
       let params = { CommunityID: id + "" };
       this.$api
         .post({
@@ -757,7 +757,7 @@ export default {
           console.log(e);
         });
     },
-    queryVerifyHouseDatas (currentPage, column, type) {
+    queryVerifyHouseDatas(currentPage, column, type) {
       let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
       let that = this;
       if (Object.keys(this.moreSelect).length != 0) {
@@ -853,7 +853,7 @@ export default {
           console.log(e);
         });
     },
-    queryConcernCount () {
+    queryConcernCount() {
       this.$api
         .post({
           url: "/concern_community/CommunityCount",
@@ -891,7 +891,7 @@ export default {
           console.log(e);
         });
     },
-    selectChangeValue (value) {
+    selectChangeValue(value) {
       //  console.log(value, "value");
       if (value) {
         this.addCommunity(value);
@@ -902,7 +902,7 @@ export default {
         });
       }
     },
-    queryNotConcernCommunityList (name, type) {
+    queryNotConcernCommunityList(name, type) {
       if (type == "change") {
         console.log(type);
         this.selectPage = 1;
@@ -952,12 +952,12 @@ export default {
         });
       // }
     },
-    remoteInput () {
+    remoteInput() {
       if (this.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -982,7 +982,7 @@ export default {
           });
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -1003,7 +1003,7 @@ export default {
         });
       console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -1043,54 +1043,56 @@ export default {
       this.querylistByParams();
     },
     //跳转房源详情页面
-    toHouseDetail (row) {
+    toHouseDetail(row) {
       var that = this;
-      console.log("房源状态："+row.houseType);
+      console.log("房源状态：" + row.houseType);
       //店公共盘,在售无跟单, 进入BSAgentHouse房源详情
       if (row.houseType == 3 || row.houseType == 4) {
-        console.log('进入bsagenthouse房源详情');
+        console.log("进入bsagenthouse房源详情");
         that.$router.push({
           name: "houseDetails",
           params: { houseId: row.id }
         });
-      }else if(row.houseType == 2){ //暂不售
-        console.log('进入历史房源房源详情');
+      } else if (row.houseType == 2) {
+        //暂不售
+        console.log("进入历史房源房源详情");
         that.$router.push({
           name: "historyDetails",
-          params: { houseId: row.id,tradeType:1 }
-        });   
-      }else if (row.houseType == 5) {//潜在出售
-           console.log('进入交易房源（tradeHouseTbl）详情');
-           that.$router.push({
-             name:"historyDetails",
-             params:{houseId:row.id,tradeType:0}
-           })
-           
-      }else if (row.houseType == 1|| row.houseType == 6) {//无号码
-           console.log('进入楼盘详情')
-           console.log("/building/geBuildingDetail/"+row.id);
-           that.$notify({
-            title: "警告",
-            message: '楼盘详情页面未实现，接口已经有了',
-            type: "warning",
-            offset: 60
-          });
-      }else {
-           that.$notify({
-            title: "警告",
-            message: '房源状态未知，无法查看',
-            type: "warning",
-            offset: 60
-          });
+          params: { houseId: row.id, tradeType: 1 }
+        });
+      } else if (row.houseType == 5) {
+        //潜在出售
+        console.log("进入交易房源（tradeHouseTbl）详情");
+        that.$router.push({
+          name: "historyDetails",
+          params: { houseId: row.id, tradeType: 0 }
+        });
+      } else if (row.houseType == 1 || row.houseType == 6) {
+        //无号码
+        console.log("进入楼盘详情");
+        console.log("/building/geBuildingDetail/" + row.id);
+        that.$notify({
+          title: "警告",
+          message: "楼盘详情页面未实现，接口已经有了",
+          type: "warning",
+          offset: 60
+        });
+      } else {
+        that.$notify({
+          title: "警告",
+          message: "房源状态未知，无法查看",
+          type: "warning",
+          offset: 60
+        });
       }
     },
 
-    handleClick () { },
-    handleSizeChange (val) {
+    handleClick() {},
+    handleSizeChange(val) {
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.queryVerifyHouseDatas(val, "id", "ascending");
     }
   }

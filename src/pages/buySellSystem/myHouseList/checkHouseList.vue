@@ -355,7 +355,7 @@ export default {
         { prop: 'CommunityName', label: "楼盘名称" },
         { prop: 'Price', label: "售价(万元)" },
         { prop: 'InArea', label: "面积(m²)" },
-        { prop: 'PropertyFee', label: "均价(元/平)" },
+        { prop: 'PropertyFee', label: "均价(元/m²)" },
         { prop: 'hall', label: "户型" },
         { prop: 'Decoration', label: "装修程度" },
         { prop: 'AgentPer', label: "跟单人" },
@@ -502,7 +502,7 @@ export default {
     moreSelectChange (e) {
       if (e != '')
         this.moreSelect = e;
-      this.querylist(1, 'id', 'ascending')
+      this.querylist(1, 'addTime', 'descending')
     },
     changeFile (e, index) {
       let checkProjectList = this.accessoryMoldList[index].list;
@@ -637,7 +637,7 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.querylist(1, 'id', 'ascending')
+      this.querylist(1, 'id', 'descending')
     },
     tabColumnChange (e) {
       this.tableColumn = e;
@@ -713,10 +713,10 @@ export default {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
-    querylist (currentPage) {
+    querylist ( ) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage };
+      let params = { limit: that.pageJson.pageSize, page: that.pageJson.currentPage };
 
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
@@ -741,7 +741,9 @@ export default {
         params.status = that.status;
         params.checkProject = that.checkProject;
         params.checkType = that.type;
-      }     this.$api.post({
+      }
+      params.sortColumn = "addTime";
+      this.$api.post({
         url: '/myHouse/myCheckList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,

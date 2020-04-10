@@ -1,54 +1,98 @@
 <style lang="less" scoped>
 .query-cell {
+  padding: 15px 0;
   display: flex;
+  align-items: center;
+  .el-select {
+    margin-left: 10px;
+  }
+  .query-right {
+    flex: 1;
+    text-align: right;
+    padding-right: 20px;
+    /deep/.el-input {
+      width: auto;
+    }
+  }
+}
+.page-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .elTree {
-  width: 200px;
-  margin-right: 20px;
-  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
-  padding: 15px 15px 15px;
-  border-radius: 10px;
-
+  box-sizing: border-box;
+  width: 230px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  .elTree-scroll {
+    padding: 10px;
+    height: 0;
+    flex: 1 0 auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-track-piece {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--color--primary);
+      border-radius: 50px;
+    }
+    .scroll-content-tag {
+      margin-right: 20px;
+      margin-bottom: 10px;
+    }
+  }
   /deep/ .el-input {
     margin: 10px 0 10px;
   }
-
-  float: left;
 }
 </style>
-
-
 <template>
-  <div>
-    <template>
-      <div class="elTree">
-        <el-tree
-          ref="tree2"
-          :data="treeData"
-          :default-expanded-keys="[1]"
-          node-key="nodeId"
-          show-checkbox
-          check-strictly
-          :props="defaultProps"
-          @check-change="checkChange"
-          @check="treeCheck"
-          :highlight-current="true"
-          :filter-node-method="filterNode"
-        ></el-tree>
-      </div>
-    </template>
-
+  <div class="page-content">
     <list-page
       :parentData="$data"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
+      <template v-slot:left>
+        <div class="elTree">
+          <div class="elTree-scroll">
+            <el-tree
+              ref="tree2"
+              :data="treeData"
+              :default-expanded-keys="[1]"
+              node-key="nodeId"
+              show-checkbox
+              check-strictly
+              :props="defaultProps"
+              @check-change="checkChange"
+              @check="treeCheck"
+              :highlight-current="true"
+              :filter-node-method="filterNode"
+            ></el-tree>
+          </div>
+        </div>
+      </template>
       <template v-slot:top>
         <div class="query-cell">
-          <el-input placeholder="部门名称" v-model="queryData.DeptName" clearable>
-            <template slot="prepend">部门名</template>
-          </el-input>
-          <el-select v-model="selectTag" placeholder="全部" @change="SelectTag">
+          <el-button type="primary" size="mini" @click="toAddDeptPage(0)">添加同级部门</el-button>
+          <el-button type="primary" size="mini" @click="toAddDeptPage(1)">添加子级部门</el-button>
+          <!-- <el-button type="primary"
+                     size="mini"
+                     @click="queryDeptByIsLocked(0)">查询锁定部门</el-button>
+          <el-button type="primary"
+                     size="mini"
+          @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button>-->
+          <el-select v-model="selectTag" placeholder="全部" size="mini" @change="SelectTag">
             <el-option
               v-for="item in SelectOptions"
               :key="item.value"
@@ -56,16 +100,10 @@
               :value="item.value"
             ></el-option>
           </el-select>
-          <el-button
-            type="primary"
-            style="margin-left:10px"
-            size="mini"
-            @click="queryDeptByParams"
-          >查询</el-button>
-          <el-button type="primary" size="mini" @click="toAddDeptPage(0)">添加同级部门</el-button>
-          <el-button type="primary" size="mini" @click="toAddDeptPage(1)">添加子级部门</el-button>
-          <el-button type="primary" size="mini" @click="queryDeptByIsLocked(0)">查询锁定部门</el-button>
-          <el-button type="primary" size="mini" @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button>
+          <div class="query-right">
+            <el-input placeholder="部门名称" size="small" v-model="queryData.DeptName" clearable></el-input>
+            <el-button type="primary" size="mini" @click="queryDeptByParams">查询</el-button>
+          </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
@@ -77,7 +115,7 @@
             :key="item.prop"
           ></el-table-column>
         </template>
-        <el-table-column prop="operation" label="操作" fixed="right" key="operation">
+        <el-table-column label="操作" fixed="right" width="300">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
               <el-button
@@ -108,6 +146,7 @@ export default {
   },
   data() {
     return {
+      sidebarFlag: false,
       loading: false, //控制表格加载动画提示
       department: {},
       queryData: {
@@ -123,7 +162,7 @@ export default {
       },
       pageJson: {
         currentPage: 1, //当前页码
-        total: 9, //总记录数
+        total: 0, //总记录数
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
@@ -270,6 +309,9 @@ export default {
       if (this.queryData.flag) {
         if (saveType == 0) {
           if (this.queryData.type == 1) {
+            console.log("部门同级");
+            console.log(this.department.deptParentID);
+            console.log(this.department.coId);
             this.$router.push({
               path: "addDeptManage",
               query: {

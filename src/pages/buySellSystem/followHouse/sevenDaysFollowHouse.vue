@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+@import url("../../../assets/publicLess/pageListQuery.less");
 .page-content {
   height: 100%;
   display: flex;
@@ -100,7 +101,6 @@
 <script>
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
-import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid],
   components: {

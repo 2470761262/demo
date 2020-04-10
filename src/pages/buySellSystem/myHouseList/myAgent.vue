@@ -1,5 +1,6 @@
 
 <style lang="less" scoped>
+@import url("../../../assets/publicLess/pageListQuery.less");
 /deep/.cellRed {
   background: #e13d3d;
   color: #fff;
@@ -208,7 +209,6 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
-import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid],
   components: {
