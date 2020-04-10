@@ -92,7 +92,7 @@
           <el-button type="primary"
                      size="mini"
           @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button>-->
-          <el-select v-model="selectTag" placeholder="全部" size="mini" @change="SelectTag">
+          <el-select v-model="queryData.isLocked" placeholder="全部" size="mini" @change="SelectTag">
             <el-option
               v-for="item in SelectOptions"
               :key="item.value"
@@ -151,7 +151,7 @@ export default {
       department: {},
       queryData: {
         DeptName: "",
-        del: 0,
+        del: null,
         isLocked: null,
         flag: false,
         type: null
@@ -187,11 +187,11 @@ export default {
           label: "全部"
         },
         {
-          value: "0",
+          value: 0,
           label: "锁定"
         },
         {
-          value: "1",
+          value: 1,
           label: "正常"
         }
       ]
