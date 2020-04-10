@@ -15,8 +15,12 @@ export default {
 
         console.log("getUrlToken---->" + token);
 
-        if (token != null)
+        if (token != null) {
+            util.localStorageSet('nest', true);
             util.localStorageSet(TOKEN, token);
+        } else {
+            util.localStorageSet('nest', false);
+        }
         if (!util.localStorageGet(LOGINDATA)) {
             //util.localStorageSet("logindata",{sessionId:null});
             this.getLoginData(token);
@@ -25,9 +29,6 @@ export default {
     mounted () {
         if (window.self !== window.top) {
             document.querySelector('#page-cell-main').style.height = '100%';
-            util.localStorageSet('nest', true);
-        } else {
-            util.localStorageSet('nest', false);
         }
     },
     methods: {
