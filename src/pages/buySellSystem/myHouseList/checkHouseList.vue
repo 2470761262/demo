@@ -742,7 +742,9 @@ export default {
         params.status = that.status;
         params.checkProject = that.checkProject;
         params.checkType = that.type;
-      } this.$api.post({
+      }
+      params.sortColumn = "addTime";
+      this.$api.post({
         url: '/myHouse/myCheckList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },
         data: params,
