@@ -1,4 +1,5 @@
 ﻿<style lang="less" scoped>
+@import url("../../../assets/publicLess/pageListQuery.less");
 .flex-cell-content {
   display: flex;
   justify-content: space-around;
@@ -69,150 +70,130 @@
 }
 </style>
 <template>
-  <list-page
-    :parentData="$data"
-    @sort-change="sortMethod"
-    @handleClick="handleClick"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
+  <list-page :parentData="$data"
+             @sort-change="sortMethod"
+             @handleClick="handleClick"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
-          <el-select
-            v-model="data.comId"
-            @focus="remoteInput"
-            @change="queryCBId"
-            filterable
-            remote
-            clearable
-            placeholder="楼盘名称"
-            :remote-method="remoteMethod"
-            :loading="loading"
-          >
-            <el-option
-              v-for="item in optionsList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+          <el-select v-model="data.comId"
+                     @focus="remoteInput"
+                     @change="queryCBId"
+                     filterable
+                     remote
+                     clearable
+                     placeholder="楼盘名称"
+                     :remote-method="remoteMethod"
+                     :loading="loading">
+            <el-option v-for="item in optionsList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
-          <el-select
-            v-model="data.cbId"
-            filterable
-            clearable
-            placeholder="楼栋"
-            @change="queryRoomNo"
-          >
-            <el-option
-              v-for="item in cbIdList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+          <el-select v-model="data.cbId"
+                     filterable
+                     clearable
+                     placeholder="楼栋"
+                     @change="queryRoomNo">
+            <el-option v-for="item in cbIdList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
-          <el-select v-model="data.roomNo" filterable @change="querylistByParams" placeholder="房间号">
-            <el-option
-              v-for="item in roomNoList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
+          <el-select v-model="data.roomNo"
+                     filterable
+                     @change="querylistByParams"
+                     placeholder="房间号">
+            <el-option v-for="item in roomNoList"
+                       :key="item.value"
+                       :label="item.name"
+                       :value="item.value"></el-option>
           </el-select>
         </div>
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
-          <el-input
-            placeholder="姓名"
-            class="set-input120"
-            @change="querylistByParams"
-            v-model="data.customName"
-            clearable
-          />
+          <el-input placeholder="姓名"
+                    class="set-input120"
+                    @change="querylistByParams"
+                    v-model="data.customName"
+                    clearable />
         </div>
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">电话</h3>
-          <el-input
-            placeholder="业主电话"
-            v-model="data.tel"
-            class="set-input200"
-            @change="querylistByParams"
-            clearable
-          />
+          <el-input placeholder="业主电话"
+                    v-model="data.tel"
+                    class="set-input200"
+                    @change="querylistByParams"
+                    clearable />
         </div>
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">价格</h3>
-          <el-input
-            placeholder="最小值"
-            v-model="data.minPrice"
-            class="set-input90"
-            @change="querylistByParams"
-            clearable
-          />
+          <el-input placeholder="最小值"
+                    v-model="data.minPrice"
+                    class="set-input90"
+                    @change="querylistByParams"
+                    clearable />
           <span class="cut-off-rule"></span>
-          <el-input
-            placeholder="最大值"
-            v-model="data.maxPrice"
-            class="set-input90"
-            @change="querylistByParams"
-            clearable
-          />
+          <el-input placeholder="最大值"
+                    v-model="data.maxPrice"
+                    class="set-input90"
+                    @change="querylistByParams"
+                    clearable />
         </div>
         <div class="query-content-cell cell-interval45">
-          <definitionmenu
-            :renderList="tableDataColumn"
-            :tableColumn="tableColumn"
-            @change="tabColumnChange"
-          ></definitionmenu>
+          <definitionmenu :renderList="tableDataColumn"
+                          :tableColumn="tableColumn"
+                          @change="tabColumnChange"></definitionmenu>
         </div>
       </div>
       <div class="page-list-query-row">
         <div class="query-content-cell">
           <h3 class="query-cell-title">面积</h3>
-          <el-input
-            placeholder="最小值"
-            v-model="data.minInArea"
-            class="set-input90"
-            @change="querylistByParams"
-            clearable
-          />
+          <el-input placeholder="最小值"
+                    v-model="data.minInArea"
+                    class="set-input90"
+                    @change="querylistByParams"
+                    clearable />
           <span class="cut-off-rule"></span>
-          <el-input
-            placeholder="最大值"
-            v-model="data.maxInArea"
-            class="set-input90"
-            @change="querylistByParams"
-            clearable
-          />
+          <el-input placeholder="最大值"
+                    v-model="data.maxInArea"
+                    class="set-input90"
+                    @change="querylistByParams"
+                    clearable />
           <span class="query-cell-suffix">平方</span>
         </div>
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">录入时间</h3>
-          <el-date-picker
-            v-model="data.timeSelect"
-            type="daterange"
-            class="set-data-pricker"
-            @change="querylistByParams"
-            range-separator="至"
-            :default-time="['00:00:00', '23:59:59']"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-          ></el-date-picker>
-          <span class="query-cell-suffix handlebut" @click="remove">清除</span>
+          <el-date-picker v-model="data.timeSelect"
+                          type="daterange"
+                          class="set-data-pricker"
+                          @change="querylistByParams"
+                          range-separator="至"
+                          :default-time="['00:00:00', '23:59:59']"
+                          start-placeholder="开始日期"
+                          end-placeholder="结束日期"></el-date-picker>
+          <span class="query-cell-suffix handlebut"
+                @click="remove">清除</span>
         </div>
         <div class="query-content-cell cell-interval45">
           <label class="query-checkbox">
-            <input type="checkbox" @click="keySelect">
+            <input type="checkbox"
+                   @click="keySelect">
             <span>钥匙</span>
           </label>
           <label class="query-checkbox">
-            <input type="checkbox" @click="onlySelect">
+            <input type="checkbox"
+                   @click="onlySelect">
             <span>独家委托</span>
           </label>
         </div>
         <div class="query-content-cell cell-interval45">
-          <el-button type="primary" size="mini" @click="querylistByParams">查询</el-button>
+          <el-button type="primary"
+                     size="mini"
+                     @click="querylistByParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
           <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
@@ -220,69 +201,66 @@
       </div>
     </template>
     <template v-slot:left>
-      <div class="attention-content" v-if="!querySelectFlag">
+      <div class="attention-content"
+           v-if="!querySelectFlag">
         <div class="attention-select">
-          <el-select
-            v-model="imdataimdata"
-            @focus="removeImpressionInput"
-            @change="selectImpression($event)"
-            filterable
-            placeholder="请输入您添加过的房源印象"
-            :loading="loading"
-          >
-            <el-option
-              v-for="item in MyImpressionList"
-              :key="item.index"
-              :label="item"
-              :value="item"
-            ></el-option>
+          <el-select v-model="imdataimdata"
+                     @focus="removeImpressionInput"
+                     @change="selectImpression($event)"
+                     filterable
+                     placeholder="请输入您添加过的房源印象"
+                     :loading="loading">
+            <el-option v-for="item in MyImpressionList"
+                       :key="item.index"
+                       :label="item"
+                       :value="item"></el-option>
           </el-select>
         </div>
         <div class="but-group">
-          <el-button type="text" @click="show(1)">一键还原</el-button>
-          <el-button type="text" @click="show(0)">一键清除</el-button>
+          <el-button type="text"
+                     @click="show(1)">一键还原</el-button>
+          <el-button type="text"
+                     @click="show(0)">一键清除</el-button>
         </div>
-        <div class="attention-scroll-content" v-if="showImpression">
-          <span v-for="item in ImpressionList" :key="item.index">
-            <el-tag class="scroll-content-tag" @close="handleClose(item.index)" closable>{{item}}</el-tag>
+        <div class="attention-scroll-content"
+             v-if="showImpression">
+          <span v-for="item in ImpressionList"
+                :key="item.index">
+            <el-tag class="scroll-content-tag"
+                    @close="handleClose(item.index)"
+                    closable>{{item}}</el-tag>
           </span>
         </div>
       </div>
-      <div
-        class="hide-query"
-        @click="()=> querySelectFlag = !querySelectFlag "
-        :class="querySelectFlag ? 'el-icon-d-arrow-right':'el-icon-d-arrow-left'"
-      ></div>
+      <div class="hide-query"
+           @click="()=> querySelectFlag = !querySelectFlag "
+           :class="querySelectFlag ? 'el-icon-d-arrow-right':'el-icon-d-arrow-left'"></div>
     </template>
     <template v-slot:tableColumn>
       <template v-for="(item) in tableColumn">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :width="item.width"
-          :key="item.prop"
-          :formatter="item.formart"
-          show-overflow-tooltip
-          :sort-orders="['ascending', 'descending']"
-          :sortable="item.order"
-        ></el-table-column>
+        <el-table-column :prop="item.prop"
+                         :label="item.label"
+                         :width="item.width"
+                         :key="item.prop"
+                         :formatter="item.formart"
+                         show-overflow-tooltip
+                         :sort-orders="['ascending', 'descending']"
+                         :sortable="item.order"></el-table-column>
       </template>
-      <el-table-column label="操作" width="200" fixed="right">
+      <el-table-column label="操作"
+                       width="200"
+                       fixed="right">
         <template v-slot="scope">
           <div class="flex-cell-content">
-            <el-button
-              type="primary"
-              style="background:green"
-              @click="toHouseDetail(scope.row.id)"
-              size="mini"
-            >查看</el-button>
+            <el-button type="primary"
+                       style="background:green"
+                       @click="toHouseDetail(scope.row.id)"
+                       size="mini">查看</el-button>
             <div v-if="scope.row.collectId != null && scope.row.collectId!= '' ">
-              <el-button
-                type="primary"
-                slot="reference"
-                @click="ifOFF(scope.row.id)"
-                size="mini"
-              >取消关注</el-button>
+              <el-button type="primary"
+                         slot="reference"
+                         @click="ifOFF(scope.row.id)"
+                         size="mini">取消关注</el-button>
             </div>
           </div>
         </template>
@@ -295,7 +273,6 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
-import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -599,7 +576,9 @@ export default {
       var impression = this.imdata;
       this.$api
         .get({
-          url: "/agentHouse/impression/getMyImpressionList?impression="+impression,
+          url:
+            "/agentHouse/impression/getMyImpressionList?impression=" +
+            impression,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           qs: true,
           data: {}
