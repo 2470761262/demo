@@ -797,6 +797,12 @@ export default {
     },
     queryCBId (name) {
       var that = this;
+      if (name == '') {
+        that.form.communityName = '';
+        that.form.cbNo = '';
+        that.form.roomNumber = '';
+      }
+
       this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
@@ -812,13 +818,16 @@ export default {
             that.form.roomNo = "";
             that.form.cbId = "";
             that.cbIdList = e.data.data.list;
-            let resultArr = that.options.find((item) => {
-              return item.value === name;
-            });
-            that.form.communityName = resultArr.name;
-            that.form.cbNo = '';
-            that.form.roomNumber = '';
-            console.log(that.form.communityName);
+            console.log(name);
+            if (name != '') {
+              let resultArr = that.options.find((item) => {
+                return item.value === name;
+              });
+              that.form.communityName = resultArr.name;
+              that.form.cbNo = '';
+              that.form.roomNumber = '';
+              console.log(that.form.communityName);
+            }
           }
         });
     },

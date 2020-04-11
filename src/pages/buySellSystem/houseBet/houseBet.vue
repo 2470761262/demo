@@ -4,7 +4,9 @@
              @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+             @handleCurrentChange="handleCurrentChange"
+             :dblclick="true"
+             @cellDblClick="toHouseDetail">
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -167,7 +169,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="toLook(scope.row)">查看</el-button>
+                     @click="toHouseDetail(scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </template>
@@ -270,6 +272,14 @@ export default {
       });
   },
   methods: {
+     toHouseDetail(row) {
+      var that = this;
+      console.log(row, "进入对赌房源（bsagenthousetbl）详情");
+      that.$router.push({
+              name: "houseDetails",
+              params: { houseId: row.houseId }
+      });
+    },
     moreSelectChange (e) {
       this.moreSelect = e;
       this.queryHouseBet(1, "createTime", "1");
@@ -357,13 +367,6 @@ export default {
       this.data.order = o;
       this.data.orderAsc = Asc;
       this.queryHouseBetParams();
-    },
-    toLook (row) {
-      var that = this;
-      that.$router.push({
-        name: "houseDetails",
-        params: { houseId: row.houseId }
-      });
     },
     queryHouseBetParams () {
       this.queryHouseBet(1, "createTime", "1");
