@@ -152,16 +152,20 @@ export default {
         { prop: "agentName", label: "跟单人", order: false, disabled: false, default: true },
         { prop: 'id', label: "成交人", order: false, disabled: false, default: true, formart: item => item.agentName }
       ],
-      tableData: []
+      tableData: [],
+      sortColumn: "id",//排序字段
+      sortType: "descending",//排序类型
     };
   },
   mounted () {
-    this.queryOurComDeal(1, "id", "ascending");
+    this.queryOurComDeal(1);
   },
   methods: {
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryOurComDeal(1, e.prop, e.order);
+      this.sortColumn = e.prop;
+      this.sortType = e.order;
+      this.queryOurComDeal(1);
     },
     queryTabData () {
       console.log(this, "111");
@@ -170,10 +174,10 @@ export default {
       console.log(id);
       var that = this;
 
-      this.$router.push({ name: "historyDetails", params: { houseId: id ,tradeType:0} });
+      this.$router.push({ name: "historyDetails", params: { houseId: id, tradeType: 0 } });
     },
     queryDatalist () {
-      this.queryOurComDeal(1, "id", "ascending");
+      this.queryOurComDeal(1);
     },
     remoteMethod (query) {
       var that = this;
@@ -206,10 +210,10 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryOurComDeal(1, 'id', 'ascending');
+      this.queryOurComDeal(1);
 
     },
-    queryOurComDeal (currentPage, column, type) {
+    queryOurComDeal (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -232,16 +236,8 @@ export default {
       if (that.data.maxPrice != null && that.data.maxPrice.length > 0) {
         params.maxPrice = that.data.maxPrice;
       }
-      if (column == "" || type == null || type == undefined) {
-        params.sortColumn = "id";
-      } else {
-        params.sortColumn = column;
-      }
-      if (type == "" || type == null || type == undefined) {
-        params.sortType = "ascending";
-      } else {
-        params.sortType = type;
-      }
+      params.sortColumn = this.sortColumn;
+      params.sortType = this.sortType;
       console.log(params);
       this.$api
         .post({
@@ -313,12 +309,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryOurComDeal(val, "id", "ascending");
+      this.queryOurComDeal(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryOurComDeal(1, "id", "ascending");
+      this.queryOurComDeal(1);
     }
   }
 };
