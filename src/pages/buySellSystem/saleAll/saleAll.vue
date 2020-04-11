@@ -352,20 +352,24 @@ export default {
           key: "followTime",
           value: [{ paramsKey: "beginFollowTime", index: 0 }, { paramsKey: "endFollowTime", index: 1 }],
         }
-      ]
+      ],
+      sortColumn: "id",//排序字段
+      sortType: "descending",//排序类型
     };
   },
   mounted () {
-    this.queryVerifyHouseDatas(1, "id", "ascending");
+    this.queryVerifyHouseDatas(1);
   },
   methods: {
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1);
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryVerifyHouseDatas(1, e.prop, e.order);
+      this.sortColumn = e.prop;
+      this.sortType = e.order;
+      this.queryVerifyHouseDatas(1);
     },
     tabColumnChange (e) {
       this.tableColumn = e;
@@ -382,7 +386,7 @@ export default {
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     querySoleAllParams () {
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1);
     },
     remoteInput () {
       if (this.data.comId.length == 0) {
@@ -422,7 +426,7 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryVerifyHouseDatas(1, 'id', 'ascending');
+      this.queryVerifyHouseDatas(1);
 
     },
     queryCBId () {
@@ -475,7 +479,7 @@ export default {
         });
       this.querySoleAllParams();
     },
-    queryVerifyHouseDatas (currentPage, column, type) {
+    queryVerifyHouseDatas (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -495,17 +499,8 @@ export default {
         params.minPrice = that.data.minPrice;
         params.maxPrice = that.data.maxPrice;
       }
-      if (column == "" || type == null || type == undefined) {
-        params.sortColumn = "id";
-      } else {
-        params.sortColumn = column;
-      }
-      if (type == "" || type == null || type == undefined) {
-        params.sortType = "ascending";
-      } else {
-        params.sortType = type;
-      }
-
+      params.sortColumn = this.sortColumn;
+      params.sortType = this.sortType;
       this.$api
         .post({
           url: "/saleAll/querySaleAll",
@@ -539,11 +534,11 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryVerifyHouseDatas(1, "id", "ascending");
+      this.queryVerifyHouseDatas(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryVerifyHouseDatas(val, "id", "ascending");
+      this.queryVerifyHouseDatas(val);
     }
   }
 };
