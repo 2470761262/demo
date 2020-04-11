@@ -304,6 +304,9 @@
                 <div class="item-data-top-tag">
                   <div class="top-tag-item overText"
                        v-if="item.keyOwner>0">钥匙</div>
+                  <div class="top-tag-item overText"
+                       style='margin-left:5px'
+                       v-if="item.isOnly>0">独家</div>
                 </div>
               </div>
               <div class="item-data-middle overText">{{item.title}}</div>

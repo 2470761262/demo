@@ -217,7 +217,7 @@ export default {
       console.log(1111111111111111111);
       var that = this;
       if (!this.$attrs.dblclick) {
-        if (row.communityName && row.checkSign == undefined)
+        if (row.communityName)
           if (row.houseType == 3 || row.houseType == 4) {
             console.log('进入bsagenthouse房源详情');
             that.$router.push({

@@ -321,7 +321,8 @@
                      filterable
                      clearable
                      placeholder="请选择楼栋"
-                     @change="queryRoomNo">
+                     @change="queryRoomNo"
+                     @focus="queryCBId">
             <el-option v-for="item in cbIdList"
                        :key="item.value"
                        :label="item.name"
@@ -810,7 +811,8 @@ export default {
           token: false,
           qs: true,
           data: {
-            comId: that.form.comId
+            comId: that.form.comId,
+            limit: 1000
           }
         })
         .then(e => {
@@ -841,7 +843,8 @@ export default {
           qs: true,
           data: {
             comId: that.form.comId,
-            cbId: that.form.cbId
+            cbId: that.form.cbId,
+            limit: 1000
           }
         })
         .then(e => {

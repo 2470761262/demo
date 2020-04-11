@@ -19,7 +19,6 @@
         <el-input type="textarea"
                   :placeholder="text"
                   v-model="pop.textarea"
-                  maxlength="10"
                   resize="none"
                   show-word-limit>
         </el-input>
@@ -49,7 +48,7 @@ export default {
       default: true
     }
   },
-  data() {
+  data () {
     return {
       sumitButClass: "",
       cancelButClass: "",
@@ -69,7 +68,7 @@ export default {
   },
   methods: {
     //添加跟进
-    result() {
+    result () {
       let that = this;
       let params = {
         memo: this.pop.textarea,
@@ -101,7 +100,7 @@ export default {
           }
         });
     },
-    cancel() {
+    cancel () {
       this.$emit("update:visible", false);
     }
   }
