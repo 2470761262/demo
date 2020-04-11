@@ -423,12 +423,12 @@ export default {
         },
         {
           prop: "unitPrice",
-          label: "均价(元/平)",
+          label: "均价(元/㎡)",
           width: "130px",
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitPrice + "元/㎡"
+          formart: item => (item.unitPrice||"-")
         },
         //{
         // prop: "decoration",
@@ -462,7 +462,8 @@ export default {
           width: "110px",
           order: false,
           disabled: false,
-          default: true
+          default: true,
+          formart: item => (item.agentName||"-")
         },
         {
           prop: "",
@@ -585,7 +586,7 @@ export default {
     },
     houseNoFormat (houseNo) {
       let type;
-      if (houseNo == null && houseNo == "") {
+      if (houseNo == null || houseNo == "") {
         type = "--";
       } else {
         type = houseNo;
@@ -871,7 +872,7 @@ export default {
         });
     },
     queryConcernCount () {
-      this.$api
+      return this.$api
         .post({
           url: "/concern_community/CommunityCount",
           qs: true
