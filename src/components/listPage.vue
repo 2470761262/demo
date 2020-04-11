@@ -217,18 +217,6 @@ export default {
       console.log(1111111111111111111);
       var that = this;
       if (!this.$attrs.dblclick) {
-        if (row.communityName && row.checkSign == undefined)
-          if (row.houseType == 1 || row.houseType == 6) {//无号码
-            console.log('进入楼盘详情')
-            console.log("/building/geBuildingDetail/" + row.id);
-            that.$notify({
-              title: "警告",
-              message: '楼盘详情页面未实现，接口已经有了',
-              type: "warning",
-              offset: 60
-            });
-            return;
-          }
         if (row.houseId != undefined && row.houseId > row.id)
           that.$router.push({
             name: `${
