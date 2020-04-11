@@ -333,6 +333,7 @@
                       clearable
                       class="page-label-center">
           <el-select v-model="form.roomNo"
+                     @change="queryRoomNumber"
                      filterable
                      placeholder="请选择房间号">
             <el-option v-for="item in roomNoList"
@@ -620,20 +621,20 @@ export default {
     VueSlider
   },
   computed: {
-    MathPrimarySchoolListfirst() {
+    MathPrimarySchoolListfirst () {
       return this.primarySchoolList.slice(0, 5);
     },
-    MathPrimarySchoolListLast() {
+    MathPrimarySchoolListLast () {
       return this.primarySchoolList.slice(5);
     },
-    MathMiddleSchoolListfirst() {
+    MathMiddleSchoolListfirst () {
       return this.middleSchoolList.slice(0, 5);
     },
-    MathMiddleSchoolListLast() {
+    MathMiddleSchoolListLast () {
       return this.middleSchoolList.slice(5);
     }
   },
-  data() {
+  data () {
     return {
       searchData: "",
       areaSliderMarks: areaSliderMarks,
@@ -655,7 +656,7 @@ export default {
       loading: false
     };
   },
-  mounted() {
+  mounted () {
     //商圈
     this.queryConstant("Region").then(e => {
       this.businessList = e;
@@ -692,7 +693,7 @@ export default {
 
   methods: {
     //面积滑块参数更新
-    flootSliderChange(e) {
+    flootSliderChange (e) {
       if (e[0] == -2 && e[1] == -2) {
         this.form.minFloor = "";
         this.form.maxFloor = "";
@@ -702,7 +703,7 @@ export default {
       }
     },
     //面积滑块参数更新
-    areaSliderChange(e) {
+    areaSliderChange (e) {
       if (e[0] == 20 && e[1] == 20) {
         this.form.minInArea = "";
         this.form.maxInArea = "";
@@ -712,7 +713,7 @@ export default {
       }
     },
     //售价滑块参数更新
-    priceSliderChange(e) {
+    priceSliderChange (e) {
       if (e[0] == 20 && e[1] == 20) {
         this.form.minPrice = "";
         this.form.maxPrice = "";
@@ -722,14 +723,14 @@ export default {
       }
     },
     //重置表单
-    resetForm(formName) {
+    resetForm (formName) {
       this.$parent.setSelectNav(null, true);
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
       this.Slider.priceSlider = [20, 20];
       this.Slider.areaSlider = [20, 20];
       this.Slider.flootSlider = [-2, -2];
     },
-    addInputToList(toList, inputName) {
+    addInputToList (toList, inputName) {
       let findFlag = this.form[toList].some(item => {
         return item == this[inputName];
       });
@@ -745,7 +746,7 @@ export default {
       }
     },
 
-    queryConstant(constant) {
+    queryConstant (constant) {
       return this.$api
         .get({
           url: "/mateHouse/queryConstant",
@@ -762,13 +763,13 @@ export default {
           }
         });
     },
-    remoteInput() {
+    remoteInput () {
       var that = this;
       if (that.form.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -794,8 +795,14 @@ export default {
         this.options = [];
       }
     },
-    queryCBId() {
+    queryCBId (name) {
       var that = this;
+      if (name == '') {
+        that.form.communityName = '';
+        that.form.cbNo = '';
+        that.form.roomNumber = '';
+      }
+
       this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
@@ -811,10 +818,20 @@ export default {
             that.form.roomNo = "";
             that.form.cbId = "";
             that.cbIdList = e.data.data.list;
+            console.log(name);
+            if (name != '') {
+              let resultArr = that.options.find((item) => {
+                return item.value === name;
+              });
+              that.form.communityName = resultArr.name;
+              that.form.cbNo = '';
+              that.form.roomNumber = '';
+              console.log(that.form.communityName);
+            }
           }
         });
     },
-    queryRoomNo() {
+    queryRoomNo (name) {
       var that = this;
       this.$api
         .get({
@@ -830,15 +847,27 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             that.form.roomNo = "";
+            let resultArr = that.cbIdList.find((item) => {
+              return item.value === name;
+            });
+            that.form.cbNo = resultArr.name;
+            that.form.roomNumber = '';
             that.roomNoList = e.data.data.list;
           }
         });
     },
-    search() {
+    queryRoomNumber (name) {
+      let that = this;
+      let resultArr = that.roomNoList.find((item) => {
+        return item.value === name;
+      });
+      that.form.roomNumber = resultArr.name;
+    },
+    search () {
       var that = this;
       that.form.searchInfo = that.searchData;
     },
-    mateHouse() {
+    mateHouse () {
       var that = this;
       console.log(that.form);
       console.log(that.form.comId);

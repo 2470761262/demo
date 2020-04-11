@@ -109,7 +109,7 @@
 
       <el-button-group>
         <el-button type="primary"
-                   @click="apply()">调交审核</el-button>
+                   @click="apply()">提交审核</el-button>
       </el-button-group>
     </el-form>
     <el-dialog :visible.sync="dialogVisible">
@@ -197,6 +197,10 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          this.$message({
+            message: '换肤成功',
+            type: 'success'
+          });
           that.$router.push({ path: '/buySellSystem/addFloorList' });
         } else if (e.data.code == 400) {
           alert(e.data.message);

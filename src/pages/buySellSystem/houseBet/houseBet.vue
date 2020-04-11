@@ -80,7 +80,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">面积</h3>
           <el-input placeholder="最小值"
-                     v-model="data.minInArea"
+                    v-model="data.minInArea"
                     class="set-input90"
                     clearable />
           <span class="cut-off-rule"></span>
@@ -109,7 +109,8 @@
                      @click="queryHouseBetParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/myBetList"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      deptUrl="/myHouse/myBetList"></moreSelect>
         </div>
       </div>
     </template>
@@ -202,8 +203,8 @@ export default {
         minPrice: "",
         maxprice: "",
         minInArea: "",
-        maxInArea: "",  
-        stauts: "",  
+        maxInArea: "",
+        stauts: "",
         order: "",
         empId: "",
         deptId: "",
@@ -453,11 +454,11 @@ export default {
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
       params.sortColumn = column;
-      if(type == "descending"){
+      if (type == "descending") {
         params.sortType = 1;
-      }else if(type == "ascending"){
+      } else if (type == "ascending") {
         params.sortType = 0;
-      }else{
+      } else {
         params.sortType = type;
       }
       if (Object.keys(this.moreSelect).length != 0) {
@@ -475,7 +476,7 @@ export default {
       } else {
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
-        params.roomNo = that.data.roomNo;
+        params.bhId = that.data.roomNo;
         params.status = that.data.status;
         params.customerName = that.data.customerName;
         params.empId = that.data.empId;

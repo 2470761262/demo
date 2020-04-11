@@ -111,8 +111,7 @@
           </el-dialog>
           <el-input type="text"
                     v-model="DeptEntity.perName"
-                    @change="getDialogVisible()"
-                    readonly="readonly"></el-input>
+                    @focus="getDialogVisible()"></el-input>
         </el-form-item>
       </div>
 
@@ -268,6 +267,7 @@ export default {
   computed: {},
   methods: {
     getDialogVisible() {
+      debugger;
       this.dialogVisible = true;
       this.getPrincipal(1);
       this.tableDataColumn = [
@@ -382,7 +382,7 @@ export default {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       this.$api
         .post({
-          url: "/stroe/list",
+          url: "/stroe/list/dept",
           data: params,
           token: false,
           headers: { "Content-Type": "application/json" }

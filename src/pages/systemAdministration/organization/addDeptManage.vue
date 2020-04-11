@@ -400,7 +400,7 @@ export default {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       this.$api
         .post({
-          url: "/stroe/list",
+          url: "/stroe/list/dept",
           data: params,
           token: false,
           headers: { "Content-Type": "application/json" }

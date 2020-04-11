@@ -390,13 +390,13 @@ export default {
     form: {
       deep: true,
       immediate: true,
-      handler: function(value, ordvalue) {
+      handler: function (value, ordvalue) {
         this.renderTag(value);
         this.getHouseData(JSON.parse(JSON.stringify(value)));
       }
     }
   },
-  data() {
+  data () {
     return {
       dynamicTags: [],
       renderList: [],
@@ -423,22 +423,6 @@ export default {
           default: true
         },
         {
-          prop: "buildingName",
-          label: "楼栋号",
-          width: "90",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "roomNo",
-          label: "房间号",
-          width: "110",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
           prop: "inArea",
           label: "面积(m²)",
           width: "110",
@@ -460,7 +444,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -468,7 +452,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -476,7 +460,7 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -484,7 +468,7 @@ export default {
           prop: "addTime",
           label: "添加时间",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -552,38 +536,38 @@ export default {
     };
   },
   methods: {
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    toHouseDetail(id) {
+    toHouseDetail (id) {
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //远程排序
-    sortMethod(item) {
+    sortMethod (item) {
       this.form.sortColumn = item.prop;
       this.form.sortType = item.order;
       this.getHouseData(JSON.parse(JSON.stringify(value)));
       console.log(item);
     },
-    keySelect() {
+    keySelect () {
       if (this.form.keyOwner != "") {
         this.form.keyOwner = "";
       } else {
         this.form.keyOwner = "1";
       }
     },
-    onlySelect() {
+    onlySelect () {
       if (this.form.isOnly != "") {
         this.form.isOnly = "";
       } else {
         this.form.isOnly = "1";
       }
     },
-    defaultSelect() {
+    defaultSelect () {
       this.form.sortColumn = "id";
       this.form.sortType = "ascending";
     },
-    priceSelect() {
+    priceSelect () {
       this.form.sortColumn = "price";
       if (this.form.sortType == "ascending") {
         this.form.sortType = "descending";
@@ -592,7 +576,7 @@ export default {
       }
       console.log(this.form.sortType);
     },
-    inAreaSelect() {
+    inAreaSelect () {
       this.form.sortColumn = "inArea";
       if (this.form.sortType == "ascending") {
         this.form.sortType = "descending";
@@ -601,10 +585,10 @@ export default {
       }
       console.log(this.form.sortType);
     },
-    InitPageJson() {
+    InitPageJson () {
       this.pageJson = { total: 1, currentPage: 1 };
     },
-    getHouseData(value, initPage = true) {
+    getHouseData (value, initPage = true) {
       let that = this;
       this.loading = true;
       Object.keys(value).forEach(item => {
@@ -639,8 +623,9 @@ export default {
         });
     },
     //创建需要渲染的标签
-    renderTag(value) {
+    renderTag (value) {
       let that = this;
+      console.log(value);
       //清空
       this.dynamicTags = [];
       //价格
@@ -648,7 +633,7 @@ export default {
         this.dynamicTags.push({
           title: `价格:${value.minPrice}-${
             value.maxPrice == "9999" ? "无限" : value.maxPrice
-          }万`,
+            }万`,
           field: "price",
           arr: false
         });
@@ -658,7 +643,7 @@ export default {
         this.dynamicTags.push({
           title: `面积:${value.minInArea}-${
             value.maxInArea == "9999" ? "无限" : value.maxInArea
-          }㎡`,
+            }㎡`,
           field: "area",
           arr: false
         });
@@ -668,12 +653,34 @@ export default {
         this.dynamicTags.push({
           title: `楼层:${value.minFloor}-${
             value.maxFloor == "9999" ? "无限" : value.maxFloor
-          }层`,
+            }层`,
           field: "floot",
           arr: false
         });
       }
 
+      //楼栋号
+      if (value.cbNo != null && value.cbNo != "") {
+        this.dynamicTags.push({
+          title: `楼栋号:${value.cbNo}`,
+          field: "cbNo",
+          arr: false
+        })      };
+
+      //房间号
+      if (value.roomNumber != null && value.roomNumber != "") {
+        this.dynamicTags.push({
+          title: `房间号:${value.roomNumber}`,
+          field: "roomNumber",
+          arr: false
+        })      };
+      //楼盘名称
+      if (value.communityName != null && value.communityName != "") {
+        this.dynamicTags.push({
+          title: `楼盘名称:${value.communityName}`,
+          field: "communityName",
+          arr: false
+        })      };
       //房源类型
       if (value.title != null && value.title != "") {
         this.dynamicTags.push({
@@ -703,7 +710,7 @@ export default {
       //中学
       this.appendFormTag(value.middleSchool, "中学", "middleSchool");
     },
-    appendFormTag(to, titleName, fieldName) {
+    appendFormTag (to, titleName, fieldName) {
       //房型
       to.forEach(item => {
         this.dynamicTags.push({
@@ -714,13 +721,13 @@ export default {
         });
       });
     },
-    filterSplice(e) {
+    filterSplice (e) {
       return this.form[e.field].findIndex(item => {
         return item == e.value;
       });
     },
     //标签关闭
-    handleClose(e) {
+    handleClose (e) {
       if (e.arr) {
         // 删除多选
         this.form[e.field].splice(this.filterSplice(e), 1);
@@ -742,10 +749,29 @@ export default {
           this.form.maxFloor = "";
           this.form.minFloor = "";
         }
+        if (e.field == "communityName") {
+          this.form.communityName = "";
+          this.form.cbNo = "";
+          this.form.roomNumber = "";
+          this.form.comId = '';
+          this.form.cbId = '';
+          this.form.roomNo = '';
+
+        }
+        if (e.field == "cbNo") {
+          this.form.cbNo = "";
+          this.form.roomNumber = "";
+          this.form.cbId = '';
+          this.form.roomNo = '';
+        }
+        if (e.field == "roomNumber") {
+          this.form.roomNumber = "";
+          this.form.roomNo = '';
+        }
       }
     },
     //跳转第几页
-    handleCurrentChange(e) {
+    handleCurrentChange (e) {
       this.pageJson.currentPage = e;
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
     }

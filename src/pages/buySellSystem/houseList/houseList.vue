@@ -327,14 +327,14 @@ import getMenuRid from "@/minxi/getMenuRid";
 import { TOKEN } from "@/util/constMap";
 import util from "@/util/util";
 export default {
-  provide() {
+  provide () {
     return {
       form: this.form,
       Slider: this.Slider
     };
   },
   computed: {
-    nest() {
+    nest () {
       return util.localStorageGet("nest");
     }
   },
@@ -344,7 +344,7 @@ export default {
     houselistlhousepair,
     houseresultlist
   },
-  data() {
+  data () {
     return {
       querySelectFlag: false,
       houseMenuList: HosueList,
@@ -356,6 +356,9 @@ export default {
       form: {
         type: "13",
         title: "全部在售",
+        communityName: '',//楼盘名
+        cbNo: '',//楼栋号
+        roomNumber: '',//房间号
         business: [],
         houseType: [],
         renovation: [],
@@ -381,13 +384,13 @@ export default {
       }
     };
   },
-  created() {
+  created () {
     this.form.type = "12";
     this.form.title = "全部在售";
     this.form.action = "/mateHouse/getMateHouse/soleAllHouse";
   },
   methods: {
-    setSelectNav(item, resetAll) {
+    setSelectNav (item, resetAll) {
       this.houseMenuList.forEach((items, index) => {
         if (resetAll) {
           items.flag = false;
@@ -410,11 +413,11 @@ export default {
       }
     },
     //跳转页面
-    navToPath(path) {
+    navToPath (path) {
       this.$router.push({ path: path });
     },
 
-    GetRequest() {
+    GetRequest () {
       var href = window.location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", href);
       var str = href.substring(href.indexOf("?"));
@@ -428,10 +431,10 @@ export default {
       console.log("傻逼傻逼：从地址tk获取到后放到storage:" + token);
       return token;
     },
-    handleClick(e) {
+    handleClick (e) {
       console.log(e);
     },
-    addHouse() {
+    addHouse () {
       this.$router.push({ path: "/buySellSystem/addHouse" });
     }
   }

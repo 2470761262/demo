@@ -228,18 +228,17 @@ export default {
     this.getAgentRules();
     this.getisRecommend();
     this.getBetInfo();
-    if (util.localStorageGet("logindata")) {
-      this.perId = util.localStorageGet("logindata").accountId;
-      console.log(this.perId, "this.perId ");
-    }
-    if (this.resultData.plate != 1 && this.resultData.plate != 4 && this.perId == this.resultData.AgentPer) {//当前跟单人显示编辑按钮
-      but.$emit("editAgentHouse");
-    }
+
+
   },
   created () {
     but.$on("getBetInfo", () => {
       this.getBetInfo;
     });
+    if (util.localStorageGet("logindata")) {
+      this.perId = util.localStorageGet("logindata").accountId;
+      console.log(this.perId, "this.perId ");
+    }
   },
   destroyed () {
     but.$off("getBetInfo");
@@ -422,6 +421,9 @@ export default {
               }
             }
           });
+          if (that.resultData.plate != 1 && that.resultData.plate != 4 && that.perId == that.resultData.AgentPer) {//当前跟单人显示编辑按钮
+            but.$emit("editAgentHouse");
+          }
         })
         .catch(e => { });
     },

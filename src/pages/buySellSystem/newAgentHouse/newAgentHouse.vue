@@ -25,7 +25,7 @@
                        :loading="communitySelect.loading">
               <el-option v-for="item in communitySelect.list"
                          :key="item.value"
-                         :label="item.name"
+                         :label="item.name" 
                          :value="item.name"></el-option>
             </el-select>
           </div>
