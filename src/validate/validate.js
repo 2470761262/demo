@@ -54,6 +54,18 @@ Validator.extend('isGreater', {
         return Number(value) <= Number((compare[0] == '' ? 0 : compare[0]));
     }
 });
+//比较是否相同
+Validator.extend('isSame', {
+    compare: ['List', 'title'],
+    messages: {
+        zh_CN: (field, args) => {
+            return `不能出现重复的${args[1]}`
+        }
+    },
+    validate: (value, compare) => {
+        return compare[0].length == new Set(compare[0]).size
+    }
+});
 //中文
 Validator.extend('isChinese', {
     messages: {

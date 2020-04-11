@@ -41,6 +41,26 @@ export default [
             import(/* webpackChunkName: "validateHouseDetails" */ "@/pages/buySellSystem/houseDetails/validateHouseDetails.vue")
     },
     {
+        //买卖系统楼盘详情
+        path: "/buySellSystem/buildingHouseDetail",
+        name: "buildingHouseDetail",
+        meta: {
+            title: '楼盘详情'
+        },
+        component: () =>
+            import(/* webpackChunkName: "buildingHouseDetail" */ "@/pages/buySellSystem/houseDetails/buildingHouseDetail.vue")
+    },
+    {
+        //买卖系统交易房源详情
+        path: "/buySellSystem/tradeHouseDetail",
+        name: "tradeHouseDetail",
+        meta: {
+            title: '房源历史交易详情'
+        },
+        component: () =>
+            import(/* webpackChunkName: "tradeHouseDetail" */ "@/pages/buySellSystem/houseDetails/tradeHouseDetail.vue")
+    },
+    {
         path: "/buySellSystem/addHouse",
         name: 'addHouse',
         meta: {

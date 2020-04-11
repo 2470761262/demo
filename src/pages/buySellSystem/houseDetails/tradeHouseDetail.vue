@@ -49,8 +49,7 @@
       <!-- 右侧功能按钮 -->
       <sidebarList lastItemSet
                    lastTitle="编辑"
-                   :judgeShowEidt="true"
-                   :lastParams='lastParams'></sidebarList>
+                   :lastParams='{id:forID.id,method:"reset"}'></sidebarList>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -85,11 +84,11 @@ export default {
       houseId: this.forID,
       houseDetails: this.houseDetails,
       load: this.load,
-      buttonDisabled: false
+      buttonDisabled: true
     };
   },
   computed: {
-    nest () {
+    nest() {
       return util.localStorageGet("nest");
     }
   },
@@ -113,57 +112,26 @@ export default {
       load: {
         loading: true,
         loadingMessage: "努力加载中~"
-      },
-      lastParams: {
-        id: 0,
-        method: "edit",
-        paramsObj: {
-          getEditUrl: "/agent_house/getEditDetails/",
-          buttonText: "保存",
-          editUrl: "/agent_house/editAgentHouse",
-          getAudioUrl: "/agentHouse/audio/getAudioList/",
-          getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
-          getVideoUrl: "/agentHouse/video/getVideoList/"
-        },
-      },
-      detailType:undefined//标识房源详情类型，决定调用哪个详情接口地址
+      }
     };
   },
   created () {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
-      this.detailType=this.$route.params.detailType;
-      util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
-      util.localStorageSet("houseDetails.vue:detailType", this.detailType);
+      util.localStorageSet("tradeHouseDetail.vue:houseId", this.forID.id);
     } else {
-      this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
-      this.detailType = util.localStorageGet("houseDetails.vue:detailType");
+      this.forID.id = util.localStorageGet("tradeHouseDetail.vue:houseId");
     }
-    this.lastParams.id = this.forID.id;
     this.getHouseDetails();
   },
   methods: {
-    /**
-     * 获取房源详情
-     */
     getHouseDetails () {
       let that = this;
       this.load.loading = true;
-      let url='/agent_house/getHouseDetail';
-      let query={
-        houseId: that.forID.id
-      };
-      if(that.detailType&&that.detailType!='undefined'){
-          console.log("注意，了，这是调用另一个房源详情接口");
-					query.type=that.detailType;
-					url='applet/agent_house/getUniversalHouseDetail';
-			}else{
-          console.log("调用原有正常房源详情接口");
-      }
       this.$api
         .post({
-          url: url,
-          data: query,
+          url: "/history/agent_house/getHouseDetail/" + that.forID.id,
+          data: { tradeType: 0 },
           qs: true
         })
         .then(e => {

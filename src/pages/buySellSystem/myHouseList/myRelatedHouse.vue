@@ -303,7 +303,7 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            (item.rooms||0) + "室" + (item.hall||0) + "厅" + (item.toilet||0) + "卫"
+            (item.rooms || 0) + "室" + (item.hall || 0) + "厅" + (item.toilet || 0) + "卫"
         },
         {
           prop: "unitPrice",
@@ -341,26 +341,30 @@ export default {
       ],
       tableColumn: [],
       tableData: [],
-      moreSelect: {}
+      moreSelect: {},
+      sortColumn: "id",//排序字段
+      sortType: "descending",//排序类型
     };
   },
   mounted () {
-    this.querySaleNotTrack(1, "id", "ascending");
+    this.querySaleNotTrack(1);
   },
   methods: {
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.querySaleNotTrack(1, e.prop, e.order);
+      this.sortColumn = e.prop;
+      this.sortType = e.order;
+      this.querySaleNotTrack(1);
     },
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.querySaleNotTrack(1, "id", "ascending");
+      this.querySaleNotTrack(1);
     },
     remove () {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.querySaleNotTrack(1, 'id', 'ascending');
+      this.querySaleNotTrack(1);
     },
     distributeEvent (e, id) {
       var that = this;
@@ -378,7 +382,7 @@ export default {
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     querySaleNotTrackParams () {
-      this.querySaleNotTrack(1, 'id', 'ascending');
+      this.querySaleNotTrack(1);
     },
     remoteInput () {
       if (this.data.comId.length == 0) {
@@ -463,7 +467,7 @@ export default {
       })
       this.querySaleNotTrackParams();
     },
-    querySaleNotTrack (currentPage, column, type) {
+    querySaleNotTrack (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -471,14 +475,12 @@ export default {
         console.log("option的值！！！" + that.workType);
         params.workType = that.workType;
       }
-      params.sortColumn = column;
-      params.sortType = type;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
             params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } 
+          }
           else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
@@ -500,6 +502,8 @@ export default {
         params.minPrice = that.data.minPrice;
         params.maxPrice = that.data.maxPrice;
       }
+      params.sortColumn = that.sortColumn;
+      params.sortType = that.sortType;
       this.$api
         .post({
           url: "/myHouse/getMyRelated",
@@ -535,11 +539,11 @@ export default {
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.querySaleNotTrack(1, "id", "ascending");
+      this.querySaleNotTrack(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.querySaleNotTrack(val, "id", "ascending");
+      this.querySaleNotTrack(val);
     }
   }
 };

@@ -210,20 +210,24 @@ export default {
           key: "area",
           value: [{ paramsKey: "busy", index: -1 }]
         }
-      ]
+      ],
+      sortColumn: "id",//排序字段
+      sortType: "descending",//排序类型
     };
   },
   mounted () {
-    this.queryOurComDeal(1, "id", "ascending");
+    this.queryOurComDeal(1);
   },
   methods: {
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryOurComDeal(1, "id", "descending");
+      this.queryOurComDeal(1);
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryOurComDeal(1, e.prop, e.order);
+      this.sortColumn = e.prop;
+      this.sortType = e.order;
+      this.queryOurComDeal(1);
     },
     queryTabData () {
       console.log(this, "111");
@@ -234,7 +238,7 @@ export default {
       this.$router.push({ name: "historyDetails", params: { houseId: id } });
     },
     queryDatalist () {
-      this.queryOurComDeal(1, "id", "ascending");
+      this.queryOurComDeal(1);
     },
     remoteInput () {
       if (this.comId.length == 0) {
@@ -319,10 +323,10 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryOurComDeal(1, 'id', 'ascending');
+      this.queryOurComDeal(1);
 
     },
-    queryOurComDeal (currentPage, column, type) {
+    queryOurComDeal (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -364,17 +368,8 @@ export default {
           params.maxPrice = that.data.maxPrice;
         }
       }
-      if (column == "" || type == null || type == undefined) {
-        params.sortColumn = "id";
-      } else {
-        params.sortColumn = column;
-      }
-      if (type == "" || type == null || type == undefined) {
-        params.sortType = "ascending";
-      } else {
-        params.sortType = type;
-      }
-
+      params.sortColumn = this.sortColumn;
+      params.sortType = this.sortType;
       console.log(params);
       this.$api
         .post({
@@ -443,7 +438,7 @@ export default {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryOurComDeal(1, "id", "ascending");
+      this.queryOurComDeal(1);
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
@@ -452,7 +447,7 @@ export default {
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryOurComDeal(1, "id", "ascending");
+      this.queryOurComDeal(1);
     },
     formatData (row, column) {
       if (column.property == "unitPrice") {

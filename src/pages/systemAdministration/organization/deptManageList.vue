@@ -92,15 +92,15 @@
           <el-button type="primary"
                      size="mini"
           @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button>-->
-          <el-select v-model="queryData.isLocked" placeholder="全部" size="mini" @change="SelectTag">
-            <el-option
-              v-for="item in SelectOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            ></el-option>
-          </el-select>
           <div class="query-right">
+            <el-select v-model="queryData.isLocked" placeholder="全部" size="mini" @change="SelectTag">
+              <el-option
+                v-for="item in SelectOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
             <el-input placeholder="部门名称" size="small" v-model="queryData.DeptName" clearable></el-input>
             <el-button type="primary" size="mini" @click="queryDeptByParams">查询</el-button>
           </div>
@@ -183,7 +183,7 @@ export default {
       selectTag: "",
       SelectOptions: [
         {
-          value: "",
+          value: null,
           label: "全部"
         },
         {
@@ -224,7 +224,7 @@ export default {
   },
   methods: {
     queryDeptByParams() {
-      this.queryData.isLocked = null;
+      //this.queryData.isLocked = null;
       this.queryDeptDatas(1);
     },
     queryDeptDatas(currentPage) {

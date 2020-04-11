@@ -313,12 +313,12 @@
               <div class="item-data-bottom">
                 <div class="item-data-bottom-detali overText">{{item.communityName}} &nbsp;/&nbsp;{{item.inArea}}㎡ &nbsp;/&nbsp;{{item.rooms}}房2厅1卫</div>
                 <div class="item-data-bottom-price overText">￥{{item.price}}万</div>
-                <div class="item-data-bottom-avgPirce overText">{{item.unitpaice}}元/平</div>
+                <div class="item-data-bottom-avgPirce overText">{{item.unitPrice}}元/平</div>
               </div>
             </div>
             <div class="select-for-item-but">
               <i class="el-icon-document icon i"
-                 @click="toHouseDetail(item.id)"></i>
+                 @click="toHouseDetail(item)"></i>
             </div>
           </div>
         </template>
@@ -354,7 +354,7 @@
                 <template slot-scope="scope">
                   <el-button size="mini"
                              type="primary"
-                             @click="toHouseDetail(scope.row.id)">查看</el-button>
+                             @click="toHouseDetail(scope.row)">查看</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -491,16 +491,16 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+            (item.rooms||0) + "室" + (item.hall||0) + "厅" + (item.toilet||0) + "卫"
         },
         {
-          prop: "unitpaice",
+          prop: "unitPrice",
           label: "单价(元/㎡)",
           width: "120",
           order: "custom",
           disabled: false,
           default: false,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         {
           prop: "face",
@@ -542,7 +542,12 @@ export default {
     tabColumnChange (e) {
       this.tableColumn = e;
     },
-    toHouseDetail (id) {
+    toHouseDetail (item) {
+      let id=item.id;
+      console.log(item,"谢谢谢谢谢谢谢谢");
+      if(item.hasOwnProperty('houseId')){
+        id=item.houseId;
+      }
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //远程排序

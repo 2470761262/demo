@@ -8,7 +8,9 @@
              @handleClick="handleClick"
              pageName="historyDetails"
              @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+             @handleCurrentChange="handleCurrentChange"
+             :dblclick="true"
+             @cellDblClick="toHouseDetail">
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -135,7 +137,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="toLook(scope.row.id)"
+                     @click="toHouseDetail(scope.row)"
                      v-if="scope.row.houseType!==1">查看</el-button>
           <el-button type="primary"
                      size="mini"
@@ -158,7 +160,7 @@ export default {
     // definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
       option: [
@@ -270,34 +272,55 @@ export default {
             { paramsKey: "endFollowTime", index: 1 }
           ]
         }
-      ]
+      ],
+      sortColumn: "id",//排序字段
+      sortType: "descending",//排序类型
     };
   },
-  mounted() {
+  mounted () {
     this.data.type = "build";
-    this.queryPotentialHouse(1, "id", "descending");
+    this.queryPotentialHouse(1);
   },
   methods: {
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryPotentialHouse(1, e.prop, e.order);
+      this.sortColumn = e.prop;
+      this.sortType = e.order;
+      this.queryPotentialHouse(1);
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    sortMethod(e) {
-      console.log(e.prop, e.order);
-      this.queryPotentialHouse(1, e.prop, e.order);
-    },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryPotentialHouse(1, "id", "ascending");
+      this.queryPotentialHouse(1);
     },
-    toLook(id) {
-      var that = this;
-      that.$router.push({ name: "historyDetails", params: { houseId: id } });
+    toHouseDetail (item) {
+      let id = item.id;
+      let that = this;
+      console.log(item, "潜在出售房源详情");
+      if (item.houseType == 1) {//楼盘情况
+        console.log("进入楼盘详情");
+        console.log("/building/getBuildingDetail/" + item.id);
+        that.$router.push({
+          name: "buildingHouseDetail",
+          params: { houseId: item.id }
+        });
+      } else if (item.houseType == 2) {
+        console.log("进入交易房源详情");
+        if (!item.houseId) {
+          that.$message.error("houseId都是空的，如何查看");
+          return;
+        }
+        that.$router.push({
+          name: "tradeHouseDetail",
+          params: { houseId: item.houseId }
+        });
+      } else {
+        that.$message.error("无法识别潜在房源的类型，到底是楼盘还是交易过的房源呢？这是个值得思索的问题");
+      }
     },
-    toSale(
+    toSale (
       comId,
       cbId,
       bhId,
@@ -323,15 +346,15 @@ export default {
         }
       });
     },
-    queryPotentialHouseParams() {
-      this.queryPotentialHouse(1, "id", "descending");
+    queryPotentialHouseParams () {
+      this.queryPotentialHouse(1);
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -357,7 +380,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       if (that.data.comId == "") {
         that.data.roomNo = "";
@@ -384,7 +407,7 @@ export default {
         });
       this.queryPotentialHouseParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -407,14 +430,14 @@ export default {
         });
       this.queryPotentialHouseParams();
     },
-    Remove() {
+    Remove () {
       //  let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       //   this.tabColumnChange(tab);
-      this.queryPotentialHouse(1, "id", "descending");
+      this.queryPotentialHouse(1);
     },
 
-    queryPotentialHouse(currentPage, column, type) {
+    queryPotentialHouse (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -438,8 +461,8 @@ export default {
         params.beginTime = that.data.timeSelect[0];
         params.endTime = that.data.timeSelect[1];
       }
-      params.sortColumn = column;
-      params.sortType = type;
+      params.sortColumn = this.sortColumn;
+      params.sortType = this.sortType;
       console.log(params);
       this.$api
         .post({
@@ -464,20 +487,20 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryPotentialHouseParams(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryPotentialHouse(val, "id", "descending");
+      this.queryPotentialHouse(val);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryPotentialHouse(1, "id", "descending");
+      this.queryPotentialHouse(1);
     }
   }
 };

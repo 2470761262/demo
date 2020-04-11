@@ -267,7 +267,7 @@ export default {
             params: { houseId: row.id }
           });
         }
-      } else {
+      } else {//使用各自页面的双击事件
         this.$emit("cellDblClick", row);
       }
     },

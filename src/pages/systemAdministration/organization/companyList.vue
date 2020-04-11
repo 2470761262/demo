@@ -107,6 +107,14 @@
                       v-model="queryData.CompanyName"
                       clearable>
             </el-input>
+            <el-select v-model="selectTag" size="small" placeholder="全部" @change="SelectTag">
+              <el-option
+                v-for="item in SelectOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
+            </el-select>
             <el-button type="primary"
                        size="mini"
                        @click="queryCompanyByParams">查询</el-button>
@@ -118,7 +126,10 @@
           <el-table-column :prop="item.prop"
                            :label="item.label"
                            :width="item.width"
-                           :key="item.prop"></el-table-column>
+                           :key="item.prop"
+                           :formatter="item.formatter"
+          >
+          </el-table-column>
         </template>
         <el-table-column label="操作"
                          width="300"
@@ -179,10 +190,19 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "companyName", label: "公司名" },
-        { prop: "coDesc", label: "公司描述" },
-        { prop: "tel", label: "电话" },
-        { prop: "addDate", label: "添加时间" }
+        { prop: "companyName", label: "公司名"},
+        { prop: "coDesc", label: "公司描述"},
+        { prop: "tel", label: "电话"},
+        { prop: "isLocked", label: "是否锁定",
+          formatter: function (row) {
+            if(row.isLocked == 1){
+              return "正常";
+            }else{
+              return "锁定";
+            }
+          }
+        },
+        { prop: "addDate", label: "添加时间"}
       ],
       tableData: [],
       selectTag: "",

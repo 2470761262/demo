@@ -419,3 +419,18 @@ export const REMARK = [//备注
         value: "saleDesc"
     }
 ]
+
+export const ONLYTYPE = [//委托类型
+    {
+        key: "独家",
+        value: 1
+    },
+    {
+        key: "普通",
+        value: 2
+    },
+    {
+        key: "限时",
+        value: 3
+    }
+]

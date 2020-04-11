@@ -4,7 +4,9 @@
              @queryTabData="queryTabData"
              @handleClick="handleClick"
              @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+             @handleCurrentChange="handleCurrentChange"
+             :dblclick="true"
+             @cellDblClick="toHouseDetail">
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -167,7 +169,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="toLook(scope.row)">查看</el-button>
+                     @click="toHouseDetail(scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </template>
@@ -231,11 +233,13 @@ export default {
         { prop: "houseNo", label: "房源编号" },
         { prop: "communityName", label: "楼盘名称" }
       ],
-      tableData: []
+      tableData: [],
+      sortColumn: "createTime",//排序字段
+      sortType: 1,//排序类型
     };
   },
   mounted () {
-    this.queryHouseBet(1, "createTime", "1");
+    this.queryHouseBet(1);
     //读取树数据
     this.$api
       .post({
@@ -270,19 +274,34 @@ export default {
       });
   },
   methods: {
+     toHouseDetail(row) {
+      var that = this;
+      console.log(row, "进入对赌房源（bsagenthousetbl）详情");
+      that.$router.push({
+              name: "houseDetails",
+              params: { houseId: row.houseId }
+      });
+    },
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryHouseBet(1, "createTime", "1");
+      this.queryHouseBet(1);
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryHouseBet(1, e.prop, e.order);
+      this.sortColumn = e.prop;
+      if (e.order == "descending") {
+        this.sortType = 1;
+      }
+      else {
+        this.sortType = 0;
+      }
+      this.queryHouseBet(1);
     },
     Remove () {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryHouseBet(1, 'createTime', '1');
+      this.queryHouseBet(1);
 
     },
     handleCheckChange (data, checked, node) {
@@ -358,15 +377,8 @@ export default {
       this.data.orderAsc = Asc;
       this.queryHouseBetParams();
     },
-    toLook (row) {
-      var that = this;
-      that.$router.push({
-        name: "houseDetails",
-        params: { houseId: row.houseId }
-      });
-    },
     queryHouseBetParams () {
-      this.queryHouseBet(1, "createTime", "1");
+      this.queryHouseBet(1);
     },
     //楼盘获取焦点 第一次点击就进行查询
 
@@ -443,24 +455,12 @@ export default {
         });
       this.queryHouseBetParams();
     },
-    queryHouseBet (currentPage, column, type) {
-      if (!column) {
-        column = "createTime";
-      }
-      if (!type) {
-        type = "1";
-      }
+    queryHouseBet (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
-      params.sortColumn = column;
-      if (type == "descending") {
-        params.sortType = 1;
-      } else if (type == "ascending") {
-        params.sortType = 0;
-      } else {
-        params.sortType = type;
-      }
+      params.sortColumn = that.sortColumn;
+      params.sortType = that.sortType;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
@@ -533,12 +533,12 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryHouseBet(val, "createTime", "1");
+      this.queryHouseBet(val);
     },
     handleSizeChange (val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryHouseBet(1, "createTime", "1");
+      this.queryHouseBet(1);
     }
   }
 };
