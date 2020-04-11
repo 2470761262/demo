@@ -99,7 +99,9 @@
                      :show-file-list="true"
                      list-type="picture-card"
                      :before-upload="beforeAvatarUpload"
+                     :file-list="setEntity.siteLogo && [{name:'siteLogo',url:setEntity.siteLogo}]"
                      :on-success="resultImgNane('siteLogo')">
+
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
@@ -112,6 +114,7 @@
                      :show-file-list="true"
                      list-type="picture-card"
                      :before-upload="beforeAvatarUpload"
+                     :file-list="setEntity.sitebLogo && [{name:'sitebLogo',url:setEntity.sitebLogo}]"
                      :on-success="resultImgNane('sitebLogo')">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -127,6 +130,7 @@
                      :show-file-list="true"
                      list-type="picture-card"
                      :before-upload="beforeAvatarUpload"
+                     :file-list="setEntity.sitemLogo && [{name:'sitemLogo',url:setEntity.sitemLogo}]"
                      :on-success="resultImgNane('sitemLogo')">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -140,6 +144,7 @@
                      :show-file-list="true"
                      list-type="picture-card"
                      :before-upload="beforeAvatarUpload"
+                     :file-list="setEntity.siteHeadImg && [{name:'siteHeadImg',url:setEntity.siteHeadImg}]"
                      :on-success="resultImgNane('siteHeadImg')">
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -261,7 +266,9 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            that.setEntity = result.data;
+            if(result.data){
+              that.setEntity = result.data;
+            }
           }
         })
         .catch(e => {
