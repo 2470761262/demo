@@ -304,13 +304,16 @@
                 <div class="item-data-top-tag">
                   <div class="top-tag-item overText"
                        v-if="item.keyOwner>0">钥匙</div>
+                  <div class="top-tag-item overText"
+                       style='margin-left:5px'
+                       v-if="item.isOnly>0">独家</div>
                 </div>
               </div>
               <div class="item-data-middle overText">{{item.title}}</div>
               <div class="item-data-bottom">
                 <div class="item-data-bottom-detali overText">{{item.communityName}} &nbsp;/&nbsp;{{item.inArea}}㎡ &nbsp;/&nbsp;{{item.rooms}}房2厅1卫</div>
                 <div class="item-data-bottom-price overText">￥{{item.price}}万</div>
-                <div class="item-data-bottom-avgPirce overText">{{item.unitpaice}}元/平</div>
+                <div class="item-data-bottom-avgPirce overText">{{item.unitPrice}}元/平</div>
               </div>
             </div>
             <div class="select-for-item-but">
@@ -488,16 +491,16 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+            (item.rooms||0) + "室" + (item.hall||0) + "厅" + (item.toilet||0) + "卫"
         },
         {
-          prop: "unitpaice",
+          prop: "unitPrice",
           label: "单价(元/㎡)",
           width: "120",
           order: "custom",
           disabled: false,
           default: false,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         {
           prop: "face",

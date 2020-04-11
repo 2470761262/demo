@@ -95,6 +95,14 @@
         color: #fff;
       }
     }
+    .only {
+      width: 50px;
+      height: 10px;
+      height: 25px;
+      line-height: 25px;
+      margin-top: 25px;
+      position: absolute;
+    }
   }
 }
 .text-middle {
@@ -170,6 +178,9 @@
       <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
            data-detail="委托人">
         <template v-if="resultData.agentHouseMethod.onlyOwnerName!=null">
+          <el-button class="only">
+            {{resultData.isOnly | mapFilter('ONLYTYPE')}}
+          </el-button>
           <el-image class="task-pro-img"
                     :src="resultData.agentHouseMethod.onlyOwnerHeadImg | defaultImg "
                     fit="cover">
@@ -313,6 +324,11 @@ export default {
       showFollow: true, //是否显示组件的跟进
       applyAgentFlag: false //申请跟单开关
     };
+  },
+  filters: {
+    mapFilter (value, ListName, resultValue = null) {
+      return util.countMapFilter(value, ListName, resultValue);
+    }
   },
   methods: {
     /**

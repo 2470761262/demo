@@ -88,7 +88,7 @@ export default {
     };
   },
   computed: {
-    nest() {
+    nest () {
       return util.localStorageGet("nest");
     }
   },
@@ -117,10 +117,10 @@ export default {
   },
   created () {
     if (this.$route.params.houseId) {
-      this.forID.id = this.$route.params.houseId;      
-      util.localStorageSet("validateHouseDetails.vue:houseId", this.forID.id);      
+      this.forID.id = this.$route.params.houseId;
+      util.localStorageSet("validateHouseDetails.vue:houseId", this.forID.id);
     } else {
-      this.forID.id = util.localStorageGet("validateHouseDetails.vue:houseId");      
+      this.forID.id = util.localStorageGet("validateHouseDetails.vue:houseId");
     }
     this.getHouseDetails();
   },
@@ -176,7 +176,13 @@ export default {
                 }
               }
             }
-            result.data.validateText='待验真';
+            if (result.data.checkSign == 1) { result.data.validateText = '待验真'; }
+            else if (result.data.checkSign == 2) {
+              result.data.validateText = '验真成功';
+            }
+            else {
+              result.data.validateText = '验真失败';
+            }
             this.$set(this.houseDetails, "data", result.data);
           } else {
             that.$message.error(result.message);

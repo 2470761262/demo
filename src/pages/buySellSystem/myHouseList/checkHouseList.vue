@@ -16,10 +16,10 @@
   <div class="page-row-flex">
     <list-page :parentData="$data"
                @handleClick="handleClick"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange"
                :dblclick="true"
-              @cellDblClick="toHouseDetail">
+               @handleSizeChange="handleSizeChange"
+               @cellDblClick="toHouseDetail"
+               @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
         <div class="page-list-query-row">
           <div class="query-content-cell">
@@ -259,7 +259,7 @@
 
             <el-button type="primary"
                        v-if="!(scope.row.checkProject==13)"
-                       @click="toHouseDetail(scope.row)"
+                       @click="toHouseDetail"
                        size="mini">查看</el-button>
           </template>
         </el-table-column>
@@ -708,15 +708,14 @@ export default {
       this.querylistByParams();
     },
     //跳转房源详情页面
-    toHouseDetail (item) {
-      let id=item.eid;
-      this.$router.push({ name: "houseDetails", params: { houseId: id,detailType:4 } });
+    toHouseDetail (row) {
+      this.$router.push({ name: "houseDetails", params: { houseId: row.eid } });
     },
     querylistByParams () {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
-    querylist ( ) {
+    querylist () {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: that.pageJson.currentPage };
@@ -726,7 +725,7 @@ export default {
           if (key == "addTime" && this.moreSelect[key] !== "") {
             params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          } 
+          }
           else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];

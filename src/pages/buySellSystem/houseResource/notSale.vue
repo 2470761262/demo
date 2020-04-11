@@ -164,7 +164,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
 
@@ -359,36 +359,40 @@ export default {
             { paramsKey: "endFollowTime", index: 1 }
           ]
         }
-      ]
+      ],
+      sortColumn: "id",//排序字段
+      sortType: "descending",//排序类型
     };
   },
-  mounted() {
-    this.queryNotSale(1, "id", "ascending");
+  mounted () {
+    this.queryNotSale(1);
   },
   methods: {
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
-      this.queryNotSale(1, e.prop, e.order);
+      this.sortColumn = e.prop;
+      this.sortType = e.order;
+      this.queryNotSale(1);
     },
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
-      this.queryNotSale(1, "id", "ascending");
+      this.queryNotSale(1);
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    formatHouseType(row, column) {
+    formatHouseType (row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook(id) {
+    toLook (id) {
       var that = this;
       that.$router.push({ name: "historyDetails", params: { houseId: id } });
     },
-    toSale(
+    toSale (
       comId,
       cbId,
       bhId,
@@ -415,15 +419,15 @@ export default {
         }
       });
     },
-    queryNotSaleParams() {
-      this.queryNotSale(1, "id", "ascending");
+    queryNotSaleParams () {
+      this.queryNotSale(1);
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -449,7 +453,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       if (that.data.comId == "") {
         that.data.roomNo = "";
@@ -476,7 +480,7 @@ export default {
         });
       this.queryNotSaleParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -499,13 +503,13 @@ export default {
         });
       this.queryNotSaleParams();
     },
-    Remove() {
+    Remove () {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.queryNotSale(1, "id", "ascending");
+      this.queryNotSale(1);
     },
-    queryNotSale(currentPage, column, type) {
+    queryNotSale (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -528,8 +532,8 @@ export default {
         params.minPrice = that.data.minPrice;
         params.maxPrice = that.data.maxPrice;
       }
-      params.sortColumn = column;
-      params.sortType = type;
+      params.sortColumn = this.sortColumn;
+      params.sortType = this.sortType;
       this.$api
         .post({
           url: "/houseResource/getNotSale",
@@ -554,20 +558,20 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryNotSaleParams(1);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
-      this.queryNotSale(1, "id", "ascending");
+      this.queryNotSale(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.queryNotSale(val, "id", "ascending");
+      this.queryNotSale(val);
     }
   }
 };
