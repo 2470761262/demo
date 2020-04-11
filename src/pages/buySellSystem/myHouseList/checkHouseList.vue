@@ -17,7 +17,9 @@
     <list-page :parentData="$data"
                @handleClick="handleClick"
                @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+               @handleCurrentChange="handleCurrentChange"
+               :dblclick="true"
+              @cellDblClick="toHouseDetail">
       <template v-slot:top>
         <div class="page-list-query-row">
           <div class="query-content-cell">
@@ -257,7 +259,7 @@
 
             <el-button type="primary"
                        v-if="!(scope.row.checkProject==13)"
-                       @click="toHouseDetail(scope.row.Eid)"
+                       @click="toHouseDetail(scope.row)"
                        size="mini">查看</el-button>
           </template>
         </el-table-column>
@@ -706,8 +708,9 @@ export default {
       this.querylistByParams();
     },
     //跳转房源详情页面
-    toHouseDetail (id) {
-      this.$router.push({ name: "houseDetails", params: { houseId: id } });
+    toHouseDetail (item) {
+      let id=item.eid;
+      this.$router.push({ name: "houseDetails", params: { houseId: id,detailType:4 } });
     },
     querylistByParams () {
       console.log(this.queryData.timeSelect);

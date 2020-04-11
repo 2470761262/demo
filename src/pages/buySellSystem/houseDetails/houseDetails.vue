@@ -125,15 +125,19 @@ export default {
           getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
           getVideoUrl: "/agentHouse/video/getVideoList/"
         },
-      }
+      },
+      detailType:undefined//标识房源详情类型，决定调用哪个详情接口地址
     };
   },
   created () {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
+      this.detailType=this.$route.params.detailType;
       util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
+      util.localStorageSet("houseDetails.vue:detailType", this.detailType);
     } else {
       this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
+      this.detailType = util.localStorageGet("houseDetails.vue:detailType");
     }
     this.lastParams.id = this.forID.id;
     this.getHouseDetails();
@@ -145,12 +149,21 @@ export default {
     getHouseDetails () {
       let that = this;
       this.load.loading = true;
+      let url='/agent_house/getHouseDetail';
+      let query={
+        houseId: that.forID.id
+      };
+      if(that.detailType&&that.detailType!='undefined'){
+          console.log("注意，了，这是调用另一个房源详情接口");
+					query.type=that.detailType;
+					url='applet/agent_house/getUniversalHouseDetail';
+			}else{
+          console.log("调用原有正常房源详情接口");
+      }
       this.$api
         .post({
-          url: "/agent_house/getHouseDetail",
-          data: {
-            houseId: that.forID.id
-          },
+          url: url,
+          data: query,
           qs: true
         })
         .then(e => {

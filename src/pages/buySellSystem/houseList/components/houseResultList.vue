@@ -315,7 +315,7 @@
             </div>
             <div class="select-for-item-but">
               <i class="el-icon-document icon i"
-                 @click="toHouseDetail(item.id)"></i>
+                 @click="toHouseDetail(item)"></i>
             </div>
           </div>
         </template>
@@ -351,7 +351,7 @@
                 <template slot-scope="scope">
                   <el-button size="mini"
                              type="primary"
-                             @click="toHouseDetail(scope.row.id)">查看</el-button>
+                             @click="toHouseDetail(scope.row)">查看</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -539,7 +539,12 @@ export default {
     tabColumnChange (e) {
       this.tableColumn = e;
     },
-    toHouseDetail (id) {
+    toHouseDetail (item) {
+      let id=item.id;
+      console.log(item,"谢谢谢谢谢谢谢谢");
+      if(item.hasOwnProperty('houseId')){
+        id=item.houseId;
+      }
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //远程排序
