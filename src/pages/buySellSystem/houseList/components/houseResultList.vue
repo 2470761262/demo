@@ -423,22 +423,6 @@ export default {
           default: true
         },
         {
-          prop: "buildingName",
-          label: "楼栋号",
-          width: "90",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "roomNo",
-          label: "房间号",
-          width: "110",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
           prop: "inArea",
           label: "面积(m²)",
           width: "110",
@@ -460,7 +444,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -468,7 +452,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -476,7 +460,7 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -484,7 +468,7 @@ export default {
           prop: "addTime",
           label: "添加时间",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -679,7 +663,7 @@ export default {
       if (value.cbNo != null && value.cbNo != "") {
         this.dynamicTags.push({
           title: `楼栋号:${value.cbNo}`,
-          field: "type",
+          field: "floot",
           arr: false
         })      };
 
@@ -687,14 +671,14 @@ export default {
       if (value.roomNumber != null && value.roomNumber != "") {
         this.dynamicTags.push({
           title: `房间号:${value.roomNumber}`,
-          field: "type",
+          field: "floot",
           arr: false
         })      };
       //楼盘名称
       if (value.communityName != null && value.communityName != "") {
         this.dynamicTags.push({
           title: `楼盘名称:${value.communityName}`,
-          field: "type",
+          field: "floot",
           arr: false
         })      };
       //房源类型
