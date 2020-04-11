@@ -290,7 +290,7 @@
           placeholder="默认拨打为第一个号码"
           data-vv-name="tel"
           data-vv-as="电话号码"
-          v-validate="'required|phone'"
+          v-validate="'required|phoneLen|phone'"
           v-model="form.tel"
         >
           <div slot="prepend" class="item-before" data-before="*">手机号</div>
@@ -315,8 +315,8 @@
             placeholder="请输入业主电话号码"
             :data-vv-name="'tel'+item"
             :data-vv-as="'电话号码'+item"
-            v-validate="'phone'"
             v-model="form['tel'+item]"
+            v-validate="{phone:true,isSame:[ [form.tel,  ...addTel.map(tel=>  form['tel'+tel]) ],'手机号']}"
           >
             <div slot="prepend" class="item-before">手机号{{item}}</div>
             <div

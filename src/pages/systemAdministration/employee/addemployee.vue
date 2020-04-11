@@ -100,12 +100,30 @@
       <div class="flex-row">
         <el-form-item label="岗位:"
                       prop="perRole">
-          <el-select v-model="employeeEntity.perRole"
-                     @focus="findByParams1()"
-                     placeholder="请选择">
-            <el-option v-for="item in roleNameList"
+
+          <el-cascader ref="positionTree"
+                       @focus="selectPositionList()"
+                       @change="selectPositionNode()"
+                       :options="positionTree"
+                       :props="{
+                         label: 'labelName',
+                         value: 'businessId',
+                         children: 'childrenNodes'
+                       }"
+                       :show-all-levels="false">
+          </el-cascader>
+
+        </el-form-item>
+        <el-form-item label="角色:"
+                      prop="perPost">
+          <el-select v-model="employeeEntity.perPost"
+                     @focus="selectRoleList()"
+                     placeholder="请选择"
+                     :disabled="perPostReadOnly"
+          >
+            <el-option v-for="item in positionNameList"
                        :key="item.value"
-                       :label="item.roleName"
+                       :label="item.positionName"
                        :value="item.id"></el-option>
           </el-select>
         </el-form-item>
@@ -132,22 +150,6 @@
                        :value="1" />
           </el-select>
         </el-form-item>
-        <el-form-item label="状态:"
-                      prop="status">
-          <el-select type="text"
-                     placeholder="0实习，1试用，2正式，3离职"
-                     v-model="employeeEntity.status"
-                     show-word-limit>
-            <el-option label="实习"
-                       :value="0" />
-            <el-option label="试用"
-                       :value="1" />
-            <el-option label="正式"
-                       :value="2" />
-            <el-option label="离职"
-                       :value="3" />
-          </el-select>
-        </el-form-item>
       </div>
       <div class="flex-row">
         <el-form-item label="身份证:"
@@ -164,16 +166,20 @@
                     maxlength="100"
                     show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="角色:"
-                      prop="perPost">
-          <el-select v-model="employeeEntity.perPost"
-                     @focus="findByParams()"
-                     @change="initposition()"
-                     placeholder="请选择">
-            <el-option v-for="item in positionNameList"
-                       :key="item.value"
-                       :label="item.positionName"
-                       :value="item.id"></el-option>
+        <el-form-item label="状态:"
+                      prop="status">
+          <el-select type="text"
+                     placeholder="0实习，1试用，2正式，3离职"
+                     v-model="employeeEntity.status"
+                     show-word-limit>
+            <el-option label="实习"
+                       :value="0" />
+            <el-option label="试用"
+                       :value="1" />
+            <el-option label="正式"
+                       :value="2" />
+            <el-option label="离职"
+                       :value="3" />
           </el-select>
         </el-form-item>
         <el-form-item label="生日:"
@@ -444,6 +450,9 @@ export default {
       }
     };
     return {
+      perPostReadOnly: true,
+      roleTree:[],
+      positionTree:[],
       sidebarFlag: false,
       treeData: [],
       filterText: "",
@@ -675,6 +684,54 @@ export default {
           console.log("查询星级失败");
         });
     },
+    selectPositionList() {
+      let that = this;
+      that.$api
+        .post({
+          url: "/sys/tree/position/tree/user/manager"
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.positionTree = result.data;
+            console.log(that.positionTree);
+          } else {
+            console.log("查询岗位结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询岗位失败");
+        });
+    },
+    selectPositionNode(){
+      let checkedNodes = this.$refs.positionTree.getCheckedNodes();
+      this.employeeEntity.perRole = checkedNodes[0].data.businessId;
+      this.perPostReadOnly=false;
+      this.employeeEntity.positionName="";
+      this.employeeEntity.perPost = "";
+      this.$forceUpdate();
+    },
+    // selectRoleList(){
+    //   let that = this;
+    //   that.$api
+    //     .post({
+    //       url: "/sys/tree/role/tree/user/manager"
+    //     })
+    //     .then(e => {
+    //       let result = e.data;
+    //       if (result.code == 200) {
+    //         that.roleTree = result.data;
+    //         console.log(that.roleTree);
+    //       } else {
+    //         console.log("查询岗位结果：" + result.message);
+    //         alert(result.message);
+    //       }
+    //     })
+    //     .catch(e => {
+    //       console.log("查询岗位失败");
+    //     });
+    // },
     findByParams1() {
       let params = null;
       if (
@@ -704,25 +761,24 @@ export default {
           console.log("查询岗位失败");
         });
     },
-    findByParams() {
-      let params = null;
-      if (
-        this.employeeEntity.positionName != null &&
-        this.employeeEntity.positionName != ""
-      ) {
-        params.keyWord = this.employeeEntity.positionName;
-      }
-      this.$api
-        .post({
-          url: "/sys/position/getPostName",
-          data: params,
-          token: false
+    selectRoleList() {
+      // let params = null;
+      // if (
+      //   this.employeeEntity.positionName != null &&
+      //   this.employeeEntity.positionName != ""
+      // ) {
+      //   params.keyWord = this.employeeEntity.positionName;
+      // }
+      let that = this;
+      let positionId = that.employeeEntity.perRole;
+      that.$api
+        .get({
+          url: "/sys/position/list/"+positionId
         })
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            //debugger;
-            this.positionNameList = result.data;
+            that.positionNameList = result.data;
             console.log(this.positionNameList);
           } else {
             console.log("查询角色结果：" + result.message);
@@ -830,12 +886,8 @@ export default {
               let result = e.data;
               if (result.code == 200) {
                 console.log(result.message);
-                this.$alert("", "添加成功", {
-                  dangerouslyUseHTMLString: false
-                });
                 this.$router.push({ path: "/sys/employeeList" });
-                console.log(result.data);
-                this.$message({ message: result.message });
+                this.$message({ message: "添加成功"});
               }
             })
             .catch(e => {

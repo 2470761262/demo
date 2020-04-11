@@ -197,6 +197,10 @@ export default {
         }
       }).then((e) => {
         if (e.data.code == 200) {
+          this.$message({
+            message: '换肤成功',
+            type: 'success'
+          });
           that.$router.push({ path: '/buySellSystem/addFloorList' });
         } else if (e.data.code == 400) {
           alert(e.data.message);

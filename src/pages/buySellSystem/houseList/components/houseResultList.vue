@@ -315,7 +315,7 @@
             </div>
             <div class="select-for-item-but">
               <i class="el-icon-document icon i"
-                 @click="toHouseDetail(item.id)"></i>
+                 @click="toHouseDetail(item)"></i>
             </div>
           </div>
         </template>
@@ -351,7 +351,7 @@
                 <template slot-scope="scope">
                   <el-button size="mini"
                              type="primary"
-                             @click="toHouseDetail(scope.row.id)">查看</el-button>
+                             @click="toHouseDetail(scope.row)">查看</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -423,22 +423,6 @@ export default {
           default: true
         },
         {
-          prop: "buildingName",
-          label: "楼栋号",
-          width: "90",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "roomNo",
-          label: "房间号",
-          width: "110",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
           prop: "inArea",
           label: "面积(m²)",
           width: "110",
@@ -460,7 +444,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -468,7 +452,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -476,7 +460,7 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -484,7 +468,7 @@ export default {
           prop: "addTime",
           label: "添加时间",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -555,7 +539,12 @@ export default {
     tabColumnChange (e) {
       this.tableColumn = e;
     },
-    toHouseDetail (id) {
+    toHouseDetail (item) {
+      let id=item.id;
+      console.log(item,"谢谢谢谢谢谢谢谢");
+      if(item.hasOwnProperty('houseId')){
+        id=item.houseId;
+      }
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //远程排序
@@ -679,7 +668,7 @@ export default {
       if (value.cbNo != null && value.cbNo != "") {
         this.dynamicTags.push({
           title: `楼栋号:${value.cbNo}`,
-          field: "type",
+          field: "cbNo",
           arr: false
         })      };
 
@@ -687,14 +676,14 @@ export default {
       if (value.roomNumber != null && value.roomNumber != "") {
         this.dynamicTags.push({
           title: `房间号:${value.roomNumber}`,
-          field: "type",
+          field: "roomNumber",
           arr: false
         })      };
       //楼盘名称
       if (value.communityName != null && value.communityName != "") {
         this.dynamicTags.push({
           title: `楼盘名称:${value.communityName}`,
-          field: "type",
+          field: "communityName",
           arr: false
         })      };
       //房源类型
@@ -764,6 +753,25 @@ export default {
           this.Slider.flootSlider = [-2, -2];
           this.form.maxFloor = "";
           this.form.minFloor = "";
+        }
+        if (e.field == "communityName") {
+          this.form.communityName = "";
+          this.form.cbNo = "";
+          this.form.roomNumber = "";
+          this.form.comId = '';
+          this.form.cbId = '';
+          this.form.roomNo = '';
+
+        }
+        if (e.field == "cbNo") {
+          this.form.cbNo = "";
+          this.form.roomNumber = "";
+          this.form.cbId = '';
+          this.form.roomNo = '';
+        }
+        if (e.field == "roomNumber") {
+          this.form.roomNumber = "";
+          this.form.roomNo = '';
         }
       }
     },

@@ -49,8 +49,7 @@
       <!-- 右侧功能按钮 -->
       <sidebarList lastItemSet
                    lastTitle="编辑"
-                   :judgeShowEidt="true"
-                   :lastParams='lastParams'></sidebarList>
+                   :lastParams='{id:forID.id,method:"reset"}'></sidebarList>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -59,10 +58,7 @@
       <houseMessage class="cell-msg"
                     :class="{'cell-msg-nest':nest}"></houseMessage>
       <div class="cell-right no-center">
-        <!-- 操作 -->
-        <houseOperation></houseOperation>
-        <!-- 房源任务方 -->
-        <houseTask></houseTask>
+    
       </div>
     </section>
   </div>
@@ -74,10 +70,8 @@ import houseDetailsHead from "./components/houseDetailsHead";
 import loopImg from "./components/loopImg";
 import detail from "./components/detail";
 import sidebarList from "@/components/sidebarList";
-import buttonGroup from "./components/buttonGroup";
 import houseMessage from "./components/houseMessage";
-import houseOperation from "./components/houseOperation";
-import houseTask from "./components/houseTask";
+import buttonGroup from "./components/buttonGroup";
 import { REMARK } from "@/util/constMap";
 export default {
   provide () {
@@ -85,11 +79,11 @@ export default {
       houseId: this.forID,
       houseDetails: this.houseDetails,
       load: this.load,
-      buttonDisabled: false
+      buttonDisabled: true
     };
   },
   computed: {
-    nest () {
+    nest() {
       return util.localStorageGet("nest");
     }
   },
@@ -99,10 +93,10 @@ export default {
     loopImg, // 轮播
     detail, // 右边的详情
     sidebarList,
-    buttonGroup, // 按钮群
     houseMessage,
-    houseOperation,
-    houseTask //房源任务方
+    buttonGroup// 按钮群
+    // houseOperation,
+    // houseTask //房源任务方
   },
   data () {
     return {
@@ -113,57 +107,26 @@ export default {
       load: {
         loading: true,
         loadingMessage: "努力加载中~"
-      },
-      lastParams: {
-        id: 0,
-        method: "edit",
-        paramsObj: {
-          getEditUrl: "/agent_house/getEditDetails/",
-          buttonText: "保存",
-          editUrl: "/agent_house/editAgentHouse",
-          getAudioUrl: "/agentHouse/audio/getAudioList/",
-          getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
-          getVideoUrl: "/agentHouse/video/getVideoList/"
-        },
-      },
-      detailType:undefined//标识房源详情类型，决定调用哪个详情接口地址
+      }
     };
   },
   created () {
     if (this.$route.params.houseId) {
-      this.forID.id = this.$route.params.houseId;
-      this.detailType=this.$route.params.detailType;
-      util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
-      util.localStorageSet("houseDetails.vue:detailType", this.detailType);
+      this.forID.id = this.$route.params.houseId;      
+      util.localStorageSet("buildingHouseDetail.vue:houseId", this.forID.id);      
     } else {
-      this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
-      this.detailType = util.localStorageGet("houseDetails.vue:detailType");
+      this.forID.id = util.localStorageGet("buildingHouseDetail.vue:houseId");      
     }
-    this.lastParams.id = this.forID.id;
     this.getHouseDetails();
   },
   methods: {
-    /**
-     * 获取房源详情
-     */
     getHouseDetails () {
       let that = this;
       this.load.loading = true;
-      let url='/agent_house/getHouseDetail';
-      let query={
-        houseId: that.forID.id
-      };
-      if(that.detailType&&that.detailType!='undefined'){
-          console.log("注意，了，这是调用另一个房源详情接口");
-					query.type=that.detailType;
-					url='applet/agent_house/getUniversalHouseDetail';
-			}else{
-          console.log("调用原有正常房源详情接口");
-      }
       this.$api
         .post({
-          url: url,
-          data: query,
+          url: "/building/getBuildingDetail/" + that.forID.id,
+          data: { remark: 1 },
           qs: true
         })
         .then(e => {
@@ -208,6 +171,7 @@ export default {
                 }
               }
             }
+            result.data.validateText='待验真';
             this.$set(this.houseDetails, "data", result.data);
           } else {
             that.$message.error(result.message);
