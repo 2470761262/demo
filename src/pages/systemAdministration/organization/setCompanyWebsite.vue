@@ -243,14 +243,35 @@ export default {
   created() {
     this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
     this.header = { tk: util.localStorageGet(TOKEN) };
+    this.loadSiteInfo();
   },
   methods: {
     back() {
       this.$router.push({ path: "/sys/companyList" });
     },
+    loadSiteInfo(){
+      let that = this;
+      let companyId = this.$route.query.companyId;
+      that.$api
+        .get({
+          url: "/company/siteInfo/"+companyId,
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            that.setEntity = result.data;
+          }
+        })
+        .catch(e => {
+          console.log("添加失败");
+          console.log(e);
+        });
+    },
     saveSiteInfo() {
       let params = this.setEntity;
-      params.companyid = this.$route.query.companyId;
+      params.companyId = this.$route.query.companyId;
       this.$api
         .post({
           url: "/company/saveSiteInfo",
@@ -261,7 +282,7 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             console.log(result.message);
-            this.$alert("", "添加成功", {
+            this.$alert("", "保存成功", {
               dangerouslyUseHTMLString: false
             });
             this.$router.push({ path: "/sys/companyList" });

@@ -194,12 +194,12 @@ export default {
     $attrs: {
       deep: true,
       immediate: true,
-      handler: function(val, oldVal) {
+      handler: function (val, oldVal) {
         Object.assign(this.$data, val.parentData);
       }
     }
   },
-  data() {
+  data () {
     return {
       sidebarFlag: true,
       loading: true,
@@ -211,28 +211,72 @@ export default {
       tableData: []
     };
   },
-  mounted() {},
+  mounted () { },
   methods: {
-    toHouseDetail(row) {
+    toHouseDetail (row) {
+      console.log(1111111111111111111);
       var that = this;
       if (!this.$attrs.dblclick) {
-        if (row.communityName)
+        if (row.communityName && row.checkSign == undefined)
+          if (row.houseType == 3 || row.houseType == 4) {
+            console.log('进入bsagenthouse房源详情');
+            that.$router.push({
+              name: "houseDetails",
+              params: { houseId: row.id }
+            });
+          } else if (row.houseType == 2) { //暂不售
+            console.log('进入历史房源房源详情');
+            that.$router.push({
+              name: "historyDetails",
+              params: { houseId: row.id, tradeType: 0 }
+            });
+          } else if (row.houseType == 5) {//潜在出售
+            console.log('进入交易房源（tradeHouseTbl）详情');
+            that.$router.push({
+              name: "historyDetails",
+              params: { houseId: row.id, tradeType: 0 }
+            })
+
+          } else if (row.houseType == 1 || row.houseType == 6) {//无号码
+            console.log('进入楼盘详情')
+            console.log("/building/geBuildingDetail/" + row.id);
+            that.$notify({
+              title: "警告",
+              message: '楼盘详情页面未实现，接口已经有了',
+              type: "warning",
+              offset: 60
+            });
+          } else {
+            that.$router.push({
+              name: "historyDetails",
+              params: { houseId: row.id }
+            })
+          }
+        if (row.houseId != undefined && row.houseId > row.id)
           that.$router.push({
             name: `${
               that.$attrs.pageName ? that.$attrs.pageName : "houseDetails"
-            }`,
+              }`,
+            params: { houseId: row.houseId }
+          });
+        else {
+          that.$router.push({
+            name: `${
+              that.$attrs.pageName ? that.$attrs.pageName : "houseDetails"
+              }`,
             params: { houseId: row.id }
           });
+        }
       } else {
         this.$emit("cellDblClick", row);
       }
     },
     //每页数据设置事件
-    handleSizeChange(e) {
+    handleSizeChange (e) {
       this.$emit("handleSizeChange", e);
     },
     //前往多少页事件
-    handleCurrentChange(e) {
+    handleCurrentChange (e) {
       this.$emit("handleCurrentChange", e);
     }
   }
