@@ -57,11 +57,11 @@
 }
 </style>
 
-
 <template>
   <div class="page-content">
     <list-page highlight-current-row
                :parentData="$data"
+               :dblclick="true"
                @current-change="handleChange"
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
