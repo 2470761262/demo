@@ -1,109 +1,98 @@
 
 <style lang="less" scoped>
-.page-content {
-  padding: 40px 0 35px 33px;
-  background: #fff;
-  min-height: 100%;
-  box-sizing: border-box;
-  user-select: none;
-}
-.page-house-cell {
-  display: flex;
-  margin-top: 18px;
-  &.marginTop {
-    margin-top: 0;
-  }
-  .cell-left {
-    width: 860px;
-    &.cell-left-nest {
-      width: 1020px;
-    }
-  }
-  .cell-msg {
-    width: 760px;
-    &.cell-msg-nest {
-      width: 920px;
-    }
-  }
-  .cell-right {
-    flex: 1;
-    align-self: center;
-    &.no-center {
-      align-self: flex-start;
-    }
-  }
-}
 </style>
 <template>
   <div class="page-content"
        v-loading="load.loading"
        element-loading-custom-class="loadingTop"
        :element-loading-text="load.loadingMessage">
-    <house-details-head></house-details-head>
-    <section class="page-house-cell">
-      <!-- 轮播图 -->
-      <loopImg class="cell-left"
-               :class="{'cell-left-nest':nest}"></loopImg>
-      <!-- 房屋详情 -->
-      <detail class="cell-right"></detail>
-      <!-- 右侧功能按钮 -->
-      <sidebarList lastItemSet
-                   lastTitle="编辑"
-                   :lastParams='{id:forID.id,method:"reset"}'></sidebarList>
-    </section>
-    <!--按钮组 -->
-    <buttonGroup></buttonGroup>
     <section class="page-house-cell marginTop">
+      <div>
       <!-- 房屋其他信息 -->
-      <houseMessage class="cell-msg"
-                    :class="{'cell-msg-nest':nest}"></houseMessage>
-      <div class="cell-right no-center">
-    
+        <h3 class="other-title">房屋概况</h3>
+        <section class="message-row-group">
+          <div class="message-row">
+            <h5 class="message-row-title">房屋用途</h5>
+            <div class="message-row-right">{{resultData.buildtype | emptyRead}}</div>
+          </div>
+          <div class="message-row">
+            <h5 class="message-row-title">电梯配套</h5>
+            <div class="message-row-right">{{resultData.elevator | elevatorFilter}}</div>
+          </div>
+        </section>
+        <section class="message-row-group">
+          <div class="message-row">
+            <h5 class="message-row-title">房屋证件</h5>
+            <div class="message-row-right">{{resultData.certificateType | mapFilter('CERTIFICATETYPE') | emptyRead}}</div>
+          </div>
+          <div class="message-row">
+            <h5 class="message-row-title">产权性质</h5>
+            <div class="message-row-right">{{resultData.HouseProperty | emptyRead}}</div>
+          </div>
+        </section>
+        <section class="message-row-group">
+          <div class="message-row">
+            <h5 class="message-row-title">户口占用</h5>
+            <div class="message-row-right">{{resultData.sign | mapFilter('SIGN')  | emptyRead}}</div>
+          </div>
+          <div class="message-row">
+            <h5 class="message-row-title">附属配套</h5>
+            <div class="message-row-right">{{resultData.HouseBelong | mapFilter('HOUSEBELONGLIST') | emptyRead}}</div>
+          </div>
+        </section>
+        <section class="message-row-group">
+          <div class="message-row">
+            <h5 class="message-row-title">小学划片</h5>
+            <div class="message-row-right">{{resultData.primarySchool | emptyRead}}</div>
+          </div>
+          <div class="message-row">
+            <h5 class="message-row-title">学籍占用</h5>
+            <div class="message-row-right">{{resultData.primarySchoolGrade | mapFilter('PRIMARYSCHOOLUSE','未占用')}}</div>
+          </div>
+        </section>
+        <section class="message-row-group">
+          <div class="message-row">
+            <h5 class="message-row-title">中学划片</h5>
+            <div class="message-row-right">{{resultData.middleSchool | emptyRead}}</div>
+          </div>
+          <div class="message-row">
+            <h5 class="message-row-title">学籍情况</h5>
+            <div class="message-row-right">{{resultData.middleSchoolGrade | mapFilter('MIDDLESCHOOLUSE','未占用')  }}</div>
+          </div>
+        </section>
+        <section class="message-row-group">
+          <div class="message-row">
+            <h5 class="message-row-title">物业公司</h5>
+            <div class="message-row-right">{{resultData.propertyCompany | emptyRead}}</div>
+          </div>
+          <div class="message-row">
+            <h5 class="message-row-title">评估价</h5>
+            <div class="message-row-right">{{resultData.valuation | emptyRead("元/平")}}</div>
+          </div>
+        </section>
+        <section class="message-row-group">
+          <div class="message-row">
+            <h5 class="message-row-title">物业费</h5>
+            <div class="message-row-right">{{resultData.PropertyFee | emptyRead("元/平") }}</div>
+          </div>
+        </section>
       </div>
     </section>
   </div>
 </template>
 <script>
 import util from "@/util/util";
-import getMenuRid from "@/minxi/getMenuRid";
-import houseDetailsHead from "./components/houseDetailsHead";
-import loopImg from "./components/loopImg";
-import detail from "./components/detail";
-import sidebarList from "@/components/sidebarList";
-import houseMessage from "./components/houseMessage";
-import buttonGroup from "./components/buttonGroup";
-import { REMARK } from "@/util/constMap";
+
 export default {
-  provide () {
-    return {
-      houseId: this.forID,
-      houseDetails: this.houseDetails,
-      load: this.load,
-      buttonDisabled: true
-    };
-  },
   computed: {
     nest() {
       return util.localStorageGet("nest");
     }
   },
-  mixins: [getMenuRid],
-  components: {
-    houseDetailsHead, //房源详情头部
-    loopImg, // 轮播
-    detail, // 右边的详情
-    sidebarList,
-    houseMessage,
-    buttonGroup// 按钮群
-    // houseOperation,
-    // houseTask //房源任务方
-  },
   data () {
     return {
-      forID: {
-        id: null
-      },
-      houseDetails: {},
+      houseId: null,
+      resultData: {},
       load: {
         loading: true,
         loadingMessage: "努力加载中~"
@@ -112,10 +101,10 @@ export default {
   },
   created () {
     if (this.$route.params.houseId) {
-      this.forID.id = this.$route.params.houseId;      
-      util.localStorageSet("buildingHouseDetail.vue:houseId", this.forID.id);      
+      this.houseId = this.$route.params.houseId;      
+      util.localStorageSet("buildingHouseDetail.vue:houseId", this.houseId);      
     } else {
-      this.forID.id = util.localStorageGet("buildingHouseDetail.vue:houseId");      
+      this.houseId = util.localStorageGet("buildingHouseDetail.vue:houseId");      
     }
     this.getHouseDetails();
   },
@@ -123,64 +112,20 @@ export default {
     getHouseDetails () {
       let that = this;
       this.load.loading = true;
-      this.$api
-        .post({
-          url: "/building/getBuildingDetail/" + that.forID.id,
-          data: { remark: 1 },
+      this.$api.post({
+          url: "/building/getBuildingDetail/" + that.houseId,
           qs: true
         })
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            if (
-              result.data.remark != null &&
-              result.data.remark.indexOf("$") != -1
-            ) {
-              var Arry1 = result.data.remark.split("$");
-              for (var i = 0; i < Arry1.length; i++) {
-                var Arry2 = Arry1[i].split("@");
-                switch (Arry2[0]) {
-                  case "小区介绍":
-                    result.data.communityPresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.communityDesc =
-                      Arry2[1];
-                    break;
-                  case "户型介绍":
-                    result.data.houseTypePresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.roomDesc =
-                      Arry2[1];
-                    break;
-                  case "税费解析":
-                    result.data.taxParsing = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.taxDesc =
-                      Arry2[1];
-                    break;
-                  case "核心卖点":
-                    result.data.coreSellingPoint = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.saleDesc =
-                      Arry2[1];
-                    break;
-                }
-                if (result.data.applyAgentVo != null) {
-                  REMARK.forEach(element => {
-                    if (element.key == Arry2[0]) {
-                      let obj = element.value;
-                      result.data.applyAgentVo[obj] = Arry2[1];
-                    }
-                  });
-                }
-              }
-            }
-            result.data.validateText='待验真';
-            this.$set(this.houseDetails, "data", result.data);
+            that.resultData=result.data;
           } else {
             that.$message.error(result.message);
           }
         })
         .catch(e => {
-          if (e.response != undefined) {
-            that.$message(e.response.data.message);
-          }
+          
         })
         .finally(() => {
           this.load.loading = false;

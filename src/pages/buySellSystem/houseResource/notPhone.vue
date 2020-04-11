@@ -9,7 +9,9 @@
              @handleClick="handleClick"
              pageName="historyDetails"
              @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+             @handleCurrentChange="handleCurrentChange"
+             :dblclick="true"
+             @cellDblClick="toHouseDetail">
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -232,6 +234,16 @@ export default {
     this.queryNotPhone(1);
   },
   methods: {
+    toHouseDetail (row) {
+      let that = this;
+      //无号码
+      console.log(row, "进入楼盘详情");
+      console.log("/building/getBuildingDetail/" + row.id);
+      that.$router.push({
+        name: "buildingHouseDetail",
+        params: { houseId: row.id }
+      });
+    },
     queryTabData () {
       console.log(this, "111");
     },

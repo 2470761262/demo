@@ -8,7 +8,9 @@
              @handleClick="handleClick"
              pageName="historyDetails"
              @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+             @handleCurrentChange="handleCurrentChange"
+             :dblclick="true"
+             @cellDblClick="toHouseDetail">
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -135,7 +137,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="toLook(scope.row.id)"
+                     @click="toHouseDetail(scope.row)"
                      v-if="scope.row.houseType!==1">查看</el-button>
           <el-button type="primary"
                      size="mini"
@@ -293,9 +295,30 @@ export default {
       this.moreSelect = e;
       this.queryPotentialHouse(1);
     },
-    toLook (id) {
-      var that = this;
-      that.$router.push({ name: "historyDetails", params: { houseId: id } });
+    toHouseDetail (item) {
+      let id = item.id;
+      let that = this;
+      console.log(item, "潜在出售房源详情");
+      if (item.houseType == 1) {//楼盘情况
+        console.log("进入楼盘详情");
+        console.log("/building/getBuildingDetail/" + item.id);
+        that.$router.push({
+          name: "buildingHouseDetail",
+          params: { houseId: item.id }
+        });
+      } else if (item.houseType == 2) {
+        console.log("进入交易房源详情");
+        if (!item.houseId) {
+          that.$message.error("houseId都是空的，如何查看");
+          return;
+        }
+        that.$router.push({
+          name: "tradeHouseDetail",
+          params: { houseId: item.houseId }
+        });
+      } else {
+        that.$message.error("无法识别潜在房源的类型，到底是楼盘还是交易过的房源呢？这是个值得思索的问题");
+      }
     },
     toSale (
       comId,
