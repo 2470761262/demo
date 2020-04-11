@@ -663,7 +663,7 @@ export default {
       if (value.cbNo != null && value.cbNo != "") {
         this.dynamicTags.push({
           title: `楼栋号:${value.cbNo}`,
-          field: "floot",
+          field: "cbNo",
           arr: false
         })      };
 
@@ -671,14 +671,14 @@ export default {
       if (value.roomNumber != null && value.roomNumber != "") {
         this.dynamicTags.push({
           title: `房间号:${value.roomNumber}`,
-          field: "floot",
+          field: "roomNumber",
           arr: false
         })      };
       //楼盘名称
       if (value.communityName != null && value.communityName != "") {
         this.dynamicTags.push({
           title: `楼盘名称:${value.communityName}`,
-          field: "floot",
+          field: "communityName",
           arr: false
         })      };
       //房源类型
@@ -748,6 +748,25 @@ export default {
           this.Slider.flootSlider = [-2, -2];
           this.form.maxFloor = "";
           this.form.minFloor = "";
+        }
+        if (e.field == "communityName") {
+          this.form.communityName = "";
+          this.form.cbNo = "";
+          this.form.roomNumber = "";
+          this.form.comId = '';
+          this.form.cbId = '';
+          this.form.roomNo = '';
+
+        }
+        if (e.field == "cbNo") {
+          this.form.cbNo = "";
+          this.form.roomNumber = "";
+          this.form.cbId = '';
+          this.form.roomNo = '';
+        }
+        if (e.field == "roomNumber") {
+          this.form.roomNumber = "";
+          this.form.roomNo = '';
         }
       }
     },
