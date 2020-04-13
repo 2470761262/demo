@@ -111,6 +111,9 @@ export default {
     beforeClose: {
       type: Function
     },
+    beforeClear: {
+      type: Function
+    },
     title: {
       type: String,
       default: "提示"
@@ -130,6 +133,15 @@ export default {
     maskHideEvent: {
       type: Boolean,
       default: false
+    }
+  },
+  watch: {
+    visible(newValue) {
+      if (!newValue) {
+        if (this.beforeClear) {
+          this.beforeClear.bind(this.$parent)();
+        }
+      }
     }
   },
   data() {

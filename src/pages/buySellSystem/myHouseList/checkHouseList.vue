@@ -158,7 +158,7 @@
         </el-table-column>
         <el-table-column label="提交时间">
           <template v-slot="scope">
-            {{scope.row.addTime}}
+            {{scope.row.checkAddTime}}
           </template>
         </el-table-column>
         <el-table-column label="审核状态">
@@ -504,7 +504,7 @@ export default {
     moreSelectChange (e) {
       if (e != '')
         this.moreSelect = e;
-      this.querylist(1, 'addTime', 'descending')
+      this.querylist(1, 'id', 'descending')
     },
     changeFile (e, index) {
       let checkProjectList = this.accessoryMoldList[index].list;
@@ -744,7 +744,7 @@ export default {
         params.checkProject = that.checkProject;
         params.checkType = that.type;
       }
-      params.sortColumn = "addTime";
+      params.sortColumn = "id";
       this.$api.post({
         url: '/myHouse/myCheckList',
         headers: { "Content-Type": "application/json;charset=UTF-8" },

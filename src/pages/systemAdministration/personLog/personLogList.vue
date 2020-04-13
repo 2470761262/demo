@@ -21,6 +21,7 @@
 <template>
   <div class="page-content">
     <list-page :parentData="$data"
+               :dblclick="true"
                @handleSizeChange="handleSizeChange"
                @handleCurrentChange="handleCurrentChange">
       <template v-slot:top>
