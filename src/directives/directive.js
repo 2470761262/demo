@@ -1,5 +1,5 @@
 export default {
-    install (Vue) {
+    install(Vue) {
         Vue.directive('number', {
             bind: (el, binding, vnode) => {
                 const input = el.getElementsByTagName('input')[0];
@@ -37,8 +37,35 @@ export default {
             }
         })
 
+        /**
+         *动画滚动定位到第一个不在视口内的错误提示位置
+         */
+        Vue.directive('scrollError', {
+            componentUpdated(el, binding, vnode) {
+                if (binding.value instanceof Vue) {
+                    if (binding.value['errorBags'].items.length > 0) {
+                        let contentScroll = el;
+                        vnode.context.$nextTick(() => {
+                            let firstEerrorDom = document.querySelector(".after-tips");
+                            console.log(firstEerrorDom, "firstEerrorDom");
+                            if (firstEerrorDom.offsetTop < contentScroll.scrollTop) {
+                                function animateScroll() {
+                                    if (contentScroll.scrollTop >= firstEerrorDom.offsetTop) {
+                                        contentScroll.scrollTop = contentScroll.scrollTop - 10;
+                                    } else {
+                                        return;
+                                    }
+                                    requestAnimationFrame(animateScroll);
+                                }
+                                animateScroll();
+                            }
+                        });
+                    }
+                }
+            }
+        })
         Vue.directive("elDrag", {
-            bind (el) {
+            bind(el) {
                 let drag = el.querySelector('.didLog-content-body');
                 let dragWarp = drag.querySelector('.didLog-content-box-title');
                 dragWarp.style.cursor = "all-scroll";
