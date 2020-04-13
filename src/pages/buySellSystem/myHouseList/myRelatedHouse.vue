@@ -470,7 +470,7 @@ export default {
     querySaleNotTrack (currentPage) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (that.workType != null && that.workType != "") {
         console.log("option的值！！！" + that.workType);
         params.workType = that.workType;

@@ -482,7 +482,7 @@ export default {
     queryVerifyHouseDatas (currentPage) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (Object.keys(this.moreSelect).length != 0) {
         let selectObject = common.getSelectParams(this.transitionList, this.moreSelect);
         Object.assign(params, selectObject);
