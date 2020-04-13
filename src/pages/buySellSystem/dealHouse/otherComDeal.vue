@@ -11,7 +11,9 @@
              @handleClick="handleClick"
              @sort-change="sortMethod"
              @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange">
+             @handleCurrentChange="handleCurrentChange"
+             :dblclick="true"
+             @cellDblClick="toHouseDetail">
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -228,10 +230,15 @@ export default {
     queryTabData () {
       console.log(this, "111");
     },
-    toLook (id) {
+    toHouseDetail (item) {
+      let id=item.id;
+       if (!item.id) {
+        that.$message.error("houseId都是空的，如何查看");
+        return;
+      }
       console.log(id);
       var that = this;
-      this.$router.push({ name: "historyDetails", params: { houseId: id } });
+      this.$router.push({ name: "historyDetails", params: { houseId: id ,tradeType:1} });
     },
     queryDatalist () {
       this.queryOurComDeal(1);

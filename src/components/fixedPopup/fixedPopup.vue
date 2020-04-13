@@ -90,7 +90,8 @@
             <i class="el-icon-close"
                @click.stop="close"></i>
           </div>
-          <div class="didLog-content-sroll">
+          <div class="didLog-content-sroll"
+               v-scrollError>
             <slot>
             </slot>
           </div>
