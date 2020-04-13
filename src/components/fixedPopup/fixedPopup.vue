@@ -90,8 +90,7 @@
             <i class="el-icon-close"
                @click.stop="close"></i>
           </div>
-          <div class="didLog-content-sroll"
-               v-scrollError>
+          <div class="didLog-content-sroll">
             <slot>
             </slot>
           </div>
@@ -112,8 +111,8 @@ export default {
     beforeClose: {
       type: Function
     },
-    beforeClear:{
-      type:Function
+    beforeClear: {
+      type: Function
     },
     title: {
       type: String,
@@ -136,12 +135,12 @@ export default {
       default: false
     }
   },
-  watch:{
-    visible(newValue){
-      if(!newValue){
-          if (this.beforeClear) {
-              this.beforeClear.bind(this.$parent)();
-          }
+  watch: {
+    visible(newValue) {
+      if (!newValue) {
+        if (this.beforeClear) {
+          this.beforeClear.bind(this.$parent)();
+        }
       }
     }
   },
@@ -149,9 +148,6 @@ export default {
     return {};
   },
   methods: {
-    closeFun(){
-
-    },
     maskHide() {
       if (this.maskHideEvent) {
         if (this.beforeClose) {

@@ -76,8 +76,7 @@
     <div class="page-contenr"
          v-loading="butLoading"
          element-loading-text="已经在努力加载了~">
-      <div v-scrollError="$refs.com"
-           :class="['page-contenr-com',{'page-contenr-com-over':butLoading}]">
+      <div :class="['page-contenr-com',{'page-contenr-com-over':butLoading}]">
         <div class="page-contenr-com-posi">
           <keep-alive>
             <component :houseType.sync="componentName"

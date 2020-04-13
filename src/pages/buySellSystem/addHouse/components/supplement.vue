@@ -180,6 +180,7 @@
 <template>
   <div class="page-cell-addHouse"
        element-loading-text="我在去获取数据的路上了~"
+       v-scrollError="errorBags.items"
        v-loading="loading">
     <!-- 房屋来源 -->
     <div :class="{'after-tips':errorBags.has('houseSource')}"
@@ -680,17 +681,17 @@ export default {
     },
     audioList: {
       type: Array,
-      default: function () {
+      default: function() {
         return [];
       }
     },
     paramsObj: {
       type: Object,
-      default: () => { }
+      default: () => {}
     }
   },
   computed: {
-    formData () {
+    formData() {
       this.$set(
         this.$data,
         "step",
@@ -700,13 +701,13 @@ export default {
     }
   },
   filters: {
-    timefomat (value) {
+    timefomat(value) {
       return util.timeToStr(value);
     }
   },
   directives: {
     audioLoad: {
-      bind (el, binding, vnode) {
+      bind(el, binding, vnode) {
         el.addEventListener("loadedmetadata", () => {
           vnode.context.audioPlay.endTime = parseInt(el.duration);
         });
@@ -720,14 +721,14 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     let that = this;
     that.isLeavePage = false;
     //true 则去获取数据
     if (this.getData) {
       this.loading = true;
       Promise.all([this.getAudio(), this.getLoadData()])
-        .catch(() => { })
+        .catch(() => {})
         .finally(() => {
           this.loading = false;
         });
@@ -737,25 +738,25 @@ export default {
     }
     this.getQrCode(
       { remark: "录入房源-上传音频", resourceType: "audio" },
-      function (data) {
-        if (!that.isLeavePage) {//还没等请求完毕就下一步录入了，那么不需要回调这个了
+      function(data) {
+        if (!that.isLeavePage) {
+          //还没等请求完毕就下一步录入了，那么不需要回调这个了
           that.audioQrCodeImage = data.url;
           that.contactSocket(data.qrCode);
         }
       }
     );
   },
-  beforeRouteLeave (to, from, next) {
-    console.log('离开了供给页面，不需要执行任何请求回调');
+  beforeRouteLeave(to, from, next) {
+    console.log("离开了供给页面，不需要执行任何请求回调");
     this.isLeavePage = true;
     next();
-
   },
   watch: {
     formData: {
       deep: true,
       immediate: true,
-      handler (newValue, oldValue) {
+      handler(newValue, oldValue) {
         //deff 获取到修改的属性
         let deffData = util.diffGet(
           this.$store.state.addHouse.formData.step2,
@@ -772,7 +773,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       isLeavePage: false,
       audioPlay: {
@@ -807,7 +808,7 @@ export default {
       audioQrCodeImage: "",
       onlyStr: "",
       pickerOptions: {
-        disabledDate (time) {
+        disabledDate(time) {
           return time.getTime() > Date.now();
         }
       }
@@ -815,21 +816,23 @@ export default {
   },
   methods: {
     //删除audio
-    removeAudio (id, url) {
-      this.$api.delete({
-        url: `/draft-house/audio/${id}`,
-        data: {
-          url: url
-        },
-        qs: true
-      }).then((e) => {
-        if (e.data.code == 200) {
-          this.audioFile = {};
-          Object.assign(this.$data.audioPlay, this.$options.data().audioPlay);
-        }
-      })
+    removeAudio(id, url) {
+      this.$api
+        .delete({
+          url: `/draft-house/audio/${id}`,
+          data: {
+            url: url
+          },
+          qs: true
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.audioFile = {};
+            Object.assign(this.$data.audioPlay, this.$options.data().audioPlay);
+          }
+        });
     },
-    contactSocket (user) {
+    contactSocket(user) {
       console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
@@ -838,18 +841,18 @@ export default {
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
       console.log("用户【" + user + "】接入完毕");
     },
-    receiveMessage (r) {
+    receiveMessage(r) {
       let that = this;
       console.log(r, "录入房源页面之音频上传接收到了消息");
       if (r.content.resourceType == "audio") {
         console.log(r.content, "音频消息内容，准备插入草稿箱");
-        that.uploadFileInfo(r.content.picUrl, function (data) {
+        that.uploadFileInfo(r.content.picUrl, function(data) {
           that.audioFile = data;
         });
       }
     },
     //获取扫码上传语音二维码
-    getQrCode (data, callback) {
+    getQrCode(data, callback) {
       let that = this;
       that.$api
         .post({
@@ -873,14 +876,13 @@ export default {
           console.log(e);
         });
     },
-    uploadFileInfo (url, callback) {
+    uploadFileInfo(url, callback) {
       let that = this;
       this.audioFileLoading = true;
       let formData = {};
       if (this.paramsObj.getEditUrl) {
         formData.Eid = that.$store.state.addHouse.formData.id;
-      }
-      else {
+      } else {
         formData.DraftId = that.$store.state.addHouse.formData.id;
       }
 
@@ -909,10 +911,11 @@ export default {
         });
     },
     //根据ID获取已经上传的音频
-    getAudio () {
+    getAudio() {
       let url = `/draft-house/audios/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getAudioUrl) {
-        url = this.paramsObj.getAudioUrl + this.$store.state.addHouse.formData.id
+        url =
+          this.paramsObj.getAudioUrl + this.$store.state.addHouse.formData.id;
       }
       return this.$api
         .post({
@@ -925,7 +928,7 @@ export default {
         });
     },
     //获取音频上传
-    getAudioFile (e) {
+    getAudioFile(e) {
       let file = event.target.files;
       let isVideoType = ["audio/mp3", "audio/mpeg"];
       //console.log("音频格式：" + file[0].type);
@@ -940,11 +943,11 @@ export default {
       this.uploadSectionFile(file[0]);
     },
     //格式化slider时间
-    formatTooltip (val) {
+    formatTooltip(val) {
       return util.timeToStr(val);
     },
     //播放 or 暂停音频
-    openVideo () {
+    openVideo() {
       let audio = this.$refs.audio;
       try {
         if (audio.paused) {
@@ -959,19 +962,18 @@ export default {
       }
     },
     //监听进度条拉动设置播放位置
-    audioSliderChange (e) {
+    audioSliderChange(e) {
       if (this.$refs.audioSlider.dragging) {
         this.$refs.audio.currentTime = e;
       }
     },
-    uploadSectionFile (uploader) {
+    uploadSectionFile(uploader) {
       let that = this;
       this.audioFileLoading = true;
       let formData = new FormData();
       if (this.paramsObj.getEditUrl) {
         formData.append("eid", that.$store.state.addHouse.formData.id);
-      }
-      else {
+      } else {
         formData.append("draftId", that.$store.state.addHouse.formData.id);
       }
       formData.append("file", uploader);
@@ -996,11 +998,12 @@ export default {
           this.audioFileLoading = false;
         });
     },
-    getLoadData () {
+    getLoadData() {
       this.loading = true;
       let url = `/draft-house/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getEditUrl) {
-        url = this.paramsObj.getEditUrl + this.$store.state.addHouse.formData.id;
+        url =
+          this.paramsObj.getEditUrl + this.$store.state.addHouse.formData.id;
       }
       return this.$api
         .get({
@@ -1047,26 +1050,26 @@ export default {
         });
     },
     //抵押情况切换
-    mortgageChange (e) {
+    mortgageChange(e) {
       if (e != 1) {
         this.formData.mortgageBank = "";
       }
     },
     //中学占用切换
-    middleRadioChange (e) {
+    middleRadioChange(e) {
       if (e != 1) {
         this.formData.middleSchoolUseList = "";
         this.$store.state.addHouse.formData.step2.middleSchoolUse = "";
       }
     },
     //小学占用切换
-    primaryRadioChange (e) {
+    primaryRadioChange(e) {
       if (e != 1) {
         this.formData.primarySchoolUse = "";
         this.$store.state.addHouse.formData.step2.primarySchoolUse = "";
       }
     },
-    validateAll () {
+    validateAll() {
       let that = this;
       return this.$validator
         .validateAll()
@@ -1084,7 +1087,7 @@ export default {
           }
         });
     },
-    validateAllNotUpdata () {
+    validateAllNotUpdata() {
       let that = this;
       return this.$validator.validateAll().then(e => {
         if (e) {
@@ -1094,7 +1097,7 @@ export default {
       });
     },
     //修改数据到接口
-    setDataToUpdate () {
+    setDataToUpdate() {
       let that = this;
       let sendData = {
         id: that.$store.state.addHouse.formData.id,
@@ -1132,7 +1135,7 @@ export default {
           return false;
         });
     },
-    changeOnly () {
+    changeOnly() {
       console.log("触发...");
       if (
         this.formData.isOwnerOnly === 1 &&
@@ -1141,11 +1144,11 @@ export default {
       ) {
         let iDays = parseInt(
           Math.abs(new Date() - new Date(this.formData.lastSale)) /
-          1000 /
-          60 /
-          60 /
-          24 /
-          365
+            1000 /
+            60 /
+            60 /
+            24 /
+            365
         );
         if (iDays >= 5) {
           this.onlyStr = "满5唯一";

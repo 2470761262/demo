@@ -41,28 +41,32 @@ export default {
          *动画滚动定位到第一个不在视口内的错误提示位置
          */
         Vue.directive('scrollError', {
-            componentUpdated(el, binding, vnode) {
-                if (binding.value instanceof Vue) {
-                    if (binding.value['errorBags'].items.length > 0) {
-                        let contentScroll = el;
+            update(el, binding, vnode) {
+                vnode.context.$nextTick(() => {
+                    if (binding.value.length > 0) {
                         vnode.context.$nextTick(() => {
                             let firstEerrorDom = document.querySelector(".after-tips");
-                            console.log(firstEerrorDom, "firstEerrorDom");
-                            if (firstEerrorDom.offsetTop < contentScroll.scrollTop) {
-                                function animateScroll() {
-                                    if (contentScroll.scrollTop >= firstEerrorDom.offsetTop) {
-                                        contentScroll.scrollTop = contentScroll.scrollTop - 10;
-                                    } else {
-                                        return;
-                                    }
-                                    requestAnimationFrame(animateScroll);
-                                }
-                                animateScroll();
-                            }
+                            firstEerrorDom.scrollIntoView({
+                                block: 'start',
+                                behavior: 'smooth'
+                            })
+
+                            // if (firstEerrorDom.offsetTop < contentScroll.scrollTop) {
+                            //     function animateScroll() {
+                            //         if (contentScroll.scrollTop >= firstEerrorDom.offsetTop) {
+                            //             contentScroll.scrollTop = contentScroll.scrollTop - 10;
+                            //         } else {
+                            //             return;
+                            //         }
+                            //         requestAnimationFrame(animateScroll);
+                            //     }
+                            //     animateScroll();
+                            // }
                         });
                     }
-                }
+                })
             }
+
         })
         Vue.directive("elDrag", {
             bind(el) {
