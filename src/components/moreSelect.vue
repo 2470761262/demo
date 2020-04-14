@@ -330,7 +330,9 @@ export default {
   props: {
     configRule: {
       type: Object,
-      default: () => {}
+      default: () => {
+        return {};
+      }
     }
   },
   computed: {
