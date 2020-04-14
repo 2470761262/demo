@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+@import url("../../../assets/publicLess/pageListQuery.less");
 .flex-cell-content {
   display: flex;
   justify-content: space-around;
@@ -79,7 +80,7 @@
                        v-model="checkProject"
                        clearable
                        class="set-select120"
-                       @change="querylistByParams"
+                       @change="reviewProject"
                        placeholder="全部">
               <el-option v-for="item in checkProjectList"
                          :key="item.value"
@@ -124,7 +125,8 @@
                        @click="querylistByParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/myCheckList"></moreSelect>
+            <moreSelect @moreSelectChange="moreSelectChange"
+                        deptUrl="/myHouse/myCheckList"></moreSelect>
           </div>
         </div>
       </template>
@@ -320,11 +322,48 @@
   </div>
 </template>
 <script>
-import listPage from '@/components/listPage';
-import getMenuRid from '@/minxi/getMenuRid';
+/**
+ * 作业人申请
+ */
+const taskProCheck = [
+  { label: "钥匙申请", value: 0 },
+  { label: "实勘申请", value: 12 },
+  { label: "普通委托申请", value: "2,1" },
+  { label: "独家委托申请", value: "1,1" },
+  { label: "限时委托申请", value: "3,1" }
+];
+/**
+ * 取代申请
+ */
+const replaceCheck = [
+  { label: "钥匙取代", value: 3 },
+  { label: "实勘取代", value: 5 },
+  { label: "普通委托取代", value: "2,1,2" },
+  { label: "独家委托取代", value: "1,1,2" },
+  { label: "限时委托取代", value: "3,1,2" }
+];
+/**
+ * 房源转状态
+ */
+const houseTypeCheck = [
+  { label: "他司售", value: 4 },
+  { label: "业主自售", value: 6 },
+  { label: "暂不售", value: 5 },
+  { label: "无效", value: 3 }
+];
+/**
+ * 默认类型
+ */
+const defaultCheck = [
+  { value: "0", label: "钥匙人" },
+  { value: "1", label: "独家委托审核" },
+  { value: "4", label: "他司售" },
+  { value: "2", label: "虚假实勘" }
+];
+import listPage from "@/components/listPage";
+import getMenuRid from "@/minxi/getMenuRid";
 import util from "@/util/util";
-import moreSelect from '@/components/moreSelect';
-import '@/assets/publicLess/pageListQuery.less';
+import moreSelect from "@/components/moreSelect";
 export default {
   mixins: [getMenuRid],
 
@@ -332,20 +371,20 @@ export default {
     listPage,
     moreSelect
   },
-  data () {
+  data() {
     return {
-      type: '',
+      type: "",
       checkProject: "",
-      option: '',
-      status: '',
-      cbIdList: '',
-      roomNoList: '',
-      comList: '',
+      option: "",
+      status: "",
+      cbIdList: "",
+      roomNoList: "",
+      comList: "",
       moreSelect: [],
       dialogVisible: false,
-      value: '',
-      input: '',
-      addPer: '',
+      value: "",
+      input: "",
+      addPer: "",
       loading: true, //控制表格加载动画提示
       pageJson: {
         currentPage: 1, //当前页码
@@ -353,91 +392,94 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: 'HouseNo', label: "房源编号" },
-        { prop: 'CommunityName', label: "楼盘名称" },
-        { prop: 'Price', label: "售价(万元)" },
-        { prop: 'InArea', label: "面积(m²)" },
-        { prop: 'PropertyFee', label: "均价(元/m²)" },
-        { prop: 'hall', label: "户型" },
-        { prop: 'Decoration', label: "装修程度" },
-        { prop: 'AgentPer', label: "跟单人" },
-        { prop: 'AddTime', label: "录入时间" }
+        { prop: "HouseNo", label: "房源编号" },
+        { prop: "CommunityName", label: "楼盘名称" },
+        { prop: "Price", label: "售价(万元)" },
+        { prop: "InArea", label: "面积(m²)" },
+        { prop: "PropertyFee", label: "均价(元/m²)" },
+        { prop: "hall", label: "户型" },
+        { prop: "Decoration", label: "装修程度" },
+        { prop: "AgentPer", label: "跟单人" },
+        { prop: "AddTime", label: "录入时间" }
       ],
       tableData: [],
       elTabs: {
         activeName: "tab1",
-        list: [
-
-        ]
+        list: []
       },
-      stateList: [{
-        value: '0',
-        label: '待审核'
-      }, {
-        value: '1',
-        label: '审核通过'
-      }, {
-        value: '2',
-        label: '未通过'
-      },],
-      options: [{
-        value: '选项1',
-        label: '全部'
-      }, {
-        value: '选项2',
-        label: '待验真'
-      }, {
-        value: '选项3',
-        label: '客户验真'
-      }, {
-        value: '选项4',
-        label: '店长验真'
-      }, {
-        value: '选项5',
-        label: '验真失败'
-      }, {
-        value: '选项6',
-        label: '已过期'
-      }],
-      checkProjectList: [{
-        value: '1',
-        label: '作业人申请'
-      }, {
-        value: '4',
-        label: '取代申请'
-      }, {
-        value: '8',
-        label: '房源转状态'
-      }, {
-        value: '11',
-        label: '举报'
-      }, {
-        value: '10',
-        label: '录入修改'
-      }],
-      typeList: [{
-        value: '0',
-        label: '钥匙人'
-      }, {
-        value: '1',
-        label: '独家委托审核'
-      }, {
-        value: '4',
-        label: '他司售'
-      }, {
-        value: '2',
-        label: '虚假实勘'
-      }],
+      stateList: [
+        {
+          value: "0",
+          label: "待审核"
+        },
+        {
+          value: "1",
+          label: "审核通过"
+        },
+        {
+          value: "2",
+          label: "未通过"
+        }
+      ],
+      options: [
+        {
+          value: "选项1",
+          label: "全部"
+        },
+        {
+          value: "选项2",
+          label: "待验真"
+        },
+        {
+          value: "选项3",
+          label: "客户验真"
+        },
+        {
+          value: "选项4",
+          label: "店长验真"
+        },
+        {
+          value: "选项5",
+          label: "验真失败"
+        },
+        {
+          value: "选项6",
+          label: "已过期"
+        }
+      ],
+      checkProjectList: [
+        {
+          value: "1",
+          label: "作业人申请"
+        },
+        {
+          value: "4",
+          label: "取代申请"
+        },
+        {
+          value: "8",
+          label: "房源转状态"
+        },
+        {
+          value: "11",
+          label: "举报"
+        },
+        {
+          value: "10",
+          label: "录入修改"
+        }
+      ],
+      typeList: defaultCheck,
       queryData: {
         comId: "",
-        CommunityName: '',
-        timeSelect: '',
-        roomNo: '',
+        CommunityName: "",
+        timeSelect: "",
+        roomNo: "",
         roomId: "",
-        cbId: '',
-        cbName: "",
+        cbId: "",
+        cbName: ""
       },
-      accessoryUrl: require('../../../assets/images/accessory.png'),
+      accessoryUrl: require("../../../assets/images/accessory.png"),
       showPopUp: false,
       checkStatus: 1,
       checkMemo: "",
@@ -479,8 +521,7 @@ export default {
         { title: "客厅", list: [], type: 4 },
         { title: "卫生间", list: [], type: 5 },
         { title: "户型", list: [], type: 6 },
-        { title: "视频", list: [], type: 7 },
-
+        { title: "视频", list: [], type: 7 }
       ],
       accessoryListObj: {
         file1: [],
@@ -489,50 +530,68 @@ export default {
         file4: [],
         file5: [],
         file6: [],
-        file7: [],
-
+        file7: []
       },
       file8: [],
       showAccessory: false,
       fill: "fill"
-    }
+    };
   },
-  mounted () {
+  mounted() {
     this.querylist(1);
   },
   methods: {
-    moreSelectChange (e) {
-      if (e != '')
-        this.moreSelect = e;
-      this.querylist(1, 'id', 'descending')
+    /**
+     * 审核项目change
+     */
+    reviewProject(value) {
+      switch (String(value)) {
+        case "1":
+          this.typeList = taskProCheck;
+          break;
+        case "4":
+          this.typeList = replaceCheck;
+          break;
+        case "8":
+          this.typeList = houseTypeCheck;
+          break;
+        default:
+          this.typeList = defaultCheck;
+          break;
+      }
+      this.type = "";
+      this.querylistByParams();
     },
-    changeFile (e, index) {
+    moreSelectChange(e) {
+      if (e != "") this.moreSelect = e;
+      this.querylist(1, "id", "descending");
+    },
+    changeFile(e, index) {
       let checkProjectList = this.accessoryMoldList[index].list;
       let activeIndex = checkProjectList[e].activeIndex;
       this.cutPic(activeIndex);
     },
-    cutPic (index) {
+    cutPic(index) {
       let that = this;
       that.$refs.loopImg.setActiveItem(index);
     },
-    getFile (list) {
+    getFile(list) {
       this.accessoryMoldList.forEach(item => {
-        item.list = [];//清空数组
+        item.list = []; //清空数组
         if (list != null) {
           list.forEach((element, index) => {
             if (element.subType == item.type) {
               element.activeIndex = index;
-              item.list.push(element)
+              item.list.push(element);
             }
           });
         }
-
       });
       this.file8 = list;
       console.log(this.file8);
       this.showAccessory = true;
     },
-    getAccessory (row) {
+    getAccessory(row) {
       let checkId = row.id;
       let that = this;
       let exists = false;
@@ -546,33 +605,36 @@ export default {
       if (exists) {
         return true;
       }
-      this.$api.get({
-        url: '/agentHouse/followPic/getAccessory/' + checkId,
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: {},
-        token: false
-      }).then((e) => {
-        let result = e.data;
-        if (result.code == 200) {
-          if (row.Type == 13) {
-            result.data.push({ "CheckID": checkId, "url": row.picUrl })
-          }
-          console.log(result.data)
-          that.accessoryAllList.push({ "key": checkId, "value": result.data });
+      this.$api
+        .get({
+          url: "/agentHouse/followPic/getAccessory/" + checkId,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {},
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            if (row.Type == 13) {
+              result.data.push({ CheckID: checkId, url: row.picUrl });
+            }
+            console.log(result.data);
+            that.accessoryAllList.push({ key: checkId, value: result.data });
 
-          that.getFile(result.data);
-        }
-      }).catch((e) => {
-        that.$message("获取失败");
-      })
+            that.getFile(result.data);
+          }
+        })
+        .catch(e => {
+          that.$message("获取失败");
+        });
     },
-    checkHouse () {
+    checkHouse() {
       let that = this;
       let params = {
         id: this.checkId,
         CheckMemo: this.checkMemo,
         Tag: this.checkStatus
-      }
+      };
       if (params.Tag == 2) {
         if (!util.isNotNull(this.checkMemo)) {
           this.$alert("", "请填写审核失败理由!!!", {
@@ -584,153 +646,159 @@ export default {
 
       this.showPopUp = false;
       this.loading = true;
-      this.$api.post({
-        url: '/agentHouse/propertyCheck/checkHouse',
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: params,
-        token: false
-      }).then((e) => {
-        let result = e.data;
-        that.loading = false;
-        that.$message(result.message);
-        if (result.code == 200) {
-          that.querylistByParams();
-          that.CheckMemo = "";
-        }
-      }).catch((e) => {
-        that.$message("操作失败");
-      })
+      this.$api
+        .post({
+          url: "/agentHouse/propertyCheck/checkHouse",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params,
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.loading = false;
+          that.$message(result.message);
+          if (result.code == 200) {
+            that.querylistByParams();
+            that.CheckMemo = "";
+          }
+        })
+        .catch(e => {
+          that.$message("操作失败");
+        });
     },
-    remoteInput () {
-
+    remoteInput() {
       if (this.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
-      var that = this
-      if (query !== '') {
+    remoteMethod(query) {
+      var that = this;
+      if (query !== "") {
         this.loading = true;
 
-        this.$api.get({
-          url: "/mateHouse/queryCommunity",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            communityName: query,
-            page: 1,
-            limit: 50
-          }
-        }).then((e) => {
-          console.log(e.data.code)
-          if (e.data.code == 200) {
-
-            that.loading = false;
-            that.comList = e.data.data.list;
-
-          }
-        })
+        this.$api
+          .get({
+            url: "/mateHouse/queryCommunity",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
+            data: {
+              communityName: query,
+              page: 1,
+              limit: 50
+            }
+          })
+          .then(e => {
+            console.log(e.data.code);
+            if (e.data.code == 200) {
+              that.loading = false;
+              that.comList = e.data.data.list;
+            }
+          });
       } else {
         this.options = [];
       }
     },
-    Remove () {
+    Remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
-      this.querylist(1, 'id', 'descending')
+      this.querylist(1, "id", "descending");
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    queryCBId () {
-      var that = this
-      this.$api.get({
-        url: "/mateHouse/queryComBuilding",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          comId: that.queryData.comId,
-          page: 1,
-          limit: 50
-        }
-      }).then((e) => {
-        if (e.data.code == 200) {
-          that.queryData.roomNo = '';
-          that.queryData.cbId = '';
-          that.cbIdList = e.data.data.list;
-        }
-      })
+    queryCBId() {
+      var that = this;
+      this.$api
+        .get({
+          url: "/mateHouse/queryComBuilding",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            comId: that.queryData.comId,
+            page: 1,
+            limit: 50
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.queryData.roomNo = "";
+            that.queryData.cbId = "";
+            that.cbIdList = e.data.data.list;
+          }
+        });
       let obj = {};
-      obj = this.comList.find((item) => {
+      obj = this.comList.find(item => {
         return item.value === that.queryData.comId;
       });
       this.queryData.CommunityName = obj.name;
       this.querylistByParams();
-
     },
-    getTitle (row) {
+    getTitle(row) {
       this.titleList.forEach(element => {
         if (element.key == row.Type) {
           this.title = element.value;
         }
       });
       this.checkId = row.id;
-      this.row = row
+      this.row = row;
       this.showPopUp = true;
     },
-    queryRoomNo () {
-      var that = this
-      this.$api.get({
-        url: "/mateHouse/queryBuildIngHouses",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          comId: that.queryData.comId,
-          cbId: that.queryData.cbId,
-          page: 1,
-          limit: 50
-        }
-      }).then((e) => {
-        if (e.data.code == 200) {
-          that.queryData.roomNo = '';
-          that.roomNoList = e.data.data.list;
-        }
-      })
+    queryRoomNo() {
+      var that = this;
+      this.$api
+        .get({
+          url: "/mateHouse/queryBuildIngHouses",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            comId: that.queryData.comId,
+            cbId: that.queryData.cbId,
+            page: 1,
+            limit: 50
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.queryData.roomNo = "";
+            that.roomNoList = e.data.data.list;
+          }
+        });
       let obj = {};
-      obj = this.cbIdList.find((item) => {
+      obj = this.cbIdList.find(item => {
         return item.value === that.queryData.cbId;
       });
       this.queryData.cbName = obj.name;
       this.querylistByParams();
     },
     //跳转房源详情页面
-    toHouseDetail (row) {
+    toHouseDetail(row) {
       this.$router.push({ name: "houseDetails", params: { houseId: row.eid } });
     },
-    querylistByParams () {
+    querylistByParams() {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
-    querylist () {
+    querylist() {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: that.pageJson.currentPage };
+      let params = {
+        limit: that.pageJson.pageSize,
+        page: that.pageJson.currentPage
+      };
 
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
             params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          }
-          else if (key == "followTime" && this.moreSelect[key] !== "") {
+          } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
-          }
-          else {
+          } else {
             params[key] = this.moreSelect[key];
           }
         }
@@ -745,85 +813,86 @@ export default {
         params.checkType = that.type;
       }
       params.sortColumn = "id";
-      this.$api.post({
-        url: '/myHouse/myCheckList',
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: params,
-        token: false
-      }).then((e) => {
-        let result = e.data;
-        that.loading = false;
-        if (result.code == 200) {
-          that.pageJson.total = result.data.totalCount;
-          that.pageJson.currentPage = result.data.currPage;
-          that.tableData = result.data.list;
-        } else {
-          console.log("查询我的跟单列表结果：" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("查询我的跟单失败");
-        console.log(e);
-      })
+      this.$api
+        .post({
+          url: "/myHouse/myCheckList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params,
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.loading = false;
+          if (result.code == 200) {
+            that.pageJson.total = result.data.totalCount;
+            that.pageJson.currentPage = result.data.currPage;
+            that.tableData = result.data.list;
+          } else {
+            console.log("查询我的跟单列表结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询我的跟单失败");
+          console.log(e);
+        });
     },
-    distributeEvent (e, id) {
+    distributeEvent(e, id) {
       this[e](id);
     },
-    isForBut (type) {
-      let array = [
-        { name: '查看', isType: '1,2,3', methosName: '' }
-      ]
-      return array.filter((item) => {
-        this.item.push("12222222222222222222222222222222222")
-        return item.isType.includes(type)
-      })
+    isForBut(type) {
+      let array = [{ name: "查看", isType: "1,2,3", methosName: "" }];
+      return array.filter(item => {
+        this.item.push("12222222222222222222222222222222222");
+        return item.isType.includes(type);
+      });
     },
-    remoteInput () {
-
+    remoteInput() {
       if (this.queryData.CommunityName.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
-      var that = this
-      if (query !== '') {
+    remoteMethod(query) {
+      var that = this;
+      if (query !== "") {
         console.log(query);
         this.loading = true;
-        this.$api.get({
-          url: "/mateHouse/queryCommunity",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            page: 1,
-            limit: 50,
-            communityName: query
-          }
-        }).then((e) => {
-          console.log(e.data)
-          if (e.data.code == 200) {
-
-            that.loading = false;
-            that.comList = e.data.data.list;
-          }
-        })
+        this.$api
+          .get({
+            url: "/mateHouse/queryCommunity",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
+            data: {
+              page: 1,
+              limit: 50,
+              communityName: query
+            }
+          })
+          .then(e => {
+            console.log(e.data);
+            if (e.data.code == 200) {
+              that.loading = false;
+              that.comList = e.data.data.list;
+            }
+          });
       } else {
         this.optionsList = [];
       }
-      console.log("remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
+      console.log(
+        "remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId
+      );
     },
-    handleClick () {
-
-    },
-    handleSizeChange (val) {
+    handleClick() {},
+    handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.querylist(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.querylist(val);
-    },
-  },
-}
+    }
+  }
+};
 </script>

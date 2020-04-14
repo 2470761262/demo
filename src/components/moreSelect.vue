@@ -129,16 +129,19 @@ span {
                 <span>㎡</span>
               </div>
               <div class="selectType">
-                <span>总价</span>
+                <span v-if="mergeConfig.minPrice">总价</span>
                 <el-input style="width:30%"
                           v-model="more.minPrice"
                           clearable
-                          placeholder="最低"></el-input>万
+                          v-if="mergeConfig.minPrice"
+                          placeholder="最低"></el-input>
+                <span v-if="mergeConfig.minPrice">万</span>
                 <el-input v-model="more.maxPrice"
                           style="width:30%"
                           clearable
+                          v-if="mergeConfig.maxPrice"
                           placeholder="最高"></el-input>
-                <span>万</span>
+                <span v-if="mergeConfig.maxPrice">万</span>
               </div>
             </div>
             <div class="line">
