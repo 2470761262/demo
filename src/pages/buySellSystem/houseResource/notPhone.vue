@@ -97,8 +97,10 @@
                     @change="queryNotPhoneParams"
                     clearable />
           <span class="query-cell-suffix">平方</span>
+          <span class="query-cell-suffix handlebut"
+                @click="Remove">清除</span>
         </div>
-        <div class="query-content-cell cell-interval75">
+        <!-- <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">录入时间</h3>
           <el-date-picker v-model="data.timeSelect"
                           type="daterange"
@@ -108,9 +110,8 @@
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"
                           :default-time="['00:00:00', '23:59:59']"></el-date-picker>
-          <span class="query-cell-suffix handlebut"
-                @click="Remove">清除</span>
-        </div>
+         
+        </div> -->
         <div class="query-content-cell cell-interval75">
           <el-button type="primary"
                      size="mini"
@@ -119,11 +120,11 @@
         <!-- <div class="query-content-cell cell-interval25">
           <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
         </div> -->
-        <div class="query-content-cell cell-interval25">
+        <!-- <div class="query-content-cell cell-interval25">
           <definitionmenu :renderList="tableDataColumn"
                           :tableColumn="tableColumn"
                           @change="tabColumnChange"></definitionmenu>
-        </div>
+        </div> -->
       </div>
     </template>
     <template #tableColumn>
@@ -169,7 +170,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data () {
+  data() {
     return {
       loading: true,
 
@@ -186,14 +187,7 @@ export default {
       options: [],
       cbIdList: [],
       roomNoList: [],
-      tableColumn: [],
-      moreSelect: [],
-      pageJson: {
-        currentPage: 1, //当前页码
-        total: 0, //总记录数
-        pageSize: 10 //每页条数
-      },
-      tableDataColumn: [
+      tableColumn: [
         {
           prop: "communityName",
           label: "小区名称",
@@ -225,16 +219,22 @@ export default {
           formart: item => (item.inArea == null ? "---" : item.inArea)
         }
       ],
+      moreSelect: [],
+      pageJson: {
+        currentPage: 1, //当前页码
+        total: 0, //总记录数
+        pageSize: 10 //每页条数
+      },
       tableData: [],
-      sortColumn: "id",//排序字段
-      sortType: "descending",//排序类型
+      sortColumn: "id", //排序字段
+      sortType: "descending" //排序类型
     };
   },
-  mounted () {
+  mounted() {
     this.queryNotPhone(1);
   },
   methods: {
-    toHouseDetail (row) {
+    toHouseDetail(row) {
       let that = this;
       //无号码
       console.log(row, "进入楼盘详情");
@@ -244,44 +244,44 @@ export default {
         params: { houseId: row.id }
       });
     },
-    queryTabData () {
+    queryTabData() {
       console.log(this, "111");
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       this.moreSelect = e;
       this.queryNotPhone(1);
     },
-    formatHouseType (row, column) {
+    formatHouseType(row, column) {
       if (row.Rooms != null && row.Rooms != "") {
         return row.Rooms + "室";
       } else {
         return "---";
       }
     },
-    formatInArea (row, column) {
+    formatInArea(row, column) {
       if (row.inArea != null && row.inArea != "") {
         return row.inArea;
       } else {
         return "---";
       }
     },
-    formatOrientation (row, column) {
+    formatOrientation(row, column) {
       if (row.orientation != null && row.orientation != "") {
         return row.orientation;
       } else {
         return "---";
       }
     },
-    Remove () {
+    Remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.queryNotPhone(1);
     },
-    addPhone (id, esId) {
+    addPhone(id, esId) {
       console.log(id);
       this.$prompt("请输业主手机号码", "提示", {
         confirmButtonText: "确定",
@@ -320,7 +320,7 @@ export default {
         });
       //that.$router.push({ path: '/buySellSystem/updatePhone', query: { "id": id } });
     },
-    toSale (comId, cbId, bhId, communityName, buildingName, roomNo) {
+    toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
       var that = this;
       that.$router.push({
         path: "/buySellSystem/addHouse",
@@ -338,15 +338,15 @@ export default {
       });
     },
 
-    queryNotPhoneParams () {
+    queryNotPhoneParams() {
       this.queryNotPhone(1);
     },
-    remoteInput () {
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -374,13 +374,13 @@ export default {
         that.options = [];
       }
     },
-    sortMethod (e) {
+    sortMethod(e) {
       console.log(e.prop, e.order);
       this.sortColumn = e.prop;
       this.sortType = e.order;
       this.queryNotPhone(1);
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       if (that.data.comId == "") {
         that.data.roomNo = "";
@@ -407,7 +407,7 @@ export default {
         });
       this.queryNotPhoneParams();
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -430,7 +430,7 @@ export default {
         });
       this.queryNotPhoneParams();
     },
-    queryNotPhone (currentPage) {
+    queryNotPhone(currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -483,23 +483,23 @@ export default {
           console.log(e);
         });
     },
-    isForBut (type) {
+    isForBut(type) {
       let array = [{ name: "查看", isType: "3", methosName: "" }];
       return array.filter(item => {
         return item.isType.includes(type);
       });
     },
-    handleClick () { },
-    queryTabData () {
+    handleClick() {},
+    queryTabData() {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryNotPhone(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.queryNotPhone(val);
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryNotPhone(1);

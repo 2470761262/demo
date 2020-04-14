@@ -285,6 +285,8 @@
                          :label="item.label"
                          :value="item.value"></el-option>
             </el-select>
+            <span class="query-cell-suffix handlebut"
+                  @click="remove">清除</span>
           </div>
           <div class="query-content-cell cell-interval45">
             <label class="query-checkbox">
@@ -454,7 +456,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-
+          order: "custom",
           disabled: false,
           default: true
         },
@@ -664,7 +666,7 @@ export default {
     },
     remove () {
       let tab = this.tableColumn;
-      Object.assign(this.$data, this.$comList.data.call(this));
+      Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.queryVerifyHouseDatas(1);
     },
@@ -1075,7 +1077,7 @@ export default {
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             data: {
-              comId: query,
+              communityName: query,
               page: 1,
               limit: 50
             }
