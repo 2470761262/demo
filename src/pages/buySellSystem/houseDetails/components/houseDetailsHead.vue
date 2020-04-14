@@ -184,8 +184,7 @@
         <div class="qr-content">
           <div id="qrcode"
                v-if="!buttonDisabled"
-               :class="{'qrcode':qrData}"
-               v-text="qrData ? '':'二维码失败'"></div>
+               :class="{'qrcode':qrData}">{{qrData?'':'二维码加载失败'}}</div>
           <div class="qr-code-msg">
             <h3 class="qr-title">房源编号:</h3>
             <div class="qr-NO">{{resultData.HouseNo}}</div>
@@ -225,7 +224,7 @@ export default {
   watch: {
     houseDetails: {
       deep: true,
-      handler: function(newValue) {
+      handler: function (newValue) {
         let _that = this;
         if (Object.keys(newValue).length > 0 && !this.isDisabled) {
           this.qrData = new QRCode("qrcode", {
@@ -244,15 +243,15 @@ export default {
     report,
     attention
   },
-  created() {
+  created () {
     this.getImpressionList();
     this.getisCollect();
   },
   computed: {
-    isDisabled() {
+    isDisabled () {
       return this.buttonDisabled;
     },
-    resultData() {
+    resultData () {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
@@ -260,7 +259,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       qrData: null,
       followUpFlag: false, //跟进开关
@@ -272,7 +271,7 @@ export default {
   },
   methods: {
     //关注或者取消关注
-    changCollectHouse() {
+    changCollectHouse () {
       if (this.isDisabled) {
         return;
       }
@@ -310,7 +309,7 @@ export default {
         });
     },
     //获取是否关注标记
-    getisCollect() {
+    getisCollect () {
       let that = this;
       this.$api
         .get({
@@ -326,10 +325,10 @@ export default {
             that.isCollect = result.data;
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     //删除印象
-    deleteImpression(impressionId, index) {
+    deleteImpression (impressionId, index) {
       if (this.isDisabled) {
         return;
       }
@@ -351,7 +350,7 @@ export default {
         });
     },
     //添加印象
-    insertImpression(impression) {
+    insertImpression (impression) {
       if (this.isDisabled) {
         return;
       }
@@ -379,7 +378,7 @@ export default {
         });
     },
     //获取印象数组
-    getImpressionList() {
+    getImpressionList () {
       let that = this;
       let params = {
         houseId: this.houseId.id
@@ -398,7 +397,7 @@ export default {
         });
     },
     //打开举报弹窗
-    async openReport() {
+    async openReport () {
       if (this.isDisabled) {
         return;
       }
@@ -412,13 +411,13 @@ export default {
         this.reportFlag = true;
       }
     },
-    openPopUp(PopName) {
+    openPopUp (PopName) {
       if (this.isDisabled) {
         return;
       }
       this[PopName] = true;
     },
-    nodePop() {
+    nodePop () {
       if (this.isDisabled) {
         return;
       }
@@ -429,12 +428,12 @@ export default {
         inputPlaceholder: "推荐5个字以内",
         lockScroll: false,
         inputValidator: e => {
-          if (!e || e.length > 10) return "不能是空, 或者不能大于10个字";
+          if (!e || e.length > 5) return "不能是空, 或者不能大于5个字";
           if (!e || /(.+)\1{2,}/.test(e)) {
             return "不能连续输入重复的字符";
           }
         },
-        beforeClose(action, instance, done) {
+        beforeClose (action, instance, done) {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = "执行中...";
@@ -451,7 +450,7 @@ export default {
         .then(value => {
           console.log(action, instance, done);
         })
-        .catch(() => {});
+        .catch(() => { });
     }
   }
 };

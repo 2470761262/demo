@@ -378,7 +378,7 @@ export default {
       console.log(this, "111");
     },
     formatHouseType (row, column) {
-      return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
+      return (row.Rooms||0) + "室" + (row.hall||0) + "厅" + (row.toilet||0) + "卫";
     },
 
     toLook (id) {
@@ -482,7 +482,7 @@ export default {
     queryVerifyHouseDatas (currentPage) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (Object.keys(this.moreSelect).length != 0) {
         let selectObject = common.getSelectParams(this.transitionList, this.moreSelect);
         Object.assign(params, selectObject);

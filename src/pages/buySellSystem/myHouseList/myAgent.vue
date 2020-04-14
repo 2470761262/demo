@@ -833,7 +833,11 @@ export default {
           } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
-          } else {
+          }
+          else if (key == "bhId") {
+            params.roomNo = this.moreSelect.bhId;
+          }
+          else {
             params[key] = this.moreSelect[key];
           }
         }

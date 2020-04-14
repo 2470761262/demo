@@ -49,7 +49,7 @@
       </div>
       <div class="sldebar-content-item"
            @click="lastClick"
-           v-if="showEidt">
+           v-if="showEdit || editAgentHouse">
         <!-- <i class="el-icon-plus icon"></i> -->
         <img class="nav-image"
              src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/43c6bb2152e647ec825a754fd3817fbb.png">
@@ -79,28 +79,32 @@ export default {
       type: Object,
       default: () => { }
     },
-    judgeShowEidt: {
+    judgeShowEdit: {//判断是否为编辑
       type: Boolean,
       default: false
     },
     sissiontSet: {
       type: Object
+    },
+    showEdit: {
+      type: Boolean,
+      default: false
     }
 
   },
   data () {
     return {
-      showEidt: false,
+      editAgentHouse: false
     }
 
   },
   mounted () {
     let that = this;
-    if (!this.judgeShowEidt) {
-      this.showEidt = true;
+    if (!this.judgeShowEdit) {
+      this.editAgentHouse = true;
     }
     but.$on("editAgentHouse", () => {
-      that.showEidt = true;
+      that.editAgentHouse = true;
     });
   },
   destroyed () {
