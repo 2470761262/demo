@@ -6,24 +6,17 @@
     background: none;
     border: none;
   }
-  &::after {
-    content: attr(data-tips);
-    line-height: 40px;
-    font-size: 14px;
-    margin-left: 20px;
-    color: #606266;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
 }
 .page-form-tips {
   height: 50px;
   border-bottom: 1px solid #f2f2f2;
   margin-bottom: 20px;
-  //line-height: 50px;
-  display: table-cell;
-  vertical-align: middle;
+  line-height: 50px;
+  font-size: 16px;
+}
+.item-before-top {
+  padding: 20px 0;
+  font-size: 18px;
 }
 .dividingLine {
   height: 1px;
@@ -39,18 +32,40 @@
   margin-left: 20px;
   flex-shrink: 0;
 }
+.content-warp {
+  min-height: 100%;
+  background: #fff;
+  padding: 0 50px;
+}
+.text-center {
+  padding: 10px 0;
+  margin-bottom: 30px;
+}
+.set-el-textarea {
+  width: 500px;
+  /deep/.el-form-item {
+    width: 100%;
+    .el-upload {
+      width: 100%;
+      .el-upload-dragger {
+        width: 100%;
+      }
+    }
+  }
+}
 </style>
 <template >
-  <div>
+  <div class="content-warp">
     <div class="page-form-tips">Tips：楼盘信息补充成功后，管理员将尽快进行审核！</div>
     <el-form ref="form"
+             :rules="rules"
              @submit.native.prevent
              :model="form"
              label-width="80px"
-             label-position="right">
-
+             label-position="left">
       <div class="page-form-inline">
-        <el-form-item label="楼盘名称">
+        <el-form-item label="楼盘名称"
+                      prop="communityName">
           <el-input placeholder="请输入楼盘名称"
                     v-model="form.communityName">
           </el-input>
@@ -58,7 +73,8 @@
       </div>
 
       <div class="page-form-inline">
-        <el-form-item label="楼栋">
+        <el-form-item label="楼栋"
+                      prop="comBuildingName">
           <el-input placeholder="请输入楼栋名称"
                     v-model="form.comBuildingName">
           </el-input>
@@ -66,48 +82,47 @@
       </div>
 
       <div class="page-form-inline">
-        <el-form-item label="房间号">
+        <el-form-item label="房间号"
+                      prop="buildIngHouses">
           <el-input placeholder="请输入房间号"
                     v-model="form.buildIngHouses">
           </el-input>
         </el-form-item>
       </div>
 
-      <div class="page-form-inline">
-        <el-form-item label="材料说明">
-          <el-input placeholder="请输入材料说明"
+      <div class="page-form-inline set-el-textarea">
+        <el-form-item label="材料说明"
+                      prop="ReplenishRemark">
+          <el-input type="textarea"
+                    :autosize="{ minRows: 4, maxRows: 6}"
+                    placeholder="请输入材料说明"
+                    :maxlength="300"
+                    show-word-limit
                     v-model="form.ReplenishRemark">
           </el-input>
         </el-form-item>
       </div>
-      <div class="form-error-tips">
-        <div class="page-cell-item">
-          <div class="item-before item-before-top">证明材料</div>
-          <div>
-            <div class="page-cell-item">
-              <el-upload drag
-                         :action="''"
-                         :on-preview="handlePreview"
-                         :limit="9"
-                         name="1"
-                         :before-upload="beforeAvatarUpload"
-                         :http-request="uploadSectionFile"
-                         :on-remove="removeImg"
-                         :file-list="form.proveImg"
-                         multiple>
-                <i class="el-icon-upload"></i>
-                <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-              </el-upload>
-            </div>
-            <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
-          </div>
-        </div>
+      <div class="set-el-textarea">
+        <el-form-item label="材料说明"
+                      prop="prove">
+          <el-upload drag
+                     :on-preview="handlePreview"
+                     :limit="9"
+                     name="1"
+                     action=""
+                     :before-upload="beforeAvatarUpload"
+                     :http-request="uploadSectionFile"
+                     :on-remove="removeImg"
+                     :file-list="form.proveImg"
+                     multiple>
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+          </el-upload>
+          <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
+        </el-form-item>
       </div>
-
-      <el-button-group>
-        <el-button type="primary"
-                   @click="apply()">申请</el-button>
-      </el-button-group>
+      <el-button type="primary"
+                 @click="apply()">申请</el-button>
     </el-form>
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%"
@@ -117,157 +132,144 @@
   </div>
 </template>
 <script>
-
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
-  data () {
+  data() {
     return {
-      form: {
-        communityName: '',
-        comBuildingName: '',
-        buildIngHouses: '',
-        ReplenishRemark: '',
-        proveImg: [],
-        prove: [],
+      rules: {
+        prove: [
+          { required: true, message: "证明材料不能为空", trigger: "change" }
+        ],
+        communityName: [
+          { required: true, message: "楼盘名称不能为空", trigger: "blur" }
+        ],
+        comBuildingName: [
+          { required: true, message: "楼栋名称不能为空", trigger: "blur" }
+        ],
+        buildIngHouses: [
+          { required: true, message: "房间号不能为空", trigger: "blur" }
+        ],
+        ReplenishRemark: [
+          { required: true, message: "材料说明不能为空", trigger: "blur" }
+        ]
       },
-      dialogImageUrl: '',
-      dialogVisible: false,
-    }
+      form: {
+        communityName: "",
+        comBuildingName: "",
+        buildIngHouses: "",
+        ReplenishRemark: "",
+        proveImg: [],
+        prove: []
+      },
+      dialogImageUrl: "",
+      dialogVisible: false
+    };
   },
-  mounted () {
-
-
-
-  },
+  mounted() {},
   methods: {
-    handlePreview (file) {
-      this.dialogImageUrl = file.url;// file.url;
+    handlePreview(file) {
+      this.dialogImageUrl = file.url; // file.url;
       this.dialogVisible = true;
       this.showFlag = true;
     },
-    beforeAvatarUpload (file) {
+    beforeAvatarUpload(file) {
       // 上传图片前处理函数
-      const isJPG =
-        file.type === "image/jpeg" ||
-        file.type === "image/png";
+      const isJPG = file.type === "image/jpeg" || file.type === "image/png";
       let that = this;
       if (!isJPG) {
         this.$message.error("上传头像图片只能是jpg,jpeg 格式!");
       }
-      // const isSize = new Promise(function (resolve, reject) {
-      //   let width = 600;
-      //   let height = 600;
-      //   let _URL = window.URL || window.webkitURL;
-      //   let image = new Image();
-      //   image.onload = function () {
-      //     let valid = image.width == width && image.height == height;
-      //     valid ? resolve() : reject();
-      //   };
-      //   image.src = _URL.createObjectURL(file);
-      // }).then(
-      //   () => {
-      //     return file;
-      //   },
-      //   () => {
-      //     this.$message.error("上传头像图片尺寸不符合,只能是600*600!");
-      //     return Promise.reject();
-      //   }
-      // );
-      //  return isJPG && isSize;
       return isJPG;
     },
-    uploadSectionFile (uploader) {
+    uploadSectionFile(uploader) {
       let that = this;
       let formData = new FormData();
-      formData.append('picClass', uploader.filename)
-      formData.append('draftid', 1)
-      formData.append('file', uploader.file)
-      this.$api.post({
-        url: "/draft-house/picture",
-        headers: { "Content-Type": "multipart/form-data" },
-        data: formData,
-        onUploadProgress: progressEvent => { //静读条
-          let percent = (progressEvent.loaded / progressEvent.total * 100) | 0
-          uploader.onProgress({ percent: percent })
-        }
-      }).then((json) => {
-        uploader.onSuccess()
-        let data = json.data.data;
-        that.form.proveImg.push({ name: data.id, url: data.url, id: data.id });
-        that.form.prove.push(data.url);
-        console.log(that.form.proveImg.join(','))
-      }).catch(() => {
-        that.$message({
-          message: '不晓得为什么,反正失败了',
-          type: 'warning'
+      formData.append("picClass", uploader.filename);
+      formData.append("draftid", 1);
+      formData.append("file", uploader.file);
+      this.$api
+        .post({
+          url: "/draft-house/picture",
+          headers: { "Content-Type": "multipart/form-data" },
+          data: formData,
+          onUploadProgress: progressEvent => {
+            //静读条
+            let percent =
+              ((progressEvent.loaded / progressEvent.total) * 100) | 0;
+            uploader.onProgress({ percent: percent });
+          }
         })
-        uploader.onError()
-      })
+        .then(json => {
+          uploader.onSuccess();
+          let data = json.data.data;
+          that.form.proveImg.push({
+            name: data.id,
+            url: data.url,
+            id: data.id
+          });
+          that.form.prove.push(data.url);
+          this.$refs["form"].validateField("prove");
+        })
+        .catch(() => {
+          that.$message({
+            message: "不晓得为什么,反正失败了",
+            type: "warning"
+          });
+          uploader.onError();
+        });
     },
-    removeImg (file) {
+    removeImg(file) {
       if (file.id) {
-        this.form.proveImg = this.form.proveImg.filter((item) => {
+        this.form.proveImg = this.form.proveImg.filter(item => {
           return item.url != file.url;
-        })
+        });
+        this.form.prove = this.form.prove.filter(item => {
+          return item != file.url;
+        });
+        this.$refs["form"].validateField("prove");
         this.$api.delete({
           url: `/draft_house/picture/${file.id}`,
           qs: true,
           data: {
             url: file.url
           }
-        })
+        });
       }
     },
-    apply () {
-      var that = this
-      if (that.form.prove == '') {
-        alert("证明材料不能为空");
-        return;
-      }
-      if (that.form.communityName == '') {
-        alert("楼盘名称");
-        return;
-      }
-      if (that.form.comBuildingName == '') {
-        alert("楼栋名称");
-        return;
-      }
-      if (that.form.buildIngHouses == '') {
-        alert("房间号");
-        return;
-      }
-      if (that.form.ReplenishRemark == '') {
-        alert("材料说明");
-        return;
-      }
-
-      this.$api.get({
-        url: "/CommunityReplenish/add",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          communityName: that.form.communityName,//楼盘名称
-          comBuildingName: that.form.comBuildingName,//楼栋名称
-          buildIngHouses: that.form.buildIngHouses,//房间号
-          ReplenishRemark: that.form.ReplenishRemark,//材料说明
-          proveImg: that.form.prove.join(',')//证明材料
+    apply() {
+      var that = this;
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          this.$api
+            .get({
+              url: "/CommunityReplenish/add",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              token: false,
+              qs: true,
+              data: {
+                communityName: that.form.communityName, //楼盘名称
+                comBuildingName: that.form.comBuildingName, //楼栋名称
+                buildIngHouses: that.form.buildIngHouses, //房间号
+                ReplenishRemark: that.form.ReplenishRemark, //材料说明
+                proveImg: that.form.prove.join(",") //证明材料
+              }
+            })
+            .then(e => {
+              if (e.data.code == 200) {
+                this.$alert("", "补充楼盘申请提交成功，请尽快进行审核", {
+                  dangerouslyUseHTMLString: false
+                });
+                this.$router.push({ path: "/buySellSystem/addHouse" });
+              } else {
+                this.$alert("", "补充楼盘提交失败，请重新提交", {
+                  dangerouslyUseHTMLString: false
+                });
+              }
+            });
         }
-      }).then((e) => {
-        if (e.data.code == 200) {
-          this.$alert("", "补充楼盘申请提交成功，请尽快进行审核", {
-            dangerouslyUseHTMLString: false
-          });
-          this.$router.push({ path: '/buySellSystem/addHouse' });
-        } else {
-          this.$alert("", "补充楼盘提交失败，请重新提交", {
-            dangerouslyUseHTMLString: false
-          });
-        }
-      })
+      });
     }
-
   }
-}
+};
 </script>

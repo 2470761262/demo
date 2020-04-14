@@ -174,6 +174,7 @@
           </div>
           <div class="query-content-cell cell-interval25">
             <moreSelect @moreSelectChange="moreSelectChange"
+                        :configRule="{entrustType: false,taskType:false}"
                         deptUrl="/myHouse/myVerifyList"></moreSelect>
           </div>
         </div>
@@ -470,6 +471,13 @@ export default {
           formart: row => row.checkTel || "暂无",
           width: "120",
           order: false
+        },
+        {
+          prop: "addTime",
+          label: "录入时间",
+          formart: row => row.addTime,
+          width: "180",
+          order: true
         }
         // {
         //   prop: "decoration",

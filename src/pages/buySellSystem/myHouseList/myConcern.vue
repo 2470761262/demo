@@ -196,7 +196,8 @@
                      @click="querylistByParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"
+          <moreSelect :configRule="{deptParentId: false,store:false,personnel:false}"
+                      @moreSelectChange="moreSelectChange"
                       ref="moreSelect"></moreSelect>
         </div>
       </div>
