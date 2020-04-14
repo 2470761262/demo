@@ -265,6 +265,7 @@ export default {
         this.componentName = this.stepsList[
           this.stepsActiveIndex
         ].componentName;
+        this.$store.commit("updateIsformDataNoCommit", false);
         return;
       }
       if (this.stepsActiveIndex < this.stepsList.length && flag) {

@@ -91,9 +91,11 @@
         </div>
       </div>
       <div class="text-col-centent">
-        <router-link class="link"
-                     to="/buySellSystem/validateHouseList"
-                     replace>前往驗證列表</router-link>
+        <el-button type="primary"
+                   class="link"
+                   @click="navto">
+          前往验真列表
+        </el-button>
       </div>
     </div>
     <div v-else>
@@ -105,7 +107,7 @@
 import util from "@/util/util";
 export default {
   name: "addHouseSuccess",
-  data () {
+  data() {
     return {
       stepsActiveIndex: 1,
       stepsList: [
@@ -115,19 +117,19 @@ export default {
       ],
       loading: false,
       url: "",
-      edit: false,
+      edit: false
     };
   },
-  created () {
+  created() {
     this.getQr();
   },
-  mounted () {
-    if (util.sessionLocalStorageGet('editHouse')) {
+  mounted() {
+    if (util.sessionLocalStorageGet("editHouse")) {
       this.edit = true;
     }
   },
   methods: {
-    getQr () {
+    getQr() {
       let that = this;
       this.$api
         .post({
@@ -155,7 +157,10 @@ export default {
           that.loading = false;
         });
     },
-    validateAll () {
+    navto() {
+      this.$router.replace({ path: "/buySellSystem/validateHouseList" });
+    },
+    validateAll() {
       let that = this;
       this.$api.put({
         url: "/draft-house/reset",
