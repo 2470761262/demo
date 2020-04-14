@@ -782,12 +782,12 @@ export default {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
-    querylist() {
+    querylist(currentPage) {
       var that = this;
       that.loading = true;
       let params = {
         limit: that.pageJson.pageSize,
-        page: that.pageJson.currentPage
+        page: currentPage
       };
 
       if (Object.keys(this.moreSelect).length != 0) {
