@@ -306,9 +306,10 @@ export default {
               console.log(e.data.code);
               if (e.data.code == 200) {
                 // this.$router.push({ path: '/buySellSystem/notPhone' });
+                this.$message(e.data.message);
                 this.queryNotPhone(1);
               } else {
-                alert(e.data.message);
+                this.$message(e.data.message);
               }
             });
         })

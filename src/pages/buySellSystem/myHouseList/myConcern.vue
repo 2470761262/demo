@@ -196,7 +196,8 @@
                      @click="querylistByParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      ref="moreSelect"></moreSelect>
         </div>
       </div>
     </template>
@@ -262,6 +263,11 @@
                          @click="ifOFF(scope.row.id)"
                          size="mini">取消关注</el-button>
             </div>
+            <div v-else>
+              <el-button type="info"
+                         slot="reference"
+                         size="mini">印象关注</el-button>
+            </div>
           </div>
         </template>
       </el-table-column>
@@ -321,22 +327,22 @@ export default {
           disabled: true,
           default: true
         },
-        {
-          prop: "buildingName",
-          label: "栋座",
-          width: "100px",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "roomNo",
-          label: "房间号",
-          width: "100px",
-          order: false,
-          disabled: false,
-          default: true
-        },
+        // {
+        //   prop: "buildingName",
+        //   label: "栋座",
+        //   width: "100px",
+        //   order: false,
+        //   disabled: false,
+        //   default: true
+        // },
+        // {
+        //   prop: "roomNo",
+        //   label: "房间号",
+        //   width: "100px",
+        //   order: false,
+        //   disabled: false,
+        //   default: true
+        // },
         {
           prop: "price",
           label: "售价(万元)",
@@ -460,12 +466,17 @@ export default {
     // this.querylist(1, "id", "descending");
     // this.queryMyImpression();
     let that = this;
-    that.show(1);
+    // that.show(1);
+    this.querylistByParams();
   },
   methods: {
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.querylist(1);
+      this.$refs.moreSelect.visible = true;
+      if (!this.$refs.moreSelect.clear) {
+        this.querylist(1);
+      }
+
     },
     tabColumnChange (e) {
       this.tableColumn = e;
@@ -520,9 +531,10 @@ export default {
     },
     selectImpression (e) {
       let that = this;
-      that.ImpressionList = [];
-      that.ImpressionList.push(e);
-
+      //   that.ImpressionList = [];
+      if (!that.ImpressionList.includes(e)) {
+        that.ImpressionList.push(e);
+      }
       this.querylistByParams();
     },
     remoteMethod (query) {
@@ -588,11 +600,26 @@ export default {
         });
     },
     concernOFF (id) {
+      let that = this;
       this.$api
         .post({
           url: "/agent_house/concernHouseOFF/" + id,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
+        })
+        .then(e => {
+          that.deleteMyAttention(id);
+        });
+    },
+    deleteMyAttention (houseId) {
+      this.$api
+        .post({
+          url: "/myHouse/deleteMyAttention",
+          data: {
+            houseId: houseId
+          },
+          qs: true,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
         .then(e => { });
     },
@@ -723,7 +750,7 @@ export default {
           params.cbId = this.data.cbId;
         }
         if (that.data.roomNo != null && this.data.RoomNo != "") {
-          params.roomNo = this.data.roomNo;
+          params.bhId = this.data.roomNo;
         }
         if (that.data.customName != null && that.data.customName != "") {
           params.customName = that.data.customName;
@@ -845,13 +872,15 @@ export default {
           token: false,
           qs: true,
           data: {
-            comId: this.queryData.comId
+            comId: this.data.comId,
+            page: 1,
+            limit: 9999,
           }
         })
         .then(e => {
           if (e.data.code == 200) {
-            that.queryData.RoomNo = "";
-            that.queryData.cbId = "";
+            that.data.RoomNo = "";
+            that.data.cbId = "";
             this.cbIdList = e.data.data.list;
           }
         });
@@ -867,13 +896,15 @@ export default {
           token: false,
           qs: true,
           data: {
-            comId: this.queryData.comId,
-            cbId: this.queryData.cbId
+            comId: this.data.comId,
+            cbId: this.data.cbId,
+            page: 1,
+            limit: 9999,
           }
         })
         .then(e => {
           if (e.data.code == 200) {
-            that.queryData.RoomNo = "";
+            that.data.RoomNo = "";
             this.roomNoList = e.data.data.list;
           }
         });

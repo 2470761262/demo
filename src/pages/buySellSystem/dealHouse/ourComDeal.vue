@@ -164,16 +164,16 @@ export default {
   },
   methods: {
     toHouseDetail (row) {
-      let that = this;     
+      let that = this;
       console.log("进入交易房源详情");
       if (!row.id) {
         that.$message.error("houseId都是空的，如何查看");
         return;
       }
       that.$router.push({
-          name: "historyDetails",
-          params: { houseId: row.id, tradeType: 0 }
-        }); 
+        name: "historyDetails",
+        params: { houseId: row.id, tradeType: 0 }
+      });
     },
     sortMethod (e) {
       console.log(e, "eeee排序");
@@ -217,7 +217,6 @@ export default {
     Remove () {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
-      this.tabColumnChange(tab);
       this.queryOurComDeal(1);
 
     },

@@ -289,7 +289,7 @@ span {
 import sidebarList from "./sidebarList";
 export default {
   inheritAttrs: false,
-  data() {
+  data () {
     return {
       PropertyList: [
         {
@@ -417,29 +417,31 @@ export default {
       ],
       moreRoomNoList: [],
       moreOptions: [],
-      moreCbIdList: []
+      moreCbIdList: [],
+      clear: false//是否清空
     };
   },
-  mounted() {
+  mounted () {
     this.queryConstant();
   },
   methods: {
-    remoteSelect() {
+    remoteSelect () {
       if (this.more.deptParentId.length == 0) {
         this.remoteArea();
       }
     },
-    remoteInput() {
+    remoteInput () {
       if (this.more.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remove() {
+    remove () {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryConstant();
+      this.clear = true;
       this.$emit("moreSelectChange", "");
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.$api
@@ -464,7 +466,7 @@ export default {
         this.moreOptions = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -486,7 +488,7 @@ export default {
           }
         });
     },
-    setTabRender() {
+    setTabRender () {
       console.log(111);
       let data = "";
       for (let key in this.more) {
@@ -496,10 +498,11 @@ export default {
           break;
         }
       }
+      this.clear = false;
       this.$emit("moreSelectChange", data);
       this.visible = false;
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -521,7 +524,7 @@ export default {
           }
         });
     },
-    queryConstant() {
+    queryConstant () {
       return this.$api
         .get({
           url: "/mateHouse/queryConstant",
@@ -538,7 +541,7 @@ export default {
           }
         });
     },
-    remoteArea(query) {
+    remoteArea (query) {
       var that = this;
       if (query !== "") {
         this.$api
@@ -559,7 +562,7 @@ export default {
         this.deptParentList = [];
       }
     },
-    queryShop() {
+    queryShop () {
       var that = this;
       this.$api
         .post({
@@ -576,7 +579,7 @@ export default {
           }
         });
     },
-    queryPer() {
+    queryPer () {
       var that = this;
       this.$api
         .post({
