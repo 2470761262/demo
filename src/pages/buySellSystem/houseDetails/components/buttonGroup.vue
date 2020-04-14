@@ -421,9 +421,6 @@ export default {
               }
             }
           });
-          if (that.resultData.plate != 1 && that.resultData.plate != 4 && that.perId == that.resultData.AgentPer) {//当前跟单人显示编辑按钮
-            but.$emit("editAgentHouse");
-          }
         })
         .catch(e => { });
     },
