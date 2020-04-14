@@ -49,8 +49,9 @@
       <!-- 右侧功能按钮 -->
       <sidebarList lastItemSet
                    lastTitle="编辑"
-                   :judgeShowEidt="true"
-                   :lastParams='lastParams'></sidebarList>
+                   :judgeShowEdit="true"
+                   :lastParams='lastParams'
+                   :showEdit="showEdit"></sidebarList>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -126,13 +127,14 @@ export default {
           getVideoUrl: "/agentHouse/video/getVideoList/"
         },
       },
-      detailType:undefined//标识房源详情类型，决定调用哪个详情接口地址
+      detailType: undefined,//标识房源详情类型，决定调用哪个详情接口地址
+      showEdit: false,
     };
   },
   created () {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
-      this.detailType=this.$route.params.detailType;
+      this.detailType = this.$route.params.detailType;
       util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
       util.localStorageSet("houseDetails.vue:detailType", this.detailType);
     } else {
@@ -149,16 +151,16 @@ export default {
     getHouseDetails () {
       let that = this;
       this.load.loading = true;
-      let url='/agent_house/getHouseDetail';
-      let query={
+      let url = '/agent_house/getHouseDetail';
+      let query = {
         houseId: that.forID.id
       };
-      if(that.detailType&&that.detailType!='undefined'){
-          console.log("注意，了，这是调用另一个房源详情接口");
-					query.type=that.detailType;
-					url='applet/agent_house/getUniversalHouseDetail';
-			}else{
-          console.log("调用原有正常房源详情接口");
+      if (that.detailType && that.detailType != 'undefined') {
+        console.log("注意，了，这是调用另一个房源详情接口");
+        query.type = that.detailType;
+        url = 'applet/agent_house/getUniversalHouseDetail';
+      } else {
+        console.log("调用原有正常房源详情接口");
       }
       this.$api
         .post({
@@ -207,6 +209,15 @@ export default {
                   });
                 }
               }
+            }
+            let perId = 0;
+            if (util.localStorageGet("logindata")) {
+              perId = util.localStorageGet("logindata").accountId;
+            }
+
+            if (result.data.plate != 1 && result.data.plate != 4 && perId == result.data.AgentPer) {//当前跟单人显示编辑按钮
+              console.log(perId, result.data.plate, result.data.AgentPer, "result.data.plateresult.data.plateresult.data.plate");
+              that.showEdit = true;
             }
             this.$set(this.houseDetails, "data", result.data);
           } else {
