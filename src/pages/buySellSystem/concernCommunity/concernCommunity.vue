@@ -456,7 +456,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-
+          order: "custom",
           disabled: false,
           default: true
         },
@@ -1077,7 +1077,7 @@ export default {
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             data: {
-              comId: query,
+              communityName: query,
               page: 1,
               limit: 50
             }
