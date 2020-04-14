@@ -282,7 +282,7 @@
             <i class="el-icon-search"></i>
             <input type="text"
                    class="select-input-sub"
-                   placeholder="请输入关键字"
+                   placeholder="请输入楼盘名称或房源编号"
                    v-model="searchData" />
           </div>
           <div class="select-but-sub"
