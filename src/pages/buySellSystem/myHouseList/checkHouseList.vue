@@ -261,7 +261,7 @@
 
             <el-button type="primary"
                        v-if="!(scope.row.checkProject==13)"
-                       @click="toHouseDetail"
+                       @click="toHouseDetail(scope.row)"
                        size="mini">查看</el-button>
           </template>
         </el-table-column>
