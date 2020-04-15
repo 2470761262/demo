@@ -214,87 +214,83 @@
 </style>
 <template>
   <div class="query-data-pad">
-    <div class="page-query-data"
-         v-if="dynamicTags.length>0 || querySelectFlag">
+    <div class="page-query-data" v-if="dynamicTags.length>0 || querySelectFlag">
       <div class="page-query-data-title">所有房源&nbsp;></div>
       <div class="page-query-data-tag">
-        <el-tag :key="index"
-                class="query-tag"
-                v-for="(tag,index) in dynamicTags"
-                closable
-                :disable-transitions="false"
-                @close="handleClose(tag)">
-          {{tag.title}}{{tag.value}}
-        </el-tag>
+        <el-tag
+          :key="index"
+          class="query-tag"
+          v-for="(tag,index) in dynamicTags"
+          closable
+          :disable-transitions="false"
+          @close="handleClose(tag)"
+        >{{tag.title}}{{tag.value}}</el-tag>
       </div>
-      <div class="select-tabs-cell"
-           v-if="querySelectFlag">
+      <div class="select-tabs-cell" v-if="querySelectFlag">
         <label class="select-checkbox">
-          <input type="checkbox"
-                 @click="keySelect()">
+          <input type="checkbox" @click="keySelect()" />
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
-          <input type="checkbox"
-                 @click="onlySelect()">
+          <input type="checkbox" @click="onlySelect()" />
           <span>独家</span>
         </label>
       </div>
     </div>
     <!-- 缩小时不显示 -->
-    <div class="select-tabs"
-         v-if="!querySelectFlag">
+    <div class="select-tabs" v-if="!querySelectFlag">
       <div class="select-tabs-cell">
-        <div class="select-tabs-item"
-             :class="{'is-order':form.sortColumn == 'id'}"
-             @click="defaultSelect()">
+        <div
+          class="select-tabs-item"
+          :class="{'is-order':form.sortColumn == 'id'}"
+          @click="defaultSelect()"
+        >
           <div class="tabs-item-title">默认排序</div>
         </div>
-        <div class="select-tabs-item"
-             :class="{'is-order':form.sortColumn == 'price'}"
-             @click="priceSelect()">
+        <div
+          class="select-tabs-item"
+          :class="{'is-order':form.sortColumn == 'price'}"
+          @click="priceSelect()"
+        >
           <div class="tabs-item-title">价格</div>
           <i class="el-icon-sort"></i>
         </div>
-        <div class="select-tabs-item"
-             :class="{'is-order':form.sortColumn == 'inArea'}"
-             @click="inAreaSelect()">
+        <div
+          class="select-tabs-item"
+          :class="{'is-order':form.sortColumn == 'inArea'}"
+          @click="inAreaSelect()"
+        >
           <div class="tabs-item-title">面积</div>
           <i class="el-icon-sort"></i>
         </div>
       </div>
       <div class="select-tabs-cell">
         <label class="select-checkbox">
-          <input type="checkbox"
-                 @click="keySelect()">
+          <input type="checkbox" @click="keySelect()" />
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
-          <input type="checkbox"
-                 @click="onlySelect()">
+          <input type="checkbox" @click="onlySelect()" />
           <span>独家</span>
         </label>
       </div>
     </div>
-    <div class="select-for-warp"
-         v-loading="loading"
-         element-loading-text="我在去获取数据的路上了~">
+    <div class="select-for-warp" v-loading="loading" element-loading-text="我在去获取数据的路上了~">
       <template v-if="!querySelectFlag">
         <template v-if="renderList.length > 0">
-          <div class="select-for-item"
-               v-for="(item,index) in renderList"
-               :key="index"
-               @click.stop="toHouseDetail(item)">
+          <div
+            class="select-for-item"
+            v-for="(item,index) in renderList"
+            :key="index"
+            @click.stop="toHouseDetail(item)"
+          >
             <div class="select-for-item-img">
-              <el-image :src="item.picUrl+'?x-oss-process=style/thumb'"
-                        fit="cover">
-                <div slot="placeholder"
-                     class="image-slot">
-                  加载中<span>...</span>
+              <el-image :src="item.picUrl+'?x-oss-process=style/thumb'" fit="cover">
+                <div slot="placeholder" class="image-slot">
+                  加载中
+                  <span>...</span>
                 </div>
-                <div slot="error"
-                     fit="cover"
-                     class="image-slot">
+                <div slot="error" fit="cover" class="image-slot">
                   <el-image :src="''|houseMiniImg"></el-image>
                 </div>
               </el-image>
@@ -303,16 +299,15 @@
               <div class="item-data-top">
                 <div class="item-data-top-no overText">{{item.houseNo}}</div>
                 <div class="item-data-top-tag">
-                  <div class="top-tag-item overText"
-                       v-if="item.keyOwner>0">钥匙</div>
-                  <div class="top-tag-item overText"
-                       style='margin-left:5px'
-                       v-if="item.isOnly>0">独家</div>
+                  <div class="top-tag-item overText" v-if="item.keyOwner>0">钥匙</div>
+                  <div class="top-tag-item overText" style="margin-left:5px" v-if="item.isOnly>0">独家</div>
                 </div>
               </div>
               <div class="item-data-middle overText">{{item.title}}</div>
               <div class="item-data-bottom">
-                <div class="item-data-bottom-detali overText">{{item.communityName}} &nbsp;/&nbsp;{{item.inArea}}㎡ &nbsp;/&nbsp;{{item.rooms}}房2厅1卫</div>
+                <div
+                  class="item-data-bottom-detali overText"
+                >{{item.communityName}} &nbsp;/&nbsp;{{item.inArea}}㎡ &nbsp;/&nbsp;{{item.rooms}}房2厅1卫</div>
                 <div class="item-data-bottom-price overText">￥{{item.price}}万</div>
                 <div class="item-data-bottom-avgPirce overText">{{item.unitPrice}}元/平</div>
               </div>
@@ -323,55 +318,53 @@
           </div>
         </template>
         <template v-else>
-          <el-alert title="暂无数据"
-                    type="primary"
-                    center
-                    show-icon>
-          </el-alert>
+          <el-alert title="暂无数据" type="primary" center show-icon></el-alert>
         </template>
       </template>
       <template v-else>
         <div class="flex-cell">
           <div class="flex-cell-tab">
-            <el-table :data="renderList"
-                      v-if="tableColumn.length >0"
-                      @sort-change="sortMethod"
-                      :default-sort="{prop: 'price', order: 'descending'}"
-                      border>
-              <el-table-column v-for="(item,index) in tableColumn"
-                               :key="index"
-                               :prop="item.prop"
-                               :label="item.label"
-                               :width="item.width"
-                               :sortable="item.order"
-                               :formatter="item.formart"
-                               :sort-orders="['ascending', 'descending']"
-                               show-overflow-tooltip>
-              </el-table-column>
-              <el-table-column label="操作"
-                               fixed="right"
-                               width="80px">
+            <el-table
+              :data="renderList"
+              v-if="tableColumn.length >0"
+              @sort-change="sortMethod"
+              :default-sort="{prop: 'price', order: 'descending'}"
+              border
+            >
+              <el-table-column
+                v-for="(item,index) in tableColumn"
+                :key="index"
+                :prop="item.prop"
+                :label="item.label"
+                :width="item.width"
+                :sortable="item.order"
+                :formatter="item.formart"
+                :sort-orders="['ascending', 'descending']"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column label="操作" fixed="right" width="80px">
                 <template slot-scope="scope">
-                  <el-button size="mini"
-                             type="primary"
-                             @click="toHouseDetail(scope.row)">查看</el-button>
+                  <el-button size="mini" type="primary" @click="toHouseDetail(scope.row)">查看</el-button>
                 </template>
               </el-table-column>
             </el-table>
           </div>
-          <definitionmenu class="menuMarin"
-                          :renderList="tableColumnField"
-                          :tableColumn="tableColumn"
-                          @change="tabColumnChange"></definitionmenu>
+          <definitionmenu
+            class="menuMarin"
+            :renderList="tableColumnField"
+            :tableColumn="tableColumn"
+            @change="tabColumnChange"
+          ></definitionmenu>
         </div>
       </template>
     </div>
     <div class="select-page-nav">
-      <el-pagination @current-change="handleCurrentChange"
-                     :current-page="pageJson.currentPage"
-                     layout="total, prev, pager, next, jumper"
-                     :total="pageJson.total">
-      </el-pagination>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="pageJson.currentPage"
+        layout="total, prev, pager, next, jumper"
+        :total="pageJson.total"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -725,6 +718,13 @@ export default {
       this.appendFormTag(value.primarySchool, "小学", "primarySchool");
       //中学
       this.appendFormTag(value.middleSchool, "中学", "middleSchool");
+      if (value.searchInfo != null && value.searchInfo != "") {
+        this.dynamicTags.push({
+          title: `搜索关键字:${value.searchInfo}`,
+          field: "searchInfo",
+          arr: false
+        });
+      }
     },
     appendFormTag(to, titleName, fieldName) {
       //房型
@@ -782,6 +782,9 @@ export default {
         if (e.field == "roomNumber") {
           this.form.roomNumber = "";
           this.form.roomNo = "";
+        }
+        if (e.field == "searchInfo") {
+          this.form.searchInfo = "";
         }
       }
     },
