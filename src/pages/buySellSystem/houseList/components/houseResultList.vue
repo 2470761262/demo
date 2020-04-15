@@ -223,20 +223,18 @@
                 v-for="(tag,index) in dynamicTags"
                 closable
                 :disable-transitions="false"
-                @close="handleClose(tag)">
-          {{tag.title}}{{tag.value}}
-        </el-tag>
+                @close="handleClose(tag)">{{tag.title}}{{tag.value}}</el-tag>
       </div>
       <div class="select-tabs-cell"
            v-if="querySelectFlag">
         <label class="select-checkbox">
           <input type="checkbox"
-                 @click="keySelect()">
+                 @click="keySelect()" />
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
           <input type="checkbox"
-                 @click="onlySelect()">
+                 @click="onlySelect()" />
           <span>独家</span>
         </label>
       </div>
@@ -266,12 +264,12 @@
       <div class="select-tabs-cell">
         <label class="select-checkbox">
           <input type="checkbox"
-                 @click="keySelect()">
+                 @click="keySelect()" />
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
           <input type="checkbox"
-                 @click="onlySelect()">
+                 @click="onlySelect()" />
           <span>独家</span>
         </label>
       </div>
@@ -289,7 +287,8 @@
                         fit="cover">
                 <div slot="placeholder"
                      class="image-slot">
-                  加载中<span>...</span>
+                  加载中
+                  <span>...</span>
                 </div>
                 <div slot="error"
                      fit="cover"
@@ -305,7 +304,7 @@
                   <div class="top-tag-item overText"
                        v-if="item.keyOwner>0">钥匙</div>
                   <div class="top-tag-item overText"
-                       style='margin-left:5px'
+                       style="margin-left:5px"
                        v-if="item.isOnly>0">独家</div>
                 </div>
               </div>
@@ -325,8 +324,7 @@
           <el-alert title="暂无数据"
                     type="primary"
                     center
-                    show-icon>
-          </el-alert>
+                    show-icon></el-alert>
         </template>
       </template>
       <template v-else>
@@ -345,8 +343,7 @@
                                :sortable="item.order"
                                :formatter="item.formart"
                                :sort-orders="['ascending', 'descending']"
-                               show-overflow-tooltip>
-              </el-table-column>
+                               show-overflow-tooltip></el-table-column>
               <el-table-column label="操作"
                                fixed="right"
                                width="80px">
@@ -369,8 +366,7 @@
       <el-pagination @current-change="handleCurrentChange"
                      :current-page="pageJson.currentPage"
                      layout="total, prev, pager, next, jumper"
-                     :total="pageJson.total">
-      </el-pagination>
+                     :total="pageJson.total"></el-pagination>
     </div>
   </div>
 </template>
@@ -724,6 +720,13 @@ export default {
       this.appendFormTag(value.primarySchool, "小学", "primarySchool");
       //中学
       this.appendFormTag(value.middleSchool, "中学", "middleSchool");
+      if (value.searchInfo != null && value.searchInfo != "") {
+        this.dynamicTags.push({
+          title: `搜索关键字:${value.searchInfo}`,
+          field: "searchInfo",
+          arr: false
+        });
+      }
     },
     appendFormTag (to, titleName, fieldName) {
       //房型
@@ -781,6 +784,9 @@ export default {
         if (e.field == "roomNumber") {
           this.form.roomNumber = "";
           this.form.roomNo = "";
+        }
+        if (e.field == "searchInfo") {
+          this.form.searchInfo = "";
         }
       }
     },

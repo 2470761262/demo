@@ -44,8 +44,8 @@
       }
     }
     .query-body-select {
-      flex: 1;
-      margin-top: 20px;
+      //  flex: 1;
+      margin: 20px 0;
     }
     .query-item-attention {
       display: flex;
@@ -186,19 +186,22 @@
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
-            <el-select v-model="comId"
-                       @focus="remoteInput"
-                       @change="queryCBId"
-                       remote
-                       clearable
-                       placeholder="楼盘名称"
-                       :remote-method="remoteMethod"
-                       filterable
-                       :loading="loading">
-              <el-option v-for="item in comList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
+            <el-select
+              v-model="comId"
+              @focus="remoteInput"
+              @change="queryCBId"
+              remote
+              clearable
+              placeholder="楼盘名称"
+              :remote-method="remoteMethod"
+              filterable
+            >
+              <el-option
+                v-for="item in comList"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
             </el-select>
             <el-select v-model="cbId"
                        filterable
@@ -285,6 +288,8 @@
                          :label="item.label"
                          :value="item.value"></el-option>
             </el-select>
+            <span class="query-cell-suffix handlebut"
+                  @click="remove">清除</span>
           </div>
           <div class="query-content-cell cell-interval45">
             <label class="query-checkbox">
@@ -304,7 +309,8 @@
                        @click="querylistByParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+            <moreSelect :configRule="{deptParentId: false,store:false,personnel:false}"
+                        @moreSelectChange="moreSelectChange"></moreSelect>
           </div>
         </div>
       </template>
@@ -325,7 +331,7 @@
           <template v-slot="scope">
             <el-button type="primary"
                        size="mini"
-                       v-if="scope.row.houseType != '2'"
+                       v-if="!['1','5'].includes(scope.row.houseType)"
                        @click="houseOperate(scope.row)">{{ scope.row.houseType | setRowButName}}</el-button>
             <el-button type="primary"
                        @click="toHouseDetail(scope.row)"
@@ -334,16 +340,21 @@
         </el-table-column>
       </template>
     </list-page>
-    <fixedPopup :visible.sync="applyAgentFlag"
-                title="请填写完这些信息才能申请为跟单人"
-                width="960px"
-                :before-clear="clearStep">
-      <supplement ref="com"
-                  :required="required"
-                  :middleRadioTo="middleRadio"
-                  :primaryRadioTo="primaryRadio"
-                  :showFollow="showFollow"
-                  :audioList="audioList"></supplement>
+    <fixedPopup
+      :visible.sync="applyAgentFlag"
+      v-if="applyAgentFlag"
+      title="请填写完这些信息才能申请为跟单人"
+      width="960px"
+      :before-clear="clearStep"
+    >
+      <supplement
+        ref="com"
+        :required="required"
+        :middleRadioTo="middleRadio"
+        :primaryRadioTo="primaryRadio"
+        :showFollow="showFollow"
+        :audioList="audioList"
+      ></supplement>
       <template v-slot:floot>
         <div class="text-middle">
           <el-button size="mini"
@@ -370,7 +381,7 @@ export default {
     definitionmenu,
     supplement
   },
-  data () {
+  data() {
     return {
       paginationCurrentPage: 1,
       selectCommunityNum: 1,
@@ -386,11 +397,13 @@ export default {
         pageSize: 10 //每页条数
       },
       houseTypeList: [
-        { value: "3", label: "店公共盘" },
-        { value: "4", label: "在售无跟单" },
-        { value: "1", label: "无号码" },
-        { value: "2", label: "成交房源" },
-        { value: "5", label: "潜在出售" }
+        { value: "1", label: "在售" },
+        { value: "2", label: "店公共盘" },
+        { value: "3", label: "在售无跟单" },
+        { value: "4", label: "无号码" },
+        { value: "5", label: "成交房源" },
+        { value: "6", label: "潜在出售" },
+        { value: "7", label: "暂不售" }
       ],
       state: [
         { value: "1", label: "房源编号1" },
@@ -454,7 +467,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-
+          order: "custom",
           disabled: false,
           default: true
         },
@@ -525,7 +538,7 @@ export default {
     };
   },
   computed: {
-    resultArray () {
+    resultArray() {
       return this.array.slice(
         (this.paginationCurrentPage - 1) * 4,
         this.paginationCurrentPage * 4
@@ -533,38 +546,41 @@ export default {
     }
   },
   filters: {
-    setRowButName (value) {
+    setRowButName(value) {
       switch (value) {
         case "1":
-          return "录入";
+          break;
         case "2":
-          break;
-        case "3":
-          break;
-        case "5":
-          return "转在售";
-        case "4":
           return "转跟单";
-        default:
+        case "3":
+          return "转跟单";
+        case "4":
+          return "转在售";
+        case "5":
+          break;
+        case "6":
+          return "转在售";
+        case "7":
           return "转在售";
       }
     }
   },
-  mounted () {
-    this.queryConcernCount().then(() => this.queryVerifyHouseDatas(1));
+  mounted() {
+    this.queryConcernCount();
+    this.queryVerifyHouseDatas(1);
     //  this.queryNotConcernCommunityList();
   },
   methods: {
     /**
      * 关闭时清楚对应的数据
      */
-    clearStep () {
+    clearStep() {
       this.$store.commit("resetFormData");
     },
-    isDisabled () {
+    isDisabled() {
       return this.buttonDisabled;
     },
-    changeAreaBut () {
+    changeAreaBut() {
       let that = this;
 
       if (util.isNumber(that.queryData.minInArea)) {
@@ -584,7 +600,7 @@ export default {
         this.querylistByParams();
       }
     },
-    changeAreaButMax () {
+    changeAreaButMax() {
       let that = this;
 
       if (util.isNumber(that.queryData.maxInArea)) {
@@ -605,14 +621,14 @@ export default {
       }
     },
     //当前选择已经关注这个这个核心盘则不让在重复选择
-    filterRoomDisabled () {
+    filterRoomDisabled() {
       return this.array
         .map(item => {
           return item.communityName + "$" + item.id;
         })
         .join(",");
     },
-    houseNoFormat (houseNo) {
+    houseNoFormat(houseNo) {
       let type;
       if (houseNo == null || houseNo == "") {
         type = "--";
@@ -622,7 +638,7 @@ export default {
       return type;
     },
 
-    houseFormat (rooms, hall, toilet) {
+    houseFormat(rooms, hall, toilet) {
       let ro,
         ha,
         to = "";
@@ -643,70 +659,53 @@ export default {
       }
       return ro + ha + to;
     },
-    houseTypeFormat (houseType) {
-      let type;
-      if (houseType == 1) {
-        type = "无号码";
-      } else if (houseType == 2) {
-        type = "暂不售";
-      } else if (houseType == 3) {
-        type = "店公共盘";
-      } else if (houseType == 4) {
-        type = "在售无跟单";
-      } else if (houseType == 5) {
-        type = "潜在出售";
-      } else if (houseType == 6) {
-        type = "--";
-      } else {
-        type = "状态未知";
+    houseTypeFormat(houseType) {
+      switch (houseType) {
+        case "1":
+          return "在售";
+        case "2":
+          return "店公共盘";
+        case "3":
+          return "在售无跟单";
+        case "4":
+          return "无号码";
+        case "5":
+          return "成交房源";
+        case "6":
+          return "潜在出售";
+        case "7":
+          return "暂不售";
+        default:
+          return "未知";
       }
-      return type;
     },
-    remove () {
+    remove() {
       let tab = this.tableColumn;
-      Object.assign(this.$data, this.$comList.data.call(this));
+      Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
+      this.queryConcernCount();
       this.queryVerifyHouseDatas(1);
     },
-    sortMethod (e) {
+    sortMethod(e) {
       this.sortColumn = e.prop;
       this.sortType = e.order;
       this.queryVerifyHouseDatas(1);
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       let that = this;
       that.tableColumn = e;
     },
-    houseOperate (row) {
+    houseOperate(row) {
       switch (row.houseType) {
         case "1":
-          this.toSale(
-            row.comId,
-            row.cbId,
-            row.bhId,
-            row.communityName,
-            row.buildingName,
-            row.roomNo
-          );
           break;
         case "2":
-          break;
-        case "3":
-          break;
-        case "5":
-          this.toSale(
-            row.comId,
-            row.cbId,
-            row.bhId,
-            row.communityName,
-            row.buildingName,
-            row.roomNo
-          );
-          break;
-        case "4":
           this.toFollow(row.eid);
           break;
-        default:
+        case "3":
+          this.toFollow(row.eid);
+          break;
+        case "4":
           this.toSale(
             row.comId,
             row.cbId,
@@ -715,10 +714,34 @@ export default {
             row.buildingName,
             row.roomNo
           );
+          break;
+        case "5":
+          break;
+        case "6":
+          this.toSale(
+            row.comId,
+            row.cbId,
+            row.bhId,
+            row.communityName,
+            row.buildingName,
+            row.roomNo
+          );
+          break;
+        case "7":
+          this.toSale(
+            row.comId,
+            row.cbId,
+            row.bhId,
+            row.communityName,
+            row.buildingName,
+            row.roomNo
+          );
+          break;
+        default:
           break;
       }
     },
-    toSale (comId, cbId, bhId, communityName, buildingName, roomNo) {
+    toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
       var that = this;
       that.$router.push({
         path: "/buySellSystem/addHouse",
@@ -739,7 +762,7 @@ export default {
     /**
      * 转跟单
      */
-    async toFollow (eid) {
+    async toFollow(eid) {
       let data = await this.getHouseDetails(eid);
       if (data.data.applyAgentVo != null) {
         this.$store.commit("updateStep2", data.data.applyAgentVo);
@@ -757,10 +780,11 @@ export default {
       }
       this.applyAgentFlag = true;
     },
-    moreSelectChange (e) {
-      this.moreSelect = e;
+    moreSelectChange(e) {
+      if (e != "") this.moreSelect = e;
+      this.querylistByParams();
     },
-    keySelect () {
+    keySelect() {
       if (this.queryData.keyOwner != "") {
         this.queryData.keyOwner = "";
       } else {
@@ -768,7 +792,7 @@ export default {
       }
       this.queryVerifyHouseDatas(1);
     },
-    onlySelect () {
+    onlySelect() {
       if (this.queryData.isOnly != "") {
         this.queryData.isOnly = "";
       } else {
@@ -776,7 +800,7 @@ export default {
       }
       this.queryVerifyHouseDatas(1);
     },
-    selectedCommunity (e) {
+    selectedCommunity(e) {
       this.$confirm("是否确定关注该楼盘?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -797,7 +821,7 @@ export default {
           });
         });
     },
-    concernOFF (id) {
+    concernOFF(id) {
       this.$confirm("是否确定取消关注该楼盘?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -813,7 +837,7 @@ export default {
           });
         });
     },
-    deleteConcern (comId) {
+    deleteConcern(comId) {
       this.$api
         .post({
           url: "/concern_community/concernOFF",
@@ -828,7 +852,8 @@ export default {
               message: result.message
             });
 
-            this.queryConcernCount().then(() => this.querylistByParams());
+            this.queryConcernCount()
+            this.querylistByParams();
           } else {
             this.$message({
               type: "success",
@@ -841,10 +866,10 @@ export default {
           console.log(e);
         });
     },
-    querylistByParams () {
+    querylistByParams() {
       this.queryVerifyHouseDatas(1);
     },
-    addCommunity (id) {
+    addCommunity(id) {
       let params = { CommunityID: id + "" };
       this.$api
         .post({
@@ -856,7 +881,8 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            this.queryConcernCount().then(() => this.querylistByParams());
+            this.queryConcernCount();
+            this.querylistByParams();
           } else {
             console.log("添加关注" + result.message);
             this.$message.error(result.message);
@@ -867,17 +893,16 @@ export default {
           console.log(e);
         });
     },
-    queryVerifyHouseDatas (currentPage) {
+    queryVerifyHouseDatas(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
-          console.log(this.moreSelect);
           if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.biginTime = this.moreSelect[key][0];
+            params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
           } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.biginFollowTime = this.moreSelect[key][0];
+            params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
           } else {
             params[key] = this.moreSelect[key];
@@ -945,7 +970,6 @@ export default {
           qs: true
         })
         .then(e => {
-          that.loading = false;
           console.log(e.data);
           if (e.data.code == 200) {
             typeof e.data.data.data;
@@ -957,11 +981,13 @@ export default {
           }
         })
         .catch(e => {
-          console.log("查询我的核心盘失败");
-          console.log(e);
+            that.tableData=[];
+            that.pageJson.total=0;
+        }).finally(e=>{
+          that.loading = false;
         });
     },
-    queryConcernCount () {
+    queryConcernCount() {
       return this.$api
         .post({
           url: "/concern_community/CommunityCount",
@@ -999,7 +1025,7 @@ export default {
           console.log(e);
         });
     },
-    selectChangeValue (value) {
+    selectChangeValue(value) {
       //  console.log(value, "value");
       if (value) {
         this.addCommunity(value);
@@ -1010,7 +1036,7 @@ export default {
         });
       }
     },
-    queryNotConcernCommunityList (name, type) {
+    queryNotConcernCommunityList(name, type) {
       if (type == "change") {
         console.log(type);
         this.selectPage = 1;
@@ -1060,22 +1086,21 @@ export default {
         });
       // }
     },
-    remoteInput () {
+    remoteInput() {
       if (this.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
-        this.loading = true;
         this.$api
           .get({
             url: "/community/myConcern",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             data: {
-              comId: query,
+              communityName: query,
               page: 1,
               limit: 50
             }
@@ -1084,13 +1109,12 @@ export default {
             console.log("=========================" + e);
             if (e.data.code == 200) {
               console.log("=========================" + e.data.code);
-              that.loading = false;
               that.comList = e.data.data.list;
             }
           });
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -1111,7 +1135,7 @@ export default {
         });
       console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -1151,31 +1175,17 @@ export default {
       this.querylistByParams();
     },
     //跳转房源详情页面
-    toHouseDetail (row) {
+    toHouseDetail(row) {
       var that = this;
       console.log("房源状态：" + row.houseType, row.houseNo);
-      //店公共盘,在售无跟单, 进入BSAgentHouse房源详情
-      if (row.houseType == 3 || row.houseType == 4) {
+      //在售店公共盘,在售无跟单, 进入BSAgentHouse房源详情
+      if (row.houseType == 1 || row.houseType == 2 || row.houseType == 3) {
         console.log("进入bsagenthouse房源详情");
         that.$router.push({
           name: "houseDetails",
           params: { houseId: row.eid }
         });
-      } else if (row.houseType == 2) {
-        //成交房源
-        console.log("进入交易房源（tradeHouseTbl）详情");
-        that.$router.push({
-          name: "historyDetails",
-          params: { houseId: row.eid, tradeType: 0 }
-        });
-      } else if (row.houseType == 5 && row.houseNo != null) {
-        //潜在出售成交房源大于90天
-        console.log("进入交易房源（tradeHouseTbl）详情");
-        that.$router.push({
-          name: "historyDetails",
-          params: { houseId: row.eid, tradeType: 0 }
-        });
-      } else {
+      } else if (row.isSale == -1) {
         //无号码
         console.log("进入楼盘详情");
         console.log("/building/geBuildingDetail/" + row.id);
@@ -1183,21 +1193,40 @@ export default {
           name: "buildingHouseDetail",
           params: { houseId: row.id }
         });
+      } else if (row.tradeDay != null && row.tradeDay >= 0) {
+        //成交房源
+        console.log("进入交易房源（tradeHouseTbl）详情");
+        that.$router.push({
+          name: "historyDetails",
+          params: { houseId: row.eid, tradeType: 0 }
+        });
+      } else if (!(row.isSale == -1 || row.isSale == 0 || row.isSale == 2)) {
+        //暂不售 历史
+        console.log("进入历史房源（hisbsagenthouse）详情");
+        that.$router.push({
+          name: "historyDetails",
+          params: { houseId: row.eid, tradeType: 1 }
+        });
+      } else {
+        that.$router.push({
+          name: "buildingHouseDetail",
+          params: { houseId: row.id }
+        });
       }
     },
 
-    handleClick () { },
-    handleSizeChange (val) {
+    handleClick() {},
+    handleSizeChange(val) {
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.queryVerifyHouseDatas(val);
     },
     /**
      * 申请跟单人
      */
-    applyAgent (id) {
+    applyAgent(id) {
       let params = this.$refs.com.formData;
       let that = this;
       this.$refs.com.validateAllNotUpdata().then(e => {
@@ -1217,14 +1246,14 @@ export default {
               let result = e.data;
               that.$message(result.message);
             })
-            .catch(e => { });
+            .catch(e => {});
         }
       });
     },
     /**
      * 获取房源详情
      */
-    getHouseDetails (id) {
+    getHouseDetails(id) {
       let that = this;
       let url = "/agent_house/getHouseDetail";
       let query = {
@@ -1258,7 +1287,7 @@ export default {
             that.$message(e.response.data.message);
           }
         })
-        .finally(() => { });
+        .finally(() => {});
     }
   }
 };

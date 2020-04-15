@@ -128,7 +128,7 @@
                      @click="querySaleNotTrackParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect :configRule="{deptParentId: false,store:false,personnel:false}" @moreSelectChange="moreSelectChange"></moreSelect>
         </div>
       </div>
     </template>

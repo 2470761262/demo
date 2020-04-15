@@ -8,9 +8,9 @@
     min-width: 1280px;
   }
   .page-cell-main {
-    height: calc(100% - 80PX);
+    height: calc(100% - 80px);
     @media screen and(max-width: 1280px) {
-      height: calc(100% - 100PX);
+      height: calc(100% - 100px);
     }
 
     .el-aside,
@@ -96,27 +96,31 @@ export default {
     asideNav,
     headerContent
   },
+  computed: {
+    asideNavFlag() {
+      return !util.localStorageGet("nest");
+    }
+  },
   data() {
     return {
-      asideNavFlag: true,
       loginUserData: {},
       menuDatasInParent: []
     };
   },
   created() {
-    but.$on("asideNav", e => {
-      this.asideNavFlag = e;
-    });
-    window.addEventListener(
-      "message",
-      e => {
-        //  console.log("-------------------", e);
-        if (e.data.isXinIfram) {
-          this.asideNavFlag = false;
-        }
-      },
-      false
-    );
+    // but.$on("asideNav", e => {
+    //   this.asideNavFlag = e;
+    // });
+    // window.addEventListener(
+    //   "message",
+    //   e => {
+    //     //  console.log("-------------------", e);
+    //     if (e.data.isXinIfram) {
+    //       this.asideNavFlag = false;
+    //     }
+    //   },
+    //   false
+    // );
     this.loginUserData = util.localStorageGet(LOGINDATA);
     if (this.loginUserData.menuNodes) {
       this.menuDatasInParent = this.loginUserData.menuNodes;

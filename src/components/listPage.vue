@@ -32,6 +32,10 @@
   .page-body-floot {
     display: flex;
     justify-content: center;
+    padding-bottom: 10px;
+    /deep/.number {
+      font-size: 15px;
+    }
   }
 }
 .query-center-item {

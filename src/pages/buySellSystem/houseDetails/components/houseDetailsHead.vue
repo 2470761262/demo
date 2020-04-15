@@ -270,6 +270,20 @@ export default {
     };
   },
   methods: {
+    //
+    deleteMyAttention () {
+      let that = this;
+      this.$api
+        .post({
+          url: "/myHouse/deleteMyAttention",
+          data: {
+            houseId: that.houseId.id
+          },
+          qs: true,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+        .then(e => { });
+    },
     //关注或者取消关注
     changCollectHouse () {
       if (this.isDisabled) {
@@ -281,7 +295,7 @@ export default {
         houseId: that.houseId.id
       };
       if (that.isCollect) {
-        ajaxurl = "/agentHouse/collect/cancelCollectHouse";
+        ajaxurl = "/agent_house/concernHouseOFF/" + that.houseId.id;
       } else {
         ajaxurl = "/agentHouse/collect/collectHouse";
       }
@@ -295,6 +309,9 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             that.isCollect = !that.isCollect;
+            if (ajaxurl != "/agentHouse/collect/collectHouse") {
+              that.deleteMyAttention();
+            }
             // if (ajaxurl == "/agentHouse/collect/collectHouse") {
             //   this.attentionFlag = true;
             // }
@@ -345,6 +362,7 @@ export default {
         .then(e => {
           that.$message(e.data.message);
           if (e.data.code == 200) {
+            that.deleteMyAttention();
             that.impressionList.splice(index, 1);
           }
         });

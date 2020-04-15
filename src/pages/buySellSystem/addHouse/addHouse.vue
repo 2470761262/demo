@@ -12,6 +12,10 @@
       margin-top: 10px;
       text-indent: -14px;
     }
+    /deep/.is-success {
+      color: var(--color--primary);
+      border-color: var(--color--primary);
+    }
     background: #fff;
     padding: 10px 0 15px;
   }
@@ -265,6 +269,7 @@ export default {
         this.componentName = this.stepsList[
           this.stepsActiveIndex
         ].componentName;
+        this.$store.commit("updateIsformDataNoCommit", false);
         return;
       }
       if (this.stepsActiveIndex < this.stepsList.length && flag) {

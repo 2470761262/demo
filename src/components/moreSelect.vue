@@ -68,7 +68,8 @@ span {
         <div class="definition-checkBox">
           <div class="selectBox">
             <div class="line">
-              <div class="selectType">
+              <div class="selectType"
+                   v-if="mergeConfig.comId">
                 <span>楼盘名称</span>
                 <el-select v-model="more.comId"
                            style="width:60%"
@@ -86,8 +87,9 @@ span {
                 </el-select>
               </div>
               <div class="selectType">
-                <span>栋座</span>
-                <el-select v-model="more.cbId"
+                <span v-if="mergeConfig.cbId">栋座</span>
+                <el-select v-if="mergeConfig.cbId"
+                           v-model="more.cbId"
                            style="width:30%"
                            filterable
                            clearable
@@ -98,8 +100,9 @@ span {
                              :label="item.name"
                              :value="item.value"></el-option>
                 </el-select>
-                <span>房号</span>
-                <el-select v-model="more.bhId"
+                <span v-if="mergeConfig.bhId">房号</span>
+                <el-select v-if="mergeConfig.bhId"
+                           v-model="more.bhId"
                            style="width:30%"
                            filterable
                            clearable
@@ -113,31 +116,37 @@ span {
             </div>
             <div class="line">
               <div class="selectType">
-                <span>建筑面积</span>
+                <span v-if="mergeConfig.minInArea">建筑面积</span>
                 <el-input style="width:30%"
                           clearable
+                          v-if="mergeConfig.minInArea"
                           v-model="more.minInArea"></el-input>
-                <span>-</span>
+                <span v-if="mergeConfig.maxInArea">-</span>
                 <el-input style="width:30%"
                           clearable
+                          v-if="mergeConfig.maxInArea"
                           v-model="more.maxInArea"></el-input>
                 <span>㎡</span>
               </div>
               <div class="selectType">
-                <span>总价</span>
+                <span v-if="mergeConfig.minPrice">总价</span>
                 <el-input style="width:30%"
                           v-model="more.minPrice"
                           clearable
-                          placeholder="最低"></el-input>万
+                          v-if="mergeConfig.minPrice"
+                          placeholder="最低"></el-input>
+                <span v-if="mergeConfig.minPrice">万</span>
                 <el-input v-model="more.maxPrice"
                           style="width:30%"
                           clearable
+                          v-if="mergeConfig.maxPrice"
                           placeholder="最高"></el-input>
-                <span>万</span>
+                <span v-if="mergeConfig.maxPrice">万</span>
               </div>
             </div>
             <div class="line">
-              <div class="selectType">
+              <div class="selectType"
+                   v-if="mergeConfig.addTime">
                 <span>录入时间</span>
                 <el-date-picker v-model="more.addTime"
                                 type="daterange"
@@ -147,7 +156,8 @@ span {
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期"></el-date-picker>
               </div>
-              <div class="selectType">
+              <div class="selectType"
+                   v-if="mergeConfig.followTime">
                 <span>跟进时间</span>
                 <el-date-picker v-model="more.followTime"
                                 type="daterange"
@@ -159,7 +169,8 @@ span {
               </div>
             </div>
             <div class="line">
-              <div class="selectType">
+              <div class="selectType"
+                   v-if="mergeConfig.propertyYear">
                 <span>产权年限</span>
                 <el-select v-model="more.propertyYear"
                            clearable
@@ -174,13 +185,16 @@ span {
                 <span>楼层</span>
                 <el-input style="width:30%"
                           clearable
+                          v-if="mergeConfig.minFloor"
                           v-model="more.minFloor"></el-input>-
                 <el-input v-model="more.maxFloor"
+                          v-if="mergeConfig.maxFloor"
                           style="width:30%"></el-input>
               </div>
             </div>
             <div class="line">
-              <div class="selectType">
+              <div class="selectType"
+                   v-if="mergeConfig.area">
                 <span>物理区域</span>
                 <el-select v-model="more.area"
                            clearable
@@ -191,7 +205,8 @@ span {
                              :value="item.value"></el-option>
                 </el-select>
               </div>
-              <div class="selectType">
+              <div class="selectType"
+                   v-if="mergeConfig.entrustType">
                 <!-- <span>房源状态</span>
                 <el-select v-model="more.houseType"
                            style="width:30%">
@@ -212,7 +227,8 @@ span {
               </div>
             </div>
             <div class="line">
-              <div class="selectType">
+              <div class="selectType"
+                   v-if="mergeConfig.taskType">
                 <span>作业类型</span>
                 <el-select v-model="more.taskType"
                            clearable
@@ -223,7 +239,8 @@ span {
                              :label="item.label"></el-option>
                 </el-select>
               </div>
-              <div class="selectType">
+              <div class="selectType"
+                   v-if="mergeConfig.buildType">
                 <span>房屋用途</span>
                 <el-select v-model="more.buildType"
                            clearable
@@ -236,14 +253,14 @@ span {
               </div>
             </div>
             <div class="line"
-                 style="display:flex;align-items:center"
-                 v-if="$attrs.deptUrl!=null">
-              <span>区域</span>
+                 style="display:flex;align-items:center">
+              <span v-if="mergeConfig.deptParentId">区域</span>
               <el-select v-model="more.deptParentId"
                          :remote-method="remoteArea"
                          clearable
                          @focus="remoteSelect"
                          @change="queryShop"
+                         v-if="mergeConfig.deptParentId"
                          style="width:35%">
                 <el-option v-for="(item) in deptParentList"
                            :key="item.depId"
@@ -253,6 +270,7 @@ span {
               <el-select v-model="more.store"
                          @change="queryPer"
                          clearable
+                         v-if="mergeConfig.store"
                          style="width:30%">
                 <el-option v-for="(item) in storeList"
                            :key="item.depId"
@@ -261,6 +279,7 @@ span {
               </el-select>
               <el-select v-model="more.personnel"
                          clearable
+                         v-if="mergeConfig.personnel"
                          style="width:20%">
                 <el-option v-for="(item) in perList"
                            :key="item.accountId"
@@ -287,9 +306,44 @@ span {
 </template>
 <script>
 import sidebarList from "./sidebarList";
+import util from "@/util/util";
+const defaultRule = {
+  comId: true,
+  cbId: true,
+  bhId: true,
+  minInArea: true,
+  maxInArea: true,
+  minPrice: true,
+  maxPrice: true,
+  addTime: true,
+  followTime: true,
+  propertyYear: true,
+  minFloor: true,
+  maxFloor: true,
+  area: true,
+  entrustType: true,
+  taskType: true,
+  buildType: true,
+  deptParentId: true,
+  store: true,
+  personnel: true
+};
 export default {
   inheritAttrs: false,
-  data() {
+  props: {
+    configRule: {
+      type: Object,
+      default: () => {
+        return {};
+      }
+    }
+  },
+  computed: {
+    mergeConfig () {
+      return util.merge(defaultRule, this.configRule);
+    }
+  },
+  data () {
     return {
       PropertyList: [
         {
@@ -417,29 +471,31 @@ export default {
       ],
       moreRoomNoList: [],
       moreOptions: [],
-      moreCbIdList: []
+      moreCbIdList: [],
+      clear: false//是否清空
     };
   },
-  mounted() {
+  mounted () {
     this.queryConstant();
   },
   methods: {
-    remoteSelect() {
+    remoteSelect () {
       if (this.more.deptParentId.length == 0) {
         this.remoteArea();
       }
     },
-    remoteInput() {
+    remoteInput () {
       if (this.more.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remove() {
+    remove () {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryConstant();
+      this.clear = true;
       this.$emit("moreSelectChange", "");
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.$api
@@ -464,7 +520,7 @@ export default {
         this.moreOptions = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -486,7 +542,7 @@ export default {
           }
         });
     },
-    setTabRender() {
+    setTabRender () {
       console.log(111);
       let data = "";
       for (let key in this.more) {
@@ -496,10 +552,11 @@ export default {
           break;
         }
       }
+      this.clear = false;
       this.$emit("moreSelectChange", data);
       this.visible = false;
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -521,7 +578,7 @@ export default {
           }
         });
     },
-    queryConstant() {
+    queryConstant () {
       return this.$api
         .get({
           url: "/mateHouse/queryConstant",
@@ -538,7 +595,7 @@ export default {
           }
         });
     },
-    remoteArea(query) {
+    remoteArea (query) {
       var that = this;
       if (query !== "") {
         this.$api
@@ -559,7 +616,7 @@ export default {
         this.deptParentList = [];
       }
     },
-    queryShop() {
+    queryShop () {
       var that = this;
       this.$api
         .post({
@@ -576,7 +633,7 @@ export default {
           }
         });
     },
-    queryPer() {
+    queryPer () {
       var that = this;
       this.$api
         .post({
