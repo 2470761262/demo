@@ -12,6 +12,10 @@
       margin-top: 10px;
       text-indent: -14px;
     }
+    /deep/.is-success {
+      color: var(--color--primary);
+      border-color: var(--color--primary);
+    }
     background: #fff;
     padding: 10px 0 15px;
   }

@@ -32,6 +32,10 @@
   .page-body-floot {
     display: flex;
     justify-content: center;
+    padding-bottom: 10px;
+    /deep/.number {
+      font-size: 15px;
+    }
   }
 }
 .query-center-item {
@@ -194,12 +198,12 @@ export default {
     $attrs: {
       deep: true,
       immediate: true,
-      handler: function (val, oldVal) {
+      handler: function(val, oldVal) {
         Object.assign(this.$data, val.parentData);
       }
     }
   },
-  data () {
+  data() {
     return {
       sidebarFlag: true,
       loading: true,
@@ -211,9 +215,9 @@ export default {
       tableData: []
     };
   },
-  mounted () { },
+  mounted() {},
   methods: {
-    toHouseDetail (row) {
+    toHouseDetail(row) {
       console.log(1111111111111111111);
       var that = this;
       if (!this.$attrs.dblclick) {
@@ -255,27 +259,28 @@ export default {
           that.$router.push({
             name: `${
               that.$attrs.pageName ? that.$attrs.pageName : "houseDetails"
-              }`,
+            }`,
             params: { houseId: row.houseId }
           });
         else {
           that.$router.push({
             name: `${
               that.$attrs.pageName ? that.$attrs.pageName : "houseDetails"
-              }`,
+            }`,
             params: { houseId: row.id }
           });
         }
-      } else {//使用各自页面的双击事件
+      } else {
+        //使用各自页面的双击事件
         this.$emit("cellDblClick", row);
       }
     },
     //每页数据设置事件
-    handleSizeChange (e) {
+    handleSizeChange(e) {
       this.$emit("handleSizeChange", e);
     },
     //前往多少页事件
-    handleCurrentChange (e) {
+    handleCurrentChange(e) {
       this.$emit("handleCurrentChange", e);
     }
   }

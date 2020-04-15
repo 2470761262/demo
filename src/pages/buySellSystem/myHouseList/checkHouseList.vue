@@ -306,17 +306,22 @@
           <el-carousel-item v-for="(item,index) in file8"
                             :key="index">
             <img :src="item.url"
-                 :fit="fill"
+                 @click="changeShowImg(item.url)"
                  v-if="item.subType!=7"
-                 style="width:100%;height:100%">
+                 style="width:100%;height:100%;object-fit:scale-down;">
             <video :src="item.url"
                    controls="controls"
                    v-else
                    height="100%"
+                   style="object-fit: scale-down;"
                    width="100%"></video>
           </el-carousel-item>
         </el-carousel>
       </div>
+      <el-image-viewer v-if="showViewer"
+                       :on-close="iamgeViewClose"
+                       :url-list="showImgList">
+      </el-image-viewer>
     </el-dialog>
   </div>
 </template>
@@ -363,15 +368,37 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import util from "@/util/util";
 import moreSelect from "@/components/moreSelect";
+import ElImageViewer from "element-ui/packages/image/src/image-viewer";
 export default {
   mixins: [getMenuRid],
 
   components: {
     listPage,
-    moreSelect
+    moreSelect,
+    ElImageViewer
+  },
+  computed: {
+    showImgList() {
+      let result = this.file8.map(item => {
+        if (item.subType != 7) {
+          return item.url;
+        }
+      });
+      if (this.showImgIndexImg != null) {
+        const index = result.findIndex(item => {
+          return item == this.showImgIndexImg;
+        });
+        if (index) {
+          result.unshift(result.splice(index, 1));
+        }
+      }
+      return result;
+    }
   },
   data() {
     return {
+      showViewer: false,
+      showImgIndexImg: null,
       type: "",
       checkProject: "",
       option: "",
@@ -386,7 +413,7 @@ export default {
       addPer: "",
       loading: true, //控制表格加载动画提示
       pageJson: {
-        currentPage: 1, //当前页码
+        currentPage: 5, //当前页码
         total: 9, //总记录数
         pageSize: 10 //每页条数
       },
@@ -540,6 +567,14 @@ export default {
     this.querylist(1);
   },
   methods: {
+    iamgeViewClose() {
+      this.showViewer = false;
+      this.showImgIndexImg = null;
+    },
+    changeShowImg(url) {
+      this.showViewer = true;
+      this.showImgIndexImg = url;
+    },
     /**
      * 审核项目change
      */
