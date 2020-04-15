@@ -44,8 +44,8 @@
       }
     }
     .query-body-select {
-      flex: 1;
-      margin-top: 20px;
+      //  flex: 1;
+      margin: 20px 0;
     }
     .query-item-attention {
       display: flex;
@@ -105,14 +105,12 @@
 </style>
 <template>
   <div class="page-row-flex">
-    <list-page
-      :parentData="$data"
-      @sort-change="sortMethod"
-      :dblclick="true"
-      @cellDblClick="toHouseDetail"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
+    <list-page :parentData="$data"
+               @sort-change="sortMethod"
+               :dblclick="true"
+               @cellDblClick="toHouseDetail"
+               @handleSizeChange="handleSizeChange"
+               @handleCurrentChange="handleCurrentChange">
       <template v-slot:left>
         <section class="left-query-content">
           <h3 class="query-title">核心盘总览</h3>
@@ -139,25 +137,24 @@
               </div>
             </div>
             <div class="query-body-select">
-              <el-paging-select
-                v-model="queryData.selectCommunity"
-                keyValue="communityName"
-                valueKey="id"
-                clearable
-                type="radio"
-                frist
-                placeholder="选择您想添加的核心盘"
-                @load="queryNotConcernCommunityList"
-                @change="queryNotConcernCommunityList"
-                @valueChange="selectChangeValue"
-                :isPageEnd="isPageEnd"
-                :loading="loadingSelect"
-                :disabled="(item,index)=>{return filterRoomDisabled().includes(list[index].communityName+'$'+item.id)}"
-                :data="list"
-              ></el-paging-select>
+              <el-paging-select v-model="queryData.selectCommunity"
+                                keyValue="communityName"
+                                valueKey="id"
+                                clearable
+                                type="radio"
+                                frist
+                                placeholder="选择您想添加的核心盘"
+                                @load="queryNotConcernCommunityList"
+                                @change="queryNotConcernCommunityList"
+                                @valueChange="selectChangeValue"
+                                :isPageEnd="isPageEnd"
+                                :loading="loadingSelect"
+                                :disabled="(item,index)=>{return filterRoomDisabled().includes(list[index].communityName+'$'+item.id)}"
+                                :data="list"></el-paging-select>
             </div>
             <template v-for="(item,i) in resultArray">
-              <div class="query-item-attention" :key="i">
+              <div class="query-item-attention"
+                   :key="i">
                 <div class="attention-left overText">{{item.communityName || '暂无'}}</div>
                 <div class="attention-middel">
                   <div class="attention-middel-title">在售套数</div>
@@ -167,23 +164,19 @@
                   <div class="attention-middel-title">存量套数</div>
                   <div class="attention-middel-data">{{item.countConcernCommunity}}套</div>
                 </div>
-                <div
-                  title="取消关注"
-                  @click="concernOFF(item.id)"
-                  class="attention-cell-remove el-icon-circle-close"
-                ></div>
+                <div title="取消关注"
+                     @click="concernOFF(item.id)"
+                     class="attention-cell-remove el-icon-circle-close"></div>
               </div>
             </template>
             <div class="page-num-center">
-              <el-pagination
-                background=""
-                :page-size="4"
-                :hide-on-single-page="array.length < 4"
-                small
-                :current-page.sync="paginationCurrentPage"
-                layout="prev, pager, next"
-                :total="array.length"
-              ></el-pagination>
+              <el-pagination background=""
+                             :page-size="4"
+                             :hide-on-single-page="array.length < 4"
+                             small
+                             :current-page.sync="paginationCurrentPage"
+                             layout="prev, pager, next"
+                             :total="array.length"></el-pagination>
             </div>
           </div>
         </section>
@@ -193,185 +186,171 @@
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
-            <el-select
-              v-model="comId"
-              @focus="remoteInput"
-              @change="queryCBId"
-              remote
-              clearable
-              placeholder="楼盘名称"
-              :remote-method="remoteMethod"
-              filterable
-              :loading="loading"
-            >
-              <el-option
-                v-for="item in comList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="comId"
+                       @focus="remoteInput"
+                       @change="queryCBId"
+                       remote
+                       clearable
+                       placeholder="楼盘名称"
+                       :remote-method="remoteMethod"
+                       filterable
+                       :loading="loading">
+              <el-option v-for="item in comList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
-            <el-select v-model="cbId" filterable clearable placeholder="楼栋" @change="queryRoomNo">
-              <el-option
-                v-for="item in cbIdList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="cbId"
+                       filterable
+                       clearable
+                       placeholder="楼栋"
+                       @change="queryRoomNo">
+              <el-option v-for="item in cbIdList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
-            <el-select v-model="roomNo" filterable @change="querylistByParams" placeholder="房间号">
-              <el-option
-                v-for="item in roomNoList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="roomNo"
+                       filterable
+                       @change="querylistByParams"
+                       placeholder="房间号">
+              <el-option v-for="item in roomNoList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
           </div>
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">业主</h3>
-            <el-input
-              placeholder="姓名"
-              class="set-input120"
-              @change="querylistByParams"
-              v-model="queryData.customName"
-              clearable
-            />
+            <el-input placeholder="姓名"
+                      class="set-input120"
+                      @change="querylistByParams"
+                      v-model="queryData.customName"
+                      clearable />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">电话</h3>
-            <el-input
-              placeholder="业主电话"
-              v-model="queryData.tel"
-              class="set-input200"
-              @change="querylistByParams"
-              clearable
-            />
+            <el-input placeholder="业主电话"
+                      v-model="queryData.tel"
+                      class="set-input200"
+                      @change="querylistByParams"
+                      clearable />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">价格</h3>
-            <el-input
-              placeholder="最小值"
-              v-model="queryData.minPrice"
-              class="set-input90"
-              @change="querylistByParams"
-              clearable
-            />
+            <el-input placeholder="最小值"
+                      v-model="queryData.minPrice"
+                      class="set-input90"
+                      @change="querylistByParams"
+                      clearable />
             <span class="cut-off-rule"></span>
-            <el-input
-              placeholder="最大值"
-              v-model="queryData.maxPrice"
-              class="set-input90"
-              @change="querylistByParams"
-              clearable
-            />
+            <el-input placeholder="最大值"
+                      v-model="queryData.maxPrice"
+                      class="set-input90"
+                      @change="querylistByParams"
+                      clearable />
             <span class="query-cell-suffix">万</span>
           </div>
           <div class="query-content-cell cell-interval45">
-            <definitionmenu
-              :renderList="tableDataColumn"
-              :tableColumn="tableColumn"
-              @change="tabColumnChange"
-            ></definitionmenu>
+            <definitionmenu :renderList="tableDataColumn"
+                            :tableColumn="tableColumn"
+                            @change="tabColumnChange"></definitionmenu>
           </div>
         </div>
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">面积</h3>
-            <el-input
-              placeholder="最小值"
-              v-validate="'decimal:2|noZero1'"
-              v-model="queryData.minInArea"
-              class="set-input90"
-              @change="changeAreaBut"
-              clearable
-            />
+            <el-input placeholder="最小值"
+                      v-validate="'decimal:2|noZero1'"
+                      v-model="queryData.minInArea"
+                      class="set-input90"
+                      @change="changeAreaBut"
+                      clearable />
             <span class="cut-off-rule"></span>
-            <el-input
-              placeholder="最大值"
-              v-model="queryData.maxInArea"
-              class="set-input90"
-              @change="changeAreaButMax"
-              clearable
-            />
+            <el-input placeholder="最大值"
+                      v-model="queryData.maxInArea"
+                      class="set-input90"
+                      @change="changeAreaButMax"
+                      clearable />
             <span class="query-cell-suffix">平方</span>
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">房源状态</h3>
-            <el-select clearable placeholder="房源状态" class="set-select100" v-model="houseType">
-              <el-option
-                v-for="item in houseTypeList"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+            <el-select clearable
+                       placeholder="房源状态"
+                       class="set-select100"
+                       v-model="houseType">
+              <el-option v-for="item in houseTypeList"
+                         :key="item.value"
+                         :label="item.label"
+                         :value="item.value"></el-option>
             </el-select>
-            <span class="query-cell-suffix handlebut" @click="remove">清除</span>
+            <span class="query-cell-suffix handlebut"
+                  @click="remove">清除</span>
           </div>
           <div class="query-content-cell cell-interval45">
             <label class="query-checkbox">
-              <input type="checkbox" @click="keySelect">
+              <input type="checkbox"
+                     @click="keySelect">
               <span>钥匙</span>
             </label>
             <label class="query-checkbox">
-              <input type="checkbox" @click="onlySelect">
+              <input type="checkbox"
+                     @click="onlySelect">
               <span>独家</span>
             </label>
           </div>
           <div class="query-content-cell cell-interval45">
-            <el-button type="primary" size="mini" @click="querylistByParams">查询</el-button>
+            <el-button type="primary"
+                       size="mini"
+                       @click="querylistByParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect
-              :configRule="{deptParentId: false,store:false,personnel:false}"
-              @moreSelectChange="moreSelectChange"
-            ></moreSelect>
+            <moreSelect :configRule="{deptParentId: false,store:false,personnel:false}"
+                        @moreSelectChange="moreSelectChange"></moreSelect>
           </div>
         </div>
       </template>
       <template v-slot:tableColumn>
         <template v-for="(item) in tableColumn">
-          <el-table-column
-            :prop="item.prop"
-            :label="item.label"
-            :width="item.width"
-            :key="item.prop"
-            :formatter="item.formart"
-            show-overflow-tooltip
-            :sort-orders="['ascending', 'descending']"
-            :sortable="item.order"
-          ></el-table-column>
+          <el-table-column :prop="item.prop"
+                           :label="item.label"
+                           :width="item.width"
+                           :key="item.prop"
+                           :formatter="item.formart"
+                           show-overflow-tooltip
+                           :sort-orders="['ascending', 'descending']"
+                           :sortable="item.order"></el-table-column>
         </template>
-        <el-table-column label="操作" width="170" fixed="right">
+        <el-table-column label="操作"
+                         width="170"
+                         fixed="right">
           <template v-slot="scope">
-            <el-button
-              type="primary"
-              size="mini"
-              v-if="!['1','5'].includes(scope.row.houseType)"
-              @click="houseOperate(scope.row)"
-            >{{ scope.row.houseType | setRowButName}}</el-button>
-            <el-button type="primary" @click="toHouseDetail(scope.row)" size="mini">查看</el-button>
+            <el-button type="primary"
+                       size="mini"
+                       v-if="!['1','5'].includes(scope.row.houseType)"
+                       @click="houseOperate(scope.row)">{{ scope.row.houseType | setRowButName}}</el-button>
+            <el-button type="primary"
+                       @click="toHouseDetail(scope.row)"
+                       size="mini">查看</el-button>
           </template>
         </el-table-column>
       </template>
     </list-page>
-    <fixedPopup
-      :visible.sync="applyAgentFlag"
-      title="请填写完这些信息才能申请为跟单人"
-      width="960px"
-      :before-clear="clearStep"
-    >
-      <supplement
-        ref="com"
-        :required="required"
-        :middleRadioTo="middleRadio"
-        :primaryRadioTo="primaryRadio"
-        :showFollow="showFollow"
-        :audioList="audioList"
-      ></supplement>
+    <fixedPopup :visible.sync="applyAgentFlag"
+                title="请填写完这些信息才能申请为跟单人"
+                width="960px"
+                :before-clear="clearStep">
+      <supplement ref="com"
+                  :required="required"
+                  :middleRadioTo="middleRadio"
+                  :primaryRadioTo="primaryRadio"
+                  :showFollow="showFollow"
+                  :audioList="audioList"></supplement>
       <template v-slot:floot>
         <div class="text-middle">
-          <el-button size="mini" @click="applyAgent">提交</el-button>
+          <el-button size="mini"
+                     @click="applyAgent">提交</el-button>
         </div>
       </template>
     </fixedPopup>
@@ -791,10 +770,9 @@ export default {
       }
       this.applyAgentFlag = true;
     },
-    moreSelectChange (e) {
-      if (e != '')
-        this.moreSelect = e;
-        this.querylistByParams();
+    moreSelectChange(e) {
+      if (e != "") this.moreSelect = e;
+      this.querylistByParams();
     },
     keySelect() {
       if (this.queryData.keyOwner != "") {
@@ -911,12 +889,10 @@ export default {
           if (key == "addTime" && this.moreSelect[key] !== "") {
             params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          }
-          else if (key == "followTime" && this.moreSelect[key] !== "") {
+          } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
-          }
-          else {
+          } else {
             params[key] = this.moreSelect[key];
           }
         }
