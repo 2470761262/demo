@@ -300,7 +300,7 @@
       <el-card class="box-card">
         <div slot="header"
              class="clearfix">
-          <span>客户信息</span>
+          <span>业主信息</span>
         </div>
         <div class="cus-box">
           <img width="55px"
