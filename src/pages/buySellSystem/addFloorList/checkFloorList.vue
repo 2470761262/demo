@@ -198,7 +198,7 @@ export default {
       }).then((e) => {
         if (e.data.code == 200) {
           this.$message({
-            message: '换肤成功',
+            message: '提交成功',
             type: 'success'
           });
           that.$router.push({ path: '/buySellSystem/addFloorList' });

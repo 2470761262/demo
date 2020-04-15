@@ -725,6 +725,7 @@ export default {
     },
     //重置表单
     resetForm (formName) {
+      this.searchData = '';
       this.$parent.setSelectNav(null, true);
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
       this.Slider.priceSlider = [20, 20];

@@ -124,7 +124,8 @@
                        @click="querylistByParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange" deptUrl="/myHouse/myCheckList"></moreSelect>
+            <moreSelect @moreSelectChange="moreSelectChange"
+                        deptUrl="/myHouse/myCheckList"></moreSelect>
           </div>
         </div>
       </template>
@@ -158,7 +159,7 @@
         </el-table-column>
         <el-table-column label="提交时间">
           <template v-slot="scope">
-            {{scope.row.checkAddTime}}
+            {{scope.row.addTime}}
           </template>
         </el-table-column>
         <el-table-column label="审核状态">
@@ -822,7 +823,8 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
-      this.querylist(val);
+      this.pageJson.currentPage = val;
+      this.querylist();
     },
   },
 }
