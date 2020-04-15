@@ -181,23 +181,15 @@ export default {
                 switch (Arry2[0]) {
                   case "小区介绍":
                     result.data.communityPresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.communityDesc =
-                      Arry2[1];
                     break;
                   case "户型介绍":
                     result.data.houseTypePresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.roomDesc =
-                      Arry2[1];
                     break;
                   case "税费解析":
                     result.data.taxParsing = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.taxDesc =
-                      Arry2[1];
                     break;
                   case "核心卖点":
                     result.data.coreSellingPoint = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.saleDesc =
-                      Arry2[1];
                     break;
                 }
                 if (result.data.applyAgentVo != null) {
