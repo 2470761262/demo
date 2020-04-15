@@ -234,7 +234,7 @@
             <el-tag size="small"
                     type="danger"
                     v-for="item in employeeDiff.spanList"
-                    :key="item.index">{{item}}</el-tag>
+                    :key="item.index">{{diffList[item]}}</el-tag>
           </div>
           <div>{{employeeDiff.remark}}</div>
         </div>
@@ -251,7 +251,7 @@
             <el-tag size="small"
                     type="danger"
                     v-for="item in customerDiff.spanList"
-                    :key="item.index">{{item}}</el-tag>
+                    :key="item.index">{{diffList[item]}}</el-tag>
           </div>
           <div>{{customerDiff.remark}}</div>
         </div>
@@ -371,6 +371,7 @@ export default {
         remark: "",
         show: false
       },
+      diffList:['楼盘信息','价格不准确','面积错误','户型错误'],
       employeeDiff: {
         spanList: [],
         remark: "",
