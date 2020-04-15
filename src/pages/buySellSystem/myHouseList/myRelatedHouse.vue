@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+@import url("../../../assets/publicLess/pageListQuery.less");
 </style>
 <template>
   <list-page @sort-change="sortMethod"
@@ -128,7 +129,8 @@
                      @click="querySaleNotTrackParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect :configRule="{deptParentId: false,store:false,personnel:false}" @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect :configRule="{deptParentId: false,store:false,personnel:false}"
+                      @moreSelectChange="moreSelectChange"></moreSelect>
         </div>
       </div>
     </template>
@@ -163,15 +165,14 @@ import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
-import '@/assets/publicLess/pageListQuery.less';
 export default {
-  mixins: [getMenuRid, houseContrast],
+  mixins: [getMenuRid],
   components: {
     listPage,
     definitionmenu,
     moreSelect
   },
-  data () {
+  data() {
     return {
       loading: true,
       workType: "",
@@ -303,7 +304,12 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            (item.rooms || 0) + "室" + (item.hall || 0) + "厅" + (item.toilet || 0) + "卫"
+            (item.rooms || 0) +
+            "室" +
+            (item.hall || 0) +
+            "厅" +
+            (item.toilet || 0) +
+            "卫"
         },
         {
           prop: "unitPrice",
@@ -342,60 +348,60 @@ export default {
       tableColumn: [],
       tableData: [],
       moreSelect: {},
-      sortColumn: "id",//排序字段
-      sortType: "descending",//排序类型
+      sortColumn: "id", //排序字段
+      sortType: "descending" //排序类型
     };
   },
-  mounted () {
+  mounted() {
     this.querySaleNotTrack(1);
   },
   methods: {
-    sortMethod (e) {
+    sortMethod(e) {
       console.log(e, "eeee排序");
       this.sortColumn = e.prop;
       this.sortType = e.order;
       this.querySaleNotTrack(1);
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       this.moreSelect = e;
       this.querySaleNotTrack(1);
     },
-    remove () {
+    remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.querySaleNotTrack(1);
     },
-    distributeEvent (e, id) {
+    distributeEvent(e, id) {
       var that = this;
       console.log("hhhhhhhhhhhhhhhhhh", id);
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    queryTabData () {
+    queryTabData() {
       console.log(this, "111");
     },
-    toLook (id) {
+    toLook(id) {
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    querySaleNotTrackParams () {
+    querySaleNotTrackParams() {
       this.querySaleNotTrack(1);
     },
-    remoteInput () {
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    isForBut (type) {
+    isForBut(type) {
       let array = [{ name: "查看", isType: "1,2,3", methosName: "" }];
       return array.filter(item => {
         return item.isType.includes(type);
       });
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -423,7 +429,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -446,28 +452,30 @@ export default {
         });
       this.querySaleNotTrackParams();
     },
-    queryRoomNo () {
-      var that = this
-      this.$api.get({
-        url: "/mateHouse/queryBuildIngHouses",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          comId: that.data.comId,
-          cbId: that.data.cbId,
-          page: 1,
-          limit: 50
-        }
-      }).then((e) => {
-        if (e.data.code == 200) {
-          that.data.roomNo = '';
-          that.roomNoList = e.data.data.list;
-        }
-      })
+    queryRoomNo() {
+      var that = this;
+      this.$api
+        .get({
+          url: "/mateHouse/queryBuildIngHouses",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            comId: that.data.comId,
+            cbId: that.data.cbId,
+            page: 1,
+            limit: 50
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.data.roomNo = "";
+            that.roomNoList = e.data.data.list;
+          }
+        });
       this.querySaleNotTrackParams();
     },
-    querySaleNotTrack (currentPage) {
+    querySaleNotTrack(currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
@@ -480,12 +488,10 @@ export default {
           if (key == "addTime" && this.moreSelect[key] !== "") {
             params.beginTime = this.moreSelect[key][0];
             params.endTime = this.moreSelect[key][1];
-          }
-          else if (key == "followTime" && this.moreSelect[key] !== "") {
+          } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
-          }
-          else {
+          } else {
             params[key] = this.moreSelect[key];
           }
         }
@@ -530,18 +536,18 @@ export default {
         });
     },
 
-    handleClick () { },
-    queryTabData () {
+    handleClick() {},
+    queryTabData() {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.querySaleNotTrackParams(1);
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.querySaleNotTrack(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.querySaleNotTrack(val);
     }
