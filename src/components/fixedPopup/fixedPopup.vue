@@ -91,7 +91,7 @@
                @click.stop="close"></i>
           </div>
           <div class="didLog-content-sroll">
-            <slot v-if="visible">
+            <slot>
             </slot>
           </div>
           <slot name="floot"></slot>
