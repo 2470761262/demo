@@ -362,7 +362,7 @@
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
-            ]">{{ Slider.priceSlider[index] }}￥ - {{ Slider.priceSlider[index + 1]  == '9999' ? '无限' : Slider.priceSlider[index + 1] }}￥</div>
+            ]">{{ Slider.priceSlider[index] }}￥ - {{ Slider.priceSlider[index + 1] == '9999' ? '无限' : Slider.priceSlider[index + 1] }}￥</div>
               </div>
             </template>
             <template v-slot:dot>
@@ -389,7 +389,7 @@
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
-            ]">{{ Slider.areaSlider[index] }}㎡ - {{ Slider.areaSlider[index + 1] == '9999' ? '无限' : Slider.areaSlider[index + 1]  }}㎡</div>
+            ]">{{ Slider.areaSlider[index] }}㎡ - {{ Slider.areaSlider[index + 1] == '9999' ? '无限' : Slider.areaSlider[index + 1] }}㎡</div>
               </div>
             </template>
             <template v-slot:dot>
@@ -417,7 +417,7 @@
               'merge-tooltip',
               'vue-slider-dot-tooltip-inner',
               'vue-slider-dot-tooltip-inner-top',
-            ]">{{ Slider.flootSlider[index] }}层 - {{ Slider.flootSlider[index + 1] == '9999' ? '无限' : Slider.flootSlider[index + 1]  }}层</div>
+            ]">{{ Slider.flootSlider[index] }}层 - {{ Slider.flootSlider[index + 1] == '9999' ? '无限' : Slider.flootSlider[index + 1] }}层</div>
               </div>
             </template>
             <template v-slot:dot>
@@ -539,8 +539,7 @@
               <template v-for="item in MathPrimarySchoolListLast">
                 <el-option :key="item.value"
                            :label="item.label"
-                           :value="item.value">
-                </el-option>
+                           :value="item.value"></el-option>
               </template>
             </el-select>
           </div>
@@ -569,8 +568,7 @@
               <template v-for="item in MathMiddleSchoolListLast">
                 <el-option :key="item.value"
                            :label="item.label"
-                           :value="item.value">
-                </el-option>
+                           :value="item.value"></el-option>
               </template>
             </el-select>
           </div>
@@ -725,11 +723,13 @@ export default {
     },
     //重置表单
     resetForm (formName) {
+      this.searchData = '';
       this.$parent.setSelectNav(null, true);
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
       this.Slider.priceSlider = [20, 20];
       this.Slider.areaSlider = [20, 20];
       this.Slider.flootSlider = [-2, -2];
+      this.searchData = "";
     },
     addInputToList (toList, inputName) {
       let findFlag = this.form[toList].some(item => {
@@ -798,10 +798,10 @@ export default {
     },
     queryCBId (name) {
       var that = this;
-      if (name == '') {
-        that.form.communityName = '';
-        that.form.cbNo = '';
-        that.form.roomNumber = '';
+      if (name == "") {
+        that.form.communityName = "";
+        that.form.cbNo = "";
+        that.form.roomNumber = "";
       }
 
       this.$api
@@ -821,13 +821,13 @@ export default {
             that.form.cbId = "";
             that.cbIdList = e.data.data.list;
             console.log(name);
-            if (name != '') {
-              let resultArr = that.options.find((item) => {
+            if (name != "") {
+              let resultArr = that.options.find(item => {
                 return item.value === name;
               });
               that.form.communityName = resultArr.name;
-              that.form.cbNo = '';
-              that.form.roomNumber = '';
+              that.form.cbNo = "";
+              that.form.roomNumber = "";
               console.log(that.form.communityName);
             }
           }
@@ -850,18 +850,18 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             that.form.roomNo = "";
-            let resultArr = that.cbIdList.find((item) => {
+            let resultArr = that.cbIdList.find(item => {
               return item.value === name;
             });
             that.form.cbNo = resultArr.name;
-            that.form.roomNumber = '';
+            that.form.roomNumber = "";
             that.roomNoList = e.data.data.list;
           }
         });
     },
     queryRoomNumber (name) {
       let that = this;
-      let resultArr = that.roomNoList.find((item) => {
+      let resultArr = that.roomNoList.find(item => {
         return item.value === name;
       });
       that.form.roomNumber = resultArr.name;

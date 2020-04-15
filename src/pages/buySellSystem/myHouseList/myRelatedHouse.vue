@@ -260,7 +260,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -268,7 +268,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -276,7 +276,7 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -332,7 +332,7 @@ export default {
           prop: "floor",
           label: "楼层",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -357,9 +357,16 @@ export default {
   },
   methods: {
     sortMethod(e) {
-      console.log(e, "eeee排序");
-      this.sortColumn = e.prop;
-      this.sortType = e.order;
+      this.transitionOrderList.forEach(Element => {
+        if (Element.key == e.prop) {
+          this.sortColumn = Element.value;
+          if (e.order == "descending") {
+            this.sortType = "ascending";
+          } else {
+            this.sortType = "descending";
+          }
+        }
+      });
       this.querySaleNotTrack(1);
     },
     moreSelectChange(e) {

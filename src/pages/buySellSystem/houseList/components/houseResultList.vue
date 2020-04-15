@@ -223,20 +223,18 @@
                 v-for="(tag,index) in dynamicTags"
                 closable
                 :disable-transitions="false"
-                @close="handleClose(tag)">
-          {{tag.title}}{{tag.value}}
-        </el-tag>
+                @close="handleClose(tag)">{{tag.title}}{{tag.value}}</el-tag>
       </div>
       <div class="select-tabs-cell"
            v-if="querySelectFlag">
         <label class="select-checkbox">
           <input type="checkbox"
-                 @click="keySelect()">
+                 @click="keySelect()" />
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
           <input type="checkbox"
-                 @click="onlySelect()">
+                 @click="onlySelect()" />
           <span>独家</span>
         </label>
       </div>
@@ -266,12 +264,12 @@
       <div class="select-tabs-cell">
         <label class="select-checkbox">
           <input type="checkbox"
-                 @click="keySelect()">
+                 @click="keySelect()" />
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
           <input type="checkbox"
-                 @click="onlySelect()">
+                 @click="onlySelect()" />
           <span>独家</span>
         </label>
       </div>
@@ -283,14 +281,14 @@
         <template v-if="renderList.length > 0">
           <div class="select-for-item"
                v-for="(item,index) in renderList"
-               :key="index"
-               @click.stop="toHouseDetail(item)">
+               :key="index">
             <div class="select-for-item-img">
               <el-image :src="item.picUrl+'?x-oss-process=style/thumb'"
                         fit="cover">
                 <div slot="placeholder"
                      class="image-slot">
-                  加载中<span>...</span>
+                  加载中
+                  <span>...</span>
                 </div>
                 <div slot="error"
                      fit="cover"
@@ -306,7 +304,7 @@
                   <div class="top-tag-item overText"
                        v-if="item.keyOwner>0">钥匙</div>
                   <div class="top-tag-item overText"
-                       style='margin-left:5px'
+                       style="margin-left:5px"
                        v-if="item.isOnly>0">独家</div>
                 </div>
               </div>
@@ -326,8 +324,7 @@
           <el-alert title="暂无数据"
                     type="primary"
                     center
-                    show-icon>
-          </el-alert>
+                    show-icon></el-alert>
         </template>
       </template>
       <template v-else>
@@ -346,8 +343,7 @@
                                :sortable="item.order"
                                :formatter="item.formart"
                                :sort-orders="['ascending', 'descending']"
-                               show-overflow-tooltip>
-              </el-table-column>
+                               show-overflow-tooltip></el-table-column>
               <el-table-column label="操作"
                                fixed="right"
                                width="80px">
@@ -370,8 +366,7 @@
       <el-pagination @current-change="handleCurrentChange"
                      :current-page="pageJson.currentPage"
                      layout="total, prev, pager, next, jumper"
-                     :total="pageJson.total">
-      </el-pagination>
+                     :total="pageJson.total"></el-pagination>
     </div>
   </div>
 </template>
@@ -393,13 +388,13 @@ export default {
     form: {
       deep: true,
       immediate: true,
-      handler: function(value, ordvalue) {
+      handler: function (value, ordvalue) {
         this.renderTag(value);
         this.getHouseData(JSON.parse(JSON.stringify(value)));
       }
     }
   },
-  data() {
+  data () {
     return {
       dynamicTags: [],
       renderList: [],
@@ -544,10 +539,10 @@ export default {
     };
   },
   methods: {
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    toHouseDetail(item) {
+    toHouseDetail (item) {
       let id = item.id;
       console.log(item, "谢谢谢谢谢谢谢谢");
       if (item.hasOwnProperty("houseId")) {
@@ -556,31 +551,31 @@ export default {
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //远程排序
-    sortMethod(item) {
+    sortMethod (item) {
       this.form.sortColumn = item.prop;
       this.form.sortType = item.order;
       this.getHouseData(JSON.parse(JSON.stringify(value)));
       console.log(item);
     },
-    keySelect() {
+    keySelect () {
       if (this.form.keyOwner != "") {
         this.form.keyOwner = "";
       } else {
         this.form.keyOwner = "1";
       }
     },
-    onlySelect() {
+    onlySelect () {
       if (this.form.isOnly != "") {
         this.form.isOnly = "";
       } else {
         this.form.isOnly = "1";
       }
     },
-    defaultSelect() {
+    defaultSelect () {
       this.form.sortColumn = "id";
       this.form.sortType = "ascending";
     },
-    priceSelect() {
+    priceSelect () {
       this.form.sortColumn = "price";
       if (this.form.sortType == "ascending") {
         this.form.sortType = "descending";
@@ -589,7 +584,7 @@ export default {
       }
       console.log(this.form.sortType);
     },
-    inAreaSelect() {
+    inAreaSelect () {
       this.form.sortColumn = "inArea";
       if (this.form.sortType == "ascending") {
         this.form.sortType = "descending";
@@ -598,10 +593,10 @@ export default {
       }
       console.log(this.form.sortType);
     },
-    InitPageJson() {
+    InitPageJson () {
       this.pageJson = { total: 1, currentPage: 1 };
     },
-    getHouseData(value, initPage = true) {
+    getHouseData (value, initPage = true) {
       let that = this;
       this.loading = true;
       Object.keys(value).forEach(item => {
@@ -636,7 +631,7 @@ export default {
         });
     },
     //创建需要渲染的标签
-    renderTag(value) {
+    renderTag (value) {
       let that = this;
       console.log(value);
       //清空
@@ -646,7 +641,7 @@ export default {
         this.dynamicTags.push({
           title: `价格:${value.minPrice}-${
             value.maxPrice == "9999" ? "无限" : value.maxPrice
-          }万`,
+            }万`,
           field: "price",
           arr: false
         });
@@ -656,7 +651,7 @@ export default {
         this.dynamicTags.push({
           title: `面积:${value.minInArea}-${
             value.maxInArea == "9999" ? "无限" : value.maxInArea
-          }㎡`,
+            }㎡`,
           field: "area",
           arr: false
         });
@@ -666,7 +661,7 @@ export default {
         this.dynamicTags.push({
           title: `楼层:${value.minFloor}-${
             value.maxFloor == "9999" ? "无限" : value.maxFloor
-          }层`,
+            }层`,
           field: "floot",
           arr: false
         });
@@ -725,8 +720,15 @@ export default {
       this.appendFormTag(value.primarySchool, "小学", "primarySchool");
       //中学
       this.appendFormTag(value.middleSchool, "中学", "middleSchool");
+      if (value.searchInfo != null && value.searchInfo != "") {
+        this.dynamicTags.push({
+          title: `搜索关键字:${value.searchInfo}`,
+          field: "searchInfo",
+          arr: false
+        });
+      }
     },
-    appendFormTag(to, titleName, fieldName) {
+    appendFormTag (to, titleName, fieldName) {
       //房型
       to.forEach(item => {
         this.dynamicTags.push({
@@ -737,13 +739,13 @@ export default {
         });
       });
     },
-    filterSplice(e) {
+    filterSplice (e) {
       return this.form[e.field].findIndex(item => {
         return item == e.value;
       });
     },
     //标签关闭
-    handleClose(e) {
+    handleClose (e) {
       if (e.arr) {
         // 删除多选
         this.form[e.field].splice(this.filterSplice(e), 1);
@@ -783,10 +785,13 @@ export default {
           this.form.roomNumber = "";
           this.form.roomNo = "";
         }
+        if (e.field == "searchInfo") {
+          this.form.searchInfo = "";
+        }
       }
     },
     //跳转第几页
-    handleCurrentChange(e) {
+    handleCurrentChange (e) {
       this.pageJson.currentPage = e;
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
     }

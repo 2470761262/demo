@@ -203,22 +203,7 @@ export default {
           disabled: true,
           default: true
         },
-        {
-          prop: "buildingName",
-          label: "楼栋号",
-          width: "90",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "roomNo",
-          label: "房间号",
-          width: "110",
-          order: false,
-          disabled: true,
-          default: true
-        },
+
         {
           prop: "inArea",
           label: "面积(m²)",
@@ -241,7 +226,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -249,7 +234,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -257,7 +242,7 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -265,7 +250,7 @@ export default {
           prop: "addTime",
           label: "添加时间",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -331,6 +316,16 @@ export default {
       ],
       tableColumn: [],
       tableData: [],
+      transitionOrderList: [
+        {
+          key: "outFollow",
+          value: "lastFollowTime"
+        },
+        {
+          key: "noSeenDay",
+          value: "lastPairTime"
+        }
+      ],
       transitionList: [
         {
           key: "bhId",
@@ -364,8 +359,17 @@ export default {
   methods: {
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.sortColumn = e.prop;
-      this.sortType = e.order;
+      this.transitionOrderList.forEach(Element => {
+        if (Element.key == e.prop) {
+          this.sortColumn = Element.value;
+          if (e.order == "descending") {
+            this.sortType = "ascending";
+          }
+          else {
+            this.sortType = "descending";
+          }
+        }
+      });
       this.queryVerifyHouseDatas(1);
     },
     tabColumnChange (e) {
