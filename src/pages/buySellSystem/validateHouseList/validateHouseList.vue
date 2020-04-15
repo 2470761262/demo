@@ -4,10 +4,10 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 300px;
+  width: 350px;
 }
 .span-width {
-  width: 150px;
+  flex: 1;
 }
 .cus-box {
   display: flex;
@@ -330,14 +330,14 @@ export default {
     moreSelect
   },
   computed: {
-    avgPrice () {
+    avgPrice() {
       if (!this.nowRow.price || this.nowRow.area == 0) {
         return "-";
       }
       return (this.nowRow.price / this.nowRow.area).toFixed(4) * 10000;
     }
   },
-  data () {
+  data() {
     return {
       loading: true, //控制表格加载动画提示
       showVeryfyDetail: false, //验真详情弹出层
@@ -524,14 +524,14 @@ export default {
       sortType: 1
     };
   },
-  created () {
+  created() {
     this.queryVerifyHouseByParams(1);
   },
-  mounted () {
+  mounted() {
     this.queryVerifyHouseByParams(1);
   },
   methods: {
-    toHouseDetail (row) {
+    toHouseDetail(row) {
       var that = this;
       console.log(row, "进入验真房源（sale_house_draft）详情");
       that.$router.push({
@@ -539,17 +539,16 @@ export default {
         params: { houseId: row.id }
       });
     },
-    sortMethod (e) {
+    sortMethod(e) {
       this.sortColumn = e.prop;
       if (e.order == "descending") {
         this.sortType = 1;
-      }
-      else {
+      } else {
         this.sortType = 0;
       }
       this.queryVerifyHouseByParams(1);
     },
-    GetRequest () {
+    GetRequest() {
       var url = location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", location);
       var theRequest = new URLSearchParams(
@@ -559,18 +558,18 @@ export default {
       util.localStorageSet("token", token);
       return token;
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       this.moreSelect = e;
       this.queryVerifyHouseDatas(1);
     },
-    queryVerifyHouseByParams (currentPage) {
+    queryVerifyHouseByParams(currentPage) {
       this.queryVerifyHouseDatas(1);
     },
-    Remove () {
+    Remove() {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryVerifyHouseDatas(1);
     },
-    queryVerifyHouseDatas (currentPage) {
+    queryVerifyHouseDatas(currentPage) {
       let that = this;
       that.loading = true;
 
@@ -638,7 +637,7 @@ export default {
           console.log(e);
         });
     },
-    getVerifyImg (row) {
+    getVerifyImg(row) {
       let trueId = row.id;
       if (row.isMul != null && row.isMul !== 0) {
         trueId = row.isMul;
@@ -681,12 +680,12 @@ export default {
           that.loading = false;
         });
     },
-    remoteInput () {
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -714,7 +713,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -737,7 +736,7 @@ export default {
         });
       this.queryVerifyHouseByParams();
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -760,13 +759,13 @@ export default {
         });
       this.queryVerifyHouseByParams();
     },
-    queryTabData () {
+    queryTabData() {
       console.log(this.queryData);
     },
-    distributeEvent (e, row) {
+    distributeEvent(e, row) {
       this[e](row);
     },
-    isForBut (type) {
+    isForBut(type) {
       let array = [
         {
           name: "邀请验真",
@@ -797,7 +796,7 @@ export default {
         return item.isType.includes(type);
       });
     },
-    getResult (row) {
+    getResult(row) {
       let that = this;
       that.showVeryfyDetail = true;
       that.nowRow = row;
@@ -847,14 +846,14 @@ export default {
           break;
       }
     },
-    getCheckStatus (key) {
+    getCheckStatus(key) {
       let that = this;
       console.log("key=" + key);
       return that.checkStatusList.filter(item => {
         return item.key.includes(key);
       });
     },
-    getVerifyDiff (id, perType) {
+    getVerifyDiff(id, perType) {
       this.$api
         .get({
           url: "/verifyHouse/diffrent/" + id,
@@ -881,22 +880,22 @@ export default {
           console.log(e);
         });
     },
-    handleClick () {
+    handleClick() {
       console.log(this.queryData);
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.queryVerifyHouseDatas(val);
     },
-    edit (val) {
+    edit(val) {
       this.$router.push({
         path: "/buySellSystem/addHouse?method=edit&id=" + val.id
       });
     },
-    reVerify (val) {
+    reVerify(val) {
       this.$router.push({
         path: "/buySellSystem/addHouse?method=reset&id=" + val.id
       });
