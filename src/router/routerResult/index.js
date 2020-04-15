@@ -1,6 +1,4 @@
-
-export default [
-    {
+export default [{
         //买卖系统房源列表
         path: "/buySellSystem/houseList",
         meta: {
@@ -8,7 +6,7 @@ export default [
             title: '首页'
         },
         component: () =>
-            import(/* webpackChunkName: "houseList" */ "@/pages/buySellSystem/houseList/houseList.vue")
+            import ( /* webpackChunkName: "houseList" */ "@/pages/buySellSystem/houseList/houseList.vue")
     },
     {
         //买卖系统录入房源
@@ -18,7 +16,7 @@ export default [
             title: '房源详情'
         },
         component: () =>
-            import(/* webpackChunkName: "houseDetails" */ "@/pages/buySellSystem/houseDetails/houseDetails.vue")
+            import ( /* webpackChunkName: "houseDetails" */ "@/pages/buySellSystem/houseDetails/houseDetails.vue")
     },
     {
         //买卖系统历史房源
@@ -28,7 +26,7 @@ export default [
             title: '历史详情'
         },
         component: () =>
-            import(/* webpackChunkName: "historyDetails" */ "@/pages/buySellSystem/houseDetails/historyDetails.vue")
+            import ( /* webpackChunkName: "historyDetails" */ "@/pages/buySellSystem/houseDetails/historyDetails.vue")
     },
     {
         //买卖系统验证房源
@@ -38,7 +36,7 @@ export default [
             title: '验真详情'
         },
         component: () =>
-            import(/* webpackChunkName: "validateHouseDetails" */ "@/pages/buySellSystem/houseDetails/validateHouseDetails.vue")
+            import ( /* webpackChunkName: "validateHouseDetails" */ "@/pages/buySellSystem/houseDetails/validateHouseDetails.vue")
     },
     {
         //买卖系统楼盘详情
@@ -48,7 +46,7 @@ export default [
             title: '楼盘详情'
         },
         component: () =>
-            import(/* webpackChunkName: "buildingHouseDetail" */ "@/pages/buySellSystem/houseDetails/buildingHouseDetail.vue")
+            import ( /* webpackChunkName: "buildingHouseDetail" */ "@/pages/buySellSystem/houseDetails/buildingHouseDetail.vue")
     },
     {
         //买卖系统交易房源详情
@@ -58,7 +56,7 @@ export default [
             title: '房源历史交易详情'
         },
         component: () =>
-            import(/* webpackChunkName: "tradeHouseDetail" */ "@/pages/buySellSystem/houseDetails/tradeHouseDetail.vue")
+            import ( /* webpackChunkName: "tradeHouseDetail" */ "@/pages/buySellSystem/houseDetails/tradeHouseDetail.vue")
     },
     {
         path: "/buySellSystem/addHouse",
@@ -67,7 +65,7 @@ export default [
             title: '录入房源'
         },
         component: () =>
-            import(/* webpackChunkName: "addHouse" */ "@/pages/buySellSystem/addHouse/addHouse.vue")
+            import ( /* webpackChunkName: "addHouse" */ "@/pages/buySellSystem/addHouse/addHouse.vue")
     },
 
     {
@@ -77,7 +75,7 @@ export default [
             title: '补充楼盘'
         },
         component: () =>
-            import(/* webpackChunkName: "checkFloorList" */ "@/pages/buySellSystem/addFloorList/checkFloorList.vue")
+            import ( /* webpackChunkName: "checkFloorList" */ "@/pages/buySellSystem/addFloorList/checkFloorList.vue")
     },
     {
         //独家房源列表
@@ -86,7 +84,7 @@ export default [
             title: '独家房源'
         },
         component: () =>
-            import(/* webpackChunkName: "soleHouse" */ "@/pages/buySellSystem/soleHouse/soleHouse.vue")
+            import ( /* webpackChunkName: "soleHouse" */ "@/pages/buySellSystem/soleHouse/soleHouse.vue")
     },
     {
         //总监推荐房源
@@ -95,7 +93,7 @@ export default [
             title: '总监推荐'
         },
         component: () =>
-            import(/* webpackChunkName: "chiefRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/chiefRecommendHouse.vue")
+            import ( /* webpackChunkName: "chiefRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/chiefRecommendHouse.vue")
     },
     {
         //资源库-无号码-录入号码
@@ -104,7 +102,7 @@ export default [
             title: '录入号码'
         },
         component: () =>
-            import(/* webpackChunkName: "updatePhone" */ "@/pages/buySellSystem/houseResource/updatePhone.vue")
+            import ( /* webpackChunkName: "updatePhone" */ "@/pages/buySellSystem/houseResource/updatePhone.vue")
     },
     {
         //店长推荐房源
@@ -113,7 +111,7 @@ export default [
             title: '店长推荐'
         },
         component: () =>
-            import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/shopownerRecommendHouse.vue")
+            import ( /* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseRecommend/shopownerRecommendHouse.vue")
     },
     {
         //补充楼盘
@@ -122,7 +120,7 @@ export default [
             title: '补充楼盘'
         },
         component: () =>
-            import(/* webpackChunkName: "CommunityReplenish" */ "@/pages/buySellSystem/addFloorList/CommunityReplenish.vue")
+            import ( /* webpackChunkName: "CommunityReplenish" */ "@/pages/buySellSystem/addFloorList/CommunityReplenish.vue")
     },
     {
         //七天内被带看
@@ -131,7 +129,7 @@ export default [
             title: '七天内被带看'
         },
         component: () =>
-            import(/* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/followHouse/sevenDaysFollowHouse.vue")
+            import ( /* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/followHouse/sevenDaysFollowHouse.vue")
     },
     {
         //新增房源
@@ -140,7 +138,7 @@ export default [
             title: '新增房源'
         },
         component: () =>
-            import(/* webpackChunkName: "newAgentHouse" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
+            import ( /* webpackChunkName: "newAgentHouse" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
     },
     {
         //买卖系统三级路由
@@ -148,137 +146,151 @@ export default [
         name: "otherIframe",
         redirect: "/buySellSystem/concernCommunity",
         meta: {
-            title: '买卖系统'
+            title: '买卖系统',
+
         },
         component: () =>
-            import(/* webpackChunkName: "otherIframe" */ "@/pages/buySellSystem/otherIframe/otherIframe.vue"),
-        children: [
-            {
+            import ( /* webpackChunkName: "otherIframe" */ "@/pages/buySellSystem/otherIframe/otherIframe.vue"),
+        children: [{
                 //我的核心盘
                 path: "/buySellSystem/concernCommunity",
                 name: "concernCommunity",
                 meta: {
-                    title: '我的核心盘'
+                    title: '我的核心盘',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/concernCommunity/concernCommunity.vue")
+                    import ( /* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/concernCommunity/concernCommunity.vue")
             },
             {
                 //对赌房源
                 path: "/buySellSystem/houseBet",
                 meta: {
-                    title: '对赌房源'
+                    title: '对赌房源',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseBet/houseBet.vue")
+                    import ( /* webpackChunkName: "shopownerRecommendHouse" */ "@/pages/buySellSystem/houseBet/houseBet.vue")
             },
             {
                 //我的跟单
                 path: "/buySellSystem/myAgent",
                 meta: {
-                    title: '我的跟单'
+                    title: '我的跟单',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/myHouseList/myAgent.vue")
+                    import ( /* webpackChunkName: "myAgent" */ "@/pages/buySellSystem/myHouseList/myAgent.vue")
             },
             {
                 //我的相关
                 path: "/buySellSystem/myRelatedHouse",
                 meta: {
-                    title: '我的相关'
+                    title: '我的相关',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/myRelatedHouse.vue")
+                    import ( /* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/myRelatedHouse.vue")
             },
             {
                 //我的数据
                 path: "/buySellSystem/myHouseData",
                 meta: {
-                    title: '我的数据'
+                    title: '我的数据',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/myHouseData.vue")
+                    import ( /* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/myHouseData.vue")
             },
             {
                 //我的关注
                 path: "/buySellSystem/myConcern",
                 meta: {
-                    title: '我的关注'
+                    title: '我的关注',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/myConcern.vue")
+                    import ( /* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/myConcern.vue")
             },
             {
                 //验真列表
                 path: "/buySellSystem/draftHouse",
                 meta: {
-                    title: '验真列表'
+                    title: '验真列表',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/draftHouse.vue")
+                    import ( /* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/draftHouse.vue")
             },
             {
                 //审核列表
                 path: "/buySellSystem/checkHouseList",
                 meta: {
-                    title: '审核列表'
+                    title: '审核列表',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/checkHouseList.vue")
+                    import ( /* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/checkHouseList.vue")
             },
             {
                 //资源库-暂不售房源列表
                 path: "/buySellSystem/notSale",
                 meta: {
-                    title: '暂不售房源'
+                    title: '暂不售房源',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "notSale" */ "@/pages/buySellSystem/houseResource/notSale.vue")
+                    import ( /* webpackChunkName: "notSale" */ "@/pages/buySellSystem/houseResource/notSale.vue")
             },
             {
                 //资源库-在售无跟单房源列表
                 path: "/buySellSystem/saleNotTracking",
                 meta: {
-                    title: '在售无跟单'
+                    title: '在售无跟单',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "saleNotTracking" */ "@/pages/buySellSystem/houseResource/saleNotTracking.vue")
+                    import ( /* webpackChunkName: "saleNotTracking" */ "@/pages/buySellSystem/houseResource/saleNotTracking.vue")
             },
             {
                 //资源库-无号码
                 path: "/buySellSystem/notPhone",
                 meta: {
-                    title: '无号码'
+                    title: '无号码',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "notPhone" */ "@/pages/buySellSystem/houseResource/notPhone.vue")
+                    import ( /* webpackChunkName: "notPhone" */ "@/pages/buySellSystem/houseResource/notPhone.vue")
             },
             {
                 //资源库-潜在出售列表
                 path: "/buySellSystem/potentialHouse",
                 meta: {
-                    title: '潜在出售'
+                    title: '潜在出售',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "potentialHouse" */ "@/pages/buySellSystem/houseResource/potentialHouse.vue")
+                    import ( /* webpackChunkName: "potentialHouse" */ "@/pages/buySellSystem/houseResource/potentialHouse.vue")
             },
             {
                 //资源库-店公盘
                 path: "/buySellSystem/shopDisk",
                 meta: {
-                    title: '店公盘'
+                    title: '店公盘',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "shopDisk" */ "@/pages/buySellSystem/houseResource/shopDisk.vue")
+                    import ( /* webpackChunkName: "shopDisk" */ "@/pages/buySellSystem/houseResource/shopDisk.vue")
             },
             {
                 //全部在售
                 path: "/buySellSystem/saleAll",
                 meta: {
-                    title: '全部在售'
+                    title: '全部在售',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "saleAll" */ "@/pages/buySellSystem/saleAll/saleAll.vue")
+                    import ( /* webpackChunkName: "saleAll" */ "@/pages/buySellSystem/saleAll/saleAll.vue")
             },
             {
                 //外网房源
@@ -287,7 +299,7 @@ export default [
                     title: '外网房源'
                 },
                 component: () =>
-                    import(/* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/releaseOutsideHouseList.vue")
+                    import ( /* webpackChunkName: "concernCommunity" */ "@/pages/buySellSystem/myHouseList/releaseOutsideHouseList.vue")
             },
 
             {
@@ -297,7 +309,7 @@ export default [
                     title: 'good boy'
                 },
                 component: () =>
-                    import(/* webpackChunkName: "loadDevelopment" */ "@/pages/buySellSystem/loadDevelopment/loadDevelopment.vue")
+                    import ( /* webpackChunkName: "loadDevelopment" */ "@/pages/buySellSystem/loadDevelopment/loadDevelopment.vue")
             },
             {
                 //我的房源
@@ -306,7 +318,7 @@ export default [
                     title: '我的房源'
                 },
                 component: () =>
-                    import(/* webpackChunkName: "myHouseList" */ "@/pages/buySellSystem/myHouseList/myHouseList.vue")
+                    import ( /* webpackChunkName: "myHouseList" */ "@/pages/buySellSystem/myHouseList/myHouseList.vue")
             },
             {
                 //楼盘补充
@@ -315,7 +327,7 @@ export default [
                     title: '楼盘补充'
                 },
                 component: () =>
-                    import(/* webpackChunkName: "addFloorList" */ "@/pages/buySellSystem/addFloorList/addFloorList.vue")
+                    import ( /* webpackChunkName: "addFloorList" */ "@/pages/buySellSystem/addFloorList/addFloorList.vue")
             },
             {
                 //异常验真
@@ -324,7 +336,7 @@ export default [
                     title: '异常验真'
                 },
                 component: () =>
-                    import(/* webpackChunkName: "errorValidateList" */ "@/pages/buySellSystem/errorValidateList/errorValidateList.vue")
+                    import ( /* webpackChunkName: "errorValidateList" */ "@/pages/buySellSystem/errorValidateList/errorValidateList.vue")
             },
             {
                 //房源作业方审核
@@ -333,7 +345,7 @@ export default [
                     title: '房源作业方审核'
                 },
                 component: () =>
-                    import(/* webpackChunkName: "houseTaskExamineList" */ "@/pages/buySellSystem/houseTaskExamineList/houseTaskExamineList.vue")
+                    import ( /* webpackChunkName: "houseTaskExamineList" */ "@/pages/buySellSystem/houseTaskExamineList/houseTaskExamineList.vue")
             },
             {
                 //验真房源审核
@@ -342,7 +354,7 @@ export default [
                     title: '验真房源审核'
                 },
                 component: () =>
-                    import(/* webpackChunkName: "validateHouseExamineList" */ "@/pages/buySellSystem/validateHouseExamineList/validateHouseExamineList.vue")
+                    import ( /* webpackChunkName: "validateHouseExamineList" */ "@/pages/buySellSystem/validateHouseExamineList/validateHouseExamineList.vue")
             },
             {
                 //验真房源列表
@@ -351,34 +363,37 @@ export default [
                     title: '验真房源列表'
                 },
                 component: () =>
-                    import(/* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/validateHouseList/validateHouseList.vue")
+                    import ( /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/validateHouseList/validateHouseList.vue")
             },
             {
                 //我司成交
                 path: "/buySellSystem/ourComDeal",
                 meta: {
-                    title: '我司成交'
+                    title: '我司成交',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/ourComDeal.vue")
+                    import ( /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/ourComDeal.vue")
             },
             {
                 //他司成交
                 path: "/buySellSystem/otherComDeal",
                 meta: {
-                    title: '他司成交'
+                    title: '他司成交',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/otherComDeal.vue")
+                    import ( /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/otherComDeal.vue")
             },
             {
                 //业主自售
                 path: "/buySellSystem/selfDeal",
                 meta: {
-                    title: '业主自售'
+                    title: '业主自售',
+                    keepAlive: true
                 },
                 component: () =>
-                    import(/* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/selfDeal.vue")
+                    import ( /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/selfDeal.vue")
             }
         ]
     },
@@ -389,7 +404,7 @@ export default [
             title: '公告管理'
         },
         component: () =>
-            import(/* webpackChunkName: "noticeManageList" */ "@/pages/systemAdministration/noticeManage/noticeManageList.vue")
+            import ( /* webpackChunkName: "noticeManageList" */ "@/pages/systemAdministration/noticeManage/noticeManageList.vue")
     },
     {
         //系统管理 在线用户统计
@@ -398,7 +413,7 @@ export default [
             title: '在线用户统计'
         },
         component: () =>
-            import("@/pages/systemAdministration/onLineUser/onLineUserList.vue")
+            import ("@/pages/systemAdministration/onLineUser/onLineUserList.vue")
     },
     {
         //补充楼盘
@@ -407,13 +422,13 @@ export default [
             title: '补充楼盘'
         },
         component: () =>
-            import(/* webpackChunkName: "CommunityReplenish" */ "@/pages/buySellSystem/addFloorList/checkFloorList.vue")
+            import ( /* webpackChunkName: "CommunityReplenish" */ "@/pages/buySellSystem/addFloorList/checkFloorList.vue")
     },
     {
         //思冲的页面
         path: "/buySellSystem/mateHouseList",
         component: () =>
-            import(/* webpackChunkName: "mateHouseList" */ "@/pages/buySellSystem/mateHouseList/mateHouseList.vue")
+            import ( /* webpackChunkName: "mateHouseList" */ "@/pages/buySellSystem/mateHouseList/mateHouseList.vue")
     },
     {
         //系统管理 添加公告
@@ -422,7 +437,7 @@ export default [
             title: '添加公告'
         },
         component: () =>
-            import(/* webpackChunkName: "addNotice" */ "@/pages/systemAdministration/noticeManage/addNotice.vue")
+            import ( /* webpackChunkName: "addNotice" */ "@/pages/systemAdministration/noticeManage/addNotice.vue")
     },
     {
         //系统管理 公告详情
@@ -431,7 +446,7 @@ export default [
             title: '公告详情'
         },
         component: () =>
-            import(/* webpackChunkName: "noticeDetail" */ "@/pages/systemAdministration/noticeManage/noticeDetail.vue")
+            import ( /* webpackChunkName: "noticeDetail" */ "@/pages/systemAdministration/noticeManage/noticeDetail.vue")
     },
     {
         //系统管理 系统参数配置列表
@@ -440,7 +455,7 @@ export default [
             title: '系统参数配置列表'
         },
         component: () =>
-            import(/* webpackChunkName: "systemConfigList" */ "@/pages/systemAdministration/systemConfigList/systemConfigList.vue")
+            import ( /* webpackChunkName: "systemConfigList" */ "@/pages/systemAdministration/systemConfigList/systemConfigList.vue")
     },
     {
         //系统管理 添加系统参数配置
@@ -449,7 +464,7 @@ export default [
             title: '添加系统参数配置'
         },
         component: () =>
-            import(/* webpackChunkName: "addConfig" */ "@/pages/systemAdministration/systemConfigList/addConfig.vue")
+            import ( /* webpackChunkName: "addConfig" */ "@/pages/systemAdministration/systemConfigList/addConfig.vue")
     },
     {
         //系统管理 添加系统参数配置对象
@@ -459,7 +474,7 @@ export default [
             title: '添加系统参数配置对象'
         },
         component: () =>
-            import(/* webpackChunkName: "addConfigObject" */ "@/pages/systemAdministration/systemConfigList/addConfigObject.vue")
+            import ( /* webpackChunkName: "addConfigObject" */ "@/pages/systemAdministration/systemConfigList/addConfigObject.vue")
     },
     {
         //系统管理 系统参数配置对象列表
@@ -468,7 +483,7 @@ export default [
             title: '系统参数配置对象列表'
         },
         component: () =>
-            import(/* webpackChunkName: "configObjectList" */ "@/pages/systemAdministration/systemConfigList/configObjectList.vue")
+            import ( /* webpackChunkName: "configObjectList" */ "@/pages/systemAdministration/systemConfigList/configObjectList.vue")
     },
     {
         //系统管理 密码重置
@@ -477,7 +492,7 @@ export default [
             title: '密码重置'
         },
         component: () =>
-            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/passwordReset/passwordReset.vue")
+            import ( /* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/passwordReset/passwordReset.vue")
     },
     {
         //系统管理 PC在线管理
@@ -486,7 +501,7 @@ export default [
             title: 'PC在线管理'
         },
         component: () =>
-            import(/* webpackChunkName: "pcOnlineList" */ "@/pages/systemAdministration/pcOnline/list.vue")
+            import ( /* webpackChunkName: "pcOnlineList" */ "@/pages/systemAdministration/pcOnline/list.vue")
     },
     {
         //系统管理 公司PC管理
@@ -495,7 +510,7 @@ export default [
             title: '公司PC管理'
         },
         component: () =>
-            import(/* webpackChunkName: "pcOnlineList" */ "@/pages/systemAdministration/pcManagement/list.vue")
+            import ( /* webpackChunkName: "pcOnlineList" */ "@/pages/systemAdministration/pcManagement/list.vue")
     },
     {
         //系统管理 文档管理
@@ -504,7 +519,7 @@ export default [
             title: '文档管理'
         },
         component: () =>
-            import(/* webpackChunkName: "documentList" */ "@/pages/systemAdministration/document/list.vue")
+            import ( /* webpackChunkName: "documentList" */ "@/pages/systemAdministration/document/list.vue")
     },
     {
         //系统管理 文档管理 编辑
@@ -513,7 +528,7 @@ export default [
             title: '文档管理编辑'
         },
         component: () =>
-            import(/* webpackChunkName: "documentEdit" */ "@/pages/systemAdministration/document/edit.vue")
+            import ( /* webpackChunkName: "documentEdit" */ "@/pages/systemAdministration/document/edit.vue")
     },
     {
         //系统管理 规则管理
@@ -522,7 +537,7 @@ export default [
             title: '规则管理'
         },
         component: () =>
-            import(/* webpackChunkName: "docRulesList" */ "@/pages/systemAdministration/docRules/list.vue")
+            import ( /* webpackChunkName: "docRulesList" */ "@/pages/systemAdministration/docRules/list.vue")
     },
     {
         //系统管理 规则管理 编辑
@@ -531,7 +546,7 @@ export default [
             title: '规则管理编辑'
         },
         component: () =>
-            import(/* webpackChunkName: "docRulesList" */ "@/pages/systemAdministration/docRules/edit.vue")
+            import ( /* webpackChunkName: "docRulesList" */ "@/pages/systemAdministration/docRules/edit.vue")
     },
     {
         //系统管理 组织结构
@@ -540,7 +555,7 @@ export default [
             title: '组织结构'
         },
         component: () =>
-            import(/* webpackChunkName: "hrTree" */ "@/pages/systemAdministration/hrTree/hrTree.vue")
+            import ( /* webpackChunkName: "hrTree" */ "@/pages/systemAdministration/hrTree/hrTree.vue")
     },
     {
         //系统管理 获取授权器密码
@@ -549,7 +564,7 @@ export default [
             title: '获取授权器密码'
         },
         component: () =>
-            import(/* webpackChunkName: "logonRegPwd" */ "@/pages/systemAdministration/logonRegPwd/view.vue")
+            import ( /* webpackChunkName: "logonRegPwd" */ "@/pages/systemAdministration/logonRegPwd/view.vue")
     },
     {
         //系统管理 岗位管理
@@ -558,7 +573,7 @@ export default [
             title: '岗位管理'
         },
         component: () =>
-            import(/* webpackChunkName: "roleManagementList" */ "@/pages/systemAdministration/roleManagement/roleManagementList.vue")
+            import ( /* webpackChunkName: "roleManagementList" */ "@/pages/systemAdministration/roleManagement/roleManagementList.vue")
     },
     {
         //系统管理 岗位管理-添加
@@ -567,7 +582,7 @@ export default [
             title: '岗位管理添加'
         },
         component: () =>
-            import(/* webpackChunkName: "addRoleManagementList" */ "@/pages/systemAdministration/roleManagement/addRoleManagementList.vue")
+            import ( /* webpackChunkName: "addRoleManagementList" */ "@/pages/systemAdministration/roleManagement/addRoleManagementList.vue")
     },
     {
         //系统管理 岗位管理-修改
@@ -576,7 +591,7 @@ export default [
             title: '岗位管理修改'
         },
         component: () =>
-            import(/* webpackChunkName: "editRoleDetail" */ "@/pages/systemAdministration/roleManagement/editRoleDetail.vue")
+            import ( /* webpackChunkName: "editRoleDetail" */ "@/pages/systemAdministration/roleManagement/editRoleDetail.vue")
     },
     {
         //系统管理 公司管理
@@ -585,7 +600,7 @@ export default [
             title: '公司管理'
         },
         component: () =>
-            import(/* webpackChunkName: "companyList" */ "@/pages/systemAdministration/organization/companyList.vue")
+            import ( /* webpackChunkName: "companyList" */ "@/pages/systemAdministration/organization/companyList.vue")
     },
     {
         //系统管理 公司管理-添加
@@ -594,7 +609,7 @@ export default [
             title: '公司管理添加'
         },
         component: () =>
-            import(/* webpackChunkName: "addCompanyManage" */ "@/pages/systemAdministration/organization/addCompanyManage.vue")
+            import ( /* webpackChunkName: "addCompanyManage" */ "@/pages/systemAdministration/organization/addCompanyManage.vue")
     },
     {
         //系统管理 公司管理-修改
@@ -603,7 +618,7 @@ export default [
             title: '公司管理修改'
         },
         component: () =>
-            import(/* webpackChunkName: "editCompanyDetail" */ "@/pages/systemAdministration/organization/editCompanyDetail.vue")
+            import ( /* webpackChunkName: "editCompanyDetail" */ "@/pages/systemAdministration/organization/editCompanyDetail.vue")
     },
     {
         //系统管理 公司管理-设置网站
@@ -612,7 +627,7 @@ export default [
             title: '设置网站'
         },
         component: () =>
-            import(/* webpackChunkName: "setCompanyWebsite" */ "@/pages/systemAdministration/organization/setCompanyWebsite.vue")
+            import ( /* webpackChunkName: "setCompanyWebsite" */ "@/pages/systemAdministration/organization/setCompanyWebsite.vue")
     },
     {
         //系统管理 部门管理
@@ -621,7 +636,7 @@ export default [
             title: '部门管理'
         },
         component: () =>
-            import(/* webpackChunkName: "deptManageList" */ "@/pages/systemAdministration/organization/deptManageList.vue")
+            import ( /* webpackChunkName: "deptManageList" */ "@/pages/systemAdministration/organization/deptManageList.vue")
     },
     {
         //系统管理 部门管理-添加
@@ -630,7 +645,7 @@ export default [
             title: '部门管理添加'
         },
         component: () =>
-            import(/* webpackChunkName: "addDeptManage" */ "@/pages/systemAdministration/organization/addDeptManage.vue")
+            import ( /* webpackChunkName: "addDeptManage" */ "@/pages/systemAdministration/organization/addDeptManage.vue")
     },
     {
         //系统管理 部门管理-修改
@@ -639,7 +654,7 @@ export default [
             title: '部门管理修改'
         },
         component: () =>
-            import(/* webpackChunkName: "editDeptDetail" */ "@/pages/systemAdministration/organization/editDeptDetail.vue")
+            import ( /* webpackChunkName: "editDeptDetail" */ "@/pages/systemAdministration/organization/editDeptDetail.vue")
     },
     {
         //系统管理 用户管理
@@ -648,7 +663,7 @@ export default [
             title: '用户管理'
         },
         component: () =>
-            import(/* webpackChunkName: "deptManageList" */ "@/pages/systemAdministration/employee/employeeList.vue")
+            import ( /* webpackChunkName: "deptManageList" */ "@/pages/systemAdministration/employee/employeeList.vue")
     },
     {
         //系统管理 用户管理-详情
@@ -657,7 +672,7 @@ export default [
             title: '用户管理详情'
         },
         component: () =>
-            import(/* webpackChunkName: "employeedetails" */ "@/pages/systemAdministration/employee/employeedetails.vue")
+            import ( /* webpackChunkName: "employeedetails" */ "@/pages/systemAdministration/employee/employeedetails.vue")
     },
     {
         //系统管理 用户管理-添加
@@ -666,7 +681,7 @@ export default [
             title: '用户管理添加'
         },
         component: () =>
-            import(/* webpackChunkName: "addDeptManage" */ "@/pages/systemAdministration/employee/addemployee.vue")
+            import ( /* webpackChunkName: "addDeptManage" */ "@/pages/systemAdministration/employee/addemployee.vue")
     },
     {
         //系统管理 用户管理-修改
@@ -675,7 +690,7 @@ export default [
             title: '用户管理修改'
         },
         component: () =>
-            import(/* webpackChunkName: "editDeptDetail" */ "@/pages/systemAdministration/employee/editemployee.vue")
+            import ( /* webpackChunkName: "editDeptDetail" */ "@/pages/systemAdministration/employee/editemployee.vue")
     },
     {
         //系统管理 游客管理
@@ -684,7 +699,7 @@ export default [
             title: '游客管理'
         },
         component: () =>
-            import("@/pages/systemAdministration/visitor/visitorList.vue")
+            import ("@/pages/systemAdministration/visitor/visitorList.vue")
     },
     {
         //系统管理 角色管理
@@ -693,7 +708,7 @@ export default [
             title: '角色管理'
         },
         component: () =>
-            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/ruleManager/rule.vue")
+            import ( /* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/ruleManager/rule.vue")
     },
     {
         //系统管理
@@ -702,7 +717,7 @@ export default [
             title: '系统管理'
         },
         component: () =>
-            import("@/pages/systemAdministration/common/notFoundPage.vue")
+            import ("@/pages/systemAdministration/common/notFoundPage.vue")
     },
     {
         //系统管理 角色管理
@@ -711,7 +726,7 @@ export default [
             title: '角色管理'
         },
         component: () =>
-            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/position.vue")
+            import ( /* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/position.vue")
     },
     {
         //系统管理 权限设置
@@ -720,7 +735,7 @@ export default [
             title: '权限设置'
         },
         component: () =>
-            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/setPosition.vue")
+            import ( /* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/positionManager/setPosition.vue")
     },
     {
         //系统管理 店面管理
@@ -729,7 +744,7 @@ export default [
             title: '店面管理'
         },
         component: () =>
-            import("@/pages/systemAdministration/stroe/stroeList.vue")
+            import ("@/pages/systemAdministration/stroe/stroeList.vue")
     },
     {
         //系统管理 店面管理-添加
@@ -738,7 +753,7 @@ export default [
             title: '店面管理添加'
         },
         component: () =>
-            import("@/pages/systemAdministration/stroe/addStroe.vue")
+            import ("@/pages/systemAdministration/stroe/addStroe.vue")
     },
     {
         //系统管理 店面管理-修改
@@ -747,7 +762,7 @@ export default [
             title: '店面管理'
         },
         component: () =>
-            import("@/pages/systemAdministration/stroe/editStroe.vue")
+            import ("@/pages/systemAdministration/stroe/editStroe.vue")
     },
     {
         //系统管理 店面管理-修改
@@ -756,7 +771,7 @@ export default [
             title: '店面管理修改'
         },
         component: () =>
-            import(/* webpackChunkName: "detailsStroe" */ "@/pages/systemAdministration/stroe/detailsStroe.vue")
+            import ( /* webpackChunkName: "detailsStroe" */ "@/pages/systemAdministration/stroe/detailsStroe.vue")
     },
     {
         //系统管理 权限设置 用户列表
@@ -765,7 +780,7 @@ export default [
             title: '用户列表'
         },
         component: () =>
-            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/employeeList.vue")
+            import ( /* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/employeeList.vue")
     },
     {
         //系统管理 权限设置
@@ -774,7 +789,7 @@ export default [
             title: '权限设置'
         },
         component: () =>
-            import(/* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/setAuthority.vue")
+            import ( /* webpackChunkName: "passwordReset" */ "@/pages/systemAdministration/authority/setAuthority.vue")
     },
     {
         //系统管理 反馈列表
@@ -783,7 +798,7 @@ export default [
             title: '反馈列表'
         },
         component: () =>
-            import(/* webpackChunkName: "feedbackList" */ "@/pages/systemAdministration/feedback/feedbackList.vue")
+            import ( /* webpackChunkName: "feedbackList" */ "@/pages/systemAdministration/feedback/feedbackList.vue")
     },
     {
         //系统管理 人员异动列表
@@ -792,7 +807,7 @@ export default [
             title: '人员异动列表'
         },
         component: () =>
-            import(/* webpackChunkName: "personLogList" */ "@/pages/systemAdministration/personLog/personLogList.vue")
+            import ( /* webpackChunkName: "personLogList" */ "@/pages/systemAdministration/personLog/personLogList.vue")
     },
     {
         //系统管理 人员异动列表-详情
@@ -801,7 +816,7 @@ export default [
             title: '人员异动列表详情'
         },
         component: () =>
-            import(/* webpackChunkName: "editPersonLogDetail" */ "@/pages/systemAdministration/personLog/editPersonLogDetail.vue")
+            import ( /* webpackChunkName: "editPersonLogDetail" */ "@/pages/systemAdministration/personLog/editPersonLogDetail.vue")
     },
     {
         //系统管理 客户列表
@@ -810,7 +825,7 @@ export default [
             title: '客户列表'
         },
         component: () =>
-            import(/* webpackChunkName: "baseCustomersList" */ "@/pages/systemAdministration/employee/baseCustomersList.vue")
+            import ( /* webpackChunkName: "baseCustomersList" */ "@/pages/systemAdministration/employee/baseCustomersList.vue")
     },
     {
         //系统管理 客户列表
@@ -819,7 +834,7 @@ export default [
             title: '客户列表详情'
         },
         component: () =>
-            import(/* webpackChunkName: "editBaseCustomersDetail" */ "@/pages/systemAdministration/employee/editBaseCustomersDetail.vue")
+            import ( /* webpackChunkName: "editBaseCustomersDetail" */ "@/pages/systemAdministration/employee/editBaseCustomersDetail.vue")
     },
     {
         //系统管理 公司权限设置
@@ -828,7 +843,7 @@ export default [
             title: '公司权限设置'
         },
         component: () =>
-            import(/* webpackChunkName: "authorityConfiguration" */ "@/pages/systemAdministration/authorityConfiguration/configList.vue")
+            import ( /* webpackChunkName: "authorityConfiguration" */ "@/pages/systemAdministration/authorityConfiguration/configList.vue")
     },
     {
         //系统管理 公司权限配置
@@ -837,7 +852,7 @@ export default [
             title: '公司权限配置'
         },
         component: () =>
-            import(/* webpackChunkName: "authorityConfigurationSetAuthority" */ "@/pages/systemAdministration/authorityConfiguration/setAuthority.vue")
+            import ( /* webpackChunkName: "authorityConfigurationSetAuthority" */ "@/pages/systemAdministration/authorityConfiguration/setAuthority.vue")
     },
 
 ]
