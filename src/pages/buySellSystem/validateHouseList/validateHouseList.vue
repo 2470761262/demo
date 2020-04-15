@@ -377,7 +377,7 @@ export default {
         show: false
       },
       steps: [
-        { title: "客户验真", description: "" },
+        { title: "业主验真", description: "" },
         { title: "店长验真", description: "" },
         { title: "完成验真", description: "" }
       ],
