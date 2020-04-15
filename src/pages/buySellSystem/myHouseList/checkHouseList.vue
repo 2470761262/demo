@@ -125,8 +125,7 @@
                        @click="querylistByParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange"
-                        deptUrl="/myHouse/myCheckList"></moreSelect>
+            <moreSelect :configRule="{entrustType: false,taskType:false}" @moreSelectChange="moreSelectChange" deptUrl="/myHouse/myCheckList"></moreSelect>
           </div>
         </div>
       </template>
@@ -261,7 +260,7 @@
 
             <el-button type="primary"
                        v-if="!(scope.row.checkProject==13)"
-                       @click="toHouseDetail"
+                       @click="toHouseDetail(scope.row)"
                        size="mini">查看</el-button>
           </template>
         </el-table-column>
@@ -817,12 +816,12 @@ export default {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
-    querylist() {
+    querylist(currentPage) {
       var that = this;
       that.loading = true;
       let params = {
         limit: that.pageJson.pageSize,
-        page: that.pageJson.currentPage
+        page: currentPage
       };
 
       if (Object.keys(this.moreSelect).length != 0) {

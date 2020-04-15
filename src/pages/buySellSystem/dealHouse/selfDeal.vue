@@ -235,14 +235,14 @@ export default {
       console.log(this, "111");
     },
     toHouseDetail (item) {
-      let id=item.id;
+      let id = item.id;
       console.log(id);
-       if (!item.id) {
+      if (!item.id) {
         that.$message.error("houseId都是空的，如何查看");
         return;
       }
       var that = this;
-      this.$router.push({ name: "historyDetails", params: { houseId: id,tradeType:1 } });
+      this.$router.push({ name: "historyDetails", params: { houseId: id, tradeType: 1 } });
     },
     queryDatalist () {
       this.queryOurComDeal(1);
@@ -329,7 +329,6 @@ export default {
     Remove () {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
-      this.tabColumnChange(tab);
       this.queryOurComDeal(1);
 
     },
