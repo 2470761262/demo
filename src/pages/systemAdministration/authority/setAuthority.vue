@@ -156,7 +156,7 @@
                  v-show="showCompanyTree">
               <el-tree ref="companyTree"
                        :data="companyTreeData"
-                       node-key="businessId"
+                       node-key="nodeId"
                        show-checkbox
                        :props="companyProps"
                        @check="checkNode"
@@ -338,6 +338,17 @@ export default {
           that.treeLoading = false;
         });
     },
+    foreachNodes(res_list,list,type){
+      if(!res_list){
+        res_list = [];
+      }
+      if(list){
+        list.forEach(i =>{
+          res_list.push(i+','+type);
+        })
+      }
+      return res_list;
+    },
     operationCompany(node, data) {
       this.showCompanyTree = true;
       this.showSave = true;
@@ -347,19 +358,12 @@ export default {
       if (data.companyGather) {
         let gather = data.companyGather;
         let arrayGather = gather.split(",");
-        this.companyGather = arrayGather;
+        this.companyGather = this.foreachNodes([],arrayGather,0);
       }
       if (data.deptGather) {
         let deptGather = data.deptGather;
         let deptArrayGather = deptGather.split(",");
-        if (this.companyGather) {
-          deptArrayGather.forEach(deptId => {
-            this.companyGather.push(deptId);
-          });
-          //this.companyGather = this.companyGather + deptArrayGather;
-        } else {
-          this.companyGather = deptArrayGather;
-        }
+        this.companyGather = this.foreachNodes(this.companyGather,deptArrayGather,1);
       }
       this.currentCompanyGather = null;
       this.currentDeptGather = null;
