@@ -810,9 +810,9 @@ export default {
       this.queryData.cbName = obj.name;
       this.querylistByParams();
     },
-    //跳转房源详情页面
+     //跳转房源详情页面
     toHouseDetail (row) {
-      this.$router.push({ name: "houseDetails", params: { houseId: row.eid } });
+      this.$router.push({ name: "houseDetails", params: { houseId: row.eid,detailType:4 } });
     },
     querylistByParams () {
       console.log(this.queryData.timeSelect);
