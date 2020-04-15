@@ -186,19 +186,22 @@
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
-            <el-select v-model="comId"
-                       @focus="remoteInput"
-                       @change="queryCBId"
-                       remote
-                       clearable
-                       placeholder="楼盘名称"
-                       :remote-method="remoteMethod"
-                       filterable
-                       :loading="loading">
-              <el-option v-for="item in comList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
+            <el-select
+              v-model="comId"
+              @focus="remoteInput"
+              @change="queryCBId"
+              remote
+              clearable
+              placeholder="楼盘名称"
+              :remote-method="remoteMethod"
+              filterable
+            >
+              <el-option
+                v-for="item in comList"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
             </el-select>
             <el-select v-model="cbId"
                        filterable
@@ -337,16 +340,21 @@
         </el-table-column>
       </template>
     </list-page>
-    <fixedPopup :visible.sync="applyAgentFlag"
-                title="请填写完这些信息才能申请为跟单人"
-                width="960px"
-                :before-clear="clearStep">
-      <supplement ref="com"
-                  :required="required"
-                  :middleRadioTo="middleRadio"
-                  :primaryRadioTo="primaryRadio"
-                  :showFollow="showFollow"
-                  :audioList="audioList"></supplement>
+    <fixedPopup
+      :visible.sync="applyAgentFlag"
+      v-if="applyAgentFlag"
+      title="请填写完这些信息才能申请为跟单人"
+      width="960px"
+      :before-clear="clearStep"
+    >
+      <supplement
+        ref="com"
+        :required="required"
+        :middleRadioTo="middleRadio"
+        :primaryRadioTo="primaryRadio"
+        :showFollow="showFollow"
+        :audioList="audioList"
+      ></supplement>
       <template v-slot:floot>
         <div class="text-middle">
           <el-button size="mini"
@@ -558,7 +566,8 @@ export default {
     }
   },
   mounted() {
-    this.queryConcernCount().then(() => this.queryVerifyHouseDatas(1));
+    this.queryConcernCount();
+    this.queryVerifyHouseDatas(1);
     //  this.queryNotConcernCommunityList();
   },
   methods: {
@@ -674,6 +683,7 @@ export default {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
+      this.queryConcernCount();
       this.queryVerifyHouseDatas(1);
     },
     sortMethod(e) {
@@ -842,7 +852,8 @@ export default {
               message: result.message
             });
 
-            this.queryConcernCount().then(() => this.querylistByParams());
+            this.queryConcernCount()
+            this.querylistByParams();
           } else {
             this.$message({
               type: "success",
@@ -870,7 +881,8 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            this.queryConcernCount().then(() => this.querylistByParams());
+            this.queryConcernCount();
+            this.querylistByParams();
           } else {
             console.log("添加关注" + result.message);
             this.$message.error(result.message);
@@ -958,7 +970,6 @@ export default {
           qs: true
         })
         .then(e => {
-          that.loading = false;
           console.log(e.data);
           if (e.data.code == 200) {
             typeof e.data.data.data;
@@ -970,8 +981,10 @@ export default {
           }
         })
         .catch(e => {
-          console.log("查询我的核心盘失败");
-          console.log(e);
+            that.tableData=[];
+            that.pageJson.total=0;
+        }).finally(e=>{
+          that.loading = false;
         });
     },
     queryConcernCount() {
@@ -1081,7 +1094,6 @@ export default {
     remoteMethod(query) {
       var that = this;
       if (query !== "") {
-        this.loading = true;
         this.$api
           .get({
             url: "/community/myConcern",
@@ -1097,7 +1109,6 @@ export default {
             console.log("=========================" + e);
             if (e.data.code == 200) {
               console.log("=========================" + e.data.code);
-              that.loading = false;
               that.comList = e.data.data.list;
             }
           });
