@@ -141,6 +141,15 @@ export default [{
             import ( /* webpackChunkName: "newAgentHouse" */ "@/pages/buySellSystem/newAgentHouse/newAgentHouse.vue")
     },
     {
+        //楼盘补充
+        path: "/buySellSystem/addFloorList",
+        meta: {
+            title: '楼盘补充'
+        },
+        component: () =>
+            import ( /* webpackChunkName: "addFloorList" */ "@/pages/buySellSystem/addFloorList/addFloorList.vue")
+    },
+    {
         //买卖系统三级路由
         path: "/buySellSystem/otherIframe",
         name: "otherIframe",
@@ -319,15 +328,6 @@ export default [{
                 },
                 component: () =>
                     import ( /* webpackChunkName: "myHouseList" */ "@/pages/buySellSystem/myHouseList/myHouseList.vue")
-            },
-            {
-                //楼盘补充
-                path: "/buySellSystem/addFloorList",
-                meta: {
-                    title: '楼盘补充'
-                },
-                component: () =>
-                    import ( /* webpackChunkName: "addFloorList" */ "@/pages/buySellSystem/addFloorList/addFloorList.vue")
             },
             {
                 //异常验真
