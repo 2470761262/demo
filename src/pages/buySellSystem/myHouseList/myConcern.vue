@@ -590,12 +590,7 @@ export default {
             message: "操作成功!"
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消"
-          });
-        });
+        .catch(() => {});
     },
     concernOFF(id) {
       let that = this;

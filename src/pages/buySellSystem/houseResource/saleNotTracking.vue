@@ -125,7 +125,7 @@
       <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
-                         :width="item.width"
+                         :min-width="item.width"
                          :key="item.prop"
                          show-overflow-tooltip
                          :formatter="item.formart"
@@ -134,7 +134,7 @@
       </template>
       <el-table-column label="操作"
                        fixed="right"
-                       width="170">
+                       min-width="220">
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
@@ -152,8 +152,8 @@ import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
-import '@/assets/publicLess/pageListQuery.less';
-import common from "../houseResource/common/common"
+import "@/assets/publicLess/pageListQuery.less";
+import common from "../houseResource/common/common";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -161,7 +161,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data () {
+  data() {
     return {
       loading: true,
 
@@ -334,67 +334,72 @@ export default {
       transitionList: [
         {
           key: "bhId",
-          value: [{ paramsKey: "roomNo", index: -1 }],
+          value: [{ paramsKey: "roomNo", index: -1 }]
         },
         {
           key: "area",
-          value: [{ paramsKey: "business", index: -1 }],
+          value: [{ paramsKey: "business", index: -1 }]
         },
         {
           key: "buildType",
-          value: [{ paramsKey: "purpose", index: -1 }],
+          value: [{ paramsKey: "purpose", index: -1 }]
         },
         {
           key: "addTime",
-          value: [{ paramsKey: "beginTime", index: 0 }, { paramsKey: "endTime", index: 1 }],
+          value: [
+            { paramsKey: "beginTime", index: 0 },
+            { paramsKey: "endTime", index: 1 }
+          ]
         },
         {
-
           key: "followTime",
-          value: [{ paramsKey: "beginFollowTime", index: 0 }, { paramsKey: "endFollowTime", index: 1 }],
+          value: [
+            { paramsKey: "beginFollowTime", index: 0 },
+            { paramsKey: "endFollowTime", index: 1 }
+          ]
         }
       ],
-      sortColumn: "id",//排序字段
-      sortType: "descending",//排序类型
+      sortColumn: "id", //排序字段
+      sortType: "descending" //排序类型
     };
   },
-  mounted () {
+  mounted() {
     this.queryVerifyHouseDatas(1);
   },
   methods: {
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       this.moreSelect = e;
       this.queryVerifyHouseDatas(1);
     },
-    sortMethod (e) {
+    sortMethod(e) {
       console.log(e, "eeee排序");
       this.sortColumn = e.prop;
       this.sortType = e.order;
       this.queryVerifyHouseDatas(1);
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    queryTabData () {
+    queryTabData() {
       console.log(this, "111");
     },
-    formatHouseType (row, column) {
+    formatHouseType(row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook (id) {
+    toLook(id) {
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    querySaleNotTrackParams () {
+    querySaleNotTrackParams() {
       this.queryVerifyHouseDatas(1);
     },
-    remoteInput () {
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -422,7 +427,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       if (that.data.comId == "") {
         that.data.roomNo = "";
@@ -449,7 +454,7 @@ export default {
         });
       this.querySaleNotTrackParams();
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -472,18 +477,21 @@ export default {
         });
       this.querySaleNotTrackParams();
     },
-    Remove () {
+    Remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.queryVerifyHouseDatas(1);
     },
-    queryVerifyHouseDatas (currentPage) {
+    queryVerifyHouseDatas(currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       if (Object.keys(this.moreSelect).length != 0) {
-        let selectObject = common.getSelectParams(this.transitionList, this.moreSelect);
+        let selectObject = common.getSelectParams(
+          this.transitionList,
+          this.moreSelect
+        );
         Object.assign(params, selectObject);
       } else {
         params.comId = that.data.comId;
@@ -505,7 +513,7 @@ export default {
         .post({
           url: "/houseResource/getSaleNotTrack",
           data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           console.log(e.data);
@@ -526,18 +534,18 @@ export default {
         });
     },
 
-    handleClick () { },
-    queryTabData () {
+    handleClick() {},
+    queryTabData() {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.querySaleNotTrackParams(1);
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.queryVerifyHouseDatas(val);
     }
