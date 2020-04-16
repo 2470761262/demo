@@ -286,7 +286,7 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+            (item.rooms||0) + "室" + (item.hall||0) + "厅" + (item.toilet||0) + "卫"
         },
         {
           prop: "unitpaice",

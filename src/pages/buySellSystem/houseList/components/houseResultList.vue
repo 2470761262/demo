@@ -281,7 +281,8 @@
         <template v-if="renderList.length > 0">
           <div class="select-for-item"
                v-for="(item,index) in renderList"
-               :key="index">
+               :key="index"
+                @dblclick="toHouseDetail(item)">
             <div class="select-for-item-img">
               <el-image :src="item.picUrl+'?x-oss-process=style/thumb'"
                         fit="cover">
@@ -316,7 +317,7 @@
               </div>
             </div>
             <div class="select-for-item-but">
-              <i class="el-icon-document icon i"></i>
+              <i class="el-icon-document icon i" @click.stop="toHouseDetail(item)"></i>
             </div>
           </div>
         </template>
