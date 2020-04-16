@@ -8,9 +8,9 @@
     min-width: 1280px;
   }
   .page-cell-main {
-    height: calc(100% - 80px);
+    height: calc(100% - 80PX);
     @media screen and(max-width: 1280px) {
-      height: calc(100% - 100px);
+      height: calc(100% - 100PX);
     }
 
     .el-aside,

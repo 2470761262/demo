@@ -186,22 +186,18 @@
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
-            <el-select
-              v-model="comId"
-              @focus="remoteInput"
-              @change="queryCBId"
-              remote
-              clearable
-              placeholder="楼盘名称"
-              :remote-method="remoteMethod"
-              filterable
-            >
-              <el-option
-                v-for="item in comList"
-                :key="item.value"
-                :label="item.name"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="comId"
+                       @focus="remoteInput"
+                       @change="queryCBId"
+                       remote
+                       clearable
+                       placeholder="楼盘名称"
+                       :remote-method="remoteMethod"
+                       filterable>
+              <el-option v-for="item in comList"
+                         :key="item.value"
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
             <el-select v-model="cbId"
                        filterable
@@ -282,6 +278,7 @@
             <el-select clearable
                        placeholder="房源状态"
                        class="set-select100"
+                       @change="querylistByParams"
                        v-model="houseType">
               <el-option v-for="item in houseTypeList"
                          :key="item.value"
@@ -340,21 +337,17 @@
         </el-table-column>
       </template>
     </list-page>
-    <fixedPopup
-      :visible.sync="applyAgentFlag"
-      v-if="applyAgentFlag"
-      title="请填写完这些信息才能申请为跟单人"
-      width="960px"
-      :before-clear="clearStep"
-    >
-      <supplement
-        ref="com"
-        :required="required"
-        :middleRadioTo="middleRadio"
-        :primaryRadioTo="primaryRadio"
-        :showFollow="showFollow"
-        :audioList="audioList"
-      ></supplement>
+    <fixedPopup :visible.sync="applyAgentFlag"
+                v-if="applyAgentFlag"
+                title="请填写完这些信息才能申请为跟单人"
+                width="960px"
+                :before-clear="clearStep">
+      <supplement ref="com"
+                  :required="required"
+                  :middleRadioTo="middleRadio"
+                  :primaryRadioTo="primaryRadio"
+                  :showFollow="showFollow"
+                  :audioList="audioList"></supplement>
       <template v-slot:floot>
         <div class="text-middle">
           <el-button size="mini"
@@ -852,7 +845,7 @@ export default {
               message: result.message
             });
 
-            this.queryConcernCount()
+            this.queryConcernCount();
             this.querylistByParams();
           } else {
             this.$message({
@@ -981,9 +974,10 @@ export default {
           }
         })
         .catch(e => {
-            that.tableData=[];
-            that.pageJson.total=0;
-        }).finally(e=>{
+          that.tableData = [];
+          that.pageJson.total = 0;
+        })
+        .finally(e => {
           that.loading = false;
         });
     },
