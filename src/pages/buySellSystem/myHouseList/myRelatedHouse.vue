@@ -138,7 +138,7 @@
       <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
-                         :width="item.width"
+                         :min-width="item.width"
                          :key="item.prop"
                          :formatter="item.formart"
                          show-overflow-tooltip
@@ -147,7 +147,7 @@
       </template>
       <el-table-column label="操作"
                        fixed="right"
-                       width="150">
+                       min-width="150">
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
@@ -172,7 +172,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
       workType: "",
@@ -352,63 +352,56 @@ export default {
       sortType: "descending" //排序类型
     };
   },
-  mounted() {
+  mounted () {
     this.querySaleNotTrack(1);
   },
   methods: {
-    sortMethod(e) {
-      this.transitionOrderList.forEach(Element => {
-        if (Element.key == e.prop) {
-          this.sortColumn = Element.value;
-          if (e.order == "descending") {
-            this.sortType = "ascending";
-          } else {
-            this.sortType = "descending";
-          }
-        }
-      });
+    sortMethod (e) {
+      console.log();
+      this.sortColumn = e.prop;
+      this.sortType = e.order;
       this.querySaleNotTrack(1);
     },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
       this.querySaleNotTrack(1);
     },
-    remove() {
+    remove () {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.querySaleNotTrack(1);
     },
-    distributeEvent(e, id) {
+    distributeEvent (e, id) {
       var that = this;
       console.log("hhhhhhhhhhhhhhhhhh", id);
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    toLook(id) {
+    toLook (id) {
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    querySaleNotTrackParams() {
+    querySaleNotTrackParams () {
       this.querySaleNotTrack(1);
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    isForBut(type) {
+    isForBut (type) {
       let array = [{ name: "查看", isType: "1,2,3", methosName: "" }];
       return array.filter(item => {
         return item.isType.includes(type);
       });
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -436,7 +429,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -459,7 +452,7 @@ export default {
         });
       this.querySaleNotTrackParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -482,7 +475,7 @@ export default {
         });
       this.querySaleNotTrackParams();
     },
-    querySaleNotTrack(currentPage) {
+    querySaleNotTrack (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
@@ -543,18 +536,18 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.querySaleNotTrackParams(1);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.querySaleNotTrack(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.querySaleNotTrack(val);
     }

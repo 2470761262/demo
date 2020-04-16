@@ -242,7 +242,7 @@
       <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
-                         :width="item.width"
+                         :min-width="item.width"
                          :key="item.prop"
                          :formatter="item.formart"
                          show-overflow-tooltip
@@ -250,25 +250,21 @@
                          :sortable="item.order"></el-table-column>
       </template>
       <el-table-column label="操作"
-                       width="200"
+                       min-width="180"
                        fixed="right">
         <template v-slot="scope">
-          <div class="flex-cell-content">
-            <el-button type="primary"
-                       @click="toHouseDetail(scope.row.id)"
-                       size="mini">查看</el-button>
-            <div v-if="scope.row.collectId != null && scope.row.collectId!= '' ">
-              <el-button type="primary"
-                         slot="reference"
-                         @click="ifOFF(scope.row.id)"
-                         size="mini">取消关注</el-button>
-            </div>
-            <div v-else>
-              <el-button type="info"
-                         slot="reference"
-                         size="mini">印象关注</el-button>
-            </div>
-          </div>
+          <el-button type="primary"
+                     @click="toHouseDetail(scope.row.id)"
+                     size="mini">查看</el-button>
+          <el-button type="primary"
+                     v-if="scope.row.collectId != null && scope.row.collectId!= '' "
+                     slot="reference"
+                     @click="ifOFF(scope.row.id)"
+                     size="mini">取消关注</el-button>
+          <el-button type="info"
+                     v-else
+                     slot="reference"
+                     size="mini">印象关注</el-button>
         </template>
       </el-table-column>
     </template>
@@ -590,12 +586,7 @@ export default {
             message: "操作成功!"
           });
         })
-        .catch(() => {
-          this.$message({
-            type: "info",
-            message: "已取消"
-          });
-        });
+        .catch(() => {});
     },
     concernOFF(id) {
       let that = this;
