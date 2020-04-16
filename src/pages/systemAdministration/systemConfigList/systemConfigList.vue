@@ -288,19 +288,19 @@ export default {
             that.tableData = "";
             for (var i = 0; i < result.data.list.length; i++) {
               switch (result.data.list[i].sysParType) {
-                case "1":
+                case 1:
                   result.data.list[i].sysParType = "买卖房源";
                   break;
-                case "2":
+                case 2:
                   result.data.list[i].sysParType = "买卖客户";
                   break;
-                case "3":
+                case 3:
                   result.data.list[i].sysParType = "租赁房源";
                   break;
-                case "4":
+                case 4:
                   result.data.list[i].sysParType = "租赁客户";
                   break;
-                case "5":
+                case 5:
                   result.data.list[i].sysParType = "用户管理";
                   break;
               }
@@ -324,15 +324,15 @@ export default {
       console.log(id, sysParNo, sysParName);
 
       this.$router.push({
-        name: "addConfigObject",
-        params: { configId: id, sysParNo: sysParNo, sysParName: sysParName }
+        path: "addConfigObject",
+        query: { configId: id, sysParNo: sysParNo, sysParName: sysParName }
       });
     },
     updateConfig (id, sysParNo, sysParName, sysParType, memo) {
       console.log(memo);
       this.$router.push({
-        name: "addConfig",
-        params: {
+        path: "/sys/addConfig",
+        query: {
           configId: id,
           sysParNo: sysParNo,
           sysParName: sysParName,
