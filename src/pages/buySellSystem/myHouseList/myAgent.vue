@@ -159,7 +159,7 @@
         <template v-for="(item) in tableColumn">
           <el-table-column :prop="item.prop"
                            :label="item.label"
-                           :width="item.width"
+                           :min-width="item.width"
                            :key="item.prop"
                            :formatter="item.formart"
                            show-overflow-tooltip
@@ -168,7 +168,7 @@
         </template>
         <el-table-column label="操作"
                          fixed="right"
-                         width="170">
+                         min-width="170">
           <template v-slot="scope">
             <el-button type="primary"
                        size="mini"
