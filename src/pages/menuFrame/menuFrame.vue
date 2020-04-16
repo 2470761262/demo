@@ -71,13 +71,15 @@
         <div class="children-page">
           <!-- 二级页面 router-view -->
           <transition name="el">
-            <keep-alive>
-              <router-view v-if="$route.meta.keepAlive" />
+            <keep-alive :max="3"
+                        include="houseList,otherIframe">
+              <!-- <router-view v-if="$route.meta.keepAlive" /> -->
+              <router-view />
             </keep-alive>
           </transition>
-          <transition name="el">
+          <!-- <transition name="el">
             <router-view v-if="!$route.meta.keepAlive" />
-          </transition>
+          </transition> -->
         </div>
       </el-main>
     </el-container>

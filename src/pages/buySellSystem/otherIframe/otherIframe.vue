@@ -20,10 +20,11 @@
 import routerTabs from "@/components/routerTabs";
 import rouetTabsArray from "@/pages/buySellSystem/otherIframe/routerTabJs/index";
 export default {
+  name: "otherIframe",
   components: {
     routerTabs
   },
-  data () {
+  data() {
     return {
       activeParent: "1", //默认显示那个一个块tabs父级菜单
       activeChild: "/buySellSystem/concernCommunity", //默认显示的路径 tabs路径
@@ -31,7 +32,7 @@ export default {
     };
   },
   methods: {
-    change (e) {
+    change(e) {
       console.log(e, this.activeChild);
     }
   }
