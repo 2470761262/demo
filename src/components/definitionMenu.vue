@@ -83,7 +83,7 @@ export default {
     },
     loading: {
       type: Boolean,
-      default: true
+      default: false
     },
     renderList: {
       type: Array,
