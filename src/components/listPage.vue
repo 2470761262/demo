@@ -218,7 +218,6 @@ export default {
   mounted () { },
   methods: {
     toHouseDetail (row) {
-      console.log(1111111111111111111);
       var that = this;
       if (!this.$attrs.dblclick) {
         if (row.communityName)
