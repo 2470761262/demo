@@ -322,7 +322,7 @@ export default {
   components: {
     progressContent
   },
-  data() {
+  data () {
     return {
       livingChart: null,
       queryContent: {
@@ -345,34 +345,34 @@ export default {
       ],
       tableDataText: [
         { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
+        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
+        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
+        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
+        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
+        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
+        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
+        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
+        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
         { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 }
-        // { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        // { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        // { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        // { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        // { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        // { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        // { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        // { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 }
       ]
     };
   },
-  mounted() {
+  mounted () {
     addResizeListener(this.$refs.chart, this.resetEcharts);
     this.draw();
   },
-  destroyed() {
+  destroyed () {
     removeResizeListener(this.$refs.chart, this.resetEcharts);
   },
   methods: {
-    querySearch(value, resolve) {
+    querySearch (value, resolve) {
       resolve([{ value: "小区1" }, { value: "小区2" }]);
     },
-    resetEcharts() {
+    resetEcharts () {
       if (!this.livingChart) return;
       this.livingChart.resize();
     },
-    draw() {
+    draw () {
       // 实例化echarts对象
       this.livingChart = echarts.init(this.$refs.chart);
       // 绘制条形图
