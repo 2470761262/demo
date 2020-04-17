@@ -548,7 +548,7 @@ export default {
         case "3":
           return "转跟单";
         case "4":
-          return "转在售";
+          return "录号码";
         case "5":
           break;
         case "6":
@@ -699,14 +699,7 @@ export default {
           this.toFollow(row.eid);
           break;
         case "4":
-          this.toSale(
-            row.comId,
-            row.cbId,
-            row.bhId,
-            row.communityName,
-            row.buildingName,
-            row.roomNo
-          );
+          this.addPhone(row.id);
           break;
         case "5":
           break;
@@ -1208,7 +1201,41 @@ export default {
         });
       }
     },
-
+    addPhone(esId) {
+      this.$prompt("请输业主手机号码", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /^\d{11}$/,
+        inputErrorMessage: "手机号码格式不正确"
+      })
+        .then(({ value }) => {
+          this.$api
+            .post({
+              url: "/houseResource/updatePhone",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              data: {
+                id: esId,
+                tel: value,
+                esId: esId
+              }
+            })
+            .then(e => {
+              console.log(e.data.code);
+              if (e.data.code == 200) {
+                this.$message(e.data.message);
+                 this.queryVerifyHouseDatas(1);
+              } else {
+                this.$message(e.data.message);
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消输入"
+          });
+        });
+    },
     handleClick() {},
     handleSizeChange(val) {
       this.pageJson.pageSize = val;

@@ -391,7 +391,7 @@
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">评估价</div>
-        <div class="cell-tabs-item-data">{{formData.valuation}}</div>
+        <div class="cell-tabs-item-data">{{formData.valuation}}元/㎡</div>
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">房屋朝向</div>
@@ -399,7 +399,7 @@
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">电梯</div>
-        <div class="cell-tabs-item-data">{{formData.isElevator == 0 ? '否' : '是'}}</div>
+        <div class="cell-tabs-item-data">{{formData.isElevator == 0 ? '否' : formData.isElevator == 1 ? '是' : '未知'}}</div>
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">房屋用途</div>
@@ -407,7 +407,17 @@
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">土地性质</div>
-        <div class="cell-tabs-item-data">{{formData.landCharacteristic}}</div>
+        <div class="cell-tabs-item-data">
+          <el-select
+            v-model="formData.landCharacteristic"
+            disabled
+          >
+            <el-option :value='null'  label="未知"></el-option>
+            <el-option :value="0" label="出让"></el-option>
+            <el-option :value="1" label="划拨"></el-option>
+          </el-select>
+        </div>
+        
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">产权性质</div>
@@ -752,6 +762,7 @@ export default {
           this.formData.primarySchool = data.primarySchool;
           this.formData.middleSchool = data.middleSchool;
           this.formData.propertyCompany = data.propertyCompany;
+          this.formData.landCharacteristic = data.landCharacteristic;
         }
       });
     },
