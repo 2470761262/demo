@@ -1,7 +1,11 @@
 import api from '@/api/require';
 import util from '@/util/util'
 class tableMenu {
-
+    /**
+     * 获取自定义菜单数据
+     * @param {Array} defaultList 默认显示的菜单数组
+     * @param {Number} type 列表的类型
+     */
     static getTableMenu (defaultList, type) {
         return api.post({
             url: `/agentHouse/Table/Menu/list/${type}`,
@@ -25,6 +29,11 @@ class tableMenu {
             return result;
         });
     }
+    /**
+     * 添加自定义菜单
+     * @param {Array} filedList  选中的菜单数组
+     * @param {Number} type  列表类型
+     */
     static insert (filedList, type) {
         let json = {
             list: filedList

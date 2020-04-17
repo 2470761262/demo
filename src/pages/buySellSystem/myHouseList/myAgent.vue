@@ -480,7 +480,7 @@ export default {
       return rooms + hall + toilet;
     },
     moreSelectChange (e) {
-      if (e != "") this.moreSelect = e;
+      this.moreSelect = e;
       this.queryMyAgent(1);
     },
     sortMethod (e) {

@@ -472,7 +472,6 @@ export default {
       moreRoomNoList: [],
       moreOptions: [],
       moreCbIdList: [],
-      clear: false//是否清空
     };
   },
   mounted () {
@@ -492,8 +491,8 @@ export default {
     remove () {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryConstant();
-      this.clear = true;
-      this.$emit("moreSelectChange", "");
+      this.visible = true;
+      //this.$emit("moreSelectChange", "");
     },
     remoteMethod (query) {
       var that = this;
@@ -552,7 +551,6 @@ export default {
           break;
         }
       }
-      this.clear = false;
       this.$emit("moreSelectChange", data);
       this.visible = false;
     },

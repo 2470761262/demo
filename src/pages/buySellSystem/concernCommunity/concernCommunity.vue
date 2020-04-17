@@ -791,7 +791,7 @@ export default {
       this.applyAgentFlag = true;
     },
     moreSelectChange (e) {
-      if (e != "") this.moreSelect = e;
+      this.moreSelect = e;
       this.querylistByParams();
     },
     keySelect () {
