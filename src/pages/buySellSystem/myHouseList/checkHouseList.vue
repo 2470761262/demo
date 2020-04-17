@@ -193,73 +193,6 @@
             <el-button size="mini"
                        type=""
                        v-else>已审核</el-button>
-            <el-dialog :title="title"
-                       :visible.sync="showPopUp"
-                       width="30%"
-                       :modal="false"
-                       :center="true">
-              <div>
-                <div>
-                  <span>审核状态:</span>
-                  <el-radio-group v-model="checkStatus">
-                    <el-radio :label="1">通过</el-radio>
-                    <el-radio :label="2">不通过</el-radio>
-                  </el-radio-group>
-                </div>
-                <div v-if="row.checkProject==1||row.replaceType==2">
-                  <span>委托截止时间:</span>
-                  <span>{{row.proxyMaxTime}}</span>
-                </div>
-                <div v-if="row.checkProject==0||row.replaceType==3"
-                     style="display:flex">
-                  <span>钥匙类型:</span>
-                  <span v-if="row.keyType==0">钥匙</span>
-                  <span v-if="row.keyType==1">指纹锁</span>
-                  <span v-if="row.keyType==2">密码锁</span>
-                  <div v-if="row.keyType==2"
-                       style="margin-left:20px;">
-                    <span>密码:</span>
-                    <span>{{row.keyCode}}</span>
-                  </div>
-                </div>
-                <div v-if="row.checkProject==8">
-                  <div v-if="row.newSaleTag==4"
-                       style="display:flex">
-                    <span>成交公司:</span>
-                    <span>{{row.dealCompany}}</span>
-                    <div v-if="row.dealPrice!=null&&row.dealPrice!=''">
-                      <span>成交价:</span>
-                      <span>{{row.dealPrice}}</span>
-                    </div>
-                  </div>
-                  <div v-if="row.newSaleTag==6">
-                    <span>子类型:</span>
-                    <span v-if="row.subStatus==0">疑似跳单</span>
-                    <span v-if="row.subStatus==1">亲朋好友</span>
-                  </div>
-                  <div v-if="row.NewSaleTag==3">
-                    <span>子类型:</span>
-                    <span v-if="row.subStatus==2">号码错误</span>
-                    <span v-if="row.subStatus==3">空号</span>
-                    <span v-if="row.subStatus==4">房源不存在</span>
-                  </div>
-                </div>
-                <div>
-                  <el-input type="textarea"
-                            placeholder="请输入审核说明"
-                            v-model="checkMemo">
-                  </el-input>
-                </div>
-
-              </div>
-              <span slot="footer"
-                    class="dialog-footer">
-                <el-button @click="showPopUp = false">取 消</el-button>
-                <el-button type="primary"
-                           @click="checkHouse()">确 定</el-button>
-              </span>
-            </el-dialog>
-
             <el-button type="primary"
                        v-if="!(scope.row.checkProject==13)"
                        @click="toHouseDetail(scope.row)"
@@ -268,6 +201,72 @@
         </el-table-column>
       </template>
     </list-page>
+    <el-dialog :title="title"
+               :visible.sync="showPopUp"
+               width="30%"
+               :close-on-click-modal="false"
+               :center="true">
+      <div>
+        <div>
+          <span>审核状态:</span>
+          <el-radio-group v-model="checkStatus">
+            <el-radio :label="1">通过</el-radio>
+            <el-radio :label="2">不通过</el-radio>
+          </el-radio-group>
+        </div>
+        <div v-if="row.checkProject==1||row.replaceType==2">
+          <span>委托截止时间:</span>
+          <span>{{row.proxyMaxTime}}</span>
+        </div>
+        <div v-if="row.checkProject==0||row.replaceType==3"
+             style="display:flex">
+          <span>钥匙类型:</span>
+          <span v-if="row.keyType==0">钥匙</span>
+          <span v-if="row.keyType==1">指纹锁</span>
+          <span v-if="row.keyType==2">密码锁</span>
+          <div v-if="row.keyType==2"
+               style="margin-left:20px;">
+            <span>密码:</span>
+            <span>{{row.keyCode}}</span>
+          </div>
+        </div>
+        <div v-if="row.checkProject==8">
+          <div v-if="row.newSaleTag==4"
+               style="display:flex">
+            <span>成交公司:</span>
+            <span>{{row.dealCompany}}</span>
+            <div v-if="row.dealPrice!=null&&row.dealPrice!=''">
+              <span>成交价:</span>
+              <span>{{row.dealPrice}}</span>
+            </div>
+          </div>
+          <div v-if="row.newSaleTag==6">
+            <span>子类型:</span>
+            <span v-if="row.subStatus==0">疑似跳单</span>
+            <span v-if="row.subStatus==1">亲朋好友</span>
+          </div>
+          <div v-if="row.NewSaleTag==3">
+            <span>子类型:</span>
+            <span v-if="row.subStatus==2">号码错误</span>
+            <span v-if="row.subStatus==3">空号</span>
+            <span v-if="row.subStatus==4">房源不存在</span>
+          </div>
+        </div>
+        <div>
+          <el-input type="textarea"
+                    placeholder="请输入审核说明"
+                    v-model="checkMemo">
+          </el-input>
+        </div>
+
+      </div>
+      <span slot="footer"
+            class="dialog-footer">
+        <el-button @click="showPopUp = false">取 消</el-button>
+        <el-button type="primary"
+                   @click="checkHouse()">确 定</el-button>
+      </span>
+    </el-dialog>
     <el-dialog :visible.sync="showAccessory"
                width="60%"
                :modal-append-to-body="false">
@@ -380,7 +379,7 @@ export default {
     ElImageViewer
   },
   computed: {
-    showImgList () {
+    showImgList() {
       let result = this.file8.map(item => {
         if (item.subType != 7) {
           return item.url;
@@ -397,7 +396,7 @@ export default {
       return result;
     }
   },
-  data () {
+  data() {
     return {
       showViewer: false,
       showImgIndexImg: null,
@@ -565,22 +564,22 @@ export default {
       fill: "fill"
     };
   },
-  mounted () {
+  mounted() {
     this.querylist(1);
   },
   methods: {
-    iamgeViewClose () {
+    iamgeViewClose() {
       this.showViewer = false;
       this.showImgIndexImg = null;
     },
-    changeShowImg (url) {
+    changeShowImg(url) {
       this.showViewer = true;
       this.showImgIndexImg = url;
     },
     /**
      * 审核项目change
      */
-    reviewProject (value) {
+    reviewProject(value) {
       switch (String(value)) {
         case "1":
           this.typeList = taskProCheck;
@@ -598,20 +597,20 @@ export default {
       this.type = "";
       this.querylistByParams();
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       if (e != "") this.moreSelect = e;
       this.querylist(1, "id", "descending");
     },
-    changeFile (e, index) {
+    changeFile(e, index) {
       let checkProjectList = this.accessoryMoldList[index].list;
       let activeIndex = checkProjectList[e].activeIndex;
       this.cutPic(activeIndex);
     },
-    cutPic (index) {
+    cutPic(index) {
       let that = this;
       that.$refs.loopImg.setActiveItem(index);
     },
-    getFile (list) {
+    getFile(list) {
       this.accessoryMoldList.forEach(item => {
         item.list = []; //清空数组
         if (list != null) {
@@ -627,7 +626,7 @@ export default {
       console.log(this.file8);
       this.showAccessory = true;
     },
-    getAccessory (row) {
+    getAccessory(row) {
       let checkId = row.id;
       let that = this;
       let exists = false;
@@ -664,7 +663,7 @@ export default {
           that.$message("获取失败");
         });
     },
-    checkHouse () {
+    checkHouse() {
       let that = this;
       let params = {
         id: this.checkId,
@@ -702,12 +701,12 @@ export default {
           that.$message("操作失败");
         });
     },
-    remoteInput () {
+    remoteInput() {
       if (this.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -735,16 +734,16 @@ export default {
         this.options = [];
       }
     },
-    Remove () {
+    Remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.querylist(1, "id", "descending");
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -772,7 +771,7 @@ export default {
       this.queryData.CommunityName = obj.name;
       this.querylistByParams();
     },
-    getTitle (row) {
+    getTitle(row) {
       this.titleList.forEach(element => {
         if (element.key == row.Type) {
           this.title = element.value;
@@ -782,7 +781,7 @@ export default {
       this.row = row;
       this.showPopUp = true;
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -810,15 +809,18 @@ export default {
       this.queryData.cbName = obj.name;
       this.querylistByParams();
     },
-     //跳转房源详情页面
-    toHouseDetail (row) {
-      this.$router.push({ name: "houseDetails", params: { houseId: row.eid,detailType:4 } });
+    //跳转房源详情页面
+    toHouseDetail(row) {
+      this.$router.push({
+        name: "houseDetails",
+        params: { houseId: row.eid, detailType: 4 }
+      });
     },
-    querylistByParams () {
+    querylistByParams() {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
-    querylist (currentPage) {
+    querylist(currentPage) {
       var that = this;
       that.loading = true;
       let params = {
@@ -873,22 +875,22 @@ export default {
           console.log(e);
         });
     },
-    distributeEvent (e, id) {
+    distributeEvent(e, id) {
       this[e](id);
     },
-    isForBut (type) {
+    isForBut(type) {
       let array = [{ name: "查看", isType: "1,2,3", methosName: "" }];
       return array.filter(item => {
         this.item.push("12222222222222222222222222222222222");
         return item.isType.includes(type);
       });
     },
-    remoteInput () {
+    remoteInput() {
       if (this.queryData.CommunityName.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         console.log(query);
@@ -919,16 +921,16 @@ export default {
         "remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId
       );
     },
-    handleClick () { },
-    handleSizeChange (val) {
+    handleClick() {},
+    handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.querylist(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.pageJson.currentPage = val;
-      this.querylist();
+      this.querylist(val);
     },
   },
 }

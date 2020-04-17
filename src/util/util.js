@@ -1,13 +1,13 @@
 import * as constMap from './constMap';
 export default {
-    localStorageSet(key, value) {
+    localStorageSet (key, value) {
         if (typeof value == "object") {
             localStorage.setItem(key, JSON.stringify(value));
         } else {
             localStorage.setItem(key, value);
         }
     },
-    localStorageGet(key) {
+    localStorageGet (key) {
         if (localStorage.getItem(key) == null || localStorage.getItem(key) == '') {
             return null;
         } else {
@@ -18,20 +18,20 @@ export default {
             }
         }
     },
-    localStorageClear() {
+    localStorageClear () {
         localStorage.clear()
     },
-    localStorageRemove(key) {
+    localStorageRemove (key) {
         localStorage.removeItem(key);
     },
-    sessionLocalStorageSet(key, value) {
+    sessionLocalStorageSet (key, value) {
         if (typeof value == "object") {
             sessionStorage.setItem(key, JSON.stringify(value));
         } else {
             sessionStorage.setItem(key, value);
         }
     },
-    sessionLocalStorageGet(key) {
+    sessionLocalStorageGet (key) {
         if (sessionStorage.getItem(key) == null || sessionStorage.getItem(key) == '') {
             return null;
         } else {
@@ -42,30 +42,30 @@ export default {
             }
         }
     },
-    merge(args1, args2) {
+    merge (args1, args2) {
         let newArgs1 = JSON.parse(JSON.stringify(args1));
         let newArgs2 = JSON.parse(JSON.stringify(args2));
         return Object.assign({}, args1, args2);
     },
-    sessionLocalStorageClear() {
+    sessionLocalStorageClear () {
         sessionStorage.clear()
     },
-    sessionLocalStorageRemove(key) {
+    sessionLocalStorageRemove (key) {
         sessionStorage.removeItem(key);
     },
-    analysisElevator(elevator) {
+    analysisElevator (elevator) {
         if (parseInt(elevator) > 0) {
             return "有配套";
         } else {
             return "无配套";
         }
     },
-    countMapFilter(value, ListName = 'ROOMTYPE', resultValue = null) {
+    countMapFilter (value, ListName = 'ROOMTYPE', resultValue = null) {
         let result = constMap[ListName].filter(item => item.value == parseInt(value))
         return result.length > 0 ? result[0].key : resultValue;
     },
     //添加房源数据对比
-    diffGet(rData, nowData) {
+    diffGet (rData, nowData) {
         var rData = JSON.parse(JSON.stringify(rData));
         var nowData = JSON.parse(JSON.stringify(nowData));
         for (let item in rData) {
@@ -79,10 +79,10 @@ export default {
         }
         return nowData;
     },
-    find(list, f) {
+    find (list, f) {
         return list.filter(f)[0]
     },
-    deepCopy(obj, cache = []) {
+    deepCopy (obj, cache = []) {
         if (obj === null || typeof obj !== 'object') {
             return obj
         }
@@ -100,19 +100,19 @@ export default {
         })
         return copy
     },
-    isNull(value) {
+    isNull (value) {
         if (value != 0 && (value === "" || value === null)) {
             return true;
         }
         return false;
     },
-    isNotNull(value) {
+    isNotNull (value) {
         if (value != "" && value !== null) {
             return true;
         }
         return false;
     },
-    isNumber(number) {
+    isNumber (number) {
         let flag = true;
         let myreg = /^((0{1}\.\d+)|([1-9]\d*\.{1}\d+)|([1-9]+\d*)|0)$/;
         if (myreg.test(number)) {
@@ -120,7 +120,7 @@ export default {
         }
         return flag;
     },
-    timeToStr(time) {
+    timeToStr (time) {
         var m = 0,
             s = 0,
             _m = '00',
@@ -133,16 +133,16 @@ export default {
         return _m + ":" + _s;
     },
     //节流
-    throttle(delay, callback) {
+    throttle (delay, callback) {
         let timeoutID;
         let lastExec = 0;
 
-        function wrapper() {
+        function wrapper () {
             const self = this;
             const elapsed = Number(new Date()) - lastExec;
             const args = arguments;
 
-            function exec() {
+            function exec () {
                 lastExec = Number(new Date());
                 callback.apply(self, args);
             }
@@ -159,14 +159,14 @@ export default {
         return wrapper;
     },
     //防抖
-    debounce(delay, callback) {
+    debounce (delay, callback) {
         let timeoutID;
 
-        function wrapper() {
+        function wrapper () {
             const self = this;
             const args = arguments;
 
-            function exec() {
+            function exec () {
                 callback.apply(self, args);
             }
 
@@ -177,4 +177,5 @@ export default {
 
         return wrapper;
     }
+
 }
