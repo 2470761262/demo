@@ -189,6 +189,7 @@ span {
                           v-model="more.minFloor"></el-input>-
                 <el-input v-model="more.maxFloor"
                           v-if="mergeConfig.maxFloor"
+                          clearable
                           style="width:30%"></el-input>
               </div>
             </div>
@@ -213,7 +214,7 @@ span {
                   <el-option v-for='(item) in houseTypeList'
                              :key="item.value"
                              :value='item.value'
-                             :label="item.label"></el-option>  
+                             :label="item.label"></el-option>
                 </el-select>-->
                 <span>委托</span>
                 <el-select v-model="more.entrustType"
@@ -493,7 +494,7 @@ export default {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryConstant();
       this.clear = true;
-      this.$emit("moreSelectChange", "");
+      this.$emit("moreSelectChange", {});
     },
     remoteMethod (query) {
       var that = this;
@@ -544,15 +545,22 @@ export default {
     },
     setTabRender () {
       console.log(111);
-      let data = "";
+      let data = {};
       for (let key in this.more) {
         console.log(key, this.more[key]);
         if (this.more[key] != "") {
-          data = this.more;
+          Object.assign(data , this.more);
           break;
         }
       }
       this.clear = false;
+
+      if(data.minFloor&&!data.maxFloor){
+        data.maxFloor="999999";
+      }
+      if(!data.minFloor&&data.maxFloor){
+        data.minFloor="-999999";
+      }
       this.$emit("moreSelectChange", data);
       this.visible = false;
     },

@@ -5,12 +5,10 @@
 </style>
 </style>
 <template>
-  <list-page
-    :parentData="$data"
-    @handleClick="handleClick"
-    @handleSizeChange="handleSizeChange"
-    @handleCurrentChange="handleCurrentChange"
-  >
+  <list-page :parentData="$data"
+             @handleClick="handleClick"
+             @handleSizeChange="handleSizeChange"
+             @handleCurrentChange="handleCurrentChange">
     <template v-slot:tableColumn>
       <!-- <template v-for="(item) in cell.tableData">
         <el-table-column :prop="item.prop"
@@ -53,17 +51,18 @@
         <template v-slot="scope">{{scope.row.comId==0?'默认':scope.row.companyName}}</template>
       </el-table-column>
 
-      <el-table-column prop="operation" label="操作" fixed="right" key="992">
+      <el-table-column prop="operation"
+                       label="操作"
+                       fixed="right"
+                       key="992">
         <template v-slot="scope">
           <!-- <div v-if="scope.row.operation!=''"> -->
-          <el-button
-            type="primary"
-            size="mini"
-            @click="distributeEvent(item.methosName,scope.row.id,scope.row.sysParNo,scope.row.sysParName,scope.row.sysParType,scope.row.memo)"
-            v-for="(item,index) in isForBut(2)"
-            :key="index"
-            class="as"
-          >{{item.name}}</el-button>
+          <el-button type="primary"
+                     size="mini"
+                     @click="distributeEvent(item.methosName,scope.row.id,scope.row.sysParNo,scope.row.sysParName,scope.row.sysParType,scope.row.memo)"
+                     v-for="(item,index) in isForBut(2)"
+                     :key="index"
+                     class="as">{{item.name}}</el-button>
           <!-- </div> -->
         </template>
       </el-table-column>
@@ -73,12 +72,13 @@
 <script>
 import listPage from "@/components/listPage";
 import getToken from "@/minxi/getUrlToken";
+import but from "@/evenBus/but.js"
 export default {
   mixins: [getToken],
   components: {
     listPage
   },
-  data() {
+  data () {
     return {
       loading: true, //控制表格加载动画提示
       pageJson: {
@@ -164,14 +164,15 @@ export default {
       hide: false
     };
   },
-  mounted() {
+  mounted () {
+    but.$emit("asideNav", false);
     this.queryVerifyHouseByParams(1);
   },
   methods: {
-    queryVerifyHouseByParams() {
+    queryVerifyHouseByParams () {
       this.queryVerifyHouseDatas(1);
     },
-    queryVerifyHouseDatas(currentPage) {
+    queryVerifyHouseDatas (currentPage) {
       let params = {
         limit: this.pageJson.pageSize,
         page: currentPage,
@@ -239,11 +240,11 @@ export default {
         });
     },
 
-    toList() {
+    toList () {
       this.$router.push({ path: "/menuFrame/addConfig" });
     },
 
-    updateDelRight(id, sysParNo, sysParName, sysParType, memo) {
+    updateDelRight (id, sysParNo, sysParName, sysParType, memo) {
       this.$api
         .get({
           url: "/Set/companyUpdateDel",
@@ -268,7 +269,7 @@ export default {
           console.log(e);
         });
     },
-    updateDelLeft(id, sysParNo, sysParName, sysParType, memo) {
+    updateDelLeft (id, sysParNo, sysParName, sysParType, memo) {
       this.$api
         .get({
           url: "/Set/companyUpdateDel",
@@ -293,10 +294,10 @@ export default {
           console.log(e);
         });
     },
-    distributeEvent(e, id, sysParNo, sysParName, sysParType, memo) {
+    distributeEvent (e, id, sysParNo, sysParName, sysParType, memo) {
       this[e](id, sysParNo, sysParName, sysParType, memo);
     },
-    isForBut(type) {
+    isForBut (type) {
       let array = [
         { name: "修改", isType: "1,2,3", methosName: "postUpdate" },
         { name: "转有效", isType: "1,2,3", methosName: "updateDelRight" },
@@ -306,30 +307,30 @@ export default {
         return item.isType.includes(type);
       });
     },
-    postUpdate(id) {
+    postUpdate (id) {
       this.hide = true;
       this.$router.push({ name: "addConfigObject", params: { objectId: id } });
     },
-    handleClick() {},
-    created() {
+    handleClick () { },
+    created () {
       this.configId = this.$route.query.configId;
 
       console.log(this.configId);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.queryVerifyHouseDatas(val);
     }
   },
-  created() {
+  created () {
     this.configId = this.$route.query.configId;
     but.$emit("asideNav", false);
   },
-  destroyed() {
+  destroyed () {
     if (this.hide != true) but.$emit("asideNav", true);
     but.$off("asideNav");
   }

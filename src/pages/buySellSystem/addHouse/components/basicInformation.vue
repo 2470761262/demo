@@ -124,9 +124,10 @@
           placeholder="请输入业主姓名"
           data-vv-name="customerName"
           data-vv-as="业主姓名"
-          v-validate="'required|isChinese'"
+          v-validate="'required|isChinese|chineseLen'"
           v-model="formData.customerName"
           maxlength="5"
+          minlength="2"
         >
           <div slot="prepend" class="item-before" data-before="*">业主姓名</div>
         </el-input>
@@ -877,6 +878,7 @@ export default {
         return item.value == e;
       });
       this.formData.roomNo = this.selectPageRoomNo.list[findResultIndex].name;
+      this.formData.floor = this.selectPageRoomNo.list[findResultIndex].floor;
       //初始化房间号选中获取的数据
       this.formData.valuation = "";
       this.formData.area = 0;
