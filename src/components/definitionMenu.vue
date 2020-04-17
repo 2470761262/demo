@@ -67,6 +67,7 @@
       </div>
       <el-button slot="reference"
                  size="mini"
+                 :loading="loading"
                  type="primary">自定义菜单</el-button>
     </el-popover>
   </div>
@@ -76,6 +77,14 @@
 import util from "@/util/util";
 export default {
   props: {
+    resetList: {
+      type: Array,
+      default: () => []
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    },
     renderList: {
       type: Array,
       default: () => []
@@ -89,7 +98,8 @@ export default {
     renderList: {
       immediate: true,
       deep: true,
-      handler(newValue, oldValue) {
+      handler (newValue, oldValue) {
+        if (this.loading) return
         //深度复制父组件数据
         this.thatRenderList = util.deepCopy(newValue);
         //备份
@@ -98,7 +108,7 @@ export default {
         this.setTabRender();
       }
     },
-    visible(newVal) {
+    visible (newVal) {
       if (!newVal && this.submitFlag && this.backupsRenderList.length > 0) {
         this.thatRenderList = this.backupsRenderList;
         this.submitFlag = false;
@@ -109,7 +119,7 @@ export default {
       }
     }
   },
-  data() {
+  data () {
     return {
       visible: false, //  弹出框开关
       thatRenderList: [], //checkbox渲染list
@@ -117,14 +127,14 @@ export default {
       submitFlag: false //修改了是否有提交
     };
   },
-  created() {},
+  created () { },
   methods: {
-    setListCheck(item) {
+    setListCheck (item) {
       item.default = !item.default;
       //如果进行了修改把标记修改为true
       this.submitFlag = true;
     },
-    setTabRender() {
+    setTabRender () {
       let rendelOptions = ["prop", "label", "width", "order", "formart"];
       let result = [];
       this.thatRenderList.forEach((item, index) => {
@@ -140,14 +150,16 @@ export default {
       });
       //确定按钮提交时把标记关闭
       this.submitFlag = false;
+
+      let difference = this.backupsRenderList.filter((item, index) => item.default != this.thatRenderList[index].default);
       //关闭弹框
       this.visible = false;
       //提交数据到父级
-      this.$emit("change", result);
+      this.$emit("change", result, difference.length);
     },
-    resetTabRender() {
+    resetTabRender () {
       //重置默认数据
-      this.thatRenderList = util.deepCopy(this.renderList);
+      this.thatRenderList = util.deepCopy(this.resetList);
       //再次渲染
       this.setTabRender();
     }

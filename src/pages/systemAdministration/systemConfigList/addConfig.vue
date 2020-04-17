@@ -179,25 +179,25 @@ export default {
       },
       newsClassOption: [
         {
-          value: "1",
+          value: 1,
           label: "买卖房源"
         },
         {
-          value: "2",
+          value: 2,
           label: "买卖客户"
         }
         ,
         {
-          value: "3",
+          value: 3,
           label: "租赁房源"
         },
         {
-          value: "4",
+          value: 4,
           label: "租赁客户"
         }
         ,
         {
-          value: "5",
+          value: 5,
           label: "用户管理"
         }
       ],
@@ -299,7 +299,7 @@ export default {
         this.$api.get({
           url: '/Set/update',
           data: {
-            sysParID: that.$route.params.configId,
+            sysParID: that.$route.query.configId,
             sysParType: that.notice.newsClass,
             sysParNo: that.notice.configNo,
             sysParName: that.notice.configName,
@@ -336,15 +336,17 @@ export default {
   },
 
   created () {
-    this.notice.configId = this.$route.params.configId;
-    this.notice.configNo = this.$route.params.sysParNo;
-    this.notice.configName = this.$route.params.sysParName;
-    this.notice.configMemo = this.$route.params.memo;
-    if (this.$route.params.configId != undefined) {
+    console.log(this.$route.query.configId);
+    this.notice.configId = this.$route.query.configId;
+    this.notice.configNo = this.$route.query.sysParNo;
+    this.notice.configName = this.$route.query.sysParName;
+    this.notice.configMemo = this.$route.query.memo;
+    if (this.$route.query.configId != undefined) {
       this.updateState = true;
     }
-    console.log(this.$route.params.configId);
-    switch (this.$route.params.sysParType) {
+    console.log(this.$route.query.configId);
+    this.notice.newsClass = this.$route.query.sysParType
+    switch (this.$route.query.sysParType) {
       case "买卖房源":
         this.notice.newsClass = "1";
         break;
