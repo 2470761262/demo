@@ -75,6 +75,16 @@ Validator.extend('isChinese', {
         return /^[\u4e00-\u9fa5]+$/.test(value)
     }
 });
+
+//中文长度
+Validator.extend('chineseLen', {
+    messages: {
+        zh_CN: (field, args) => field + '不得少于两个字',
+    },
+    validate: value => value.length > 1
+});
+
 Vue.use(VeeValidate, config);
 // 使用中文提示
 Validator.localize("zh_CN", veeMessage);
+

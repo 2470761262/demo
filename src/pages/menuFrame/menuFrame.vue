@@ -92,7 +92,9 @@ import headerContent from "@/components/headerContent";
 import util from "@/util/util";
 import { LOGINDATA } from "@/util/constMap";
 import but from "@/evenBus/but";
+import getToken from "@/minxi/getUrlToken";
 export default {
+  mixins: [getToken],
   name: "menuFrame",
   components: {
     asideNav,
@@ -109,6 +111,7 @@ export default {
       menuDatasInParent: []
     };
   },
+  beforeCreate() {},
   created() {
     // but.$on("asideNav", e => {
     //   this.asideNavFlag = e;
