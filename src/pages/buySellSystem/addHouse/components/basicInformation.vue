@@ -878,6 +878,7 @@ export default {
         return item.value == e;
       });
       this.formData.roomNo = this.selectPageRoomNo.list[findResultIndex].name;
+      this.formData.floor = this.selectPageRoomNo.list[findResultIndex].floor;
       //初始化房间号选中获取的数据
       this.formData.valuation = "";
       this.formData.area = 0;
