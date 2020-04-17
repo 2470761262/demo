@@ -117,9 +117,12 @@
           <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
         </div>
         <div class="query-content-cell cell-interval25">
-          <definitionmenu :renderList="tableColumnField"
+          <definitionmenu :renderList="renderList"
                           :tableColumn="tableColumn"
-                          @change="tabColumnChange"></definitionmenu>
+                          @change="tabColumnChange"
+                          :loading="menuLoading"
+                          :resetList="tableColumnField"></definitionmenu>
+
         </div>
       </div>
     </template>
@@ -155,6 +158,7 @@ import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
 import common from "../houseResource/common/common";
+import tableMenu from '@/util/getTableMenu';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -162,7 +166,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
 
@@ -299,7 +303,7 @@ export default {
           width: "120",
           order: "custom",
           disabled: false,
-          default: false,
+          default: true,
           format: item => item.unitpaice + "元/㎡"
         },
         {
@@ -308,7 +312,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         },
         {
           prop: "floor",
@@ -316,7 +320,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         },
         {
           prop: "decoration",
@@ -324,7 +328,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         },
         {
           prop: "addName",
@@ -332,7 +336,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         }
       ],
       tableColumn: [],
@@ -366,30 +370,42 @@ export default {
         }
       ],
       sortColumn: "id", //排序字段
-      sortType: "descending" //排序类型
+      sortType: "descending",//排序类型
+      menuLoading: true,//自定义菜单
+      renderList: []
     };
   },
-  mounted() {
-    this.queryVerifyHouseDatas(1);
+  mounted () {
+    tableMenu.getTableMenu(this.tableColumnField, 15).then((e) => {
+      this.menuLoading = false;
+      this.renderList = e;
+      this.queryVerifyHouseDatas(1);
+
+    });
+
   },
   methods: {
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
       this.queryVerifyHouseDatas(1);
     },
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.sortColumn = e.prop;
       this.sortType = e.order;
       this.queryVerifyHouseDatas(1);
     },
-    tabColumnChange(e) {
+    tabColumnChange (e, length = 0) {
       this.tableColumn = e;
+      if (length > 0) {
+        let prop = e.map(item => { return { prop: item.prop } })
+        tableMenu.insert(prop, 15);
+      }
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    formatHouseType(row, column) {
+    formatHouseType (row, column) {
       return (
         (row.Rooms || 0) +
         "室" +
@@ -400,19 +416,19 @@ export default {
       );
     },
 
-    toLook(id) {
+    toLook (id) {
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    querySoleAllParams() {
+    querySoleAllParams () {
       this.queryVerifyHouseDatas(1);
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -440,14 +456,17 @@ export default {
         this.options = [];
       }
     },
-    Remove() {
+    Remove () {
       let that = this;
       let tab = this.tableColumn;
+      let renderList = this.renderList;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.renderList = renderList;
+      this.menuLoading = false;
       this.tabColumnChange(tab);
       this.queryVerifyHouseDatas(1);
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       if (that.data.comId == "") {
         that.data.roomNo = "";
@@ -474,7 +493,7 @@ export default {
         });
       this.querySoleAllParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -497,7 +516,7 @@ export default {
         });
       this.querySoleAllParams();
     },
-    queryVerifyHouseDatas(currentPage) {
+    queryVerifyHouseDatas (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
@@ -546,18 +565,18 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.querySoleAllParams(1);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.queryVerifyHouseDatas(val);
     }

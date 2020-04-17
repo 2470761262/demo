@@ -437,11 +437,9 @@ export default {
     };
   },
   mounted () {
-
     tableMenu.getTableMenu(this.tableColumnField, 2).then((e) => {
-      console.log(e);
-      this.renderList = e;
       this.menuLoading = false;
+      this.renderList = e;
       this.queryMyAgent(1);
     })
 
@@ -664,7 +662,10 @@ export default {
     },
     remove () {
       let tab = this.tableColumn;
+      let renderList = this.renderList;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.renderList = renderList;
+      this.menuLoading = false;
       this.tabColumnChange(tab);
       this.queryMyAgent(1);
     },
