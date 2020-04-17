@@ -118,9 +118,12 @@
           <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
         </div>
         <div class="query-content-cell cell-interval25">
-          <definitionmenu :renderList="tableColumnField"
+          <definitionmenu :renderList="renderList"
                           :tableColumn="tableColumn"
-                          @change="tabColumnChange"></definitionmenu>
+                          @change="tabColumnChange"
+                          :loading="menuLoading"
+                          :resetList="tableColumnField"></definitionmenu>
+
         </div>
       </div>
     </template>
@@ -157,6 +160,7 @@ import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
 import common from "../houseResource/common/common";
+import tableMenu from '@/util/getTableMenu';
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -286,7 +290,7 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            (item.rooms||0) + "室" + (item.hall||0) + "厅" + (item.toilet||0) + "卫"
+            (item.rooms || 0) + "室" + (item.hall || 0) + "厅" + (item.toilet || 0) + "卫"
         },
         {
           prop: "unitpaice",
@@ -294,7 +298,7 @@ export default {
           width: "140",
           order: "custom",
           disabled: false,
-          default: false,
+          default: true,
           format: item => item.unitpaice + "元/㎡"
         },
         {
@@ -362,10 +366,17 @@ export default {
       ],
       sortColumn: "id",//排序字段
       sortType: "descending",//排序类型
+      menuLoading: true,//自定义菜单
+      renderList: []
     };
   },
   mounted () {
-    this.queryNotSale(1);
+    tableMenu.getTableMenu(this.tableColumnField, 12).then((e) => {
+      this.menuLoading = false;
+      this.renderList = e;
+      this.queryNotSale(1);
+    });
+
   },
   methods: {
     sortMethod (e) {
@@ -374,8 +385,12 @@ export default {
       this.sortType = e.order;
       this.queryNotSale(1);
     },
-    tabColumnChange (e) {
+    tabColumnChange (e, length = 0) {
       this.tableColumn = e;
+      if (length > 0) {
+        let prop = e.map(item => { return { prop: item.prop } })
+        tableMenu.insert(prop, 12);
+      }
     },
     moreSelectChange (e) {
       this.moreSelect = e;
@@ -505,7 +520,10 @@ export default {
     },
     Remove () {
       let tab = this.tableColumn;
+      let renderList = this.renderList;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.renderList = renderList;
+      this.menuLoading = false;
       this.tabColumnChange(tab);
       this.queryNotSale(1);
     },

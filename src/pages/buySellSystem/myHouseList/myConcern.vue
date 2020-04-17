@@ -144,9 +144,11 @@
                     clearable />
         </div>
         <div class="query-content-cell cell-interval45">
-          <definitionmenu :renderList="tableDataColumn"
+          <definitionmenu :renderList="renderList"
                           :tableColumn="tableColumn"
-                          @change="tabColumnChange"></definitionmenu>
+                          @change="tabColumnChange"
+                          :loading="menuLoading"
+                          :resetList="tableDataColumn"></definitionmenu>
         </div>
       </div>
       <div class="page-list-query-row">
@@ -275,6 +277,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
+import tableMenu from '@/util/getTableMenu';
 export default {
   mixins: [getMenuRid],
   components: {
@@ -282,7 +285,7 @@ export default {
     moreSelect,
     definitionmenu
   },
-  data() {
+  data () {
     return {
       querySelectFlag: false,
       optionsList: [],
@@ -414,6 +417,8 @@ export default {
             "卫"
         }
       ],
+      menuLoading: true,//自定义菜单
+      renderList: [],
       tableData: [],
       elTabs: {
         activeName: "tab1",
@@ -458,25 +463,34 @@ export default {
       ] //转换排序字段数组
     };
   },
-  mounted() {
+  mounted () {
     // this.querylist(1, "id", "descending");
     // this.queryMyImpression();
     let that = this;
     // that.show(1);
-    this.querylistByParams();
+    tableMenu.getTableMenu(this.tableDataColumn, 5).then((e) => {
+      this.menuLoading = false;
+      this.renderList = e;
+      this.querylistByParams();
+    })
+
   },
   methods: {
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
       this.$refs.moreSelect.visible = true;
       if (!this.$refs.moreSelect.clear) {
         this.querylist(1);
       }
     },
-    tabColumnChange(e) {
+    tabColumnChange (e, length = 0) {
       this.tableColumn = e;
+      if (length > 0) {
+        let prop = e.map(item => { return { prop: item.prop } })
+        tableMenu.insert(prop, 5);
+      }
     },
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.sortColumn = e.prop;
       this.sortType = e.order;
@@ -492,7 +506,7 @@ export default {
       });
       this.querylist(1);
     },
-    keySelect() {
+    keySelect () {
       if (this.data.isKey != "") {
         this.data.isKey = "";
       } else {
@@ -500,7 +514,7 @@ export default {
       }
       this.querylistByParams(1);
     },
-    onlySelect() {
+    onlySelect () {
       if (this.data.isOnly != "") {
         this.data.isOnly = "";
       } else {
@@ -508,22 +522,25 @@ export default {
       }
       this.querylistByParams(1);
     },
-    handleClose(index) {
+    handleClose (index) {
       console.log("删除前：", this.ImpressionList);
       this.ImpressionList.splice(index, 1);
       console.log("删除后：", this.ImpressionList);
       this.querylistByParams();
     },
-    remove() {
+    remove () {
       this.queryData.isKey = "";
       this.queryData.isOnly = "";
       let tab = this.tableColumn;
+      let renderList = this.renderList;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.renderList = renderList;
+      this.menuLoading = false;
       this.tabColumnChange(tab);
       //this.querylist(1, "id", "descending");
       this.show(1);
     },
-    selectImpression(e) {
+    selectImpression (e) {
       let that = this;
       //   that.ImpressionList = [];
       if (!that.ImpressionList.includes(e)) {
@@ -531,7 +548,7 @@ export default {
       }
       this.querylistByParams();
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -557,7 +574,7 @@ export default {
         this.options = [];
       }
     },
-    queryHouseImpression() {
+    queryHouseImpression () {
       var that = this;
       this.$api
         .get({
@@ -573,7 +590,7 @@ export default {
           }
         });
     },
-    ifOFF(id) {
+    ifOFF (id) {
       this.$confirm("是否确定取消关注?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -586,9 +603,9 @@ export default {
             message: "操作成功!"
           });
         })
-        .catch(() => {});
+        .catch(() => { });
     },
-    concernOFF(id) {
+    concernOFF (id) {
       let that = this;
       this.$api
         .post({
@@ -600,7 +617,7 @@ export default {
           that.deleteMyAttention(id);
         });
     },
-    deleteMyAttention(houseId) {
+    deleteMyAttention (houseId) {
       this.$api
         .post({
           url: "/myHouse/deleteMyAttention",
@@ -610,9 +627,9 @@ export default {
           qs: true,
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
-        .then(e => {});
+        .then(e => { });
     },
-    queryMyImpression() {
+    queryMyImpression () {
       var that = this;
       var impression = this.imdata;
       this.$api
@@ -639,12 +656,12 @@ export default {
         });
     },
     //跳转房源详情页面
-    toHouseDetail(id) {
+    toHouseDetail (id) {
       let that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
     //清除
-    show(msg) {
+    show (msg) {
       var that = this;
       if (msg == 0) {
         this.$confirm("清除当前所有房源印象?", "提示", {
@@ -706,11 +723,11 @@ export default {
         // });
       }
     },
-    querylistByParams() {
+    querylistByParams () {
       let that = this;
       that.querylist(1);
     },
-    querylist(currentPage) {
+    querylist (currentPage) {
       let params = {
         limit: this.pageJson.pageSize + "",
         page: currentPage + ""
@@ -807,12 +824,12 @@ export default {
           console.log(e);
         });
     },
-    remoteInput() {
+    remoteInput () {
       if (this.queryData.CommunityName.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         console.log(query);
@@ -843,7 +860,7 @@ export default {
         "remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId
       );
     },
-    removeImpressionInput() {
+    removeImpressionInput () {
       let that = this;
       console.log("removeImpressionInput->", that.imdataimdata);
       // if(that.imdataimdata!="")
@@ -852,7 +869,7 @@ export default {
       //  else
       //  that.imdataimdata="";
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -876,7 +893,7 @@ export default {
       this.querylistByParams();
       console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -899,13 +916,13 @@ export default {
         });
       this.querylistByParams();
     },
-    handleClick() {},
-    handleSizeChange(val) {
+    handleClick () { },
+    handleSizeChange (val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.querylist(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.querylist(val);
     }

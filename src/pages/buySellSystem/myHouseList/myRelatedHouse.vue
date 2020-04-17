@@ -77,9 +77,11 @@
                     class="set-input90" />
         </div>
         <div class="query-content-cell cell-interval45">
-          <definitionmenu :renderList="tableColumnField"
+          <definitionmenu :renderList="renderList"
                           :tableColumn="tableColumn"
-                          @change="tabColumnChange"></definitionmenu>
+                          @change="tabColumnChange"
+                          :loading="menuLoading"
+                          :resetList="tableColumnField"></definitionmenu>
         </div>
       </div>
       <div class="page-list-query-row">
@@ -165,6 +167,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
+import tableMenu from '@/util/getTableMenu';
 export default {
   mixins: [getMenuRid],
   components: {
@@ -349,11 +352,17 @@ export default {
       tableData: [],
       moreSelect: {},
       sortColumn: "id", //排序字段
-      sortType: "descending" //排序类型
+      sortType: "descending", //排序类型
+      menuLoading: true,//自定义菜单
+      renderList: []
     };
   },
   mounted () {
-    this.querySaleNotTrack(1);
+    tableMenu.getTableMenu(this.tableColumnField, 3).then((e) => {
+      this.menuLoading = false;
+      this.renderList = e;
+      this.querySaleNotTrack(1);
+    });
   },
   methods: {
     sortMethod (e) {
@@ -368,7 +377,10 @@ export default {
     },
     remove () {
       let tab = this.tableColumn;
+      let renderList = this.renderList;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.renderList = renderList;
+      this.menuLoading = false;
       this.tabColumnChange(tab);
       this.querySaleNotTrack(1);
     },
@@ -377,8 +389,12 @@ export default {
       console.log("hhhhhhhhhhhhhhhhhh", id);
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    tabColumnChange (e) {
+    tabColumnChange (e, length = 0) {
       this.tableColumn = e;
+      if (length > 0) {
+        let prop = e.map(item => { return { prop: item.prop } })
+        tableMenu.insert(prop, 3);
+      }
     },
     queryTabData () {
       console.log(this, "111");
