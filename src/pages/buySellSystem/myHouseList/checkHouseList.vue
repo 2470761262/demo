@@ -930,8 +930,8 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.pageJson.currentPage = val;
-      this.querylist();
-    }
-  }
-};
+      this.querylist(val);
+    },
+  },
+}
 </script>
