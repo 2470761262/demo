@@ -157,7 +157,6 @@ export default {
       //关闭弹框
       this.visible = false;
       //提交数据到父级
-      console.log(result, this.thatRenderList, "this.thatRenderList");
       this.$emit("change", result, difference.length);
     },
     resetTabRender() {

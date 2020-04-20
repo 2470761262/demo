@@ -359,8 +359,9 @@
           </div>
           <definitionmenu class="menuMarin"
                           :loading="menuLoading"
-                          :renderList="tableColumnField"
+                          :renderList="menuRenderList"
                           :tableColumn="tableColumn"
+                          :resetList="tableColumnField"
                           @change="tabColumnChange"></definitionmenu>
         </div>
       </template>
@@ -401,7 +402,8 @@ export default {
   created() {
     tableMenu.getTableMenu(this.tableColumnField, 16).then(e => {
       this.menuLoading = false;
-      this.renderList = e;
+      this.menuRenderList = e;
+      console.log(this.renderList, "this.renderListthis.renderList");
       this.renderTag(this.form);
       this.getHouseData(JSON.parse(JSON.stringify(this.form)));
     });
@@ -409,7 +411,7 @@ export default {
   data() {
     return {
       dynamicTags: [],
-      renderList: [],
+      menuRenderList: [],
       loading: false,
       pageJson: {
         total: 1,
