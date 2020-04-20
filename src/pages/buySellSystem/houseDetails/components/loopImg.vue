@@ -105,7 +105,8 @@
         </el-image>
       </template>
       <!-- 音频 -->
-      <template v-if="loopBig.typeStr == 'picUrl' && resultData.saleUploadAudioList">
+<!--      <template v-if="loopBig.typeStr == 'picUrl' && resultData.saleUploadAudioList">-->
+      <template v-if="resultData.saleUploadAudioList">
         <el-audio fixed
                   v-if="resultData.saleUploadAudioList.length > 0"
                   :url="resultData.saleUploadAudioList[0].url">
