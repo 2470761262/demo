@@ -98,9 +98,11 @@
                       clearable />
           </div>
           <div class="query-content-cell cell-interval45">
-            <definitionmenu :renderList="tableColumnField"
+            <definitionmenu :renderList="renderList"
                             :tableColumn="tableColumn"
-                            @change="tabColumnChange"></definitionmenu>
+                            @change="tabColumnChange"
+                            :loading="menuLoading"
+                            :resetList="tableColumnField"></definitionmenu>
           </div>
         </div>
         <div class="page-list-query-row">
@@ -213,6 +215,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
+import tableMenu from '@/util/getTableMenu';
 export default {
   mixins: [getMenuRid],
   components: {
@@ -429,11 +432,18 @@ export default {
           key: "noSeenDay",
           value: "lastPairTime"
         }
-      ] //转换排序字段数组
+      ], //转换排序字段数组
+      menuLoading: true,//自定义菜单
+      renderList: []
     };
   },
   mounted () {
-    this.queryMyAgent(1);
+    tableMenu.getTableMenu(this.tableColumnField, 2).then((e) => {
+      this.menuLoading = false;
+      this.renderList = e;
+      this.queryMyAgent(1);
+    })
+
   },
   methods: {
     defaultCell ({ column }) {
@@ -636,7 +646,7 @@ export default {
       var that = this;
       this.AgentPerId = data;
       that.newAgentName = data.perName;
-      this.$api
+      return this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -654,7 +664,10 @@ export default {
     },
     remove () {
       let tab = this.tableColumn;
+      let renderList = this.renderList;
       Object.assign(this.$data, this.$options.data.call(this));
+      this.renderList = renderList;
+      this.menuLoading = false;
       this.tabColumnChange(tab);
       this.queryMyAgent(1);
     },
@@ -746,8 +759,12 @@ export default {
       that.toHouseId = id;
       that.toComName = CommunityName;
     },
-    tabColumnChange (e) {
+    tabColumnChange (e, length = 0) {
       this.tableColumn = e;
+      if (length > 0) {
+        let prop = e.map(item => { return { prop: item.prop } })
+        tableMenu.insert(prop, 2);
+      }
     },
     queryTabData () {
       console.log(this, "111");
@@ -894,6 +911,7 @@ export default {
           } else {
             console.log("查询我的跟单列表结果：" + result.message);
             alert(result.message);
+
           }
         })
         .catch(e => {

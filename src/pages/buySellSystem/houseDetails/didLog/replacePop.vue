@@ -136,49 +136,49 @@
 }
 </style>
 <template>
-  <fixedPopup v-bind="$attrs" v-on="$listeners">
+  <fixedPopup v-bind="$attrs"
+              v-on="$listeners">
     <template>
       <div class="replace-content">
         <div class="replace-left">
           <div class="replace-left-row">
             <h3>钥匙类型</h3>
             <div class="raido-group">
-              <label class="raido-group-label" v-for="(item,index) in pop.checkList" :key="index">
-                <input type="radio" :value="item.value" v-model="pop.model" />
+              <label class="raido-group-label"
+                     v-for="(item,index) in pop.checkList"
+                     :key="index">
+                <input type="radio"
+                       :value="item.value"
+                       v-model="pop.model" />
                 <i></i>
                 <span>{{item.title}}</span>
               </label>
             </div>
           </div>
-          <div class="replace-left-row passWord-input" v-if="pop.model==2">
+          <div class="replace-left-row passWord-input"
+               v-if="pop.model==2">
             <h3>密码</h3>
-            <el-input
-              v-model="password"
-              data-vv-as="密码锁"
-              data-vv-name="password"
-              v-validate="{required:pop.model==2}"
-              placeholder="请输入密码锁密码"
-            ></el-input>
+            <el-input v-model="password"
+                      data-vv-as="密码锁"
+                      data-vv-name="password"
+                      v-validate="{required:pop.model==2}"
+                      placeholder="请输入密码锁密码"></el-input>
           </div>
           <div class="replace-left-row">
             <h3>存放门店</h3>
-            <el-select
-              v-model="stores.model"
-              filterable
-              remote
-              :remote-method="getStroeDepartment"
-              placeholder="请选择"
-              @change="change"
-              data-vv-as="门店"
-              data-vv-name="stores"
-              v-validate="'required'"
-            >
-              <el-option
-                v-for="item in stores.list"
-                :key="item.id"
-                :label="item.deptName"
-                :value="item.id"
-              ></el-option>
+            <el-select v-model="stores.model"
+                       filterable
+                       remote
+                       :remote-method="getStroeDepartment"
+                       placeholder="请选择"
+                       @change="change"
+                       data-vv-as="门店"
+                       data-vv-name="stores"
+                       v-validate="'required'">
+              <el-option v-for="item in stores.list"
+                         :key="item.id"
+                         :label="item.deptName"
+                         :value="item.id"></el-option>
             </el-select>
           </div>
         </div>
@@ -186,37 +186,41 @@
           <div class="replace-upload">
             <i class="el-icon-upload icon"></i>
             <label class="replace-upload-but">
-              <input type="file" @change="getFileChange" />
-              <input
-                type="text"
-                v-model="fileLoad.id"
-                data-vv-as="文件"
-                data-vv-name="fileLoad"
-                v-validate="'required'"
-                id="uploadFile"
-              />
+              <input type="file"
+                     @change="getFileChange" />
+              <input type="text"
+                     v-model="fileLoad.id"
+                     data-vv-as="文件"
+                     data-vv-name="fileLoad"
+                     v-validate="'required'"
+                     id="uploadFile" />
               <span>请上传委托文件</span>
             </label>
           </div>
         </div>
         <div class="replace-qr">
-          <el-image
-            :src="fileLoad.url || fileLoad.qrImg"
-            fit="cover"
-            :preview-src-list="[fileLoad.url ? fileLoad.url : fileLoad.qrImg]"
-          >
-            <div slot="placeholder" class="image-slot">
+          <el-image :src="fileLoad.url || fileLoad.qrImg"
+                    fit="cover"
+                    :preview-src-list="[fileLoad.url ? fileLoad.url : fileLoad.qrImg]">
+            <div slot="placeholder"
+                 class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
-          <i class="el-icon-close icon" v-if="fileLoad.url" @click="removeImg"></i>
+          <i class="el-icon-close icon"
+             v-if="fileLoad.url"
+             @click="removeImg"></i>
         </div>
       </div>
       <div class="fieldError">{{ errorBags.all()[0] }}</div>
       <div class="pop-but">
-        <el-button size="small" @click="hidePop">取消</el-button>
-        <el-button size="small" class="button-back" :loading="pop.loading" @click="result">确定</el-button>
+        <el-button size="small"
+                   @click="hidePop">取消</el-button>
+        <el-button size="small"
+                   class="button-back"
+                   :loading="pop.loading"
+                   @click="result">确定</el-button>
       </div>
     </template>
   </fixedPopup>
@@ -234,7 +238,7 @@ export default {
       type: Number
     }
   },
-  data() {
+  data () {
     return {
       pop: {
         model: 0,
@@ -266,18 +270,18 @@ export default {
       }
     };
   },
-  mounted() {
+  mounted () {
     this.requestQrCode();
     this.getStroeDepartment("");
   },
-  destroyed() {
+  destroyed () {
     this.socketApi.closeSocket();
   },
   methods: {
     /**
      * 选择存放门店
      */
-    getStroeDepartment(value) {
+    getStroeDepartment (value) {
       console.log(value, "value");
       this.$api
         .get({
@@ -289,29 +293,29 @@ export default {
         .then(e => {
           this.stores.list = e.data.data;
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     /**
      *选择存放门店
      */
-    change(e) {
+    change (e) {
       this.stores.model = e;
     },
     /**
      * 关闭弹窗
      */
-    hidePop() {
+    hidePop () {
       this.$emit("update:visible", false);
     },
     /**
      * submit
      */
-    result() {
+    result () {
       this.$validator.validateAll().then(e => {
         if (e) {
           let url = `/agentHouse/propertyCheck/${
             this.replaceType == 0 ? "insertApplyFor" : "insertReplace"
-          }`;
+            }`;
           let params = {
             Eid: this.houseId.id,
             Type: this.replaceType,
@@ -344,7 +348,7 @@ export default {
     /**
      *  删除图片
      */
-    removeImg() {
+    removeImg () {
       houseCheck
         .removeImg(this.fileLoad.id, this.fileLoad.url)
         .then(e => {
@@ -362,7 +366,7 @@ export default {
      * 上传文件
      * @param {e} event
      */
-    getFileChange(event) {
+    getFileChange (event) {
       let file = event.target.files;
       let isImgType = ["image/jpeg", "image/png"];
       if (this.fileLoad.id != null) {
@@ -380,7 +384,7 @@ export default {
      * 上传文件
      * @param {file} file
      */
-    upLoadFile(file) {
+    upLoadFile (file) {
       let formData = new FormData();
       formData.append("type", this.replaceType);
       formData.append("file", file);
@@ -403,7 +407,7 @@ export default {
           });
         });
     },
-    contactSocket(user) {
+    contactSocket (user) {
       console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
@@ -412,8 +416,8 @@ export default {
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
       console.log("用户【" + user + "】接入完毕");
     },
-    guid() {
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+    guid () {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (
         c
       ) {
         var r = (Math.random() * 16) | 0,
@@ -421,7 +425,7 @@ export default {
         return v.toString(16);
       });
     },
-    requestQrCode() {
+    requestQrCode () {
       let that = this;
       //请求二维码参数说明，是一个js对象
       //remark 标题，用于显示在小程序上传资源页面标题；
@@ -447,9 +451,9 @@ export default {
             alert(result.message);
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
-    receiveMessage(r) {
+    receiveMessage (r) {
       //回调函数，用于接收扫码后发送的消息
       console.log(r.content, "消息内容");
       let that = this;
@@ -470,7 +474,7 @@ export default {
       //。。。执行你需要的业务逻辑
     },
     //添加图片
-    insertPic(params, picUrl) {
+    insertPic (params, picUrl) {
       this.$api
         .post({
           url: "/agentHouse/followPic/insert",

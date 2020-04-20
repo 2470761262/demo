@@ -120,6 +120,41 @@
 #uploadFile {
   display: none;
 }
+.replace-image-list-div {
+  overflow-x: auto;
+  margin-left: 400px;
+  height: auto;
+  display: flex;
+  margin-top: 10px;
+  .replace-image-div {
+    position: relative;
+    margin-left: 5px;
+    .image {
+      width: 80px;
+      height: 80px;
+    }
+    .icon {
+      position: absolute;
+      color: black;
+      top: -5px;
+      right: -5px;
+      font-size: 14px;
+      background: black;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      z-index: 10;
+      color: #fff;
+      text-align: center;
+      line-height: 20px;
+      display: none;
+      cursor: pointer;
+    }
+    &:hover .icon {
+      display: block;
+    }
+  }
+}
 </style>
 <template>
   <fixedPopup v-bind="$attrs"
@@ -128,7 +163,7 @@
       <div class="replace-content">
         <div class="replace-left">
           <div class="replace-left-row">
-            <h3>钥匙类型</h3>
+            <h3>委托类型</h3>
             <div class="raido-group">
               <label class="raido-group-label"
                      v-for="(item,index) in pop.checkList"
@@ -162,7 +197,7 @@
               <input type="file"
                      @change="getFileChange" />
               <input type="text"
-                     v-model="fileLoad.id"
+                     v-model="fileLoad.list"
                      data-vv-as="文件"
                      data-vv-name="fileLoad"
                      v-validate="'required'"
@@ -172,17 +207,32 @@
           </div>
         </div>
         <div class="replace-qr">
-          <el-image :src="fileLoad.url || fileLoad.qrImg"
+          <el-image :src=" fileLoad.qrImg"
                     fit="cover"
-                    :preview-src-list="[fileLoad.url ? fileLoad.url : fileLoad.qrImg]">
+                    :preview-src-list="[fileLoad.qrImg]">
+            <div slot="placeholder"
+                 class="image-slot">
+              加载中<span>...</span>
+            </div>
+          </el-image>
+
+        </div>
+      </div>
+      <div class="replace-image-list-div">
+        <div class="replace-image-div"
+             v-for=" item in fileLoad.list "
+             :key="item.id">
+          <el-image :src="item.url"
+                    fit="cover"
+                    class="image"
+                    :preview-src-list="fillterImgList()">
             <div slot="placeholder"
                  class="image-slot">
               加载中<span>...</span>
             </div>
           </el-image>
           <i class="el-icon-close icon"
-             v-if="fileLoad.url"
-             @click="removeImg"></i>
+             @click="removeImg(item)"></i>
         </div>
       </div>
       <div class="fieldError">{{ errorBags.all()[0] }}</div>
@@ -222,9 +272,8 @@ export default {
       },
       entrustTime: '',//委托时间
       fileLoad: {//上传文件
-        id: null,
         qrImg: '',
-        url: ''
+        list: []
       },
     }
   },
@@ -253,7 +302,7 @@ export default {
               Eid: this.houseId.id,
               Type: this.replaceType,
               onlyType: this.pop.model,
-              picList: [this.fileLoad.id],
+              picList: this.fileLoad.list.map(item => item.id),
               ProxyMaxTime: this.entrustTime,
               followMemo: "提交了委托申请"
             }
@@ -274,11 +323,10 @@ export default {
     /**
      *  删除图片
      */
-    removeImg () {
-      houseCheck.removeImg(this.fileLoad.id, this.fileLoad.url).then((e) => {
+    removeImg (item) {
+      houseCheck.removeImg(item.id, item.url).then((e) => {
         if (e.data.code == 200) {
-          this.fileLoad.id = null;
-          this.fileLoad.url = this.fileLoad.qrImg;
+          this.fileLoad.list.splice(this.fileLoad.list.indexOf(item), 1)
           this.$message.success('删除成功~');
         }
       }).catch(() => {
@@ -292,8 +340,8 @@ export default {
     getFileChange (event) {
       let file = event.target.files;
       let isImgType = ["image/jpeg", "image/png"];
-      if (this.fileLoad.id != null) {
-        this.$message.error("最多一次上传1张图片");
+      if (this.fileLoad.list.length >= 6) {
+        this.$message.error("最多一次上传6张图片");
         return;
       }
 
@@ -319,8 +367,7 @@ export default {
         })
         .then(json => {
           if (json.data.code == 200) {
-            this.fileLoad.id = json.data.data.id;
-            this.fileLoad.url = json.data.data.url;
+            this.insertArray(json.data.data.id, json.data.data.url);
           }
         })
         .catch(() => {
@@ -368,7 +415,7 @@ export default {
       //回调函数，用于接收扫码后发送的消息
       console.log(r.content, "消息内容");
       let that = this;
-      if (that.fileLoad.id == null) {
+      if (that.fileLoad.list.length < 6) {
         let str = r.content.picUrl;
         let firstIndex = str.indexOf("/");
         let secondIndex = str.indexOf("/", firstIndex + 1);
@@ -394,8 +441,7 @@ export default {
         })
         .then(json => {
           if (json.data.code == 200) {
-            this.fileLoad.id = json.data.data.id;
-            this.fileLoad.url = picUrl;
+            this.insertArray(json.data.data.id, picUrl);
           }
         })
         .catch(() => {
@@ -404,7 +450,25 @@ export default {
             type: "warning"
           });
         });
-    }
+    },
+    //添加数组数据
+    insertArray (id, picUrl) {
+      let image = {
+        id: id,
+        url: picUrl
+      }
+      this.fileLoad.list.push(image);
+    },
+    //返回预览大图list
+    fillterImgList () {
+      if (this.fileLoad.list.length > 0) {
+        return this.fileLoad.list.map((item) => {
+          return item.url;
+        })
+      } else {
+        return [];
+      }
+    },
   }
 }
 
