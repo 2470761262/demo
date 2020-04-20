@@ -59,123 +59,117 @@
 
 <template>
   <div class="page-content">
-    <list-page highlight-current-row
-               :parentData="$data"
-               :dblclick="true"
-               @current-change="handleChange"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      highlight-current-row
+      :parentData="$data"
+      :dblclick="true"
+      @current-change="handleChange"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:left>
         <div class="elTree">
           <div class="elTree-scroll">
-            <el-tree ref="tree2"
-                     :data="treeData"
-                     :default-expanded-keys="[1]"
-                     node-key="nodeId"
-                     show-checkbox
-                     :props="defaultProps"
-                     @check-change="checkChange"
-                     :highlight-current="true"
-                     auto-expand-parent
-                     check-strictly></el-tree>
+            <el-tree
+              ref="tree2"
+              :data="treeData"
+              :default-expanded-keys="[1]"
+              node-key="nodeId"
+              show-checkbox
+              :props="defaultProps"
+              @check-change="checkChange"
+              :highlight-current="true"
+              auto-expand-parent
+              check-strictly
+              v-loading="treeLoading"
+            ></el-tree>
           </div>
         </div>
       </template>
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddEmployeePage">添加用户</el-button>
+          <el-button type="primary" size="mini" @click="toAddEmployeePage">添加用户</el-button>
           <div class="query-right">
-            <el-select v-model="queryData.isLocked"
-                       @change="queryEmployeeDatas(1)"
-                       clearable
-                       size="small"
-                       placeholder="情况过滤">
-              <el-option key="1"
-                         label="正常"
-                         value="1" />
-              <el-option key="0"
-                         label="锁定"
-                         value="0" />
-              <el-option key="2"
-                         label="异常"
-                         value="2" />
+            <el-select
+              v-model="queryData.isLocked"
+              @change="queryEmployeeDatas(1)"
+              clearable
+              size="small"
+              placeholder="情况过滤"
+            >
+              <el-option key="1" label="正常" value="1" />
+              <el-option key="0" label="锁定" value="0" />
+              <el-option key="2" label="异常" value="2" />
             </el-select>
-            <el-select v-model="queryData.del"
-                       @change="queryEmployeeDatas(1)"
-                       clearable
-                       size="small"
-                       placeholder="状态过滤">
-              <el-option key="0"
-                         label="在职"
-                         value="0" />
-              <el-option key="1"
-                         label="离职"
-                         value="1" />
-              <el-option key="2"
-                         label="离职待审核"
-                         value="2" />
+            <el-select
+              v-model="queryData.del"
+              @change="queryEmployeeDatas(1)"
+              clearable
+              size="small"
+              placeholder="状态过滤"
+            >
+              <el-option key="0" label="在职" value="0" />
+              <el-option key="1" label="离职" value="1" />
+              <el-option key="2" label="离职待审核" value="2" />
             </el-select>
-            <el-input placeholder="登录名/姓名/公司/部门/岗位"
-                      v-model="queryData.keyWord"
-                      size="small"
-                      class="keyWordInput">
+            <el-input
+              placeholder="登录名/姓名/公司/部门/岗位"
+              v-model="queryData.keyWord"
+              size="small"
+              class="keyWordInput"
+            >
               <!-- <el-select v-model="queryData.keyWordType" slot="prepend" class="preKeyWordSelect" placeholder="请选择">
               <el-option label="登录名" value="0"></el-option>
               <el-option label="姓名" value="1"></el-option>
               <el-option label="公司" value="2"></el-option>
               <el-option label="部门" value="3"></el-option>
               <el-option label="岗位" value="4"></el-option>
-            </el-select> -->
+              </el-select>-->
             </el-input>
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryEmployeeByParams">查询</el-button>
+            <el-button type="primary" size="mini" @click="queryEmployeeByParams">查询</el-button>
           </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column label="操作"
-                         fixed="right">
+        <el-table-column label="操作" fixed="right">
           <template v-slot="scope">
             <div class="no-center">
-              <el-button type="primary"
-                         size="mini"
-                         @click="distributeEvent(item.methodName,scope.row.id)"
-                         v-for="(item,index) in getOpeBtns(scope.row.del,scope.row.isLocked)"
-                         :key="index">{{item.name}}</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="distributeEvent(item.methodName,scope.row.id)"
+                v-for="(item,index) in getOpeBtns(scope.row.del,scope.row.isLocked)"
+                :key="index"
+              >{{item.name}}</el-button>
             </div>
           </template>
         </el-table-column>
       </template>
     </list-page>
-    <el-dialog title="提示"
-               :visible.sync="dialogVisible"
-               width="50%">
+    <el-dialog title="提示" :visible.sync="dialogVisible" width="50%">
       <div class="left-input-container">
         <span>离职时间</span>
-        <el-input type="date"
-                  placeholder="birthday"
-                  v-model="leaveTime"></el-input>
+        <el-input type="date" placeholder="birthday" v-model="leaveTime"></el-input>
         <span>离职原因</span>
-        <el-input type="text"
-                  placeholder="请输入内容"
-                  v-model="leaveMemo"
-                  maxlength="100"
-                  show-word-limit></el-input>
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="leaveMemo"
+          maxlength="100"
+          show-word-limit
+        ></el-input>
       </div>
-      <span slot="footer"
-            class="dialog-footer">
+      <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose()">取 消</el-button>
-        <el-button type="primary"
-                   @click="delAccount()">确 定</el-button>
+        <el-button type="primary" @click="delAccount()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -231,7 +225,8 @@ export default {
       },
       checkedId: null,
       checkedType: null,
-      id: 0
+      id: 0,
+      treeLoading: true
     };
   },
   mounted() {
@@ -256,6 +251,9 @@ export default {
       .catch(e => {
         console.log("读取失败");
         console.log(e);
+      })
+      .finally(e => {
+        this.treeLoading = false;
       });
     this.queryData.isLocked = null;
     this.queryData.del = null;

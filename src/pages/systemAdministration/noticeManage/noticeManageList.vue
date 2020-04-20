@@ -20,41 +20,38 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page :parentData="$data"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddNoticePage">添加公告</el-button>
-          <div class="query-right ">
-            <el-input placeholder="标题名称"
-                      size="small"
-                      v-model="queryData.newsTitle"
-                      clearable>
-            </el-input>
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryNoticeByParams">查询</el-button>
+          <el-button type="primary" size="mini" @click="toAddNoticePage">添加公告</el-button>
+          <div class="query-right">
+            <el-input placeholder="标题名称" size="small" v-model="queryData.newsTitle" clearable></el-input>
+            <el-button type="primary" size="mini" @click="queryNoticeByParams">查询</el-button>
           </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column label="操作"
-                         fixed="right">
+        <el-table-column label="操作" fixed="right">
           <template v-slot="scope">
-            <el-button type="primary"
-                       size="mini"
-                       @click="distributeEvent(item.methosName,scope.row.id)"
-                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                       :key="index">{{item.name}}</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="distributeEvent(item.methosName,scope.row.id)"
+              v-for="(item,index) in getOpeBtns(scope.row.operation)"
+              :key="index"
+            >{{item.name}}</el-button>
           </template>
         </el-table-column>
       </template>
@@ -113,6 +110,7 @@ export default {
       this.queryNoticeDatas(1);
     },
     queryNoticeDatas(currentPage) {
+      this.loading = true;
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.newsTitle != null) {
@@ -142,6 +140,9 @@ export default {
         .catch(e => {
           console.log("查询公告管理列表失败");
           console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
         });
     },
     toAddNoticePage() {

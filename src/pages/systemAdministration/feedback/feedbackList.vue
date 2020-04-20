@@ -122,6 +122,7 @@ export default {
     },
     //查询数据
     queryAddFloorList(currentPage) {
+      this.loading = true;
       var that = this;
       let params = { limit: that.pageJson.pageSize, page: currentPage };
       params.keyword = that.queryData.keyword;
@@ -151,6 +152,9 @@ export default {
         .catch(e => {
           console.log("查询反馈列表失败");
           console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
         });
     },
     //取消

@@ -1,5 +1,4 @@
 <style lang="less" scoped>
-@import url("../../../assets/publicLess/pageListQuery.less");
 .div-line {
   display: flex;
   flex-wrap: wrap;

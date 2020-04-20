@@ -178,7 +178,6 @@
 <script>
 import listPage from "@/components/listPage";
 import moreSelect from "@/components/moreSelect";
-import '@/assets/publicLess/pageListQuery.less';
 export default {
   components: {
     listPage,
