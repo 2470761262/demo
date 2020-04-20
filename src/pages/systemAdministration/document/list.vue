@@ -20,45 +20,41 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page :parentData="$data"
-               @handleSizeChange="sizeChange"
-               @handleCurrentChange="currentChange">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="sizeChange"
+      @handleCurrentChange="currentChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary"
-                     size="mini"
-                     @click="addDocument">添加</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="handleClick">规则管理</el-button>
+          <el-button type="primary" size="mini" @click="addDocument">添加</el-button>
+          <el-button type="primary" size="mini" @click="handleClick">规则管理</el-button>
           <div class="query-right">
-            <el-input placeholder="关键字"
-                      size="small"
-                      v-model="queryData.keyword"
-                      clearable>
-            </el-input>
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryByParams">查询</el-button>
+            <el-input placeholder="关键字" size="small" v-model="queryData.keyword" clearable></el-input>
+            <el-button type="primary" size="mini" @click="queryByParams">查询</el-button>
           </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column v-if="!item.show"
-                           :key="item.prop"
-                           :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :formatter="downStr"></el-table-column>
+          <el-table-column
+            v-if="!item.show"
+            :key="item.prop"
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :formatter="downStr"
+          ></el-table-column>
         </template>
         <el-table-column label="操作">
           <template v-slot="scope">
             <div>
-              <el-button size="mini"
-                         @click="distributeEvent(item.methosName,scope.row.id)"
-                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                         :key="index">{{item.name}}</el-button>
+              <el-button
+                size="mini"
+                @click="distributeEvent(item.methosName,scope.row.id)"
+                v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                :key="index"
+              >{{item.name}}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -103,6 +99,7 @@ export default {
   },
   methods: {
     queryDatas(currentPage) {
+      this.loading = true;
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.keyword != null) {
@@ -132,6 +129,9 @@ export default {
         .catch(e => {
           console.log("查询文档列表失败");
           console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
         });
     },
     sizeChange(val) {
