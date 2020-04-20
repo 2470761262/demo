@@ -282,7 +282,7 @@
         <!-- <button>查看号码</button> -->
         <button class="cell-pro-but"
                 @click="dialPhoneToFD"
-                :disabled="isDisabled">一键拨号</button>
+                :disabled="isDisabled||fdDial">一键拨号</button>
       </div>
     </div>
   </div>
@@ -290,6 +290,7 @@
 
 <script>
 import util from "@/util/util";
+import {LOGINDATA} from "../../../../util/constMap";
 export default {
   inject: ["houseDetails", "houseId", "buttonDisabled"],
   computed: {
@@ -302,6 +303,29 @@ export default {
       } else {
         return {};
       }
+    },
+    fdDial() {
+      let perId = util.localStorageGet("logindata").accountId;
+      if (Object.keys(this.houseDetails).length > 0) {
+        let detailData = this.houseDetails.data;
+        if(!detailData){
+          return true;
+        }
+        if(!detailData.isNew){
+          return false;
+        }
+        if(!detailData.agentHouseMethod){
+          return true;
+        }
+        if(perId!=detailData.agentHouseMethod.addPer&&perId!=detailData.agentHouseMethod.agentPer
+          &&perId!=detailData.agentHouseMethod.keyOwner&&perId!=detailData.agentHouseMethod.onlyOwner
+          &&perId!=detailData.agentHouseMethod.realOwner){
+          return  true;
+        }
+      } else {
+        return true;
+      }
+      return false
     }
   },
   data() {
