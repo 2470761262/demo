@@ -7,38 +7,33 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page :parentData="$data"
-               @handleSizeChange="sizeChange"
-               @handleCurrentChange="currentChange">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="sizeChange"
+      @handleCurrentChange="currentChange"
+    >
       <template v-slot:top>
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">MAC地址：</h3>
-            <el-input placeholder="电脑的MAC地址"
-                      class="set-input120"
-                      v-model="queryData.mac"
-                      clearable />
+            <el-input
+              placeholder="电脑的MAC地址"
+              class="set-input120"
+              v-model="queryData.mac"
+              clearable
+            />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">硬盘编号:</h3>
-            <el-input placeholder="硬盘编号"
-                      class="set-input120"
-                      v-model="queryData.disk"
-                      clearable />
+            <el-input placeholder="硬盘编号" class="set-input120" v-model="queryData.disk" clearable />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">CPU编号:</h3>
-            <el-input placeholder="CPU编号"
-                      class="set-input120"
-                      v-model="queryData.cpu"
-                      clearable />
+            <el-input placeholder="CPU编号" class="set-input120" v-model="queryData.cpu" clearable />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">门店名称:</h3>
-            <el-input placeholder="门店名称"
-                      class="set-input120"
-                      v-model="queryData.remark"
-                      clearable />
+            <el-input placeholder="门店名称" class="set-input120" v-model="queryData.remark" clearable />
           </div>
           <div class="query-content-cell cell-interval45">
             <el-checkbox v-model="queryData.delChecked">查询已删除</el-checkbox>
@@ -47,48 +42,54 @@
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">添加时间:</h3>
-            <el-date-picker v-model="queryData.addDate"
-                            type="daterange"
-                            align="right"
-                            unlink-panels
-                            class="set-data-pricker"
-                            range-separator="至"
-                            start-placeholder="添加的开始时间"
-                            end-placeholder="添加的结束时间"
-                            :picker-options="pickerOptions2"></el-date-picker>
+            <el-date-picker
+              v-model="queryData.addDate"
+              type="daterange"
+              align="right"
+              unlink-panels
+              class="set-data-pricker"
+              range-separator="至"
+              start-placeholder="添加的开始时间"
+              end-placeholder="添加的结束时间"
+              :picker-options="pickerOptions2"
+            ></el-date-picker>
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">最后登录:</h3>
-            <el-date-picker v-model="queryData.loginDate"
-                            type="daterange"
-                            align="right"
-                            class="set-data-pricker"
-                            unlink-panels
-                            range-separator="至"
-                            start-placeholder="最后登录的开始时间"
-                            end-placeholder="最后登录的结束时间"
-                            :picker-options="pickerOptions2"></el-date-picker>
+            <el-date-picker
+              v-model="queryData.loginDate"
+              type="daterange"
+              align="right"
+              class="set-data-pricker"
+              unlink-panels
+              range-separator="至"
+              start-placeholder="最后登录的开始时间"
+              end-placeholder="最后登录的结束时间"
+              :picker-options="pickerOptions2"
+            ></el-date-picker>
           </div>
           <div class="query-content-cell cell-interval75">
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryByParams">查询</el-button>
+            <el-button type="primary" size="mini" @click="queryByParams">查询</el-button>
           </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
         <el-table-column label="操作">
           <template slot-scope="scope">
-            <el-button size="mini"
-                       type="primary"
-                       @click="Del(scope.$index, scope.row)"
-                       v-if="scope.row.Del==0">删除</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              @click="Del(scope.$index, scope.row)"
+              v-if="scope.row.Del==0"
+            >删除</el-button>
           </template>
         </el-table-column>
       </template>
@@ -170,6 +171,7 @@ export default {
   },
   methods: {
     queryPcManagementDatas(currentPage) {
+      this.loading = true;
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.mac != null) {
@@ -219,6 +221,9 @@ export default {
         .catch(e => {
           console.log("查询PC在线管理列表失败");
           console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
         });
     },
     sizeChange(val) {

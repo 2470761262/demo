@@ -78,6 +78,7 @@
               @check="treeCheck"
               :highlight-current="true"
               :filter-node-method="filterNode"
+              v-loading="treeLoading"
             ></el-tree>
           </div>
         </div>
@@ -93,7 +94,12 @@
                      size="mini"
           @click="queryDeptByIsLocked(1)">查询未锁定部门</el-button>-->
           <div class="query-right">
-            <el-select v-model="queryData.isLocked" placeholder="全部" size="mini" @change="SelectTag">
+            <el-select
+              v-model="queryData.isLocked"
+              placeholder="全部"
+              size="mini"
+              @change="SelectTag"
+            >
               <el-option
                 v-for="item in SelectOptions"
                 :key="item.value"
@@ -194,7 +200,8 @@ export default {
           value: 1,
           label: "正常"
         }
-      ]
+      ],
+      treeLoading: true
     };
   },
   mounted() {
@@ -219,6 +226,9 @@ export default {
       .catch(e => {
         console.log("读取失败");
         console.log(e);
+      })
+      .finally(e => {
+        this.treeLoading = false;
       });
     this.queryDeptDatas(1);
   },
@@ -228,6 +238,7 @@ export default {
       this.queryDeptDatas(1);
     },
     queryDeptDatas(currentPage) {
+      this.loading = true;
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       let that = this;
       if (this.queryData.DeptName != null) {
@@ -299,6 +310,9 @@ export default {
         .catch(e => {
           console.log("查询部门管理列表失败");
           console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
         });
     },
     queryDeptByIsLocked(isLocked) {

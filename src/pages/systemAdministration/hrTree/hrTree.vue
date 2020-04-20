@@ -605,13 +605,13 @@ export default {
               let result = e.data;
               if (result.code == 200) {
                 let com = result.data;
-                this.formCom.name = com.CompanyName;
-                this.formCom.header = com.Header;
-                this.formCom.tel = com.Tel;
-                this.formCom.desc = com.CoDesc;
+                this.formCom.name = com.companyName;
+                this.formCom.header = com.header;
+                this.formCom.tel = com.tel;
+                this.formCom.desc = com.coDesc;
                 this.formCom.regDate = com.regDate;
                 this.formCom.comType = ["经纪", "物业", "平台", "金融", "代理"][
-                  com.ComType - 1
+                  com.comType - 1
                 ];
                 this.formCom.id = com.id;
                 this.formCom.joinType = [
@@ -619,8 +619,8 @@ export default {
                   "合资控股",
                   "合资占股",
                   "特许经营"
-                ][com.JoinType - 1];
-                this.formCom.region = com.RegionName;
+                ][com.joinType - 1];
+                this.formCom.region = com.regionName;
               } else {
                 console.log("查询公司详情结果：" + result.message);
                 alert(result.message);
