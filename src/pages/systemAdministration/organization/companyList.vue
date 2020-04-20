@@ -83,12 +83,15 @@
         <div class="query-cell">
           <el-button type="primary"
                      size="mini"
+                     :disabled="!(company&&company.parentId>0)"
                      @click="toAddCompanyPage(0)">添加同级公司</el-button>
           <el-button type="primary"
                      size="mini"
+                     :disabled="!(company&&company.id)"
                      @click="toAddCompanyPage(1)">添加子公司</el-button>
           <el-button type="primary"
                      size="mini"
+                     :disabled="!(company&&company.id)"
                      @click="toAddDeptPage">添加子级部门</el-button>
           <!-- <el-button type="primary"
                      size="mini"
@@ -301,6 +304,7 @@ export default {
       this.queryCompanyDatas(1);
     },
     toAddCompanyPage(saveType) {
+      debugger
       if (this.queryData.type == null) {
         this.$alert("", "请选择一个节点", {
           dangerouslyUseHTMLString: false
