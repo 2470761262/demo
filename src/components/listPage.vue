@@ -158,7 +158,7 @@
             <slot name="left"></slot>
           </div>
           <div class="page-body-conter-right"
-               :class='{"tabIsMar": $scopedSlots.left,"queryIsPad":$scopedSlots.top && !$scopedSlots.title}'>
+               :class="{'tabIsMar': $scopedSlots.left,'queryIsPad':$scopedSlots.top && !$scopedSlots.title}">
             <el-table :data="tableData"
                       @cell-dblclick="toHouseDetail"
                       border
@@ -182,8 +182,7 @@
                        :page-sizes="pageJson.sizes || [5,10,15,20]"
                        :page-size="pageJson.size || 10"
                        layout="total, sizes, prev, pager, next, jumper"
-                       :total="pageJson.total">
-        </el-pagination>
+                       :total="pageJson.total"></el-pagination>
       </div>
     </div>
   </div>
@@ -199,12 +198,12 @@ export default {
     $attrs: {
       deep: true,
       immediate: true,
-      handler: function (val, oldVal) {
+      handler: function(val, oldVal) {
         Object.assign(this.$data, val.parentData);
       }
     }
   },
-  data () {
+  data() {
     return {
       sidebarFlag: true,
       loading: true,
@@ -216,9 +215,9 @@ export default {
       tableData: []
     };
   },
-  mounted () { },
+  mounted() {},
   methods: {
-    toHouseDetail (row) {
+    toHouseDetail(row) {
       var that = this;
       if (!this.$attrs.dblclick) {
         if (row.communityName)
@@ -226,27 +225,28 @@ export default {
             that.$router.push({
               name: `${
                 that.$attrs.pageName ? that.$attrs.pageName : "houseDetails"
-                }`,
+              }`,
               params: { houseId: row.houseId }
             });
           else {
             that.$router.push({
               name: `${
                 that.$attrs.pageName ? that.$attrs.pageName : "houseDetails"
-                }`,
+              }`,
               params: { houseId: row.id }
             });
           }
-      } else {//使用各自页面的双击事件
+      } else {
+        //使用各自页面的双击事件
         this.$emit("cellDblClick", row);
       }
     },
     //每页数据设置事件
-    handleSizeChange (e) {
+    handleSizeChange(e) {
       this.$emit("handleSizeChange", e);
     },
     //前往多少页事件
-    handleCurrentChange (e) {
+    handleCurrentChange(e) {
       this.$emit("handleCurrentChange", e);
     }
   }

@@ -5,7 +5,6 @@ import rouetTabsArray from './routerTabJs/index';
         extends:otherIframe,
         data() {
             return {
-                activeParent: "1", //默认显示那个一个块tabs父级菜单
                 activeChild: "/customersSystem/allCustomers", //默认显示的路径 tabs路径
                 routerTab: rouetTabsArray
             }
