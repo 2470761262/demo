@@ -1,5 +1,4 @@
 <style lang="less" scoped>
-@import url("../../../assets/publicLess/pageListQuery.less");
 .flex-cell-content {
   display: flex;
   justify-content: space-around;

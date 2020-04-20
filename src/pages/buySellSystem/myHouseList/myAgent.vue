@@ -1,6 +1,5 @@
 
 <style lang="less" scoped>
-@import url("../../../assets/publicLess/pageListQuery.less");
 /deep/.cellRed {
   background: #e13d3d;
   color: #fff;
@@ -404,6 +403,7 @@ export default {
           default: true
         }
       ],
+      agentPer: '',
       tableColumn: [],
       tableData: [],
       elTabs: {
@@ -499,7 +499,8 @@ export default {
       });
       this.queryMyAgent(1);
     },
-    toHouseData (id, CommunityName) {
+    toHouseData (id, CommunityName, agentName, agentPer) {
+      this.agentPer = agentPer;
       var that = this;
       that.dialogVisible = true;
       console.log("得到房源id为:" + id + "------楼盘名称" + CommunityName);
@@ -708,6 +709,13 @@ export default {
       console.log(
         "得到房源id为:" + that.toHouseId + "------楼盘名称" + that.toComName
       );
+      if (that.agentPer = that.AgentPerId.accountID) {
+        this.$message({
+          message: "调配跟单人和原跟单人相同，请重新选择！",
+          type: "success"
+        });
+        return info
+      }
       let params = {
         houseId: parseInt(that.toHouseId) + "",
         newAgentPer: parseInt(JSON.stringify(that.AgentPerId.accountID)),

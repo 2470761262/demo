@@ -49,6 +49,13 @@
         <el-menu-item index="/sys/baseCustomersList">客户管理</el-menu-item>
 
       </el-submenu>
+      <el-submenu index="99 ">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>新客源系统</span>
+        </template>
+        <el-menu-item index="/customersSystem/customersIframe">客源管理</el-menu-item>
+      </el-submenu>
       <el-submenu :index="item.id+''"
                   :key="item.id"
                   v-for="(item) in menuNodeDatas">

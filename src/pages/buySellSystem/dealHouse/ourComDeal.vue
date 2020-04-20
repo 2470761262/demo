@@ -112,7 +112,6 @@
 <script>
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
-import '@/assets/publicLess/pageListQuery.less';
 export default {
   mixins: [getMenuRid],
   components: {

@@ -49,6 +49,7 @@
           draggable
           @node-drag-end="handleDragEnd"
           @node-click="clickNode"
+          v-loading="treeLoading"
         ></el-tree>
       </div>
     </template>
@@ -292,7 +293,8 @@ export default {
       type: 0,
       node: [],
       showTable: false,
-      saveType: "update"
+      saveType: "update",
+      treeLoading: false
     };
   },
   mounted: function() {
@@ -315,6 +317,7 @@ export default {
 
     //动态加载节点
     loadNode(node, resolve) {
+      this.treeLoading = true;
       if (node.level == 0) {
         this.node = node;
         this.node.id = 0;
@@ -345,6 +348,9 @@ export default {
         .catch(e => {
           console.log("发送公告结果");
           console.log(e);
+        })
+        .finally(e => {
+          this.treeLoading = false;
         });
     },
     treeCheck(e, data) {

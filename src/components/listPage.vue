@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+@import url("../assets/publicLess/pageListQuery.less");
 .page-body {
   display: flex;
   background: #fff;
