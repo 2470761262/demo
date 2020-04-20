@@ -40,6 +40,7 @@
           @check="treeCheck"
           :highlight-current="true"
           :filter-node-method="filterNode"
+          v-loading="treeLoading"
         ></el-tree>
       </div>
     </template>
@@ -93,7 +94,8 @@ export default {
       },
       newPwd: "",
       employeeList: [],
-      personBusinessId: ""
+      personBusinessId: "",
+      treeLoading: true
     };
   },
   mounted: function() {
@@ -121,6 +123,9 @@ export default {
         .catch(e => {
           console.log("发送公告结果");
           console.log(e);
+        })
+        .finally(e => {
+          this.treeLoading = false;
         });
     });
   },

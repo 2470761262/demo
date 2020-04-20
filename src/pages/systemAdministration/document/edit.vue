@@ -33,6 +33,7 @@
           :filter-node-method="filterNode"
           check-strictly
           :action="''"
+          v-loading="treeLoading"
         ></el-tree>
       </div>
     </template>
@@ -77,7 +78,8 @@ export default {
       fileStr: "",
       picName: "",
       fileList: [],
-      defaultCheckedKeys: null
+      defaultCheckedKeys: null,
+      treeLoading: true
     };
   },
   mounted() {
@@ -102,6 +104,9 @@ export default {
       .catch(e => {
         console.log("读取失败");
         console.log(e);
+      })
+      .finally(e => {
+        this.treeLoading = false;
       });
   },
   methods: {

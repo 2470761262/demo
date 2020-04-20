@@ -358,8 +358,10 @@
             </el-table>
           </div>
           <definitionmenu class="menuMarin"
-                          :renderList="tableColumnField"
+                          :loading="menuLoading"
+                          :renderList="menuRenderList"
                           :tableColumn="tableColumn"
+                          :resetList="tableColumnField"
                           @change="tabColumnChange"></definitionmenu>
         </div>
       </template>
@@ -375,6 +377,7 @@
 
 <script>
 import definitionmenu from "@/components/definitionMenu";
+import tableMenu from "@/util/getTableMenu";
 export default {
   inject: ["form", "Slider"],
   components: {
@@ -389,17 +392,26 @@ export default {
   watch: {
     form: {
       deep: true,
-      immediate: true,
+      // immediate: true,
       handler: function(value, ordvalue) {
         this.renderTag(value);
         this.getHouseData(JSON.parse(JSON.stringify(value)));
       }
     }
   },
+  created() {
+    tableMenu.getTableMenu(this.tableColumnField, 16).then(e => {
+      this.menuLoading = false;
+      this.menuRenderList = e;
+      console.log(this.renderList, "this.renderListthis.renderList");
+      this.renderTag(this.form);
+      this.getHouseData(JSON.parse(JSON.stringify(this.form)));
+    });
+  },
   data() {
     return {
       dynamicTags: [],
-      renderList: [],
+      menuRenderList: [],
       loading: false,
       pageJson: {
         total: 1,
@@ -501,7 +513,7 @@ export default {
           width: "120",
           order: "custom",
           disabled: false,
-          default: false,
+          default: true,
           format: item => item.unitPrice + "元/㎡"
         },
         {
@@ -510,7 +522,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         },
         {
           prop: "floor",
@@ -518,7 +530,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         },
         {
           prop: "decoration",
@@ -526,7 +538,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         },
         {
           prop: "addName",
@@ -534,14 +546,17 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: false
+          default: true
         }
       ],
-      tableColumn: []
+      tableColumn: [],
+      menuLoading: true, //自定义菜单
+      renderList: []
     };
   },
   methods: {
     tabColumnChange(e) {
+      console.log(e, "e");
       this.tableColumn = e;
     },
     toHouseDetail(item) {

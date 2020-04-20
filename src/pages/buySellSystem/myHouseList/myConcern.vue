@@ -478,10 +478,7 @@ export default {
   methods: {
     moreSelectChange (e) {
       this.moreSelect = e;
-      this.$refs.moreSelect.visible = true;
-      if (!this.$refs.moreSelect.clear) {
-        this.querylist(1);
-      }
+      this.querylist(1);
     },
     tabColumnChange (e, length = 0) {
       this.tableColumn = e;

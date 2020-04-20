@@ -473,7 +473,6 @@ export default {
       moreRoomNoList: [],
       moreOptions: [],
       moreCbIdList: [],
-      clear: false//是否清空
     };
   },
   mounted () {
@@ -493,8 +492,8 @@ export default {
     remove () {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryConstant();
-      this.clear = true;
-      this.$emit("moreSelectChange", {});
+      this.visible = true;
+      //this.$emit("moreSelectChange", "");
     },
     remoteMethod (query) {
       var that = this;
@@ -549,17 +548,15 @@ export default {
       for (let key in this.more) {
         console.log(key, this.more[key]);
         if (this.more[key] != "") {
-          Object.assign(data , this.more);
+          Object.assign(data, this.more);
           break;
         }
       }
-      this.clear = false;
-
-      if(data.minFloor&&!data.maxFloor){
-        data.maxFloor="999999";
+      if (data.minFloor && !data.maxFloor) {
+        data.maxFloor = "999999";
       }
-      if(!data.minFloor&&data.maxFloor){
-        data.minFloor="-999999";
+      if (!data.minFloor && data.maxFloor) {
+        data.minFloor = "-999999";
       }
       this.$emit("moreSelectChange", data);
       this.visible = false;
