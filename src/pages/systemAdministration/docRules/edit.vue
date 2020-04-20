@@ -42,6 +42,7 @@
           :filter-node-method="filterNode"
           check-strictly
           :action="''"
+          v-loading="treeLoading"
         ></el-tree>
       </div>
     </template>
@@ -172,7 +173,8 @@ export default {
           label: "鑫家网系统规则"
         }
       ],
-      typeValue: ""
+      typeValue: "",
+      treeLoading: true
     };
   },
   mounted() {
@@ -197,6 +199,9 @@ export default {
       .catch(e => {
         console.log("读取失败");
         console.log(e);
+      })
+      .finally(e => {
+        this.treeLoading = false;
       });
 
     this.quill = this.$refs.QuillEditor.quill;
