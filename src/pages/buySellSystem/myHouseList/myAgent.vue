@@ -1,6 +1,5 @@
 
 <style lang="less" scoped>
-@import url("../../../assets/publicLess/pageListQuery.less");
 /deep/.cellRed {
   background: #e13d3d;
   color: #fff;

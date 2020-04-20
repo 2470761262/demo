@@ -154,7 +154,6 @@ import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
-import "@/assets/publicLess/pageListQuery.less";
 import common from "../houseResource/common/common";
 import tableMenu from '@/util/getTableMenu';
 export default {

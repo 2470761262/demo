@@ -96,7 +96,6 @@
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import getToken from "@/minxi/getUrlToken";
-import "@/assets/publicLess/pageListQuery.less";
 export default {
   mixins: [getMenuRid, getToken],
   components: {

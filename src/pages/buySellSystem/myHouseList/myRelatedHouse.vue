@@ -1,5 +1,4 @@
 <style lang="less" scoped>
-@import url("../../../assets/publicLess/pageListQuery.less");
 </style>
 <template>
   <list-page @sort-change="sortMethod"

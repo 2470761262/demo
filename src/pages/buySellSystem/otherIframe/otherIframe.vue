@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     change(e) {
-      console.log(e, this.activeChild);
+      //console.log(e, this.activeChild);
     }
   }
 };

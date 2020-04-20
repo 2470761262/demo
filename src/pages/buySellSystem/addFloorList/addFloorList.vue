@@ -1,5 +1,4 @@
 <style lang="less" scoped>
-@import url("../../../assets/publicLess/pageListQuery.less");
 .page-row-flex {
   display: flex;
   flex-direction: column;
