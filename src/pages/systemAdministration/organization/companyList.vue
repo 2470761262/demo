@@ -57,56 +57,47 @@
 
 <template >
   <div class="page-content">
-    <list-page :parentData="$data"
-               highlight-current-row
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange"
-               @current-change="handleChange">
+    <list-page
+      :parentData="$data"
+      highlight-current-row
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+      @current-change="handleChange"
+    >
       <template v-slot:left>
         <div class="elTree">
           <div class="elTree-scroll">
-            <el-tree ref="tree2"
-                     :data="treeData"
-                     :default-expanded-keys="[1]"
-                     node-key="nodeId"
-                     show-checkbox
-                     check-strictly
-                     :props="defaultProps"
-                     @check-change="checkChange"
-                     @check="treeCheck"
-                     :highlight-current="true"
-                     :filter-node-method="filterNode"></el-tree>
+            <el-tree
+              ref="tree2"
+              :data="treeData"
+              :default-expanded-keys="[1]"
+              node-key="nodeId"
+              show-checkbox
+              check-strictly
+              :props="defaultProps"
+              @check-change="checkChange"
+              @check="treeCheck"
+              :highlight-current="true"
+              :filter-node-method="filterNode"
+              v-loading="treeLoading"
+            ></el-tree>
           </div>
         </div>
       </template>
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddCompanyPage(0)">添加同级公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddCompanyPage(1)">添加子公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddDeptPage">添加子级部门</el-button>
+          <el-button type="primary" size="mini" @click="toAddCompanyPage(0)">添加同级公司</el-button>
+          <el-button type="primary" size="mini" @click="toAddCompanyPage(1)">添加子公司</el-button>
+          <el-button type="primary" size="mini" @click="toAddDeptPage">添加子级部门</el-button>
           <!-- <el-button type="primary"
                      size="mini"
                      @click="queryCompanyByIsLocked(0)">查询锁定公司</el-button>
           <el-button type="primary"
                      size="mini"
-                     @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button> -->
-          <el-button icon="el-icon-s-platform"
-                     size="mini"
-                     @click="setUp()"
-                     title="设置网站"
-                     round></el-button>
+          @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button>-->
+          <el-button icon="el-icon-s-platform" size="mini" @click="setUp()" title="设置网站" round></el-button>
           <div class="query-right">
-            <el-input placeholder="公司名称"
-                      size="small"
-                      v-model="queryData.CompanyName"
-                      clearable>
-            </el-input>
+            <el-input placeholder="公司名称" size="small" v-model="queryData.CompanyName" clearable></el-input>
             <el-select v-model="selectTag" size="small" placeholder="全部" @change="SelectTag">
               <el-option
                 v-for="item in SelectOptions"
@@ -115,32 +106,30 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryCompanyByParams">查询</el-button>
+            <el-button type="primary" size="mini" @click="queryCompanyByParams">查询</el-button>
           </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"
-                           :formatter="item.formatter"
-          >
-          </el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+            :formatter="item.formatter"
+          ></el-table-column>
         </template>
-        <el-table-column label="操作"
-                         width="300"
-                         fixed="right">
+        <el-table-column label="操作" width="300" fixed="right">
           <template v-slot="scope">
             <div v-if="scope.row.operation!=''">
-              <el-button type="primary"
-                         size="mini"
-                         @click="distributeEvent(item.methosName,scope.row.id)"
-                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                         :key="index">{{item.name}}</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="distributeEvent(item.methosName,scope.row.id)"
+                v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                :key="index"
+              >{{item.name}}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -190,19 +179,21 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "companyName", label: "公司名"},
-        { prop: "coDesc", label: "公司描述"},
-        { prop: "tel", label: "电话"},
-        { prop: "isLocked", label: "是否锁定",
-          formatter: function (row) {
-            if(row.isLocked == 1){
+        { prop: "companyName", label: "公司名" },
+        { prop: "coDesc", label: "公司描述" },
+        { prop: "tel", label: "电话" },
+        {
+          prop: "isLocked",
+          label: "是否锁定",
+          formatter: function(row) {
+            if (row.isLocked == 1) {
               return "正常";
-            }else{
+            } else {
               return "锁定";
             }
           }
         },
-        { prop: "addDate", label: "添加时间"}
+        { prop: "addDate", label: "添加时间" }
       ],
       tableData: [],
       selectTag: "",
@@ -219,7 +210,8 @@ export default {
           value: "1",
           label: "正常"
         }
-      ]
+      ],
+      treeLoading: true
     };
   },
   mounted() {
@@ -249,6 +241,9 @@ export default {
         .catch(e => {
           console.log("读取失败");
           console.log(e);
+        })
+        .finally(e => {
+          this.treeLoading = false;
         });
     },
     queryCompanyByParams() {
