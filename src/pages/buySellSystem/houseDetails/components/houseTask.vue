@@ -302,7 +302,6 @@ export default {
       }
     },
     agentApply() {
-      return false
       if(!this.dept.id){
         return false;
       }
