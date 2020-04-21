@@ -208,22 +208,6 @@ export default {
           default: true
         },
         {
-          prop: "buildingName",
-          label: "楼栋号",
-          width: "90",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "roomNo",
-          label: "房间号",
-          width: "110",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
           prop: "inArea",
           label: "面积(m²)",
           width: "110",
