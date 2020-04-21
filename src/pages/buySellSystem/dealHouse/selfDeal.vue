@@ -119,7 +119,8 @@
                      @click="queryDatalist">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      deptUrl="tradeHouse/getOwnerTrade"></moreSelect>
         </div>
       </div>
     </template>
@@ -378,9 +379,11 @@ export default {
       console.log(params);
       this.$api
         .post({
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
           url: "/tradeHouse/getOwnerTrade",
           data: params,
-          qs: true
+          // qs: true
         })
         .then(e => {
           console.log(e.data);
@@ -488,4 +491,4 @@ export default {
     }
   }
 };
-</script>  
+</script>
