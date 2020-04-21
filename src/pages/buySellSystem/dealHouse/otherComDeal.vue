@@ -229,6 +229,11 @@ export default {
     queryTabData () {
       console.log(this, "111");
     },
+    toLook (id) {
+      var that = this;
+      that.$router.push({ name: "historyDetails",
+        params: { houseId: id } });
+    },
     toHouseDetail (item) {
       let id = item.id;
       if (!item.id) {
@@ -426,4 +431,4 @@ export default {
     }
   }
 };
-</script>  
+</script>
