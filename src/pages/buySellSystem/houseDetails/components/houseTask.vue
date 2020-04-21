@@ -148,7 +148,7 @@
           </div>
         </template>
         <el-button v-else
-                   :disabled="isDisabled"
+                   :disabled="isDisabled||agentApply"
                    @click="openAgentPop"><span>申请跟单人</span> </el-button>
       </div>
     </div>
@@ -269,7 +269,7 @@
       <template>
         <div class="text-middle">
           <el-button size="mini"
-                     :disabled="isDisabled"
+                     :disabled="agentApply||isDisabled"
                      @click="applyAgent"> 提交</el-button>
         </div>
       </template>
@@ -289,7 +289,7 @@ import houseCheck from "../common/houseCheck";
 import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
 import util from "@/util/util";
 export default {
-  inject: ["houseDetails", "houseId", "buttonDisabled"],
+  inject: ["houseDetails", "houseId", "buttonDisabled","dept"],
   computed: {
     isDisabled() {
       return this.buttonDisabled;
@@ -299,6 +299,24 @@ export default {
         return this.houseDetails.data;
       } else {
         return {};
+      }
+    },
+    agentApply() {
+      return false
+      if(!this.dept.id){
+        return false;
+      }
+      let loginDeptId = util.localStorageGet("logindata").deptId;
+      if (Object.keys(this.houseDetails).length > 0) {
+        let detailData = this.houseDetails.data;
+        if(!detailData){
+          return true;
+        }
+        if(detailData.plate==1&&this.dept.id!=loginDeptId){
+          return true;
+        }
+      } else {
+        return true;
       }
     }
   },
