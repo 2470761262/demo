@@ -1,6 +1,5 @@
 
 <style lang="less" scoped>
-@import url("../../../assets/publicLess/pageListQuery.less");
 .page-content {
   height: 100%;
   display: flex;

@@ -152,7 +152,6 @@
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
-import '@/assets/publicLess/pageListQuery.less';
 import common from "../houseResource/common/common"
 export default {
   mixins: [getMenuRid],

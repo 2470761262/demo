@@ -261,12 +261,12 @@
     <section class="echart-data">
       <div class="echart-data-content">
         <h3 class="query-heander-abs">
-          <span>热点搜索</span>
+          <span>今日推荐</span>
         </h3>
         <div class="data-content-progress">
           <div class="progress-layout">
-            <progress-content :houseNum="30"
-                              :compare="30"
+            <progress-content :houseNum="yesterday.agentCount"
+                              :compare="yesterday.agentCount-beforeYesterday.agentCount || 0"
                               progress="6%"
                               reset-progress
                               proportion="公司总占比"></progress-content>
@@ -354,17 +354,59 @@ export default {
         { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
         { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
         { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 }
-      ]
+      ],
+      companyProportion: {},
+      yesterday: {},
+      beforeYesterday: {}
     };
   },
   mounted () {
     addResizeListener(this.$refs.chart, this.resetEcharts);
+    this.getStatisticsList("company").then((e) => {
+      if (e.data.data) {
+        this.companyProportion = e.data.data;
+        this.getStatisticsList().then((e) => {
+          if (e.data.data.length > 0) {
+            var day = new Date();
+            var month = (day.getMonth() + 1) < 10 ? "0" + (day.getMonth() + 1) : day.getMonth() + 1;
+            day.setDate(day.getDate() - 1);
+            var yesterday = month + "-" + day.getDate();
+            day.setDate(day.getDate() - 1);
+            var beforeYesterday = month + "-" + day.getDate();
+            console.log(beforeYesterday);
+            e.data.data.forEach(element => {
+              if (element.createTime == yesterday) {
+                this.yesterday = element;
+              }
+              if (element.createTime == beforeYesterday) {
+                this.beforeYesterday = element;
+              }
+            });
+          }
+          console.log(this.beforeYesterday);
+        });
+      }
+
+    });
     this.draw();
   },
   destroyed () {
     removeResizeListener(this.$refs.chart, this.resetEcharts);
   },
   methods: {
+    getStatisticsList (type = "") {
+      return this.$api
+        .post({
+          url: "/myHouse/myData",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            type: type
+          }
+        })
+        .then(e => {
+          return e;
+        })
+    },
     querySearch (value, resolve) {
       resolve([{ value: "小区1" }, { value: "小区2" }]);
     },
