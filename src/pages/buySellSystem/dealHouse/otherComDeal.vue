@@ -118,7 +118,8 @@
                      @click="queryDatalist">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      deptUrl="/tradeHouse/getOtherCompanyTrade"></moreSelect>
         </div>
       </div>
     </template>
