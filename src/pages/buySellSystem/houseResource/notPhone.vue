@@ -109,7 +109,7 @@
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"
                           :default-time="['00:00:00', '23:59:59']"></el-date-picker>
-         
+
         </div> -->
         <div class="query-content-cell cell-interval75">
           <el-button type="primary"
@@ -147,7 +147,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="addPhone(scope.row.bhid,scope.row.id)"
+                     @click="addPhone(scope.row.bhId,scope.row.id)"
                      style="">录入号码</el-button>
           <el-button type="primary"
                      size="mini"
@@ -290,9 +290,9 @@ export default {
       })
         .then(({ value }) => {
           this.$api
-            .get({
+            .post({
               url: "/houseResource/updatePhone",
-              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              headers: { "Content-Type": "application/x-www-form-urlencoded" },
               token: false,
               qs: true,
               data: {
