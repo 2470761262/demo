@@ -26,7 +26,7 @@ export default {
           { title: '虚假钥匙', value: 3 },
           { title: '虚假跟进', value: 4 },
           { title: '房屋已售', value: 5 },
-          { title: '虚假业务号码', value: 6 },
+          { title: '虚假业主号码', value: 6 },
           { title: '其他', value: 7 }
         ]
       }
