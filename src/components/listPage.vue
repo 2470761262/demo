@@ -12,13 +12,15 @@
   .page-body-conter {
     flex: 1;
     padding-left: 20px;
-
+    display: flex;
+    flex-direction: column;
     .page-body-conter-title {
       padding: 15px 0;
     }
     .page-body-conter-flex {
       display: flex;
-      height: 100%;
+      // height: 100%;
+      flex: 1;
       .page-body-conter-left-slot {
         position: relative;
         display: flex;
@@ -33,7 +35,7 @@
   .page-body-floot {
     display: flex;
     justify-content: center;
-    padding-bottom: 10px;
+    padding: 10px 0;
     /deep/.number {
       font-size: 15px;
     }
