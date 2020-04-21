@@ -163,7 +163,7 @@
                :class="{'tabIsMar': $scopedSlots.left,'queryIsPad':$scopedSlots.top && !$scopedSlots.title}">
             <el-table :data="tableData"
                       @cell-dblclick="toHouseDetail"
-                      border
+                      :border="$attrs.border ? false : true"
                       :header-cell-class-name="( $attrs.headerClass || $attrs.headerClass == '') ? $attrs.headerClass: 'headerCellSet' "
                       :cell-class-name="( $attrs.cellClass || $attrs.cellClass == '')  ? $attrs.cellClass: 'cellItemSet'"
                       ref="table"
@@ -217,7 +217,6 @@ export default {
       tableData: []
     };
   },
-  mounted() {},
   methods: {
     toHouseDetail(row) {
       var that = this;
