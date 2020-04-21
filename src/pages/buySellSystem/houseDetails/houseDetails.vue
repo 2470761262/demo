@@ -84,6 +84,7 @@ export default {
   provide () {
     return {
       houseId: this.forID,
+      dept: this.dept,
       houseDetails: this.houseDetails,
       load: this.load,
       buttonDisabled: false
@@ -129,6 +130,9 @@ export default {
       },
       detailType: undefined,//标识房源详情类型，决定调用哪个详情接口地址
       showEdit: false,
+      dept: {
+        id: 0
+      }
     };
   },
   created () {
@@ -142,6 +146,12 @@ export default {
       this.detailType = util.localStorageGet("houseDetails.vue:detailType");
     }
     this.lastParams.id = this.forID.id;
+    if(this.$route.params.dept){
+      this.dept.id=this.$route.params.dept;
+      util.localStorageSet("houseDetails.vue:deptId", this.dept.id);
+    } else {
+      this.dept.id = util.localStorageGet("houseDetails.vue:deptId");
+    }
     this.getHouseDetails();
   },
   methods: {
