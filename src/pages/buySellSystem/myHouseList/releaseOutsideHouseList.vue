@@ -133,16 +133,7 @@
                   @click="remove">清除</span>
           </div>
           <div class="query-content-cell cell-interval45">
-            <label class="query-checkbox">
-              <input type="checkbox"
-                     @click="keySelect" />
-              <span>钥匙</span>
-            </label>
-            <label class="query-checkbox">
-              <input type="checkbox"
-                     @click="onlySelect" />
-              <span>独家</span>
-            </label>
+
           </div>
           <div class="query-content-cell cell-interval45">
             <el-button type="primary"
@@ -150,8 +141,7 @@
                        @click="queryMyAgentParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange"
-                        deptUrl="/myHouse/getMyAgent"></moreSelect>
+
           </div>
         </div>
       </template>
@@ -227,7 +217,7 @@ export default {
       },
       tableColumnField: [
         {
-          prop: "HouseNo",
+          prop: "houseNo",
           label: "房源编号",
           width: "170",
           order: false,
@@ -235,7 +225,7 @@ export default {
           default: true
         },
         {
-          prop: "CommunityName",
+          prop: "communityName",
           label: "小区名称",
           order: false,
           width: "150",
@@ -243,7 +233,7 @@ export default {
           default: true
         },
         {
-          prop: "BuildingName",
+          prop: "buildingName",
           label: "楼栋号",
           width: "90",
           order: false,
@@ -251,7 +241,7 @@ export default {
           default: true
         },
         {
-          prop: "RoomNo",
+          prop: "roomNo",
           label: "房间号",
           width: "110",
           order: false,
@@ -259,22 +249,22 @@ export default {
           default: true
         },
         {
-          prop: "InArea",
+          prop: "inArea",
           label: "面积(m²)",
           width: "110",
           order: "custom",
           disabled: false,
           default: true,
-          formart: item => item.InArea + "m²"
+          formart: item => item.inArea + "m²"
         },
         {
-          prop: "Price",
+          prop: "price",
           label: "售价(万元)",
           width: "120",
           order: "custom",
           disabled: false,
           default: true,
-          formart: item => item.Price + "万元"
+          formart: item => item.price + "万元"
         },
         {
           prop: "unitPrice",
@@ -283,7 +273,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.Price * 10000 / item.InArea + "元/㎡"
+          format: item => item.price * 10000 / item.inArea + "元/㎡"
         },
         {
           prop: "seenNum",
@@ -310,7 +300,7 @@ export default {
           default: true
         },
         {
-          prop: "AddTime",
+          prop: "addTime",
           label: "添加时间",
           width: "120",
           order: "custom",
@@ -341,7 +331,7 @@ export default {
             "卫"
         },
         {
-          prop: "Face",
+          prop: "face",
           label: "朝向",
           width: "120",
           order: false,
@@ -349,7 +339,7 @@ export default {
           default: true
         },
         {
-          prop: "Floor",
+          prop: "floor",
           label: "楼层",
           width: "120",
           order: false,
@@ -357,7 +347,7 @@ export default {
           default: true
         },
         {
-          prop: "Decoration",
+          prop: "decoration",
           label: "装修",
           width: "120",
           order: false,
