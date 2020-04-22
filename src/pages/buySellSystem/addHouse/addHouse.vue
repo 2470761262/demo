@@ -69,44 +69,50 @@
 <template>
   <div class="page-body">
     <div class="page-steps">
-      <el-steps :active="stepsActiveIndex+1"
-                finish-status="success">
-        <el-step :title="item.title"
-                 icon="el-icon-edit"
-                 v-for="(item, index) in stepsList"
-                 :key="index"></el-step>
+      <el-steps :active="stepsActiveIndex+1" finish-status="success">
+        <el-step
+          :title="item.title"
+          icon="el-icon-edit"
+          v-for="(item, index) in stepsList"
+          :key="index"
+        ></el-step>
       </el-steps>
     </div>
-    <div class="page-contenr"
-         v-loading="butLoading"
-         element-loading-text="已经在努力加载了~">
+    <div class="page-contenr" v-loading="butLoading" element-loading-text="已经在努力加载了~">
       <div :class="['page-contenr-com',{'page-contenr-com-over':butLoading}]">
         <div class="page-contenr-com-posi">
           <keep-alive>
-            <component :houseType.sync="componentName"
-                       :getData="formDataGet"
-                       :disabled="disabled"
-                       :is="componentName"
-                       ref="com"
-                       :paramsObj="paramsObj"></component>
+            <component
+              :houseType.sync="componentName"
+              :getData="formDataGet"
+              :disabled="disabled"
+              :is="componentName"
+              ref="com"
+              :paramsObj="paramsObj"
+            ></component>
           </keep-alive>
           <div class="page-contenr-but">
             <el-button-group>
-              <el-button v-if="stepsActiveIndex != 0 && stepsActiveIndex != 3 "
-                         type="primary"
-                         @click="prevPage"
-                         class="page-previous">
-                {{prevText}}
-              </el-button>
-              <el-button v-if="stepsActiveIndex < 2 ||  reSetMethod"
-                         type="primary"
-                         @click="nextPage(null)"
-                         class="page-next"
-                         :loading="butLoading">{{ nextText }}</el-button>
-              <el-button type="primary"
-                         v-if="stepsActiveIndex < 3 ||  reSetMethod"
-                         @click="nextPage('draft')"
-                         :loading="butLoading">{{paramsObj.buttonText ||'提交验真' }}</el-button>
+              <el-button
+                v-if="stepsActiveIndex != 0 && stepsActiveIndex != 3 "
+                type="primary"
+                @click="prevPage"
+                class="page-previous"
+              >{{prevText}}</el-button>
+              <el-button
+                v-if="stepsActiveIndex < 2 ||  reSetMethod"
+                type="primary"
+                @click="nextPage(null)"
+                class="page-next"
+                :loading="butLoading"
+              >{{ nextText }}</el-button>
+              <el-button
+                type="primary"
+                v-if="stepsActiveIndex < 3 ||  reSetMethod"
+                @click="nextPage('draft')"
+                :disabled="btnSubmitVerify"
+                :loading="butLoading"
+              >{{paramsObj.buttonText ||'提交验真' }}</el-button>
             </el-button-group>
           </div>
         </div>
@@ -121,6 +127,7 @@ import basicInformation from "@/pages/buySellSystem/addHouse/components/basicInf
 import componentsFactory from "@/util/componentsFactory";
 import getMenuRid from "@/minxi/getMenuRid";
 import util from "@/util/util";
+import but from "@/evenBus/but.js";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -192,7 +199,8 @@ export default {
       butLoading: false,
       formDataGet: false,
       disabled: false, //是否禁用楼盘选择和多套单套录入切换
-      paramsObj: {}
+      paramsObj: {},
+      btnSubmitVerify: true
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -278,6 +286,11 @@ export default {
         ].componentName;
       }
     }
+  },
+  mounted() {
+    but.$on("submitVerify", () => {
+      this.btnSubmitVerify = false;
+    });
   }
 };
 </script>

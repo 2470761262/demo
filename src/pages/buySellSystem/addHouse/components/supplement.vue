@@ -178,104 +178,126 @@
 }
 </style>
 <template>
-  <div class="page-cell-addHouse"
-       element-loading-text="我在去获取数据的路上了~"
-       v-scrollError="errorBags.items"
-       v-loading="loading">
+  <div
+    class="page-cell-addHouse"
+    element-loading-text="我在去获取数据的路上了~"
+    v-scrollError="errorBags.items"
+    v-loading="loading"
+  >
     <!-- 房屋来源 -->
-    <div :class="{'after-tips':errorBags.has('houseSource')}"
-         :data-tips="errorBags.first('houseSource')">
+    <div
+      :class="{'after-tips':errorBags.has('houseSource')}"
+      :data-tips="errorBags.first('houseSource')"
+    >
       <div class="cell-item-cell">
         <div class="item-before text-just">房源来源</div>
-        <el-select v-model="formData.houseSource"
-                   placeholder="请选择房源来源"
-                   v-validate="required?'required': ''"
-                   data-vv-as="房源来源"
-                   data-vv-name="houseSource">
-          <el-option v-for="item in houseSourceList"
-                     :key="item.value"
-                     :label="item.key"
-                     :value="item.value"></el-option>
+        <el-select
+          v-model="formData.houseSource"
+          placeholder="请选择房源来源"
+          v-validate="required?'required': ''"
+          data-vv-as="房源来源"
+          data-vv-name="houseSource"
+        >
+          <el-option
+            v-for="item in houseSourceList"
+            :key="item.value"
+            :label="item.key"
+            :value="item.value"
+          ></el-option>
         </el-select>
       </div>
     </div>
     <!-- 房屋现状 -->
-    <div :class="{'after-tips':errorBags.has('houseNow')}"
-         :data-tips="errorBags.first('houseNow')">
+    <div :class="{'after-tips':errorBags.has('houseNow')}" :data-tips="errorBags.first('houseNow')">
       <div class="cell-item-cell">
         <div class="item-before text-just">房屋现状</div>
-        <el-radio-group v-model="formData.houseNow"
-                        size="mini"
-                        v-validate="required?'required': ''"
-                        data-vv-as="房屋现状"
-                        data-vv-name="houseNow">
-          <el-radio :label="item.value"
-                    v-for="item in houseNowList"
-                    :key="item.key">{{ item.key }}</el-radio>
+        <el-radio-group
+          v-model="formData.houseNow"
+          size="mini"
+          v-validate="required?'required': ''"
+          data-vv-as="房屋现状"
+          data-vv-name="houseNow"
+        >
+          <el-radio :label="item.value" v-for="item in houseNowList" :key="item.key">{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <!-- 装修类型  -->
-    <div :class="{'after-tips':errorBags.has('decoration')}"
-         :data-tips="errorBags.first('decoration')">
+    <div
+      :class="{'after-tips':errorBags.has('decoration')}"
+      :data-tips="errorBags.first('decoration')"
+    >
       <div class="cell-item-cell">
         <div class="item-before text-just">装修类型</div>
-        <el-radio-group v-model="formData.decoration"
-                        size="mini"
-                        v-validate="required?'required': ''"
-                        data-vv-as="装修类型"
-                        data-vv-name="decoration">
-          <el-radio :label="item.value"
-                    v-for="item in decorationList"
-                    :key="item.key">{{ item.key }}</el-radio>
+        <el-radio-group
+          v-model="formData.decoration"
+          size="mini"
+          v-validate="required?'required': ''"
+          data-vv-as="装修类型"
+          data-vv-name="decoration"
+        >
+          <el-radio
+            :label="item.value"
+            v-for="item in decorationList"
+            :key="item.key"
+          >{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <!-- 户口情况 -->
-    <div :class="{'after-tips':errorBags.has('sign')}"
-         :data-tips="errorBags.first('sign')">
+    <div :class="{'after-tips':errorBags.has('sign')}" :data-tips="errorBags.first('sign')">
       <div class="cell-item-cell">
         <div class="item-before text-just">户口情况</div>
-        <el-radio-group v-model="formData.sign"
-                        size="mini"
-                        v-validate="required?'required': ''"
-                        data-vv-as="户口情况"
-                        data-vv-name="sign">
-          <el-radio v-for="item in signList"
-                    :key="item.key"
-                    :label="item.value">{{ item.key }}</el-radio>
+        <el-radio-group
+          v-model="formData.sign"
+          size="mini"
+          v-validate="required?'required': ''"
+          data-vv-as="户口情况"
+          data-vv-name="sign"
+        >
+          <el-radio v-for="item in signList" :key="item.key" :label="item.value">{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <!-- 物业费 -->
-    <div :class="{'after-tips':errorBags.has('propertyFee')}"
-         :data-tips="errorBags.first('propertyFee')">
+    <div
+      :class="{'after-tips':errorBags.has('propertyFee')}"
+      :data-tips="errorBags.first('propertyFee')"
+    >
       <div class="cell-item-cell el-input-w">
         <div class="item-before text-just">物业费</div>
-        <el-input type="text"
-                  v-model="formData.propertyFee"
-                  v-validate="required?'decimal:2|noZero1|max:14|required': 'decimal:2|noZero1|max:14'"
-                  data-vv-as="物业费"
-                  data-vv-name="propertyFee"
-                  placeholder="请输入物业费"
-                  style="height:0.3rem;"></el-input>
+        <el-input
+          type="text"
+          v-model="formData.propertyFee"
+          v-validate="required?'decimal:2|noZero1|max:14|required': 'decimal:2|noZero1|max:14'"
+          data-vv-as="物业费"
+          data-vv-name="propertyFee"
+          placeholder="请输入物业费"
+          style="height:0.3rem;"
+        ></el-input>
         <div class="item-after">元/平方</div>
       </div>
     </div>
 
     <!-- 附属配套 -->
-    <div :class="{'after-tips':errorBags.has('houseBelong')}"
-         :data-tips="errorBags.first('houseBelong')">
+    <div
+      :class="{'after-tips':errorBags.has('houseBelong')}"
+      :data-tips="errorBags.first('houseBelong')"
+    >
       <div class="cell-item-cell el-input-w">
         <div class="item-before text-just">附属配套</div>
-        <el-radio-group v-model="formData.houseBelong"
-                        size="mini"
-                        v-validate="required?'required': ''"
-                        data-vv-as="附属配套"
-                        data-vv-name="houseBelong">
-          <el-radio v-for="item in houseBelongList"
-                    :key="item.key"
-                    :label="item.value">{{ item.key }}</el-radio>
+        <el-radio-group
+          v-model="formData.houseBelong"
+          size="mini"
+          v-validate="required?'required': ''"
+          data-vv-as="附属配套"
+          data-vv-name="houseBelong"
+        >
+          <el-radio
+            v-for="item in houseBelongList"
+            :key="item.key"
+            :label="item.value"
+          >{{ item.key }}</el-radio>
         </el-radio-group>
         <!-- <el-input v-if="houseBelongSelect=='其他'"
                 type="text"
@@ -283,125 +305,150 @@
       </div>
     </div>
     <!-- 学籍占用 -->
-    <div class="{'after-tips':errorBags.has('primaryRadio')}"
-         :data-tips="errorBags.first('primaryRadio')">
+    <div
+      class="{'after-tips':errorBags.has('primaryRadio')}"
+      :data-tips="errorBags.first('primaryRadio')"
+    >
       <div class="cell-item-cell">
-        <div class="item-before text-just before-text"
-             data-before="(小学)">学籍占用</div>
-        <el-radio-group size="mini"
-                        @change="primaryRadioChange"
-                        v-model="primaryRadio">
-          <el-radio v-for="item in primarySchoolUseList"
-                    :key="item.value"
-                    :label="item.value">{{ item.key }}</el-radio>
+        <div class="item-before text-just before-text" data-before="(小学)">学籍占用</div>
+        <el-radio-group size="mini" @change="primaryRadioChange" v-model="primaryRadio">
+          <el-radio
+            v-for="item in primarySchoolUseList"
+            :key="item.value"
+            :label="item.value"
+          >{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <!-- 小学占用选择 -->
-    <div class="cell-item-cell no-top"
-         v-if="primaryRadio == 1">
+    <div class="cell-item-cell no-top" v-if="primaryRadio == 1">
       <div class="item-before"></div>
-      <div :class="{'after-tips':errorBags.has('primarySchoolUse')}"
-           :data-tips="errorBags.first('primarySchoolUse')">
-        <el-radio-group v-validate="{'required':primaryRadio == 1}"
-                        data-vv-name="primarySchoolUse"
-                        data-vv-as="小学学籍占用"
-                        v-model="formData.primarySchoolUse"
-                        size="mini">
-          <el-radio :label="item.value"
-                    v-for="item in primarySchoolUseRenderList"
-                    :key="item.value"
-                    border>{{ item.key }}</el-radio>
+      <div
+        :class="{'after-tips':errorBags.has('primarySchoolUse')}"
+        :data-tips="errorBags.first('primarySchoolUse')"
+      >
+        <el-radio-group
+          v-validate="{'required':primaryRadio == 1}"
+          data-vv-name="primarySchoolUse"
+          data-vv-as="小学学籍占用"
+          v-model="formData.primarySchoolUse"
+          size="mini"
+        >
+          <el-radio
+            :label="item.value"
+            v-for="item in primarySchoolUseRenderList"
+            :key="item.value"
+            border
+          >{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <!-- 中学籍占用 -->
-    <div class="{'after-tips':errorBags.has('middleRadio')}"
-         :data-tips="errorBags.first('middleRadio')">
+    <div
+      class="{'after-tips':errorBags.has('middleRadio')}"
+      :data-tips="errorBags.first('middleRadio')"
+    >
       <div class="cell-item-cell">
-        <div class="item-before text-just before-text"
-             data-before="(中学)">学籍占用</div>
-        <el-radio-group size="mini"
-                        @change="middleRadioChange"
-                        v-model="middleRadio">
-          <el-radio v-for="item in middleSchoolUseList"
-                    :key="item.value"
-                    :label="item.value">{{ item.key }}</el-radio>
+        <div class="item-before text-just before-text" data-before="(中学)">学籍占用</div>
+        <el-radio-group size="mini" @change="middleRadioChange" v-model="middleRadio">
+          <el-radio
+            v-for="item in middleSchoolUseList"
+            :key="item.value"
+            :label="item.value"
+          >{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <!-- 中学占用选择 -->
-    <div class="cell-item-cell no-top"
-         v-if="middleRadio == 1">
+    <div class="cell-item-cell no-top" v-if="middleRadio == 1">
       <div class="item-before"></div>
-      <div :class="{'after-tips':errorBags.has('middleSchoolUse')}"
-           :data-tips="errorBags.first('middleSchoolUse')">
-        <el-radio-group v-validate="{'required':middleRadio == 1}"
-                        data-vv-name="middleSchoolUse"
-                        data-vv-as="中学学籍占用"
-                        v-model="formData.middleSchoolUse"
-                        size="mini">
-          <el-radio :label="item.value"
-                    v-for="item in middleSchoolUseRenderList"
-                    :key="item.value"
-                    border>{{ item.key }}</el-radio>
+      <div
+        :class="{'after-tips':errorBags.has('middleSchoolUse')}"
+        :data-tips="errorBags.first('middleSchoolUse')"
+      >
+        <el-radio-group
+          v-validate="{'required':middleRadio == 1}"
+          data-vv-name="middleSchoolUse"
+          data-vv-as="中学学籍占用"
+          v-model="formData.middleSchoolUse"
+          size="mini"
+        >
+          <el-radio
+            :label="item.value"
+            v-for="item in middleSchoolUseRenderList"
+            :key="item.value"
+            border
+          >{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <!-- 抵押情况 -->
-    <div :class="{'after-tips':errorBags.has('mortgageChange')}"
-         :data-tips="errorBags.first('mortgageChange')">
+    <div
+      :class="{'after-tips':errorBags.has('mortgageChange')}"
+      :data-tips="errorBags.first('mortgageChange')"
+    >
       <div class="cell-item-cell">
         <div class="item-before text-just">抵押情况</div>
-        <el-radio-group v-model="formData.mortgage"
-                        @change="mortgageChange"
-                        size="mini"
-                        v-validate="required?'required': ''"
-                        data-vv-as="抵押情况"
-                        data-vv-name="mortgageChange">
-          <el-radio v-for="item in mortgageList"
-                    class="item-flex-avg"
-                    :key="item.key"
-                    :label="item.value">{{ item.key }}</el-radio>
+        <el-radio-group
+          v-model="formData.mortgage"
+          @change="mortgageChange"
+          size="mini"
+          v-validate="required?'required': ''"
+          data-vv-as="抵押情况"
+          data-vv-name="mortgageChange"
+        >
+          <el-radio
+            v-for="item in mortgageList"
+            class="item-flex-avg"
+            :key="item.key"
+            :label="item.value"
+          >{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <div class="cell-item-cell no-top">
       <div class="item-before"></div>
-      <div :class="{'after-tips':errorBags.has('mortgageBank') || errorBags.has('balance') ||  errorBags.has('monthlyMortgage')}"
-           :data-tips="errorBags.first('mortgageBank')|| errorBags.first('balance') || errorBags.first('monthlyMortgage')">
+      <div
+        :class="{'after-tips':errorBags.has('mortgageBank') || errorBags.has('balance') ||  errorBags.has('monthlyMortgage')}"
+        :data-tips="errorBags.first('mortgageBank')|| errorBags.first('balance') || errorBags.first('monthlyMortgage')"
+      >
         <div class="cell-item-cell no-top">
-          <el-select v-show="formData.mortgage==1"
-                     v-model="formData.mortgageBank"
-                     placeholder="请选择抵押银行"
-                     v-validate="formData.mortgage==1?'required':''"
-                     data-vv-as="抵押银行"
-                     data-vv-name="mortgageBank">
-            <el-option v-for="item in mortgageBankList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value"></el-option>
+          <el-select
+            v-show="formData.mortgage==1"
+            v-model="formData.mortgageBank"
+            placeholder="请选择抵押银行"
+            v-validate="formData.mortgage==1?'required':''"
+            data-vv-as="抵押银行"
+            data-vv-name="mortgageBank"
+          >
+            <el-option
+              v-for="item in mortgageBankList"
+              :key="item.value"
+              :label="item.key"
+              :value="item.value"
+            ></el-option>
           </el-select>
-          <div class="Division"
-               v-if="formData.mortgage==1">余贷/月供</div>
-          <el-input class="other-input"
-                    v-model="formData.balance"
-                    v-validate="formData.mortgage==1&&required?'decimal:2|max:14|required':'decimal:2|max:14'"
-                    data-vv-as="余贷"
-                    data-vv-name="balance"
-                    placeholder="请输入余贷金额"
-                    v-show="formData.mortgage==1"></el-input>
-          <div class="Division"
-               v-if="formData.mortgage==1">万元</div>
-          <el-input class="other-input"
-                    v-model="formData.monthlyMortgage"
-                    v-validate="formData.mortgage==1&&required?'decimal:2|max:14|required':'decimal:2|max:14'"
-                    data-vv-as="月供"
-                    data-vv-name="monthlyMortgage"
-                    placeholder="请输入月供"
-                    v-show="formData.mortgage==1"></el-input>
-          <div class="Division"
-               v-if="formData.mortgage==1">元/月</div>
+          <div class="Division" v-if="formData.mortgage==1">余贷/月供</div>
+          <el-input
+            class="other-input"
+            v-model="formData.balance"
+            v-validate="formData.mortgage==1&&required?'decimal:2|max:14|required':'decimal:2|max:14'"
+            data-vv-as="余贷"
+            data-vv-name="balance"
+            placeholder="请输入余贷金额"
+            v-show="formData.mortgage==1"
+          ></el-input>
+          <div class="Division" v-if="formData.mortgage==1">万元</div>
+          <el-input
+            class="other-input"
+            v-model="formData.monthlyMortgage"
+            v-validate="formData.mortgage==1&&required?'decimal:2|max:14|required':'decimal:2|max:14'"
+            data-vv-as="月供"
+            data-vv-name="monthlyMortgage"
+            placeholder="请输入月供"
+            v-show="formData.mortgage==1"
+          ></el-input>
+          <div class="Division" v-if="formData.mortgage==1">元/月</div>
         </div>
       </div>
     </div>
@@ -409,181 +456,215 @@
 
     <div class="cell-item-cell">
       <div class="item-before text-just">上次交易</div>
-      <div :class="{'after-tips':errorBags.has('lastSale')}"
-           :data-tips="errorBags.first('lastSale')">
-        <el-date-picker v-model="formData.lastSale"
-                        type="date"
-                        class="other-input"
-                        placeholder="契税发票时间"
-                        v-validate="required?'required': ''"
-                        data-vv-as="契税发票时间"
-                        data-vv-name="lastSale"
-                        value-format="yyyy-MM-dd"
-                        @change="changeOnly"
-                        :picker-options="pickerOptions"></el-date-picker>
+      <div
+        :class="{'after-tips':errorBags.has('lastSale')}"
+        :data-tips="errorBags.first('lastSale')"
+      >
+        <el-date-picker
+          v-model="formData.lastSale"
+          type="date"
+          class="other-input"
+          placeholder="契税发票时间"
+          v-validate="required?'required': ''"
+          data-vv-as="契税发票时间"
+          data-vv-name="lastSale"
+          value-format="yyyy-MM-dd"
+          @change="changeOnly"
+          :picker-options="pickerOptions"
+        ></el-date-picker>
       </div>
       <div class="Division">是否唯一住房</div>
-      <div :class="{'after-tips':errorBags.has('isOwnerOnly')}"
-           :data-tips="errorBags.first('isOwnerOnly')">
-        <el-radio-group size="mini"
-                        v-model="formData.isOwnerOnly"
-                        v-validate="required?'required': ''"
-                        data-vv-as="唯一住房"
-                        data-vv-name="isOwnerOnly"
-                        @change="changeOnly">
-          <el-radio v-for="item in isowneronlyList"
-                    :key="item.value"
-                    :label="item.value">{{ item.key }}</el-radio>
+      <div
+        :class="{'after-tips':errorBags.has('isOwnerOnly')}"
+        :data-tips="errorBags.first('isOwnerOnly')"
+      >
+        <el-radio-group
+          size="mini"
+          v-model="formData.isOwnerOnly"
+          v-validate="required?'required': ''"
+          data-vv-as="唯一住房"
+          data-vv-name="isOwnerOnly"
+          @change="changeOnly"
+        >
+          <el-radio
+            v-for="item in isowneronlyList"
+            :key="item.value"
+            :label="item.value"
+          >{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
-      <div class="Division"
-           v-show="formData.isOwnerOnly===1&&formData.lastSale!=null&&formData.lastSale!=''">{{this.onlyStr}}</div>
+      <div
+        class="Division"
+        v-show="formData.isOwnerOnly===1&&formData.lastSale!=null&&formData.lastSale!=''"
+      >{{this.onlyStr}}</div>
     </div>
 
     <!-- 付款方式 -->
     <div class="cell-item-cell">
       <div class="item-before text-just">付款方式</div>
-      <div :class="{'after-tips':  errorBags.has('paymentMethod')|| errorBags.has('lastPayment')}"
-           :data-tips="errorBags.first('paymentMethod')|| errorBags.first('lastPayment') ">
+      <div
+        :class="{'after-tips':  errorBags.has('paymentMethod')|| errorBags.has('lastPayment')}"
+        :data-tips="errorBags.first('paymentMethod')|| errorBags.first('lastPayment') "
+      >
         <div class="cell-item-cell no-top">
-          <el-select v-model="formData.paymentMethod"
-                     placeholder="付款方式"
-                     v-validate="required?'required': ''"
-                     data-vv-as="付款方式"
-                     data-vv-name="paymentMethod">
-            <el-option v-for="item in paymentMethodList"
-                       :key="item.value"
-                       :label="item.key"
-                       :value="item.value"></el-option>
+          <el-select
+            v-model="formData.paymentMethod"
+            placeholder="付款方式"
+            v-validate="required?'required': ''"
+            data-vv-as="付款方式"
+            data-vv-name="paymentMethod"
+          >
+            <el-option
+              v-for="item in paymentMethodList"
+              :key="item.value"
+              :label="item.key"
+              :value="item.value"
+            ></el-option>
           </el-select>
           <div class="Division">上次交易金额</div>
-          <el-input class="other-input"
-                    v-model="formData.lastPayment"
-                    v-validate="required?'decimal:2|max:14|required':'decimal:2|max:14'"
-                    data-vv-as="上次交易金额"
-                    data-vv-name="lastPayment"
-                    placeholder="报税价"></el-input>
+          <el-input
+            class="other-input"
+            v-model="formData.lastPayment"
+            v-validate="required?'decimal:2|max:14|required':'decimal:2|max:14'"
+            data-vv-as="上次交易金额"
+            data-vv-name="lastPayment"
+            placeholder="报税价"
+          ></el-input>
           <div class="Division">万</div>
         </div>
       </div>
     </div>
     <div class="division-line"></div>
     <!-- 房源标题 -->
-    <div :class="{'after-tips':errorBags.has('title')}"
-         :data-tips="errorBags.first('title')">
+    <div :class="{'after-tips':errorBags.has('title')}" :data-tips="errorBags.first('title')">
       <div class="cell-item-cell el-input-w el-input-w-280">
         <div class="item-before text-just">房源标题</div>
-        <el-input type="text"
-                  v-model="formData.title"
-                  placeholder="请输入房源标题"
-                  maxlength="15"
-                  v-validate="required?'required':''"
-                  data-vv-as="房源标题"
-                  data-vv-name="title"></el-input>
+        <el-input
+          type="text"
+          v-model="formData.title"
+          placeholder="请输入房源标题"
+          maxlength="15"
+          v-validate="required?'required':''"
+          data-vv-as="房源标题"
+          data-vv-name="title"
+        ></el-input>
         <div class="item-after">{{formData.title.length}}/15</div>
       </div>
     </div>
     <!-- 小区介绍 -->
-    <div :class="{'after-tips':errorBags.has('communityDesc')}"
-         :data-tips="errorBags.first('communityDesc')">
+    <div
+      :class="{'after-tips':errorBags.has('communityDesc')}"
+      :data-tips="errorBags.first('communityDesc')"
+    >
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">小区介绍</div>
-        <el-input class="el-textarea"
-                  type="textarea"
-                  placeholder="请输入小区介绍"
-                  v-model="formData.communityDesc"
-                  maxlength="50"
-                  resize="none"
-                  show-word-limit
-                  v-validate="required?'required':''"
-                  data-vv-as="小区介绍"
-                  data-vv-name="communityDesc"></el-input>
+        <el-input
+          class="el-textarea"
+          type="textarea"
+          placeholder="请输入小区介绍"
+          v-model="formData.communityDesc"
+          maxlength="50"
+          resize="none"
+          show-word-limit
+          v-validate="required?'required':''"
+          data-vv-as="小区介绍"
+          data-vv-name="communityDesc"
+        ></el-input>
       </div>
     </div>
     <!-- 户型介绍 -->
-    <div :class="{'after-tips':errorBags.has('roomDesc')}"
-         :data-tips="errorBags.first('roomDesc')">
+    <div :class="{'after-tips':errorBags.has('roomDesc')}" :data-tips="errorBags.first('roomDesc')">
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">户型介绍</div>
-        <el-input class="el-textarea"
-                  type="textarea"
-                  placeholder="请输入户型介绍"
-                  v-model="formData.roomDesc"
-                  maxlength="50"
-                  resize="none"
-                  show-word-limit
-                  v-validate="required?'required':''"
-                  data-vv-as="户型介绍"
-                  data-vv-name="roomDesc"></el-input>
+        <el-input
+          class="el-textarea"
+          type="textarea"
+          placeholder="请输入户型介绍"
+          v-model="formData.roomDesc"
+          maxlength="50"
+          resize="none"
+          show-word-limit
+          v-validate="required?'required':''"
+          data-vv-as="户型介绍"
+          data-vv-name="roomDesc"
+        ></el-input>
       </div>
     </div>
     <!-- 税费解析 -->
-    <div :class="{'after-tips':errorBags.has('taxDesc')}"
-         :data-tips="errorBags.first('taxDesc')">
+    <div :class="{'after-tips':errorBags.has('taxDesc')}" :data-tips="errorBags.first('taxDesc')">
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">税费解析</div>
-        <el-input class="el-textarea"
-                  type="textarea"
-                  placeholder="请输入税费解析"
-                  v-model="formData.taxDesc"
-                  maxlength="50"
-                  resize="none"
-                  show-word-limit
-                  v-validate="required?'required':''"
-                  data-vv-as="税费解析"
-                  data-vv-name="taxDesc"></el-input>
+        <el-input
+          class="el-textarea"
+          type="textarea"
+          placeholder="请输入税费解析"
+          v-model="formData.taxDesc"
+          maxlength="50"
+          resize="none"
+          show-word-limit
+          v-validate="required?'required':''"
+          data-vv-as="税费解析"
+          data-vv-name="taxDesc"
+        ></el-input>
       </div>
     </div>
     <!-- 核心卖点 -->
-    <div :class="{'after-tips':errorBags.has('saleDesc')}"
-         :data-tips="errorBags.first('saleDesc')">
+    <div :class="{'after-tips':errorBags.has('saleDesc')}" :data-tips="errorBags.first('saleDesc')">
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">核心卖点</div>
-        <el-input class="el-textarea"
-                  type="textarea"
-                  placeholder="请输入核心卖点"
-                  v-model="formData.saleDesc"
-                  maxlength="50"
-                  resize="none"
-                  show-word-limit
-                  v-validate="required?'required':''"
-                  data-vv-as="核心卖点"
-                  data-vv-name="saleDesc"></el-input>
+        <el-input
+          class="el-textarea"
+          type="textarea"
+          placeholder="请输入核心卖点"
+          v-model="formData.saleDesc"
+          maxlength="50"
+          resize="none"
+          show-word-limit
+          v-validate="required?'required':''"
+          data-vv-as="核心卖点"
+          data-vv-name="saleDesc"
+        ></el-input>
       </div>
     </div>
     <!-- 跟进类型 -->
-    <div :class="{'after-tips':errorBags.has('followWay')}"
-         :data-tips="errorBags.first('followWay')"
-         v-if="showFollow">
+    <div
+      :class="{'after-tips':errorBags.has('followWay')}"
+      :data-tips="errorBags.first('followWay')"
+      v-if="showFollow"
+    >
       <div class="cell-item-cell">
         <div class="item-before text-just">跟进类型</div>
-        <el-radio-group v-model="formData.followWay"
-                        size="mini"
-                        v-validate="required?'required': ''"
-                        data-vv-as="跟进类型 "
-                        data-vv-name="followWay">
-          <el-radio v-for="item in followWayList"
-                    :key="item.key"
-                    :label="item.value">{{ item.key }}</el-radio>
+        <el-radio-group
+          v-model="formData.followWay"
+          size="mini"
+          v-validate="required?'required': ''"
+          data-vv-as="跟进类型 "
+          data-vv-name="followWay"
+        >
+          <el-radio v-for="item in followWayList" :key="item.key" :label="item.value">{{ item.key }}</el-radio>
         </el-radio-group>
       </div>
     </div>
     <!-- 跟进内容 -->
-    <div :class="{'after-tips':errorBags.has('followMemo')}"
-         :data-tips="errorBags.first('followMemo')"
-         v-if="showFollow">
+    <div
+      :class="{'after-tips':errorBags.has('followMemo')}"
+      :data-tips="errorBags.first('followMemo')"
+      v-if="showFollow"
+    >
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">跟进内容</div>
-        <el-input class="el-textarea"
-                  type="textarea"
-                  placeholder="请输入跟进内容"
-                  v-model="formData.followMemo"
-                  maxlength="50"
-                  resize="none"
-                  show-word-limit
-                  v-validate="required?'required':''"
-                  data-vv-as="跟进内容"
-                  data-vv-name="followMemo"></el-input>
+        <el-input
+          class="el-textarea"
+          type="textarea"
+          placeholder="请输入跟进内容"
+          v-model="formData.followMemo"
+          maxlength="50"
+          resize="none"
+          show-word-limit
+          v-validate="required?'required':''"
+          data-vv-as="跟进内容"
+          data-vv-name="followMemo"
+        ></el-input>
       </div>
     </div>
     <!-- 讲房语音 -->
@@ -591,53 +672,54 @@
       <div class="upLoadFile-title">讲房语音</div>
       <div class="upLoadFile-flex">
         <div class="upLoadFile-right">
-          <div class="upLoadFile-input"
-               v-loading="audioFileLoading"
-               element-loading-text="文件上传中~">
-            <label for="houseVideoList"
-                   class="el-icon-upload">
-              <input id="houseVideoList"
-                     type="file"
-                     @change="getAudioFile($event)" />
+          <div class="upLoadFile-input" v-loading="audioFileLoading" element-loading-text="文件上传中~">
+            <label for="houseVideoList" class="el-icon-upload">
+              <input
+                id="houseVideoList"
+                type="file"
+                :disabled="!uploadFile"
+                @change="getAudioFile($event)"
+              />
             </label>
           </div>
           <div class="upLoadFile-file-list">
             <div class="audio-title">
               <span>{{audioFile.id ? '音频.mp3' : '暂无' }}</span>
-              <span v-if="audioFile.url"
-                    class="removebut el-icon-delete"
-                    @click='removeAudio(audioFile.id,audioFile.url)'></span>
+              <span
+                v-if="audioFile.url"
+                class="removebut el-icon-delete"
+                @click="removeAudio(audioFile.id,audioFile.url)"
+              ></span>
             </div>
             <div class="audio-contenr">
-              <audio :src="audioFile.url"
-                     ref="audio"
-                     v-if="audioFile.url"
-                     v-audioLoad></audio>
-              <div :class="['audio-contenr-but',audioPlay.icon]"
-                   @click="openVideo"></div>
-              <el-slider v-model="audioPlay.nowTime"
-                         :format-tooltip="formatTooltip"
-                         @input="audioSliderChange"
-                         ref="audioSlider"
-                         :max="audioPlay.endTime"
-                         :disabled="audioFile.url ? false : true"></el-slider>
-              <div class="autio-time">{{audioPlay.nowTime | timefomat}} / {{audioPlay.endTime | timefomat}}</div>
+              <audio :src="audioFile.url" ref="audio" v-if="audioFile.url" v-audioLoad></audio>
+              <div :class="['audio-contenr-but',audioPlay.icon]" @click="openVideo"></div>
+              <el-slider
+                v-model="audioPlay.nowTime"
+                :format-tooltip="formatTooltip"
+                @input="audioSliderChange"
+                ref="audioSlider"
+                :max="audioPlay.endTime"
+                :disabled="audioFile.url ? false : true"
+              ></el-slider>
+              <div
+                class="autio-time"
+              >{{audioPlay.nowTime | timefomat}} / {{audioPlay.endTime | timefomat}}</div>
             </div>
           </div>
           <div class="upLoadFile-file-phone">
-            <el-image :src="audioQrCodeImage"
-                      :preview-src-list="[audioQrCodeImage]"
-                      fit="cover">
-              <div slot="placeholder"
-                   class="image-slot">
+            <el-image :src="audioQrCodeImage" :preview-src-list="[audioQrCodeImage]" fit="cover">
+              <div slot="placeholder" class="image-slot">
                 加载中
                 <span>...</span>
               </div>
             </el-image>
-            <div>微信扫码上传</div>
+            <div v-if="uploadFile">微信扫码上传</div>
+            <div v-if="!uploadFile">暂无上传权限.</div>
           </div>
         </div>
-        <div>仅可以上传一个音频.</div>
+        <div v-if="uploadFile">仅可以上传一个音频.</div>
+        <div v-if="!uploadFile">暂无上传权限.</div>
       </div>
     </div>
   </div>
@@ -645,6 +727,7 @@
 <script>
 import * as formReander from "@/util/constMap";
 import util from "@/util/util";
+import but from "@/evenBus/but.js";
 //import func from '../../../../../vue-temp/vue-editor-bridge';
 const USE = [
   {
@@ -681,17 +764,17 @@ export default {
     },
     audioList: {
       type: Array,
-      default: function () {
+      default: function() {
         return [];
       }
     },
     paramsObj: {
       type: Object,
-      default: () => { }
+      default: () => {}
     }
   },
   computed: {
-    formData () {
+    formData() {
       this.$set(
         this.$data,
         "step",
@@ -701,13 +784,13 @@ export default {
     }
   },
   filters: {
-    timefomat (value) {
+    timefomat(value) {
       return util.timeToStr(value);
     }
   },
   directives: {
     audioLoad: {
-      bind (el, binding, vnode) {
+      bind(el, binding, vnode) {
         el.addEventListener("loadedmetadata", () => {
           vnode.context.audioPlay.endTime = parseInt(el.duration);
         });
@@ -721,14 +804,14 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     let that = this;
     that.isLeavePage = false;
     //true 则去获取数据
     if (this.getData) {
       this.loading = true;
       Promise.all([this.getAudio(), this.getLoadData()])
-        .catch(() => { })
+        .catch(() => {})
         .finally(() => {
           this.loading = false;
         });
@@ -738,7 +821,7 @@ export default {
     }
     this.getQrCode(
       { remark: "录入房源-上传音频", resourceType: "audio" },
-      function (data) {
+      function(data) {
         if (!that.isLeavePage) {
           //还没等请求完毕就下一步录入了，那么不需要回调这个了
           that.audioQrCodeImage = data.url;
@@ -746,8 +829,14 @@ export default {
         }
       }
     );
+    but.$on("nextSaveButton", () => {
+      this.nextSaveData = true;
+    });
+    but.$on("wxUploadFile", () => {
+      this.uploadFile = true;
+    });
   },
-  beforeRouteLeave (to, from, next) {
+  beforeRouteLeave(to, from, next) {
     console.log("离开了供给页面，不需要执行任何请求回调");
     this.isLeavePage = true;
     next();
@@ -756,7 +845,7 @@ export default {
     formData: {
       deep: true,
       immediate: true,
-      handler (newValue, oldValue) {
+      handler(newValue, oldValue) {
         //deff 获取到修改的属性
         let deffData = util.diffGet(
           this.$store.state.addHouse.formData.step2,
@@ -773,7 +862,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       isLeavePage: false,
       audioPlay: {
@@ -808,15 +897,17 @@ export default {
       audioQrCodeImage: "",
       onlyStr: "",
       pickerOptions: {
-        disabledDate (time) {
+        disabledDate(time) {
           return time.getTime() > Date.now();
         }
-      }
+      },
+      nextSaveData: false,
+      uploadFile: false
     };
   },
   methods: {
     //删除audio
-    removeAudio (id, url) {
+    removeAudio(id, url) {
       this.$api
         .delete({
           url: `/draft-house/audio/${id}`,
@@ -832,7 +923,7 @@ export default {
           }
         });
     },
-    contactSocket (user) {
+    contactSocket(user) {
       console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
@@ -841,19 +932,22 @@ export default {
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
       console.log("用户【" + user + "】接入完毕");
     },
-    receiveMessage (r) {
+    receiveMessage(r) {
       let that = this;
       console.log(r, "录入房源页面之音频上传接收到了消息");
       if (r.content.resourceType == "audio") {
         console.log(r.content, "音频消息内容，准备插入草稿箱");
-        that.uploadFileInfo(r.content.picUrl, function (data) {
+        that.uploadFileInfo(r.content.picUrl, function(data) {
           that.audioFile = data;
         });
       }
     },
     //获取扫码上传语音二维码
-    getQrCode (data, callback) {
+    getQrCode(data, callback) {
       let that = this;
+      if (!that.uploadFile) {
+        return;
+      }
       that.$api
         .post({
           url: "/scanUpload/getUploadQrCode",
@@ -876,7 +970,7 @@ export default {
           console.log(e);
         });
     },
-    uploadFileInfo (url, callback) {
+    uploadFileInfo(url, callback) {
       let that = this;
       this.audioFileLoading = true;
       let formData = {};
@@ -911,7 +1005,7 @@ export default {
         });
     },
     //根据ID获取已经上传的音频
-    getAudio () {
+    getAudio() {
       let url = `/draft-house/audios/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getAudioUrl) {
         url =
@@ -928,7 +1022,11 @@ export default {
         });
     },
     //获取音频上传
-    getAudioFile (e) {
+    getAudioFile(e) {
+      if (!this.uploadFile) {
+        this.$message.error("暂无上传权限");
+        return;
+      }
       let file = event.target.files;
       let isVideoType = ["audio/mp3", "audio/mpeg"];
       //console.log("音频格式：" + file[0].type);
@@ -943,11 +1041,11 @@ export default {
       this.uploadSectionFile(file[0]);
     },
     //格式化slider时间
-    formatTooltip (val) {
+    formatTooltip(val) {
       return util.timeToStr(val);
     },
     //播放 or 暂停音频
-    openVideo () {
+    openVideo() {
       let audio = this.$refs.audio;
       try {
         if (audio.paused) {
@@ -962,12 +1060,12 @@ export default {
       }
     },
     //监听进度条拉动设置播放位置
-    audioSliderChange (e) {
+    audioSliderChange(e) {
       if (this.$refs.audioSlider.dragging) {
         this.$refs.audio.currentTime = e;
       }
     },
-    uploadSectionFile (uploader) {
+    uploadSectionFile(uploader) {
       let that = this;
       this.audioFileLoading = true;
       let formData = new FormData();
@@ -998,7 +1096,7 @@ export default {
           this.audioFileLoading = false;
         });
     },
-    getLoadData () {
+    getLoadData() {
       this.loading = true;
       let url = `/draft-house/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getEditUrl) {
@@ -1050,26 +1148,26 @@ export default {
         });
     },
     //抵押情况切换
-    mortgageChange (e) {
+    mortgageChange(e) {
       if (e != 1) {
         this.formData.mortgageBank = null;
       }
     },
     //中学占用切换
-    middleRadioChange (e) {
+    middleRadioChange(e) {
       if (e != 1) {
         this.formData.middleSchoolUseList = "";
         this.$store.state.addHouse.formData.step2.middleSchoolUse = "";
       }
     },
     //小学占用切换
-    primaryRadioChange (e) {
+    primaryRadioChange(e) {
       if (e != 1) {
         this.formData.primarySchoolUse = "";
         this.$store.state.addHouse.formData.step2.primarySchoolUse = "";
       }
     },
-    validateAll () {
+    validateAll() {
       let that = this;
       return this.$validator
         .validateAll()
@@ -1087,7 +1185,7 @@ export default {
           }
         });
     },
-    validateAllNotUpdata () {
+    validateAllNotUpdata() {
       let that = this;
       return this.$validator.validateAll().then(e => {
         if (e) {
@@ -1097,7 +1195,7 @@ export default {
       });
     },
     //修改数据到接口
-    setDataToUpdate () {
+    setDataToUpdate() {
       let that = this;
       let sendData = {
         id: that.$store.state.addHouse.formData.id,
@@ -1111,8 +1209,9 @@ export default {
         sendData.saleDesc = that.formData.saleDesc;
         sendData.taxDesc = that.formData.taxDesc;
       }
-      if (Object.keys(this.deffData).length == 0) {
-        //没有做出修改
+      if (Object.keys(this.deffData).length == 0 || !this.nextSaveData) {
+        //没有做出修改  或者 没有下一步保存的按钮权限
+        console.log("跳过保存：", this.nextSaveData);
         return true;
       }
       return this.$api
@@ -1135,7 +1234,7 @@ export default {
           return false;
         });
     },
-    changeOnly () {
+    changeOnly() {
       console.log("触发...");
       if (
         this.formData.isOwnerOnly === 1 &&
@@ -1144,11 +1243,11 @@ export default {
       ) {
         let iDays = parseInt(
           Math.abs(new Date() - new Date(this.formData.lastSale)) /
-          1000 /
-          60 /
-          60 /
-          24 /
-          365
+            1000 /
+            60 /
+            60 /
+            24 /
+            365
         );
         if (iDays >= 5) {
           this.onlyStr = "满5唯一";
