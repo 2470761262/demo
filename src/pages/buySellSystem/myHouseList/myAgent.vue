@@ -714,7 +714,7 @@ export default {
           message: "调配跟单人和原跟单人相同，请重新选择！",
           type: "success"
         });
-        return info
+        return false
       }
       let params = {
         houseId: parseInt(that.toHouseId) + "",
