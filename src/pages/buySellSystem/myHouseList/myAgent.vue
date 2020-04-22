@@ -500,6 +500,7 @@ export default {
       this.queryMyAgent(1);
     },
     toHouseData (id, CommunityName, agentName, agentPer) {
+      console.log(agentPer, 11111);
       this.agentPer = agentPer;
       var that = this;
       that.dialogVisible = true;
@@ -707,9 +708,9 @@ export default {
         JSON.stringify(that.AgentPerId.accountID)
       );
       console.log(
-        "得到房源id为:" + that.toHouseId + "------楼盘名称" + that.toComName
+        "得到房源id为:" + that.agentPer + "------楼盘名称" + that.AgentPerId.accountID
       );
-      if (that.agentPer = that.AgentPerId.accountID) {
+      if (that.agentPer == that.AgentPerId.accountID) {
         this.$message({
           message: "调配跟单人和原跟单人相同，请重新选择！",
           type: "success"
@@ -752,6 +753,7 @@ export default {
       that.agentLoading = true;
       that.queryCompanyPerList();
       that.agentName = agentName;
+      console.log(agentper);
       that.agentper = agentper;
       that.dialogVisible = true;
       console.log("得到房源id为:" + id + "------楼盘名称" + CommunityName);
