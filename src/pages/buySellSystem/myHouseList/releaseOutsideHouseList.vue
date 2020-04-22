@@ -177,32 +177,7 @@
         </el-table-column>
       </template>
     </list-page>
-    <el-dialog title="跟单人将调配至本公司人员"
-               :visible.sync="dialogVisible"
-               width="20%">
-      <el-select v-model="newAgentName"
-                 @change="queryAddPerId"
-                 key-value="accountID"
-                 filterable
-                 remote
-                 clearable
-                 placeholder="请输入跟单人姓名进行搜索"
-                 :loading="agentLoading">
-        <el-option v-for="item in AgentPerList"
-                   :key="item.accountID"
-                   :label="item.perName"
-                   :value="item">
-          <span style="float: left">{{item.perName}}</span>
-          <span style="float: right; color: #8492a6; font-size: 13px">{{item.deptName}}</span>
-        </el-option>
-      </el-select>
-      <span slot="footer"
-            class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="updateAgentPer">确 定</el-button>
-      </span>
-    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -675,56 +650,7 @@ export default {
           that.agentLoading = false;
         });
     },
-    updateAgentPer () {
-      var that = this;
 
-      console.log(
-        "得到跟单人id为:" +
-        that.newAgentName +
-        "======" +
-        JSON.stringify(that.AgentPerId.accountID)
-      );
-      console.log(
-        "得到房源id为:" + that.toHouseId + "------楼盘名称" + that.toComName
-      );
-      if (that.agentPer = that.AgentPerId.accountID) {
-        this.$message({
-          message: "调配跟单人和原跟单人相同，请重新选择！",
-          type: "success"
-        });
-        return info
-      }
-      let params = {
-        houseId: parseInt(that.toHouseId) + "",
-        newAgentPer: parseInt(JSON.stringify(that.AgentPerId.accountID)),
-        oldAgentPer: parseInt(that.agentper != null ? that.agentper : ""),
-        newAgentName: that.AgentPerId.perName
-      };
-
-      this.$api
-        .post({
-          url: "/agent_house/updateAgentPer",
-
-          data: params,
-          qs: true
-        })
-        .then(e => {
-          let result = e.data;
-          if (result.code == 200) {
-            this.$message({
-              message: "修改成功！",
-              type: "success"
-            });
-          } else {
-            console.log("修改失败");
-          }
-        })
-        .catch(e => {
-          console.log("修改失败");
-        });
-      that.dialogVisible = false;
-      this.queryMyAgentParams();
-    },
     toHouseData (id, CommunityName, agentName, agentper) {
       var that = this;
       that.agentLoading = true;
@@ -835,7 +761,7 @@ export default {
     queryMyAgent (currentPage) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
@@ -867,10 +793,10 @@ export default {
         params.agentName = that.data.agentName;
       }
       params.sortColumn = that.sortColumn;
-      params.sortType = that.sortType;
+      params.sortType = that.sortType == 'descending' ? 0 : 1;
       this.$api
         .post({
-          url: "/agent_house/getReleaseOutsideHouseList",
+          url: "/myHouse/releaseOutsideHouseList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params
         })
