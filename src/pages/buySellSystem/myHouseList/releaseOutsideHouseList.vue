@@ -692,7 +692,7 @@ export default {
           message: "调配跟单人和原跟单人相同，请重新选择！",
           type: "success"
         });
-        return info
+        return false
       }
       let params = {
         houseId: parseInt(that.toHouseId) + "",
@@ -835,7 +835,7 @@ export default {
     queryMyAgent (currentPage) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
@@ -867,10 +867,10 @@ export default {
         params.agentName = that.data.agentName;
       }
       params.sortColumn = that.sortColumn;
-      params.sortType = that.sortType;
+      params.sortType = that.sortType == 'descending' ? 0 : 1;
       this.$api
         .post({
-          url: "/agent_house/getReleaseOutsideHouseList",
+          url: "/myHouse/releaseOutsideHouseList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params
         })
