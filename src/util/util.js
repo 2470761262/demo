@@ -176,6 +176,6 @@ export default {
         }
 
         return wrapper;
-    }
+    },
 
 }

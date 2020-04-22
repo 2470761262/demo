@@ -109,7 +109,7 @@
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"
                           :default-time="['00:00:00', '23:59:59']"></el-date-picker>
-         
+
         </div> -->
         <div class="query-content-cell cell-interval75">
           <el-button type="primary"
@@ -147,7 +147,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="addPhone(scope.row.bhid,scope.row.id)"
+                     @click="addPhone(scope.row.bhId,scope.row.id)"
                      style="">录入号码</el-button>
           <el-button type="primary"
                      size="mini"
@@ -226,7 +226,8 @@ export default {
       },
       tableData: [],
       sortColumn: "id", //排序字段
-      sortType: "descending" //排序类型
+      sortType: "descending", //排序类型
+      showAddPhone: false, //是否显示录入号码
     };
   },
   mounted() {
@@ -286,14 +287,13 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /^\d{11}$/,
-        inputErrorMessage: "手机号码格式不正确"
+        inputErrorMessage: "手机号码格式不正确",
+        showConfirmButton: this.showAddPhone
       })
         .then(({ value }) => {
           this.$api
-            .get({
-              url: "/houseResource/updatePhone",
-              headers: { "Content-Type": "application/json;charset=UTF-8" },
-              token: false,
+            .post({
+              url: "/houseResource/updatePhone/notPhone",
               qs: true,
               data: {
                 id: id,
@@ -461,10 +461,9 @@ export default {
       params.sortType = this.sortType;
       console.log(params);
       this.$api
-        .get({
+        .post({
           url: "/houseResource/getNotPhone",
           data: params,
-          token: false
         })
         .then(e => {
           console.log(e.data);
@@ -472,10 +471,20 @@ export default {
           if (e.data.code == 200) {
             that.pageJson.total = e.data.data.dataCount;
             that.tableData = e.data.data.data;
+            let btnList = e.data.data.btnList;
+            if ( btnList && btnList.length > 0) {
+              let isExist = false;
+              btnList.forEach(btn => {
+                if (btn.rName == "录入号码") {
+                  isExist = true;
+                }
+              })
+              if (isExist) {
+                that.showAddPhone = true;
+              }
+            }
           } else {
             console.log("查询无号码列表结果：" + result.message);
-
-            alert(result.message);
           }
         })
         .catch(e => {

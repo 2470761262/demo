@@ -12,7 +12,11 @@ export default {
             url.substring(url.indexOf("?"))
         );
         var token = theRequest.get("tk");
-
+        console.log(util.localStorageGet("tk"), token, "util.localStorageGet(tk)");
+        if (!util.localStorageGet(LOGINDATA) || (token != "" && token != null && token != util.localStorageGet("tk"))) {
+            //util.localStorageSet("logindata",{sessionId:null});
+            this.getLoginData(token);
+        }
         console.log("getUrlToken---->" + token);
 
         if (token != null) {
@@ -21,10 +25,7 @@ export default {
         } else {
             util.localStorageSet('nest', false);
         }
-        if (!util.localStorageGet(LOGINDATA)) {
-            //util.localStorageSet("logindata",{sessionId:null});
-            this.getLoginData(token);
-        }
+
     },
     mounted () {
         if (window.self !== window.top) {

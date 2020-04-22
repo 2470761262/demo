@@ -370,7 +370,7 @@ export default {
         remark: "",
         show: false
       },
-      diffList:['楼盘信息','价格不准确','面积错误','户型错误'],
+      diffList: ["楼盘信息", "价格不准确", "面积错误", "户型错误"],
       employeeDiff: {
         spanList: [],
         remark: "",
@@ -669,7 +669,9 @@ export default {
             console.log(result.message);
             console.log(result.data);
             this.$alert(
-              '<img src="' + result.data + '"></img>',
+              '<img class="invitationToVerify" src="' +
+                result.data +
+                '"></img>',
               "业主邀请二维码",
               {
                 dangerouslyUseHTMLString: true

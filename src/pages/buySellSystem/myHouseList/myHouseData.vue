@@ -206,8 +206,11 @@
                              v-model="queryContent.communityName"
                              prefix-icon="el-icon-search"
                              :fetch-suggestions="querySearch"
-                             placeholder="你想找那个小区?"></el-autocomplete>
-            <el-button type="primary">确定</el-button>
+                             :trigger-on-focus="false"
+                             placeholder="你想找那个小区?"
+                             @select="selectCommunity"></el-autocomplete>
+            <el-button type="primary"
+                       @click="reloadList">确定</el-button>
           </div>
           <div class="query-content-row">
             <div class="query-row-title">时间搜索</div>
@@ -218,7 +221,8 @@
                             start-placeholder="选择开始时间"
                             end-placeholder="选择结束时间">
             </el-date-picker>
-            <el-button type="primary">确定</el-button>
+            <el-button type="primary"
+                       @click="reloadList">确定</el-button>
           </div>
         </div>
         <!-- 表格 -->
@@ -229,7 +233,8 @@
                       header-cell-class-name="headerCellSet"
                       cell-class-name="cellItemSet"
                       show-overflow-tooltip
-                      border>
+                      border
+                      @sort-change="sortChange">
               <el-table-column type="index"
                                width="50">
               </el-table-column>
@@ -252,7 +257,8 @@
                            :current-page.sync="pageJson.current"
                            hide-on-single-page
                            layout=" prev, pager, next, jumper"
-                           :total="pageJson.total">
+                           :total="pageJson.total"
+                           @current-change="currentChange">
             </el-pagination>
           </div>
         </div>
@@ -265,38 +271,44 @@
         </h3>
         <div class="data-content-progress">
           <div class="progress-layout">
-            <progress-content :houseNum="yesterday.agentCount"
+            <progress-content :houseNum="yesterday.agentCount ||0"
                               :compare="yesterday.agentCount-beforeYesterday.agentCount || 0"
-                              progress="6%"
+                              :progress="companyProportion.agentCount | proportionFilter(yesterday,'agentCount')  "
                               reset-progress
-                              proportion="公司总占比"></progress-content>
-            <progress-content :houseNum="100"
-                              :compare="-30"
-                              progress="25%"
+                              proportion="公司总占比"
+                              title="跟单数"></progress-content>
+            <progress-content :houseNum="yesterday.addCount || 0 "
+                              :compare="yesterday.addCount-beforeYesterday.addCount || 0"
+                              :progress="companyProportion.addCount | proportionFilter(yesterday,'addCount')  "
                               reset-progress
-                              proportion="公司总占比"></progress-content>
-            <progress-content :houseNum="120"
-                              :compare="20"
-                              progress="19%"
+                              proportion="公司总占比"
+                              title="录入数"></progress-content>
+            <progress-content :houseNum="yesterday.keyCount ||0"
+                              :compare="yesterday.keyCount-beforeYesterday.keyCount || 0"
+                              :progress="companyProportion.keyCount | proportionFilter(yesterday,'keyCount')  "
                               reset-progress
-                              proportion="公司总占比"></progress-content>
+                              proportion="公司总占比"
+                              title="钥匙数"></progress-content>
           </div>
           <div class="progress-layout">
-            <progress-content :houseNum="140"
-                              :compare="-200"
-                              progress="10%"
+            <progress-content :houseNum="yesterday.commonCount ||0"
+                              :compare="yesterday.commonCount-beforeYesterday.commonCount || 0"
+                              :progress="companyProportion.commonCount | proportionFilter(yesterday,'commonCount')  "
                               reset-progress
-                              proportion="公司总占比"></progress-content>
-            <progress-content :houseNum="120"
-                              :compare="220"
-                              progress="100%"
+                              proportion="公司总占比"
+                              title="普通委托数"></progress-content>
+            <progress-content :houseNum="yesterday.onlyCount ||0"
+                              :compare="yesterday.onlyCount-beforeYesterday.onlyCount || 0"
+                              :progress="companyProportion.onlyCount | proportionFilter(yesterday,'onlyCount')  "
                               reset-progress
-                              proportion="公司总占比"></progress-content>
-            <progress-content :houseNum="120"
-                              :compare="-220"
-                              progress="96%"
+                              proportion="公司总占比"
+                              title="独家委托数"></progress-content>
+            <progress-content :houseNum="yesterday.realCount ||0"
+                              :compare="yesterday.realCount-beforeYesterday.realCount || 0"
+                              :progress="companyProportion.realCount | proportionFilter(yesterday,'realCount')  "
                               reset-progress
-                              proportion="公司总占比"></progress-content>
+                              proportion="公司总占比"
+                              title="实勘数"></progress-content>
           </div>
         </div>
       </div>
@@ -318,6 +330,9 @@ import {
   addResizeListener,
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
+import {
+  formatDate
+} from "element-ui/src/utils/date-util"
 export default {
   components: {
     progressContent
@@ -327,73 +342,145 @@ export default {
       livingChart: null,
       queryContent: {
         communityName: "",
-        queryTime: ""
+        queryTime: [],
+        comId: ""
       },
       pageJson: {
         current: 1,
-        total: 300
+        total: 0,
+        pageSize: 10
       },
       tableDataColumn: [
         { label: "小区", width: "", prop: "communityName", order: false },
         {
           label: "看房客户",
           width: "",
-          prop: "communitycount",
+          prop: "customerCount",
           order: "custom"
         },
-        { label: "被看次数", width: "", prop: "const", order: "custom" }
+        { label: "被看次数", width: "", prop: "houseMoviesCount", order: "custom" },
+        { label: "添加时间", width: "", prop: "addTime" },
       ],
-      tableDataText: [
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 },
-        { communityName: "国贸天琴弯(二期)", communitycount: 26, const: 33 }
-      ],
+      tableDataText: [],
       companyProportion: {},
       yesterday: {},
-      beforeYesterday: {}
+      beforeYesterday: {},
+      sortColumn: "addTime",
+      sortType: 1
     };
+  },
+  filters: {
+    proportionFilter (value, yesterday, key) {
+      return !value ? 0 + "%" : value == 0 ? 0 + "%" : parseInt(yesterday[key] / value) * 100 + "%"
+    }
   },
   mounted () {
     addResizeListener(this.$refs.chart, this.resetEcharts);
+    this.getList();
     this.getStatisticsList("company").then((e) => {
       if (e.data.data) {
         this.companyProportion = e.data.data;
-        this.getStatisticsList().then((e) => {
-          if (e.data.data.length > 0) {
-            var day = new Date();
-            var month = (day.getMonth() + 1) < 10 ? "0" + (day.getMonth() + 1) : day.getMonth() + 1;
-            day.setDate(day.getDate() - 1);
-            var yesterday = month + "-" + day.getDate();
-            day.setDate(day.getDate() - 1);
-            var beforeYesterday = month + "-" + day.getDate();
-            console.log(beforeYesterday);
-            e.data.data.forEach(element => {
-              if (element.createTime == yesterday) {
-                this.yesterday = element;
-              }
-              if (element.createTime == beforeYesterday) {
-                this.beforeYesterday = element;
-              }
-            });
-          }
-          console.log(this.beforeYesterday);
-        });
       }
+      this.getStatisticsList().then((e) => {
+        if (e.data.data.length > 0) {
+          let json = {
+            dayList: [],
+            agentCount: [],
+            lookCustomersCount: [],
+            houseMoviesCount: []
+          };
+          var yesterday = formatDate(new Date().setDate(new Date().getDate() - 1), "MM-dd");
+          var beforeYesterday = formatDate(new Date().setDate(new Date().getDate() - 2), "MM-dd");
+          e.data.data.forEach(element => {
+            json.dayList.push(element.createTime);
+            json.agentCount.push(element.agentCount);
+            json.lookCustomersCount.push(element.lookCustomersCount);
+            json.houseMoviesCount.push(element.houseMoviesCount);
+            if (element.createTime == yesterday) {
+              this.yesterday = element;
+            }
+            if (element.createTime == beforeYesterday) {
+              this.beforeYesterday = element;
+            }
+          });
+          this.draw(json);
+        }
 
+      });
     });
-    this.draw();
+
   },
   destroyed () {
     removeResizeListener(this.$refs.chart, this.resetEcharts);
   },
   methods: {
+    getCommunity (value) {
+      return this.$api.get({
+        url: "/community/myDataList",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          communityName: value,
+          page: 1,
+          limit: 50
+        }
+      })
+        .then(e => {
+          return e
+        });
+    },
+    reloadList () {
+      this.pageJson.current = 1;
+      this.pageJson.total = 0;
+      this.getList();
+    },
+    /**
+     * 排序
+     */
+    sortChange (e) {
+      this.sortColumn = e.prop
+      if (e.order == "ascending") {
+        this.sortType = 0;
+      }
+      else {
+        this.sortType = 1;
+      }
+      this.reloadList();
+    },
+    /**
+     * 分页
+     */
+    currentChange (e) {
+      this.getList();
+    },
+    /**
+     * 获取列表数据
+     */
+    getList () {
+      let params = {
+        sortColumn: this.sortColumn,
+        sortType: this.sortType,
+        limit: this.pageJson.pageSize,
+        page: this.pageJson.current,
+        beginTime: this.queryContent.queryTime ? this.queryContent.queryTime[0] : null,
+        endTime: this.queryContent.queryTime ? this.queryContent.queryTime[1] : null,
+        comId: this.queryContent.communityName == "" ? "" : this.queryContent.comId
+      }
+      this.$api
+        .post({
+          url: "/myHouse//myDataList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200 && data.data.list) {
+            this.pageJson.total = data.data.totalCount;
+            this.tableDataText = data.data.list;
+          }
+        })
+    },
     getStatisticsList (type = "") {
       return this.$api
         .post({
@@ -407,20 +494,31 @@ export default {
           return e;
         })
     },
+    selectCommunity (e) {
+      this.queryContent.comId = e.id;
+      this.reloadList();
+    },
     querySearch (value, resolve) {
-      resolve([{ value: "小区1" }, { value: "小区2" }]);
+      this.queryContent.comId = "";
+      console.log(value, "valuevaluevalue");
+      this.getCommunity(value).then((e) => {
+        if (e.data.code == 200) {
+          resolve(e.data.data.list.map(item => { return { value: item.name, id: item.value } }));
+        }
+      });
     },
     resetEcharts () {
       if (!this.livingChart) return;
       this.livingChart.resize();
     },
-    draw () {
+    draw (data) {
       // 实例化echarts对象
       this.livingChart = echarts.init(this.$refs.chart);
+      let text = formatDate(new Date(), "yyyy年MM月")
       // 绘制条形图
       this.livingChart.setOption({
         title: {
-          text: "2020年3月第一周",
+          text: text,
           right: 0,
           textStyle: {
             fontSize: 15,
@@ -456,7 +554,7 @@ export default {
           },
           //  type: "category",
           boundaryGap: false,
-          data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+          data: data.dayList
         },
         yAxis: {
           splitLine: {
@@ -475,21 +573,21 @@ export default {
             type: "line",
             stack: "总量",
             areaStyle: {},
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: data.agentCount
           },
           {
             name: "看房客户数",
             type: "line",
             stack: "总量",
             areaStyle: {},
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: data.lookCustomersCount
           },
           {
             name: "房源被看次数",
             type: "line",
             stack: "总量",
             areaStyle: {},
-            data: [150, 232, 201, 154, 190, 330, 410]
+            data: data.houseMoviesCount
           }
         ]
       });

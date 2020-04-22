@@ -140,7 +140,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="distributeEvent(item.methosName,scope.row.id)"
+                     @click="distributeEvent(item.methosName,scope.row.id,scope.row.perDept)"
                      v-for="(item,index) in isForBut(scope.row.id)"
                      :key="index">{{item.name}}</el-button>
         </template>
@@ -399,13 +399,19 @@ export default {
     queryTabData () {
       console.log(this, "111");
     },
+    distributeEvent (e, id,dept) {
+      this[e](id,dept);
+    },
     formatHouseType (row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook (id) {
+    toLook (id,dept) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      that.$router.push({ name: "houseDetails", params: { houseId: id, dept: dept } });
+    },
+    showNoticeDetail (noticeId,dept) {
+      this.$router.push({ name: "houseDetails", params: { houseId: noticeId, dept: dept } });
     },
     queryShopDiskParams () {
       this.queryVerifyHouseDatas(1);

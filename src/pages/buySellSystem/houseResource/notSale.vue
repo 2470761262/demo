@@ -130,7 +130,7 @@
       <template v-for="(item) in tableColumn">
         <el-table-column :prop="item.prop"
                          :label="item.label"
-                         :width="item.width"
+                         :min-width="item.width"
                          :key="item.prop"
                          show-overflow-tooltip
                          :formatter="item.formart"
@@ -139,7 +139,7 @@
       </template>
       <el-table-column label="操作"
                        fixed="right"
-                       width="170">
+                       min-width="170">
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
@@ -159,7 +159,7 @@ import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
 import common from "../houseResource/common/common";
-import tableMenu from '@/util/getTableMenu';
+import tableMenu from "@/util/getTableMenu";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -167,7 +167,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data () {
+  data() {
     return {
       loading: true,
 
@@ -289,7 +289,12 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            (item.rooms || 0) + "室" + (item.hall || 0) + "厅" + (item.toilet || 0) + "卫"
+            (item.rooms || 0) +
+            "室" +
+            (item.hall || 0) +
+            "厅" +
+            (item.toilet || 0) +
+            "卫"
         },
         {
           prop: "unitpaice",
@@ -363,50 +368,51 @@ export default {
           ]
         }
       ],
-      sortColumn: "id",//排序字段
-      sortType: "descending",//排序类型
-      menuLoading: true,//自定义菜单
+      sortColumn: "id", //排序字段
+      sortType: "descending", //排序类型
+      menuLoading: true, //自定义菜单
       renderList: []
     };
   },
-  mounted () {
-    tableMenu.getTableMenu(this.tableColumnField, 12).then((e) => {
+  mounted() {
+    tableMenu.getTableMenu(this.tableColumnField, 12).then(e => {
       this.menuLoading = false;
       this.renderList = e;
       this.queryNotSale(1);
     });
-
   },
   methods: {
-    sortMethod (e) {
+    sortMethod(e) {
       console.log(e, "eeee排序");
       this.sortColumn = e.prop;
       this.sortType = e.order;
       this.queryNotSale(1);
     },
-    tabColumnChange (e, length = 0) {
+    tabColumnChange(e, length = 0) {
       this.tableColumn = e;
       if (length > 0) {
-        let prop = e.map(item => { return { prop: item.prop } })
+        let prop = e.map(item => {
+          return { prop: item.prop };
+        });
         tableMenu.insert(prop, 12);
       }
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       this.moreSelect = e;
       this.queryNotSale(1);
     },
-    queryTabData () {
+    queryTabData() {
       console.log(this, "111");
     },
-    formatHouseType (row, column) {
+    formatHouseType(row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook (id) {
+    toLook(id) {
       var that = this;
       that.$router.push({ name: "historyDetails", params: { houseId: id } });
     },
-    toSale (
+    toSale(
       comId,
       cbId,
       bhId,
@@ -433,15 +439,15 @@ export default {
         }
       });
     },
-    queryNotSaleParams () {
+    queryNotSaleParams() {
       this.queryNotSale(1);
     },
-    remoteInput () {
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -467,7 +473,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       if (that.data.comId == "") {
         that.data.roomNo = "";
@@ -494,7 +500,7 @@ export default {
         });
       this.queryNotSaleParams();
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -517,7 +523,7 @@ export default {
         });
       this.queryNotSaleParams();
     },
-    Remove () {
+    Remove() {
       let tab = this.tableColumn;
       let renderList = this.renderList;
       Object.assign(this.$data, this.$options.data.call(this));
@@ -526,7 +532,7 @@ export default {
       this.tabColumnChange(tab);
       this.queryNotSale(1);
     },
-    queryNotSale (currentPage) {
+    queryNotSale(currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -575,18 +581,18 @@ export default {
         });
     },
 
-    handleClick () { },
-    queryTabData () {
+    handleClick() {},
+    queryTabData() {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryNotSaleParams(1);
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryNotSale(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.queryNotSale(val);
     }

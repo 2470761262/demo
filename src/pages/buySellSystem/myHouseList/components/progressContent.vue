@@ -95,7 +95,7 @@
   <section class="progress-content">
     <div class="progress-header">
       <div class="progress-header-num">
-        <span>跟单数</span>
+        <span>{{title}}</span>
         <span>{{houseNum}}套</span>
       </div>
       <div class="progress-header-compare"
@@ -120,6 +120,10 @@
 <script>
 export default {
   props: {
+    title: {
+      type: String,
+      default: "跟单数"
+    },
     proportion: {
       type: String,
       default: "占比"
@@ -150,10 +154,10 @@ export default {
     }
   },
   computed: {
-    progressNumDirection() {
+    progressNumDirection () {
       return parseInt(this.progress) > 95 ? true : false;
     },
-    changeBack() {
+    changeBack () {
       if (this.resetProgress) {
         const num = parseInt(this.progress);
         const findIndex = this.progressBackList.findIndex(item => num <= item);
@@ -163,7 +167,7 @@ export default {
     }
   },
   filters: {
-    isGrZero(value) {
+    isGrZero (value) {
       if (value >= 0) {
         return "+" + value;
       }

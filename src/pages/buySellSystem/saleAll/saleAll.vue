@@ -113,7 +113,8 @@
                      @click="querySoleAllParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      deptUrl="/saleAll/querySaleAll"></moreSelect>
         </div>
         <div class="query-content-cell cell-interval25">
           <definitionmenu :renderList="renderList"
@@ -204,22 +205,6 @@ export default {
           label: "小区名称",
           order: false,
           width: "150",
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "buildingName",
-          label: "楼栋号",
-          width: "90",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "roomNo",
-          label: "房间号",
-          width: "110",
-          order: false,
           disabled: true,
           default: true
         },
@@ -542,9 +527,11 @@ export default {
       params.sortType = this.sortType;
       this.$api
         .post({
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
           url: "/saleAll/querySaleAll",
           data: params,
-          qs: true
+          // qs: true
         })
         .then(e => {
           console.log(e.data);

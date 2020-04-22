@@ -219,7 +219,12 @@ export default {
         deleteFollow: false,
         updateKeyStorageDept: false,
         telFollow: false,
-        editAgentHouse: false
+        editAgentHouse: false,
+        applyAgent:false, //申请跟单人
+        applyKeyOwner:false, //申请钥匙人
+        applyRealOwner:false,//申请实勘人
+        applyOnlyOwner:false,//申请委托人
+        submitApplyKeyOwner:false  //提交申请钥匙人 
       }, //是否显示按钮
       perId: "", //登录人id
       isRecommend: false, //是否推荐
@@ -416,6 +421,7 @@ export default {
             }
             if (that.isShowButton.hasOwnProperty(element.rUrl)) {
               that.isShowButton[element.rUrl] = true;
+              console.log("----------",element.rUrl);
               if (element.rUrl == "deleteFollow") {
                 but.$emit("deleteFollow");
               }
@@ -424,6 +430,22 @@ export default {
               }
               if (element.rUrl == "editAgentHouse") {
                 but.$emit("editAgentHouse");
+              }
+              if (element.rUrl == "applyAgent") { //申请跟单人
+                but.$emit("applyAgent");
+              }
+              if (element.rUrl == "applyKeyOwner") { //申请钥匙人
+                but.$emit("applyKeyOwner");
+              }
+              if (element.rUrl == "submitApplyKeyOwner") { //提交（申请钥匙人）按钮
+                console.log("+++++++++",element.rUrl)
+                but.$emit("submitApplyKeyOwner");
+              }
+              if (element.rUrl == "applyOnlyOwner") { //申请委托人
+                but.$emit("applyOnlyOwner");
+              }
+              if (element.rUrl == "applyRealOwner") { //申请实勘人
+                but.$emit("applyRealOwner");
               }
             }
           });
