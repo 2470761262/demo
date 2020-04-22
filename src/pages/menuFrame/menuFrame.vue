@@ -55,15 +55,12 @@
 <template >
   <section class="page-cell-conter">
     <el-container>
-      <el-header v-if="asideNavFlag"
-                 height="80px">
+      <el-header v-if="asideNavFlag" height="80px">
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
-    <el-container class="page-cell-main"
-                  id="page-cell-main">
-      <el-aside class="el-background"
-                v-if="asideNavFlag">
+    <el-container class="page-cell-main" id="page-cell-main">
+      <el-aside class="el-background" v-if="asideNavFlag">
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
@@ -71,15 +68,14 @@
         <div class="children-page">
           <!-- 二级页面 router-view -->
           <transition name="el">
-            <keep-alive :max="3"
-                        include="houseList,otherIframe">
+            <keep-alive :max="3" include="houseList,otherIframe">
               <!-- <router-view v-if="$route.meta.keepAlive" /> -->
               <router-view />
             </keep-alive>
           </transition>
           <!-- <transition name="el">
             <router-view v-if="!$route.meta.keepAlive" />
-          </transition> -->
+          </transition>-->
         </div>
       </el-main>
     </el-container>
