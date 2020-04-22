@@ -203,7 +203,7 @@
       <span slot="footer"
             class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary"
+        <el-button type="primary" :disabled="!showUpdateAgentPer"
                    @click="updateAgentPer">确 定</el-button>
       </span>
     </el-dialog>
@@ -433,7 +433,8 @@ export default {
         }
       ], //转换排序字段数组
       menuLoading: true,//自定义菜单
-      renderList: []
+      renderList: [],
+      showUpdateAgentPer: false, //调配功能
     };
   },
   mounted () {
@@ -532,107 +533,118 @@ export default {
       this.newAgentName = name;
       console.log("==========" + this.newAgentName);
     },
-    querylist (currentPage, column, type) {
-      let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
-      let that = this;
-      that.loading = true;
-      if (Object.keys(this.moreSelect).length != 0) {
-        for (let key in this.moreSelect) {
-          if (key == "addTime" && this.moreSelect[key] !== "") {
-            params.beginTime = this.moreSelect[key][0];
-            params.endTime = this.moreSelect[key][1];
-          } else if (key == "followTime" && this.moreSelect[key] !== "") {
-            params.beginFollowTime = this.moreSelect[key][0];
-            params.endFollowTime = this.moreSelect[key][1];
-          } else {
-            params[key] = this.moreSelect[key];
-          }
-        }
-      } else {
-        if (that.data.comId != null && that.data.comId != "") {
-          params.comId = that.data.comId;
-        }
-        if (that.data.cbId != null && that.data.cbId != "") {
-          params.cbId = this.data.cbId;
-        }
-        if (that.data.roomNo != null && this.data.RoomNo != "") {
-          params.roomNo = this.data.roomNo;
-        }
-        if (that.data.customName != null && that.data.customName != "") {
-          params.customName = that.data.customName;
-        }
-        if (that.data.tel != null && that.data.tel != "") {
-          params.tel = this.data.tel;
-        }
-        if (that.data.minPrice != null && that.data.minPrice != "") {
-          params.minPrice = that.data.minPrice;
-        }
-        if (that.data.maxPrice != null && that.data.maxPrice != "") {
-          params.maxPrice = that.data.maxPrice;
-        }
-        if (that.data.minInArea != null && that.data.minInArea != "") {
-          params.minInArea = that.data.minInArea;
-        }
-        if (that.data.maxInArea != null && that.data.maxInArea != "") {
-          params.maxInArea = that.data.maxInArea;
-        }
-        if (
-          that.data.timeSelect != null &&
-          that.data.timeSelect[0] != null &&
-          that.data.timeSelect[0] != ""
-        ) {
-          params.beginTime = that.data.timeSelect[0];
-        }
-        if (
-          that.data.timeSelect != null &&
-          that.data.timeSelect[1] != null &&
-          that.data.timeSelect[1] != ""
-        ) {
-          params.endTime = that.data.timeSelect[1];
-        }
-        if (that.data.agentName != null && that.data.agentName != "") {
-          params.agentName = that.data.agentName;
-        }
-      }
-      params.isOnly = that.data.isOnly;
-      params.isKey = that.data.isKey;
 
-      if (column == "" || type == null || type == undefined) {
-        params.sortColumn = "id";
-      } else {
-        params.sortColumn = column;
-      }
-      if (type == "" || type == null || type == undefined) {
-        params.sortType = "descending";
-      } else {
-        params.sortType = type;
-      }
-      this.$api
-        .post({
-          url: "/myHouse/getMyAgent",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: params,
-          token: false
-        })
-        .then(e => {
-          console.log(e.data);
-          let result = e.data;
-          that.loading = false;
-          if (result.code == 200) {
-            console.log(result.message);
-            console.log(result.data);
-            that.pageJson.total = result.data.dataCount;
-            that.tableData = result.data.data;
-          } else {
-            console.log("查询我的跟单列表结果：" + result.message);
-            alert(result.message);
-          }
-        })
-        .catch(e => {
-          console.log("查询我的跟单失败");
-          console.log(e);
-        });
-    },
+    // querylist (currentPage, column, type) {
+    //   let params = { limit: this.pageJson.pageSize, page: currentPage - 1 };
+    //   let that = this;
+    //   that.loading = true;
+    //   if (Object.keys(this.moreSelect).length != 0) {
+    //     for (let key in this.moreSelect) {
+    //       if (key == "addTime" && this.moreSelect[key] !== "") {
+    //         params.beginTime = this.moreSelect[key][0];
+    //         params.endTime = this.moreSelect[key][1];
+    //       } else if (key == "followTime" && this.moreSelect[key] !== "") {
+    //         params.beginFollowTime = this.moreSelect[key][0];
+    //         params.endFollowTime = this.moreSelect[key][1];
+    //       } else {
+    //         params[key] = this.moreSelect[key];
+    //       }
+    //     }
+    //   } else {
+    //     if (that.data.comId != null && that.data.comId != "") {
+    //       params.comId = that.data.comId;
+    //     }
+    //     if (that.data.cbId != null && that.data.cbId != "") {
+    //       params.cbId = this.data.cbId;
+    //     }
+    //     if (that.data.roomNo != null && this.data.RoomNo != "") {
+    //       params.roomNo = this.data.roomNo;
+    //     }
+    //     if (that.data.customName != null && that.data.customName != "") {
+    //       params.customName = that.data.customName;
+    //     }
+    //     if (that.data.tel != null && that.data.tel != "") {
+    //       params.tel = this.data.tel;
+    //     }
+    //     if (that.data.minPrice != null && that.data.minPrice != "") {
+    //       params.minPrice = that.data.minPrice;
+    //     }
+    //     if (that.data.maxPrice != null && that.data.maxPrice != "") {
+    //       params.maxPrice = that.data.maxPrice;
+    //     }
+    //     if (that.data.minInArea != null && that.data.minInArea != "") {
+    //       params.minInArea = that.data.minInArea;
+    //     }
+    //     if (that.data.maxInArea != null && that.data.maxInArea != "") {
+    //       params.maxInArea = that.data.maxInArea;
+    //     }
+    //     if (
+    //       that.data.timeSelect != null &&
+    //       that.data.timeSelect[0] != null &&
+    //       that.data.timeSelect[0] != ""
+    //     ) {
+    //       params.beginTime = that.data.timeSelect[0];
+    //     }
+    //     if (
+    //       that.data.timeSelect != null &&
+    //       that.data.timeSelect[1] != null &&
+    //       that.data.timeSelect[1] != ""
+    //     ) {
+    //       params.endTime = that.data.timeSelect[1];
+    //     }
+    //     if (that.data.agentName != null && that.data.agentName != "") {
+    //       params.agentName = that.data.agentName;
+    //     }
+    //   }
+    //   params.isOnly = that.data.isOnly;
+    //   params.isKey = that.data.isKey;
+    //
+    //   if (column == "" || type == null || type == undefined) {
+    //     params.sortColumn = "id";
+    //   } else {
+    //     params.sortColumn = column;
+    //   }
+    //   if (type == "" || type == null || type == undefined) {
+    //     params.sortType = "descending";
+    //   } else {
+    //     params.sortType = type;
+    //   }
+    //   this.$api
+    //     .post({
+    //       url: "/myHouse/getMyAgent",
+    //       headers: { "Content-Type": "application/json;charset=UTF-8" },
+    //       data: params,
+    //       token: false
+    //     })
+    //     .then(e => {
+    //       console.log(e.data);
+    //       let result = e.data;
+    //       that.loading = false;
+    //       if (result.code == 200) {
+    //         console.log(result.message);
+    //         console.log(result.data);
+    //         that.pageJson.total = result.data.dataCount;
+    //         that.tableData = result.data.data;
+    //         let btnList = e.data.data.btnList;
+    //         debugger;
+    //         if ( btnList && btnList.length > 0){
+    //           btnList.forEach(btn => {
+    //             if (btn.rName == "调配"){
+    //               that.showUpdateAgentPer = true;
+    //             }
+    //           })
+    //         }
+    //       } else {
+    //         console.log("查询我的跟单列表结果：" + result.message);
+    //         alert(result.message);
+    //       }
+    //     })
+    //     .catch(e => {
+    //       console.log("查询我的跟单失败");
+    //       console.log(e);
+    //     });
+    // },
+
     queryOnly () {
       if (this.data.isOnly != "") {
         this.data.isOnly = "";
@@ -700,7 +712,6 @@ export default {
     },
     updateAgentPer () {
       var that = this;
-
       console.log(
         "得到跟单人id为:" +
         that.newAgentName +
@@ -710,10 +721,17 @@ export default {
       console.log(
         "得到房源id为:" + that.agentPer + "------楼盘名称" + that.AgentPerId.accountID
       );
+      if(!that.newAgentName){
+        this.$message({
+          message: "请选择调配跟单人！",
+          type: "warning"
+        });
+        return false
+      }
       if (that.agentPer == that.AgentPerId.accountID) {
         this.$message({
           message: "调配跟单人和原跟单人相同，请重新选择！",
-          type: "success"
+          type: "warning"
         });
         return false
       }
@@ -723,11 +741,9 @@ export default {
         oldAgentPer: parseInt(that.agentper != null ? that.agentper : ""),
         newAgentName: that.AgentPerId.perName
       };
-
       this.$api
         .post({
           url: "/agent_house/updateAgentPer",
-
           data: params,
           qs: true
         })
@@ -909,6 +925,15 @@ export default {
           if (data.code == 200) {
             that.pageJson.total = data.data.dataCount;
             that.tableData = data.data.data;
+            let btnList = e.data.data.btnList;
+            debugger;
+            if ( btnList && btnList.length > 0){
+              btnList.forEach(btn => {
+                if (btn.rName == "调配"){
+                  that.showUpdateAgentPer = true;
+                }
+              })
+            }
           } else {
             console.log("查询我的跟单列表结果：" + result.message);
             alert(result.message);
