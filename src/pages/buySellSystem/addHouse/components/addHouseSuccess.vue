@@ -131,7 +131,7 @@ export default {
       }
       this.$api
         .post({
-          url: "/verifyHouse/invitationToVerify",
+          url: "/verifyHouse/invitationToVerify/addHouse",
           data: {
             id: that.$store.state.addHouse.formData.id
           },
