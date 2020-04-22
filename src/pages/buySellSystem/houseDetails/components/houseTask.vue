@@ -147,9 +147,11 @@
             <div class="task-pro-options overText">{{resultData.agentPerDepartmentName}}</div>
           </div>
         </template>
-        <el-button v-else
+        <el-button v-else-if="applyAgentRule"
                    :disabled="isDisabled||agentApply"
                    @click="openAgentPop"><span>申请跟单人</span> </el-button>
+        <el-button v-else
+                   :disabled="true"><span>申请跟单人</span> </el-button>
       </div>
     </div>
     <div class="task-pro-flex">
@@ -171,9 +173,11 @@
           <el-button :disabled="isDisabled"
                      @click="openPop('keyPopFlag',4,'keyType',3)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
         </template>
-        <el-button v-else
+        <el-button v-else-if="applyKeyOwnerRule"
                    :disabled="isDisabled"
                    @click="openPop('keyPopFlag',0,'keyType',0)"><span>申请钥匙人</span> </el-button>
+        <el-button v-else
+                   :disabled="true"><span>申请钥匙人</span> </el-button>
       </div>
       <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
            data-detail="委托人">
@@ -196,9 +200,11 @@
           <el-button :disabled="isDisabled"
                      @click="openPop('entrustPopFlag',4,'entrustType',2)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
         </template>
-        <el-button v-else
+        <el-button v-else-if="applyOnlyOwnerRule"
                    :disabled="isDisabled"
                    @click="openPop('entrustPopFlag',1,'entrustType',0)"><span>申请委托人</span> </el-button>
+        <el-button v-else
+                   :disabled="true"><span>申请委托人</span> </el-button>
       </div>
     </div>
     <div class="task-pro-flex seat">
@@ -222,9 +228,11 @@
             <i class="el-icon-sunny icon"></i> <span>取代</span>
           </el-button>
         </template>
-        <el-button v-else
+        <el-button v-else-if="applyRealOwnerRule"
                    :disabled="isDisabled"
                    @click="openPop('houseUploadflag',12,'houseUploadType',0)">申请实勘人</el-button>
+        <el-button v-else
+                   :disabled="true">申请实勘人</el-button>
       </div>
     </div>
     <!--取代 -->
@@ -232,7 +240,8 @@
                 :visible.sync="keyPopFlag"
                 v-if="keyPopFlag"
                 width="620px"
-                title=""></replacePop>
+                title=""
+                :submitApplyKeyOwner="submitApplyKeyOwner"></replacePop>
     <!-- 委托人 -->
     <entrustPop :replaceType="entrustType"
                 v-if="entrustPopFlag"
@@ -288,6 +297,7 @@ import houseCheck from "../common/houseCheck";
 //选填信息
 import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
 import util from "@/util/util";
+import but from "@/evenBus/but.js";
 export default {
   inject: ["houseDetails", "houseId", "buttonDisabled","dept"],
   computed: {
@@ -340,13 +350,46 @@ export default {
       primaryRadio: 0, //小学占用年级
       audioList: [], //音频文件
       showFollow: true, //是否显示组件的跟进
-      applyAgentFlag: false //申请跟单开关
+      applyAgentFlag: false, //申请跟单开关
+      applyAgentRule:false,//权限控制申请跟单人按钮是否显示
+      applyKeyOwnerRule:false,//权限控制申请钥匙人按钮是否显示
+      applyOnlyOwnerRule:false,//权限控制申请委托人按钮是否显示
+      applyRealOwnerRule:false,//权限控制申请实勘人按钮是否显示
+      submitApplyKeyOwner:false,
     };
   },
   filters: {
     mapFilter (value, ListName, resultValue = null) {
       return util.countMapFilter(value, ListName, resultValue);
     }
+  },
+  mounted(){
+    let that = this;
+    but.$on("submitApplyKeyOwner", () => {
+      console.log("1111111111",that.submitApplyKeyOwner)
+      that.submitApplyKeyOwner = true;
+    });
+    
+    but.$on("applyAgent", () => {
+      that.applyAgentRule = true;
+    });
+    but.$on("applyKeyOwner", () => {
+      that.applyKeyOwnerRule = true;
+    });
+    but.$on("applyOnlyOwner", () => {
+      that.applyOnlyOwnerRule = true;
+    });
+    but.$on("applyRealOwner", () => {
+      that.applyRealOwnerRule = true;
+    });
+
+    
+  },
+  destroyed () {
+    but.$off("applyAgent");
+    but.$off("applyKeyOwner");
+    but.$off("applyOnlyOwner");
+    but.$off("applyRealOwner");
   },
   methods: {
     /**
