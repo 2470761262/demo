@@ -192,7 +192,7 @@ export default {
       },
       option: [
         { value: "1", label: "全部" },
-        { value: "2", label: "草稿" },
+        // { value: "2", label: "草稿" },
         { value: "3", label: "录入" },
         { value: "4", label: "钥匙" },
         { value: "5", label: "委托" },
