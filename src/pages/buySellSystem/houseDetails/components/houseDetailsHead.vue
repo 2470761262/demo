@@ -195,10 +195,12 @@
     </section>
     <!-- 写跟进 -->
     <followUp :visible.sync="followUpFlag"
+              :insertFollow="insertFollow"
               v-if="followUpFlag"></followUp>
     <!-- 举报 -->
     <report :visible.sync="reportFlag"
             v-if="reportFlag"
+            :insertFollow="insertReport"
             typeClass="error"
             title="!举报"></report>
     <attention :visible.sync="attentionFlag"
@@ -219,6 +221,7 @@ import attention from "../didLog/attention";
 import QRCode from "qrcodejs2";
 //房源审核
 import houseCheck from "../common/houseCheck";
+import but from "@/evenBus/but.js";
 export default {
   inject: ["houseDetails", "houseId", "buttonDisabled"],
   watch: {
@@ -247,6 +250,15 @@ export default {
     this.getImpressionList();
     this.getisCollect();
   },
+  mounted(){
+    let that = this;
+    but.$on("insertFollow", () => {
+      that.insertFollow = true;
+    });
+    but.$on("insertReport", () => {
+      that.insertReport = true;
+    });
+  },
   computed: {
     isDisabled () {
       return this.buttonDisabled;
@@ -266,7 +278,9 @@ export default {
       reportFlag: false, //举报开关
       impressionList: [], //印象数组
       isCollect: false,
-      attentionFlag: false //关注开关
+      attentionFlag: false, //关注开关
+      insertFollow:false, //权限控制添加跟进按钮
+      insertReport:false,//权限控制添加举报按钮
     };
   },
   methods: {

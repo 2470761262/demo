@@ -195,6 +195,7 @@
           <div class="fixed"
                v-if="!isDisabled">
             <followUp :isCancel="false"
+                      :insertFollow="insertFollow"
                       :visible.sync="followUpFlag"
                       v-if="followUpFlag"
                       width="100%"
@@ -343,7 +344,8 @@ export default {
       followUpFlag: true,
       changeTabsValue: "follow",
       deleteFollow: false,
-      telFollow: false
+      telFollow: false,
+      insertFollow:false
     };
   },
   created() {
@@ -357,6 +359,12 @@ export default {
     });
     but.$on("telFollow", () => {
       this.telFollow = true;
+    });
+  },
+  mounted(){
+    let that = this;
+    but.$on("insertFollow", () => {
+      that.insertFollow = true;
     });
   },
   destroyed() {
