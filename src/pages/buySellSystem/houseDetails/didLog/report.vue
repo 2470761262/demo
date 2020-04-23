@@ -11,6 +11,12 @@ import followUp from './followUp.vue';
 export default {
   inject: ["houseId"],
   extends: followUp,
+  props: {
+    insertFollow: {
+      type: Boolean,
+      default: false
+    }
+  },
   data () {
     return {
       sumitButClass: 'sumitButClass',

@@ -463,6 +463,7 @@ export default {
       this.$api
         .post({
           url: "/houseResource/getNotPhone",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params,
         })
         .then(e => {

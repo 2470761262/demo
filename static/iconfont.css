@@ -119,8 +119,7 @@
 .iconquxiao:before {
     content: "\e630";
 }
-
-.iconsuoding:before {
+.iconjiesuo:before {
     content: "\e631";
 }
 
@@ -128,7 +127,7 @@
     content: "\e632";
 }
 
-.iconjiesuo:before {
+.iconsuoding:before {
     content: "\e633";
 }
 
