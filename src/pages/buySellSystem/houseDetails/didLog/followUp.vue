@@ -28,9 +28,14 @@
                    :class="[cancelButClass]"
                    @click="cancel"
                    v-if="cancelFlag">取消</el-button>
-        <el-button size="small"
+        <el-button v-if="insertFollow"
+                   size="small"
                    :class="['button-back',sumitButClass]"
                    @click="result"
+                   :loading="pop.loading">提交</el-button>
+        <el-button v-else
+                   size="small"
+                   :disabled="true"
                    :loading="pop.loading">提交</el-button>
       </div>
     </template>
@@ -46,6 +51,10 @@ export default {
     isCancel: {
       type: Boolean,
       default: true
+    },
+    insertFollow: {
+      type: Boolean,
+      default: false
     }
   },
   data () {

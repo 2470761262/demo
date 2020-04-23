@@ -196,7 +196,7 @@
                        @click="getTitle(scope.row)"
                        :disabled="btnDisabled.checkHouse">审核</el-button>
             <el-button size="mini"
-                       type=""
+                       type="warning"
                        v-if="scope.row.tag!=0">已审核</el-button>
             <el-button type="primary"
                        v-if="!(scope.row.checkProject==13)"
@@ -384,7 +384,7 @@ export default {
     ElImageViewer
   },
   computed: {
-    showImgList () {
+    showImgList() {
       let result = this.file8.map(item => {
         if (item.subType != 7) {
           return item.url;
@@ -401,7 +401,7 @@ export default {
       return result;
     }
   },
-  data () {
+  data() {
     return {
       showViewer: false,
       showImgIndexImg: null,
@@ -569,26 +569,26 @@ export default {
       fill: "fill",
       btnDisabled: {
         checkHouse: true,
-        checkStatus: true,
+        checkStatus: true
       }
     };
   },
-  mounted () {
+  mounted() {
     this.querylist(1);
   },
   methods: {
-    iamgeViewClose () {
+    iamgeViewClose() {
       this.showViewer = false;
       this.showImgIndexImg = null;
     },
-    changeShowImg (url) {
+    changeShowImg(url) {
       this.showViewer = true;
       this.showImgIndexImg = url;
     },
     /**
      * 审核项目change
      */
-    reviewProject (value) {
+    reviewProject(value) {
       switch (String(value)) {
         case "1":
           this.typeList = taskProCheck;
@@ -606,20 +606,20 @@ export default {
       this.type = "";
       this.querylistByParams();
     },
-    moreSelectChange (e) {
+    moreSelectChange(e) {
       this.moreSelect = e;
       this.querylist(1, "id", "descending");
     },
-    changeFile (e, index) {
+    changeFile(e, index) {
       let checkProjectList = this.accessoryMoldList[index].list;
       let activeIndex = checkProjectList[e].activeIndex;
       this.cutPic(activeIndex);
     },
-    cutPic (index) {
+    cutPic(index) {
       let that = this;
       that.$refs.loopImg.setActiveItem(index);
     },
-    getFile (list) {
+    getFile(list) {
       this.accessoryMoldList.forEach(item => {
         item.list = []; //清空数组
         if (list != null) {
@@ -635,7 +635,7 @@ export default {
       console.log(this.file8);
       this.showAccessory = true;
     },
-    getAccessory (row) {
+    getAccessory(row) {
       let checkId = row.id;
       let that = this;
       let exists = false;
@@ -672,7 +672,7 @@ export default {
           that.$message("获取失败");
         });
     },
-    checkHouse () {
+    checkHouse() {
       let that = this;
       let params = {
         id: this.checkId,
@@ -692,7 +692,9 @@ export default {
       this.loading = true;
       this.$api
         .post({
-          url: `/agentHouse/propertyCheck/${this.row.checkProject == '房源转状态' ? 'checkStatus' : 'checkHouse'}`,
+          url: `/agentHouse/propertyCheck/${
+            this.row.checkProject == "房源转状态" ? "checkStatus" : "checkHouse"
+          }`,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params,
           token: false
@@ -711,12 +713,12 @@ export default {
           that.loading = false;
         });
     },
-    remoteInput () {
+    remoteInput() {
       if (this.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -744,16 +746,16 @@ export default {
         this.options = [];
       }
     },
-    Remove () {
+    Remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
       this.tabColumnChange(tab);
       this.querylist(1, "id", "descending");
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -781,7 +783,7 @@ export default {
       this.queryData.CommunityName = obj.name;
       this.querylistByParams();
     },
-    getTitle (row) {
+    getTitle(row) {
       this.titleList.forEach(element => {
         if (element.key == row.Type) {
           this.title = element.value;
@@ -791,7 +793,7 @@ export default {
       this.row = row;
       this.showPopUp = true;
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -820,17 +822,17 @@ export default {
       this.querylistByParams();
     },
     //跳转房源详情页面
-    toHouseDetail (row) {
+    toHouseDetail(row) {
       this.$router.push({
         name: "houseDetails",
         params: { houseId: row.eid, detailType: 4 }
       });
     },
-    querylistByParams () {
+    querylistByParams() {
       console.log(this.queryData.timeSelect);
       this.querylist(1);
     },
-    querylist (currentPage) {
+    querylist(currentPage) {
       var that = this;
       that.loading = true;
       let params = {
@@ -879,7 +881,7 @@ export default {
               if (that.btnDisabled.hasOwnProperty(item.rUrl)) {
                 that.btnDisabled[item.rUrl] = false;
               }
-            })
+            });
           } else {
             console.log("查询我的跟单列表结果：" + result.message);
             alert(result.message);
@@ -890,22 +892,22 @@ export default {
           console.log(e);
         });
     },
-    distributeEvent (e, id) {
+    distributeEvent(e, id) {
       this[e](id);
     },
-    isForBut (type) {
+    isForBut(type) {
       let array = [{ name: "查看", isType: "1,2,3", methosName: "" }];
       return array.filter(item => {
         this.item.push("12222222222222222222222222222222222");
         return item.isType.includes(type);
       });
     },
-    remoteInput () {
+    remoteInput() {
       if (this.queryData.CommunityName.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         console.log(query);
@@ -936,17 +938,17 @@ export default {
         "remoteMethod!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId
       );
     },
-    handleClick () { },
-    handleSizeChange (val) {
+    handleClick() {},
+    handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.querylist(1);
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.pageJson.currentPage = val;
       this.querylist(val);
-    },
-  },
-}
+    }
+  }
+};
 </script>

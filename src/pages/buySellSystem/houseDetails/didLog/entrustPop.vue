@@ -239,10 +239,15 @@
       <div class="pop-but">
         <el-button size="small"
                    @click="hidePop">取消</el-button>
-        <el-button size="small"
+        <el-button v-if="submitApplyOnlyOwner"
+                   size="small"
                    class="button-back"
                    :loading="pop.loading"
                    @click="result">确定</el-button>
+        <el-button v-else
+                   size="small"
+                   :loading="pop.loading"
+                   :disabled="true">确定</el-button>
       </div>
     </template>
   </fixedPopup>
@@ -258,6 +263,10 @@ export default {
   props: {
     replaceType: {
       type: Number
+    },
+    submitApplyOnlyOwner:{  //提交按钮权限控制
+      type: Boolean,
+      default:false
     }
   },
   data () {

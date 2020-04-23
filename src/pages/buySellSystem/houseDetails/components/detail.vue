@@ -248,7 +248,7 @@
         <button class="cell-pro-but"
                 v-if="resultData.agentPerName"
                 @click="oneTouchDialPhone"
-                :disabled="isDisabled">一键拨号</button>
+                :disabled="!touchedDialPhone">一键拨号</button>
       </div>
       <div class="cell-pro-item"
            v-else>
@@ -282,7 +282,7 @@
         <!-- <button>查看号码</button> -->
         <button class="cell-pro-but"
                 @click="dialPhoneToFD"
-                :disabled="isDisabled||fdDial">一键拨号</button>
+                :disabled="!touchedDialPhone">一键拨号</button>
       </div>
     </div>
   </div>
@@ -291,6 +291,7 @@
 <script>
 import util from "@/util/util";
 import {LOGINDATA} from "../../../../util/constMap";
+import but from "@/evenBus/but.js";
 export default {
   inject: ["houseDetails", "houseId", "buttonDisabled"],
   computed: {
@@ -308,30 +309,40 @@ export default {
       let perId = util.localStorageGet("logindata").accountId;
       if (Object.keys(this.houseDetails).length > 0) {
         let detailData = this.houseDetails.data;
-        if(!detailData){
+        if (!detailData) {
           return true;
         }
-        if(!detailData.isNew){
+        if (!detailData.isNew) {
           return false;
         }
-        if(!detailData.agentHouseMethod){
+        if (!detailData.agentHouseMethod) {
           return true;
         }
-        if(perId!=detailData.agentHouseMethod.addPer&&perId!=detailData.agentHouseMethod.agentPer
-          &&perId!=detailData.agentHouseMethod.keyOwner&&perId!=detailData.agentHouseMethod.onlyOwner
-          &&perId!=detailData.agentHouseMethod.realOwner){
-          return  true;
+        if (
+          perId != detailData.agentHouseMethod.addPer &&
+          perId != detailData.agentHouseMethod.agentPer &&
+          perId != detailData.agentHouseMethod.keyOwner &&
+          perId != detailData.agentHouseMethod.onlyOwner &&
+          perId != detailData.agentHouseMethod.realOwner
+        ) {
+          return true;
         }
       } else {
         return true;
       }
-      return false
+      return false;
     }
   },
   data() {
     return {
-      isShowBuilding: false
+      isShowBuilding: false,
+      touchedDialPhone: false,
     };
+  },
+  created() {
+    but.$on("dialPhone", (value) => {
+      this.touchedDialPhone = value;
+    });
   },
   mounted() {},
   methods: {
@@ -392,7 +403,8 @@ export default {
       this.$confirm("确定一键拨号吗？", "友情提醒", {
         distinguishCancelAndClose: true,
         confirmButtonText: "确定",
-        cancelButtonText: "取消"
+        cancelButtonText: "取消",
+        showConfirmButton: that.touchedDialPhone
       })
         .then(() => {
           console.log(that.houseDetails);
@@ -463,6 +475,9 @@ export default {
     keyStorageFilter(value, keyOwnerName) {
       return keyOwnerName == null ? "暂无" : value;
     }
+  },
+  destroyed () {
+    but.$off("dialPhone");
   }
 };
 </script>
