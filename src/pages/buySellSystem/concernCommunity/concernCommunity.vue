@@ -350,8 +350,8 @@
                   :showFollow="showFollow"
                   :audioList="audioList"></supplement>
       <template v-slot:floot>
-        <div class="text-middle">
-          <el-button size="mini"
+        <div class="text-middle" style="text-align: center;margin: 10px">
+          <el-button size="mini" :disabled="!showApplyAgentBtn"
                      @click="applyAgent">提交</el-button>
         </div>
       </template>
@@ -531,7 +531,9 @@ export default {
       middleRadio: 0, //中学占用级
       primaryRadio: 0, //小学占用年级
       audioList: [], //音频文件
-      showFollow: true //是否显示组件的跟进
+      showFollow: true, //是否显示组件的跟进
+      showAddPhone: false, //是否显示录入号码
+      showApplyAgentBtn: false, // 是否显示转跟单按钮
     };
   },
   computed: {
@@ -977,9 +979,18 @@ export default {
             typeof e.data.data.data;
             that.pageJson.total = e.data.data.dataCount;
             that.tableData = e.data.data.data;
+            let btnList = e.data.data.btnList;
+            if ( btnList && btnList.length > 0){
+              btnList.forEach(btn => {
+                if (btn.rName == "录入号码"){
+                  that.showAddPhone = true;
+                }else if(btn.rName == "转跟单"){
+                  that.showApplyAgentBtn = true;
+                }
+              })
+            }
           } else {
             this.$message.error(e.data.message);
-            this.$message.error;
           }
         })
         .catch(e => {
@@ -1222,18 +1233,20 @@ export default {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         inputPattern: /^\d{11}$/,
-        inputErrorMessage: "手机号码格式不正确"
+        inputErrorMessage: "手机号码格式不正确",
+        showConfirmButton: this.showAddPhone
       })
         .then(({ value }) => {
+          let params = {
+            id: esId,
+            tel: value,
+            esId: esId
+          };
           this.$api
             .post({
-              url: "/houseResource/updatePhone",
-              headers: { "Content-Type": "application/json;charset=UTF-8" },
-              data: {
-                id: esId,
-                tel: value,
-                esId: esId
-              }
+              url: "/houseResource/updatePhone/kernelHouse",
+              qs: true,
+              data: params
             })
             .then(e => {
               console.log(e.data.code);
@@ -1275,7 +1288,7 @@ export default {
           that.applyAgentFlag = false;
           that.$api
             .post({
-              url: "/agentHouse/propertyCheck/applyAgent",
+              url: "/myHouse/applyAgent",
               headers: { "Content-Type": "application/json;charset=UTF-8" },
               data: params
             })
@@ -1296,7 +1309,6 @@ export default {
       let query = {
         houseId: id
       };
-      console.log(id, "idddddddddd");
       this.$store.commit("updateId", id);
       if (that.detailType && that.detailType != "undefined") {
         console.log("注意，了，这是调用另一个房源详情接口");

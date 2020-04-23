@@ -195,7 +195,8 @@
             <div class="flex-cell-content">
               <el-button :type="item.buttonType"
                          size="mini"
-                         @click="distributeEvent(item.methosName,scope.row)"
+                         :disabled="(!showValidityBtn && item.name=='邀请验真')"
+                         @click="distributeEvent(item.methodName,scope.row)"
                          v-for="(item,index) in isForBut(scope.row.checkStatus)"
                          :key="index">{{item.name}}</el-button>
             </div>
@@ -529,7 +530,9 @@ export default {
       checkStatusValue: "",
       phoneStatusValue: "",
       sortColumn: "id",
-      sortType: 1
+      sortType: 1,
+      showValidityBtn : false, //验真按钮
+      // showEditBtn : false,//编辑按钮
     };
   },
   created() {
@@ -632,9 +635,20 @@ export default {
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            that.pageJson.total = result.data.totalCount;
-            that.pageJson.currentPage = result.data.currPage;
-            that.tableData = result.data.list;
+            let data = result.data.houseList;
+            that.pageJson.total = data.totalCount;
+            that.pageJson.currentPage = data.currPage;
+            that.tableData = data.list;
+
+            let btnList = result.data.btnList;
+            if ( btnList && btnList.length > 0){
+              btnList.forEach(btn => {
+                if (btn.rName == "邀请验真"){
+                  that.showValidityBtn = true;
+                }
+              })
+            }
+
           } else {
             console.log("查询验真房源列表结果：" + result.message);
             alert(result.message);
@@ -656,9 +670,8 @@ export default {
       that.loading = true;
       this.$api
         .post({
-          url: "/verifyHouse/invitationToVerify",
+          url: "/verifyHouse/invitationToVerify/verifyList",
           data: params,
-          token: false,
           qs: true
         })
         .then(e => {
@@ -780,25 +793,25 @@ export default {
         {
           name: "邀请验真",
           isType: "待业主验真,待店长验真,已过期",
-          methosName: "getVerifyImg",
+          methodName: "getVerifyImg",
           buttonType: "primary"
         },
         {
           name: "重新验真",
           isType: "验真失败",
-          methosName: "reVerify",
+          methodName: "reVerify",
           buttonType: "warning"
         },
         {
           name: "编辑",
           isType: "待业主验真,待店长验真,已过期,验真失败",
-          methosName: "edit",
-          buttonType: ""
+          methodName: "edit",
+          buttonType: "warning"
         },
         {
           name: "查看",
           isType: "待业主验真,待店长验真,已过期,验真失败,验真成功",
-          methosName: "getResult",
+          methodName: "getResult",
           buttonType: "primary"
         }
       ];

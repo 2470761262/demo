@@ -400,7 +400,9 @@
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">电梯</div>
-        <div class="cell-tabs-item-data">{{formData.isElevator == 0 ? '否' : formData.isElevator == 1 ? '是' : '未知'}}</div>
+        <div
+          class="cell-tabs-item-data"
+        >{{formData.isElevator == 0 ? '否' : formData.isElevator == 1 ? '是' : '未知'}}</div>
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">房屋用途</div>
@@ -409,16 +411,12 @@
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">土地性质</div>
         <div class="cell-tabs-item-data">
-          <el-select
-            v-model="formData.landCharacteristic"
-            disabled
-          >
-            <el-option :value='null'  label="未知"></el-option>
+          <el-select v-model="formData.landCharacteristic" disabled>
+            <el-option :value="null" label="未知"></el-option>
             <el-option :value="0" label="出让"></el-option>
             <el-option :value="1" label="划拨"></el-option>
           </el-select>
         </div>
-        
       </div>
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">产权性质</div>
@@ -459,6 +457,7 @@ let certificateType = [
 ];
 //import { mapState } from "vuex";
 import util from "@/util/util";
+import but from "@/evenBus/but.js";
 export default {
   name: "basicInformation",
   props: {
@@ -574,6 +573,7 @@ export default {
       this.formData.tel = this.$route.query.tel;
     }
     console.log(this.$route.query.flag);
+    this.getNextSaveButton();
   },
   destroyed() {
     window.removeEventListener("click", this.bodyClick);
@@ -1012,8 +1012,9 @@ export default {
         data.id = that.$store.state.addHouse.formData.id;
         method = "put";
       }
-      if (Object.keys(this.deffData).length == 0) {
-        //没有做出修改
+      if (Object.keys(this.deffData).length == 0 || !this.nextSaveData) {
+        //没有做出修改 或者 没有下一步保存的按钮权限
+        console.log("跳过保存：", this.nextSaveData);
         return true;
       }
       return this.$api[method]({
@@ -1036,6 +1037,28 @@ export default {
         .catch(e => {
           return false;
         });
+    },
+    getNextSaveButton() {
+      let that = this;
+      this.$api
+        .get({
+          url: "/agent_house/nextSaveButton"
+        })
+        .then(e => {
+          e.data.data.functionRuleList.forEach(element => {
+            if (element.rUrl == "nextSaveButton") {
+              that.nextSaveData = true;
+              but.$emit("nextSaveButton");
+            }
+            if (element.rUrl == "submitVerify") {
+              but.$emit("submitVerify");
+            }
+            if (element.rUrl == "wxUploadFile") {
+              but.$emit("wxUploadFile");
+            }
+          });
+        })
+        .catch(e => {});
     }
   },
   data() {
@@ -1074,7 +1097,8 @@ export default {
       },
       loading: false,
       deffData: {},
-      roomTypeStr: ""
+      roomTypeStr: "",
+      nextSaveData: false
     };
   }
 };

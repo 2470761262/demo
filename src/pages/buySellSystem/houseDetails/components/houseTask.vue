@@ -247,6 +247,7 @@
                 v-if="entrustPopFlag"
                 width="640px"
                 title=""
+                :submitApplyOnlyOwner="submitApplyOnlyOwner"
                 :visible.sync="entrustPopFlag">
     </entrustPop>
     <!-- 上传 -->
@@ -258,9 +259,14 @@
                           :replaceType="houseUploadType"></houseUploadExtends>
       <template v-slot:floot>
         <div class="text-middle">
-          <el-button size="mini"
+          <el-button v-if="submitApplyRealOwner"
+                     size="mini"
                      :disabled="isDisabled"
                      @click="submitUpload"
+                     :loading="houseUploadLoading">{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
+          <el-button v-else
+                     size="mini"
+                     :disabled="true"
                      :loading="houseUploadLoading">{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
         </div>
       </template>
@@ -278,9 +284,13 @@
                   :audioList="audioList"></supplement>
       <template>
         <div class="text-middle">
-          <el-button size="mini"
+          <el-button v-if="submitApplyAgent"
+                     size="mini"
                      :disabled="agentApply||isDisabled"
                      @click="applyAgent"> 提交</el-button>
+          <el-button v-else
+                     size="mini"
+                     :disabled="true"> 提交</el-button>
         </div>
       </template>
     </fixedPopup>
@@ -356,7 +366,10 @@ export default {
       applyKeyOwnerRule: false, //权限控制申请钥匙人按钮是否显示
       applyOnlyOwnerRule: false, //权限控制申请委托人按钮是否显示
       applyRealOwnerRule: false, //权限控制申请实勘人按钮是否显示
-      submitApplyKeyOwner: false
+      submitApplyKeyOwner: false, //提交申请钥匙人按钮
+      submitApplyOnlyOwner: false, //提交申请委托人按钮
+      submitApplyRealOwner: false, //提交申请实勘人按钮
+      submitApplyAgent: false //提交申请跟单人
     };
   },
   filters: {
@@ -366,10 +379,6 @@ export default {
   },
   mounted() {
     let that = this;
-    but.$on("submitApplyKeyOwner", () => {
-      console.log("1111111111", that.submitApplyKeyOwner);
-      that.submitApplyKeyOwner = true;
-    });
 
     but.$on("applyAgent", () => {
       that.applyAgentRule = true;
@@ -383,12 +392,29 @@ export default {
     but.$on("applyRealOwner", () => {
       that.applyRealOwnerRule = true;
     });
+
+    but.$on("submitApplyKeyOwner", () => {
+      that.submitApplyKeyOwner = true;
+    });
+    but.$on("submitApplyOnlyOwner", () => {
+      that.submitApplyOnlyOwner = true;
+    });
+    but.$on("submitApplyRealOwner", () => {
+      that.submitApplyRealOwner = true;
+    });
+    but.$on("submitApplyAgent", () => {
+      that.submitApplyAgent = true;
+    });
   },
   destroyed() {
     but.$off("applyAgent");
     but.$off("applyKeyOwner");
     but.$off("applyOnlyOwner");
     but.$off("applyRealOwner");
+    but.$off("submitApplyKeyOwner");
+    but.$off("submitApplyOnlyOwner");
+    but.$off("submitApplyRealOwner");
+    but.$off("submitApplyAgent");
   },
   methods: {
     /**

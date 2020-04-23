@@ -57,77 +57,71 @@
 <template >
   <div class="content-warp">
     <div class="page-form-tips">Tips：楼盘信息补充成功后，管理员将尽快进行审核！</div>
-    <el-form ref="form"
-             :rules="rules"
-             @submit.native.prevent
-             :model="form"
-             label-width="80px"
-             label-position="left">
+    <el-form
+      ref="form"
+      :rules="rules"
+      @submit.native.prevent
+      :model="form"
+      label-width="80px"
+      label-position="left"
+    >
       <div class="page-form-inline">
-        <el-form-item label="楼盘名称"
-                      prop="communityName">
-          <el-input placeholder="请输入楼盘名称"
-                    v-model="form.communityName">
-          </el-input>
+        <el-form-item label="楼盘名称" prop="communityName">
+          <el-input placeholder="请输入楼盘名称" v-model="form.communityName"></el-input>
         </el-form-item>
       </div>
 
       <div class="page-form-inline">
-        <el-form-item label="楼栋"
-                      prop="comBuildingName">
-          <el-input placeholder="请输入楼栋名称"
-                    v-model="form.comBuildingName">
-          </el-input>
+        <el-form-item label="楼栋" prop="comBuildingName">
+          <el-input placeholder="请输入楼栋名称" v-model="form.comBuildingName"></el-input>
         </el-form-item>
       </div>
 
       <div class="page-form-inline">
-        <el-form-item label="房间号"
-                      prop="buildIngHouses">
-          <el-input placeholder="请输入房间号"
-                    v-model="form.buildIngHouses">
-          </el-input>
+        <el-form-item label="房间号" prop="buildIngHouses">
+          <el-input placeholder="请输入房间号" v-model="form.buildIngHouses"></el-input>
         </el-form-item>
       </div>
 
       <div class="page-form-inline set-el-textarea">
-        <el-form-item label="材料说明"
-                      prop="ReplenishRemark">
-          <el-input type="textarea"
-                    :autosize="{ minRows: 4, maxRows: 6}"
-                    placeholder="请输入材料说明"
-                    :maxlength="300"
-                    show-word-limit
-                    v-model="form.ReplenishRemark">
-          </el-input>
+        <el-form-item label="材料说明" prop="ReplenishRemark">
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 4, maxRows: 6}"
+            placeholder="请输入材料说明"
+            :maxlength="300"
+            show-word-limit
+            v-model="form.ReplenishRemark"
+          ></el-input>
         </el-form-item>
       </div>
       <div class="set-el-textarea">
-        <el-form-item label="材料说明"
-                      prop="prove">
-          <el-upload drag
-                     :on-preview="handlePreview"
-                     :limit="9"
-                     name="1"
-                     action=""
-                     :before-upload="beforeAvatarUpload"
-                     :http-request="uploadSectionFile"
-                     :on-remove="removeImg"
-                     :file-list="form.proveImg"
-                     multiple>
+        <el-form-item label="材料说明" prop="prove">
+          <el-upload
+            drag
+            :on-preview="handlePreview"
+            :limit="9"
+            name="1"
+            action
+            :before-upload="beforeAvatarUpload"
+            :http-request="uploadSectionFile"
+            :on-remove="removeImg"
+            :file-list="form.proveImg"
+            multiple
+          >
             <i class="el-icon-upload"></i>
-            <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+            <div class="el-upload__text">
+              将文件拖到此处，或
+              <em>点击上传</em>
+            </div>
           </el-upload>
           <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
         </el-form-item>
       </div>
-      <el-button type="primary"
-                 @click="apply()">申请</el-button>
+      <el-button type="primary" :disabled="buttonDisable" @click="apply()">申请</el-button>
     </el-form>
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%"
-           :src="dialogImageUrl"
-           alt="">
+      <img width="100%" :src="dialogImageUrl" alt />
     </el-dialog>
   </div>
 </template>
@@ -163,10 +157,25 @@ export default {
         prove: []
       },
       dialogImageUrl: "",
-      dialogVisible: false
+      dialogVisible: false,
+      buttonDisable: true
     };
   },
-  mounted() {},
+  mounted() {
+    let that = this;
+    this.$api
+      .get({
+        url: "/agent_house/nextSaveButton"
+      })
+      .then(e => {
+        e.data.data.functionRuleList.forEach(element => {
+          if (element.rUrl == "submitCommReplenish") {
+            that.buttonDisable = false;
+          }
+        });
+      })
+      .catch(e => {});
+  },
   methods: {
     handlePreview(file) {
       this.dialogImageUrl = file.url; // file.url;

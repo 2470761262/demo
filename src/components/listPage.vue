@@ -184,7 +184,7 @@
                        :page-sizes="pageJson.sizes || [5,10,15,20]"
                        :page-size="pageJson.size || 10"
                        layout="total, sizes, prev, pager, next, jumper"
-                       :total="pageJson.total"></el-pagination>
+                       :total="pageJson.total>10000?10000:pageJson.total"></el-pagination>
       </div>
     </div>
   </div>
