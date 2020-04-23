@@ -189,14 +189,14 @@
                          :sort-orders="['ascending', 'descending']"
                          :sortable="item.order"></el-table-column>
         <el-table-column label="操作"
-                         width="240"
+                         width="320"
                          fixed="right">
           <template v-slot="scope">
             <div class="flex-cell-content">
               <el-button :type="item.buttonType"
                          size="mini"
-                         :disabled="(!showValidityBtn && item.name=='邀请验真')"
-                         @click="distributeEvent(item.methodName,scope.row)"
+                         :disabled="item.disabled"
+                         @click.stop="distributeEvent(item.methodName,scope.row)"
                          v-for="(item,index) in isForBut(scope.row.checkStatus)"
                          :key="index">{{item.name}}</el-button>
             </div>
@@ -531,7 +531,7 @@ export default {
       phoneStatusValue: "",
       sortColumn: "id",
       sortType: 1,
-      showValidityBtn : false, //验真按钮
+      showValidityBtn: false //验真按钮
       // showEditBtn : false,//编辑按钮
     };
   },
@@ -641,14 +641,13 @@ export default {
             that.tableData = data.list;
 
             let btnList = result.data.btnList;
-            if ( btnList && btnList.length > 0){
+            if (btnList && btnList.length > 0) {
               btnList.forEach(btn => {
-                if (btn.rName == "邀请验真"){
+                if (btn.rName == "邀请验真") {
                   that.showValidityBtn = true;
                 }
-              })
+              });
             }
-
           } else {
             console.log("查询验真房源列表结果：" + result.message);
             alert(result.message);
@@ -786,8 +785,10 @@ export default {
       console.log(this.queryData);
     },
     distributeEvent(e, row) {
+      if (!e) return;
       this[e](row);
     },
+    //空方法
     isForBut(type) {
       let array = [
         {
@@ -806,17 +807,27 @@ export default {
           name: "编辑",
           isType: "待业主验真,待店长验真,已过期,验真失败",
           methodName: "edit",
-          buttonType: "warning"
+          buttonType: "info"
         },
         {
           name: "查看",
           isType: "待业主验真,待店长验真,已过期,验真失败,验真成功",
           methodName: "getResult",
-          buttonType: "primary"
+          buttonType: "success"
         }
       ];
-      return array.filter(item => {
-        return item.isType.includes(type);
+      return array.map(item => {
+        if (item.isType.includes(type)) {
+          item.disabled = false;
+        } else {
+          item.disabled = true;
+          item.methodName = null;
+        }
+        if (!this.showValidityBtn && item.name == "邀请验真") {
+          item.disabled = true;
+          item.methodName = null;
+        }
+        return item;
       });
     },
     getResult(row) {
