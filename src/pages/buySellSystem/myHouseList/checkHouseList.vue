@@ -187,11 +187,17 @@
           <template v-slot="scope">
             <el-button type="primary"
                        size="mini"
-                       v-if="scope.row.tag==0"
-                       @click="getTitle(scope.row)">审核</el-button>
+                       v-if="scope.row.tag==0&&scope.row.checkProject=='房源转状态'"
+                       @click="getTitle(scope.row)"
+                       :disabled="btnDisabled.checkStatus">审核</el-button>
+            <el-button type="primary"
+                       size="mini"
+                       v-if="scope.row.tag==0&&scope.row.checkProject!='房源转状态'"
+                       @click="getTitle(scope.row)"
+                       :disabled="btnDisabled.checkHouse">审核</el-button>
             <el-button size="mini"
                        type=""
-                       v-else>已审核</el-button>
+                       v-if="scope.row.tag!=0">已审核</el-button>
             <el-button type="primary"
                        v-if="!(scope.row.checkProject==13)"
                        @click="toHouseDetail(scope.row)"
@@ -560,7 +566,11 @@ export default {
       },
       file8: [],
       showAccessory: false,
-      fill: "fill"
+      fill: "fill",
+      btnDisabled: {
+        checkHouse: true,
+        checkStatus: true,
+      }
     };
   },
   mounted () {
@@ -682,7 +692,7 @@ export default {
       this.loading = true;
       this.$api
         .post({
-          url: "/agentHouse/propertyCheck/checkHouse",
+          url: `/agentHouse/propertyCheck/${this.row.checkProject == '房源转状态' ? 'checkStatus' : 'checkHouse'}`,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params,
           token: false
@@ -861,9 +871,14 @@ export default {
           let result = e.data;
           that.loading = false;
           if (result.code == 200) {
-            that.pageJson.total = result.data.totalCount;
-            that.pageJson.currentPage = result.data.currPage;
-            that.tableData = result.data.list;
+            that.pageJson.total = result.data.checkList.totalCount;
+            that.pageJson.currentPage = result.data.checkList.currPage;
+            that.tableData = result.data.checkList.list;
+            result.data.btnList.forEach(item => {
+              if (that.btnDisabled.hasOwnProperty(item.rUrl)) {
+                that.btnDisabled[item.rUrl] = false;
+              }
+            })
           } else {
             console.log("查询我的跟单列表结果：" + result.message);
             alert(result.message);

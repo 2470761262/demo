@@ -227,7 +227,7 @@ export default {
       },
       tableColumnField: [
         {
-          prop: "HouseNo",
+          prop: "houseNo",
           label: "房源编号",
           width: "170",
           order: false,
@@ -235,7 +235,7 @@ export default {
           default: true
         },
         {
-          prop: "CommunityName",
+          prop: "communityName",
           label: "小区名称",
           order: false,
           width: "150",
@@ -243,7 +243,7 @@ export default {
           default: true
         },
         {
-          prop: "BuildingName",
+          prop: "buildingName",
           label: "楼栋号",
           width: "90",
           order: false,
@@ -251,7 +251,7 @@ export default {
           default: true
         },
         {
-          prop: "RoomNo",
+          prop: "roomNo",
           label: "房间号",
           width: "110",
           order: false,
@@ -265,16 +265,19 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          formart: item => item.InArea + "m²"
+          formart: item => item.inArea + "m²"
         },
         {
-          prop: "Price",
+          prop: "price",
           label: "售价(万元)",
           width: "120",
           order: "custom",
           disabled: false,
           default: true,
-          formart: item => item.Price + "万元"
+          formart: function(item){
+            debugger;
+            return item.price + "万元"
+          }
         },
         {
           prop: "unitPrice",
@@ -283,7 +286,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.Price * 10000 / item.InArea + "元/㎡"
+          format: item => item.price * 10000 / item.inArea + "元/㎡"
         },
         {
           prop: "seenNum",
@@ -310,7 +313,7 @@ export default {
           default: true
         },
         {
-          prop: "AddTime",
+          prop: "addTime",
           label: "添加时间",
           width: "120",
           order: "custom",
@@ -341,7 +344,7 @@ export default {
             "卫"
         },
         {
-          prop: "Face",
+          prop: "face",
           label: "朝向",
           width: "120",
           order: false,
@@ -349,7 +352,7 @@ export default {
           default: true
         },
         {
-          prop: "Floor",
+          prop: "floor",
           label: "楼层",
           width: "120",
           order: false,
@@ -357,7 +360,7 @@ export default {
           default: true
         },
         {
-          prop: "Decoration",
+          prop: "decoration",
           label: "装修",
           width: "120",
           order: false,
@@ -807,12 +810,12 @@ export default {
           if (data.code == 200) {
             that.pageJson.total = data.data.totalCount;
             that.tableData = data.data.list;
-          } else {
+          } else{
             console.log("查询我的跟单列表结果：" + result.message);
-            alert(result.message);
           }
         })
         .catch(e => {
+          that.loading = false;
           console.log("查询我的跟单列表失败");
           console.log(e);
         });
