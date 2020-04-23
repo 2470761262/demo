@@ -247,8 +247,7 @@
         </div>
         <button class="cell-pro-but"
                 v-if="resultData.agentPerName"
-                @click="oneTouchDialPhone"
-                :disabled="isDisabled">一键拨号</button>
+                @click="oneTouchDialPhone">一键拨号</button>
       </div>
       <div class="cell-pro-item"
            v-else>
@@ -281,8 +280,7 @@
         </el-dropdown>
         <!-- <button>查看号码</button> -->
         <button class="cell-pro-but"
-                @click="dialPhoneToFD"
-                :disabled="isDisabled||fdDial">一键拨号</button>
+                @click="dialPhoneToFD">一键拨号</button>
       </div>
     </div>
   </div>
@@ -290,7 +288,7 @@
 
 <script>
 import util from "@/util/util";
-import {LOGINDATA} from "../../../../util/constMap";
+import { LOGINDATA } from "../../../../util/constMap";
 export default {
   inject: ["houseDetails", "houseId", "buttonDisabled"],
   computed: {
@@ -308,24 +306,28 @@ export default {
       let perId = util.localStorageGet("logindata").accountId;
       if (Object.keys(this.houseDetails).length > 0) {
         let detailData = this.houseDetails.data;
-        if(!detailData){
+        if (!detailData) {
           return true;
         }
-        if(!detailData.isNew){
+        if (!detailData.isNew) {
           return false;
         }
-        if(!detailData.agentHouseMethod){
+        if (!detailData.agentHouseMethod) {
           return true;
         }
-        if(perId!=detailData.agentHouseMethod.addPer&&perId!=detailData.agentHouseMethod.agentPer
-          &&perId!=detailData.agentHouseMethod.keyOwner&&perId!=detailData.agentHouseMethod.onlyOwner
-          &&perId!=detailData.agentHouseMethod.realOwner){
-          return  true;
+        if (
+          perId != detailData.agentHouseMethod.addPer &&
+          perId != detailData.agentHouseMethod.agentPer &&
+          perId != detailData.agentHouseMethod.keyOwner &&
+          perId != detailData.agentHouseMethod.onlyOwner &&
+          perId != detailData.agentHouseMethod.realOwner
+        ) {
+          return true;
         }
       } else {
         return true;
       }
-      return false
+      return false;
     }
   },
   data() {
