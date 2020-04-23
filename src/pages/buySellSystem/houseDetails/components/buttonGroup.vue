@@ -53,14 +53,14 @@
     <div class="page-button-group">
       <!-- 发布外网 -->
       <div class="button-set">
-        <el-button :disabled="isDisabled"
+        <el-button :disabled="!isShowButton.releaseOutsideHouse"
                    @click="certificateType"
-                   v-if="resultData.isReleaseOutside!=1&&(resultData.AgentPer==perId||isShowButton.releaseOutsideHouse)&&resultData.plate!=4&&resultData.plate!=1">
+                   v-if="resultData.isReleaseOutside!=1&&(resultData.AgentPer==perId)&&resultData.plate!=4&&resultData.plate!=1">
           <i class="iconfabu iconfont el-icon--left"></i>
           <span class="button-title">发布外网</span>
         </el-button>
-        <el-button :disabled="isDisabled"
-                   v-if="resultData.isReleaseOutside==1&&(resultData.AgentPer==perId||isShowButton.cancelOutsideHouse)&&resultData.plate!=4&&resultData.plate!=1"
+        <el-button :disabled="!isShowButton.cancelOutsideHouse"
+                   v-if="resultData.isReleaseOutside==1&&(resultData.AgentPer==perId)&&resultData.plate!=4&&resultData.plate!=1"
                    @click="cancelOutsideHouse">
           <i class="iconfabu iconfont el-icon--left"></i>
           <span class="button-title">取消发布</span>
@@ -68,14 +68,14 @@
       </div>
       <!-- 总监推荐 -->
       <div class="button-set">
-        <el-button :disabled="isDisabled"
+        <el-button :disabled="!isShowButton.inspector && !isShowButton.shopOwner"
                    @click="nodePop"
-                   v-if="!isRecommend&&(inspector==true||Shopowner==true)">
+                   v-if="!isRecommend && (isShowButton.inspector || isShowButton.shopOwner)">
           <i class="icontuijian iconfont el-icon--left"></i>
           <span class="button-title"
-                v-if="inspector==true">总监推荐</span>
+                v-if="isShowButton.inspector==true">总监推荐</span>
           <span class="button-title"
-                v-if="Shopowner==true&&inspector==false">店长推荐</span>
+                v-if="isShowButton.shopOwner==true && isShowButton.inspector==false">店长推荐</span>
         </el-button>
         <el-button :disabled="isDisabled"
                    v-if="isRecommend"
@@ -104,7 +104,7 @@
       <!-- 取消作业方 -->
       <div class="button-set">
         <el-button :disabled="isDisabled"
-                   @click="openPopUp('cencelTaskFlag')"
+                   @click="openPopUp('cancelTaskFlag')"
                    v-if="isShowButton.cancelMethod">
           <i class="iconfont iconquxiao el-icon--left"></i>
           <span class="button-title">取消角色人</span>
@@ -146,15 +146,17 @@
     <!-- 转房源状态 -->
     <changeHouseType title
                      :visible.sync="typeFlag"
+                     :showSubmitBtn = "isShowButton.changePopUp"
                      width="580px"
                      maskHideEvent
                      v-if="typeFlag"></changeHouseType>
     <!-- 取消作业方 -->
     <cancelTask title
-                :visible.sync="cencelTaskFlag"
+                :visible.sync="cancelTaskFlag"
                 width="680px"
                 maskHideEvent
-                v-if="cencelTaskFlag"></cancelTask>
+                :insertFollow="isShowButton.cancelMethod"
+                v-if="cancelTaskFlag"></cancelTask>
     <!-- 修改存放门店 -->
     <keyStorage title="修改存放门店"
                 :visible.sync="keyStorageFlag"
@@ -209,13 +211,15 @@ export default {
       releasePopFlag: false,
       betPopFlag: false,
       typeFlag: false,
-      cencelTaskFlag: false,
+      cancelTaskFlag: false,
       keyStorageFlag: false,
       isShowButton: {
+        inspector: false,
+        shopOwner: false,
         locking: false,
         releaseOutsideHouse: false,
         cancelOutsideHouse: false,
-        cancelMethod: false,
+        cancelMethod: false, //取消作业方按钮
         deleteFollow: false,
         updateKeyStorageDept: false,
         telFollow: false,
@@ -224,12 +228,16 @@ export default {
         applyKeyOwner:false, //申请钥匙人
         applyRealOwner:false,//申请实勘人
         applyOnlyOwner:false,//申请委托人
-        submitApplyKeyOwner:false,  //提交申请钥匙人 
+        submitApplyKeyOwner:false,  //提交申请钥匙人
         submitApplyAgent:false,//提交申请跟单人
         submitApplyOnlyOwner:false,//提交申请委托人
         submitApplyRealOwner:false,//提交申请实勘人
         insertFollow:false,//提交跟进按钮
         insertReport:false,//添加举报按钮
+        betBtn: false,//是否对赌
+        changePopUp: false,// 转状态按钮
+        dialPhone: false,//拨号
+        shareQRCode: false,//二维码
       }, //是否显示按钮
       perId: "", //登录人id
       isRecommend: false, //是否推荐
@@ -279,20 +287,21 @@ export default {
     },
     //获取对赌配置参数
     showBetView () {
-      var that = this;
-      this.$api
+      let that = this;
+      that.$api
         .get({
           url: "/house/bet/conf"
         })
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
-            this.betPopFlag = true;
-            this.$nextTick(() => {
+            that.betPopFlag = true;
+            that.$nextTick(() => {
               but.$emit("betConf", data.data);
+              but.$emit("betBtn", that.isShowButton.betBtn);
             });
           } else {
-            this.$message.error({ message: data.message, offset: 400 });
+            that.$message.error({ message: data.message, offset: 400 });
           }
         })
         .catch(e => { });
@@ -418,12 +427,12 @@ export default {
         })
         .then(e => {
           e.data.data.functionRuleList.forEach(element => {
-            if (element.rname == "总监推荐") {
-              that.inspector = true
-            }
-            if (element.rname == "店长推荐") {
-              that.Shopowner = true
-            }
+            // if (element.rname == "总监推荐") {
+            //   that.inspector = true
+            // }
+            // if (element.rname == "店长推荐") {
+            //   that.Shopowner = true
+            // }
             if (that.isShowButton.hasOwnProperty(element.rUrl)) {
               that.isShowButton[element.rUrl] = true;
               console.log("----------",element.rUrl);
@@ -462,6 +471,8 @@ export default {
               //   but.$emit("submitApplyRealOwner");
               // }
             }
+            but.$emit("dialPhone",that.isShowButton.dialPhone);
+            but.$emit("shareQRCode",that.isShowButton.shareQRCode);
           });
         })
         .catch(e => { });
@@ -501,13 +512,13 @@ export default {
     },
     //是否显示转状态弹窗
     async changePopUp () {
-      let reslut = await houseCheck.isChecking(
+      let result = await houseCheck.isChecking(
         8,
         0,
         this.houseId.id,
         "当前正在审核"
       );
-      if (!reslut) {
+      if (!result) {
         this.typeFlag = true;
       }
     },

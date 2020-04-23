@@ -71,6 +71,7 @@
         <el-button size="small"
                    @click="hidePop">取消</el-button>
         <el-button size="small"
+                   :disabled="!showBetBtn"
                    class="button-back"
                    :loading="loading"
                    @click="result">确定</el-button>
@@ -93,15 +94,20 @@ export default {
         upper: 0,
         lower: 0,
       },
+      showBetBtn: false,
     }
   },
   created () {
     but.$on("betConf", (value) => {
       this.betConf = value;
     })
+    but.$on("betBtn", (value) => {
+      this.showBetBtn = value;
+    })
   },
   destroyed () {
     but.$off('betConf');
+    but.$off('betBtn');
   },
   methods: {
     result () {
@@ -114,7 +120,6 @@ export default {
             this.$api.post({
               url: '/house/bet/add',
               data: params,
-              token: false,
               headers: { "Content-Type": "application/json" }
             }).then((e) => {
               let data = e.data

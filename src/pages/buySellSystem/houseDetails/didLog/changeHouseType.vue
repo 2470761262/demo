@@ -85,6 +85,7 @@
         <el-button size="small"
                    @click="hidePop">取消</el-button>
         <el-button size="small"
+                   :disabled="!showSubmitBtn"
                    class="button-back"
                    :loading="pop.loading"
                    @click="result">确定</el-button>
@@ -97,6 +98,12 @@
 import '../less/didLogCss.less';
 export default {
   inject: ["houseId"],
+  props: {
+    showSubmitBtn: {
+      type: Boolean,
+      default: false
+    },
+  },
   methods: {
     radioChange (e) {
       console.log(e);
@@ -179,7 +186,6 @@ export default {
       params: {
         followMemo: "他司售",
         dealCompany: "",
-
       }
     }
   },

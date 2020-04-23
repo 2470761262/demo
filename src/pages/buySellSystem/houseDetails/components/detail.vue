@@ -247,7 +247,8 @@
         </div>
         <button class="cell-pro-but"
                 v-if="resultData.agentPerName"
-                @click="oneTouchDialPhone">一键拨号</button>
+                @click="oneTouchDialPhone"
+                :disabled="!touchedDialPhone">一键拨号</button>
       </div>
       <div class="cell-pro-item"
            v-else>
@@ -280,7 +281,8 @@
         </el-dropdown>
         <!-- <button>查看号码</button> -->
         <button class="cell-pro-but"
-                @click="dialPhoneToFD">一键拨号</button>
+                @click="dialPhoneToFD"
+                :disabled="!touchedDialPhone">一键拨号</button>
       </div>
     </div>
   </div>
@@ -288,7 +290,8 @@
 
 <script>
 import util from "@/util/util";
-import { LOGINDATA } from "../../../../util/constMap";
+import {LOGINDATA} from "../../../../util/constMap";
+import but from "@/evenBus/but.js";
 export default {
   inject: ["houseDetails", "houseId", "buttonDisabled"],
   computed: {
@@ -332,8 +335,14 @@ export default {
   },
   data() {
     return {
-      isShowBuilding: false
+      isShowBuilding: false,
+      touchedDialPhone: false,
     };
+  },
+  created() {
+    but.$on("dialPhone", (value) => {
+      this.touchedDialPhone = value;
+    });
   },
   mounted() {},
   methods: {
@@ -394,7 +403,8 @@ export default {
       this.$confirm("确定一键拨号吗？", "友情提醒", {
         distinguishCancelAndClose: true,
         confirmButtonText: "确定",
-        cancelButtonText: "取消"
+        cancelButtonText: "取消",
+        showConfirmButton: that.touchedDialPhone
       })
         .then(() => {
           console.log(that.houseDetails);
@@ -465,6 +475,9 @@ export default {
     keyStorageFilter(value, keyOwnerName) {
       return keyOwnerName == null ? "暂无" : value;
     }
+  },
+  destroyed () {
+    but.$off("dialPhone");
   }
 };
 </script>
