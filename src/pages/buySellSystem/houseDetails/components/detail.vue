@@ -291,6 +291,7 @@
 <script>
 import util from "@/util/util";
 import {LOGINDATA} from "../../../../util/constMap";
+import but from "@/evenBus/but.js";
 export default {
   inject: ["houseDetails", "houseId", "buttonDisabled"],
   computed: {

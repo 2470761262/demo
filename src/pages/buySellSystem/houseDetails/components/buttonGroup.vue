@@ -237,6 +237,7 @@ export default {
         betBtn: false,//是否对赌
         changePopUp: false,// 转状态按钮
         dialPhone: false,//拨号
+        shareQRCode: false,//二维码
       }, //是否显示按钮
       perId: "", //登录人id
       isRecommend: false, //是否推荐
@@ -471,6 +472,7 @@ export default {
               // }
             }
             but.$emit("dialPhone",that.isShowButton.dialPhone);
+            but.$emit("shareQRCode",that.isShowButton.shareQRCode);
           });
         })
         .catch(e => { });
