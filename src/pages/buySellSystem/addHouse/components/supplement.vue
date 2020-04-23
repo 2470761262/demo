@@ -677,7 +677,7 @@
               <input
                 id="houseVideoList"
                 type="file"
-                :disabled="!uploadFile"
+                :disabled="!wxUploadFile"
                 @change="getAudioFile($event)"
               />
             </label>
@@ -714,12 +714,12 @@
                 <span>...</span>
               </div>
             </el-image>
-            <div v-if="uploadFile">微信扫码上传</div>
-            <div v-if="!uploadFile">暂无上传权限.</div>
+            <div v-if="wxUploadFile">微信扫码上传</div>
+            <div v-if="!wxUploadFile">暂无上传权限.</div>
           </div>
         </div>
-        <div v-if="uploadFile">仅可以上传一个音频.</div>
-        <div v-if="!uploadFile">暂无上传权限.</div>
+        <div v-if="wxUploadFile">仅可以上传一个音频.</div>
+        <div v-if="!wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
   </div>
@@ -742,6 +742,10 @@ const USE = [
 export default {
   name: "supplement",
   props: {
+    // aaa: {
+    //   type: Boolean,
+    //   default: false
+    // },
     getData: {
       type: Boolean,
       default: false
@@ -771,6 +775,14 @@ export default {
     paramsObj: {
       type: Object,
       default: () => {}
+    },
+    nextSaveButton: {
+      type: Boolean,
+      default: false
+    },
+    wxUploadFile: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -829,12 +841,16 @@ export default {
         }
       }
     );
-    but.$on("nextSaveButton", () => {
-      this.nextSaveData = true;
-    });
-    but.$on("wxUploadFile", () => {
-      this.uploadFile = true;
-    });
+    // console.log("but", but);
+    // but.$on("nextSaveButton", () => {
+    //   this.nextSaveData = true;
+    // });
+    // but.$on("wxUploadFile", () => {
+    //   console.log("111111111");
+    //   this.uploadFile = true;
+    // });
+    // console.log("nextSaveButton", this.nextSaveData);
+    // console.log("wxUploadFile", this.uploadFile);
   },
   beforeRouteLeave(to, from, next) {
     console.log("离开了供给页面，不需要执行任何请求回调");
@@ -900,9 +916,9 @@ export default {
         disabledDate(time) {
           return time.getTime() > Date.now();
         }
-      },
-      nextSaveData: false,
-      uploadFile: false
+      }
+      //nextSaveData: false,
+      //uploadFile: false
     };
   },
   methods: {
@@ -945,7 +961,7 @@ export default {
     //获取扫码上传语音二维码
     getQrCode(data, callback) {
       let that = this;
-      if (!that.uploadFile) {
+      if (!that.wxUploadFile) {
         return;
       }
       that.$api
@@ -1023,7 +1039,7 @@ export default {
     },
     //获取音频上传
     getAudioFile(e) {
-      if (!this.uploadFile) {
+      if (!this.wxUploadFile) {
         this.$message.error("暂无上传权限");
         return;
       }
@@ -1209,9 +1225,9 @@ export default {
         sendData.saleDesc = that.formData.saleDesc;
         sendData.taxDesc = that.formData.taxDesc;
       }
-      if (Object.keys(this.deffData).length == 0 || !this.nextSaveData) {
+      if (Object.keys(this.deffData).length == 0 || !this.nextSaveButton) {
         //没有做出修改  或者 没有下一步保存的按钮权限
-        console.log("跳过保存：", this.nextSaveData);
+        console.log("跳过保存，当前权限：", this.nextSaveButton);
         return true;
       }
       return this.$api
