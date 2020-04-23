@@ -183,7 +183,7 @@
       <article class="heard-item">
         <div class="qr-content">
           <div id="qrcode"
-               v-if="!buttonDisabled"
+               v-if="!buttonDisabled && shareQRCode"
                :class="{'qrcode':qrData}">{{qrData?'':'二维码加载失败'}}</div>
           <div class="qr-code-msg">
             <h3 class="qr-title">房源编号:</h3>
@@ -249,6 +249,9 @@ export default {
   created () {
     this.getImpressionList();
     this.getisCollect();
+    but.$on("shareQRCode", (value) => {
+      this.shareQRCode = value;
+    });
   },
   mounted(){
     let that = this;
@@ -281,6 +284,7 @@ export default {
       attentionFlag: false, //关注开关
       insertFollow:false, //权限控制添加跟进按钮
       insertReport:false,//权限控制添加举报按钮
+      shareQRCode: false,
     };
   },
   methods: {
@@ -484,6 +488,9 @@ export default {
         })
         .catch(() => { });
     }
+  },
+  destroyed () {
+    but.$off("shareQRCode");
   }
 };
 </script>

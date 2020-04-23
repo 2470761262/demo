@@ -161,11 +161,12 @@
       <div class="page-house-ditali">
         <div class="page-title-head">
           <div class="page-title-left">
-            <h3>{{buildingName | emptyRead('栋')}}-{{resultData.RoomNo | emptyRead('室')}}</h3>
+            <h3>{{resultData.buildingName | emptyRead('栋')}}-{{resultData.RoomNo | emptyRead('室')}}</h3>
             <h6>{{resultData.Floor | emptyRead('层')}}/{{resultData.floorNum | emptyRead('层','共')}}</h6>
           </div>
           <el-button class="right-btn"
-                     type="primary">转在售</el-button>
+                     type="primary"
+                     @click="tosele">转在售</el-button>
         </div>
         <div class="page-title-just">
           <div class="title-just-item">
@@ -255,7 +256,8 @@
                     placeholder="请输入业主号码1"></el-input>
           <div class="errors-tips">{{errorBags.all()[0]}}</div>
           <div class="but-content">
-            <el-button type="primary">立即提交</el-button>
+            <el-button type="primary"
+                       @click='notPhone'>立即提交</el-button>
             <el-button type="primary"
                        @click="addPhone">添加号码</el-button>
           </div>
@@ -292,6 +294,50 @@ export default {
     this.getHouseDetails();
   },
   methods: {
+    tosele() {
+      let _that = this;
+      this.$router.push({
+        path: "/buySellSystem/addHouse",
+        disabledStatus: false,
+        query: {
+          comId: _that.resultData.Comid,
+          cbId: _that.resultData.CBId,
+          bhId: _that.resultData.id,
+          communityName: _that.resultData.communityName,
+          buildingName: _that.resultData.buildingName,
+          roomNo: _that.resultData.roomNo,
+          flag: "potentia"
+        }
+      });
+    },
+    notPhone() {
+      let _that = this;
+      this.$validator.validateAll().then(e => {
+        if (e) {
+          this.$api
+            .post({
+              url: "/houseResource/updatePhone/notPhone",
+              qs: true,
+              data: {
+                id: _that.houseId,
+                owner: _that.addCut.cutPhone.cutName,
+                tel: _that.addCut.cutPhone,
+                tel1: _that.addCut.cutPhone1,
+                esId: _that.resultData.id
+              }
+            })
+            .then(e => {
+              console.log(e.data.code);
+              if (e.data.code == 200) {
+                this.$message(e.data.message);
+              } else {
+                return Promise.reject(e);
+              }
+            })
+            .catch(e => {});
+        }
+      });
+    },
     getHouseDetails() {
       this.load.loading = true;
       this.$api
