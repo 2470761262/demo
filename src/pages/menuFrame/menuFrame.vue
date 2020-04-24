@@ -8,9 +8,9 @@
     min-width: 1280px;
   }
   .page-cell-main {
-    height: calc(100% - 80px);
+    height: calc(100% - 80PX);
     @media screen and(max-width: 1280px) {
-      height: calc(100% - 100px);
+      height: calc(100% - 100PX);
     }
 
     .el-aside,
@@ -68,7 +68,7 @@
         <div class="children-page">
           <!-- 二级页面 router-view -->
           <transition name="el">
-            <keep-alive :max="3" include="houseList,otherIframe">
+            <keep-alive :max="3" include="houseList,otherIframe,customersIframe">
               <!-- <router-view v-if="$route.meta.keepAlive" /> -->
               <router-view />
             </keep-alive>

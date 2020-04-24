@@ -15,7 +15,118 @@
              @handleCurrentChange="handleCurrentChange"
              @handleSizeChange="handleSizeChange">
     <template v-slot:top>
-      <allCustomersQuery></allCustomersQuery>
+      <section class="query-content">
+        <div class="empty-query">
+          <div class="page-list-query-row"
+               v-if="changeQuery">
+            <div class="query-content-cell">
+              <h3 class="query-cell-title">电话</h3>
+              <el-select clearable
+                         placeholder="客户电话"
+                         class="set-select120"
+                         v-model="sssss">
+                <el-option v-for="item in ssslist"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"></el-option>
+              </el-select>
+            </div>
+            <div class="query-content-cell cell-interval75">
+              <h3 class="query-cell-title">客户意向</h3>
+              <el-select clearable
+                         placeholder="全部"
+                         class="set-select120"
+                         v-model="sssss">
+                <el-option v-for="item in ssslist"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"></el-option>
+              </el-select>
+            </div>
+            <div class="query-content-cell cell-interval75">
+              <h3 class="query-cell-title">带看进度</h3>
+              <el-select clearable
+                         placeholder="全部"
+                         class="set-select120"
+                         v-model="sssss">
+                <el-option v-for="item in ssslist"
+                           :key="item.value"
+                           :label="item.label"
+                           :value="item.value"></el-option>
+              </el-select>
+            </div>
+          </div>
+          <div class="page-list-query-row"
+               v-if="changeQuery">
+            <div class="query-content-cell">
+              <h3 class="query-cell-title">价格</h3>
+              <el-input placeholder="最小值"
+                        v-model="sssss"
+                        class="set-input90"
+                        clearable />
+              <span class="cut-off-rule"></span>
+              <el-input placeholder="最大值"
+                        v-model="sssss"
+                        class="set-input90"
+                        clearable />
+              <span class="query-cell-suffix">万元</span>
+            </div>
+            <div class="query-content-cell cell-interval75">
+              <h3 class="query-cell-title">面积</h3>
+              <el-input placeholder="最小值"
+                        v-model="sssss"
+                        class="set-input90"
+                        clearable />
+              <span class="cut-off-rule"></span>
+              <el-input placeholder="最大值"
+                        v-model="sssss"
+                        class="set-input90"
+                        clearable />
+              <span class="query-cell-suffix">平方</span>
+            </div>
+            <div class="query-content-cell cell-interval75">
+              <h3 class="query-cell-title">户型</h3>
+              <el-input placeholder="最小值"
+                        v-model="sssss"
+                        class="set-input90"
+                        clearable />
+              <span class="cut-off-rule"></span>
+              <el-input placeholder="最大值"
+                        v-model="sssss"
+                        class="set-input90"
+                        clearable />
+            </div>
+          </div>
+          <div class="page-list-query-row"
+               v-if="changeQuery">
+            <div class="query-content-cell">
+              <h3 class="query-cell-title">带看时间</h3>
+              <el-date-picker v-model="sssss"
+                              type="daterange"
+                              class="set-data-pricker set-pricker-width260"
+                              range-separator="至"
+                              start-placeholder="开始日期"
+                              :default-time="['00:00:00', '23:59:59']"
+                              end-placeholder="结束日期">
+              </el-date-picker>
+            </div>
+            <div class="query-content-cell  cell-interval180">
+              <h3 class="query-cell-title">录入时间</h3>
+              <el-date-picker v-model="sssss"
+                              type="daterange"
+                              class="set-data-pricker set-pricker-width260"
+                              range-separator="至"
+                              start-placeholder="开始日期"
+                              :default-time="['00:00:00', '23:59:59']"
+                              end-placeholder="结束日期">
+              </el-date-picker>
+            </div>
+          </div>
+        </div>
+        <span class="el-icon-d-arrow-left icon"
+              :class="{'is-active':!changeQuery}"
+              @click="triggerChange"></span>
+      </section>
     </template>
     <template v-slot:title>
       <h3 class="page-tab-title"><i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span></h3>
@@ -58,17 +169,26 @@
 
 <script>
 import listPage from "@/components/listPage";
-import allCustomersQuery from "../components/allCustomersQuery";
 import leftAttention from "../components/leftAttention";
 export default {
   components: {
     listPage,
-    allCustomersQuery,
     leftAttention
   },
   data () {
     return {
-      querySelectFlag: true,
+      sssss: '',
+      ssslist: [
+        {
+          value: '选项1',
+          label: '黄金糕'
+        }, {
+          value: '选项2',
+          label: '双皮奶'
+        }
+      ],
+      changeQuery: true,//顶部开关
+      querySelectFlag: false,//侧边印象开关
       loading: false,
       pageJson: {
         currentPage: 1, //当前页码
@@ -155,86 +275,6 @@ export default {
           yy: "为带看",
           uu: "站务",
           ii: "2020-02-01"
-        },
-        {
-          id: 5,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 6,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 7,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 8,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 9,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 10,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 11,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 12,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
         }
       ] //存放表格数据
     };
@@ -243,10 +283,12 @@ export default {
     this.$nextTick(this.setImpression);
   },
   methods: {
+    triggerChange () {
+      this.changeQuery = !this.changeQuery;
+    },
     /**
      * 设置如果有当前行有印象数据则行先生对应的calss
      */
-
     cellClass ({ row }) {
       if (row.hasOwnProperty("pp")) {
         return "cellset";
