@@ -27,7 +27,8 @@
       <el-table-column type="expand"
                        width="1px">
         <template v-slot:default="props">
-          <template v-if="props.row.pp">
+          <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
+          <template v-if="props.row.pp && props.row.pp.length > 0">
             <div class="flex-expand">
               <div class="flex-impression-content">
                 <div v-for="(item,index) in props.row.pp"
@@ -60,6 +61,7 @@
 import listPage from "@/components/listPage";
 import allCustomersQuery from "../components/allCustomersQuery";
 import leftAttention from "../components/leftAttention";
+import { setImpression } from '@/util/tabUtil';
 export default {
   components: {
     listPage,
@@ -240,40 +242,17 @@ export default {
     };
   },
   mounted () {
-    this.$nextTick(this.setImpression);
+    this.$nextTick(setImpression);
   },
   methods: {
     /**
      * 设置如果有当前行有印象数据则行先生对应的calss
      */
-
     cellClass ({ row }) {
       if (row.hasOwnProperty("pp")) {
         return "cellset";
       }
       return "cellItemSet";
-    },
-    setImpression () {
-      let checkBox = document.querySelectorAll(".trigger-impression-btn");
-      [...checkBox].forEach(item => {
-        let check = item.querySelector("input");
-        check.addEventListener(
-          "click",
-          function (e) {
-            let children = this.parentElement.previousElementSibling.children;
-            if (this.checked) {
-              [...children].forEach((childrenItem, index) => {
-                index != 0 && (childrenItem.style.cssText = "display:none");
-              });
-            } else {
-              [...children].forEach((childrenItem, index) => {
-                childrenItem.style.cssText = "display:block";
-              });
-            }
-          },
-          false
-        );
-      });
     },
     /**
      * 排序触发

@@ -138,7 +138,9 @@
       <el-table-column type="expand"
                        width="1px">
         <template v-slot:default="props">
-          <template v-if="props.row.pp">
+          <!-- pp属性名请按照实际字段进行修改 -->
+          <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
+          <template v-if="props.row.pp && props.row.pp.length > 0">
             <div class="flex-expand">
               <div class="flex-impression-content">
                 <div v-for="(item,index) in props.row.pp"
@@ -170,6 +172,7 @@
 <script>
 import listPage from "@/components/listPage";
 import leftAttention from "../components/leftAttention";
+import { setImpression } from '@/util/tabUtil';
 export default {
   components: {
     listPage,
@@ -177,8 +180,8 @@ export default {
   },
   data () {
     return {
-      sssss: '',
-      ssslist: [
+      sssss: '',//请按照实际字段名进行修改，
+      ssslist: [//请按照实际字段名进行修改，
         {
           value: '选项1',
           label: '黄金糕'
@@ -232,7 +235,7 @@ export default {
             );
           }
         }
-      ], //定义表格字段
+      ], //定义表格数据
       tableData: [
         {
           id: 1,
@@ -274,13 +277,14 @@ export default {
           tt: "3房",
           yy: "为带看",
           uu: "站务",
-          ii: "2020-02-01"
+          ii: "2020-02-01",
+          pp: []
         }
       ] //存放表格数据
     };
   },
   mounted () {
-    this.$nextTick(this.setImpression);
+    this.$nextTick(setImpression);
   },
   methods: {
     triggerChange () {
@@ -294,28 +298,6 @@ export default {
         return "cellset";
       }
       return "cellItemSet";
-    },
-    setImpression () {
-      let checkBox = document.querySelectorAll(".trigger-impression-btn");
-      [...checkBox].forEach(item => {
-        let check = item.querySelector("input");
-        check.addEventListener(
-          "click",
-          function (e) {
-            let children = this.parentElement.previousElementSibling.children;
-            if (this.checked) {
-              [...children].forEach((childrenItem, index) => {
-                index != 0 && (childrenItem.style.cssText = "display:none");
-              });
-            } else {
-              [...children].forEach((childrenItem, index) => {
-                childrenItem.style.cssText = "display:block";
-              });
-            }
-          },
-          false
-        );
-      });
     },
     /**
      * 排序触发
