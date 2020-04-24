@@ -84,6 +84,9 @@
           <keep-alive>
             <component
               :houseType.sync="componentName"
+              :nextSaveButton="nextSaveButton"
+              :submitVerify="submitVerify"
+              :wxUploadFile="wxUploadFile"
               :getData="formDataGet"
               :disabled="disabled"
               :is="componentName"
@@ -110,7 +113,7 @@
                 type="primary"
                 v-if="stepsActiveIndex < 3 ||  reSetMethod"
                 @click="nextPage('draft')"
-                :disabled="btnSubmitVerify"
+                :disabled="!submitVerify"
                 :loading="butLoading"
               >{{paramsObj.buttonText ||'提交验真' }}</el-button>
             </el-button-group>
@@ -200,7 +203,9 @@ export default {
       formDataGet: false,
       disabled: false, //是否禁用楼盘选择和多套单套录入切换
       paramsObj: {},
-      btnSubmitVerify: true
+      nextSaveButton: false,
+      submitVerify: false,
+      wxUploadFile: false
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -285,12 +290,40 @@ export default {
           ++this.stepsActiveIndex
         ].componentName;
       }
+    },
+    getNextSaveButton() {
+      let that = this;
+      this.$api
+        .get({
+          url: "/agent_house/nextSaveButton"
+        })
+        .then(e => {
+          e.data.data.functionRuleList.forEach(element => {
+            if (element.rUrl == "nextSaveButton") {
+              //that.nextSaveData = true;
+              //but.$emit("nextSaveButton");
+              that.nextSaveButton = true;
+            }
+            if (element.rUrl == "submitVerify") {
+              //but.$emit("submitVerify");
+              that.submitVerify = true;
+            }
+            if (element.rUrl == "wxUploadFile") {
+              //console.log("0000000000", element.rUrl);
+              //but.$emit("wxUploadFile");
+              that.wxUploadFile = true;
+            }
+          });
+        })
+        .catch(e => {});
     }
   },
   mounted() {
-    but.$on("submitVerify", () => {
-      this.btnSubmitVerify = false;
-    });
+    // but.$on("submitVerify", () => {
+    //   this.btnSubmitVerify = false;
+    // });
+    let that = this;
+    that.getNextSaveButton();
   }
 };
 </script>
