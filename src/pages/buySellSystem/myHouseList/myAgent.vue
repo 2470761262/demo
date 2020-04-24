@@ -932,7 +932,6 @@ export default {
             that.pageJson.total = data.data.dataCount;
             that.tableData = data.data.data;
             let btnList = e.data.data.btnList;
-            debugger;
             if (btnList && btnList.length > 0) {
               btnList.forEach(btn => {
                 if (btn.rName == "调配") {
