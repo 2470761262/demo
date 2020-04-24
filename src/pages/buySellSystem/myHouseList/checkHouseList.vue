@@ -710,6 +710,7 @@ export default {
         })
         .catch(e => {
           that.$message("操作失败");
+          that.loading = false;
         });
     },
     remoteInput() {

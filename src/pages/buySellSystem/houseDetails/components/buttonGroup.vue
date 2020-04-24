@@ -146,7 +146,7 @@
     <!-- 转房源状态 -->
     <changeHouseType title
                      :visible.sync="typeFlag"
-                     :showSubmitBtn = "isShowButton.changePopUp"
+                     :showSubmitBtn="isShowButton.changePopUp"
                      width="580px"
                      maskHideEvent
                      v-if="typeFlag"></changeHouseType>
@@ -224,16 +224,16 @@ export default {
         updateKeyStorageDept: false,
         telFollow: false,
         editAgentHouse: false,
-        applyAgent:false, //申请跟单人
-        applyKeyOwner:false, //申请钥匙人
-        applyRealOwner:false,//申请实勘人
-        applyOnlyOwner:false,//申请委托人
-        submitApplyKeyOwner:false,  //提交申请钥匙人
-        submitApplyAgent:false,//提交申请跟单人
-        submitApplyOnlyOwner:false,//提交申请委托人
-        submitApplyRealOwner:false,//提交申请实勘人
-        insertFollow:false,//提交跟进按钮
-        insertReport:false,//添加举报按钮
+        applyAgent: false, //申请跟单人
+        applyKeyOwner: false, //申请钥匙人
+        applyRealOwner: false,//申请实勘人
+        applyOnlyOwner: false,//申请委托人
+        submitApplyKeyOwner: false,  //提交申请钥匙人
+        submitApplyAgent: false,//提交申请跟单人
+        submitApplyOnlyOwner: false,//提交申请委托人
+        submitApplyRealOwner: false,//提交申请实勘人
+        insertFollow: false,//提交跟进按钮
+        insertReport: false,//添加举报按钮
         betBtn: false,//是否对赌
         changePopUp: false,// 转状态按钮
         dialPhone: false,//拨号
@@ -435,7 +435,7 @@ export default {
             // }
             if (that.isShowButton.hasOwnProperty(element.rUrl)) {
               that.isShowButton[element.rUrl] = true;
-              console.log("----------",element.rUrl);
+              console.log("----------", element.rUrl);
               but.$emit(element.rUrl);
               // if (element.rUrl == "deleteFollow") {
               //   but.$emit("deleteFollow");
@@ -471,8 +471,8 @@ export default {
               //   but.$emit("submitApplyRealOwner");
               // }
             }
-            but.$emit("dialPhone",that.isShowButton.dialPhone);
-            but.$emit("shareQRCode",that.isShowButton.shareQRCode);
+            but.$emit("dialPhone", that.isShowButton.dialPhone);
+            but.$emit("shareQRCode", that.isShowButton.shareQRCode);
           });
         })
         .catch(e => { });
