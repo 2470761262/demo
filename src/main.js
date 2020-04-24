@@ -11,11 +11,11 @@ import "./validate/validate"; //表单验证
 import Api from "@/api/require"; //请求api
 import guard from "@/router/guard"; // 路由拦截器
 import * as socketApi from './util/webSocket';
-import themePackers from "@/themePackers/themePackers";
+import {getColor} from '@/themePackers/getSkin';
 import componentsIndex from "@/components/index";
 import directives from "@/directives/directive";
 import * as md5Util from './util/md5';
-import "babel-polyfill";
+//import "babel-polyfill";
 Vue.prototype.socketApi = socketApi;
 Vue.prototype.md5Util = md5Util;
 Vue.prototype.$api = Api;
@@ -25,7 +25,7 @@ Vue.use(VueCookies);
 Vue.use(componentsIndex);
 Vue.use(directives);
 guard(router);
-themePackers.createImport();
+getColor();
 /* eslint-disable no-new */
 let app = new Vue({
   el: "#app",

@@ -103,6 +103,7 @@
                           range-separator="至"
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"
+                          value-format="yyyy-MM-dd"
                           :default-time="['00:00:00', '23:59:59']"></el-date-picker>
           <span class="query-cell-suffix handlebut"
                 @click="Remove">清除</span>
@@ -511,6 +512,7 @@ export default {
         );
         Object.assign(params, selectObject);
       } else {
+        console.log(this.data.timeSelect, 'data.timeSelect');
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
         params.roomNo = that.data.roomNo;

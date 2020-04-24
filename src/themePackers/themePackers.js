@@ -3,7 +3,6 @@ import {
   TREMEPACKERS,
   TREMEDEFTULTCOLOR
 } from '@/util/constMap';
-import api from '@/api/require';
 //const version = require('element-ui/package.json').version // element-ui version from node_modules
 const defaultColor = "#409EFF"; // 不可修改
 let themeData = {
