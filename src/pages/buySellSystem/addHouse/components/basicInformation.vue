@@ -477,6 +477,10 @@ export default {
       default: function() {
         return {};
       }
+    },
+    nextSaveButton: {
+      type: Boolean,
+      default: false
     }
   },
   filters: {
@@ -573,7 +577,7 @@ export default {
       this.formData.tel = this.$route.query.tel;
     }
     console.log(this.$route.query.flag);
-    this.getNextSaveButton();
+    // this.getNextSaveButton();
   },
   destroyed() {
     window.removeEventListener("click", this.bodyClick);
@@ -1012,9 +1016,9 @@ export default {
         data.id = that.$store.state.addHouse.formData.id;
         method = "put";
       }
-      if (Object.keys(this.deffData).length == 0 || !this.nextSaveData) {
+      if (Object.keys(this.deffData).length == 0 || !this.nextSaveButton) {
         //没有做出修改 或者 没有下一步保存的按钮权限
-        console.log("跳过保存：", this.nextSaveData);
+        console.log("跳过保存，当前权限：", this.nextSaveButton);
         return true;
       }
       return this.$api[method]({
@@ -1037,29 +1041,30 @@ export default {
         .catch(e => {
           return false;
         });
-    },
-    getNextSaveButton() {
-      let that = this;
-      this.$api
-        .get({
-          url: "/agent_house/nextSaveButton"
-        })
-        .then(e => {
-          e.data.data.functionRuleList.forEach(element => {
-            if (element.rUrl == "nextSaveButton") {
-              that.nextSaveData = true;
-              but.$emit("nextSaveButton");
-            }
-            if (element.rUrl == "submitVerify") {
-              but.$emit("submitVerify");
-            }
-            if (element.rUrl == "wxUploadFile") {
-              but.$emit("wxUploadFile");
-            }
-          });
-        })
-        .catch(e => {});
     }
+    // getNextSaveButton() {
+    //   let that = this;
+    //   this.$api
+    //     .get({
+    //       url: "/agent_house/nextSaveButton"
+    //     })
+    //     .then(e => {
+    //       e.data.data.functionRuleList.forEach(element => {
+    //         if (element.rUrl == "nextSaveButton") {
+    //           that.nextSaveData = true;
+    //           but.$emit("nextSaveButton");
+    //         }
+    //         if (element.rUrl == "submitVerify") {
+    //           but.$emit("submitVerify");
+    //         }
+    //         if (element.rUrl == "wxUploadFile") {
+    //           console.log("0000000000", element.rUrl);
+    //           but.$emit("wxUploadFile");
+    //         }
+    //       });
+    //     })
+    //     .catch(e => {});
+    // }
   },
   data() {
     return {
@@ -1097,8 +1102,8 @@ export default {
       },
       loading: false,
       deffData: {},
-      roomTypeStr: "",
-      nextSaveData: false
+      roomTypeStr: ""
+      //nextSaveData: false
     };
   }
 };
