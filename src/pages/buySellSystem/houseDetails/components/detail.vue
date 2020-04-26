@@ -256,8 +256,12 @@
       <div class="cell-pro-item center"
            v-else>
         <el-button class="cell-pro-but"
-                   :disabled="isDisabled||agentApply"
+                   v-if="applyAgentRule"
+                   :disabled="isDisabled  || agentApply"
                    @click="callTaskAgent">申请跟单人</el-button>
+        <el-button class="cell-pro-but"
+                   :disabled="true"
+                   v-else>申请跟单人</el-button>
       </div>
       <div class="cell-pro-item">
         <div class="cell-pro-detail">
@@ -358,12 +362,16 @@ export default {
   data () {
     return {
       isShowBuilding: false,
-      touchedDialPhone: false
+      touchedDialPhone: false,
+      applyAgentRule: false
     };
   },
   created () {
     but.$on("dialPhone", (value) => {
       this.touchedDialPhone = value;
+    });
+    but.$on("applyAgent", () => {
+      that.applyAgentRule = true;
     });
   },
   mounted () { },
@@ -503,6 +511,7 @@ export default {
   },
   destroyed () {
     but.$off("dialPhone");
+    but.$off("applyAgent");
   }
 };
 </script>
