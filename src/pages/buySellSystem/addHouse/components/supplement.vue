@@ -966,7 +966,7 @@ export default {
     //获取扫码上传语音二维码
     getQrCode(data, callback) {
       let that = this;
-      if (!that.wxUploadFile) {
+      if (that.isFromHouseTask ? false : !that.wxUploadFile) {
         return;
       }
       that.$api
@@ -1044,7 +1044,7 @@ export default {
     },
     //获取音频上传
     getAudioFile(e) {
-      if (!this.wxUploadFile) {
+      if (that.isFromHouseTask ? false : !this.wxUploadFile) {
         this.$message.error("暂无上传权限");
         return;
       }
