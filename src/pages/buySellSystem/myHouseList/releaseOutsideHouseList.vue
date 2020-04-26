@@ -133,16 +133,7 @@
                   @click="remove">清除</span>
           </div>
           <div class="query-content-cell cell-interval45">
-            <label class="query-checkbox">
-              <input type="checkbox"
-                     @click="keySelect" />
-              <span>钥匙</span>
-            </label>
-            <label class="query-checkbox">
-              <input type="checkbox"
-                     @click="onlySelect" />
-              <span>独家</span>
-            </label>
+
           </div>
           <div class="query-content-cell cell-interval45">
             <el-button type="primary"
@@ -150,8 +141,7 @@
                        @click="queryMyAgentParams">查询</el-button>
           </div>
           <div class="query-content-cell cell-interval25">
-            <moreSelect @moreSelectChange="moreSelectChange"
-                        deptUrl="/myHouse/getMyAgent"></moreSelect>
+
           </div>
         </div>
       </template>
@@ -259,7 +249,7 @@ export default {
           default: true
         },
         {
-          prop: "InArea",
+          prop: "inArea",
           label: "面积(m²)",
           width: "110",
           order: "custom",
@@ -321,7 +311,7 @@ export default {
           default: true
         },
         {
-          prop: "agentPerName",
+          prop: "agentPer",
           label: "跟单人",
           width: "120",
           order: false,
@@ -368,7 +358,7 @@ export default {
           default: true
         },
         {
-          prop: "addName",
+          prop: "addPer",
           label: "添加人",
           width: "120",
           order: false,
