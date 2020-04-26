@@ -16,22 +16,22 @@
             <h3 class="query-cell-title">楼盘</h3>
             <el-select v-model="queryData.CommunityName"
                        @focus="remoteCommunityFoucus"
+                       @change="querylist(null)"
+                       filterable
                        remote
                        clearable
                        placeholder="楼盘名称"
-                       @change="querylist(null)"
                        :remote-method="remoteCommunity"
                        :loading="communitySelect.loading">
               <el-option v-for="item in communitySelect.list"
                          :key="item.value"
-                         :label="item.name" 
-                         :value="item.name"></el-option>
+                         :label="item.name"
+                         :value="item.value"></el-option>
             </el-select>
           </div>
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">业主</h3>
             <el-input placeholder="姓名"
-                      @change="querylist(null)"
                       class="set-input120"
                       v-model="queryData.Customers"
                       clearable />
@@ -40,7 +40,6 @@
             <h3 class="query-cell-title">电话</h3>
             <el-input placeholder="业主电话"
                       v-number
-                      @change="querylist(null)"
                       v-model="queryData.tel"
                       class="set-input200"
                       clearable />
@@ -51,12 +50,12 @@
                             type="daterange"
                             class="set-data-pricker"
                             range-separator="至"
-                            @change="querylist(null)"
                             start-placeholder="开始日期"
                             :default-time="['00:00:00', '23:59:59']"
-                            end-placeholder="结束日期"></el-date-picker>
+                            end-placeholder="结束日期"
+                            value-format="yyyy-MM-dd"></el-date-picker>
           </div>
-          <div class="query-content-cell cell-interval45">
+          <!-- <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">房源类型</h3>
             <el-select clearable
                        placeholder="房源类型"
@@ -67,7 +66,7 @@
                          :label="item.label"
                          :value="item.value"></el-option>
             </el-select>
-          </div>
+          </div> -->
           <div class="query-content-cell cell-interval45">
             <el-button type="primary"
                        size="mini"
@@ -111,7 +110,7 @@ export default {
     listPage,
     houseContrast
   },
-  data() {
+  data () {
     return {
       loading: false, //控制表格加载动画提示
       pageJson: {
@@ -120,25 +119,24 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "HouseNo", label: "房源编号", width: "" },
-        { prop: "CommunityName", label: "楼盘名称", width: "" },
-        { prop: "Price", label: "售价(万元)", width: "160" },
-        { prop: "InArea", label: "面积(m²)", width: "160" },
+        { prop: "houseNo", label: "房源编号", width: "" },
+        { prop: "communityName", label: "楼盘名称", width: "" },
+        { prop: "price", label: "售价(万元)", width: "160" },
+        { prop: "inArea", label: "面积(m²)", width: "160" },
         {
           label: "单价(元/㎡)",
           width: "160",
-          formart: item =>
-            Math.round((item.Price * 10000) / item.InArea) + "元/m²"
+          prop: "unitPrice",
         },
         {
           prop: "hall",
           label: "户型",
           width: "170",
           formart: item =>
-            item.Rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+            (item.rooms == null ? "0" : item.rooms) + "室" + (item.hall == null ? "0" : item.hall) + "厅" + (item.toilet == null ? "0" : item.toilet) + "卫"
         },
-        { prop: "Decoration", label: "装修程度", width: "160" },
-        { prop: "FollowEndTime", label: "最后带看时间", width: "160" }
+        { prop: "decoration", label: "装修程度", width: "160" },
+        { prop: "addTime", label: "录入时间" }
       ],
       tableData: [],
       communitySelect: {
@@ -162,65 +160,66 @@ export default {
       }
     };
   },
-  created() {
+  created () {
     this.querylist();
   },
   methods: {
-    remoteCommunityFoucus() {
+    remoteCommunityFoucus () {
       if (this.communitySelect.list.length == 0) {
         this.remoteCommunity();
       }
     },
-    remoteCommunity(query = "") {
+    remoteCommunity (query = "") {
       this.communitySelect.loading = true;
       this.$api
-        .post({
-          url: "/concern_community/queryCommunityConcern",
+        .get({
+          url: "/community/newAddHouse",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
-            comId: query,
+            communityName: query,
             page: 1,
             limit: 50
           }
         })
         .then(e => {
           if (e.data.code == 200) {
-            this.communitySelect.list = e.data.data;
+            this.communitySelect.list = e.data.data.list;
           }
         })
         .finally(() => {
           this.communitySelect.loading = false;
         });
     },
-    handleSizeChange() {
+    handleSizeChange () {
       this.pageJson.pageSize = e;
       this.querylist();
     },
-    querylist(currentPage) {
+    querylist (currentPage) {
       let _that = this;
       let params = {
         limit: _that.pageJson.pageSize,
         page: currentPage || 1,
-        minFollowEndTime: _that.queryData.timeSelect[0] || "",
-        maxFollowEndTime: _that.queryData.timeSelect[1] || "",
-        Tel: _that.queryData.tel,
-        CommunityName: _that.queryData.CommunityName,
-        Customers: _that.queryData.Customers,
-        houseStates: _that.queryData.houseStates
+        beginTime: _that.queryData.timeSelect != null ? _that.queryData.timeSelect[0] : "" || "",
+        endTime: _that.queryData.timeSelect != null ? _that.queryData.timeSelect[1] : "" || "",
+        tel: _that.queryData.tel,
+        comId: _that.queryData.CommunityName,
+        customName: _that.queryData.Customers,
+        type: 3,
+        title: "新增房源",
+        sortColumn: "id",
+        sortType: "descending"
       };
       this.loading = true;
       this.$api
-        .post({
-          url: "/agent_house/newHouseList",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+        .get({
+          url: "/mateHouse/getMateHouse/addHouse",
           data: params
         })
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            this.pageJson.total = result.data.totalCount;
-            this.pageJson.currentPage = result.data.currPage;
-            this.tableData = result.data.list;
+            this.pageJson.total = result.data.dataCount;
+            this.tableData = result.data.data;
           } else {
             return Promise.reject(result.message);
           }
