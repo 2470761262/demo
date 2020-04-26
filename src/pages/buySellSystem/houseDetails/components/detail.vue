@@ -176,6 +176,9 @@
     }
   }
 }
+.center {
+  justify-content: center;
+}
 </style>
 <template>
   <div class="detail-content">
@@ -250,9 +253,15 @@
                 @click="oneTouchDialPhone"
                 :disabled="!touchedDialPhone">一键拨号</button>
       </div>
-      <div class="cell-pro-item"
+      <div class="cell-pro-item center"
            v-else>
-        <span> 暂无</span>
+        <el-button class="cell-pro-but"
+                   v-if="applyAgentRule"
+                   :disabled="isDisabled  || agentApply"
+                   @click="callTaskAgent">申请跟单人</el-button>
+        <el-button class="cell-pro-but"
+                   :disabled="true"
+                   v-else>申请跟单人</el-button>
       </div>
       <div class="cell-pro-item">
         <div class="cell-pro-detail">
@@ -290,22 +299,39 @@
 
 <script>
 import util from "@/util/util";
-import {LOGINDATA} from "../../../../util/constMap";
+import { LOGINDATA } from "../../../../util/constMap";
 import but from "@/evenBus/but.js";
 export default {
-  inject: ["houseDetails", "houseId", "buttonDisabled"],
+  inject: ["houseDetails", "houseId", "buttonDisabled", 'dept'],
   computed: {
-    isDisabled() {
+    isDisabled () {
       return this.buttonDisabled;
     },
-    resultData() {
+    resultData () {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
         return {};
       }
     },
-    fdDial() {
+    agentApply () {
+      if (!this.dept.id) {
+        return false;
+      }
+      let loginDeptId = util.localStorageGet("logindata").deptId;
+      if (Object.keys(this.houseDetails).length > 0) {
+        let detailData = this.houseDetails.data;
+        if (!detailData) {
+          return true;
+        }
+        if (detailData.plate == 1 && this.dept.id != loginDeptId) {
+          return true;
+        }
+      } else {
+        return true;
+      }
+    },
+    fdDial () {
       let perId = util.localStorageGet("logindata").accountId;
       if (Object.keys(this.houseDetails).length > 0) {
         let detailData = this.houseDetails.data;
@@ -333,20 +359,27 @@ export default {
       return false;
     }
   },
-  data() {
+  data () {
     return {
       isShowBuilding: false,
       touchedDialPhone: false,
+      applyAgentRule: false
     };
   },
-  created() {
+  created () {
     but.$on("dialPhone", (value) => {
       this.touchedDialPhone = value;
     });
+    but.$on("applyAgent", () => {
+      that.applyAgentRule = true;
+    });
   },
-  mounted() {},
+  mounted () { },
   methods: {
-    getShowBuliding() {
+    callTaskAgent () {
+      but.$emit('callTaskAgent');
+    },
+    getShowBuliding () {
       let that = this;
       this.$api
         .get({
@@ -366,9 +399,9 @@ export default {
             that.$message(e.data.message);
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
-    oneTouchDialPhone() {
+    oneTouchDialPhone () {
       let phone = this.resultData.agentPerTel;
       if (!phone) {
         this.$message({
@@ -381,7 +414,7 @@ export default {
       };
       this.dailPhone(0, p);
     },
-    dialPhoneToFD() {
+    dialPhoneToFD () {
       let p = {
         contactPhone: this.resultData.Tel,
         contactPhone1: this.resultData.Tel1,
@@ -390,14 +423,14 @@ export default {
       };
       this.dailPhone(1, p);
     },
-    contactOwer(cmd) {
+    contactOwer (cmd) {
       console.log(cmd);
       let p = {};
       p["contactPhone" + cmd] = this.resultData["Tel" + cmd];
       p["isLookPhone"] = true;
       this.dailPhone(1, p);
     },
-    dailPhone(contactPerType, phoneObj) {
+    dailPhone (contactPerType, phoneObj) {
       let that = this;
       //console.log(that.houseDetails);
       this.$confirm("确定一键拨号吗？", "友情提醒", {
@@ -466,18 +499,19 @@ export default {
     }
   },
   filters: {
-    familyStructureFiletr(value, listName) {
+    familyStructureFiletr (value, listName) {
       return util.countMapFilter(value, listName);
     },
-    lookHouseModeFiletr(value) {
+    lookHouseModeFiletr (value) {
       return value != null ? "有钥匙" : "无钥匙";
     },
-    keyStorageFilter(value, keyOwnerName) {
+    keyStorageFilter (value, keyOwnerName) {
       return keyOwnerName == null ? "暂无" : value;
     }
   },
   destroyed () {
     but.$off("dialPhone");
+    but.$off("applyAgent");
   }
 };
 </script>

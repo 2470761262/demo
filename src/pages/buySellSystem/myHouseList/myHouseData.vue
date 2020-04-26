@@ -125,7 +125,7 @@
           .tips-abs;
         }
         &::after {
-          content: "数据范围(区域)";
+          content: "数据更新时间截止到：昨日24点";
           margin-left: 10px;
           color: #a9a9a9;
           align-self: flex-end;

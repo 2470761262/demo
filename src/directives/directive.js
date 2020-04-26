@@ -1,5 +1,6 @@
+import util from '@/util/util';
 export default {
-    install(Vue) {
+    install (Vue) {
         Vue.directive('number', {
             bind: (el, binding, vnode) => {
                 const input = el.getElementsByTagName('input')[0];
@@ -41,7 +42,7 @@ export default {
          *动画滚动定位到第一个不在视口内的错误提示位置
          */
         Vue.directive('scrollError', {
-            update(el, binding, vnode) {
+            update (el, binding, vnode) {
                 vnode.context.$nextTick(() => {
                     if (binding.value.length > 0) {
                         vnode.context.$nextTick(() => {
@@ -69,7 +70,7 @@ export default {
 
         })
         Vue.directive("elDrag", {
-            bind(el) {
+            bind (el) {
                 let drag = el.querySelector('.didLog-content-body');
                 let dragWarp = drag.querySelector('.didLog-content-box-title');
                 dragWarp.style.cursor = "all-scroll";
@@ -93,7 +94,19 @@ export default {
                 };
             }
         })
-
+        //跟随父级scroll在当前可视窗口内居中
+        Vue.directive('scrollCenter', {
+            bind (el, binding, vnode) {
+                vnode.context.$nextTick(() => {
+                    let parent = document.querySelector('.' + binding.value);
+                    scroll();
+                    parent.addEventListener('scroll', util.debounce(200, scroll))
+                    function scroll (e) {
+                        el.style.cssText = `top:${(parent.clientHeight / 2 + parent.scrollTop) - (el.offsetHeight / 2)}px`
+                    }
+                })
+            }
+        })
 
         Vue.filter('emptyRead', (value, afterCompany = '', beforeCompany = '') => {
             let result = ['', null, 0, '无'].every(item => item != value);

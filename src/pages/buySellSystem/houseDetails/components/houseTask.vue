@@ -111,35 +111,41 @@
 }
 </style>
 <template>
-  <div class="task-content"
-       v-if="resultData.agentHouseMethod">
+  <div class="task-content" v-if="resultData.agentHouseMethod">
     <h3 class="other-title">房源角色人</h3>
     <div class="task-pro-flex">
-      <div class="task-pro-content"
-           data-detail="录入人">
-        <el-image class="task-pro-img"
-                  v-if="resultData"
-                  :src=" resultData.agentHouseMethod.addPerHeadImg | defaultImg"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
-            加载中<span>...</span>
+      <div class="task-pro-content" data-detail="录入人">
+        <el-image
+          class="task-pro-img"
+          v-if="resultData"
+          :src=" resultData.agentHouseMethod.addPerHeadImg | defaultImg"
+          fit="cover"
+        >
+          <div slot="placeholder" class="image-slot">
+            加载中
+            <span>...</span>
           </div>
         </el-image>
         <div class="task-pro-message">
           <div class="task-pro-name overText">{{resultData.agentHouseMethod.addPerName | emptyRead}}</div>
-          <div class="task-pro-options overText">{{resultData.agentHouseMethod.addPerDepartmentName | emptyRead}}</div>
+          <div
+            class="task-pro-options overText"
+          >{{resultData.agentHouseMethod.addPerDepartmentName | emptyRead}}</div>
         </div>
       </div>
-      <div :class="['task-pro-content',{'flex-center':resultData.agentPerName==null|| resultData.plate==1||resultData.plate==4}]"
-           data-detail="跟单人">
+      <div
+        :class="['task-pro-content',{'flex-center':resultData.agentPerName==null|| resultData.plate==1||resultData.plate==4}]"
+        data-detail="跟单人"
+      >
         <template v-if="resultData.agentPerName!=null&& resultData.plate!=1&&resultData.plate!=4 ">
-          <el-image class="task-pro-img"
-                    :src="resultData.agentPerHeadImg |  defaultImg"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
+          <el-image
+            class="task-pro-img"
+            :src="resultData.agentPerHeadImg |  defaultImg"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
             </div>
           </el-image>
           <div class="task-pro-message">
@@ -147,150 +153,195 @@
             <div class="task-pro-options overText">{{resultData.agentPerDepartmentName}}</div>
           </div>
         </template>
-        <el-button v-else-if="applyAgentRule"
-                   :disabled="isDisabled||agentApply"
-                   @click="openAgentPop"><span>申请跟单人</span> </el-button>
-        <el-button v-else
-                   :disabled="true"><span>申请跟单人</span> </el-button>
+        <el-button
+          v-else-if="applyAgentRule"
+          :disabled="isDisabled||agentApply"
+          @click="openAgentPop"
+        >
+          <span>申请跟单人</span>
+        </el-button>
+        <el-button v-else :disabled="true">
+          <span>申请跟单人</span>
+        </el-button>
       </div>
     </div>
     <div class="task-pro-flex">
-      <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.keyOwnerName==null}]"
-           data-detail="钥匙人">
+      <div
+        :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.keyOwnerName==null}]"
+        data-detail="钥匙人"
+      >
         <template v-if="resultData.agentHouseMethod.keyOwnerName!=null">
-          <el-image class="task-pro-img"
-                    :src="resultData.agentHouseMethod.keyOwnerHeadImg |  defaultImg"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
+          <el-image
+            class="task-pro-img"
+            :src="resultData.agentHouseMethod.keyOwnerHeadImg |  defaultImg"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
             </div>
           </el-image>
           <div class="task-pro-message">
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.keyOwnerName}}</div>
-            <div class="task-pro-options overText">{{resultData.agentHouseMethod.keyOwnerDepartmentName}}</div>
+            <div
+              class="task-pro-options overText"
+            >{{resultData.agentHouseMethod.keyOwnerDepartmentName}}</div>
           </div>
-          <el-button :disabled="isDisabled"
-                     @click="openPop('keyPopFlag',4,'keyType',3)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
-        </template>
-        <el-button v-else-if="applyKeyOwnerRule"
-                   :disabled="isDisabled"
-                   @click="openPop('keyPopFlag',0,'keyType',0)"><span>申请钥匙人</span> </el-button>
-        <el-button v-else
-                   :disabled="true"><span>申请钥匙人</span> </el-button>
-      </div>
-      <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
-           data-detail="委托人">
-        <template v-if="resultData.agentHouseMethod.onlyOwnerName!=null">
-          <el-button class="only">
-            {{resultData.isOnly | mapFilter('ONLYTYPE')}}
+          <el-button :disabled="isDisabled" @click="openPop('keyPopFlag',4,'keyType',3)">
+            <i class="el-icon-sunny icon"></i>
+            <span>取代</span>
           </el-button>
-          <el-image class="task-pro-img"
-                    :src="resultData.agentHouseMethod.onlyOwnerHeadImg | defaultImg "
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
+        </template>
+        <el-button
+          v-else-if="applyKeyOwnerRule"
+          :disabled="isDisabled"
+          @click="openPop('keyPopFlag',0,'keyType',0)"
+        >
+          <span>申请钥匙人</span>
+        </el-button>
+        <el-button v-else :disabled="true">
+          <span>申请钥匙人</span>
+        </el-button>
+      </div>
+      <div
+        :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
+        data-detail="委托人"
+      >
+        <template v-if="resultData.agentHouseMethod.onlyOwnerName!=null">
+          <el-button class="only">{{resultData.isOnly | mapFilter('ONLYTYPE')}}</el-button>
+          <el-image
+            class="task-pro-img"
+            :src="resultData.agentHouseMethod.onlyOwnerHeadImg | defaultImg "
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
             </div>
           </el-image>
           <div class="task-pro-message">
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
             <div class="task-pro-options overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
           </div>
-          <el-button :disabled="isDisabled"
-                     @click="openPop('entrustPopFlag',4,'entrustType',2)"> <i class="el-icon-sunny icon"></i> <span>取代</span> </el-button>
+          <el-button :disabled="isDisabled" @click="openPop('entrustPopFlag',4,'entrustType',2)">
+            <i class="el-icon-sunny icon"></i>
+            <span>取代</span>
+          </el-button>
         </template>
-        <el-button v-else-if="applyOnlyOwnerRule"
-                   :disabled="isDisabled"
-                   @click="openPop('entrustPopFlag',1,'entrustType',0)"><span>申请委托人</span> </el-button>
-        <el-button v-else
-                   :disabled="true"><span>申请委托人</span> </el-button>
+        <el-button
+          v-else-if="applyOnlyOwnerRule"
+          :disabled="isDisabled"
+          @click="openPop('entrustPopFlag',1,'entrustType',0)"
+        >
+          <span>申请委托人</span>
+        </el-button>
+        <el-button v-else :disabled="true">
+          <span>申请委托人</span>
+        </el-button>
       </div>
     </div>
     <div class="task-pro-flex seat">
-      <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.realOwnerName==null}]"
-           data-detail="实勘人">
+      <div
+        :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.realOwnerName==null}]"
+        data-detail="实勘人"
+      >
         <template v-if="resultData.agentHouseMethod.realOwnerName!=null">
-          <el-image class="task-pro-img"
-                    :src="resultData.agentHouseMethod.realOwnerHeadImg | defaultImg "
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
-              加载中<span>...</span>
+          <el-image
+            class="task-pro-img"
+            :src="resultData.agentHouseMethod.realOwnerHeadImg | defaultImg "
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
             </div>
           </el-image>
           <div class="task-pro-message">
             <div class="task-pro-name overText">{{resultData.agentHouseMethod.realOwnerName}}</div>
-            <div class="task-pro-options overText">{{resultData.agentHouseMethod.realOwnerDepartmentName}}</div>
+            <div
+              class="task-pro-options overText"
+            >{{resultData.agentHouseMethod.realOwnerDepartmentName}}</div>
           </div>
-          <el-button :disabled="isDisabled"
-                     @click="openPop('houseUploadflag',4,'houseUploadType',5)">
-            <i class="el-icon-sunny icon"></i> <span>取代</span>
+          <el-button
+            :disabled="isDisabled"
+            @click="openPop('houseUploadflag',4,'houseUploadType',5)"
+          >
+            <i class="el-icon-sunny icon"></i>
+            <span>取代</span>
           </el-button>
         </template>
-        <el-button v-else-if="applyRealOwnerRule"
-                   :disabled="isDisabled"
-                   @click="openPop('houseUploadflag',12,'houseUploadType',0)">申请实勘人</el-button>
-        <el-button v-else
-                   :disabled="true">申请实勘人</el-button>
+        <el-button
+          v-else-if="applyRealOwnerRule"
+          :disabled="isDisabled"
+          @click="openPop('houseUploadflag',12,'houseUploadType',0)"
+        >申请实勘人</el-button>
+        <el-button v-else :disabled="true">申请实勘人</el-button>
       </div>
     </div>
     <!--取代 -->
-    <replacePop :replaceType="keyType"
-                :visible.sync="keyPopFlag"
-                v-if="keyPopFlag"
-                width="620px"
-                title=""
-                :submitApplyKeyOwner="submitApplyKeyOwner"></replacePop>
+    <replacePop
+      :replaceType="keyType"
+      :visible.sync="keyPopFlag"
+      v-if="keyPopFlag"
+      width="620px"
+      title
+      :submitApplyKeyOwner="submitApplyKeyOwner"
+    ></replacePop>
     <!-- 委托人 -->
-    <entrustPop :replaceType="entrustType"
-                v-if="entrustPopFlag"
-                width="640px"
-                title=""
-                :submitApplyOnlyOwner="submitApplyOnlyOwner"
-                :visible.sync="entrustPopFlag">
-    </entrustPop>
+    <entrustPop
+      :replaceType="entrustType"
+      v-if="entrustPopFlag"
+      width="640px"
+      title
+      :submitApplyOnlyOwner="submitApplyOnlyOwner"
+      :visible.sync="entrustPopFlag"
+    ></entrustPop>
     <!-- 上传 -->
-    <fixedPopup :visible.sync="houseUploadflag"
-                title=""
-                v-if="houseUploadflag"
-                width="960px">
-      <houseUploadExtends ref="houseUpload"
-                          :replaceType="houseUploadType"></houseUploadExtends>
+    <fixedPopup :visible.sync="houseUploadflag" title v-if="houseUploadflag" width="960px">
+      <houseUploadExtends ref="houseUpload" :replaceType="houseUploadType"></houseUploadExtends>
       <template v-slot:floot>
         <div class="text-middle">
-          <el-button v-if="submitApplyRealOwner"
-                     size="mini"
-                     :disabled="isDisabled"
-                     @click="submitUpload"
-                     :loading="houseUploadLoading">{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
-          <el-button v-else
-                     size="mini"
-                     :disabled="true"
-                     :loading="houseUploadLoading">{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
+          <el-button
+            v-if="submitApplyRealOwner"
+            size="mini"
+            :disabled="isDisabled"
+            @click="submitUpload"
+            :loading="houseUploadLoading"
+          >{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
+          <el-button
+            v-else
+            size="mini"
+            :disabled="true"
+            :loading="houseUploadLoading"
+          >{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
         </div>
       </template>
     </fixedPopup>
 
-    <fixedPopup :visible.sync="applyAgentFlag"
-                title="请填写完这些信息才能申请为跟单人"
-                v-if="applyAgentFlag"
-                width="960px">
-      <supplement ref="com"
-                  :required="required"
-                  :middleRadioTo="middleRadio"
-                  :primaryRadioTo="primaryRadio"
-                  :showFollow="showFollow"
-                  :audioList="audioList"></supplement>
+    <fixedPopup
+      :visible.sync="applyAgentFlag"
+      title="请填写完这些信息才能申请为跟单人"
+      v-if="applyAgentFlag"
+      width="960px"
+    >
+      <supplement
+        ref="com"
+        :required="required"
+        :middleRadioTo="middleRadio"
+        :primaryRadioTo="primaryRadio"
+        :showFollow="showFollow"
+        :audioList="audioList"
+        :isFromHouseTask="true"
+      ></supplement>
       <template>
         <div class="text-middle">
-          <el-button v-if="submitApplyAgent"
-                     size="mini"
-                     :disabled="agentApply||isDisabled"
-                     @click="applyAgent"> 提交</el-button>
-          <el-button v-else
-                     size="mini"
-                     :disabled="true"> 提交</el-button>
+          <el-button
+            v-if="submitApplyAgent"
+            size="mini"
+            :disabled="agentApply||isDisabled"
+            @click="applyAgent"
+          >提交</el-button>
+          <el-button v-else size="mini" :disabled="true">提交</el-button>
         </div>
       </template>
     </fixedPopup>
@@ -405,6 +456,7 @@ export default {
     but.$on("submitApplyAgent", () => {
       that.submitApplyAgent = true;
     });
+    but.$on("callTaskAgent", this.openAgentPop);
   },
   destroyed () {
     but.$off("applyAgent");
@@ -415,6 +467,7 @@ export default {
     but.$off("submitApplyOnlyOwner");
     but.$off("submitApplyRealOwner");
     but.$off("submitApplyAgent");
+    but.$off("callTaskAgent");
   },
   methods: {
     /**
