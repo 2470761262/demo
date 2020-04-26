@@ -139,19 +139,16 @@ export default {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
       this.detailType = this.$route.params.detailType;
+      this.dept.id=this.$route.params.dept;
+      util.localStorageSet("houseDetails.vue:deptId", this.dept.id);
       util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
       util.localStorageSet("houseDetails.vue:detailType", this.detailType);
     } else {
       this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
       this.detailType = util.localStorageGet("houseDetails.vue:detailType");
-    }
-    this.lastParams.id = this.forID.id;
-    if(this.$route.params.dept){
-      this.dept.id=this.$route.params.dept;
-      util.localStorageSet("houseDetails.vue:deptId", this.dept.id);
-    } else {
       this.dept.id = util.localStorageGet("houseDetails.vue:deptId");
     }
+    this.lastParams.id = this.forID.id;
     this.getHouseDetails();
   },
   methods: {
