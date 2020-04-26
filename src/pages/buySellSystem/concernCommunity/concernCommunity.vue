@@ -418,7 +418,7 @@ export default {
           width: "190",
           order: false,
           disabled: false,
-          default: true,
+          default: false,
           formart: item => this.houseNoFormat(item.houseNo)
         },
         {
@@ -601,7 +601,7 @@ export default {
         });
       } else if (
         that.queryData.maxInArea != "" &&
-        that.queryData.minInArea > that.queryData.maxInArea
+        Number(that.queryData.minInArea) > Number(that.queryData.maxInArea)
       ) {
         that.$message({
           message: "最大值必须大于最小值",
@@ -621,7 +621,7 @@ export default {
         });
       } else if (
         that.queryData.minInArea != "" &&
-        that.queryData.minInArea > that.queryData.maxInArea
+        Number(that.queryData.minInArea) > Number(that.queryData.maxInArea)
       ) {
         that.$message({
           message: "最大值必须大于最小值",

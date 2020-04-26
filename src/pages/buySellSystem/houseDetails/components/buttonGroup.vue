@@ -53,116 +53,128 @@
     <div class="page-button-group">
       <!-- 发布外网 -->
       <div class="button-set">
-        <el-button :disabled="!isShowButton.releaseOutsideHouse"
-                   @click="certificateType"
-                   v-if="resultData.isReleaseOutside!=1&&(resultData.AgentPer==perId)&&resultData.plate!=4&&resultData.plate!=1">
+        <el-button
+          :disabled="!isShowButton.releaseOutsideHouse"
+          @click="certificateType"
+          v-if="resultData.isReleaseOutside!=1&&(resultData.AgentPer==perId)&&resultData.plate!=4&&resultData.plate!=1"
+        >
           <i class="iconfabu iconfont el-icon--left"></i>
           <span class="button-title">发布外网</span>
         </el-button>
-        <el-button :disabled="!isShowButton.cancelOutsideHouse"
-                   v-if="resultData.isReleaseOutside==1&&(resultData.AgentPer==perId)&&resultData.plate!=4&&resultData.plate!=1"
-                   @click="cancelOutsideHouse">
+        <el-button
+          :disabled="!isShowButton.cancelOutsideHouse"
+          v-if="resultData.isReleaseOutside==1&&(resultData.AgentPer==perId)&&resultData.plate!=4&&resultData.plate!=1"
+          @click="cancelOutsideHouse"
+        >
           <i class="iconfabu iconfont el-icon--left"></i>
           <span class="button-title">取消发布</span>
         </el-button>
       </div>
       <!-- 总监推荐 -->
       <div class="button-set">
-        <el-button :disabled="!isShowButton.inspector && !isShowButton.shopOwner"
-                   @click="nodePop"
-                   v-if="!isRecommend && (isShowButton.inspector || isShowButton.shopOwner)">
+        <el-button
+          :disabled="!isShowButton.inspector && !isShowButton.shopOwner"
+          @click="nodePop"
+          v-if="!isRecommend"
+        >
+          <!-- && (isShowButton.inspector || isShowButton.shopOwner) -->
           <i class="icontuijian iconfont el-icon--left"></i>
-          <span class="button-title"
-                v-if="isShowButton.inspector==true">总监推荐</span>
-          <span class="button-title"
-                v-if="isShowButton.shopOwner==true && isShowButton.inspector==false">店长推荐</span>
+          <span class="button-title" v-if="isShowButton.inspector==true">总监推荐</span>
+          <span class="button-title" v-if="isShowButton.inspector==false">店长推荐</span>
         </el-button>
-        <el-button :disabled="isDisabled"
-                   v-if="isRecommend"
-                   @click="nodePop">
+        <el-button :disabled="isDisabled" v-if="isRecommend" @click="nodePop">
           <i class="icontuijian iconfont el-icon--left"></i>
           <span class="button-title">取消推荐</span>
         </el-button>
       </div>
       <!-- 成交对赌 -->
       <div class="button-set">
-        <el-button :disabled="isDisabled"
-                   @click="showBetView"
-                   v-if="!isBet&&resultData.AgentPer==perId&&resultData.plate!=4&&resultData.plate!=1">
+        <el-button
+          :disabled="isDisabled"
+          @click="showBetView"
+          v-if="!isBet&&resultData.AgentPer==perId&&resultData.plate!=4&&resultData.plate!=1"
+        >
           <i class="icontuijian iconfont el-icon--left"></i>
           <span class="button-title">成交对赌</span>
         </el-button>
       </div>
       <!-- 转房源状态 -->
       <div class="button-set">
-        <el-button @click="changePopUp"
-                   :disabled="isDisabled">
+        <el-button @click="changePopUp" :disabled="isDisabled">
           <i class="iconzhuanhuan iconfont el-icon--left"></i>
           <span class="button-title">转房源状态</span>
         </el-button>
       </div>
       <!-- 取消作业方 -->
       <div class="button-set">
-        <el-button :disabled="isDisabled"
-                   @click="openPopUp('cancelTaskFlag')"
-                   v-if="isShowButton.cancelMethod">
+        <el-button
+          :disabled="isDisabled||!isShowButton.cancelMethod"
+          @click="openPopUp('cancelTaskFlag')"
+        >
+          <!-- v-if="isShowButton.cancelMethod" -->
           <i class="iconfont iconquxiao el-icon--left"></i>
           <span class="button-title">取消角色人</span>
         </el-button>
       </div>
       <!-- 锁定房源 -->
       <div class="button-set">
-        <el-button :disabled="isDisabled"
-                   v-if="isShowButton.locking"
-                   @click="houseLock">
-          <i class="iconfont el-icon--left"
-             :class="resultData.isLocking == 1 ? 'iconjiesuo':'iconsuoding'"></i>
+        <el-button :disabled="isDisabled||!isShowButton.locking" @click="houseLock">
+          <!-- v-if="isShowButton.locking" -->
+          <i
+            class="iconfont el-icon--left"
+            :class="resultData.isLocking == 1 ? 'iconjiesuo':'iconsuoding'"
+          ></i>
           <span class="button-title">{{resultData.isLocking==1 ?"解锁房源":"锁定房源"}}</span>
         </el-button>
       </div>
       <!-- 修改钥匙存放门店 -->
-      <div class="button-set"
-           v-if="resultData.agentHouseMethod">
-        <el-button :disabled="isDisabled||!(resultData.keyOwner>0)"
-                   @click="openPopUp('keyStorageFlag')"
-                   v-if="resultData.agentHouseMethod.keyOwner==perId||isShowButton.updateKeyStorageDept">
+      <div class="button-set" v-if="resultData.agentHouseMethod">
+        <el-button
+          :disabled="isDisabled||!(resultData.keyOwner>0)||!isShowButton.updateKeyStorageDept"
+          @click="openPopUp('keyStorageFlag')"
+          v-if="resultData.agentHouseMethod.keyOwner==perId"
+        >
           <i class="iconyuechi iconfont el-icon--left"></i>
           <span class="button-title">修改钥匙存放门店</span>
         </el-button>
       </div>
     </div>
     <!-- 发布外网 -->
-    <releasePop :visible.sync="releasePopFlag"
-                width="300px"
-                title
-                maskHideEvent
-                v-if="releasePopFlag"></releasePop>
+    <releasePop
+      :visible.sync="releasePopFlag"
+      width="300px"
+      title
+      maskHideEvent
+      v-if="releasePopFlag"
+    ></releasePop>
     <!-- 成交对赌 -->
-    <betPop :visible.sync="betPopFlag"
-            v-if="betPopFlag"
-            title="说明"
-            maskHideEvent
-            width="600px"></betPop>
+    <betPop :visible.sync="betPopFlag" v-if="betPopFlag" title="说明" maskHideEvent width="600px"></betPop>
     <!-- 转房源状态 -->
-    <changeHouseType title
-                     :visible.sync="typeFlag"
-                     :showSubmitBtn="isShowButton.changePopUp"
-                     width="580px"
-                     maskHideEvent
-                     v-if="typeFlag"></changeHouseType>
+    <changeHouseType
+      title
+      :visible.sync="typeFlag"
+      :showSubmitBtn="isShowButton.changePopUp"
+      width="580px"
+      maskHideEvent
+      v-if="typeFlag"
+    ></changeHouseType>
     <!-- 取消作业方 -->
-    <cancelTask title
-                :visible.sync="cancelTaskFlag"
-                width="680px"
-                maskHideEvent
-                :insertFollow="isShowButton.cancelMethod"
-                v-if="cancelTaskFlag"></cancelTask>
+    <cancelTask
+      title
+      :visible.sync="cancelTaskFlag"
+      width="680px"
+      maskHideEvent
+      :insertFollow="isShowButton.cancelMethod"
+      v-if="cancelTaskFlag"
+    ></cancelTask>
     <!-- 修改存放门店 -->
-    <keyStorage title="修改存放门店"
-                :visible.sync="keyStorageFlag"
-                width="320px"
-                maskHideEvent
-                v-if="keyStorageFlag"></keyStorage>
+    <keyStorage
+      title="修改存放门店"
+      :visible.sync="keyStorageFlag"
+      width="320px"
+      maskHideEvent
+      v-if="keyStorageFlag"
+    ></keyStorage>
   </section>
 </template>
 
@@ -193,10 +205,10 @@ export default {
     keyStorage
   },
   computed: {
-    isDisabled () {
+    isDisabled() {
       return this.buttonDisabled;
     },
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
@@ -204,7 +216,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       inspector: false,
       Shopowner: false,
@@ -226,30 +238,30 @@ export default {
         editAgentHouse: false,
         applyAgent: false, //申请跟单人
         applyKeyOwner: false, //申请钥匙人
-        applyRealOwner: false,//申请实勘人
-        applyOnlyOwner: false,//申请委托人
-        submitApplyKeyOwner: false,  //提交申请钥匙人
-        submitApplyAgent: false,//提交申请跟单人
-        submitApplyOnlyOwner: false,//提交申请委托人
-        submitApplyRealOwner: false,//提交申请实勘人
-        insertFollow: false,//提交跟进按钮
-        insertReport: false,//添加举报按钮
-        betBtn: false,//是否对赌
-        changePopUp: false,// 转状态按钮
-        dialPhone: false,//拨号
-        shareQRCode: false,//二维码
+        applyRealOwner: false, //申请实勘人
+        applyOnlyOwner: false, //申请委托人
+        submitApplyKeyOwner: false, //提交申请钥匙人
+        submitApplyAgent: false, //提交申请跟单人
+        submitApplyOnlyOwner: false, //提交申请委托人
+        submitApplyRealOwner: false, //提交申请实勘人
+        insertFollow: false, //提交跟进按钮
+        insertReport: false, //添加举报按钮
+        betBtn: false, //是否对赌
+        changePopUp: false, // 转状态按钮
+        dialPhone: false, //拨号
+        shareQRCode: false //二维码
       }, //是否显示按钮
       perId: "", //登录人id
       isRecommend: false, //是否推荐
       isBet: true //是否正在对赌
     };
   },
-  mounted () {
+  mounted() {
     this.getAgentRules();
     this.getisRecommend();
     this.getBetInfo();
   },
-  created () {
+  created() {
     but.$on("getBetInfo", () => {
       this.getBetInfo;
     });
@@ -258,12 +270,12 @@ export default {
       console.log(this.perId, "this.perId ");
     }
   },
-  destroyed () {
+  destroyed() {
     but.$off("getBetInfo");
   },
   methods: {
     //获取对赌结束时间
-    getBetInfo () {
+    getBetInfo() {
       var that = this;
       this.$api
         .get({
@@ -283,10 +295,10 @@ export default {
             that.isBet = false;
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     //获取对赌配置参数
-    showBetView () {
+    showBetView() {
       let that = this;
       that.$api
         .get({
@@ -304,10 +316,10 @@ export default {
             that.$message.error({ message: data.message, offset: 400 });
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     //推荐或者取消推荐房源
-    insertOrCancelRecommend (value) {
+    insertOrCancelRecommend(value) {
       let that = this;
       let url = "/agentHouse/recommend/insertRecommend";
       if (this.isRecommend) {
@@ -330,10 +342,10 @@ export default {
             that.$message(result.message);
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     //打开推荐弹窗
-    nodePop () {
+    nodePop() {
       let that = this;
       this.$prompt(null, this.isRecommend ? "取消推荐" : "推荐房源", {
         confirmButtonText: "提交",
@@ -344,7 +356,7 @@ export default {
         inputValidator: e => {
           if (!e) return "理由不能为空";
         },
-        beforeClose (action, instance, done) {
+        beforeClose(action, instance, done) {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = "执行中...";
@@ -361,12 +373,12 @@ export default {
         .then(value => {
           console.log(action, instance, done);
         })
-        .catch(() => { });
+        .catch(() => {});
     },
     /**
      * 是否已经推荐
      */
-    getisRecommend () {
+    getisRecommend() {
       let that = this;
       this.$api
         .get({
@@ -388,10 +400,10 @@ export default {
             that.isRecommend = false;
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     //锁定或解锁房源
-    houseLock () {
+    houseLock() {
       let that = this;
       let isLocking = this.resultData.isLocking == 1 ? 0 : 1;
       if (this.resultData.isLocking == undefined) {
@@ -416,10 +428,10 @@ export default {
             that.resultData.isLocking = isLocking;
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     //获取按钮权限
-    getAgentRules () {
+    getAgentRules() {
       let that = this;
       this.$api
         .get({
@@ -427,57 +439,18 @@ export default {
         })
         .then(e => {
           e.data.data.functionRuleList.forEach(element => {
-            // if (element.rname == "总监推荐") {
-            //   that.inspector = true
-            // }
-            // if (element.rname == "店长推荐") {
-            //   that.Shopowner = true
-            // }
             if (that.isShowButton.hasOwnProperty(element.rUrl)) {
               that.isShowButton[element.rUrl] = true;
               console.log("----------", element.rUrl);
               but.$emit(element.rUrl);
-              // if (element.rUrl == "deleteFollow") {
-              //   but.$emit("deleteFollow");
-              // }
-              // if (element.rUrl == "telFollow") {
-              //   but.$emit("telFollow");
-              // }
-              // if (element.rUrl == "editAgentHouse") {
-              //   but.$emit("editAgentHouse");
-              // }
-              // if (element.rUrl == "applyAgent") { //申请跟单人
-              //   but.$emit("applyAgent");
-              // }
-              // if (element.rUrl == "submitApplyAgent") { //提交（申请跟单人）按钮
-              //   but.$emit("submitApplyAgent");
-              // }
-              // if (element.rUrl == "applyKeyOwner") { //申请钥匙人
-              //   but.$emit("applyKeyOwner");
-              // }
-              // if (element.rUrl == "submitApplyKeyOwner") { //提交（申请钥匙人）按钮
-              //   but.$emit("submitApplyKeyOwner");
-              // }
-              // if (element.rUrl == "applyOnlyOwner") { //申请委托人
-              //   but.$emit("applyOnlyOwner");
-              // }
-              // if (element.rUrl == "submitApplyOnlyOwner") { //提交（申请委托人）按钮
-              //   but.$emit("submitApplyOnlyOwner");
-              // }
-              // if (element.rUrl == "applyRealOwner") { //申请实勘人
-              //   but.$emit("applyRealOwner");
-              // }
-              // if (element.rUrl == "submitApplyRealOwner") { //提交（申请实勘人）按钮
-              //   but.$emit("submitApplyRealOwner");
-              // }
             }
-            but.$emit("dialPhone", that.isShowButton.dialPhone);
-            but.$emit("shareQRCode", that.isShowButton.shareQRCode);
           });
+          but.$emit("dialPhone", that.isShowButton.dialPhone);
+          but.$emit("shareQRCode", that.isShowButton.shareQRCode);
         })
-        .catch(e => { });
+        .catch(e => {});
     },
-    async cancelOutsideHouse () {
+    async cancelOutsideHouse() {
       let params = {
         HouseNo: this.resultData.HouseNo
       };
@@ -490,7 +463,7 @@ export default {
       }
     },
     //是否展示产权证号弹窗
-    async certificateType () {
+    async certificateType() {
       if (parseInt(this.resultData.certificateType) != 1) {
         this.releasePopFlag = true;
       } else {
@@ -511,7 +484,7 @@ export default {
       }
     },
     //是否显示转状态弹窗
-    async changePopUp () {
+    async changePopUp() {
       let result = await houseCheck.isChecking(
         8,
         0,
@@ -522,11 +495,11 @@ export default {
         this.typeFlag = true;
       }
     },
-    openPopUp (PopName) {
+    openPopUp(PopName) {
       this[PopName] = true;
     },
     //钥匙存储
-    keyStorage () {
+    keyStorage() {
       this.$prompt(null, "您的钥匙要存放哪个门店?", {
         confirmButtonText: "确定",
         showCancelButton: false,
@@ -535,9 +508,9 @@ export default {
         .then(value => {
           console.log(value);
         })
-        .catch(() => { });
+        .catch(() => {});
     },
-    message (icon, text) {
+    message(icon, text) {
       const h = this.$createElement;
       return this.$msgbox({
         title: "",
@@ -562,8 +535,8 @@ export default {
         showCancelButton: false,
         confirmButtonText: "确定"
       })
-        .then(() => { })
-        .catch(() => { });
+        .then(() => {})
+        .catch(() => {});
     }
   }
 };
