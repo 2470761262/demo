@@ -167,7 +167,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
 
@@ -196,7 +196,7 @@ export default {
           label: "房源编号",
           width: "170",
           order: false,
-          disabled: true,
+          disabled: false,
           default: true
         },
         {
@@ -374,7 +374,7 @@ export default {
       renderList: []
     };
   },
-  mounted() {
+  mounted () {
     tableMenu.getTableMenu(this.tableColumnField, 12).then(e => {
       this.menuLoading = false;
       this.renderList = e;
@@ -382,13 +382,13 @@ export default {
     });
   },
   methods: {
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.sortColumn = e.prop;
       this.sortType = e.order;
       this.queryNotSale(1);
     },
-    tabColumnChange(e, length = 0) {
+    tabColumnChange (e, length = 0) {
       this.tableColumn = e;
       if (length > 0) {
         let prop = e.map(item => {
@@ -397,22 +397,22 @@ export default {
         tableMenu.insert(prop, 12);
       }
     },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
       this.queryNotSale(1);
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    formatHouseType(row, column) {
+    formatHouseType (row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook(id) {
+    toLook (id) {
       var that = this;
       that.$router.push({ name: "historyDetails", params: { houseId: id } });
     },
-    toSale(
+    toSale (
       comId,
       cbId,
       bhId,
@@ -439,15 +439,15 @@ export default {
         }
       });
     },
-    queryNotSaleParams() {
+    queryNotSaleParams () {
       this.queryNotSale(1);
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         that.loading = true;
@@ -473,7 +473,7 @@ export default {
         that.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       if (that.data.comId == "") {
         that.data.roomNo = "";
@@ -500,7 +500,7 @@ export default {
         });
       this.queryNotSaleParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -523,7 +523,7 @@ export default {
         });
       this.queryNotSaleParams();
     },
-    Remove() {
+    Remove () {
       let tab = this.tableColumn;
       let renderList = this.renderList;
       Object.assign(this.$data, this.$options.data.call(this));
@@ -532,7 +532,7 @@ export default {
       this.tabColumnChange(tab);
       this.queryNotSale(1);
     },
-    queryNotSale(currentPage) {
+    queryNotSale (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -581,18 +581,18 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryNotSaleParams(1);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryNotSale(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.queryNotSale(val);
     }

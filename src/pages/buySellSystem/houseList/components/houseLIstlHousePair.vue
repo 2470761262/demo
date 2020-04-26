@@ -531,19 +531,13 @@
                            border>{{item.name}}</el-checkbox>
             </el-tooltip>
           </div>
-          <div class="marLeft20">
-            <el-select placeholder="更多选择"
-                       clearable
-                       v-model="primarySchoolInput"
-                       @change="addInputToList('primarySchool','primarySchoolInput')">
-              <template v-for="item in MathPrimarySchoolListLast">
-                <el-option :key="item.value"
-                           :label="item.label"
-                           :value="item.value"></el-option>
-              </template>
-            </el-select>
+          <div class="checkbox-flex-pad">
+            <el-button type="text"
+                       @click="triggerSchoolSizeFlag('PrimarySizeFlag')">{{PrimarySizeFlag ? '收起': '更多'}}</el-button>
           </div>
         </el-checkbox-group>
+        <div class="marLeft20">
+        </div>
       </el-form-item>
       <el-form-item label="中学划片"
                     prop="middleSchool">
@@ -560,17 +554,9 @@
                            border>{{item.name}}</el-checkbox>
             </el-tooltip>
           </div>
-          <div class="marLeft20">
-            <el-select placeholder="更多选择"
-                       clearable
-                       v-model="middleSchoolInput"
-                       @change="addInputToList('middleSchool','middleSchoolInput')">
-              <template v-for="item in MathMiddleSchoolListLast">
-                <el-option :key="item.value"
-                           :label="item.label"
-                           :value="item.value"></el-option>
-              </template>
-            </el-select>
+          <div class="checkbox-flex-pad">
+            <el-button type="text"
+                       @click="triggerSchoolSizeFlag('middleSizeFlag')">{{middleSizeFlag ? '收起' : '更多'}}</el-button>
           </div>
         </el-checkbox-group>
       </el-form-item>
@@ -621,20 +607,24 @@ export default {
   },
   computed: {
     MathPrimarySchoolListfirst () {
-      return this.primarySchoolList.slice(0, 5);
-    },
-    MathPrimarySchoolListLast () {
-      return this.primarySchoolList.slice(5);
+      let sliceSize = [0, 11]
+      if (this.PrimarySizeFlag) {
+        sliceSize = [0, this.primarySchoolList.length - 1]
+      }
+      return this.primarySchoolList.slice(...sliceSize);
     },
     MathMiddleSchoolListfirst () {
-      return this.middleSchoolList.slice(0, 5);
+      let sliceSize = [0, 11]
+      if (this.middleSizeFlag) {
+        sliceSize = [0, this.middleSchoolList.length - 1]
+      }
+      return this.middleSchoolList.slice(...sliceSize);
     },
-    MathMiddleSchoolListLast () {
-      return this.middleSchoolList.slice(5);
-    }
   },
   data () {
     return {
+      PrimarySizeFlag: false,
+      middleSizeFlag: false,
       searchData: "",
       areaSliderMarks: areaSliderMarks,
       priceSliderMarks: priceSliderMarks,
@@ -691,6 +681,9 @@ export default {
   },
 
   methods: {
+    triggerSchoolSizeFlag (value) {
+      this[value] = !this[value]
+    },
     //面积滑块参数更新
     flootSliderChange (e) {
       if (e[0] == -2 && e[1] == -2) {
