@@ -115,7 +115,8 @@
                      @click="queryPotentialHouseParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      deptUrl="/houseResource/potentialHouse"></moreSelect>
         </div>
       </div>
     </template>
@@ -467,7 +468,7 @@ export default {
         .post({
           url: "/houseResource/potentialHouse",
           data: params,
-          qs: true
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
         })
         .then(e => {
           console.log(e.data);

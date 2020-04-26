@@ -493,6 +493,7 @@ export default {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryConstant();
       this.visible = true;
+      this.setTabRender();
       //this.$emit("moreSelectChange", "");
     },
     remoteMethod (query) {
@@ -511,7 +512,6 @@ export default {
             }
           })
           .then(e => {
-            console.log(e.data);
             if (e.data.code == 200) {
               that.moreOptions = e.data.data.list;
             }
