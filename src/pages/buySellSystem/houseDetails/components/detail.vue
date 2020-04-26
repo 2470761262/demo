@@ -371,7 +371,7 @@ export default {
       this.touchedDialPhone = value;
     });
     but.$on("applyAgent", () => {
-      that.applyAgentRule = true;
+      this.applyAgentRule = true;
     });
   },
   mounted () { },
