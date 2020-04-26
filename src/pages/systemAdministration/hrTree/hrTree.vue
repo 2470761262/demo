@@ -968,6 +968,7 @@ export default {
         "改成rpl5]";
     },
     userQuitSubmit() {
+      debugger
       if (
         this.quitPost.time == null ||
         this.quitPost.time == "" ||
@@ -980,7 +981,7 @@ export default {
         });
       } else {
         let params = {
-          accountId: this.optInfo.id,
+          perId: this.optInfo.id,
           UpType: "del",
           upValue: 1,
           leaveMemo: this.quitPost.remark,
@@ -1102,7 +1103,7 @@ export default {
               message: "参数出错"
             });
           } else {
-            let params = { accountId: id, UpType: "locked", upValue: 1 };
+            let params = { perId: id, UpType: "locked", upValue: 1 };
             this.operation(params);
           }
         })
@@ -1200,4 +1201,4 @@ export default {
     }
   }
 };
-</script> 
+</script>
