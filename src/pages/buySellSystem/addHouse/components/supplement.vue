@@ -677,7 +677,7 @@
               <input
                 id="houseVideoList"
                 type="file"
-                :disabled="!wxUploadFile"
+                :disabled="isFromHouseTask?false:!wxUploadFile"
                 @change="getAudioFile($event)"
               />
             </label>
@@ -714,12 +714,12 @@
                 <span>...</span>
               </div>
             </el-image>
-            <div v-if="wxUploadFile">微信扫码上传</div>
-            <div v-if="!wxUploadFile">暂无上传权限.</div>
+            <div v-if="isFromHouseTask?true:wxUploadFile">微信扫码上传</div>
+            <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
           </div>
         </div>
-        <div v-if="wxUploadFile">仅可以上传一个音频.</div>
-        <div v-if="!wxUploadFile">暂无上传权限.</div>
+        <div v-if="isFromHouseTask?true:wxUploadFile">仅可以上传一个音频.</div>
+        <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
   </div>
@@ -781,6 +781,10 @@ export default {
       default: false
     },
     wxUploadFile: {
+      type: Boolean,
+      default: false
+    },
+    isFromHouseTask: {
       type: Boolean,
       default: false
     }
@@ -851,6 +855,7 @@ export default {
     // });
     // console.log("nextSaveButton", this.nextSaveData);
     // console.log("wxUploadFile", this.uploadFile);
+    console.log("isFromHouseTask", that.isFromHouseTask);
   },
   beforeRouteLeave(to, from, next) {
     console.log("离开了供给页面，不需要执行任何请求回调");
