@@ -264,7 +264,10 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          formart: item => item.price + "万元"
+          formart: function (item) {
+            debugger;
+            return item.price + "万元"
+          }
         },
         {
           prop: "unitPrice",
@@ -799,10 +802,10 @@ export default {
             that.tableData = data.data.list;
           } else {
             console.log("查询我的跟单列表结果：" + result.message);
-            alert(result.message);
           }
         })
         .catch(e => {
+          that.loading = false;
           console.log("查询我的跟单列表失败");
           console.log(e);
         });

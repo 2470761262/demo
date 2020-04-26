@@ -19,7 +19,7 @@
             id="outdoorImgList"
             type="file"
             @change="getFile(1,'outdoorImgList',$event)"
-            :disabled="!uploadFile"
+            :disabled="!wxUploadFile"
             multiple="multiplt"
           />
         </label>
@@ -49,8 +49,8 @@
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="uploadFile">微信扫码上传</div>
-        <div v-if="!uploadFile">暂无上传权限.</div>
+        <div v-if="wxUploadFile">微信扫码上传</div>
+        <div v-if="!wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 客厅 -->
@@ -66,7 +66,7 @@
             id="livingRoomImgList"
             type="file"
             @change="getFile(2,'livingRoomImgList',$event)"
-            :disabled="!uploadFile"
+            :disabled="!wxUploadFile"
             multiple="multiplt"
           />
         </label>
@@ -96,8 +96,8 @@
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="uploadFile">微信扫码上传</div>
-        <div v-if="!uploadFile">暂无上传权限.</div>
+        <div v-if="wxUploadFile">微信扫码上传</div>
+        <div v-if="!wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 卧室 -->
@@ -109,7 +109,7 @@
             id="bedroomImgList"
             type="file"
             @change="getFile(3,'bedroomImgList',$event)"
-            :disabled="!uploadFile"
+            :disabled="!wxUploadFile"
             multiple="multiplt"
           />
         </label>
@@ -139,8 +139,8 @@
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="uploadFile">微信扫码上传</div>
-        <div v-if="!uploadFile">暂无上传权限.</div>
+        <div v-if="wxUploadFile">微信扫码上传</div>
+        <div v-if="!wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 厨房 -->
@@ -152,7 +152,7 @@
             id="kitchenImgList"
             type="file"
             @change="getFile(4,'kitchenImgList',$event)"
-            :disabled="!uploadFile"
+            :disabled="!wxUploadFile"
             multiple="multiplt"
           />
         </label>
@@ -182,8 +182,8 @@
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="uploadFile">微信扫码上传</div>
-        <div v-if="!uploadFile">暂无上传权限.</div>
+        <div v-if="wxUploadFile">微信扫码上传</div>
+        <div v-if="!wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 卫生间 -->
@@ -195,7 +195,7 @@
             id="toiletImgList"
             type="file"
             @change="getFile(5,'toiletImgList',$event)"
-            :disabled="!uploadFile"
+            :disabled="!wxUploadFile"
             multiple="multiplt"
           />
         </label>
@@ -221,8 +221,8 @@
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="uploadFile">微信扫码上传</div>
-        <div v-if="!uploadFile">暂无上传权限.</div>
+        <div v-if="wxUploadFile">微信扫码上传</div>
+        <div v-if="!wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 户型图 -->
@@ -234,7 +234,7 @@
             id="layoutImgList"
             type="file"
             @change="getFile(6,'layoutImgList',$event)"
-            :disabled="!uploadFile"
+            :disabled="!wxUploadFile"
             multiple="multiplt"
           />
         </label>
@@ -260,8 +260,8 @@
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="uploadFile">微信扫码上传</div>
-        <div v-if="!uploadFile">暂无上传权限.</div>
+        <div v-if="wxUploadFile">微信扫码上传</div>
+        <div v-if="!wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 房源视频 -->
@@ -275,7 +275,7 @@
                 id="houseVideoList"
                 type="file"
                 @change="getVideoFile('houseVideo',$event)"
-                :disabled="!uploadFile"
+                :disabled="!wxUploadFile"
               />
             </label>
           </div>
@@ -292,12 +292,12 @@
                 <span>...</span>
               </div>
             </el-image>
-            <div v-if="uploadFile">微信扫码上传</div>
-            <div v-if="!uploadFile">暂无上传权限.</div>
+            <div v-if="wxUploadFile">微信扫码上传</div>
+            <div v-if="!wxUploadFile">暂无上传权限.</div>
           </div>
         </div>
-        <div v-if="uploadFile">仅可以上传一个视频,时间为60秒.</div>
-        <div v-if="!uploadFile">暂无上传权限.</div>
+        <div v-if="wxUploadFile">仅可以上传一个视频,时间为60秒.</div>
+        <div v-if="!wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 视频弹框 -->
@@ -320,6 +320,10 @@ export default {
     paramsObj: {
       type: Object,
       default: () => {}
+    },
+    wxUploadFile: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {
@@ -374,9 +378,9 @@ export default {
         console.log(that.qrCodeImgVedio, "视频二维码地址");
       });
     });
-    but.$on("wxUploadFile", () => {
-      that.uploadFile = true;
-    });
+    // but.$on("wxUploadFile", () => {
+    //   that.uploadFile = true;
+    // });
   },
   data() {
     return {
@@ -410,8 +414,7 @@ export default {
         6: { picContainer: "layoutImgList", remark: "录入房源上传-户型图片" }
       },
       websock: null,
-      webSocketUser: "",
-      uploadFile: false
+      webSocketUser: ""
     };
   },
   methods: {
@@ -457,7 +460,7 @@ export default {
     },
     getQrCodeForVedio(callback) {
       let that = this;
-      if (!that.uploadFile) {
+      if (!that.wxUploadFile) {
         return; //无上传权限就不加载图片
       }
       let loginUser = util.localStorageGet(LOGINDATA);
@@ -491,7 +494,7 @@ export default {
     },
     getQrCode2(data, callback) {
       let that = this;
-      if (!that.uploadFile) {
+      if (!that.wxUploadFile) {
         return; //无上传权限就不加载图片
       }
       that.$api
