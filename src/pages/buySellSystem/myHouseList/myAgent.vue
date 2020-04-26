@@ -885,7 +885,7 @@ export default {
     queryMyAgent(currentPage) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
