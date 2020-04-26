@@ -65,6 +65,16 @@
 /deep/.el-button {
   border: none;
 }
+.right-nav-content {
+  position: absolute;
+  right: 0;
+  transform: translateX(calc(100% + 1px));
+  display: flex;
+  flex-direction: column;
+  > button:last-child {
+    margin-left: 0;
+  }
+}
 </style>
 <template>
   <div class="page-body">
@@ -110,6 +120,11 @@
                          :disabled="!submitVerify"
                          :loading="butLoading">{{paramsObj.buttonText ||'提交验真' }}</el-button>
             </el-button-group>
+          </div>
+          <div class="right-nav-content"
+               v-scrollCenter="'page-contenr-com'">
+            <el-button @click="navPage('/buySellSystem/houseList')">首页</el-button>
+            <el-button @click="navPage()">返回</el-button>
           </div>
         </div>
       </div>
@@ -231,6 +246,13 @@ export default {
     util.sessionLocalStorageRemove("editHouse");
   },
   methods: {
+    navPage (value) {
+      if (!value) {
+        this.$router.go(-1);
+        return false;
+      }
+      this.$router.push({ path: value })
+    },
     //上一步
     prevPage () {
       if (this.stepsActiveIndex > 0) {
