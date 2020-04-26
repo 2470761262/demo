@@ -934,7 +934,7 @@ export default {
           params.keyOwner = this.queryData.keyOwner;
         }
         if (this.roomNo != null && this.roomNo != "") {
-          params.roomNo = this.roomNo;
+          params.bhId = this.roomNo;
         }
         if (
           this.queryData.customName != null &&
