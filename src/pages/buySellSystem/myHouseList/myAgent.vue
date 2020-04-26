@@ -885,7 +885,7 @@ export default {
     queryMyAgent (currentPage) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (Object.keys(this.moreSelect).length != 0) {
         for (let key in this.moreSelect) {
           if (key == "addTime" && this.moreSelect[key] !== "") {
@@ -932,7 +932,6 @@ export default {
             that.pageJson.total = data.data.dataCount;
             that.tableData = data.data.data;
             let btnList = e.data.data.btnList;
-            debugger;
             if (btnList && btnList.length > 0) {
               btnList.forEach(btn => {
                 if (btn.rName == "调配") {
