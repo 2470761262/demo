@@ -439,53 +439,14 @@ export default {
         })
         .then(e => {
           e.data.data.functionRuleList.forEach(element => {
-            // if (element.rname == "总监推荐") {
-            //   that.inspector = true
-            // }
-            // if (element.rname == "店长推荐") {
-            //   that.Shopowner = true
-            // }
             if (that.isShowButton.hasOwnProperty(element.rUrl)) {
               that.isShowButton[element.rUrl] = true;
               console.log("----------", element.rUrl);
               but.$emit(element.rUrl);
-              // if (element.rUrl == "deleteFollow") {
-              //   but.$emit("deleteFollow");
-              // }
-              // if (element.rUrl == "telFollow") {
-              //   but.$emit("telFollow");
-              // }
-              // if (element.rUrl == "editAgentHouse") {
-              //   but.$emit("editAgentHouse");
-              // }
-              // if (element.rUrl == "applyAgent") { //申请跟单人
-              //   but.$emit("applyAgent");
-              // }
-              // if (element.rUrl == "submitApplyAgent") { //提交（申请跟单人）按钮
-              //   but.$emit("submitApplyAgent");
-              // }
-              // if (element.rUrl == "applyKeyOwner") { //申请钥匙人
-              //   but.$emit("applyKeyOwner");
-              // }
-              // if (element.rUrl == "submitApplyKeyOwner") { //提交（申请钥匙人）按钮
-              //   but.$emit("submitApplyKeyOwner");
-              // }
-              // if (element.rUrl == "applyOnlyOwner") { //申请委托人
-              //   but.$emit("applyOnlyOwner");
-              // }
-              // if (element.rUrl == "submitApplyOnlyOwner") { //提交（申请委托人）按钮
-              //   but.$emit("submitApplyOnlyOwner");
-              // }
-              // if (element.rUrl == "applyRealOwner") { //申请实勘人
-              //   but.$emit("applyRealOwner");
-              // }
-              // if (element.rUrl == "submitApplyRealOwner") { //提交（申请实勘人）按钮
-              //   but.$emit("submitApplyRealOwner");
-              // }
             }
-            but.$emit("dialPhone", that.isShowButton.dialPhone);
-            but.$emit("shareQRCode", that.isShowButton.shareQRCode);
           });
+          but.$emit("dialPhone", that.isShowButton.dialPhone);
+          but.$emit("shareQRCode", that.isShowButton.shareQRCode);
         })
         .catch(e => {});
     },
