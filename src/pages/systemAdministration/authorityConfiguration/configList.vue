@@ -36,6 +36,7 @@
     <template v-slot:top>
       <div class="query-cell">
         <el-input placeholder="关键字搜索"
+        @input.enter="queryCompanyByParams"
                   v-model="queryData.keyword"
                   clearable>
           <template slot="prepend">关键字</template>

@@ -10,10 +10,11 @@ export function getColor(){
         url:'/sys/skin/color'
     }).then((e)=>{
         console.log(e);
-        return e.data
+        return e.data.data
        
      }).then((e)=>{
-        themePackers.createImport(e.data);
+        console.log(e,'them111111111');
+        themePackers.createImport(e);
      })
 }
 
