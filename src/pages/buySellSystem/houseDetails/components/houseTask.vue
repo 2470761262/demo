@@ -312,17 +312,17 @@ import but from "@/evenBus/but.js";
 export default {
   inject: ["houseDetails", "houseId", "buttonDisabled", "dept"],
   computed: {
-    isDisabled() {
+    isDisabled () {
       return this.buttonDisabled;
     },
-    resultData() {
+    resultData () {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
         return {};
       }
     },
-    agentApply() {
+    agentApply () {
       if (!this.dept.id) {
         return false;
       }
@@ -346,7 +346,7 @@ export default {
     entrustPop,
     supplement
   },
-  data() {
+  data () {
     return {
       houseUploadLoading: false,
       houseUploadflag: false,
@@ -373,11 +373,11 @@ export default {
     };
   },
   filters: {
-    mapFilter(value, ListName, resultValue = null) {
+    mapFilter (value, ListName, resultValue = null) {
       return util.countMapFilter(value, ListName, resultValue);
     }
   },
-  mounted() {
+  mounted () {
     let that = this;
 
     but.$on("applyAgent", () => {
@@ -405,8 +405,9 @@ export default {
     but.$on("submitApplyAgent", () => {
       that.submitApplyAgent = true;
     });
+    but.$on("callTaskAgent", this.openAgentPop);
   },
-  destroyed() {
+  destroyed () {
     but.$off("applyAgent");
     but.$off("applyKeyOwner");
     but.$off("applyOnlyOwner");
@@ -415,12 +416,13 @@ export default {
     but.$off("submitApplyOnlyOwner");
     but.$off("submitApplyRealOwner");
     but.$off("submitApplyAgent");
+    but.$off("callTaskAgent");
   },
   methods: {
     /**
      * 申请跟单人
      */
-    applyAgent() {
+    applyAgent () {
       let params = this.$refs.com.formData;
       let that = this;
       this.$refs.com.validateAllNotUpdata().then(e => {
@@ -454,14 +456,14 @@ export default {
                 that.$message(result.message);
               }
             })
-            .catch(e => {});
+            .catch(e => { });
         }
       });
     },
     /**
      * 申请跟单人打开弹窗
      */
-    openAgentPop() {
+    openAgentPop () {
       if (this.resultData.applyAgentVo != null) {
         this.$store.commit("updateStep2", this.resultData.applyAgentVo);
         this.audioList = this.resultData.applyAgentVo.saleUploadAudioList;
@@ -483,7 +485,7 @@ export default {
      * @param {String} popName 弹出层的Flag名字
      * @param {number} type 打开类型
      */
-    async openPop(popName, type, typeName, replaceType) {
+    async openPop (popName, type, typeName, replaceType) {
       if (type != 4) {
         let result = await houseCheck.isChecking(
           type,
@@ -520,7 +522,7 @@ export default {
     /**
      * refs 获取上传组件实例并且验证非空
      */
-    submitUpload() {
+    submitUpload () {
       let _that = this;
       let verifyFieldMap = new Map([
         ["outdoorImgList", "外景图"],
@@ -537,7 +539,7 @@ export default {
             name: _key,
             alias: _value,
             rules: "required",
-            getter: function() {
+            getter: function () {
               if (_that.$refs.houseUpload[_key] instanceof Array) {
                 return _that.$refs.houseUpload[_key];
               } else {
@@ -557,7 +559,7 @@ export default {
         } else {
           let url = `/agentHouse/propertyCheck/${
             this.houseUploadType == 12 ? "insertApplyFor" : "insertReplace"
-          }`;
+            }`;
           let resultIdList = [];
           verifyFieldMap.forEach((_value, _key) => {
             if (_that.$refs.houseUpload[_key] instanceof Array) {
@@ -586,7 +588,7 @@ export default {
                 this.$message.success(e.data.message);
               }
             })
-            .catch(e => {})
+            .catch(e => { })
             .finally(() => {
               this.houseUploadLoading = false;
               this.houseUploadflag = false;
