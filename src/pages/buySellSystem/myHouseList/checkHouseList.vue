@@ -825,7 +825,7 @@ export default {
     toHouseDetail(row) {
       this.$router.push({
         name: "houseDetails",
-        params: { houseId: row.eid, detailType: 4 }
+        params: { houseId: row.eid}
       });
     },
     querylistByParams() {
