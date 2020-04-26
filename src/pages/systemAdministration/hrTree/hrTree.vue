@@ -510,6 +510,7 @@ export default {
         ]
       },
       optInfo: {
+        id: 0,
         name: null,
         dep: null,
         job: null,
@@ -968,7 +969,6 @@ export default {
         "改成rpl5]";
     },
     userQuitSubmit() {
-      debugger
       if (
         this.quitPost.time == null ||
         this.quitPost.time == "" ||
