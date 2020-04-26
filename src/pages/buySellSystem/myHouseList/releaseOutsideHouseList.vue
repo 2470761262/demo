@@ -308,7 +308,7 @@ export default {
           default: true
         },
         {
-          prop: "agentPerName",
+          prop: "agentPer",
           label: "跟单人",
           width: "120",
           order: false,
@@ -355,7 +355,7 @@ export default {
           default: true
         },
         {
-          prop: "addName",
+          prop: "addPer",
           label: "添加人",
           width: "120",
           order: false,

@@ -180,6 +180,7 @@
             <h3>委托截止时间</h3>
             <el-date-picker class="replace-select"
                             size="mini"
+                            :picker-options="pickerOptions"
                             v-model="entrustTime"
                             type="date"
                             value-format="yyyy-MM-dd hh:mm:ss"
@@ -269,6 +270,24 @@ export default {
           { title: '独家委托', value: 1 },
           { title: '限时委托', value: 3 }
         ]
+      },
+      pickerOptions: {
+
+        disabledDate: (time) => {
+          if (this.pop.model == 3) {
+            const curDate = (new Date()).getTime()
+            const day = 90 * 24 * 3600 * 1000
+            const dateRegion = curDate + day
+            return time.getTime() < Date.now() - 8.64e7 ||
+              time.getTime() > dateRegion
+          } else if (this.pop.model == 1) {
+            const curDate = (new Date()).getTime()
+            const day = 180 * 24 * 3600 * 1000
+            const dateRegion = curDate + day
+            return time.getTime() < Date.now() - 8.64e7 ||
+              time.getTime() > dateRegion
+          }
+        }
       },
       entrustTime: '',//委托时间
       fileLoad: {//上传文件
@@ -469,6 +488,7 @@ export default {
         return [];
       }
     },
+
   }
 }
 
