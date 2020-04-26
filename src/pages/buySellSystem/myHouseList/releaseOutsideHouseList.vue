@@ -231,7 +231,7 @@ export default {
           label: "房源编号",
           width: "170",
           order: false,
-          disabled: true,
+          disabled: false,
           default: true
         },
         {
@@ -274,7 +274,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          formart: function(item){
+          formart: function (item) {
             debugger;
             return item.price + "万元"
           }
@@ -810,7 +810,7 @@ export default {
           if (data.code == 200) {
             that.pageJson.total = data.data.totalCount;
             that.tableData = data.data.list;
-          } else{
+          } else {
             console.log("查询我的跟单列表结果：" + result.message);
           }
         })

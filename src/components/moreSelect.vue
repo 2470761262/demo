@@ -493,6 +493,7 @@ export default {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryConstant();
       this.visible = true;
+      this.setTabRender();
       //this.$emit("moreSelectChange", "");
     },
     remoteMethod (query) {

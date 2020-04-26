@@ -194,7 +194,7 @@ export default {
           label: "房源编号",
           width: "170",
           order: false,
-          disabled: true,
+          disabled: false,
           default: true
         },
         {
@@ -399,18 +399,18 @@ export default {
     queryTabData () {
       console.log(this, "111");
     },
-    distributeEvent (e, id,dept) {
-      this[e](id,dept);
+    distributeEvent (e, id, dept) {
+      this[e](id, dept);
     },
     formatHouseType (row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook (id,dept) {
+    toLook (id, dept) {
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id, dept: dept } });
     },
-    showNoticeDetail (noticeId,dept) {
+    showNoticeDetail (noticeId, dept) {
       this.$router.push({ name: "houseDetails", params: { houseId: noticeId, dept: dept } });
     },
     queryShopDiskParams () {

@@ -198,7 +198,7 @@ export default {
           label: "房源编号",
           width: "170",
           order: false,
-          disabled: true,
+          disabled: false,
           default: true
         },
         {
