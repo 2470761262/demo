@@ -36,7 +36,7 @@
     <template v-slot:top>
       <div class="query-cell">
         <el-input placeholder="关键字搜索"
-        @input.enter="queryCompanyByParams"
+                  @keydown.native.enter="queryCompanyByParams"
                   v-model="queryData.keyword"
                   clearable>
           <template slot="prepend">关键字</template>
@@ -145,11 +145,11 @@ export default {
     this.queryCompanyDatas(1);
   },
   methods: {
-    expandChange(row,expanded){
-      if(expanded){
+    expandChange (row, expanded) {
+      if (expanded) {
         let rowData = JSON.parse(JSON.stringify(row));
         delete rowData.children;
-        this.$store.commit('setNavList',rowData);
+        this.$store.commit('setNavList', rowData);
       }
     },
     rowClick (row, column, event) {
@@ -313,7 +313,7 @@ export default {
     //设置权限
     setPosition (e) {
       var that = this;
-      this.$store.commit('setNavList',e);
+      this.$store.commit('setNavList', e);
       //跳转页面
       that.$router.push({ path: "/sys/setPosition", query: { id: e.id } });
     },
