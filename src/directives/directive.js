@@ -95,15 +95,48 @@ export default {
             }
         })
         //跟随父级scroll在当前可视窗口内居中
+        /**
+         * @example: 
+         * 
+         * 高级使用
+         * v-scrollCenter.overflowMain="{scroll:'el-main',offsetParent:'com-flex',top:'80'}"
+         * overflowMain 如果相对父级已经超出顶部则这时候相对body来显示
+         * scroll：需要滚动的父级
+         * offsetParent: 相对父级
+         * top :偏移量
+         * 
+         * 简单使用
+         * v-scrollCenter="'page-contenr-com'"
+         * page-contenr-com => 滚动的父级
+         */
         Vue.directive('scrollCenter', {
             bind (el, binding, vnode) {
+                let parent;
+                let scroll;
                 vnode.context.$nextTick(() => {
-                    let parent = document.querySelector('.' + binding.value);
+                    if (typeof binding.value == 'object') {
+                        parent = document.querySelector('.' + binding.value.scroll)
+                        scroll = function () {
+                            let offsetParent = document.querySelector('.' + binding.value.offsetParent)
+                            let parentOffset = util.getElementTop(offsetParent);
+                            parentOffset = parent.clientHeight - (parentOffset - (binding.value.top || 0));
+                            let elHeight = el.clientHeight / 2;
+                            let overHide = util.getElementTop(offsetParent) - parent.scrollTop - (binding.value.top || 0);
+                            if (overHide < 0 && binding.modifiers.overflowMain)
+                                overHide = Math.abs(overHide) / 2;
+                            else
+                                overHide = 0;
+
+                            el.style.cssText = `top:${(parentOffset + parent.scrollTop) / 2 - elHeight + overHide}px`
+                        }
+                    } else {
+                        parent = document.querySelector('.' + binding.value);
+                        scroll = function (e) {
+                            el.style.cssText = `top:${(parent.clientHeight / 2 + parent.scrollTop) - (el.offsetHeight / 2)}px`
+                        }
+                    }
                     scroll();
                     parent.addEventListener('scroll', util.debounce(200, scroll))
-                    function scroll (e) {
-                        el.style.cssText = `top:${(parent.clientHeight / 2 + parent.scrollTop) - (el.offsetHeight / 2)}px`
-                    }
                 })
             }
         })
