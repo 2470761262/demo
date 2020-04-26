@@ -229,7 +229,8 @@ export default {
       deep: true,
       handler: function (newValue) {
         let _that = this;
-        if (Object.keys(newValue).length > 0 && !this.isDisabled) {
+        if (Object.keys(newValue).length > 0 && !this.isDisabled && this.shareQRCode) {
+          console.log(newValue.data.shareQRCode, "newValuenewValuenewValuenewValue");
           this.qrData = new QRCode("qrcode", {
             width: 65,
             height: 65,
@@ -253,7 +254,7 @@ export default {
       this.shareQRCode = value;
     });
   },
-  mounted(){
+  mounted () {
     let that = this;
     but.$on("insertFollow", () => {
       that.insertFollow = true;
@@ -282,8 +283,8 @@ export default {
       impressionList: [], //印象数组
       isCollect: false,
       attentionFlag: false, //关注开关
-      insertFollow:false, //权限控制添加跟进按钮
-      insertReport:false,//权限控制添加举报按钮
+      insertFollow: false, //权限控制添加跟进按钮
+      insertReport: false,//权限控制添加举报按钮
       shareQRCode: false,
     };
   },

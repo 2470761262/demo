@@ -511,7 +511,6 @@ export default {
             }
           })
           .then(e => {
-            console.log(e.data);
             if (e.data.code == 200) {
               that.moreOptions = e.data.data.list;
             }
