@@ -139,12 +139,16 @@
           <div class="query-content-cell cell-interval45">
             <label class="query-checkbox">
               <input type="checkbox"
-                     @click="keySelect" />
+                     v-model="queryData.keyOwner"
+                     value="1"
+                     @click="keySelect">
               <span>钥匙</span>
             </label>
             <label class="query-checkbox">
               <input type="checkbox"
-                     @click="onlySelect" />
+                     v-model="queryData.isOnly"
+                     value="1"
+                     @click="onlySelect">
               <span>独家</span>
             </label>
           </div>
@@ -226,7 +230,7 @@ export default {
     definitionmenu,
     moreSelect
   },
-  data() {
+  data () {
     return {
       loading: true,
       agentLoading: true,
@@ -441,7 +445,7 @@ export default {
       showUpdateAgentPer: false //调配功能
     };
   },
-  mounted() {
+  mounted () {
     tableMenu.getTableMenu(this.tableColumnField, 2).then(e => {
       this.menuLoading = false;
       this.renderList = e;
@@ -449,21 +453,21 @@ export default {
     });
   },
   methods: {
-    defaultCell({ column }) {
+    defaultCell ({ column }) {
       if (column.label == "操作") {
         return "defaultCell cellItemSet";
       } else {
         return "cellItemSet";
       }
     },
-    setRowClass({ row }) {
+    setRowClass ({ row }) {
       if (row.outFollow) {
         if (row.outFollow >= 4) {
           return "cellOrange";
         }
       }
     },
-    houseType(rooms, hall, toilet) {
+    houseType (rooms, hall, toilet) {
       if (rooms != null && rooms != "" && rooms != undefined) {
         romms = rooms + "室";
       } else {
@@ -481,11 +485,11 @@ export default {
       }
       return rooms + hall + toilet;
     },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
       this.queryMyAgent(1);
     },
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.sortColumn = e.prop;
       this.sortType = e.order;
@@ -501,7 +505,7 @@ export default {
       });
       this.queryMyAgent(1);
     },
-    toHouseData(id, CommunityName, agentName, agentPer) {
+    toHouseData (id, CommunityName, agentName, agentPer) {
       console.log(agentPer, 11111);
       this.agentPer = agentPer;
       var that = this;
@@ -510,11 +514,11 @@ export default {
       that.toHouseId = id;
       that.toComName = CommunityName;
     },
-    querylistByParams() {
+    querylistByParams () {
       console.log(this.queryData.timeSelect);
       this.queryMyAgent(1);
     },
-    keySelect() {
+    keySelect () {
       if (this.data.isKey != "") {
         this.data.isKey = "";
       } else {
@@ -522,7 +526,7 @@ export default {
       }
       this.queryMyAgent(1);
     },
-    onlySelect() {
+    onlySelect () {
       if (this.data.isOnly != "") {
         this.data.isOnly = "";
       } else {
@@ -530,7 +534,7 @@ export default {
       }
       this.queryMyAgent(1);
     },
-    getName(name) {
+    getName (name) {
       this.newAgentName = name;
       console.log("==========" + this.newAgentName);
     },
@@ -646,7 +650,7 @@ export default {
     //     });
     // },
 
-    queryOnly() {
+    queryOnly () {
       if (this.data.isOnly != "") {
         this.data.isOnly = "";
       } else {
@@ -654,7 +658,7 @@ export default {
       }
       this.queryMyAgent(1);
     },
-    queryAddPerId(row) {
+    queryAddPerId (row) {
       let data = row;
       var that = this;
       this.AgentPerId = data;
@@ -675,7 +679,7 @@ export default {
           }
         });
     },
-    remove() {
+    remove () {
       let tab = this.tableColumn;
       let renderList = this.renderList;
       Object.assign(this.$data, this.$options.data.call(this));
@@ -684,7 +688,7 @@ export default {
       this.tabColumnChange(tab);
       this.queryMyAgent(1);
     },
-    queryCompanyPerList() {
+    queryCompanyPerList () {
       var that = this;
       that.agentLoading = true;
       this.$api
@@ -711,19 +715,19 @@ export default {
           that.agentLoading = false;
         });
     },
-    updateAgentPer() {
+    updateAgentPer () {
       var that = this;
       console.log(
         "得到跟单人id为:" +
-          that.newAgentName +
-          "======" +
-          JSON.stringify(that.AgentPerId.accountID)
+        that.newAgentName +
+        "======" +
+        JSON.stringify(that.AgentPerId.accountID)
       );
       console.log(
         "得到房源id为:" +
-          that.agentPer +
-          "------楼盘名称" +
-          that.AgentPerId.accountID
+        that.agentPer +
+        "------楼盘名称" +
+        that.AgentPerId.accountID
       );
       if (!that.newAgentName) {
         this.$message({
@@ -768,7 +772,7 @@ export default {
       that.dialogVisible = false;
       this.queryMyAgentParams();
     },
-    toHouseData(id, CommunityName, agentName, agentper) {
+    toHouseData (id, CommunityName, agentName, agentper) {
       var that = this;
       that.agentLoading = true;
       that.queryCompanyPerList();
@@ -780,7 +784,7 @@ export default {
       that.toHouseId = id;
       that.toComName = CommunityName;
     },
-    tabColumnChange(e, length = 0) {
+    tabColumnChange (e, length = 0) {
       this.tableColumn = e;
       if (length > 0) {
         let prop = e.map(item => {
@@ -789,26 +793,26 @@ export default {
         tableMenu.insert(prop, 2);
       }
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    formatHouseType(row, column) {
+    formatHouseType (row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook(id) {
+    toLook (id) {
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    queryMyAgentParams() {
+    queryMyAgentParams () {
       this.queryMyAgent(1);
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -836,7 +840,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -859,7 +863,7 @@ export default {
         });
       this.querylistByParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -882,7 +886,7 @@ export default {
         });
       this.querylistByParams();
     },
-    queryMyAgent(currentPage) {
+    queryMyAgent (currentPage) {
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -951,18 +955,18 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryMyAgentParams(1);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryMyAgent(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.queryMyAgent(val);
     }

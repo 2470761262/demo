@@ -85,9 +85,7 @@
           <template v-slot="scope">
             <el-button type="primary"
                        size="mini"
-                       @click="distributeEvent(item.methosName,scope.row.id)"
-                       v-for="(item,index) in isForBut(scope.row.id)"
-                       :key="index">{{item.name}}</el-button>
+                       @click="toLook(scope.row.id)">查看</el-button>
           </template>
         </el-table-column>
       </template>
@@ -105,7 +103,7 @@ export default {
     listPage,
     definitionmenu
   },
-  data() {
+  data () {
     return {
       loading: false,
       data: {
@@ -270,18 +268,18 @@ export default {
       tableData: []
     };
   },
-  created() {
+  created () {
     this.querySoleHouse(1, "id", "ascending");
   },
   methods: {
-    notNull(item, memo) {
+    notNull (item, memo) {
       if (item != null && item != "" && item != undefined) {
         return item.substring(0, item.indexOf(".") + 3) + memo;
       } else {
         return "——" + memo;
       }
     },
-    houseType(rooms, hall, toilet) {
+    houseType (rooms, hall, toilet) {
       let ro,
         ha,
         to = "";
@@ -302,15 +300,15 @@ export default {
       }
       return ro + ha + to;
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -337,7 +335,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -360,7 +358,7 @@ export default {
         });
       this.querySoleHouseParams();
     },
-    querySoleHouse(currentPage, column, type) {
+    querySoleHouse (currentPage, column, type) {
       var that = this;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       params.comId = that.data.comId;
@@ -392,7 +390,7 @@ export default {
           console.log(e);
         });
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -415,17 +413,21 @@ export default {
         });
       this.querySoleHouseParams();
     },
-    querySoleHouseParams() {
+    toLook (id, dept) {
+      var that = this;
+      that.$router.push({ name: "houseDetails", params: { houseId: id, dept: dept } });
+    },
+    querySoleHouseParams () {
       this.querySoleHouse(1, "id", "ascending");
     },
-    sortMethod(e) {
+    sortMethod (e) {
       this.querySoleHouse(1, e.prop, e.order);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.pageJson.pageSize = val;
       this.querySoleHouse(1, "id", "ascending");
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.querySoleHouse(val, "id", "ascending");
     }
   }
