@@ -250,7 +250,7 @@
              v-infinite-scroll="load">
           <transition-group name="el">
             <template v-for="item in pair.list">
-              <div :key="item.id">
+              <div :key="item.PairId">
                 <div class="list-content-item">
                   <div class="content-item-head ">
                     <div class="content-item-time">{{item.FollowTime}}</div>
@@ -467,6 +467,7 @@ export default {
           token: false
         })
         .then(e => {
+          debugger;
           let result = e.data;
           if (result.code == 200) {
             that.pair.list = [...that.pair.list, ...result.data.list];
