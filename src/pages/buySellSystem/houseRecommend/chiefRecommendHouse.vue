@@ -86,7 +86,7 @@
         </template>
         <el-table-column label="操作"
                          fixed="right"
-                         width="180">
+                         width="150">
           <template v-slot="scope">
             <el-button type="primary"
                        size="mini"
