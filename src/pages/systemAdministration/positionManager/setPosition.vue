@@ -118,8 +118,16 @@
                          style="cursor: pointer;"
                          :class="{'selected_btn':node.data.dataType == '2'}"
                          @click="operationCompany(node, data)">跨部门权限</el-button>
-                         <!-- (value)=>  node.data.callLimit = value.target.value -->
-              <input v-if="node.data.rtype=='量化按钮'" style="width:1rem;" size="mini" @input="changeInput($event,data)" :value="data.numLimit"/>
+              <!-- (value)=>  node.data.callLimit = value.target.value -->
+              <span v-if="node.data.rtype=='量化按钮'">
+                <input style="width:1rem;"
+                       size="mini"
+                       @input="changeInput($event,data)"
+                       :value="data.numLimit" />
+                <el-button size="mini"
+                           type="text"
+                           @click="submitNumLimit(data)">确定</el-button>
+              </span>
             </span>
           </span>
         </el-tree>
@@ -258,19 +266,40 @@ export default {
     this.loadPath();
   },
   methods: {
-    changeInput(event,nodeData){
-      console.log(event,nodeData);
-      this.$nextTick(()=>{
+    changeInput (event, nodeData) {
+      this.$nextTick(() => {
         nodeData.numLimit = event.target.value;
       })
 
-        console.log('---nodeData-------',nodeData);
-
-      this.ruleTreeData.forEach(item=>{
-        console.log('----------',item.numLimit);
-      })
-      
-       console.log(nodeData,);
+    },
+    submitNumLimit (data) {
+      let that = this;
+      let params = {
+        postId: that.postId,
+        postRouleCode: data.id,
+        numLimit: data.numLimit
+      };
+      that.$api
+        .put({
+          url: "/sys/position/update/numLimit",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            // that.pathList = result.data;
+            that.$message.success("设置成功");
+            console.log('设置numLimit成功！');
+          } else {
+            console.log("查询错误: ", result.message);
+            that.$message.error("查询错误: " + result.message);
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
     },
     loadPath () {
       let that = this;
@@ -487,12 +516,12 @@ export default {
         paramsObj.postRuleCode = keys;
       }
 
-
-      that.ruleTreeData.forEach(item=>{
+      console.log('-------ruleTreeData------', that.ruleTreeData);
+      that.ruleTreeData.forEach(item => {
         // if(item.callLimit>0)
-          console.log(item.numLimit,'======================')
+        console.log(item.numLimit, '======================')
       });
-      paramsObj.postNumLimit=0;
+
       that.fullscreenLoading = true;
       this.$api
         .put({
@@ -587,6 +616,7 @@ export default {
       //设置权限数据
       functionPointObj.companyId = that.currentCompanyGather;
       functionPointObj.deptId = that.currentDeptGather;
+      functionPointObj.numLimit=currentNode.data.numLimit;
       //设置树上的权限数据
       currentNode.data.companyGather = that.currentCompanyGather;
       currentNode.data.deptGather = that.currentDeptGather;
