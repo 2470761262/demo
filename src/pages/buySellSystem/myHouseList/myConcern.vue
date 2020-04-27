@@ -104,6 +104,7 @@
           </el-select>
           <el-select v-model="data.roomNo"
                      filterable
+                     clearable
                      @change="querylistByParams"
                      placeholder="房间号">
             <el-option v-for="item in roomNoList"
