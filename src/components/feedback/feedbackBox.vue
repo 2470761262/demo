@@ -50,7 +50,6 @@
                        :action="uploadUrl"
                        :headers="myHeader"
                        accept="image"
-                       :file-list="form.pics"
                        list-type="picture-card"
                        :on-success="uploadFinished"
                        :on-preview="handlePictureCardPreview"
@@ -81,6 +80,7 @@
       <div slot="footer"
            class="dialog-footer">
         <el-button type="primary"
+                   :loading="btnLoadding"
                    @click="goSubmit">提交</el-button>
       </div>
     </el-dialog>
@@ -115,15 +115,16 @@ export default {
     }
   },
   watch: {
-    $route(newValue, oldValue) {
+    $route (newValue, oldValue) {
       this.breadcrumbSet(newValue.matched);
     }
   },
-  data() {
+  data () {
     return {
       form: {
         pics: []
       },
+      btnLoadding: false,
       uploadUrl: "",
       myHeader: "",
       outerVisible: false,
@@ -133,13 +134,13 @@ export default {
       breadcrumbList: []
     };
   },
-  created() {
+  created () {
     this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
     this.myHeader = { tk: util.localStorageGet(TOKEN) };
     this.breadcrumbSet(this.$route.matched);
   },
   methods: {
-    breadcrumbSet(matched) {
+    breadcrumbSet (matched) {
       //需要过滤的Path;
       this.breadcrumbList = [];
       let filterPath = ["/buySellSystem/houseList"];
@@ -155,11 +156,11 @@ export default {
         });
       }
     },
-    hitOuterVisible() {
+    hitOuterVisible () {
       this.outerVisible = true;
       this.requestQrCode();
     },
-    handleRemove(file, fileList) {
+    handleRemove (file, fileList) {
       console.log(file, fileList);
       let that = this;
       if (file && file.response) {
@@ -168,7 +169,10 @@ export default {
           let urls = that.form.pics;
           urls.forEach(u => {
             if (u == url) {
-              that.form.pics.pop(url);
+              that.form.pics.pop({
+                name: url,
+                url: url
+              });
             }
           });
           this.form.pics = that.form.pics;
@@ -176,12 +180,12 @@ export default {
         }
       }
     },
-    handlePictureCardPreview(file) {
+    handlePictureCardPreview (file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
     //上传成功
-    uploadFinished(response, file, fileList) {
+    uploadFinished (response, file, fileList) {
       let that = this;
       if (response.code == 200) {
         if (!that.form.pics) {
@@ -191,12 +195,13 @@ export default {
       }
       console.log(this.uploadUrl, file, fileList, "file list ....");
     },
-    cleanFiles() {
+    cleanFiles () {
       this.$refs.upload.clearFiles();
     },
-    goSubmit() {
+    goSubmit () {
       let that = this;
       console.log(that.form, "save");
+      this.btnLoadding = true;
       that.$api
         .put({
           url: "/sys/onlineFeedback",
@@ -213,16 +218,21 @@ export default {
             this.outerVisible = false;
             this.form = {};
             //清空图片
-            this.cleanFiles();
+            // this.cleanFiles();
             this.$forceUpdate();
           } else {
             console.log("修改查询操作失败：" + result.message);
             this.$message.error("修改查询操作失败：" + result.message);
           }
+        }).catch(() => {
+
+        }).finally(() => {
+          console.log(1111111111111);
+          this.btnLoadding = false;
         });
     },
     //关闭之前调用
-    beforeClose(done) {
+    beforeClose (done) {
       if (!this.form) {
         done();
         return;
@@ -236,19 +246,19 @@ export default {
           .then(_ => {
             done();
           })
-          .catch(_ => {});
+          .catch(_ => { });
         this.form.pics = [];
       } else {
         done();
       }
     },
-    goBack(back) {
+    goBack (back) {
       this.$router.go(-1);
     },
-    goHome() {
+    goHome () {
       this.$router.push({ path: this.homeUrl });
     },
-    contactSocket(user) {
+    contactSocket (user) {
       console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
@@ -257,8 +267,8 @@ export default {
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
       console.log("用户【" + user + "】接入完毕");
     },
-    guid() {
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+    guid () {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (
         c
       ) {
         var r = (Math.random() * 16) | 0,
@@ -266,7 +276,7 @@ export default {
         return v.toString(16);
       });
     },
-    requestQrCode() {
+    requestQrCode () {
       //请求二维码参数说明，是一个js对象
       //remark 标题，用于显示在小程序上传资源页面标题；
       //resourceType 资源类型 默认picture,还有vedio,audio分别代表视频和音频--扫码后自动适应时选择图片还是视频还是音频
@@ -302,7 +312,7 @@ export default {
           console.log(e);
         });
     },
-    receiveMessage(r) {
+    receiveMessage (r) {
       //回调函数，用于接收扫码后发送的消息
       console.log(r, "消息内容");
       //。。。执行你需要的业务逻辑

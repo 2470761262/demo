@@ -324,6 +324,7 @@ export default {
         if (!detailData) {
           return true;
         }
+        //判断店公盘和责任盘，如果不是同一个店的不能申请跟单人
         if (detailData.plate == 1 && this.dept.id != loginDeptId) {
           return true;
         }
