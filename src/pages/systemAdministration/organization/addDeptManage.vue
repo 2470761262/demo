@@ -189,7 +189,7 @@
     </el-form>
 
     <div class="footerContainer el-top">
-      <el-button type="primary" @click="saveDept()">确定</el-button>
+      <el-button type="primary" @click="saveDept()" :disabled="btnDis">确定</el-button>
       <el-button type="primary" @click="back()">返回</el-button>
     </div>
   </div>
@@ -273,7 +273,8 @@ export default {
       filterText: "",
       treeLoading: true,
       checkedId: null,
-      checkedType: null
+      checkedType: null,
+      btnDis: false
     };
   },
   watch: {
@@ -331,6 +332,7 @@ export default {
       this.dialogVisible3 = false;
     },
     saveDept() {
+      this.btnDis = true;
       if (
         /^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(
           this.DeptEntity.tel
@@ -366,11 +368,15 @@ export default {
             //debugger;
             console.log("添加失败");
             console.log(e);
+          })
+          .finally(e => {
+            this.btnDis = false;
           });
       } else {
         this.$alert("", "请填写正确的电话号码!!!", {
           dangerouslyUseHTMLString: false
         });
+        this.btnDis = false;
       }
     },
     back() {
