@@ -6,6 +6,11 @@
   padding: 15px 15px 15px;
   border-radius: 10px;
   float: left;
+  overflow-x: auto;
+  background: #fff;
+  /deep/.el-tree-node__children{
+        overflow:visible;
+    }
 }
 
 .elControl {
