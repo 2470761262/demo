@@ -298,7 +298,7 @@
     ></entrustPop>
     <!-- 上传 -->
     <fixedPopup :visible.sync="houseUploadflag" title v-if="houseUploadflag" width="960px">
-      <houseUploadExtends ref="houseUpload" :replaceType="houseUploadType"></houseUploadExtends>
+      <houseUploadExtends ref="houseUpload" :replaceType="houseUploadType" :wxUploadFile="true"></houseUploadExtends>
       <template v-slot:floot>
         <div class="text-middle">
           <el-button
@@ -577,6 +577,7 @@ export default {
      */
     submitUpload () {
       let _that = this;
+      console.log("sssssssssssssssssss");
       let verifyFieldMap = new Map([
         ["outdoorImgList", "外景图"],
         ["livingRoomImgList", "客厅"],
