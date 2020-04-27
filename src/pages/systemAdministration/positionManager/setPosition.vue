@@ -118,11 +118,15 @@
                          style="cursor: pointer;"
                          :class="{'selected_btn':node.data.dataType == '2'}"
                          @click="operationCompany(node, data)">跨部门权限</el-button>
-                         <!-- (value)=>  node.data.callLimit = value.target.value -->
+              <!-- (value)=>  node.data.callLimit = value.target.value -->
               <span v-if="node.data.rtype=='量化按钮'">
-              <input style="width:1rem;" size="mini" @input="changeInput($event,data)" :value="data.numLimit"/>
-              <el-button size="mini"
-                         @click="submitNumLimit(data)">确定</el-button>
+                <input style="width:1rem;"
+                       size="mini"
+                       @input="changeInput($event,data)"
+                       :value="data.numLimit" />
+                <el-button size="mini"
+                           type="text"
+                           @click="submitNumLimit(data)">确定</el-button>
               </span>
             </span>
           </span>
@@ -262,26 +266,18 @@ export default {
     this.loadPath();
   },
   methods: {
-    changeInput(event,nodeData){
-      console.log(event,nodeData);
-      this.$nextTick(()=>{
+    changeInput (event, nodeData) {
+      this.$nextTick(() => {
         nodeData.numLimit = event.target.value;
       })
 
-        console.log('---nodeData-------',nodeData);
-
-      this.ruleTreeData.forEach(item=>{
-        console.log('----------',item.numLimit);
-      })
-      
-       console.log(nodeData,);
     },
-    submitNumLimit(data){
+    submitNumLimit (data) {
       let that = this;
       let params = {
-        postId:that.postId,
-        postRouleCode:data.id,
-        numLimit:data.numLimit
+        postId: that.postId,
+        postRouleCode: data.id,
+        numLimit: data.numLimit
       };
       that.$api
         .put({
@@ -519,10 +515,10 @@ export default {
         paramsObj.postRuleCode = keys;
       }
 
-      console.log('-------ruleTreeData------',that.ruleTreeData);
-      that.ruleTreeData.forEach(item=>{
+      console.log('-------ruleTreeData------', that.ruleTreeData);
+      that.ruleTreeData.forEach(item => {
         // if(item.callLimit>0)
-          console.log(item.numLimit,'======================')
+        console.log(item.numLimit, '======================')
       });
 
       that.fullscreenLoading = true;
