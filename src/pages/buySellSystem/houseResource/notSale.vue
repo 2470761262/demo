@@ -114,7 +114,8 @@
                      @click="queryNotSaleParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
-          <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
+          <moreSelect @moreSelectChange="moreSelectChange"
+                      deptUrl="/houseResource/getNotSale"></moreSelect>
         </div>
         <div class="query-content-cell cell-interval25">
           <definitionmenu :renderList="renderList"
@@ -245,7 +246,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -253,7 +254,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -261,7 +262,7 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -269,7 +270,7 @@ export default {
           prop: "addTime",
           label: "添加时间",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
