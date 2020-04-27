@@ -8,11 +8,11 @@
   background: #fff;
 }
 /deep/.cellOrange {
-  background: #d7bb1c;
+  // background: #d7bb1c;
   color: #fff;
 }
 /deep/.hover-row > :not(.defaultCell) {
-  background: #feb55f !important;
+  // background: #feb55f !important;
 }
 .page-row-flex {
   display: flex;
