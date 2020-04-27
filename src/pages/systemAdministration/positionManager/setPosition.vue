@@ -616,6 +616,7 @@ export default {
       //设置权限数据
       functionPointObj.companyId = that.currentCompanyGather;
       functionPointObj.deptId = that.currentDeptGather;
+      functionPointObj.numLimit=currentNode.data.numLimit;
       //设置树上的权限数据
       currentNode.data.companyGather = that.currentCompanyGather;
       currentNode.data.deptGather = that.currentDeptGather;
