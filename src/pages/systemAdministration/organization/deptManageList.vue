@@ -32,7 +32,7 @@
     height: 0;
     flex: 1 0 auto;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     &::-webkit-scrollbar {
       width: 4px;
       height: 4px;
@@ -49,6 +49,9 @@
     .scroll-content-tag {
       margin-right: 20px;
       margin-bottom: 10px;
+    }
+    /deep/.el-tree-node__children{
+        overflow:visible;
     }
   }
   /deep/ .el-input {
