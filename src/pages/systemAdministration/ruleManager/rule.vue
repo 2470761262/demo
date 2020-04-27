@@ -243,6 +243,11 @@ export default {
           id: 3,
           name: "主目录",
           type: "主目录"
+        },
+        {
+          id: 4,
+          name: "量化按钮",
+          type: "量化按钮"
         }
       ],
       delList: [
