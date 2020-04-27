@@ -277,7 +277,9 @@
                 v-if="houseUploadflag"
                 width="960px">
       <houseUploadExtends ref="houseUpload"
-                          :replaceType="houseUploadType"></houseUploadExtends>
+                          :replaceType="houseUploadType"
+                          :wxUploadFile="true"
+                          :isFromHouseTask="true"></houseUploadExtends>
       <template v-slot:floot>
         <div class="text-middle">
           <el-button v-if="submitApplyRealOwner"
@@ -468,14 +470,11 @@ export default {
                 this.resultData.agentPerName = util.localStorageGet(
                   "logindata"
                 ).userName;
-                this.resultData.agentPerDepartmentName = util.localStorageGet(
-                  "logindata"
-                ).deptName;
-                this.resultData.agentPerHeadImg = util.localStorageGet(
-                  "logindata"
-                ).headImgUrl.includes("http") ? util.localStorageGet(
-                  "logindata"
-                ).headImgUrl : null;
+                this.resultData.agentPerHeadImg = util
+                  .localStorageGet("logindata")
+                  .headImgUrl.includes("http")
+                  ? util.localStorageGet("logindata").headImgUrl
+                  : null;
               } else {
                 that.$message(result.message);
               }
@@ -548,6 +547,7 @@ export default {
      */
     submitUpload () {
       let _that = this;
+      console.log("sssssssssssssssssss");
       let verifyFieldMap = new Map([
         ["outdoorImgList", "外景图"],
         ["livingRoomImgList", "客厅"],

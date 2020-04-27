@@ -7,7 +7,11 @@
   padding: 15px 15px 15px;
   border-radius: 10px;
   font-size: 14px;
-
+  background: #fff;
+  overflow: auto;
+  /deep/.el-tree-node__children {
+    overflow: visible;
+  }
   /deep/ .el-input {
     margin: 10px 0 10px;
   }
@@ -114,6 +118,16 @@
                          style="cursor: pointer;"
                          :class="{'selected_btn':node.data.dataType == '2'}"
                          @click="operationCompany(node, data)">跨部门权限</el-button>
+              <!-- (value)=>  node.data.callLimit = value.target.value -->
+              <span v-if="node.data.rtype=='量化按钮'">
+                <input style="width:1rem;"
+                       size="mini"
+                       @input="changeInput($event,data)"
+                       :value="data.numLimit" />
+                <el-button size="mini"
+                           type="text"
+                           @click="submitNumLimit(data)">确定</el-button>
+              </span>
             </span>
           </span>
         </el-tree>
@@ -199,7 +213,7 @@ export default {
   computed: {
     ...mapState(["navAuthority"])
   },
-  data() {
+  data () {
     return {
       pathList: [],
       checkStrictly: true,
@@ -240,7 +254,7 @@ export default {
       currentNode: null
     };
   },
-  created() {
+  created () {
     let id = JSON.parse(this.$route.query.id);
     console.log(this.navAuthority.navList, "navAuthority.navList");
     //this.$store.dispatch("judgeNavList", id);
@@ -252,7 +266,42 @@ export default {
     this.loadPath();
   },
   methods: {
-    loadPath() {
+    changeInput (event, nodeData) {
+      this.$nextTick(() => {
+        nodeData.numLimit = event.target.value;
+      })
+
+    },
+    submitNumLimit (data) {
+      let that = this;
+      let params = {
+        postId: that.postId,
+        postRouleCode: data.id,
+        numLimit: data.numLimit
+      };
+      that.$api
+        .put({
+          url: "/sys/position/update/numLimit",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            // that.pathList = result.data;
+            that.$message.success("设置成功");
+            console.log('设置numLimit成功！');
+          } else {
+            console.log("查询错误: ", result.message);
+            that.$message.error("查询错误: " + result.message);
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+    loadPath () {
       let that = this;
       let params = {
         operationId: that.postId,
@@ -279,7 +328,7 @@ export default {
           console.log(e);
         });
     },
-    loadFunctionPoint() {
+    loadFunctionPoint () {
       let that = this;
       //读取功能点数据
       that.$api
@@ -307,7 +356,7 @@ export default {
           console.log(e);
         });
     },
-    loadUnitTree() {
+    loadUnitTree () {
       let that = this;
       //读取树数据
       that.$api
@@ -345,18 +394,18 @@ export default {
           that.treeLoading = false;
         });
     },
-    foreachNodes(res_list,list,type){
-      if(!res_list){
+    foreachNodes (res_list, list, type) {
+      if (!res_list) {
         res_list = [];
       }
-      if(list){
-        list.forEach(i =>{
-          res_list.push(i+','+type);
+      if (list) {
+        list.forEach(i => {
+          res_list.push(i + ',' + type);
         })
       }
       return res_list;
     },
-    operationCompany(node, data) {
+    operationCompany (node, data) {
       this.showCompanyTree = true;
       this.showSave = true;
       this.showOperationCompany = true;
@@ -366,19 +415,19 @@ export default {
       if (data.companyGather) {
         let gather = data.companyGather;
         let arrayGather = gather.split(",");
-        this.companyGather = this.foreachNodes([],arrayGather,0);
+        this.companyGather = this.foreachNodes([], arrayGather, 0);
       }
       if (data.deptGather) {
         let deptGather = data.deptGather;
         let deptArrayGather = deptGather.split(",");
-        this.companyGather = this.foreachNodes(this.companyGather,deptArrayGather,1);
+        this.companyGather = this.foreachNodes(this.companyGather, deptArrayGather, 1);
       }
       this.currentCompanyGather = null;
       this.currentDeptGather = null;
       this.putParams(node, "2");
       this.currentNode = node;
     },
-    operationSelf(node, data) {
+    operationSelf (node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
@@ -389,7 +438,7 @@ export default {
       //设置参数
       this.putParams(node, "0");
     },
-    operationDept(node, data) {
+    operationDept (node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
@@ -401,7 +450,7 @@ export default {
       this.putParams(node, "1");
     },
     //应用
-    savePosition(type) {
+    savePosition (type) {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -443,7 +492,7 @@ export default {
         });
     },
     //保存角色rule
-    savePositionRule() {
+    savePositionRule () {
       var that = this;
       let paramsObj = {};
       paramsObj.id = that.postId;
@@ -466,6 +515,13 @@ export default {
         //默认 pc端
         paramsObj.postRuleCode = keys;
       }
+
+      console.log('-------ruleTreeData------', that.ruleTreeData);
+      that.ruleTreeData.forEach(item => {
+        // if(item.callLimit>0)
+        console.log(item.numLimit, '======================')
+      });
+
       that.fullscreenLoading = true;
       this.$api
         .put({
@@ -484,7 +540,7 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(function() {
+        .finally(function () {
           that.fullscreenLoading = false;
         });
     },
@@ -492,7 +548,7 @@ export default {
     /**
      * 批量保存角色设置
      */
-    saveRolePermission() {
+    saveRolePermission () {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -524,12 +580,12 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(function() {
+        .finally(function () {
           that.fullscreenLoading = false;
         });
     },
     //保存跨部门权限
-    putParams(node, dataType) {
+    putParams (node, dataType) {
       let data = node.data;
       if (!data) {
         data = node;
@@ -582,7 +638,7 @@ export default {
         }
       }
     },
-    foreachList(list) {
+    foreachList (list) {
       let temp = "";
       list.forEach(id => {
         temp = temp + "," + id;
@@ -591,7 +647,7 @@ export default {
       return temp;
     },
     //遍历子节点
-    foreachChildren(childrenData, dataType) {
+    foreachChildren (childrenData, dataType) {
       let that = this;
       if (childrenData) {
         childrenData.forEach(data => {
@@ -600,7 +656,7 @@ export default {
       }
     },
     //动态加载节点
-    loadCompanyTreeNode(node, resolve) {
+    loadCompanyTreeNode (node, resolve) {
       if (node.level == 0) {
         this.node = node;
         this.resolve = resolve;
@@ -632,7 +688,7 @@ export default {
     },
 
     //选中节点
-    checkNode(data, checkedData) {
+    checkNode (data, checkedData) {
       if (checkedData.checkedNodes) {
         this.companyTreeSelectNode.companyIds = new Array();
         this.companyTreeSelectNode.deptIds = new Array();
@@ -653,12 +709,12 @@ export default {
       }
     },
     //取消
-    cancel() {
+    cancel () {
       var that = this;
       //跳转页面
       that.$router.push({ path: "/sys/positionManager" });
     },
-    filterNode(value, data) {
+    filterNode (value, data) {
       console.log("value：" + value);
       console.log(data);
       if (!value) return true;
@@ -668,7 +724,7 @@ export default {
     }
   },
   watch: {
-    filterText(val) {
+    filterText (val) {
       this.$refs.companyTree.filter(val);
     }
   }

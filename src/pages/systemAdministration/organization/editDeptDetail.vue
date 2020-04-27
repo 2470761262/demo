@@ -30,53 +30,70 @@
 </style>
 <template>
   <div class="form-content">
-    <el-form ref="form" :rules="rules" :model="DeptEntity" label-width="130px">
+    <el-form ref="form"
+             :rules="rules"
+             :model="DeptEntity"
+             label-width="130px">
       <div class="flex-row">
-        <el-form-item label="部门名称:" prop="deptName">
-          <el-input v-model="DeptEntity.deptName" readonly="readonly"></el-input>
+        <el-form-item label="部门名称:"
+                      prop="deptName">
+          <el-input v-model="DeptEntity.deptName"
+                    readonly="readonly"></el-input>
         </el-form-item>
-        <el-form-item label="部门首拼" prop="header">
-          <el-input v-model="DeptEntity.header" readonly="readonly"></el-input>
+        <el-form-item label="部门首拼"
+                      prop="header">
+          <el-input v-model="DeptEntity.header"
+                    readonly="readonly"></el-input>
         </el-form-item>
 
         <el-form-item label="电话:">
           <el-input v-model="DeptEntity.tel"></el-input>
         </el-form-item>
         <el-form-item label="开业时间">
-          <el-date-picker v-model="DeptEntity.regDate" type="date" placeholder="选择日期"></el-date-picker>
+          <el-date-picker v-model="DeptEntity.regDate"
+                          type="date"
+                          placeholder="选择日期"></el-date-picker>
         </el-form-item>
       </div>
       <div class="flex-row">
-        <el-form-item label="部门类型:" prop="deptType">
-          <el-select type="text" v-model="DeptEntity.deptType">
-            <el-option label="综合" :value="1" />
-            <el-option label="业务" :value="2" />
-            <el-option label="行政" :value="3" />
-            <el-option label="联营" :value="4" />
+        <el-form-item label="部门类型:"
+                      prop="deptType">
+          <el-select type="text"
+                     v-model="DeptEntity.deptType">
+            <el-option label="综合"
+                       :value="1" />
+            <el-option label="业务"
+                       :value="2" />
+            <el-option label="行政"
+                       :value="3" />
+            <el-option label="联营"
+                       :value="4" />
           </el-select>
         </el-form-item>
-        <el-form-item label="片区:" prop="isArea">
-          <el-select type="text" placeholder="是否片区" v-model="DeptEntity.isArea">
-            <el-option label="是片区" :value="1" />
-            <el-option label="不是片区" :value="0" />
+        <el-form-item label="片区:"
+                      prop="isArea">
+          <el-select type="text"
+                     placeholder="是否片区"
+                     v-model="DeptEntity.isArea">
+            <el-option label="是片区"
+                       :value="1" />
+            <el-option label="不是片区"
+                       :value="0" />
           </el-select>
         </el-form-item>
         <el-form-item label="部门编码:">
-          <el-input
-            type="text"
-            placeholder="请输入内容"
-            v-model="DeptEntity.deptCode"
-            maxlength="100"
-            show-word-limit
-          ></el-input>
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="DeptEntity.deptCode"
+                    maxlength="100"
+                    show-word-limit></el-input>
         </el-form-item>
-        <el-form-item label="选择负责人:" prop="perName">
-          <el-dialog
-            title="请选择:"
-            :visible.sync="dialogVisible"
-            width="50%"
-            :before-close="handleClose"
-          >
+        <el-form-item label="选择负责人:"
+                      prop="perName">
+          <el-dialog title="请选择:"
+                     :visible.sync="dialogVisible"
+                     width="50%"
+                     :before-close="handleClose">
             <!-- <list-page :parentData="$data"
                        highlight-current-row
                        @handleSizeChange="handleSizeChange"
@@ -91,87 +108,98 @@
                 </template>
               </template>
             </list-page>-->
-            <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
-            <el-tree
-              ref="treeForm"
-              :data="treeData"
-              node-key="nodeId"
-              show-checkbox
-              :props="defaultProps"
-              @check-change="handleCheckChange"
-              :highlight-current="true"
-              :filter-node-method="filterNode"
-              check-strictly
-              :action="''"
-              empty-text="暂无数据，请检查权限"
-              auto-expand-parent
-              :default-expanded-keys="curNodeId"
-              :default-checked-keys="curNodeId"
-              v-loading="treeLoading"
-            ></el-tree>
+            <el-input placeholder="输入关键字进行过滤"
+                      v-model="filterText"
+                      class="treeSearch"></el-input>
+            <el-tree ref="treeForm"
+                     :data="treeData"
+                     node-key="nodeId"
+                     show-checkbox
+                     :props="defaultProps"
+                     @check-change="handleCheckChange"
+                     :highlight-current="true"
+                     :filter-node-method="filterNode"
+                     check-strictly
+                     :action="''"
+                     empty-text="暂无数据，请检查权限"
+                     auto-expand-parent
+                     :default-expanded-keys="curNodeId"
+                     :default-checked-keys="curNodeId"
+                     v-loading="treeLoading"></el-tree>
           </el-dialog>
-          <el-input type="text" v-model="DeptEntity.perName" @focus="getDialogVisible()"></el-input>
+          <el-input type="text"
+                    v-model="DeptEntity.perName"
+                    @focus="getDialogVisible()"></el-input>
         </el-form-item>
       </div>
 
-      <el-form-item label="加入类型" prop="joinType">
-        <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.joinType">
-          <el-option label="直营" :value="1" />
-          <el-option label="加盟" :value="2" />
-          <el-option label="联营" :value="3" />
+      <el-form-item label="加入类型"
+                    prop="joinType">
+        <el-select type="text"
+                   placeholder="请输入内容"
+                   v-model="DeptEntity.joinType">
+          <el-option label="直营"
+                     :value="1" />
+          <el-option label="加盟"
+                     :value="2" />
+          <el-option label="联营"
+                     :value="3" />
         </el-select>
       </el-form-item>
 
       <el-form-item label="部门属性:">
-        <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.isCom" show-word-limit>
-          <el-option label="运营期" :value="1" />
-          <el-option label="拓展期" :value="2" />
+        <el-select type="text"
+                   placeholder="请输入内容"
+                   v-model="DeptEntity.isCom"
+                   show-word-limit>
+          <el-option label="运营期"
+                     :value="1" />
+          <el-option label="拓展期"
+                     :value="2" />
         </el-select>
       </el-form-item>
       <el-form-item label="选择店面:">
-        <el-dialog
-          title="请选择:"
-          :visible.sync="dialogVisible3"
-          width="40%"
-          :before-close="handleClose"
-        >
-          <list-page
-            :parentData="$data"
-            highlight-current-row
-            @handleSizeChange="handleSizeChange3"
-            @handleCurrentChange="handleCurrentChange3"
-            @current-change="handleChange3"
-          >
+        <el-dialog title="请选择:"
+                   :visible.sync="dialogVisible3"
+                   width="40%"
+                   :before-close="handleClose">
+          <list-page :parentData="$data"
+                     highlight-current-row
+                     @handleSizeChange="handleSizeChange3"
+                     @handleCurrentChange="handleCurrentChange3"
+                     @current-change="handleChange3">
             <template v-slot:tableColumn="cell">
               <template v-for="item in cell.tableData">
-                <el-table-column
-                  :prop="item.prop"
-                  :label="item.label"
-                  :width="item.width"
-                  :key="item.prop"
-                ></el-table-column>
+                <el-table-column :prop="item.prop"
+                                 :label="item.label"
+                                 :width="item.width"
+                                 :key="item.prop"></el-table-column>
               </template>
             </template>
           </list-page>
         </el-dialog>
-        <el-input
-          type="text"
-          v-model="DeptEntity.storeName"
-          @focus="getDialogVisible3()"
-          readonly="readonly"
-        ></el-input>
+        <el-input type="text"
+                  v-model="DeptEntity.storeName"
+                  @focus="getDialogVisible3()"
+                  readonly="readonly"></el-input>
       </el-form-item>
 
       <el-form-item label="地址:">
-        <el-input type="text" placeholder="请输入内容" v-model="DeptEntity.address"></el-input>
+        <el-input type="text"
+                  placeholder="请输入内容"
+                  v-model="DeptEntity.address"></el-input>
       </el-form-item>
       <el-form-item label="部门描述">
-        <el-input type="text" placeholder="请输入内容" v-model="DeptEntity.deptDesc"></el-input>
+        <el-input type="text"
+                  placeholder="请输入内容"
+                  v-model="DeptEntity.deptDesc"></el-input>
       </el-form-item>
 
       <div class="footerContainer el-top">
-        <el-button type="primary" @click="saveDept()">确定</el-button>
-        <el-button type="primary" @click="back()">返回</el-button>
+        <el-button type="primary"
+                   @click="saveDept()">确定</el-button>
+        <el-button type="primary"
+                   @click="back()">返回</el-button>
       </div>
     </el-form>
   </div>
@@ -186,7 +214,7 @@ export default {
     listPage
   },
   props: {},
-  data() {
+  data () {
     return {
       rules: {
         deptName: [
@@ -264,16 +292,16 @@ export default {
     };
   },
   watch: {
-    filterText(val) {
+    filterText (val) {
       this.$refs.treeForm.filter(val);
     },
-    filterTextChange(val) {
+    filterTextChange (val) {
       this.$refs.treeFormChange.filter(val);
     }
   },
   computed: {},
   methods: {
-    getDialogVisible() {
+    getDialogVisible () {
       //debugger;
       this.dialogVisible = true;
       this.getPrincipal(1);
@@ -284,7 +312,7 @@ export default {
         { prop: "positionName", label: "岗位" }
       ];
     },
-    getPrincipal(currentPage) {
+    getPrincipal (currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       params.coId = this.DeptEntity.coId;
       params.postId = this.$api
@@ -314,12 +342,13 @@ export default {
           console.log(e);
         });
     },
-    handleClose() {
+    handleClose () {
       this.dialogVisible = false;
       this.dialogVisible3 = false;
     },
-    saveDept() {
-      if (
+    saveDept () {
+
+      if (this.DeptEntity.tel == '' ||
         /^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(
           this.DeptEntity.tel
         )
@@ -362,7 +391,7 @@ export default {
         });
       }
     },
-    back() {
+    back () {
       if (this.backUrl === "hrTree") {
         this.$router.push({
           path: "/sys/hrTree/hrTree",
@@ -372,20 +401,20 @@ export default {
         this.$router.push({ path: "/sys/DeptManageList" });
       }
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.getPrincipal(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.getPrincipal(val);
     },
-    handleChange(row) {
+    handleChange (row) {
       console.log(row);
       this.DeptEntity.managerPer = row.accountId;
       this.DeptEntity.perName = row.perName;
     },
-    getStores(currentPage) {
+    getStores (currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       this.$api
         .post({
@@ -420,25 +449,25 @@ export default {
           console.log(e);
         });
     },
-    getDialogVisible3() {
+    getDialogVisible3 () {
       this.dialogVisible3 = true;
       this.getStores(1);
       this.tableDataColumn = [{ prop: "storeName", label: "门店" }];
     },
-    handleSizeChange3(val) {
+    handleSizeChange3 (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.getStores(1);
     },
-    handleCurrentChange3(val) {
+    handleCurrentChange3 (val) {
       this.getStores(val);
     },
-    handleChange3(row) {
+    handleChange3 (row) {
       console.log(row);
       this.DeptEntity.storeName = row.storeName;
       this.DeptEntity.sId = row.id;
     },
-    handleCheckChange(data, checked, node) {
+    handleCheckChange (data, checked, node) {
       if (checked == true) {
         if (data.type !== 2) {
           this.$message({
@@ -459,7 +488,7 @@ export default {
         console.log("当前类型：" + data.type + ",ID：" + data.businessId);
       }
     },
-    filterNode(value, data) {
+    filterNode (value, data) {
       console.log("value：" + value);
       console.log(data);
       if (!value) return true;
@@ -468,7 +497,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.id = this.$route.query.id;
     if (this.$route.query.back != null) {
       this.backUrl = this.$route.query.back;
@@ -477,7 +506,7 @@ export default {
       this.jumpNodeId = this.$route.query.cur;
     }
   },
-  mounted() {
+  mounted () {
     console.log("准备查询部门详情");
     this.$api
       .get({
