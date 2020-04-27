@@ -740,6 +740,8 @@ export default {
           } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
+          } else if (key == "bhId") {
+            params.roomNo = this.moreSelect.bhId;
           } else {
             params[key] = this.moreSelect[key];
           }
@@ -751,8 +753,8 @@ export default {
         if (that.data.cbId != null && that.data.cbId != "") {
           params.cbId = this.data.cbId;
         }
-        if (that.data.roomNo != null && this.data.RoomNo != "") {
-          params.bhId = this.data.roomNo;
+        if (that.data.roomNo != null && this.data.roomNo != "") {
+          params.roomNo = that.data.roomNo;
         }
         if (that.data.customName != null && that.data.customName != "") {
           params.customName = that.data.customName;
