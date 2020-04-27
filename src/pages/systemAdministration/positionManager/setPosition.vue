@@ -290,6 +290,7 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             // that.pathList = result.data;
+            that.$message.success("设置成功");
             console.log('设置numLimit成功！');
           } else {
             console.log("查询错误: ", result.message);
