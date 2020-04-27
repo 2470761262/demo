@@ -90,9 +90,7 @@
             <!-- <div v-if="scope.row.operation!=''"> -->
             <el-button type="primary"
                        size="mini"
-                       @click="distributeEvent(item.methosName,scope.row.id)"
-                       v-for="(item,index) in isForBut(scope.row.id)"
-                       :key="index">{{item.name}}</el-button>
+                       @click="toLook(scope.row.id)">查看</el-button>
             <!-- </div> -->
           </template>
         </el-table-column>
@@ -230,7 +228,11 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    }
+    },
+    toLook (id, dept) {
+      var that = this;
+      that.$router.push({ name: "houseDetails", params: { houseId: id, dept: dept } });
+    },
   }
 };
 </script>

@@ -184,7 +184,8 @@
         <div class="qr-content">
           <div id="qrcode"
                v-if="!buttonDisabled && shareQRCode"
-               :class="{'qrcode':qrData}">{{qrData?'':'二维码加载失败'}}</div>
+               :class="{'qrcode':qrData}"></div>
+          <div v-if="!qrData&&!buttonDisabled && shareQRCode">二维码加载失败</div>
           <div class="qr-code-msg">
             <h3 class="qr-title">房源编号:</h3>
             <div class="qr-NO">{{resultData.HouseNo}}</div>
@@ -230,6 +231,7 @@ export default {
       handler: function (newValue) {
         let _that = this;
         if (Object.keys(newValue).length > 0 && !this.isDisabled && this.shareQRCode) {
+          console.log(newValue.data.shareQRCode, "newValue.data.shareQRCode")
           this.qrData = new QRCode("qrcode", {
             width: 65,
             height: 65,
