@@ -118,6 +118,8 @@
                          style="cursor: pointer;"
                          :class="{'selected_btn':node.data.dataType == '2'}"
                          @click="operationCompany(node, data)">跨部门权限</el-button>
+                         <!-- (value)=>  node.data.callLimit = value.target.value -->
+              <input v-if="node.data.rtype=='量化按钮'" style="width:1rem;" size="mini" @input="changeInput($event,node.data.callLimit)" :value="node.data.callLimit"/>
             </span>
           </span>
         </el-tree>
@@ -256,6 +258,12 @@ export default {
     this.loadPath();
   },
   methods: {
+    changeInput(event,nodeData){
+      console.log(event,nodeData);
+      nodeData = event.target.value;
+
+       console.log(nodeData,);
+    },
     loadPath () {
       let that = this;
       let params = {
@@ -470,6 +478,13 @@ export default {
         //默认 pc端
         paramsObj.postRuleCode = keys;
       }
+
+      console.log(this.$refs.tree);
+      this.$refs.tree.data.forEach(item=>{
+        // if(item.callLimit>0)
+          console.log(item.callLimit,'======================')
+      });
+      paramsObj.postCallLimit=0;
       that.fullscreenLoading = true;
       this.$api
         .put({
