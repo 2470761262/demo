@@ -370,24 +370,46 @@ td {
             </td>
             <td>
               <el-form-item label="岗位" label-position="right">
-                <el-select v-model="optInfo.role" filterable placeholder="请选择" :disabled="RoleDis">
+                <!-- <el-select v-model="optInfo.role" filterable placeholder="请选择" :disabled="RoleDis">
                   <el-option
                     v-for="item in postOptions"
                     :key="item.roleID"
                     :label="item.roleName"
                     :value="item.roleID"
                   ></el-option>
-                </el-select>
+                </el-select>-->
+                <el-cascader
+                  ref="positionTree"
+                  @focus="selectPositionList()"
+                  @change="selectPositionNode()"
+                  :options="positionTree"
+                  :props="{
+                         label: 'labelName',
+                         value: 'businessId',
+                         children: 'childrenNodes'
+                       }"
+                  :show-all-levels="false"
+                  :disabled="RoleDis"
+                  v-model="optInfo.role"
+                ></el-cascader>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td>
               <el-form-item label="角色权限" label-position="right">
-                <el-select v-model="optInfo.post" filterable placeholder="请选择">
+                <!-- <el-select v-model="optInfo.post" filterable placeholder="请选择">
                   <el-option
                     v-for="item in positionNameList"
                     :key="item.id"
+                    :label="item.positionName"
+                    :value="item.id"
+                  ></el-option>
+                </el-select>-->
+                <el-select v-model="optInfo.post" @focus="selectRoleList()" placeholder="请选择">
+                  <el-option
+                    v-for="item in positionNameList"
+                    :key="item.value"
                     :label="item.positionName"
                     :value="item.id"
                   ></el-option>
@@ -545,7 +567,8 @@ export default {
       RoleDis: false,
       checkedIdChange: null,
       checkedTypeChange: null,
-      logStr: ""
+      logStr: "",
+      positionTree: []
     };
   },
   mounted() {
@@ -1181,6 +1204,58 @@ export default {
         .catch(e => {
           console.log("保存失败");
           console.log(e);
+        });
+    },
+    selectPositionList() {
+      let that = this;
+      that.$api
+        .post({
+          url: "/sys/tree/hr/tree/user/manager"
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.positionTree = result.data;
+            console.log(that.positionTree);
+          } else {
+            console.log("查询岗位结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询岗位失败");
+        });
+    },
+    selectPositionNode() {
+      let checkedNodes = this.$refs.positionTree.getCheckedNodes();
+      //this.employeeEntity.perRole = checkedNodes[0].data.businessId;
+      this.perPostReadOnly = false;
+      //   this.employeeEntity.positionName = "";
+      //   this.employeeEntity.perPost = "";
+      this.$forceUpdate();
+      this.optInfo.role = checkedNodes[0].data.businessId;
+      this.optInfo.post;
+      this.selectRoleList();
+    },
+    selectRoleList() {
+      let that = this;
+      let positionId = that.optInfo.role;
+      that.$api
+        .get({
+          url: "/sys/position/hrTree/list/" + positionId
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            that.positionNameList = result.data;
+            console.log(this.positionNameList);
+          } else {
+            console.log("查询角色结果：" + result.message);
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询角色失败");
         });
     }
   },

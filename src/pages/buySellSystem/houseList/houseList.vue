@@ -190,6 +190,7 @@
           <houselistlhousepair></houselistlhousepair>
         </div>
         <div class="hide-query"
+             v-scrollCenter.overflowMain="{scroll:'el-main',offsetParent:'com-flex',top:'80'}"
              @click="()=> querySelectFlag = !querySelectFlag "
              :class="querySelectFlag ? 'el-icon-d-arrow-right': 'el-icon-d-arrow-left'  "></div>
       </div>
