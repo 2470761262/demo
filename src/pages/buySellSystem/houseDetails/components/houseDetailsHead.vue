@@ -230,6 +230,7 @@ export default {
       deep: true,
       handler: function (newValue) {
         let _that = this;
+        console.log(Object.keys(newValue).length > 0 && !this.isDisabled && this.shareQRCode, "Object.keys(newValue).length > 0 && !this.isDisabled && this.shareQRCode")
         if (Object.keys(newValue).length > 0 && !this.isDisabled && this.shareQRCode) {
           console.log(newValue.data.shareQRCode, "newValue.data.shareQRCode")
           this.qrData = new QRCode("qrcode", {
