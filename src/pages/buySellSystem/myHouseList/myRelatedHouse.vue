@@ -286,7 +286,7 @@ export default {
           prop: "addTime",
           label: "添加时间",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },

@@ -705,6 +705,7 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             that.$store.commit("updateId", e.data.data);
+            that.$message.warning(e.data.message);
             return true;
           } else {
             return false;
