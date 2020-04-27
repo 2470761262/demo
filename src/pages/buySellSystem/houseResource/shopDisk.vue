@@ -36,7 +36,7 @@
           </el-select>
           <el-select v-model="data.roomNo"
                      filterable
-                     @change="queryShopDiskParams"
+                     @change="querySaleNotTrackParams"
                      placeholder="房间号">
             <el-option v-for="item in roomNoList"
                        :key="item.value"
@@ -49,7 +49,7 @@
           <el-input placeholder="姓名"
                     v-model="data.customName"
                     class="set-input120"
-                    @change="queryShopDiskParams"
+                    @change="querySaleNotTrackParams"
                     clearable />
         </div>
         <div class="query-content-cell cell-interval45">
@@ -57,7 +57,7 @@
           <el-input placeholder="业主电话"
                     v-model="data.tel"
                     class="set-input200"
-                    @change="queryShopDiskParams"
+                    @change="querySaleNotTrackParams"
                     clearable />
         </div>
         <div class="query-content-cell cell-interval45">
@@ -65,13 +65,13 @@
           <el-input placeholder="最小值"
                     v-model="data.minPrice"
                     class="set-input90"
-                    @change="queryShopDiskParams"
+                    @change="querySaleNotTrackParams"
                     clearable />
           <span class="cut-off-rule"></span>
           <el-input placeholder="最大值"
                     v-model="data.maxPrice"
                     class="set-input90"
-                    @change="queryShopDiskParams"
+                    @change="querySaleNotTrackParams"
                     clearable />
           <span class="query-cell-suffix">万</span>
         </div>
@@ -82,13 +82,13 @@
           <el-input placeholder="最小值"
                     v-model="data.minInArea"
                     class="set-input90"
-                    @change="queryShopDiskParams"
+                    @change="querySaleNotTrackParams"
                     clearable />
           <span class="cut-off-rule"></span>
           <el-input placeholder="最大值"
                     v-model="data.maxInArea"
                     class="set-input90"
-                    @change="queryShopDiskParams"
+                    @change="querySaleNotTrackParams"
                     clearable />
           <span class="query-cell-suffix">平方</span>
         </div>
@@ -97,7 +97,7 @@
           <el-date-picker v-model="data.timeSelect"
                           type="daterange"
                           class="set-data-pricker"
-                          @change="queryShopDiskParams"
+                          @change="querySaleNotTrackParams"
                           range-separator="至"
                           start-placeholder="开始日期"
                           end-placeholder="结束日期"
@@ -108,11 +108,11 @@
         <div class="query-content-cell cell-interval75">
           <el-button type="primary"
                      size="mini"
-                     @click="queryShopDiskParams">查询</el-button>
+                     @click="querySaleNotTrackParams">查询</el-button>
         </div>
         <div class="query-content-cell cell-interval25">
           <moreSelect @moreSelectChange="moreSelectChange"
-                      deptUrl="/houseResource/getShopDisk"></moreSelect>
+                      deptUrl="/houseResource/getSaleNotTrack"></moreSelect>
         </div>
         <div class="query-content-cell cell-interval25">
           <definitionmenu :renderList="renderList"
@@ -140,7 +140,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="toLook(scope.row.id,scope.row.perDept)">查看</el-button>
+                     @click="toLook(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
     </template>
@@ -180,12 +180,12 @@ export default {
       options: [],
       cbIdList: [],
       roomNoList: [],
-      moreSelect: [],
       pageJson: {
         currentPage: 1, //当前页码
         total: 0, //总记录数
         pageSize: 10 //每页条数
       },
+      moreSelect: [],
       tableColumnField: [
         {
           prop: "houseNo",
@@ -203,7 +203,22 @@ export default {
           disabled: true,
           default: true
         },
-
+        {
+          prop: "buildingName",
+          label: "楼栋号",
+          width: "90",
+          order: false,
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "roomNo",
+          label: "房间号",
+          width: "110",
+          order: false,
+          disabled: true,
+          default: true
+        },
         {
           prop: "inArea",
           label: "面积(m²)",
@@ -316,16 +331,6 @@ export default {
       ],
       tableColumn: [],
       tableData: [],
-      transitionOrderList: [
-        {
-          key: "outFollow",
-          value: "lastFollowTime"
-        },
-        {
-          key: "noSeenDay",
-          value: "lastPairTime"
-        }
-      ],
       transitionList: [
         {
           key: "bhId",
@@ -361,7 +366,7 @@ export default {
     };
   },
   mounted () {
-    tableMenu.getTableMenu(this.tableColumnField, 10).then((e) => {
+    tableMenu.getTableMenu(this.tableColumnField, 11).then((e) => {
       this.menuLoading = false;
       this.renderList = e;
       this.queryVerifyHouseDatas(1);
@@ -369,49 +374,35 @@ export default {
 
   },
   methods: {
+    moreSelectChange (e) {
+      this.moreSelect = e;
+      this.queryVerifyHouseDatas(1);
+    },
     sortMethod (e) {
       console.log(e, "eeee排序");
-      this.transitionOrderList.forEach(Element => {
-        if (Element.key == e.prop) {
-          this.sortColumn = Element.value;
-          if (e.order == "descending") {
-            this.sortType = "ascending";
-          } else {
-            this.sortType = "descending";
-          }
-        }
-      });
+      this.sortColumn = e.prop;
+      this.sortType = e.order;
       this.queryVerifyHouseDatas(1);
     },
     tabColumnChange (e, length = 0) {
       this.tableColumn = e;
       if (length > 0) {
         let prop = e.map(item => { return { prop: item.prop } })
-        tableMenu.insert(prop, 10);
+        tableMenu.insert(prop, 11);
       }
-    },
-    moreSelectChange (e) {
-      this.moreSelect = e;
-      this.queryVerifyHouseDatas(1);
     },
     queryTabData () {
       console.log(this, "111");
-    },
-    distributeEvent (e, id, dept) {
-      this[e](id, dept);
     },
     formatHouseType (row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook (id, dept) {
+    toLook (id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id, dept: dept } });
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    showNoticeDetail (noticeId, dept) {
-      this.$router.push({ name: "houseDetails", params: { houseId: noticeId, dept: dept } });
-    },
-    queryShopDiskParams () {
+    querySaleNotTrackParams () {
       this.queryVerifyHouseDatas(1);
     },
     remoteInput () {
@@ -422,9 +413,9 @@ export default {
     remoteMethod (query) {
       var that = this;
       if (query !== "") {
-        this.loading = true;
+        that.loading = true;
 
-        this.$api
+        that.$api
           .get({
             url: "/community/shopDisk",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -444,7 +435,7 @@ export default {
             }
           });
       } else {
-        this.options = [];
+        that.options = [];
       }
     },
     queryCBId () {
@@ -472,16 +463,7 @@ export default {
             that.cbIdList = e.data.data.list;
           }
         });
-      this.queryShopDiskParams();
-    },
-    Remove () {
-      let tab = this.tableColumn;
-      let renderList = this.renderList;
-      Object.assign(this.$data, this.$options.data.call(this));
-      this.renderList = renderList;
-      this.menuLoading = false;
-      this.tabColumnChange(tab);
-      this.queryVerifyHouseDatas(1);
+      this.querySaleNotTrackParams();
     },
     queryRoomNo () {
       var that = this;
@@ -504,7 +486,16 @@ export default {
             that.roomNoList = e.data.data.list;
           }
         });
-      this.queryShopDiskParams();
+      this.querySaleNotTrackParams();
+    },
+    Remove () {
+      let tab = this.tableColumn;
+      let renderList = this.renderList;
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.renderList = renderList;
+      this.menuLoading = false;
+      this.tabColumnChange(tab);
+      this.queryVerifyHouseDatas(1);
     },
     queryVerifyHouseDatas (currentPage) {
       var that = this;
@@ -531,6 +522,7 @@ export default {
       }
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
+
       this.$api
         .post({
           url: "/houseResource/getShopDisk",
@@ -560,7 +552,7 @@ export default {
     queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
-      this.queryShopDiskParams(1);
+      this.querySaleNotTrackParams(1);
     },
     handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
