@@ -44,49 +44,69 @@
 </style>
 <template>
   <div class="form-content">
-    <el-form ref="form" :rules="rules" :model="companyEntity" label-width="130px">
+    <el-form ref="form"
+             :rules="rules"
+             :model="companyEntity"
+             label-width="130px">
       <div class="flex-row">
-        <el-form-item label="公司名称:" prop="companyName">
-          <el-input
-            type="text"
-            placeholder="请输入内容"
-            v-model="companyEntity.companyName"
-            @input="GetPinyin()"
-          ></el-input>
+        <el-form-item label="公司名称:"
+                      prop="companyName">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="companyEntity.companyName"
+                    @input="GetPinyin()"></el-input>
         </el-form-item>
         <el-form-item label="公司名首拼:">
-          <el-input type="text" placeholder="请输入内容" v-model="companyEntity.header"></el-input>
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="companyEntity.header"></el-input>
         </el-form-item>
         <el-form-item label="电话:">
-          <el-input type="text" placeholder="请输入内容" v-model="companyEntity.tel"></el-input>
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="companyEntity.tel"></el-input>
         </el-form-item>
-        <el-form-item label="加入类型:">
-          <el-select type="text" placeholder="请输入内容" v-model="companyEntity.joinType">
-            <el-option label="直营" :value="1" />
-            <el-option label="加盟" :value="2" />
+        <el-form-item label="加入类型:"
+                      :required="true">
+          <el-select type="text"
+                     placeholder="请输入内容"
+                     v-model="companyEntity.joinType">
+            <el-option label="直营"
+                       :value="1" />
+            <el-option label="加盟"
+                       :value="2" />
           </el-select>
         </el-form-item>
       </div>
       <div class="flex-row">
         <el-form-item label="开业时间:">
-          <el-date-picker v-model="companyEntity.regDate" type="date" placeholder="选择日期"></el-date-picker>
+          <el-date-picker v-model="companyEntity.regDate"
+                          type="date"
+                          placeholder="选择日期"></el-date-picker>
         </el-form-item>
-        <el-form-item label="公司类型:">
-          <el-select type="text" placeholder="请输入内容" v-model="companyEntity.comType">
-            <el-option label="经纪" :value="1" />
-            <el-option label="物业" :value="2" />
-            <el-option label="平台" :value="3" />
-            <el-option label="金融" :value="4" />
-            <el-option label="代理" :value="5" />
+        <el-form-item label="公司类型:"
+                      :required="true">
+          <el-select type="text"
+                     placeholder="请输入内容"
+                     v-model="companyEntity.comType">
+            <el-option label="经纪"
+                       :value="1" />
+            <el-option label="物业"
+                       :value="2" />
+            <el-option label="平台"
+                       :value="3" />
+            <el-option label="金融"
+                       :value="4" />
+            <el-option label="代理"
+                       :value="5" />
           </el-select>
         </el-form-item>
-        <el-form-item label="选择负责人:" prop="managerPer">
-          <el-dialog
-            title="请选择:"
-            :visible.sync="dialogVisible1"
-            width="50%"
-            :before-close="handleClose1"
-          >
+        <el-form-item label="选择负责人:"
+                      prop="managerPer">
+          <el-dialog title="请选择:"
+                     :visible.sync="dialogVisible1"
+                     width="50%"
+                     :before-close="handleClose1">
             <!-- <list-page
               :parentData="$data"
               highlight-current-row
@@ -105,76 +125,79 @@
                 </template>
               </template>
             </list-page>-->
-            <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
-            <el-tree
-              ref="treeForm"
-              :data="treeData"
-              node-key="nodeId"
-              show-checkbox
-              :props="defaultProps"
-              @check-change="handleCheckChange"
-              :highlight-current="true"
-              :filter-node-method="filterNode"
-              check-strictly
-              :action="''"
-              empty-text="暂无数据，请检查权限"
-              auto-expand-parent
-              :default-expanded-keys="curNodeId"
-              :default-checked-keys="curNodeId"
-              v-loading="treeLoading"
-            ></el-tree>
+            <el-input placeholder="输入关键字进行过滤"
+                      v-model="filterText"
+                      class="treeSearch"></el-input>
+            <el-tree ref="treeForm"
+                     :data="treeData"
+                     node-key="nodeId"
+                     show-checkbox
+                     :props="defaultProps"
+                     @check-change="handleCheckChange"
+                     :highlight-current="true"
+                     :filter-node-method="filterNode"
+                     check-strictly
+                     :action="''"
+                     empty-text="暂无数据，请检查权限"
+                     auto-expand-parent
+                     :default-expanded-keys="curNodeId"
+                     :default-checked-keys="curNodeId"
+                     v-loading="treeLoading"></el-tree>
           </el-dialog>
-          <el-input
-            type="text"
-            placeholder="请输入内容"
-            v-model="companyEntity.perName"
-            @focus="getDialogVisible1()"
-          ></el-input>
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="companyEntity.perName"
+                    @focus="getDialogVisible1()"></el-input>
         </el-form-item>
         <el-form-item label="地址:">
-          <el-input type="text" placeholder="请输入内容" v-model="companyEntity.address" maxlength="100"></el-input>
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="companyEntity.address"
+                    maxlength="100"></el-input>
         </el-form-item>
       </div>
       <div class="flex-row flex-row40">
         <el-form-item label="公司描述:">
-          <el-input type="text" placeholder="请输入内容" v-model="companyEntity.coDesc"></el-input>
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="companyEntity.coDesc"></el-input>
         </el-form-item>
-        <el-form-item label="设置管辖区域:" prop="regionName">
-          <el-input
-            type="text"
-            placeholder="请输入内容"
-            v-model="companyEntity.regionName"
-            @focus="getDialogVisible()"
-          ></el-input>
+        <el-form-item label="设置管辖区域:"
+                      prop="regionName"
+                      :required="true">
+          <el-input type="text"
+                    placeholder="请输入内容"
+                    v-model="companyEntity.regionName"
+                    @focus="getDialogVisible()"></el-input>
         </el-form-item>
       </div>
 
       <div class="footerContainer el-top">
-        <el-button type="primary" @click="savecompany()">确定</el-button>
-        <el-button type="primary" @click="back()">返回</el-button>
+        <el-button type="primary"
+                   @click="savecompany()">确定</el-button>
+        <el-button type="primary"
+                   @click="back()">返回</el-button>
       </div>
     </el-form>
-    <fixed-popup
-      title="鑫家区域"
-      mask-hide-event
-      typeClass="system"
-      :visible.sync="dialogVisible"
-      width="30%"
-    >
-      <el-tree
-        :props="props"
-        :load="loadNode"
-        lazy
-        :default-expanded-keys=" treeExpanded"
-        @check-change="treecheck"
-        node-key="id"
-        ref="tree"
-        show-checkbox
-      ></el-tree>
+    <fixed-popup title="鑫家区域"
+                 mask-hide-event
+                 typeClass="system"
+                 :visible.sync="dialogVisible"
+                 width="30%">
+      <el-tree :props="props"
+               :load="loadNode"
+               lazy
+               :default-expanded-keys=" treeExpanded"
+               @check-change="treecheck"
+               node-key="id"
+               ref="tree"
+               show-checkbox></el-tree>
       <template v-slot:floot>
         <div class="flex-centent">
-          <el-button size="mini" @click="resetTree">重置</el-button>
-          <el-button size="mini" @click="getTreeCheck">确定</el-button>
+          <el-button size="mini"
+                     @click="resetTree">重置</el-button>
+          <el-button size="mini"
+                     @click="getTreeCheck">确定</el-button>
         </div>
       </template>
     </fixed-popup>
@@ -187,7 +210,7 @@ export default {
   components: {
     listPage
   },
-  data() {
+  data () {
     return {
       treeExpanded: [],
       props: {
@@ -264,7 +287,7 @@ export default {
   },
   computed: {},
   methods: {
-    loadNode(node, resolve) {
+    loadNode (node, resolve) {
       if (node.level == 0) {
         this.checked(this.id).then(e => {
           resolve(e);
@@ -278,10 +301,10 @@ export default {
         });
       }
     },
-    resetTree() {
+    resetTree () {
       this.$refs.tree.setCheckedKeys([]);
     },
-    getTreeCheck() {
+    getTreeCheck () {
       let arr = this.$refs.tree.getCheckedNodes().filter(item => {
         return item.LevelType != 2;
       });
@@ -297,7 +320,7 @@ export default {
         .join(",");
       this.dialogVisible = false;
     },
-    treecheck(data, isChecked) {
+    treecheck (data, isChecked) {
       if (isChecked && data.LevelType == 2) {
         if (this.treeExpanded.length != 0) {
           this.treeExpanded.splice(0, 1, data.id);
@@ -306,11 +329,11 @@ export default {
         }
       }
     },
-    getDialogVisible1() {
+    getDialogVisible1 () {
       this.dialogVisible1 = true;
       this.getPrincipal(1);
     },
-    getPrincipal(currentPage) {
+    getPrincipal (currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
       params.coId = this.companyEntity.coId;
       params.postId = this.$api
@@ -340,23 +363,23 @@ export default {
           console.log(e);
         });
     },
-    handleClose1() {
+    handleClose1 () {
       this.dialogVisible1 = false;
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.getPrincipal(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.getPrincipal(val);
     },
-    handleChange(row) {
+    handleChange (row) {
       console.log(row);
       this.companyEntity.managerPer = row.accountId;
       this.companyEntity.managerPerName = row.perName;
     },
-    checked(id) {
+    checked (id) {
       return this.$api
         .get({
           url: "/company/regionName?id=" + id
@@ -375,24 +398,24 @@ export default {
           this.$message.error(e.message);
         });
     },
-    handleCheckAllChange(val) {
+    handleCheckAllChange (val) {
       this.checkedCities = val ? this.regionName : [];
       this.isIndeterminate = false;
     },
-    handleCheckedCitiesChange(value) {
+    handleCheckedCitiesChange (value) {
       let checkedCount = value.length;
       this.checkAll = checkedCount === this.regionName.length;
       this.isIndeterminate =
         checkedCount > 0 && checkedCount < this.regionName.length;
     },
-    getDialogVisible(id) {
+    getDialogVisible (id) {
       this.dialogVisible = true;
     },
-    setDialogVisible() {
+    setDialogVisible () {
       this.dialogVisible = false;
     },
 
-    handleClose(done) {
+    handleClose (done) {
       console.log(this.checkedCities);
       this.companyEntity.RegionName = "";
       this.dialogVisible = false;
@@ -410,7 +433,7 @@ export default {
         }
       }
     },
-    savecompany() {
+    savecompany () {
       if (
         /^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(
           this.companyEntity.tel
@@ -453,7 +476,7 @@ export default {
         });
       }
     },
-    back() {
+    back () {
       if (this.backUrl === "hrTree") {
         this.$router.push({
           path: "/sys/hrTree/hrTree",
@@ -463,7 +486,7 @@ export default {
         this.$router.push({ path: "/sys/companyList" });
       }
     },
-    GetPinyin() {
+    GetPinyin () {
       if (
         this.companyEntity != null &&
         this.companyEntity.companyName != null &&
@@ -489,7 +512,7 @@ export default {
           });
       }
     },
-    handleCheckChange(data, checked, node) {
+    handleCheckChange (data, checked, node) {
       if (checked == true) {
         if (data.type !== 2) {
           this.$message({
@@ -510,7 +533,7 @@ export default {
         console.log("当前类型：" + data.type + ",ID：" + data.businessId);
       }
     },
-    filterNode(value, data) {
+    filterNode (value, data) {
       console.log("value：" + value);
       console.log(data);
       if (!value) return true;
@@ -519,7 +542,7 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.companyId = this.$route.query.companyId;
     if (this.$route.query.back != null) {
       this.backUrl = this.$route.query.back;
@@ -528,7 +551,7 @@ export default {
       this.jumpNodeId = this.$route.query.cur;
     }
   },
-  mounted() {
+  mounted () {
     console.log("准备查询公司详情");
     this.$api
       .get({
@@ -589,10 +612,10 @@ export default {
       });
   },
   watch: {
-    filterText(val) {
+    filterText (val) {
       this.$refs.treeForm.filter(val);
     },
-    filterTextChange(val) {
+    filterTextChange (val) {
       this.$refs.treeFormChange.filter(val);
     }
   }

@@ -86,13 +86,11 @@
         </template>
         <el-table-column label="操作"
                          fixed="right"
-                         width="180">
+                         width="150">
           <template v-slot="scope">
             <el-button type="primary"
                        size="mini"
-                       @click="distributeEvent(item.methosName,scope.row.id)"
-                       v-for="(item,index) in isForBut(scope.row.id)"
-                       :key="index">{{item.name}}</el-button>
+                       @click="toLook(scope.row.id)">查看</el-button>
           </template>
         </el-table-column>
 
@@ -111,7 +109,7 @@ export default {
     listPage,
     definitionmenu
   },
-  data() {
+  data () {
     return {
       loading: false,
 
@@ -268,37 +266,37 @@ export default {
       tableData: []
     };
   },
-  mounted() {
+  mounted () {
     this.queryVerifyHouseDatas(1, "id", "ascending");
   },
   methods: {
-    sortMethod(e) {
+    sortMethod (e) {
       console.log(e, "eeee排序");
       this.queryVerifyHouseDatas(1, e.prop, e.order);
     },
-    tabColumnChange(e) {
+    tabColumnChange (e) {
       this.tableColumn = e;
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this, "111");
     },
-    formatHouseType(row, column) {
+    formatHouseType (row, column) {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook(id) {
+    toLook (id) {
       var that = this;
       that.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    queryChiefHouseParams() {
+    queryChiefHouseParams () {
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -326,7 +324,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -349,7 +347,7 @@ export default {
         });
       this.queryChiefHouseParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -372,7 +370,7 @@ export default {
         });
       this.queryChiefHouseParams();
     },
-    queryVerifyHouseDatas(currentPage, column, type) {
+    queryVerifyHouseDatas (currentPage, column, type) {
       var that = this;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       params.comId = that.data.comId;
@@ -414,18 +412,18 @@ export default {
         });
     },
 
-    handleClick() {},
-    queryTabData() {
+    handleClick () { },
+    queryTabData () {
       this.$emit("queryTabData");
       console.log(this.queryData);
       this.queryChiefHouseParams(1);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       console.log(`设置了每页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1, "id", "ascending");
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       console.log(`当前页: ${val}`);
       this.queryVerifyHouseDatas(val, "id", "ascending");
     }

@@ -292,11 +292,15 @@
           <div class="query-content-cell cell-interval45">
             <label class="query-checkbox">
               <input type="checkbox"
+                     v-model="queryData.keyOwner"
+                     value="1"
                      @click="keySelect">
               <span>钥匙</span>
             </label>
             <label class="query-checkbox">
               <input type="checkbox"
+                     v-model="queryData.isOnly"
+                     value="1"
                      @click="onlySelect">
               <span>独家</span>
             </label>

@@ -105,7 +105,7 @@ export default {
   components: {
     listPage
   },
-  data() {
+  data () {
     return {
       loading: false, //控制表格加载动画提示
       pageJson: {
@@ -156,23 +156,23 @@ export default {
       }
     };
   },
-  created() {
+  created () {
     this.querylist();
   },
   methods: {
-    navPage(id) {
+    navPage (id) {
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
-    handleSizeChange(e) {
+    handleSizeChange (e) {
       this.pageJson.pageSize = e;
       this.querylist();
     },
-    remoteCommunityFoucus() {
+    remoteCommunityFoucus () {
       if (this.communitySelect.list.length == 0) {
         this.remoteCommunity();
       }
     },
-    remoteCommunity(query = "") {
+    remoteCommunity (query = "") {
       this.communitySelect.loading = true;
       this.$api
         .post({
@@ -193,7 +193,7 @@ export default {
           this.communitySelect.loading = false;
         });
     },
-    querylist(currentPage) {
+    querylist (currentPage) {
       let _that = this;
       let params = {
         limit: _that.pageJson.pageSize,
@@ -207,7 +207,7 @@ export default {
       };
       this.loading = true;
       this.$api
-        .post({
+        .get({
           url: "/agent_house/listFollowHouse",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params

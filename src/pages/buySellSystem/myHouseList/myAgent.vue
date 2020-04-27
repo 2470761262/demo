@@ -21,7 +21,7 @@
 }
 </style>
 <template>
-  <div class="page-row-flex ">
+  <div class="page-row-flex">
     <list-page @sort-change="sortMethod"
                :parentData="$data"
                :cellClass="defaultCell"
@@ -139,12 +139,16 @@
           <div class="query-content-cell cell-interval45">
             <label class="query-checkbox">
               <input type="checkbox"
-                     @click="keySelect" />
+                     v-model="queryData.keyOwner"
+                     value="1"
+                     @click="keySelect">
               <span>钥匙</span>
             </label>
             <label class="query-checkbox">
               <input type="checkbox"
-                     @click="onlySelect" />
+                     v-model="queryData.isOnly"
+                     value="1"
+                     @click="onlySelect">
               <span>独家</span>
             </label>
           </div>
@@ -179,6 +183,7 @@
                        @click="toLook(scope.row.id)">查看</el-button>
             <el-button type="primary"
                        size="mini"
+                       :disabled="btnDeployment"
                        @click="toHouseData(scope.row.id,scope.row.communityName,scope.row.agentName,scope.row.agentPer)">调配</el-button>
           </template>
         </el-table-column>
@@ -438,7 +443,8 @@ export default {
       ], //转换排序字段数组
       menuLoading: true, //自定义菜单
       renderList: [],
-      showUpdateAgentPer: false //调配功能
+      showUpdateAgentPer: false, //调配功能
+      btnDeployment: true
     };
   },
   mounted () {
@@ -936,6 +942,9 @@ export default {
               btnList.forEach(btn => {
                 if (btn.rName == "调配") {
                   that.showUpdateAgentPer = true;
+                }
+                if (btn.rUrl == "btnDeployment") {
+                  that.btnDeployment = false;
                 }
               });
             }

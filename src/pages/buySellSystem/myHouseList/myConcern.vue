@@ -104,6 +104,7 @@
           </el-select>
           <el-select v-model="data.roomNo"
                      filterable
+                     clearable
                      @change="querylistByParams"
                      placeholder="房间号">
             <el-option v-for="item in roomNoList"
@@ -182,13 +183,17 @@
         <div class="query-content-cell cell-interval45">
           <label class="query-checkbox">
             <input type="checkbox"
+                   v-model="queryData.keyOwner"
+                   value="1"
                    @click="keySelect">
             <span>钥匙</span>
           </label>
           <label class="query-checkbox">
             <input type="checkbox"
+                   v-model="queryData.isOnly"
+                   value="1"
                    @click="onlySelect">
-            <span>独家委托</span>
+            <span>独家</span>
           </label>
         </div>
         <div class="query-content-cell cell-interval45">
@@ -740,6 +745,8 @@ export default {
           } else if (key == "followTime" && this.moreSelect[key] !== "") {
             params.beginFollowTime = this.moreSelect[key][0];
             params.endFollowTime = this.moreSelect[key][1];
+          } else if (key == "bhId") {
+            params.roomNo = this.moreSelect.bhId;
           } else {
             params[key] = this.moreSelect[key];
           }
@@ -751,8 +758,8 @@ export default {
         if (that.data.cbId != null && that.data.cbId != "") {
           params.cbId = this.data.cbId;
         }
-        if (that.data.roomNo != null && this.data.RoomNo != "") {
-          params.bhId = this.data.roomNo;
+        if (that.data.roomNo != null && this.data.roomNo != "") {
+          params.roomNo = that.data.roomNo;
         }
         if (that.data.customName != null && that.data.customName != "") {
           params.customName = that.data.customName;

@@ -136,13 +136,11 @@
       </template>
       <el-table-column label="操作"
                        fixed="right"
-                       min-width="220">
+                       min-width="150">
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="distributeEvent(item.methosName,scope.row.id)"
-                     v-for="(item,index) in isForBut(scope.row.id)"
-                     :key="index">{{item.name}}</el-button>
+                     @click="toLook(scope.row.id)">查看</el-button>
         </template>
       </el-table-column>
     </template>
@@ -243,7 +241,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -251,7 +249,7 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -259,7 +257,7 @@ export default {
           prop: "noSeenDay",
           label: "未被看天数",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },
@@ -267,7 +265,7 @@ export default {
           prop: "addTime",
           label: "添加时间",
           width: "120",
-          order: false,
+          order: true,
           disabled: false,
           default: true
         },

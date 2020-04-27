@@ -239,6 +239,23 @@ export default {
           });
         }
       }
+    },
+    shareQRCode: {
+      deep: true,
+      handler: function (value) {
+        let _that = this;
+        if (Object.keys(this.resultData).length > 0 && !this.isDisabled && value) {
+          this.$nextTick(() => {
+            this.qrData = new QRCode("qrcode", {
+              width: 65,
+              height: 65,
+              text: _that.resultData.shareQRCode,
+              colorDark: "#000",
+              colorLight: "#fff"
+            });
+          })
+        }
+      }
     }
   },
   components: {
@@ -249,9 +266,7 @@ export default {
   created () {
     this.getImpressionList();
     this.getisCollect();
-    but.$on("shareQRCode", (value) => {
-      this.shareQRCode = value;
-    });
+
   },
   mounted () {
     let that = this;
@@ -260,6 +275,9 @@ export default {
     });
     but.$on("insertReport", () => {
       that.insertReport = true;
+    });
+    but.$on("shareQRCode", (value) => {
+      this.shareQRCode = value;
     });
   },
   computed: {
