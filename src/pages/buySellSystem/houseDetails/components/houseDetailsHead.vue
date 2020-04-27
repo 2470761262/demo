@@ -229,9 +229,7 @@ export default {
       deep: true,
       handler: function (newValue) {
         let _that = this;
-        console.log(Object.keys(newValue).length > 0, !this.isDisabled, this.shareQRCode, "this.shareQRCodethis.shareQRCodethis.shareQRCodethis.shareQRCode");
-        if (Object.keys(newValue).length > 0 && !this.isDisabled) {
-          console.log(newValue.data.shareQRCode, "newValue.data.shareQRCode")
+        if (Object.keys(newValue).length > 0 && !this.isDisabled && this.shareQRCode) {
           this.qrData = new QRCode("qrcode", {
             width: 65,
             height: 65,
@@ -239,6 +237,23 @@ export default {
             colorDark: "#000",
             colorLight: "#fff"
           });
+        }
+      }
+    },
+    shareQRCode: {
+      deep: true,
+      handler: function (value) {
+        let _that = this;
+        if (Object.keys(this.resultData).length > 0 && !this.isDisabled && value) {
+          this.$nextTick(() => {
+            this.qrData = new QRCode("qrcode", {
+              width: 65,
+              height: 65,
+              text: _that.resultData.shareQRCode,
+              colorDark: "#000",
+              colorLight: "#fff"
+            });
+          })
         }
       }
     }
@@ -263,7 +278,6 @@ export default {
     });
     but.$on("shareQRCode", (value) => {
       this.shareQRCode = value;
-      //this.houseDetails.change = "11";
     });
   },
   computed: {
