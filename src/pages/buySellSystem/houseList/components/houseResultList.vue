@@ -569,7 +569,7 @@ export default {
       if (item.hasOwnProperty("houseId")) {
         id = item.houseId;
       }
-      this.$router.push({ name: "houseDetails", params: { houseId: id } });
+      this.$router.push({ name: "houseDetails", params: { houseId: id,dept:item.perDept } });
     },
     //远程排序
     sortMethod (item) {

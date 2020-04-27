@@ -140,7 +140,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="toLook(scope.row.id)">查看</el-button>
+                     @click="toLook(scope.row.id,scope.row.perDept)">查看</el-button>
         </template>
       </el-table-column>
     </template>
