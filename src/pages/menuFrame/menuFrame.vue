@@ -98,7 +98,7 @@ export default {
   },
   data() {
     return {
-      asideNavFlag: true,
+      asideNavFlag: false,
       loginUserData: {},
       menuDatasInParent: []
     };
@@ -109,9 +109,9 @@ export default {
       this.asideNavFlag = !util.localStorageGet("nest");
     });
     this.loginUserData = util.localStorageGet(LOGINDATA);
-    if (this.loginUserData.menuNodes) {
-      this.menuDatasInParent = this.loginUserData.menuNodes;
-    }
+    // if (this.loginUserData && this.loginUserData.menuNodes) {
+    //   this.menuDatasInParent = this.loginUserData.menuNodes;
+    // }
   }
 };
 </script>
