@@ -178,6 +178,8 @@ export default {
         return wrapper;
     },
     getElementTop (el) {
+        if (!el)
+            return null;
         let actualTop = el.offsetTop
         let current = el.offsetParent
         while (current !== null) {

@@ -1,21 +1,20 @@
 import api from '@/api/require';
 import themePackers from "@/themePackers/themePackers";
-
-
-
-
-
-export function getColor(){
+import util from '@/util/util';
+import {
+    TREMEPACKERS,
+} from '@/util/constMap';
+export function getColor () {
+    themePackers.createImport();
     api.get({
-        url:'/sys/skin/color'
-    }).then((e)=>{
-        console.log(e);
+        url: '/sys/skin/color'
+    }).then((e) => {
         return e.data.data
-       
-     }).then((e)=>{
-        console.log(e,'them111111111');
-        themePackers.createImport(e);
-     })
+    }).then((e) => {
+        if (util.localStorageGet(TREMEPACKERS) != e) {
+            themePackers.createImport(e);
+        }
+    })
 }
 
 

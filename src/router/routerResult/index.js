@@ -885,5 +885,13 @@ export default [{
     component: () =>
         import( /* webpackChunkName: "authorityConfigurationSetAuthority" */ "@/pages/systemAdministration/authorityConfiguration/setAuthority.vue")
 },
-
+{
+    //系统管理 公司权限配置
+    path: "/customersSystem/addCustomers",
+    meta: {
+        title: '新增客户'
+    },
+    component: () =>
+        import( /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue")
+}
 ]

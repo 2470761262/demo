@@ -55,6 +55,7 @@
           <span>新客源系统</span>
         </template>
         <el-menu-item index="/customersSystem/customersIframe">客源管理</el-menu-item>
+        <el-menu-item index="/customersSystem/addCustomers">录入客户</el-menu-item>
       </el-submenu>
       <el-submenu :index="item.id+''"
                   :key="item.id"
@@ -73,12 +74,12 @@
 <script>
 export default {
   props: ["menuNodeDatas"],
-  data() {
+  data () {
     return {
       collapse: false
     };
   },
-  created() {
+  created () {
     let that = this;
     window.addEventListener("resize", e => {
       if (window.innerWidth < 1400) {

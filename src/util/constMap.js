@@ -37,7 +37,7 @@ export const DECORATION = [{ //装修 decoration
     value: 1
 },
 {
-    key: "简单装",
+    key: "简单装修",
     value: 2
 },
 {
@@ -432,5 +432,16 @@ export const ONLYTYPE = [//委托类型
     {
         key: "限时",
         value: 3
+    }
+]
+
+export const SEX = [//性别
+    {
+        key: "男",
+        value: 1
+    },
+    {
+        key: "女",
+        value: 0
     }
 ]

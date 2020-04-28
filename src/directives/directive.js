@@ -119,6 +119,8 @@ export default {
                         scroll = function () {
                             let offsetParent = document.querySelector('.' + binding.value.offsetParent)
                             let parentOffset = util.getElementTop(offsetParent);
+                            if (!parentOffset)
+                                return false;
                             parentOffset = parent.clientHeight - (parentOffset - (binding.value.top || 0));
                             let elHeight = el.clientHeight / 2;
                             let overHide = util.getElementTop(offsetParent) - parent.scrollTop - (binding.value.top || 0);
