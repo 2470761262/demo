@@ -140,6 +140,7 @@ export default {
       this.forID.id = this.$route.params.houseId;
       this.detailType = this.$route.params.detailType;
       this.dept.id = this.$route.params.dept;
+      console.log('************',this.dept.id)
       util.localStorageSet("houseDetails.vue:deptId", this.dept.id);
       util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
       util.localStorageSet("houseDetails.vue:detailType", this.detailType);

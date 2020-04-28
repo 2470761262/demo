@@ -140,7 +140,7 @@
         <template v-slot="scope">
           <el-button type="primary"
                      size="mini"
-                     @click="toLook(scope.row.id)">查看</el-button>
+                     @click="toLook(scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </template>
@@ -395,9 +395,9 @@ export default {
       return row.Rooms + "室" + row.hall + "厅" + row.toilet + "卫";
     },
 
-    toLook (id) {
+    toLook (row) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      that.$router.push({ name: "houseDetails", params: { houseId: row.id,dept:row.perDept } });
     },
     querySaleNotTrackParams () {
       this.queryVerifyHouseDatas(1);

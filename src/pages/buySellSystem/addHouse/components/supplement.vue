@@ -965,6 +965,7 @@ export default {
     },
     //获取音频上传
     getAudioFile (e) {
+      let that=this;
       if (that.isFromHouseTask ? false : !this.wxUploadFile) {
         this.$message.error("暂无上传权限");
         return;
