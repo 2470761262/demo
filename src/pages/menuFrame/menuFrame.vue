@@ -55,12 +55,15 @@
 <template >
   <section class="page-cell-conter">
     <el-container>
-      <el-header v-if="asideNavFlag" height="80px">
+      <el-header v-if="asideNavFlag"
+                 height="80px">
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
-    <el-container class="page-cell-main" id="page-cell-main">
-      <el-aside class="el-background" v-if="asideNavFlag">
+    <el-container class="page-cell-main"
+                  id="page-cell-main">
+      <el-aside class="el-background"
+                v-if="asideNavFlag">
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
@@ -68,7 +71,8 @@
         <div class="children-page">
           <!-- 二级页面 router-view -->
           <transition name="el">
-            <keep-alive :max="3" include="houseList,otherIframe,customersIframe">
+            <keep-alive :max="3"
+                        include="houseList,otherIframe,customersIframe">
               <!-- <router-view v-if="$route.meta.keepAlive" /> -->
               <router-view />
             </keep-alive>
@@ -96,19 +100,21 @@ export default {
     asideNav,
     headerContent
   },
-  data() {
+  data () {
     return {
-      asideNavFlag: false,
+      asideNavFlag: true,
       loginUserData: {},
       menuDatasInParent: []
     };
   },
-  beforeCreate() {},
-  created() {
-    this.$nextTick(() => {
-      this.asideNavFlag = !util.localStorageGet("nest");
-    });
-    this.loginUserData = util.localStorageGet(LOGINDATA);
+  created () {
+    if (process.env.NODE_ENV !== 'development') {
+      this.asideNavFlag = true;
+    }
+    // this.$nextTick(() => {
+    //   this.asideNavFlag = !util.localStorageGet("nest");
+    // });
+    // this.loginUserData = util.localStorageGet(LOGINDATA);
     // if (this.loginUserData && this.loginUserData.menuNodes) {
     //   this.menuDatasInParent = this.loginUserData.menuNodes;
     // }
