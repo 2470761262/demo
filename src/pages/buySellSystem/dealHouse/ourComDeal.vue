@@ -8,12 +8,9 @@
 <template>
   <list-page :parentData="$data"
              @queryTabData="queryTabData"
-             @handleClick="handleClick"
              @sort-change="sortMethod"
              @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange"
-             :dblclick="true"
-             @cellDblClick="toHouseDetail">
+             @handleCurrentChange="handleCurrentChange">
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -97,7 +94,7 @@
                          :sort-orders="['ascending', 'descending']"
                          :sortable="item.order"></el-table-column>
       </template>
-      <el-table-column label="操作"
+      <!-- <el-table-column label="操作"
                        fixed="right"
                        width="90">
         <template v-slot="scope">
@@ -105,12 +102,12 @@
                      size="mini"
                      @click="toHouseDetail(scope.row)">查看</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </template>
   </list-page>
 </template>
 <script>
-import listPage from "@/components/listPage";
+import listPage from "@/components/listPageNotLink";
 import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
@@ -163,16 +160,16 @@ export default {
   },
   methods: {
     toHouseDetail (row) {
-      let that = this;
-      console.log("进入交易房源详情");
-      if (!row.id) {
-        that.$message.error("houseId都是空的，如何查看");
-        return;
-      }
-      that.$router.push({
-        name: "historyDetails",
-        params: { houseId: row.id, tradeType: 0 }
-      });
+      // let that = this;
+      // console.log("进入交易房源详情");
+      // if (!row.id) {
+      //   that.$message.error("houseId都是空的，如何查看");
+      //   return;
+      // }
+      // that.$router.push({
+      //   name: "historyDetails",
+      //   params: { houseId: row.id, tradeType: 0 }
+      // });
     },
     sortMethod (e) {
       console.log(e, "eeee排序");

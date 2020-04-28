@@ -225,6 +225,8 @@
                   <div class="content-item-head ">
                     <div class="content-item-time">{{item.FollowTime}}</div>
                     <button class="content-item-but"
+                            v-if="deleteFollow"
+                            @click="deleteFollowById(item.id)"
                             :disabled="isDisabled">删除</button>
                   </div>
                   <div class="content-item-body">
@@ -250,7 +252,7 @@
              v-infinite-scroll="load">
           <transition-group name="el">
             <template v-for="item in pair.list">
-              <div :key="item.id">
+              <div :key="item.PairId">
                 <div class="list-content-item">
                   <div class="content-item-head ">
                     <div class="content-item-time">{{item.FollowTime}}</div>
@@ -314,11 +316,11 @@ export default {
     followUp
   },
   computed: {
-    isDisabled() {
+    isDisabled () {
       return this.buttonDisabled;
     }
   },
-  data() {
+  data () {
     return {
       follow: {
         list: [],
@@ -345,10 +347,10 @@ export default {
       changeTabsValue: "follow",
       deleteFollow: false,
       telFollow: false,
-      insertFollow:false
+      insertFollow: false
     };
   },
-  created() {
+  created () {
     this.getList();
     but.$on("followReolad", () => {
       Object.assign(this.$data.follow, this.$options.data().follow);
@@ -361,26 +363,26 @@ export default {
       this.telFollow = true;
     });
   },
-  mounted(){
+  mounted () {
     let that = this;
     but.$on("insertFollow", () => {
       that.insertFollow = true;
     });
   },
-  destroyed() {
+  destroyed () {
     but.$off("followReolad");
     but.$off("deleteFollow");
     but.$off("telFollow");
   },
   methods: {
-    changeTabsEvent(e) {
+    changeTabsEvent (e) {
       if (this[this.changeTabsValue].list.length > 0) {
         return;
       }
       this.getList();
     },
     //获取列表数据
-    getList() {
+    getList () {
       switch (this.changeTabsValue) {
         case "follow":
           this.getHouseFollow();
@@ -394,7 +396,7 @@ export default {
       }
     },
     //获取跟进列表
-    getHouseFollow() {
+    getHouseFollow () {
       let that = this;
       let params = {
         page: that.follow.page,
@@ -424,13 +426,13 @@ export default {
             that.follow.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => {})
+        .catch(() => { })
         .finally(() => {
           this.follow.loading = false;
         });
     },
     //删除跟进
-    deleteFollowById(followId) {
+    deleteFollowById (followId) {
       let that = this;
       let params = { followId: followId, houseId: that.houseId.id };
       this.$api
@@ -449,10 +451,10 @@ export default {
             that.$message(e.data.message);
           }
         })
-        .catch(e => {});
+        .catch(e => { });
     },
     //获取被看列表
-    getHousePairFollowList() {
+    getHousePairFollowList () {
       let that = this;
       let params = {
         page: that.pair.page,
@@ -467,19 +469,20 @@ export default {
           token: false
         })
         .then(e => {
+          debugger;
           let result = e.data;
           if (result.code == 200) {
             that.pair.list = [...that.pair.list, ...result.data.list];
             that.pair.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => {})
+        .catch(() => { })
         .finally(() => {
           this.pair.loading = false;
         });
     },
     //获取电话修改记录列表
-    getTelFollowList() {
+    getTelFollowList () {
       let that = this;
       let params = {
         page: that.tel.page,
@@ -500,13 +503,13 @@ export default {
             that.tel.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => {})
+        .catch(() => { })
         .finally(() => {
           this.tel.loading = false;
         });
     },
     //滚动分页
-    load() {
+    load () {
       if (
         this[this.changeTabsValue].page < this[this.changeTabsValue].totalPage
       ) {

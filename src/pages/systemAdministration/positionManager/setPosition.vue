@@ -290,6 +290,7 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             // that.pathList = result.data;
+            that.$message.success("设置成功");
             console.log('设置numLimit成功！');
           } else {
             console.log("查询错误: ", result.message);
@@ -615,6 +616,7 @@ export default {
       //设置权限数据
       functionPointObj.companyId = that.currentCompanyGather;
       functionPointObj.deptId = that.currentDeptGather;
+      functionPointObj.numLimit=currentNode.data.numLimit;
       //设置树上的权限数据
       currentNode.data.companyGather = that.currentCompanyGather;
       currentNode.data.deptGather = that.currentDeptGather;
