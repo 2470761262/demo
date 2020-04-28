@@ -334,7 +334,20 @@ import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
 export default {
-  inject: ["houseDetails", "houseId", "buttonDisabled", "dept"],
+  inject:{
+      houseDetails:{
+          default:{}
+      },
+      houseId:{
+          default:{}
+      },
+      buttonDisabled:{
+          default:false
+      },
+      dept:{
+          default:{}
+      }
+  },
   computed: {
     isDisabled () {
       return this.buttonDisabled;
