@@ -347,10 +347,12 @@ export default {
       }
     },
     agentApply () {
+      console.log('======this.dept.id======>',this.dept)
       if (!this.dept.id) {
         return false;
       }
       let loginDeptId = util.localStorageGet("logindata").deptId;
+      console.log('============>',loginDeptId)
       if (Object.keys(this.houseDetails).length > 0) {
         let detailData = this.houseDetails.data;
         if (!detailData) {
