@@ -3,6 +3,13 @@ import {
     TOKEN, LOGINDATA
 } from '@/util/constMap';
 export default {
+    beforeCreate () {
+        if (process.env.NODE_ENV !== 'development') {
+            util.localStorageSet('nest', true);
+        } else {
+            util.localStorageSet('nest', false);
+        }
+    },
     created () {
         //console.log(window.location.href);
         //console.log(window.location.hash);
@@ -19,12 +26,12 @@ export default {
         }
         console.log("getUrlToken---->" + token);
 
-        if (token != null) {
-            util.localStorageSet('nest', true);
-            util.localStorageSet(TOKEN, token);
-        } else {
-            util.localStorageSet('nest', false);
-        }
+        // if (token != null) {
+        //     util.localStorageSet('nest', true);
+        //     util.localStorageSet(TOKEN, token);
+        // } else {
+        //     util.localStorageSet('nest', false);
+        // }
 
     },
     mounted () {

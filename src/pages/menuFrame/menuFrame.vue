@@ -108,16 +108,13 @@ export default {
     };
   },
   created () {
-    if (process.env.NODE_ENV !== 'development') {
-      this.asideNavFlag = true;
+    this.$nextTick(() => {
+      this.asideNavFlag = !util.localStorageGet("nest");
+    });
+    this.loginUserData = util.localStorageGet(LOGINDATA);
+    if (this.loginUserData && this.loginUserData.menuNodes) {
+      this.menuDatasInParent = this.loginUserData.menuNodes;
     }
-    // this.$nextTick(() => {
-    //   this.asideNavFlag = !util.localStorageGet("nest");
-    // });
-    // this.loginUserData = util.localStorageGet(LOGINDATA);
-    // if (this.loginUserData && this.loginUserData.menuNodes) {
-    //   this.menuDatasInParent = this.loginUserData.menuNodes;
-    // }
   }
 };
 </script>
