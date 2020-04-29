@@ -886,12 +886,21 @@ export default [{
         import( /* webpackChunkName: "authorityConfigurationSetAuthority" */ "@/pages/systemAdministration/authorityConfiguration/setAuthority.vue")
 },
 {
-    //系统管理 公司权限配置
+    //客户系统 新增客户
     path: "/customersSystem/addCustomers",
     meta: {
         title: '新增客户'
     },
     component: () =>
         import( /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue")
+},
+{
+    //客户系统 客户详情
+    path: "/customersSystem/customersDetail",
+    meta: {
+        title: '客户详情'
+    },
+    component: () =>
+        import( /* webpackChunkName: "customersDetail" */ "@/pages/customersSystem/customersDetail/customersDetail.vue")
 }
 ]
