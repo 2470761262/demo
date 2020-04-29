@@ -52,6 +52,7 @@
       <div class="page-form-inline">
         <el-form-item label="楼盘名称">
           <el-input placeholder="请输入楼盘名称"
+                    readonly
                     v-model="form.communityName">
           </el-input>
         </el-form-item>
@@ -60,6 +61,7 @@
       <div class="page-form-inline">
         <el-form-item label="楼栋">
           <el-input placeholder="请输入楼栋名称"
+                    readonly
                     v-model="form.comBuildingName">
           </el-input>
         </el-form-item>
@@ -68,6 +70,7 @@
       <div class="page-form-inline">
         <el-form-item label="房间号">
           <el-input placeholder="请输入房间号"
+                    readonly
                     v-model="form.buildIngHouses">
           </el-input>
         </el-form-item>
@@ -77,6 +80,7 @@
         <el-form-item label="审核类型">
           <el-select v-model="form.type"
                      placeholder="类型"
+                     readonly
                      class="set-select150"
                      clearable>
             <el-option v-for="item in typeOptions"
@@ -91,6 +95,7 @@
       <div class="page-form-inline">
         <el-form-item label="审核数据">
           <el-input placeholder=""
+                    readonly
                     v-model="form.value">
           </el-input>
         </el-form-item>
@@ -99,6 +104,7 @@
       <div class="page-form-inline">
         <el-form-item label="材料说明">
           <el-input placeholder="请输入材料说明"
+                    readonly
                     v-model="form.ReplenishRemark">
           </el-input>
         </el-form-item>

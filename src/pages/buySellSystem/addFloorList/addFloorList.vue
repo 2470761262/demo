@@ -245,7 +245,7 @@
           },
           {
             prop: "isCheck",
-            label: "添加时间",
+            label: "审核状态",
             width: "120",
             order: true,
             disabled: false,
