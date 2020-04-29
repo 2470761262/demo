@@ -74,6 +74,29 @@
       </div>
 
       <div class="page-form-inline">
+        <el-form-item label="审核类型">
+          <el-select v-model="form.type"
+                     placeholder="类型"
+                     class="set-select150"
+                     clearable>
+            <el-option v-for="item in typeOptions"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+
+      <div class="page-form-inline">
+        <el-form-item label="审核数据">
+          <el-input placeholder=""
+                    v-model="form.value">
+          </el-input>
+        </el-form-item>
+      </div>
+
+      <div class="page-form-inline">
         <el-form-item label="材料说明">
           <el-input placeholder="请输入材料说明"
                     v-model="form.ReplenishRemark">
@@ -127,6 +150,8 @@ export default {
   data () {
     return {
       form: {
+        type: '',
+        value: '',
         communityName: '',
         comBuildingName: '',
         buildIngHouses: '',
@@ -137,6 +162,24 @@ export default {
         prove: [],
         checkRemark: ''
       },
+      typeOptions: [
+        {
+          value: 0,
+          label: "材料"
+        },
+        {
+          value: 1,
+          label: "面积"
+        },
+        {
+          value: 2,
+          label: "房型"
+        },
+        {
+          value: 3,
+          label: "业主号码"
+        }
+      ],
       options: [{
         value: '1',
         label: '审核通过'
@@ -169,6 +212,8 @@ export default {
         that.form.buildIngHouses = e.data.data.buildIngHouses;
         that.form.ReplenishRemark = e.data.data.replenishRemark;
         that.form.id = e.data.data.id;
+        that.form.type = e.data.data.type;
+        that.form.value = e.data.data.value;
         //that.urls=e.data.data.proveImg.spilt(",");
         if (e.data.data.proveImg.indexOf(",") == -1) { //等于-1表示这个字符串中没有o这个字符
           that.urls.push(e.data.data.proveImg)
