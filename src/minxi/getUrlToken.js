@@ -1,4 +1,5 @@
 import util from "@/util/util";
+//import {getColor} from '@/themePackers/getSkin';
 import {
     TOKEN, LOGINDATA
 } from '@/util/constMap';
@@ -24,14 +25,15 @@ export default {
             //util.localStorageSet("logindata",{sessionId:null});
             this.getLoginData(token);
         }
+        //getColor();
         console.log("getUrlToken---->" + token);
 
-        // if (token != null) {
-        //     util.localStorageSet('nest', true);
-        //     util.localStorageSet(TOKEN, token);
-        // } else {
-        //     util.localStorageSet('nest', false);
-        // }
+        if (token != null) {
+            //util.localStorageSet('nest', true);
+            util.localStorageSet(TOKEN, token);
+        } else {
+            //util.localStorageSet('nest', false);
+        }
 
     },
     mounted () {
@@ -47,19 +49,20 @@ export default {
                     url: "/loginManager/getLoginData",
                     data: params,
                     token: false,
-                    qs: true
+                    qs: true,
+                    async:false
                 })
                 .then(e => {
                     let result = e.data;
                     if (result.code == 200) {
-                        console.log(200);
+                        console.log('200-------->',e.data.data);
                         util.localStorageSet("logindata", e.data.data);
                     } else {
-                        console.log(e);
+                        console.log('-------->',e);
                     }
                 })
                 .catch(e => {
-                    console.log(e);
+                    console.log('catch-------->',e);
                 });
         }
     }

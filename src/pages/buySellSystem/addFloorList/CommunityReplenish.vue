@@ -84,6 +84,27 @@
       </div>
 
       <div class="page-form-inline set-el-textarea">
+        <el-form-item label="审核类型" prop="type">
+          <el-select v-model="form.type"
+                     placeholder="类型"
+                     class="set-select150"
+                     clearable>
+            <el-option v-for="item in typeOptions"
+                       :key="item.value"
+                       :label="item.label"
+                       :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+
+      <div class="page-form-inline set-el-textarea">
+        <el-form-item label="对应数值" prop="value">
+          <el-input placeholder="" v-model="form.value"></el-input>
+        </el-form-item>
+      </div>
+
+      <div class="page-form-inline set-el-textarea">
         <el-form-item label="材料说明" prop="ReplenishRemark">
           <el-input
             type="textarea"
@@ -149,6 +170,7 @@ export default {
         ]
       },
       form: {
+        type: "",
         communityName: "",
         comBuildingName: "",
         buildIngHouses: "",
@@ -156,6 +178,25 @@ export default {
         proveImg: [],
         prove: []
       },
+      typeOptions: [
+        {
+          value: "0",
+          label: "材料"
+        },
+        {
+          value: "1",
+          label: "面积"
+        },
+        {
+          value: "2",
+          label: "房型"
+        },
+        {
+          value: "3",
+          label: "业主号码"
+        }
+      ],
+
       dialogImageUrl: "",
       dialogVisible: false,
       buttonDisable: true
