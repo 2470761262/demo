@@ -1239,7 +1239,7 @@ export default {
       //   this.employeeEntity.perPost = "";
       this.$forceUpdate();
       this.optInfo.role = checkedNodes[0].data.businessId;
-      this.optInfo.post;
+      this.optInfo.post = "";
       this.selectRoleList();
     },
     selectRoleList() {
