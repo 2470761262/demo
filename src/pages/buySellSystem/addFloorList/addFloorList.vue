@@ -236,6 +236,14 @@
             formart: item => this.formatType(item.type)
           },
           {
+            prop: "value",
+            label: "数据",
+            width: "120",
+            order: true,
+            disabled: false,
+            default: true,
+          },
+          {
             prop: "isCheck",
             label: "添加时间",
             width: "120",

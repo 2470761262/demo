@@ -910,6 +910,9 @@ export default {
           this.formData.area = data.outArea;
           this.formData.face = data.orientation;
           this.formData.room = data.rooms || 0;
+          this.formData.hall = data.hall || 0;
+          this.formData.toilet = data.toilet || 0;
+          this.formData.balcony = data.balcony || 0;
           this.formData.roomType = data.roomType;
         }
       });

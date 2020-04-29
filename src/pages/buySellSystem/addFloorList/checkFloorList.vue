@@ -227,9 +227,9 @@ export default {
   methods: {
     apply () {
       var that = this;
-      this.$api.get({
+      this.$api.post({
         url: "/CommunityReplenish/updateCommunityReplenish",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        // headers: { "Content-Type": "application/json;charset=UTF-8" },
         token: false,
         qs: true,
         data: {
