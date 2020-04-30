@@ -87,7 +87,8 @@ export default {
       dept: this.dept,
       houseDetails: this.houseDetails,
       load: this.load,
-      buttonDisabled: false
+      buttonDisabled: false,
+      paramsObj: this.lastParams
     };
   },
   computed: {
