@@ -2,13 +2,16 @@
 .task-content {
   margin-left: 48px;
 }
+
 .other-title {
   font-size: 30px;
   font-weight: 400;
   margin-top: 80px;
 }
+
 .task-pro-flex {
   display: flex;
+
   &.seat {
     &::after {
       content: "";
@@ -16,6 +19,7 @@
       visibility: hidden;
     }
   }
+
   .task-pro-content {
     margin-top: 30px;
     height: 85px;
@@ -28,14 +32,17 @@
     align-items: center;
     width: 0;
     flex-shrink: 0;
+
     &.flex-center {
       justify-content: center;
+
       .el-button {
         padding: 0 5px;
         width: auto;
         margin-right: 0;
       }
     }
+
     &:after {
       content: attr(data-detail);
       position: absolute;
@@ -48,6 +55,7 @@
       padding: 2px 4px;
       border-radius: 4px;
     }
+
     .task-pro-img {
       width: 67px;
       height: 67px;
@@ -56,22 +64,26 @@
       flex-shrink: 0;
       margin-left: 55px;
     }
+
     .task-pro-message {
       margin-left: 15px;
       flex: 1;
       width: 0;
+
       .task-pro-name {
         font-size: 24px;
         color: #515151;
         font-weight: 600;
       }
+
       .task-pro-options {
         color: #bbbbbb;
         font-size: 16px;
         margin-top: 5px;
       }
     }
-    /deep/.el-button {
+
+    /deep/ .el-button {
       margin-right: 8px;
       flex-shrink: 0;
       width: 100px;
@@ -80,21 +92,26 @@
       padding: 0;
       background-image: linear-gradient(115deg, #0d8f51 60%, #10a65f);
       letter-spacing: 4px;
+
       &[disabled="disabled"] {
         background: #fff;
+
         span {
           color: #c0c4cc;
         }
       }
+
       .icon {
         font-size: 20px;
         vertical-align: middle;
       }
+
       span {
         font-size: 16px;
         color: #fff;
       }
     }
+
     .only {
       width: 50px;
       height: 10px;
@@ -105,6 +122,7 @@
     }
   }
 }
+
 .text-middle {
   text-align: center;
   padding-bottom: 15px;
@@ -335,6 +353,7 @@
         :middleRadioTo="middleRadio"
         :primaryRadioTo="primaryRadio"
         :showFollow="showFollow"
+        :paramsObj="supplementObj"
         :audioList="audioList"
         :isFromHouseTask="true"
       ></supplement>
@@ -365,6 +384,7 @@ import houseCheck from "../common/houseCheck";
 import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
+
 export default {
   inject: {
     houseDetails: {
@@ -378,11 +398,21 @@ export default {
     },
     dept: {
       default: {}
+    },
+    paramsObj: {
+      default: {}
     }
   },
   computed: {
     isDisabled() {
       return this.buttonDisabled;
+    },
+    supplementObj() {
+      if (Object.keys(this.paramsObj).length > 0) {
+        return this.paramsObj.paramsObj;
+      } else {
+        return {};
+      }
     },
     resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
@@ -396,7 +426,6 @@ export default {
       if (!this.dept.id) {
         return false;
       }
-      console.log("logindata", util.localStorageGet("logindata"));
       let loginDeptId = util.localStorageGet("logindata").deptId;
       console.log("============>", loginDeptId);
       if (Object.keys(this.houseDetails).length > 0) {
