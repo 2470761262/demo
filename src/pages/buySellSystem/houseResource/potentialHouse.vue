@@ -304,7 +304,7 @@ export default {
         console.log("/building/getBuildingDetail/" + item.id);
         that.$router.push({
           name: "potentialHouseDetail",
-          params: { houseId: item.id }
+          params: { houseId: item.id, houseType: item.houseType }
         });
       } else if (item.houseType == 2) {
         console.log("进入交易房源详情");
@@ -314,7 +314,7 @@ export default {
         }
         that.$router.push({
           name: "tradeHouseDetail",
-          params: { houseId: item.houseId }
+          params: { houseId: item.houseId, houseType: item.houseType }
         });
       } else {
         that.$message.error("无法识别潜在房源的类型，到底是楼盘还是交易过的房源呢？这是个值得思索的问题");

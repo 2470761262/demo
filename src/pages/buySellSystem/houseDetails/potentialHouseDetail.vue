@@ -188,6 +188,10 @@
     }
   }
 }
+.empty-message {
+  margin-top: 30px;
+  font-size: 16px;
+}
 </style>
 <template>
   <div class="page-content"
@@ -271,7 +275,8 @@
           </div>
         </div>
         <div class="add-phone-title">最近成交信息</div>
-        <div class="add-cut-content">
+        <div class="add-cut-content"
+             v-if="this.houseType == 2">
           <div class="add-cut-content-row">
             <div class="row-just-item overText">房源证件:&nbsp;{{tradeDetail.certificateType| constMapFilter('CERTIFICATETYPE')  | emptyRead}}</div>
             <div class="row-just-item overText">产权性质:&nbsp;{{tradeDetail.ownerProperty | emptyRead}}</div>
@@ -295,6 +300,8 @@
             <div>{{tradeDetail.tradeTime | timeFormat('yyyy-MM-dd') | emptyRead }}</div>
           </div>
         </div>
+        <div v-else
+             class="empty-message">暂无成交数据</div>
       </div>
     </section>
   </div>
@@ -305,6 +312,7 @@ export default {
   data () {
     return {
       houseId: null,
+      houseType: null,
       resultData: {},
       tradeDetail: {},
       load: {
@@ -327,13 +335,24 @@ export default {
   created () {
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
+      this.houseType = this.$route.params.houseType;
       util.localStorageSet("potentialHouse.vue:houseId", this.houseId);
+      util.localStorageSet("potentialHouse.vue:houseType", this.houseType);
     } else {
       this.houseId = util.localStorageGet("potentialHouse.vue:houseId");
+      this.houseType = util.localStorageGet("potentialHouse.vue:houseType");
     }
-    Promise.all([this.getHouseDetails(), this.getTradeHouseTradeDetail()]).then(() => {
-      this.load.loading = false
-    })
+    if (this.houseType == 1) {
+      this.getHouseDetails().then(() => {
+        this.load.loading = false
+      })
+    } else if (this.houseType == 2) {
+      Promise.all([this.getHouseDetails(), this.getTradeHouseTradeDetail()]).then(() => {
+        this.load.loading = false
+      })
+    } else {
+      this.$message.error("无法识别潜在房源的类型，到底是楼盘还是交易过的房源呢？");
+    }
   },
   methods: {
     getTradeHouseTradeDetail () {
@@ -344,7 +363,7 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-            this.tradeDetail = e.data.data
+            this.tradeDetail = e.data.data;
           }
         })
         .catch(e => { })
