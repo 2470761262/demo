@@ -303,7 +303,7 @@ export default {
         console.log("进入楼盘详情");
         console.log("/building/getBuildingDetail/" + item.id);
         that.$router.push({
-          name: "buildingHouseDetail",
+          name: "potentialHouseDetail",
           params: { houseId: item.id }
         });
       } else if (item.houseType == 2) {
