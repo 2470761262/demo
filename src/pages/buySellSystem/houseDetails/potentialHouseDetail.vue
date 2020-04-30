@@ -150,6 +150,7 @@
             padding-top: 15px;
             min-height: 50px;
             font-size: 16px;
+            line-height: 25px;
           }
         }
         .per-content {
@@ -272,24 +273,26 @@
         <div class="add-phone-title">最近成交信息</div>
         <div class="add-cut-content">
           <div class="add-cut-content-row">
-            <div class="row-just-item overText">房源证件:</div>
-            <div class="row-just-item overText">产权性质:</div>
+            <div class="row-just-item overText">房源证件:&nbsp;{{tradeDetail.certificateType| constMapFilter('CERTIFICATETYPE')  | emptyRead}}</div>
+            <div class="row-just-item overText">产权性质:&nbsp;{{tradeDetail.ownerProperty | emptyRead}}</div>
           </div>
           <div class="add-cut-content-row article-row">
             小区介绍:<br />
+            {{tradeDetail.remark | emptyRead}}
           </div>
           <div class="add-cut-content-row article-row">
             核心卖点:<br />
+            {{tradeDetail.characteristic | emptyRead}}
           </div>
           <div class="per-content">
-            <img src="https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/4/16/6e35732669034e24a6448324b3d8a33d.jpg?x-oss-process=style/thumb"
+            <img :src="tradeDetail.agentPerHeadImg | defaultImg"
                  alt="头像">
             <div class="per-content-column">
-              <h3>周杰伦</h3>
-              <div>国贸一店</div>
+              <h3>{{tradeDetail.agentPerName | emptyRead}}</h3>
+              <div>{{tradeDetail.agentPerDepartmentName | emptyRead}}</div>
             </div>
-            <div>200万</div>
-            <div>2019-12-13</div>
+            <div>{{tradeDetail.tradePrice | parseIntNum | emptyRead('万') }}</div>
+            <div>{{tradeDetail.tradeTime | timeFormat('yyyy-MM-dd') | emptyRead }}</div>
           </div>
         </div>
       </div>
@@ -303,11 +306,23 @@ export default {
     return {
       houseId: null,
       resultData: {},
+      tradeDetail: {},
       load: {
-        loading: true,
+        loading: false,
         loadingMessage: "努力加载中~"
       }
     };
+  },
+  filters: {
+    constMapFilter () {
+      return util.countMapFilter(...arguments);
+    },
+    timeFormat (value, fmt) {
+      return value ? util.format(value, fmt) : value;
+    },
+    parseIntNum (value) {
+      return value ? parseInt(value) : value;
+    }
   },
   created () {
     if (this.$route.params.houseId) {
@@ -316,9 +331,24 @@ export default {
     } else {
       this.houseId = util.localStorageGet("potentialHouse.vue:houseId");
     }
-    this.getHouseDetails();
+    Promise.all([this.getHouseDetails(), this.getTradeHouseTradeDetail()]).then(() => {
+      this.load.loading = false
+    })
   },
   methods: {
+    getTradeHouseTradeDetail () {
+      return this.$api
+        .post({
+          url: "/history/agent_house/getTradeHouseTradeDetail/" + this.houseId,
+          qs: true
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.tradeDetail = e.data.data
+          }
+        })
+        .catch(e => { })
+    },
     tosele () {
       let _that = this;
       this.$router.push({
@@ -336,8 +366,7 @@ export default {
       });
     },
     getHouseDetails () {
-      this.load.loading = true;
-      this.$api
+      return this.$api
         .post({
           url: "/building/getBuildingDetail/" + this.houseId,
           qs: true
@@ -351,9 +380,7 @@ export default {
           }
         })
         .catch(e => { })
-        .finally(() => {
-          this.load.loading = false;
-        });
+
     }
   },
   destroyed () {
