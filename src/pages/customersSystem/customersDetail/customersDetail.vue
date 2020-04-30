@@ -6,9 +6,14 @@
   box-sizing: border-box;
   .head-content {
     display: flex;
+    justify-content: space-between;
     width: 1345px;
     .head-content-button {
       width: 433px;
+    }
+    /** 基础信息 */
+    .basics {
+      width: 714px;
     }
   }
 }
@@ -17,15 +22,19 @@
   <section class="page-content">
     <div class="head-content">
       <detail-button class="head-content-button"></detail-button>
+      <basics class="basics"></basics>
     </div>
   </section>
 </template>
 
 <script>
 import detailButton from './components/detailButton';
+//基础信息
+import basics from './components/basicsMessage';
 export default {
   components: {
     detailButton,
+    basics
   },
 }
 </script>

@@ -132,6 +132,35 @@
       }
     }
   }
+  /** 按钮组 */
+  .customers-button-gruop {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 20px 0 40px;
+    margin: 30px -30px 0;
+    .customers-button-item {
+      flex: 0 0 calc((100% - 60px * 2) / 2);
+      margin: 20px 30px 0px;
+      &:nth-child(-n + 2) {
+        margin-top: 0;
+      }
+      /deep/.el-button {
+        width: 100%;
+        height: 53px;
+        font-size: 18px;
+        color: black;
+        padding: 0;
+        i {
+          font-size: 28px;
+          vertical-align: middle;
+          margin-right: 15px;
+        }
+        span {
+          vertical-align: middle;
+        }
+      }
+    }
+  }
 }
 .line-break {
   height: 1px;
@@ -188,6 +217,20 @@
       </div>
       <el-button type="primary"
                  class="customers-phone"><i class="el-icon-phone"></i>一键拨号</el-button>
+    </div>
+    <div class="customers-button-gruop">
+      <div class="customers-button-item">
+        <el-button icon="el-icon-refresh">转公客</el-button>
+      </div>
+      <div class="customers-button-item">
+        <el-button icon="el-icon-refresh">转状态</el-button>
+      </div>
+      <div class="customers-button-item">
+        <el-button icon="el-icon-delete">删除</el-button>
+      </div>
+      <div class="customers-button-item">
+        <el-button icon="el-icon- iconfont iconzhuanhuan">PASS客户</el-button>
+      </div>
     </div>
   </div>
 </template>

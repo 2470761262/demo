@@ -59,6 +59,17 @@ export default [{
         import( /* webpackChunkName: "tradeHouseDetail" */ "@/pages/buySellSystem/houseDetails/tradeHouseDetail.vue")
 },
 {
+    //潜在出售房源详情
+    path: "/buySellSystem/potentialHouseDetail",
+    name: "potentialHouseDetail",
+    meta: {
+        title: '潜在出售房源详情',
+        keepAlive: true
+    },
+    component: () =>
+        import( /* webpackChunkName: "potentialHouseDetail" */ "@/pages/buySellSystem/houseDetails/potentialHouseDetail.vue")
+},
+{
     path: "/buySellSystem/addHouse",
     name: 'addHouse',
     meta: {
