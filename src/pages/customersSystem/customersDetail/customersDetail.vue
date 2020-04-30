@@ -8,6 +8,8 @@
     display: flex;
     justify-content: space-between;
     width: 1345px;
+    border-bottom: 1px solid #cccccc;
+    padding-bottom: 30px;
     .head-content-button {
       width: 433px;
     }
