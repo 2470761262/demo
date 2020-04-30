@@ -161,8 +161,9 @@
             <el-input v-model="password"
                       data-vv-as="密码锁"
                       data-vv-name="password"
+                      @keyup.native="UpNumber"
                       v-validate="{required:pop.model==2}"
-                      placeholder="请输入密码锁密码"></el-input>
+                      placeholder="请输入纯数字密码"></el-input>
           </div>
           <div class="replace-left-row">
             <h3>存放门店</h3>
@@ -287,6 +288,9 @@ export default {
     this.socketApi.closeSocket();
   },
   methods: {
+    UpNumber(e) {
+      e.target.value = e.target.value.replace(/[^\d]/g,"");
+    },
     /**
      * 选择存放门店
      */
