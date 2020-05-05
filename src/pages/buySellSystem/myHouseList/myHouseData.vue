@@ -365,7 +365,7 @@ export default {
       companyProportion: {},
       yesterday: {},
       beforeYesterday: {},
-      sortColumn: "addTime",
+      sortColumn: "customerCount",
       sortType: 1
     };
   },
