@@ -82,6 +82,9 @@
 <script>
 import but from "@/evenBus/but.js";
 export default {
+  $_veeValidate: {
+    validator: 'new' // give me my own validator scope.
+  },
   inject: ["houseId"],
   data () {
     return {
@@ -125,9 +128,9 @@ export default {
               let data = e.data
               this.$message.error(data.message);
               if (data.code == 200) {
-                 this.$alert('对赌已生效', '支付成功', {
-                   confirmButtonText: '加油',
-                 });
+                this.$alert('对赌已生效', '支付成功', {
+                  confirmButtonText: '加油',
+                });
                 but.$emit("getBetInfo")
               }
             }).catch((e) => {

@@ -269,7 +269,10 @@
 <script>
 import util from "@/util/util";
 export default {
-  data() {
+  $_veeValidate: {
+    validator: 'new' // give me my own validator scope.
+  },
+  data () {
     return {
       houseId: null,
       resultData: {},
@@ -284,7 +287,7 @@ export default {
       }
     };
   },
-  created() {
+  created () {
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       util.localStorageSet("buildingHouseDetail.vue:houseId", this.houseId);
@@ -294,7 +297,7 @@ export default {
     this.getHouseDetails();
   },
   methods: {
-    tosele() {
+    tosele () {
       let _that = this;
       this.$router.push({
         path: "/buySellSystem/addHouse",
@@ -310,7 +313,7 @@ export default {
         }
       });
     },
-    notPhone() {
+    notPhone () {
       let _that = this;
       this.$validator.validateAll().then(e => {
         if (e) {
@@ -334,11 +337,11 @@ export default {
                 return Promise.reject(e);
               }
             })
-            .catch(e => {});
+            .catch(e => { });
         }
       });
     },
-    getHouseDetails() {
+    getHouseDetails () {
       this.load.loading = true;
       this.$api
         .post({
@@ -353,12 +356,12 @@ export default {
             this.$message.error(result.message);
           }
         })
-        .catch(e => {})
+        .catch(e => { })
         .finally(() => {
           this.load.loading = false;
         });
     },
-    addPhone() {
+    addPhone () {
       this.cutPhone1Flag = !this.cutPhone1Flag;
       if (this.cutPhone1Flag) {
         this.$set(this.addCut, "cutPhone1", "");
@@ -367,7 +370,7 @@ export default {
       }
     }
   },
-  destroyed() {
+  destroyed () {
     // this.$store.commit("resetFormData");
   }
 };

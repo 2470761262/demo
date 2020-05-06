@@ -355,6 +355,9 @@ import util from "@/util/util";
 import but from "@/evenBus/but.js";
 
 export default {
+  $_veeValidate: {
+    validator: 'new' // give me my own validator scope.
+  },
   inject: {
     houseDetails: {
       default: {}
