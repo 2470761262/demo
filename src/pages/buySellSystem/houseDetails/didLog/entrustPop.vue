@@ -260,14 +260,17 @@ import util from '@/util/util';
 import { LOGINDATA } from '@/util/constMap';
 import houseCheck from '../common/houseCheck';
 export default {
+  $_veeValidate: {
+    validator: 'new' // give me my own validator scope.
+  },
   inject: ["houseId"],
   props: {
     replaceType: {
       type: Number
     },
-    submitApplyOnlyOwner:{  //提交按钮权限控制
+    submitApplyOnlyOwner: {  //提交按钮权限控制
       type: Boolean,
-      default:false
+      default: false
     }
   },
   data () {

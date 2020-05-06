@@ -75,7 +75,7 @@
       </div>
       <div class="upLoadFile-file-list">
         <div class="file-list-item"
-             v-for="item in livingRoomImgList"
+             v-for="(item,index) in livingRoomImgList"
              :key="item.id">
           <el-image :src="item.url"
                     :preview-src-list="fillterImgList('livingRoomImgList')"
@@ -121,7 +121,7 @@
       </div>
       <div class="upLoadFile-file-list">
         <div class="file-list-item"
-             v-for="item in bedroomImgList"
+             v-for="(item,index) in bedroomImgList"
              :key="item.id">
           <el-image :src="item.url"
                     :preview-src-list="fillterImgList('bedroomImgList')"
@@ -167,7 +167,7 @@
       </div>
       <div class="upLoadFile-file-list">
         <div class="file-list-item"
-             v-for="item in kitchenImgList"
+             v-for="(item,index) in kitchenImgList"
              :key="item.id">
           <el-image :src="item.url"
                     :preview-src-list="fillterImgList('kitchenImgList')"
@@ -213,7 +213,7 @@
       </div>
       <div class="upLoadFile-file-list">
         <div class="file-list-item"
-             v-for="item in toiletImgList"
+             v-for="(item,index)  in toiletImgList"
              :key="item.id">
           <el-image :src="item.url"
                     :preview-src-list="fillterImgList('toiletImgList')"
@@ -259,7 +259,7 @@
       </div>
       <div class="upLoadFile-file-list">
         <div class="file-list-item"
-             v-for="item in layoutImgList"
+             v-for="(item,index) in layoutImgList"
              :key="item.id">
           <el-image :src="item.url"
                     :preview-src-list="fillterImgList('layoutImgList')"
@@ -343,6 +343,9 @@ import util from "@/util/util";
 import but from "@/evenBus/but.js";
 import { LOGINDATA } from "@/util/constMap";
 export default {
+  $_veeValidate: {
+    validator: 'new' // give me my own validator scope.
+  },
   name: "exploration",
   props: {
     getData: {
@@ -747,7 +750,7 @@ export default {
         .catch(e => {
           console.log(e);
           that.$message({
-            message: "不晓得为什么,反正失败了2",
+            message: e.message,
             type: "warning"
           });
         })
@@ -788,9 +791,8 @@ export default {
           }
         })
         .catch(e => {
-          console.log(e);
           that.$message({
-            message: "不晓得为什么,反正失败了",
+            message: e.message,
             type: "warning"
           });
         })

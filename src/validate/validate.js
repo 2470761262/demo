@@ -11,7 +11,7 @@ const config = {
     strict: true,
     enableAutoClasses: true,
     events: "blur|input",
-    inject: true
+    inject: false
 };
 //手机号码
 Validator.extend('phone', {

@@ -30,34 +30,35 @@
 }
 </style>
 <template>
-  <fixedPopup v-bind="$attrs" v-on="$listeners">
+  <fixedPopup v-bind="$attrs"
+              v-on="$listeners">
     <template>
       <div class="raido-group">
-        <label class="raido-group-label" v-for="(item,index) in pop.checkList" :key="index">
-          <input
-            type="radio"
-            :value="item.value"
-            @click="radioChange(item.value)"
-            v-model="pop.model"
-          />
+        <label class="raido-group-label"
+               v-for="(item,index) in pop.checkList"
+               :key="index">
+          <input type="radio"
+                 :value="item.value"
+                 @click="radioChange(item.value)"
+                 v-model="pop.model" />
           <i></i>
           <span>{{item.title}}</span>
         </label>
       </div>
       <template v-if="pop.model==4">
         <div class="input-content">
-          <el-input
-            v-model="type0.val0"
-            placeholder="请输入成交公司"
-            v-validate="{'required': pop.model== 4}"
-            data-vv-name="dealCompany"
-            data-vv-as="成交公司必填"
-          >
+          <el-input v-model="type0.val0"
+                    placeholder="请输入成交公司"
+                    v-validate="{'required': pop.model== 4}"
+                    data-vv-name="dealCompany"
+                    data-vv-as="成交公司必填">
             <template slot="prepend">成交公司</template>
           </el-input>
         </div>
         <div class="input-content">
-          <el-input v-model="type0.val1" placeholder="请输入成交价钱" v-number.floot>
+          <el-input v-model="type0.val1"
+                    placeholder="请输入成交价钱"
+                    v-number.floot>
             <template slot="prepend">成交</template>
             <template slot="append">万元</template>
           </el-input>
@@ -65,15 +66,15 @@
       </template>
       <template v-if="pop.model == 6 || pop.model == 3">
         <div class="raido-group mini">
-          <label class="raido-group-label" v-for="(item,index) in typeShow.list" :key="index">
-            <input
-              type="radio"
-              :value="item.value"
-              v-model="typeShow.model"
-              v-validate="{'required': pop.model== 6 || pop.model == 3}"
-              data-vv-name="subType"
-              data-vv-as="子类型必填"
-            />
+          <label class="raido-group-label"
+                 v-for="(item,index) in typeShow.list"
+                 :key="index">
+            <input type="radio"
+                   :value="item.value"
+                   v-model="typeShow.model"
+                   v-validate="{'required': pop.model== 6 || pop.model == 3}"
+                   data-vv-name="subType"
+                   data-vv-as="子类型必填" />
             <i></i>
             <span>{{item.title}}</span>
           </label>
@@ -81,14 +82,13 @@
       </template>
       <div class="filedError">{{errorBags.all()[0]}}</div>
       <div class="pop-but">
-        <el-button size="small" @click="hidePop">取消</el-button>
-        <el-button
-          size="small"
-          :disabled="!showSubmitBtn"
-          class="button-back"
-          :loading="pop.loading"
-          @click="result"
-        >确定</el-button>
+        <el-button size="small"
+                   @click="hidePop">取消</el-button>
+        <el-button size="small"
+                   :disabled="!showSubmitBtn"
+                   class="button-back"
+                   :loading="pop.loading"
+                   @click="result">确定</el-button>
       </div>
     </template>
   </fixedPopup>
@@ -97,6 +97,9 @@
 <script>
 import "../less/didLogCss.less";
 export default {
+  $_veeValidate: {
+    validator: 'new' // give me my own validator scope.
+  },
   inject: ["houseId"],
   props: {
     showSubmitBtn: {
@@ -105,7 +108,7 @@ export default {
     }
   },
   methods: {
-    radioChange(e) {
+    radioChange (e) {
       console.log(e);
       this.typeShow.model = "";
       Object.assign(this.$data.type0, this.$options.data().type0);
@@ -113,10 +116,10 @@ export default {
         this.typeShow.list = this["type" + e];
       }
     },
-    hidePop() {
+    hidePop () {
       this.$emit("update:visible", false);
     },
-    result() {
+    result () {
       console.log(this.$validator, "this.$validator");
       this.$validator.validateAll().then(e => {
         if (e) {
@@ -149,12 +152,12 @@ export default {
             .then(e => {
               that.$message(e.data.message);
             })
-            .catch(e => {});
+            .catch(e => { });
         }
       });
     }
   },
-  data() {
+  data () {
     return {
       pop: {
         model: 4,
@@ -189,7 +192,7 @@ export default {
       }
     };
   },
-  created() {
+  created () {
     console.log("showSubmitBtn", this.showSubmitBtn);
   }
 };

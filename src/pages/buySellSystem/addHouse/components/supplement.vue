@@ -661,6 +661,9 @@ const USE = [
   }
 ];
 export default {
+  $_veeValidate: {
+    validator: 'new' // give me my own validator scope.
+  },
   name: "supplement",
   props: {
     // aaa: {
@@ -965,7 +968,7 @@ export default {
     },
     //获取音频上传
     getAudioFile (e) {
-      let that=this;
+      let that = this;
       if (that.isFromHouseTask ? false : !this.wxUploadFile) {
         this.$message.error("暂无上传权限");
         return;

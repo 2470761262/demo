@@ -59,8 +59,11 @@
   <div class="page-cell-addHouse form-error-tips">
     <div id="addHouseType">
       <div class="page-cell-item">
-        <div class="item-before" data-before="*"></div>
-        <el-radio-group v-model="addHouseType" @change="houseTypeChange" size="mini">
+        <div class="item-before"
+             data-before="*"></div>
+        <el-radio-group v-model="addHouseType"
+                        @change="houseTypeChange"
+                        size="mini">
           <el-radio label="basicInformation">单套录入</el-radio>
           <el-radio label="morePushHouse">多套录入</el-radio>
         </el-radio-group>
@@ -68,98 +71,88 @@
       </div>
     </div>
     <!--  -->
-    <div
-      class="page-cell-item-flex form-error-tips"
-      :class="{'after-tips':errorBags.has('communityId')}"
-      :data-tips="errorBags.first('communityId')"
-    >
+    <div class="page-cell-item-flex form-error-tips"
+         :class="{'after-tips':errorBags.has('communityId')}"
+         :data-tips="errorBags.first('communityId')">
       <div class="page-cell-item select-nobor">
-        <div class="item-before" data-before="*">楼盘</div>
-        <el-select
-          filterable
-          remote
-          :remote-method="remoteCommunityName"
-          data-vv-name="communityId"
-          data-vv-as="楼盘名称"
-          v-validate="'required'"
-          v-model="selectPageCommunit.id"
-          placeholder="请选择楼盘名称"
-          @focus="remoteCommunityNameInput"
-          @change="remoteCommunityNameChange"
-          :loading="selectPageCommunit.loading"
-        >
-          <el-option
-            v-for="item in selectPageCommunit.list"
-            :key="item.value"
-            :label="item.name"
-            :value="item.value"
-          ></el-option>
+        <div class="item-before"
+             data-before="*">楼盘</div>
+        <el-select filterable
+                   remote
+                   :remote-method="remoteCommunityName"
+                   data-vv-name="communityId"
+                   data-vv-as="楼盘名称"
+                   v-validate="'required'"
+                   v-model="selectPageCommunit.id"
+                   placeholder="请选择楼盘名称"
+                   @focus="remoteCommunityNameInput"
+                   @change="remoteCommunityNameChange"
+                   :loading="selectPageCommunit.loading">
+          <el-option v-for="item in selectPageCommunit.list"
+                     :key="item.value"
+                     :label="item.name"
+                     :value="item.value"></el-option>
         </el-select>
       </div>
-      <div
-        class="form-error-tips select-pad-width_70"
-        :class="{'after-tips':errorBags.has('tableForList')}"
-        :data-tips="errorBags.first('tableForList')"
-      >
+      <div class="form-error-tips select-pad-width_70"
+           :class="{'after-tips':errorBags.has('tableForList')}"
+           :data-tips="errorBags.first('tableForList')">
         <div class="page-cell-item select-nobor">
-          <el-input
-            placeholder="几"
-            maxlength="2"
-            v-number
-            data-vv-name="tableForList"
-            data-vv-as="套数"
-            v-validate="'required'"
-            @input="houseListChange"
-            v-model="tableForList"
-          >
-            <div slot="prepend" class="item-before">共</div>
-            <div slot="append" class="item-before">套</div>
+          <el-input placeholder="几"
+                    maxlength="2"
+                    v-number
+                    data-vv-name="tableForList"
+                    data-vv-as="套数"
+                    v-validate="'required'"
+                    @input="houseListChange"
+                    v-model="tableForList">
+            <div slot="prepend"
+                 class="item-before">共</div>
+            <div slot="append"
+                 class="item-before">套</div>
           </el-input>
         </div>
       </div>
-      <div
-        class="form-error-tips select-pad-width_70"
-        :class="{'after-tips':errorBags.has('tableAvgPirce')}"
-        :data-tips="errorBags.first('tableAvgPirce')"
-      >
+      <div class="form-error-tips select-pad-width_70"
+           :class="{'after-tips':errorBags.has('tableAvgPirce')}"
+           :data-tips="errorBags.first('tableAvgPirce')">
         <div class="page-cell-item select-nobor">
-          <el-input
-            placeholder="￥"
-            v-number.floot
-            data-vv-name="tableAvgPirce"
-            data-vv-as="总售价"
-            v-validate="'required'"
-            @input="tableAvgChange('tableAvgPirce','price')"
-            v-model="tableAvgPirce"
-          >
-            <div slot="prepend" class="item-before">总售价</div>
-            <div slot="append" class="item-before">万</div>
+          <el-input placeholder="￥"
+                    v-number.floot
+                    data-vv-name="tableAvgPirce"
+                    data-vv-as="总售价"
+                    v-validate="'required'"
+                    @input="tableAvgChange('tableAvgPirce','price')"
+                    v-model="tableAvgPirce">
+            <div slot="prepend"
+                 class="item-before">总售价</div>
+            <div slot="append"
+                 class="item-before">万</div>
           </el-input>
         </div>
       </div>
-      <div
-        class="form-error-tips select-pad-width_70"
-        :class="{'after-tips':errorBags.has('bottomPriceAvgPrice')}"
-        :data-tips="errorBags.first('bottomPriceAvgPrice')"
-      >
+      <div class="form-error-tips select-pad-width_70"
+           :class="{'after-tips':errorBags.has('bottomPriceAvgPrice')}"
+           :data-tips="errorBags.first('bottomPriceAvgPrice')">
         <div class="page-cell-item select-nobor">
-          <el-input
-            placeholder="￥"
-            v-number.floot
-            data-vv-name="bottomPriceAvgPrice"
-            data-vv-as="总底价"
-            v-validate="{required:true,isGreater:[tableAvgPirce,'总售价']}"
-            @input="tableAvgChange('bottomPriceAvgPrice','bottomPrice')"
-            v-model="bottomPriceAvgPrice"
-          >
-            <div slot="prepend" class="item-before">总底价</div>
-            <div slot="append" class="item-before">万</div>
+          <el-input placeholder="￥"
+                    v-number.floot
+                    data-vv-name="bottomPriceAvgPrice"
+                    data-vv-as="总底价"
+                    v-validate="{required:true,isGreater:[tableAvgPirce,'总售价']}"
+                    @input="tableAvgChange('bottomPriceAvgPrice','bottomPrice')"
+                    v-model="bottomPriceAvgPrice">
+            <div slot="prepend"
+                 class="item-before">总底价</div>
+            <div slot="append"
+                 class="item-before">万</div>
           </el-input>
         </div>
       </div>
     </div>
     <transition name="el">
-      <div class="page-cell-for-add" v-if="tableFor.length > 0">
+      <div class="page-cell-for-add"
+           v-if="tableFor.length > 0">
         <div class="for-add-table">
           <div class="for-add-header">
             <div class="for-add-tr">
@@ -171,79 +164,65 @@
             </div>
           </div>
           <div class="for-add-tbody">
-            <div
-              class="for-add-tr"
-              :class="{'after-tips':errorBags.has('buildingId'+(index+1)) || errorBags.has('roomId'+(index+1)) || errorBags.has('bottomPrice'+(index+1))}"
-              :data-tips="errorBags.first('buildingId'+(index+1)) || errorBags.first('roomId'+(index+1)) || errorBags.first('bottomPrice'+(index+1))"
-              v-for="(item,index) in tableFor"
-              :key="index"
-            >
+            <div class="for-add-tr"
+                 :class="{'after-tips':errorBags.has('buildingId'+(index+1)) || errorBags.has('roomId'+(index+1)) || errorBags.has('bottomPrice'+(index+1))}"
+                 :data-tips="errorBags.first('buildingId'+(index+1)) || errorBags.first('roomId'+(index+1)) || errorBags.first('bottomPrice'+(index+1))"
+                 v-for="(item,index) in tableFor"
+                 :key="index">
               <div class="for-add-td">{{index+1}}</div>
               <div class="for-add-td select-nobor">
-                <el-select
-                  filterable
-                  remote
-                  :data-vv-name="'buildingId'+(index+1)"
-                  :data-vv-as="'楼栋'+(index+1)"
-                  v-validate="'required'"
-                  :remote-method="remoteBuildingNo"
-                  @change="remoteBuildingNoChange($event,index)"
-                  v-model="item.buildingId"
-                  placeholder="楼栋"
-                >
-                  <el-option
-                    v-for="item in selectPageBuilding.list"
-                    :key="item.value"
-                    :label="item.name"
-                    :value="item.value"
-                  ></el-option>
+                <el-select filterable
+                           remote
+                           :data-vv-name="'buildingId'+(index+1)"
+                           :data-vv-as="'楼栋'+(index+1)"
+                           v-validate="'required'"
+                           :remote-method="remoteBuildingNo"
+                           @change="remoteBuildingNoChange($event,index)"
+                           v-model="item.buildingId"
+                           placeholder="楼栋">
+                  <el-option v-for="item in selectPageBuilding.list"
+                             :key="item.value"
+                             :label="item.name"
+                             :value="item.value"></el-option>
                 </el-select>
               </div>
               <div class="for-add-td select-nobor">
-                <el-select
-                  filterable
-                  remote
-                  :remote-method="remoteRoomNo"
-                  :data-vv-name="'roomId'+(index+1)"
-                  :data-vv-as="'房间号'+(index+1)"
-                  v-validate="'required'"
-                  v-model="item.roomId"
-                  @change="remoteRoomNoChange($event,index)"
-                  @blur="selectPageRoom.focusIndex = -1"
-                  @focus="selectPageRoom.focusIndex = index"
-                  placeholder="房间号"
-                >
-                  <el-option
-                    v-for="item in selectPageRoom.list"
-                    :key="item.value"
-                    :disabled="filterRoomDisabled().includes(tableFor[index].buildingId+'$'+item.value)"
-                    :label="item.name"
-                    :value="item.value"
-                  ></el-option>
+                <el-select filterable
+                           remote
+                           :remote-method="remoteRoomNo"
+                           :data-vv-name="'roomId'+(index+1)"
+                           :data-vv-as="'房间号'+(index+1)"
+                           v-validate="'required'"
+                           v-model="item.roomId"
+                           @change="remoteRoomNoChange($event,index)"
+                           @blur="selectPageRoom.focusIndex = -1"
+                           @focus="selectPageRoom.focusIndex = index"
+                           placeholder="房间号">
+                  <el-option v-for="item in selectPageRoom.list"
+                             :key="item.value"
+                             :disabled="filterRoomDisabled().includes(tableFor[index].buildingId+'$'+item.value)"
+                             :label="item.name"
+                             :value="item.value"></el-option>
                 </el-select>
               </div>
               <div class="for-add-td select-nobor select-pad-width_70">
                 <div class="tr-flex">
-                  <el-input
-                    placeholder="售价"
-                    v-number.floot
-                    @input="updatePirce('tableAvgPirce','price')"
-                    v-model="item.price"
-                  ></el-input>
+                  <el-input placeholder="售价"
+                            v-number.floot
+                            @input="updatePirce('tableAvgPirce','price')"
+                            v-model="item.price"></el-input>
                   <span>万</span>
                 </div>
               </div>
               <div class="for-add-td select-nobor select-pad-width_70">
                 <div class="tr-flex">
-                  <el-input
-                    placeholder="底价"
-                    v-number.floot
-                    :data-vv-name="'bottomPrice'+(index+1)"
-                    :data-vv-as="'楼栋'+(index+1)"
-                    v-validate="{isGreater:[item.price,'售价']}"
-                    @input="updatePirce('bottomPriceAvgPrice','bottomPrice')"
-                    v-model="item.bottomPrice"
-                  ></el-input>
+                  <el-input placeholder="底价"
+                            v-number.floot
+                            :data-vv-name="'bottomPrice'+(index+1)"
+                            :data-vv-as="'楼栋'+(index+1)"
+                            v-validate="{isGreater:[item.price,'售价']}"
+                            @input="updatePirce('bottomPriceAvgPrice','bottomPrice')"
+                            v-model="item.bottomPrice"></el-input>
                   <span>万</span>
                 </div>
               </div>
@@ -253,48 +232,45 @@
       </div>
     </transition>
     <!-- 业主姓名 -->
-    <div
-      class="form-error-tips maging-top_60 margin-bot_20"
-      :class="{'after-tips':errorBags.has('customerName')}"
-      :data-tips="errorBags.first('customerName')"
-    >
+    <div class="form-error-tips maging-top_60 margin-bot_20"
+         :class="{'after-tips':errorBags.has('customerName')}"
+         :data-tips="errorBags.first('customerName')">
       <div class="page-cell-item select-nobor center-flex">
-        <el-input
-          placeholder="请输入业主姓名"
-          data-vv-name="customerName"
-          data-vv-as="业主姓名"
-          v-validate="'required|isChinese'"
-          v-model="form.customerName"
-        >
-          <div slot="prepend" class="item-before" data-before="*">业主姓名</div>
+        <el-input placeholder="请输入业主姓名"
+                  data-vv-name="customerName"
+                  data-vv-as="业主姓名"
+                  v-validate="'required|isChinese'"
+                  v-model="form.customerName">
+          <div slot="prepend"
+               class="item-before"
+               data-before="*">业主姓名</div>
         </el-input>
         <div class="input-after-checkbox">
-          <el-radio-group v-model="form.sex" size="mini">
-            <el-radio
-              :label="item.label"
-              v-for="(item, index) in sexList"
-              :key="index"
-            >{{ item.title }}</el-radio>
+          <el-radio-group v-model="form.sex"
+                          size="mini">
+            <el-radio :label="item.label"
+                      v-for="(item, index) in sexList"
+                      :key="index">{{ item.title }}</el-radio>
           </el-radio-group>
         </div>
       </div>
     </div>
     <!-- 电话号码 -->
-    <div
-      class="form-error-tips margin-bot_20"
-      :class="{'after-tips':errorBags.has('tel')}"
-      :data-tips="errorBags.first('tel')"
-    >
+    <div class="form-error-tips margin-bot_20"
+         :class="{'after-tips':errorBags.has('tel')}"
+         :data-tips="errorBags.first('tel')">
       <div class="page-cell-item select-nobor">
-        <el-input
-          placeholder="默认拨打为第一个号码"
-          data-vv-name="tel"
-          data-vv-as="电话号码"
-          v-validate="'required|phoneLen|phone'"
-          v-model="form.tel"
-        >
-          <div slot="prepend" class="item-before" data-before="*">手机号</div>
-          <div slot="append" @click="addTelToList" class="item-after item-before-col">
+        <el-input placeholder="默认拨打为第一个号码"
+                  data-vv-name="tel"
+                  data-vv-as="电话号码"
+                  v-validate="'required|phoneLen|phone'"
+                  v-model="form.tel">
+          <div slot="prepend"
+               class="item-before"
+               data-before="*">手机号</div>
+          <div slot="append"
+               @click="addTelToList"
+               class="item-after item-before-col">
             <i class="el-icon-circle-plus-outline"></i>
             <div>新增</div>
           </div>
@@ -303,27 +279,22 @@
     </div>
     <!-- 电话号码 for -->
     <transition-group name="el">
-      <div
-        class="form-error-tips margin-bot_20"
-        :class="{'after-tips':errorBags.has('tel'+item)}"
-        :data-tips="errorBags.first('tel'+item)"
-        v-for="(item,index) in addTel"
-        :key="item"
-      >
+      <div class="form-error-tips margin-bot_20"
+           :class="{'after-tips':errorBags.has('tel'+item)}"
+           :data-tips="errorBags.first('tel'+item)"
+           v-for="(item,index) in addTel"
+           :key="item">
         <div class="page-cell-item select-nobor">
-          <el-input
-            placeholder="请输入业主电话号码"
-            :data-vv-name="'tel'+item"
-            :data-vv-as="'电话号码'+item"
-            v-model="form['tel'+item]"
-            v-validate="{phone:true,isSame:[ [form.tel,  ...addTel.map(tel=>  form['tel'+tel]) ],'手机号']}"
-          >
-            <div slot="prepend" class="item-before">手机号{{item}}</div>
-            <div
-              slot="append"
-              @click="removeTelToList(index,item)"
-              class="item-after item-before-col"
-            >
+          <el-input placeholder="请输入业主电话号码"
+                    :data-vv-name="'tel'+item"
+                    :data-vv-as="'电话号码'+item"
+                    v-model="form['tel'+item]"
+                    v-validate="{phone:true,isSame:[ [form.tel,  ...addTel.map(tel=>  form['tel'+tel]) ],'手机号']}">
+            <div slot="prepend"
+                 class="item-before">手机号{{item}}</div>
+            <div slot="append"
+                 @click="removeTelToList(index,item)"
+                 class="item-after item-before-col">
               <i class="el-icon-circle-plus-outline"></i>
               <div>删除</div>
             </div>
@@ -333,26 +304,21 @@
     </transition-group>
     <div class="page-cell-item-flex maging-top_60 margin-bot_20">
       <!-- 房屋证件 -->
-      <div
-        class="form-error-tips"
-        :class="{'after-tips':errorBags.has('certificateType')}"
-        :data-tips="errorBags.first('certificateType')"
-      >
+      <div class="form-error-tips"
+           :class="{'after-tips':errorBags.has('certificateType')}"
+           :data-tips="errorBags.first('certificateType')">
         <div class="page-cell-item">
-          <div class="item-before" data-before="*">房屋证件</div>
-          <el-select
-            v-model="form.certificateType"
-            v-validate="'required'"
-            data-vv-name="certificateType"
-            data-vv-as="房屋证件"
-            placeholder="请选择房屋证件"
-          >
-            <el-option
-              v-for="item in certificateTypeList"
-              :key="item.label"
-              :label="item.title"
-              :value="item.label"
-            ></el-option>
+          <div class="item-before"
+               data-before="*">房屋证件</div>
+          <el-select v-model="form.certificateType"
+                     v-validate="'required'"
+                     data-vv-name="certificateType"
+                     data-vv-as="房屋证件"
+                     placeholder="请选择房屋证件">
+            <el-option v-for="item in certificateTypeList"
+                       :key="item.label"
+                       :label="item.title"
+                       :value="item.label"></el-option>
           </el-select>
         </div>
       </div>
@@ -396,8 +362,10 @@
     <!-- 证号 -->
     <div class="form-error-tips margin-bot_20">
       <div class="page-cell-item select-nobor">
-        <el-input placeholder="请输入产权证号" v-model="form.certificateNo">
-          <div slot="prepend" class="item-before">证号</div>
+        <el-input placeholder="请输入产权证号"
+                  v-model="form.certificateNo">
+          <div slot="prepend"
+               class="item-before">证号</div>
         </el-input>
       </div>
     </div>
@@ -415,13 +383,16 @@ let certificateType = [
   { title: "拆迁安置协议书", label: 3 }
 ];
 export default {
+  $_veeValidate: {
+    validator: 'new' // give me my own validator scope.
+  },
   name: "morePushHouse",
   props: {
     houseType: {
       type: String
     }
   },
-  data() {
+  data () {
     return {
       addHouseType: this.houseType,
       sexList: sex,
@@ -457,11 +428,11 @@ export default {
       }
     };
   },
-  activated() {
+  activated () {
     this.addHouseType = this.houseType;
   },
   methods: {
-    remoteCommunityNameChange(e) {
+    remoteCommunityNameChange (e) {
       let findResultIndex = this.selectPageCommunit.list.findIndex(item => {
         return item.value == e;
       });
@@ -475,13 +446,13 @@ export default {
       this.remoteBuildingNo();
     },
     //楼盘获取焦点 第一次点击就进行查询
-    remoteCommunityNameInput() {
+    remoteCommunityNameInput () {
       if (this.selectPageCommunit.list.length == 0) {
         this.remoteCommunityName();
       }
     },
     //获取楼盘数据
-    remoteCommunityName(e) {
+    remoteCommunityName (e) {
       let that = this;
       that.selectPageCommunit.loading = true;
       this.$api
@@ -507,7 +478,7 @@ export default {
         });
     },
     //查询栋座
-    remoteBuildingNo(e) {
+    remoteBuildingNo (e) {
       let that = this;
       //验证楼盘
       that.$validator
@@ -541,7 +512,7 @@ export default {
         });
     },
     //楼栋选择
-    remoteBuildingNoChange(e, index) {
+    remoteBuildingNoChange (e, index) {
       let findResultIndex = this.selectPageBuilding.list.findIndex(item => {
         return item.value == e;
       });
@@ -554,7 +525,7 @@ export default {
       this.remoteRoomNo(null, index);
     },
     //查询房间号
-    remoteRoomNo(e, index) {
+    remoteRoomNo (e, index) {
       let that = this;
       if (index == undefined) {
         index = this.selectPageRoom.focusIndex;
@@ -593,7 +564,7 @@ export default {
         });
     },
     //房间号选择更改事件
-    remoteRoomNoChange(e, index) {
+    remoteRoomNoChange (e, index) {
       let findResultIndex = this.selectPageRoom.list.findIndex(item => {
         return item.value == e;
       });
@@ -602,7 +573,7 @@ export default {
       ].name;
     },
     //输入的套数改变
-    houseListChange(e) {
+    houseListChange (e) {
       let that = this;
       this.tableFor = [];
       for (let i = 0; i < e; i++) {
@@ -621,7 +592,7 @@ export default {
       }
     },
     //输入的总价钱设置tab的平均值
-    tableAvgChange(objName, toObjName) {
+    tableAvgChange (objName, toObjName) {
       let that = this;
       this.tableFor.forEach(item => {
         if (!Number.isNaN(that[objName]))
@@ -629,7 +600,7 @@ export default {
       });
     },
     //当前选择已经存在这个房间则不让在重复选择
-    filterRoomDisabled() {
+    filterRoomDisabled () {
       return this.tableFor
         .map(item => {
           return item.buildingId + "$" + item.roomId;
@@ -637,7 +608,7 @@ export default {
         .join(",");
     },
     //同步更新价钱
-    updatePirce(priceName, itemName) {
+    updatePirce (priceName, itemName) {
       if (!Number.isNaN(this[itemName])) {
         let price = 0;
         this.tableFor.forEach(item => {
@@ -649,7 +620,7 @@ export default {
       }
     },
     //添加电话号码
-    addTelToList() {
+    addTelToList () {
       let defaultList = [1, 2, 3];
       if (this.addTel.length < 3) {
         for (let index = 0; index < defaultList.length; index++) {
@@ -662,15 +633,15 @@ export default {
       this.addTel.sort();
     },
     //删除电话号码
-    removeTelToList(index, item) {
+    removeTelToList (index, item) {
       this.addTel.splice(index, 1);
       this.form["tel" + item] = "";
     },
-    houseTypeChange(e) {
+    houseTypeChange (e) {
       this.$emit("update:houseType", e);
     },
     //验证
-    validateAll() {
+    validateAll () {
       let that = this;
       return this.$validator
         .validateAll()
@@ -689,7 +660,7 @@ export default {
         });
     },
     //提交数据d
-    upLoadData() {
+    upLoadData () {
       let that = this;
       return this.$api
         .post({

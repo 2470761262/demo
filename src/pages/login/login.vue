@@ -167,6 +167,9 @@ import util from "@/util/util";
 import { LOGINDATA, TOKEN } from "@/util/constMap";
 //import func from '../../vue-temp/vue-editor-bridge';
 export default {
+  $_veeValidate: {
+    validator: 'new' // give me my own validator scope.
+  },
   name: "home",
   watch: {
     loginType: {
@@ -439,7 +442,7 @@ export default {
         this.$validator.validateAll();
         this.loginLoadding = true;
         loginParams.userName = this.loginData.account;
-        loginParams.passWord =this.md5Util.hex_md5(this.loginData.password).toUpperCase();
+        loginParams.passWord = this.md5Util.hex_md5(this.loginData.password).toUpperCase();
       } else {
         loginParams.clientId = 4;
         loginParams.accountId = this.accountId;
