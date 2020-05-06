@@ -19,7 +19,10 @@ export default {
         var theRequest = new URLSearchParams(
             url.substring(url.indexOf("?"))
         );
+
         var token = theRequest.get("tk");
+        if(token==""||token==null)  //兼容部分低版本浏览器通过上面的方法获取不到token问题 
+            token=this.getQueryVariable("tk");
         console.log(util.localStorageGet("tk"), token, "util.localStorageGet(tk)");
         if (!util.localStorageGet(LOGINDATA) || (token != "" && token != null && token != util.localStorageGet("tk"))) {
             //util.localStorageSet("logindata",{sessionId:null});
@@ -42,6 +45,16 @@ export default {
         }
     },
     methods: {
+        getQueryVariable(variable)
+        {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                    var pair = vars[i].split("=");
+                    if(pair[0] == variable){return pair[1];}
+            }
+            return null;
+        },
         getLoginData (token) {
             let params = { token: token };
             this.$api
