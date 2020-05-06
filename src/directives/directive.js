@@ -98,14 +98,14 @@ export default {
         /**
          * @example: 
          * 
-         * 高级使用
+         * 方式2
          * v-scrollCenter.overflowMain="{scroll:'el-main',offsetParent:'com-flex',top:'80'}"
          * overflowMain 如果相对父级已经超出顶部则这时候相对body来显示
          * scroll：需要滚动的父级
          * offsetParent: 相对父级
          * top :偏移量
          * 
-         * 简单使用
+         * 方式1
          * v-scrollCenter="'page-contenr-com'"
          * page-contenr-com => 滚动的父级
          */

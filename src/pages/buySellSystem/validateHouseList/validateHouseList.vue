@@ -30,6 +30,20 @@
   display: flex;
   justify-content: space-between;
 }
+.checkTel-type {
+  position: relative;
+  .checkTel-type-title {
+    color: #40a375;
+  }
+  .icon {
+    position: absolute;
+    right: 0;
+    font-size: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+}
 </style>
 <template>
   <div class="page-row-flex">
@@ -317,6 +331,12 @@
         </div>
       </el-card>
     </el-dialog>
+    <tel-pop title=""
+             :visible.sync="telPopFlag"
+             width="auto"
+             :type-class="telPopFlagTypeClass"
+             v-if="telPopFlag">
+    </tel-pop>
   </div>
 </template>
 <script>
@@ -324,22 +344,27 @@ import listPage from "@/components/listPage";
 import util from "@/util/util";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
+//验真电话弹框
+import telPop from "./components/telPop";
 export default {
   mixins: [getMenuRid],
   components: {
     listPage,
-    moreSelect
+    moreSelect,
+    telPop
   },
   computed: {
-    avgPrice() {
+    avgPrice () {
       if (!this.nowRow.price || this.nowRow.area == 0) {
         return "-";
       }
       return (this.nowRow.price / this.nowRow.area).toFixed(4) * 10000;
     }
   },
-  data() {
+  data () {
     return {
+      telPopFlag: false,
+      telPopFlagTypeClass: 'info',
       loading: true, //控制表格加载动画提示
       showVeryfyDetail: false, //验真详情弹出层
       pageJson: {
@@ -469,7 +494,15 @@ export default {
         {
           prop: "checkTel",
           label: "验真电话",
-          formart: row => row.checkTel || "暂无",
+          formart: row => {
+            if (row.checkTel) {
+              return <div class="checkTel-type">
+                <span class="checkTel-type-title">正常</span>
+                <span class="el-icon-s-order icon" onClick={this.openCheckTelPop}></span>
+              </div>
+            }
+            return "暂无"
+          },
           width: "120",
           order: false
         },
@@ -535,14 +568,22 @@ export default {
       // showEditBtn : false,//编辑按钮
     };
   },
-  created() {
+  created () {
     this.queryVerifyHouseByParams(1);
   },
-  mounted() {
+  mounted () {
     this.queryVerifyHouseByParams(1);
   },
   methods: {
-    toHouseDetail(row) {
+    /**
+     *  展开验证电话弹框
+     */
+    openCheckTelPop () {
+      //this.telPopFlagTypeClass = 'error'
+      this.telPopFlagTypeClass = 'info';
+      this.telPopFlag = true;
+    },
+    toHouseDetail (row) {
       var that = this;
       console.log(row, "进入验真房源（sale_house_draft）详情");
       that.$router.push({
@@ -550,7 +591,7 @@ export default {
         params: { houseId: row.id }
       });
     },
-    sortMethod(e) {
+    sortMethod (e) {
       this.sortColumn = e.prop;
       if (e.order == "descending") {
         this.sortType = 1;
@@ -559,7 +600,7 @@ export default {
       }
       this.queryVerifyHouseByParams(1);
     },
-    GetRequest() {
+    GetRequest () {
       var url = location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", location);
       var theRequest = new URLSearchParams(
@@ -569,18 +610,18 @@ export default {
       util.localStorageSet("token", token);
       return token;
     },
-    moreSelectChange(e) {
+    moreSelectChange (e) {
       this.moreSelect = e;
       this.queryVerifyHouseDatas(1);
     },
-    queryVerifyHouseByParams(currentPage) {
+    queryVerifyHouseByParams (currentPage) {
       this.queryVerifyHouseDatas(1);
     },
-    Remove() {
+    Remove () {
       Object.assign(this.$data, this.$options.data.call(this));
       this.queryVerifyHouseDatas(1);
     },
-    queryVerifyHouseDatas(currentPage) {
+    queryVerifyHouseDatas (currentPage) {
       let that = this;
       that.loading = true;
 
@@ -658,7 +699,7 @@ export default {
           console.log(e);
         });
     },
-    getVerifyImg(row) {
+    getVerifyImg (row) {
       let trueId = row.id;
       if (row.isMul != null && row.isMul !== 0) {
         trueId = row.isMul;
@@ -682,8 +723,8 @@ export default {
             console.log(result.data);
             this.$alert(
               '<img class="invitationToVerify" src="' +
-                result.data +
-                '"></img>',
+              result.data +
+              '"></img>',
               "业主邀请二维码",
               {
                 dangerouslyUseHTMLString: true
@@ -702,12 +743,12 @@ export default {
           that.loading = false;
         });
     },
-    remoteInput() {
+    remoteInput () {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod(query) {
+    remoteMethod (query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -735,7 +776,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId() {
+    queryCBId () {
       var that = this;
       this.$api
         .get({
@@ -758,7 +799,7 @@ export default {
         });
       this.queryVerifyHouseByParams();
     },
-    queryRoomNo() {
+    queryRoomNo () {
       var that = this;
       this.$api
         .get({
@@ -781,15 +822,15 @@ export default {
         });
       this.queryVerifyHouseByParams();
     },
-    queryTabData() {
+    queryTabData () {
       console.log(this.queryData);
     },
-    distributeEvent(e, row) {
+    distributeEvent (e, row) {
       if (!e) return;
       this[e](row);
     },
     //空方法
-    isForBut(type) {
+    isForBut (type) {
       let array = [
         {
           name: "邀请验真",
@@ -830,7 +871,7 @@ export default {
         return item;
       });
     },
-    getResult(row) {
+    getResult (row) {
       let that = this;
       that.showVeryfyDetail = true;
       that.nowRow = row;
@@ -880,14 +921,14 @@ export default {
           break;
       }
     },
-    getCheckStatus(key) {
+    getCheckStatus (key) {
       let that = this;
       console.log("key=" + key);
       return that.checkStatusList.filter(item => {
         return item.key.includes(key);
       });
     },
-    getVerifyDiff(id, perType) {
+    getVerifyDiff (id, perType) {
       this.$api
         .get({
           url: "/verifyHouse/diffrent/" + id,
@@ -914,22 +955,22 @@ export default {
           console.log(e);
         });
     },
-    handleClick() {
+    handleClick () {
       console.log(this.queryData);
     },
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.pageJson.pageSize = val;
       this.queryVerifyHouseDatas(1);
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.queryVerifyHouseDatas(val);
     },
-    edit(val) {
+    edit (val) {
       this.$router.push({
         path: "/buySellSystem/addHouse?method=edit&id=" + val.id
       });
     },
-    reVerify(val) {
+    reVerify (val) {
       this.$router.push({
         path: "/buySellSystem/addHouse?method=reset&id=" + val.id
       });

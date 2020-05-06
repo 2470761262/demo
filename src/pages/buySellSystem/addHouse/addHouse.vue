@@ -112,7 +112,6 @@
               <el-button v-if="stepsActiveIndex < 2 ||  reSetMethod"
                          type="primary"
                          @click="nextPage(null)"
-                         class="page-next"
                          :loading="butLoading">{{ nextText }}</el-button>
               <el-button type="primary"
                          v-if="stepsActiveIndex < 3 ||  reSetMethod"
