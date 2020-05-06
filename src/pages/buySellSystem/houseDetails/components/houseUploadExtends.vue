@@ -14,7 +14,7 @@ let listMap = new Map([
   ['kitchenImgList', '4'],
   ['toiletImgList', '5'],
   ['layoutImgList', '6'],
-  ['houseVideo', 'vedio']
+  ['houseVideo', 'vedio'],
 ]);
 export default {
   inject: ["houseId"],
@@ -22,12 +22,49 @@ export default {
   props: {
     replaceType: {
       type: Number
+    },
+    echoData: {
+      type: Array,
+      default: () => []
+    }
+  },
+  created () {
+    if (this.echoData.length != 0) {
+      this.FillImgVideo();
     }
   },
   destroyed () {
     this.socketApi.closeSocket();
   },
   methods: {
+    /**
+    * 回显视频和图片
+    */
+    FillImgVideo () {
+      let echoMap = new Map([
+        ['1', 'outdoorImgList'],
+        ['2', 'livingRoomImgList'],
+        ['3', 'bedroomImgList'],
+        ['4', 'kitchenImgList'],
+        ['5', 'toiletImgList'],
+        ['6', 'layoutImgList'],
+      ]);
+      this.echoData.forEach((item) => {
+        if (item.PicClass && echoMap.has(item.PicClass.toString())) {
+          this[echoMap.get(item.PicClass.toString())].push({
+            id: item.id,
+            url: item.picUrl
+          })
+        } else {
+          if (item.videoUrl && item.id) {
+            this.houseVideo = {
+              id: item.id,
+              url: item.videoUrl
+            }
+          }
+        }
+      })
+    },
     /**
      * @param {string} picClass 当前上传的类型 如果是视屏则是null
      * @param {file} uploader 上传的文件
