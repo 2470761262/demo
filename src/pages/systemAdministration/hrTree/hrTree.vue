@@ -574,7 +574,16 @@ export default {
       checkedTypeChange: null,
       logStr: "",
       positionTree: [],
-      currDep: null
+      currDep: null,
+      userChangeData: {
+        id: null,
+        dep: null,
+        post: null,
+        level: null,
+        role: null,
+        isGold: null,
+        fnFrom: null
+      }
     };
   },
   mounted() {
@@ -968,12 +977,20 @@ export default {
           this.dialogChange = true;
           this.RoleDis = true;
           this.optInfo.fnFrom = 1; //0任命，1调动
+          this.userChangeData.fnFrom = 1;
         }
         if (type === "appoint") {
           this.dialogChange = true;
           this.RoleDis = false;
           this.optInfo.fnFrom = 0; //0任命，1调动
+          this.userChangeData.fnFrom = 0;
         }
+        this.userChangeData.id = id;
+        this.userChangeData.dep = deptId;
+        this.userChangeData.post = perPostid;
+        this.userChangeData.level = level + "";
+        this.userChangeData.isGold = isGold + "";
+        this.userChangeData.role = roleId;
       }
       this.optInfo.id = id;
       this.optInfo.name = name;
@@ -1183,6 +1200,23 @@ export default {
         isGold: this.optInfo.isGold,
         fnFrom: this.optInfo.fnFrom
       };
+
+      if (
+        this.userChangeData.id == params.id &&
+        this.userChangeData.dep == params.dep &&
+        this.userChangeData.post == params.post &&
+        this.userChangeData.level == params.level &&
+        this.userChangeData.role == params.role &&
+        this.userChangeData.isGold == params.isGold &&
+        this.userChangeData.fnFrom == params.fnFrom
+      ) {
+        this.$message({
+          type: "error",
+          message: "未做变动"
+        });
+        return;
+      }
+
       this.logStr = this.logStr
         .replace("rpl1", this.checkedIdChange)
         .replace("rpl2", this.optInfo.role)
