@@ -231,8 +231,8 @@ export default {
         let _that = this;
         if (Object.keys(newValue).length > 0 && !this.isDisabled && this.shareQRCode) {
           this.qrData = new QRCode("qrcode", {
-            width: 65,
-            height: 65,
+            width: 88,
+            height: 88,
             text: newValue.data.shareQRCode,
             colorDark: "#000",
             colorLight: "#fff"
