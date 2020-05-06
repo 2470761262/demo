@@ -156,7 +156,7 @@ export default {
           prop: "replyPer",
           label: "答复人",
           width: "200px",
-          formatter: row => row.replyMessage
+          formatter: row => row.replyPer
         }
         ,
         {
