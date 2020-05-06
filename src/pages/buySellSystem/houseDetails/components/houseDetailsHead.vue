@@ -247,8 +247,8 @@ export default {
         if (Object.keys(this.resultData).length > 0 && !this.isDisabled && value) {
           this.$nextTick(() => {
             this.qrData = new QRCode("qrcode", {
-              width: 65,
-              height: 65,
+              width: 88,
+              height: 88,
               text: _that.resultData.shareQRCode,
               colorDark: "#000",
               colorLight: "#fff"
