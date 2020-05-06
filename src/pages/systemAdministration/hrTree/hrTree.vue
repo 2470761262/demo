@@ -8,9 +8,9 @@
   float: left;
   overflow-x: auto;
   background: #fff;
-  /deep/.el-tree-node__children{
-        overflow:visible;
-    }
+  /deep/.el-tree-node__children {
+    overflow: visible;
+  }
 }
 
 .elControl {
@@ -573,7 +573,8 @@ export default {
       checkedIdChange: null,
       checkedTypeChange: null,
       logStr: "",
-      positionTree: []
+      positionTree: [],
+      currDep: null
     };
   },
   mounted() {
@@ -898,6 +899,8 @@ export default {
               this.treeDataChange = result.data;
               //this.filterTextChange = dep;
               this.curNodeIdChange = [deptId + ",1"];
+              this.currDep = deptId;
+              console.log("this.currDep", this.currDep);
             } else {
               console.log("载入结果" + +result.message);
               alert(result.message);
@@ -1131,7 +1134,7 @@ export default {
               message: "参数出错"
             });
           } else {
-            let params = { perId: id, UpType: "locked", upValue: 1 };
+            let params = { perId: id, upType: "locked", upValue: 0 };
             this.operation(params);
           }
         })
@@ -1145,6 +1148,8 @@ export default {
     handleCheckChangeChange(data, checked, node) {
       if (checked == true) {
         this.checkedIdChange = data.businessId;
+        console.log("this.checkedIdChange", this.checkedIdChange);
+        this.currDep = data.businessId;
         this.checkedTypeChange = data.type;
         this.$refs.treeFormChange.setCheckedNodes([data]);
         if (this.checkedTypeChange === 1) {
@@ -1213,9 +1218,14 @@ export default {
     },
     selectPositionList() {
       let that = this;
+      let params = {
+        dep: that.currDep
+      };
       that.$api
         .post({
-          url: "/sys/tree/hr/tree/user/manager"
+          url: "/sys/tree/hr/tree/user/manager",
+          data: params,
+          qs: true
         })
         .then(e => {
           let result = e.data;
