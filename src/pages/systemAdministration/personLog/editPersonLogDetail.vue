@@ -181,7 +181,7 @@ export default {
             this.personLogEntity = result.data;
 
             this.tableData = result.data.logJson.data;
-            console.log(this.tableData);
+            console.log("this.tableData", this.tableData);
             this.ttag = this.personLogEntity.tag;
             switch (this.personLogEntity.tag) {
               case 0:

@@ -548,9 +548,9 @@ export default {
       accessoryAllList: [],
       accessoryMoldList: [
         { title: "外景图", list: [], type: 1 },
-        { title: "卧室图", list: [], type: 2 },
-        { title: "厨房", list: [], type: 3 },
-        { title: "客厅", list: [], type: 4 },
+        { title: "客厅", list: [], type: 2 },
+        { title: "卧室图", list: [], type: 3 },
+        { title: "厨房", list: [], type: 4 },
         { title: "卫生间", list: [], type: 5 },
         { title: "户型", list: [], type: 6 },
         { title: "视频", list: [], type: 7 }

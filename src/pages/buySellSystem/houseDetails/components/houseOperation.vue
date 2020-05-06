@@ -224,12 +224,14 @@
                      v-if="item.isTellFollow">
                   <div class="content-item-head ">
                     <div class="content-item-time">{{item.FollowTime}}</div>
+
                     <button class="content-item-but"
                             v-if="deleteFollow"
                             @click="deleteFollowById(item.id)"
                             :disabled="isDisabled">删除</button>
                   </div>
                   <div class="content-item-body">
+                    <div class="item-body-text">{{item.followPerName | emptyRead}}({{item.followPerDepartmentName | emptyRead}})</div>
                     <playAudio :url="item.Memo"></playAudio>
                     <div class="pad-line"></div>
                   </div>
