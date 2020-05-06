@@ -48,7 +48,10 @@
     <el-form ref="form" :rules="rules" :model="DeptEntity" label-width="130px">
       <div class="flex-row">
         <el-form-item label="部门名称:" prop="deptName">
-          <el-input v-model="DeptEntity.deptName" @input="GetPinyin()"></el-input>
+          <el-input
+            v-model="DeptEntity.deptName"
+            @input="GetPinyin()"
+          ></el-input>
         </el-form-item>
         <el-form-item label="部门首拼" prop="header">
           <el-input v-model="DeptEntity.header"></el-input>
@@ -58,7 +61,11 @@
           <el-input v-model="DeptEntity.tel"></el-input>
         </el-form-item>
         <el-form-item label="开业时间">
-          <el-date-picker v-model="DeptEntity.regDate" type="date" placeholder="选择日期"></el-date-picker>
+          <el-date-picker
+            v-model="DeptEntity.regDate"
+            type="date"
+            placeholder="选择日期"
+          ></el-date-picker>
         </el-form-item>
       </div>
       <div class="flex-row">
@@ -97,7 +104,11 @@
                 </template>
               </template>
             </list-page>-->
-            <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
+            <el-input
+              placeholder="输入关键字进行过滤"
+              v-model="filterText"
+              class="treeSearch"
+            ></el-input>
             <el-tree
               ref="treeForm"
               :data="treeData"
@@ -116,10 +127,19 @@
               v-loading="treeLoading"
             ></el-tree>
           </el-dialog>
-          <el-input type="text" v-model="DeptEntity.managerPerName" @focus="getDialogVisible()"></el-input>
+          <el-input
+            type="text"
+            v-model="DeptEntity.managerPerName"
+            @focus="getDialogVisible()"
+          ></el-input>
         </el-form-item>
         <el-form-item label="加入类型" prop="joinType">
-          <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.joinType" show-word-limit>
+          <el-select
+            type="text"
+            placeholder="请输入内容"
+            v-model="DeptEntity.joinType"
+            show-word-limit
+          >
             <el-option label="直营" :value="1" />
             <el-option label="加盟" :value="2" />
             <el-option label="联营" :value="3" />
@@ -127,7 +147,12 @@
         </el-form-item>
 
         <el-form-item label="部门属性:">
-          <el-select type="text" placeholder="请输入内容" v-model="DeptEntity.isCom" show-word-limit>
+          <el-select
+            type="text"
+            placeholder="请输入内容"
+            v-model="DeptEntity.isCom"
+            show-word-limit
+          >
             <el-option label="运营期" :value="1" />
             <el-option label="拓展期" :value="2" />
           </el-select>
@@ -160,14 +185,26 @@
               </template>
             </list-page>
           </el-dialog>
-          <el-input type="text" v-model="DeptEntity.storeName" @focus="getDialogVisible3()"></el-input>
+          <el-input
+            type="text"
+            v-model="DeptEntity.storeName"
+            @focus="getDialogVisible3()"
+          ></el-input>
         </el-form-item>
 
         <el-form-item label="地址:">
-          <el-input type="text" placeholder="请输入内容" v-model="DeptEntity.address"></el-input>
+          <el-input
+            type="text"
+            placeholder="请输入内容"
+            v-model="DeptEntity.address"
+          ></el-input>
         </el-form-item>
         <el-form-item label="部门描述">
-          <el-input type="text" placeholder="请输入内容" v-model="DeptEntity.deptDesc"></el-input>
+          <el-input
+            type="text"
+            placeholder="请输入内容"
+            v-model="DeptEntity.deptDesc"
+          ></el-input>
         </el-form-item>
       </div>
       <div class="flex-row">
@@ -180,7 +217,12 @@
           </el-select>
         </el-form-item>
         <el-form-item label="是否区片:" prop="isArea">
-          <el-select type="text" placeholder="请选择" v-model="DeptEntity.isArea" show-word-limit>
+          <el-select
+            type="text"
+            placeholder="请选择"
+            v-model="DeptEntity.isArea"
+            show-word-limit
+          >
             <el-option label="是片区" :value="1" />
             <el-option label="不是片区" :value="0" />
           </el-select>
@@ -189,7 +231,9 @@
     </el-form>
 
     <div class="footerContainer el-top">
-      <el-button type="primary" @click="saveDept()" :disabled="btnDis">确定</el-button>
+      <el-button type="primary" @click="saveDept()" :disabled="btnDis"
+        >确定</el-button
+      >
       <el-button type="primary" @click="back()">返回</el-button>
     </div>
   </div>
@@ -369,7 +413,7 @@ export default {
             console.log("添加失败");
             console.log(e);
           })
-          .finally(e => {
+          .finally(() => {
             this.btnDis = false;
           });
       } else {
@@ -481,7 +525,7 @@ export default {
           });
       }
     },
-    handleCheckChange(data, checked, node) {
+    handleCheckChange(data, checked) {
       if (checked == true) {
         if (data.type !== 2) {
           this.$message({
@@ -566,7 +610,7 @@ export default {
         console.log("读取失败");
         console.log(e);
       })
-      .finally(e => {
+      .finally(() => {
         this.treeLoading = false;
       });
   }

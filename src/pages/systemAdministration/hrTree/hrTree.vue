@@ -74,7 +74,11 @@ td {
   <div>
     <template>
       <div class="elTree">
-        <el-input placeholder="输入关键字进行过滤" v-model="filterText" class="treeSearch"></el-input>
+        <el-input
+          placeholder="输入关键字进行过滤"
+          v-model="filterText"
+          class="treeSearch"
+        ></el-input>
         <el-tree
           ref="treeForm"
           :data="treeData"
@@ -94,161 +98,266 @@ td {
         ></el-tree>
       </div>
       <div class="elControl" v-loading="loading">
-        <el-form ref="formCom" :model="formCom" v-show="checkedType===0" label-width="100px">
-          <el-form-item label="公司名称">{{formCom.name}}</el-form-item>
-          <el-form-item label="首拼">{{formCom.header}}</el-form-item>
-          <el-form-item label="电话">{{formCom.tel}}</el-form-item>
-          <el-form-item label="描述">{{formCom.desc}}</el-form-item>
-          <el-form-item label="成立时间">{{formCom.regDate}}</el-form-item>
-          <el-form-item label="公司类型">{{formCom.comType}}</el-form-item>
-          <el-form-item label="公司编号">{{formCom.id}}</el-form-item>
-          <el-form-item label="加入类型">{{formCom.joinType}}</el-form-item>
-          <el-form-item label="楼盘管辖区域">{{formCom.region}}</el-form-item>
+        <el-form
+          ref="formCom"
+          :model="formCom"
+          v-show="checkedType === 0"
+          label-width="100px"
+        >
+          <el-form-item label="公司名称">{{ formCom.name }}</el-form-item>
+          <el-form-item label="首拼">{{ formCom.header }}</el-form-item>
+          <el-form-item label="电话">{{ formCom.tel }}</el-form-item>
+          <el-form-item label="描述">{{ formCom.desc }}</el-form-item>
+          <el-form-item label="成立时间">{{ formCom.regDate }}</el-form-item>
+          <el-form-item label="公司类型">{{ formCom.comType }}</el-form-item>
+          <el-form-item label="公司编号">{{ formCom.id }}</el-form-item>
+          <el-form-item label="加入类型">{{ formCom.joinType }}</el-form-item>
+          <el-form-item label="楼盘管辖区域">{{ formCom.region }}</el-form-item>
           <el-form-item label="操作">
             <el-button
               type="text"
-              @click="linkJump('addCompanyManage',0,formCom.id)"
+              @click="linkJump('addCompanyManage', 0, formCom.id)"
               :underline="false"
-            >添加下级公司</el-button>
+              >添加下级公司</el-button
+            >
             <el-button
               type="text"
-              @click="linkJump('addDeptManage',0,formCom.id)"
+              @click="linkJump('addDeptManage', 0, formCom.id)"
               :underline="false"
-            >添加部门</el-button>
-            <el-button type="text" @click="linkJumpEdit(0,formCom.id)" :underline="false">修改</el-button>
-            <el-button type="text" @click="lock('company',formCom.id)" :underline="false">锁定</el-button>
+              >添加部门</el-button
+            >
+            <el-button
+              type="text"
+              @click="linkJumpEdit(0, formCom.id)"
+              :underline="false"
+              >修改</el-button
+            >
+            <el-button
+              type="text"
+              @click="lock('company', formCom.id)"
+              :underline="false"
+              >锁定</el-button
+            >
           </el-form-item>
         </el-form>
         <el-form
           ref="formDep"
           :model="formDep"
-          v-show="checkedType===1||checkedType===2"
+          v-show="checkedType === 1 || checkedType === 2"
           label-width="100px"
         >
-          <el-form-item label="部门名称">{{formDep.name}}</el-form-item>
-          <el-form-item label="部门类型">{{formDep.depType}}</el-form-item>
-          <el-form-item label="部门属性">{{formDep.isCom}}</el-form-item>
-          <el-form-item label="负责人">{{formDep.principal}}</el-form-item>
-          <el-form-item label="电话">{{formDep.tel}}</el-form-item>
-          <el-form-item label="地址">{{formDep.add}}</el-form-item>
-          <el-form-item label="在职人数">{{formDep.employeesNum}}</el-form-item>
-          <el-form-item label="所在门店">{{formDep.store}}</el-form-item>
-          <el-form-item label="部门编号">{{formDep.id}}</el-form-item>
-          <el-form-item label="成立日期">{{formDep.regDate}}</el-form-item>
-          <el-form-item label="部门描述">{{formDep.desc}}</el-form-item>
+          <el-form-item label="部门名称">{{ formDep.name }}</el-form-item>
+          <el-form-item label="部门类型">{{ formDep.depType }}</el-form-item>
+          <el-form-item label="部门属性">{{ formDep.isCom }}</el-form-item>
+          <el-form-item label="负责人">{{ formDep.principal }}</el-form-item>
+          <el-form-item label="电话">{{ formDep.tel }}</el-form-item>
+          <el-form-item label="地址">{{ formDep.add }}</el-form-item>
+          <el-form-item label="在职人数">{{
+            formDep.employeesNum
+          }}</el-form-item>
+          <el-form-item label="所在门店">{{ formDep.store }}</el-form-item>
+          <el-form-item label="部门编号">{{ formDep.id }}</el-form-item>
+          <el-form-item label="成立日期">{{ formDep.regDate }}</el-form-item>
+          <el-form-item label="部门描述">{{ formDep.desc }}</el-form-item>
           <el-form-item label="操作">
             <el-button
               type="text"
-              @click="linkJump('addDeptManage',formDep.id,formDep.coId)"
+              @click="linkJump('addDeptManage', formDep.id, formDep.coId)"
               :underline="false"
-            >添加子部门</el-button>
+              >添加子部门</el-button
+            >
             <el-button
               type="text"
-              @click="linkJump('addCompanyManage',formDep.id,formDep.coId)"
+              @click="linkJump('addCompanyManage', formDep.id, formDep.coId)"
               :underline="false"
-            >添加下级公司</el-button>
-            <el-button type="text" @click="linkJumpEdit(1,formDep.id)" :underline="false">修改</el-button>
-            <el-button type="text" @click="lock('department',formDep.id)" :underline="false">锁定</el-button>
+              >添加下级公司</el-button
+            >
+            <el-button
+              type="text"
+              @click="linkJumpEdit(1, formDep.id)"
+              :underline="false"
+              >修改</el-button
+            >
+            <el-button
+              type="text"
+              @click="lock('department', formDep.id)"
+              :underline="false"
+              >锁定</el-button
+            >
           </el-form-item>
         </el-form>
       </div>
       <div
         class="elInfo"
-        v-show="checkedType===1||checkedType===2"
+        v-show="checkedType === 1 || checkedType === 2"
         v-loading="loading"
         :style="contentStyleObj"
       >
-        <div v-for="(item) in this.employeeData" :key="item.AccountID">
+        <div v-for="item in this.employeeData" :key="item.AccountID">
           <el-card class="box-card">
             <div slot="header" class="clearfix">
-              <span>{{item.PerName}}</span>
+              <span>{{ item.PerName }}</span>
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
                 @click="setPhone(item.AccountID)"
-              >手机备案</el-button>
+                >手机备案</el-button
+              >
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
                 @click="resetPwd(item.AccountID)"
-              >密码重置</el-button>
+                >密码重置</el-button
+              >
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
-                @click="userHandle('change',item.AccountID,item.PerName,item.DeptName,item.PerPost,item.Deptid,item.PerPostid,item.PerRole,item.LevelNo,item.IsGold)"
-              >人员异动</el-button>
+                @click="
+                  userHandle(
+                    'change',
+                    item.AccountID,
+                    item.PerName,
+                    item.DeptName,
+                    item.PerPost,
+                    item.Deptid,
+                    item.PerPostid,
+                    item.PerRole,
+                    item.LevelNo,
+                    item.IsGold
+                  )
+                "
+                >人员异动</el-button
+              >
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
-                @click="userHandle('appoint',item.AccountID,item.PerName,item.DeptName,item.PerPost,item.Deptid,item.PerPostid,item.PerRole,item.LevelNo,item.IsGold)"
-              >任命</el-button>
+                @click="
+                  userHandle(
+                    'appoint',
+                    item.AccountID,
+                    item.PerName,
+                    item.DeptName,
+                    item.PerPost,
+                    item.Deptid,
+                    item.PerPostid,
+                    item.PerRole,
+                    item.LevelNo,
+                    item.IsGold
+                  )
+                "
+                >任命</el-button
+              >
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
                 @click="userLock(item.AccountID)"
-              >锁定</el-button>
+                >锁定</el-button
+              >
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
-                @click="userHandle('quit',item.AccountID,item.PerName,item.DeptName,item.PerPost,item.Deptid,item.PerPostid,item.PerRole,item.LevelNo,item.IsGold)"
-              >离职</el-button>
+                @click="
+                  userHandle(
+                    'quit',
+                    item.AccountID,
+                    item.PerName,
+                    item.DeptName,
+                    item.PerPost,
+                    item.Deptid,
+                    item.PerPostid,
+                    item.PerRole,
+                    item.LevelNo,
+                    item.IsGold
+                  )
+                "
+                >离职</el-button
+              >
               <el-button
                 style="float: right; padding: 3px 0"
                 type="text"
                 @click="userJumpEdit(item.AccountID)"
-              >修改</el-button>
+                >修改</el-button
+              >
             </div>
             <table>
               <tr>
                 <td>账号：</td>
-                <td>{{item.LoginUser}}</td>
+                <td>{{ item.LoginUser }}</td>
                 <td>账号状态：</td>
-                <td>{{["帐号锁定","正常","三天未登录锁定","三天未带看锁定"][item.islocked]}}</td>
+                <td>
+                  {{
+                    ["帐号锁定", "正常", "三天未登录锁定", "三天未带看锁定"][
+                      item.islocked
+                    ]
+                  }}
+                </td>
               </tr>
               <tr>
                 <td>姓名：</td>
-                <td>{{item.PerName}}</td>
+                <td>{{ item.PerName }}</td>
                 <td>性别：</td>
-                <td>{{["男","女"][item.sex]}}</td>
+                <td>{{ ["男", "女"][item.sex] }}</td>
               </tr>
               <tr>
                 <td>电话：</td>
-                <td>{{item.Tel}}</td>
+                <td>{{ item.Tel }}</td>
                 <td>身份证号：</td>
-                <td>{{item.CardId}}</td>
+                <td>{{ item.CardId }}</td>
               </tr>
               <tr>
                 <td>岗位：</td>
-                <td>{{item.RoleName}}</td>
+                <td>{{ item.RoleName }}</td>
                 <td>部门：</td>
-                <td>{{item.DeptName}}</td>
+                <td>{{ item.DeptName }}</td>
               </tr>
               <tr>
                 <td>角色权限：</td>
-                <td>{{item.PerPost}}</td>
+                <td>{{ item.PerPost }}</td>
                 <td>星级：</td>
-                <td>{{item.levelName}}[{{item.LevelCode}}]</td>
+                <td>{{ item.levelName }}[{{ item.LevelCode }}]</td>
               </tr>
               <tr>
                 <td>是否菁英：</td>
-                <td>{{["否","菁英经纪人","未设置"][item.IsGold==null?3:item.IsGold]}}</td>
+                <td>
+                  {{
+                    ["否", "菁英经纪人", "未设置"][
+                      item.IsGold == null ? 3 : item.IsGold
+                    ]
+                  }}
+                </td>
                 <td>引进人：</td>
-                <td>{{item.JieShaoName}}</td>
+                <td>{{ item.JieShaoName }}</td>
               </tr>
               <tr>
                 <td>微信昵称：</td>
-                <td colspan="2">{{item.nickname}}</td>
+                <td colspan="2">{{ item.nickname }}</td>
                 <td>
                   <el-image :src="item.WXImgUrl"></el-image>
                 </td>
               </tr>
               <tr>
                 <td>入职时间：</td>
-                <td>{{item.Regtime}}</td>
+                <td>{{ item.Regtime }}</td>
                 <td>在职状态：</td>
-                <td>（{{["实习","试用","正式","离职","其他"][item.Status==null?4:item.Status]}}）-{{["在职","离职","待离职","待审核","异常状态","未知状态"][item.Del==null?5:(item.Del==-2?4:item.Del)]}}</td>
+                <td>
+                  （{{
+                    ["实习", "试用", "正式", "离职", "其他"][
+                      item.Status == null ? 4 : item.Status
+                    ]
+                  }}）-{{
+                    [
+                      "在职",
+                      "离职",
+                      "待离职",
+                      "待审核",
+                      "异常状态",
+                      "未知状态"
+                    ][item.Del == null ? 5 : item.Del == -2 ? 4 : item.Del]
+                  }}
+                </td>
               </tr>
             </table>
+
             <br />
             <el-collapse class="box-card" accordion>
               <el-collapse-item title="more" name="1">
@@ -261,57 +370,65 @@ td {
                   </tr>-->
                   <tr>
                     <td>生日：</td>
-                    <td>{{item.Birthday!=null&&item.Birthday.length>10?item.Birthday.substring(0,10):item.Birthday}}</td>
+                    <td>
+                      {{
+                        item.Birthday != null && item.Birthday.length > 10
+                          ? item.Birthday.substring(0, 10)
+                          : item.Birthday
+                      }}
+                    </td>
                     <td>学历：</td>
-                    <td>{{item.Education}}</td>
+                    <td>{{ item.Education }}</td>
                   </tr>
                   <tr>
                     <td>专业：</td>
-                    <td colspan="3">{{item.Speciality}}</td>
+                    <td colspan="3">{{ item.Speciality }}</td>
                   </tr>
                   <tr>
                     <td>毕业学校：</td>
-                    <td colspan="3">{{item.GraduateSchool}}</td>
+                    <td colspan="3">{{ item.GraduateSchool }}</td>
                   </tr>
                   <tr>
                     <td>毕业时间：</td>
-                    <td colspan="3">{{item.Graduation}}</td>
+                    <td colspan="3">{{ item.Graduation }}</td>
                   </tr>
                   <tr>
                     <td>户口所在地：</td>
-                    <td colspan="3">{{item.Address}}</td>
+                    <td colspan="3">{{ item.Address }}</td>
                   </tr>
                   <tr>
                     <td>现居地：</td>
-                    <td colspan="3">{{item.Living}}</td>
+                    <td colspan="3">{{ item.Living }}</td>
                   </tr>
                   <tr>
                     <td>紧急联系人：</td>
-                    <td>{{item.EmergencyContact}}（{{item.Relationship}}）</td>
+                    <td>
+                      {{ item.EmergencyContact }}（{{ item.Relationship }}）
+                    </td>
                     <td>联系电话：</td>
-                    <td>{{item.contactTelephone}}</td>
+                    <td>{{ item.contactTelephone }}</td>
                   </tr>
                   <tr>
                     <td>基础底薪：</td>
-                    <td>{{item.BasicSalary}}</td>
+                    <td>{{ item.BasicSalary }}</td>
                     <td>绩效薪酬：</td>
-                    <td>{{item.performancePay}}</td>
+                    <td>{{ item.performancePay }}</td>
                   </tr>
                   <tr>
                     <td>岗位津贴：</td>
-                    <td colspan="3">{{item.PostAllowance}}</td>
+                    <td colspan="3">{{ item.PostAllowance }}</td>
                   </tr>
                   <tr>
                     <td>银行卡号：</td>
-                    <td colspan="3">{{item.Bankcard}}</td>
+                    <td colspan="3">{{ item.Bankcard }}</td>
                   </tr>
                   <tr>
                     <td>离职时间：</td>
-                    <td colspan="3">{{item.LeaveTime}}</td>
+                    <td colspan="3">{{ item.LeaveTime }}</td>
                   </tr>
                   <tr>
                     <td>备注：</td>
-                    <td colspan="3">{{item.remark}}</td>
+                    <td colspan="3">{{ item.remark }}</td>
                   </tr>
                 </table>
               </el-collapse-item>
@@ -323,7 +440,11 @@ td {
     </template>
     <el-dialog title="离职信息" :visible.sync="dialogQuit" width="33%">
       <el-form>
-        <span>{{this.optInfo.name}}-{{this.optInfo.dep}}-{{this.optInfo.job}}</span>
+        <span
+          >{{ this.optInfo.name }}-{{ this.optInfo.dep }}-{{
+            this.optInfo.job
+          }}</span
+        >
         <br />
         <br />
         <el-form-item label="离职时间">
@@ -337,7 +458,12 @@ td {
         </el-form-item>
         <br />
         <el-form-item label="离职原因">
-          <el-input type="textarea" placeholder="请离职原因" v-model="quitPost.remark" width="100%"></el-input>
+          <el-input
+            type="textarea"
+            placeholder="请离职原因"
+            v-model="quitPost.remark"
+            width="100%"
+          ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -347,12 +473,19 @@ td {
     </el-dialog>
     <el-dialog title="任命信息" :visible.sync="dialogChange" width="52%">
       <el-form>
-        <span>{{this.optInfo.name}}-{{this.optInfo.dep}}-{{this.optInfo.job}}</span>
+        <span
+          >{{ this.optInfo.name }}-{{ this.optInfo.dep }}-{{
+            this.optInfo.job
+          }}</span
+        >
         <table>
           <tr>
             <td rowspan="4">
               <el-form-item label="调动部门" label-position="right">
-                <el-input placeholder="输入关键字进行过滤" v-model="filterTextChange"></el-input>
+                <el-input
+                  placeholder="输入关键字进行过滤"
+                  v-model="filterTextChange"
+                ></el-input>
                 <div>
                   <el-tree
                     ref="treeFormChange"
@@ -389,10 +522,10 @@ td {
                   @change="selectPositionNode()"
                   :options="positionTree"
                   :props="{
-                         label: 'labelName',
-                         value: 'businessId',
-                         children: 'childrenNodes'
-                       }"
+                    label: 'labelName',
+                    value: 'businessId',
+                    children: 'childrenNodes'
+                  }"
                   :show-all-levels="false"
                   :disabled="RoleDis"
                   v-model="optInfo.role"
@@ -411,7 +544,11 @@ td {
                     :value="item.id"
                   ></el-option>
                 </el-select>-->
-                <el-select v-model="optInfo.post" @focus="selectRoleList()" placeholder="请选择">
+                <el-select
+                  v-model="optInfo.post"
+                  @focus="selectRoleList()"
+                  placeholder="请选择"
+                >
                   <el-option
                     v-for="item in positionNameList"
                     :key="item.value"
@@ -425,11 +562,22 @@ td {
           <tr>
             <td>
               <el-form-item label="星级" label-position="right">
-                <el-select v-model="optInfo.level" filterable placeholder="请选择">
+                <el-select
+                  v-model="optInfo.level"
+                  filterable
+                  placeholder="请选择"
+                >
                   <el-option
                     v-for="item in levelNameList"
                     :key="item.levelNo"
-                    :label="item.levelName+'['+item.levelCode+']('+item.companyName+')'"
+                    :label="
+                      item.levelName +
+                        '[' +
+                        item.levelCode +
+                        '](' +
+                        item.companyName +
+                        ')'
+                    "
                     :value="item.levelNo"
                   ></el-option>
                 </el-select>
@@ -610,12 +758,12 @@ export default {
         console.log("读取失败");
         console.log(e);
       })
-      .finally(e => {
+      .finally(() => {
         this.treeLoading = false;
       });
   },
   methods: {
-    handleCheckChange(data, checked, node) {
+    handleCheckChange(data, checked) {
       this.loading = true;
       if (checked == true) {
         this.checkedId = data.businessId;
@@ -660,7 +808,7 @@ export default {
               console.log("查询公司详情失败");
               console.log(e);
             })
-            .finally(e => {
+            .finally(() => {
               this.loading = false;
             });
         } else if (this.checkedType === 1) {
@@ -699,7 +847,7 @@ export default {
               console.log("查询详情失败");
               console.log(e);
             })
-            .finally(e => {
+            .finally(() => {
               this.employee(this.checkedId);
             });
         } else if (this.checkedType === 2) {
@@ -738,7 +886,7 @@ export default {
               console.log("查询详情失败");
               console.log(e);
             })
-            .finally(e => {
+            .finally(() => {
               this.userInfo(this.checkedId);
             });
         }
@@ -752,7 +900,7 @@ export default {
         return data.labelName.indexOf(value) !== -1;
       }
     },
-    treeCheck(e, data) {},
+    treeCheck() {},
     linkJump(jumpName, depId, coId) {
       this.$router.push({
         path: "/sys/" + jumpName,
@@ -804,7 +952,7 @@ export default {
               console.log("失败");
               console.log(e);
             })
-            .finally(e => {
+            .finally(() => {
               this.loading = false;
               this.$router.go(0);
             });
@@ -836,7 +984,7 @@ export default {
           console.log("查询失败");
           console.log(e);
         })
-        .finally(e => {
+        .finally(() => {
           this.loading = false;
         });
     },
@@ -860,7 +1008,7 @@ export default {
           console.log("查询失败");
           console.log(e);
         })
-        .finally(e => {
+        .finally(() => {
           this.loading = false;
         });
     },
@@ -926,7 +1074,7 @@ export default {
               alert(result.message);
             }
           })
-          .catch(e => {
+          .catch(() => {
             console.log("查询岗位失败");
           });
         this.$api
@@ -943,7 +1091,7 @@ export default {
               alert(result.message);
             }
           })
-          .catch(e => {
+          .catch(() => {
             console.log("查询角色失败");
           });
         paramsRole.depId = deptId;
@@ -961,7 +1109,7 @@ export default {
               alert(result.message);
             }
           })
-          .catch(e => {
+          .catch(() => {
             console.log("查询星级失败");
           });
         if (type === "change") {
@@ -1145,7 +1293,7 @@ export default {
           });
         });
     },
-    handleCheckChangeChange(data, checked, node) {
+    handleCheckChangeChange(data, checked) {
       if (checked == true) {
         this.checkedIdChange = data.businessId;
         console.log("this.checkedIdChange", this.checkedIdChange);
@@ -1237,7 +1385,7 @@ export default {
             alert(result.message);
           }
         })
-        .catch(e => {
+        .catch(() => {
           console.log("查询岗位失败");
         });
     },
@@ -1269,7 +1417,7 @@ export default {
             alert(result.message);
           }
         })
-        .catch(e => {
+        .catch(() => {
           console.log("查询角色失败");
         });
     }

@@ -41,93 +41,94 @@
 }
 </style>
 <template>
-  <div  v-loading.fullscreen.lock="fullscreenLoading">
-
+  <div v-loading.fullscreen.lock="fullscreenLoading">
     <template>
-
       <el-card class="box-card elTree ">
         <div slot="header">
           <span>给公司配置拥有的功能点</span>
         </div>
         <div class="text item">
-          <el-form :inline="true"
-                   class="demo1-form-inline"
-                   style="align-content: center">
+          <el-form
+            :inline="true"
+            class="demo1-form-inline"
+            style="align-content: center"
+          >
             <el-form-item label="类型">
-              <el-select v-model="ruleParamsObj.type"
-                         style="width: 130px;"
-                         @change="loadFunctionPoint"
-                         placeholder="请选择功能点类型">
-                <el-option label="PC端"
-                           value="0"></el-option>
-                <el-option label="Client端"
-                           value="1"></el-option>
-                <el-option label="Wap端"
-                           value="2"></el-option>
+              <el-select
+                v-model="ruleParamsObj.type"
+                style="width: 130px;"
+                @change="loadFunctionPoint"
+                placeholder="请选择功能点类型"
+              >
+                <el-option label="PC端" value="0"></el-option>
+                <el-option label="Client端" value="1"></el-option>
+                <el-option label="Wap端" value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="不子节点选中">
               <el-switch v-model="checkStrictly"></el-switch>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" size="mini" @click="savePosition">保存</el-button>
+              <el-button type="primary" size="mini" @click="savePosition"
+                >保存</el-button
+              >
             </el-form-item>
           </el-form>
-          <el-tree :data="ruleTreeData"
-                   show-checkbox
-                   node-key="id"
-                   ref="tree"
-                   :check-strictly="checkStrictly"
-                   highlight-current
-                   :props="defaultProps">
-          <span class="custom-tree-node"
-                slot-scope="{ node}">
-            <span>{{ node.label }}</span>
-            <span>
-              <!--              <el-button type="text"-->
-              <!--                         size="mini"-->
-              <!--                         style="cursor: pointer;"-->
-              <!--                         :class="{'selected_btn':node.data.dataType == '2'}"-->
-              <!--                         @click.stop="() => operationCompany(node, data)">权限设置</el-button>-->
+          <el-tree
+            :data="ruleTreeData"
+            show-checkbox
+            node-key="id"
+            ref="tree"
+            :check-strictly="checkStrictly"
+            highlight-current
+            :props="defaultProps"
+          >
+            <span class="custom-tree-node" slot-scope="{ node }">
+              <span>{{ node.label }}</span>
+              <span>
+                <!--              <el-button type="text"-->
+                <!--                         size="mini"-->
+                <!--                         style="cursor: pointer;"-->
+                <!--                         :class="{'selected_btn':node.data.dataType == '2'}"-->
+                <!--                         @click.stop="() => operationCompany(node, data)">权限设置</el-button>-->
+              </span>
             </span>
-          </span>
           </el-tree>
         </div>
       </el-card>
-
     </template>
     <template>
       <el-card class="box-card elTree">
         <div slot="header">
           <span>给公司配置功能点所拥有的权限</span>
         </div>
-        <div class="text item"
-             style="margin-top: 10px;">
+        <div class="text item" style="margin-top: 10px;">
           <template>
-
-            <el-input placeholder="输入关键字进行过滤"
-                      v-model="filterText"
-                      class="treeSearch"></el-input>
-            <el-tree ref="companyTree"
-                     :data="companyTreeData"
-                     node-key="businessId"
-                     show-checkbox
-                     :props="companyProps"
-                     @check="checkNode"
-                     :highlight-current="true"
-                     :filter-node-method="filterNode"
-                     :action="''"
-                     empty-text="暂无数据，请检查权限"
-                     auto-expand-parent
-                     :default-checked-keys="companyGather"
-                     :default-expanded-keys="companyGather"
-                     v-loading="treeLoading"></el-tree>
-
+            <el-input
+              placeholder="输入关键字进行过滤"
+              v-model="filterText"
+              class="treeSearch"
+            ></el-input>
+            <el-tree
+              ref="companyTree"
+              :data="companyTreeData"
+              node-key="businessId"
+              show-checkbox
+              :props="companyProps"
+              @check="checkNode"
+              :highlight-current="true"
+              :filter-node-method="filterNode"
+              :action="''"
+              empty-text="暂无数据，请检查权限"
+              auto-expand-parent
+              :default-checked-keys="companyGather"
+              :default-expanded-keys="companyGather"
+              v-loading="treeLoading"
+            ></el-tree>
           </template>
         </div>
       </el-card>
     </template>
-
   </div>
 </template>
 <script>
@@ -240,7 +241,7 @@ export default {
           console.log("读取失败");
           console.log(e);
         })
-        .finally(e => {
+        .finally(() => {
           this.treeLoading = false;
         });
     },
@@ -324,7 +325,7 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(function () {
+        .finally(function() {
           that.fullscreenLoading = false;
         });
     },

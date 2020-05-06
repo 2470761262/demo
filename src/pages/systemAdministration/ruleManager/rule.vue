@@ -36,9 +36,20 @@
           placeholder="输入关键字进行过滤"
           @change="keywordChange"
           v-model="keyword"
-        ></el-input>类型:
-        <el-select v-model="type" @change="typeChange" placeholder="请选择类型" style="width: 150px">
-          <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.type"></el-option>
+        ></el-input
+        >类型:
+        <el-select
+          v-model="type"
+          @change="typeChange"
+          placeholder="请选择类型"
+          style="width: 150px"
+        >
+          <el-option
+            v-for="item in typeList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.type"
+          ></el-option>
         </el-select>
         <el-tree
           ref="tree2"
@@ -57,10 +68,14 @@
       <el-card class="box-card">
         <div class="text item">
           <div class="formItem">
-            <el-button type="primary" @click="saveSubordinate">添加子级节点</el-button>
+            <el-button type="primary" @click="saveSubordinate"
+              >添加子级节点</el-button
+            >
           </div>
           <div class="formItem">
-            <el-button type="primary" @click="saveSiblingRule">添加同级节点</el-button>
+            <el-button type="primary" @click="saveSiblingRule"
+              >添加同级节点</el-button
+            >
           </div>
           <div class="formItem">
             <el-button type="primary" @click="updateRule">修改</el-button>
@@ -80,27 +95,51 @@
         <div class="item form">
           <div class="formItem">
             功能点名称:
-            <el-input v-model="ruleObj.rName" style="width: 200px;" placeholder="功能点名称"></el-input>
+            <el-input
+              v-model="ruleObj.rName"
+              style="width: 200px;"
+              placeholder="功能点名称"
+            ></el-input>
           </div>
           <div class="formItem">
             链接地址:
-            <el-input v-model="ruleObj.rUrl" style="width: 200px;" placeholder="链接地址"></el-input>
+            <el-input
+              v-model="ruleObj.rUrl"
+              style="width: 200px;"
+              placeholder="链接地址"
+            ></el-input>
           </div>
           <div class="formItem">
             post参数:
-            <el-input v-model="ruleObj.postData" style="width: 200px;" placeholder="post参数"></el-input>
+            <el-input
+              v-model="ruleObj.postData"
+              style="width: 200px;"
+              placeholder="post参数"
+            ></el-input>
           </div>
           <div class="formItem">
             图片地址:
-            <el-input v-model="ruleObj.picUrl" style="width: 200px;" placeholder="图片地址"></el-input>
+            <el-input
+              v-model="ruleObj.picUrl"
+              style="width: 200px;"
+              placeholder="图片地址"
+            ></el-input>
           </div>
           <div class="formItem">
             说明:
-            <el-input v-model="ruleObj.state" style="width: 200px;" placeholder="说明"></el-input>
+            <el-input
+              v-model="ruleObj.state"
+              style="width: 200px;"
+              placeholder="说明"
+            ></el-input>
           </div>
           <div class="formItem">
             功能编号:
-            <el-input v-model="ruleObj.rNo" style="width: 200px;" placeholder="功能编号"></el-input>
+            <el-input
+              v-model="ruleObj.rNo"
+              style="width: 200px;"
+              placeholder="功能编号"
+            ></el-input>
           </div>
           <div class="formItem">
             菜单类型:
@@ -354,7 +393,7 @@ export default {
           console.log("发送公告结果");
           console.log(e);
         })
-        .finally(e => {
+        .finally(() => {
           this.treeLoading = false;
         });
     },
@@ -466,7 +505,7 @@ export default {
             console.log("删除操作失败异常");
             console.log(e);
           });
-        this.$message.error("删除操作失败异常" + e);
+        this.$message.error("删除操作失败异常");
       });
     },
     //添加子级功能点
@@ -516,7 +555,7 @@ export default {
         url = "sys/rule/update";
       } else if (this.saveType == "saveSib") {
         url = "/sys/rule/add/sib";
-      } else if ((this.saveType = "saveSub")) {
+      } else if (this.saveType == "saveSub") {
         url = "/sys/rule/add/sub";
       }
       if (!url) {

@@ -20,42 +20,49 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page :parentData="$data"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary"
-                     size="mini"
-                     @click="toAddRolePage">添加岗位</el-button>
+          <el-button type="primary" size="mini" @click="toAddRolePage"
+            >添加岗位</el-button
+          >
           <div class="query-right">
-            <el-input placeholder="岗位名称"
-                      size="small"
-                      v-model="queryData.RoleName"
-                      clearable>
+            <el-input
+              placeholder="岗位名称"
+              size="small"
+              v-model="queryData.RoleName"
+              clearable
+            >
             </el-input>
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryRoleByParams">查询</el-button>
-
+            <el-button type="primary" size="mini" @click="queryRoleByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column label="操作"
-                         width="250">
+        <el-table-column label="操作" width="250">
           <template v-slot="scope">
-            <el-button type="primary"
-                       size="mini"
-                       @click="distributeEvent(item.methosName,scope.row)"
-                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                       :key="index">{{item.name}}</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="distributeEvent(item.methosName, scope.row)"
+              v-for="(item, index) in getOpeBtns(scope.row.operation)"
+              :key="index"
+              >{{ item.name }}</el-button
+            >
           </template>
         </el-table-column>
       </template>
@@ -115,7 +122,6 @@ export default {
     },
     queryRoleDatas(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
-      let that = this;
       if (this.queryData.RoleName != null) {
         params.RoleName = this.queryData.RoleName;
       }
@@ -196,7 +202,7 @@ export default {
     distributeEvent(e, row) {
       this[e](row);
     },
-    getOpeBtns(type) {
+    getOpeBtns() {
       let array = [
         { name: "编辑", isType: "1", methosName: "editRoleDetail" },
         { name: "删除", isType: "1", methosName: "delRoleDetail" },

@@ -88,7 +88,9 @@
       </template>
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary" size="mini" @click="toAddEmployeePage">添加用户</el-button>
+          <el-button type="primary" size="mini" @click="toAddEmployeePage"
+            >添加用户</el-button
+          >
           <div class="query-right">
             <el-select
               v-model="queryData.isLocked"
@@ -126,7 +128,9 @@
               <el-option label="岗位" value="4"></el-option>
               </el-select>-->
             </el-input>
-            <el-button type="primary" size="mini" @click="queryEmployeeByParams">查询</el-button>
+            <el-button type="primary" size="mini" @click="queryEmployeeByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
@@ -145,10 +149,14 @@
               <el-button
                 type="primary"
                 size="mini"
-                @click="distributeEvent(item.methodName,scope.row.id)"
-                v-for="(item,index) in getOpeBtns(scope.row.del,scope.row.isLocked)"
+                @click="distributeEvent(item.methodName, scope.row.id)"
+                v-for="(item, index) in getOpeBtns(
+                  scope.row.del,
+                  scope.row.isLocked
+                )"
                 :key="index"
-              >{{item.name}}</el-button>
+                >{{ item.name }}</el-button
+              >
             </div>
           </template>
         </el-table-column>
@@ -157,7 +165,11 @@
     <el-dialog title="提示" :visible.sync="dialogVisible" width="50%">
       <div class="left-input-container">
         <span>离职时间</span>
-        <el-input type="date" placeholder="birthday" v-model="leaveTime"></el-input>
+        <el-input
+          type="date"
+          placeholder="birthday"
+          v-model="leaveTime"
+        ></el-input>
         <span>离职原因</span>
         <el-input
           type="text"
@@ -252,7 +264,7 @@ export default {
         console.log("读取失败");
         console.log(e);
       })
-      .finally(e => {
+      .finally(() => {
         this.treeLoading = false;
       });
     this.queryData.isLocked = null;
@@ -266,7 +278,6 @@ export default {
     queryEmployeeDatas(currentPage) {
       this.loading = true;
       let params = { limit: this.pageJson.pageSize, page: currentPage };
-      let that = this;
       if (this.queryData.keyWord != null) {
         params.keyWord = this.queryData.keyWord;
       }
@@ -330,7 +341,7 @@ export default {
           console.log("查询用户管理列表失败");
           console.log(e);
         })
-        .finally(e => {
+        .finally(() => {
           this.loading = false;
         });
     },
@@ -347,7 +358,7 @@ export default {
       let that = this;
       if (this.leaveTime != null && this.leaveMemo != "") {
         this.dialogVisible = false;
-        this.operation(that.id, "del", 1, function(result) {
+        this.operation(that.id, "del", 1, function() {
           let index = that.tableData.findIndex(item => {
             return item.id == that.id;
           });
@@ -362,7 +373,7 @@ export default {
         });
       }
     },
-    handleChange(row) {
+    handleChange() {
       // console.log(row);
       // this.$router.push({ path: "/sys/editemployee", query: { id: row.id } });
       //this.employeeEntity = row;
@@ -379,7 +390,7 @@ export default {
         cancelButtonText: "取消"
       })
         .then(() => {
-          that.operation(id, "locked", 0, function(result) {
+          that.operation(id, "locked", 0, function() {
             let index = that.tableData.findIndex(item => {
               return item.id == id;
             });
@@ -389,7 +400,7 @@ export default {
             }
           });
         })
-        .catch(action => {
+        .catch(() => {
           this.$message({
             type: "info",
             message: "取消锁定"
@@ -404,7 +415,7 @@ export default {
         cancelButtonText: "取消"
       })
         .then(() => {
-          that.operation(id, "locked", 1, function(result) {
+          that.operation(id, "locked", 1, function() {
             let index = that.tableData.findIndex(item => {
               return item.id == id;
             });
@@ -414,7 +425,7 @@ export default {
             }
           });
         })
-        .catch(action => {
+        .catch(() => {
           this.$message({
             type: "info",
             message: "取消解锁"
@@ -434,7 +445,7 @@ export default {
         cancelButtonText: "取消"
       })
         .then(() => {
-          that.operation(id, "restoration", 0, function(result) {
+          that.operation(id, "restoration", 0, function() {
             let index = that.tableData.findIndex(item => {
               return item.id == id;
             });
@@ -444,7 +455,7 @@ export default {
             }
           });
         })
-        .catch(action => {
+        .catch(() => {
           this.$message({
             type: "info",
             message: "取消复职"
@@ -535,6 +546,7 @@ export default {
         });
     },
     switchUser() {
+      let params = {};
       if (this.employeeEntity.id != null && this.employeeEntity.id != "") {
         params.newPerId = this.employeeEntity.id;
         this.$api
@@ -565,7 +577,7 @@ export default {
           });
       }
     },
-    checkChange(data, checked, node) {
+    checkChange(data, checked) {
       this.loading = true;
       if (checked == true) {
         this.checkedId = data.businessId;

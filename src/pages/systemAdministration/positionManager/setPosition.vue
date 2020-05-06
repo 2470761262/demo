@@ -56,88 +56,100 @@
 </style>
 <template>
   <div v-loading.fullscreen.lock="fullscreenLoading">
-
-    <el-breadcrumb separator-class="el-icon-arrow-right"
-                   style="margin: 10px">
-      <el-breadcrumb-item v-for="(item,index) in pathList"
-                          :key="index">{{item}}</el-breadcrumb-item>
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin: 10px">
+      <el-breadcrumb-item v-for="(item, index) in pathList" :key="index">{{
+        item
+      }}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <template>
       <div class="elTree">
-        <el-form :inline="true"
-                 class="demo1-form-inline"
-                 style="align-content: center">
+        <el-form
+          :inline="true"
+          class="demo1-form-inline"
+          style="align-content: center"
+        >
           <el-form-item label="类型">
-            <el-select v-model="type"
-                       @change="loadFunctionPoint"
-                       style="width: 130px;"
-                       placeholder="请选择功能点类型">
-              <el-option label="PC端"
-                         value="0"></el-option>
-              <el-option label="Client端"
-                         value="1"></el-option>
-              <el-option label="Wap端"
-                         value="2"></el-option>
+            <el-select
+              v-model="type"
+              @change="loadFunctionPoint"
+              style="width: 130px;"
+              placeholder="请选择功能点类型"
+            >
+              <el-option label="PC端" value="0"></el-option>
+              <el-option label="Client端" value="1"></el-option>
+              <el-option label="Wap端" value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="不选中子节点">
             <el-switch v-model="checkStrictly"></el-switch>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary"
-                       size="mini"
-                       @click="savePositionRule">保存</el-button>
+            <el-button type="primary" size="mini" @click="savePositionRule"
+              >保存</el-button
+            >
           </el-form-item>
         </el-form>
-        <el-tree :data="ruleTreeData"
-                 show-checkbox
-                 node-key="id"
-                 ref="tree"
-                 :check-on-click-node=false
-                 highlight-current
-                 :check-strictly="checkStrictly"
-                 :expand-on-click-node=false
-                 :props="defaultProps">
-          <span class="custom-tree-node"
-                slot-scope="{ node, data }">
+        <el-tree
+          :data="ruleTreeData"
+          show-checkbox
+          node-key="id"
+          ref="tree"
+          :check-on-click-node="false"
+          highlight-current
+          :check-strictly="checkStrictly"
+          :expand-on-click-node="false"
+          :props="defaultProps"
+        >
+          <span class="custom-tree-node" slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
             <span>
-              <el-button type="text"
-                         size="mini"
-                         style="cursor: pointer;"
-                         :class="{'selected_btn':node.data.dataType == '0' }"
-                         @click=" operationSelf(node,data)"> 自己</el-button>
-              <el-button type="text"
-                         size="mini"
-                         style="cursor: pointer;"
-                         :class="{'selected_btn':node.data.dataType == '1'}"
-                         @click="operationDept(node, data)"> 部门权限</el-button>
-              <el-button type="text"
-                         size="mini"
-                         style="cursor: pointer;"
-                         :class="{'selected_btn':node.data.dataType == '2'}"
-                         @click="operationCompany(node, data)">跨部门权限</el-button>
+              <el-button
+                type="text"
+                size="mini"
+                style="cursor: pointer;"
+                :class="{ selected_btn: node.data.dataType == '0' }"
+                @click="operationSelf(node, data)"
+              >
+                自己</el-button
+              >
+              <el-button
+                type="text"
+                size="mini"
+                style="cursor: pointer;"
+                :class="{ selected_btn: node.data.dataType == '1' }"
+                @click="operationDept(node, data)"
+              >
+                部门权限</el-button
+              >
+              <el-button
+                type="text"
+                size="mini"
+                style="cursor: pointer;"
+                :class="{ selected_btn: node.data.dataType == '2' }"
+                @click="operationCompany(node, data)"
+                >跨部门权限</el-button
+              >
               <!-- (value)=>  node.data.callLimit = value.target.value -->
-              <span v-if="node.data.rtype=='量化按钮'">
-                <input style="width:1rem;"
-                       size="mini"
-                       @input="changeInput($event,data)"
-                       :value="data.numLimit" />
-                <el-button size="mini"
-                           type="text"
-                           @click="submitNumLimit(data)">确定</el-button>
+              <span v-if="node.data.rtype == '量化按钮'">
+                <input
+                  style="width:1rem;"
+                  size="mini"
+                  @input="changeInput($event, data)"
+                  :value="data.numLimit"
+                />
+                <el-button size="mini" type="text" @click="submitNumLimit(data)"
+                  >确定</el-button
+                >
               </span>
             </span>
           </span>
         </el-tree>
       </div>
-
     </template>
     <template>
       <el-card class="box-card">
-        <div slot="header"
-             class="clearfix">
+        <div slot="header" class="clearfix">
           <span>操作</span>
         </div>
         <div class="text item">
@@ -159,50 +171,54 @@
           <!--            <el-button type="primary" @click="saveRolePermission">保存</el-button>-->
           <!--          </div>-->
         </div>
-        <div class="text item"
-             v-show="true">
+        <div class="text item" v-show="true">
           <template>
             <div class="formItem">
-              <el-form :inline="true"
-                       class="demo-form-inline"
-                       style="!important;align-content: center">
-                <el-form-item label="关键字过滤"
-                              v-show="showCompanyTree">
-                  <el-input placeholder="输入关键字进行过滤"
-                            v-model="filterText"
-                            class="treeSearch"></el-input>
+              <el-form
+                :inline="true"
+                class="demo-form-inline"
+                style="!important;align-content: center"
+              >
+                <el-form-item label="关键字过滤" v-show="showCompanyTree">
+                  <el-input
+                    placeholder="输入关键字进行过滤"
+                    v-model="filterText"
+                    class="treeSearch"
+                  ></el-input>
                 </el-form-item>
-                <el-form-item label="功能操作"
-                              v-show="showSave">
-                  <el-button type="primary"
-                             size="mini"
-                             @click="saveRolePermission">保存</el-button>
+                <el-form-item label="功能操作" v-show="showSave">
+                  <el-button
+                    type="primary"
+                    size="mini"
+                    @click="saveRolePermission"
+                    >保存</el-button
+                  >
                 </el-form-item>
               </el-form>
             </div>
-            <div class="elTree"
-                 v-show="showCompanyTree">
-              <el-tree ref="companyTree"
-                       :data="companyTreeData"
-                       node-key="nodeId"
-                       show-checkbox
-                       :props="companyProps"
-                       @check="checkNode"
-                       :highlight-current="true"
-                       :filter-node-method="filterNode"
-                       check-strictly
-                       :action="''"
-                       empty-text="暂无数据，请检查权限"
-                       auto-expand-parent
-                       :default-checked-keys="companyGather"
-                       :default-expanded-keys="companyGather"
-                       v-loading="treeLoading"></el-tree>
+            <div class="elTree" v-show="showCompanyTree">
+              <el-tree
+                ref="companyTree"
+                :data="companyTreeData"
+                node-key="nodeId"
+                show-checkbox
+                :props="companyProps"
+                @check="checkNode"
+                :highlight-current="true"
+                :filter-node-method="filterNode"
+                check-strictly
+                :action="''"
+                empty-text="暂无数据，请检查权限"
+                auto-expand-parent
+                :default-checked-keys="companyGather"
+                :default-expanded-keys="companyGather"
+                v-loading="treeLoading"
+              ></el-tree>
             </div>
           </template>
         </div>
       </el-card>
     </template>
-
   </div>
 </template>
 <script>
@@ -213,7 +229,7 @@ export default {
   computed: {
     ...mapState(["navAuthority"])
   },
-  data () {
+  data() {
     return {
       pathList: [],
       checkStrictly: true,
@@ -254,7 +270,7 @@ export default {
       currentNode: null
     };
   },
-  created () {
+  created() {
     let id = JSON.parse(this.$route.query.id);
     console.log(this.navAuthority.navList, "navAuthority.navList");
     //this.$store.dispatch("judgeNavList", id);
@@ -266,13 +282,12 @@ export default {
     this.loadPath();
   },
   methods: {
-    changeInput (event, nodeData) {
+    changeInput(event, nodeData) {
       this.$nextTick(() => {
         nodeData.numLimit = event.target.value;
-      })
-
+      });
     },
-    submitNumLimit (data) {
+    submitNumLimit(data) {
       let that = this;
       let params = {
         postId: that.postId,
@@ -291,7 +306,7 @@ export default {
           if (result.code == 200) {
             // that.pathList = result.data;
             that.$message.success("设置成功");
-            console.log('设置numLimit成功！');
+            console.log("设置numLimit成功！");
           } else {
             console.log("查询错误: ", result.message);
             that.$message.error("查询错误: " + result.message);
@@ -301,7 +316,7 @@ export default {
           console.log(e);
         });
     },
-    loadPath () {
+    loadPath() {
       let that = this;
       let params = {
         operationId: that.postId,
@@ -328,7 +343,7 @@ export default {
           console.log(e);
         });
     },
-    loadFunctionPoint () {
+    loadFunctionPoint() {
       let that = this;
       //读取功能点数据
       that.$api
@@ -356,7 +371,7 @@ export default {
           console.log(e);
         });
     },
-    loadUnitTree () {
+    loadUnitTree() {
       let that = this;
       //读取树数据
       that.$api
@@ -390,22 +405,22 @@ export default {
           console.log("读取失败");
           console.log(e);
         })
-        .finally(e => {
+        .finally(() => {
           that.treeLoading = false;
         });
     },
-    foreachNodes (res_list, list, type) {
+    foreachNodes(res_list, list, type) {
       if (!res_list) {
         res_list = [];
       }
       if (list) {
         list.forEach(i => {
-          res_list.push(i + ',' + type);
-        })
+          res_list.push(i + "," + type);
+        });
       }
       return res_list;
     },
-    operationCompany (node, data) {
+    operationCompany(node, data) {
       this.showCompanyTree = true;
       this.showSave = true;
       this.showOperationCompany = true;
@@ -420,14 +435,18 @@ export default {
       if (data.deptGather) {
         let deptGather = data.deptGather;
         let deptArrayGather = deptGather.split(",");
-        this.companyGather = this.foreachNodes(this.companyGather, deptArrayGather, 1);
+        this.companyGather = this.foreachNodes(
+          this.companyGather,
+          deptArrayGather,
+          1
+        );
       }
       this.currentCompanyGather = null;
       this.currentDeptGather = null;
       this.putParams(node, "2");
       this.currentNode = node;
     },
-    operationSelf (node, data) {
+    operationSelf(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
@@ -438,7 +457,7 @@ export default {
       //设置参数
       this.putParams(node, "0");
     },
-    operationDept (node, data) {
+    operationDept(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       this.showOperationCompany = false;
@@ -450,7 +469,7 @@ export default {
       this.putParams(node, "1");
     },
     //应用
-    savePosition (type) {
+    savePosition(type) {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -492,7 +511,7 @@ export default {
         });
     },
     //保存角色rule
-    savePositionRule () {
+    savePositionRule() {
       var that = this;
       let paramsObj = {};
       paramsObj.id = that.postId;
@@ -516,10 +535,10 @@ export default {
         paramsObj.postRuleCode = keys;
       }
 
-      console.log('-------ruleTreeData------', that.ruleTreeData);
+      console.log("-------ruleTreeData------", that.ruleTreeData);
       that.ruleTreeData.forEach(item => {
         // if(item.callLimit>0)
-        console.log(item.numLimit, '======================')
+        console.log(item.numLimit, "======================");
       });
 
       that.fullscreenLoading = true;
@@ -540,7 +559,7 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(function () {
+        .finally(function() {
           that.fullscreenLoading = false;
         });
     },
@@ -548,7 +567,7 @@ export default {
     /**
      * 批量保存角色设置
      */
-    saveRolePermission () {
+    saveRolePermission() {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -580,12 +599,12 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(function () {
+        .finally(function() {
           that.fullscreenLoading = false;
         });
     },
     //保存跨部门权限
-    putParams (node, dataType) {
+    putParams(node, dataType) {
       let data = node.data;
       if (!data) {
         data = node;
@@ -616,7 +635,7 @@ export default {
       //设置权限数据
       functionPointObj.companyId = that.currentCompanyGather;
       functionPointObj.deptId = that.currentDeptGather;
-      functionPointObj.numLimit=currentNode.data.numLimit;
+      functionPointObj.numLimit = currentNode.data.numLimit;
       //设置树上的权限数据
       currentNode.data.companyGather = that.currentCompanyGather;
       currentNode.data.deptGather = that.currentDeptGather;
@@ -639,7 +658,7 @@ export default {
         }
       }
     },
-    foreachList (list) {
+    foreachList(list) {
       let temp = "";
       list.forEach(id => {
         temp = temp + "," + id;
@@ -648,7 +667,7 @@ export default {
       return temp;
     },
     //遍历子节点
-    foreachChildren (childrenData, dataType) {
+    foreachChildren(childrenData, dataType) {
       let that = this;
       if (childrenData) {
         childrenData.forEach(data => {
@@ -657,7 +676,7 @@ export default {
       }
     },
     //动态加载节点
-    loadCompanyTreeNode (node, resolve) {
+    loadCompanyTreeNode(node, resolve) {
       if (node.level == 0) {
         this.node = node;
         this.resolve = resolve;
@@ -689,7 +708,7 @@ export default {
     },
 
     //选中节点
-    checkNode (data, checkedData) {
+    checkNode(data, checkedData) {
       if (checkedData.checkedNodes) {
         this.companyTreeSelectNode.companyIds = new Array();
         this.companyTreeSelectNode.deptIds = new Array();
@@ -710,12 +729,12 @@ export default {
       }
     },
     //取消
-    cancel () {
+    cancel() {
       var that = this;
       //跳转页面
       that.$router.push({ path: "/sys/positionManager" });
     },
-    filterNode (value, data) {
+    filterNode(value, data) {
       console.log("value：" + value);
       console.log(data);
       if (!value) return true;
@@ -725,7 +744,7 @@ export default {
     }
   },
   watch: {
-    filterText (val) {
+    filterText(val) {
       this.$refs.companyTree.filter(val);
     }
   }

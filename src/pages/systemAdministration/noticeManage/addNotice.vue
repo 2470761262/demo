@@ -167,7 +167,11 @@
             </div>
             <div>
               <span>发送方式</span>
-              <el-select v-model="notice.sendType" placeholder="请选择" @change="sendTypeSelectChange">
+              <el-select
+                v-model="notice.sendType"
+                placeholder="请选择"
+                @change="sendTypeSelectChange"
+              >
                 <el-option
                   v-for="item in sendTypeOption"
                   :key="item.value"
@@ -190,7 +194,7 @@
             <div class="selectedNodeTip">已选择</div>
             <ul>
               <li v-for="item in selectedNodeDatas" :key="item.nodeId">
-                {{item.labelName}}
+                {{ item.labelName }}
                 <img
                   @click="deleteSelectedData(item.nodeId)"
                   src="http://imgsrc.baidu.com/image/c0=shijue1,0,0,294,40/sign=684e81c3a9cc7cd9ee203c9a51684b4a/8c1001e93901213f7cefd4f25ee736d12e2e95c4.jpg"
@@ -207,8 +211,12 @@
               :headers="myHeader"
               :on-success="handleAvatarSuccess"
             >
-              <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+              <el-button size="small" type="primary" id="btnUpload"
+                >点击上传</el-button
+              >
+              <div slot="tip" class="el-upload__tip">
+                只能上传jpg/png文件，且不超过500kb
+              </div>
             </el-upload>
             <quill-editor
               class="myQuillEditor"
@@ -447,7 +455,7 @@ export default {
               this.treeData = [allPersonNode];
               this.selectedNodeDatas = [];
               this.notice.receiveAcountIds = [];
-              result.data.forEach((item, index, array) => {
+              result.data.forEach(item => {
                 this.selectedNodeDatas.push({
                   nodeId: item.nodeId,
                   labelName: item.labelName
@@ -466,7 +474,7 @@ export default {
           console.log("发送公告结果");
           console.log(e);
         })
-        .finally(e => {
+        .finally(() => {
           this.treeLoading = false;
         });
     },
@@ -482,7 +490,7 @@ export default {
       this.treeData = [];
       this.getTreeData(sendType);
     },
-    handleCheckChange(item, checked, indeterminate) {
+    handleCheckChange(item, checked) {
       //console.log(data, checked, indeterminate);
       //去除勾选
       if (!checked) {
@@ -559,7 +567,7 @@ export default {
         console.log("展开了节点远程读取并加载用户节点：" + data.labelName);
         this.getAccountDataByHigher(data.businessId, data.type, function(r) {
           if (r.length > 0) {
-            r.forEach((item, index, array) => {
+            r.forEach(item => {
               //执行代码
               that.$refs.treeNotice.append(item, node);
             });
@@ -568,7 +576,7 @@ export default {
       }
       this.hasQueryAccountNode.push(data.nodeId);
     },
-    handellNodeExpand(data, node, nodeComponent) {
+    handellNodeExpand(data, node) {
       if (data.type == 0) {
         //展开公司节点
         console.log("展开了公司节点：" + data.labelName);
@@ -578,7 +586,7 @@ export default {
         console.log("展开了部门节点：" + data.labelName);
       }
     },
-    handleNodeClick(data, node, nodeComponent) {
+    handleNodeClick(data, node) {
       //单独发送，需要加载用户
       this.appendAccountNode(data, node);
     },
@@ -607,7 +615,7 @@ export default {
       this.notice.receiveAcountIds = []; //选中的人员
       this.selectedNodeDatas = [];
       if (selectedData.constructor === Array && selectedData.length > 0) {
-        selectedData.forEach((item, index, array) => {
+        selectedData.forEach(item => {
           if (this.notice.sendType == 0) {
             //按单独发送
             if (item.type == 2) {
@@ -734,7 +742,7 @@ export default {
           console.log(e);
         });
     },
-    handleAvatarSuccess(res, file) {
+    handleAvatarSuccess(res) {
       // 如果上传成功
       if (res.code == 200) {
         let imageUrl = res.data.url;

@@ -47,7 +47,11 @@
       </div>
     </template>
     <div class="elControl">
-      <el-input placeholder="请在组织结构树选择所属单位" v-model="unitName" :disabled="true">
+      <el-input
+        placeholder="请在组织结构树选择所属单位"
+        v-model="unitName"
+        :disabled="true"
+      >
         <template slot="prepend">所属单位</template>
       </el-input>
       <el-input placeholder="请输入标题" v-model="title">
@@ -69,8 +73,12 @@
             :headers="myHeader"
             :on-success="handleAvatarSuccess"
           >
-            <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+            <el-button size="small" type="primary" id="btnUpload"
+              >点击上传</el-button
+            >
+            <div slot="tip" class="el-upload__tip">
+              只能上传jpg/png文件，且不超过500kb
+            </div>
           </el-upload>
           <quill-editor
             class="myQuillEditor"
@@ -200,14 +208,14 @@ export default {
         console.log("读取失败");
         console.log(e);
       })
-      .finally(e => {
+      .finally(() => {
         this.treeLoading = false;
       });
 
     this.quill = this.$refs.QuillEditor.quill;
   },
   methods: {
-    handleCheckChange(data, checked, node) {
+    handleCheckChange(data, checked) {
       if (checked == true) {
         this.checkedId = data.businessId;
         this.checkedType = data.type;
@@ -216,14 +224,14 @@ export default {
         this.unitName = data.labelName;
       }
     },
-    handleNodeClick(data) {},
-    loadNode(node, resolve) {},
+    handleNodeClick() {},
+    loadNode() {},
     filterNode(value, data) {
       console.log(value, data);
       if (!value) return true;
       return data.label.indexOf(value) !== -1;
     },
-    treeCheck(e, data) {},
+    treeCheck() {},
     saveData() {
       let that = this;
       if (
@@ -297,7 +305,7 @@ export default {
           console.log(e);
         });
     },
-    handleAvatarSuccess(res, file) {
+    handleAvatarSuccess(res) {
       // 如果上传成功
       if (res.code == 200) {
         let imageUrl = res.data.url;

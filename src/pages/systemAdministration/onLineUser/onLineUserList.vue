@@ -20,9 +20,11 @@
 </style>
 <template>
   <div class="page-content ">
-    <list-page :parentData="$data"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
           <!-- <el-input placeholder="用户名"
@@ -30,43 +32,53 @@
                   clearable>
           <template slot="prepend">用户名</template>
         </el-input>-->
-          <el-button type="primary"
-                     size="mini"
-                     @click="queryOnLineUserDatas(1)">刷新</el-button>
+          <el-button type="primary" size="mini" @click="queryOnLineUserDatas(1)"
+            >刷新</el-button
+          >
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column prop="userInfo.userImage"
-                         label="用户头像"
-                         width="90">
+        <el-table-column prop="userInfo.userImage" label="用户头像" width="90">
           <!-- 图片的显示 -->
           <template slot-scope="scope">
-            <img :src="scope.row.userInfo.userImage"
-                 width="50"
-                 height="50" />
+            <img :src="scope.row.userInfo.userImage" width="50" height="50" />
           </template>
         </el-table-column>
-        <el-table-column prop="loginTime"
-                         :formatter="formatLoginTime"
-                         label="登录时间"></el-table-column>
-        <el-table-column prop="clientType"
-                         :formatter="formatClientType"
-                         label="登录终端"
-                         width="90"></el-table-column>
-        <el-table-column label="操作"
-                         fixed="right">
+        <el-table-column
+          prop="loginTime"
+          :formatter="formatLoginTime"
+          label="登录时间"
+        ></el-table-column>
+        <el-table-column
+          prop="clientType"
+          :formatter="formatClientType"
+          label="登录终端"
+          width="90"
+        ></el-table-column>
+        <el-table-column label="操作" fixed="right">
           <template v-slot="scope">
-            <el-button type="primary"
-                       size="mini"
-                       @click="distributeEvent(item.methosName,scope.row.perId,scope.row.perType)"
-                       v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                       :key="index">{{item.name}}</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="
+                distributeEvent(
+                  item.methosName,
+                  scope.row.perId,
+                  scope.row.perType
+                )
+              "
+              v-for="(item, index) in getOpeBtns(scope.row.operation)"
+              :key="index"
+              >{{ item.name }}</el-button
+            >
           </template>
         </el-table-column>
       </template>
@@ -138,10 +150,10 @@ export default {
     this.queryOnLineUserDatas(1);
   },
   methods: {
-    formatLoginTime(row, column) {
+    formatLoginTime(row) {
       return new Date(row.loginTime).Format("yy-MM-dd hh:mm:ss");
     },
-    formatClientType(row, column) {
+    formatClientType(row) {
       if (row.perType == 0) {
         return "PC端";
       } else if (row.clientType == 3) {
@@ -213,13 +225,13 @@ export default {
       let end = (currentPage - 1) * pageSize + pageSize;
       return allData.slice(start, end);
     },
-    offLineUser(perId, perType) {
+    offLineUser() {
       alert("查看用户详情实现");
     },
     distributeEvent(e, perId, perType) {
       this[e](perId, perType);
     },
-    getOpeBtns(type) {
+    getOpeBtns() {
       let array = [
         { name: "查看用户", isType: "1,3", methosName: "offLineUser" }
         // { name: '编辑', isType: '1', methosName: 'test1' }

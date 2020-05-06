@@ -56,130 +56,138 @@
 
 <template>
   <div v-loading.fullscreen.lock="fullscreenLoading">
-
-    <el-breadcrumb separator-class="el-icon-arrow-right"
-                   style="margin: 10px">
-      <el-breadcrumb-item v-for="(item,index) in pathList"
-                          :key="index">{{item}}</el-breadcrumb-item>
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin: 10px">
+      <el-breadcrumb-item v-for="(item, index) in pathList" :key="index">{{
+        item
+      }}</el-breadcrumb-item>
     </el-breadcrumb>
 
     <template>
       <div class="elTree">
-        <el-form :inline="true"
-                 class="demo1-form-inline"
-                 style="align-content: center">
+        <el-form
+          :inline="true"
+          class="demo1-form-inline"
+          style="align-content: center"
+        >
           <el-form-item label="类型">
-            <el-select v-model="ruleParamsObj.type"
-                       style="width: 130px;"
-                       @change="loadFunctionPoint"
-                       placeholder="请选择功能点类型">
-              <el-option label="PC端"
-                         value="0"></el-option>
-              <el-option label="Client端"
-                         value="1"></el-option>
-              <el-option label="Wap端"
-                         value="2"></el-option>
+            <el-select
+              v-model="ruleParamsObj.type"
+              style="width: 130px;"
+              @change="loadFunctionPoint"
+              placeholder="请选择功能点类型"
+            >
+              <el-option label="PC端" value="0"></el-option>
+              <el-option label="Client端" value="1"></el-option>
+              <el-option label="Wap端" value="2"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="不选中子节点">
             <el-switch v-model="treeCheckStrictly"></el-switch>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary"
-                       size="mini"
-                       @click="savePosition">保存</el-button>
+            <el-button type="primary" size="mini" @click="savePosition"
+              >保存</el-button
+            >
           </el-form-item>
         </el-form>
-        <el-tree :data="ruleTreeData"
-                 show-checkbox
-                 node-key="id"
-                 ref="tree"
-                 highlight-current
-                 :check-strictly="treeCheckStrictly"
-                 :expand-on-click-node=false
-                 :props="defaultProps">
-          <span class="custom-tree-node"
-                slot-scope="{ node, data }">
+        <el-tree
+          :data="ruleTreeData"
+          show-checkbox
+          node-key="id"
+          ref="tree"
+          highlight-current
+          :check-strictly="treeCheckStrictly"
+          :expand-on-click-node="false"
+          :props="defaultProps"
+        >
+          <span class="custom-tree-node" slot-scope="{ node, data }">
             <span>{{ node.label }}</span>
             <span>
-              <el-button type="text"
-                         size="mini"
-                         :class="{'selected_btn':node.data.dataType == '0' }"
-                         @click="operationSelf(node,data)"> 自己</el-button>
-              <el-button type="text"
-                         size="mini"
-                         :class="{'selected_btn':node.data.dataType == '1'}"
-                         @click="operationDept(node, data)"> 部门权限</el-button>
-              <el-button type="text"
-                         size="mini"
-                         :class="{'selected_btn':node.data.dataType == '2'}"
-                         @click="operationCompany(node, data)">跨部门权限</el-button>
+              <el-button
+                type="text"
+                size="mini"
+                :class="{ selected_btn: node.data.dataType == '0' }"
+                @click="operationSelf(node, data)"
+              >
+                自己</el-button
+              >
+              <el-button
+                type="text"
+                size="mini"
+                :class="{ selected_btn: node.data.dataType == '1' }"
+                @click="operationDept(node, data)"
+              >
+                部门权限</el-button
+              >
+              <el-button
+                type="text"
+                size="mini"
+                :class="{ selected_btn: node.data.dataType == '2' }"
+                @click="operationCompany(node, data)"
+                >跨部门权限</el-button
+              >
             </span>
           </span>
         </el-tree>
       </div>
-
     </template>
     <template>
       <el-card class="box-card">
-        <div slot="header"
-             class="clearfix">
+        <div slot="header" class="clearfix">
           <span>操作</span>
         </div>
         <div class="text item">
           <!--          <el-button type="primary"-->
           <!--                     @click="cancel">返回</el-button>-->
         </div>
-        <div class="text item"
-             style="margin-top: 10px;">
+        <div class="text item" style="margin-top: 10px;">
           <template>
             <div class="formItem">
-              <el-form :inline="true"
-                       class="demo-form-inline"
-                       style="!important;align-content: center">
-                <el-form-item label="关键字过滤"
-                              v-show="showCompanyTree">
-                  <el-input placeholder="输入关键字进行过滤"
-                            v-model="filterText"
-                            class="treeSearch"></el-input>
+              <el-form
+                :inline="true"
+                class="demo-form-inline"
+                style="!important;align-content: center"
+              >
+                <el-form-item label="关键字过滤" v-show="showCompanyTree">
+                  <el-input
+                    placeholder="输入关键字进行过滤"
+                    v-model="filterText"
+                    class="treeSearch"
+                  ></el-input>
                 </el-form-item>
-                <el-form-item label="不选子节点"
-                              v-show="showCompanyTree">
+                <el-form-item label="不选子节点" v-show="showCompanyTree">
                   <el-switch v-model="checkStrictly"></el-switch>
                 </el-form-item>
-                <el-form-item label="功能操作"
-                              v-show="showSave">
-                  <el-button type="primary"
-                             size="mini"
-                             @click="saveCompanyRule">保存</el-button>
+                <el-form-item label="功能操作" v-show="showSave">
+                  <el-button type="primary" size="mini" @click="saveCompanyRule"
+                    >保存</el-button
+                  >
                 </el-form-item>
               </el-form>
-
             </div>
-            <div class="elTree"
-                 v-show="showCompanyTree">
-              <el-tree ref="companyTree"
-                       :data="companyTreeData"
-                       node-key="nodeId"
-                       show-checkbox
-                       :props="companyProps"
-                       @check="checkNode"
-                       :highlight-current="true"
-                       :filter-node-method="filterNode"
-                       :check-strictly="checkStrictly"
-                       :action="''"
-                       empty-text="暂无数据，请检查权限"
-                       auto-expand-parent
-                       :default-checked-keys="companyGather"
-                       :default-expanded-keys="companyGather"
-                       v-loading="treeLoading"></el-tree>
-
+            <div class="elTree" v-show="showCompanyTree">
+              <el-tree
+                ref="companyTree"
+                :data="companyTreeData"
+                node-key="nodeId"
+                show-checkbox
+                :props="companyProps"
+                @check="checkNode"
+                :highlight-current="true"
+                :filter-node-method="filterNode"
+                :check-strictly="checkStrictly"
+                :action="''"
+                empty-text="暂无数据，请检查权限"
+                auto-expand-parent
+                :default-checked-keys="companyGather"
+                :default-expanded-keys="companyGather"
+                v-loading="treeLoading"
+              ></el-tree>
             </div>
           </template>
         </div>
       </el-card>
     </template>
-
   </div>
 </template>
 <script>
@@ -190,7 +198,7 @@ export default {
   computed: {
     ...mapState(["navAuthority"])
   },
-  data () {
+  data() {
     return {
       pathList: [],
       treeCheckStrictly: true,
@@ -232,14 +240,14 @@ export default {
       currentCompanyGather: null,
       currentDeptGather: null,
       currentNode: null,
-      selectNodes: [],
+      selectNodes: []
     };
   },
-  destroyed () {
+  destroyed() {
     //销毁
     this.$store.commit("resetNavList");
   },
-  created () {
+  created() {
     let accountId = JSON.parse(this.$route.query.accountId);
     //this.$store.dispatch("judgeNavList", accountId);
     this.ruleParamsObj.accountId = accountId;
@@ -249,7 +257,7 @@ export default {
     this.loadUnitTree();
   },
   methods: {
-    loadPath () {
+    loadPath() {
       let that = this;
       let params = {
         operationId: that.paramsObj.accountId,
@@ -276,7 +284,7 @@ export default {
           console.log(e);
         });
     },
-    loadFunctionPoint () {
+    loadFunctionPoint() {
       let that = this;
       that.currentNode = null;
       that.paramsObj.functionPointArray = new Array();
@@ -304,7 +312,7 @@ export default {
           console.log(e);
         });
     },
-    loadUnitTree () {
+    loadUnitTree() {
       let that = this;
       //读取树数据
       that.$api
@@ -338,22 +346,22 @@ export default {
           console.log("读取失败");
           console.log(e);
         })
-        .finally(e => {
+        .finally(() => {
           that.treeLoading = false;
         });
     },
-    foreachNodes (res_list, list, type) {
+    foreachNodes(res_list, list, type) {
       if (!res_list) {
         res_list = [];
       }
       if (list) {
         list.forEach(i => {
-          res_list.push(i + ',' + type);
-        })
+          res_list.push(i + "," + type);
+        });
       }
       return res_list;
     },
-    operationCompany (node, data) {
+    operationCompany(node, data) {
       this.showCompanyTree = true;
       this.showSave = true;
       console.log(node, data, "operationCompany..");
@@ -367,7 +375,11 @@ export default {
       if (data.deptGather) {
         let deptGather = data.deptGather;
         let deptArrayGather = deptGather.split(",");
-        this.companyGather = this.foreachNodes(this.companyGather, deptArrayGather, 1);
+        this.companyGather = this.foreachNodes(
+          this.companyGather,
+          deptArrayGather,
+          1
+        );
       }
       this.currentCompanyGather = null;
       this.currentDeptGather = null;
@@ -375,7 +387,7 @@ export default {
       this.putParams(node, "2");
       this.currentNode = node;
     },
-    operationSelf (node, data) {
+    operationSelf(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       node.data.dataType = "0";
@@ -383,7 +395,7 @@ export default {
       this.putParams(node, "0");
       console.log(node, data, "operationSelf..");
     },
-    operationDept (node, data) {
+    operationDept(node, data) {
       this.showCompanyTree = false;
       this.showSave = true;
       node.data.dataType = "1";
@@ -392,7 +404,7 @@ export default {
       console.log(node, data, "operationDept..");
     },
     //应用
-    savePosition () {
+    savePosition() {
       var that = this;
       let checkedKeys = that.$refs.tree.getCheckedKeys();
       let keys = "";
@@ -420,7 +432,7 @@ export default {
         });
     },
     //保存跨部门权限
-    putParams (node, dataType) {
+    putParams(node, dataType) {
       let data = node.data;
       if (!data) {
         data = node;
@@ -455,7 +467,6 @@ export default {
       currentNode.data.companyGather = that.currentCompanyGather;
       currentNode.data.deptGather = that.currentDeptGather;
 
-
       // if (
       //   (that.companyTreeSelectNode.companyIds &&
       //     that.companyTreeSelectNode.companyIds.length > 0) ||
@@ -474,10 +485,9 @@ export default {
           that.foreachChildren(data.children, dataType);
         }
       }
-
     },
     //遍历子节点
-    foreachChildren (childrenData, dataType) {
+    foreachChildren(childrenData, dataType) {
       let that = this;
       if (childrenData) {
         childrenData.forEach(data => {
@@ -485,7 +495,7 @@ export default {
         });
       }
     },
-    saveCompanyRule () {
+    saveCompanyRule() {
       if (!this.paramsObj && !this.paramsObj.rId) {
         this.$message.info("请选择节点进行保存");
         return;
@@ -517,11 +527,11 @@ export default {
           }
           that.fullscreenLoading = false;
         })
-        .finally(function () {
+        .finally(function() {
           that.fullscreenLoading = false;
         });
     },
-    foreachList (list) {
+    foreachList(list) {
       let temp = "";
       list.forEach(id => {
         temp = temp + "," + id;
@@ -531,7 +541,7 @@ export default {
     },
 
     //选中节点
-    checkNode (data, checkedData) {
+    checkNode(data, checkedData) {
       if (checkedData.checkedNodes) {
         this.companyTreeSelectNode.companyIds = new Array();
         this.companyTreeSelectNode.deptIds = new Array();
@@ -556,7 +566,7 @@ export default {
     },
 
     //取消
-    cancel () {
+    cancel() {
       var that = this;
       //跳转页面
       that.$router.push({
@@ -564,7 +574,7 @@ export default {
         query: { id: this.paramsObj.postId }
       });
     },
-    filterNode (value, data) {
+    filterNode(value, data) {
       console.log("value：" + value);
       console.log(data);
       if (!value) return true;
@@ -574,7 +584,7 @@ export default {
     }
   },
   watch: {
-    filterText (val) {
+    filterText(val) {
       this.$refs.companyTree.filter(val);
     }
   }

@@ -20,36 +20,80 @@
 <template>
   <div class="wrapper">
     <div>
-      <el-form ref="form" :model="personLogEntity" label-width="80px" :inline="true">
+      <el-form
+        ref="form"
+        :model="personLogEntity"
+        label-width="80px"
+        :inline="true"
+      >
         <el-form-item label="姓名:">
-          <el-input v-model="personLogEntity.perName" readonly="readonly"></el-input>
+          <el-input
+            v-model="personLogEntity.perName"
+            readonly="readonly"
+          ></el-input>
         </el-form-item>
         <el-form-item label="部门">
-          <el-input v-model="personLogEntity.deptName" readonly="readonly"></el-input>
+          <el-input
+            v-model="personLogEntity.deptName"
+            readonly="readonly"
+          ></el-input>
         </el-form-item>
       </el-form>
-      <el-form ref="form" :model="personLogEntity" label-width="80px" :inline="true">
+      <el-form
+        ref="form"
+        :model="personLogEntity"
+        label-width="80px"
+        :inline="true"
+      >
         <el-form-item label="操作人:">
-          <el-input v-model="personLogEntity.addName" readonly="readonly"></el-input>
+          <el-input
+            v-model="personLogEntity.addName"
+            readonly="readonly"
+          ></el-input>
         </el-form-item>
         <el-form-item label="变动时间">
-          <el-input v-model="personLogEntity.logDate" readonly="readonly"></el-input>
+          <el-input
+            v-model="personLogEntity.logDate"
+            readonly="readonly"
+          ></el-input>
         </el-form-item>
       </el-form>
-      <el-form ref="form" :model="personLogEntity" label-width="80px" :inline="true">
+      <el-form
+        ref="form"
+        :model="personLogEntity"
+        label-width="80px"
+        :inline="true"
+      >
         <el-form-item label="异动类型:">
-          <el-input v-model="personLogEntity.fnFrom" readonly="readonly"></el-input>
+          <el-input
+            v-model="personLogEntity.fnFrom"
+            readonly="readonly"
+          ></el-input>
         </el-form-item>
         <el-form-item label="审核状态">
-          <el-input v-model="personLogEntity.tag" readonly="readonly"></el-input>
+          <el-input
+            v-model="personLogEntity.tag"
+            readonly="readonly"
+          ></el-input>
         </el-form-item>
       </el-form>
-      <el-form ref="form" :model="personLogEntity" label-width="80px" :inline="true">
+      <el-form
+        ref="form"
+        :model="personLogEntity"
+        label-width="80px"
+        :inline="true"
+      >
         <el-form-item label="审核人:">
-          <el-input v-model="personLogEntity.checkName" readonly="readonly"></el-input>
+          <el-input
+            v-model="personLogEntity.checkName"
+            readonly="readonly"
+          ></el-input>
         </el-form-item>
         <el-form-item label="审核时间">
-          <el-input v-model="personLogEntity.checkTime" readonly="readonly"></el-input>
+          <el-input
+            v-model="personLogEntity.checkTime"
+            readonly="readonly"
+          ></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -64,7 +108,7 @@
         ></el-table-column>
       </el-table>
     </template>
-    <div class="footerContainer el-top" v-show="this.ttag===0">
+    <div class="footerContainer el-top" v-show="this.ttag === 0">
       <el-button type="primary" @click="savepersonLog(1)">通过</el-button>
       <el-button type="primary" @click="savepersonLog(-1)">不通过</el-button>
     </div>
@@ -155,7 +199,7 @@ export default {
             .catch(e => {
               console.log(e);
             })
-            .finally(e => {
+            .finally(() => {
               this.pageLoad();
             });
         })
