@@ -30,7 +30,7 @@ export default {
   },
   created () {
     if (this.echoData.length != 0) {
-      this.FillImgVideo();
+      //this.FillImgVideo();
     }
   },
   destroyed () {
