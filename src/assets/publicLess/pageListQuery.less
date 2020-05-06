@@ -1,0 +1,156 @@
+.page-list-query-row {
+    display: flex;
+    margin-top: 25px;
+
+    &:last-of-type {
+        margin-bottom: 25px;
+    }
+
+    .query-content-cell {
+        display: flex;
+        align-items: center;
+
+        .query-cell-title {
+            font-size: 15px;
+            font-weight: normal;
+            margin-right: 10px;
+        }
+
+        /deep/.el-select {
+            width: 110px;
+            margin-right: 20px;
+
+            .el-input--suffix .el-input__inner {
+                padding-right: 15px;
+            }
+
+            .el-input__inner {
+                height: 30px;
+                line-height: 30px;
+                text-align: center;
+            }
+
+            .el-select__caret {
+                line-height: 30px;
+            }
+        }
+
+        /deep/.el-select:first-of-type {
+            width: 150px;
+        }
+
+        /deep/.el-select:last-of-type {
+            margin-right: 0;
+        }
+
+        .set-input-content {
+            /deep/.el-input__inner {
+                height: 30px;
+                line-height: 30px;
+                text-align: center;
+                padding-right: 15px;
+            }
+
+            /deep/i {
+                line-height: 30px;
+            }
+        }
+
+        .set-select90 {
+            width: 90px !important;
+        }
+
+        .set-select100 {
+            width: 100px !important;
+        }
+
+        .set-select110 {
+            width: 110px !important;
+        }
+
+        .set-select150 {
+            width: 150px !important;
+        }
+
+        .set-input90 {
+            width: 90px;
+            .set-input-content;
+        }
+
+        .set-input120 {
+            width: 120px;
+            .set-input-content;
+        }
+
+        .set-input200 {
+            width: 200px;
+            .set-input-content;
+        }
+
+        .handlebut {
+            color: rgb(90, 159, 203);
+            cursor: pointer;
+        }
+
+        .query-checkbox {
+            &:last-of-type {
+                margin-left: 25px;
+            }
+
+            input {
+                vertical-align: middle;
+                width: 15px;
+                height: 15px;
+            }
+
+            span {
+                vertical-align: middle;
+                font-size: 15px;
+                margin-left: 5px;
+            }
+        }
+
+        .set-data-pricker {
+            height: 30px;
+            line-height: 30px;
+
+            /deep/.el-input__icon,
+            /deep/.el-range-separator {
+                line-height: 30px;
+                height: auto;
+            }
+
+            &.set-pricker-width260 {
+                width: 260px;
+            }
+        }
+
+        .query-cell-suffix {
+            margin-left: 10px;
+            font-size: 15px;
+        }
+
+        .cut-off-rule {
+            margin: 0 8px;
+            background: #dcdfe6;
+            height: 1px;
+            width: 8px;
+        }
+
+        &.cell-interval180 {
+            margin-left: 180px;
+        }
+
+        &.cell-interval75 {
+            margin-left: 75px;
+        }
+
+        &.cell-interval25 {
+            margin-left: 25px;
+        }
+
+        &.cell-interval45 {
+            margin-left: 45px;
+        }
+    }
+}

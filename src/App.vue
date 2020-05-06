@@ -7,5 +7,6 @@
 </template>
 
 <style lang="less">
-@import url(./static/public.less);
+@import url(./assets/publicLess/public.less);
+@import url(../public/iconfont.css);
 </style>

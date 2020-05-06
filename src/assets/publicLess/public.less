@@ -1,0 +1,184 @@
+body,
+ol,
+ul,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+th,
+td,
+dl,
+dd,
+form,
+fieldset,
+legend,
+input,
+textarea,
+select {
+    margin: 0;
+    padding: 0
+}
+
+body {
+    font: 12px"SimHei",
+        sans-serif;
+    background: #fff;
+    //-webkit-text-size-adjust: 100%;
+}
+
+a {
+    color: #2d374b;
+    text-decoration: none
+}
+
+a:hover {
+    color: #cd0200;
+    text-decoration: underline
+}
+
+em {
+    font-style: normal
+}
+
+li {
+    list-style: none
+}
+
+img {
+    border: 0;
+    vertical-align: middle
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+p {
+    word-wrap: break-word
+}
+
+
+.overText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.isDisabled {
+    color: #c0c4cc;
+    cursor: not-allowed !important;
+
+    * {
+        color: #c0c4cc !important;
+    }
+}
+
+.loadingTop {
+    .el-loading-spinner {
+        top: 20%;
+    }
+}
+
+:root {
+    --color--primary: #409EFF;
+}
+
+.font-small-title {
+    font-size: 16px;
+}
+
+.font-middle-title {
+    font-size: 18px;
+}
+
+.font-big-title {
+    font-size: 20px;
+}
+
+.gray {
+    filter: grayscale(1);
+}
+
+html {
+    min-width: 1280px;
+    max-width: 1920px;
+
+    @media screen and (max-width: 1280px) {
+        font-size: 66.66px;
+    }
+
+    @media screen and (min-width: 1281px) and (max-width: 1919px) {
+        font-size: calc(100vw / 1920 * 100);
+    }
+
+    @media screen and (min-width: 1920px) {
+        font-size: 100px;
+    }
+}
+
+body {
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+}
+
+.mini-message-box {
+    width: 200px;
+
+    &.but-center {
+        .el-message-box__btns {
+            text-align: center;
+        }
+    }
+}
+
+.el-enter-active,
+.el-leave-active {
+    transition: all 0.5s;
+}
+
+.el-enter,
+.el-leave-active {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.el-leave-active {
+    position: absolute;
+    width: 100%;
+}
+
+.dadlog-enter-active {
+    animation: dadlog-in 0.3s;
+}
+
+.dadlog-leave-active {
+    animation: dadlog-in 0.3s reverse;
+}
+
+@keyframes dadlog-in {
+    0% {
+        transform: translate3d(0, -20px, 0);
+        opacity: 0;
+    }
+
+    100% {
+        transform: translate3d(0, 0px, 0);
+        opacity: 1;
+    }
+}
+
+.poperSet {
+    box-sizing: border-box;
+    min-width: none;
+}
+
+.invitationToVerify {
+    display: block;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}

@@ -1,76 +1,35 @@
 import Vue from "vue";
-import VueRouter from "vue-router";
-import Login from "../views/Login.vue";
-Vue.use(VueRouter);
+import Router from "vue-router";
+import Login from "@/pages/login/login";
+import menuFrame from "@/pages/menuFrame/menuFrame";
+import routerResult from "@/router/routerResult/index";
+Vue.use(Router);
 
-const routes = [
-  {
-    path: "/",
-    name: "login",
-    component: Login
-  },
-  {
-    path: "/Middle",
-    name: "middle",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "middle" */ "../views/Middle.vue"),
-    meta: {
-      routeArray: [
-        {
-          path: "",
-          name: "系统管理"
-        }
-      ]
+const originalPush = Router.prototype.push;
+Router.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject);
+  return originalPush.call(this, location).catch(err => err);
+};
+
+export default new Router({
+  mode: "history",
+  routes: [
+    {
+      path: "/",
+      name: "Login",
+      component: Login
     },
-    redirect: "/Middle/Details",
-    children: [
-      {
-        path: "/Middle/Details",
-        name: "details",
-        meta: {
-          routeArray: [
-            {
-              path: "",
-              name: "系统管理"
-            },
-            {
-              path: "",
-              name: "应用管理"
-            }
-          ]
-        },
-        component: () =>
-          import(/* webpackChunkName: "details" */ "../views/Details.vue")
+    {
+      // 二级路由
+      path: "/menuFrame",
+      name: "menuFrame",
+      component: menuFrame,
+      redirect: "/buySellSystem/houseList",
+      meta: {
+        title: "首页"
       },
-      {
-        path: "/Middle/List",
-        name: "list",
-        meta: {
-          routeArray: [
-            {
-              path: "",
-              name: "系统管理"
-            },
-            {
-              path: "",
-              name: "日志管理"
-            }
-          ]
-        },
-        component: () =>
-          import(/* webpackChunkName: "list" */ "../views/List.vue")
-      }
-    ]
-  }
-];
-
-const router = new VueRouter({
-  mode: "hash",
-  base: process.env.BASE_URL,
-  routes
+      children: routerResult
+    }
+  ]
 });
-
-export default router;

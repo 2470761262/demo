@@ -1,0 +1,245 @@
+.page-cell-addHouse {
+    padding: 0 50px;
+}
+
+.page-cell-item-flex {
+    display: flex;
+}
+
+.form-error-tips {
+    position: relative;
+}
+
+&.select-pad-width_100 {
+    margin-left: 20px;
+
+    .item-before {
+        width: 60px !important;
+    }
+
+    /deep/.el-input__inner {
+        width: 110px !important;
+        padding-right: 0 !important;
+    }
+}
+
+&.select-pad-width_70 {
+    margin-left: 60px;
+
+    .item-before {
+        width: auto !important;
+        align-self: flex-end;
+    }
+
+    /deep/.el-input__inner {
+        width: 70px !important;
+        padding-right: 0 !important;
+    }
+}
+
+&.after-tips {
+    &::after {
+        position: absolute;
+        content: attr(data-tips);
+        color: red;
+        font-size: 13px;
+        bottom: 0;
+        transform: translateY(100%);
+    }
+}
+
+.page-cell-item {
+    display: flex;
+    display: -webkit-box; // flex 导致文本居中有问题，把前缀优先暂无问题
+
+    /deep/.el-input__inner {
+        width: 180px;
+    }
+
+    .el-input-group {
+        width: auto;
+    }
+
+    /deep/.el-input-group__prepend {
+        padding: 0;
+        border: none;
+        background: none;
+        // white-space: normal;
+    }
+
+    /deep/.el-input-group__append {
+        padding: 0;
+        background: none;
+        border: none;
+
+        .item-before-col {
+            text-align: center;
+            margin-left: 10px;
+            color: var(--color--primary);
+        }
+    }
+
+
+    .item-before {
+        position: relative;
+        width: 80px;
+        margin-right: 10px;
+        height: 40px;
+        line-height: 40px;
+        text-align: justify;
+        font-size: 15px;
+        padding-left: 10px;
+        box-sizing: border-box;
+        color: #666;
+        white-space: nowrap;
+
+        &::before {
+            content: attr(data-before);
+            color: red;
+            position: absolute;
+            left: 0;
+        }
+
+        &::after {
+            content: "";
+            width: 100%;
+            display: inline-block;
+        }
+    }
+}
+
+.select-nobor {
+    /deep/.el-input__inner {
+        border: none;
+        border-bottom: 1px solid #c0c4cc;
+        border-radius: 0;
+    }
+}
+
+.for-add-td {
+    /deep/.el-input__inner {
+        padding: 0 15px;
+        text-align: center;
+    }
+
+    /deep/.el-input__suffix-inner {
+        display: none;
+    }
+
+    /deep/.el-input {
+        /deep/.el-input__inner {
+            padding: 0;
+        }
+    }
+}
+
+.center-flex {
+    align-items: center;
+}
+
+.input-after-checkbox {
+    margin-left: 30px;
+}
+
+.margin-bot_20 {
+    margin-bottom: 20px;
+}
+
+.maging-top_60 {
+    margin-top: 60px;
+}
+
+.dividing_line {
+    height: 1px;
+    background: #c0c4cc;
+    margin-top: 20px;
+}
+
+.cell-tabs {
+    flex-wrap: wrap;
+    margin-top: 60px;
+
+    .page-cell-item-flex {
+        flex: 0 0 50%;
+        align-items: center;
+        font-size: 15px;
+        margin-top: 20px;
+
+        .cell-tabs-item-title {
+            width: 80px;
+            margin-right: 25px;
+            font-size: inherit;
+            color: #c0c0c0;
+            text-align: justify;
+            height: 40px;
+            line-height: 40px;
+
+            &:after {
+                display: inline-block;
+                width: 100%;
+                content: "";
+            }
+        }
+
+        .cell-tabs-item-data {
+            font-size: inherit;
+            color: #666;
+            display: flex;
+
+            .item-deep-data {
+                color: inherit;
+            }
+
+            .but-append {
+                cursor: pointer;
+                margin-left: 10px;
+                color: var(--color--primary);
+                align-self: center;
+
+                &::before {
+                    content: attr(data-tips);
+                    font-size: 13px;
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+.min-input {
+    border: none;
+    outline: none;
+    border-bottom: 1px solid #999;
+    width: 50px;
+    text-align: center;
+    font-size: 15px;
+}
+
+.input-tips {
+    display: flex;
+    align-items: center;
+
+    .min-input {
+        width: 40px;
+    }
+}
+
+#addHouseType {
+    padding: 30px 0px;
+    border-bottom: 1px solid #c0c4cc;
+    margin-bottom: 30px;
+
+    .page-cell-item {
+        align-items: center;
+    }
+
+    .item-before {
+        width: auto;
+        line-height: normal;
+        height: auto;
+    }
+
+    .addhouse-tips {
+        margin-left: 30px;
+    }
+}
