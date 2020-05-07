@@ -19,10 +19,17 @@
   <div class="wrapper">
     <el-form ref="form" :model="DeptEntity" label-width="160px">
       <el-form-item label="姓名:">
-        <el-input v-model="employeeEntity.perName" readonly="readonly"></el-input>
+        <el-input
+          v-model="employeeEntity.perName"
+          readonly="readonly"
+        ></el-input>
       </el-form-item>
       <el-form-item label="头像">
-        <img v-if="employeeEntity.userImage" :src="employeeEntity.userImage" class="avatar" />
+        <img
+          v-if="employeeEntity.userImage"
+          :src="employeeEntity.userImage"
+          class="avatar"
+        />
         <i v-else class="el-icon-plus avatar-uploader-icon"></i>
       </el-form-item>
       <el-form-item label="身份证">
@@ -34,7 +41,12 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="性别">
-        <el-select type="text" placeholder="请输入内容" v-model="employeeEntity.sex" readonly="readonly">
+        <el-select
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.sex"
+          readonly="readonly"
+        >
           <el-option label="男" :value="0" />
           <el-option label="女" :value="1" />
         </el-select>
@@ -61,7 +73,11 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="学历">
-        <el-select v-model="employeeEntity.education" readonly="readonly" placeholder="请选择">
+        <el-select
+          v-model="employeeEntity.education"
+          readonly="readonly"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in educationList"
             :key="item.value"
@@ -87,10 +103,20 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="qq">
-        <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.qq" readonly="readonly"></el-input>
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.qq"
+          readonly="readonly"
+        ></el-input>
       </el-form-item>
       <el-form-item label="电话号码">
-        <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.tel" readonly="readonly"></el-input>
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.tel"
+          readonly="readonly"
+        ></el-input>
       </el-form-item>
       <el-form-item label="生日">
         <el-date-picker
@@ -101,11 +127,20 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="选择部门">
-        <el-input type="text" v-model="employeeEntity.deptName" readonly="readonly" show-word-limit></el-input>
+        <el-input
+          type="text"
+          v-model="employeeEntity.deptName"
+          readonly="readonly"
+          show-word-limit
+        ></el-input>
       </el-form-item>
 
       <el-form-item label="角色">
-        <el-select v-model="employeeEntity.perPost" readonly="readonly" placeholder="请选择">
+        <el-select
+          v-model="employeeEntity.perPost"
+          readonly="readonly"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in positionNameList"
             :key="item.value"
@@ -115,7 +150,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="岗位">
-        <el-select v-model="employeeEntity.perRole" readonly="readonly" placeholder="请选择">
+        <el-select
+          v-model="employeeEntity.perRole"
+          readonly="readonly"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in roleNameList"
             :key="item.value"
@@ -230,7 +269,11 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="星级编号">
-        <el-select v-model="employeeEntity.levelNo" readonly="readonly" placeholder="请选择">
+        <el-select
+          v-model="employeeEntity.levelNo"
+          readonly="readonly"
+          placeholder="请选择"
+        >
           <el-option
             v-for="item in levelNameList"
             :key="item.value"
@@ -252,7 +295,12 @@
         </el-select>
       </el-form-item>
       <el-form-item label="岗位属性">
-        <el-input type="text" placeholder="请输入内容" v-model="employeeEntity.sxId" readonly="readonly"></el-input>
+        <el-input
+          type="text"
+          placeholder="请输入内容"
+          v-model="employeeEntity.sxId"
+          readonly="readonly"
+        ></el-input>
       </el-form-item>
       <el-form-item label="毕业时间">
         <el-date-picker
@@ -272,7 +320,11 @@
       </el-form-item>
 
       <el-form-item label="介绍人">
-        <el-input type="text" v-model="employeeEntity.jieShaoName" readonly="readonly"></el-input>
+        <el-input
+          type="text"
+          v-model="employeeEntity.jieShaoName"
+          readonly="readonly"
+        ></el-input>
       </el-form-item>
     </el-form>
     <div class="footerContainer el-top">
@@ -285,12 +337,9 @@
 import util from "@/util/util";
 import { TOKEN } from "@/util/constMap";
 import getMenuRid from "@/minxi/getMenuRid";
-import listPage from "@/components/listPage";
 export default {
   mixins: [getMenuRid],
-  components: {
-    listPage
-  },
+  components: {},
   props: {},
   data() {
     return {

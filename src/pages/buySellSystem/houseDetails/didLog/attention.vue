@@ -41,65 +41,68 @@
 }
 </style>
 <template>
-  <fixedPopup v-bind="$attrs"
-              v-on="$listeners">
+  <fixedPopup v-bind="$attrs" v-on="$listeners">
     <template>
       <div class="attention-content">
         <div class="attention-left">
           <div class="attention-title">请选择是否通知</div>
           <div class="raido-group">
-            <label class="raido-group-label"
-                   v-for="(item,index) in pop.checkList"
-                   :key="index">
-              <input type="radio"
-                     :value="item.value"
-                     v-model="pop.model">
+            <label
+              class="raido-group-label"
+              v-for="(item, index) in pop.checkList"
+              :key="index"
+            >
+              <input type="radio" :value="item.value" v-model="pop.model" />
               <i></i>
-              <span>{{item.title}}</span>
+              <span>{{ item.title }}</span>
             </label>
           </div>
         </div>
         <i class="el-icon-bell attention-right"></i>
       </div>
-      <div class="attention-tips">如若选择通知,当关注的房源变动时,将会通过微信通知您的房源变化</div>
+      <div class="attention-tips">
+        如若选择通知,当关注的房源变动时,将会通过微信通知您的房源变化
+      </div>
       <div class="pop-but">
-        <el-button size="small"
-                   @click="hidePop">取消</el-button>
-        <el-button size="small"
-                   class="button-back"
-                   :loading="pop.loading"
-                   @click="updateSendNotice">确定</el-button>
+        <el-button size="small" @click="hidePop">取消</el-button>
+        <el-button
+          size="small"
+          class="button-back"
+          :loading="pop.loading"
+          @click="updateSendNotice"
+          >确定</el-button
+        >
       </div>
     </template>
   </fixedPopup>
 </template>
 
 <script>
-import '../less/didLogCss.less';
+import "../less/didLogCss.less";
 export default {
   inject: ["houseId"],
-  data () {
+  data() {
     return {
       pop: {
         model: 1,
         loading: false,
         checkList: [
-          { title: '通知', value: 1 },
-          { title: '不通知', value: 0 },
+          { title: "通知", value: 1 },
+          { title: "不通知", value: 0 }
         ]
       }
-    }
+    };
   },
   methods: {
     //修改下发通知标记
-    updateSendNotice () {
+    updateSendNotice() {
       let that = this;
       let ajaxurl = "";
       let params = {
         houseId: that.houseId.id,
         isSendNotice: that.pop.model
       };
-      this.$emit('update:visible', false)
+      this.$emit("update:visible", false);
       this.$api
         .post({
           url: "/agentHouse/collect/updateSendNotice",
@@ -107,13 +110,11 @@ export default {
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false
         })
-        .then(e => {
-
-        });
+        .then(e => {});
     },
-    hidePop () {
-      this.$emit('update:visible', false)
+    hidePop() {
+      this.$emit("update:visible", false);
     }
-  },
-}
+  }
+};
 </script>

@@ -27,10 +27,19 @@
     >
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary" size="mini" @click="toAddNoticePage">添加公告</el-button>
+          <el-button type="primary" size="mini" @click="toAddNoticePage"
+            >添加公告</el-button
+          >
           <div class="query-right">
-            <el-input placeholder="标题名称" size="small" v-model="queryData.newsTitle" clearable></el-input>
-            <el-button type="primary" size="mini" @click="queryNoticeByParams">查询</el-button>
+            <el-input
+              placeholder="标题名称"
+              size="small"
+              v-model="queryData.newsTitle"
+              clearable
+            ></el-input>
+            <el-button type="primary" size="mini" @click="queryNoticeByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
@@ -48,10 +57,11 @@
             <el-button
               type="primary"
               size="mini"
-              @click="distributeEvent(item.methosName,scope.row.id)"
-              v-for="(item,index) in getOpeBtns(scope.row.operation)"
+              @click="distributeEvent(item.methosName, scope.row.id)"
+              v-for="(item, index) in getOpeBtns(scope.row.operation)"
               :key="index"
-            >{{item.name}}</el-button>
+              >{{ item.name }}</el-button
+            >
           </template>
         </el-table-column>
       </template>

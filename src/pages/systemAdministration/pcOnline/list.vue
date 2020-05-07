@@ -16,19 +16,38 @@
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">门店名称:</h3>
-            <el-input placeholder="门店名称" class="set-input120" v-model="queryData.remark" clearable></el-input>
+            <el-input
+              placeholder="门店名称"
+              class="set-input120"
+              v-model="queryData.remark"
+              clearable
+            ></el-input>
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">账号:</h3>
-            <el-input placeholder="账号" class="set-input120" v-model="queryData.account" clearable></el-input>
+            <el-input
+              placeholder="账号"
+              class="set-input120"
+              v-model="queryData.account"
+              clearable
+            ></el-input>
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">电脑IP地址:</h3>
-            <el-input placeholder="电脑IP地址" class="set-input120" v-model="queryData.ip" clearable></el-input>
+            <el-input
+              placeholder="电脑IP地址"
+              class="set-input120"
+              v-model="queryData.ip"
+              clearable
+            ></el-input>
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">类型:</h3>
-            <el-select v-model="selectTag" placeholder="全部" @change="SelectTag">
+            <el-select
+              v-model="selectTag"
+              placeholder="全部"
+              @change="SelectTag"
+            >
               <el-option
                 v-for="item in SelectOptions"
                 :key="item.value"
@@ -38,7 +57,7 @@
             </el-select>
           </div>
           <div class="query-content-cell cell-interval45">
-            <el-tag type="danger">在线人数：{{onlineCount}}</el-tag>
+            <el-tag type="danger">在线人数：{{ onlineCount }}</el-tag>
           </div>
         </div>
         <div class="page-list-query-row">
@@ -57,7 +76,9 @@
             ></el-date-picker>
           </div>
           <div class="query-content-cell cell-interval45">
-            <el-button type="primary" size="mini" @click="queryByParams">查询</el-button>
+            <el-button type="primary" size="mini" @click="queryByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
@@ -77,8 +98,9 @@
             <el-button
               size="mini"
               @click="Offline(scope.$index, scope.row)"
-              v-if="scope.row.LineTag==1"
-            >下线</el-button>
+              v-if="scope.row.LineTag == 1"
+              >下线</el-button
+            >
           </template>
         </el-table-column>
       </template>

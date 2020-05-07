@@ -20,73 +20,85 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page v-show="!showForm"
-               :parentData="$data"
-               @queryTabData="queryTabData"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      v-show="!showForm"
+      :parentData="$data"
+      @queryTabData="queryTabData"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary"
-                     size="mini"
-                     @click="addPosition">新增</el-button>
+          <el-button type="primary" size="mini" @click="addPosition"
+            >新增</el-button
+          >
           <div class="query-right">
-            <el-input placeholder="角色名称搜索"
-                      size="small"
-                      v-model="queryData.keyword">
+            <el-input
+              placeholder="角色名称搜索"
+              size="small"
+              v-model="queryData.keyword"
+            >
             </el-input>
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryAddFloorListParams">查询</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="queryAddFloorListParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
       <template #tableColumn="cell">
-        <template v-for="(item) in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :formatter="item.formatClientType"
-                           :key="item.prop"></el-table-column>
+        <template v-for="item in cell.tableData">
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :formatter="item.formatClientType"
+            :key="item.prop"
+          ></el-table-column>
         </template>
 
-        <el-table-column label="操作"
-                         fixed="right"
-                         width="420px">
+        <el-table-column label="操作" fixed="right" width="420px">
           <template v-slot="scope">
-            <el-button type="primary"
-                       size="mini"
-                       @click="setEmployeeAuthority(scope.row)">个人权限设置</el-button>
-            <el-button type="warning"
-                       size="mini"
-                       @click="setPosition(scope.row)">权限设置</el-button>
-            <el-button type="primary"
-                       size="mini"
-                       @click="updatePosition(scope.row)">修改</el-button>
-            <el-button type="danger"
-                       size="mini"
-                       @click="delPosition(scope.row)">删除</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="setEmployeeAuthority(scope.row)"
+              >个人权限设置</el-button
+            >
+            <el-button
+              type="warning"
+              size="mini"
+              @click="setPosition(scope.row)"
+              >权限设置</el-button
+            >
+            <el-button
+              type="primary"
+              size="mini"
+              @click="updatePosition(scope.row)"
+              >修改</el-button
+            >
+            <el-button type="danger" size="mini" @click="delPosition(scope.row)"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </template>
     </list-page>
     <template>
-      <el-card class="box-card"
-               v-show="showForm">
-        <div slot="header"
-             class="clearfix">
+      <el-card class="box-card" v-show="showForm">
+        <div slot="header" class="clearfix">
           <span>人员管理</span>
         </div>
         <div class="text item">
           <div class="formItem">
-            <el-input v-model="positionObj.positionName"
-                      placeholder="角色名称">
+            <el-input v-model="positionObj.positionName" placeholder="角色名称">
               <template slot="prepend">角色名称:</template>
             </el-input>
           </div>
           <div class="formItem">
-            <el-input v-model="positionObj.positionDesc"
-                      placeholder="角色描述">
+            <el-input v-model="positionObj.positionDesc" placeholder="角色描述">
               <template slot="prepend">角色描述:</template>
             </el-input>
           </div>
@@ -105,12 +117,9 @@
           <!--          </div>-->
         </div>
         <div class="text item">
-          <div class="formItem"
-               style="float: right;margin-right: 230px;">
-            <el-button type="primary"
-                       @click="savePositionObj">保存</el-button>
-            <el-button type="primary"
-                       @click="cancel">取消</el-button>
+          <div class="formItem" style="float: right;margin-right: 230px;">
+            <el-button type="primary" @click="savePositionObj">保存</el-button>
+            <el-button type="primary" @click="cancel">取消</el-button>
           </div>
         </div>
       </el-card>
@@ -179,9 +188,9 @@ export default {
     this.queryAddFloorList(1);
   },
   methods: {
-    queryTabData() {
-      console.log(this, "111");
-    },
+    // queryTabData() {
+    //   console.log(this, "111");
+    // },
     //查询按钮
     queryAddFloorListParams() {
       this.queryAddFloorList(1);
@@ -209,8 +218,8 @@ export default {
               that.pageJson.currentPage = data.data.currPage;
               that.tableData = data.data.list;
             } else {
-              console.log("查询角色列表结果：" + result.message);
-              alert(result.message);
+              //   console.log("查询角色列表结果：" + result.message);
+              //   alert(result.message);
             }
           })
           .catch(e => {
@@ -364,7 +373,7 @@ export default {
           console.log("删除操作失败异常");
           console.log(e);
         });
-      this.$message.error("删除操作失败异常" + e);
+      //  this.$message.error("删除操作失败异常" + e);
     },
     //个人权限设置
     setEmployeeAuthority(e) {

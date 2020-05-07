@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .page-content {
   padding: 40px 0 35px 33px;
@@ -35,28 +34,33 @@
 }
 </style>
 <template>
-  <div class="page-content"
-       v-loading="load.loading"
-       element-loading-custom-class="loadingTop"
-       :element-loading-text="load.loadingMessage">
+  <div
+    class="page-content"
+    v-loading="load.loading"
+    element-loading-custom-class="loadingTop"
+    :element-loading-text="load.loadingMessage"
+  >
     <house-details-head></house-details-head>
     <section class="page-house-cell">
       <!-- 轮播图 -->
-      <loopImg class="cell-left"
-               :class="{'cell-left-nest':nest}"></loopImg>
+      <loopImg class="cell-left" :class="{ 'cell-left-nest': nest }"></loopImg>
       <!-- 房屋详情 -->
       <detail class="cell-right"></detail>
       <!-- 右侧功能按钮 -->
-      <sidebarList lastItemSet
-                   lastTitle="编辑"
-                   :lastParams='{id:forID.id,method:"reset"}'></sidebarList>
+      <sidebarList
+        lastItemSet
+        lastTitle="编辑"
+        :lastParams="{ id: forID.id, method: 'reset' }"
+      ></sidebarList>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
     <section class="page-house-cell marginTop">
       <!-- 房屋其他信息 -->
-      <houseMessage class="cell-msg"
-                    :class="{'cell-msg-nest':nest}"></houseMessage>
+      <houseMessage
+        class="cell-msg"
+        :class="{ 'cell-msg-nest': nest }"
+      ></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->
         <!-- <houseOperation></houseOperation> -->
@@ -79,7 +83,7 @@ import buttonGroup from "./components/buttonGroup";
 // import houseTask from "./components/houseTask";
 import { REMARK } from "@/util/constMap";
 export default {
-  provide () {
+  provide() {
     return {
       houseId: this.forID,
       houseDetails: this.houseDetails,
@@ -88,7 +92,7 @@ export default {
     };
   },
   computed: {
-    nest () {
+    nest() {
       return util.localStorageGet("nest");
     }
   },
@@ -99,11 +103,11 @@ export default {
     detail, // 右边的详情
     sidebarList,
     houseMessage,
-    buttonGroup// 按钮群
+    buttonGroup // 按钮群
     // houseOperation,
     // houseTask //房源任务方
   },
-  data () {
+  data() {
     return {
       forID: {
         id: null
@@ -115,7 +119,7 @@ export default {
       }
     };
   },
-  created () {
+  created() {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
       util.localStorageSet("validateHouseDetails.vue:houseId", this.forID.id);
@@ -125,7 +129,7 @@ export default {
     this.getHouseDetails();
   },
   methods: {
-    getHouseDetails () {
+    getHouseDetails() {
       let that = this;
       this.load.loading = true;
       this.$api
@@ -176,12 +180,12 @@ export default {
                 }
               }
             }
-            if (result.data.checkSign == 1) { result.data.validateText = '待验真'; }
-            else if (result.data.checkSign == 2) {
-              result.data.validateText = '验真成功';
-            }
-            else {
-              result.data.validateText = '验真失败';
+            if (result.data.checkSign == 1) {
+              result.data.validateText = "待验真";
+            } else if (result.data.checkSign == 2) {
+              result.data.validateText = "验真成功";
+            } else {
+              result.data.validateText = "验真失败";
             }
             this.$set(this.houseDetails, "data", result.data);
           } else {
@@ -198,9 +202,8 @@ export default {
         });
     }
   },
-  destroyed () {
+  destroyed() {
     // this.$store.commit("resetFormData");
   }
 };
 </script>
-

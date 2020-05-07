@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .page-content {
   height: 100%;
@@ -8,84 +7,102 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page @sort-change="sortMethod"
-               :parentData="$data"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      @sort-change="sortMethod"
+      :parentData="$data"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:top>
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
-            <el-select v-model="data.comId"
-                       @focus="remoteInput"
-                       @change="queryCBId"
-                       filterable
-                       remote
-                       clearable
-                       placeholder="楼盘名称"
-                       :remote-method="remoteMethod">
-              <el-option v-for="item in options"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
+            <el-select
+              v-model="data.comId"
+              @focus="remoteInput"
+              @change="queryCBId"
+              filterable
+              remote
+              clearable
+              placeholder="楼盘名称"
+              :remote-method="remoteMethod"
+            >
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
             </el-select>
-            <el-select v-model="data.cbId"
-                       filterable
-                       clearable
-                       placeholder="楼栋"
-                       @change="queryRoomNo">
-              <el-option v-for="item in cbIdList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
+            <el-select
+              v-model="data.cbId"
+              filterable
+              clearable
+              placeholder="楼栋"
+              @change="queryRoomNo"
+            >
+              <el-option
+                v-for="item in cbIdList"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
             </el-select>
-            <el-select v-model="data.roomNo"
-                       filterable
-                       @change="querySoleHouseParams"
-                       placeholder="房间号">
-              <el-option v-for="item in roomNoList"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
+            <el-select
+              v-model="data.roomNo"
+              filterable
+              @change="querySoleHouseParams"
+              placeholder="房间号"
+            >
+              <el-option
+                v-for="item in roomNoList"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">录入时间</h3>
-            <el-date-picker v-model="data.timeSelect"
-                            type="daterange"
-                            class="set-data-pricker"
-                            @change="querySoleHouseParams"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            :default-time="['00:00:00', '23:59:59']"
-                            end-placeholder="结束日期"></el-date-picker>
+            <el-date-picker
+              v-model="data.timeSelect"
+              type="daterange"
+              class="set-data-pricker"
+              @change="querySoleHouseParams"
+              range-separator="至"
+              start-placeholder="开始日期"
+              :default-time="['00:00:00', '23:59:59']"
+              end-placeholder="结束日期"
+            ></el-date-picker>
           </div>
           <div class="query-content-cell cell-interval45">
-            <definitionmenu class="menuMarin"
-                            :renderList="tableColumnField"
-                            :tableColumn="tableColumn"
-                            @change="tabColumnChange"></definitionmenu>
+            <definitionmenu
+              class="menuMarin"
+              :renderList="tableColumnField"
+              :tableColumn="tableColumn"
+              @change="tabColumnChange"
+            ></definitionmenu>
           </div>
         </div>
       </template>
       <template v-slot:tableColumn>
-        <template v-for="(item) in tableColumn">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"
-                           :formatter="item.formart"
-                           :sort-orders="['ascending', 'descending']"
-                           :sortable="item.order">
+        <template v-for="item in tableColumn">
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+            :formatter="item.formart"
+            :sort-orders="['ascending', 'descending']"
+            :sortable="item.order"
+          >
           </el-table-column>
         </template>
-        <el-table-column label="操作"
-                         fixed="right"
-                         width="150">
+        <el-table-column label="操作" fixed="right" width="150">
           <template v-slot="scope">
-            <el-button type="primary"
-                       size="mini"
-                       @click="toLook(scope.row.id)">查看</el-button>
+            <el-button type="primary" size="mini" @click="toLook(scope.row.id)"
+              >查看</el-button
+            >
           </template>
         </el-table-column>
       </template>
@@ -103,7 +120,7 @@ export default {
     listPage,
     definitionmenu
   },
-  data () {
+  data() {
     return {
       loading: false,
       data: {
@@ -268,18 +285,18 @@ export default {
       tableData: []
     };
   },
-  created () {
+  created() {
     this.querySoleHouse(1, "id", "ascending");
   },
   methods: {
-    notNull (item, memo) {
+    notNull(item, memo) {
       if (item != null && item != "" && item != undefined) {
         return item.substring(0, item.indexOf(".") + 3) + memo;
       } else {
         return "——" + memo;
       }
     },
-    houseType (rooms, hall, toilet) {
+    houseType(rooms, hall, toilet) {
       let ro,
         ha,
         to = "";
@@ -300,15 +317,15 @@ export default {
       }
       return ro + ha + to;
     },
-    remoteInput () {
+    remoteInput() {
       if (this.data.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    tabColumnChange (e) {
+    tabColumnChange(e) {
       this.tableColumn = e;
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -335,7 +352,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId () {
+    queryCBId() {
       var that = this;
       this.$api
         .get({
@@ -358,7 +375,7 @@ export default {
         });
       this.querySoleHouseParams();
     },
-    querySoleHouse (currentPage, column, type) {
+    querySoleHouse(currentPage, column, type) {
       var that = this;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
       params.comId = that.data.comId;
@@ -381,8 +398,8 @@ export default {
             that.pageJson.total = data.data.dataCount;
             that.tableData = data.data.data;
           } else {
-            console.log("查询独家房源列表结果：" + result.message);
-            alert(result.message);
+            // console.log("查询独家房源列表结果：" + result.message);
+            // alert(result.message);
           }
         })
         .catch(e => {
@@ -390,7 +407,7 @@ export default {
           console.log(e);
         });
     },
-    queryRoomNo () {
+    queryRoomNo() {
       var that = this;
       this.$api
         .get({
@@ -413,23 +430,26 @@ export default {
         });
       this.querySoleHouseParams();
     },
-    toLook (id, dept) {
+    toLook(id, dept) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id, dept: dept } });
+      that.$router.push({
+        name: "houseDetails",
+        params: { houseId: id, dept: dept }
+      });
     },
-    querySoleHouseParams () {
+    querySoleHouseParams() {
       this.querySoleHouse(1, "id", "ascending");
     },
-    sortMethod (e) {
+    sortMethod(e) {
       this.querySoleHouse(1, e.prop, e.order);
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.pageJson.pageSize = val;
       this.querySoleHouse(1, "id", "ascending");
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.querySoleHouse(val, "id", "ascending");
     }
   }
 };
-</script>  
+</script>

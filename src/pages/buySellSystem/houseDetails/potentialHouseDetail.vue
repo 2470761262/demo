@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .page-content {
   padding-left: 60px;
@@ -194,32 +193,42 @@
 }
 </style>
 <template>
-  <div class="page-content"
-       v-loading="load.loading"
-       element-loading-custom-class="loadingTop"
-       :element-loading-text="load.loadingMessage">
+  <div
+    class="page-content"
+    v-loading="load.loading"
+    element-loading-custom-class="loadingTop"
+    :element-loading-text="load.loadingMessage"
+  >
     <section class="page-house-cell">
       <div class="page-house-ditali">
         <div class="page-title-head">
           <div class="page-title-left">
-            <h3>{{resultData.buildingName | emptyRead('栋')}}-{{resultData.RoomNo | emptyRead('室')}}</h3>
-            <h6>{{resultData.Floor | emptyRead('层')}}/{{resultData.floorNum | emptyRead('层','共')}}</h6>
+            <h3>
+              {{ resultData.buildingName | emptyRead("栋") }}-{{
+                resultData.RoomNo | emptyRead("室")
+              }}
+            </h3>
+            <h6>
+              {{ resultData.Floor | emptyRead("层") }}/{{
+                resultData.floorNum | emptyRead("层", "共")
+              }}
+            </h6>
           </div>
-          <el-button class="right-btn"
-                     type="primary"
-                     @click="tosele">转在售</el-button>
+          <el-button class="right-btn" type="primary" @click="tosele"
+            >转在售</el-button
+          >
         </div>
         <div class="page-title-just">
           <div class="title-just-item">
-            <h4>{{resultData.rooms | emptyRead('室')}}</h4>
+            <h4>{{ resultData.rooms | emptyRead("室") }}</h4>
             <div>户型</div>
           </div>
           <div class="title-just-item">
-            <h4>{{resultData.InArea | emptyRead('㎡')}}</h4>
+            <h4>{{ resultData.InArea | emptyRead("㎡") }}</h4>
             <div>面积</div>
           </div>
           <div class="title-just-item">
-            <h4>{{resultData.decoration | emptyRead}}</h4>
+            <h4>{{ resultData.decoration | emptyRead }}</h4>
             <div>装修程度</div>
           </div>
         </div>
@@ -227,81 +236,118 @@
         <section class="detail-layout">
           <div class="detail-layout-item">
             <div class="layout-item-title">房屋用途</div>
-            <div class="layout-item-detail overText">{{resultData.buildtype | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.buildtype | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">电梯配套</div>
-            <div class="layout-item-detail overText">{{resultData.elevator | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.elevator | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">产权性质</div>
-            <div class="layout-item-detail overText">{{resultData.HouseProperty | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.HouseProperty | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">附属配套</div>
-            <div class="layout-item-detail overText">{{resultData.HouseBelong | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.HouseBelong | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">小学划片</div>
-            <div class="layout-item-detail overText">{{resultData.primarySchool | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.primarySchool | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">中学划片</div>
-            <div class="layout-item-detail overText">{{resultData.middleSchool | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.middleSchool | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">物业公司</div>
-            <div class="layout-item-detail overText">{{resultData.propertyCompany | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.propertyCompany | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">评估价</div>
-            <div class="layout-item-detail overText">{{resultData.valuation | emptyRead }}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.valuation | emptyRead }}
+            </div>
           </div>
         </section>
       </div>
       <div class="page-house-right">
         <div class="right-huose-detail">
-          <el-image class="detail-image"
-                    fit="cover"
-                    src="https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/4/16/6e35732669034e24a6448324b3d8a33d.jpg?x-oss-process=style/thumb"></el-image>
+          <el-image
+            class="detail-image"
+            fit="cover"
+            src="https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/4/16/6e35732669034e24a6448324b3d8a33d.jpg?x-oss-process=style/thumb"
+          ></el-image>
           <div class="detail-image-msg">
-            <div class="detail-image-top">{{resultData.communityName | emptyRead}}</div>
+            <div class="detail-image-top">
+              {{ resultData.communityName | emptyRead }}
+            </div>
             <div class="detail-num">
-              <div class="detail-num-data"
-                   :data-num="resultData.existHouseNum |  emptyRead">在售房源</div>
-              <div class="detail-num-data"
-                   :data-num="resultData.saleHouseNum | emptyRead">存量房源数</div>
+              <div
+                class="detail-num-data"
+                :data-num="resultData.existHouseNum | emptyRead"
+              >
+                在售房源
+              </div>
+              <div
+                class="detail-num-data"
+                :data-num="resultData.saleHouseNum | emptyRead"
+              >
+                存量房源数
+              </div>
             </div>
           </div>
         </div>
         <div class="add-phone-title">最近成交信息</div>
-        <div class="add-cut-content"
-             v-if="this.houseType == 2">
+        <div class="add-cut-content" v-if="this.houseType == 2">
           <div class="add-cut-content-row">
-            <div class="row-just-item overText">房源证件:&nbsp;{{tradeDetail.certificateType| constMapFilter('CERTIFICATETYPE')  | emptyRead}}</div>
-            <div class="row-just-item overText">产权性质:&nbsp;{{tradeDetail.ownerProperty | emptyRead}}</div>
+            <div class="row-just-item overText">
+              房源证件:&nbsp;{{
+                tradeDetail.certificateType
+                  | constMapFilter("CERTIFICATETYPE")
+                  | emptyRead
+              }}
+            </div>
+            <div class="row-just-item overText">
+              产权性质:&nbsp;{{ tradeDetail.ownerProperty | emptyRead }}
+            </div>
           </div>
           <div class="add-cut-content-row article-row">
             小区介绍:<br />
-            {{tradeDetail.remark | emptyRead}}
+            {{ tradeDetail.remark | emptyRead }}
           </div>
           <div class="add-cut-content-row article-row">
             核心卖点:<br />
-            {{tradeDetail.characteristic | emptyRead}}
+            {{ tradeDetail.characteristic | emptyRead }}
           </div>
           <div class="per-content">
-            <img :src="tradeDetail.agentPerHeadImg | defaultImg"
-                 alt="头像">
+            <img :src="tradeDetail.agentPerHeadImg | defaultImg" alt="头像" />
             <div class="per-content-column">
-              <h3>{{tradeDetail.agentPerName | emptyRead}}</h3>
-              <div>{{tradeDetail.agentPerDepartmentName | emptyRead}}</div>
+              <h3>{{ tradeDetail.agentPerName | emptyRead }}</h3>
+              <div>{{ tradeDetail.agentPerDepartmentName | emptyRead }}</div>
             </div>
-            <div>{{tradeDetail.tradePrice | parseIntNum | emptyRead('万') }}</div>
-            <div>{{tradeDetail.tradeTime | timeFormat('yyyy-MM-dd') | emptyRead }}</div>
+            <div>
+              {{ tradeDetail.tradePrice | parseIntNum | emptyRead("万") }}
+            </div>
+            <div>
+              {{ tradeDetail.tradeTime | timeFormat("yyyy-MM-dd") | emptyRead }}
+            </div>
           </div>
         </div>
-        <div v-else
-             class="empty-message">暂无成交数据</div>
+        <div v-else class="empty-message">暂无成交数据</div>
       </div>
     </section>
   </div>
@@ -309,7 +355,7 @@
 <script>
 import util from "@/util/util";
 export default {
-  data () {
+  data() {
     return {
       houseId: null,
       houseType: null,
@@ -322,17 +368,17 @@ export default {
     };
   },
   filters: {
-    constMapFilter () {
+    constMapFilter() {
       return util.countMapFilter(...arguments);
     },
-    timeFormat (value, fmt) {
+    timeFormat(value, fmt) {
       return value ? util.format(value, fmt) : value;
     },
-    parseIntNum (value) {
+    parseIntNum(value) {
       return value ? parseInt(value) : value;
     }
   },
-  created () {
+  created() {
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       this.houseType = this.$route.params.houseType;
@@ -344,18 +390,23 @@ export default {
     }
     if (this.houseType == 1) {
       this.getHouseDetails().then(() => {
-        this.load.loading = false
-      })
+        this.load.loading = false;
+      });
     } else if (this.houseType == 2) {
-      Promise.all([this.getHouseDetails(), this.getTradeHouseTradeDetail()]).then(() => {
-        this.load.loading = false
-      })
+      Promise.all([
+        this.getHouseDetails(),
+        this.getTradeHouseTradeDetail()
+      ]).then(() => {
+        this.load.loading = false;
+      });
     } else {
-      this.$message.error("无法识别潜在房源的类型，到底是楼盘还是交易过的房源呢？");
+      this.$message.error(
+        "无法识别潜在房源的类型，到底是楼盘还是交易过的房源呢？"
+      );
     }
   },
   methods: {
-    getTradeHouseTradeDetail () {
+    getTradeHouseTradeDetail() {
       return this.$api
         .post({
           url: "/history/agent_house/getTradeHouseTradeDetail/" + this.houseId,
@@ -366,9 +417,9 @@ export default {
             this.tradeDetail = e.data.data;
           }
         })
-        .catch(e => { })
+        .catch(e => {});
     },
-    tosele () {
+    tosele() {
       let _that = this;
       this.$router.push({
         path: "/buySellSystem/addHouse",
@@ -384,7 +435,7 @@ export default {
         }
       });
     },
-    getHouseDetails () {
+    getHouseDetails() {
       return this.$api
         .post({
           url: "/building/getBuildingDetail/" + this.houseId,
@@ -398,12 +449,9 @@ export default {
             this.$message.error(result.message);
           }
         })
-        .catch(e => { })
-
+        .catch(e => {});
     }
   },
-  destroyed () {
-  }
+  destroyed() {}
 };
 </script>
-

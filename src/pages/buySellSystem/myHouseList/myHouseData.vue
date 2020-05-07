@@ -202,63 +202,68 @@
         <div class="query-content">
           <div class="query-content-row">
             <div class="query-row-title">小区搜索</div>
-            <el-autocomplete class="query-input"
-                             v-model="queryContent.communityName"
-                             prefix-icon="el-icon-search"
-                             :fetch-suggestions="querySearch"
-                             :trigger-on-focus="false"
-                             placeholder="你想找那个小区?"
-                             @select="selectCommunity"></el-autocomplete>
-            <el-button type="primary"
-                       @click="reloadList">确定</el-button>
+            <el-autocomplete
+              class="query-input"
+              v-model="queryContent.communityName"
+              prefix-icon="el-icon-search"
+              :fetch-suggestions="querySearch"
+              :trigger-on-focus="false"
+              placeholder="你想找那个小区?"
+              @select="selectCommunity"
+            ></el-autocomplete>
+            <el-button type="primary" @click="reloadList">确定</el-button>
           </div>
           <div class="query-content-row">
             <div class="query-row-title">时间搜索</div>
-            <el-date-picker class="query-date"
-                            v-model="queryContent.queryTime"
-                            type="daterange"
-                            range-separator="-"
-                            start-placeholder="选择开始时间"
-                            end-placeholder="选择结束时间">
+            <el-date-picker
+              class="query-date"
+              v-model="queryContent.queryTime"
+              type="daterange"
+              range-separator="-"
+              start-placeholder="选择开始时间"
+              end-placeholder="选择结束时间"
+            >
             </el-date-picker>
-            <el-button type="primary"
-                       @click="reloadList">确定</el-button>
+            <el-button type="primary" @click="reloadList">确定</el-button>
           </div>
         </div>
         <!-- 表格 -->
         <div class="query-table-conten">
           <div class="query-table-data">
-            <el-table :data="tableDataText"
-                      highlight-current-row
-                      header-cell-class-name="headerCellSet"
-                      cell-class-name="cellItemSet"
-                      show-overflow-tooltip
-                      border
-                      @sort-change="sortChange">
-              <el-table-column type="index"
-                               width="50">
-              </el-table-column>
-              <el-table-column v-for="item in tableDataColumn"
-                               :key="item.label"
-                               :sort-orders="['ascending', 'descending']"
-                               :label="item.label"
-                               :sortable="item.order"
-                               :width="item.item"
-                               :prop="item.prop">
+            <el-table
+              :data="tableDataText"
+              highlight-current-row
+              header-cell-class-name="headerCellSet"
+              cell-class-name="cellItemSet"
+              show-overflow-tooltip
+              border
+              @sort-change="sortChange"
+            >
+              <el-table-column type="index" width="50"> </el-table-column>
+              <el-table-column
+                v-for="item in tableDataColumn"
+                :key="item.label"
+                :sort-orders="['ascending', 'descending']"
+                :label="item.label"
+                :sortable="item.order"
+                :width="item.item"
+                :prop="item.prop"
+              >
               </el-table-column>
             </el-table>
           </div>
         </div>
         <!-- 分页 -->
-        <div class="query-table-foot"
-             v-if="pageJson.total > 1">
+        <div class="query-table-foot" v-if="pageJson.total > 1">
           <div class="table-foot-bor">
-            <el-pagination background
-                           :current-page.sync="pageJson.current"
-                           hide-on-single-page
-                           layout=" prev, pager, next, jumper"
-                           :total="pageJson.total"
-                           @current-change="currentChange">
+            <el-pagination
+              background
+              :current-page.sync="pageJson.current"
+              hide-on-single-page
+              layout=" prev, pager, next, jumper"
+              :total="pageJson.total"
+              @current-change="currentChange"
+            >
             </el-pagination>
           </div>
         </div>
@@ -271,44 +276,76 @@
         </h3>
         <div class="data-content-progress">
           <div class="progress-layout">
-            <progress-content :houseNum="yesterday.agentCount ||0"
-                              :compare="yesterday.agentCount-beforeYesterday.agentCount || 0"
-                              :progress="companyProportion.agentCount | proportionFilter(yesterday,'agentCount')  "
-                              reset-progress
-                              proportion="公司总占比"
-                              title="跟单数"></progress-content>
-            <progress-content :houseNum="yesterday.addCount || 0 "
-                              :compare="yesterday.addCount-beforeYesterday.addCount || 0"
-                              :progress="companyProportion.addCount | proportionFilter(yesterday,'addCount')  "
-                              reset-progress
-                              proportion="公司总占比"
-                              title="录入数"></progress-content>
-            <progress-content :houseNum="yesterday.keyCount ||0"
-                              :compare="yesterday.keyCount-beforeYesterday.keyCount || 0"
-                              :progress="companyProportion.keyCount | proportionFilter(yesterday,'keyCount')  "
-                              reset-progress
-                              proportion="公司总占比"
-                              title="钥匙数"></progress-content>
+            <progress-content
+              :houseNum="yesterday.agentCount || 0"
+              :compare="yesterday.agentCount - beforeYesterday.agentCount || 0"
+              :progress="
+                companyProportion.agentCount
+                  | proportionFilter(yesterday, 'agentCount')
+              "
+              reset-progress
+              proportion="公司总占比"
+              title="跟单数"
+            ></progress-content>
+            <progress-content
+              :houseNum="yesterday.addCount || 0"
+              :compare="yesterday.addCount - beforeYesterday.addCount || 0"
+              :progress="
+                companyProportion.addCount
+                  | proportionFilter(yesterday, 'addCount')
+              "
+              reset-progress
+              proportion="公司总占比"
+              title="录入数"
+            ></progress-content>
+            <progress-content
+              :houseNum="yesterday.keyCount || 0"
+              :compare="yesterday.keyCount - beforeYesterday.keyCount || 0"
+              :progress="
+                companyProportion.keyCount
+                  | proportionFilter(yesterday, 'keyCount')
+              "
+              reset-progress
+              proportion="公司总占比"
+              title="钥匙数"
+            ></progress-content>
           </div>
           <div class="progress-layout">
-            <progress-content :houseNum="yesterday.commonCount ||0"
-                              :compare="yesterday.commonCount-beforeYesterday.commonCount || 0"
-                              :progress="companyProportion.commonCount | proportionFilter(yesterday,'commonCount')  "
-                              reset-progress
-                              proportion="公司总占比"
-                              title="普通委托数"></progress-content>
-            <progress-content :houseNum="yesterday.onlyCount ||0"
-                              :compare="yesterday.onlyCount-beforeYesterday.onlyCount || 0"
-                              :progress="companyProportion.onlyCount | proportionFilter(yesterday,'onlyCount')  "
-                              reset-progress
-                              proportion="公司总占比"
-                              title="独家委托数"></progress-content>
-            <progress-content :houseNum="yesterday.realCount ||0"
-                              :compare="yesterday.realCount-beforeYesterday.realCount || 0"
-                              :progress="companyProportion.realCount | proportionFilter(yesterday,'realCount')  "
-                              reset-progress
-                              proportion="公司总占比"
-                              title="实勘数"></progress-content>
+            <progress-content
+              :houseNum="yesterday.commonCount || 0"
+              :compare="
+                yesterday.commonCount - beforeYesterday.commonCount || 0
+              "
+              :progress="
+                companyProportion.commonCount
+                  | proportionFilter(yesterday, 'commonCount')
+              "
+              reset-progress
+              proportion="公司总占比"
+              title="普通委托数"
+            ></progress-content>
+            <progress-content
+              :houseNum="yesterday.onlyCount || 0"
+              :compare="yesterday.onlyCount - beforeYesterday.onlyCount || 0"
+              :progress="
+                companyProportion.onlyCount
+                  | proportionFilter(yesterday, 'onlyCount')
+              "
+              reset-progress
+              proportion="公司总占比"
+              title="独家委托数"
+            ></progress-content>
+            <progress-content
+              :houseNum="yesterday.realCount || 0"
+              :compare="yesterday.realCount - beforeYesterday.realCount || 0"
+              :progress="
+                companyProportion.realCount
+                  | proportionFilter(yesterday, 'realCount')
+              "
+              reset-progress
+              proportion="公司总占比"
+              title="实勘数"
+            ></progress-content>
           </div>
         </div>
       </div>
@@ -316,9 +353,7 @@
         <h3 class="query-heander-abs">
           <span>进七日分析</span>
         </h3>
-        <div id="chart"
-             ref="chart">
-        </div>
+        <div id="chart" ref="chart"></div>
       </div>
     </section>
   </section>
@@ -330,14 +365,12 @@ import {
   addResizeListener,
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
-import {
-  formatDate
-} from "element-ui/src/utils/date-util"
+import { formatDate } from "element-ui/src/utils/date-util";
 export default {
   components: {
     progressContent
   },
-  data () {
+  data() {
     return {
       livingChart: null,
       queryContent: {
@@ -358,8 +391,13 @@ export default {
           prop: "customerCount",
           order: "custom"
         },
-        { label: "被看次数", width: "", prop: "houseMoviesCount", order: "custom" },
-        { label: "添加时间", width: "", prop: "addTime" },
+        {
+          label: "被看次数",
+          width: "",
+          prop: "houseMoviesCount",
+          order: "custom"
+        },
+        { label: "添加时间", width: "", prop: "addTime" }
       ],
       tableDataText: [],
       companyProportion: {},
@@ -370,18 +408,22 @@ export default {
     };
   },
   filters: {
-    proportionFilter (value, yesterday, key) {
-      return !value ? 0 + "%" : value == 0 ? 0 + "%" : parseInt(yesterday[key] / value) * 100 + "%"
+    proportionFilter(value, yesterday, key) {
+      return !value
+        ? 0 + "%"
+        : value == 0
+        ? 0 + "%"
+        : parseInt(yesterday[key] / value) * 100 + "%";
     }
   },
-  mounted () {
+  mounted() {
     addResizeListener(this.$refs.chart, this.resetEcharts);
     this.getList();
-    this.getStatisticsList("company").then((e) => {
+    this.getStatisticsList("company").then(e => {
       if (e.data.data) {
         this.companyProportion = e.data.data;
       }
-      this.getStatisticsList().then((e) => {
+      this.getStatisticsList().then(e => {
         if (e.data.data.length > 0) {
           let json = {
             dayList: [],
@@ -389,8 +431,14 @@ export default {
             lookCustomersCount: [],
             houseMoviesCount: []
           };
-          var yesterday = formatDate(new Date().setDate(new Date().getDate() - 1), "MM-dd");
-          var beforeYesterday = formatDate(new Date().setDate(new Date().getDate() - 2), "MM-dd");
+          var yesterday = formatDate(
+            new Date().setDate(new Date().getDate() - 1),
+            "MM-dd"
+          );
+          var beforeYesterday = formatDate(
+            new Date().setDate(new Date().getDate() - 2),
+            "MM-dd"
+          );
           e.data.data.forEach(element => {
             json.dayList.push(element.createTime);
             json.agentCount.push(element.agentCount);
@@ -405,32 +453,31 @@ export default {
           });
           this.draw(json);
         }
-
       });
     });
-
   },
-  destroyed () {
+  destroyed() {
     removeResizeListener(this.$refs.chart, this.resetEcharts);
   },
   methods: {
-    getCommunity (value) {
-      return this.$api.get({
-        url: "/community/myDataList",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          communityName: value,
-          page: 1,
-          limit: 50
-        }
-      })
+    getCommunity(value) {
+      return this.$api
+        .get({
+          url: "/community/myDataList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: value,
+            page: 1,
+            limit: 50
+          }
+        })
         .then(e => {
-          return e
+          return e;
         });
     },
-    reloadList () {
+    reloadList() {
       this.pageJson.current = 1;
       this.pageJson.total = 0;
       this.getList();
@@ -438,12 +485,11 @@ export default {
     /**
      * 排序
      */
-    sortChange (e) {
-      this.sortColumn = e.prop
+    sortChange(e) {
+      this.sortColumn = e.prop;
       if (e.order == "ascending") {
         this.sortType = 0;
-      }
-      else {
+      } else {
         this.sortType = 1;
       }
       this.reloadList();
@@ -451,22 +497,27 @@ export default {
     /**
      * 分页
      */
-    currentChange (e) {
+    currentChange(e) {
       this.getList();
     },
     /**
      * 获取列表数据
      */
-    getList () {
+    getList() {
       let params = {
         sortColumn: this.sortColumn,
         sortType: this.sortType,
         limit: this.pageJson.pageSize,
         page: this.pageJson.current,
-        beginTime: this.queryContent.queryTime ? this.queryContent.queryTime[0] : null,
-        endTime: this.queryContent.queryTime ? this.queryContent.queryTime[1] : null,
-        comId: this.queryContent.communityName == "" ? "" : this.queryContent.comId
-      }
+        beginTime: this.queryContent.queryTime
+          ? this.queryContent.queryTime[0]
+          : null,
+        endTime: this.queryContent.queryTime
+          ? this.queryContent.queryTime[1]
+          : null,
+        comId:
+          this.queryContent.communityName == "" ? "" : this.queryContent.comId
+      };
       this.$api
         .post({
           url: "/myHouse//myDataList",
@@ -479,9 +530,9 @@ export default {
             this.pageJson.total = data.data.totalCount;
             this.tableDataText = data.data.list;
           }
-        })
+        });
     },
-    getStatisticsList (type = "") {
+    getStatisticsList(type = "") {
       return this.$api
         .post({
           url: "/myHouse/myData",
@@ -492,29 +543,33 @@ export default {
         })
         .then(e => {
           return e;
-        })
+        });
     },
-    selectCommunity (e) {
+    selectCommunity(e) {
       this.queryContent.comId = e.id;
       this.reloadList();
     },
-    querySearch (value, resolve) {
+    querySearch(value, resolve) {
       this.queryContent.comId = "";
       console.log(value, "valuevaluevalue");
-      this.getCommunity(value).then((e) => {
+      this.getCommunity(value).then(e => {
         if (e.data.code == 200) {
-          resolve(e.data.data.list.map(item => { return { value: item.name, id: item.value } }));
+          resolve(
+            e.data.data.list.map(item => {
+              return { value: item.name, id: item.value };
+            })
+          );
         }
       });
     },
-    resetEcharts () {
+    resetEcharts() {
       if (!this.livingChart) return;
       this.livingChart.resize();
     },
-    draw (data) {
+    draw(data) {
       // 实例化echarts对象
       this.livingChart = echarts.init(this.$refs.chart);
-      let text = formatDate(new Date(), "yyyy年MM月")
+      let text = formatDate(new Date(), "yyyy年MM月");
       // 绘制条形图
       this.livingChart.setOption({
         title: {

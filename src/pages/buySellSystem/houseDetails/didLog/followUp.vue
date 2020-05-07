@@ -1,42 +1,47 @@
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>
 <template>
-  <fixedPopup v-bind="$attrs"
-              v-on="$listeners">
+  <fixedPopup v-bind="$attrs" v-on="$listeners">
     <template>
       <div class="raido-group">
-        <label class="raido-group-label"
-               v-for="(item,index) in pop.checkList"
-               :key="index">
-          <input type="radio"
-                 :value="item.value"
-                 v-model="pop.model">
+        <label
+          class="raido-group-label"
+          v-for="(item, index) in pop.checkList"
+          :key="index"
+        >
+          <input type="radio" :value="item.value" v-model="pop.model" />
           <i></i>
-          <span>{{item.title}}</span>
+          <span>{{ item.title }}</span>
         </label>
       </div>
       <div class="el-textarea-content">
-        <el-input type="textarea"
-                  :placeholder="text"
-                  v-model="pop.textarea"
-                  resize="none"
-                  show-word-limit>
+        <el-input
+          type="textarea"
+          :placeholder="text"
+          v-model="pop.textarea"
+          resize="none"
+          show-word-limit
+        >
         </el-input>
       </div>
       <div class="pop-but">
-        <el-button size="small"
-                   :class="[cancelButClass]"
-                   @click="cancel"
-                   v-if="cancelFlag">取消</el-button>
-        <el-button v-if="insertFollow"
-                   size="small"
-                   :class="['button-back',sumitButClass]"
-                   @click="result"
-                   :loading="pop.loading">提交</el-button>
-        <el-button v-else
-                   size="small"
-                   :disabled="true"
-                   :loading="pop.loading">提交</el-button>
+        <el-button
+          size="small"
+          :class="[cancelButClass]"
+          @click="cancel"
+          v-if="cancelFlag"
+          >取消</el-button
+        >
+        <el-button
+          v-if="insertFollow"
+          size="small"
+          :class="['button-back', sumitButClass]"
+          @click="result"
+          :loading="pop.loading"
+          >提交</el-button
+        >
+        <el-button v-else size="small" :disabled="true" :loading="pop.loading"
+          >提交</el-button
+        >
       </div>
     </template>
   </fixedPopup>
@@ -57,7 +62,7 @@ export default {
       default: false
     }
   },
-  data () {
+  data() {
     return {
       sumitButClass: "",
       cancelButClass: "",
@@ -77,7 +82,7 @@ export default {
   },
   methods: {
     //添加跟进
-    result () {
+    result() {
       let that = this;
       let params = {
         memo: this.pop.textarea,
@@ -109,7 +114,7 @@ export default {
           }
         });
     },
-    cancel () {
+    cancel() {
       this.$emit("update:visible", false);
     }
   }

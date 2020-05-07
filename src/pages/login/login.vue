@@ -118,43 +118,52 @@
             <div class="page-cell-qrtitle">二维码登录</div>
             <div class="page--cell-qrImg">
               <div id="qrcode"></div>
-              <div class="page-cell-reload-img"
-                   @click="remakeQr"></div>
+              <div class="page-cell-reload-img" @click="remakeQr"></div>
             </div>
-            <div class="page-cell-time">剩余时间:{{timeOutText}}秒</div>
+            <div class="page-cell-time">剩余时间:{{ timeOutText }}秒</div>
           </div>
         </template>
         <!-- 账号 -->
         <template v-if="loginType == 1">
           <div class="page-cell-account">
             <div class="account-cell-title">用户名:</div>
-            <div :class="{'after-tips':errorBags.has('account')}"
-                 :data-tips="errorBags.first('account')">
-              <el-input v-model="loginData.account"
-                        placeholder="请输入账号"
-                        name="account"
-                        v-validate="'required'"></el-input>
+            <div
+              :class="{ 'after-tips': errorBags.has('account') }"
+              :data-tips="errorBags.first('account')"
+            >
+              <el-input
+                v-model="loginData.account"
+                placeholder="请输入账号"
+                name="account"
+                v-validate="'required'"
+              ></el-input>
             </div>
             <div class="account-cell-title">密码:</div>
-            <div :class="{'after-tips':errorBags.has('password')}"
-                 :data-tips="errorBags.first('password')">
-              <el-input v-model="loginData.password"
-                        @keyup.enter.native="loginValidate"
-                        type="password"
-                        placeholder="请输入密码"
-                        name="password"
-                        v-validate="'required'"></el-input>
+            <div
+              :class="{ 'after-tips': errorBags.has('password') }"
+              :data-tips="errorBags.first('password')"
+            >
+              <el-input
+                v-model="loginData.password"
+                @keyup.enter.native="loginValidate"
+                type="password"
+                placeholder="请输入密码"
+                name="password"
+                v-validate="'required'"
+              ></el-input>
             </div>
-            <el-button type="primary"
-                       class="account-midder"
-                       :loading="loginLoadding"
-                       @click="loginValidate">{{loginLoadding ? '加载中' : '点击登录'}}</el-button>
+            <el-button
+              type="primary"
+              class="account-midder"
+              :loading="loginLoadding"
+              @click="loginValidate"
+              >{{ loginLoadding ? "加载中" : "点击登录" }}</el-button
+            >
           </div>
         </template>
         <!-- 切换按钮 -->
-        <div class="page-cell-changeBut"
-             @click="changeLoginType">
-          <div :class="loginType == 0 ? 'loginZxj':'Web_login_03'"></div>
+        <div class="page-cell-changeBut" @click="changeLoginType">
+          <div :class="loginType == 0 ? 'loginZxj' : 'Web_login_03'"></div>
         </div>
       </div>
     </div>
@@ -168,13 +177,13 @@ import { LOGINDATA, TOKEN } from "@/util/constMap";
 //import func from '../../vue-temp/vue-editor-bridge';
 export default {
   $_veeValidate: {
-    validator: 'new' // give me my own validator scope.
+    validator: "new" // give me my own validator scope.
   },
   name: "home",
   watch: {
     loginType: {
       // immediate: true,
-      handler: function (val, oldVal) {
+      handler: function(val, oldVal) {
         console.log("切换了登录方式");
         this.clearTime();
         if (this.loginType == 1) {
@@ -189,13 +198,13 @@ export default {
       }
     },
     qrcodeFlag: {
-      handler: function (val, oldVal) {
+      handler: function(val, oldVal) {
         //this.contactSocket(val);
       }
     }
   },
-  created () { },
-  destroyed () {
+  created() {},
+  destroyed() {
     console.log("页面销毁，主动断开websocket连接");
     if (this.websock && this.websock.readyState == 1) {
       this.websock.close();
@@ -205,7 +214,7 @@ export default {
     //   console.log("成功断开websocket连接");
     // }
   },
-  mounted () {
+  mounted() {
     let that = this;
     //开启登陆器验证
     //this.judgeSessionId(this.initPage);
@@ -213,11 +222,11 @@ export default {
     this.initPage();
   },
   //离开页面时清空定时器
-  beforeRouteLeave (to, from, next) {
+  beforeRouteLeave(to, from, next) {
     this.clearTime();
     next();
   },
-  data () {
+  data() {
     return {
       loginType: 0, // 0 二维码 ，1 账号
       loginLoadding: false,
@@ -237,11 +246,11 @@ export default {
     };
   },
   methods: {
-    initPage () {
+    initPage() {
       let that = this;
       that.qrcode();
     },
-    doIlegalTip () {
+    doIlegalTip() {
       this.$message({
         type: "info",
         message: "非法登录"
@@ -249,7 +258,7 @@ export default {
       document.getElementById("app").innerHTML =
         "<div style='box-shadow:0 0 6px rgba(0, 0, 0, 0.3);text-align:center;padding:5px;margin:10px'><h1>非法登录，O(∩_∩)O</h1></div>";
     },
-    judgeSessionId (callback) {
+    judgeSessionId(callback) {
       this.sessionId = this.getQueryVariable("SID");
       if (!this.sessionId) {
         this.doIlegalTip();
@@ -274,7 +283,7 @@ export default {
           this.doIlegalTip();
         });
     },
-    getQueryVariable (variable) {
+    getQueryVariable(variable) {
       var query = window.location.search.substring(1);
       var vars = query.split("&");
       for (var i = 0; i < vars.length; i++) {
@@ -285,7 +294,7 @@ export default {
       }
       return false;
     },
-    contactSocket (qrCode) {
+    contactSocket(qrCode) {
       if (!this.openWebSocketType) {
         return;
       }
@@ -308,26 +317,26 @@ export default {
 
       console.log("用户【" + qrCode + "】接入完毕");
     },
-    initWebSocket (domain, user) {
+    initWebSocket(domain, user) {
       //初始化weosocket
       //var wsuri = "ws" + domain + "/webSocketHandler?user=" + user;
       var wsuri = "ws" + domain + "/webSocketHandlerTomcat/" + user;
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
-      this.websock.onclose = function (e) {
+      this.websock.onclose = function(e) {
         console.log(e, "WebSocket连接关闭 closed ");
       };
       let that = this;
-      this.websock.onopen = function (e) {
+      this.websock.onopen = function(e) {
         console.log(e, "WebSocket连接成功,状态" + that.websock.readyState);
       };
 
       //连接发生错误的回调方法
-      this.websock.onerror = function () {
+      this.websock.onerror = function() {
         console.log("WebSocket连接发生错误");
       };
     },
-    sendSock (agentData) {
+    sendSock(agentData) {
       let that = this;
       if (!this.websock) {
         return;
@@ -337,27 +346,27 @@ export default {
         this.websock.send(JSON.stringify(agentData));
       } else if (this.websock.readyState === that.websock.CONNECTING) {
         // 若是 正在开启状态，则等待1s后重新调用
-        setTimeout(function () {
+        setTimeout(function() {
           that.sendSock(agentData);
         }, 1000);
       } else {
         // 若未开启 ，则等待1s后重新调用
-        setTimeout(function () {
+        setTimeout(function() {
           that.sendSock(agentData);
         }, 1000);
       }
     },
-    websocketonmessage (e) {
+    websocketonmessage(e) {
       this.qrLoginSuccess(JSON.parse(e.data));
     },
-    qrLoginSuccess (data) {
+    qrLoginSuccess(data) {
       if (data && data.operation == "qrLoginSuccess") {
         console.log(data, "微信扫码成功，准备执行登录");
         this.accountId = data.content;
         this.loginValidate();
       }
     },
-    clearTime () {
+    clearTime() {
       if (this.setIntervalId != null) {
         clearInterval(this.setIntervalId);
       }
@@ -365,7 +374,7 @@ export default {
         clearInterval(this.intervalIdForLoginStatus);
       }
     },
-    startTimer () {
+    startTimer() {
       this.setTimeOutText(() => {
         this.timeOutText = 120;
       });
@@ -377,14 +386,15 @@ export default {
           if (that.qrcodeFlag == null) {
             return;
           }
-          that.$api.post({
-            url: "/loginManager/getUserLoginStatus",
-            data: {
-              qrCode: that.qrcodeFlag
-            },
-            qs: true,
-            token: false
-          })
+          that.$api
+            .post({
+              url: "/loginManager/getUserLoginStatus",
+              data: {
+                qrCode: that.qrcodeFlag
+              },
+              qs: true,
+              token: false
+            })
             .then(e => {
               console.log(e.data);
               let result = e.data;
@@ -407,7 +417,7 @@ export default {
       }
     },
     //初始化验证
-    validateInit () {
+    validateInit() {
       const dictionary = {
         zh_CN: {
           messages: {
@@ -422,12 +432,12 @@ export default {
       this.$validator.updateDictionary(dictionary);
     },
     //切换当前登录类型
-    changeLoginType () {
+    changeLoginType() {
       this.loginType = this.loginType == 0 ? 1 : 0;
       console.log(this.loginType);
     },
     //登录验证
-    loginValidate () {
+    loginValidate() {
       let that = this;
       let loginParams = {
         clientId: 0,
@@ -442,7 +452,9 @@ export default {
         this.$validator.validateAll();
         this.loginLoadding = true;
         loginParams.userName = this.loginData.account;
-        loginParams.passWord = this.md5Util.hex_md5(this.loginData.password).toUpperCase();
+        loginParams.passWord = this.md5Util
+          .hex_md5(this.loginData.password)
+          .toUpperCase();
       } else {
         loginParams.clientId = 4;
         loginParams.accountId = this.accountId;
@@ -450,13 +462,13 @@ export default {
       }
       this.loginReal(
         loginParams,
-        function (e) {
+        function(e) {
           util.localStorageSet(LOGINDATA, e.data);
           //保存token
           util.localStorageSet(TOKEN, e.data.token.token);
           that.$router.push({ path: "/buySellSystem/houseList" });
         },
-        function (message) {
+        function(message) {
           that.loginLoadding = false;
           that.$notify({
             title: "警告",
@@ -467,7 +479,7 @@ export default {
         }
       );
     },
-    loginReal (params, successFunc, failFunc) {
+    loginReal(params, successFunc, failFunc) {
       this.$api
         .post({
           url: "/loginManager/pcLogin",
@@ -492,20 +504,16 @@ export default {
         });
     },
     //重置二维码
-    remakeQr () {
+    remakeQr() {
       this.sendSock({
         operation: "0",
         user: this.qrcodeFlag,
         content: "testContent"
       });
       return;
-      this.qrcode();
-      this.setTimeOutText(() => {
-        this.timeOutText = 120;
-      });
     },
     //倒计时
-    setTimeOutText (afterFun) {
+    setTimeOutText(afterFun) {
       //前置回掉
       if (afterFun) afterFun();
       //阻止重复定时器
@@ -520,7 +528,7 @@ export default {
       }, 1000);
     },
     //生成二维码
-    async qrcode () {
+    async qrcode() {
       let that = this;
       this.$nextTick(() => {
         this.$api
@@ -570,4 +578,3 @@ export default {
   }
 };
 </script>
-

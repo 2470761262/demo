@@ -63,7 +63,12 @@
           </div>
           <div class="formItem">
             最新密码:
-            <el-input v-model="newPwd" style="width: 200px;" placeholder="最新密码" disabled></el-input>
+            <el-input
+              v-model="newPwd"
+              style="width: 200px;"
+              placeholder="最新密码"
+              disabled
+            ></el-input>
           </div>
           <div class="formItem">
             <el-button type="primary" @click="resetPwd">重置密码</el-button>

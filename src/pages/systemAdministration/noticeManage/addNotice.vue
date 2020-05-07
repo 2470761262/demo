@@ -167,7 +167,11 @@
             </div>
             <div>
               <span>发送方式</span>
-              <el-select v-model="notice.sendType" placeholder="请选择" @change="sendTypeSelectChange">
+              <el-select
+                v-model="notice.sendType"
+                placeholder="请选择"
+                @change="sendTypeSelectChange"
+              >
                 <el-option
                   v-for="item in sendTypeOption"
                   :key="item.value"
@@ -190,7 +194,7 @@
             <div class="selectedNodeTip">已选择</div>
             <ul>
               <li v-for="item in selectedNodeDatas" :key="item.nodeId">
-                {{item.labelName}}
+                {{ item.labelName }}
                 <img
                   @click="deleteSelectedData(item.nodeId)"
                   src="http://imgsrc.baidu.com/image/c0=shijue1,0,0,294,40/sign=684e81c3a9cc7cd9ee203c9a51684b4a/8c1001e93901213f7cefd4f25ee736d12e2e95c4.jpg"
@@ -207,8 +211,12 @@
               :headers="myHeader"
               :on-success="handleAvatarSuccess"
             >
-              <el-button size="small" type="primary" id="btnUpload">点击上传</el-button>
-              <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+              <el-button size="small" type="primary" id="btnUpload"
+                >点击上传</el-button
+              >
+              <div slot="tip" class="el-upload__tip">
+                只能上传jpg/png文件，且不超过500kb
+              </div>
             </el-upload>
             <quill-editor
               class="myQuillEditor"

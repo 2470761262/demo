@@ -20,20 +20,24 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page :parentData="$data"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
           <div class="query-right">
-            <el-input placeholder="登录名/姓名/公司/部门/岗位"
-                      size="small"
-                      v-model="queryData.keyWord"
-                      clearable>
+            <el-input
+              placeholder="登录名/姓名/公司/部门/岗位"
+              size="small"
+              v-model="queryData.keyWord"
+              clearable
+            >
             </el-input>
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryEmployee()">查询</el-button>
+            <el-button type="primary" size="mini" @click="queryEmployee()"
+              >查询</el-button
+            >
           </div>
           <!--          <el-button type="primary"-->
           <!--                     style="margin-left:10px"-->
@@ -44,18 +48,22 @@
 
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column label="操作"
-                         fixed="right">
+        <el-table-column label="操作" fixed="right">
           <template v-slot="scope">
-            <div v-if="scope.row.operation!=''">
-              <el-button type="primary"
-                         size="mini"
-                         @click="setAuthority(scope.row)">权限设置</el-button>
+            <div v-if="scope.row.operation != ''">
+              <el-button
+                type="primary"
+                size="mini"
+                @click="setAuthority(scope.row)"
+                >权限设置</el-button
+              >
             </div>
           </template>
         </el-table-column>

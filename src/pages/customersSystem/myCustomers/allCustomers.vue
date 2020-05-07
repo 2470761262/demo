@@ -6,52 +6,58 @@
       :expand-row-keys='[1,3]'
       row-key="id"
   -->
-  <list-Page :parentData="$data"
-             @sort-change="sortMethod"
-             :border="true"
-             default-expand-all
-             :cellClass="cellClass"
-             headerClass="headerCellSet1"
-             @handleCurrentChange="handleCurrentChange"
-             @handleSizeChange="handleSizeChange">
+  <list-Page
+    :parentData="$data"
+    @sort-change="sortMethod"
+    :border="true"
+    default-expand-all
+    :cellClass="cellClass"
+    headerClass="headerCellSet1"
+    @handleCurrentChange="handleCurrentChange"
+    @handleSizeChange="handleSizeChange"
+  >
     <template v-slot:top>
       <allCustomersQuery></allCustomersQuery>
     </template>
     <template v-slot:title>
-      <h3 class="page-tab-title"><i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span></h3>
+      <h3 class="page-tab-title">
+        <i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span>
+      </h3>
     </template>
     <template v-slot:left>
       <left-attention v-model="querySelectFlag"></left-attention>
     </template>
     <template v-slot:tableColumn>
-      <el-table-column type="expand"
-                       width="1px">
+      <el-table-column type="expand" width="1px">
         <template v-slot:default="props">
           <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
           <template v-if="props.row.pp && props.row.pp.length > 0">
             <div class="flex-expand">
               <div class="flex-impression-content">
-                <div v-for="(item,index) in props.row.pp"
-                     :key="index">{{item}}</div>
+                <div v-for="(item, index) in props.row.pp" :key="index">
+                  {{ item }}
+                </div>
               </div>
               <label class="trigger-impression-btn">
-                <input type="checkbox">
+                <input type="checkbox" />
                 <i class="iconfont"></i>
               </label>
             </div>
           </template>
         </template>
       </el-table-column>
-      <template v-for="(item) in tableColumn">
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
-                         :min-width="item.width"
-                         :key="item.prop"
-                         :formatter="item.formart"
-                         show-overflow-tooltip
-                         :fixed="item.fixed ? 'right' :false"
-                         :sort-orders="['ascending', 'descending']"
-                         :sortable="item.order"></el-table-column>
+      <template v-for="item in tableColumn">
+        <el-table-column
+          :prop="item.prop"
+          :label="item.label"
+          :min-width="item.width"
+          :key="item.prop"
+          :formatter="item.formart"
+          show-overflow-tooltip
+          :fixed="item.fixed ? 'right' : false"
+          :sort-orders="['ascending', 'descending']"
+          :sortable="item.order"
+        ></el-table-column>
       </template>
     </template>
   </list-Page>
@@ -61,14 +67,14 @@
 import listPage from "@/components/listPage";
 import allCustomersQuery from "../components/allCustomersQuery";
 import leftAttention from "../components/leftAttention";
-import { setImpression } from '@/util/tabUtil';
+import { setImpression } from "@/util/tabUtil";
 export default {
   components: {
     listPage,
     allCustomersQuery,
     leftAttention
   },
-  data () {
+  data() {
     return {
       querySelectFlag: true,
       loading: false,
@@ -241,14 +247,14 @@ export default {
       ] //存放表格数据
     };
   },
-  mounted () {
+  mounted() {
     this.$nextTick(setImpression);
   },
   methods: {
     /**
      * 设置如果有当前行有印象数据则行先生对应的calss
      */
-    cellClass ({ row }) {
+    cellClass({ row }) {
       if (row.hasOwnProperty("pp")) {
         return "cellset";
       }
@@ -257,17 +263,17 @@ export default {
     /**
      * 排序触发
      */
-    sortMethod (e) { },
+    sortMethod(e) {},
     /**
      * @param {number} e
      * 设置一页显示多少个
      */
-    handleSizeChange (e) { },
+    handleSizeChange(e) {},
     /**
      * 前往多少页
      * @param {number} e
      */
-    handleCurrentChange (e) { }
+    handleCurrentChange(e) {}
   }
 };
 </script>

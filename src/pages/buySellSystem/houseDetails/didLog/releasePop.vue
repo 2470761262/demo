@@ -40,84 +40,83 @@
 }
 </style>
 <template>
-  <fixedPopup v-bind="$attrs"
-              v-on="$listeners">
+  <fixedPopup v-bind="$attrs" v-on="$listeners">
     <template>
       <i class="el-icon-sunny icon"></i>
       <div class="radio-content">
         <span class="radio-content-title">不动产权证</span>
         <div class="raido-group">
-          <label class="raido-group-label"
-                 v-for="(item,index) in pop.checkList"
-                 :key="index">
-            <input type="radio"
-                   :value="item.value"
-                   v-model="pop.model">
+          <label
+            class="raido-group-label"
+            v-for="(item, index) in pop.checkList"
+            :key="index"
+          >
+            <input type="radio" :value="item.value" v-model="pop.model" />
             <i></i>
-            <span>{{item.title}}</span>
+            <span>{{ item.title }}</span>
           </label>
         </div>
       </div>
-      <div class="text-flex"
-           v-if="pop.model == 1">
+      <div class="text-flex" v-if="pop.model == 1">
         <span>证号:</span>
         <el-input v-model="pop.inputValue"></el-input>
       </div>
       <div class="pop-but">
-        <el-button size="small"
-                   @click="hidePop">取消</el-button>
-        <el-button size="small"
-                   class="button-back"
-                   :loading="pop.loading"
-                   @click="result">确定</el-button>
+        <el-button size="small" @click="hidePop">取消</el-button>
+        <el-button
+          size="small"
+          class="button-back"
+          :loading="pop.loading"
+          @click="result"
+          >确定</el-button
+        >
       </div>
     </template>
   </fixedPopup>
 </template>
 
 <script>
-import '../less/didLogCss.less';
+import "../less/didLogCss.less";
 //发布外网
-import release from "../common/releaseHouse.js"
+import release from "../common/releaseHouse.js";
 export default {
   inject: ["houseDetails", "houseId", "load"],
   watch: {
-    'pop.model' (newValue, oldValue) {
+    "pop.model"(newValue, oldValue) {
       if (newValue != 0) {
-        this.pop.inputValue = '';
+        this.pop.inputValue = "";
       }
     }
   },
   computed: {
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
-        return this.houseDetails.data
+        return this.houseDetails.data;
       } else {
         return {};
       }
     }
   },
-  data () {
+  data() {
     return {
       pop: {
-        inputValue: '',
+        inputValue: "",
         model: 1,
         loading: false,
         checkList: [
-          { title: '有', value: 1 },
-          { title: '无', value: 0 }
+          { title: "有", value: 1 },
+          { title: "无", value: 0 }
         ]
       }
-    }
+    };
   },
   methods: {
-    async  result () {
+    async result() {
       let that = this;
       if (that.pop.model == 0) {
         this.$message("房屋未出证,无法发布到外网");
-        this.$emit('update:visible', false)
-      }
-      else {
+        this.$emit("update:visible", false);
+      } else {
         let params = {
           houseId: this.houseId.id,
           houseType: 0,
@@ -129,7 +128,7 @@ export default {
           this.$message("产权证号未填");
           return;
         }
-        this.$emit('update:visible', false)
+        this.$emit("update:visible", false);
         this.load.loadingMessage = "正在发布";
         this.load.loading = true;
         result = await release.releaseOutsideHouse(params);
@@ -137,16 +136,14 @@ export default {
         if (result) {
           this.resultData.isReleaseOutside = 1;
           this.$message("操作成功");
-        }
-        else {
+        } else {
           this.$message("操作失败");
         }
       }
-
     },
-    hidePop () {
-      this.$emit('update:visible', false)
+    hidePop() {
+      this.$emit("update:visible", false);
     }
-  },
-}
+  }
+};
 </script>

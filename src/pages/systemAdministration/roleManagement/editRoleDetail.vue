@@ -28,28 +28,30 @@
   <div class="page-content">
     <div class="left-input-container">
       <span>岗位名称:</span>
-      <el-input type="text"
-                size="small"
-                placeholder="请输入内容"
-                v-model="roleEntity.RoleName"
-                maxlength="10"
-                show-word-limit></el-input>
+      <el-input
+        type="text"
+        size="small"
+        placeholder="请输入内容"
+        v-model="roleEntity.RoleName"
+        maxlength="10"
+        show-word-limit
+      ></el-input>
     </div>
     <div class="left-input-container">
       <span>岗位描述:</span>
-      <el-input type="textarea"
-                size="small"
-                placeholder="请输入内容"
-                v-model="roleEntity.RoleDesc"
-                maxlength="100"
-                show-word-limit></el-input>
+      <el-input
+        type="textarea"
+        size="small"
+        placeholder="请输入内容"
+        v-model="roleEntity.RoleDesc"
+        maxlength="100"
+        show-word-limit
+      ></el-input>
     </div>
 
     <div class=" el-top">
-      <el-button type="primary"
-                 @click="saveRole()">确定</el-button>
-      <el-button type="primary"
-                 @click="back()">返回</el-button>
+      <el-button type="primary" @click="saveRole()">确定</el-button>
+      <el-button type="primary" @click="back()">返回</el-button>
     </div>
   </div>
 </template>
