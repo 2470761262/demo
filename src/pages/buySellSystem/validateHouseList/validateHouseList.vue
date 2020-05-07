@@ -32,8 +32,13 @@
 }
 .checkTel-type {
   position: relative;
-  .checkTel-type-title {
-    color: #40a375;
+  .checkTel-type- {
+    &success {
+      color: #40a375;
+    }
+    &error {
+      color: red;
+    }
   }
   .icon {
     position: absolute;
@@ -335,7 +340,8 @@
              :visible.sync="telPopFlag"
              width="auto"
              :type-class="telPopFlagTypeClass"
-             v-if="telPopFlag">
+             v-if="telPopFlag"
+             :data="rowData">
     </tel-pop>
   </div>
 </template>
@@ -492,16 +498,13 @@ export default {
           order: false
         },
         {
-          prop: "checkTel",
+          prop: "checkTelStatus",
           label: "验真电话",
           formart: row => {
-            if (row.checkTel) {
-              return <div class="checkTel-type">
-                <span class="checkTel-type-title">正常</span>
-                <span class="el-icon-s-order icon" onClick={this.openCheckTelPop}></span>
-              </div>
-            }
-            return "暂无"
+            return <div class="checkTel-type">
+              {row.checkTelStatus == "正常" ? <span class="checkTel-type-success">{row.checkTelStatus}</span> : <span class="checkTel-type-error">{row.checkTelStatus}</span>}
+              <span class="el-icon-s-order icon" onClick={this.openCheckTelPop.bind(this, row)}></span>
+            </div>
           },
           width: "120",
           order: false
@@ -564,8 +567,9 @@ export default {
       phoneStatusValue: "",
       sortColumn: "id",
       sortType: 1,
-      showValidityBtn: false //验真按钮
+      showValidityBtn: false, //验真按钮
       // showEditBtn : false,//编辑按钮
+      rowData: {}//行数据
     };
   },
   created () {
@@ -578,9 +582,12 @@ export default {
     /**
      *  展开验证电话弹框
      */
-    openCheckTelPop () {
-      //this.telPopFlagTypeClass = 'error'
-      this.telPopFlagTypeClass = 'info';
+    openCheckTelPop (row) {
+      this.telPopFlagTypeClass = 'error'
+      if (row.checkTelStatus == "正常") {
+        this.telPopFlagTypeClass = 'info';
+      }
+      this.rowData = row;
       this.telPopFlag = true;
     },
     toHouseDetail (row) {
