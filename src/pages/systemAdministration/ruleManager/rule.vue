@@ -161,12 +161,13 @@
           <div class="formItem">
             关联接口:
             <el-select
+              :disabled=true
               v-model="ruleObj.ruleUrls"
               multiple
               filterable
               allow-create
               default-first-option
-              placeholder="请选择接口"
+              placeholder="关联接口联系管理员进行操作"
             >
               <el-option
                 v-for="item in ruleUrlList"
