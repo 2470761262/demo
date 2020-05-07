@@ -85,7 +85,9 @@
             </el-select>
           </div>
           <div class="query-content-cell cell-interval45">
-            <el-button type="primary" size="mini" @click="querylist(null)">查询</el-button>
+            <el-button type="primary" size="mini" @click="querylist(null)"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
@@ -101,7 +103,9 @@
         ></el-table-column>
         <el-table-column label="操作" fixed="right" width="90">
           <template v-slot="scope">
-            <el-button type="primary" size="mini" @click="navPage(scope.row.id)">查看</el-button>
+            <el-button type="primary" size="mini" @click="navPage(scope.row.id)"
+              >查看</el-button
+            >
           </template>
         </el-table-column>
       </template>

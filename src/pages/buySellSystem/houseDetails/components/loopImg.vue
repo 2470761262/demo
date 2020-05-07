@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .loog-body {
   height: 411px;
@@ -79,37 +78,39 @@
 </style>
 <template>
   <div>
-    <section class="loog-body"
-             :data-validate="resultData.validateText || '验真通过'">
+    <section
+      class="loog-body"
+      :data-validate="resultData.validateText || '验真通过'"
+    >
       <!-- 图片 -->
       <template v-if="loopBig.typeStr == 'picUrl'">
-        <el-image class="loop-item"
-                  :src="loopBig.src"
-                  :preview-src-list="previewList()"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
+        <el-image
+          class="loop-item"
+          :src="loopBig.src"
+          :preview-src-list="previewList()"
+          fit="cover"
+        >
+          <div slot="placeholder" class="image-slot">
             加载中<span>...</span>
           </div>
         </el-image>
       </template>
       <!-- 不存在 -->
       <template v-if="!loopBig.typeStr">
-        <el-image class="loop-item"
-                  :src="''|defaultImg"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
+        <el-image class="loop-item" :src="'' | defaultImg" fit="cover">
+          <div slot="placeholder" class="image-slot">
             加载中<span>...</span>
           </div>
         </el-image>
       </template>
       <!-- 音频 -->
-<!--      <template v-if="loopBig.typeStr == 'picUrl' && resultData.saleUploadAudioList">-->
+      <!--      <template v-if="loopBig.typeStr == 'picUrl' && resultData.saleUploadAudioList">-->
       <template v-if="resultData.saleUploadAudioList">
-        <el-audio fixed
-                  v-if="resultData.saleUploadAudioList.length > 0"
-                  :url="resultData.saleUploadAudioList[0].url">
+        <el-audio
+          fixed
+          v-if="resultData.saleUploadAudioList.length > 0"
+          :url="resultData.saleUploadAudioList[0].url"
+        >
           经纪人讲房
         </el-audio>
       </template>
@@ -118,39 +119,45 @@
         <el-video :src="loopBig.src"></el-video>
       </template>
       <!-- 对赌倒计时 -->
-      <elCountDown :endTime="betExpire"
-                   v-if="betExpire"></elCountDown>
+      <elCountDown :endTime="betExpire" v-if="betExpire"></elCountDown>
     </section>
-    <section class="img-list"
-             :class="{'scrolPad':scrollBar}">
-      <div class="
+    <section class="img-list" :class="{ scrolPad: scrollBar }">
+      <div
+        class="
              item-img-prev
              el-icon-arrow-left"
-           v-if="scrollBar"
-           @click="scrollMove('left')">
-      </div>
-      <div class="item-img-next el-icon-arrow-right"
-           v-if="scrollBar"
-           @click="scrollMove('right')"></div>
-      <div :class="['item-img-for',{'scrollActive':scrollBar}]"
-           ref="itemOver">
-        <div class="img-scroll-translateX"
-             :style="moveX">
-          <template v-for="(item,index) in loopList">
+        v-if="scrollBar"
+        @click="scrollMove('left')"
+      ></div>
+      <div
+        class="item-img-next el-icon-arrow-right"
+        v-if="scrollBar"
+        @click="scrollMove('right')"
+      ></div>
+      <div
+        :class="['item-img-for', { scrollActive: scrollBar }]"
+        ref="itemOver"
+      >
+        <div class="img-scroll-translateX" :style="moveX">
+          <template v-for="(item, index) in loopList">
             <!-- 循环图片 -->
             <template v-if="item.picUrl">
-              <img :src="item.picUrl"
-                   @click.stop="changeLoop(item)"
-                   :key="index"
-                   alt=""
-                   class="loop-item">
+              <img
+                :src="item.picUrl"
+                @click.stop="changeLoop(item)"
+                :key="index"
+                alt=""
+                class="loop-item"
+              />
             </template>
             <!-- 视频 -->
             <template v-if="item.videoUrl">
-              <video @click="changeLoop(item)"
-                     class="loop-item"
-                     :src="item.videoUrl"
-                     :key="item.id"></video>
+              <video
+                @click="changeLoop(item)"
+                class="loop-item"
+                :src="item.videoUrl"
+                :key="item.id"
+              ></video>
             </template>
           </template>
         </div>

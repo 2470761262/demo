@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .page-content {
   padding: 40px 0 35px 33px;
@@ -35,28 +34,33 @@
 }
 </style>
 <template>
-  <div class="page-content"
-       v-loading="load.loading"
-       element-loading-custom-class="loadingTop"
-       :element-loading-text="load.loadingMessage">
+  <div
+    class="page-content"
+    v-loading="load.loading"
+    element-loading-custom-class="loadingTop"
+    :element-loading-text="load.loadingMessage"
+  >
     <house-details-head></house-details-head>
     <section class="page-house-cell">
       <!-- 轮播图 -->
-      <loopImg class="cell-left"
-               :class="{'cell-left-nest':nest}"></loopImg>
+      <loopImg class="cell-left" :class="{ 'cell-left-nest': nest }"></loopImg>
       <!-- 房屋详情 -->
       <detail class="cell-right"></detail>
       <!-- 右侧功能按钮 -->
-      <sidebarList lastItemSet
-                   lastTitle="编辑"
-                   :lastParams='{id:forID.id,method:"reset"}'></sidebarList>
+      <sidebarList
+        lastItemSet
+        lastTitle="编辑"
+        :lastParams="{ id: forID.id, method: 'reset' }"
+      ></sidebarList>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
     <section class="page-house-cell marginTop">
       <!-- 房屋其他信息 -->
-      <houseMessage class="cell-msg"
-                    :class="{'cell-msg-nest':nest}"></houseMessage>
+      <houseMessage
+        class="cell-msg"
+        :class="{ 'cell-msg-nest': nest }"
+      ></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->
         <houseOperation></houseOperation>
@@ -79,7 +83,7 @@ import houseOperation from "./components/houseOperation";
 import houseTask from "./components/houseTask";
 import { REMARK } from "@/util/constMap";
 export default {
-  provide () {
+  provide() {
     return {
       houseId: this.forID,
       houseDetails: this.houseDetails,
@@ -103,7 +107,7 @@ export default {
     houseOperation,
     houseTask //房源任务方
   },
-  data () {
+  data() {
     return {
       forID: {
         id: null
@@ -116,7 +120,7 @@ export default {
       }
     };
   },
-  created () {
+  created() {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
       this.tradeType = this.$route.params.tradeType;
@@ -129,7 +133,7 @@ export default {
     this.getHouseDetails();
   },
   methods: {
-    getHouseDetails () {
+    getHouseDetails() {
       let that = this;
       this.load.loading = true;
       this.$api
@@ -195,9 +199,8 @@ export default {
         });
     }
   },
-  destroyed () {
+  destroyed() {
     // this.$store.commit("resetFormData");
   }
 };
 </script>
-

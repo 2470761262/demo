@@ -1,4 +1,4 @@
-<style lang="less" scoped >
+<style lang="less" scoped>
 .query-warp {
   padding-left: 20px;
   position: relative;
@@ -269,26 +269,27 @@
   width: 75px;
 }
 </style>
-<template >
+<template>
   <div class="query-warp">
-    <el-form ref="form"
-             @submit.native.prevent
-             :model="form"
-             label-position="left">
-      <el-form-item prop="type"
-                    class="ohter-item">
+    <el-form
+      ref="form"
+      @submit.native.prevent
+      :model="form"
+      label-position="left"
+    >
+      <el-form-item prop="type" class="ohter-item">
         <div class="select-input">
           <div class="select-input-set">
             <i class="el-icon-search"></i>
-            <input type="text"
-                   class="select-input-sub"
-                   placeholder="请输入楼盘名称或房源编号"
-                   v-model="searchData" />
+            <input
+              type="text"
+              class="select-input-sub"
+              placeholder="请输入楼盘名称或房源编号"
+              v-model="searchData"
+            />
           </div>
-          <div class="select-but-sub"
-               @click="search">开始搜索</div>
-          <div class="select-but-reset"
-               @click="resetForm('form')">
+          <div class="select-but-sub" @click="search">开始搜索</div>
+          <div class="select-but-reset" @click="resetForm('form')">
             <i class="el-icon-refresh reset-icon"></i>
             <span class="select-but-reset-title">重置</span>
           </div>
@@ -296,73 +297,104 @@
       </el-form-item>
       <!-- 楼盘 -->
       <div class="page-form-inline budingMarinSet">
-        <el-form-item label="楼盘名称"
-                      prop="comId">
-          <el-select class="frist-width-select"
-                     v-model="form.comId"
-                     @focus="remoteInput"
-                     @change="queryCBId"
-                     filterable
-                     remote
-                     clearable
-                     placeholder="请输入楼盘进行搜索"
-                     :remote-method="remoteMethod"
-                     :loading="loading">
-            <el-option v-for="item in options"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value"></el-option>
+        <el-form-item label="楼盘名称" prop="comId">
+          <el-select
+            class="frist-width-select"
+            v-model="form.comId"
+            @focus="remoteInput"
+            @change="queryCBId"
+            filterable
+            remote
+            clearable
+            placeholder="请输入楼盘进行搜索"
+            :remote-method="remoteMethod"
+            :loading="loading"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="栋座"
-                      prop="cbId"
-                      class="page-label-center">
-          <el-select v-model="form.cbId"
-                     filterable
-                     clearable
-                     placeholder="请选择楼栋"
-                     @change="queryRoomNo"
-                     @focus="queryCBId">
-            <el-option v-for="item in cbIdList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value"></el-option>
+        <el-form-item label="栋座" prop="cbId" class="page-label-center">
+          <el-select
+            v-model="form.cbId"
+            filterable
+            clearable
+            placeholder="请选择楼栋"
+            @change="queryRoomNo"
+            @focus="queryCBId"
+          >
+            <el-option
+              v-for="item in cbIdList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="房间号"
-                      prop="roomNo"
-                      clearable
-                      class="page-label-center">
-          <el-select v-model="form.roomNo"
-                     @change="queryRoomNumber"
-                     filterable
-                     placeholder="请选择房间号">
-            <el-option v-for="item in roomNoList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value"></el-option>
+        <el-form-item
+          label="房间号"
+          prop="roomNo"
+          clearable
+          class="page-label-center"
+        >
+          <el-select
+            v-model="form.roomNo"
+            @change="queryRoomNumber"
+            filterable
+            placeholder="请选择房间号"
+          >
+            <el-option
+              v-for="item in roomNoList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </el-form-item>
       </div>
       <!-- 售价 -->
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="售价">
-          <vue-slider v-model="Slider.priceSlider"
-                      :data="['20','60','80','100','120','140','200','300','9999']"
-                      :marks="priceSliderMarks"
-                      tooltip="none"
-                      :lazy="true"
-                      @change="priceSliderChange"
-                      :contained="true">
+          <vue-slider
+            v-model="Slider.priceSlider"
+            :data="[
+              '20',
+              '60',
+              '80',
+              '100',
+              '120',
+              '140',
+              '200',
+              '300',
+              '9999'
+            ]"
+            :marks="priceSliderMarks"
+            tooltip="none"
+            :lazy="true"
+            @change="priceSliderChange"
+            :contained="true"
+          >
             <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process"
-                   :style="style">
-                <div v-show="end !=0"
-                     :class="[
-              'merge-tooltip',
-              'vue-slider-dot-tooltip-inner',
-              'vue-slider-dot-tooltip-inner-top',
-            ]">{{ Slider.priceSlider[index] }}￥ - {{ Slider.priceSlider[index + 1] == '9999' ? '无限' : Slider.priceSlider[index + 1] }}￥</div>
+              <div class="vue-slider-process" :style="style">
+                <div
+                  v-show="end != 0"
+                  :class="[
+                    'merge-tooltip',
+                    'vue-slider-dot-tooltip-inner',
+                    'vue-slider-dot-tooltip-inner-top'
+                  ]"
+                >
+                  {{ Slider.priceSlider[index] }}￥ -
+                  {{
+                    Slider.priceSlider[index + 1] == "9999"
+                      ? "无限"
+                      : Slider.priceSlider[index + 1]
+                  }}￥
+                </div>
               </div>
             </template>
             <template v-slot:dot>
@@ -373,23 +405,43 @@
       </div>
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="面积">
-          <vue-slider class="vue-slider-index1"
-                      v-model="Slider.areaSlider"
-                      :data="['20','60','80','100','120','140','200','300','9999']"
-                      :marks="areaSliderMarks"
-                      tooltip="none"
-                      :lazy="true"
-                      @change="areaSliderChange"
-                      :contained="true">
+          <vue-slider
+            class="vue-slider-index1"
+            v-model="Slider.areaSlider"
+            :data="[
+              '20',
+              '60',
+              '80',
+              '100',
+              '120',
+              '140',
+              '200',
+              '300',
+              '9999'
+            ]"
+            :marks="areaSliderMarks"
+            tooltip="none"
+            :lazy="true"
+            @change="areaSliderChange"
+            :contained="true"
+          >
             <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process"
-                   :style="style">
-                <div v-show="end !=0"
-                     :class="[
-              'merge-tooltip',
-              'vue-slider-dot-tooltip-inner',
-              'vue-slider-dot-tooltip-inner-top',
-            ]">{{ Slider.areaSlider[index] }}㎡ - {{ Slider.areaSlider[index + 1] == '9999' ? '无限' : Slider.areaSlider[index + 1] }}㎡</div>
+              <div class="vue-slider-process" :style="style">
+                <div
+                  v-show="end != 0"
+                  :class="[
+                    'merge-tooltip',
+                    'vue-slider-dot-tooltip-inner',
+                    'vue-slider-dot-tooltip-inner-top'
+                  ]"
+                >
+                  {{ Slider.areaSlider[index] }}㎡ -
+                  {{
+                    Slider.areaSlider[index + 1] == "9999"
+                      ? "无限"
+                      : Slider.areaSlider[index + 1]
+                  }}㎡
+                </div>
               </div>
             </template>
             <template v-slot:dot>
@@ -401,23 +453,33 @@
       <!-- 楼层 -->
       <div class="page-form-inline form-item-flex1">
         <el-form-item label="楼层">
-          <vue-slider class="vue-slider-index2"
-                      v-model="Slider.flootSlider"
-                      :data="['-2','5','10','15','20','25','30','40','9999']"
-                      :marks="flootSliderMarks"
-                      tooltip="none"
-                      :lazy="true"
-                      :contained="true"
-                      @change="flootSliderChange">
+          <vue-slider
+            class="vue-slider-index2"
+            v-model="Slider.flootSlider"
+            :data="['-2', '5', '10', '15', '20', '25', '30', '40', '9999']"
+            :marks="flootSliderMarks"
+            tooltip="none"
+            :lazy="true"
+            :contained="true"
+            @change="flootSliderChange"
+          >
             <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process"
-                   :style="style">
-                <div v-show="end !=0"
-                     :class="[
-              'merge-tooltip',
-              'vue-slider-dot-tooltip-inner',
-              'vue-slider-dot-tooltip-inner-top',
-            ]">{{ Slider.flootSlider[index] }}层 - {{ Slider.flootSlider[index + 1] == '9999' ? '无限' : Slider.flootSlider[index + 1] }}层</div>
+              <div class="vue-slider-process" :style="style">
+                <div
+                  v-show="end != 0"
+                  :class="[
+                    'merge-tooltip',
+                    'vue-slider-dot-tooltip-inner',
+                    'vue-slider-dot-tooltip-inner-top'
+                  ]"
+                >
+                  {{ Slider.flootSlider[index] }}层 -
+                  {{
+                    Slider.flootSlider[index + 1] == "9999"
+                      ? "无限"
+                      : Slider.flootSlider[index + 1]
+                  }}层
+                </div>
               </div>
             </template>
             <template v-slot:dot>
@@ -426,137 +488,171 @@
           </vue-slider>
         </el-form-item>
       </div>
-      <el-form-item label="商圈"
-                    prop="business">
-        <el-checkbox-group class="checkbox-flex"
-                           v-model="form.business"
-                           size="small">
-          <div v-for="(item,index) in businessList"
-               :key="index"
-               class="checkbox-flex-pad">
-            <el-tooltip :content="item.name"
-                        :disabled="item.name.length < 4"
-                        placement="top">
-              <el-checkbox :label="item.value"
-                           name="business"
-                           border>{{item.name}}</el-checkbox>
+      <el-form-item label="商圈" prop="business">
+        <el-checkbox-group
+          class="checkbox-flex"
+          v-model="form.business"
+          size="small"
+        >
+          <div
+            v-for="(item, index) in businessList"
+            :key="index"
+            class="checkbox-flex-pad"
+          >
+            <el-tooltip
+              :content="item.name"
+              :disabled="item.name.length < 4"
+              placement="top"
+            >
+              <el-checkbox :label="item.value" name="business" border>{{
+                item.name
+              }}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="房型"
-                    prop="houseType">
-        <el-checkbox-group v-model="form.houseType"
-                           class="checkbox-flex"
-                           size="small">
-          <div v-for="(item,index) in houseTypeList"
-               :key="index"
-               class="checkbox-flex-pad">
-            <el-tooltip :content="item.name"
-                        :disabled="item.name.length < 4"
-                        placement="top">
-              <el-checkbox :label="item.value"
-                           name="houseType"
-                           border>{{item.name}}</el-checkbox>
+      <el-form-item label="房型" prop="houseType">
+        <el-checkbox-group
+          v-model="form.houseType"
+          class="checkbox-flex"
+          size="small"
+        >
+          <div
+            v-for="(item, index) in houseTypeList"
+            :key="index"
+            class="checkbox-flex-pad"
+          >
+            <el-tooltip
+              :content="item.name"
+              :disabled="item.name.length < 4"
+              placement="top"
+            >
+              <el-checkbox :label="item.value" name="houseType" border>{{
+                item.name
+              }}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="装修"
-                    prop="renovation">
-        <el-checkbox-group v-model="form.renovation"
-                           class="checkbox-flex"
-                           size="small">
-          <div v-for="(item,index) in renovationList"
-               :key="index"
-               class="checkbox-flex-pad">
-            <el-tooltip :content="item.name"
-                        :disabled="item.name.length < 4"
-                        placement="top">
-              <el-checkbox :label="item.value"
-                           name="renovation"
-                           border>{{item.name}}</el-checkbox>
+      <el-form-item label="装修" prop="renovation">
+        <el-checkbox-group
+          v-model="form.renovation"
+          class="checkbox-flex"
+          size="small"
+        >
+          <div
+            v-for="(item, index) in renovationList"
+            :key="index"
+            class="checkbox-flex-pad"
+          >
+            <el-tooltip
+              :content="item.name"
+              :disabled="item.name.length < 4"
+              placement="top"
+            >
+              <el-checkbox :label="item.value" name="renovation" border>{{
+                item.name
+              }}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="房源用途"
-                    prop="purpose">
-        <el-checkbox-group v-model="form.purpose"
-                           class="checkbox-flex"
-                           size="small">
-          <div class="checkbox-flex-pad"
-               v-for="(item,index) in purposeList"
-               :key="index">
-            <el-tooltip :content="item.name"
-                        :disabled="item.name.length < 4"
-                        placement="top">
-              <el-checkbox :label="item.value"
-                           name="purpose"
-                           border>{{item.name}}</el-checkbox>
+      <el-form-item label="房源用途" prop="purpose">
+        <el-checkbox-group
+          v-model="form.purpose"
+          class="checkbox-flex"
+          size="small"
+        >
+          <div
+            class="checkbox-flex-pad"
+            v-for="(item, index) in purposeList"
+            :key="index"
+          >
+            <el-tooltip
+              :content="item.name"
+              :disabled="item.name.length < 4"
+              placement="top"
+            >
+              <el-checkbox :label="item.value" name="purpose" border>{{
+                item.name
+              }}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="朝向"
-                    prop="face">
-        <el-checkbox-group v-model="form.face"
-                           class="checkbox-flex"
-                           size="small">
-          <div v-for="(item,index) in faceList"
-               :key="index"
-               class="checkbox-flex-pad">
-            <el-tooltip :content="item.name"
-                        :disabled="item.name.length < 4"
-                        placement="top">
-              <el-checkbox :label="item.value"
-                           name="face"
-                           border>{{item.name}}</el-checkbox>
+      <el-form-item label="朝向" prop="face">
+        <el-checkbox-group
+          v-model="form.face"
+          class="checkbox-flex"
+          size="small"
+        >
+          <div
+            v-for="(item, index) in faceList"
+            :key="index"
+            class="checkbox-flex-pad"
+          >
+            <el-tooltip
+              :content="item.name"
+              :disabled="item.name.length < 4"
+              placement="top"
+            >
+              <el-checkbox :label="item.value" name="face" border>{{
+                item.name
+              }}</el-checkbox>
             </el-tooltip>
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <el-form-item label="小学划片"
-                    prop="primarySchool">
-        <el-checkbox-group v-model="form.primarySchool"
-                           class="checkbox-flex"
-                           size="small">
-          <div v-for="(item,index) in MathPrimarySchoolListfirst"
-               :key="index"
-               class="checkbox-flex-pad">
-            <el-tooltip :content="item.name"
-                        placement="top">
-              <el-checkbox :label="item.value"
-                           name="primarySchool"
-                           border>{{item.name}}</el-checkbox>
+      <el-form-item label="小学划片" prop="primarySchool">
+        <el-checkbox-group
+          v-model="form.primarySchool"
+          class="checkbox-flex"
+          size="small"
+        >
+          <div
+            v-for="(item, index) in MathPrimarySchoolListfirst"
+            :key="index"
+            class="checkbox-flex-pad"
+          >
+            <el-tooltip :content="item.name" placement="top">
+              <el-checkbox :label="item.value" name="primarySchool" border>{{
+                item.name
+              }}</el-checkbox>
             </el-tooltip>
           </div>
           <div class="checkbox-flex-pad">
-            <el-button type="text"
-                       @click="triggerSchoolSizeFlag('PrimarySizeFlag')">{{PrimarySizeFlag ? '收起': '更多'}}</el-button>
+            <el-button
+              type="text"
+              @click="triggerSchoolSizeFlag('PrimarySizeFlag')"
+              >{{ PrimarySizeFlag ? "收起" : "更多" }}</el-button
+            >
           </div>
         </el-checkbox-group>
-        <div class="marLeft20">
-        </div>
+        <div class="marLeft20"></div>
       </el-form-item>
-      <el-form-item label="中学划片"
-                    prop="middleSchool">
-        <el-checkbox-group v-model="form.middleSchool"
-                           class="checkbox-flex"
-                           size="small">
-          <div v-for="(item,index) in MathMiddleSchoolListfirst"
-               :key="index"
-               class="checkbox-flex-pad">
-            <el-tooltip :content="item.name"
-                        placement="top">
-              <el-checkbox :label="item.value"
-                           name="middleSchool"
-                           border>{{item.name}}</el-checkbox>
+      <el-form-item label="中学划片" prop="middleSchool">
+        <el-checkbox-group
+          v-model="form.middleSchool"
+          class="checkbox-flex"
+          size="small"
+        >
+          <div
+            v-for="(item, index) in MathMiddleSchoolListfirst"
+            :key="index"
+            class="checkbox-flex-pad"
+          >
+            <el-tooltip :content="item.name" placement="top">
+              <el-checkbox :label="item.value" name="middleSchool" border>{{
+                item.name
+              }}</el-checkbox>
             </el-tooltip>
           </div>
           <div class="checkbox-flex-pad">
-            <el-button type="text"
-                       @click="triggerSchoolSizeFlag('middleSizeFlag')">{{middleSizeFlag ? '收起' : '更多'}}</el-button>
+            <el-button
+              type="text"
+              @click="triggerSchoolSizeFlag('middleSizeFlag')"
+              >{{ middleSizeFlag ? "收起" : "更多" }}</el-button
+            >
           </div>
         </el-checkbox-group>
       </el-form-item>
@@ -606,22 +702,22 @@ export default {
     VueSlider
   },
   computed: {
-    MathPrimarySchoolListfirst () {
-      let sliceSize = [0, 11]
+    MathPrimarySchoolListfirst() {
+      let sliceSize = [0, 11];
       if (this.PrimarySizeFlag) {
-        sliceSize = [0, this.primarySchoolList.length - 1]
+        sliceSize = [0, this.primarySchoolList.length - 1];
       }
       return this.primarySchoolList.slice(...sliceSize);
     },
-    MathMiddleSchoolListfirst () {
-      let sliceSize = [0, 11]
+    MathMiddleSchoolListfirst() {
+      let sliceSize = [0, 11];
       if (this.middleSizeFlag) {
-        sliceSize = [0, this.middleSchoolList.length - 1]
+        sliceSize = [0, this.middleSchoolList.length - 1];
       }
       return this.middleSchoolList.slice(...sliceSize);
-    },
+    }
   },
-  data () {
+  data() {
     return {
       PrimarySizeFlag: false,
       middleSizeFlag: false,
@@ -645,7 +741,7 @@ export default {
       loading: false
     };
   },
-  mounted () {
+  mounted() {
     //商圈
     this.queryConstant("Region").then(e => {
       this.businessList = e;
@@ -681,11 +777,11 @@ export default {
   },
 
   methods: {
-    triggerSchoolSizeFlag (value) {
-      this[value] = !this[value]
+    triggerSchoolSizeFlag(value) {
+      this[value] = !this[value];
     },
     //面积滑块参数更新
-    flootSliderChange (e) {
+    flootSliderChange(e) {
       if (e[0] == -2 && e[1] == -2) {
         this.form.minFloor = "";
         this.form.maxFloor = "";
@@ -695,7 +791,7 @@ export default {
       }
     },
     //面积滑块参数更新
-    areaSliderChange (e) {
+    areaSliderChange(e) {
       if (e[0] == 20 && e[1] == 20) {
         this.form.minInArea = "";
         this.form.maxInArea = "";
@@ -705,7 +801,7 @@ export default {
       }
     },
     //售价滑块参数更新
-    priceSliderChange (e) {
+    priceSliderChange(e) {
       if (e[0] == 20 && e[1] == 20) {
         this.form.minPrice = "";
         this.form.maxPrice = "";
@@ -715,8 +811,8 @@ export default {
       }
     },
     //重置表单
-    resetForm (formName) {
-      this.searchData = '';
+    resetForm(formName) {
+      this.searchData = "";
       this.$parent.setSelectNav(null, true);
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
       this.Slider.priceSlider = [20, 20];
@@ -724,7 +820,7 @@ export default {
       this.Slider.flootSlider = [-2, -2];
       this.searchData = "";
     },
-    addInputToList (toList, inputName) {
+    addInputToList(toList, inputName) {
       let findFlag = this.form[toList].some(item => {
         return item == this[inputName];
       });
@@ -740,7 +836,7 @@ export default {
       }
     },
 
-    queryConstant (constant) {
+    queryConstant(constant) {
       return this.$api
         .get({
           url: "/mateHouse/queryConstant",
@@ -757,13 +853,13 @@ export default {
           }
         });
     },
-    remoteInput () {
+    remoteInput() {
       var that = this;
       if (that.form.comId.length == 0) {
         this.remoteMethod();
       }
     },
-    remoteMethod (query) {
+    remoteMethod(query) {
       var that = this;
       if (query !== "") {
         this.loading = true;
@@ -789,7 +885,7 @@ export default {
         this.options = [];
       }
     },
-    queryCBId (name) {
+    queryCBId(name) {
       var that = this;
       if (name == "") {
         that.form.communityName = "";
@@ -826,7 +922,7 @@ export default {
           }
         });
     },
-    queryRoomNo (name) {
+    queryRoomNo(name) {
       var that = this;
       this.$api
         .get({
@@ -852,18 +948,18 @@ export default {
           }
         });
     },
-    queryRoomNumber (name) {
+    queryRoomNumber(name) {
       let that = this;
       let resultArr = that.roomNoList.find(item => {
         return item.value === name;
       });
       that.form.roomNumber = resultArr.name;
     },
-    search () {
+    search() {
       var that = this;
       that.form.searchInfo = that.searchData;
     },
-    mateHouse () {
+    mateHouse() {
       var that = this;
       console.log(that.form);
       console.log(that.form.comId);

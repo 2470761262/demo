@@ -8,23 +8,24 @@
 }
 </style>
 <template>
-  <div class="wrapper">该功能未开发，如果已经实现，请正确配置该功能菜单的路径地址并确保登录用户有使用该功能权限</div>
+  <div class="wrapper">
+    该功能未开发，如果已经实现，请正确配置该功能菜单的路径地址并确保登录用户有使用该功能权限
+  </div>
 </template>
 
 <script>
-import getMenuRid from '@/minxi/getMenuRid';
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
   components: {},
   props: {},
-  data () {
-    return {
-    };
+  data() {
+    return {};
   },
   watch: {},
   computed: {},
   methods: {},
-  created () { },
-  mounted () { }
+  created() {},
+  mounted() {}
 };
 </script>

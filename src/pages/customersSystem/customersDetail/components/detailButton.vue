@@ -171,12 +171,13 @@
 <template>
   <div class="page-content-head">
     <div class="customers-head">
-      <div class="customers-head-name"
-           data-sex="男">李先生</div>
-      <el-rate class="customers-head-rate"
-               :value="2"
-               :max="3"
-               disabled></el-rate>
+      <div class="customers-head-name" data-sex="男">李先生</div>
+      <el-rate
+        class="customers-head-rate"
+        :value="2"
+        :max="3"
+        disabled
+      ></el-rate>
     </div>
     <div class="customers-head-impression">
       <div class="heard-scroll-tag">
@@ -193,30 +194,26 @@
           <i class="el-icon-close icon"></i>
         </div>
       </div>
-      <el-button type="text"
-                 class="add-impression"><i class="el-icon-circle-plus"></i> 印象</el-button>
+      <el-button type="text" class="add-impression"
+        ><i class="el-icon-circle-plus"></i> 印象</el-button
+      >
     </div>
     <div class="line-break"></div>
     <div class="customers-body">
       <div class="customers-body-detail">
-        <div class="body-detail-row"
-             data-before="拥有人数"
-             data-after="人">
+        <div class="body-detail-row" data-before="拥有人数" data-after="人">
           <span class="overText">2</span>
         </div>
-        <div class="body-detail-row"
-             data-before="公司看房套数"
-             data-after="套">
+        <div class="body-detail-row" data-before="公司看房套数" data-after="套">
           <span class="overText">15</span>
         </div>
-        <div class="body-detail-row"
-             data-before="我的带看套数"
-             data-after="套">
+        <div class="body-detail-row" data-before="我的带看套数" data-after="套">
           <span class="overText">9</span>
         </div>
       </div>
-      <el-button type="primary"
-                 class="customers-phone"><i class="el-icon-phone"></i>一键拨号</el-button>
+      <el-button type="primary" class="customers-phone"
+        ><i class="el-icon-phone"></i>一键拨号</el-button
+      >
     </div>
     <div class="customers-button-gruop">
       <div class="customers-button-item">
@@ -236,8 +233,5 @@
 </template>
 
 <script>
-export default {
-
-}
+export default {};
 </script>
-

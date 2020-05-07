@@ -30,14 +30,13 @@
 </template>
 
 <script>
-import detailButton from './components/detailButton';
+import detailButton from "./components/detailButton";
 //基础信息
-import basics from './components/basicsMessage';
+import basics from "./components/basicsMessage";
 export default {
   components: {
     detailButton,
     basics
-  },
-}
+  }
+};
 </script>
-

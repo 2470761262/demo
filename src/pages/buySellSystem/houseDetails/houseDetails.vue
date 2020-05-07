@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .page-content {
   padding: 40px 0 35px 33px;
@@ -35,30 +34,35 @@
 }
 </style>
 <template>
-  <div class="page-content"
-       v-loading="load.loading"
-       element-loading-custom-class="loadingTop"
-       :element-loading-text="load.loadingMessage">
+  <div
+    class="page-content"
+    v-loading="load.loading"
+    element-loading-custom-class="loadingTop"
+    :element-loading-text="load.loadingMessage"
+  >
     <house-details-head></house-details-head>
     <section class="page-house-cell">
       <!-- 轮播图 -->
-      <loopImg class="cell-left"
-               :class="{'cell-left-nest':nest}"></loopImg>
+      <loopImg class="cell-left" :class="{ 'cell-left-nest': nest }"></loopImg>
       <!-- 房屋详情 -->
       <detail class="cell-right"></detail>
       <!-- 右侧功能按钮 -->
-      <sidebarList lastItemSet
-                   lastTitle="编辑"
-                   :judgeShowEdit="true"
-                   :lastParams='lastParams'
-                   :showEdit="showEdit"></sidebarList>
+      <sidebarList
+        lastItemSet
+        lastTitle="编辑"
+        :judgeShowEdit="true"
+        :lastParams="lastParams"
+        :showEdit="showEdit"
+      ></sidebarList>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
     <section class="page-house-cell marginTop">
       <!-- 房屋其他信息 -->
-      <houseMessage class="cell-msg"
-                    :class="{'cell-msg-nest':nest}"></houseMessage>
+      <houseMessage
+        class="cell-msg"
+        :class="{ 'cell-msg-nest': nest }"
+      ></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->
         <houseOperation></houseOperation>
@@ -81,7 +85,7 @@ import houseOperation from "./components/houseOperation";
 import houseTask from "./components/houseTask";
 import { REMARK } from "@/util/constMap";
 export default {
-  provide () {
+  provide() {
     return {
       houseId: this.forID,
       dept: this.dept,
@@ -92,7 +96,7 @@ export default {
     };
   },
   computed: {
-    nest () {
+    nest() {
       return util.localStorageGet("nest");
     }
   },
@@ -107,7 +111,7 @@ export default {
     houseOperation,
     houseTask //房源任务方
   },
-  data () {
+  data() {
     return {
       forID: {
         id: null
@@ -127,21 +131,21 @@ export default {
           getAudioUrl: "/agentHouse/audio/getAudioList/",
           getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
           getVideoUrl: "/agentHouse/video/getVideoList/"
-        },
+        }
       },
-      detailType: undefined,//标识房源详情类型，决定调用哪个详情接口地址
+      detailType: undefined, //标识房源详情类型，决定调用哪个详情接口地址
       showEdit: false,
       dept: {
         id: 0
       }
     };
   },
-  created () {
+  created() {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
       this.detailType = this.$route.params.detailType;
       this.dept.id = this.$route.params.dept;
-      console.log('************',this.dept.id)
+      console.log("************", this.dept.id);
       util.localStorageSet("houseDetails.vue:deptId", this.dept.id);
       util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
       util.localStorageSet("houseDetails.vue:detailType", this.detailType);
@@ -157,17 +161,17 @@ export default {
     /**
      * 获取房源详情
      */
-    getHouseDetails () {
+    getHouseDetails() {
       let that = this;
       this.load.loading = true;
-      let url = '/agent_house/getHouseDetail';
+      let url = "/agent_house/getHouseDetail";
       let query = {
         houseId: that.forID.id
       };
-      if (that.detailType && that.detailType != 'undefined') {
+      if (that.detailType && that.detailType != "undefined") {
         console.log("注意，了，这是调用另一个房源详情接口");
         query.type = that.detailType;
-        url = 'applet/agent_house/getUniversalHouseDetail';
+        url = "applet/agent_house/getUniversalHouseDetail";
       } else {
         console.log("调用原有正常房源详情接口");
       }
@@ -216,8 +220,18 @@ export default {
               perId = util.localStorageGet("logindata").accountId;
             }
 
-            if (result.data.plate != 1 && result.data.plate != 4 && perId == result.data.AgentPer) {//当前跟单人显示编辑按钮
-              console.log(perId, result.data.plate, result.data.AgentPer, "result.data.plateresult.data.plateresult.data.plate");
+            if (
+              result.data.plate != 1 &&
+              result.data.plate != 4 &&
+              perId == result.data.AgentPer
+            ) {
+              //当前跟单人显示编辑按钮
+              console.log(
+                perId,
+                result.data.plate,
+                result.data.AgentPer,
+                "result.data.plateresult.data.plateresult.data.plate"
+              );
               that.showEdit = true;
             }
             this.$set(this.houseDetails, "data", result.data);
@@ -235,9 +249,8 @@ export default {
         });
     }
   },
-  destroyed () {
+  destroyed() {
     this.$store.commit("resetKey", "step2");
   }
 };
 </script>
-

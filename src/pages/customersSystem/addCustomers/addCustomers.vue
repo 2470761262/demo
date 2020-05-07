@@ -166,15 +166,20 @@
 </style>
 <template>
   <section class="add-content">
-    <el-collapse accordion
-                 v-model="collapseActive">
+    <el-collapse accordion v-model="collapseActive">
       <!-- 客户信息 -->
       <el-collapse-item :name="1">
         <!-- collapse title -->
         <template slot="title">
-          <div class="collapse-title"
-               :class="{'collapse-title-active': collapseActive != 1}">
-            客户信息<i :class="collapseActive == 1? 'el-icon-arrow-down' : 'el-icon-arrow-up'"></i>
+          <div
+            class="collapse-title"
+            :class="{ 'collapse-title-active': collapseActive != 1 }"
+          >
+            客户信息<i
+              :class="
+                collapseActive == 1 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
+              "
+            ></i>
           </div>
         </template>
         <section class="add-cust-step">
@@ -184,8 +189,10 @@
             <div class="step-item-inline">
               <div class="step-row-title title-required">客户姓名:</div>
               <div class="step-row-query">
-                <el-input v-model="sssValue"
-                          placeholder="请输入客户姓名"></el-input>
+                <el-input
+                  v-model="sssValue"
+                  placeholder="请输入客户姓名"
+                ></el-input>
               </div>
             </div>
             <!-- 客户性别 -->
@@ -193,9 +200,12 @@
               <div class="step-row-title title-required">客户性别:</div>
               <div class="step-row-query border">
                 <el-radio-group v-model="sssValue">
-                  <el-radio :label="item.value"
-                            v-for="item in sex"
-                            :key="item.value">{{item.key}}</el-radio>
+                  <el-radio
+                    :label="item.value"
+                    v-for="item in sex"
+                    :key="item.value"
+                    >{{ item.key }}</el-radio
+                  >
                 </el-radio-group>
               </div>
             </div>
@@ -206,22 +216,28 @@
             <div class="step-item-inline">
               <div class="step-row-title title-required">客户电话:</div>
               <div class="step-row-query">
-                <el-input v-model="sssValue"
-                          clearable
-                          placeholder="请输入客户电话号码"></el-input>
+                <el-input
+                  v-model="sssValue"
+                  clearable
+                  placeholder="请输入客户电话号码"
+                ></el-input>
               </div>
             </div>
             <!-- 客户籍贯 -->
             <div class="step-item-inline ">
               <div class="step-row-title title-required">客户籍贯:</div>
               <div class="step-row-query">
-                <el-select v-model="sssValue"
-                           clearable
-                           placeholder="请选择客户籍贯">
-                  <el-option v-for="item in ssslist"
-                             :key="item.value"
-                             :label="item.key"
-                             :value="item.value"></el-option>
+                <el-select
+                  v-model="sssValue"
+                  clearable
+                  placeholder="请选择客户籍贯"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
                 </el-select>
               </div>
             </div>
@@ -232,13 +248,17 @@
             <div class="step-item-inline ">
               <div class="step-row-title title-required">客户来源:</div>
               <div class="step-row-query">
-                <el-select v-model="sssValue"
-                           clearable
-                           placeholder="请选择客户来源">
-                  <el-option v-for="item in ssslist"
-                             :key="item.value"
-                             :label="item.key"
-                             :value="item.value"></el-option>
+                <el-select
+                  v-model="sssValue"
+                  clearable
+                  placeholder="请选择客户来源"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
                 </el-select>
               </div>
             </div>
@@ -246,13 +266,17 @@
             <div class="step-item-inline ">
               <div class="step-row-title title-required">客源特性:</div>
               <div class="step-row-query">
-                <el-select v-model="sssValue"
-                           clearable
-                           placeholder="请选择客源特性">
-                  <el-option v-for="item in ssslist"
-                             :key="item.value"
-                             :label="item.key"
-                             :value="item.value"></el-option>
+                <el-select
+                  v-model="sssValue"
+                  clearable
+                  placeholder="请选择客源特性"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
                 </el-select>
               </div>
             </div>
@@ -263,10 +287,12 @@
             <div class="step-item-inline ">
               <div class="step-row-title title-required">购房意向:</div>
               <div class="step-row-query">
-                <el-rate v-model="formData.rateNum"
-                         :max="3"
-                         :texts="['没意思','有点意思','很有点意思']"
-                         show-text>
+                <el-rate
+                  v-model="formData.rateNum"
+                  :max="3"
+                  :texts="['没意思', '有点意思', '很有点意思']"
+                  show-text
+                >
                 </el-rate>
               </div>
             </div>
@@ -277,8 +303,10 @@
             <div class="step-item-block">
               <div class="step-row-title">客户印象</div>
               <div class="step-row-query">
-                <el-input v-model="sssValue"
-                          class="input-olny-botttom"></el-input>
+                <el-input
+                  v-model="sssValue"
+                  class="input-olny-botttom"
+                ></el-input>
                 <el-button type="text">添加</el-button>
               </div>
             </div>
@@ -290,9 +318,15 @@
       <el-collapse-item :name="2">
         <!-- collapse title -->
         <template slot="title">
-          <div class="collapse-title"
-               :class="{'collapse-title-active': collapseActive != 2}">
-            求购信息<i :class="collapseActive == 2? 'el-icon-arrow-down' : 'el-icon-arrow-up'"></i>
+          <div
+            class="collapse-title"
+            :class="{ 'collapse-title-active': collapseActive != 2 }"
+          >
+            求购信息<i
+              :class="
+                collapseActive == 2 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
+              "
+            ></i>
           </div>
         </template>
         <section class="add-cust-step">
@@ -302,13 +336,17 @@
             <div class="step-item-inline">
               <div class="step-row-title">购买用途:</div>
               <div class="step-row-query">
-                <el-select v-model="sssValue"
-                           clearable
-                           placeholder="请选择购买用途">
-                  <el-option v-for="item in ssslist"
-                             :key="item.value"
-                             :label="item.key"
-                             :value="item.value"></el-option>
+                <el-select
+                  v-model="sssValue"
+                  clearable
+                  placeholder="请选择购买用途"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
                 </el-select>
               </div>
             </div>
@@ -317,9 +355,12 @@
               <div class="step-row-title">期望装修:</div>
               <div class="step-row-query">
                 <el-radio-group v-model="sssValue">
-                  <el-radio :label="item.value"
-                            v-for="item in decoration"
-                            :key="item.value">{{item.key}}</el-radio>
+                  <el-radio
+                    :label="item.value"
+                    v-for="item in decoration"
+                    :key="item.value"
+                    >{{ item.key }}</el-radio
+                  >
                 </el-radio-group>
               </div>
             </div>
@@ -329,25 +370,19 @@
             <!-- 首付金额 -->
             <div class="step-item-inline">
               <div class="step-row-title">首付金额:</div>
-              <div class="step-row-query step-flex-group"
-                   data-unit="万">
-                <el-input v-model="sssValue"
-                          placeholder="最小值"></el-input>
+              <div class="step-row-query step-flex-group" data-unit="万">
+                <el-input v-model="sssValue" placeholder="最小值"></el-input>
                 <span class="input-space"></span>
-                <el-input v-model="sssValue"
-                          placeholder="最小值"></el-input>
+                <el-input v-model="sssValue" placeholder="最小值"></el-input>
               </div>
             </div>
             <!-- 期望总价 -->
             <div class="step-item-inline">
               <div class="step-row-title">期望总价:</div>
-              <div class="step-row-query step-flex-group"
-                   data-unit="万">
-                <el-input v-model="sssValue"
-                          placeholder="最小值"></el-input>
+              <div class="step-row-query step-flex-group" data-unit="万">
+                <el-input v-model="sssValue" placeholder="最小值"></el-input>
                 <span class="input-space"></span>
-                <el-input v-model="sssValue"
-                          placeholder="最小值"></el-input>
+                <el-input v-model="sssValue" placeholder="最小值"></el-input>
               </div>
             </div>
           </div>
@@ -356,26 +391,27 @@
             <!-- 首付面积 -->
             <div class="step-item-inline">
               <div class="step-row-title">首付面积:</div>
-              <div class="step-row-query step-flex-group"
-                   data-unit="万">
-                <el-input v-model="sssValue"
-                          placeholder="最小值"></el-input>
+              <div class="step-row-query step-flex-group" data-unit="万">
+                <el-input v-model="sssValue" placeholder="最小值"></el-input>
                 <span class="input-space"></span>
-                <el-input v-model="sssValue"
-                          placeholder="最小值"></el-input>
+                <el-input v-model="sssValue" placeholder="最小值"></el-input>
               </div>
             </div>
             <!-- 付款方式 -->
             <div class="step-item-inline">
               <div class="step-row-title">付款方式:</div>
               <div class="step-row-query">
-                <el-select v-model="sssValue"
-                           clearable
-                           placeholder="请选择付款方式">
-                  <el-option v-for="item in ssslist"
-                             :key="item.value"
-                             :label="item.key"
-                             :value="item.value"></el-option>
+                <el-select
+                  v-model="sssValue"
+                  clearable
+                  placeholder="请选择付款方式"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
                 </el-select>
               </div>
             </div>
@@ -387,9 +423,15 @@
       <el-collapse-item :name="3">
         <!-- collapse title -->
         <template slot="title">
-          <div class="collapse-title"
-               :class="{'collapse-title-active': collapseActive != 3}">
-            其他需求<i :class="collapseActive == 3? 'el-icon-arrow-down' : 'el-icon-arrow-up'"></i>
+          <div
+            class="collapse-title"
+            :class="{ 'collapse-title-active': collapseActive != 3 }"
+          >
+            其他需求<i
+              :class="
+                collapseActive == 3 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
+              "
+            ></i>
           </div>
         </template>
         <section class="add-cust-step">
@@ -399,14 +441,18 @@
             <div class="step-item-inline ">
               <div class="step-row-title ">期望小学:</div>
               <div class="step-row-query">
-                <el-select v-model="sssValue1"
-                           clearable
-                           multiple
-                           placeholder="请选择客户期望小学(可多选)">
-                  <el-option v-for="item in ssslist"
-                             :key="item.value"
-                             :label="item.key"
-                             :value="item.value"></el-option>
+                <el-select
+                  v-model="sssValue1"
+                  clearable
+                  multiple
+                  placeholder="请选择客户期望小学(可多选)"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
                 </el-select>
               </div>
             </div>
@@ -414,14 +460,18 @@
             <div class="step-item-inline ">
               <div class="step-row-title ">期望中学:</div>
               <div class="step-row-query">
-                <el-select v-model="sssValue1"
-                           clearable
-                           multiple
-                           placeholder="请选择客户期望中学(可多选)">
-                  <el-option v-for="item in ssslist"
-                             :key="item.value"
-                             :label="item.key"
-                             :value="item.value"></el-option>
+                <el-select
+                  v-model="sssValue1"
+                  clearable
+                  multiple
+                  placeholder="请选择客户期望中学(可多选)"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
                 </el-select>
               </div>
             </div>
@@ -432,14 +482,18 @@
             <div class="step-item-inline ">
               <div class="step-row-title ">期望楼盘:</div>
               <div class="step-row-query">
-                <el-select v-model="sssValue1"
-                           clearable
-                           multiple
-                           placeholder="请选择客户期望楼盘(可多选)">
-                  <el-option v-for="item in ssslist"
-                             :key="item.value"
-                             :label="item.key"
-                             :value="item.value"></el-option>
+                <el-select
+                  v-model="sssValue1"
+                  clearable
+                  multiple
+                  placeholder="请选择客户期望楼盘(可多选)"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.key"
+                    :value="item.value"
+                  ></el-option>
                 </el-select>
               </div>
             </div>
@@ -450,10 +504,12 @@
             <div class="step-item-block">
               <div class="step-row-title title-top">看房经历:</div>
               <div class="step-row-query content-857">
-                <el-input type="textarea"
-                          placeholder="请输入客户看房经历"
-                          :autosize="{ minRows: 4, maxRows: 8}"
-                          v-model="sssValue"></el-input>
+                <el-input
+                  type="textarea"
+                  placeholder="请输入客户看房经历"
+                  :autosize="{ minRows: 4, maxRows: 8 }"
+                  v-model="sssValue"
+                ></el-input>
               </div>
             </div>
           </div>
@@ -467,32 +523,32 @@
 </template>
 
 <script>
-import { SEX, DECORATION } from '@/util/constMap';
-import but from '@/evenBus/but';
+import { SEX, DECORATION } from "@/util/constMap";
+import but from "@/evenBus/but";
 export default {
-  data () {
+  data() {
     return {
       formData: {
         rateNum: 0
       },
-      sssValue1: [],//请按照实际字段名进行修改，
-      sssValue: '',//请按照实际字段名进行修改，
-      ssslist: [//请按照实际字段名进行修改，
+      sssValue1: [], //请按照实际字段名进行修改，
+      sssValue: "", //请按照实际字段名进行修改，
+      ssslist: [
+        //请按照实际字段名进行修改，
         {
-          value: '选项1',
-          label: '辛苦了'
-        }, {
-          value: '选项2',
-          label: '谢谢你'
+          value: "选项1",
+          label: "辛苦了"
+        },
+        {
+          value: "选项2",
+          label: "谢谢你"
         }
       ],
-      decoration: DECORATION,//装修
-      sex: SEX,//性别
+      decoration: DECORATION, //装修
+      sex: SEX, //性别
       collapseActive: 1 //折叠面板当前激活name
-    }
+    };
   },
-  methods: {
-
-  },
-}
+  methods: {}
+};
 </script>

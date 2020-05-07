@@ -184,54 +184,69 @@
 </style>
 <template>
   <div class="operation-content">
-    <el-tabs type="border-card"
-             @tab-click="changeTabsEvent"
-             v-model="changeTabsValue">
-      <el-tab-pane label="跟进记录"
-                   name="follow">
-        <div class="list-content"
-             infinite-scroll-immediate="false"
-             v-infinite-scroll="load">
-          <div class="fixed"
-               v-if="!isDisabled">
-            <followUp :isCancel="false"
-                      :insertFollow="insertFollow"
-                      :visible.sync="followUpFlag"
-                      v-if="followUpFlag"
-                      width="100%"
-                      title=""></followUp>
+    <el-tabs
+      type="border-card"
+      @tab-click="changeTabsEvent"
+      v-model="changeTabsValue"
+    >
+      <el-tab-pane label="跟进记录" name="follow">
+        <div
+          class="list-content"
+          infinite-scroll-immediate="false"
+          v-infinite-scroll="load"
+        >
+          <div class="fixed" v-if="!isDisabled">
+            <followUp
+              :isCancel="false"
+              :insertFollow="insertFollow"
+              :visible.sync="followUpFlag"
+              v-if="followUpFlag"
+              width="100%"
+              title=""
+            ></followUp>
           </div>
-          <transition-group name="el"
-                            tag="div">
+          <transition-group name="el" tag="div">
             <template v-for="item in follow.list">
-              <div :key="item.id"
-                   class="spacing"
-                   v-if="follow.list.length > 0">
-                <div class="list-content-item"
-                     v-if="!item.isTellFollow">
+              <div :key="item.id" class="spacing" v-if="follow.list.length > 0">
+                <div class="list-content-item" v-if="!item.isTellFollow">
                   <div class="content-item-head ">
-                    <div class="content-item-time">{{item.FollowTime}}</div>
-                    <button class="content-item-but"
-                            v-if="deleteFollow"
-                            @click="deleteFollowById(item.id)"
-                            :disabled="isDisabled">删除</button>
+                    <div class="content-item-time">{{ item.FollowTime }}</div>
+                    <button
+                      class="content-item-but"
+                      v-if="deleteFollow"
+                      @click="deleteFollowById(item.id)"
+                      :disabled="isDisabled"
+                    >
+                      删除
+                    </button>
                   </div>
                   <div class="content-item-body">
-                    <div class="item-body-text">{{item.followPerName | emptyRead}}({{item.followPerDepartmentName | emptyRead}}),{{item.Memo}}</div>
+                    <div class="item-body-text">
+                      {{ item.followPerName | emptyRead }}({{
+                        item.followPerDepartmentName | emptyRead
+                      }}),{{ item.Memo }}
+                    </div>
                   </div>
                 </div>
-                <div class="list-content-item"
-                     v-if="item.isTellFollow">
+                <div class="list-content-item" v-if="item.isTellFollow">
                   <div class="content-item-head ">
-                    <div class="content-item-time">{{item.FollowTime}}</div>
+                    <div class="content-item-time">{{ item.FollowTime }}</div>
 
-                    <button class="content-item-but"
-                            v-if="deleteFollow"
-                            @click="deleteFollowById(item.id)"
-                            :disabled="isDisabled">删除</button>
+                    <button
+                      class="content-item-but"
+                      v-if="deleteFollow"
+                      @click="deleteFollowById(item.id)"
+                      :disabled="isDisabled"
+                    >
+                      删除
+                    </button>
                   </div>
                   <div class="content-item-body">
-                    <div class="item-body-text">{{item.followPerName | emptyRead}}({{item.followPerDepartmentName | emptyRead}})</div>
+                    <div class="item-body-text">
+                      {{ item.followPerName | emptyRead }}({{
+                        item.followPerDepartmentName | emptyRead
+                      }})
+                    </div>
                     <playAudio :url="item.Memo"></playAudio>
                     <div class="pad-line"></div>
                   </div>
@@ -242,25 +257,30 @@
           <template v-if="follow.loading">
             <i class="el-icon-loading"></i> 加载中...
           </template>
-          <template v-if="follow.loadPageEnd || follow.list.length==0">
+          <template v-if="follow.loadPageEnd || follow.list.length == 0">
             暂无数据~
           </template>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="被看详情"
-                   name="pair">
-        <div class="list-content"
-             infinite-scroll-immediate="false"
-             v-infinite-scroll="load">
+      <el-tab-pane label="被看详情" name="pair">
+        <div
+          class="list-content"
+          infinite-scroll-immediate="false"
+          v-infinite-scroll="load"
+        >
           <transition-group name="el">
             <template v-for="item in pair.list">
               <div :key="item.PairId">
                 <div class="list-content-item">
                   <div class="content-item-head ">
-                    <div class="content-item-time">{{item.FollowTime}}</div>
+                    <div class="content-item-time">{{ item.FollowTime }}</div>
                   </div>
                   <div class="content-item-body">
-                    <div class="item-body-text">{{item.lookPerName | emptyRead}}({{item.lookPerNameDepartmentName | emptyRead}}),{{item.Memo}}</div>
+                    <div class="item-body-text">
+                      {{ item.lookPerName | emptyRead }}({{
+                        item.lookPerNameDepartmentName | emptyRead
+                      }}),{{ item.Memo }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -269,26 +289,30 @@
           <template v-if="pair.loading">
             <i class="el-icon-loading"></i> 加载中...
           </template>
-          <template v-if="pair.loadPageEnd || pair.list.length==0">
+          <template v-if="pair.loadPageEnd || pair.list.length == 0">
             暂无数据~
           </template>
         </div>
       </el-tab-pane>
-      <el-tab-pane label="电话修改记录"
-                   name="tel"
-                   v-if="telFollow">
-        <div class="list-content"
-             infinite-scroll-immediate="false"
-             v-infinite-scroll="load">
+      <el-tab-pane label="电话修改记录" name="tel" v-if="telFollow">
+        <div
+          class="list-content"
+          infinite-scroll-immediate="false"
+          v-infinite-scroll="load"
+        >
           <transition-group name="el">
             <template v-for="item in tel.list">
               <div :key="item">
                 <div class="list-content-item">
                   <div class="content-item-head ">
-                    <div class="content-item-time">{{item.FollowTime}}</div>
+                    <div class="content-item-time">{{ item.FollowTime }}</div>
                   </div>
                   <div class="content-item-body">
-                    <div class="item-body-text">{{item.followName | emptyRead}}({{item.followDepartment | emptyRead}}),{{item.Memo}}</div>
+                    <div class="item-body-text">
+                      {{ item.followName | emptyRead }}({{
+                        item.followDepartment | emptyRead
+                      }}),{{ item.Memo }}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -297,7 +321,7 @@
           <template v-if="tel.loading">
             <i class="el-icon-loading"></i> 加载中...
           </template>
-          <template v-if="tel.loadPageEnd || tel.list.length==0">
+          <template v-if="tel.loadPageEnd || tel.list.length == 0">
             暂无数据~
           </template>
         </div>
@@ -318,11 +342,11 @@ export default {
     followUp
   },
   computed: {
-    isDisabled () {
+    isDisabled() {
       return this.buttonDisabled;
     }
   },
-  data () {
+  data() {
     return {
       follow: {
         list: [],
@@ -352,7 +376,7 @@ export default {
       insertFollow: false
     };
   },
-  created () {
+  created() {
     this.getList();
     but.$on("followReolad", () => {
       Object.assign(this.$data.follow, this.$options.data().follow);
@@ -365,26 +389,26 @@ export default {
       this.telFollow = true;
     });
   },
-  mounted () {
+  mounted() {
     let that = this;
     but.$on("insertFollow", () => {
       that.insertFollow = true;
     });
   },
-  destroyed () {
+  destroyed() {
     but.$off("followReolad");
     but.$off("deleteFollow");
     but.$off("telFollow");
   },
   methods: {
-    changeTabsEvent (e) {
+    changeTabsEvent(e) {
       if (this[this.changeTabsValue].list.length > 0) {
         return;
       }
       this.getList();
     },
     //获取列表数据
-    getList () {
+    getList() {
       switch (this.changeTabsValue) {
         case "follow":
           this.getHouseFollow();
@@ -398,7 +422,7 @@ export default {
       }
     },
     //获取跟进列表
-    getHouseFollow () {
+    getHouseFollow() {
       let that = this;
       let params = {
         page: that.follow.page,
@@ -428,13 +452,13 @@ export default {
             that.follow.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => { })
+        .catch(() => {})
         .finally(() => {
           this.follow.loading = false;
         });
     },
     //删除跟进
-    deleteFollowById (followId) {
+    deleteFollowById(followId) {
       let that = this;
       let params = { followId: followId, houseId: that.houseId.id };
       this.$api
@@ -453,10 +477,10 @@ export default {
             that.$message(e.data.message);
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     //获取被看列表
-    getHousePairFollowList () {
+    getHousePairFollowList() {
       let that = this;
       let params = {
         page: that.pair.page,
@@ -478,13 +502,13 @@ export default {
             that.pair.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => { })
+        .catch(() => {})
         .finally(() => {
           this.pair.loading = false;
         });
     },
     //获取电话修改记录列表
-    getTelFollowList () {
+    getTelFollowList() {
       let that = this;
       let params = {
         page: that.tel.page,
@@ -505,13 +529,13 @@ export default {
             that.tel.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => { })
+        .catch(() => {})
         .finally(() => {
           this.tel.loading = false;
         });
     },
     //滚动分页
-    load () {
+    load() {
       if (
         this[this.changeTabsValue].page < this[this.changeTabsValue].totalPage
       ) {

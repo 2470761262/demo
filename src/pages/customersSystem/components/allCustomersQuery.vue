@@ -173,17 +173,17 @@
     <div class="select-input">
       <div class="select-input-set">
         <i class="el-icon-search"></i>
-        <input type="text"
-               class="select-input-sub"
-               placeholder="请输入客户姓名,联系方式"
-               v-model="form.searchData" />
+        <input
+          type="text"
+          class="select-input-sub"
+          placeholder="请输入客户姓名,联系方式"
+          v-model="form.searchData"
+        />
       </div>
-      <button class="select-but-sub"
-              @click="search">开始搜索</button>
+      <button class="select-but-sub" @click="search">开始搜索</button>
     </div>
     <transition name="el-fade-in-linear">
-      <div class="query-change-content"
-           v-if="changeQuery">
+      <div class="query-change-content" v-if="changeQuery">
         <div class="query-change-item">
           <h3>意向:</h3>
           <ul>
@@ -218,9 +218,9 @@
             <li>150-200万</li>
             <li>200万以上</li>
             <li class="is-query-input">
-              <input type="text">
+              <input type="text" />
               <span></span>
-              <input type="text">
+              <input type="text" />
             </li>
             <li data-btn><button class="is-button">确定</button></li>
           </ul>
@@ -238,9 +238,9 @@
             <li>150-200㎡</li>
             <li>200㎡以上</li>
             <li class="is-query-input">
-              <input type="text">
+              <input type="text" />
               <span></span>
-              <input type="text">
+              <input type="text" />
             </li>
             <li data-btn><button class="is-button">确定</button></li>
           </ul>
@@ -258,9 +258,9 @@
             <li>150-200㎡</li>
             <li>200㎡以上</li>
             <li class="is-query-input">
-              <input type="text">
+              <input type="text" />
               <span></span>
-              <input type="text">
+              <input type="text" />
             </li>
             <li data-btn><button class="is-button">确定</button></li>
           </ul>
@@ -271,11 +271,13 @@
             <ul>
               <li class="flex-item">
                 <div class="is-time">
-                  <el-date-picker v-model="form.tasttime"
-                                  type="daterange"
-                                  range-separator="至"
-                                  start-placeholder="开始日期"
-                                  end-placeholder="结束日期">
+                  <el-date-picker
+                    v-model="form.tasttime"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                  >
                   </el-date-picker>
                 </div>
                 <button class="is-button">确定</button>
@@ -287,11 +289,13 @@
             <ul>
               <li class="flex-item">
                 <div class="is-time">
-                  <el-date-picker v-model="form.tasttime"
-                                  type="daterange"
-                                  range-separator="至"
-                                  start-placeholder="开始日期"
-                                  end-placeholder="结束日期">
+                  <el-date-picker
+                    v-model="form.tasttime"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期"
+                  >
                   </el-date-picker>
                 </div>
                 <button class="is-button">确定</button>
@@ -301,9 +305,11 @@
         </div>
       </div>
     </transition>
-    <div class="el-icon-d-arrow-left icon"
-         :class="{'is-active':!changeQuery}"
-         @click="triggerChange"></div>
+    <div
+      class="el-icon-d-arrow-left icon"
+      :class="{ 'is-active': !changeQuery }"
+      @click="triggerChange"
+    ></div>
   </section>
 </template>
 

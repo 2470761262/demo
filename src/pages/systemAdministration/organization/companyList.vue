@@ -54,8 +54,7 @@
 }
 </style>
 
-
-<template >
+<template>
   <div class="page-content">
     <list-page
       :parentData="$data"
@@ -86,28 +85,53 @@
       </template>
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary"
-                     size="mini"
-                     :disabled="!(company&&company.parentId>0)"
-                     @click="toAddCompanyPage(0)">添加同级公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     :disabled="!(company&&company.id)"
-                     @click="toAddCompanyPage(1)">添加子公司</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     :disabled="!(company&&company.id)"
-                     @click="toAddDeptPage">添加子级部门</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            :disabled="!(company && company.parentId > 0)"
+            @click="toAddCompanyPage(0)"
+            >添加同级公司</el-button
+          >
+          <el-button
+            type="primary"
+            size="mini"
+            :disabled="!(company && company.id)"
+            @click="toAddCompanyPage(1)"
+            >添加子公司</el-button
+          >
+          <el-button
+            type="primary"
+            size="mini"
+            :disabled="!(company && company.id)"
+            @click="toAddDeptPage"
+            >添加子级部门</el-button
+          >
           <!-- <el-button type="primary"
                      size="mini"
                      @click="queryCompanyByIsLocked(0)">查询锁定公司</el-button>
           <el-button type="primary"
                      size="mini"
           @click="queryCompanyByIsLocked(1)">查询未锁定公司</el-button>-->
-          <el-button icon="el-icon-s-platform" size="mini" @click="setUp()" title="设置网站" round></el-button>
+          <el-button
+            icon="el-icon-s-platform"
+            size="mini"
+            @click="setUp()"
+            title="设置网站"
+            round
+          ></el-button>
           <div class="query-right">
-            <el-input placeholder="公司名称" size="small" v-model="queryData.CompanyName" clearable></el-input>
-            <el-select v-model="selectTag" size="small" placeholder="全部" @change="SelectTag">
+            <el-input
+              placeholder="公司名称"
+              size="small"
+              v-model="queryData.CompanyName"
+              clearable
+            ></el-input>
+            <el-select
+              v-model="selectTag"
+              size="small"
+              placeholder="全部"
+              @change="SelectTag"
+            >
               <el-option
                 v-for="item in SelectOptions"
                 :key="item.value"
@@ -115,7 +139,9 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-button type="primary" size="mini" @click="queryCompanyByParams">查询</el-button>
+            <el-button type="primary" size="mini" @click="queryCompanyByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
@@ -131,14 +157,15 @@
         </template>
         <el-table-column label="操作" width="300" fixed="right">
           <template v-slot="scope">
-            <div v-if="scope.row.operation!=''">
+            <div v-if="scope.row.operation != ''">
               <el-button
                 type="primary"
                 size="mini"
-                @click="distributeEvent(item.methosName,scope.row.id)"
-                v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                @click="distributeEvent(item.methosName, scope.row.id)"
+                v-for="(item, index) in getOpeBtns(scope.row.operation)"
                 :key="index"
-              >{{item.name}}</el-button>
+                >{{ item.name }}</el-button
+              >
             </div>
           </template>
         </el-table-column>

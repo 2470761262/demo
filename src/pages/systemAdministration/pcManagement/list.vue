@@ -25,15 +25,30 @@
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">硬盘编号:</h3>
-            <el-input placeholder="硬盘编号" class="set-input120" v-model="queryData.disk" clearable />
+            <el-input
+              placeholder="硬盘编号"
+              class="set-input120"
+              v-model="queryData.disk"
+              clearable
+            />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">CPU编号:</h3>
-            <el-input placeholder="CPU编号" class="set-input120" v-model="queryData.cpu" clearable />
+            <el-input
+              placeholder="CPU编号"
+              class="set-input120"
+              v-model="queryData.cpu"
+              clearable
+            />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">门店名称:</h3>
-            <el-input placeholder="门店名称" class="set-input120" v-model="queryData.remark" clearable />
+            <el-input
+              placeholder="门店名称"
+              class="set-input120"
+              v-model="queryData.remark"
+              clearable
+            />
           </div>
           <div class="query-content-cell cell-interval45">
             <el-checkbox v-model="queryData.delChecked">查询已删除</el-checkbox>
@@ -69,7 +84,9 @@
             ></el-date-picker>
           </div>
           <div class="query-content-cell cell-interval75">
-            <el-button type="primary" size="mini" @click="queryByParams">查询</el-button>
+            <el-button type="primary" size="mini" @click="queryByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
@@ -88,8 +105,9 @@
               size="mini"
               type="primary"
               @click="Del(scope.$index, scope.row)"
-              v-if="scope.row.Del==0"
-            >删除</el-button>
+              v-if="scope.row.Del == 0"
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </template>

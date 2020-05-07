@@ -129,212 +129,298 @@
 }
 </style>
 <template>
-  <div class="task-content"
-       v-if="resultData.agentHouseMethod">
+  <div class="task-content" v-if="resultData.agentHouseMethod">
     <h3 class="other-title">房源角色人</h3>
     <div class="task-pro-flex">
-      <div class="task-pro-content"
-           data-detail="录入人">
-        <el-image class="task-pro-img"
-                  v-if="resultData"
-                  :src=" resultData.agentHouseMethod.addPerHeadImg | defaultImg"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
+      <div class="task-pro-content" data-detail="录入人">
+        <el-image
+          class="task-pro-img"
+          v-if="resultData"
+          :src="resultData.agentHouseMethod.addPerHeadImg | defaultImg"
+          fit="cover"
+        >
+          <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
           </div>
         </el-image>
         <div class="task-pro-message">
-          <div class="task-pro-name overText">{{resultData.agentHouseMethod.addPerName | emptyRead}}</div>
-          <div class="task-pro-options overText">{{resultData.agentHouseMethod.addPerDepartmentName | emptyRead}}</div>
+          <div class="task-pro-name overText">
+            {{ resultData.agentHouseMethod.addPerName | emptyRead }}
+          </div>
+          <div class="task-pro-options overText">
+            {{ resultData.agentHouseMethod.addPerDepartmentName | emptyRead }}
+          </div>
         </div>
       </div>
-      <div :class="['task-pro-content',{'flex-center':resultData.agentPerName==null|| resultData.plate==1||resultData.plate==4}]"
-           data-detail="跟单人">
-        <template v-if="resultData.agentPerName!=null&& resultData.plate!=1&&resultData.plate!=4 ">
-          <el-image class="task-pro-img"
-                    :src="resultData.agentPerHeadImg |  defaultImg"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
+      <div
+        :class="[
+          'task-pro-content',
+          {
+            'flex-center':
+              resultData.agentPerName == null ||
+              resultData.plate == 1 ||
+              resultData.plate == 4
+          }
+        ]"
+        data-detail="跟单人"
+      >
+        <template
+          v-if="
+            resultData.agentPerName != null &&
+              resultData.plate != 1 &&
+              resultData.plate != 4
+          "
+        >
+          <el-image
+            class="task-pro-img"
+            :src="resultData.agentPerHeadImg | defaultImg"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
           <div class="task-pro-message">
-            <div class="task-pro-name overText">{{resultData.agentPerName}}</div>
-            <div class="task-pro-options overText">{{resultData.agentPerDepartmentName}}</div>
+            <div class="task-pro-name overText">
+              {{ resultData.agentPerName }}
+            </div>
+            <div class="task-pro-options overText">
+              {{ resultData.agentPerDepartmentName }}
+            </div>
           </div>
         </template>
-        <el-button v-else-if="applyAgentRule"
-                   :disabled="isDisabled||agentApply"
-                   @click="openAgentPop">
+        <el-button
+          v-else-if="applyAgentRule"
+          :disabled="isDisabled || agentApply"
+          @click="openAgentPop"
+        >
           <span>申请跟单人</span>
         </el-button>
-        <el-button v-else
-                   :disabled="true">
+        <el-button v-else :disabled="true">
           <span>申请跟单人</span>
         </el-button>
       </div>
     </div>
     <div class="task-pro-flex">
-      <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.keyOwnerName==null}]"
-           data-detail="钥匙人">
-        <template v-if="resultData.agentHouseMethod.keyOwnerName!=null">
-          <el-image class="task-pro-img"
-                    :src="resultData.agentHouseMethod.keyOwnerHeadImg |  defaultImg"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
+      <div
+        :class="[
+          'task-pro-content',
+          { 'flex-center': resultData.agentHouseMethod.keyOwnerName == null }
+        ]"
+        data-detail="钥匙人"
+      >
+        <template v-if="resultData.agentHouseMethod.keyOwnerName != null">
+          <el-image
+            class="task-pro-img"
+            :src="resultData.agentHouseMethod.keyOwnerHeadImg | defaultImg"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
           <div class="task-pro-message">
-            <div class="task-pro-name overText">{{resultData.agentHouseMethod.keyOwnerName}}</div>
-            <div class="task-pro-options overText">{{resultData.agentHouseMethod.keyOwnerDepartmentName}}</div>
+            <div class="task-pro-name overText">
+              {{ resultData.agentHouseMethod.keyOwnerName }}
+            </div>
+            <div class="task-pro-options overText">
+              {{ resultData.agentHouseMethod.keyOwnerDepartmentName }}
+            </div>
           </div>
-          <el-button :disabled="isDisabled"
-                     @click="openPop('keyPopFlag',4,'keyType',3)">
+          <el-button
+            :disabled="isDisabled"
+            @click="openPop('keyPopFlag', 4, 'keyType', 3)"
+          >
             <i class="el-icon-sunny icon"></i>
             <span>取代</span>
           </el-button>
         </template>
-        <el-button v-else-if="applyKeyOwnerRule"
-                   :disabled="isDisabled"
-                   @click="openPop('keyPopFlag',0,'keyType',0)">
+        <el-button
+          v-else-if="applyKeyOwnerRule"
+          :disabled="isDisabled"
+          @click="openPop('keyPopFlag', 0, 'keyType', 0)"
+        >
           <span>申请钥匙人</span>
         </el-button>
-        <el-button v-else
-                   :disabled="true">
+        <el-button v-else :disabled="true">
           <span>申请钥匙人</span>
         </el-button>
       </div>
-      <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.onlyOwnerName==null}]"
-           data-detail="委托人">
-        <template v-if="resultData.agentHouseMethod.onlyOwnerName!=null">
-          <el-button class="only">{{resultData.isOnly | mapFilter('ONLYTYPE')}}</el-button>
-          <el-image class="task-pro-img"
-                    :src="resultData.agentHouseMethod.onlyOwnerHeadImg | defaultImg "
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
+      <div
+        :class="[
+          'task-pro-content',
+          { 'flex-center': resultData.agentHouseMethod.onlyOwnerName == null }
+        ]"
+        data-detail="委托人"
+      >
+        <template v-if="resultData.agentHouseMethod.onlyOwnerName != null">
+          <el-button class="only">{{
+            resultData.isOnly | mapFilter("ONLYTYPE")
+          }}</el-button>
+          <el-image
+            class="task-pro-img"
+            :src="resultData.agentHouseMethod.onlyOwnerHeadImg | defaultImg"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
           <div class="task-pro-message">
-            <div class="task-pro-name overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
-            <div class="task-pro-options overText">{{resultData.agentHouseMethod.onlyOwnerName}}</div>
+            <div class="task-pro-name overText">
+              {{ resultData.agentHouseMethod.onlyOwnerName }}
+            </div>
+            <div class="task-pro-options overText">
+              {{ resultData.agentHouseMethod.onlyOwnerName }}
+            </div>
           </div>
-          <el-button :disabled="isDisabled"
-                     @click="openPop('entrustPopFlag',4,'entrustType',2)">
+          <el-button
+            :disabled="isDisabled"
+            @click="openPop('entrustPopFlag', 4, 'entrustType', 2)"
+          >
             <i class="el-icon-sunny icon"></i>
             <span>取代</span>
           </el-button>
         </template>
-        <el-button v-else-if="applyOnlyOwnerRule"
-                   :disabled="isDisabled"
-                   @click="openPop('entrustPopFlag',1,'entrustType',0)">
+        <el-button
+          v-else-if="applyOnlyOwnerRule"
+          :disabled="isDisabled"
+          @click="openPop('entrustPopFlag', 1, 'entrustType', 0)"
+        >
           <span>申请委托人</span>
         </el-button>
-        <el-button v-else
-                   :disabled="true">
+        <el-button v-else :disabled="true">
           <span>申请委托人</span>
         </el-button>
       </div>
     </div>
     <div class="task-pro-flex seat">
-      <div :class="['task-pro-content',{'flex-center':resultData.agentHouseMethod.realOwnerName==null}]"
-           data-detail="实勘人">
-        <template v-if="resultData.agentHouseMethod.realOwnerName!=null">
-          <el-image class="task-pro-img"
-                    :src="resultData.agentHouseMethod.realOwnerHeadImg | defaultImg "
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
+      <div
+        :class="[
+          'task-pro-content',
+          { 'flex-center': resultData.agentHouseMethod.realOwnerName == null }
+        ]"
+        data-detail="实勘人"
+      >
+        <template v-if="resultData.agentHouseMethod.realOwnerName != null">
+          <el-image
+            class="task-pro-img"
+            :src="resultData.agentHouseMethod.realOwnerHeadImg | defaultImg"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
           <div class="task-pro-message">
-            <div class="task-pro-name overText">{{resultData.agentHouseMethod.realOwnerName}}</div>
-            <div class="task-pro-options overText">{{resultData.agentHouseMethod.realOwnerDepartmentName}}</div>
+            <div class="task-pro-name overText">
+              {{ resultData.agentHouseMethod.realOwnerName }}
+            </div>
+            <div class="task-pro-options overText">
+              {{ resultData.agentHouseMethod.realOwnerDepartmentName }}
+            </div>
           </div>
-          <el-button :disabled="isDisabled"
-                     @click="openPop('houseUploadflag',4,'houseUploadType',5)">
+          <el-button
+            :disabled="isDisabled"
+            @click="openPop('houseUploadflag', 4, 'houseUploadType', 5)"
+          >
             <i class="el-icon-sunny icon"></i>
             <span>取代</span>
           </el-button>
         </template>
-        <el-button v-else-if="applyRealOwnerRule"
-                   :disabled="isDisabled"
-                   @click="openPop('houseUploadflag',12,'houseUploadType',0)">申请实勘人</el-button>
-        <el-button v-else
-                   :disabled="true">申请实勘人</el-button>
+        <el-button
+          v-else-if="applyRealOwnerRule"
+          :disabled="isDisabled"
+          @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
+          >申请实勘人</el-button
+        >
+        <el-button v-else :disabled="true">申请实勘人</el-button>
       </div>
     </div>
     <!--取代 -->
-    <replacePop :replaceType="keyType"
-                :visible.sync="keyPopFlag"
-                v-if="keyPopFlag"
-                width="620px"
-                title
-                :submitApplyKeyOwner="submitApplyKeyOwner"></replacePop>
+    <replacePop
+      :replaceType="keyType"
+      :visible.sync="keyPopFlag"
+      v-if="keyPopFlag"
+      width="620px"
+      title
+      :submitApplyKeyOwner="submitApplyKeyOwner"
+    ></replacePop>
     <!-- 委托人 -->
-    <entrustPop :replaceType="entrustType"
-                v-if="entrustPopFlag"
-                width="640px"
-                title
-                :submitApplyOnlyOwner="submitApplyOnlyOwner"
-                :visible.sync="entrustPopFlag"></entrustPop>
+    <entrustPop
+      :replaceType="entrustType"
+      v-if="entrustPopFlag"
+      width="640px"
+      title
+      :submitApplyOnlyOwner="submitApplyOnlyOwner"
+      :visible.sync="entrustPopFlag"
+    ></entrustPop>
     <!-- 上传 -->
-    <fixedPopup :visible.sync="houseUploadflag"
-                title
-                v-if="houseUploadflag"
-                width="960px">
-      <houseUploadExtends ref="houseUpload"
-                          :replaceType="houseUploadType"
-                          :wxUploadFile="true"
-                          :echoData="echoData"
-                          :isFromHouseTask="true"></houseUploadExtends>
+    <fixedPopup
+      :visible.sync="houseUploadflag"
+      title
+      v-if="houseUploadflag"
+      width="960px"
+    >
+      <houseUploadExtends
+        ref="houseUpload"
+        :replaceType="houseUploadType"
+        :wxUploadFile="true"
+        :echoData="echoData"
+        :isFromHouseTask="true"
+      ></houseUploadExtends>
       <template v-slot:floot>
         <div class="text-middle">
-          <el-button v-if="submitApplyRealOwner"
-                     size="mini"
-                     :disabled="isDisabled"
-                     @click="submitUpload"
-                     :loading="houseUploadLoading">{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
-          <el-button v-else
-                     size="mini"
-                     :disabled="true"
-                     :loading="houseUploadLoading">{{ houseUploadLoading ? '加载中' : '提交'}}</el-button>
+          <el-button
+            v-if="submitApplyRealOwner"
+            size="mini"
+            :disabled="isDisabled"
+            @click="submitUpload"
+            :loading="houseUploadLoading"
+            >{{ houseUploadLoading ? "加载中" : "提交" }}</el-button
+          >
+          <el-button
+            v-else
+            size="mini"
+            :disabled="true"
+            :loading="houseUploadLoading"
+            >{{ houseUploadLoading ? "加载中" : "提交" }}</el-button
+          >
         </div>
       </template>
     </fixedPopup>
 
-    <fixedPopup :visible.sync="applyAgentFlag"
-                title="请填写完这些信息才能申请为跟单人"
-                v-if="applyAgentFlag"
-                width="960px">
-      <supplement ref="com"
-                  :required="required"
-                  :middleRadioTo="middleRadio"
-                  :primaryRadioTo="primaryRadio"
-                  :showFollow="showFollow"
-                  :paramsObj="supplementObj"
-                  :audioList="audioList"
-                  :isFromHouseTask="true"></supplement>
+    <fixedPopup
+      :visible.sync="applyAgentFlag"
+      title="请填写完这些信息才能申请为跟单人"
+      v-if="applyAgentFlag"
+      width="960px"
+    >
+      <supplement
+        ref="com"
+        :required="required"
+        :middleRadioTo="middleRadio"
+        :primaryRadioTo="primaryRadio"
+        :showFollow="showFollow"
+        :paramsObj="supplementObj"
+        :audioList="audioList"
+        :isFromHouseTask="true"
+      ></supplement>
       <template>
         <div class="text-middle">
-          <el-button v-if="submitApplyAgent"
-                     size="mini"
-                     :disabled="agentApply||isDisabled"
-                     @click="applyAgent">提交</el-button>
-          <el-button v-else
-                     size="mini"
-                     :disabled="true">提交</el-button>
+          <el-button
+            v-if="submitApplyAgent"
+            size="mini"
+            :disabled="agentApply || isDisabled"
+            @click="applyAgent"
+            >提交</el-button
+          >
+          <el-button v-else size="mini" :disabled="true">提交</el-button>
         </div>
       </template>
     </fixedPopup>
@@ -356,7 +442,7 @@ import but from "@/evenBus/but.js";
 
 export default {
   $_veeValidate: {
-    validator: 'new' // give me my own validator scope.
+    validator: "new" // give me my own validator scope.
   },
   inject: {
     houseDetails: {
@@ -376,24 +462,24 @@ export default {
     }
   },
   computed: {
-    isDisabled () {
+    isDisabled() {
       return this.buttonDisabled;
     },
-    supplementObj () {
+    supplementObj() {
       if (Object.keys(this.paramsObj).length > 0) {
         return this.paramsObj.paramsObj;
       } else {
         return {};
       }
     },
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
         return {};
       }
     },
-    agentApply () {
+    agentApply() {
       if (!this.dept.id) {
         return false;
       }
@@ -406,9 +492,8 @@ export default {
         if (detailData.plate == 1 && this.dept.id != loginDeptId) {
           return true;
         }
-      } else {
-        return true;
       }
+      return true;
     }
   },
   components: {
@@ -417,9 +502,9 @@ export default {
     entrustPop,
     supplement
   },
-  data () {
+  data() {
     return {
-      echoData: [],//回显图片视频
+      echoData: [], //回显图片视频
       houseUploadLoading: false,
       houseUploadflag: false,
       houseUploadType: null,
@@ -445,11 +530,11 @@ export default {
     };
   },
   filters: {
-    mapFilter (value, ListName, resultValue = null) {
+    mapFilter(value, ListName, resultValue = null) {
       return util.countMapFilter(value, ListName, resultValue);
     }
   },
-  mounted () {
+  mounted() {
     let that = this;
 
     but.$on("applyAgent", () => {
@@ -479,7 +564,7 @@ export default {
     });
     but.$on("callTaskAgent", this.openAgentPop);
   },
-  destroyed () {
+  destroyed() {
     but.$off("applyAgent");
     but.$off("applyKeyOwner");
     but.$off("applyOnlyOwner");
@@ -494,7 +579,7 @@ export default {
     /**
      * 申请跟单人
      */
-    applyAgent () {
+    applyAgent() {
       let params = this.$refs.com.formData;
       let that = this;
       this.$refs.com.validateAllNotUpdata().then(e => {
@@ -527,14 +612,14 @@ export default {
                 that.$message(result.message);
               }
             })
-            .catch(e => { });
+            .catch(e => {});
         }
       });
     },
     /**
      * 申请跟单人打开弹窗
      */
-    openAgentPop () {
+    openAgentPop() {
       if (this.resultData.applyAgentVo != null) {
         this.$store.commit("updateStep2", this.resultData.applyAgentVo);
         this.audioList = this.resultData.applyAgentVo.saleUploadAudioList;
@@ -556,8 +641,7 @@ export default {
      * @param {String} popName 弹出层的Flag名字
      * @param {number} type 打开类型
      */
-    async openPop (popName, type, typeName, replaceType) {
-
+    async openPop(popName, type, typeName, replaceType) {
       if (type != 4) {
         let result = await houseCheck.isChecking(
           type,
@@ -566,8 +650,10 @@ export default {
           "正在审核"
         );
         if (popName == "houseUploadflag") {
-
-          this.echoData = [...this.resultData.saleUploadPicDtoList, ...this.resultData.saleUploadVideoDtoList];
+          this.echoData = [
+            ...this.resultData.saleUploadPicDtoList,
+            ...this.resultData.saleUploadVideoDtoList
+          ];
         }
         if (!result) {
           this[typeName] = type;
@@ -594,13 +680,11 @@ export default {
           });
         }
       }
-
-
     },
     /**
      * refs 获取上传组件实例并且验证非空
      */
-    submitUpload () {
+    submitUpload() {
       let _that = this;
       let verifyFieldMap = new Map([
         ["outdoorImgList", "外景图"],
@@ -617,7 +701,7 @@ export default {
             name: _key,
             alias: _value,
             rules: "required",
-            getter: function () {
+            getter: function() {
               if (_that.$refs.houseUpload[_key] instanceof Array) {
                 return _that.$refs.houseUpload[_key];
               } else {
@@ -637,7 +721,7 @@ export default {
         } else {
           let url = `/agentHouse/propertyCheck/${
             this.houseUploadType == 12 ? "insertApplyFor" : "insertReplace"
-            }`;
+          }`;
           let resultIdList = [];
           verifyFieldMap.forEach((_value, _key) => {
             if (_that.$refs.houseUpload[_key] instanceof Array) {
@@ -666,7 +750,7 @@ export default {
                 this.$message.success(e.data.message);
               }
             })
-            .catch(e => { })
+            .catch(e => {})
             .finally(() => {
               this.houseUploadLoading = false;
               this.houseUploadflag = false;
@@ -677,4 +761,3 @@ export default {
   }
 };
 </script>
-

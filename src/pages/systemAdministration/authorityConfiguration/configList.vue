@@ -50,7 +50,8 @@
           style="margin-left:10px"
           size="mini"
           @click="queryCompanyByParams"
-        >查询</el-button>
+          >查询</el-button
+        >
       </div>
     </template>
     <template v-slot:tableColumn="cell">
@@ -73,7 +74,8 @@
               v-for="(item, index) in getOpeBtns(scope.row)"
               :type="item.style"
               :key="index"
-            >{{ item.name }}</el-button>
+              >{{ item.name }}</el-button
+            >
           </div>
         </template>
       </el-table-column>

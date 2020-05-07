@@ -157,42 +157,62 @@
     <div class="page-house-cell nav-back">
       <div class="page-house-cell house-left-tips"><span>为你推荐</span></div>
       <div class="page-house-cell for-house-cell">
-        <div class="house-cell-item"
-             v-for="(item,index) in houseMenuList"
-             :key="index"
-             :class="[item.cellTop,{'item-hot':item.hot}]">
-          <div :class="['for-house-item',{'item-opacity':item.flag}]"
-               @click="setSelectNav(item)"
-               @dblclick="navToPath(item.path)">
-            <i :class="item.icon"
-               class="icon"></i>
-            <div class="for-house-item-title">{{item.title}}</div>
+        <div
+          class="house-cell-item"
+          v-for="(item, index) in houseMenuList"
+          :key="index"
+          :class="[item.cellTop, { 'item-hot': item.hot }]"
+        >
+          <div
+            :class="['for-house-item', { 'item-opacity': item.flag }]"
+            @click="setSelectNav(item)"
+            @dblclick="navToPath(item.path)"
+          >
+            <i :class="item.icon" class="icon"></i>
+            <div class="for-house-item-title">{{ item.title }}</div>
           </div>
         </div>
       </div>
       <div class="page-house-cell but-flex-center">
-        <div class="house-cell-but"
-             @click="navToPath('/buySellSystem/addHouse')">
+        <div
+          class="house-cell-but"
+          @click="navToPath('/buySellSystem/addHouse')"
+        >
           <i class="el-icon-plus"></i>
           <span>录入房源</span>
         </div>
-        <div class="house-cell-but"
-             @click="navToPath('/buySellSystem/concernCommunity')">
+        <div
+          class="house-cell-but"
+          @click="navToPath('/buySellSystem/concernCommunity')"
+        >
           <i class="iconguanli iconfont"></i>
           <span>管理入口</span>
         </div>
       </div>
     </div>
     <div class="com-flex">
-      <div class="com-flex-cell com-cell-posi"
-           :class="{'querySelectFlag':querySelectFlag,'com-cell-posi-nest':nest}">
+      <div
+        class="com-flex-cell com-cell-posi"
+        :class="{
+          querySelectFlag: querySelectFlag,
+          'com-cell-posi-nest': nest
+        }"
+      >
         <div class="hide-warp">
           <houselistlhousepair></houselistlhousepair>
         </div>
-        <div class="hide-query"
-             v-scrollCenter.overflowMain="{scroll:'el-main',offsetParent:'com-flex',top:'80'}"
-             @click="()=> querySelectFlag = !querySelectFlag "
-             :class="querySelectFlag ? 'el-icon-d-arrow-right': 'el-icon-d-arrow-left'  "></div>
+        <div
+          class="hide-query"
+          v-scrollCenter.overflowMain="{
+            scroll: 'el-main',
+            offsetParent: 'com-flex',
+            top: '80'
+          }"
+          @click="() => (querySelectFlag = !querySelectFlag)"
+          :class="
+            querySelectFlag ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'
+          "
+        ></div>
       </div>
       <div class="com-flex-cell">
         <houseresultlist :querySelectFlag="querySelectFlag"></houseresultlist>
@@ -327,14 +347,14 @@ import getMenuRid from "@/minxi/getMenuRid";
 import { TOKEN } from "@/util/constMap";
 import util from "@/util/util";
 export default {
-  provide () {
+  provide() {
     return {
       form: this.form,
       Slider: this.Slider
     };
   },
   computed: {
-    nest () {
+    nest() {
       return util.localStorageGet("nest");
     }
   },
@@ -344,7 +364,7 @@ export default {
     houselistlhousepair,
     houseresultlist
   },
-  data () {
+  data() {
     return {
       querySelectFlag: false,
       houseMenuList: HosueList,
@@ -384,13 +404,13 @@ export default {
       }
     };
   },
-  created () {
+  created() {
     this.form.type = "12";
     this.form.title = "全部在售";
     this.form.action = "/mateHouse/getMateHouse/soleAllHouse";
   },
   methods: {
-    setSelectNav (item, resetAll) {
+    setSelectNav(item, resetAll) {
       this.houseMenuList.forEach((items, index) => {
         if (resetAll) {
           items.flag = false;
@@ -413,11 +433,11 @@ export default {
       }
     },
     //跳转页面
-    navToPath (path) {
+    navToPath(path) {
       this.$router.push({ path: path });
     },
 
-    GetRequest () {
+    GetRequest() {
       var href = window.location.href; //获取url中"?"符后的字串
       console.log("$$$$$$$", href);
       var str = href.substring(href.indexOf("?"));
@@ -431,10 +451,10 @@ export default {
       console.log("傻逼傻逼：从地址tk获取到后放到storage:" + token);
       return token;
     },
-    handleClick (e) {
+    handleClick(e) {
       console.log(e);
     },
-    addHouse () {
+    addHouse() {
       this.$router.push({ path: "/buySellSystem/addHouse" });
     }
   }

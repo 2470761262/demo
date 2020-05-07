@@ -771,39 +771,39 @@ export default {
           that.loading = false;
         });
     },
-    remoteInput() {
-      if (this.comId.length == 0) {
-        this.remoteMethod();
-      }
-    },
-    remoteMethod(query) {
-      var that = this;
-      if (query !== "") {
-        this.loading = true;
+    // remoteInput() {
+    //   if (this.comId.length == 0) {
+    //     this.remoteMethod();
+    //   }
+    // },
+    // remoteMethod(query) {
+    //   var that = this;
+    //   if (query !== "") {
+    //     this.loading = true;
 
-        this.$api
-          .get({
-            url: "/mateHouse/queryCommunity",
-            headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
-            data: {
-              communityName: query,
-              page: 1,
-              limit: 50
-            }
-          })
-          .then(e => {
-            console.log(e.data.code);
-            if (e.data.code == 200) {
-              that.loading = false;
-              that.comList = e.data.data.list;
-            }
-          });
-      } else {
-        this.options = [];
-      }
-    },
+    //     this.$api
+    //       .get({
+    //         url: "/mateHouse/queryCommunity",
+    //         headers: { "Content-Type": "application/json;charset=UTF-8" },
+    //         token: false,
+    //         qs: true,
+    //         data: {
+    //           communityName: query,
+    //           page: 1,
+    //           limit: 50
+    //         }
+    //       })
+    //       .then(e => {
+    //         console.log(e.data.code);
+    //         if (e.data.code == 200) {
+    //           that.loading = false;
+    //           that.comList = e.data.data.list;
+    //         }
+    //       });
+    //   } else {
+    //     this.options = [];
+    //   }
+    // },
     Remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));

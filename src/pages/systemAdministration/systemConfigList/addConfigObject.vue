@@ -55,109 +55,128 @@
         <el-header>
           <div class="left-input-container">
             <span>参数编号-参数名称-参数类型</span>
-            <div>{{notice.configId}}-{{notice.configName}}-{{notice.configNo}}</div>
+            <div>
+              {{ notice.configId }}-{{ notice.configName }}-{{
+                notice.configNo
+              }}
+            </div>
           </div>
           <div class="left-input-container">
             <span>公司参数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select v-model="notice.comId"
-                       placeholder="请选择">
-              <el-option v-for="item in companyDefault"
-                         :key="item.value"
-                         :label="item.CompanyName"
-                         :value="item.value"></el-option>
-              <el-option v-for="item in tableData"
-                         :key="item.id"
-                         :label="item.companyName"
-                         :value="item.id"></el-option>
+            <el-select v-model="notice.comId" placeholder="请选择">
+              <el-option
+                v-for="item in companyDefault"
+                :key="item.value"
+                :label="item.CompanyName"
+                :value="item.value"
+              ></el-option>
+              <el-option
+                v-for="item in tableData"
+                :key="item.id"
+                :label="item.companyName"
+                :value="item.id"
+              ></el-option>
             </el-select>
           </div>
           <div class="left-input-container">
             <span>参数范围&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select v-model="notice.parRange"
-                       placeholder="请选择">
-              <el-option v-for="item in parRange"
-                         :key="item.id"
-                         :label="item.label"
-                         :value="item.value"></el-option>
+            <el-select v-model="notice.parRange" placeholder="请选择">
+              <el-option
+                v-for="item in parRange"
+                :key="item.id"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
           <div class="left-input-container">
             <span>关联对象&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select v-model="notice.configObject"
-                       placeholder="请选择">
-              <el-option v-for="item in configObject"
-                         :key="item.id"
-                         :label="item.label"
-                         :value="item.value"></el-option>
+            <el-select v-model="notice.configObject" placeholder="请选择">
+              <el-option
+                v-for="item in configObject"
+                :key="item.id"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
           <div class="left-input-container">
             <span>参数一&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input type="text"
-                      placeholder="请输入内容"
-                      v-model="notice.paraNum1"
-                      maxlength="10"
-                      show-word-limit></el-input>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.paraNum1"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
           </div>
           <div class="left-input-container">
             <span>参数二&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input type="text"
-                      placeholder="请输入内容"
-                      v-model="notice.paraNum2"
-                      maxlength="10"
-                      show-word-limit></el-input>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.paraNum2"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
           </div>
           <div class="left-input-container">
             <span>参数三&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input type="text"
-                      placeholder="请输入内容"
-                      v-model="notice.paraNum3"
-                      maxlength="10"
-                      show-word-limit></el-input>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.paraNum3"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
           </div>
           <div class="left-input-container">
             <span>参数四&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input type="text"
-                      placeholder="请输入内容"
-                      v-model="notice.paraNum4"
-                      maxlength="10"
-                      show-word-limit></el-input>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.paraNum4"
+              maxlength="10"
+              show-word-limit
+            ></el-input>
           </div>
           <div class="left-input-container">
             <span>备注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input type="text"
-                      placeholder="请输入内容"
-                      v-model="notice.configMemo"
-                      maxlength="100"
-                      show-word-limit></el-input>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.configMemo"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
           </div>
           <div class="left-input-container">
             <span>时间单位&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select v-model="notice.unit"
-                       placeholder="请选择">
-              <el-option v-for="item in unit"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value"></el-option>
+            <el-select v-model="notice.unit" placeholder="请选择">
+              <el-option
+                v-for="item in unit"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
           <div class="left-input-container">
             <span>是否允许&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-select v-model="notice.paraIsAllowed"
-                       placeholder="请选择">
-              <el-option v-for="item in paraIsAllowed"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value"></el-option>
+            <el-select v-model="notice.paraIsAllowed" placeholder="请选择">
+              <el-option
+                v-for="item in paraIsAllowed"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
         </el-header>
 
         <div class="footerContainer el-top">
-          <el-button type="primary"
-                     @click="sendNotice">发送</el-button>
-          <el-button @click="post"
-                     v-if="hide==false">取消</el-button>
+          <el-button type="primary" @click="sendNotice">发送</el-button>
+          <el-button @click="post" v-if="hide == false">取消</el-button>
         </div>
       </el-container>
     </el-container>
@@ -165,37 +184,37 @@
 </template>
 
 <script>
-import { quillEditor } from "vue-quill-editor";
+// import { quillEditor } from "vue-quill-editor";
 
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-const toolbarOptions = [
-  ["bold", "italic", "underline", "strike"], // toggled buttons
-  ["blockquote", "code-block"],
+// import "quill/dist/quill.core.css";
+// import "quill/dist/quill.snow.css";
+// import "quill/dist/quill.bubble.css";
+// const toolbarOptions = [
+//   ["bold", "italic", "underline", "strike"], // toggled buttons
+//   ["blockquote", "code-block"],
 
-  [{ header: 1 }, { header: 2 }], // custom button values
-  [{ list: "ordered" }, { list: "bullet" }],
-  [{ script: "sub" }, { script: "super" }], // superscript/subscript
-  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-  [{ direction: "rtl" }], // text direction 
+//   [{ header: 1 }, { header: 2 }], // custom button values
+//   [{ list: "ordered" }, { list: "bullet" }],
+//   [{ script: "sub" }, { script: "super" }], // superscript/subscript
+//   [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+//   [{ direction: "rtl" }], // text direction
 
-  [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+//   [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+//   [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
-  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-  [{ font: [] }],
-  [{ align: [] }],
-  ["link", "image"],
-  ["clean"] // remove formatting button
-];
-import but from '@/evenBus/but'
-import getMenuRid from '@/minxi/getMenuRid';
+//   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+//   [{ font: [] }],
+//   [{ align: [] }],
+//   ["link", "image"],
+//   ["clean"] // remove formatting button
+// ];
+import but from "@/evenBus/but";
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
-  components: { quillEditor },
+  components: {},
   props: {},
-  data () {
+  data() {
     return {
       quill: null,
 
@@ -220,20 +239,20 @@ export default {
       },
       editorOption: {
         placeholder: "请输入公告内容",
-        readOnly: false,
-        modules: {
-          toolbar: {
-            container: toolbarOptions, // 工具栏
-            handlers: {
-              link: function (v) {
-                if (v) {
-                  var href = prompt("Enter the URL");
-                  this.quill.format("link", href);
-                }
-              }
-            }
-          }
-        }
+        readOnly: false
+        // modules: {
+        //   toolbar: {
+        //     container: toolbarOptions, // 工具栏
+        //     handlers: {
+        //       link: function(v) {
+        //         if (v) {
+        //           var href = prompt("Enter the URL");
+        //           this.quill.format("link", href);
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
       },
       unit: [
         {
@@ -305,8 +324,7 @@ export default {
         {
           value: "0",
           CompanyName: "默认"
-        },
-
+        }
       ],
       parRange: [
         {
@@ -337,9 +355,8 @@ export default {
   },
   watch: {},
   computed: {},
-  mounted () { },
   methods: {
-    queryCompanyDatas (currentPage) {
+    queryCompanyDatas(currentPage) {
       let params = { limit: 1000, page: currentPage };
       let that = this;
 
@@ -358,7 +375,10 @@ export default {
             console.log(result.data);
 
             this.tableData = result.data.list;
-            console.log(typeof (result.data.list[0].id), typeof (this.notice.comId));
+            console.log(
+              typeof result.data.list[0].id,
+              typeof this.notice.comId
+            );
           } else {
             alert(result.message);
           }
@@ -368,43 +388,44 @@ export default {
           console.log(e);
         });
     },
-    updateObjectDetail (id) {
+    updateObjectDetail(id) {
       let that = this;
-      this.$api.get({
-        url: '/Set/setUpId',
-        data: {
-          id: id
-        },
-        token: false
-      }).then((e) => {
-
-        let result = e.data;
-        console.log(result);
-        if (result.code == 200) {
-          that.notice.configId = result.data.SysParId
-          that.notice.configMemo = result.data.memo
-          that.notice.comId = parseInt(result.data.comid)
-          that.notice.configName = result.data.sysParName
-          that.notice.configNo = result.data.sysParNo
-          that.notice.paraNum1 = result.data.paraNum
-          that.notice.paraNum2 = result.data.paraTwoNum
-          that.notice.paraNum3 = result.data.paraNumStr
-          that.notice.unit = result.data.unit
-          that.notice.paraNum4 = result.data.paraFourNum
-          that.notice.parRange = result.data.parRange
-          that.notice.configObject = result.data.sysParObj
-          that.notice.paraIsAllowed = result.data.paraIsAllowed
-          that.notice.CompanyName = result.data.companyName
-        } else {
-          console.log("修改详情结果：" + result.message);
-
-        }
-      }).catch((e) => {
-        console.log("修改详情失败");
-        console.log(e);
-      })
+      this.$api
+        .get({
+          url: "/Set/setUpId",
+          data: {
+            id: id
+          },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          console.log(result);
+          if (result.code == 200) {
+            that.notice.configId = result.data.SysParId;
+            that.notice.configMemo = result.data.memo;
+            that.notice.comId = parseInt(result.data.comid);
+            that.notice.configName = result.data.sysParName;
+            that.notice.configNo = result.data.sysParNo;
+            that.notice.paraNum1 = result.data.paraNum;
+            that.notice.paraNum2 = result.data.paraTwoNum;
+            that.notice.paraNum3 = result.data.paraNumStr;
+            that.notice.unit = result.data.unit;
+            that.notice.paraNum4 = result.data.paraFourNum;
+            that.notice.parRange = result.data.parRange;
+            that.notice.configObject = result.data.sysParObj;
+            that.notice.paraIsAllowed = result.data.paraIsAllowed;
+            that.notice.CompanyName = result.data.companyName;
+          } else {
+            console.log("修改详情结果：" + result.message);
+          }
+        })
+        .catch(e => {
+          console.log("修改详情失败");
+          console.log(e);
+        });
     },
-    sendNotice () {
+    sendNotice() {
       let that = this.notice;
       if (this.notice.comId == null) {
         this.$message({
@@ -440,25 +461,26 @@ export default {
         return;
       }
       if (this.$route.params.objectId == undefined) {
-        this.$api.get({
-          url: "/Set/companyAdd",
-          data: {
-            sysParObj: that.configObject,
-            sysParID: that.configId,
-            relationId: "0",
-            paraIsAllowed: that.paraIsAllowed,
-            parRange: that.parRange,
-            paraNum: that.paraNum1,
-            paraTwoNum: that.paraNum2,
-            paraNumStr: that.paraNum3,
-            paraNumFour: that.paraNum4,
-            remark: that.configMemo,
-            comId: this.notice.comId,
-            unit: that.unit
-          },
-          token: false,
-          headers: { "Content-Type": "application/json" }
-        })
+        this.$api
+          .get({
+            url: "/Set/companyAdd",
+            data: {
+              sysParObj: that.configObject,
+              sysParID: that.configId,
+              relationId: "0",
+              paraIsAllowed: that.paraIsAllowed,
+              parRange: that.parRange,
+              paraNum: that.paraNum1,
+              paraTwoNum: that.paraNum2,
+              paraNumStr: that.paraNum3,
+              paraNumFour: that.paraNum4,
+              remark: that.configMemo,
+              comId: this.notice.comId,
+              unit: that.unit
+            },
+            token: false,
+            headers: { "Content-Type": "application/json" }
+          })
           .then(e => {
             console.log(e.data);
             let result = e.data;
@@ -478,28 +500,28 @@ export default {
             console.log("添加失败");
             console.log(e);
           });
-      }
-      else {
-        this.$api.get({
-          url: "/Set/companyUpdate",
-          data: {
-            id: this.$route.params.objectId,
-            sysParObj: that.configObject,
-            sysParID: that.configId,
-            relationId: "0",
-            paraIsAllowed: that.paraIsAllowed,
-            parRange: that.parRange,
-            paraNum: that.paraNum1,
-            paraTwoNum: that.paraNum2,
-            paraNumStr: that.paraNum3,
-            paraNumFour: that.paraNum4,
-            remark: that.configMemo,
-            comId: this.notice.comId,
-            unit: that.unit
-          },
-          token: false,
-          headers: { "Content-Type": "application/json" }
-        })
+      } else {
+        this.$api
+          .get({
+            url: "/Set/companyUpdate",
+            data: {
+              id: this.$route.params.objectId,
+              sysParObj: that.configObject,
+              sysParID: that.configId,
+              relationId: "0",
+              paraIsAllowed: that.paraIsAllowed,
+              parRange: that.parRange,
+              paraNum: that.paraNum1,
+              paraTwoNum: that.paraNum2,
+              paraNumStr: that.paraNum3,
+              paraNumFour: that.paraNum4,
+              remark: that.configMemo,
+              comId: this.notice.comId,
+              unit: that.unit
+            },
+            token: false,
+            headers: { "Content-Type": "application/json" }
+          })
           .then(e => {
             console.log(e.data);
             let result = e.data;
@@ -520,42 +542,38 @@ export default {
             console.log("修改失败");
             console.log(e);
           });
-
       }
     },
 
-    post () {
+    post() {
       this.$router.push({ path: "/sys/systemConfigList" });
     }
   },
-  mounted () {
-    but.$emit('asideNav', false);
+  mounted() {
+    but.$emit("asideNav", false);
   },
-  created () {
-
-    but.$emit('asideNav', false);
+  created() {
+    but.$emit("asideNav", false);
     if (this.$route.params.objectId !== undefined) {
       this.hide = true;
       this.queryCompanyDatas(1);
       this.updateObjectDetail(this.$route.params.objectId);
-
     } else {
       this.queryCompanyDatas(1);
       this.notice.configId = this.$route.params.configId;
       console.log(this.configId, 111111111);
       this.notice.configNo = this.$route.params.sysParNo;
       this.notice.configName = this.$route.params.sysParName;
-      this.notice.paraIsAllowed = this.paraIsAllowed[0].value
-      this.notice.configObject = this.configObject[0].value
-      this.notice.parRange = this.parRange[0].value
-      this.notice.unit = this.unit[0].value
-      this.notice.comId = this.companyDefault[0].value
+      this.notice.paraIsAllowed = this.paraIsAllowed[0].value;
+      this.notice.configObject = this.configObject[0].value;
+      this.notice.parRange = this.parRange[0].value;
+      this.notice.unit = this.unit[0].value;
+      this.notice.comId = this.companyDefault[0].value;
     }
-
   },
-  destroyed () {
-    but.$emit('asideNav', true);
-    but.$off('asideNav')
+  destroyed() {
+    but.$emit("asideNav", true);
+    but.$off("asideNav");
   }
 };
 </script>

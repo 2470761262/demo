@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .progress-content {
   // display: flex;
@@ -95,25 +94,28 @@
   <section class="progress-content">
     <div class="progress-header">
       <div class="progress-header-num">
-        <span>{{title}}</span>
-        <span>{{houseNum}}套</span>
+        <span>{{ title }}</span>
+        <span>{{ houseNum }}套</span>
       </div>
-      <div class="progress-header-compare"
-           :style="{background:changeBack}">
+      <div class="progress-header-compare" :style="{ background: changeBack }">
         <span>较昨日</span>
-        <span>{{compare | isGrZero}}</span>
+        <span>{{ compare | isGrZero }}</span>
       </div>
     </div>
     <div class="progress-warp">
-      <div class="progress-back"
-           :class="{'set-num-Direction':progressNumDirection}"
-           :style="{width:progress,background:changeBack,color:changeBack}"
-           :data-progress="progress">
-        <span class="progress-back-span"
-              :style="{borderBottomColor:changeBack}"></span>
+      <div
+        class="progress-back"
+        :class="{ 'set-num-Direction': progressNumDirection }"
+        :style="{ width: progress, background: changeBack, color: changeBack }"
+        :data-progress="progress"
+      >
+        <span
+          class="progress-back-span"
+          :style="{ borderBottomColor: changeBack }"
+        ></span>
       </div>
     </div>
-    <div class="progress-content-tips">{{proportion}}</div>
+    <div class="progress-content-tips">{{ proportion }}</div>
   </section>
 </template>
 
@@ -154,10 +156,10 @@ export default {
     }
   },
   computed: {
-    progressNumDirection () {
+    progressNumDirection() {
       return parseInt(this.progress) > 95 ? true : false;
     },
-    changeBack () {
+    changeBack() {
       if (this.resetProgress) {
         const num = parseInt(this.progress);
         const findIndex = this.progressBackList.findIndex(item => num <= item);
@@ -167,7 +169,7 @@ export default {
     }
   },
   filters: {
-    isGrZero (value) {
+    isGrZero(value) {
       if (value >= 0) {
         return "+" + value;
       }

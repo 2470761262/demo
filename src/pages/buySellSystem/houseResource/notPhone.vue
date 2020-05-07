@@ -1,52 +1,64 @@
-
-<style lang="less" scoped>
-</style>
+<style lang="less" scoped></style>
 <template>
-  <list-page :parentData="$data"
-             @sort-change="sortMethod"
-             @queryTabData="queryTabData"
-             @handleClick="handleClick"
-             pageName="historyDetails"
-             @handleSizeChange="handleSizeChange"
-             @handleCurrentChange="handleCurrentChange"
-             :dblclick="true"
-             @cellDblClick="toHouseDetail">
+  <list-page
+    :parentData="$data"
+    @sort-change="sortMethod"
+    @queryTabData="queryTabData"
+    @handleClick="handleClick"
+    pageName="historyDetails"
+    @handleSizeChange="handleSizeChange"
+    @handleCurrentChange="handleCurrentChange"
+    :dblclick="true"
+    @cellDblClick="toHouseDetail"
+  >
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
-          <el-select v-model="data.comId"
-                     @focus="remoteInput"
-                     @change="queryCBId"
-                     filterable
-                     remote
-                     clearable
-                     placeholder="楼盘名称"
-                     :remote-method="remoteMethod"
-                     :loading="loading">
-            <el-option v-for="item in options"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value"></el-option>
+          <el-select
+            v-model="data.comId"
+            @focus="remoteInput"
+            @change="queryCBId"
+            filterable
+            remote
+            clearable
+            placeholder="楼盘名称"
+            :remote-method="remoteMethod"
+            :loading="loading"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
           </el-select>
-          <el-select v-model="data.cbId"
-                     filterable
-                     clearable
-                     placeholder="楼栋"
-                     @change="queryRoomNo">
-            <el-option v-for="item in cbIdList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value"></el-option>
+          <el-select
+            v-model="data.cbId"
+            filterable
+            clearable
+            placeholder="楼栋"
+            @change="queryRoomNo"
+          >
+            <el-option
+              v-for="item in cbIdList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
           </el-select>
-          <el-select v-model="data.roomNo"
-                     filterable
-                     @change="queryNotPhoneParams"
-                     placeholder="房间号">
-            <el-option v-for="item in roomNoList"
-                       :key="item.value"
-                       :label="item.name"
-                       :value="item.value"></el-option>
+          <el-select
+            v-model="data.roomNo"
+            filterable
+            @change="queryNotPhoneParams"
+            placeholder="房间号"
+          >
+            <el-option
+              v-for="item in roomNoList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
           </el-select>
         </div>
         <!-- <div class="query-content-cell cell-interval75">
@@ -84,20 +96,23 @@
       <div class="page-list-query-row">
         <div class="query-content-cell">
           <h3 class="query-cell-title">面积</h3>
-          <el-input placeholder="最小值"
-                    v-model="data.minInArea"
-                    class="set-input90"
-                    @change="queryNotPhoneParams"
-                    clearable />
+          <el-input
+            placeholder="最小值"
+            v-model="data.minInArea"
+            class="set-input90"
+            @change="queryNotPhoneParams"
+            clearable
+          />
           <span class="cut-off-rule"></span>
-          <el-input placeholder="最大值"
-                    v-model="data.maxInArea"
-                    class="set-input90"
-                    @change="queryNotPhoneParams"
-                    clearable />
+          <el-input
+            placeholder="最大值"
+            v-model="data.maxInArea"
+            class="set-input90"
+            @change="queryNotPhoneParams"
+            clearable
+          />
           <span class="query-cell-suffix">平方</span>
-          <span class="query-cell-suffix handlebut"
-                @click="Remove">清除</span>
+          <span class="query-cell-suffix handlebut" @click="Remove">清除</span>
         </div>
         <!-- <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">录入时间</h3>
@@ -112,9 +127,9 @@
 
         </div> -->
         <div class="query-content-cell cell-interval75">
-          <el-button type="primary"
-                     size="mini"
-                     @click="queryNotPhoneParams">查询</el-button>
+          <el-button type="primary" size="mini" @click="queryNotPhoneParams"
+            >查询</el-button
+          >
         </div>
         <!-- <div class="query-content-cell cell-interval25">
           <moreSelect @moreSelectChange="moreSelectChange"></moreSelect>
@@ -127,31 +142,48 @@
       </div>
     </template>
     <template #tableColumn>
-      <template v-for="(item) in tableColumn">
-        <el-table-column :prop="item.prop"
-                         :label="item.label"
-                         :width="item.width"
-                         :sortable="item.order"
-                         show-overflow-tooltip
-                         :sort-orders="['ascending', 'descending']"
-                         :key="item.prop"
-                         :formatter="item.formart">
+      <template v-for="item in tableColumn">
+        <el-table-column
+          :prop="item.prop"
+          :label="item.label"
+          :width="item.width"
+          :sortable="item.order"
+          show-overflow-tooltip
+          :sort-orders="['ascending', 'descending']"
+          :key="item.prop"
+          :formatter="item.formart"
+        >
         </el-table-column>
       </template>
-      <el-table-column prop
-                       label="户型"
-                       :formatter="formatHouseType"></el-table-column>
-      <el-table-column label="操作"
-                       fixed="right"
-                       width="205">
+      <el-table-column
+        prop
+        label="户型"
+        :formatter="formatHouseType"
+      ></el-table-column>
+      <el-table-column label="操作" fixed="right" width="205">
         <template v-slot="scope">
-          <el-button type="primary"
-                     size="mini"
-                     @click="addPhone(scope.row.bhId,scope.row.id)"
-                     style="">录入号码</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="toSale(scope.row.comId,scope.row.cbId,scope.row.bhId,scope.row.communityName,scope.row.buildingName,scope.row.roomNo)">转在售</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="addPhone(scope.row.bhId, scope.row.id)"
+            style=""
+            >录入号码</el-button
+          >
+          <el-button
+            type="primary"
+            size="mini"
+            @click="
+              toSale(
+                scope.row.comId,
+                scope.row.cbId,
+                scope.row.bhId,
+                scope.row.communityName,
+                scope.row.buildingName,
+                scope.row.roomNo
+              )
+            "
+            >转在售</el-button
+          >
         </template>
       </el-table-column>
     </template>
@@ -160,14 +192,10 @@
 <script>
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
-import definitionmenu from "@/components/definitionMenu";
-import moreSelect from "@/components/moreSelect";
 export default {
   mixins: [getMenuRid],
   components: {
-    listPage,
-    definitionmenu,
-    moreSelect
+    listPage
   },
   data() {
     return {
@@ -227,7 +255,7 @@ export default {
       tableData: [],
       sortColumn: "id", //排序字段
       sortType: "descending", //排序类型
-      showAddPhone: false, //是否显示录入号码
+      showAddPhone: false //是否显示录入号码
     };
   },
   mounted() {
@@ -244,9 +272,9 @@ export default {
         params: { houseId: row.id }
       });
     },
-    queryTabData() {
-      console.log(this, "111");
-    },
+    // queryTabData() {
+    //   console.log(this, "111");
+    // },
     tabColumnChange(e) {
       this.tableColumn = e;
     },
@@ -464,7 +492,7 @@ export default {
         .post({
           url: "/houseResource/getNotPhone",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: params,
+          data: params
         })
         .then(e => {
           console.log(e.data);
@@ -473,19 +501,19 @@ export default {
             that.pageJson.total = e.data.data.dataCount;
             that.tableData = e.data.data.data;
             let btnList = e.data.data.btnList;
-            if ( btnList && btnList.length > 0) {
+            if (btnList && btnList.length > 0) {
               let isExist = false;
               btnList.forEach(btn => {
                 if (btn.rName == "录入号码") {
                   isExist = true;
                 }
-              })
+              });
               if (isExist) {
                 that.showAddPhone = true;
               }
             }
           } else {
-            console.log("查询无号码列表结果：" + result.message);
+            //console.log("查询无号码列表结果：" + result.message);
           }
         })
         .catch(e => {

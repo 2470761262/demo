@@ -1,4 +1,4 @@
-<style lang="less" scoped >
+<style lang="less" scoped>
 .page-form-inline {
   display: flex;
   /deep/.el-input-group__append {
@@ -54,9 +54,11 @@
   }
 }
 </style>
-<template >
+<template>
   <div class="content-warp">
-    <div class="page-form-tips">Tips：楼盘信息补充成功后，管理员将尽快进行审核！</div>
+    <div class="page-form-tips">
+      Tips：楼盘信息补充成功后，管理员将尽快进行审核！
+    </div>
     <el-form
       ref="form"
       :rules="rules"
@@ -67,32 +69,45 @@
     >
       <div class="page-form-inline">
         <el-form-item label="楼盘名称" prop="communityName">
-          <el-input placeholder="请输入楼盘名称" v-model="form.communityName"></el-input>
+          <el-input
+            placeholder="请输入楼盘名称"
+            v-model="form.communityName"
+          ></el-input>
         </el-form-item>
       </div>
 
       <div class="page-form-inline">
         <el-form-item label="楼栋" prop="comBuildingName">
-          <el-input placeholder="请输入楼栋名称" v-model="form.comBuildingName"></el-input>
+          <el-input
+            placeholder="请输入楼栋名称"
+            v-model="form.comBuildingName"
+          ></el-input>
         </el-form-item>
       </div>
 
       <div class="page-form-inline">
         <el-form-item label="房间号" prop="buildIngHouses">
-          <el-input placeholder="请输入房间号" v-model="form.buildIngHouses"></el-input>
+          <el-input
+            placeholder="请输入房间号"
+            v-model="form.buildIngHouses"
+          ></el-input>
         </el-form-item>
       </div>
 
       <div class="page-form-inline set-el-textarea">
         <el-form-item label="审核类型" prop="type">
-          <el-select v-model="form.type"
-                     placeholder="类型"
-                     class="set-select150"
-                     clearable>
-            <el-option v-for="item in typeOptions"
-                       :key="item.value"
-                       :label="item.label"
-                       :value="item.value">
+          <el-select
+            v-model="form.type"
+            placeholder="类型"
+            class="set-select150"
+            clearable
+          >
+            <el-option
+              v-for="item in typeOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
             </el-option>
           </el-select>
         </el-form-item>
@@ -108,7 +123,7 @@
         <el-form-item label="材料说明" prop="ReplenishRemark">
           <el-input
             type="textarea"
-            :autosize="{ minRows: 4, maxRows: 6}"
+            :autosize="{ minRows: 4, maxRows: 6 }"
             placeholder="请输入材料说明"
             :maxlength="300"
             show-word-limit
@@ -136,10 +151,14 @@
               <em>点击上传</em>
             </div>
           </el-upload>
-          <div class="text-center">最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600</div>
+          <div class="text-center">
+            最多可上传9张格式为jpg、jpeg图，尺寸不得小于600*600
+          </div>
         </el-form-item>
       </div>
-      <el-button type="primary" :disabled="buttonDisable" @click="apply()">申请</el-button>
+      <el-button type="primary" :disabled="buttonDisable" @click="apply()"
+        >申请</el-button
+      >
     </el-form>
     <el-dialog :visible.sync="dialogVisible">
       <img width="100%" :src="dialogImageUrl" alt />

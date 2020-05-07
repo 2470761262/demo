@@ -1,32 +1,32 @@
 <script>
-import followUp from './followUp.vue';
+import followUp from "./followUp.vue";
 export default {
   inject: ["houseId", "houseDetails"],
   extends: followUp,
-  data () {
+  data() {
     return {
-      text: '请输入取消作业人的原因',
+      text: "请输入取消作业人的原因",
       pop: {
         model: 0,
         checkList: [
-          { title: '委托人', value: 0 },
-          { title: '钥匙人', value: 1 },
-          { title: '实勘人', value: 2 }
+          { title: "委托人", value: 0 },
+          { title: "钥匙人", value: 1 },
+          { title: "实勘人", value: 2 }
         ]
       }
-    }
+    };
   },
   computed: {
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
-        return this.houseDetails.data
+        return this.houseDetails.data;
       } else {
         return {};
       }
     }
   },
   methods: {
-    result () {
+    result() {
       let that = this;
       let params = {
         Eid: this.houseId.id,
@@ -37,7 +37,7 @@ export default {
         this.$message("取消原因未填");
         return;
       }
-      this.$emit('update:visible', false)
+      this.$emit("update:visible", false);
       this.$api
         .post({
           url: "/agentHouse/property/cancelMethod",
@@ -62,9 +62,8 @@ export default {
             }
           }
         })
-        .catch(e => {
-        });
+        .catch(e => {});
     }
-  },
-}
+  }
+};
 </script>

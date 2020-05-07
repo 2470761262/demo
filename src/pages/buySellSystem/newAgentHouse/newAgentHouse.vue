@@ -7,53 +7,65 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page :parentData="$data"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="querylist">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="querylist"
+    >
       <template v-slot:top>
         <div class="page-list-query-row">
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
-            <el-select v-model="queryData.CommunityName"
-                       @focus="remoteCommunityFoucus"
-                       @change="querylist(null)"
-                       filterable
-                       remote
-                       clearable
-                       placeholder="楼盘名称"
-                       :remote-method="remoteCommunity"
-                       :loading="communitySelect.loading">
-              <el-option v-for="item in communitySelect.list"
-                         :key="item.value"
-                         :label="item.name"
-                         :value="item.value"></el-option>
+            <el-select
+              v-model="queryData.CommunityName"
+              @focus="remoteCommunityFoucus"
+              @change="querylist(null)"
+              filterable
+              remote
+              clearable
+              placeholder="楼盘名称"
+              :remote-method="remoteCommunity"
+              :loading="communitySelect.loading"
+            >
+              <el-option
+                v-for="item in communitySelect.list"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </div>
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">业主</h3>
-            <el-input placeholder="姓名"
-                      class="set-input120"
-                      v-model="queryData.Customers"
-                      clearable />
+            <el-input
+              placeholder="姓名"
+              class="set-input120"
+              v-model="queryData.Customers"
+              clearable
+            />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">电话</h3>
-            <el-input placeholder="业主电话"
-                      v-number
-                      v-model="queryData.tel"
-                      class="set-input200"
-                      clearable />
+            <el-input
+              placeholder="业主电话"
+              v-number
+              v-model="queryData.tel"
+              class="set-input200"
+              clearable
+            />
           </div>
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">录入时间</h3>
-            <el-date-picker v-model="queryData.timeSelect"
-                            type="daterange"
-                            class="set-data-pricker"
-                            range-separator="至"
-                            start-placeholder="开始日期"
-                            :default-time="['00:00:00', '23:59:59']"
-                            end-placeholder="结束日期"
-                            value-format="yyyy-MM-dd"></el-date-picker>
+            <el-date-picker
+              v-model="queryData.timeSelect"
+              type="daterange"
+              class="set-data-pricker"
+              range-separator="至"
+              start-placeholder="开始日期"
+              :default-time="['00:00:00', '23:59:59']"
+              end-placeholder="结束日期"
+              value-format="yyyy-MM-dd"
+            ></el-date-picker>
           </div>
           <!-- <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">房源类型</h3>
@@ -68,29 +80,29 @@
             </el-select>
           </div> -->
           <div class="query-content-cell cell-interval45">
-            <el-button type="primary"
-                       size="mini"
-                       @click="querylist(null)">查询</el-button>
+            <el-button type="primary" size="mini" @click="querylist(null)"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
       <template v-slot:tableColumn>
-        <el-table-column v-for="item in tableDataColumn"
-                         :key="item.prop"
-                         :label="item.label"
-                         :width="item.width"
-                         :formatter="item.formart"
-                         show-overflow-tooltip
-                         :prop="item.prop">
+        <el-table-column
+          v-for="item in tableDataColumn"
+          :key="item.prop"
+          :label="item.label"
+          :width="item.width"
+          :formatter="item.formart"
+          show-overflow-tooltip
+          :prop="item.prop"
+        >
         </el-table-column>
-        <el-table-column label="操作"
-                         width="150"
-                         fixed="right">
+        <el-table-column label="操作" width="150" fixed="right">
           <template v-slot="scope">
             <!-- <div v-if="scope.row.operation!=''"> -->
-            <el-button type="primary"
-                       size="mini"
-                       @click="toLook(scope.row.id)">查看</el-button>
+            <el-button type="primary" size="mini" @click="toLook(scope.row.id)"
+              >查看</el-button
+            >
             <!-- </div> -->
           </template>
         </el-table-column>
@@ -105,10 +117,9 @@ import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
-    listPage,
-    houseContrast
+    listPage
   },
-  data () {
+  data() {
     return {
       loading: false, //控制表格加载动画提示
       pageJson: {
@@ -124,14 +135,19 @@ export default {
         {
           label: "单价(元/㎡)",
           width: "160",
-          prop: "unitPrice",
+          prop: "unitPrice"
         },
         {
           prop: "hall",
           label: "户型",
           width: "170",
           formart: item =>
-            (item.rooms == null ? "0" : item.rooms) + "室" + (item.hall == null ? "0" : item.hall) + "厅" + (item.toilet == null ? "0" : item.toilet) + "卫"
+            (item.rooms == null ? "0" : item.rooms) +
+            "室" +
+            (item.hall == null ? "0" : item.hall) +
+            "厅" +
+            (item.toilet == null ? "0" : item.toilet) +
+            "卫"
         },
         { prop: "decoration", label: "装修程度", width: "160" },
         { prop: "addTime", label: "录入时间" }
@@ -158,16 +174,16 @@ export default {
       }
     };
   },
-  created () {
+  created() {
     this.querylist();
   },
   methods: {
-    remoteCommunityFoucus () {
+    remoteCommunityFoucus() {
       if (this.communitySelect.list.length == 0) {
         this.remoteCommunity();
       }
     },
-    remoteCommunity (query = "") {
+    remoteCommunity(query = "") {
       this.communitySelect.loading = true;
       this.$api
         .get({
@@ -188,17 +204,23 @@ export default {
           this.communitySelect.loading = false;
         });
     },
-    handleSizeChange () {
+    handleSizeChange(e) {
       this.pageJson.pageSize = e;
       this.querylist();
     },
-    querylist (currentPage) {
+    querylist(currentPage) {
       let _that = this;
       let params = {
         limit: _that.pageJson.pageSize,
         page: currentPage || 1,
-        beginTime: _that.queryData.timeSelect != null ? _that.queryData.timeSelect[0] : "" || "",
-        endTime: _that.queryData.timeSelect != null ? _that.queryData.timeSelect[1] : "" || "",
+        beginTime:
+          _that.queryData.timeSelect != null
+            ? _that.queryData.timeSelect[0]
+            : "" || "",
+        endTime:
+          _that.queryData.timeSelect != null
+            ? _that.queryData.timeSelect[1]
+            : "" || "",
         tel: _that.queryData.tel,
         comId: _that.queryData.CommunityName,
         customName: _that.queryData.Customers,
@@ -229,10 +251,13 @@ export default {
           this.loading = false;
         });
     },
-    toLook (id, dept) {
+    toLook(id, dept) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id, dept: dept } });
-    },
+      that.$router.push({
+        name: "houseDetails",
+        params: { houseId: id, dept: dept }
+      });
+    }
   }
 };
 </script>
