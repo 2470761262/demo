@@ -488,6 +488,7 @@ export default {
                   type: "info",
                   message: "请注意查收微信消息"
                 });
+                but.$emit("followReolad", true);
               } else {
                 this.$message({
                   type: "info",
