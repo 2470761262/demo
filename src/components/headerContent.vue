@@ -76,28 +76,30 @@
 </style>
 <template>
   <div class="page-cell-header">
-    <el-button size="mini"
-               @click="trgerColor">
+    <el-button size="mini" @click="trgerColor">
       默哀主题
     </el-button>
     <div class="happy-day-contet">
-      <img src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9d2a1dc5647d4e51a5ab5857a110be87.png"
-           alt="">
+      <img
+        src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9d2a1dc5647d4e51a5ab5857a110be87.png"
+        alt=""
+      />
       <div class="happy-day-per">
-        <span> <span>钟丽娟</span> <span> 钟丽娟</span> <span>钟丽娟</span> </span>
+        <span>
+          <span>钟丽娟</span> <span> 钟丽娟</span> <span>钟丽娟</span>
+        </span>
       </div>
     </div>
     <div class="page-theme">
       <ThemePicker />
     </div>
     <div class="per-img">
-      <img :src="userInfoData.headImgUrl"
-           alt="头像" />
+      <img :src="userInfoData.headImgUrl" alt="头像" />
     </div>
     <div class="per-name-nav">
       <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link">
-          {{userInfoData.userName}}
+          {{ userInfoData.userName }}
           <i class="el-icon-caret-bottom"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
@@ -107,8 +109,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <div class="per-exit el-icon-switch-button"
-         @click="exitLogin"></div>
+    <div class="per-exit el-icon-switch-button" @click="exitLogin"></div>
   </div>
 </template>
 <script>
@@ -198,7 +199,7 @@ export default {
               });
             });
         })
-        .catch(action => {
+        .catch(() => {
           this.$message({
             type: "info",
             message: "取消退出"

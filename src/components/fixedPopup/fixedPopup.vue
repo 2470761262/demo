@@ -76,23 +76,20 @@
 </style>
 <template>
   <transition name="dadlog">
-    <div class="didLog-content"
-         v-show="visible"
-         v-elDrag>
-      <div class="didLog-content-mask"
-           @click.stop="maskHide"></div>
-      <div class="didLog-content-body"
-           :class="typeClass"
-           :style="{'width':width}">
+    <div class="didLog-content" v-show="visible" v-elDrag>
+      <div class="didLog-content-mask" @click.stop="maskHide"></div>
+      <div
+        class="didLog-content-body"
+        :class="typeClass"
+        :style="{ width: width }"
+      >
         <div class="didLog-content-box">
           <div class="didLog-content-box-title">
-            <h3 :style="{'text-align':titleDirection}">{{title}}</h3>
-            <i class="el-icon-close"
-               @click.stop="close"></i>
+            <h3 :style="{ 'text-align': titleDirection }">{{ title }}</h3>
+            <i class="el-icon-close" @click.stop="close"></i>
           </div>
           <div class="didLog-content-sroll">
-            <slot>
-            </slot>
+            <slot> </slot>
           </div>
           <slot name="floot"></slot>
         </div>
@@ -164,7 +161,7 @@ export default {
         }
       }
     },
-    close(e) {
+    close() {
       this.$emit("update:visible", false);
     }
   }

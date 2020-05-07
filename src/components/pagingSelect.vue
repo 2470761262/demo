@@ -94,58 +94,70 @@
 }
 </style>
 <template>
-  <el-popover popper-class="poperSet"
-              trigger="hover"
-              v-model="visible"
-              :width="popoverWidth">
+  <el-popover
+    popper-class="poperSet"
+    trigger="hover"
+    v-model="visible"
+    :width="popoverWidth"
+  >
     <!-- <el-input size="mini"
               v-model="filterInput"
               clearable
               @input="debounce('filterInputChange')"
               placeholder="输入您需要筛选的关键字"></el-input> -->
-    <ul class="poper-ui"
-        v-infinite-scroll="load">
-      <li v-for="(item,index) in data"
-          :key="index"
-          class="poper-li"
-          :class="{'is-disabled':resultDisabled(item,index)}">
+    <ul class="poper-ui" v-infinite-scroll="load">
+      <li
+        v-for="(item, index) in data"
+        :key="index"
+        class="poper-li"
+        :class="{ 'is-disabled': resultDisabled(item, index) }"
+      >
         <label class="poper-li-label">
-          <input :type="type"
-                 :name="inputName"
-                 :disabled="resultDisabled(item,index)"
-                 :value="item[valueKey]"
-                 v-model="resultPitchOn">
+          <input
+            :type="type"
+            :name="inputName"
+            :disabled="resultDisabled(item, index)"
+            :value="item[valueKey]"
+            v-model="resultPitchOn"
+          />
           <div class="poper-li-label-body">
-            <div class="label-title">{{item[keyValue]}}</div>
+            <div class="label-title">{{ item[keyValue] }}</div>
             <div class="label-pitchOn-type el-icon-check"></div>
           </div>
         </label>
       </li>
-      <li v-if="loading"
-          class="ul-data-loading">
+      <li v-if="loading" class="ul-data-loading">
         <i class="el-icon-loading"></i> 加载中
       </li>
-      <li class="text-centent"
-          v-if="data.length == 0 && !loading || isPageEnd">
+      <li
+        class="text-centent"
+        v-if="(data.length == 0 && !loading) || isPageEnd"
+      >
         没有更多数据了 <i class="el-icon-warning-outline"></i>
       </li>
     </ul>
-    <div class="result-input-content"
-         slot="reference"
-         ref="onlayInput"
-         @click="visible = !visible">
+    <div
+      class="result-input-content"
+      slot="reference"
+      ref="onlayInput"
+      @click="visible = !visible"
+    >
       <!-- <input :placeholder="$attrs.placeholder || '选中您的数据'"
              readonly
              :value="resultValue"
              clearable
              @focus.stop="triggerSelect"> -->
-      <input :placeholder="$attrs.placeholder || '选中您的数据'"
-             @input="debounce('filterInputChange')"
-             v-model="filterInput"
-             @focus.stop="triggerSelect">
-      <span class="el-icon-circle-close result-clearable"
-            v-if="clearable"
-            @click.stop="clear"></span>
+      <input
+        :placeholder="$attrs.placeholder || '选中您的数据'"
+        @input="debounce('filterInputChange')"
+        v-model="filterInput"
+        @focus.stop="triggerSelect"
+      />
+      <span
+        class="el-icon-circle-close result-clearable"
+        v-if="clearable"
+        @click.stop="clear"
+      ></span>
     </div>
   </el-popover>
 </template>
@@ -305,6 +317,7 @@ export default {
     filterPitchOn() {
       switch (this.type) {
         case "checkbox":
+          // eslint-disable-next-line no-case-declarations
           let result = [];
           for (let i = 0; i < this.resultPitchOn.length; i++) {
             for (let y = 0; y < this.data.length; y++) {
