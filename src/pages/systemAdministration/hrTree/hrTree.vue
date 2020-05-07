@@ -1312,9 +1312,9 @@ export default {
         });
     },
     handleCheckChangeChange(data, checked) {
-      this.leafCheckArr = this.$refs.treeFormChange.getCheckedKeys()
+      this.leafCheckArr = this.$refs.treeFormChange.getCheckedKeys();
       if (this.leafCheckArr.length > 1) {
-        this.checkedTypeChange = null
+        this.checkedTypeChange = null;
         this.$message({
           type: "error",
           message: "请选择部门！"

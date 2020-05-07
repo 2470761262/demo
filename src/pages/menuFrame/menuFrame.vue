@@ -8,8 +8,10 @@
     min-width: 1280px;
   }
   .page-cell-main {
+    // prettier-ignore
     height: calc(100% - 80PX);
     @media screen and(max-width: 1280px) {
+      // prettier-ignore
       height: calc(100% - 100PX);
     }
 
