@@ -28,7 +28,7 @@ module.exports = {
   // enabled by default if the machine has more than 1 cores
   parallel: require("os").cpus().length > 1,
   /* 代码保存时进行eslint检测 */
-  lintOnSave: false,
+  lintOnSave: true,
   //别名配置
   chainWebpack: config => {
     config.resolve.alias.set("@", resolve("src"));
