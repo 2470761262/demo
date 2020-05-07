@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .audio-contenr {
   display: flex;
@@ -58,31 +57,31 @@
 </style>
 <template>
   <div>
-    <div class="audio-contenr"
-         v-if="!fixed">
-      <audio :src="url"
-             v-if="url"
-             ref="audio"
-             v-audioLoad></audio>
-      <div :class="['audio-contenr-but',audioPlay.icon]"
-           @click="openVideo"></div>
-      <el-slider v-model="audioPlay.nowTime"
-                 :format-tooltip="formatTooltip"
-                 @input="audioSliderChange"
-                 ref="audioSlider"
-                 :max="audioPlay.endTime"
-                 :disabled="url ? false : true"></el-slider>
-      <div class="autio-time">{{audioPlay.nowTime | timefomat}} / {{audioPlay.endTime | timefomat}}</div>
+    <div class="audio-contenr" v-if="!fixed">
+      <audio :src="url" v-if="url" ref="audio" v-audioLoad></audio>
+      <div
+        :class="['audio-contenr-but', audioPlay.icon]"
+        @click="openVideo"
+      ></div>
+      <el-slider
+        v-model="audioPlay.nowTime"
+        :format-tooltip="formatTooltip"
+        @input="audioSliderChange"
+        ref="audioSlider"
+        :max="audioPlay.endTime"
+        :disabled="url ? false : true"
+      ></el-slider>
+      <div class="autio-time">
+        {{ audioPlay.nowTime | timefomat }} /
+        {{ audioPlay.endTime | timefomat }}
+      </div>
     </div>
-    <div class="audio-contenr-fixed"
-         @click="openVideo"
-         v-if="fixed">
-      <audio :src="url"
-             v-if="url"
-             ref="audio"
-             v-audioLoad></audio>
-      <i class="icon"
-         :class="audioPlay.playType ? 'el-icon-phone-outline' : 'el-icon-phone'"></i>
+    <div class="audio-contenr-fixed" @click="openVideo" v-if="fixed">
+      <audio :src="url" v-if="url" ref="audio" v-audioLoad></audio>
+      <i
+        class="icon"
+        :class="audioPlay.playType ? 'el-icon-phone-outline' : 'el-icon-phone'"
+      ></i>
       <span>
         <slot></slot>
       </span>

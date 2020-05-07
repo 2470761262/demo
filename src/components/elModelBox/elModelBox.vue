@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .diaLogModel {
   position: fixed;
@@ -38,12 +37,12 @@
 </style>
 <template>
   <transition name="dadlog">
-    <div class="diaLogModel"
-         v-if="diaLog">
-      <div class="diaLogModel-close el-icon-circle-close"
-           @click="changeModel"></div>
-      <div class="imgdiaLog">
-      </div>
+    <div class="diaLogModel" v-if="diaLog">
+      <div
+        class="diaLogModel-close el-icon-circle-close"
+        @click="changeModel"
+      ></div>
+      <div class="imgdiaLog"></div>
       <div class="diaLogModel-warp">
         <slot v-slot:default></slot>
       </div>
@@ -58,20 +57,20 @@
  */
 export default {
   model: {
-    prop: 'diaLog',
-    event: 'input'
+    prop: "diaLog",
+    event: "input"
   },
   props: {
     diaLog: {
       type: Boolean,
       default: false
-    },
-  },
-  methods: {
-    changeModel () {
-      this.$emit('input', false);
-      this.$emit('update:diaLog', false);
     }
   },
-}
+  methods: {
+    changeModel() {
+      this.$emit("input", false);
+      this.$emit("update:diaLog", false);
+    }
+  }
+};
 </script>

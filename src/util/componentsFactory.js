@@ -1,11 +1,11 @@
 import loadding from "@/components/successLoading";
-export default componentsName => {
+export default AsyncView => {
   return {
     // 需要加载的组件 (应该是一个 `Promise` 对象)
-    component: import(`@/${componentsName}`), //配对房源,
-    // 异步组件加载时使用的组件
+    component: AsyncView, //配对房源,
+    // // 异步组件加载时使用的组件
     loading: loadding,
-    // 加载失败时使用的组件
+    // // 加载失败时使用的组件
     error: {
       template:
         "<p style='text-align: center;'>哎呀,网络不好加载失败哒,试下重新刷新~~</p>"
