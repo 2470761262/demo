@@ -52,7 +52,7 @@
       <div
         class="sldebar-content-item"
         @click="lastClick"
-        v-if="showEdit || editAgentHouse"
+        v-if="hisEdit && (showEdit || editAgentHouse)"
       >
         <!-- <i class="el-icon-plus icon"></i> -->
         <img
@@ -95,6 +95,10 @@ export default {
     showEdit: {
       type: Boolean,
       default: false
+    },
+    hisEdit: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

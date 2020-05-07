@@ -51,6 +51,7 @@
         lastItemSet
         lastTitle="编辑"
         :lastParams="{ id: forID.id, method: 'reset' }"
+        :hisEdit="false"
       ></sidebarList>
     </section>
     <!--按钮组 -->
