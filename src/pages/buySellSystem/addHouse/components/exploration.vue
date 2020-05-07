@@ -512,6 +512,9 @@ export default {
       if (r.content.resourceType == "vedio") {
         console.log(r.content, "视频消息内容，准备插入草稿箱");
         that.uploadFileInfo(undefined, r.content.picUrl, function(data) {
+          if(that.houseVideo.id){
+            that.deleteVideo(that.houseVideo)
+          }
           that.houseVideo = data;
         });
       } else {
