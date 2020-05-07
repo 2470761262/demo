@@ -28,10 +28,30 @@
     >
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary" size="mini" @click="queryPersonLogByParams(0)">未审核</el-button>
-          <el-button type="primary" size="mini" @click="queryPersonLogByParams(1)">已通过</el-button>
-          <el-button type="primary" size="mini" @click="queryPersonLogByParams(-1)">未通过</el-button>
-          <el-button type="primary" size="mini" @click="queryPersonLogByParams(2)">所有</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="queryPersonLogByParams(0)"
+            >未审核</el-button
+          >
+          <el-button
+            type="primary"
+            size="mini"
+            @click="queryPersonLogByParams(1)"
+            >已通过</el-button
+          >
+          <el-button
+            type="primary"
+            size="mini"
+            @click="queryPersonLogByParams(-1)"
+            >未通过</el-button
+          >
+          <el-button
+            type="primary"
+            size="mini"
+            @click="queryPersonLogByParams(2)"
+            >所有</el-button
+          >
           <div class="query-right">
             <el-date-picker
               value-format="yyyy-MM-dd"
@@ -40,8 +60,18 @@
               type="date"
               placeholder="选择查询日期"
             ></el-date-picker>
-            <el-input placeholder="姓名" size="small" v-model="queryData.keyWord" clearable></el-input>
-            <el-button type="primary" size="mini" @click="queryPersonLogByParams(3)">查询</el-button>
+            <el-input
+              placeholder="姓名"
+              size="small"
+              v-model="queryData.keyWord"
+              clearable
+            ></el-input>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="queryPersonLogByParams(3)"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
@@ -56,14 +86,15 @@
         </template>
         <el-table-column label="操作" fixed="right">
           <template v-slot="scope">
-            <div v-if="scope.row.operation!=''">
+            <div v-if="scope.row.operation != ''">
               <el-button
                 type="primary"
                 size="mini"
-                @click="distributeEvent(item.methosName,scope.row.logId)"
-                v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                @click="distributeEvent(item.methosName, scope.row.logId)"
+                v-for="(item, index) in getOpeBtns(scope.row.operation)"
                 :key="index"
-              >{{item.name}}</el-button>
+                >{{ item.name }}</el-button
+              >
             </div>
           </template>
         </el-table-column>

@@ -1,6 +1,12 @@
 <template>
   <div class="query-cell">
-    <el-input placeholder="登录器注册密码" size="small" v-model="pwd" clearable readonly>
+    <el-input
+      placeholder="登录器注册密码"
+      size="small"
+      v-model="pwd"
+      clearable
+      readonly
+    >
       <template slot="prepend">登录器注册密码</template>
     </el-input>
   </div>

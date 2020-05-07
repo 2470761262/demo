@@ -48,33 +48,37 @@
 }
 </style>
 <template>
-  <fixedPopup v-bind="$attrs"
-              v-on="$listeners"
-              class="didLog">
+  <fixedPopup v-bind="$attrs" v-on="$listeners" class="didLog">
     <template>
       <div class="pop-custome-head">
-        <h3 class="custome-head-tips"><i class="el-icon-s-custom icon"></i>业主姓名</h3>
-        <div class="custome-head-name">{{data.customerName}}</div>
+        <h3 class="custome-head-tips">
+          <i class="el-icon-s-custom icon"></i>业主姓名
+        </h3>
+        <div class="custome-head-name">{{ data.customerName }}</div>
       </div>
       <div class="tel-content">
         <div class="pop-custome-head">
-          <h3 class="custome-head-tips"><i class="el-icon-phone icon"></i>录入电话</h3>
-          <div class="custome-head-name">{{data.tel}}</div>
+          <h3 class="custome-head-tips">
+            <i class="el-icon-phone icon"></i>录入电话
+          </h3>
+          <div class="custome-head-name">{{ data.tel }}</div>
         </div>
         <i class="el-icon-phone call-phone"></i>
       </div>
       <div class="tel-content">
         <div class="pop-custome-head">
-          <h3 class="custome-head-tips"><i class="el-icon-phone icon"></i>验真电话</h3>
-          <div class="custome-head-name">{{data.checkTel}}</div>
+          <h3 class="custome-head-tips">
+            <i class="el-icon-phone icon"></i>验真电话
+          </h3>
+          <div class="custome-head-name">{{ data.checkTel }}</div>
         </div>
-        <i class="el-icon-phone call-phone"
-           v-if="data.checkTel!='-'&&data.checkTel!=''"></i>
+        <i
+          class="el-icon-phone call-phone"
+          v-if="data.checkTel != '-' && data.checkTel != ''"
+        ></i>
       </div>
       <div class="pop-custome-foot">
-        <el-button type="info"
-                   size="mini"
-                   @click="cancel">关闭</el-button>
+        <el-button type="info" size="mini" @click="cancel">关闭</el-button>
       </div>
     </template>
   </fixedPopup>
@@ -85,15 +89,13 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => { }
+      default: () => {}
     }
-
   },
   methods: {
-    cancel () {
+    cancel() {
       this.$emit("update:visible", false);
     }
-  },
-}
+  }
+};
 </script>
-

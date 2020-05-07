@@ -30,151 +30,166 @@
 </style>
 <template>
   <div class="form-content">
-    <el-form ref="form"
-             :model="setEntity"
-             :rules="rules"
-             label-width="130px">
+    <el-form ref="form" :model="setEntity" :rules="rules" label-width="130px">
       <div class="flex-row">
-        <el-form-item label="网站名称:"
-                      prop="siteName">
+        <el-form-item label="网站名称:" prop="siteName">
           <el-input v-model="setEntity.siteName"></el-input>
         </el-form-item>
-        <el-form-item label="网站网址"
-                      prop="siteUrl">
+        <el-form-item label="网站网址" prop="siteUrl">
           <el-input v-model="setEntity.siteUrl"></el-input>
         </el-form-item>
-        <el-form-item label="联系电话:"
-                      prop="sitePhone">
+        <el-form-item label="联系电话:" prop="sitePhone">
           <el-input v-model="setEntity.sitePhone"></el-input>
         </el-form-item>
-        <el-form-item label="联系QQ:"
-                      prop="siteQQ">
+        <el-form-item label="联系QQ:" prop="siteQQ">
           <el-input v-model="setEntity.siteQQ"></el-input>
         </el-form-item>
       </div>
       <div class="flex-row">
-        <el-form-item label="业务范围"
-                      prop="siteKeyWord">
+        <el-form-item label="业务范围" prop="siteKeyWord">
           <el-input v-model="setEntity.siteKeyWord"></el-input>
         </el-form-item>
-        <el-form-item label="邮箱:"
-                      prop="siteEmail">
-          <el-input type="text"
-                    v-model="setEntity.siteEmail"></el-input>
+        <el-form-item label="邮箱:" prop="siteEmail">
+          <el-input type="text" v-model="setEntity.siteEmail"></el-input>
         </el-form-item>
-        <el-form-item label="备案信息:"
-                      prop="siteBah">
+        <el-form-item label="备案信息:" prop="siteBah">
           <el-input v-model="setEntity.siteBah"></el-input>
         </el-form-item>
-        <el-form-item label="地址"
-                      prop="siteAddress">
+        <el-form-item label="地址" prop="siteAddress">
           <el-input v-model="setEntity.siteAddress"></el-input>
         </el-form-item>
       </div>
       <div class="flex-row">
-        <el-form-item label="背景颜色(主)"
-                      porp="siteBgColor">
+        <el-form-item label="背景颜色(主)" porp="siteBgColor">
           <el-color-picker v-model="setEntity.siteBgColor"></el-color-picker>
         </el-form-item>
-        <el-form-item label="背景颜色(辅):"
-                      porp="siteBgColor2">
+        <el-form-item label="背景颜色(辅):" porp="siteBgColor2">
           <el-color-picker v-model="setEntity.siteBgColor2"></el-color-picker>
         </el-form-item>
-        <el-form-item label="渐变色:"
-                      porp="siteBgColor3">
+        <el-form-item label="渐变色:" porp="siteBgColor3">
           <el-color-picker v-model="setEntity.siteBgColor3"></el-color-picker>
         </el-form-item>
-        <el-form-item label="备用色:"
-                      porp="siteBgColor4">
+        <el-form-item label="备用色:" porp="siteBgColor4">
           <el-color-picker v-model="setEntity.siteBgColor4"></el-color-picker>
         </el-form-item>
       </div>
       <div class="flex-row flex-row40">
         <el-form-item label="logo(主页):">
-          <el-upload :action="uploadUrl"
-                     :limit='1'
-                     :on-exceed="exceed"
-                     :headers="header"
-                     :on-preview="preview"
-                     :show-file-list="true"
-                     list-type="picture-card"
-                     :before-upload="beforeAvatarUpload"
-                     :file-list="setEntity.siteLogo && [{name:'siteLogo',url:setEntity.siteLogo}]"
-                     :on-success="resultImgNane('siteLogo')">
-
+          <el-upload
+            :action="uploadUrl"
+            :limit="1"
+            :on-exceed="exceed"
+            :headers="header"
+            :on-preview="preview"
+            :show-file-list="true"
+            list-type="picture-card"
+            :before-upload="beforeAvatarUpload"
+            :file-list="
+              setEntity.siteLogo && [
+                { name: 'siteLogo', url: setEntity.siteLogo }
+              ]
+            "
+            :on-success="resultImgNane('siteLogo')"
+          >
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="大图Logo:">
-          <el-upload :action="uploadUrl"
-                     :limit='1'
-                     :on-preview="preview"
-                     :on-exceed="exceed"
-                     :headers="header"
-                     :show-file-list="true"
-                     list-type="picture-card"
-                     :before-upload="beforeAvatarUpload"
-                     :file-list="setEntity.sitebLogo && [{name:'sitebLogo',url:setEntity.sitebLogo}]"
-                     :on-success="resultImgNane('sitebLogo')">
+          <el-upload
+            :action="uploadUrl"
+            :limit="1"
+            :on-preview="preview"
+            :on-exceed="exceed"
+            :headers="header"
+            :show-file-list="true"
+            list-type="picture-card"
+            :before-upload="beforeAvatarUpload"
+            :file-list="
+              setEntity.sitebLogo && [
+                { name: 'sitebLogo', url: setEntity.sitebLogo }
+              ]
+            "
+            :on-success="resultImgNane('sitebLogo')"
+          >
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
       </div>
       <div class="flex-row flex-row40">
         <el-form-item label="中图Logo:">
-          <el-upload :action="uploadUrl"
-                     :limit='1'
-                     :on-preview="preview"
-                     :on-exceed="exceed"
-                     :headers="header"
-                     :show-file-list="true"
-                     list-type="picture-card"
-                     :before-upload="beforeAvatarUpload"
-                     :file-list="setEntity.sitemLogo && [{name:'sitemLogo',url:setEntity.sitemLogo}]"
-                     :on-success="resultImgNane('sitemLogo')">
+          <el-upload
+            :action="uploadUrl"
+            :limit="1"
+            :on-preview="preview"
+            :on-exceed="exceed"
+            :headers="header"
+            :show-file-list="true"
+            list-type="picture-card"
+            :before-upload="beforeAvatarUpload"
+            :file-list="
+              setEntity.sitemLogo && [
+                { name: 'sitemLogo', url: setEntity.sitemLogo }
+              ]
+            "
+            :on-success="resultImgNane('sitemLogo')"
+          >
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
         <el-form-item label="默认头像:">
-          <el-upload :action="uploadUrl"
-                     :limit='1'
-                     :on-preview="preview"
-                     :on-exceed="exceed"
-                     :headers="header"
-                     :show-file-list="true"
-                     list-type="picture-card"
-                     :before-upload="beforeAvatarUpload"
-                     :file-list="setEntity.siteHeadImg && [{name:'siteHeadImg',url:setEntity.siteHeadImg}]"
-                     :on-success="resultImgNane('siteHeadImg')">
+          <el-upload
+            :action="uploadUrl"
+            :limit="1"
+            :on-preview="preview"
+            :on-exceed="exceed"
+            :headers="header"
+            :show-file-list="true"
+            list-type="picture-card"
+            :before-upload="beforeAvatarUpload"
+            :file-list="
+              setEntity.siteHeadImg && [
+                { name: 'siteHeadImg', url: setEntity.siteHeadImg }
+              ]
+            "
+            :on-success="resultImgNane('siteHeadImg')"
+          >
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
       </div>
       <div class="flex-row flex-row40">
         <el-form-item label="网站描述:">
-          <el-input type="textarea"
-                    :autosize="{ minRows: 2, maxRows: 6 }"
-                    v-model="setEntity.siteTitle"></el-input>
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 6 }"
+            v-model="setEntity.siteTitle"
+          ></el-input>
         </el-form-item>
       </div>
       <div class="flex-row flex-row40">
         <el-form-item label="关于我们:">
-          <el-input type="textarea"
-                    :autosize="{ minRows: 2, maxRows: 6 }"
-                    placeholder="请输入内容"
-                    v-model="setEntity.siteInfo"></el-input>
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 6 }"
+            placeholder="请输入内容"
+            v-model="setEntity.siteInfo"
+          ></el-input>
         </el-form-item>
       </div>
     </el-form>
     <div class="footerContainer el-top">
-      <el-button type="primary"
-                 @click="saveSiteInfo()">确定</el-button>
-      <el-button type="primary"
-                 @click="back()">返回</el-button>
+      <el-button type="primary" @click="saveSiteInfo()">确定</el-button>
+      <el-button type="primary" @click="back()">返回</el-button>
     </div>
-    <el-image-viewer v-if="showViewer"
-                     :on-close="()=>{this.showViewer = false  }"
-                     :url-list="[dialogImageUrl]">
+    <el-image-viewer
+      v-if="showViewer"
+      :on-close="
+        () => {
+          this.showViewer = false;
+        }
+      "
+      :url-list="[dialogImageUrl]"
+    >
     </el-image-viewer>
   </div>
 </template>
@@ -254,19 +269,19 @@ export default {
     back() {
       this.$router.push({ path: "/sys/companyList" });
     },
-    loadSiteInfo(){
+    loadSiteInfo() {
       let that = this;
       let companyId = this.$route.query.companyId;
       that.$api
         .get({
-          url: "/company/siteInfo/"+companyId,
+          url: "/company/siteInfo/" + companyId
         })
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
-            if(result.data){
+            if (result.data) {
               that.setEntity = result.data;
             }
           }
@@ -328,4 +343,3 @@ export default {
   }
 };
 </script>
-

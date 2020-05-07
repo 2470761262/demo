@@ -20,43 +20,57 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page :parentData="$data"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
           <div class="query-right">
-            <el-input placeholder="游客昵称"
-                      size="small"
-                      v-model="queryData.keyWord"
-                      clearable>
+            <el-input
+              placeholder="游客昵称"
+              size="small"
+              v-model="queryData.keyWord"
+              clearable
+            >
             </el-input>
-            <el-button type="primary"
-                       style="margin-left:10px"
-                       size="mini"
-                       @click="queryVisitorByParams">查询</el-button>
+            <el-button
+              type="primary"
+              style="margin-left:10px"
+              size="mini"
+              @click="queryVisitorByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column label="用户头像"
-                         width="90">
+        <el-table-column label="用户头像" width="90">
           <!-- 图片的显示 -->
           <template slot-scope="scope">
-            <img v-if="scope.row.headImgUrl"
-                 :src="scope.row.headImgUrl"
-                 width="50"
-                 height="50" />
-            <img v-else
-                 :src="'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4034879928,1229713244&fm=26&gp=0.jpg'"
-                 width="50"
-                 height="50" />
+            <img
+              v-if="scope.row.headImgUrl"
+              :src="scope.row.headImgUrl"
+              width="50"
+              height="50"
+            />
+            <img
+              v-else
+              :src="
+                'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=4034879928,1229713244&fm=26&gp=0.jpg'
+              "
+              width="50"
+              height="50"
+            />
           </template>
         </el-table-column>
       </template>

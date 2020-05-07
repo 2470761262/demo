@@ -8,284 +8,316 @@
 }
 </style>
 <template>
-  <div class="page-cell-addHouse"
-       element-loading-text="我在去获取数据的路上了~"
-       v-loading="loading">
+  <div
+    class="page-cell-addHouse"
+    element-loading-text="我在去获取数据的路上了~"
+    v-loading="loading"
+  >
     <!-- accept=".jpg,.png" -->
     <!-- 外景图 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">外景图</div>
-      <div class="upLoadFile-input"
-           v-loading="outdoorImgListLoading"
-           element-loading-text="文件上传中~">
-        <label for="outdoorImgList"
-               class="el-icon-upload">
-          <input id="outdoorImgList"
-                 type="file"
-                 @change="getFile(1,'outdoorImgList',$event)"
-                 :disabled="isFromHouseTask?false:!wxUploadFile"
-                 multiple="multiplt" />
+      <div
+        class="upLoadFile-input"
+        v-loading="outdoorImgListLoading"
+        element-loading-text="文件上传中~"
+      >
+        <label for="outdoorImgList" class="el-icon-upload">
+          <input
+            id="outdoorImgList"
+            type="file"
+            @change="getFile(1, 'outdoorImgList', $event)"
+            :disabled="isFromHouseTask ? false : !wxUploadFile"
+            multiple="multiplt"
+          />
         </label>
       </div>
       <div class="upLoadFile-file-list">
-        <div class="file-list-item"
-             v-for="(item,index) in outdoorImgList"
-             :key="item.id">
-          <el-image :src="item.url"
-                    fit="cover"
-                    :preview-src-list="fillterImgList('outdoorImgList')">
-            <div slot="placeholder"
-                 class="image-slot">
+        <div
+          class="file-list-item"
+          v-for="(item, index) in outdoorImgList"
+          :key="item.id"
+        >
+          <el-image
+            :src="item.url"
+            fit="cover"
+            :preview-src-list="fillterImgList('outdoorImgList')"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"
-               @click="deleteImg(item.id,item.url,index,'outdoorImgList')"></div>
+          <div
+            class="upLoadFile-remove el-icon-delete"
+            @click="deleteImg(item.id, item.url, index, 'outdoorImgList')"
+          ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg"
-                  :preview-src-list="[qrCodeImg]"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
+        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+          <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="isFromHouseTask?true:wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
+        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
+        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 客厅 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">客厅</div>
-      <div class="upLoadFile-input"
-           v-loading="livingRoomImgListLoading"
-           element-loading-text="文件上传中~">
-        <label for="livingRoomImgList"
-               class="el-icon-upload">
-          <input id="livingRoomImgList"
-                 type="file"
-                 @change="getFile(2,'livingRoomImgList',$event)"
-                 :disabled="isFromHouseTask?false:!wxUploadFile"
-                 multiple="multiplt" />
+      <div
+        class="upLoadFile-input"
+        v-loading="livingRoomImgListLoading"
+        element-loading-text="文件上传中~"
+      >
+        <label for="livingRoomImgList" class="el-icon-upload">
+          <input
+            id="livingRoomImgList"
+            type="file"
+            @change="getFile(2, 'livingRoomImgList', $event)"
+            :disabled="isFromHouseTask ? false : !wxUploadFile"
+            multiple="multiplt"
+          />
         </label>
       </div>
       <div class="upLoadFile-file-list">
-        <div class="file-list-item"
-             v-for="(item,index) in livingRoomImgList"
-             :key="item.id">
-          <el-image :src="item.url"
-                    :preview-src-list="fillterImgList('livingRoomImgList')"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
+        <div
+          class="file-list-item"
+          v-for="(item, index) in livingRoomImgList"
+          :key="item.id"
+        >
+          <el-image
+            :src="item.url"
+            :preview-src-list="fillterImgList('livingRoomImgList')"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"
-               @click="deleteImg(item.id,item.url,index,'livingRoomImgList')"></div>
+          <div
+            class="upLoadFile-remove el-icon-delete"
+            @click="deleteImg(item.id, item.url, index, 'livingRoomImgList')"
+          ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg"
-                  :preview-src-list="[qrCodeImg]"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
+        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+          <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="isFromHouseTask?true:wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
+        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
+        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 卧室 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">卧室</div>
-      <div class="upLoadFile-input"
-           v-loading="bedroomImgListLoading"
-           element-loading-text="文件上传中~">
-        <label for="bedroomImgList"
-               class="el-icon-upload">
-          <input id="bedroomImgList"
-                 type="file"
-                 @change="getFile(3,'bedroomImgList',$event)"
-                 :disabled="isFromHouseTask?false:!wxUploadFile"
-                 multiple="multiplt" />
+      <div
+        class="upLoadFile-input"
+        v-loading="bedroomImgListLoading"
+        element-loading-text="文件上传中~"
+      >
+        <label for="bedroomImgList" class="el-icon-upload">
+          <input
+            id="bedroomImgList"
+            type="file"
+            @change="getFile(3, 'bedroomImgList', $event)"
+            :disabled="isFromHouseTask ? false : !wxUploadFile"
+            multiple="multiplt"
+          />
         </label>
       </div>
       <div class="upLoadFile-file-list">
-        <div class="file-list-item"
-             v-for="(item,index) in bedroomImgList"
-             :key="item.id">
-          <el-image :src="item.url"
-                    :preview-src-list="fillterImgList('bedroomImgList')"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
+        <div
+          class="file-list-item"
+          v-for="(item, index) in bedroomImgList"
+          :key="item.id"
+        >
+          <el-image
+            :src="item.url"
+            :preview-src-list="fillterImgList('bedroomImgList')"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"
-               @click="deleteImg(item.id,item.url,index,'bedroomImgList')"></div>
+          <div
+            class="upLoadFile-remove el-icon-delete"
+            @click="deleteImg(item.id, item.url, index, 'bedroomImgList')"
+          ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg"
-                  :preview-src-list="[qrCodeImg]"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
+        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+          <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="isFromHouseTask?true:wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
+        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
+        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 厨房 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">厨房</div>
-      <div class="upLoadFile-input"
-           v-loading="kitchenImgListLoading"
-           element-loading-text="文件上传中~">
-        <label for="kitchenImgList"
-               class="el-icon-upload">
-          <input id="kitchenImgList"
-                 type="file"
-                 @change="getFile(4,'kitchenImgList',$event)"
-                 :disabled="isFromHouseTask?false:!wxUploadFile"
-                 multiple="multiplt" />
+      <div
+        class="upLoadFile-input"
+        v-loading="kitchenImgListLoading"
+        element-loading-text="文件上传中~"
+      >
+        <label for="kitchenImgList" class="el-icon-upload">
+          <input
+            id="kitchenImgList"
+            type="file"
+            @change="getFile(4, 'kitchenImgList', $event)"
+            :disabled="isFromHouseTask ? false : !wxUploadFile"
+            multiple="multiplt"
+          />
         </label>
       </div>
       <div class="upLoadFile-file-list">
-        <div class="file-list-item"
-             v-for="(item,index) in kitchenImgList"
-             :key="item.id">
-          <el-image :src="item.url"
-                    :preview-src-list="fillterImgList('kitchenImgList')"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
+        <div
+          class="file-list-item"
+          v-for="(item, index) in kitchenImgList"
+          :key="item.id"
+        >
+          <el-image
+            :src="item.url"
+            :preview-src-list="fillterImgList('kitchenImgList')"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"
-               @click="deleteImg(item.id,item.url,index,'kitchenImgList')"></div>
+          <div
+            class="upLoadFile-remove el-icon-delete"
+            @click="deleteImg(item.id, item.url, index, 'kitchenImgList')"
+          ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg"
-                  :preview-src-list="[qrCodeImg]"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
+        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+          <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="isFromHouseTask?true:wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
+        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
+        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 卫生间 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">卫生间</div>
-      <div class="upLoadFile-input"
-           v-loading="toiletImgListLoading"
-           element-loading-text="文件上传中~">
-        <label for="toiletImgList"
-               class="el-icon-upload">
-          <input id="toiletImgList"
-                 type="file"
-                 @change="getFile(5,'toiletImgList',$event)"
-                 :disabled="isFromHouseTask?false:!wxUploadFile"
-                 multiple="multiplt" />
+      <div
+        class="upLoadFile-input"
+        v-loading="toiletImgListLoading"
+        element-loading-text="文件上传中~"
+      >
+        <label for="toiletImgList" class="el-icon-upload">
+          <input
+            id="toiletImgList"
+            type="file"
+            @change="getFile(5, 'toiletImgList', $event)"
+            :disabled="isFromHouseTask ? false : !wxUploadFile"
+            multiple="multiplt"
+          />
         </label>
       </div>
       <div class="upLoadFile-file-list">
-        <div class="file-list-item"
-             v-for="(item,index)  in toiletImgList"
-             :key="item.id">
-          <el-image :src="item.url"
-                    :preview-src-list="fillterImgList('toiletImgList')"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
+        <div
+          class="file-list-item"
+          v-for="(item, index) in toiletImgList"
+          :key="item.id"
+        >
+          <el-image
+            :src="item.url"
+            :preview-src-list="fillterImgList('toiletImgList')"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"
-               @click="deleteImg(item.id,item.url,index,'toiletImgList')"></div>
+          <div
+            class="upLoadFile-remove el-icon-delete"
+            @click="deleteImg(item.id, item.url, index, 'toiletImgList')"
+          ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg"
-                  :preview-src-list="[qrCodeImg]"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
+        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+          <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="isFromHouseTask?true:wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
+        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
+        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 户型图 -->
     <div class="upLoadFile">
       <div class="upLoadFile-title">户型图</div>
-      <div class="upLoadFile-input"
-           v-loading="layoutImgListLoading"
-           element-loading-text="文件上传中~">
-        <label for="layoutImgList"
-               class="el-icon-upload">
-          <input id="layoutImgList"
-                 type="file"
-                 @change="getFile(6,'layoutImgList',$event)"
-                 :disabled="isFromHouseTask?false:!wxUploadFile"
-                 multiple="multiplt" />
+      <div
+        class="upLoadFile-input"
+        v-loading="layoutImgListLoading"
+        element-loading-text="文件上传中~"
+      >
+        <label for="layoutImgList" class="el-icon-upload">
+          <input
+            id="layoutImgList"
+            type="file"
+            @change="getFile(6, 'layoutImgList', $event)"
+            :disabled="isFromHouseTask ? false : !wxUploadFile"
+            multiple="multiplt"
+          />
         </label>
       </div>
       <div class="upLoadFile-file-list">
-        <div class="file-list-item"
-             v-for="(item,index) in layoutImgList"
-             :key="item.id">
-          <el-image :src="item.url"
-                    :preview-src-list="fillterImgList('layoutImgList')"
-                    fit="cover">
-            <div slot="placeholder"
-                 class="image-slot">
+        <div
+          class="file-list-item"
+          v-for="(item, index) in layoutImgList"
+          :key="item.id"
+        >
+          <el-image
+            :src="item.url"
+            :preview-src-list="fillterImgList('layoutImgList')"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
               加载中
               <span>...</span>
             </div>
           </el-image>
-          <div class="upLoadFile-remove el-icon-delete"
-               @click="deleteImg(item.id,item.url,index,'layoutImgList')"></div>
+          <div
+            class="upLoadFile-remove el-icon-delete"
+            @click="deleteImg(item.id, item.url, index, 'layoutImgList')"
+          ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg"
-                  :preview-src-list="[qrCodeImg]"
-                  fit="cover">
-          <div slot="placeholder"
-               class="image-slot">
+        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+          <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
           </div>
         </el-image>
-        <div v-if="isFromHouseTask?true:wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
+        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
+        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 房源视频 -->
@@ -293,48 +325,55 @@
       <div class="upLoadFile-title">房源视频</div>
       <div class="upLoadFile-flex">
         <div class="upLoadFile-right">
-          <div class="upLoadFile-input"
-               v-loading="houseVideoLoading"
-               element-loading-text="文件上传中~">
-            <label for="houseVideoList"
-                   class="el-icon-upload">
-              <input id="houseVideoList"
-                     type="file"
-                     @change="getVideoFile('houseVideo',$event)"
-                     :disabled="isFromHouseTask?false:!wxUploadFile" />
+          <div
+            class="upLoadFile-input"
+            v-loading="houseVideoLoading"
+            element-loading-text="文件上传中~"
+          >
+            <label for="houseVideoList" class="el-icon-upload">
+              <input
+                id="houseVideoList"
+                type="file"
+                @change="getVideoFile('houseVideo', $event)"
+                :disabled="isFromHouseTask ? false : !wxUploadFile"
+              />
             </label>
           </div>
           <div class="upLoadFile-file-list">
-            <div class="file-list-item"
-                 v-if="houseVideo.url">
-              <video :src="houseVideo.url"
-                     @click="imgdiaLog = true"></video>
-              <div class="upLoadFile-remove el-icon-delete"
-                   @click="deleteVideo(houseVideo)"></div>
+            <div class="file-list-item" v-if="houseVideo.url">
+              <video :src="houseVideo.url" @click="imgdiaLog = true"></video>
+              <div
+                class="upLoadFile-remove el-icon-delete"
+                @click="deleteVideo(houseVideo)"
+              ></div>
             </div>
           </div>
           <div class="upLoadFile-file-phone">
-            <el-image :src="qrCodeImgVedio"
-                      :preview-src-list="[qrCodeImgVedio]"
-                      fit="cover">
-              <div slot="placeholder"
-                   class="image-slot">
+            <el-image
+              :src="qrCodeImgVedio"
+              :preview-src-list="[qrCodeImgVedio]"
+              fit="cover"
+            >
+              <div slot="placeholder" class="image-slot">
                 加载中
                 <span>...</span>
               </div>
             </el-image>
-            <div v-if="isFromHouseTask?true:wxUploadFile">微信扫码上传</div>
-            <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
+            <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
+            <div v-if="isFromHouseTask ? false : !wxUploadFile">
+              暂无上传权限.
+            </div>
           </div>
         </div>
-        <div v-if="isFromHouseTask?true:wxUploadFile">仅可以上传一个视频,时间为90秒.</div>
-        <div v-if="isFromHouseTask?false:!wxUploadFile">暂无上传权限.</div>
+        <div v-if="isFromHouseTask ? true : wxUploadFile">
+          仅可以上传一个视频,时间为90秒.
+        </div>
+        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
       </div>
     </div>
     <!-- 视频弹框 -->
     <el-model-box v-model="imgdiaLog">
-      <video :src="houseVideo.url"
-             controls></video>
+      <video :src="houseVideo.url" controls></video>
     </el-model-box>
   </div>
 </template>
@@ -354,7 +393,7 @@ export default {
     },
     paramsObj: {
       type: Object,
-      default: () => { }
+      default: () => {}
     },
     wxUploadFile: {
       type: Boolean,
@@ -365,7 +404,7 @@ export default {
       default: false
     }
   },
-  mounted () {
+  mounted() {
     let that = this;
     //true 则去获取数据
     if (that.getData) {
@@ -409,10 +448,10 @@ export default {
       remark: "录入房源-上传图片"
     };
     pa.webSocketUser = that.webSocketUser;
-    that.getQrCode2(pa, function (data) {
+    that.getQrCode2(pa, function(data) {
       that.qrCodeImg = data.url;
       console.log(that.qrCodeImg, "图片二维码地址");
-      that.getQrCodeForVedio(function (data) {
+      that.getQrCodeForVedio(function(data) {
         that.qrCodeImgVedio = data;
         console.log(that.qrCodeImgVedio, "视频二维码地址");
       });
@@ -422,7 +461,7 @@ export default {
     // });
     console.log("isFromHouseTask", that.isFromHouseTask);
   },
-  data () {
+  data() {
     return {
       imgdiaLog: false,
       loading: false,
@@ -458,8 +497,8 @@ export default {
     };
   },
   methods: {
-    guid () {
-      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (
+    guid() {
+      return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
         c
       ) {
         var r = (Math.random() * 16) | 0,
@@ -467,12 +506,12 @@ export default {
         return v.toString(16);
       });
     },
-    receiveMessage (r) {
+    receiveMessage(r) {
       let that = this;
       console.log(r, "接收到了消息");
       if (r.content.resourceType == "vedio") {
         console.log(r.content, "视频消息内容，准备插入草稿箱");
-        that.uploadFileInfo(undefined, r.content.picUrl, function (data) {
+        that.uploadFileInfo(undefined, r.content.picUrl, function(data) {
           that.houseVideo = data;
         });
       } else {
@@ -482,14 +521,14 @@ export default {
         let name = temp.picContainer;
         console.log(that[name], "找到了指定用户");
         console.log(r.content.picUrl, "接受到消息的图片地址");
-        that.uploadFileInfo(r.content.picClass, r.content.picUrl, function (
+        that.uploadFileInfo(r.content.picClass, r.content.picUrl, function(
           data
         ) {
           that[name].push(data);
         });
       }
     },
-    contactSocket (user) {
+    contactSocket(user) {
       console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
@@ -498,7 +537,7 @@ export default {
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
       console.log("用户【" + user + "】接入完毕");
     },
-    getQrCodeForVedio (callback) {
+    getQrCodeForVedio(callback) {
       let that = this;
       if (that.isFromHouseTask ? false : !that.wxUploadFile) {
         return; //无上传权限就不加载图片
@@ -532,7 +571,7 @@ export default {
           console.log(e);
         });
     },
-    getQrCode2 (data, callback) {
+    getQrCode2(data, callback) {
       let that = this;
       if (that.isFromHouseTask ? false : !that.wxUploadFile) {
         return; //无上传权限就不加载图片
@@ -559,8 +598,8 @@ export default {
           console.log(e);
         });
     },
-    openVideo () { },
-    promiseAllViodeoAndImg () {
+    openVideo() {},
+    promiseAllViodeoAndImg() {
       this.loading = true;
       Promise.all([this.getLoadDataImg(), this.getLoadDataVideo()])
         .catch(() => {
@@ -570,7 +609,7 @@ export default {
           this.loading = false;
         });
     },
-    getLoadDataVideo () {
+    getLoadDataVideo() {
       let url = `/draft-house/videos/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getVideoUrl) {
         url =
@@ -592,7 +631,7 @@ export default {
         });
     },
     //返回预览大图list
-    fillterImgList (imgList) {
+    fillterImgList(imgList) {
       if (this[imgList].length > 0) {
         return this[imgList].map(item => {
           return item.url;
@@ -602,7 +641,7 @@ export default {
       }
     },
     //获取上传的图片
-    getLoadDataImg () {
+    getLoadDataImg() {
       let url = `/draft-house/pictures/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getPicturesUrl) {
         url =
@@ -640,7 +679,7 @@ export default {
       });
     },
     //上传视频
-    getVideoFile (fileListName, e) {
+    getVideoFile(fileListName, e) {
       let file = event.target.files;
       let isVideoType = ["video/mp4"];
       if (!isVideoType.includes(file[0].type)) {
@@ -661,7 +700,7 @@ export default {
       });
     },
     //上传图片
-    getFile (picClass, fileListName, e) {
+    getFile(picClass, fileListName, e) {
       let file = event.target.files;
       let isImgType = ["image/jpeg", "image/png"];
       if (file.length > 6) {
@@ -679,7 +718,7 @@ export default {
       }
     },
     //删除图片
-    deleteImg (id, url, index, listName) {
+    deleteImg(id, url, index, listName) {
       this.$api
         .delete({
           url: `/draft-house/picture/${id}`,
@@ -694,7 +733,7 @@ export default {
           }
         });
     },
-    deleteVideo (item) {
+    deleteVideo(item) {
       //微信上传的视频或图片，没必要删除。他删除的也是草稿箱，我微信上传图片没放那个草稿箱，而且oss不限容量，没必要删除图片
       if (item.id == -1) {
         this.houseVideo = {};
@@ -714,7 +753,7 @@ export default {
           }
         });
     },
-    uploadFileInfo (picClass, url, callBack) {
+    uploadFileInfo(picClass, url, callBack) {
       let that = this;
       let formData = {};
       //注意大驼峰
@@ -731,7 +770,7 @@ export default {
         .post({
           url: `/draft-house/${
             picClass != undefined ? "pictureDraft" : "videoDraft"
-            }`,
+          }`,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: formData
         })
@@ -754,9 +793,9 @@ export default {
             type: "warning"
           });
         })
-        .finally(() => { });
+        .finally(() => {});
     },
-    uploadSectionFile (picClass, uploader, fileListName) {
+    uploadSectionFile(picClass, uploader, fileListName) {
       let that = this;
       this[fileListName + "Loading"] = true;
       let formData = new FormData();
@@ -800,7 +839,7 @@ export default {
           this[fileListName + "Loading"] = false;
         });
     },
-    validateAll () {
+    validateAll() {
       return true;
     }
   }

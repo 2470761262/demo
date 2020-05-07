@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .attention-content {
   margin-right: 15px;
@@ -71,12 +70,13 @@
 <template>
   <div class="attention">
     <transition name="el-fade-in-linear">
-      <div class="attention-content"
-           v-if="queryFlag">
+      <div class="attention-content" v-if="queryFlag">
         <div class="attention-select">
-          <el-select v-model="imdataimdata"
-                     filterable
-                     placeholder="请输入您添加过的客源印象">
+          <el-select
+            v-model="imdataimdata"
+            filterable
+            placeholder="请输入您添加过的客源印象"
+          >
           </el-select>
         </div>
         <div class="but-group">
@@ -84,17 +84,22 @@
           <el-button type="text">一键清除</el-button>
         </div>
         <div class="attention-scroll-content">
-          <el-tag v-for="item in 6"
-                  :key="item.index"
-                  size="small"
-                  class="scroll-content-tag"
-                  closable>活跃客户(3)</el-tag>
+          <el-tag
+            v-for="item in 6"
+            :key="item.index"
+            size="small"
+            class="scroll-content-tag"
+            closable
+            >活跃客户(3)</el-tag
+          >
         </div>
       </div>
     </transition>
-    <div class="hide-query"
-         @click="triggerLeft"
-         :class="queryFlag ? 'el-icon-d-arrow-right':'el-icon-d-arrow-left'"></div>
+    <div
+      class="hide-query"
+      @click="triggerLeft"
+      :class="queryFlag ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'"
+    ></div>
   </div>
 </template>
 

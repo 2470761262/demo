@@ -27,11 +27,22 @@
     >
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary" size="mini" @click="addDocument">添加</el-button>
-          <el-button type="primary" size="mini" @click="handleClick">规则管理</el-button>
+          <el-button type="primary" size="mini" @click="addDocument"
+            >添加</el-button
+          >
+          <el-button type="primary" size="mini" @click="handleClick"
+            >规则管理</el-button
+          >
           <div class="query-right">
-            <el-input placeholder="关键字" size="small" v-model="queryData.keyword" clearable></el-input>
-            <el-button type="primary" size="mini" @click="queryByParams">查询</el-button>
+            <el-input
+              placeholder="关键字"
+              size="small"
+              v-model="queryData.keyword"
+              clearable
+            ></el-input>
+            <el-button type="primary" size="mini" @click="queryByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
@@ -51,10 +62,11 @@
             <div>
               <el-button
                 size="mini"
-                @click="distributeEvent(item.methosName,scope.row.id)"
-                v-for="(item,index) in getOpeBtns(scope.row.operation)"
+                @click="distributeEvent(item.methosName, scope.row.id)"
+                v-for="(item, index) in getOpeBtns(scope.row.operation)"
                 :key="index"
-              >{{item.name}}</el-button>
+                >{{ item.name }}</el-button
+              >
             </div>
           </template>
         </el-table-column>

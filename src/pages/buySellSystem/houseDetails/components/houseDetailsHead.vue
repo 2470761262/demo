@@ -137,77 +137,114 @@
     <section class="page-content-heard">
       <!-- 房源信息 -->
       <section class="heard-message">
-        <h3 class="heard-message-title overText">{{resultData.Title | emptyRead}}</h3>
-        <div class="heard-message-position overText"><i class="el-icon-map-location icon"></i> {{resultData.areaName | emptyRead }}-{{resultData.CommunityName |emptyRead}}</div>
+        <h3 class="heard-message-title overText">
+          {{ resultData.Title | emptyRead }}
+        </h3>
+        <div class="heard-message-position overText">
+          <i class="el-icon-map-location icon"></i>
+          {{ resultData.areaName | emptyRead }}-{{
+            resultData.CommunityName | emptyRead
+          }}
+        </div>
         <div class="heard-scroll-tag">
-          <div class="tag-content"
-               v-for="(item,index) in  impressionList "
-               :key="index">
-            <span>{{item.impression}}</span>
-            <i class="el-icon-close icon"
-               :class="{'isDisabled':buttonDisabled}"
-               @click="deleteImpression(item.id,index)"></i>
+          <div
+            class="tag-content"
+            v-for="(item, index) in impressionList"
+            :key="index"
+          >
+            <span>{{ item.impression }}</span>
+            <i
+              class="el-icon-close icon"
+              :class="{ isDisabled: buttonDisabled }"
+              @click="deleteImpression(item.id, index)"
+            ></i>
           </div>
         </div>
       </section>
       <!-- 房源印象 -->
-      <section class="heard-item"
-               :class="{'isDisabled':buttonDisabled}"
-               @click="nodePop">
+      <section
+        class="heard-item"
+        :class="{ isDisabled: buttonDisabled }"
+        @click="nodePop"
+      >
         <i class="iconyinxiang iconfont icon"></i>
         <span>房源印象</span>
       </section>
       <!-- 写跟进 -->
-      <section class="heard-item"
-               :class="{'isDisabled':buttonDisabled}"
-               @click="openPopUp('followUpFlag')">
+      <section
+        class="heard-item"
+        :class="{ isDisabled: buttonDisabled }"
+        @click="openPopUp('followUpFlag')"
+      >
         <i class="el-icon-edit icon"></i>
         <span>写跟进</span>
       </section>
       <!-- 已关注 -->
-      <section class="heard-item"
-               :class="{'isDisabled':buttonDisabled}"
-               @click="changCollectHouse">
-        <i class="iconfont icon colorOrange"
-           :class="isCollect ? 'iconguanzhu' : 'iconguanzhu1'"></i>
-        <span>{{isCollect? '已关注':'关注'}}</span>
+      <section
+        class="heard-item"
+        :class="{ isDisabled: buttonDisabled }"
+        @click="changCollectHouse"
+      >
+        <i
+          class="iconfont icon colorOrange"
+          :class="isCollect ? 'iconguanzhu' : 'iconguanzhu1'"
+        ></i>
+        <span>{{ isCollect ? "已关注" : "关注" }}</span>
       </section>
       <!-- 举报 -->
-      <section class="heard-item"
-               :class="{'isDisabled':buttonDisabled}"
-               @click="openReport">
+      <section
+        class="heard-item"
+        :class="{ isDisabled: buttonDisabled }"
+        @click="openReport"
+      >
         <i class=" iconfont colorRed icon iconjubao"></i>
         <span>举报</span>
       </section>
       <!-- 二维码 -->
       <article class="heard-item">
         <div class="qr-content">
-          <div id="qrcode"
-               v-if="!buttonDisabled && shareQRCode"
-               :class="{'qrcode':qrData}">{{qrData?'':'二维码加载失败'}}</div>
+          <div
+            id="qrcode"
+            v-if="!buttonDisabled && shareQRCode"
+            :class="{ qrcode: qrData }"
+          >
+            {{ qrData ? "" : "二维码加载失败" }}
+          </div>
           <div class="qr-code-msg">
             <h3 class="qr-title">房源编号:</h3>
-            <div class="qr-NO">{{resultData.HouseNo}}</div>
-            <div class="qr-tips">{{resultData.shareQRCode ?'微信扫一扫,立即分享房源':'请先完善信息后，才可以扫码分享房源'}} </div>
+            <div class="qr-NO">{{ resultData.HouseNo }}</div>
+            <div class="qr-tips">
+              {{
+                resultData.shareQRCode
+                  ? "微信扫一扫,立即分享房源"
+                  : "请先完善信息后，才可以扫码分享房源"
+              }}
+            </div>
           </div>
         </div>
       </article>
     </section>
     <!-- 写跟进 -->
-    <followUp :visible.sync="followUpFlag"
-              :insertFollow="insertFollow"
-              v-if="followUpFlag"></followUp>
+    <followUp
+      :visible.sync="followUpFlag"
+      :insertFollow="insertFollow"
+      v-if="followUpFlag"
+    ></followUp>
     <!-- 举报 -->
-    <report :visible.sync="reportFlag"
-            v-if="reportFlag"
-            :insertFollow="insertReport"
-            typeClass="error"
-            title="!举报"></report>
-    <attention :visible.sync="attentionFlag"
-               v-if="attentionFlag"
-               width="450px"
-               titleDirection="center"
-               title="关注房源变动通知"></attention>
+    <report
+      :visible.sync="reportFlag"
+      v-if="reportFlag"
+      :insertFollow="insertReport"
+      typeClass="error"
+      title="!举报"
+    ></report>
+    <attention
+      :visible.sync="attentionFlag"
+      v-if="attentionFlag"
+      width="450px"
+      titleDirection="center"
+      title="关注房源变动通知"
+    ></attention>
   </section>
 </template>
 <script>
@@ -227,9 +264,13 @@ export default {
   watch: {
     houseDetails: {
       deep: true,
-      handler: function (newValue) {
+      handler: function(newValue) {
         let _that = this;
-        if (Object.keys(newValue).length > 0 && !this.isDisabled && this.shareQRCode) {
+        if (
+          Object.keys(newValue).length > 0 &&
+          !this.isDisabled &&
+          this.shareQRCode
+        ) {
           this.qrData = new QRCode("qrcode", {
             width: 88,
             height: 88,
@@ -242,9 +283,13 @@ export default {
     },
     shareQRCode: {
       deep: true,
-      handler: function (value) {
+      handler: function(value) {
         let _that = this;
-        if (Object.keys(this.resultData).length > 0 && !this.isDisabled && value) {
+        if (
+          Object.keys(this.resultData).length > 0 &&
+          !this.isDisabled &&
+          value
+        ) {
           this.$nextTick(() => {
             this.qrData = new QRCode("qrcode", {
               width: 88,
@@ -253,7 +298,7 @@ export default {
               colorDark: "#000",
               colorLight: "#fff"
             });
-          })
+          });
         }
       }
     }
@@ -263,12 +308,11 @@ export default {
     report,
     attention
   },
-  created () {
+  created() {
     this.getImpressionList();
     this.getisCollect();
-
   },
-  mounted () {
+  mounted() {
     let that = this;
     but.$on("insertFollow", () => {
       that.insertFollow = true;
@@ -276,15 +320,15 @@ export default {
     but.$on("insertReport", () => {
       that.insertReport = true;
     });
-    but.$on("shareQRCode", (value) => {
+    but.$on("shareQRCode", value => {
       this.shareQRCode = value;
     });
   },
   computed: {
-    isDisabled () {
+    isDisabled() {
       return this.buttonDisabled;
     },
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
@@ -292,7 +336,7 @@ export default {
       }
     }
   },
-  data () {
+  data() {
     return {
       qrData: null,
       followUpFlag: false, //跟进开关
@@ -301,13 +345,13 @@ export default {
       isCollect: false,
       attentionFlag: false, //关注开关
       insertFollow: false, //权限控制添加跟进按钮
-      insertReport: false,//权限控制添加举报按钮
-      shareQRCode: false,
+      insertReport: false, //权限控制添加举报按钮
+      shareQRCode: false
     };
   },
   methods: {
     //
-    deleteMyAttention () {
+    deleteMyAttention() {
       let that = this;
       this.$api
         .post({
@@ -318,10 +362,10 @@ export default {
           qs: true,
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
         })
-        .then(e => { });
+        .then(e => {});
     },
     //关注或者取消关注
-    changCollectHouse () {
+    changCollectHouse() {
       if (this.isDisabled) {
         return;
       }
@@ -362,7 +406,7 @@ export default {
         });
     },
     //获取是否关注标记
-    getisCollect () {
+    getisCollect() {
       let that = this;
       this.$api
         .get({
@@ -378,10 +422,10 @@ export default {
             that.isCollect = result.data;
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     //删除印象
-    deleteImpression (impressionId, index) {
+    deleteImpression(impressionId, index) {
       if (this.isDisabled) {
         return;
       }
@@ -404,7 +448,7 @@ export default {
         });
     },
     //添加印象
-    insertImpression (impression) {
+    insertImpression(impression) {
       if (this.isDisabled) {
         return;
       }
@@ -432,7 +476,7 @@ export default {
         });
     },
     //获取印象数组
-    getImpressionList () {
+    getImpressionList() {
       let that = this;
       let params = {
         houseId: this.houseId.id
@@ -451,7 +495,7 @@ export default {
         });
     },
     //打开举报弹窗
-    async openReport () {
+    async openReport() {
       if (this.isDisabled) {
         return;
       }
@@ -465,13 +509,13 @@ export default {
         this.reportFlag = true;
       }
     },
-    openPopUp (PopName) {
+    openPopUp(PopName) {
       if (this.isDisabled) {
         return;
       }
       this[PopName] = true;
     },
-    nodePop () {
+    nodePop() {
       if (this.isDisabled) {
         return;
       }
@@ -487,7 +531,7 @@ export default {
             return "不能连续输入重复的字符";
           }
         },
-        beforeClose (action, instance, done) {
+        beforeClose(action, instance, done) {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = "执行中...";
@@ -501,13 +545,11 @@ export default {
           }
         }
       })
-        .then(value => {
-          console.log(action, instance, done);
-        })
-        .catch(() => { });
+        .then(value => {})
+        .catch(() => {});
     }
   },
-  destroyed () {
+  destroyed() {
     but.$off("shareQRCode");
   }
 };

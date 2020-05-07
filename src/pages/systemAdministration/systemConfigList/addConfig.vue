@@ -51,48 +51,58 @@
 <template>
   <div>
     <el-container>
-
       <el-container>
         <el-header>
-
           <div class="left-input-container">
             <span>参数类型</span>
-            <el-select v-model="notice.newsClass"
-                       placeholder="请选择"
-                       @change="getNum(notice.newsClass)"
-                       :disabled="updateState">
-              <el-option v-for="item in newsClassOption"
-                         :key="item.value"
-                         :label="item.label"
-                         :value="item.value"></el-option>
+            <el-select
+              v-model="notice.newsClass"
+              placeholder="请选择"
+              @change="getNum(notice.newsClass)"
+              :disabled="updateState"
+            >
+              <el-option
+                v-for="item in newsClassOption"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
-
           </div>
           <div class="left-input-container">
             <span>参数名称&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input type="text"
-                      placeholder="请输入内容"
-                      v-model="notice.configName"
-                      maxlength="30"
-                      show-word-limit></el-input>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.configName"
+              maxlength="30"
+              show-word-limit
+            ></el-input>
           </div>
           <div class="left-input-container">
             <span>参数编号&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <span> {{notice.configNo!=null? notice.configNo:"选择类型后自动生成编号"}}</span>
+            <span>
+              {{
+                notice.configNo != null
+                  ? notice.configNo
+                  : "选择类型后自动生成编号"
+              }}</span
+            >
           </div>
           <div class="left-input-container">
             <span>备注&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-            <el-input type="text"
-                      placeholder="请输入内容"
-                      v-model="notice.configMemo"
-                      maxlength="100"
-                      show-word-limit></el-input>
+            <el-input
+              type="text"
+              placeholder="请输入内容"
+              v-model="notice.configMemo"
+              maxlength="100"
+              show-word-limit
+            ></el-input>
           </div>
         </el-header>
 
         <div class="footerContainer el-top">
-          <el-button type="primary"
-                     @click="sendNotice">发送</el-button>
+          <el-button type="primary" @click="sendNotice">发送</el-button>
           <el-button @click="post">取消</el-button>
         </div>
       </el-container>
@@ -101,35 +111,35 @@
 </template>
 
 <script>
-import { quillEditor } from "vue-quill-editor";
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-const toolbarOptions = [
-  ["bold", "italic", "underline", "strike"], // toggled buttons
-  ["blockquote", "code-block"],
+// import { quillEditor } from "vue-quill-editor";
+// import "quill/dist/quill.core.css";
+// import "quill/dist/quill.snow.css";
+// import "quill/dist/quill.bubble.css";
+// const toolbarOptions = [
+//   ["bold", "italic", "underline", "strike"], // toggled buttons
+//   ["blockquote", "code-block"],
 
-  [{ header: 1 }, { header: 2 }], // custom button values
-  [{ list: "ordered" }, { list: "bullet" }],
-  [{ script: "sub" }, { script: "super" }], // superscript/subscript
-  [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-  [{ direction: "rtl" }], // text direction
+//   [{ header: 1 }, { header: 2 }], // custom button values
+//   [{ list: "ordered" }, { list: "bullet" }],
+//   [{ script: "sub" }, { script: "super" }], // superscript/subscript
+//   [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+//   [{ direction: "rtl" }], // text direction
 
-  [{ size: ["small", false, "large", "huge"] }], // custom dropdown
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+//   [{ size: ["small", false, "large", "huge"] }], // custom dropdown
+//   [{ header: [1, 2, 3, 4, 5, 6, false] }],
 
-  [{ color: [] }, { background: [] }], // dropdown with defaults from theme
-  [{ font: [] }],
-  [{ align: [] }],
-  ["link", "image"],
-  ["clean"] // remove formatting button
-];
-import getMenuRid from '@/minxi/getMenuRid';
+//   [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+//   [{ font: [] }],
+//   [{ align: [] }],
+//   ["link", "image"],
+//   ["clean"] // remove formatting button
+// ];
+import getMenuRid from "@/minxi/getMenuRid";
 export default {
   mixins: [getMenuRid],
-  components: { quillEditor },
+  components: {},
   props: {},
-  data () {
+  data() {
     return {
       quill: null,
       uploadUrl: "",
@@ -148,34 +158,33 @@ export default {
       },
       editorOption: {
         placeholder: "请输入公告内容",
-        readOnly: false,
-        modules: {
-          toolbar: {
-            container: toolbarOptions, // 工具栏
-            handlers: {
-              image: function (value) {
-                if (value) {
-                  console.log(value);
-                  document.getElementById('btnUpload').click();
-                } else {
-                  this.quill.format("image", false);
-                }
-              },
-              video: function (v) {
-                if (v) {
-                  alert("不支持上传视频");
-                }
-              },
-              link: function (v) {
-                if (v) {
-                  var href = prompt('Enter the URL');
-                  this.quill.format("link", href);
-
-                }
-              }
-            }
-          }
-        }
+        readOnly: false
+        // modules: {
+        //   toolbar: {
+        //     container: toolbarOptions, // 工具栏
+        //     handlers: {
+        //       image: function(value) {
+        //         if (value) {
+        //           console.log(value);
+        //           document.getElementById("btnUpload").click();
+        //         } else {
+        //           this.quill.format("image", false);
+        //         }
+        //       },
+        //       video: function(v) {
+        //         if (v) {
+        //           alert("不支持上传视频");
+        //         }
+        //       },
+        //       link: function(v) {
+        //         if (v) {
+        //           var href = prompt("Enter the URL");
+        //           this.quill.format("link", href);
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
       },
       newsClassOption: [
         {
@@ -185,8 +194,7 @@ export default {
         {
           value: 2,
           label: "买卖客户"
-        }
-        ,
+        },
         {
           value: 3,
           label: "租赁房源"
@@ -194,148 +202,149 @@ export default {
         {
           value: 4,
           label: "租赁客户"
-        }
-        ,
+        },
         {
           value: 5,
           label: "用户管理"
         }
-      ],
-
-
+      ]
     };
   },
   watch: {},
   computed: {},
   methods: {
-    getNum (val) {
+    getNum(val) {
       let that = this;
-      this.$api.get({
-        url: '/Set/judge',
-        data: {
-          id: val
-        },
-        token: false,
-        headers: { "Content-Type": "application/json" }
-      }).then((e) => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          that.notice.configNo = result.data
-
-          console.log(result.data);
-          this.$message({ message: result.message });
-        } else {
-          console.log("添加失败:" + result.message);
-          alert(result.message);
-        }
-      }).catch((e) => {
-        console.log("添加失败");
-        console.log(e);
-      })
-    },
-    sendNotice () {
-      let that = this;
-      if (this.notice.newsClass == null) {
-        this.$message({
-          showClose: true,
-          message: '参数类型',
-          type: 'warning'
-        });
-        return;
-      }
-      if (this.notice.configNo == null) {
-        this.$message({
-          showClose: true,
-          message: '参数名称',
-          type: 'warning'
-        });
-        return;
-      }
-      if (this.notice.configMemo == null) {
-        this.$message({
-          showClose: true,
-          message: '参数编号',
-          type: 'warning'
-        });
-        return;
-      }
-
-
-      if (this.notice.configId == null) {
-
-        this.$api.get({
-          url: '/Set/add',
+      this.$api
+        .get({
+          url: "/Set/judge",
           data: {
-            sysParType: that.notice.newsClass,
-            sysParNo: that.notice.configNo,
-            sysParName: that.notice.configName,
-            memo: that.notice.configMemo,
-            addName: "35491",
+            id: val
           },
           token: false,
           headers: { "Content-Type": "application/json" }
-        }).then((e) => {
+        })
+        .then(e => {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            console.log(result.message);
-            this.$alert('', '添加成功', {
-              dangerouslyUseHTMLString: false
-            });
-            this.$router.push({ path: "/sys/systemConfigList" });
+            that.notice.configNo = result.data;
+
             console.log(result.data);
             this.$message({ message: result.message });
           } else {
             console.log("添加失败:" + result.message);
             alert(result.message);
           }
-        }).catch((e) => {
+        })
+        .catch(e => {
           console.log("添加失败");
           console.log(e);
-        })
+        });
+    },
+    sendNotice() {
+      let that = this;
+      if (this.notice.newsClass == null) {
+        this.$message({
+          showClose: true,
+          message: "参数类型",
+          type: "warning"
+        });
+        return;
+      }
+      if (this.notice.configNo == null) {
+        this.$message({
+          showClose: true,
+          message: "参数名称",
+          type: "warning"
+        });
+        return;
+      }
+      if (this.notice.configMemo == null) {
+        this.$message({
+          showClose: true,
+          message: "参数编号",
+          type: "warning"
+        });
+        return;
+      }
+
+      if (this.notice.configId == null) {
+        this.$api
+          .get({
+            url: "/Set/add",
+            data: {
+              sysParType: that.notice.newsClass,
+              sysParNo: that.notice.configNo,
+              sysParName: that.notice.configName,
+              memo: that.notice.configMemo,
+              addName: "35491"
+            },
+            token: false,
+            headers: { "Content-Type": "application/json" }
+          })
+          .then(e => {
+            console.log(e.data);
+            let result = e.data;
+            if (result.code == 200) {
+              console.log(result.message);
+              this.$alert("", "添加成功", {
+                dangerouslyUseHTMLString: false
+              });
+              this.$router.push({ path: "/sys/systemConfigList" });
+              console.log(result.data);
+              this.$message({ message: result.message });
+            } else {
+              console.log("添加失败:" + result.message);
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("添加失败");
+            console.log(e);
+          });
       } else {
         console.log(this.notice.configId);
-        this.$api.get({
-          url: '/Set/update',
-          data: {
-            sysParID: that.$route.query.configId,
-            sysParType: that.notice.newsClass,
-            sysParNo: that.notice.configNo,
-            sysParName: that.notice.configName,
-            memo: that.notice.configMemo,
-          },
-          token: false,
-
-        }).then((e) => {
-          console.log(e.data);
-          let result = e.data;
-          if (result.code == 200) {
-            console.log(result.message);
-            this.$alert('', '修改成功', {
-              dangerouslyUseHTMLString: false
-            });
-            this.$router.push({ path: "/sys/systemConfigList" });
-            console.log(result.data);
-            this.$message({ message: result.message });
-          } else {
-            console.log("修改失败:" + result.message);
-            alert(result.message);
-          }
-        }).catch((e) => {
-          console.log("修改失败");
-          console.log(e);
-        })
+        this.$api
+          .get({
+            url: "/Set/update",
+            data: {
+              sysParID: that.$route.query.configId,
+              sysParType: that.notice.newsClass,
+              sysParNo: that.notice.configNo,
+              sysParName: that.notice.configName,
+              memo: that.notice.configMemo
+            },
+            token: false
+          })
+          .then(e => {
+            console.log(e.data);
+            let result = e.data;
+            if (result.code == 200) {
+              console.log(result.message);
+              this.$alert("", "修改成功", {
+                dangerouslyUseHTMLString: false
+              });
+              this.$router.push({ path: "/sys/systemConfigList" });
+              console.log(result.data);
+              this.$message({ message: result.message });
+            } else {
+              console.log("修改失败:" + result.message);
+              alert(result.message);
+            }
+          })
+          .catch(e => {
+            console.log("修改失败");
+            console.log(e);
+          });
       }
     },
-    post () {
-      this.$router.push({        path: "/sys/systemConfigList"
-      });
-    },
-
+    post() {
+      this.$router.push({ path: "/sys/systemConfigList" });
+    }
   },
 
-  created () {
+  created() {
     console.log(this.$route.query.configId);
     this.notice.configId = this.$route.query.configId;
     this.notice.configNo = this.$route.query.sysParNo;
@@ -345,7 +354,7 @@ export default {
       this.updateState = true;
     }
     console.log(this.$route.query.configId);
-    this.notice.newsClass = this.$route.query.sysParType
+    this.notice.newsClass = this.$route.query.sysParType;
     switch (this.$route.query.sysParType) {
       case "买卖房源":
         this.notice.newsClass = "1";
@@ -364,8 +373,6 @@ export default {
         break;
     }
   },
-  mounted () {
-
-  }
+  mounted() {}
 };
 </script>

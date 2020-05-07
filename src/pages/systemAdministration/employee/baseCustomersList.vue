@@ -20,48 +20,61 @@
 </style>
 <template>
   <div class="page-content">
-    <list-page :parentData="$data"
-               @handleSizeChange="handleSizeChange"
-               @handleCurrentChange="handleCurrentChange">
+    <list-page
+      :parentData="$data"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
       <template v-slot:top>
         <div class="query-cell">
           <div class="query-right">
-            <el-input placeholder
-                      size="small"
-                      v-model="queryData.keyWord"
-                      clearable>
+            <el-input
+              placeholder
+              size="small"
+              v-model="queryData.keyWord"
+              clearable
+            >
             </el-input>
-            <el-button type="primary"
-                       size="mini"
-                       @click="queryBaseCustomersByParams">查询</el-button>
+            <el-button
+              type="primary"
+              size="mini"
+              @click="queryBaseCustomersByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
       <template v-slot:tableColumn="cell">
         <template v-for="item in cell.tableData">
-          <el-table-column :prop="item.prop"
-                           :label="item.label"
-                           :width="item.width"
-                           :key="item.prop"></el-table-column>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :width="item.width"
+            :key="item.prop"
+          ></el-table-column>
         </template>
-        <el-table-column prop="operation"
-                         label="操作"
-                         fixed="right"
-                         key="operation">
+        <el-table-column
+          prop="operation"
+          label="操作"
+          fixed="right"
+          key="operation"
+        >
           <template v-slot="scope">
-            <div v-if="scope.row.operation!=''">
-              <el-button type="primary"
-                         size="mini"
-                         @click="distributeEvent(item.methosName,scope.row.id)"
-                         v-for="(item,index) in getOpeBtns(scope.row.operation)"
-                         :key="index">{{item.name}}</el-button>
+            <div v-if="scope.row.operation != ''">
+              <el-button
+                type="primary"
+                size="mini"
+                @click="distributeEvent(item.methosName, scope.row.id)"
+                v-for="(item, index) in getOpeBtns(scope.row.operation)"
+                :key="index"
+                >{{ item.name }}</el-button
+              >
             </div>
           </template>
         </el-table-column>
       </template>
     </list-page>
   </div>
-
 </template>
 
 <script>

@@ -214,163 +214,191 @@
 </style>
 <template>
   <div class="query-data-pad">
-    <div class="page-query-data"
-         v-if="dynamicTags.length>0 || querySelectFlag">
+    <div
+      class="page-query-data"
+      v-if="dynamicTags.length > 0 || querySelectFlag"
+    >
       <div class="page-query-data-title">所有房源&nbsp;></div>
       <div class="page-query-data-tag">
-        <el-tag :key="index"
-                class="query-tag"
-                v-for="(tag,index) in dynamicTags"
-                closable
-                :disable-transitions="false"
-                @close="handleClose(tag)">{{tag.title}}{{tag.value}}</el-tag>
+        <el-tag
+          :key="index"
+          class="query-tag"
+          v-for="(tag, index) in dynamicTags"
+          closable
+          :disable-transitions="false"
+          @close="handleClose(tag)"
+          >{{ tag.title }}{{ tag.value }}</el-tag
+        >
       </div>
-      <div class="select-tabs-cell"
-           v-if="querySelectFlag">
+      <div class="select-tabs-cell" v-if="querySelectFlag">
         <label class="select-checkbox">
-          <input type="checkbox"
-                 @click="keySelect()" />
+          <input type="checkbox" @click="keySelect()" />
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
-          <input type="checkbox"
-                 @click="onlySelect()" />
+          <input type="checkbox" @click="onlySelect()" />
           <span>独家</span>
         </label>
       </div>
     </div>
     <!-- 缩小时不显示 -->
-    <div class="select-tabs"
-         v-if="!querySelectFlag">
+    <div class="select-tabs" v-if="!querySelectFlag">
       <div class="select-tabs-cell">
-        <div class="select-tabs-item"
-             :class="{'is-order':form.sortColumn == 'id'}"
-             @click="defaultSelect()">
+        <div
+          class="select-tabs-item"
+          :class="{ 'is-order': form.sortColumn == 'id' }"
+          @click="defaultSelect()"
+        >
           <div class="tabs-item-title">默认排序</div>
         </div>
-        <div class="select-tabs-item"
-             :class="{'is-order':form.sortColumn == 'price'}"
-             @click="priceSelect()">
+        <div
+          class="select-tabs-item"
+          :class="{ 'is-order': form.sortColumn == 'price' }"
+          @click="priceSelect()"
+        >
           <div class="tabs-item-title">价格</div>
           <i class="el-icon-sort"></i>
         </div>
-        <div class="select-tabs-item"
-             :class="{'is-order':form.sortColumn == 'inArea'}"
-             @click="inAreaSelect()">
+        <div
+          class="select-tabs-item"
+          :class="{ 'is-order': form.sortColumn == 'inArea' }"
+          @click="inAreaSelect()"
+        >
           <div class="tabs-item-title">面积</div>
           <i class="el-icon-sort"></i>
         </div>
       </div>
       <div class="select-tabs-cell">
         <label class="select-checkbox">
-          <input type="checkbox"
-                 @click="keySelect()" />
+          <input type="checkbox" @click="keySelect()" />
           <span>钥匙</span>
         </label>
         <label class="select-checkbox">
-          <input type="checkbox"
-                 @click="onlySelect()" />
+          <input type="checkbox" @click="onlySelect()" />
           <span>独家</span>
         </label>
       </div>
     </div>
-    <div class="select-for-warp"
-         v-loading="loading"
-         element-loading-text="我在去获取数据的路上了~">
+    <div
+      class="select-for-warp"
+      v-loading="loading"
+      element-loading-text="我在去获取数据的路上了~"
+    >
       <template v-if="!querySelectFlag">
         <template v-if="renderList.length > 0">
-          <div class="select-for-item"
-               v-for="(item,index) in renderList"
-               :key="index"
-               @dblclick="toHouseDetail(item)">
+          <div
+            class="select-for-item"
+            v-for="(item, index) in renderList"
+            :key="index"
+            @dblclick="toHouseDetail(item)"
+          >
             <div class="select-for-item-img">
-              <el-image :src="item.picUrl+'?x-oss-process=style/thumb'"
-                        fit="cover">
-                <div slot="placeholder"
-                     class="image-slot">
+              <el-image
+                :src="item.picUrl + '?x-oss-process=style/thumb'"
+                fit="cover"
+              >
+                <div slot="placeholder" class="image-slot">
                   加载中
                   <span>...</span>
                 </div>
-                <div slot="error"
-                     fit="cover"
-                     class="image-slot">
-                  <el-image :src="''|houseMiniImg"></el-image>
+                <div slot="error" fit="cover" class="image-slot">
+                  <el-image :src="'' | houseMiniImg"></el-image>
                 </div>
               </el-image>
             </div>
             <div class="select-for-item-data">
               <div class="item-data-top">
-                <div class="item-data-top-no overText">{{item.houseNo}}</div>
+                <div class="item-data-top-no overText">{{ item.houseNo }}</div>
                 <div class="item-data-top-tag">
-                  <div class="top-tag-item overText"
-                       v-if="item.keyOwner>0">钥匙</div>
-                  <div class="top-tag-item overText"
-                       style="margin-left:5px"
-                       v-if="item.isOnly>0">独家</div>
+                  <div class="top-tag-item overText" v-if="item.keyOwner > 0">
+                    钥匙
+                  </div>
+                  <div
+                    class="top-tag-item overText"
+                    style="margin-left:5px"
+                    v-if="item.isOnly > 0"
+                  >
+                    独家
+                  </div>
                 </div>
               </div>
-              <div class="item-data-middle overText">{{item.title}}</div>
+              <div class="item-data-middle overText">{{ item.title }}</div>
               <div class="item-data-bottom">
-                <div class="item-data-bottom-detali overText">{{item.communityName}} &nbsp;/&nbsp;{{item.inArea}}㎡ &nbsp;/&nbsp;{{item.rooms}}房2厅1卫</div>
-                <div class="item-data-bottom-price overText">￥{{item.price}}万</div>
-                <div class="item-data-bottom-avgPirce overText">{{item.unitPrice}}元/平</div>
+                <div class="item-data-bottom-detali overText">
+                  {{ item.communityName }} &nbsp;/&nbsp;{{ item.inArea }}㎡
+                  &nbsp;/&nbsp;{{ item.rooms }}房2厅1卫
+                </div>
+                <div class="item-data-bottom-price overText">
+                  ￥{{ item.price }}万
+                </div>
+                <div class="item-data-bottom-avgPirce overText">
+                  {{ item.unitPrice }}元/平
+                </div>
               </div>
             </div>
             <div class="select-for-item-but">
-              <i class="el-icon-document icon i"
-                 @click.stop="toHouseDetail(item)"></i>
+              <i
+                class="el-icon-document icon i"
+                @click.stop="toHouseDetail(item)"
+              ></i>
             </div>
           </div>
         </template>
         <template v-else>
-          <el-alert title="暂无数据"
-                    type="primary"
-                    center
-                    show-icon></el-alert>
+          <el-alert title="暂无数据" type="primary" center show-icon></el-alert>
         </template>
       </template>
       <template v-else>
         <div class="flex-cell">
           <div class="flex-cell-tab">
-            <el-table :data="renderList"
-                      v-if="tableColumn.length >0"
-                      @sort-change="sortMethod"
-                      :default-sort="{prop: 'price', order: 'descending'}"
-                      border>
-              <el-table-column v-for="(item,index) in tableColumn"
-                               :key="index"
-                               :prop="item.prop"
-                               :label="item.label"
-                               :min-width="item.width"
-                               :sortable="item.order"
-                               :formatter="item.formart"
-                               :sort-orders="['ascending', 'descending']"
-                               show-overflow-tooltip></el-table-column>
-              <el-table-column label="操作"
-                               fixed="right"
-                               width="80px">
+            <el-table
+              :data="renderList"
+              v-if="tableColumn.length > 0"
+              @sort-change="sortMethod"
+              :default-sort="{ prop: 'price', order: 'descending' }"
+              border
+            >
+              <el-table-column
+                v-for="(item, index) in tableColumn"
+                :key="index"
+                :prop="item.prop"
+                :label="item.label"
+                :min-width="item.width"
+                :sortable="item.order"
+                :formatter="item.formart"
+                :sort-orders="['ascending', 'descending']"
+                show-overflow-tooltip
+              ></el-table-column>
+              <el-table-column label="操作" fixed="right" width="80px">
                 <template slot-scope="scope">
-                  <el-button size="mini"
-                             type="primary"
-                             @click="toHouseDetail(scope.row)">查看</el-button>
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click="toHouseDetail(scope.row)"
+                    >查看</el-button
+                  >
                 </template>
               </el-table-column>
             </el-table>
           </div>
-          <definitionmenu class="menuMarin"
-                          :loading="menuLoading"
-                          :renderList="menuRenderList"
-                          :tableColumn="tableColumn"
-                          :resetList="tableColumnField"
-                          @change="tabColumnChange"></definitionmenu>
+          <definitionmenu
+            class="menuMarin"
+            :loading="menuLoading"
+            :renderList="menuRenderList"
+            :tableColumn="tableColumn"
+            :resetList="tableColumnField"
+            @change="tabColumnChange"
+          ></definitionmenu>
         </div>
       </template>
     </div>
     <div class="select-page-nav">
-      <el-pagination @current-change="handleCurrentChange"
-                     :current-page="pageJson.currentPage"
-                     layout="total, prev, pager, next, jumper"
-                     :total="pageJson.total"></el-pagination>
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="pageJson.currentPage"
+        layout="total, prev, pager, next, jumper"
+        :total="pageJson.total"
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -393,13 +421,13 @@ export default {
     form: {
       deep: true,
       // immediate: true,
-      handler: function (value, ordvalue) {
+      handler: function(value, ordvalue) {
         this.renderTag(value);
         this.getHouseData(JSON.parse(JSON.stringify(value)));
       }
     }
   },
-  created () {
+  created() {
     tableMenu.getTableMenu(this.tableColumnField, 16).then(e => {
       this.menuLoading = false;
       this.menuRenderList = e;
@@ -408,7 +436,7 @@ export default {
       this.getHouseData(JSON.parse(JSON.stringify(this.form)));
     });
   },
-  data () {
+  data() {
     return {
       dynamicTags: [],
       menuRenderList: [],
@@ -555,48 +583,53 @@ export default {
     };
   },
   methods: {
-    tabColumnChange (e, length = 0) {
+    tabColumnChange(e, length = 0) {
       console.log(e, "e");
       this.tableColumn = e;
       if (length > 0) {
-        let prop = e.map(item => { return { prop: item.prop } })
+        let prop = e.map(item => {
+          return { prop: item.prop };
+        });
         tableMenu.insert(prop, 16);
       }
     },
-    toHouseDetail (item) {
+    toHouseDetail(item) {
       let id = item.id;
       console.log(item, "谢谢谢谢谢谢谢谢");
       if (item.hasOwnProperty("houseId")) {
         id = item.houseId;
       }
-      this.$router.push({ name: "houseDetails", params: { houseId: id,dept:item.perDept } });
+      this.$router.push({
+        name: "houseDetails",
+        params: { houseId: id, dept: item.perDept }
+      });
     },
     //远程排序
-    sortMethod (item) {
+    sortMethod(item) {
       this.form.sortColumn = item.prop;
       this.form.sortType = item.order;
-      this.getHouseData(JSON.parse(JSON.stringify(value)));
+      //  this.getHouseData(JSON.parse(JSON.stringify(value)));
       console.log(item);
     },
-    keySelect () {
+    keySelect() {
       if (this.form.keyOwner != "") {
         this.form.keyOwner = "";
       } else {
         this.form.keyOwner = "1";
       }
     },
-    onlySelect () {
+    onlySelect() {
       if (this.form.isOnly != "") {
         this.form.isOnly = "";
       } else {
         this.form.isOnly = "1";
       }
     },
-    defaultSelect () {
+    defaultSelect() {
       this.form.sortColumn = "id";
       this.form.sortType = "ascending";
     },
-    priceSelect () {
+    priceSelect() {
       this.form.sortColumn = "price";
       if (this.form.sortType == "ascending") {
         this.form.sortType = "descending";
@@ -605,7 +638,7 @@ export default {
       }
       console.log(this.form.sortType);
     },
-    inAreaSelect () {
+    inAreaSelect() {
       this.form.sortColumn = "inArea";
       if (this.form.sortType == "ascending") {
         this.form.sortType = "descending";
@@ -614,10 +647,10 @@ export default {
       }
       console.log(this.form.sortType);
     },
-    InitPageJson () {
+    InitPageJson() {
       this.pageJson = { total: 1, currentPage: 1 };
     },
-    getHouseData (value, initPage = true) {
+    getHouseData(value, initPage = true) {
       let that = this;
       this.loading = true;
       Object.keys(value).forEach(item => {
@@ -652,7 +685,7 @@ export default {
         });
     },
     //创建需要渲染的标签
-    renderTag (value) {
+    renderTag(value) {
       let that = this;
       console.log(value);
       //清空
@@ -662,7 +695,7 @@ export default {
         this.dynamicTags.push({
           title: `价格:${value.minPrice}-${
             value.maxPrice == "9999" ? "无限" : value.maxPrice
-            }万`,
+          }万`,
           field: "price",
           arr: false
         });
@@ -672,7 +705,7 @@ export default {
         this.dynamicTags.push({
           title: `面积:${value.minInArea}-${
             value.maxInArea == "9999" ? "无限" : value.maxInArea
-            }㎡`,
+          }㎡`,
           field: "area",
           arr: false
         });
@@ -682,7 +715,7 @@ export default {
         this.dynamicTags.push({
           title: `楼层:${value.minFloor}-${
             value.maxFloor == "9999" ? "无限" : value.maxFloor
-            }层`,
+          }层`,
           field: "floot",
           arr: false
         });
@@ -749,7 +782,7 @@ export default {
         });
       }
     },
-    appendFormTag (to, titleName, fieldName) {
+    appendFormTag(to, titleName, fieldName) {
       //房型
       to.forEach(item => {
         this.dynamicTags.push({
@@ -760,13 +793,13 @@ export default {
         });
       });
     },
-    filterSplice (e) {
+    filterSplice(e) {
       return this.form[e.field].findIndex(item => {
         return item == e.value;
       });
     },
     //标签关闭
-    handleClose (e) {
+    handleClose(e) {
       if (e.arr) {
         // 删除多选
         this.form[e.field].splice(this.filterSplice(e), 1);
@@ -812,7 +845,7 @@ export default {
       }
     },
     //跳转第几页
-    handleCurrentChange (e) {
+    handleCurrentChange(e) {
       this.pageJson.currentPage = e;
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
     }

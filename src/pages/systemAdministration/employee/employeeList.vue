@@ -88,7 +88,9 @@
       </template>
       <template v-slot:top>
         <div class="query-cell">
-          <el-button type="primary" size="mini" @click="toAddEmployeePage">添加用户</el-button>
+          <el-button type="primary" size="mini" @click="toAddEmployeePage"
+            >添加用户</el-button
+          >
           <div class="query-right">
             <el-select
               v-model="queryData.isLocked"
@@ -126,7 +128,9 @@
               <el-option label="岗位" value="4"></el-option>
               </el-select>-->
             </el-input>
-            <el-button type="primary" size="mini" @click="queryEmployeeByParams">查询</el-button>
+            <el-button type="primary" size="mini" @click="queryEmployeeByParams"
+              >查询</el-button
+            >
           </div>
         </div>
       </template>
@@ -145,10 +149,14 @@
               <el-button
                 type="primary"
                 size="mini"
-                @click="distributeEvent(item.methodName,scope.row.id)"
-                v-for="(item,index) in getOpeBtns(scope.row.del,scope.row.isLocked)"
+                @click="distributeEvent(item.methodName, scope.row.id)"
+                v-for="(item, index) in getOpeBtns(
+                  scope.row.del,
+                  scope.row.isLocked
+                )"
                 :key="index"
-              >{{item.name}}</el-button>
+                >{{ item.name }}</el-button
+              >
             </div>
           </template>
         </el-table-column>
@@ -157,7 +165,11 @@
     <el-dialog title="提示" :visible.sync="dialogVisible" width="50%">
       <div class="left-input-container">
         <span>离职时间</span>
-        <el-input type="date" placeholder="birthday" v-model="leaveTime"></el-input>
+        <el-input
+          type="date"
+          placeholder="birthday"
+          v-model="leaveTime"
+        ></el-input>
         <span>离职原因</span>
         <el-input
           type="text"
@@ -535,6 +547,7 @@ export default {
         });
     },
     switchUser() {
+      let params = {};
       if (this.employeeEntity.id != null && this.employeeEntity.id != "") {
         params.newPerId = this.employeeEntity.id;
         this.$api

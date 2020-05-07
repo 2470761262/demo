@@ -184,114 +184,178 @@
   <div class="detail-content">
     <div class="detail-price-content">
       <div class="detail-price">
-        <span>{{resultData.Price}}</span>
+        <span>{{ resultData.Price }}</span>
         <span v-if="resultData.Price">万元</span>
       </div>
-      <div class="detail-price-avg">{{resultData.averagePrice | emptyRead('元/㎡')}}</div>
+      <div class="detail-price-avg">
+        {{ resultData.averagePrice | emptyRead("元/㎡") }}
+      </div>
     </div>
     <div class="content-flex content-pad">
       <div class="cell-item">
-        <div class="cell-item-head">{{resultData.houseType | emptyRead}}</div>
-        <div class="cell-tiem-floot">{{resultData.Floor| emptyRead('层')}}/{{resultData.FloorNum | emptyRead('层','共')}}</div>
+        <div class="cell-item-head">{{ resultData.houseType | emptyRead }}</div>
+        <div class="cell-tiem-floot">
+          {{ resultData.Floor | emptyRead("层") }}/{{
+            resultData.FloorNum | emptyRead("层", "共")
+          }}
+        </div>
       </div>
       <div class="cell-item">
-        <div class="cell-item-head">{{resultData.Face | emptyRead}}</div>
-        <div class="cell-tiem-floot">{{resultData.FamilyStructure  | familyStructureFiletr('ROOMTYPE') | emptyRead }}/{{resultData.Decoration}}</div>
+        <div class="cell-item-head">{{ resultData.Face | emptyRead }}</div>
+        <div class="cell-tiem-floot">
+          {{
+            resultData.FamilyStructure
+              | familyStructureFiletr("ROOMTYPE")
+              | emptyRead
+          }}/{{ resultData.Decoration }}
+        </div>
       </div>
       <div class="cell-item">
-        <div class="cell-item-head">{{resultData.InArea | emptyRead('平米')}}</div>
-        <div class="cell-tiem-floot">{{resultData.BuildingTime | emptyRead('年建')}}</div>
+        <div class="cell-item-head">
+          {{ resultData.InArea | emptyRead("平米") }}
+        </div>
+        <div class="cell-tiem-floot">
+          {{ resultData.BuildingTime | emptyRead("年建") }}
+        </div>
       </div>
     </div>
     <div class="cell-tabs-content">
-      <div class="flex-row"
-           v-if="resultData.agentHouseMethod">
+      <div class="flex-row" v-if="resultData.agentHouseMethod">
         <div class="cell-tabs">
           <div class="cell-tabs-title">看房方式</div>
-          <div class="cell-tabs-detail">{{resultData.agentHouseMethod.keyOwnerName | lookHouseModeFiletr}}</div>
+          <div class="cell-tabs-detail">
+            {{ resultData.agentHouseMethod.keyOwnerName | lookHouseModeFiletr }}
+          </div>
         </div>
         <div class="cell-tabs">
           <div class="cell-tabs-title last-tabs-title">存放门店</div>
-          <div class="cell-tabs-detail">{{resultData.agentHouseMethod.keyStorageDeptName | keyStorageFilter(resultData.agentHouseMethod.keyOwnerName) | emptyRead }}</div>
+          <div class="cell-tabs-detail">
+            {{
+              resultData.agentHouseMethod.keyStorageDeptName
+                | keyStorageFilter(resultData.agentHouseMethod.keyOwnerName)
+                | emptyRead
+            }}
+          </div>
         </div>
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">小区名称</div>
-        <div class="cell-tabs-detail">{{resultData.CommunityName}}</div>
-        <div class="cell-tabs-nav"
-             v-if="isShowBuilding">{{resultData.BuildingName | emptyRead}}-{{resultData.RoomNo | emptyRead}}</div>
-        <div class="cell-tabs-nav"
-             v-if="!isShowBuilding && !buttonDisabled"
-             @click="getShowBuliding">楼栋号</div>
+        <div class="cell-tabs-detail">{{ resultData.CommunityName }}</div>
+        <div class="cell-tabs-nav" v-if="isShowBuilding">
+          {{ resultData.BuildingName | emptyRead }}-{{
+            resultData.RoomNo | emptyRead
+          }}
+        </div>
+        <div
+          class="cell-tabs-nav"
+          v-if="!isShowBuilding && !buttonDisabled"
+          @click="getShowBuliding"
+        >
+          楼栋号
+        </div>
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">被看次数</div>
-        <div class="cell-tabs-detail">{{resultData.seenNum | emptyRead('次')}}</div>
+        <div class="cell-tabs-detail">
+          {{ resultData.seenNum | emptyRead("次") }}
+        </div>
       </div>
       <div class="cell-tabs">
         <div class="cell-tabs-title">未跟进天数</div>
-        <div class="cell-tabs-detail">{{resultData.outfollow |emptyRead('天')}}</div>
+        <div class="cell-tabs-detail">
+          {{ resultData.outfollow | emptyRead("天") }}
+        </div>
       </div>
     </div>
     <div class="cell-pro">
-      <div class="cell-pro-item"
-           v-if="resultData.agentPerName!=null&& resultData.plate!=1&&resultData.plate!=4">
-        <el-image class="cell-pro-left-img"
-                  :src="resultData.agentPerHeadImg"
-                  fit="fill">
-          <div slot="placeholder"
-               class="image-slot">
+      <div
+        class="cell-pro-item"
+        v-if="
+          resultData.agentPerName != null &&
+            resultData.plate != 1 &&
+            resultData.plate != 4
+        "
+      >
+        <el-image
+          class="cell-pro-left-img"
+          :src="resultData.agentPerHeadImg"
+          fit="fill"
+        >
+          <div slot="placeholder" class="image-slot">
             加载中<span>...</span>
           </div>
         </el-image>
         <div class="cell-pro-detail">
-          <div class="cell-pro-detail-name overText">{{resultData.agentPerName | emptyRead}}</div>
-          <div class="cell-pro-detail-other overText">{{resultData.agentPerDepartmentName | emptyRead}}</div>
+          <div class="cell-pro-detail-name overText">
+            {{ resultData.agentPerName | emptyRead }}
+          </div>
+          <div class="cell-pro-detail-other overText">
+            {{ resultData.agentPerDepartmentName | emptyRead }}
+          </div>
         </div>
-        <button class="cell-pro-but"
-                v-if="resultData.agentPerName"
-                @click="oneTouchDialPhone"
-                :disabled="!touchedDialPhone">一键拨号</button>
+        <button
+          class="cell-pro-but"
+          v-if="resultData.agentPerName"
+          @click="oneTouchDialPhone"
+          :disabled="!touchedDialPhone"
+        >
+          一键拨号
+        </button>
       </div>
-      <div class="cell-pro-item center"
-           v-else>
-        <el-button class="cell-pro-but"
-                   v-if="applyAgentRule"
-                   :disabled="isDisabled  || agentApply"
-                   @click="callTaskAgent">申请跟单人</el-button>
-        <el-button class="cell-pro-but"
-                   :disabled="true"
-                   v-else>申请跟单人</el-button>
+      <div class="cell-pro-item center" v-else>
+        <el-button
+          class="cell-pro-but"
+          v-if="applyAgentRule"
+          :disabled="isDisabled || agentApply"
+          @click="callTaskAgent"
+          >申请跟单人</el-button
+        >
+        <el-button class="cell-pro-but" :disabled="true" v-else
+          >申请跟单人</el-button
+        >
       </div>
       <div class="cell-pro-item">
         <div class="cell-pro-detail">
-          <div class="cell-pro-detail-name overText">{{resultData.Customers | emptyRead}}</div>
+          <div class="cell-pro-detail-name overText">
+            {{ resultData.Customers | emptyRead }}
+          </div>
           <div class="cell-pro-detail-other overText">业主称呼</div>
         </div>
         <el-dropdown @command="contactOwer">
-          <el-button class="cell-pro-but"
-                     :disabled="isDisabled">
+          <el-button class="cell-pro-but" :disabled="isDisabled">
             查看号码<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item v-if="resultData.Tel!=''"
-                              v-text="resultData.Tel"
-                              command=""></el-dropdown-item>
-            <el-dropdown-item v-if="resultData.Tel1!=''"
-                              v-text="resultData.Tel1"
-                              command="1"></el-dropdown-item>
-            <el-dropdown-item v-if="resultData.Tel2!=''"
-                              v-text="resultData.Tel2"
-                              command="2"></el-dropdown-item>
-            <el-dropdown-item v-if="resultData.Tel3!=''"
-                              v-text="resultData.Tel3"
-                              command="3"></el-dropdown-item>
+            <el-dropdown-item
+              v-if="resultData.Tel != ''"
+              v-text="resultData.Tel"
+              command=""
+            ></el-dropdown-item>
+            <el-dropdown-item
+              v-if="resultData.Tel1 != ''"
+              v-text="resultData.Tel1"
+              command="1"
+            ></el-dropdown-item>
+            <el-dropdown-item
+              v-if="resultData.Tel2 != ''"
+              v-text="resultData.Tel2"
+              command="2"
+            ></el-dropdown-item>
+            <el-dropdown-item
+              v-if="resultData.Tel3 != ''"
+              v-text="resultData.Tel3"
+              command="3"
+            ></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
         <!-- <button>查看号码</button> -->
-        <button class="cell-pro-but"
-                @click="dialPhoneToFD"
-                :disabled="!touchedDialPhone">一键拨号</button>
+        <button
+          class="cell-pro-but"
+          @click="dialPhoneToFD"
+          :disabled="!touchedDialPhone"
+        >
+          一键拨号
+        </button>
       </div>
     </div>
   </div>
@@ -302,32 +366,32 @@ import util from "@/util/util";
 import { LOGINDATA } from "../../../../util/constMap";
 import but from "@/evenBus/but.js";
 export default {
-  inject:{
-      houseDetails:{
-          default:{}
-      },
-      houseId:{
-          default:{}
-      },
-      buttonDisabled:{
-          default:false
-      },
-      dept:{
-          default:{}
-      }
+  inject: {
+    houseDetails: {
+      default: {}
+    },
+    houseId: {
+      default: {}
+    },
+    buttonDisabled: {
+      default: false
+    },
+    dept: {
+      default: {}
+    }
   },
   computed: {
-    isDisabled () {
+    isDisabled() {
       return this.buttonDisabled;
     },
-    resultData () {
+    resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
       } else {
         return {};
       }
     },
-    agentApply () {
+    agentApply() {
       if (!this.dept.id) {
         return false;
       }
@@ -341,11 +405,10 @@ export default {
         if (detailData.plate == 1 && this.dept.id != loginDeptId) {
           return true;
         }
-      } else {
-        return true;
       }
+      return true;
     },
-    fdDial () {
+    fdDial() {
       let perId = util.localStorageGet("logindata").accountId;
       if (Object.keys(this.houseDetails).length > 0) {
         let detailData = this.houseDetails.data;
@@ -373,27 +436,27 @@ export default {
       return false;
     }
   },
-  data () {
+  data() {
     return {
       isShowBuilding: false,
       touchedDialPhone: false,
       applyAgentRule: false
     };
   },
-  created () {
-    but.$on("dialPhone", (value) => {
+  created() {
+    but.$on("dialPhone", value => {
       this.touchedDialPhone = value;
     });
     but.$on("applyAgent", () => {
       this.applyAgentRule = true;
     });
   },
-  mounted () { },
+  mounted() {},
   methods: {
-    callTaskAgent () {
-      but.$emit('callTaskAgent');
+    callTaskAgent() {
+      but.$emit("callTaskAgent");
     },
-    getShowBuliding () {
+    getShowBuliding() {
       let that = this;
       this.$api
         .get({
@@ -413,9 +476,9 @@ export default {
             that.$message(e.data.message);
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
-    oneTouchDialPhone () {
+    oneTouchDialPhone() {
       let phone = this.resultData.agentPerTel;
       if (!phone) {
         this.$message({
@@ -428,7 +491,7 @@ export default {
       };
       this.dailPhone(0, p);
     },
-    dialPhoneToFD () {
+    dialPhoneToFD() {
       let p = {
         contactPhone: this.resultData.Tel,
         contactPhone1: this.resultData.Tel1,
@@ -437,14 +500,14 @@ export default {
       };
       this.dailPhone(1, p);
     },
-    contactOwer (cmd) {
+    contactOwer(cmd) {
       console.log(cmd);
       let p = {};
       p["contactPhone" + cmd] = this.resultData["Tel" + cmd];
       p["isLookPhone"] = true;
       this.dailPhone(1, p);
     },
-    dailPhone (contactPerType, phoneObj) {
+    dailPhone(contactPerType, phoneObj) {
       let that = this;
       //console.log(that.houseDetails);
       this.$confirm("确定一键拨号吗？", "友情提醒", {
@@ -488,7 +551,7 @@ export default {
                   type: "info",
                   message: "请注意查收微信消息"
                 });
-                but.$emit("followReolad", true);
+                but.$emit("followReolad", true);
               } else {
                 this.$message({
                   type: "info",
@@ -514,17 +577,17 @@ export default {
     }
   },
   filters: {
-    familyStructureFiletr (value, listName) {
+    familyStructureFiletr(value, listName) {
       return util.countMapFilter(value, listName);
     },
-    lookHouseModeFiletr (value) {
+    lookHouseModeFiletr(value) {
       return value != null ? "有钥匙" : "无钥匙";
     },
-    keyStorageFilter (value, keyOwnerName) {
+    keyStorageFilter(value, keyOwnerName) {
       return keyOwnerName == null ? "暂无" : value;
     }
   },
-  destroyed () {
+  destroyed() {
     but.$off("dialPhone");
     but.$off("applyAgent");
   }

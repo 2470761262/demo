@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .page-content {
   padding-left: 60px;
@@ -153,32 +152,42 @@
 }
 </style>
 <template>
-  <div class="page-content"
-       v-loading="load.loading"
-       element-loading-custom-class="loadingTop"
-       :element-loading-text="load.loadingMessage">
+  <div
+    class="page-content"
+    v-loading="load.loading"
+    element-loading-custom-class="loadingTop"
+    :element-loading-text="load.loadingMessage"
+  >
     <section class="page-house-cell">
       <div class="page-house-ditali">
         <div class="page-title-head">
           <div class="page-title-left">
-            <h3>{{resultData.buildingName | emptyRead('栋')}}-{{resultData.RoomNo | emptyRead('室')}}</h3>
-            <h6>{{resultData.Floor | emptyRead('层')}}/{{resultData.floorNum | emptyRead('层','共')}}</h6>
+            <h3>
+              {{ resultData.buildingName | emptyRead("栋") }}-{{
+                resultData.RoomNo | emptyRead("室")
+              }}
+            </h3>
+            <h6>
+              {{ resultData.Floor | emptyRead("层") }}/{{
+                resultData.floorNum | emptyRead("层", "共")
+              }}
+            </h6>
           </div>
-          <el-button class="right-btn"
-                     type="primary"
-                     @click="tosele">转在售</el-button>
+          <el-button class="right-btn" type="primary" @click="tosele"
+            >转在售</el-button
+          >
         </div>
         <div class="page-title-just">
           <div class="title-just-item">
-            <h4>{{resultData.rooms | emptyRead('室')}}</h4>
+            <h4>{{ resultData.rooms | emptyRead("室") }}</h4>
             <div>户型</div>
           </div>
           <div class="title-just-item">
-            <h4>{{resultData.InArea | emptyRead('㎡')}}</h4>
+            <h4>{{ resultData.InArea | emptyRead("㎡") }}</h4>
             <div>面积</div>
           </div>
           <div class="title-just-item">
-            <h4>{{resultData.decoration | emptyRead}}</h4>
+            <h4>{{ resultData.decoration | emptyRead }}</h4>
             <div>装修程度</div>
           </div>
         </div>
@@ -186,80 +195,112 @@
         <section class="detail-layout">
           <div class="detail-layout-item">
             <div class="layout-item-title">房屋用途</div>
-            <div class="layout-item-detail overText">{{resultData.buildtype | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.buildtype | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">电梯配套</div>
-            <div class="layout-item-detail overText">{{resultData.elevator | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.elevator | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">产权性质</div>
-            <div class="layout-item-detail overText">{{resultData.HouseProperty | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.HouseProperty | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">附属配套</div>
-            <div class="layout-item-detail overText">{{resultData.HouseBelong | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.HouseBelong | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">小学划片</div>
-            <div class="layout-item-detail overText">{{resultData.primarySchool | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.primarySchool | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">中学划片</div>
-            <div class="layout-item-detail overText">{{resultData.middleSchool | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.middleSchool | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">物业公司</div>
-            <div class="layout-item-detail overText">{{resultData.propertyCompany | emptyRead}}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.propertyCompany | emptyRead }}
+            </div>
           </div>
           <div class="detail-layout-item">
             <div class="layout-item-title">评估价</div>
-            <div class="layout-item-detail overText">{{resultData.valuation | emptyRead }}</div>
+            <div class="layout-item-detail overText">
+              {{ resultData.valuation | emptyRead }}
+            </div>
           </div>
         </section>
       </div>
       <div class="page-house-right">
         <div class="right-huose-detail">
-          <el-image class="detail-image"
-                    fit="cover"
-                    src="https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/4/16/6e35732669034e24a6448324b3d8a33d.jpg?x-oss-process=style/thumb"></el-image>
+          <el-image
+            class="detail-image"
+            fit="cover"
+            src="https://imgtest.0be.cn/FileUpload/PicFile_Agent2020/4/16/6e35732669034e24a6448324b3d8a33d.jpg?x-oss-process=style/thumb"
+          ></el-image>
           <div class="detail-image-msg">
-            <div class="detail-image-top">{{resultData.communityName | emptyRead}}</div>
+            <div class="detail-image-top">
+              {{ resultData.communityName | emptyRead }}
+            </div>
             <div class="detail-num">
-              <div class="detail-num-data"
-                   :data-num="resultData.existHouseNum |  emptyRead">在售房源</div>
-              <div class="detail-num-data"
-                   :data-num="resultData.saleHouseNum | emptyRead">存量房源数</div>
+              <div
+                class="detail-num-data"
+                :data-num="resultData.existHouseNum | emptyRead"
+              >
+                在售房源
+              </div>
+              <div
+                class="detail-num-data"
+                :data-num="resultData.saleHouseNum | emptyRead"
+              >
+                存量房源数
+              </div>
             </div>
           </div>
         </div>
         <div class="add-phone-title">补充号码</div>
         <div class="add-cut-content">
           <h3>业主姓名:</h3>
-          <el-input v-model="addCut.cutName"
-                    data-vv-name="cutName"
-                    data-vv-as="业主姓名"
-                    v-validate="'required'"
-                    placeholder="请输入业主姓名"></el-input>
+          <el-input
+            v-model="addCut.cutName"
+            data-vv-name="cutName"
+            data-vv-as="业主姓名"
+            v-validate="'required'"
+            placeholder="请输入业主姓名"
+          ></el-input>
           <h3>电话号码:</h3>
-          <el-input v-model="addCut.cutPhone"
-                    data-vv-name="cutPhone"
-                    data-vv-as="业主号码"
-                    v-validate="'required|phone'"
-                    placeholder="请输入业主号码"></el-input>
+          <el-input
+            v-model="addCut.cutPhone"
+            data-vv-name="cutPhone"
+            data-vv-as="业主号码"
+            v-validate="'required|phone'"
+            placeholder="请输入业主号码"
+          ></el-input>
           <h3 v-show="cutPhone1Flag">业主号码1:</h3>
-          <el-input v-show="cutPhone1Flag"
-                    data-vv-name="cutPhone1"
-                    data-vv-as="业主号码1"
-                    v-validate="{required:cutPhone1Flag,phone:true}"
-                    v-model="addCut.cutPhone1"
-                    placeholder="请输入业主号码1"></el-input>
-          <div class="errors-tips">{{errorBags.all()[0]}}</div>
+          <el-input
+            v-show="cutPhone1Flag"
+            data-vv-name="cutPhone1"
+            data-vv-as="业主号码1"
+            v-validate="{ required: cutPhone1Flag, phone: true }"
+            v-model="addCut.cutPhone1"
+            placeholder="请输入业主号码1"
+          ></el-input>
+          <div class="errors-tips">{{ errorBags.all()[0] }}</div>
           <div class="but-content">
-            <el-button type="primary"
-                       @click='notPhone'>立即提交</el-button>
-            <el-button type="primary"
-                       @click="addPhone">添加号码</el-button>
+            <el-button type="primary" @click="notPhone">立即提交</el-button>
+            <el-button type="primary" @click="addPhone">添加号码</el-button>
           </div>
         </div>
       </div>
@@ -270,9 +311,9 @@
 import util from "@/util/util";
 export default {
   $_veeValidate: {
-    validator: 'new' // give me my own validator scope.
+    validator: "new" // give me my own validator scope.
   },
-  data () {
+  data() {
     return {
       houseId: null,
       resultData: {},
@@ -287,7 +328,7 @@ export default {
       }
     };
   },
-  created () {
+  created() {
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       util.localStorageSet("buildingHouseDetail.vue:houseId", this.houseId);
@@ -297,7 +338,7 @@ export default {
     this.getHouseDetails();
   },
   methods: {
-    tosele () {
+    tosele() {
       let _that = this;
       this.$router.push({
         path: "/buySellSystem/addHouse",
@@ -313,7 +354,7 @@ export default {
         }
       });
     },
-    notPhone () {
+    notPhone() {
       let _that = this;
       this.$validator.validateAll().then(e => {
         if (e) {
@@ -337,11 +378,11 @@ export default {
                 return Promise.reject(e);
               }
             })
-            .catch(e => { });
+            .catch(e => {});
         }
       });
     },
-    getHouseDetails () {
+    getHouseDetails() {
       this.load.loading = true;
       this.$api
         .post({
@@ -356,12 +397,12 @@ export default {
             this.$message.error(result.message);
           }
         })
-        .catch(e => { })
+        .catch(e => {})
         .finally(() => {
           this.load.loading = false;
         });
     },
-    addPhone () {
+    addPhone() {
       this.cutPhone1Flag = !this.cutPhone1Flag;
       if (this.cutPhone1Flag) {
         this.$set(this.addCut, "cutPhone1", "");
@@ -370,9 +411,8 @@ export default {
       }
     }
   },
-  destroyed () {
+  destroyed() {
     // this.$store.commit("resetFormData");
   }
 };
 </script>
-
