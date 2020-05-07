@@ -956,23 +956,24 @@ export default {
             console.log("查询角色失败");
           });
         paramsRole.depId = deptId;
-        this.$api
-          .post({
-            url: "/sys/position/getLevelList",
-            data: paramsRole,
-            qs: true
-          })
-          .then(e => {
-            let result = e.data;
-            if (result.code == 200) {
-              this.levelNameList = result.data;
-            } else {
-              alert(result.message);
-            }
-          })
-          .catch(e => {
-            console.log("查询星级失败");
-          });
+        this.GetLevelList(paramsRole);
+        // this.$api
+        //   .post({
+        //     url: "/sys/position/getLevelList",
+        //     data: paramsRole,
+        //     qs: true
+        //   })
+        //   .then(e => {
+        //     let result = e.data;
+        //     if (result.code == 200) {
+        //       this.levelNameList = result.data;
+        //     } else {
+        //       alert(result.message);
+        //     }
+        //   })
+        //   .catch(e => {
+        //     console.log("查询星级失败");
+        //   });
         if (type === "change") {
           this.dialogChange = true;
           this.RoleDis = true;
@@ -1175,6 +1176,9 @@ export default {
             message: "已选择【" + data.labelName + "】"
           });
           this.filterTextChange = null;
+          let paramsRole = {};
+          paramsRole.depId = this.currDep;
+          this.GetLevelList(paramsRole);
         } else {
           this.$message({
             type: "error",
@@ -1305,6 +1309,25 @@ export default {
         })
         .catch(e => {
           console.log("查询角色失败");
+        });
+    },
+    GetLevelList(paramsRole) {
+      this.$api
+        .post({
+          url: "/sys/position/getLevelList",
+          data: paramsRole,
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.levelNameList = result.data;
+          } else {
+            alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询星级失败");
         });
     }
   },
