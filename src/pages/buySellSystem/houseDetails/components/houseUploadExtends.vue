@@ -18,7 +18,7 @@ let listMap = new Map([
   ['houseVideo', 'vedio'],
 ]);
 export default {
-  inject: ["houseId"],
+  inject: ["houseId", "$validator"],
   extends: exploration,
   props: {
     replaceType: {
@@ -31,7 +31,7 @@ export default {
   },
   created () {
     if (this.echoData.length != 0) {
-      this.FillImgVideo();
+      //this.FillImgVideo();
     }
   },
   destroyed () {

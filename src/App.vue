@@ -1,16 +1,12 @@
 <template>
-  <div id="app">
-    <router-view />
+  <div>
+    <keep-alive>
+      <router-view />
+    </keep-alive>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'App'
-}
-</script>
-
 <style lang="less">
-@import url("./assets/publicLess/public.less");
-@import url("../static/iconfont.css");
+@import url(./assets/publicLess/public.less);
+@import url(../public/iconfont.css);
 </style>

@@ -172,25 +172,42 @@ export default {
       });
     },
     delRoleDetail(row) {
-      this.$api
-        .post({
-          url: "/role/delete/" + row.id,
-          token: false,
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(e => {
-          let result = e.data;
-          if (result.code == 200) {
-            this.$alert("", "删除成功", {
-              dangerouslyUseHTMLString: false
+      this.$confirm("确定删除？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.loading = true;
+          this.$api
+            .post({
+              url: "/role/delete/" + row.id,
+              token: false,
+              headers: { "Content-Type": "application/json" }
+            })
+            .then(e => {
+              let result = e.data;
+              if (result.code == 200) {
+                this.$alert("", "删除成功", {
+                  dangerouslyUseHTMLString: false
+                });
+                this.queryRoleByParams();
+                //this.$router.go(-1);
+              }
+            })
+            .catch(e => {
+              console.log("删除失败");
+              console.log(e);
+            })
+            .finally(e => {
+              this.loading = false;
             });
-            this.queryRoleByParams();
-            //this.$router.go(-1);
-          }
         })
-        .catch(e => {
-          console.log("删除失败");
-          console.log(e);
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
         });
     },
     distributeEvent(e, row) {

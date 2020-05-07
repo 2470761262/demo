@@ -54,16 +54,31 @@
   }
 }
 </style>
-<template v-if="!edit">
-  <div>
-    <div class="page-cell-addHouse" v-loading="loading" element-loading-text="加载二维码中~" v-if="!edit">
+<template>
+  <div v-if="!edit">
+    <div
+      class="page-cell-addHouse"
+      v-loading="loading"
+      element-loading-text="加载二维码中~"
+      v-if="!edit"
+    >
       <div class="page-cell-title max-title title-top">
         <i class="el-icon-circle-check"></i>房源保存成功
       </div>
-      <div class="page-cell-title title-top">房源录入成功后，需邀请业主对房源进行验真后方可发布房源成功。</div>
+      <div class="page-cell-title title-top">
+        房源录入成功后，需邀请业主对房源进行验真后方可发布房源成功。
+      </div>
       <div class="mindder-step">
-        <el-steps :active="stepsActiveIndex+1" align-center finish-status="success">
-          <el-step :title="item.title" v-for="(item, index) in stepsList" :key="index"></el-step>
+        <el-steps
+          :active="stepsActiveIndex + 1"
+          align-center
+          finish-status="success"
+        >
+          <el-step
+            :title="item.title"
+            v-for="(item, index) in stepsList"
+            :key="index"
+          ></el-step>
         </el-steps>
       </div>
       <div class="cell-flex">
@@ -72,18 +87,24 @@
         </div>
         <div class="text-center">
           <div class="text-center-tips" v-if="btnSubmitVerify">微信扫一扫</div>
-          <div class="text-center-tips" v-if="btnSubmitVerify">邀请业主进行验真</div>
+          <div class="text-center-tips" v-if="btnSubmitVerify">
+            邀请业主进行验真
+          </div>
           <div class="text-center-tips" v-if="!btnSubmitVerify">暂无权限</div>
         </div>
       </div>
       <div class="text-col-centent">
         <div class="inlne-text">
           <p>1.请发给业主本人(与房源所录入号码一致的)进行验证</p>
-          <p>2.房源验证通过后，请在3天内完善房源信息,否则房源跟单资格会被取消</p>
+          <p>
+            2.房源验证通过后，请在3天内完善房源信息,否则房源跟单资格会被取消
+          </p>
         </div>
       </div>
       <div class="text-col-centent">
-        <el-button type="primary" class="link" @click="navto">前往验真列表</el-button>
+        <el-button type="primary" class="link" @click="navto"
+          >前往验真列表</el-button
+        >
       </div>
     </div>
     <div v-else>

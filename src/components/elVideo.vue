@@ -10,9 +10,7 @@
 </style>
 <template>
   <div class="video-content">
-    <video :src="src"
-           class="img-video"
-           controls="controls">
+    <video :src="src" class="img-video" controls="controls">
       您的浏览器不支持 video 标签。
     </video>
   </div>
@@ -23,13 +21,12 @@ export default {
   props: {
     src: {
       type: String
-    },
-  },
-  data () {
-    return {
-      videoType: false
     }
   },
-}
+  data() {
+    return {
+      videoType: false
+    };
+  }
+};
 </script>
-

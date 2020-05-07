@@ -84,62 +84,62 @@
     <div class="conut-trans">
       <span class="conut-trans-tips">还剩</span>
       <div class="conut-trans-data">
-        <div class="conut-trans-scroll"
-             :class="['trans'+daysTransAfter]">
-          <span v-for="(item,index) in timeItemList"
-                :key="index">{{item}}</span>
+        <div class="conut-trans-scroll" :class="['trans' + daysTransAfter]">
+          <span v-for="(item, index) in timeItemList" :key="index">{{
+            item
+          }}</span>
         </div>
       </div>
       <div class="conut-trans-data">
-        <div class="conut-trans-scroll"
-             :class="['trans'+daysTransBefore]">
-          <span v-for="(item,index) in timeItemList"
-                :key="index">{{item}}</span>
+        <div class="conut-trans-scroll" :class="['trans' + daysTransBefore]">
+          <span v-for="(item, index) in timeItemList" :key="index">{{
+            item
+          }}</span>
         </div>
       </div>
       <span class="conut-trans-tips">天</span>
       <div class="conut-trans-data">
-        <div class="conut-trans-scroll"
-             :class="['trans'+hoursTransAfter]">
-          <span v-for="(item,index) in timeItemList"
-                :key="index">{{item}}</span>
+        <div class="conut-trans-scroll" :class="['trans' + hoursTransAfter]">
+          <span v-for="(item, index) in timeItemList" :key="index">{{
+            item
+          }}</span>
         </div>
       </div>
       <div class="conut-trans-data">
-        <div class="conut-trans-scroll"
-             :class="['trans'+hoursTransBefore]">
-          <span v-for="(item,index) in timeItemList"
-                :key="index">{{item}}</span>
+        <div class="conut-trans-scroll" :class="['trans' + hoursTransBefore]">
+          <span v-for="(item, index) in timeItemList" :key="index">{{
+            item
+          }}</span>
         </div>
       </div>
       <span class="conut-trans-tips">时</span>
       <div class="conut-trans-data">
-        <div class="conut-trans-scroll"
-             :class="['trans'+minutesTransAfter]">
-          <span v-for="(item,index) in timeItemList"
-                :key="index">{{item}}</span>
+        <div class="conut-trans-scroll" :class="['trans' + minutesTransAfter]">
+          <span v-for="(item, index) in timeItemList" :key="index">{{
+            item
+          }}</span>
         </div>
       </div>
       <div class="conut-trans-data">
-        <div class="conut-trans-scroll"
-             :class="['trans'+minutesTransBefore]">
-          <span v-for="(item,index) in timeItemList"
-                :key="index">{{item}}</span>
+        <div class="conut-trans-scroll" :class="['trans' + minutesTransBefore]">
+          <span v-for="(item, index) in timeItemList" :key="index">{{
+            item
+          }}</span>
         </div>
       </div>
       <span class="conut-trans-tips">分</span>
       <div class="conut-trans-data">
-        <div class="conut-trans-scroll"
-             :class="['trans'+secondsTransAfter]">
-          <span v-for="(item,index) in timeItemList"
-                :key="index">{{item}}</span>
+        <div class="conut-trans-scroll" :class="['trans' + secondsTransAfter]">
+          <span v-for="(item, index) in timeItemList" :key="index">{{
+            item
+          }}</span>
         </div>
       </div>
       <div class="conut-trans-data">
-        <div class="conut-trans-scroll"
-             :class="['trans'+secondsTransBefore]">
-          <span v-for="(item,index) in timeItemList"
-                :key="index">{{item}}</span>
+        <div class="conut-trans-scroll" :class="['trans' + secondsTransBefore]">
+          <span v-for="(item, index) in timeItemList" :key="index">{{
+            item
+          }}</span>
         </div>
       </div>
       <span class="conut-trans-tips">秒</span>
@@ -153,10 +153,10 @@ export default {
   props: {
     endTime: {
       type: String,
-      default: ''
-    },
+      default: ""
+    }
   },
-  data () {
+  data() {
     return {
       timeItemList: num,
       daysTransAfter: 0,
@@ -168,35 +168,38 @@ export default {
       secondsTransAfter: 0,
       secondsTransBefore: 0,
       timeID: null
-    }
+    };
   },
-  mounted () {
+  mounted() {
     this.getTime();
   },
   methods: {
-    getTime () {
-      let endTime = new Date(this.endTime)
+    getTime() {
+      let endTime = new Date(this.endTime);
       let nowTime = new Date();
       let time = endTime - nowTime;
       if (time <= 0) {
         //结束了
       } else {
-
         let days = Math.floor(time / 1000 / 60 / 60 / 24);
         let hours = Math.floor(time / 1000 / 60 / 60 - days * 24);
-        let minutes = Math.floor(time / 1000 / 60 - (days * 24 * 60 + hours * 60));
-        let second = Math.floor(time / 1000 - (days * 24 * 60 * 60 + hours * 60 * 60) - minutes * 60);
+        let minutes = Math.floor(
+          time / 1000 / 60 - (days * 24 * 60 + hours * 60)
+        );
+        let second = Math.floor(
+          time / 1000 - (days * 24 * 60 * 60 + hours * 60 * 60) - minutes * 60
+        );
         if (String(days).length == 1) {
-          days = '0' + days;
+          days = "0" + days;
         }
         if (String(hours).length == 1) {
-          hours = '0' + hours;
+          hours = "0" + hours;
         }
         if (String(minutes).length == 1) {
-          minutes = '0' + minutes;
+          minutes = "0" + minutes;
         }
         if (String(second).length == 1) {
-          second = '0' + second;
+          second = "0" + second;
         }
         //Array.prototype.splice.call();
         this.daysTransAfter = Array.from(String(days))[0];
@@ -211,8 +214,8 @@ export default {
       }
     }
   },
-  destroyed () {
+  destroyed() {
     clearTimeout(this.timeID);
-  },
-}
+  }
+};
 </script>

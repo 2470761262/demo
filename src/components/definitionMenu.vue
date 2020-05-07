@@ -35,40 +35,40 @@
 </style>
 <template>
   <div>
-    <el-popover placement="left"
-                width="400"
-                v-model="visible">
+    <el-popover placement="left" width="400" v-model="visible">
       <div class="definition-flex-warp">
         <div class="definition-flex-cell definition-back">
           <div class="pop-title">自定义菜单设置</div>
-          <div class="el-icon-close"
-               @click="visible = false"></div>
+          <div class="el-icon-close" @click="visible = false"></div>
         </div>
         <div class="definition-checkBox">
-          <label class="definition-checkBox-item"
-                 :class="{'disabled':item.disabled}"
-                 v-for="(item,index) in thatRenderList"
-                 :key="index">
-            <input type="checkbox"
-                   @click="setListCheck(item)"
-                   :checked="item.default"
-                   :disabled="item.disabled">
-            <span>{{item.label}}</span>
+          <label
+            class="definition-checkBox-item"
+            :class="{ disabled: item.disabled }"
+            v-for="(item, index) in thatRenderList"
+            :key="index"
+          >
+            <input
+              type="checkbox"
+              @click="setListCheck(item)"
+              :checked="item.default"
+              :disabled="item.disabled"
+            />
+            <span>{{ item.label }}</span>
           </label>
         </div>
         <div class="center-but">
-          <el-button type="primary"
-                     size="mini"
-                     @click="setTabRender">确定</el-button>
-          <el-button type="primary"
-                     size="mini"
-                     @click="resetTabRender">恢复默认</el-button>
+          <el-button type="primary" size="mini" @click="setTabRender"
+            >确定</el-button
+          >
+          <el-button type="primary" size="mini" @click="resetTabRender"
+            >恢复默认</el-button
+          >
         </div>
       </div>
-      <el-button slot="reference"
-                 size="mini"
-                 :loading="loading"
-                 type="primary">自定义菜单</el-button>
+      <el-button slot="reference" size="mini" :loading="loading" type="primary"
+        >自定义菜单</el-button
+      >
     </el-popover>
   </div>
 </template>
@@ -98,7 +98,7 @@ export default {
     renderList: {
       immediate: true,
       deep: true,
-      handler(newValue, oldValue) {
+      handler(newValue) {
         if (this.loading) return;
         //深度复制父组件数据
         this.thatRenderList = util.deepCopy(newValue);
@@ -137,7 +137,7 @@ export default {
     setTabRender() {
       let rendelOptions = ["prop", "label", "width", "order", "formart"];
       let result = [];
-      this.thatRenderList.forEach((item, index) => {
+      this.thatRenderList.forEach(item => {
         let newObj = {};
         if (item.default) {
           for (let options of rendelOptions) {
