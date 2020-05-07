@@ -8,9 +8,9 @@
     min-width: 1280px;
   }
   .page-cell-main {
-    height: calc(100% - 80PX);
+    height: calc(100% - 80px);
     @media screen and(max-width: 1280px) {
-      height: calc(100% - 100PX);
+      height: calc(100% - 100px);
     }
 
     .el-aside,
@@ -52,18 +52,15 @@
   background: var(--color--primary);
 }
 </style>
-<template >
+<template>
   <section class="page-cell-conter">
     <el-container>
-      <el-header v-if="asideNavFlag"
-                 height="80px">
+      <el-header v-if="asideNavFlag" height="80px">
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
-    <el-container class="page-cell-main"
-                  id="page-cell-main">
-      <el-aside class="el-background"
-                v-if="asideNavFlag">
+    <el-container class="page-cell-main" id="page-cell-main">
+      <el-aside class="el-background" v-if="asideNavFlag">
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
@@ -71,8 +68,10 @@
         <div class="children-page">
           <!-- 二级页面 router-view -->
           <transition name="el">
-            <keep-alive :max="3"
-                        include="houseList,otherIframe,customersIframe">
+            <keep-alive
+              :max="3"
+              include="houseList,otherIframe,customersIframe"
+            >
               <!-- <router-view v-if="$route.meta.keepAlive" /> -->
               <router-view />
             </keep-alive>
@@ -100,14 +99,14 @@ export default {
     asideNav,
     headerContent
   },
-  data () {
+  data() {
     return {
       asideNavFlag: true,
       loginUserData: {},
       menuDatasInParent: []
     };
   },
-  created () {
+  created() {
     this.$nextTick(() => {
       this.asideNavFlag = !util.localStorageGet("nest");
     });
