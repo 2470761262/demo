@@ -288,7 +288,6 @@ export default {
           disabled: false,
           default: true,
           formart: function(item) {
-            debugger;
             return item.price + "万元";
           }
         },

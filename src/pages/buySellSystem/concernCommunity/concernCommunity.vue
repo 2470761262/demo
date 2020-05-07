@@ -445,14 +445,15 @@ import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
 import tableMenu from "@/util/getTableMenu";
 //选填信息
-import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
+//import supplement from "";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
     listPage,
     moreSelect,
     definitionmenu,
-    supplement
+    supplement: () =>
+      import("@/pages/buySellSystem/addHouse/components/supplement")
   },
   data() {
     return {

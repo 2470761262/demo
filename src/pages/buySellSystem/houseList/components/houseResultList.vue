@@ -444,7 +444,7 @@ export default {
       loading: false,
       pageJson: {
         total: 1,
-        pageSize:8,
+        pageSize: 8,
         currentPage: 1
       },
       tableColumnField: [
@@ -650,7 +650,7 @@ export default {
       console.log(this.form.sortType);
     },
     InitPageJson() {
-      this.pageJson = { total: 1, currentPage: 1, pageSize:8 };
+      this.pageJson = { total: 1, currentPage: 1, pageSize: 8 };
     },
     getHouseData(value, initPage = true) {
       let that = this;
