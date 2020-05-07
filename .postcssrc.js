@@ -4,7 +4,7 @@ module.exports = {
   "plugins": {
    "postcss-plugin-px2rem": {
       remUnit: 100,
-      selectorBlackList: [/^html$/],
+      selectorBlackList: [/^html$/,'.page-cell-main-menu'],
       unitPrecision: 5,
       minPixelValue: 2
    }
