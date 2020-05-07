@@ -396,6 +396,7 @@
       <el-pagination
         @current-change="handleCurrentChange"
         :current-page="pageJson.currentPage"
+        :page-size="pageJson.pageSize"
         layout="total, prev, pager, next, jumper"
         :total="pageJson.total"
       ></el-pagination>
@@ -443,6 +444,7 @@ export default {
       loading: false,
       pageJson: {
         total: 1,
+        pageSize:8,
         currentPage: 1
       },
       tableColumnField: [
@@ -648,7 +650,7 @@ export default {
       console.log(this.form.sortType);
     },
     InitPageJson() {
-      this.pageJson = { total: 1, currentPage: 1 };
+      this.pageJson = { total: 1, currentPage: 1, pageSize:8 };
     },
     getHouseData(value, initPage = true) {
       let that = this;
@@ -663,7 +665,7 @@ export default {
       console.log(value, "==============>?");
       let restuleParms = Object.assign({}, value, {
         page: that.pageJson.currentPage,
-        limit: 8
+        limit: that.pageJson.pageSize
       });
       return this.$api
         .get({
