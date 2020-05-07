@@ -1,6 +1,7 @@
 <script>
 import exploration from '@/pages/buySellSystem/addHouse/components/exploration';
 import houseCheck from '../common/houseCheck';
+import util from '@/util/util'
 let enumUpload = new Map();
 let houseEnum = [1, 2, 3, 4, 5, 6];//上传类型 => 添加房源
 let detailEnum = [1, 2, 3, 4, 5, 6];// 上传类型 =>房源详情
@@ -49,21 +50,43 @@ export default {
         ['5', 'toiletImgList'],
         ['6', 'layoutImgList'],
       ]);
-      this.echoData.forEach((item) => {
-        if (item.PicClass && echoMap.has(item.PicClass.toString())) {
-          this[echoMap.get(item.PicClass.toString())].push({
-            id: item.id,
-            url: item.picUrl
-          })
-        } else {
-          if (item.videoUrl && item.id) {
-            this.houseVideo = {
-              id: item.id,
-              url: item.videoUrl
-            }
-          }
+      this.loading = true;
+      let fileList = this.echoData.map((item) => {
+        return {
+          Type: 12,
+          IpStr: item.IpStr,
+          FileStr: item.FileStr,
+          PicName: item.PicName,
+          PicType: "PicFile_AHouseF",
+          AddName: util.localStorageGet("logindata").accountId ? util.localStorageGet("logindata").accountId : 0,
+          subType: item.PicClass ? item.PicClass : 7,
+          Eid: 0
         }
       })
+
+      this.$api.post({
+        url: `/agentHouse/followPic/insertApplyFile`,
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        data: JSON.stringify(fileList)
+      }).then((json) => {
+        if (json.data.code == 200) {
+          json.data.data.forEach((item, index) => {
+            let result = {
+              id: item.id,
+              url: item.IpStr + item.FileStr + item.PicName
+            }
+            if (item.subType == 7) {
+              this.houseVideo = result;
+            }
+            else {
+              this[echoMap.get(item.subType.toString())].push(result)
+            }
+          });
+          this.loading = false;
+        }
+
+      }).catch((e) => {
+      });
     },
     /**
      * @param {string} picClass 当前上传的类型 如果是视屏则是null
