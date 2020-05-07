@@ -29,19 +29,19 @@ export default {
       default: () => []
     }
   },
-  created () {
+  created() {
     if (this.echoData.length != 0) {
       //this.FillImgVideo();
     }
   },
-  destroyed () {
+  destroyed() {
     this.socketApi.closeSocket();
   },
   methods: {
     /**
      * 回显视频和图片
      */
-    FillImgVideo () {
+    FillImgVideo() {
       let echoMap = new Map([
         ["1", "outdoorImgList"],
         ["2", "livingRoomImgList"],
@@ -50,21 +50,7 @@ export default {
         ["5", "toiletImgList"],
         ["6", "layoutImgList"]
       ]);
-      this.echoData.forEach(item => {
-        if (item.PicClass && echoMap.has(item.PicClass.toString())) {
-          this[echoMap.get(item.PicClass.toString())].push({
-            id: item.id,
-            url: item.picUrl
-          });
-        } else {
-          if (item.videoUrl && item.id) {
-            this.houseVideo = {
-              id: item.id,
-              url: item.videoUrl
-            };
-          }
-        }
-      });
+
       this.loading = true;
       let fileList = this.echoData.map(item => {
         return {
@@ -103,14 +89,14 @@ export default {
             this.loading = false;
           }
         })
-        .catch(e => { });
+        .catch(e => {});
     },
     /**
      * @param {string} picClass 当前上传的类型 如果是视屏则是null
      * @param {file} uploader 上传的文件
      * @param {string} fileListName 对应的数组名字 如果是视屏则是一个对象
      */
-    uploadSectionFile (picClass, uploader, fileListName) {
+    uploadSectionFile(picClass, uploader, fileListName) {
       this[fileListName + "Loading"] = true;
       let formData = new FormData();
       formData.append("type", this.replaceType);
@@ -137,7 +123,7 @@ export default {
         })
         .catch(e => {
           this.$message({
-            message: "不晓得为什么,反正失败了",
+            message: e.data.message,
             type: "warning"
           });
         })
@@ -146,7 +132,7 @@ export default {
         });
     },
     //删除视频
-    deleteVideo (item) {
+    deleteVideo(item) {
       houseCheck.removeImg(item.id, item.url).then(e => {
         if (e.data.code == 200) {
           this.houseVideo = {};
@@ -155,7 +141,7 @@ export default {
       });
     },
     //删除图片
-    deleteImg (id, url, index, listName) {
+    deleteImg(id, url, index, listName) {
       houseCheck.removeImg(id, url).then(e => {
         if (e.data.code == 200) {
           this.$message.success(e.data.message);
@@ -164,7 +150,7 @@ export default {
       });
     },
     //扫码上传回显
-    receiveMessage (r) {
+    receiveMessage(r) {
       let that = this;
       console.log(r, "rdsasad");
       let str = r.content.picUrl;
@@ -185,7 +171,7 @@ export default {
       that.insertFile(params, str, picClass);
     },
     //添加文件
-    insertFile (params, str, picClass) {
+    insertFile(params, str, picClass) {
       this.$api
         .post({
           url: "/agentHouse/followPic/insert",
@@ -210,9 +196,9 @@ export default {
             });
           }
         })
-        .catch(() => {
+        .catch(e => {
           this.$message({
-            message: "不晓得为什么,反正失败了",
+            message: e.data.message,
             type: "warning"
           });
         });
