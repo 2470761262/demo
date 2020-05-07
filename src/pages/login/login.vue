@@ -134,7 +134,8 @@
               <el-input
                 v-model="loginData.account"
                 placeholder="请输入账号"
-                name="account"
+                data-vv-name="account"
+                data-vv-as="账号"
                 v-validate="'required'"
               ></el-input>
             </div>
@@ -148,7 +149,8 @@
                 @keyup.enter.native="loginValidate"
                 type="password"
                 placeholder="请输入密码"
-                name="password"
+                data-vv-name="password"
+                data-vv-as="密码"
                 v-validate="'required'"
               ></el-input>
             </div>
@@ -187,7 +189,7 @@ export default {
         console.log("切换了登录方式");
         this.clearTime();
         if (this.loginType == 1) {
-          this.validateInit();
+          // this.validateInit();
         } else if (this.loginType == 0) {
           // 和div的id相同 必须是id
           if (this.qrData != null) {
@@ -417,20 +419,21 @@ export default {
       }
     },
     //初始化验证
-    validateInit() {
-      const dictionary = {
-        zh_CN: {
-          messages: {
-            required: field => field + "不能为空"
-          },
-          attributes: {
-            account: "账号",
-            password: "密码"
-          }
-        }
-      };
-      this.$validator.updateDictionary(dictionary);
-    },
+    // validateInit() {
+    //   const dictionary = {
+    //     zh_CN: {
+    //       messages: {
+    //         required: field => field + "不能为空"
+    //       },
+    //       attributes: {
+    //         account: "账号",
+    //         password: "密码"
+    //       }
+    //     }
+    //   };
+    //   //    this.$validator.updateDictionary(dictionary);
+    //   console.log("validateInit -> this.$validator", this.$validator);
+    // },
     //切换当前登录类型
     changeLoginType() {
       this.loginType = this.loginType == 0 ? 1 : 0;
