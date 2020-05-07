@@ -1,7 +1,7 @@
 //选择房源
 export default {
   state: {
-    nowRid: ''
+    nowRid: ""
   },
   mutations: {
     setNowRid(state, val) {

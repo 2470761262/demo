@@ -148,42 +148,56 @@
       <div class="query-center">
         <slot name="top"></slot>
       </div>
-      <div class="division-line"
-           v-if="$scopedSlots.top"></div>
+      <div class="division-line" v-if="$scopedSlots.top"></div>
       <div class="page-body-conter">
-        <div class="page-body-conter-title"
-             v-if="$scopedSlots.title">
+        <div class="page-body-conter-title" v-if="$scopedSlots.title">
           <slot name="title"></slot>
         </div>
         <div class="page-body-conter-flex">
           <div class="page-body-conter-left-slot">
             <slot name="left"></slot>
           </div>
-          <div class="page-body-conter-right"
-               :class="{'tabIsMar': $scopedSlots.left,'queryIsPad':$scopedSlots.top && !$scopedSlots.title}">
-            <el-table :data="tableData"
-                      :border="$attrs.border ? false : true"
-                      :header-cell-class-name="( $attrs.headerClass || $attrs.headerClass == '') ? $attrs.headerClass: 'headerCellSet' "
-                      :cell-class-name="( $attrs.cellClass || $attrs.cellClass == '')  ? $attrs.cellClass: 'cellItemSet'"
-                      ref="table"
-                      v-bind="$attrs"
-                      v-on="$listeners"
-                      v-loading="loading">
-              <slot name="tableColumn"
-                    :tableData="tableDataColumn"></slot>
+          <div
+            class="page-body-conter-right"
+            :class="{
+              tabIsMar: $scopedSlots.left,
+              queryIsPad: $scopedSlots.top && !$scopedSlots.title
+            }"
+          >
+            <el-table
+              :data="tableData"
+              :border="$attrs.border ? false : true"
+              :header-cell-class-name="
+                $attrs.headerClass || $attrs.headerClass == ''
+                  ? $attrs.headerClass
+                  : 'headerCellSet'
+              "
+              :cell-class-name="
+                $attrs.cellClass || $attrs.cellClass == ''
+                  ? $attrs.cellClass
+                  : 'cellItemSet'
+              "
+              ref="table"
+              v-bind="$attrs"
+              v-on="$listeners"
+              v-loading="loading"
+            >
+              <slot name="tableColumn" :tableData="tableDataColumn"></slot>
             </el-table>
           </div>
           <sidebarList v-if="sidebarFlag"></sidebarList>
         </div>
       </div>
       <div class="page-body-floot">
-        <el-pagination @size-change="handleSizeChange"
-                       @current-change="handleCurrentChange"
-                       :current-page="pageJson.currentPage"
-                       :page-sizes="pageJson.sizes || [5,10,15,20]"
-                       :page-size="pageJson.size || 10"
-                       layout="total, sizes, prev, pager, next, jumper"
-                       :total="pageJson.total>10000?10000:pageJson.total"></el-pagination>
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageJson.currentPage"
+          :page-sizes="pageJson.sizes || [5, 10, 15, 20]"
+          :page-size="pageJson.size || 10"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pageJson.total > 10000 ? 10000 : pageJson.total"
+        ></el-pagination>
       </div>
     </div>
   </div>
@@ -199,7 +213,7 @@ export default {
     $attrs: {
       deep: true,
       immediate: true,
-      handler: function(val, oldVal) {
+      handler: function(val) {
         Object.assign(this.$data, val.parentData);
       }
     }

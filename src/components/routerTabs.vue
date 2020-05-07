@@ -1,4 +1,3 @@
-
 <style lang="less" scoped>
 .el-tabs--border-card {
   box-shadow: none;
@@ -51,26 +50,34 @@
 </style>
 <template>
   <div class="page-cell">
-    <el-tabs type="border-card"
-             class="el-parent-tabs"
-             v-model="renderActive"
-             @tab-click="parentChange">
-      <el-tab-pane v-for="(item,index) in renderTab"
-                   :key="index"
-                   :name="item.active">
-        <span slot="label"><i :class="item.icon"></i> {{item.name}}</span>
+    <el-tabs
+      type="border-card"
+      class="el-parent-tabs"
+      v-model="renderActive"
+      @tab-click="parentChange"
+    >
+      <el-tab-pane
+        v-for="(item, index) in renderTab"
+        :key="index"
+        :name="item.active"
+      >
+        <span slot="label"><i :class="item.icon"></i> {{ item.name }}</span>
       </el-tab-pane>
     </el-tabs>
-    <template v-for="(item,index) in renderTab">
-      <el-tabs @tab-click="childChange"
-               v-if="item.children && item.active==renderActive"
-               v-model="renderChild"
-               class="el-children-tabs"
-               :key="index">
-        <el-tab-pane v-for="(items,index) in item.children"
-                     :key="index"
-                     :name="items.active"
-                     :label="items.name">
+    <template v-for="(item, index) in renderTab">
+      <el-tabs
+        @tab-click="childChange"
+        v-if="item.children && item.active == renderActive"
+        v-model="renderChild"
+        class="el-children-tabs"
+        :key="index"
+      >
+        <el-tab-pane
+          v-for="(items, index) in item.children"
+          :key="index"
+          :name="items.active"
+          :label="items.name"
+        >
         </el-tab-pane>
       </el-tabs>
     </template>
@@ -91,7 +98,7 @@ export default {
     // },
   },
   watch: {
-    $route(newValue, oldValue) {
+    $route() {
       this.initUrlTab();
     }
   },
@@ -123,7 +130,7 @@ export default {
       // this.$emit('input', this.renderChild);
       this.$emit("change", this.renderChild);
     },
-    setMetaTitle(resultIndex) {
+    setMetaTitle() {
       //   this.$route.matched.forEach(item => {
       //     if (item.path == "/buySellSystem/otherIframe") {
       //       item.meta.title = this.routerTab[resultIndex].name;
@@ -132,7 +139,7 @@ export default {
     },
     //父级切换
     parentChange(e) {
-      let resultIndex = this.routerTab.findIndex((item, index) => {
+      let resultIndex = this.routerTab.findIndex(item => {
         return item.active == e.name;
       });
       this.setMetaTitle(resultIndex);

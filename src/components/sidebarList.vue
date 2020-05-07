@@ -33,27 +33,33 @@
 <template>
   <div class="sldebar-content">
     <div class="sldebar-content-list">
-      <div class="sldebar-content-item"
-           @click="goHome">
-        <img class="nav-image"
-             src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/8d7ff13733c34e6b9020a137150ad2bc.png"
-             alt="">
+      <div class="sldebar-content-item" @click="goHome">
+        <img
+          class="nav-image"
+          src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/8d7ff13733c34e6b9020a137150ad2bc.png"
+          alt=""
+        />
         <span class="item-title">首页</span>
       </div>
-      <div class="sldebar-content-item"
-           @click="goBack">
-        <img class="nav-image"
-             src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/cfca816db35642d483ad4dc5e889288a.png"
-             alt="">
+      <div class="sldebar-content-item" @click="goBack">
+        <img
+          class="nav-image"
+          src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/cfca816db35642d483ad4dc5e889288a.png"
+          alt=""
+        />
         <span class="item-title">返回</span>
       </div>
-      <div class="sldebar-content-item"
-           @click="lastClick"
-           v-if="showEdit || editAgentHouse">
+      <div
+        class="sldebar-content-item"
+        @click="lastClick"
+        v-if="showEdit || editAgentHouse"
+      >
         <!-- <i class="el-icon-plus icon"></i> -->
-        <img class="nav-image"
-             src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/43c6bb2152e647ec825a754fd3817fbb.png">
-        <span class="item-title">{{lastItemSet ? lastTitle : '新增'}}</span>
+        <img
+          class="nav-image"
+          src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/43c6bb2152e647ec825a754fd3817fbb.png"
+        />
+        <span class="item-title">{{ lastItemSet ? lastTitle : "新增" }}</span>
       </div>
     </div>
   </div>
@@ -61,7 +67,6 @@
 
 <script>
 import but from "@/evenBus/but.js";
-import util from "@/util/util";
 export default {
   props: {
     lastItemSet: {
@@ -77,9 +82,10 @@ export default {
     },
     lastParams: {
       type: Object,
-      default: () => { }
+      default: () => {}
     },
-    judgeShowEdit: {//判断是否为编辑
+    judgeShowEdit: {
+      //判断是否为编辑
       type: Boolean,
       default: false
     },
@@ -90,15 +96,13 @@ export default {
       type: Boolean,
       default: false
     }
-
   },
-  data () {
+  data() {
     return {
       editAgentHouse: false
-    }
-
+    };
   },
-  mounted () {
+  mounted() {
     let that = this;
     if (!this.judgeShowEdit) {
       this.editAgentHouse = true;
@@ -107,17 +111,17 @@ export default {
       that.editAgentHouse = true;
     });
   },
-  destroyed () {
+  destroyed() {
     but.$off("editAgentHouse");
   },
   methods: {
-    goHome () {
+    goHome() {
       this.$router.push({ path: "/buySellSystem/houseList" });
     },
-    goBack () {
+    goBack() {
       this.$router.go(-1);
     },
-    lastClick () {
+    lastClick() {
       let routerData = {
         name: this.lastName
       };
@@ -129,4 +133,3 @@ export default {
   }
 };
 </script>
-
