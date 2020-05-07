@@ -406,9 +406,9 @@ const taskProCheck = [
 const replaceCheck = [
   { label: "钥匙取代", value: 3 },
   { label: "实勘取代", value: 5 },
-  { label: "普通委托取代", value: "2,1,2" },
-  { label: "独家委托取代", value: "1,1,2" },
-  { label: "限时委托取代", value: "3,1,2" }
+  { label: "普通委托取代", value: "2,44" },
+  { label: "独家委托取代", value: "1,44" },
+  { label: "限时委托取代", value: "3,44" }
 ];
 /**
  * 房源转状态
@@ -918,7 +918,7 @@ export default {
         params.endTime = that.queryData.timeSelect[1];
         params.status = that.status;
         params.checkProject = that.checkProject;
-        params.checkType = that.type;
+        params.checkTypeStr = that.type;
       }
       params.sortColumn = "id";
       this.$api
