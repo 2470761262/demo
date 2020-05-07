@@ -1431,7 +1431,7 @@ export default {
             alert(result.message);
           }
         })
-        .catch(e => {
+        .catch(() => {
           console.log("查询岗位失败");
         });
     },
@@ -1463,7 +1463,7 @@ export default {
             alert(result.message);
           }
         })
-        .catch(e => {
+        .catch(() => {
           console.log("查询角色失败");
         });
     },

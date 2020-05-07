@@ -50,21 +50,7 @@ export default {
         ["5", "toiletImgList"],
         ["6", "layoutImgList"]
       ]);
-      this.echoData.forEach(item => {
-        if (item.PicClass && echoMap.has(item.PicClass.toString())) {
-          this[echoMap.get(item.PicClass.toString())].push({
-            id: item.id,
-            url: item.picUrl
-          });
-        } else {
-          if (item.videoUrl && item.id) {
-            this.houseVideo = {
-              id: item.id,
-              url: item.videoUrl
-            };
-          }
-        }
-      });
+
       this.loading = true;
       let fileList = this.echoData.map(item => {
         return {
@@ -137,7 +123,7 @@ export default {
         })
         .catch(e => {
           this.$message({
-            message: "不晓得为什么,反正失败了",
+            message: e.data.message,
             type: "warning"
           });
         })
@@ -210,9 +196,9 @@ export default {
             });
           }
         })
-        .catch(() => {
+        .catch(e => {
           this.$message({
-            message: "不晓得为什么,反正失败了",
+            message: e.data.message,
             type: "warning"
           });
         });
