@@ -110,7 +110,7 @@ export default {
   },
   created() {
     this.$nextTick(() => {
-      this.asideNavFlag = !util.localStorageGet("nest");
+      this.asideNavFlag = util.localStorageGet("nest");
     });
     this.loginUserData = util.localStorageGet(LOGINDATA);
     if (this.loginUserData && this.loginUserData.menuNodes) {
