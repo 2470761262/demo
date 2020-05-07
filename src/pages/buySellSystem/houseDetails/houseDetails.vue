@@ -141,6 +141,7 @@ export default {
     };
   },
   created() {
+    console.log(window.location, "window.location");
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
       this.detailType = this.$route.params.detailType;
@@ -150,9 +151,14 @@ export default {
       util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
       util.localStorageSet("houseDetails.vue:detailType", this.detailType);
     } else {
-      this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
-      this.detailType = util.localStorageGet("houseDetails.vue:detailType");
-      this.dept.id = util.localStorageGet("houseDetails.vue:deptId");
+      let houseId = util.getQueryVariable("commissionHouseId");
+      if (houseId) {
+        this.forID.id = houseId;
+      } else {
+        this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
+        this.detailType = util.localStorageGet("houseDetails.vue:detailType");
+        this.dept.id = util.localStorageGet("houseDetails.vue:deptId");
+      }
     }
     this.lastParams.id = this.forID.id;
     this.getHouseDetails();
