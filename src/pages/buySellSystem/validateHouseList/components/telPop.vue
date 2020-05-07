@@ -54,14 +54,14 @@
         <h3 class="custome-head-tips">
           <i class="el-icon-s-custom icon"></i>业主姓名
         </h3>
-        <div class="custome-head-name">钟丽娟</div>
+        <div class="custome-head-name">{{ data.customerName }}</div>
       </div>
       <div class="tel-content">
         <div class="pop-custome-head">
           <h3 class="custome-head-tips">
             <i class="el-icon-phone icon"></i>录入电话
           </h3>
-          <div class="custome-head-name">186****8888</div>
+          <div class="custome-head-name">{{ data.tel }}</div>
         </div>
         <i class="el-icon-phone call-phone"></i>
       </div>
@@ -70,9 +70,12 @@
           <h3 class="custome-head-tips">
             <i class="el-icon-phone icon"></i>验真电话
           </h3>
-          <div class="custome-head-name">186****8888</div>
+          <div class="custome-head-name">{{ data.checkTel }}</div>
         </div>
-        <i class="el-icon-phone call-phone"></i>
+        <i
+          class="el-icon-phone call-phone"
+          v-if="data.checkTel != '-' && data.checkTel != ''"
+        ></i>
       </div>
       <div class="pop-custome-foot">
         <el-button type="info" size="mini" @click="cancel">关闭</el-button>
@@ -83,6 +86,12 @@
 
 <script>
 export default {
+  props: {
+    data: {
+      type: Object,
+      default: () => {}
+    }
+  },
   methods: {
     cancel() {
       this.$emit("update:visible", false);
