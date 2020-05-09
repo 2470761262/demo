@@ -20,6 +20,15 @@
     text-indent: 21px;
     margin-top: 5px;
   }
+  .retrievalInfo- {
+    font-size: 13px;
+    &success {
+      color: #40a375;
+    }
+    &error {
+      color: red;
+    }
+  }
 }
 .tel-content {
   padding: 15px;
@@ -60,6 +69,14 @@
         <div class="pop-custome-head">
           <h3 class="custome-head-tips">
             <i class="el-icon-phone icon"></i>录入电话
+            <span
+              :class="
+                retrievalInfo == '首次出现'
+                  ? 'retrievalInfo-success'
+                  : 'retrievalInfo-error'
+              "
+              >({{ retrievalInfo | emptyRead }})</span
+            >
           </h3>
           <div class="custome-head-name">{{ data.tel }}</div>
         </div>
@@ -93,7 +110,28 @@ export default {
       default: () => {}
     }
   },
+  created() {
+    this.getTelRetrieval();
+  },
+  data() {
+    return {
+      retrievalInfo: ""
+    };
+  },
   methods: {
+    getTelRetrieval() {
+      this.$api
+        .post({
+          url: `/verifyHouse/listTelRetrieval/${this.data.id}`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {}
+        })
+        .then(e => {
+          console.log(e);
+          this.retrievalInfo = e.data.data.retrievalInfo;
+        })
+        .catch(e => {});
+    },
     cancel() {
       this.$emit("update:visible", false);
     },
