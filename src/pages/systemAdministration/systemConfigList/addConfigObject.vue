@@ -554,16 +554,16 @@ export default {
   },
   created() {
     but.$emit("asideNav", false);
-    if (this.$route.params.objectId !== undefined) {
+    if (this.$route.query.objectId !== undefined) {
       this.hide = true;
       this.queryCompanyDatas(1);
-      this.updateObjectDetail(this.$route.params.objectId);
+      this.updateObjectDetail(this.$route.query.objectId);
     } else {
       this.queryCompanyDatas(1);
-      this.notice.configId = this.$route.params.configId;
+      this.notice.configId = this.$route.query.configId;
       console.log(this.configId, 111111111);
-      this.notice.configNo = this.$route.params.sysParNo;
-      this.notice.configName = this.$route.params.sysParName;
+      this.notice.configNo = this.$route.query.sysParNo;
+      this.notice.configName = this.$route.query.sysParName;
       this.notice.paraIsAllowed = this.paraIsAllowed[0].value;
       this.notice.configObject = this.configObject[0].value;
       this.notice.parRange = this.parRange[0].value;
