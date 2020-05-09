@@ -308,11 +308,11 @@
           v-if="applyAgentRule"
           :disabled="isDisabled || agentApply"
           @click="callTaskAgent"
-          >申请跟单人</el-button
+          >{{ housePageType != "notSale" ? "申请跟单人" : "转在售" }}</el-button
         >
-        <el-button class="cell-pro-but" :disabled="true" v-else
-          >申请跟单人</el-button
-        >
+        <el-button class="cell-pro-but" :disabled="true" v-else>{{
+          housePageType != "notSale" ? "申请跟单人" : "转在售"
+        }}</el-button>
       </div>
       <div class="cell-pro-item">
         <div class="cell-pro-detail">
@@ -378,6 +378,11 @@ export default {
     },
     dept: {
       default: {}
+    }
+  },
+  props: {
+    housePageType: {
+      type: String
     }
   },
   computed: {
@@ -454,7 +459,23 @@ export default {
   mounted() {},
   methods: {
     callTaskAgent() {
-      but.$emit("callTaskAgent");
+      if (this.housePageType != "notSale") {
+        but.$emit("callTaskAgent");
+      } else {
+        let _that = this;
+        this.$router.push({
+          path: "/buySellSystem/addHouse",
+          query: {
+            comId: _that.resultData.Comid,
+            cbId: _that.resultData.CBId,
+            bhId: _that.resultData.id,
+            communityName: _that.resultData.CommunityName,
+            buildingName: _that.resultData.BuildingName,
+            roomNo: _that.resultData.RoomNo,
+            flag: "history"
+          }
+        });
+      }
     },
     getShowBuliding() {
       let that = this;

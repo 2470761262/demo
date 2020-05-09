@@ -123,13 +123,18 @@ export default {
     console.log(window.location, "window.location");
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
-      util.localStorageSet("tradeHouseDetail.vue:houseId", this.forID.id);
+      util.sessionLocalStorageSet(
+        "tradeHouseDetail.vue:houseId",
+        this.forID.id
+      );
     } else {
       let houseId = util.getQueryVariable("commissionHouseId");
       if (houseId) {
         this.forID.id = houseId;
       } else {
-        this.forID.id = util.localStorageGet("tradeHouseDetail.vue:houseId");
+        this.forID.id = util.sessionLocalStorageGet(
+          "tradeHouseDetail.vue:houseId"
+        );
       }
     }
     this.getHouseDetails();

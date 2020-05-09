@@ -45,7 +45,7 @@
       <!-- 轮播图 -->
       <loopImg class="cell-left" :class="{ 'cell-left-nest': nest }"></loopImg>
       <!-- 房屋详情 -->
-      <detail class="cell-right"></detail>
+      <detail class="cell-right" :housePageType="housePageType"></detail>
       <!-- 右侧功能按钮 -->
       <sidebarList
         lastItemSet
@@ -113,6 +113,7 @@ export default {
       forID: {
         id: null
       },
+      housePageType: null, //当前页面类型
       tradeType: 1,
       houseDetails: {},
       load: {
@@ -124,12 +125,29 @@ export default {
   created() {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
-      this.tradeType = this.$route.params.tradeType;
-      util.localStorageSet("historyDetails.vue:houseId", this.forID.id);
-      util.localStorageSet("historyDetails.vue:tradeType", this.tradeType);
+      this.tradeType = this.$route.params.tradeType || 1;
+      util.sessionLocalStorageSet("historyDetails.vue:houseId", this.forID.id);
+      util.sessionLocalStorageSet(
+        "historyDetails.vue:tradeType",
+        this.tradeType
+      );
     } else {
-      this.forID.id = util.localStorageGet("historyDetails.vue:houseId");
-      this.tradeType = util.localStorageGet("historyDetails.vue:tradeType");
+      this.forID.id = util.sessionLocalStorageGet("historyDetails.vue:houseId");
+      this.tradeType = util.sessionLocalStorageGet(
+        "historyDetails.vue:tradeType"
+      );
+    }
+    //获取页面类型 暂不售需要特殊判断需要知道当前页面类型
+    if (this.$route.params.housePageType) {
+      this.housePageType = this.$route.params.housePageType;
+      util.sessionLocalStorageSet(
+        "historyDetails.vue:housePageType",
+        this.housePageType
+      );
+    } else {
+      this.housePageType = util.sessionLocalStorageGet(
+        "historyDetails.vue:housePageType"
+      );
     }
     this.getHouseDetails();
   },
