@@ -40,10 +40,10 @@ module.exports = {
   },
   //cnd引入
   configureWebpack: config => {
-    config.externals = {
-      vue: "Vue",
-      "element-ui": "ELEMENT"
-    };
+    // config.externals = {
+    //   vue: "Vue",
+    //   "element-ui": "ELEMENT"
+    // };
   },
   /* webpack-dev-server 相关配置 */
   devServer: {

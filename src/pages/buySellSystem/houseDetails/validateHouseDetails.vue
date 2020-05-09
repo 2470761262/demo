@@ -93,7 +93,7 @@ export default {
   },
   computed: {
     nest() {
-      return util.localStorageGet("nest");
+      return !util.localStorageGet("nest");
     }
   },
   mixins: [getMenuRid],
@@ -122,9 +122,14 @@ export default {
   created() {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
-      util.localStorageSet("validateHouseDetails.vue:houseId", this.forID.id);
+      util.sessionLocalStorageSet(
+        "validateHouseDetails.vue:houseId",
+        this.forID.id
+      );
     } else {
-      this.forID.id = util.localStorageGet("validateHouseDetails.vue:houseId");
+      this.forID.id = util.sessionLocalStorageGet(
+        "validateHouseDetails.vue:houseId"
+      );
     }
     this.getHouseDetails();
   },

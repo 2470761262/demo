@@ -453,7 +453,10 @@ export default {
 
     toLook(id) {
       var that = this;
-      that.$router.push({ name: "historyDetails", params: { houseId: id } });
+      that.$router.push({
+        name: "historyDetails",
+        params: { houseId: id, housePageType: "notSale" }
+      });
     },
     toSale(
       comId,
