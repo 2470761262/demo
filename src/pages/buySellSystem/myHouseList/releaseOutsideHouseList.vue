@@ -333,7 +333,7 @@ export default {
           default: true
         },
         {
-          prop: "agentPer",
+          prop: "brokerName",
           label: "跟单人",
           width: "120",
           order: false,
@@ -374,14 +374,6 @@ export default {
         {
           prop: "decoration",
           label: "装修",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "addPer",
-          label: "添加人",
           width: "120",
           order: false,
           disabled: false,

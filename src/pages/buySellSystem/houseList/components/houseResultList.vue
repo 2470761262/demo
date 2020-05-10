@@ -496,7 +496,9 @@ export default {
           width: "120",
           order: true,
           disabled: false,
-          default: true
+          default: true,
+          formart: item =>
+            item.outfollow == undefined ? item.outFollow : item.outfollow
         },
         {
           prop: "noSeenDay",
@@ -520,7 +522,9 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: true
+          default: true,
+          formart: item =>
+            item.brokerName == undefined ? item.agentName : item.brokerName
         },
         {
           prop: "houseType",
