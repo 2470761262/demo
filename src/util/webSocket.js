@@ -3,12 +3,15 @@ var global_receiveMessageCallback = null;
 function initWebSocket(domain, code) {
   //初始化weosocket
   var wsuri = "ws" + domain + "/webSocketHandler?user=" + code;
+  connectWs(wsuri);
+}
+function connectWs(wsuri) {
   websock = new WebSocket(wsuri);
   websock.onmessage = function(e) {
     websocketonmessage(e);
   };
   websock.onclose = function(e) {
-    websocketclose(e);
+    websocketclose(e, wsuri);
   };
   websock.onopen = function() {
     websocketOpen();
@@ -48,8 +51,8 @@ function websocketonmessage(e) {
     global_receiveMessageCallback(JSON.parse(e.data));
   } else {
     console.log(
-      JSON.parse(e.data),
-      "数据接收成功，但未初始化接收消息回调处理函数"
+        JSON.parse(e.data),
+        "数据接收成功，但未初始化接收消息回调处理函数"
     );
   }
 }
@@ -60,8 +63,10 @@ function websocketsend(agentData) {
 }
 
 //关闭
-function websocketclose(e) {
+function websocketclose(e, url) {
   console.log("connection closed (" + e + ")");
+  console.log("准备重新连接 --");
+  connectWs(url);
 }
 
 function websocketOpen(e) {

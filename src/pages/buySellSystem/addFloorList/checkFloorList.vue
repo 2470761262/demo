@@ -85,7 +85,7 @@
         </el-form-item>
       </div>
 
-      <div class="page-form-inline">
+      <div class="page-form-inline" v-if="form.type != 4">
         <el-form-item label="审核类型">
           <el-select
             v-model="form.type"
@@ -105,7 +105,7 @@
         </el-form-item>
       </div>
 
-      <div class="page-form-inline">
+      <div class="page-form-inline" v-if="form.type != 4">
         <el-form-item label="审核数据">
           <el-input placeholder="" readonly v-model="form.value"> </el-input>
         </el-form-item>

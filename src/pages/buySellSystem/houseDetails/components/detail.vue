@@ -411,7 +411,7 @@ export default {
           return true;
         }
       }
-      return true;
+      return false;
     },
     fdDial() {
       let perId = util.localStorageGet("logindata").accountId;
