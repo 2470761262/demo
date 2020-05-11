@@ -701,7 +701,7 @@ export default {
       }
       let audioElement = new Audio(URL.createObjectURL(file[0]));
       audioElement.addEventListener("loadedmetadata", () => {
-        if (audioElement.duration > 90) {
+        if (audioElement.duration > 90.9) {
           this.$message.error("视频时长大于90秒了~");
         } else {
           this.uploadSectionFile(undefined, file[0], fileListName);
