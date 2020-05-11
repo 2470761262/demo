@@ -514,8 +514,8 @@ export default {
       console.log(r, "接收到了消息");
       if (r.content.resourceType == "vedio") {
         console.log(r.content, "视频消息内容，准备插入草稿箱");
-        debugger
-        if(that.houseVideo&&that.houseVideo.url){
+        debugger;
+        if (that.houseVideo && that.houseVideo.url) {
           console.log("仅可以上传一个视频,请先手动删除！");
           this.$message.error("仅可以上传一个视频,请先手动删除！");
           return;
