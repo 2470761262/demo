@@ -3,7 +3,7 @@ import util from "@/util/util";
 import { TOKEN, LOGINDATA } from "@/util/constMap";
 export default {
   beforeCreate() {
-    if (process.env.NODE_ENV !== "development") {
+    if (process.env.NODE_ENV == "development") {
       util.localStorageSet("nest", true);
     } else {
       util.localStorageSet("nest", false);

@@ -492,6 +492,7 @@ export default {
         if (detailData.plate == 1 && this.dept.id != loginDeptId) {
           return true;
         }
+        return false;
       }
       return true;
     }

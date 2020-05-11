@@ -331,9 +331,14 @@ export default {
   created() {
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
-      util.localStorageSet("buildingHouseDetail.vue:houseId", this.houseId);
+      util.sessionLocalStorageSet(
+        "buildingHouseDetail.vue:houseId",
+        this.houseId
+      );
     } else {
-      this.houseId = util.localStorageGet("buildingHouseDetail.vue:houseId");
+      this.houseId = util.sessionLocalStorageGet(
+        "buildingHouseDetail.vue:houseId"
+      );
     }
     this.getHouseDetails();
   },

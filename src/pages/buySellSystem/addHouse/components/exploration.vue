@@ -511,10 +511,13 @@ export default {
       console.log(r, "接收到了消息");
       if (r.content.resourceType == "vedio") {
         console.log(r.content, "视频消息内容，准备插入草稿箱");
+        debugger;
+        if (that.houseVideo && that.houseVideo.url) {
+          console.log("仅可以上传一个视频,请先手动删除！");
+          this.$message.error("仅可以上传一个视频,请先手动删除！");
+          return;
+        }
         that.uploadFileInfo(undefined, r.content.picUrl, function(data) {
-          if (that.houseVideo.id) {
-            that.deleteVideo(that.houseVideo);
-          }
           that.houseVideo = data;
         });
       } else {
@@ -695,7 +698,7 @@ export default {
       }
       let audioElement = new Audio(URL.createObjectURL(file[0]));
       audioElement.addEventListener("loadedmetadata", () => {
-        if (audioElement.duration > 90) {
+        if (audioElement.duration > 91) {
           this.$message.error("视频时长大于90秒了~");
         } else {
           this.uploadSectionFile(undefined, file[0], fileListName);

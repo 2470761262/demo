@@ -444,7 +444,7 @@ export default {
       loading: false,
       pageJson: {
         total: 1,
-        pageSize:8,
+        pageSize: 8,
         currentPage: 1
       },
       tableColumnField: [
@@ -496,7 +496,9 @@ export default {
           width: "120",
           order: true,
           disabled: false,
-          default: true
+          default: true,
+          formart: item =>
+            item.outfollow == undefined ? item.outFollow : item.outfollow
         },
         {
           prop: "noSeenDay",
@@ -520,7 +522,9 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: true
+          default: true,
+          formart: item =>
+            item.brokerName == undefined ? item.agentName : item.brokerName
         },
         {
           prop: "houseType",
@@ -650,7 +654,7 @@ export default {
       console.log(this.form.sortType);
     },
     InitPageJson() {
-      this.pageJson = { total: 1, currentPage: 1, pageSize:8 };
+      this.pageJson = { total: 1, currentPage: 1, pageSize: 8 };
     },
     getHouseData(value, initPage = true) {
       let that = this;

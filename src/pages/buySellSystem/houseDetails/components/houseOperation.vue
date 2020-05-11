@@ -495,7 +495,6 @@ export default {
           token: false
         })
         .then(e => {
-          debugger;
           let result = e.data;
           if (result.code == 200) {
             that.pair.list = [...that.pair.list, ...result.data.list];

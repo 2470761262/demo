@@ -7,12 +7,12 @@
   .page-cell-header {
     min-width: 1280px;
   }
-  .page-cell-main {
+  .page-cell-main-menu {
     // prettier-ignore
-    height: calc(100% - 80PX);
+    height: calc(100% - 80px);
     @media screen and(max-width: 1280px) {
       // prettier-ignore
-      height: calc(100% - 100PX);
+      height: calc(100% - 100px);
     }
 
     .el-aside,
@@ -61,7 +61,7 @@
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
-    <el-container class="page-cell-main" id="page-cell-main">
+    <el-container class="page-cell-main-menu" id="page-cell-main">
       <el-aside class="el-background" v-if="asideNavFlag">
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
@@ -110,7 +110,7 @@ export default {
   },
   created() {
     this.$nextTick(() => {
-      this.asideNavFlag = !util.localStorageGet("nest");
+      this.asideNavFlag = util.localStorageGet("nest");
     });
     this.loginUserData = util.localStorageGet(LOGINDATA);
     if (this.loginUserData && this.loginUserData.menuNodes) {

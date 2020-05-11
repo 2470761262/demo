@@ -355,7 +355,7 @@ export default {
   },
   computed: {
     nest() {
-      return util.localStorageGet("nest");
+      return !util.localStorageGet("nest");
     }
   },
   name: "houseList",

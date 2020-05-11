@@ -37,6 +37,7 @@
     font-size: 31px;
     vertical-align: middle;
     color: #606266;
+    margin-right: 10px;
   }
   button[disabled="disabled"] {
     .iconfont {
@@ -63,7 +64,7 @@
               resultData.plate != 1
           "
         >
-          <i class="iconfabu iconfont el-icon--left"></i>
+          <i class="iconfabu iconfont "></i>
           <span class="button-title">发布外网</span>
         </el-button>
         <el-button
@@ -76,7 +77,7 @@
           "
           @click="cancelOutsideHouse"
         >
-          <i class="iconfabu iconfont el-icon--left"></i>
+          <i class="iconfabu iconfont "></i>
           <span class="button-title">取消发布</span>
         </el-button>
       </div>
@@ -88,7 +89,7 @@
           v-if="!isRecommend"
         >
           <!-- && (isShowButton.inspector || isShowButton.shopOwner) -->
-          <i class="icontuijian iconfont el-icon--left"></i>
+          <i class="icontuijian iconfont "></i>
           <span class="button-title" v-if="isShowButton.inspector == true"
             >总监推荐</span
           >
@@ -97,7 +98,7 @@
           >
         </el-button>
         <el-button :disabled="isDisabled" v-if="isRecommend" @click="nodePop">
-          <i class="icontuijian iconfont el-icon--left"></i>
+          <i class="icontuijian iconfont "></i>
           <span class="button-title">取消推荐</span>
         </el-button>
       </div>
@@ -113,14 +114,14 @@
               resultData.plate != 1
           "
         >
-          <i class="icontuijian iconfont el-icon--left"></i>
+          <i class="icontuijian iconfont "></i>
           <span class="button-title">成交对赌</span>
         </el-button>
       </div>
       <!-- 转房源状态 -->
       <div class="button-set">
         <el-button @click="changePopUp" :disabled="isDisabled">
-          <i class="iconzhuanhuan iconfont el-icon--left"></i>
+          <i class="iconzhuanhuan iconfont "></i>
           <span class="button-title">转房源状态</span>
         </el-button>
       </div>
@@ -131,7 +132,7 @@
           @click="openPopUp('cancelTaskFlag')"
         >
           <!-- v-if="isShowButton.cancelMethod" -->
-          <i class="iconfont iconquxiao el-icon--left"></i>
+          <i class="iconfont iconquxiao "></i>
           <span class="button-title">取消角色人</span>
         </el-button>
       </div>
@@ -143,7 +144,7 @@
         >
           <!-- v-if="isShowButton.locking" -->
           <i
-            class="iconfont el-icon--left"
+            class="iconfont "
             :class="resultData.isLocking == 1 ? 'iconjiesuo' : 'iconsuoding'"
           ></i>
           <span class="button-title">{{
@@ -162,7 +163,7 @@
           @click="openPopUp('keyStorageFlag')"
           v-if="resultData.agentHouseMethod.keyOwner == perId"
         >
-          <i class="iconyuechi iconfont el-icon--left"></i>
+          <i class="iconyuechi iconfont "></i>
           <span class="button-title">修改钥匙存放门店</span>
         </el-button>
       </div>

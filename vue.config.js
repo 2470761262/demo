@@ -2,6 +2,7 @@ const path = require("path"); //引入path模块
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
+const isProduction = process.env.NODE_ENV === "production";
 module.exports = {
   /* 部署生产环境和开发环境下的URL：可对当前环境进行区分，baseUrl 从 Vue CLI 3.3 起已弃用，要使用publicPath */
   /* baseUrl: process.env.NODE_ENV === 'production' ? './' : '/' */
@@ -32,6 +33,17 @@ module.exports = {
   //别名配置
   chainWebpack: config => {
     config.resolve.alias.set("@", resolve("src"));
+    // 移除 prefetch 插件
+    config.plugins.delete("prefetch");
+    // 移除 preload 插件
+    config.plugins.delete("preload");
+  },
+  //cnd引入
+  configureWebpack: config => {
+    // config.externals = {
+    //   vue: "Vue",
+    //   "element-ui": "ELEMENT"
+    // };
   },
   /* webpack-dev-server 相关配置 */
   devServer: {

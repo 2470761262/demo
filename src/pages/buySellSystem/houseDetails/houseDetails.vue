@@ -97,7 +97,7 @@ export default {
   },
   computed: {
     nest() {
-      return util.localStorageGet("nest");
+      return !util.localStorageGet("nest");
     }
   },
   mixins: [getMenuRid],
@@ -147,17 +147,22 @@ export default {
       this.detailType = this.$route.params.detailType;
       this.dept.id = this.$route.params.dept;
       console.log("************", this.dept.id);
-      util.localStorageSet("houseDetails.vue:deptId", this.dept.id);
-      util.localStorageSet("houseDetails.vue:houseId", this.forID.id);
-      util.localStorageSet("houseDetails.vue:detailType", this.detailType);
+      util.sessionLocalStorageSet("houseDetails.vue:deptId", this.dept.id);
+      util.sessionLocalStorageSet("houseDetails.vue:houseId", this.forID.id);
+      util.sessionLocalStorageSet(
+        "houseDetails.vue:detailType",
+        this.detailType
+      );
     } else {
       let houseId = util.getQueryVariable("commissionHouseId");
       if (houseId) {
         this.forID.id = houseId;
       } else {
-        this.forID.id = util.localStorageGet("houseDetails.vue:houseId");
-        this.detailType = util.localStorageGet("houseDetails.vue:detailType");
-        this.dept.id = util.localStorageGet("houseDetails.vue:deptId");
+        this.forID.id = util.sessionLocalStorageGet("houseDetails.vue:houseId");
+        this.detailType = util.sessionLocalStorageGet(
+          "houseDetails.vue:detailType"
+        );
+        this.dept.id = util.sessionLocalStorageGet("houseDetails.vue:deptId");
       }
     }
     this.lastParams.id = this.forID.id;

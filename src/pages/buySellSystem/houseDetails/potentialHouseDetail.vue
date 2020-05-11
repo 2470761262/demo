@@ -382,11 +382,16 @@ export default {
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       this.houseType = this.$route.params.houseType;
-      util.localStorageSet("potentialHouse.vue:houseId", this.houseId);
-      util.localStorageSet("potentialHouse.vue:houseType", this.houseType);
+      util.sessionLocalStorageSet("potentialHouse.vue:houseId", this.houseId);
+      util.sessionLocalStorageSet(
+        "potentialHouse.vue:houseType",
+        this.houseType
+      );
     } else {
-      this.houseId = util.localStorageGet("potentialHouse.vue:houseId");
-      this.houseType = util.localStorageGet("potentialHouse.vue:houseType");
+      this.houseId = util.sessionLocalStorageGet("potentialHouse.vue:houseId");
+      this.houseType = util.sessionLocalStorageGet(
+        "potentialHouse.vue:houseType"
+      );
     }
     if (this.houseType == 1) {
       this.getHouseDetails().then(() => {
@@ -423,7 +428,6 @@ export default {
       let _that = this;
       this.$router.push({
         path: "/buySellSystem/addHouse",
-        disabledStatus: false,
         query: {
           comId: _that.resultData.Comid,
           cbId: _that.resultData.CBId,

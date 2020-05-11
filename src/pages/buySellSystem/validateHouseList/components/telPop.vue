@@ -20,6 +20,15 @@
     text-indent: 21px;
     margin-top: 5px;
   }
+  .retrievalInfo- {
+    font-size: 13px;
+    &success {
+      color: #40a375;
+    }
+    &error {
+      color: red;
+    }
+  }
 }
 .tel-content {
   padding: 15px;
@@ -60,10 +69,18 @@
         <div class="pop-custome-head">
           <h3 class="custome-head-tips">
             <i class="el-icon-phone icon"></i>录入电话
+            <span
+              :class="
+                retrievalInfo == '首次出现'
+                  ? 'retrievalInfo-success'
+                  : 'retrievalInfo-error'
+              "
+              >({{ retrievalInfo | emptyRead }})</span
+            >
           </h3>
           <div class="custome-head-name">{{ data.tel }}</div>
         </div>
-        <i class="el-icon-phone call-phone"></i>
+        <i class="el-icon-phone call-phone" @click="dailPhone(data.id)"></i>
       </div>
       <div class="tel-content">
         <div class="pop-custome-head">
@@ -74,6 +91,7 @@
         </div>
         <i
           class="el-icon-phone call-phone"
+          @click="dailPhone(data.id)"
           v-if="data.checkTel != '-' && data.checkTel != ''"
         ></i>
       </div>
@@ -92,9 +110,79 @@ export default {
       default: () => {}
     }
   },
+  created() {
+    this.getTelRetrieval();
+  },
+  data() {
+    return {
+      retrievalInfo: ""
+    };
+  },
   methods: {
+    getTelRetrieval() {
+      this.$api
+        .post({
+          url: `/verifyHouse/listTelRetrieval/${this.data.id}`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {}
+        })
+        .then(e => {
+          console.log(e);
+          this.retrievalInfo = e.data.data.retrievalInfo;
+        })
+        .catch(e => {});
+    },
     cancel() {
       this.$emit("update:visible", false);
+    },
+    dailPhone(id) {
+      this.$confirm("确定一键拨号吗？", "友情提醒", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(() => {
+          let params = {
+            draftId: id,
+            houseType: 0
+          };
+          this.$api
+            .post({
+              url: "/noticeManage/common/DraftOneTouchDialPhone",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              data: params
+            })
+            .then(e => {
+              let result = e.data;
+              console.log(result);
+              if (result.code == 200) {
+                this.$message({
+                  type: "info",
+                  message: "请注意查收微信消息"
+                });
+                this.$emit("update:visible", false);
+              } else {
+                this.$message({
+                  type: "info",
+                  message: result.message
+                });
+              }
+            })
+            .catch(e => {
+              console.log("【【【【uups,一键拨号失败】】】】");
+              console.log(e);
+              this.$message({
+                type: "info",
+                message: "一键拨号失败"
+              });
+            });
+        })
+        .catch(action => {
+          this.$message({
+            type: "info",
+            message: "取消拨号"
+          });
+        });
     }
   }
 };
