@@ -31,7 +31,7 @@ export default {
   },
   created() {
     if (this.echoData.length != 0) {
-      //this.FillImgVideo();
+      this.FillImgVideo();
     }
   },
   destroyed() {
@@ -52,21 +52,26 @@ export default {
       ]);
 
       this.loading = true;
-      let fileList = this.echoData.map(item => {
-        return {
-          Type: 12,
-          IpStr: item.IpStr,
-          FileStr: item.FileStr,
-          PicName: item.PicName,
-          PicType: "PicFile_AHouseF",
-          AddName: util.localStorageGet("logindata").accountId
-            ? util.localStorageGet("logindata").accountId
-            : 0,
-          subType: item.PicClass ? item.PicClass : 7,
-          Eid: 0
-        };
+      let fileList = [];
+      this.echoData.forEach(item => {
+        if (item.videoUrl) {
+          item.PicClass = 7;
+        }
+        if (item.PicClass) {
+          fileList.push({
+            Type: 12,
+            IpStr: item.IpStr,
+            FileStr: item.FileStr,
+            PicName: item.PicName,
+            PicType: "PicFile_AHouseF",
+            AddName: util.localStorageGet("logindata").accountId
+              ? util.localStorageGet("logindata").accountId
+              : 0,
+            subType: item.PicClass,
+            Eid: 0
+          });
+        }
       });
-
       this.$api
         .post({
           url: `/agentHouse/followPic/insertApplyFile`,

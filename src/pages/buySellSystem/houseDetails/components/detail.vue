@@ -410,8 +410,9 @@ export default {
         if (detailData.plate == 1 && this.dept.id != loginDeptId) {
           return true;
         }
+        return false;
       }
-      return false;
+      return true;
     },
     fdDial() {
       let perId = util.localStorageGet("logindata").accountId;
