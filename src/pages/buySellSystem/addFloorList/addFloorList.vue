@@ -312,6 +312,8 @@ export default {
           return "房型";
         case 3:
           return "业主号码";
+        case 4:
+          return "楼盘补充";
         default:
           return "其他";
       }
