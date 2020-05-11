@@ -510,6 +510,7 @@ export default {
       let that = this;
       console.log(r, "接收到了消息");
       if (r.content.resourceType == "vedio") {
+        debugger
         console.log(r.content, "视频消息内容，准备插入草稿箱");
         that.uploadFileInfo(undefined, r.content.picUrl, function(data) {
           if (that.houseVideo.id) {
