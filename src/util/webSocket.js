@@ -4,6 +4,18 @@ function initWebSocket(domain, code) {
   //初始化weosocket
   var wsuri = "ws" + domain + "/webSocketHandler?user=" + code;
   connectWs(wsuri);
+  window.setInterval(function() {
+    //每隔5秒钟发送一次心跳，避免websocket连接因超时而自动断开
+    let ping = { type: "ping" };
+    // websock.send(JSON.stringify(ping));
+    if(websock.readyState === websock.OPEN) {
+      websock.send("heartCheck");
+    } else if (websock.readyState === websock.CONNECTING) {
+      console.log("CONNECTING--");
+    }else {
+      connectWs(wsuri);
+    }
+  }, 5000);
 }
 function connectWs(wsuri) {
   websock = new WebSocket(wsuri);
@@ -11,7 +23,8 @@ function connectWs(wsuri) {
     websocketonmessage(e);
   };
   websock.onclose = function(e) {
-    websocketclose(e, wsuri);
+    // websocketclose(e, wsuri);
+    closeSocket();
   };
   websock.onopen = function() {
     websocketOpen();
@@ -51,8 +64,8 @@ function websocketonmessage(e) {
     global_receiveMessageCallback(JSON.parse(e.data));
   } else {
     console.log(
-        JSON.parse(e.data),
-        "数据接收成功，但未初始化接收消息回调处理函数"
+      JSON.parse(e.data),
+      "数据接收成功，但未初始化接收消息回调处理函数"
     );
   }
 }
