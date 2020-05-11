@@ -478,10 +478,7 @@ export default {
       kitchenImgList: [], //厨房
       toiletImgList: [], //卫生间
       layoutImgList: [], //户型图
-      houseVideo: {
-        id: 0,
-        url: ""
-      }, //房源视频
+      houseVideo: {}, //房源视频
       qrCodeImg: "",
       qrCodeImgVedio: "",
       picParams: {
