@@ -478,7 +478,10 @@ export default {
       kitchenImgList: [], //厨房
       toiletImgList: [], //卫生间
       layoutImgList: [], //户型图
-      houseVideo: {}, //房源视频
+      houseVideo: {
+        id: 0,
+        url: ""
+      }, //房源视频
       qrCodeImg: "",
       qrCodeImgVedio: "",
       picParams: {
@@ -511,9 +514,10 @@ export default {
       console.log(r, "接收到了消息");
       if (r.content.resourceType == "vedio") {
         console.log(r.content, "视频消息内容，准备插入草稿箱");
+        debugger
         if(that.houseVideo&&that.houseVideo.url){
-          console.log("");
-          that.$message.error("仅可以上传一个视频,请先手动删除！");
+          console.log("仅可以上传一个视频,请先手动删除！");
+          this.$message.error("仅可以上传一个视频,请先手动删除！");
           return;
         }
         that.uploadFileInfo(undefined, r.content.picUrl, function(data) {
