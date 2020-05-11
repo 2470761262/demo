@@ -636,6 +636,7 @@ export default {
       },
       nowRow: {},
       checkStatusList: [
+        { key: "0", label: "草稿", value: "0" },
         { key: "1", label: "待验真", value: "1" },
         { key: "2", label: "验真成功", value: "2" },
         { key: "3", label: "验真失败", value: "3" },
@@ -935,7 +936,7 @@ export default {
         },
         {
           name: "编辑",
-          isType: "待业主验真,待店长验真,已过期,验真失败",
+          isType: "待业主验真,待店长验真,已过期,验真失败,草稿",
           methodName: "edit",
           buttonType: "info"
         },
