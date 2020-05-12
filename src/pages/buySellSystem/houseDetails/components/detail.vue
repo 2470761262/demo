@@ -306,7 +306,7 @@
         <el-button
           class="cell-pro-but"
           v-if="applyAgentRule"
-          :disabled="isDisabled || agentApply || housePageType == 'notSale'"
+          :disabled="agentApply || housePageType == 'notSale'"
           @click="callTaskAgent"
           >{{ housePageType != "notSale" ? "申请跟单人" : "转在售" }}</el-button
         >

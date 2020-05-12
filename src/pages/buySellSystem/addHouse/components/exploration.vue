@@ -334,6 +334,7 @@
               <input
                 id="houseVideoList"
                 type="file"
+                ref="houseVideoList"
                 @change="getVideoFile('houseVideo', $event)"
                 :disabled="isFromHouseTask ? false : !wxUploadFile"
               />
@@ -763,6 +764,7 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             this.houseVideo = {};
+            this.$refs.houseVideoList.value = null;
           }
         });
     },
