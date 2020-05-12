@@ -1,5 +1,4 @@
 var websock = null;
-var websockStatus = null;
 var global_receiveMessageCallback = null;
 function initWebSocket(domain, code, callback) {
   //初始化weosocket
