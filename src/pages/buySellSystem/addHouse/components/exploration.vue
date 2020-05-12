@@ -55,7 +55,7 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -106,7 +106,7 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -157,7 +157,7 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -208,7 +208,7 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -259,7 +259,7 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -310,7 +310,7 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="qrCodeImg" :preview-src-list="[qrCodeImg]" fit="cover">
+        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -351,8 +351,8 @@
           </div>
           <div class="upLoadFile-file-phone">
             <el-image
-              :src="qrCodeImgVedio"
-              :preview-src-list="[qrCodeImgVedio]"
+              :src="websockStatus?qrCodeImgVedio:''"
+              :preview-src-list="[websockStatus?qrCodeImgVedio:'']"
               fit="cover"
             >
               <div slot="placeholder" class="image-slot">
@@ -360,7 +360,7 @@
                 <span>...</span>
               </div>
             </el-image>
-            <div v-if="isFromHouseTask && websockStatus ? true : wxUploadFile">
+            <div v-if="isFromHouseTask ? true : wxUploadFile">
               微信扫码上传
             </div>
             <div v-if="isFromHouseTask ? false : !wxUploadFile">
@@ -511,8 +511,9 @@ export default {
       });
     },
     websocketOpen() {
-      console.log("websocket连接成功");
-      this.websockStatus = true;
+      let that = this;
+      console.log("websocket连接成功!!!!");
+      that.websockStatus = true;
     },
     receiveMessage(r) {
       let that = this;
