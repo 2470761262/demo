@@ -289,10 +289,7 @@
       :data-tips="errorBags.first('certificateNo')"
     >
       <div class="page-cell-item select-nobor">
-        <el-input
-          placeholder="请输入产权证号"
-          v-model="formData.certificateNo"
-        >
+        <el-input placeholder="请输入产权证号" v-model="formData.certificateNo">
           <div slot="prepend" class="item-before">证号</div>
         </el-input>
       </div>

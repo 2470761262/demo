@@ -8,11 +8,11 @@ function initWebSocket(domain, code) {
     //每隔5秒钟发送一次心跳，避免websocket连接因超时而自动断开
     let ping = { type: "ping" };
     // websock.send(JSON.stringify(ping));
-    if(websock.readyState === websock.OPEN) {
+    if (websock.readyState === websock.OPEN) {
       websock.send("heartCheck");
     } else if (websock.readyState === websock.CONNECTING) {
       console.log("CONNECTING--");
-    }else {
+    } else {
       connectWs(wsuri);
     }
   }, 5000);
