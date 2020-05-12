@@ -158,6 +158,11 @@ export default {
     receiveMessage(r) {
       let that = this;
       console.log(r, "rdsasad");
+      if (that.houseVideo && that.houseVideo.url) {
+        console.log("仅可以上传一个视频,请先手动删除！");
+        this.$message.error("仅可以上传一个视频,请先手动删除！");
+        return;
+      }
       let str = r.content.picUrl;
       let firstIndex = str.indexOf("/");
       let secondIndex = str.indexOf("/", firstIndex + 1);
