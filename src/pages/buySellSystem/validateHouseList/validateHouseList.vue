@@ -1056,14 +1056,36 @@ export default {
       this.queryVerifyHouseDatas(val);
     },
     edit(val) {
-      this.$router.push({
-        path: "/buySellSystem/addHouse?method=edit&id=" + val.id
-      });
+      this.$api
+        .get({
+          url: "/verifyHouse/check/" + val.id
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$router.push({
+              path: "/buySellSystem/addHouse?method=edit&id=" + val.id
+            });
+          } else {
+            this.$message.error(e.date.message);
+          }
+        })
+        .catch(e => {});
     },
     reVerify(val) {
-      this.$router.push({
-        path: "/buySellSystem/addHouse?method=reset&id=" + val.id
-      });
+      this.$api
+        .get({
+          url: "/verifyHouse/check/" + val.id
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$router.push({
+              path: "/buySellSystem/addHouse?method=edit&id=" + val.id
+            });
+          } else {
+            this.$message.error(e.date.message);
+          }
+        })
+        .catch(e => {});
     }
   }
 };
