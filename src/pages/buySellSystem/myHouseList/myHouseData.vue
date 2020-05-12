@@ -345,7 +345,7 @@
       </div>
       <div class="echart-canvas">
         <h3 class="query-heander-abs">
-          <span>进七日分析</span>
+          <span>近七日分析</span>
         </h3>
         <div id="chart" ref="chart"></div>
       </div>

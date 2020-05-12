@@ -55,7 +55,7 @@
 }
 </style>
 <template>
-  <div v-if="!edit">
+  <div>
     <div
       class="page-cell-addHouse"
       v-loading="loading"
@@ -133,12 +133,12 @@ export default {
       btnSubmitVerify: true
     };
   },
-  created() {
-    this.getQr();
-  },
+  created() {},
   mounted() {
     if (util.sessionLocalStorageGet("editHouse")) {
       this.edit = true;
+    } else {
+      this.getQr();
     }
     but.$on("submitVerify", () => {
       this.btnSubmitVerify = false;
