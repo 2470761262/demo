@@ -359,7 +359,9 @@
                 <span>...</span>
               </div>
             </el-image>
-            <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
+            <div v-if="isFromHouseTask && websockStatus ? true : wxUploadFile">
+              微信扫码上传
+            </div>
             <div v-if="isFromHouseTask ? false : !wxUploadFile">
               暂无上传权限.
             </div>
@@ -493,6 +495,7 @@ export default {
         6: { picContainer: "layoutImgList", remark: "录入房源上传-户型图片" }
       },
       websock: null,
+      websockStatus: false,
       webSocketUser: ""
     };
   },
@@ -506,12 +509,15 @@ export default {
         return v.toString(16);
       });
     },
+    websocketOpen() {
+      console.log("websocket连接成功");
+      this.websockStatus = true;
+    },
     receiveMessage(r) {
       let that = this;
       console.log(r, "接收到了消息");
       if (r.content.resourceType == "vedio") {
         console.log(r.content, "视频消息内容，准备插入草稿箱");
-        debugger;
         if (that.houseVideo && that.houseVideo.url) {
           console.log("仅可以上传一个视频,请先手动删除！");
           this.$message.error("仅可以上传一个视频,请先手动删除！");
@@ -538,7 +544,8 @@ export default {
       console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
-        user
+        user,
+        this.websocketOpen
       );
       this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
       console.log("用户【" + user + "】接入完毕");
