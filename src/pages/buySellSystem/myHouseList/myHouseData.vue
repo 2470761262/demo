@@ -218,11 +218,11 @@
               v-model="queryContent.communityName"
               prefix-icon="el-icon-search"
               :fetch-suggestions="querySearch"
-              :trigger-on-focus="false"
+              :trigger-on-focus="true"
               placeholder="你想找那个小区?"
               @select="selectCommunity"
             ></el-autocomplete>
-            <el-button type="primary" @click="reloadList">确定</el-button>
+            <!-- <el-button type="primary" @click="reloadList">确定</el-button> -->
           </div>
           <div class="query-content-row">
             <div class="query-row-title">时间搜索</div>
@@ -521,7 +521,7 @@ export default {
       };
       this.$api
         .post({
-          url: "/myHouse//myDataList",
+          url: "/myHouse/myDataList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params
         })

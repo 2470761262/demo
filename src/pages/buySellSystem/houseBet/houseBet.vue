@@ -265,7 +265,8 @@ export default {
         { value: 0, name: "努力中" },
         { value: 1, name: "成功" },
         { value: 2, name: "失败" },
-        { value: 3, name: "过期" }
+        { value: 3, name: "过期" },
+        { value: 4, name: "注销" }
       ],
       pageJson: {
         currentPage: 1, //当前页码
@@ -398,6 +399,8 @@ export default {
           return "失败";
         case 3:
           return "过期";
+        case 4:
+          return "注销";
         default:
           return "";
       }
