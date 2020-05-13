@@ -158,10 +158,13 @@ export default {
     receiveMessage(r) {
       let that = this;
       console.log(r, "rdsasad");
-      if (that.houseVideo && that.houseVideo.url) {
-        console.log("仅可以上传一个视频,请先手动删除！");
-        this.$message.error("仅可以上传一个视频,请先手动删除！");
-        return;
+      let resourceType = r.content.resourceType;
+      if (resourceType == "vedio") {
+        if (that.houseVideo && that.houseVideo.url) {
+          console.log("仅可以上传一个视频,请先手动删除！");
+          this.$message.error("仅可以上传一个视频,请先手动删除！");
+          return;
+        }
       }
       let str = r.content.picUrl;
       let firstIndex = str.indexOf("/");
@@ -169,7 +172,6 @@ export default {
       let thirdIndex = str.indexOf("/", secondIndex + 1);
       let lastIndex = str.lastIndexOf("/");
       let picClass = r.content.picClass;
-      let resourceType = r.content.resourceType;
       let params = {
         IpStr: str.substring(0, thirdIndex),
         FileStr: str.substring(thirdIndex + 1, lastIndex),
