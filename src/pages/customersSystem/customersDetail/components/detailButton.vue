@@ -144,20 +144,17 @@
       &:nth-child(-n + 2) {
         margin-top: 0;
       }
-      /deep/.el-button {
-        width: 100%;
-        height: 53px;
-        font-size: 18px;
-        color: black;
-        padding: 0;
-        i {
-          font-size: 28px;
-          vertical-align: middle;
-          margin-right: 15px;
-        }
-        span {
-          vertical-align: middle;
-        }
+      height: 53px;
+      font-size: 18px;
+      color: black;
+      padding: 0;
+      /deep/i {
+        font-size: 28px;
+        vertical-align: middle;
+        margin-right: 15px;
+      }
+      /deep/span {
+        vertical-align: middle;
       }
     }
   }
@@ -216,18 +213,19 @@
       >
     </div>
     <div class="customers-button-gruop">
-      <div class="customers-button-item">
-        <el-button icon="el-icon-refresh">转公客</el-button>
-      </div>
-      <div class="customers-button-item">
-        <el-button icon="el-icon-refresh">转状态</el-button>
-      </div>
-      <div class="customers-button-item">
-        <el-button icon="el-icon-delete">删除</el-button>
-      </div>
-      <div class="customers-button-item">
-        <el-button icon="el-icon- iconfont iconzhuanhuan">PASS客户</el-button>
-      </div>
+      <el-button class="customers-button-item" icon="el-icon-refresh"
+        >转公客</el-button
+      >
+      <el-button class="customers-button-item" icon="el-icon-refresh"
+        >转状态</el-button
+      >
+
+      <el-button class="customers-button-item" icon="el-icon-delete"
+        >删除</el-button
+      >
+      <el-button class="customers-button-item" icon="iconfont iconzhuanhuan"
+        >PASS客户</el-button
+      >
     </div>
   </div>
 </template>
