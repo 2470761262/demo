@@ -268,6 +268,42 @@
 /deep/.el-form-item__label {
   width: 75px;
 }
+.custom-set {
+  flex-direction: column;
+  .custom-content {
+    display: flex;
+    align-self: center;
+    margin-top: 20px;
+    margin-left: 105px;
+    .split-line {
+      width: 40px;
+      position: relative;
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 2px;
+        width: 20px;
+        transform: translate(-50%, -50%);
+        background: #ddd;
+      }
+    }
+    /deep/.el-input {
+      width: 140px;
+      height: 30px;
+      line-height: 30px;
+      i {
+        line-height: inherit;
+      }
+      .el-input__inner {
+        line-height: inherit;
+        height: inherit;
+        text-align: center;
+      }
+    }
+  }
+}
 </style>
 <template>
   <div class="query-warp">
@@ -357,7 +393,7 @@
         </el-form-item>
       </div>
       <!-- 售价 -->
-      <div class="page-form-inline form-item-flex1">
+      <div class="page-form-inline form-item-flex1 custom-set">
         <el-form-item label="售价">
           <vue-slider
             v-model="Slider.priceSlider"
@@ -402,8 +438,26 @@
             </template>
           </vue-slider>
         </el-form-item>
+        <div class="custom-content">
+          <el-input
+            v-number
+            placeholder="最小售价(万)"
+            clearable
+            @change="maxChange('custom', '最大售价', 'Price')"
+            v-model="custom.minPrice"
+          ></el-input>
+          <div class="split-line"></div>
+
+          <el-input
+            v-number
+            placeholder="最大售价(万)"
+            @change="maxChange('custom', '最大售价', 'Price')"
+            clearable
+            v-model="custom.maxPrice"
+          ></el-input>
+        </div>
       </div>
-      <div class="page-form-inline form-item-flex1">
+      <div class="page-form-inline form-item-flex1 custom-set">
         <el-form-item label="面积">
           <vue-slider
             class="vue-slider-index1"
@@ -449,9 +503,26 @@
             </template>
           </vue-slider>
         </el-form-item>
+        <div class="custom-content">
+          <el-input
+            v-number
+            placeholder="最小面积(㎡)"
+            clearable
+            @change="maxChange('custom', '最大面积', 'InArea')"
+            v-model="custom.minInArea"
+          ></el-input>
+          <div class="split-line"></div>
+          <el-input
+            v-number
+            placeholder="最大面积(㎡)"
+            @change="maxChange('custom', '最大面积', 'InArea')"
+            clearable
+            v-model="custom.maxInArea"
+          ></el-input>
+        </div>
       </div>
       <!-- 楼层 -->
-      <div class="page-form-inline form-item-flex1">
+      <div class="page-form-inline form-item-flex1 custom-set">
         <el-form-item label="楼层">
           <vue-slider
             class="vue-slider-index2"
@@ -487,6 +558,23 @@
             </template>
           </vue-slider>
         </el-form-item>
+        <div class="custom-content">
+          <el-input
+            v-number
+            placeholder="最小楼层(㎡)"
+            clearable
+            @change="maxChange('custom', '最大楼层', 'Floor')"
+            v-model="custom.minFloor"
+          ></el-input>
+          <div class="split-line"></div>
+          <el-input
+            v-number
+            placeholder="最大楼层(㎡)"
+            @change="maxChange('custom', '最大楼层', 'Floor')"
+            clearable
+            v-model="custom.maxFloor"
+          ></el-input>
+        </div>
       </div>
       <el-form-item label="商圈" prop="business">
         <el-checkbox-group
@@ -719,6 +807,15 @@ export default {
   },
   data() {
     return {
+      custom: {
+        // 自定义
+        minPrice: "",
+        maxPrice: "",
+        minInArea: "",
+        maxInArea: "",
+        minFloor: "",
+        maxFloor: ""
+      },
       PrimarySizeFlag: false,
       middleSizeFlag: false,
       searchData: "",
@@ -777,10 +874,44 @@ export default {
   },
 
   methods: {
+    //自定义面积 价格 售价 change监听
+    maxChange(topFiled, msg, field) {
+      let min = this[topFiled]["min" + field];
+      let max = this[topFiled]["max" + field];
+
+      //输入时把滑块数据清空
+      switch (field) {
+        case "Price":
+          this.Slider.priceSlider = [20, 20];
+          break;
+        case "InArea":
+          this.Slider.areaSlider = [20, 20];
+          break;
+        case "Floor":
+          this.Slider.flootSlider = [-2, -2];
+          break;
+      }
+
+      if (max == "") {
+        this.form["min" + field] = min;
+        this.form["max" + field] = "9999";
+        return;
+      } else if (min == "") {
+        this.form["min" + field] = 0;
+        this.form["max" + field] = max;
+        return;
+      }
+      if (min != "" && max != "" && parseInt(min) > parseInt(max)) {
+        this.$message.warning("不能大于" + msg);
+        return;
+      }
+      this.form["min" + field] = min;
+      this.form["max" + field] = max;
+    },
     triggerSchoolSizeFlag(value) {
       this[value] = !this[value];
     },
-    //面积滑块参数更新
+    //滑块参数更新
     flootSliderChange(e) {
       if (e[0] == -2 && e[1] == -2) {
         this.form.minFloor = "";
@@ -789,8 +920,11 @@ export default {
         this.form.minFloor = e[0];
         this.form.maxFloor = e[1];
       }
+      //清空自定义数据
+      this.custom.minFloor = "";
+      this.custom.maxFloor = "";
     },
-    //面积滑块参数更新
+    //滑块参数更新
     areaSliderChange(e) {
       if (e[0] == 20 && e[1] == 20) {
         this.form.minInArea = "";
@@ -799,6 +933,9 @@ export default {
         this.form.minInArea = e[0];
         this.form.maxInArea = e[1];
       }
+      //清空自定义数据
+      this.custom.minInArea = "";
+      this.custom.maxInArea = "";
     },
     //售价滑块参数更新
     priceSliderChange(e) {
@@ -809,12 +946,16 @@ export default {
         this.form.minPrice = e[0];
         this.form.maxPrice = e[1];
       }
+      //清空自定义数据
+      this.custom.minPrice = "";
+      this.custom.maxPrice = "";
     },
     //重置表单
     resetForm(formName) {
       this.searchData = "";
       this.$parent.setSelectNav(null, true);
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
+      Object.assign(this.$data.custom, this.$options.data().custom);
       this.Slider.priceSlider = [20, 20];
       this.Slider.areaSlider = [20, 20];
       this.Slider.flootSlider = [-2, -2];
