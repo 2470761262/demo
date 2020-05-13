@@ -160,14 +160,6 @@ export default {
       console.log(r, "rdsasad");
       let resourceType = r.content.resourceType;
       let picClass = r.content.picClass;
-      if (resourceType == "vedio") {
-        picClass = "vedio";
-        if (that.houseVideo && that.houseVideo.url) {
-          console.log("仅可以上传一个视频,请先手动删除！");
-          this.$message.error("仅可以上传一个视频,请先手动删除！");
-          return;
-        }
-      }
       let str = r.content.picUrl;
       let firstIndex = str.indexOf("/");
       let secondIndex = str.indexOf("/", firstIndex + 1);
@@ -181,7 +173,24 @@ export default {
         subType: resourceType == "vedio" ? 7 : detailEnum[picClass - 1]
       };
       console.log(params);
-      that.insertFile(params, str, picClass);
+      if (resourceType == "vedio") {
+        picClass = "vedio";
+        if (that.houseVideo && that.houseVideo.url) {
+          console.log("仅可以上传一个视频,请先手动删除！");
+          this.$message.error("仅可以上传一个视频,请先手动删除！");
+          return;
+        }
+        let audioElement = new Audio(str);
+        audioElement.addEventListener("loadedmetadata", () => {
+          if (audioElement.duration > 91) {
+            this.$message.error("视频时长大于90秒了~");
+          } else {
+            that.insertFile(params, str, picClass);
+          }
+        });
+      } else {
+        that.insertFile(params, str, picClass);
+      }
     },
     //添加文件
     insertFile(params, str, picClass) {
