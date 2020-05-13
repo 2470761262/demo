@@ -561,7 +561,7 @@
         <div class="custom-content">
           <el-input
             v-number
-            placeholder="最小楼层(㎡)"
+            placeholder="最小楼层(层)"
             clearable
             @change="maxChange('custom', '最大楼层', 'Floor')"
             v-model="custom.minFloor"
@@ -569,7 +569,7 @@
           <div class="split-line"></div>
           <el-input
             v-number
-            placeholder="最大楼层(㎡)"
+            placeholder="最大楼层(层)"
             @change="maxChange('custom', '最大楼层', 'Floor')"
             clearable
             v-model="custom.maxFloor"
