@@ -159,7 +159,9 @@ export default {
       let that = this;
       console.log(r, "rdsasad");
       let resourceType = r.content.resourceType;
+      let picClass = r.content.picClass;
       if (resourceType == "vedio") {
+        picClass = "vedio";
         if (that.houseVideo && that.houseVideo.url) {
           console.log("仅可以上传一个视频,请先手动删除！");
           this.$message.error("仅可以上传一个视频,请先手动删除！");
@@ -171,7 +173,6 @@ export default {
       let secondIndex = str.indexOf("/", firstIndex + 1);
       let thirdIndex = str.indexOf("/", secondIndex + 1);
       let lastIndex = str.lastIndexOf("/");
-      let picClass = r.content.picClass;
       let params = {
         IpStr: str.substring(0, thirdIndex),
         FileStr: str.substring(thirdIndex + 1, lastIndex),
@@ -198,7 +199,7 @@ export default {
             };
             listMap.forEach((value, key) => {
               console.log(value, key, "value,key");
-              if (value == "vedio") {
+              if (value == "vedio" && picClass === "vedio") {
                 this[key] = fileobj;
               } else {
                 if (value == picClass) {
