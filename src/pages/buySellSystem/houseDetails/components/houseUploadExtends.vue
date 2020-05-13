@@ -158,18 +158,13 @@ export default {
     receiveMessage(r) {
       let that = this;
       console.log(r, "rdsasad");
-      if (that.houseVideo && that.houseVideo.url) {
-        console.log("仅可以上传一个视频,请先手动删除！");
-        this.$message.error("仅可以上传一个视频,请先手动删除！");
-        return;
-      }
+      let resourceType = r.content.resourceType;
+      let picClass = r.content.picClass;
       let str = r.content.picUrl;
       let firstIndex = str.indexOf("/");
       let secondIndex = str.indexOf("/", firstIndex + 1);
       let thirdIndex = str.indexOf("/", secondIndex + 1);
       let lastIndex = str.lastIndexOf("/");
-      let picClass = r.content.picClass;
-      let resourceType = r.content.resourceType;
       let params = {
         IpStr: str.substring(0, thirdIndex),
         FileStr: str.substring(thirdIndex + 1, lastIndex),
@@ -178,7 +173,24 @@ export default {
         subType: resourceType == "vedio" ? 7 : detailEnum[picClass - 1]
       };
       console.log(params);
-      that.insertFile(params, str, picClass);
+      if (resourceType == "vedio") {
+        picClass = "vedio";
+        if (that.houseVideo && that.houseVideo.url) {
+          console.log("仅可以上传一个视频,请先手动删除！");
+          this.$message.error("仅可以上传一个视频,请先手动删除！");
+          return;
+        }
+        let audioElement = new Audio(str);
+        audioElement.addEventListener("loadedmetadata", () => {
+          if (audioElement.duration > 91) {
+            this.$message.error("视频时长大于90秒了~");
+          } else {
+            that.insertFile(params, str, picClass);
+          }
+        });
+      } else {
+        that.insertFile(params, str, picClass);
+      }
     },
     //添加文件
     insertFile(params, str, picClass) {
@@ -196,7 +208,7 @@ export default {
             };
             listMap.forEach((value, key) => {
               console.log(value, key, "value,key");
-              if (value == "vedio") {
+              if (value == "vedio" && picClass === "vedio") {
                 this[key] = fileobj;
               } else {
                 if (value == picClass) {
