@@ -129,6 +129,11 @@
       i {
         cursor: pointer;
       }
+      .item-data-downPayment {
+        margin-left: 380px;
+        font-size: 15px;
+        color: #636363;
+      }
       .item-data-middle {
         font-size: 20px;
         color: #636363;
@@ -321,6 +326,10 @@
                     独家
                   </div>
                 </div>
+              </div>
+              <div class="item-data-downPayment overText">
+                参考首付:
+                {{ item.price | downPaymentFilter(downPaymentPercent) }}万
               </div>
               <div class="item-data-middle overText">{{ item.title }}</div>
               <div class="item-data-bottom">
@@ -585,8 +594,14 @@ export default {
       ],
       tableColumn: [],
       menuLoading: true, //自定义菜单
-      renderList: []
+      renderList: [],
+      downPaymentPercent: 0.3 //首付的百分比
     };
+  },
+  filters: {
+    downPaymentFilter(value, downPaymentPercent) {
+      return (value * downPaymentPercent).toFixed(1);
+    }
   },
   methods: {
     tabColumnChange(e, length = 0) {
