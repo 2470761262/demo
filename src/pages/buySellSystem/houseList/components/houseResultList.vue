@@ -162,6 +162,7 @@
         //
         // align-self: flex-start;
         //
+        margin-top: 10px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -368,7 +369,7 @@
                     独家
                   </div>
                 </div>
-                <div class="broker-content">
+                <div class="broker-content" v-if="item.plate == 0">
                   <img
                     class="broker-img"
                     :src="item.headimgurl | defaultImg"
@@ -380,7 +381,9 @@
               </div>
               <div class="item-data-plate">
                 <!-- 店公共盘 -->
-                <div class="plate-warp">/</div>
+                <div class="plate-warp" v-if="(item.plate | plateResult) != ''">
+                  {{ item.plate | plateResult }}
+                </div>
                 <div class="item-data-downPayment"></div>
                 参考首付:
                 {{ item.price | downPaymentFilter(downPaymentPercent) }}万
@@ -663,6 +666,19 @@ export default {
   filters: {
     downPaymentFilter(value, downPaymentPercent) {
       return (value * downPaymentPercent).toFixed(1);
+    },
+    plateResult(value) {
+      let plate = {
+        //  0: "个人跟单房源",
+        1: "店公公告盘",
+        4: "在售无跟单"
+        //  6: "暂不售",
+        //  7: "我售",
+        //  8: "业主自售",
+        // 9: "他司售",
+        // 10: "无效"
+      };
+      return plate[value] ? plate[value] : "";
     }
   },
   methods: {
