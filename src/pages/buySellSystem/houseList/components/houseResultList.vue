@@ -486,7 +486,7 @@ export default {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
-          order: true,
+          order: "custom",
           disabled: false,
           default: true
         },
@@ -494,11 +494,9 @@ export default {
           prop: "outfollow",
           label: "未跟进天数",
           width: "120",
-          order: true,
+          order: "custom",
           disabled: false,
-          default: true,
-          formart: item =>
-            item.outfollow == undefined ? item.outFollow : item.outfollow
+          default: true
         },
         {
           prop: "noSeenDay",
@@ -512,7 +510,7 @@ export default {
           prop: "addTime",
           label: "添加时间",
           width: "120",
-          order: true,
+          order: "custom",
           disabled: false,
           default: true
         },
@@ -524,7 +522,7 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            item.brokerName == undefined ? item.agentName : item.brokerName
+            item.brokerName != undefined ? item.brokerName : item.agentName
         },
         {
           prop: "houseType",
