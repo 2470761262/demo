@@ -270,7 +270,7 @@
       </div>
       <div class="select-tabs-cell" v-if="querySelectFlag">
         <label class="select-checkbox">
-          <input type="checkbox" />
+          <input type="checkbox" @click="elevatorSelect()" />
           <span>电梯</span>
         </label>
         <label class="select-checkbox">
@@ -312,7 +312,7 @@
       </div>
       <div class="select-tabs-cell">
         <label class="select-checkbox">
-          <input type="checkbox" />
+          <input type="checkbox" @click="elevatorSelect()" />
           <span>电梯</span>
         </label>
         <label class="select-checkbox">
@@ -332,11 +332,12 @@
     >
       <template v-if="!querySelectFlag">
         <template v-if="renderList.length > 0">
+          <!-- @dblclick="toHouseDetail(item)" -->
           <div
             class="select-for-item"
             v-for="(item, index) in renderList"
             :key="index"
-            @dblclick="toHouseDetail(item)"
+            @click.stop="toHouseDetail(item)"
           >
             <div class="select-for-item-img">
               <el-image
@@ -370,15 +371,16 @@
                 <div class="broker-content">
                   <img
                     class="broker-img"
-                    src="https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epTLLaOTYK4DlMakQOhLVUkTxTCyheeo9sskl0ZcppyC8YUKibh5ictz6XCZBGIntsxrIfvF4MQf6rQ/132"
+                    :src="item.headimgurl | defaultImg"
                     alt="经纪人"
                   />
                   <div class="brokerName">{{ item.brokerName }}/</div>
-                  <div class="deparName">虚拟一店</div>
+                  <div class="deparName">{{ item.deptName }}</div>
                 </div>
               </div>
               <div class="item-data-plate">
-                <div class="plate-warp">店公共盘</div>
+                <!-- 店公共盘 -->
+                <div class="plate-warp">/</div>
                 <div class="item-data-downPayment"></div>
                 参考首付:
                 {{ item.price | downPaymentFilter(downPaymentPercent) }}万
@@ -397,12 +399,12 @@
                 </div>
               </div>
             </div>
-            <div class="select-for-item-but">
+            <!-- <div class="select-for-item-but">
               <i
                 class="el-icon-document icon i"
                 @click.stop="toHouseDetail(item)"
               ></i>
-            </div>
+            </div> -->
           </div>
         </template>
         <template v-else>
@@ -544,6 +546,16 @@ export default {
           formart: item => item.price + "万元"
         },
         {
+          prop: "downPayment",
+          label: "参考首付",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true,
+          formart: item =>
+            (item.price * this.downPaymentPercent).toFixed(1) + "万元"
+        },
+        {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
@@ -654,6 +666,13 @@ export default {
     }
   },
   methods: {
+    elevatorSelect() {
+      if (this.form.elevator != "") {
+        this.form.elevator = "";
+      } else {
+        this.form.elevator = "1";
+      }
+    },
     tabColumnChange(e, length = 0) {
       console.log(e, "e");
       this.tableColumn = e;
@@ -768,6 +787,16 @@ export default {
             value.maxPrice == "9999" ? "无限" : value.maxPrice
           }万`,
           field: "price",
+          arr: false
+        });
+      }
+      //首付
+      if (value.minDownPayment !== "") {
+        this.dynamicTags.push({
+          title: `首付:${value.minDownPayment}-${
+            value.maxDownPayment == "9999" ? "无限" : value.maxDownPayment
+          }万`,
+          field: "downPayment",
           arr: false
         });
       }

@@ -371,7 +371,8 @@ export default {
       Slider: {
         priceSlider: [20, 20],
         areaSlider: [20, 20],
-        flootSlider: [-2, -2]
+        flootSlider: [-2, -2],
+        downPaymentSlider: [6, 6]
       },
       form: {
         type: "13",
@@ -395,12 +396,15 @@ export default {
         maxInArea: "",
         minPrice: "",
         maxPrice: "",
+        maxDownPayment: "",
+        minDownPayment: "",
         face: [],
         sortColumn: "id",
         sortType: "descending",
         searchInfo: "",
         isOnly: "",
-        keyOwner: ""
+        keyOwner: "",
+        elevator: ""
       }
     };
   },
