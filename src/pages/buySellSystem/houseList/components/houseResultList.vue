@@ -270,7 +270,7 @@
       </div>
       <div class="select-tabs-cell" v-if="querySelectFlag">
         <label class="select-checkbox">
-          <input type="checkbox" />
+          <input type="checkbox" @click="elevatorSelect()" />
           <span>电梯</span>
         </label>
         <label class="select-checkbox">
@@ -312,7 +312,7 @@
       </div>
       <div class="select-tabs-cell">
         <label class="select-checkbox">
-          <input type="checkbox" />
+          <input type="checkbox" @click="elevatorSelect()" />
           <span>电梯</span>
         </label>
         <label class="select-checkbox">
@@ -370,15 +370,16 @@
                 <div class="broker-content">
                   <img
                     class="broker-img"
-                    src="https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epTLLaOTYK4DlMakQOhLVUkTxTCyheeo9sskl0ZcppyC8YUKibh5ictz6XCZBGIntsxrIfvF4MQf6rQ/132"
+                    :src="item.headimgurl | defaultImg"
                     alt="经纪人"
                   />
                   <div class="brokerName">{{ item.brokerName }}/</div>
-                  <div class="deparName">虚拟一店</div>
+                  <div class="deparName">{{ item.deptName }}</div>
                 </div>
               </div>
               <div class="item-data-plate">
-                <div class="plate-warp">店公共盘</div>
+                <!-- 店公共盘 -->
+                <div class="plate-warp">/</div>
                 <div class="item-data-downPayment"></div>
                 参考首付:
                 {{ item.price | downPaymentFilter(downPaymentPercent) }}万
@@ -654,6 +655,13 @@ export default {
     }
   },
   methods: {
+    elevatorSelect() {
+      if (this.form.elevator != "") {
+        this.form.elevator = "";
+      } else {
+        this.form.elevator = "1";
+      }
+    },
     tabColumnChange(e, length = 0) {
       console.log(e, "e");
       this.tableColumn = e;
