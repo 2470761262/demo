@@ -4,7 +4,6 @@
   background: #fff;
   min-height: 100%;
   box-sizing: border-box;
-  user-select: none;
 }
 .page-house-cell {
   display: flex;

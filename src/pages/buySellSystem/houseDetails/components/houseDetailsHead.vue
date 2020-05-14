@@ -131,6 +131,32 @@
   margin-right: 10px;
   flex-shrink: 0;
 }
+.qr-content-shadow {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: .5;
+  z-index: 8888;
+  background: #000;
+}
+.qr-content-show {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 8888;
+}
+.qrcodeShow {
+  margin-left: 48%;
+  width: 255px;
+  height: 255px;
+  margin-top: 300px;
+  align-items: center;
+  z-index: 9999;
+}
 </style>
 <template>
   <section>
@@ -206,10 +232,18 @@
           <div
             id="qrcode"
             v-if="!buttonDisabled && shareQRCode"
+            @click="shareQRCodeShow = true"
             :class="{ qrcode: qrData }"
           >
             {{ qrData ? "" : "二维码加载失败" }}
           </div>
+          <div class="qr-content-shadow" v-show="shareQRCodeShow"  @click="shareQRCodeShow = false">
+          </div>
+          <div class="qr-content-show" v-show="shareQRCodeShow" @click="shareQRCodeShow = false">
+            <div id="qrcodeShow" class="qrcodeShow" v-show="shareQRCodeShow">
+            </div>
+          </div>
+
           <div class="qr-code-msg">
             <h3 class="qr-title">房源编号:</h3>
             <div class="qr-NO">{{ resultData.HouseNo }}</div>
@@ -278,6 +312,13 @@ export default {
             colorDark: "#000",
             colorLight: "#fff"
           });
+          this.qrDataShow = new QRCode("qrcodeShow", {
+            width: 250,
+            height: 250,
+            text: newValue.data.shareQRCode,
+            colorDark: "#000",
+            colorLight: "#fff"
+          });
         }
       }
     },
@@ -294,6 +335,13 @@ export default {
             this.qrData = new QRCode("qrcode", {
               width: 88,
               height: 88,
+              text: _that.resultData.shareQRCode,
+              colorDark: "#000",
+              colorLight: "#fff"
+            });
+            this.qrData = new QRCode("qrcodeShow", {
+              width: 250,
+              height: 250,
               text: _that.resultData.shareQRCode,
               colorDark: "#000",
               colorLight: "#fff"
@@ -339,6 +387,7 @@ export default {
   data() {
     return {
       qrData: null,
+      qrDataShow: null,
       followUpFlag: false, //跟进开关
       reportFlag: false, //举报开关
       impressionList: [], //印象数组
@@ -346,6 +395,7 @@ export default {
       attentionFlag: false, //关注开关
       insertFollow: false, //权限控制添加跟进按钮
       insertReport: false, //权限控制添加举报按钮
+      shareQRCodeShow: false, //
       shareQRCode: false
     };
   },

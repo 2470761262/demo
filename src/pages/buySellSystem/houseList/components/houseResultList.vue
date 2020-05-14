@@ -695,7 +695,7 @@ export default {
       //清空
       this.dynamicTags = [];
       //价格
-      if (this.Slider.priceSlider[1] != 20) {
+      if (value.minPrice !== "") {
         this.dynamicTags.push({
           title: `价格:${value.minPrice}-${
             value.maxPrice == "9999" ? "无限" : value.maxPrice
@@ -705,7 +705,7 @@ export default {
         });
       }
       //面积
-      if (this.Slider.areaSlider[1] != 20) {
+      if (value.minInArea !== "") {
         this.dynamicTags.push({
           title: `面积:${value.minInArea}-${
             value.maxInArea == "9999" ? "无限" : value.maxInArea
@@ -715,7 +715,7 @@ export default {
         });
       }
       //楼层
-      if (this.Slider.flootSlider[1] != -2) {
+      if (value.minFloor !== "") {
         this.dynamicTags.push({
           title: `楼层:${value.minFloor}-${
             value.maxFloor == "9999" ? "无限" : value.maxFloor

@@ -94,7 +94,7 @@
         </el-form-item>
       </div>
 
-      <div class="page-form-inline set-el-textarea">
+      <!-- <div class="page-form-inline set-el-textarea">
         <el-form-item label="审核类型" prop="type">
           <el-select
             v-model="form.type"
@@ -117,7 +117,7 @@
         <el-form-item label="对应数值" prop="value">
           <el-input placeholder="" v-model="form.value"></el-input>
         </el-form-item>
-      </div>
+      </div> -->
 
       <div class="page-form-inline set-el-textarea">
         <el-form-item label="材料说明" prop="ReplenishRemark">
@@ -321,7 +321,8 @@ export default {
                 comBuildingName: that.form.comBuildingName, //楼栋名称
                 buildIngHouses: that.form.buildIngHouses, //房间号
                 ReplenishRemark: that.form.ReplenishRemark, //材料说明
-                proveImg: that.form.prove.join(",") //证明材料
+                proveImg: that.form.prove.join(","), //证明材料
+                type: 4 //楼盘补充type默认为4
               }
             })
             .then(e => {

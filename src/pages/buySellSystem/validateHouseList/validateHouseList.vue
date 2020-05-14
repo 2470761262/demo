@@ -636,6 +636,7 @@ export default {
       },
       nowRow: {},
       checkStatusList: [
+        { key: "0", label: "草稿", value: "0" },
         { key: "1", label: "待验真", value: "1" },
         { key: "2", label: "验真成功", value: "2" },
         { key: "3", label: "验真失败", value: "3" },
@@ -923,7 +924,7 @@ export default {
       let array = [
         {
           name: "邀请验真",
-          isType: "待业主验真,待店长验真,已过期",
+          isType: "待业主验真,待店长验真,已过期,草稿",
           methodName: "getVerifyImg",
           buttonType: "primary"
         },
@@ -935,7 +936,7 @@ export default {
         },
         {
           name: "编辑",
-          isType: "待业主验真,待店长验真,已过期,验真失败",
+          isType: "待业主验真,待店长验真,已过期,验真失败,草稿",
           methodName: "edit",
           buttonType: "info"
         },
@@ -1055,14 +1056,36 @@ export default {
       this.queryVerifyHouseDatas(val);
     },
     edit(val) {
-      this.$router.push({
-        path: "/buySellSystem/addHouse?method=edit&id=" + val.id
-      });
+      this.$api
+        .get({
+          url: "/verifyHouse/check/" + val.id
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$router.push({
+              path: "/buySellSystem/addHouse?method=edit&id=" + val.id
+            });
+          } else {
+            this.$message.error(e.date.message);
+          }
+        })
+        .catch(e => {});
     },
     reVerify(val) {
-      this.$router.push({
-        path: "/buySellSystem/addHouse?method=reset&id=" + val.id
-      });
+      this.$api
+        .get({
+          url: "/verifyHouse/check/" + val.id
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$router.push({
+              path: "/buySellSystem/addHouse?method=edit&id=" + val.id
+            });
+          } else {
+            this.$message.error(e.date.message);
+          }
+        })
+        .catch(e => {});
     }
   }
 };

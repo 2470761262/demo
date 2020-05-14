@@ -306,7 +306,7 @@
         <el-button
           class="cell-pro-but"
           v-if="applyAgentRule"
-          :disabled="isDisabled || agentApply"
+          :disabled="agentApply || housePageType != 'notSale'"
           @click="callTaskAgent"
           >{{ housePageType != "notSale" ? "申请跟单人" : "转在售" }}</el-button
         >
@@ -410,6 +410,7 @@ export default {
         if (detailData.plate == 1 && this.dept.id != loginDeptId) {
           return true;
         }
+        return false;
       }
       return true;
     },

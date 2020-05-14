@@ -492,6 +492,7 @@ export default {
         if (detailData.plate == 1 && this.dept.id != loginDeptId) {
           return true;
         }
+        return false;
       }
       return true;
     }
@@ -660,24 +661,15 @@ export default {
           this[popName] = true;
         }
       } else {
-        if (
-          this.resultData.agentHouseMethod.onlyOwnerName !=
-          util.localStorageGet("logindata").userName
-        ) {
-          let result = await houseCheck.isChecking(
-            type,
-            replaceType,
-            this.houseId.id,
-            "正在审核"
-          );
-          if (!result) {
-            this[typeName] = type;
-            this[popName] = true;
-          }
-        } else {
-          this.$alert("", "不能取代自己!!!", {
-            dangerouslyUseHTMLString: false
-          });
+        let result = await houseCheck.isChecking(
+          type,
+          replaceType,
+          this.houseId.id,
+          "正在审核"
+        );
+        if (!result) {
+          this[typeName] = type;
+          this[popName] = true;
         }
       }
     },

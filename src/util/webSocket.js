@@ -1,18 +1,41 @@
 var websock = null;
 var global_receiveMessageCallback = null;
-function initWebSocket(domain, code) {
+function initWebSocket(domain, code, callback) {
   //初始化weosocket
   var wsuri = "ws" + domain + "/webSocketHandler?user=" + code;
+  connectWs(wsuri, callback);
+  window.setInterval(function() {
+    //每隔5秒钟发送一次心跳，避免websocket连接因超时而自动断开
+    if (websock.readyState === websock.OPEN) {
+      let ping = {
+        operation: "ping",
+        user: code,
+        content: "ping"
+      };
+      websocketsend(ping);
+    } else if (websock.readyState === websock.CONNECTING) {
+      console.log("CONNECTING--");
+    } else {
+      console.log("已断开连接--");
+    }
+  }, 5000);
+}
+function connectWs(wsuri, callback) {
   websock = new WebSocket(wsuri);
   websock.onmessage = function(e) {
     websocketonmessage(e);
   };
   websock.onclose = function(e) {
-    websocketclose(e);
+    // websocketclose(e, wsuri);
+    closeSocket();
   };
-  websock.onopen = function() {
-    websocketOpen();
-  };
+  if (callback) {
+    websock.onopen = callback;
+  } else {
+    websock.onopen = function() {
+      websocketOpen();
+    };
+  }
 
   //连接发生错误的回调方法
   websock.onerror = function() {
@@ -45,7 +68,11 @@ function sendSock(agentData, callback) {
 //数据接收
 function websocketonmessage(e) {
   if (typeof global_receiveMessageCallback == "function") {
-    global_receiveMessageCallback(JSON.parse(e.data));
+    let result = JSON.parse(e.data);
+    if(result.content&&result.content==="ping"){
+      return;
+    }
+    global_receiveMessageCallback(result);
   } else {
     console.log(
       JSON.parse(e.data),
@@ -60,8 +87,10 @@ function websocketsend(agentData) {
 }
 
 //关闭
-function websocketclose(e) {
+function websocketclose(e, url) {
   console.log("connection closed (" + e + ")");
+  console.log("准备重新连接 --");
+  connectWs(url);
 }
 
 function websocketOpen(e) {

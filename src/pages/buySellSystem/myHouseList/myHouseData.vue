@@ -23,7 +23,16 @@
       height: 100%;
       .query-heander-abs {
         align-self: flex-start;
-        .tips-abs;
+        span {
+          .tips-abs;
+        }
+        &::after {
+          content: "默认为本月数据";
+          margin-left: 10px;
+          color: #a9a9a9;
+          align-self: flex-end;
+          font-size: 14px;
+        }
       }
       .query-content {
         .query-content-row {
@@ -197,7 +206,9 @@
   <section class="page-row-flex">
     <section class="echart-query">
       <section class="echart-query-header">
-        <h3 class="query-heander-abs">热点搜索</h3>
+        <h3 class="query-heander-abs">
+          <span>热点搜索</span>
+        </h3>
         <!-- 搜索 -->
         <div class="query-content">
           <div class="query-content-row">
@@ -207,11 +218,11 @@
               v-model="queryContent.communityName"
               prefix-icon="el-icon-search"
               :fetch-suggestions="querySearch"
-              :trigger-on-focus="false"
+              :trigger-on-focus="true"
               placeholder="你想找那个小区?"
               @select="selectCommunity"
             ></el-autocomplete>
-            <el-button type="primary" @click="reloadList">确定</el-button>
+            <!-- <el-button type="primary" @click="reloadList">确定</el-button> -->
           </div>
           <div class="query-content-row">
             <div class="query-row-title">时间搜索</div>
@@ -222,6 +233,7 @@
               range-separator="-"
               start-placeholder="选择开始时间"
               end-placeholder="选择结束时间"
+              value-format="yyyy-MM-dd"
             >
             </el-date-picker>
             <el-button type="primary" @click="reloadList">确定</el-button>
@@ -279,10 +291,7 @@
             <progress-content
               :houseNum="yesterday.agentCount || 0"
               :compare="yesterday.agentCount - beforeYesterday.agentCount || 0"
-              :progress="
-                companyProportion.agentCount
-                  | proportionFilter(yesterday, 'agentCount')
-              "
+              :progress="progress.agentCount || '0%'"
               reset-progress
               proportion="公司总占比"
               title="跟单数"
@@ -290,10 +299,7 @@
             <progress-content
               :houseNum="yesterday.addCount || 0"
               :compare="yesterday.addCount - beforeYesterday.addCount || 0"
-              :progress="
-                companyProportion.addCount
-                  | proportionFilter(yesterday, 'addCount')
-              "
+              :progress="progress.addCount || '0%'"
               reset-progress
               proportion="公司总占比"
               title="录入数"
@@ -301,10 +307,7 @@
             <progress-content
               :houseNum="yesterday.keyCount || 0"
               :compare="yesterday.keyCount - beforeYesterday.keyCount || 0"
-              :progress="
-                companyProportion.keyCount
-                  | proportionFilter(yesterday, 'keyCount')
-              "
+              :progress="progress.keyCount || '0%'"
               reset-progress
               proportion="公司总占比"
               title="钥匙数"
@@ -316,10 +319,7 @@
               :compare="
                 yesterday.commonCount - beforeYesterday.commonCount || 0
               "
-              :progress="
-                companyProportion.commonCount
-                  | proportionFilter(yesterday, 'commonCount')
-              "
+              :progress="progress.commonCount || '0%'"
               reset-progress
               proportion="公司总占比"
               title="普通委托数"
@@ -327,10 +327,7 @@
             <progress-content
               :houseNum="yesterday.onlyCount || 0"
               :compare="yesterday.onlyCount - beforeYesterday.onlyCount || 0"
-              :progress="
-                companyProportion.onlyCount
-                  | proportionFilter(yesterday, 'onlyCount')
-              "
+              :progress="progress.onlyCount || '0%'"
               reset-progress
               proportion="公司总占比"
               title="独家委托数"
@@ -338,10 +335,7 @@
             <progress-content
               :houseNum="yesterday.realCount || 0"
               :compare="yesterday.realCount - beforeYesterday.realCount || 0"
-              :progress="
-                companyProportion.realCount
-                  | proportionFilter(yesterday, 'realCount')
-              "
+              :progress="progress.realCount || '0%'"
               reset-progress
               proportion="公司总占比"
               title="实勘数"
@@ -351,7 +345,7 @@
       </div>
       <div class="echart-canvas">
         <h3 class="query-heander-abs">
-          <span>进七日分析</span>
+          <span>近七日分析</span>
         </h3>
         <div id="chart" ref="chart"></div>
       </div>
@@ -396,26 +390,18 @@ export default {
           width: "",
           prop: "houseMoviesCount",
           order: "custom"
-        },
-        { label: "添加时间", width: "", prop: "addTime" }
+        }
       ],
       tableDataText: [],
       companyProportion: {},
       yesterday: {},
       beforeYesterday: {},
       sortColumn: "customerCount",
-      sortType: 1
+      sortType: 1,
+      progress: {}
     };
   },
-  filters: {
-    proportionFilter(value, yesterday, key) {
-      return !value
-        ? 0 + "%"
-        : value == 0
-        ? 0 + "%"
-        : parseInt(yesterday[key] / value) * 100 + "%";
-    }
-  },
+
   mounted() {
     addResizeListener(this.$refs.chart, this.resetEcharts);
     this.getList();
@@ -446,6 +432,15 @@ export default {
             json.houseMoviesCount.push(element.houseMoviesCount);
             if (element.createTime == yesterday) {
               this.yesterday = element;
+              Object.keys(this.companyProportion).forEach(e => {
+                this.progress[e] =
+                  this.companyProportion[e] == 0 ||
+                  this.companyProportion[e] == undefined
+                    ? "0%"
+                    : ((element[e] / this.companyProportion[e]) * 100).toFixed(
+                        2
+                      ) + "%";
+              });
             }
             if (element.createTime == beforeYesterday) {
               this.beforeYesterday = element;
@@ -509,18 +504,24 @@ export default {
         sortType: this.sortType,
         limit: this.pageJson.pageSize,
         page: this.pageJson.current,
-        beginTime: this.queryContent.queryTime
-          ? this.queryContent.queryTime[0]
-          : null,
-        endTime: this.queryContent.queryTime
-          ? this.queryContent.queryTime[1]
-          : null,
+        beginTime:
+          this.queryContent.queryTime.length > 0
+            ? this.queryContent.queryTime[0]
+            : formatDate(new Date().setDate(new Date().getDate()), "yyyy-MM") +
+              "-01",
+        endTime:
+          this.queryContent.queryTime.length > 0
+            ? this.queryContent.queryTime[1]
+            : formatDate(
+                new Date().setDate(new Date().getDate()),
+                "yyyy-MM-dd"
+              ),
         comId:
           this.queryContent.communityName == "" ? "" : this.queryContent.comId
       };
       this.$api
         .post({
-          url: "/myHouse//myDataList",
+          url: "/myHouse/myDataList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params
         })
@@ -590,7 +591,7 @@ export default {
           }
         },
         legend: {
-          data: ["看房跟单数", "看房客户数", "房源被看次数"]
+          data: ["房源跟单数", "看房客户数", "房源被看次数"]
         },
         toolbox: {
           feature: {
@@ -624,24 +625,21 @@ export default {
         },
         series: [
           {
-            name: "看房跟单数",
+            name: "房源跟单数",
             type: "line",
             stack: "总量",
-            areaStyle: {},
             data: data.agentCount
           },
           {
             name: "看房客户数",
             type: "line",
             stack: "总量",
-            areaStyle: {},
             data: data.lookCustomersCount
           },
           {
             name: "房源被看次数",
             type: "line",
             stack: "总量",
-            areaStyle: {},
             data: data.houseMoviesCount
           }
         ]
