@@ -196,7 +196,7 @@
         <div class="cell-item-head">{{ resultData.houseType | emptyRead }}</div>
         <div class="cell-tiem-floot">
           {{ resultData.Floor | emptyRead("层") }}/{{
-            resultData.FloorNum | emptyRead("层", "共")
+            resultData.floorNum | emptyRead("层", "共")
           }}
         </div>
       </div>
