@@ -492,6 +492,16 @@ export default {
           formart: item => item.price + "万元"
         },
         {
+          prop: "downPayment",
+          label: "参考首付",
+          width: "120",
+          order: false,
+          disabled: false,
+          default: true,
+          formart: item =>
+            (item.price * this.downPaymentPercent).toFixed(1) + "万元"
+        },
+        {
           prop: "seenNum",
           label: "被看次数",
           width: "120",
@@ -716,6 +726,16 @@ export default {
             value.maxPrice == "9999" ? "无限" : value.maxPrice
           }万`,
           field: "price",
+          arr: false
+        });
+      }
+      //首付
+      if (value.minDownPayment !== "") {
+        this.dynamicTags.push({
+          title: `首付:${value.minDownPayment}-${
+            value.maxDownPayment == "9999" ? "无限" : value.maxDownPayment
+          }万`,
+          field: "downPayment",
           arr: false
         });
       }
