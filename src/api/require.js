@@ -5,8 +5,8 @@ import vm from "@/main.js";
 import { TOKEN } from "@/util/constMap";
 import { Message } from "element-ui";
 import store from "@/store/store";
-let CancelToken = axios.CancelToken;
-let requerList = [];
+//let CancelToken = axios.CancelToken;
+//let requerList = [];
 let http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
   headers: {
@@ -19,9 +19,9 @@ let http = axios.create({
 // 请求拦截器
 http.interceptors.request.use(
   function(config) {
-    config.cancelToken = new CancelToken(c => {
-      requerList.push(c);
-    });
+    // config.cancelToken = new CancelToken(c => {
+    //   requerList.push(c);
+    // });
     config.headers.tk = util.localStorageGet(TOKEN);
     if (!config.headers.rid) {
       config.headers.rid = store.state.menuRid.nowRid; // 设置rid
@@ -37,10 +37,10 @@ http.interceptors.response.use(
   response => {
     if (response.data.code == 401) {
       //取消多个重复弹出框
-      requerList.forEach(item => {
-        item();
-      });
-      requerList = [];
+      //   requerList.forEach(item => {
+      //     item();
+      //   });
+      //  requerList = [];
       Message({
         message: response.data.message,
         type: "error"

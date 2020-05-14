@@ -55,7 +55,11 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
+        <el-image
+          :src="websockStatus ? qrCodeImg : ''"
+          :preview-src-list="[websockStatus ? qrCodeImg : '']"
+          fit="cover"
+        >
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -106,7 +110,11 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
+        <el-image
+          :src="websockStatus ? qrCodeImg : ''"
+          :preview-src-list="[websockStatus ? qrCodeImg : '']"
+          fit="cover"
+        >
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -157,7 +165,11 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
+        <el-image
+          :src="websockStatus ? qrCodeImg : ''"
+          :preview-src-list="[websockStatus ? qrCodeImg : '']"
+          fit="cover"
+        >
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -208,7 +220,11 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
+        <el-image
+          :src="websockStatus ? qrCodeImg : ''"
+          :preview-src-list="[websockStatus ? qrCodeImg : '']"
+          fit="cover"
+        >
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -259,7 +275,11 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
+        <el-image
+          :src="websockStatus ? qrCodeImg : ''"
+          :preview-src-list="[websockStatus ? qrCodeImg : '']"
+          fit="cover"
+        >
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -310,7 +330,11 @@
         </div>
       </div>
       <div class="upLoadFile-file-phone">
-        <el-image :src="websockStatus?qrCodeImg:''" :preview-src-list="[websockStatus?qrCodeImg:'']" fit="cover">
+        <el-image
+          :src="websockStatus ? qrCodeImg : ''"
+          :preview-src-list="[websockStatus ? qrCodeImg : '']"
+          fit="cover"
+        >
           <div slot="placeholder" class="image-slot">
             加载中
             <span>...</span>
@@ -351,8 +375,8 @@
           </div>
           <div class="upLoadFile-file-phone">
             <el-image
-              :src="websockStatus?qrCodeImgVedio:''"
-              :preview-src-list="[websockStatus?qrCodeImgVedio:'']"
+              :src="websockStatus ? qrCodeImgVedio : ''"
+              :preview-src-list="[websockStatus ? qrCodeImgVedio : '']"
               fit="cover"
             >
               <div slot="placeholder" class="image-slot">
