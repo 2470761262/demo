@@ -332,11 +332,12 @@
     >
       <template v-if="!querySelectFlag">
         <template v-if="renderList.length > 0">
+          <!-- @dblclick="toHouseDetail(item)" -->
           <div
             class="select-for-item"
             v-for="(item, index) in renderList"
             :key="index"
-            @dblclick="toHouseDetail(item)"
+            @click.stop="toHouseDetail(item)"
           >
             <div class="select-for-item-img">
               <el-image
@@ -398,12 +399,12 @@
                 </div>
               </div>
             </div>
-            <div class="select-for-item-but">
+            <!-- <div class="select-for-item-but">
               <i
                 class="el-icon-document icon i"
                 @click.stop="toHouseDetail(item)"
               ></i>
-            </div>
+            </div> -->
           </div>
         </template>
         <template v-else>
