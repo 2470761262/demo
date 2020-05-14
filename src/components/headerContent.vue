@@ -123,10 +123,10 @@ export default {
     ThemePicker
   },
   mounted() {
-    document.querySelector("body").addEventListener("mousemove", this.move);
+    // document.querySelector("body").addEventListener("mousemove", this.move);
   },
   destroyed() {
-    document.querySelector("body").removeEventListener("mousemove", this.move);
+    // document.querySelector("body").removeEventListener("mousemove", this.move);
   },
   methods: {
     trgerColor() {

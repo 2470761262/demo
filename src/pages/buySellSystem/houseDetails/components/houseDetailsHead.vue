@@ -137,7 +137,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  opacity: .5;
+  opacity: 0.5;
   z-index: 8888;
   background: #000;
 }
@@ -237,11 +237,21 @@
           >
             {{ qrData ? "" : "二维码加载失败" }}
           </div>
-          <div class="qr-content-shadow" v-show="shareQRCodeShow"  @click="shareQRCodeShow = false">
-          </div>
-          <div class="qr-content-show" v-show="shareQRCodeShow" @click="shareQRCodeShow = false">
-            <div id="qrcodeShow" class="qrcodeShow" v-show="shareQRCodeShow">
-            </div>
+          <div
+            class="qr-content-shadow"
+            v-show="shareQRCodeShow"
+            @click="shareQRCodeShow = false"
+          ></div>
+          <div
+            class="qr-content-show"
+            v-show="shareQRCodeShow"
+            @click="shareQRCodeShow = false"
+          >
+            <div
+              id="qrcodeShow"
+              class="qrcodeShow"
+              v-show="shareQRCodeShow"
+            ></div>
           </div>
 
           <div class="qr-code-msg">
