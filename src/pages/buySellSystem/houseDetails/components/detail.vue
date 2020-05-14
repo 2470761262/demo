@@ -306,7 +306,7 @@
         <el-button
           class="cell-pro-but"
           v-if="applyAgentRule"
-          :disabled="agentApply || housePageType != 'notSale'"
+          :disabled="agentApply"
           @click="callTaskAgent"
           >{{ housePageType != "notSale" ? "申请跟单人" : "转在售" }}</el-button
         >
@@ -397,17 +397,22 @@ export default {
       }
     },
     agentApply() {
-      if (!this.dept.id) {
-        return false;
-      }
+      // if (!this.dept.id) {
+      //   return false;
+      // }
       let loginDeptId = util.localStorageGet("logindata").deptId;
       if (Object.keys(this.houseDetails).length > 0) {
         let detailData = this.houseDetails.data;
+        console.log(detailData.agentPerDepartmentId, "agentPerDepartmentId");
+        console.log(loginDeptId, "loginDeptId");
         if (!detailData) {
           return true;
         }
         //判断店公盘和责任盘，如果不是同一个店的不能申请跟单人
-        if (detailData.plate == 1 && this.dept.id != loginDeptId) {
+        if (
+          detailData.plate == 1 &&
+          detailData.agentPerDepartmentId != loginDeptId
+        ) {
           return true;
         }
         return false;

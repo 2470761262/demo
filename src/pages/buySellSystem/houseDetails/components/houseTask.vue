@@ -480,16 +480,19 @@ export default {
       }
     },
     agentApply() {
-      if (!this.dept.id) {
-        return false;
-      }
+      // if (!this.dept.id) {
+      //   return false;
+      // }
       let loginDeptId = util.localStorageGet("logindata").deptId;
       if (Object.keys(this.houseDetails).length > 0) {
         let detailData = this.houseDetails.data;
         if (!detailData) {
           return true;
         }
-        if (detailData.plate == 1 && this.dept.id != loginDeptId) {
+        if (
+          detailData.plate == 1 &&
+          detailData.agentPerDepartmentId != loginDeptId
+        ) {
           return true;
         }
         return false;
