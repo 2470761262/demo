@@ -91,6 +91,7 @@
       height: 100px;
       border-radius: 4px;
       overflow: hidden;
+      align-self: center;
       /deep/.el-image {
         width: 100%;
         height: 100%;
@@ -111,9 +112,11 @@
         display: flex;
         align-items: center;
         .item-data-top-no {
+          //margin-right: 80px;
+          flex: 1;
+          width: 0;
           color: #adadad;
           font-size: 14px;
-          margin-right: 80px;
         }
         .item-data-top-tag {
           display: flex;
@@ -125,18 +128,48 @@
             color: #fff;
           }
         }
+        .broker-content {
+          display: flex;
+          align-items: center;
+          margin-left: 30px;
+          .broker-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+          }
+          .brokerName,
+          .deparName {
+            font-size: 15px;
+            color: #333;
+          }
+        }
       }
       i {
         cursor: pointer;
       }
       .item-data-downPayment {
-        margin-left: 380px;
-        font-size: 15px;
+        font-size: 16px;
         color: #636363;
       }
       .item-data-middle {
         font-size: 20px;
         color: #636363;
+        margin: 10px 0;
+      }
+      .item-data-plate {
+        // font-size: 14px;
+        //
+        // align-self: flex-start;
+        //
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .plate-warp {
+          padding: 4px 10px;
+          border: 1px solid #ddd;
+          border-radius: 20px;
+        }
       }
       .item-data-bottom {
         display: flex;
@@ -326,8 +359,19 @@
                     独家
                   </div>
                 </div>
+                <div class="broker-content">
+                  <img
+                    class="broker-img"
+                    src="https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epTLLaOTYK4DlMakQOhLVUkTxTCyheeo9sskl0ZcppyC8YUKibh5ictz6XCZBGIntsxrIfvF4MQf6rQ/132"
+                    alt="经纪人"
+                  />
+                  <div class="brokerName">{{ item.brokerName }}/</div>
+                  <div class="deparName">虚拟一店</div>
+                </div>
               </div>
-              <div class="item-data-downPayment overText">
+              <div class="item-data-plate">
+                <div class="plate-warp">店公共盘</div>
+                <div class="item-data-downPayment"></div>
                 参考首付:
                 {{ item.price | downPaymentFilter(downPaymentPercent) }}万
               </div>
