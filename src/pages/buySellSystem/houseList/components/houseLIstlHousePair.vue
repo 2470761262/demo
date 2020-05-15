@@ -458,7 +458,7 @@
         </div>
       </div>
       <!-- 首付 -->
-      <div class="page-form-inline form-item-flex1 custom-set">
+      <div class="page-form-inline form-item-flex1 custom-set" v-if="false">
         <el-form-item label="首付">
           <vue-slider
             v-model="Slider.downPaymentSlider"

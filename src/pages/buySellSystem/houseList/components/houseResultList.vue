@@ -385,8 +385,8 @@
                   {{ item.plate | plateResult }}
                 </div>
                 <div class="item-data-downPayment"></div>
-                参考首付:
-                {{ item.price | downPaymentFilter(downPaymentPercent) }}万
+                <!-- 参考首付:
+                {{ item.price | downPaymentFilter(downPaymentPercent) }}万 -->
               </div>
               <div class="item-data-middle overText">{{ item.title }}</div>
               <div class="item-data-bottom">
@@ -548,16 +548,16 @@ export default {
           default: true,
           formart: item => item.price + "万元"
         },
-        {
-          prop: "downPayment",
-          label: "参考首付",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true,
-          formart: item =>
-            (item.price * this.downPaymentPercent).toFixed(1) + "万元"
-        },
+        // {
+        //   prop: "downPayment",
+        //   label: "参考首付",
+        //   width: "120",
+        //   order: false,
+        //   disabled: false,
+        //   default: true,
+        //   formart: item =>
+        //     (item.price * this.downPaymentPercent).toFixed(1) + "万元"
+        // },
         {
           prop: "seenNum",
           label: "被看次数",
@@ -670,7 +670,7 @@ export default {
     plateResult(value) {
       let plate = {
         //  0: "个人跟单房源",
-        "1": "店公公告盘",
+        "1": "店公公共盘",
         "4": "公司公盘"
         //  6: "暂不售",
         //  7: "我售",
