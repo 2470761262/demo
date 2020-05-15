@@ -491,6 +491,23 @@ let certificateType = [
   { title: "购房合同", label: 2 },
   { title: "拆迁安置协议书", label: 3 }
 ];
+let updateFileMap = new Map([
+  ["customerName", "Customers"],
+  ["sex", "Sex"],
+  ["tel", "Tel"],
+  ["tel1", "Tel1"],
+  ["tel2", "Tel2"],
+  ["tel3", "Tel3"],
+  ["certificateType", "certificate_type"],
+  ["certificateNo", "certificate_no"],
+  ["price", "Price"],
+  ["bottomPrice", "FloorPrice"],
+  ["area", "InArea"],
+  ["room", "Rooms"],
+  ["hall", "hall"],
+  ["toilet", "toilet"],
+  ["balcony", "balcony"]
+]);
 //import { mapState } from "vuex";
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
@@ -1052,9 +1069,6 @@ export default {
       };
       let method = "post";
       let url = "/draft-house";
-      if (this.paramsObj.editUrl) {
-        url = this.paramsObj.editUrl;
-      }
       if (that.$store.state.addHouse.formData.id != "") {
         data.id = that.$store.state.addHouse.formData.id;
         method = "put";
@@ -1063,6 +1077,20 @@ export default {
         //没有做出修改 或者 没有下一步保存的按钮权限
         console.log("跳过保存，当前权限：", this.nextSaveButton);
         return true;
+      }
+      if (this.paramsObj.editUrl) {
+        url = this.paramsObj.editUrl;
+        data.saleHouseUpdateRecordList = [];
+        Object.keys(this.deffData).forEach(item => {
+          if (item != "id") {
+            data.saleHouseUpdateRecordList.push({
+              houseId: that.$store.state.addHouse.formData.id,
+              updateFiled: updateFileMap.get(item),
+              oldValue: this.$store.state.addHouse.formData.step1[item],
+              newValue: this.deffData[item]
+            });
+          }
+        });
       }
       return this.$api[method]({
         url: url,

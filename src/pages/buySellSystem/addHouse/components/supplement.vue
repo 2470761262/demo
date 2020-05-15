@@ -847,6 +847,30 @@ const USE = [
     value: 1
   }
 ];
+let updateFileMap = new Map([
+  ["houseSource", "Source"],
+  ["houseNow", "HousingSituation"],
+  ["decoration", "Decoration"],
+  ["sign", "Sign"],
+  ["propertyFee", "PropertyFee"],
+  ["houseBelong", "HouseBelong"],
+  ["primarySchoolUse", "primary_school_grade"],
+  ["middleSchoolUse", "middle_school_grade"],
+  ["mortgage", "Mortgage"],
+  ["mortgageBank", "MortgageLoanBank"],
+  ["balance", "Balance"],
+  ["monthlyMortgage", "MonthlyMortgage"],
+  ["lastSale", "IsTwoYears"],
+  ["isOwnerOnly", "OnlyHouse"],
+  ["paymentMethod", "PaymentMethod"],
+  ["lastPayment", "LastTransactionAmount"],
+  ["title", "Title"],
+  ["communityDesc", "remark"],
+  ["roomDesc", "remark"],
+  ["taxDesc", "remark"],
+  ["saleDesc", "remark"]
+]);
+const remarkFiledList = ["communityDesc", "roomDesc", "taxDesc", "saleDesc"];
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
@@ -1327,6 +1351,18 @@ export default {
         return false;
       });
     },
+    getRemark(value) {
+      return (
+        "$小区介绍@" +
+        value.communityDesc +
+        "$户型介绍@" +
+        value.roomDesc +
+        "$税费解析@" +
+        value.taxDesc +
+        "$核心卖点@" +
+        value.saleDesc
+      );
+    },
     //修改数据到接口
     setDataToUpdate() {
       let that = this;
@@ -1335,17 +1371,37 @@ export default {
         ...that.deffData
       };
       let url = "/draft-house";
+      if (Object.keys(this.deffData).length == 0 || !this.nextSaveButton) {
+        //没有做出修改  或者 没有下一步保存的按钮权限
+        console.log("跳过保存，当前权限：", this.nextSaveButton);
+        return true;
+      }
       if (this.paramsObj.editUrl) {
         url = this.paramsObj.editUrl;
         sendData.communityDesc = that.formData.communityDesc;
         sendData.roomDesc = that.formData.roomDesc;
         sendData.saleDesc = that.formData.saleDesc;
         sendData.taxDesc = that.formData.taxDesc;
-      }
-      if (Object.keys(this.deffData).length == 0 || !this.nextSaveButton) {
-        //没有做出修改  或者 没有下一步保存的按钮权限
-        console.log("跳过保存，当前权限：", this.nextSaveButton);
-        return true;
+        sendData.saleHouseUpdateRecordList = [];
+        let updateFiledList = []; //用于记录是否添加过改字段
+        Object.keys(this.deffData).forEach(item => {
+          if (
+            item != "id" &&
+            !updateFiledList.includes(updateFileMap.get(item))
+          ) {
+            sendData.saleHouseUpdateRecordList.push({
+              houseId: that.$store.state.addHouse.formData.id,
+              updateFiled: updateFileMap.get(item),
+              oldValue: remarkFiledList.includes(item)
+                ? this.getRemark(this.$store.state.addHouse.formData.step2)
+                : this.$store.state.addHouse.formData.step2[item],
+              newValue: remarkFiledList.includes(item)
+                ? this.getRemark(that.formData)
+                : this.deffData[item]
+            });
+            updateFiledList.push(updateFileMap.get(item));
+          }
+        });
       }
       return this.$api
         .put({
