@@ -191,6 +191,32 @@ export default {
               }
             }
             this.$set(this.houseDetails, "data", result.data);
+            let rooms,
+              hall,
+              toilet = 0;
+            if (result.data.houseType) {
+              rooms = result.data.houseType.split("室")[0];
+              hall = result.data.houseType.split("室")[1].split("厅")[0];
+              toilet = result.data.houseType.split("厅")[1].split("卫")[0];
+            }
+            let logParam = {
+              Type: 7,
+              HouseId: that.forID.id,
+              HouseNo: result.data.HouseNo,
+              Comid: result.data.Comid,
+              CBid: result.data.CBid,
+              BHID: result.data.BHID,
+              CommunityName: result.data.CommunityName,
+              BuildingName: result.data.BuildingName,
+              RoomNo: result.data.RoomNo,
+              Floor: result.data.Floor,
+              InArea: result.data.InArea,
+              Price: result.data.Price,
+              Rooms: rooms,
+              Hall: hall,
+              Toilet: toilet
+            };
+            that.addBrowseHouseLog(logParam);
           } else {
             that.$message.error(result.message);
           }
@@ -202,6 +228,29 @@ export default {
         })
         .finally(() => {
           this.load.loading = false;
+        });
+    },
+    addBrowseHouseLog(param) {
+      let that = this;
+      let url = "/house/browse/add";
+      this.$api
+        .post({
+          url: url,
+          data: param,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log("浏览记录添加成功");
+          } else {
+            console.log("浏览记录添加失败" + result.message);
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            console.log(e.response);
+          }
         });
     }
   },
