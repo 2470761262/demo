@@ -1219,7 +1219,9 @@ export default {
           token: false,
           qs: true,
           data: {
-            comId: this.comId
+            comId: this.comId,
+            page: 1,
+            limit: 50
           }
         })
         .then(e => {
@@ -1244,24 +1246,9 @@ export default {
           qs: true,
           data: {
             comId: this.comId,
-            cbId: this.cbId
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.roomNo = "";
-            this.roomNoList = e.data.data.list;
-          }
-        });
-      this.$api
-        .get({
-          url: "/mateHouse/queryBuildIngHouses",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: this.comId,
-            cbId: this.cbId
+            cbId: this.cbId,
+            page: 1,
+            limit: 200
           }
         })
         .then(e => {

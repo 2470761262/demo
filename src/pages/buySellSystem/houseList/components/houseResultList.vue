@@ -162,6 +162,7 @@
         //
         // align-self: flex-start;
         //
+        margin-top: 10px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -270,7 +271,7 @@
       </div>
       <div class="select-tabs-cell" v-if="querySelectFlag">
         <label class="select-checkbox">
-          <input type="checkbox" />
+          <input type="checkbox" @click="elevatorSelect()" />
           <span>电梯</span>
         </label>
         <label class="select-checkbox">
@@ -312,7 +313,7 @@
       </div>
       <div class="select-tabs-cell">
         <label class="select-checkbox">
-          <input type="checkbox" />
+          <input type="checkbox" @click="elevatorSelect()" />
           <span>电梯</span>
         </label>
         <label class="select-checkbox">
@@ -332,11 +333,12 @@
     >
       <template v-if="!querySelectFlag">
         <template v-if="renderList.length > 0">
+          <!-- @dblclick="toHouseDetail(item)" -->
           <div
             class="select-for-item"
             v-for="(item, index) in renderList"
             :key="index"
-            @dblclick="toHouseDetail(item)"
+            @click.stop="toHouseDetail(item)"
           >
             <div class="select-for-item-img">
               <el-image
@@ -367,18 +369,21 @@
                     独家
                   </div>
                 </div>
-                <div class="broker-content">
+                <div class="broker-content" v-if="item.plate == 0">
                   <img
                     class="broker-img"
-                    src="https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epTLLaOTYK4DlMakQOhLVUkTxTCyheeo9sskl0ZcppyC8YUKibh5ictz6XCZBGIntsxrIfvF4MQf6rQ/132"
+                    :src="item.headimgurl | defaultImg"
                     alt="经纪人"
                   />
                   <div class="brokerName">{{ item.brokerName }}/</div>
-                  <div class="deparName">虚拟一店</div>
+                  <div class="deparName">{{ item.deptName }}</div>
                 </div>
               </div>
               <div class="item-data-plate">
-                <div class="plate-warp">店公共盘</div>
+                <!-- 店公共盘 -->
+                <div class="plate-warp" v-if="(item.plate | plateResult) != ''">
+                  {{ item.plate | plateResult }}
+                </div>
                 <div class="item-data-downPayment"></div>
                 参考首付:
                 {{ item.price | downPaymentFilter(downPaymentPercent) }}万
@@ -397,12 +402,12 @@
                 </div>
               </div>
             </div>
-            <div class="select-for-item-but">
+            <!-- <div class="select-for-item-but">
               <i
                 class="el-icon-document icon i"
                 @click.stop="toHouseDetail(item)"
               ></i>
-            </div>
+            </div> -->
           </div>
         </template>
         <template v-else>
@@ -661,9 +666,29 @@ export default {
   filters: {
     downPaymentFilter(value, downPaymentPercent) {
       return (value * downPaymentPercent).toFixed(1);
+    },
+    plateResult(value) {
+      let plate = {
+        //  0: "个人跟单房源",
+        "1": "店公公告盘",
+        "4": "公司公盘"
+        //  6: "暂不售",
+        //  7: "我售",
+        //  8: "业主自售",
+        // 9: "他司售",
+        // 10: "无效"
+      };
+      return plate[value] ? plate[value] : "";
     }
   },
   methods: {
+    elevatorSelect() {
+      if (this.form.elevator != "") {
+        this.form.elevator = "";
+      } else {
+        this.form.elevator = "1";
+      }
+    },
     tabColumnChange(e, length = 0) {
       console.log(e, "e");
       this.tableColumn = e;

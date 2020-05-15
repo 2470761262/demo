@@ -403,7 +403,8 @@ export default {
         sortType: "descending",
         searchInfo: "",
         isOnly: "",
-        keyOwner: ""
+        keyOwner: "",
+        elevator: ""
       }
     };
   },
