@@ -179,8 +179,7 @@ export default {
         cbId: "",
         roomNo: "",
         timeSelect: "",
-        customName: "",
-        tel: "",
+        houseNo: "",
         minInArea: "",
         maxInArea: "",
         minPrice: "",
@@ -542,8 +541,7 @@ export default {
         params.roomNo = that.data.roomNo;
         params.beginTime = that.data.timeSelect[0];
         params.endTime = that.data.timeSelect[1];
-        params.customName = that.data.customName;
-        params.tel = that.data.tel;
+        params.houseNo = that.data.houseNo;
         params.minInArea = that.data.minInArea;
         params.maxInArea = that.data.maxInArea;
         params.minPrice = that.data.minPrice;
