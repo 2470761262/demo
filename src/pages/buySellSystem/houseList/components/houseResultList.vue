@@ -812,8 +812,12 @@ export default {
       //首付
       if (value.minDownPayment !== "") {
         this.dynamicTags.push({
-          title: `首付:${value.minDownPayment}-${
-            value.maxDownPayment == "9999" ? "无限" : value.maxDownPayment
+          title: `首付:${(
+            value.minDownPayment * this.downPaymentPercent
+          ).toFixed(1)}-${
+            value.maxDownPayment == "9999"
+              ? "无限"
+              : (value.maxDownPayment * this.downPaymentPercent).toFixed(1)
           }万`,
           field: "downPayment",
           arr: false

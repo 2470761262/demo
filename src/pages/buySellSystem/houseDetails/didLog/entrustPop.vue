@@ -484,7 +484,7 @@ export default {
         let params = {
           IpStr: str.substring(0, thirdIndex),
           FileStr: str.substring(thirdIndex + 1, lastIndex),
-          PicName: str.substring(lastIndex + 1, str.length - 1),
+          PicName: str.substring(lastIndex + 1, str.length),
           Type: that.replaceType
         };
         that.insertPic(params, str);

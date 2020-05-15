@@ -457,6 +457,61 @@
           ></el-input>
         </div>
       </div>
+      <!-- 首付 -->
+      <div class="page-form-inline form-item-flex1 custom-set">
+        <el-form-item label="首付">
+          <vue-slider
+            v-model="Slider.downPaymentSlider"
+            :data="['6', '18', '24', '30', '36', '42', '60', '90', '9999']"
+            :marks="downPaymentSliderMarks"
+            tooltip="none"
+            :lazy="true"
+            @change="downPaymentSliderChange"
+            :contained="true"
+          >
+            <template v-slot:process="{ start, end, style, index }">
+              <div class="vue-slider-process" :style="style">
+                <div
+                  v-show="end != 0"
+                  :class="[
+                    'merge-tooltip',
+                    'vue-slider-dot-tooltip-inner',
+                    'vue-slider-dot-tooltip-inner-top'
+                  ]"
+                >
+                  {{ Slider.downPaymentSlider[index] }}￥ -
+                  {{
+                    Slider.downPaymentSlider[index + 1] == "9999"
+                      ? "无限"
+                      : Slider.downPaymentSlider[index + 1]
+                  }}￥
+                </div>
+              </div>
+            </template>
+            <template v-slot:dot>
+              <div class="tooltipsItem">￥</div>
+            </template>
+          </vue-slider>
+        </el-form-item>
+        <div class="custom-content">
+          <el-input
+            v-number
+            placeholder="最小首付(万)"
+            clearable
+            @change="maxChange('custom', '最大售价', 'DownPayment')"
+            v-model="custom.minDownPayment"
+          ></el-input>
+          <div class="split-line"></div>
+
+          <el-input
+            v-number
+            placeholder="最大首付(万)"
+            @change="maxChange('custom', '最大售价', 'DownPayment')"
+            clearable
+            v-model="custom.maxDownPayment"
+          ></el-input>
+        </div>
+      </div>
       <div class="page-form-inline form-item-flex1 custom-set">
         <el-form-item label="面积">
           <vue-slider
@@ -770,6 +825,17 @@ const priceSliderMarks = {
   "300": "300万",
   "9999": "∞"
 };
+const downPaymentSliderMarks = {
+  "6": "6万",
+  "18": "18万",
+  "24": "24万",
+  "30": "30万",
+  "36": "36万",
+  "42": "42万",
+  "60": "60万",
+  "90": "90万",
+  "9999": "∞"
+};
 const flootSliderMarks = {
   "-2": "-2层",
   "5": "5层",
@@ -814,7 +880,9 @@ export default {
         minInArea: "",
         maxInArea: "",
         minFloor: "",
-        maxFloor: ""
+        maxFloor: "",
+        maxDownPayment: "",
+        minDownPayment: ""
       },
       PrimarySizeFlag: false,
       middleSizeFlag: false,
@@ -822,6 +890,7 @@ export default {
       areaSliderMarks: areaSliderMarks,
       priceSliderMarks: priceSliderMarks,
       flootSliderMarks: flootSliderMarks,
+      downPaymentSliderMarks: downPaymentSliderMarks,
       primarySchoolInput: "",
       middleSchoolInput: "",
       businessList: [],
@@ -835,7 +904,8 @@ export default {
       options: [],
       cbIdList: [],
       roomNoList: [],
-      loading: false
+      loading: false,
+      downPaymentPercent: 0.3 //首付的百分比
     };
   },
   mounted() {
@@ -883,6 +953,12 @@ export default {
       switch (field) {
         case "Price":
           this.Slider.priceSlider = [20, 20];
+          break;
+        case "DownPayment":
+          this.Slider.downPaymentSlider = [6, 6];
+          //首付等于总价的3分之1
+          min = min != "" ? min / this.downPaymentPercent : "";
+          max = max != "" ? max / this.downPaymentPercent : "";
           break;
         case "InArea":
           this.Slider.areaSlider = [20, 20];
@@ -949,6 +1025,19 @@ export default {
       //清空自定义数据
       this.custom.minPrice = "";
       this.custom.maxPrice = "";
+    },
+    //首付滑块参数更新
+    downPaymentSliderChange(e) {
+      if (e[0] == 6 && e[1] == 6) {
+        this.form.minDownPayment = "";
+        this.form.maxDownPayment = "";
+      } else {
+        this.form.minDownPayment = e[0] / this.downPaymentPercent;
+        this.form.maxDownPayment = e[1] / this.downPaymentPercent;
+      }
+      //清空自定义数据
+      this.custom.minDownPayment = "";
+      this.custom.maxDownPayment = "";
     },
     //重置表单
     resetForm(formName) {
