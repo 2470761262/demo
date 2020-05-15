@@ -381,7 +381,7 @@
               </div>
               <div class="item-data-plate">
                 <!-- 店公共盘 -->
-                <div class="plate-warp" v-if="(item.plate | plateResult) != ''">
+                <div class="plate-warp" v-if="plateResultMet(item.plate) != ''">
                   {{ item.plate | plateResult }}
                 </div>
                 <div class="item-data-downPayment"></div>
@@ -682,6 +682,9 @@ export default {
     }
   },
   methods: {
+    plateResultMet(value) {
+      return this.$options.filters.plateResult(value);
+    },
     elevatorSelect() {
       if (this.form.elevator != "") {
         this.form.elevator = "";

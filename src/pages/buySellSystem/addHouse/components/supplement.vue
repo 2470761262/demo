@@ -891,11 +891,11 @@ export default {
     },
     middleRadioTo: {
       type: Number,
-      default: 0
+      default: null
     },
     primaryRadioTo: {
       type: Number,
-      default: 0
+      default: null
     },
     showFollow: {
       type: Boolean,
