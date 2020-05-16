@@ -40,7 +40,7 @@ function getData() {
     },
     step2: {
       propertyFee: "", //物业费
-      isOwnerOnly: null, //唯一住房 1唯一 0 不唯一
+      isOwnerOnly: "", //唯一住房 1唯一 0 不唯一
       decoration: "", //装修
       houseNow: "", //房屋现状
       houseSource: "", //房屋来源
@@ -49,7 +49,7 @@ function getData() {
       houseBelong: "", //附属配套
       primarySchoolUse: "", //小学学籍占用
       middleSchoolUse: "", //中学学籍占用
-      mortgage: null, //抵押情况
+      mortgage: "", //抵押情况
       mortgageBank: "", //抵押银行
       balance: "", //余贷
       monthlyMortgage: "", //月供
