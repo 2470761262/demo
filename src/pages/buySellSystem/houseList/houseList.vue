@@ -152,7 +152,7 @@
   opacity: 0.7;
 }
 </style>
-<template>
+<template @mouseover="log_socket.sendUserAnchorData('房源详情页','mouserover')" @mouseleave="log_socket.sendUserAnchorData('房源详情页','mouseleave')">
   <div class="page-back-color">
     <div class="page-house-cell nav-back">
       <div class="page-house-cell house-left-tips"><span>为你推荐</span></div>
@@ -162,6 +162,7 @@
           v-for="(item, index) in houseMenuList"
           :key="index"
           :class="[item.cellTop, { 'item-hot': item.hot }]"
+          @click="log_socket.sendUserAnchorData(item.title,'click')"
         >
           <div
             :class="['for-house-item', { 'item-opacity': item.flag }]"
