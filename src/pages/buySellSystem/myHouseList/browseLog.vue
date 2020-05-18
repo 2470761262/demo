@@ -266,7 +266,7 @@ export default {
           width: "120",
           order: "custom",
           disabled: false,
-          formart: item => item.UnitPrice||0.0 + "元/㎡"
+          formart: item => item.UnitPrice || 0.0 + "元/㎡"
         },
         {
           prop: "Type",
