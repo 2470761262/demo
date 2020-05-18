@@ -60,7 +60,9 @@ export default {
               that.$message.error("当前已到最后一套！");
               return;
             }
-            that.$message.success((direct==="next"?'下一套':'上一套')+"加载成功！")
+            that.$message.success(
+              (direct === "next" ? "下一套" : "上一套") + "加载成功！"
+            );
             let browseLog = { id: item.id, topTime: item.topTime };
             browseLog[direct] = item.total;
             that.browse.id = browseLog.id;
