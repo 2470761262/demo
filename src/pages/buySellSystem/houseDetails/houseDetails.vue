@@ -245,17 +245,19 @@ export default {
               that.showEdit = true;
             }
             this.$set(this.houseDetails, "data", result.data);
-            let rooms,hall,toilet =0;
-            if(result.data.houseType){
+            let rooms,
+              hall,
+              toilet = 0;
+            if (result.data.houseType) {
               rooms = result.data.houseType.split("室")[0];
               hall = result.data.houseType.split("室")[1].split("厅")[0];
               toilet = result.data.houseType.split("厅")[1].split("卫")[0];
             }
             let type = 1;
-            if(result.data.plate==1){
+            if (result.data.plate == 1) {
               type = 2;
             }
-            if(result.data.plate==4){
+            if (result.data.plate == 4) {
               type = 3;
             }
             let logParam = {
@@ -296,7 +298,7 @@ export default {
         .post({
           url: url,
           data: param,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           let result = e.data;

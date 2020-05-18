@@ -378,21 +378,27 @@ export default {
       console.log(item, "浏览记录详情");
       if (item.Type == 1) {
         //楼盘情况
-        console.log("进入我的跟单房源详情 /buySellSystem/houseDetails/" + item.HouseId);
+        console.log(
+          "进入我的跟单房源详情 /buySellSystem/houseDetails/" + item.HouseId
+        );
         that.$router.push({
           name: "houseDetails",
           params: { houseId: item.HouseId }
         });
       } else if (item.Type == 2) {
         //楼盘情况
-        console.log("进入店公共盘房源详情 /buySellSystem/houseDetails/" + item.HouseId);
+        console.log(
+          "进入店公共盘房源详情 /buySellSystem/houseDetails/" + item.HouseId
+        );
         that.$router.push({
           name: "houseDetails",
           params: { houseId: item.HouseId }
         });
       } else if (item.Type == 3) {
         //楼盘情况
-        console.log("进入在售无跟单房源详情 /buySellSystem/houseDetails/" + item.HouseId);
+        console.log(
+          "进入在售无跟单房源详情 /buySellSystem/houseDetails/" + item.HouseId
+        );
         that.$router.push({
           name: "houseDetails",
           params: { houseId: item.HouseId }
@@ -420,7 +426,7 @@ export default {
         console.log("进入交易房源详情");
         that.$router.push({
           name: "tradeHouseDetail",
-          params: { houseId: item.HouseId, houseType: 2}
+          params: { houseId: item.HouseId, houseType: 2 }
         });
       } else {
         that.$message.error(
