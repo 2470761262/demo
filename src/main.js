@@ -8,6 +8,7 @@ import VueCookies from "vue-cookies"; //cookies
 import "./validate/validate"; //表单验证
 import Api from "@/api/require"; //请求api
 import guard from "@/router/guard"; // 路由拦截器
+import logWebSocket from "./components/log/logWebSocket";
 import * as socketApi from "./util/webSocket";
 import { getColor } from "@/themePackers/getSkin";
 import componentsIndex from "@/components/index";
@@ -18,6 +19,7 @@ Vue.prototype.socketApi = socketApi;
 Vue.prototype.md5Util = md5Util;
 Vue.prototype.$api = Api;
 Vue.config.productionTip = false;
+Vue.prototype.log_socket = logWebSocket;
 Vue.use(ElementUI);
 Vue.use(VueCookies);
 Vue.use(componentsIndex);
