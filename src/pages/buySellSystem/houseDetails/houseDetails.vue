@@ -414,7 +414,6 @@ export default {
               that.browse[direct] = 0;
               that.$message.error("当前已到最后一套！");
             }
-            debugger;
             let browseLog = { id: item.id, topTime: item.topTime };
             browseLog[direct] = item.total;
             if (item.Type == 1) {
