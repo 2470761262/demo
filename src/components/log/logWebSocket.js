@@ -11,7 +11,7 @@ import { LOGINDATA, TOKEN } from "@/util/constMap";
  * @type {boolean}
  */
 let isOpenLog = true;
-let logSocketUri = "ws://" +  process.env.VUE_APP_WEBSOCKET_URI + "/log";
+let logSocketUri = "ws://" + process.env.VUE_APP_WEBSOCKET_URI + "/log";
 
 let addLog_eventListener = {
   click() {
@@ -28,14 +28,14 @@ let log_socket = {
   init() {
     if (!log_socket.isConn) {
       log_socket.socket = new WebSocket(logSocketUri);
-      log_socket.socket.onopen = function(){
+      log_socket.socket.onopen = function() {
         log_socket.isConn = true;
       };
-      log_socket.socket.onerror = function(err){
+      log_socket.socket.onerror = function(err) {
         console.log(err);
         log_socket.isConn = false;
       };
-      log_socket.socket.onclose = function(){
+      log_socket.socket.onclose = function() {
         console.log("close");
         log_socket.isConn = false;
       };
@@ -58,25 +58,25 @@ let log_socket = {
     let content = "user_action@$:" + JSON.stringify(parent);
     log_socket.socket.send(content);
   },
-  getAccountId(){
+  getAccountId() {
     let loginData = util.localStorageGet(LOGINDATA);
     let accountId = loginData.accountId;
     return accountId;
   },
-  sendUserAnchorData(name,event) {
+  sendUserAnchorData(name, event) {
     let accountId = log_socket.getAccountId();
     let data = {
-      accountId:accountId,
-      name:name,
-      event:event
-    }
+      accountId: accountId,
+      name: name,
+      event: event
+    };
     let content = "user_anchor@$:" + JSON.stringify(data);
     console.log(content);
     log_socket.socket.send(content);
   }
 };
 
-if(isOpenLog){
+if (isOpenLog) {
   log_socket.init();
   addLog_eventListener.click();
   addLog_eventListener.mouseover();
