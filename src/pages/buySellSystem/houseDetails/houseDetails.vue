@@ -5,29 +5,51 @@
   min-height: 100%;
   box-sizing: border-box;
 }
+
 .page-house-cell {
   display: flex;
   margin-top: 18px;
+
   &.marginTop {
     margin-top: 0;
   }
+
   .cell-left {
     width: 860px;
+
     &.cell-left-nest {
       width: 1020px;
     }
   }
+
   .cell-msg {
     width: 760px;
+
     &.cell-msg-nest {
       width: 920px;
     }
   }
+
   .cell-right {
     flex: 1;
     align-self: center;
+
     &.no-center {
       align-self: flex-start;
+    }
+  }
+
+  .browse-nav-content {
+    top: 458px;
+    position: absolute;
+    right: 10%;
+    transform: translateX(calc(100% + 1px));
+    display: flex;
+    z-index: 9999;
+    flex-direction: column;
+
+    > button:last-child {
+      margin-left: 0;
     }
   }
 }
@@ -53,6 +75,16 @@
         :lastParams="lastParams"
         :showEdit="showEdit"
       ></sidebarList>
+      <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
+
+      <!--      <div class="browse-nav-content" v-if="browse.addTime">-->
+      <!--        <el-button @click="browsePage('last')" v-if="browse.last"-->
+      <!--          >上一套-->
+      <!--        </el-button>-->
+      <!--        <el-button @click="browsePage('next')" v-if="browse.next"-->
+      <!--          >下一套</el-button-->
+      <!--        >-->
+      <!--      </div>-->
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -78,11 +110,14 @@ import houseDetailsHead from "./components/houseDetailsHead";
 import loopImg from "./components/loopImg";
 import detail from "./components/detail";
 import sidebarList from "@/components/sidebarList";
+import browsebar from "@/components/browsebar";
 import buttonGroup from "./components/buttonGroup";
 import houseMessage from "./components/houseMessage";
 import houseOperation from "./components/houseOperation";
 import houseTask from "./components/houseTask";
 import { REMARK } from "@/util/constMap";
+import { formatDate } from "element-ui/src/utils/date-util";
+
 export default {
   provide() {
     return {
@@ -95,16 +130,33 @@ export default {
     };
   },
   computed: {
+    key() {
+      //解决同一组件路由跳转，数据不刷新问题
+      return this.$route.name !== undefined
+        ? this.$route.name + new Date()
+        : this.$route + new Date();
+    },
     nest() {
       return !util.localStorageGet("nest");
     }
   },
+  // watch: {
+  //   browse: {
+  //     deep: true,
+  //     handler: function(val) {
+  //       if (val !== null){
+  //         this.init();
+  //       }
+  //     }
+  //   }
+  // },
   mixins: [getMenuRid],
   components: {
     houseDetailsHead, //房源详情头部
     loopImg, // 轮播
     detail, // 右边的详情
     sidebarList,
+    browsebar,
     buttonGroup, // 按钮群
     houseMessage,
     houseOperation,
@@ -133,6 +185,12 @@ export default {
         }
       },
       detailType: undefined, //标识房源详情类型，决定调用哪个详情接口地址
+      browse: {
+        addTime: null,
+        topTime: null,
+        next: 1,
+        last: 1
+      }, //浏览记录id
       showEdit: false,
       dept: {
         id: 0
@@ -140,34 +198,53 @@ export default {
     };
   },
   created() {
-    console.log(window.location, "window.location");
-    if (this.$route.params.houseId) {
-      this.forID.id = this.$route.params.houseId;
-      this.detailType = this.$route.params.detailType;
-      this.dept.id = this.$route.params.dept;
-      console.log("************", this.dept.id);
-      util.sessionLocalStorageSet("houseDetails.vue:deptId", this.dept.id);
-      util.sessionLocalStorageSet("houseDetails.vue:houseId", this.forID.id);
-      util.sessionLocalStorageSet(
-        "houseDetails.vue:detailType",
-        this.detailType
-      );
-    } else {
-      let houseId = util.getQueryVariable("commissionHouseId");
-      if (houseId) {
-        this.forID.id = houseId;
-      } else {
-        this.forID.id = util.sessionLocalStorageGet("houseDetails.vue:houseId");
-        this.detailType = util.sessionLocalStorageGet(
-          "houseDetails.vue:detailType"
-        );
-        this.dept.id = util.sessionLocalStorageGet("houseDetails.vue:deptId");
-      }
-    }
-    this.lastParams.id = this.forID.id;
-    this.getHouseDetails();
+    this.init();
   },
   methods: {
+    init() {
+      console.log(window.location, "window.location");
+      if (this.$route.params.houseId) {
+        this.forID.id = this.$route.params.houseId;
+        this.detailType = this.$route.params.detailType;
+        this.dept.id = this.$route.params.dept;
+        if (this.$route.params.browse) {
+          this.browse.addTime = this.$route.params.browse.addTime;
+          this.browse.topTime = this.$route.params.browse.topTime
+            ? this.$route.params.browse.topTime
+            : formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+          this.browse.next = this.$route.params.browse.next
+            ? this.$route.params.browse.next
+            : 1;
+          this.browse.last = this.$route.params.browse.last
+            ? this.$route.params.browse.last
+            : 1;
+        }
+        console.log("************", this.dept.id);
+        util.sessionLocalStorageSet("houseDetails:browse", this.browse);
+        util.sessionLocalStorageSet("houseDetails.vue:deptId", this.dept.id);
+        util.sessionLocalStorageSet("houseDetails.vue:houseId", this.forID.id);
+        util.sessionLocalStorageSet(
+          "houseDetails.vue:detailType",
+          this.detailType
+        );
+      } else {
+        let houseId = util.getQueryVariable("commissionHouseId");
+        if (houseId) {
+          this.forID.id = houseId;
+        } else {
+          this.forID.id = util.sessionLocalStorageGet(
+            "houseDetails.vue:houseId"
+          );
+          this.browse = util.sessionLocalStorageGet("houseDetails:browse");
+          this.detailType = util.sessionLocalStorageGet(
+            "houseDetails.vue:detailType"
+          );
+          this.dept.id = util.sessionLocalStorageGet("houseDetails.vue:deptId");
+        }
+      }
+      this.lastParams.id = this.forID.id;
+      this.getHouseDetails();
+    },
     /**
      * 获取房源详情
      */
@@ -273,6 +350,9 @@ export default {
               Floor: result.data.Floor,
               InArea: result.data.InArea,
               Price: result.data.Price,
+              Decoration: result.data.Decoration,
+              Face: result.data.Face,
+              Buildtype: result.data.buildtype,
               Rooms: rooms,
               Hall: hall,
               Toilet: toilet

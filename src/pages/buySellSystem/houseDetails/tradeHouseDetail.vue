@@ -51,6 +51,7 @@
         lastTitle="编辑"
         :lastParams="{ id: forID.id, method: 'reset' }"
       ></sidebarList>
+      <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -76,11 +77,13 @@ import houseDetailsHead from "./components/houseDetailsHead";
 import loopImg from "./components/loopImg";
 import detail from "./components/detail";
 import sidebarList from "@/components/sidebarList";
+import browsebar from "@/components/browsebar";
 import buttonGroup from "./components/buttonGroup";
 import houseMessage from "./components/houseMessage";
 import houseOperation from "./components/houseOperation";
 import houseTask from "./components/houseTask";
 import { REMARK } from "@/util/constMap";
+import { formatDate } from "element-ui/src/utils/date-util";
 export default {
   provide() {
     return {
@@ -91,6 +94,12 @@ export default {
     };
   },
   computed: {
+    key() {
+      //解决同一组件路由跳转，数据不刷新问题
+      return this.$route.name !== undefined
+        ? this.$route.name + new Date()
+        : this.$route + new Date();
+    },
     nest() {
       return !util.localStorageGet("nest");
     }
@@ -101,6 +110,7 @@ export default {
     loopImg, // 轮播
     detail, // 右边的详情
     sidebarList,
+    browsebar,
     buttonGroup, // 按钮群
     houseMessage,
     houseOperation,
@@ -112,6 +122,12 @@ export default {
         id: null
       },
       houseDetails: {},
+      browse: {
+        addTime: null,
+        topTime: null,
+        next: 1,
+        last: 1
+      }, //浏览记录id
       load: {
         loading: true,
         loadingMessage: "努力加载中~"
@@ -122,12 +138,26 @@ export default {
     console.log(window.location, "window.location");
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
+      if (this.$route.params.browse) {
+        this.browse.addTime = this.$route.params.browse.addTime;
+        this.browse.topTime = this.$route.params.browse.topTime
+          ? this.$route.params.browse.topTime
+          : formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+        this.browse.next = this.$route.params.browse.next
+          ? this.$route.params.browse.next
+          : 1;
+        this.browse.last = this.$route.params.browse.last
+          ? this.$route.params.browse.last
+          : 1;
+      }
+      util.sessionLocalStorageSet("houseDetails:browse", this.browse);
       util.sessionLocalStorageSet(
         "tradeHouseDetail.vue:houseId",
         this.forID.id
       );
     } else {
       let houseId = util.getQueryVariable("commissionHouseId");
+      this.browse = util.sessionLocalStorageGet("houseDetails:browse");
       if (houseId) {
         this.forID.id = houseId;
       } else {
@@ -212,6 +242,9 @@ export default {
               Floor: result.data.Floor,
               InArea: result.data.InArea,
               Price: result.data.Price,
+              Decoration: result.data.Decoration,
+              Face: result.data.Face,
+              Buildtype: result.data.buildtype,
               Rooms: rooms,
               Hall: hall,
               Toilet: toilet
