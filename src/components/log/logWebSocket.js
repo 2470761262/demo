@@ -10,7 +10,7 @@ import { LOGINDATA, TOKEN } from "@/util/constMap";
  * 锚点数据是否开启
  * @type {boolean}
  */
-let isOpenLog = false;
+let isOpenLog = true;
 let logSocketUri = "ws://" + process.env.VUE_APP_WEBSOCKET_URI + "/log";
 
 let addLog_eventListener = {
@@ -52,9 +52,9 @@ let log_socket = {
       type: e.type,
       baseURI: e.target.baseURI,
       className: e.target.className,
-      id: e.target.id,
-      innerHTML: e.target.innerHTML
+      id: e.target.id
     };
+    // innerHTML: e.target.innerHTML
     let content = "user_action@$:" + JSON.stringify(parent);
     log_socket.socket.send(content);
   },
