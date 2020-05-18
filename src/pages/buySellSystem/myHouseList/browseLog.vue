@@ -243,7 +243,7 @@ export default {
           order: "Price",
           disabled: false,
           default: true,
-          formart: item => item.Price + "万元"
+          formart: item => (item.Price || 0) + "万元"
         },
         {
           prop: "HouseType",
@@ -266,8 +266,7 @@ export default {
           width: "120",
           order: "custom",
           disabled: false,
-          default: true,
-          format: item => item.Unitpaice + "元/㎡"
+          formart: item => item.UnitPrice + "元/㎡"
         },
         {
           prop: "Type",
@@ -275,8 +274,7 @@ export default {
           width: "120",
           order: false,
           disabled: false,
-          default: true,
-          format: item => this.formatType(item)
+          formart: item => this.formatType(item.Type)
         },
         {
           prop: "AddTime",
@@ -353,8 +351,8 @@ export default {
     // queryTabData() {
     //   console.log(this, "111");
     // },
-    formatType(row) {
-      switch (row.Type) {
+    formatType(type) {
+      switch (type) {
         case 1:
           return "我的跟单";
         case 2:
@@ -383,7 +381,7 @@ export default {
         );
         that.$router.push({
           name: "houseDetails",
-          params: { houseId: item.HouseId }
+          params: { houseId: item.HouseId, browse: { id: item.id } }
         });
       } else if (item.Type == 2) {
         //楼盘情况
@@ -392,7 +390,7 @@ export default {
         );
         that.$router.push({
           name: "houseDetails",
-          params: { houseId: item.HouseId }
+          params: { houseId: item.HouseId, browse: { id: item.id } }
         });
       } else if (item.Type == 3) {
         //楼盘情况
@@ -401,32 +399,44 @@ export default {
         );
         that.$router.push({
           name: "houseDetails",
-          params: { houseId: item.HouseId }
+          params: { houseId: item.HouseId, browse: { id: item.id } }
         });
       } else if (item.Type == 4) {
         console.log("进入暂不售房源详情");
         that.$router.push({
           name: "historyDetails",
-          params: { houseId: item.HouseId, housePageType: "notSale" }
+          params: {
+            houseId: item.HouseId,
+            housePageType: "notSale",
+            browse: { id: item.id }
+          }
         });
       } else if (item.Type == 5) {
         console.log("进入楼盘详情");
         that.$router.push({
           name: "buildingHouseDetail",
-          params: { houseId: item.HouseId }
+          params: { houseId: item.HouseId, browse: { id: item.id } }
         });
       } else if (item.Type == 6) {
         //楼盘情况
         console.log("进入楼盘详情");
         that.$router.push({
           name: "potentialHouseDetail",
-          params: { houseId: item.HouseId, houseType: 1 }
+          params: {
+            houseId: item.HouseId,
+            houseType: 1,
+            browse: { id: item.id }
+          }
         });
       } else if (item.Type == 7) {
         console.log("进入交易房源详情");
         that.$router.push({
           name: "tradeHouseDetail",
-          params: { houseId: item.HouseId, houseType: 2 }
+          params: {
+            houseId: item.HouseId,
+            houseType: 2,
+            browse: { id: item.id }
+          }
         });
       } else {
         that.$message.error(

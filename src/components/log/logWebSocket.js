@@ -26,7 +26,6 @@ let log_socket = {
   socket: null,
   isConn: false,
   init() {
-    debugger;
     if (!log_socket.isConn) {
       log_socket.socket = new WebSocket(logSocketUri);
       log_socket.socket.onopen = function() {
