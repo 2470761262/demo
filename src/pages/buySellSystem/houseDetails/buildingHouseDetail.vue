@@ -304,7 +304,7 @@
           </div>
         </div>
       </div>
-      <browsebar :browse="browse" v-if="browse.id"></browsebar>
+      <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
     </section>
   </div>
 </template>
@@ -344,7 +344,7 @@ export default {
         cutPhone: ""
       },
       browse: {
-        id: null,
+        addTime: null,
         topTime: null,
         next: 1,
         last: 1
@@ -359,7 +359,7 @@ export default {
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       if (this.$route.params.browse) {
-        this.browse.id = this.$route.params.browse.id;
+        this.browse.addTime = this.$route.params.browse.addTime;
         this.browse.topTime = this.$route.params.browse.topTime
           ? this.$route.params.browse.topTime
           : formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");

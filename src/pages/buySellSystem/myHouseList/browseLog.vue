@@ -231,7 +231,7 @@ export default {
           prop: "InArea",
           label: "面积(m²)",
           width: "110",
-          order: "InArea",
+          order: false,
           disabled: false,
           default: true,
           formart: item => item.InArea + "m²"
@@ -240,10 +240,10 @@ export default {
           prop: "Price",
           label: "售价(万元)",
           width: "120",
-          order: "Price",
+          order: false,
           disabled: false,
           default: true,
-          formart: item => (item.Price||0) + "万元"
+          formart: item => (item.Price || 0.0) + "万元"
         },
         {
           prop: "HouseType",
@@ -266,7 +266,7 @@ export default {
           width: "120",
           order: "custom",
           disabled: false,
-          formart: item => item.UnitPrice + "元/㎡"
+          formart: item => item.UnitPrice||0.0 + "元/㎡"
         },
         {
           prop: "Type",
@@ -315,7 +315,7 @@ export default {
           ]
         }
       ],
-      sortColumn: "id", //排序字段
+      sortColumn: "addTime", //排序字段
       sortType: "descending", //排序类型
       menuLoading: true, //自定义菜单
       renderList: []
@@ -374,6 +374,7 @@ export default {
     toHouseDetail(item) {
       let that = this;
       console.log(item, "浏览记录详情");
+      let browse = { addTime: item.Timestamp, topTime: new Date().getTime() };
       if (item.Type == 1) {
         //楼盘情况
         console.log(
@@ -381,7 +382,7 @@ export default {
         );
         that.$router.push({
           name: "houseDetails",
-          params: { houseId: item.HouseId, browse: { id: item.id } }
+          params: { houseId: item.HouseId, browse: browse }
         });
       } else if (item.Type == 2) {
         //楼盘情况
@@ -390,7 +391,7 @@ export default {
         );
         that.$router.push({
           name: "houseDetails",
-          params: { houseId: item.HouseId, browse: { id: item.id } }
+          params: { houseId: item.HouseId, browse: browse }
         });
       } else if (item.Type == 3) {
         //楼盘情况
@@ -399,7 +400,7 @@ export default {
         );
         that.$router.push({
           name: "houseDetails",
-          params: { houseId: item.HouseId, browse: { id: item.id } }
+          params: { houseId: item.HouseId, browse: browse }
         });
       } else if (item.Type == 4) {
         console.log("进入暂不售房源详情");
@@ -408,14 +409,14 @@ export default {
           params: {
             houseId: item.HouseId,
             housePageType: "notSale",
-            browse: { id: item.id }
+            browse: browse
           }
         });
       } else if (item.Type == 5) {
         console.log("进入楼盘详情");
         that.$router.push({
           name: "buildingHouseDetail",
-          params: { houseId: item.HouseId, browse: { id: item.id } }
+          params: { houseId: item.HouseId, browse: browse }
         });
       } else if (item.Type == 6) {
         //楼盘情况
@@ -425,7 +426,7 @@ export default {
           params: {
             houseId: item.HouseId,
             houseType: 1,
-            browse: { id: item.id }
+            browse: browse
           }
         });
       } else if (item.Type == 7) {
@@ -435,7 +436,7 @@ export default {
           params: {
             houseId: item.HouseId,
             houseType: 2,
-            browse: { id: item.id }
+            browse: browse
           }
         });
       } else {
