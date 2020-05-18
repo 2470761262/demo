@@ -5,29 +5,51 @@
   min-height: 100%;
   box-sizing: border-box;
 }
+
 .page-house-cell {
   display: flex;
   margin-top: 18px;
+
   &.marginTop {
     margin-top: 0;
   }
+
   .cell-left {
     width: 860px;
+
     &.cell-left-nest {
       width: 1020px;
     }
   }
+
   .cell-msg {
     width: 760px;
+
     &.cell-msg-nest {
       width: 920px;
     }
   }
+
   .cell-right {
     flex: 1;
     align-self: center;
+
     &.no-center {
       align-self: flex-start;
+    }
+  }
+
+  .browse-nav-content {
+    top: 458px;
+    position: absolute;
+    right: 10%;
+    transform: translateX(calc(100% + 1px));
+    display: flex;
+    z-index: 9999;
+    flex-direction: column;
+
+    > button:last-child {
+      margin-left: 0;
     }
   }
 }
@@ -53,6 +75,16 @@
         :lastParams="lastParams"
         :showEdit="showEdit"
       ></sidebarList>
+      <browsebar :browse="browse" v-if="browse.id"></browsebar>
+
+      <!--      <div class="browse-nav-content" v-if="browse.id">-->
+      <!--        <el-button @click="browsePage('last')" v-if="browse.last"-->
+      <!--          >上一套-->
+      <!--        </el-button>-->
+      <!--        <el-button @click="browsePage('next')" v-if="browse.next"-->
+      <!--          >下一套</el-button-->
+      <!--        >-->
+      <!--      </div>-->
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -78,11 +110,14 @@ import houseDetailsHead from "./components/houseDetailsHead";
 import loopImg from "./components/loopImg";
 import detail from "./components/detail";
 import sidebarList from "@/components/sidebarList";
+import browsebar from "@/components/browsebar";
 import buttonGroup from "./components/buttonGroup";
 import houseMessage from "./components/houseMessage";
 import houseOperation from "./components/houseOperation";
 import houseTask from "./components/houseTask";
 import { REMARK } from "@/util/constMap";
+import { formatDate } from "element-ui/src/utils/date-util";
+
 export default {
   provide() {
     return {
@@ -95,16 +130,33 @@ export default {
     };
   },
   computed: {
+    key() {
+      //解决同一组件路由跳转，数据不刷新问题
+      return this.$route.name !== undefined
+        ? this.$route.name + new Date()
+        : this.$route + new Date();
+    },
     nest() {
       return !util.localStorageGet("nest");
     }
   },
+  // watch: {
+  //   browse: {
+  //     deep: true,
+  //     handler: function(val) {
+  //       if (val !== null){
+  //         this.init();
+  //       }
+  //     }
+  //   }
+  // },
   mixins: [getMenuRid],
   components: {
     houseDetailsHead, //房源详情头部
     loopImg, // 轮播
     detail, // 右边的详情
     sidebarList,
+    browsebar,
     buttonGroup, // 按钮群
     houseMessage,
     houseOperation,
@@ -133,6 +185,12 @@ export default {
         }
       },
       detailType: undefined, //标识房源详情类型，决定调用哪个详情接口地址
+      browse: {
+        id: null,
+        topTime: null,
+        next: 1,
+        last: 1
+      }, //浏览记录id
       showEdit: false,
       dept: {
         id: 0
@@ -140,34 +198,53 @@ export default {
     };
   },
   created() {
-    console.log(window.location, "window.location");
-    if (this.$route.params.houseId) {
-      this.forID.id = this.$route.params.houseId;
-      this.detailType = this.$route.params.detailType;
-      this.dept.id = this.$route.params.dept;
-      console.log("************", this.dept.id);
-      util.sessionLocalStorageSet("houseDetails.vue:deptId", this.dept.id);
-      util.sessionLocalStorageSet("houseDetails.vue:houseId", this.forID.id);
-      util.sessionLocalStorageSet(
-        "houseDetails.vue:detailType",
-        this.detailType
-      );
-    } else {
-      let houseId = util.getQueryVariable("commissionHouseId");
-      if (houseId) {
-        this.forID.id = houseId;
-      } else {
-        this.forID.id = util.sessionLocalStorageGet("houseDetails.vue:houseId");
-        this.detailType = util.sessionLocalStorageGet(
-          "houseDetails.vue:detailType"
-        );
-        this.dept.id = util.sessionLocalStorageGet("houseDetails.vue:deptId");
-      }
-    }
-    this.lastParams.id = this.forID.id;
-    this.getHouseDetails();
+    this.init();
   },
   methods: {
+    init() {
+      console.log(window.location, "window.location");
+      if (this.$route.params.houseId) {
+        this.forID.id = this.$route.params.houseId;
+        this.detailType = this.$route.params.detailType;
+        this.dept.id = this.$route.params.dept;
+        if (this.$route.params.browse) {
+          this.browse.id = this.$route.params.browse.id;
+          this.browse.topTime = this.$route.params.browse.topTime
+            ? this.$route.params.browse.topTime
+            : formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+          this.browse.next = this.$route.params.browse.next
+            ? this.$route.params.browse.next
+            : 1;
+          this.browse.last = this.$route.params.browse.last
+            ? this.$route.params.browse.last
+            : 1;
+        }
+        console.log("************", this.dept.id);
+        util.sessionLocalStorageSet("houseDetails:browse", this.browse);
+        util.sessionLocalStorageSet("houseDetails.vue:deptId", this.dept.id);
+        util.sessionLocalStorageSet("houseDetails.vue:houseId", this.forID.id);
+        util.sessionLocalStorageSet(
+          "houseDetails.vue:detailType",
+          this.detailType
+        );
+      } else {
+        let houseId = util.getQueryVariable("commissionHouseId");
+        if (houseId) {
+          this.forID.id = houseId;
+        } else {
+          this.forID.id = util.sessionLocalStorageGet(
+            "houseDetails.vue:houseId"
+          );
+          this.browse = util.sessionLocalStorageGet("houseDetails:browse");
+          this.detailType = util.sessionLocalStorageGet(
+            "houseDetails.vue:detailType"
+          );
+          this.dept.id = util.sessionLocalStorageGet("houseDetails.vue:deptId");
+        }
+      }
+      this.lastParams.id = this.forID.id;
+      this.getHouseDetails();
+    },
     /**
      * 获取房源详情
      */
@@ -245,17 +322,19 @@ export default {
               that.showEdit = true;
             }
             this.$set(this.houseDetails, "data", result.data);
-            let rooms,hall,toilet =0;
-            if(result.data.houseType){
+            let rooms,
+              hall,
+              toilet = 0;
+            if (result.data.houseType) {
               rooms = result.data.houseType.split("室")[0];
               hall = result.data.houseType.split("室")[1].split("厅")[0];
               toilet = result.data.houseType.split("厅")[1].split("卫")[0];
             }
             let type = 1;
-            if(result.data.plate==1){
+            if (result.data.plate == 1) {
               type = 2;
             }
-            if(result.data.plate==4){
+            if (result.data.plate == 4) {
               type = 3;
             }
             let logParam = {
@@ -296,12 +375,116 @@ export default {
         .post({
           url: url,
           data: param,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
             console.log("浏览记录添加成功");
+          } else {
+            console.log("浏览记录添加失败" + result.message);
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            console.log(e.response);
+          }
+        });
+    },
+    browsePage(direct) {
+      let that = this;
+      let url = "/house/browse/near";
+      let param = {
+        id: this.browse.id,
+        topTime: this.browse.topTime,
+        direct: direct
+      };
+      this.$api
+        .post({
+          url: url,
+          data: param,
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log("浏览记录添加成功");
+            let item = result.data;
+            if (!item) {
+              that.browse[direct] = 0;
+              that.$message.error("当前已到最后一套！");
+            }
+            debugger;
+            let browseLog = { id: item.id, topTime: item.topTime };
+            browseLog[direct] = item.total;
+            if (item.Type == 1) {
+              //楼盘情况
+              console.log(
+                "进入我的跟单房源详情 /buySellSystem/houseDetails/" +
+                  item.HouseId
+              );
+              that.$router.push({
+                name: "houseDetails",
+                params: { houseId: item.HouseId, browse: browseLog }
+              });
+            } else if (item.Type == 2) {
+              //楼盘情况
+              console.log(
+                "进入店公共盘房源详情 /buySellSystem/houseDetails/" +
+                  item.HouseId
+              );
+              that.$router.push({
+                name: "houseDetails",
+                params: { houseId: item.HouseId, browse: browseLog }
+              });
+            } else if (item.Type == 3) {
+              //楼盘情况
+              console.log(
+                "进入在售无跟单房源详情 /buySellSystem/houseDetails/" +
+                  item.HouseId
+              );
+              that.$router.push({
+                name: "houseDetails",
+                params: { houseId: item.HouseId, browse: browseLog }
+              });
+            } else if (item.Type == 4) {
+              console.log("进入暂不售房源详情");
+              that.$router.push({
+                name: "historyDetails",
+                params: {
+                  houseId: item.HouseId,
+                  housePageType: "notSale",
+                  browse: browseLog
+                }
+              });
+            } else if (item.Type == 5) {
+              console.log("进入楼盘详情");
+              that.$router.push({
+                name: "buildingHouseDetail",
+                params: { houseId: item.HouseId, browse: browseLog }
+              });
+            } else if (item.Type == 6) {
+              //楼盘情况
+              console.log("进入楼盘详情");
+              that.$router.push({
+                name: "potentialHouseDetail",
+                params: {
+                  houseId: item.HouseId,
+                  houseType: 1,
+                  browse: browseLog
+                }
+              });
+            } else if (item.Type == 7) {
+              console.log("进入交易房源详情");
+              that.$router.push({
+                name: "tradeHouseDetail",
+                params: {
+                  houseId: item.HouseId,
+                  houseType: 2,
+                  browse: browseLog
+                }
+              });
+            }
           } else {
             console.log("浏览记录添加失败" + result.message);
           }

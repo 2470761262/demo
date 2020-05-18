@@ -30,6 +30,18 @@
       align-self: flex-start;
     }
   }
+  .browse-nav-content {
+    top: 458px;
+    position: absolute;
+    right: 10%;
+    transform: translateX(calc(100% + 1px));
+    display: flex;
+    z-index: 9999;
+    flex-direction: column;
+    > button:last-child {
+      margin-left: 0;
+    }
+  }
 }
 </style>
 <template>
@@ -52,6 +64,11 @@
         :lastParams="{ id: forID.id, method: 'reset' }"
         :hisEdit="false"
       ></sidebarList>
+      <div class="browse-nav-content" v-scrollCenter="'page-contenr-com'">
+        <el-button @click="navPage('/buySellSystem/houseList')">首页</el-button>
+        <el-button @click="navPage()">返回</el-button>
+      </div>
+      <browsebar :browse="browse" v-if="browse.id"></browsebar>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -77,11 +94,13 @@ import houseDetailsHead from "./components/houseDetailsHead";
 import loopImg from "./components/loopImg";
 import detail from "./components/detail";
 import sidebarList from "@/components/sidebarList";
+import browsebar from "@/components/browsebar";
 import buttonGroup from "./components/buttonGroup";
 import houseMessage from "./components/houseMessage";
 import houseOperation from "./components/houseOperation";
 import houseTask from "./components/houseTask";
 import { REMARK } from "@/util/constMap";
+import { formatDate } from "element-ui/src/utils/date-util";
 export default {
   provide() {
     return {
@@ -92,6 +111,12 @@ export default {
     };
   },
   computed: {
+    key() {
+      //解决同一组件路由跳转，数据不刷新问题
+      return this.$route.name !== undefined
+        ? this.$route.name + new Date()
+        : this.$route + new Date();
+    },
     nest() {
       return !util.localStorageGet("nest");
     }
@@ -102,6 +127,7 @@ export default {
     loopImg, // 轮播
     detail, // 右边的详情
     sidebarList,
+    browsebar,
     buttonGroup, // 按钮群
     houseMessage,
     houseOperation,
@@ -115,6 +141,12 @@ export default {
       housePageType: null, //当前页面类型
       tradeType: 1,
       houseDetails: {},
+      browse: {
+        id: null,
+        topTime: null,
+        next: 1,
+        last: 1
+      }, //浏览记录id
       load: {
         loading: true,
         loadingMessage: "努力加载中~"
@@ -125,12 +157,27 @@ export default {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
       this.tradeType = this.$route.params.tradeType || 1;
+      if (this.$route.params.browse) {
+        this.browse.id = this.$route.params.browse.id;
+        this.browse.topTime = this.$route.params.browse.topTime
+          ? this.$route.params.browse.topTime
+          : formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+        this.browse.next = this.$route.params.browse.next
+          ? this.$route.params.browse.next
+          : 1;
+        this.browse.last = this.$route.params.browse.last
+          ? this.$route.params.browse.last
+          : 1;
+      }
+      util.sessionLocalStorageSet("houseDetails:browse", this.browse);
       util.sessionLocalStorageSet("historyDetails.vue:houseId", this.forID.id);
       util.sessionLocalStorageSet(
         "historyDetails.vue:tradeType",
         this.tradeType
       );
     } else {
+      this.browse = util.sessionLocalStorageGet("houseDetails:browse");
+      this.browse = util.sessionLocalStorageGet("houseDetails:browse");
       this.forID.id = util.sessionLocalStorageGet("historyDetails.vue:houseId");
       this.tradeType = util.sessionLocalStorageGet(
         "historyDetails.vue:tradeType"
