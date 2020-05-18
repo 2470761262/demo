@@ -453,6 +453,9 @@ export default {
               Floor: result.data.Floor,
               InArea: result.data.InArea,
               Price: result.data.Price,
+              Decoration: result.data.Decoration,
+              Face: result.data.Face,
+              Buildtype: result.data.buildtype,
               Rooms: result.data.Rooms,
               Hall: result.data.hall,
               Toilet: result.data.toilet
