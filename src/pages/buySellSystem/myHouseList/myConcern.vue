@@ -127,6 +127,16 @@
             ></el-option>
           </el-select>
         </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">编号</h3>
+          <el-input
+            placeholder="房源编号"
+            v-model="data.houseNo"
+            class="set-input200"
+            @change="querylistByParams"
+            clearable
+          />
+        </div>
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
@@ -148,6 +158,17 @@
           />
         </div>
         <div class="query-content-cell cell-interval45">
+          <definitionmenu
+            :renderList="renderList"
+            :tableColumn="tableColumn"
+            @change="tabColumnChange"
+            :loading="menuLoading"
+            :resetList="tableDataColumn"
+          ></definitionmenu>
+        </div>
+      </div>
+      <div class="page-list-query-row">
+        <div class="query-content-cell ">
           <h3 class="query-cell-title">价格</h3>
           <el-input
             placeholder="最小值"
@@ -166,17 +187,6 @@
           />
         </div>
         <div class="query-content-cell cell-interval45">
-          <definitionmenu
-            :renderList="renderList"
-            :tableColumn="tableColumn"
-            @change="tabColumnChange"
-            :loading="menuLoading"
-            :resetList="tableDataColumn"
-          ></definitionmenu>
-        </div>
-      </div>
-      <div class="page-list-query-row">
-        <div class="query-content-cell">
           <h3 class="query-cell-title">面积</h3>
           <el-input
             placeholder="最小值"
@@ -491,7 +501,8 @@ export default {
         minPrice: "",
         maxPrice: "",
         isKey: "",
-        isOnly: ""
+        isOnly: "",
+        houseNo: ""
       },
       queryData: {
         CommunityName: "",
@@ -829,6 +840,9 @@ export default {
         }
         if (that.data.maxInArea != null && that.data.maxInArea != "") {
           params.maxInArea = that.data.maxInArea;
+        }
+        if (that.data.houseNo != null && that.data.houseNo != "") {
+          params.houseNo = that.data.houseNo;
         }
         if (
           that.data.timeSelect != null &&

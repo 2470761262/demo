@@ -349,7 +349,7 @@
         </div>
         <div v-else class="empty-message">暂无成交数据</div>
       </div>
-      <browsebar :browse="browse" v-if="browse.id"></browsebar>
+      <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
     </section>
   </div>
 </template>
@@ -376,7 +376,7 @@ export default {
       resultData: {},
       tradeDetail: {},
       browse: {
-        id: null,
+        addTime: null,
         topTime: null,
         next: 1,
         last: 1
@@ -403,7 +403,7 @@ export default {
       this.houseId = this.$route.params.houseId;
       this.houseType = this.$route.params.houseType;
       if (this.$route.params.browse) {
-        this.browse.id = this.$route.params.browse.id;
+        this.browse.addTime = this.$route.params.browse.addTime;
         this.browse.topTime = this.$route.params.browse.topTime
           ? this.$route.params.browse.topTime
           : formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -497,6 +497,9 @@ export default {
               Floor: result.data.Floor,
               InArea: result.data.InArea,
               Price: result.data.Price,
+              Decoration: result.data.Decoration,
+              Face: result.data.Face,
+              Buildtype: result.data.buildtype,
               Rooms: result.data.Rooms,
               Hall: result.data.hall,
               Toilet: result.data.toilet

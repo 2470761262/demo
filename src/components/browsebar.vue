@@ -13,7 +13,7 @@
 }
 </style>
 <template>
-  <div class="browse-nav-content" v-if="browse.id">
+  <div class="browse-nav-content" v-if="browse.addTime">
     <el-button @click="browsePage('last')" v-if="browse.last"
       >上一套
     </el-button>
@@ -40,7 +40,7 @@ export default {
       let that = this;
       let url = "/house/browse/near";
       let param = {
-        id: this.browse.id,
+        addTime: this.browse.addTime,
         topTime: this.browse.topTime,
         direct: direct
       };
@@ -60,12 +60,10 @@ export default {
               that.$message.error("当前已到最后一套！");
               return;
             }
-            that.$message.success(
-              (direct === "next" ? "下一套" : "上一套") + "加载成功！"
-            );
-            let browseLog = { id: item.id, topTime: item.topTime };
+            that.$message.success((direct==="next"?'下一套':'上一套')+"加载成功！")
+            let browseLog = { addTime: item.addTime, topTime: item.topTime };
             browseLog[direct] = item.total;
-            that.browse.id = browseLog.id;
+            that.browse.addTime = browseLog.addTime;
             that.browse.topTime = browseLog.topTime;
             that.browse[direct] = browseLog[direct];
             util.sessionLocalStorageSet("houseDetails:browse", that.browse);

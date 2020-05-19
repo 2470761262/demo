@@ -52,9 +52,9 @@ let log_socket = {
       type: e.type,
       baseURI: e.target.baseURI,
       className: e.target.className,
-      id: e.target.id,
-      innerHTML: e.target.innerHTML
+      id: e.target.id
     };
+    // innerHTML: e.target.innerHTML
     let content = "user_action@$:" + JSON.stringify(parent);
     log_socket.socket.send(content);
   },

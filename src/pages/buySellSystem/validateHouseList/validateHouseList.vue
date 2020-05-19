@@ -112,6 +112,16 @@
               ></el-option>
             </el-select>
           </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">编号</h3>
+            <el-input
+              placeholder="房源编号"
+              v-model="data.houseNo"
+              class="set-input200"
+              @change="queryVerifyHouseByParams"
+              clearable
+            />
+          </div>
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">业主</h3>
             <el-input
@@ -464,7 +474,8 @@ export default {
         minPrice: "",
         maxPrice: "",
         checkStatusValue: "",
-        phoneStatusValue: ""
+        phoneStatusValue: "",
+        houseNo: ""
       },
       cbIdList: [],
       roomNoList: [],
@@ -743,6 +754,7 @@ export default {
         params.maxPrice = that.data.maxPrice;
         params.checkStatusValue = that.data.checkStatusValue;
         params.phoneStatusValue = that.data.phoneStatusValue;
+        params.houseNo = that.data.houseNo;
         if (params.checkStatusValue == "1") {
           params.checkSubStatus = "0";
         } else if (params.checkStatusValue == "4") {

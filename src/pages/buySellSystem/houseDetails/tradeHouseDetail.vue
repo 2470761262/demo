@@ -51,7 +51,7 @@
         lastTitle="编辑"
         :lastParams="{ id: forID.id, method: 'reset' }"
       ></sidebarList>
-      <browsebar :browse="browse" v-if="browse.id"></browsebar>
+      <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
     </section>
     <!--按钮组 -->
     <buttonGroup></buttonGroup>
@@ -123,7 +123,7 @@ export default {
       },
       houseDetails: {},
       browse: {
-        id: null,
+        addTime: null,
         topTime: null,
         next: 1,
         last: 1
@@ -139,7 +139,7 @@ export default {
     if (this.$route.params.houseId) {
       this.forID.id = this.$route.params.houseId;
       if (this.$route.params.browse) {
-        this.browse.id = this.$route.params.browse.id;
+        this.browse.addTime = this.$route.params.browse.addTime;
         this.browse.topTime = this.$route.params.browse.topTime
           ? this.$route.params.browse.topTime
           : formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
@@ -242,6 +242,9 @@ export default {
               Floor: result.data.Floor,
               InArea: result.data.InArea,
               Price: result.data.Price,
+              Decoration: result.data.Decoration,
+              Face: result.data.Face,
+              Buildtype: result.data.buildtype,
               Rooms: rooms,
               Hall: hall,
               Toilet: toilet
