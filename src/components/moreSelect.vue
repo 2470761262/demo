@@ -60,7 +60,10 @@ span {
       <div class="definition-flex-warp">
         <div class="definition-flex-cell definition-back">
           <div class="pop-title">更多筛选</div>
-          <div class="el-icon-close" @click="visible = false"></div>
+          <div
+            class="el-icon-close anchor-point"
+            @click="visible = false"
+          ></div>
         </div>
         <div class="definition-checkBox">
           <div class="selectBox">
@@ -70,6 +73,7 @@ span {
                 <el-select
                   v-model="more.comId"
                   style="width:60%"
+                  class="anchor-point"
                   @focus="remoteInput"
                   @change="queryCBId()"
                   filterable
@@ -79,6 +83,7 @@ span {
                   :remote-method="remoteMethod"
                 >
                   <el-option
+                    class="anchor-point"
                     v-for="item in moreOptions"
                     :key="item.value"
                     :label="item.name"
@@ -95,9 +100,11 @@ span {
                   filterable
                   clearable
                   placeholder="请选择楼栋"
+                  class="anchor-point"
                   @change="queryRoomNo()"
                 >
                   <el-option
+                    class="anchor-point"
                     v-for="item in moreCbIdList"
                     :key="item.value"
                     :label="item.name"
@@ -106,6 +113,7 @@ span {
                 </el-select>
                 <span v-if="mergeConfig.bhId">房号</span>
                 <el-select
+                  class="anchor-point"
                   v-if="mergeConfig.bhId"
                   v-model="more.bhId"
                   style="width:30%"
@@ -114,6 +122,7 @@ span {
                   placeholder="请选择房间号"
                 >
                   <el-option
+                    class="anchor-point"
                     v-for="item in moreRoomNoList"
                     :key="item.value"
                     :label="item.name"
@@ -126,6 +135,7 @@ span {
               <div class="selectType">
                 <span v-if="mergeConfig.minInArea">建筑面积</span>
                 <el-input
+                  class="anchor-point"
                   style="width:30%"
                   clearable
                   v-if="mergeConfig.minInArea"
@@ -133,6 +143,7 @@ span {
                 ></el-input>
                 <span v-if="mergeConfig.maxInArea">-</span>
                 <el-input
+                  class="anchor-point"
                   style="width:30%"
                   clearable
                   v-if="mergeConfig.maxInArea"
@@ -143,6 +154,7 @@ span {
               <div class="selectType">
                 <span v-if="mergeConfig.minPrice">总价</span>
                 <el-input
+                  class="anchor-point"
                   style="width:30%"
                   v-model="more.minPrice"
                   clearable
@@ -151,6 +163,7 @@ span {
                 ></el-input>
                 <span v-if="mergeConfig.minPrice">万</span>
                 <el-input
+                  class="anchor-point"
                   v-model="more.maxPrice"
                   style="width:30%"
                   clearable
@@ -164,6 +177,7 @@ span {
               <div class="selectType" v-if="mergeConfig.addTime">
                 <span>录入时间</span>
                 <el-date-picker
+                  class="anchor-point"
                   v-model="more.addTime"
                   type="daterange"
                   range-separator="至"
@@ -176,6 +190,7 @@ span {
               <div class="selectType" v-if="mergeConfig.followTime">
                 <span>跟进时间</span>
                 <el-date-picker
+                  class="anchor-point"
                   v-model="more.followTime"
                   type="daterange"
                   style="width:70%"
@@ -190,11 +205,13 @@ span {
               <div class="selectType" v-if="mergeConfig.propertyYear">
                 <span>产权年限</span>
                 <el-select
+                  class="anchor-point"
                   v-model="more.propertyYear"
                   clearable
                   style="width:70%"
                 >
                   <el-option
+                    class="anchor-point"
                     v-for="item in PropertyList"
                     :key="item.value"
                     :label="item.label"
@@ -205,6 +222,7 @@ span {
               <div class="selectType">
                 <span>楼层</span>
                 <el-input
+                  class="anchor-point"
                   style="width:30%"
                   clearable
                   v-if="mergeConfig.minFloor"
@@ -212,6 +230,7 @@ span {
                 ></el-input
                 >-
                 <el-input
+                  class="anchor-point"
                   v-model="more.maxFloor"
                   v-if="mergeConfig.maxFloor"
                   clearable
@@ -222,8 +241,14 @@ span {
             <div class="line">
               <div class="selectType" v-if="mergeConfig.area">
                 <span>物理区域</span>
-                <el-select v-model="more.area" clearable style="width:70%">
+                <el-select
+                  class="anchor-point"
+                  v-model="more.area"
+                  clearable
+                  style="width:70%"
+                >
                   <el-option
+                    class="anchor-point"
                     v-for="item in RegionList"
                     :key="item.value"
                     :label="item.name"
@@ -242,11 +267,13 @@ span {
                 </el-select>-->
                 <span>委托</span>
                 <el-select
+                  class="anchor-point"
                   v-model="more.entrustType"
                   clearable
                   style="width:30%"
                 >
                   <el-option
+                    class="anchor-point"
                     v-for="item in EntrustList"
                     :key="item.value"
                     :value="item.value"
@@ -258,8 +285,14 @@ span {
             <div class="line">
               <div class="selectType" v-if="mergeConfig.taskType">
                 <span>作业类型</span>
-                <el-select v-model="more.taskType" clearable style="width:70%">
+                <el-select
+                  class="anchor-point"
+                  v-model="more.taskType"
+                  clearable
+                  style="width:70%"
+                >
                   <el-option
+                    class="anchor-point"
                     v-for="item in taskList"
                     :key="item.value"
                     :value="item.value"
@@ -269,8 +302,14 @@ span {
               </div>
               <div class="selectType" v-if="mergeConfig.buildType">
                 <span>房屋用途</span>
-                <el-select v-model="more.buildType" clearable style="width:70%">
+                <el-select
+                  class="anchor-point"
+                  v-model="more.buildType"
+                  clearable
+                  style="width:70%"
+                >
                   <el-option
+                    class="anchor-point"
                     v-for="item in buildTypeList"
                     :key="item.value"
                     :value="item.value"
@@ -282,6 +321,7 @@ span {
             <div class="line" style="display:flex;align-items:center">
               <span v-if="mergeConfig.deptParentId">区域</span>
               <el-select
+                class="anchor-point"
                 v-model="more.deptParentId"
                 :remote-method="remoteArea"
                 clearable
@@ -291,6 +331,7 @@ span {
                 style="width:35%"
               >
                 <el-option
+                  class="anchor-point"
                   v-for="item in deptParentList"
                   :key="item.depId"
                   :value="item.depId"
@@ -298,6 +339,7 @@ span {
                 ></el-option>
               </el-select>
               <el-select
+                class="anchor-point"
                 v-model="more.store"
                 @change="queryPer"
                 clearable
@@ -305,6 +347,7 @@ span {
                 style="width:30%"
               >
                 <el-option
+                  class="anchor-point"
                   v-for="item in storeList"
                   :key="item.depId"
                   :value="item.depId"
@@ -312,12 +355,14 @@ span {
                 ></el-option>
               </el-select>
               <el-select
+                class="anchor-point"
                 v-model="more.personnel"
                 clearable
                 v-if="mergeConfig.personnel"
                 style="width:20%"
               >
                 <el-option
+                  class="anchor-point"
                   v-for="item in perList"
                   :key="item.accountId"
                   :value="item.accountId"
@@ -328,13 +373,27 @@ span {
           </div>
         </div>
         <div class="center-but">
-          <el-button type="primary" size="mini" @click="setTabRender"
+          <el-button
+            class="anchor-point"
+            type="primary"
+            size="mini"
+            @click="setTabRender"
             >搜索</el-button
           >
-          <el-button type="primary" size="mini" @click="remove">清空</el-button>
+          <el-button
+            class="anchor-point"
+            type="primary"
+            size="mini"
+            @click="remove"
+            >清空</el-button
+          >
         </div>
       </div>
-      <el-button slot="reference" size="mini" type="primary"
+      <el-button
+        class="anchor-point"
+        slot="reference"
+        size="mini"
+        type="primary"
         >更多筛选</el-button
       >
     </el-popover>

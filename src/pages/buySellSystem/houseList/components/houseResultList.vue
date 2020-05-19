@@ -438,6 +438,7 @@
               <el-table-column label="操作" fixed="right" width="80px">
                 <template slot-scope="scope">
                   <el-button
+                    class="anchor-point"
                     size="mini"
                     type="primary"
                     @click="toHouseDetail(scope.row)"

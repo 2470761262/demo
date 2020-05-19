@@ -114,6 +114,7 @@
       >
         <label class="poper-li-label">
           <input
+            class="anchor-point"
             :type="type"
             :name="inputName"
             :disabled="resultDisabled(item, index)"
@@ -137,7 +138,7 @@
       </li>
     </ul>
     <div
-      class="result-input-content"
+      class="result-input-content anchor-point"
       slot="reference"
       ref="onlayInput"
       @click="visible = !visible"
@@ -149,12 +150,13 @@
              @focus.stop="triggerSelect"> -->
       <input
         :placeholder="$attrs.placeholder || '选中您的数据'"
+        class="anchor-point"
         @input="debounce('filterInputChange')"
         v-model="filterInput"
         @focus.stop="triggerSelect"
       />
       <span
-        class="el-icon-circle-close result-clearable"
+        class="el-icon-circle-close result-clearable anchor-point"
         v-if="clearable"
         @click.stop="clear"
       ></span>

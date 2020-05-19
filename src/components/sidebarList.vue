@@ -33,7 +33,7 @@
 <template>
   <div class="sldebar-content">
     <div class="sldebar-content-list">
-      <div class="sldebar-content-item" @click="goHome">
+      <div class="sldebar-content-item anchor-point" @click="goHome">
         <img
           class="nav-image"
           src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/8d7ff13733c34e6b9020a137150ad2bc.png"
@@ -41,7 +41,7 @@
         />
         <span class="item-title">首页</span>
       </div>
-      <div class="sldebar-content-item" @click="goBack">
+      <div class="sldebar-content-item anchor-point" @click="goBack">
         <img
           class="nav-image"
           src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/cfca816db35642d483ad4dc5e889288a.png"
@@ -50,7 +50,7 @@
         <span class="item-title">返回</span>
       </div>
       <div
-        class="sldebar-content-item"
+        class="sldebar-content-item anchor-point"
         @click="lastClick"
         v-if="hisEdit && (showEdit || editAgentHouse)"
       >

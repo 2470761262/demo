@@ -247,7 +247,7 @@
           }}
         </div>
         <div
-          class="cell-tabs-nav"
+          class="cell-tabs-nav anchor-point"
           v-if="!isShowBuilding && !buttonDisabled"
           @click="getShowBuliding"
         >
@@ -294,7 +294,7 @@
           </div>
         </div>
         <button
-          class="cell-pro-but"
+          class="cell-pro-but anchor-point"
           v-if="resultData.agentPerName"
           @click="oneTouchDialPhone"
           :disabled="!touchedDialPhone"
@@ -304,7 +304,7 @@
       </div>
       <div class="cell-pro-item center" v-else>
         <el-button
-          class="cell-pro-but"
+          class="cell-pro-but anchor-point"
           v-if="applyAgentRule"
           :disabled="agentApply"
           @click="callTaskAgent"
@@ -322,7 +322,7 @@
           <div class="cell-pro-detail-other overText">业主称呼</div>
         </div>
         <el-dropdown @command="contactOwer">
-          <el-button class="cell-pro-but" :disabled="isDisabled">
+          <el-button class="cell-pro-but anchor-point" :disabled="isDisabled">
             查看号码<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
@@ -350,7 +350,7 @@
         </el-dropdown>
         <!-- <button>查看号码</button> -->
         <button
-          class="cell-pro-but"
+          class="cell-pro-but anchor-point"
           @click="dialPhoneToFD"
           :disabled="!touchedDialPhone"
         >

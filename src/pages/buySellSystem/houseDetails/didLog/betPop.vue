@@ -57,6 +57,7 @@
           <div class="bet-input-text">对赌鑫币值</div>
           <div class="bet-input-content">
             <el-input
+              class="anchor-point"
               v-model="butValue"
               data-vv-name="butValue"
               data-vv-as="鑫币值"
@@ -76,11 +77,13 @@
         </div>
       </div>
       <div class="pop-but">
-        <el-button size="small" @click="hidePop">取消</el-button>
+        <el-button class="anchor-point" size="small" @click="hidePop"
+          >取消</el-button
+        >
         <el-button
           size="small"
           :disabled="!showBetBtn"
-          class="button-back"
+          class="button-back anchor-point"
           :loading="loading"
           @click="result"
           >确定</el-button

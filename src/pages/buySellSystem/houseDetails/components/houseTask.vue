@@ -232,6 +232,7 @@
           </div>
           <el-button
             :disabled="isDisabled"
+            class="anchor-point"
             @click="openPop('keyPopFlag', 4, 'keyType', 3)"
           >
             <i class="el-icon-sunny icon"></i>
@@ -241,6 +242,7 @@
         <el-button
           v-else-if="applyKeyOwnerRule"
           :disabled="isDisabled"
+          class="anchor-point"
           @click="openPop('keyPopFlag', 0, 'keyType', 0)"
         >
           <span>申请钥匙人</span>
@@ -280,6 +282,7 @@
           </div>
           <el-button
             :disabled="isDisabled"
+            class="anchor-point"
             @click="openPop('entrustPopFlag', 4, 'entrustType', 2)"
           >
             <i class="el-icon-sunny icon"></i>
@@ -289,6 +292,7 @@
         <el-button
           v-else-if="applyOnlyOwnerRule"
           :disabled="isDisabled"
+          class="anchor-point"
           @click="openPop('entrustPopFlag', 1, 'entrustType', 0)"
         >
           <span>申请委托人</span>
@@ -327,6 +331,7 @@
           </div>
           <el-button
             :disabled="isDisabled"
+            class="anchor-point"
             @click="openPop('houseUploadflag', 4, 'houseUploadType', 5)"
           >
             <i class="el-icon-sunny icon"></i>
@@ -336,6 +341,7 @@
         <el-button
           v-else-if="applyRealOwnerRule"
           :disabled="isDisabled"
+          class="anchor-point"
           @click="openPop('houseUploadflag', 12, 'houseUploadType', 0)"
           >申请实勘人</el-button
         >
@@ -380,6 +386,7 @@
             v-if="submitApplyRealOwner"
             size="mini"
             :disabled="isDisabled"
+            class="anchor-point"
             @click="submitUpload"
             :loading="houseUploadLoading"
             >{{ houseUploadLoading ? "加载中" : "提交" }}</el-button
@@ -414,13 +421,16 @@
       <template>
         <div class="text-middle">
           <el-button
+            class="anchor-point"
             v-if="submitApplyAgent"
             size="mini"
             :disabled="agentApply || isDisabled"
             @click="applyAgent"
             >提交</el-button
           >
-          <el-button v-else size="mini" :disabled="true">提交</el-button>
+          <el-button class="anchor-point" v-else size="mini" :disabled="true"
+            >提交</el-button
+          >
         </div>
       </template>
     </fixedPopup>
@@ -428,18 +438,9 @@
 </template>
 
 <script>
-//取代
-import replacePop from "../didLog/replacePop";
-//委托人
-import entrustPop from "../didLog/entrustPop";
-//上传
-import houseUploadExtends from "./houseUploadExtends";
 import houseCheck from "../common/houseCheck";
-//选填信息
-import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
-
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
@@ -501,10 +502,15 @@ export default {
     }
   },
   components: {
-    houseUploadExtends,
-    replacePop,
-    entrustPop,
-    supplement
+    //取代
+    houseUploadExtends: () => import("./houseUploadExtends"),
+    //委托人
+    replacePop: () => import("../didLog/replacePop"),
+    //上传
+    entrustPop: () => import("../didLog/entrustPop"),
+    //选填信息
+    supplement: () =>
+      import("@/pages/buySellSystem/addHouse/components/supplement")
   },
   data() {
     return {

@@ -47,7 +47,7 @@
         <span class="radio-content-title">不动产权证</span>
         <div class="raido-group">
           <label
-            class="raido-group-label"
+            class="raido-group-label anchor-point"
             v-for="(item, index) in pop.checkList"
             :key="index"
           >
@@ -59,13 +59,15 @@
       </div>
       <div class="text-flex" v-if="pop.model == 1">
         <span>证号:</span>
-        <el-input v-model="pop.inputValue"></el-input>
+        <el-input class="anchor-point" v-model="pop.inputValue"></el-input>
       </div>
       <div class="pop-but">
-        <el-button size="small" @click="hidePop">取消</el-button>
+        <el-button class="anchor-point" size="small" @click="hidePop"
+          >取消</el-button
+        >
         <el-button
           size="small"
-          class="button-back"
+          class="button-back anchor-point"
           :loading="pop.loading"
           @click="result"
           >确定</el-button

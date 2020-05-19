@@ -352,6 +352,7 @@ export default {
               Price: result.data.Price,
               Decoration: result.data.Decoration,
               Face: result.data.Face,
+              Title: result.data.Title,
               Buildtype: result.data.buildtype,
               Rooms: rooms,
               Hall: hall,

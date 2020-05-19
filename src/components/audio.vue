@@ -60,12 +60,14 @@
     <div class="audio-contenr" v-if="!fixed">
       <audio :src="url" v-if="url" ref="audio" v-audioLoad></audio>
       <div
+        class="anchor-point"
         :class="['audio-contenr-but', audioPlay.icon]"
         @click="openVideo"
       ></div>
       <el-slider
         v-model="audioPlay.nowTime"
         :format-tooltip="formatTooltip"
+        class="anchor-point"
         @input="audioSliderChange"
         ref="audioSlider"
         :max="audioPlay.endTime"
@@ -76,7 +78,11 @@
         {{ audioPlay.endTime | timefomat }}
       </div>
     </div>
-    <div class="audio-contenr-fixed" @click="openVideo" v-if="fixed">
+    <div
+      class="audio-contenr-fixed anchor-point"
+      @click="openVideo"
+      v-if="fixed"
+    >
       <audio :src="url" v-if="url" ref="audio" v-audioLoad></audio>
       <i
         class="icon"

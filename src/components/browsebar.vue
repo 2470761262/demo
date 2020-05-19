@@ -14,10 +14,18 @@
 </style>
 <template>
   <div class="browse-nav-content" v-if="browse.addTime">
-    <el-button @click="browsePage('last')" v-if="browse.last"
+    <el-button
+      class="anchor-point"
+      @click="browsePage('last')"
+      v-if="browse.last"
       >上一套
     </el-button>
-    <el-button @click="browsePage('next')" v-if="browse.next">下一套</el-button>
+    <el-button
+      class="anchor-point"
+      @click="browsePage('next')"
+      v-if="browse.next"
+      >下一套</el-button
+    >
   </div>
 </template>
 
@@ -60,7 +68,9 @@ export default {
               that.$message.error("当前已到最后一套！");
               return;
             }
-            that.$message.success((direct==="next"?'下一套':'上一套')+"加载成功！")
+            that.$message.success(
+              (direct === "next" ? "下一套" : "上一套") + "加载成功！"
+            );
             let browseLog = { addTime: item.addTime, topTime: item.topTime };
             browseLog[direct] = item.total;
             that.browse.addTime = browseLog.addTime;
