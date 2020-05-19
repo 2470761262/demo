@@ -76,7 +76,7 @@
 </style>
 <template>
   <div class="page-cell-header">
-    <el-button size="mini" @click="trgerColor">
+    <el-button class="anchor-point" size="mini" @click="trgerColor">
       默哀主题
     </el-button>
     <div class="happy-day-contet">

@@ -124,13 +124,14 @@
     <section class="img-list" :class="{ scrolPad: scrollBar }">
       <div
         class="
+        anchor-point
              item-img-prev
              el-icon-arrow-left"
         v-if="scrollBar"
         @click="scrollMove('left')"
       ></div>
       <div
-        class="item-img-next el-icon-arrow-right"
+        class="item-img-next el-icon-arrow-right anchor-point"
         v-if="scrollBar"
         @click="scrollMove('right')"
       ></div>
@@ -147,14 +148,14 @@
                 @click.stop="changeLoop(item)"
                 :key="index"
                 alt=""
-                class="loop-item"
+                class="loop-item anchor-point"
               />
             </template>
             <!-- 视频 -->
             <template v-if="item.videoUrl">
               <video
                 @click="changeLoop(item)"
-                class="loop-item"
+                class="loop-item anchor-point"
                 :src="item.videoUrl"
                 :key="item.id"
               ></video>

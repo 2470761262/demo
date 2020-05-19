@@ -85,7 +85,11 @@
         <img width="100%" :src="dialogImageUrl" alt="" />
       </el-dialog>
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" :loading="btnLoadding" @click="goSubmit"
+        <el-button
+          class="anchor-point"
+          type="primary"
+          :loading="btnLoadding"
+          @click="goSubmit"
           >提交</el-button
         >
       </div>
@@ -99,7 +103,7 @@
           >{{ item.title }}</el-breadcrumb-item
         >
         <el-breadcrumb-item
-          class="isBack"
+          class="isBack anchor-point"
           v-if="breadcrumbList.length > 1"
           @click.native="goBack"
           >返回</el-breadcrumb-item
@@ -108,7 +112,7 @@
       <el-link
         slot="reference"
         @click="hitOuterVisible()"
-        class="feedback_btn"
+        class="feedback_btn anchor-point"
         type="warning"
         icon="el-icon-edit-outline"
         >功能反馈

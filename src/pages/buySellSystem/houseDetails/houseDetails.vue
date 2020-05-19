@@ -125,7 +125,7 @@ export default {
       dept: this.dept,
       houseDetails: this.houseDetails,
       load: this.load,
-      buttonDisabled: false,
+      buttonDisabled: this.buttonDisabled,
       paramsObj: this.lastParams
     };
   },
@@ -185,6 +185,7 @@ export default {
         }
       },
       detailType: undefined, //标识房源详情类型，决定调用哪个详情接口地址
+      buttonDisabled: false,
       browse: {
         addTime: null,
         topTime: null,
@@ -321,6 +322,14 @@ export default {
               );
               that.showEdit = true;
             }
+
+            if (
+              result.data.plate != 1 &&
+              result.data.plate != 4 &&
+              result.data.plate != 0
+            ) {
+              this.buttonDisabled = true;
+            }
             this.$set(this.houseDetails, "data", result.data);
             let rooms,
               hall,
@@ -352,6 +361,7 @@ export default {
               Price: result.data.Price,
               Decoration: result.data.Decoration,
               Face: result.data.Face,
+              Title: result.data.Title,
               Buildtype: result.data.buildtype,
               Rooms: rooms,
               Hall: hall,
