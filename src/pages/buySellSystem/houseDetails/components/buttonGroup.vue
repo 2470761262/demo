@@ -195,7 +195,7 @@
     <!-- 成交对赌 -->
     <betPop
       :visible.sync="betPopFlag"
-      v-if="betPopFlag"
+      v-if="betPopFlag && resultData.plate === 0"
       title="说明"
       maskHideEvent
       width="600px"
