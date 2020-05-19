@@ -39,7 +39,7 @@
   <transition name="dadlog">
     <div class="diaLogModel" v-if="diaLog">
       <div
-        class="diaLogModel-close el-icon-circle-close"
+        class="diaLogModel-close el-icon-circle-close anchor-point"
         @click="changeModel"
       ></div>
       <div class="imgdiaLog"></div>

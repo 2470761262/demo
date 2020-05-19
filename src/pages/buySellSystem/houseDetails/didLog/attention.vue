@@ -48,7 +48,7 @@
           <div class="attention-title">请选择是否通知</div>
           <div class="raido-group">
             <label
-              class="raido-group-label"
+              class="raido-group-label anchor-point"
               v-for="(item, index) in pop.checkList"
               :key="index"
             >
@@ -64,10 +64,12 @@
         如若选择通知,当关注的房源变动时,将会通过微信通知您的房源变化
       </div>
       <div class="pop-but">
-        <el-button size="small" @click="hidePop">取消</el-button>
+        <el-button class="anchor-point" size="small" @click="hidePop"
+          >取消</el-button
+        >
         <el-button
           size="small"
-          class="button-back"
+          class="button-back anchor-point"
           :loading="pop.loading"
           @click="updateSendNotice"
           >确定</el-button

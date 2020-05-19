@@ -18,6 +18,13 @@
       flex: 0 0 50%;
       margin-top: 15px;
       cursor: pointer;
+      span,
+      input {
+        vertical-align: middle;
+      }
+      span {
+        margin-left: 6px;
+      }
       &.disabled {
         cursor: no-drop;
         span {
@@ -43,7 +50,7 @@
         </div>
         <div class="definition-checkBox">
           <label
-            class="definition-checkBox-item"
+            class="definition-checkBox-item anchor-point"
             :class="{ disabled: item.disabled }"
             v-for="(item, index) in thatRenderList"
             :key="index"
@@ -58,15 +65,28 @@
           </label>
         </div>
         <div class="center-but">
-          <el-button type="primary" size="mini" @click="setTabRender"
+          <el-button
+            class="anchor-point"
+            type="primary"
+            size="mini"
+            @click="setTabRender"
             >确定</el-button
           >
-          <el-button type="primary" size="mini" @click="resetTabRender"
+          <el-button
+            class="anchor-point"
+            type="primary"
+            size="mini"
+            @click="resetTabRender"
             >恢复默认</el-button
           >
         </div>
       </div>
-      <el-button slot="reference" size="mini" :loading="loading" type="primary"
+      <el-button
+        class="anchor-point"
+        slot="reference"
+        size="mini"
+        :loading="loading"
+        type="primary"
         >自定义菜单</el-button
       >
     </el-popover>

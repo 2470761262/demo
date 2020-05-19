@@ -165,7 +165,7 @@
             <h3>委托类型</h3>
             <div class="raido-group">
               <label
-                class="raido-group-label"
+                class="raido-group-label anchor-point"
                 v-for="(item, index) in pop.checkList"
                 :key="index"
               >
@@ -178,7 +178,7 @@
           <div class="replace-left-row">
             <h3>委托截止时间</h3>
             <el-date-picker
-              class="replace-select"
+              class="replace-select anchor-point"
               size="mini"
               :picker-options="pickerOptions"
               v-model="entrustTime"
@@ -196,8 +196,9 @@
           <div class="replace-upload">
             <i class="el-icon-upload icon"></i>
             <label class="replace-upload-but">
-              <input type="file" @change="getFileChange" />
+              <input class="anchor-point" type="file" @change="getFileChange" />
               <input
+                class="anchor-point"
                 type="text"
                 v-model="fileLoad.list"
                 data-vv-as="文件"
@@ -211,6 +212,7 @@
         </div>
         <div class="replace-qr">
           <el-image
+            class="anchor-point"
             :src="fileLoad.qrImg"
             fit="cover"
             :preview-src-list="[fileLoad.qrImg]"
@@ -230,7 +232,7 @@
           <el-image
             :src="item.url"
             fit="cover"
-            class="image"
+            class="image anchor-point"
             :preview-src-list="fillterImgList()"
           >
             <div slot="placeholder" class="image-slot">
@@ -242,16 +244,23 @@
       </div>
       <div class="fieldError">{{ errorBags.all()[0] }}</div>
       <div class="pop-but">
-        <el-button size="small" @click="hidePop">取消</el-button>
+        <el-button class="anchor-point" size="small" @click="hidePop"
+          >取消</el-button
+        >
         <el-button
           v-if="submitApplyOnlyOwner"
           size="small"
-          class="button-back"
+          class="button-back anchor-point"
           :loading="pop.loading"
           @click="result"
           >确定</el-button
         >
-        <el-button v-else size="small" :loading="pop.loading" :disabled="true"
+        <el-button
+          class="anchor-point"
+          v-else
+          size="small"
+          :loading="pop.loading"
+          :disabled="true"
           >确定</el-button
         >
       </div>

@@ -161,7 +161,7 @@
       <div class="page-house-cell house-left-tips"><span>为你推荐</span></div>
       <div class="page-house-cell for-house-cell">
         <div
-          class="house-cell-item"
+          class="house-cell-item anchor-point"
           v-for="(item, index) in houseMenuList"
           :key="index"
           :class="[item.cellTop, { 'item-hot': item.hot }]"
@@ -179,14 +179,14 @@
       </div>
       <div class="page-house-cell but-flex-center">
         <div
-          class="house-cell-but"
+          class="house-cell-but anchor-point"
           @click="navToPath('/buySellSystem/addHouse')"
         >
           <i class="el-icon-plus"></i>
           <span>录入房源</span>
         </div>
         <div
-          class="house-cell-but"
+          class="house-cell-but anchor-point"
           @click="navToPath('/buySellSystem/concernCommunity')"
         >
           <i class="iconguanli iconfont"></i>
@@ -206,7 +206,7 @@
           <houselistlhousepair></houselistlhousepair>
         </div>
         <div
-          class="hide-query"
+          class="hide-query anchor-point"
           v-scrollCenter.overflowMain="{
             scroll: 'el-main',
             offsetParent: 'com-flex',
