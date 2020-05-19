@@ -7,15 +7,16 @@
   max-height: 710px;
   display: flex;
   flex-direction: column;
+  align-self: flex-start;
   .record-content-title {
     font-size: 18px;
     color: black;
+    padding-bottom: 35px;
   }
   .record-content-scroll {
     flex: 1;
     height: 0;
     overflow: auto;
-    padding-top: 35px;
     box-sizing: border-box;
     &::-webkit-scrollbar {
       width: 6px;

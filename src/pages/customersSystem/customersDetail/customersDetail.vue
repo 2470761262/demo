@@ -36,6 +36,7 @@
     width: @width;
     display: flex;
     margin-top: 25px;
+    justify-content: space-between;
   }
 }
 </style>
@@ -51,6 +52,7 @@
     </div>
     <div class="head-record-content">
       <take-look-record></take-look-record>
+      <follow></follow>
     </div>
   </section>
 </template>
@@ -63,12 +65,15 @@ import basics from "./components/basicsMessage";
 import seeTakeProgress from "./components/seeTakeProgress";
 //带看记录
 import takeLookRecord from "./components/takeLookRecord";
+//跟进记录 & 推荐记录
+import follow from "./components/follow";
 export default {
   components: {
     detailButton,
     basics,
     seeTakeProgress,
-    takeLookRecord
+    takeLookRecord,
+    follow
   }
 };
 </script>
