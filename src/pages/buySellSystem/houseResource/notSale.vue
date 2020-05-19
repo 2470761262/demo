@@ -14,6 +14,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
@@ -25,6 +26,7 @@
             :loading="loading"
           >
             <el-option
+              class="anchor-point"
               v-for="item in options"
               :key="item.value"
               :label="item.name"
@@ -32,6 +34,7 @@
             ></el-option>
           </el-select>
           <el-select
+            class="anchor-point"
             v-model="data.cbId"
             filterable
             clearable
@@ -39,6 +42,7 @@
             @change="queryRoomNo"
           >
             <el-option
+              class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
               :label="item.name"
@@ -46,12 +50,14 @@
             ></el-option>
           </el-select>
           <el-select
+            class="anchor-point"
             v-model="data.roomNo"
             filterable
             @change="queryNotSaleParams"
             placeholder="房间号"
           >
             <el-option
+              class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
               :label="item.name"
@@ -64,7 +70,7 @@
           <el-input
             placeholder="姓名"
             v-model="data.customName"
-            class="set-input120"
+            class="set-input120 anchor-point"
             @change="queryNotSaleParams"
             clearable
           />
@@ -74,7 +80,7 @@
           <el-input
             placeholder="业主电话"
             v-model="data.tel"
-            class="set-input200"
+            class="set-input200 anchor-point"
             @change="queryNotSaleParams"
             clearable
           />
@@ -84,7 +90,7 @@
           <el-input
             placeholder="最小值"
             v-model="data.minPrice"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="queryNotSaleParams"
             clearable
           />
@@ -92,7 +98,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxPrice"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="queryNotSaleParams"
             clearable
           />
@@ -105,7 +111,7 @@
           <el-input
             placeholder="最小值"
             v-model="data.minInArea"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="queryNotSaleParams"
             clearable
           />
@@ -113,7 +119,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxInArea"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="queryNotSaleParams"
             clearable
           />
@@ -124,17 +130,23 @@
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
-            class="set-data-pricker"
+            class="set-data-pricker anchor-point"
             @change="queryNotSaleParams"
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
             :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut" @click="Remove">清除</span>
+          <span class="query-cell-suffix handlebut anchor-point" @click="Remove"
+            >清除</span
+          >
         </div>
         <div class="query-content-cell cell-interval75">
-          <el-button type="primary" size="mini" @click="queryNotSaleParams"
+          <el-button
+            class="anchor-point"
+            type="primary"
+            size="mini"
+            @click="queryNotSaleParams"
             >查询</el-button
           >
         </div>
@@ -170,10 +182,15 @@
       </template>
       <el-table-column label="操作" fixed="right" min-width="170">
         <template v-slot="scope">
-          <el-button type="primary" size="mini" @click="toLook(scope.row.id)"
+          <el-button
+            class="anchor-point"
+            type="primary"
+            size="mini"
+            @click="toLook(scope.row.id)"
             >查看</el-button
           >
           <el-button
+            class="anchor-point"
             type="primary"
             size="mini"
             @click="
