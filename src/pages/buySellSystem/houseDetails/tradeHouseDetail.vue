@@ -242,6 +242,7 @@ export default {
               Floor: result.data.Floor,
               InArea: result.data.InArea,
               Price: result.data.Price,
+              Title: result.data.Title,
               Decoration: result.data.Decoration,
               Face: result.data.Face,
               Buildtype: result.data.buildtype,
