@@ -27,6 +27,7 @@
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
             <el-select
+              class="anchor-point"
               v-model="queryData.comId"
               @focus="remoteInput"
               @change="queryCBId"
@@ -38,6 +39,7 @@
               :loading="loading"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in comList"
                 :key="item.value"
                 :label="item.name"
@@ -45,6 +47,7 @@
               ></el-option>
             </el-select>
             <el-select
+              class="anchor-point"
               v-model="queryData.cbId"
               filterable
               clearable
@@ -52,6 +55,7 @@
               @change="queryRoomNo"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in cbIdList"
                 :key="item.value"
                 :label="item.name"
@@ -59,12 +63,14 @@
               ></el-option>
             </el-select>
             <el-select
+              class="anchor-point"
               v-model="queryData.roomId"
               filterable
               @change="querylistByParams"
               placeholder="房间号"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in roomNoList"
                 :key="item.value"
                 :label="item.name"
@@ -77,14 +83,16 @@
             <el-date-picker
               v-model="queryData.timeSelect"
               type="daterange"
-              class="set-data-pricker"
+              class="set-data-pricker anchor-point"
               @change="querylistByParams"
               range-separator="至"
               start-placeholder="开始日期"
               :default-time="['00:00:00', '23:59:59']"
               end-placeholder="结束日期"
             ></el-date-picker>
-            <span class="query-cell-suffix handlebut" @click="Remove"
+            <span
+              class="query-cell-suffix handlebut anchor-point"
+              @click="Remove"
               >清除</span
             >
           </div>
@@ -96,11 +104,12 @@
               filterable
               v-model="checkProject"
               clearable
-              class="set-select120"
+              class="set-select120 anchor-point"
               @change="reviewProject"
               placeholder="全部"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in checkProjectList"
                 :key="item.value"
                 :label="item.label"
@@ -115,11 +124,12 @@
               filterable
               v-model="type"
               clearable
-              class="set-select120"
+              class="set-select120 anchor-point"
               @change="querylistByParams"
               placeholder="全部"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in typeList"
                 :key="item.value"
                 :label="item.label"
@@ -134,11 +144,12 @@
               filterable
               v-model="status"
               clearable
-              class="set-select120"
+              class="set-select120 anchor-point"
               @change="querylistByParams"
               placeholder="全部"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in stateList"
                 :key="item.value"
                 :label="item.label"
@@ -148,12 +159,17 @@
             </el-select>
           </div>
           <div class="query-content-cell cell-interval75">
-            <el-button type="primary" size="mini" @click="querylistByParams"
+            <el-button
+              type="primary"
+              size="mini"
+              @click="querylistByParams"
+              class="anchor-point"
               >查询</el-button
             >
           </div>
           <div class="query-content-cell cell-interval25">
             <moreSelect
+              class="anchor-point"
               :configRule="{ entrustType: false, taskType: false }"
               @moreSelectChange="moreSelectChange"
               deptUrl="/myHouse/myCheckList"
@@ -217,6 +233,7 @@
         <el-table-column label="操作" fixed="right" width="190">
           <template v-slot="scope">
             <el-button
+              class="anchor-point"
               type="primary"
               size="mini"
               v-if="
@@ -227,6 +244,7 @@
               >审核</el-button
             >
             <el-button
+              class="anchor-point"
               type="primary"
               size="mini"
               v-if="
@@ -236,10 +254,15 @@
               :disabled="btnDisabled.checkHouse"
               >审核</el-button
             >
-            <el-button size="mini" type="warning" v-if="scope.row.tag != 0"
+            <el-button
+              size="mini"
+              type="warning"
+              v-if="scope.row.tag != 0"
+              class="anchor-point"
               >已审核</el-button
             >
             <el-button
+              class="anchor-point"
               type="primary"
               v-if="!(scope.row.checkProject == 13)"
               @click="toHouseDetail(scope.row)"
@@ -305,6 +328,7 @@
         </div>
         <div>
           <el-input
+            class="anchor-point"
             type="textarea"
             placeholder="请输入审核说明"
             v-model="checkMemo"
@@ -313,8 +337,12 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="showPopUp = false">取 消</el-button>
-        <el-button type="primary" @click="checkHouse()">确 定</el-button>
+        <el-button @click="showPopUp = false" class="anchor-point"
+          >取 消</el-button
+        >
+        <el-button type="primary" @click="checkHouse()" class="anchor-point"
+          >确 定</el-button
+        >
       </span>
     </el-dialog>
     <el-dialog
@@ -362,7 +390,11 @@
       </div>
       <div style="margin-top:20px;">
         <el-carousel :autoplay="false" height="600px" ref="loopImg">
-          <el-carousel-item v-for="(item, index) in file8" :key="index">
+          <el-carousel-item
+            v-for="(item, index) in file8"
+            :key="index"
+            class="anchor-point"
+          >
             <img
               :src="item.url"
               @click="changeShowImg(item.url)"
