@@ -179,14 +179,14 @@
       </div>
       <div class="page-house-cell but-flex-center">
         <div
-          class="house-cell-but"
+          class="house-cell-but anchor-point"
           @click="navToPath('/buySellSystem/addHouse')"
         >
           <i class="el-icon-plus"></i>
           <span>录入房源</span>
         </div>
         <div
-          class="house-cell-but"
+          class="house-cell-but anchor-point"
           @click="navToPath('/buySellSystem/concernCommunity')"
         >
           <i class="iconguanli iconfont"></i>

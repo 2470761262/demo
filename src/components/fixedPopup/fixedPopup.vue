@@ -77,7 +77,10 @@
 <template>
   <transition name="dadlog">
     <div class="didLog-content" v-show="visible" v-elDrag>
-      <div class="didLog-content-mask" @click.stop="maskHide"></div>
+      <div
+        class="didLog-content-mask anchor-point"
+        @click.stop="maskHide"
+      ></div>
       <div
         class="didLog-content-body"
         :class="typeClass"
@@ -86,7 +89,7 @@
         <div class="didLog-content-box">
           <div class="didLog-content-box-title">
             <h3 :style="{ 'text-align': titleDirection }">{{ title }}</h3>
-            <i class="el-icon-close" @click.stop="close"></i>
+            <i class="el-icon-close anchor-point" @click.stop="close"></i>
           </div>
           <div class="didLog-content-sroll">
             <slot> </slot>

@@ -34,7 +34,7 @@
     <template>
       <div class="raido-group">
         <label
-          class="raido-group-label"
+          class="raido-group-label anchor-point"
           v-for="(item, index) in pop.checkList"
           :key="index"
         >
@@ -51,6 +51,7 @@
       <template v-if="pop.model == 4">
         <div class="input-content">
           <el-input
+            class="anchor-point"
             v-model="type0.val0"
             placeholder="请输入成交公司"
             v-validate="{ required: pop.model == 4 }"
@@ -62,6 +63,7 @@
         </div>
         <div class="input-content">
           <el-input
+            class="anchor-point"
             v-model="type0.val1"
             placeholder="请输入成交价钱"
             v-number.floot
@@ -74,7 +76,7 @@
       <template v-if="pop.model == 6 || pop.model == 3">
         <div class="raido-group mini">
           <label
-            class="raido-group-label"
+            class="raido-group-label anchor-point"
             v-for="(item, index) in typeShow.list"
             :key="index"
           >
@@ -93,11 +95,13 @@
       </template>
       <div class="filedError">{{ errorBags.all()[0] }}</div>
       <div class="pop-but">
-        <el-button size="small" @click="hidePop">取消</el-button>
+        <el-button class="anchor-point" size="small" @click="hidePop"
+          >取消</el-button
+        >
         <el-button
           size="small"
           :disabled="!showSubmitBtn"
-          class="button-back"
+          class="button-back anchor-point"
           :loading="pop.loading"
           @click="result"
           >确定</el-button

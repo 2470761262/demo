@@ -4,6 +4,7 @@
     <template>
       <div style="margin-top:8px;">
         <el-select
+          class="anchor-point"
           v-model="pop.value"
           filterable
           remote
@@ -12,6 +13,7 @@
           @change="change"
         >
           <el-option
+            class="anchor-point"
             v-for="item in pop.list"
             :key="item.id"
             :label="item.deptName"
@@ -22,6 +24,7 @@
       </div>
       <div class="pop-but">
         <el-button
+          class="anchor-point"
           size="small"
           :class="'button-back'"
           @click="result"
