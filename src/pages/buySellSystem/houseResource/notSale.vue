@@ -368,13 +368,13 @@ export default {
             "卫"
         },
         {
-          prop: "unitpaice",
+          prop: "unitPrice",
           label: "单价(元/㎡)",
           width: "140",
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          format: item => item.unitPrice + "元/㎡"
         },
         {
           prop: "face",
