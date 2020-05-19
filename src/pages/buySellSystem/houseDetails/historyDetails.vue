@@ -270,6 +270,7 @@ export default {
               RoomNo: result.data.RoomNo,
               Floor: result.data.Floor,
               InArea: result.data.InArea,
+              Title: result.data.Title,
               Price: result.data.Price,
               Decoration: result.data.Decoration,
               Face: result.data.Face,
