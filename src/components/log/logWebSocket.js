@@ -10,15 +10,28 @@ import { LOGINDATA, TOKEN } from "@/util/constMap";
  * 锚点数据是否开启
  * @type {boolean}
  */
-let isOpenLog = true;
+let isOpenLog = false;
 let logSocketUri = "ws://" + process.env.VUE_APP_WEBSOCKET_URI + "/log";
+let identify = process.env.VUE_APP_IDENTIFY;
 
 let addLog_eventListener = {
   click() {
-    document.addEventListener("click", log_socket.sendUserActionData);
+    document.addEventListener("click", ev => log_socket.sendUserActionData(ev));
   },
   mouseover() {
-    document.addEventListener("mouseover", log_socket.sendUserActionData);
+    document.addEventListener("mouseover", ev =>
+      log_socket.sendUserActionData(ev)
+    );
+  },
+  mouseleave() {
+    document.addEventListener("mouseleave", ev =>
+      log_socket.sendUserActionData(ev)
+    );
+  },
+  dblclick() {
+    document.addEventListener("dblclick", ev =>
+      log_socket.sendUserActionData(ev)
+    );
   }
 };
 
@@ -42,7 +55,18 @@ let log_socket = {
     }
   },
   sendUserActionData(e) {
+    console.log(e);
     let accountId = log_socket.getAccountId();
+    let target = e.target;
+    let className = target.className;
+    let content = this.sendAction(e, accountId);
+    if (className && className != "" && className.includes("anchor-point")) {
+      content = this.sendAnchorData(e, accountId);
+    }
+    content = identify + "@$@" + content;
+    this.socket.send(content);
+  },
+  sendAction(e, accountId) {
     let parent = {
       accountId: accountId,
       screenX: e.screenX,
@@ -54,9 +78,25 @@ let log_socket = {
       className: e.target.className,
       id: e.target.id
     };
-    // innerHTML: e.target.innerHTML
     let content = "user_action@$:" + JSON.stringify(parent);
-    log_socket.socket.send(content);
+    return content;
+  },
+  sendAnchorData(e, accountId) {
+    let parent = {
+      accountId: accountId,
+      screenX: e.screenX,
+      screenY: e.screenY,
+      pageX: e.pageX,
+      pageY: e.pageY,
+      type: e.type,
+      baseURI: e.target.baseURI,
+      className: e.target.className,
+      id: e.target.id,
+      nodeName: e.target.nodeName,
+      innerHTML: e.target.innerHTML
+    };
+    let content = "user_anchor@$:" + JSON.stringify(parent);
+    return content;
   },
   getAccountId() {
     let loginData = util.localStorageGet(LOGINDATA);
