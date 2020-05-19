@@ -438,18 +438,9 @@
 </template>
 
 <script>
-//取代
-import replacePop from "../didLog/replacePop";
-//委托人
-import entrustPop from "../didLog/entrustPop";
-//上传
-import houseUploadExtends from "./houseUploadExtends";
 import houseCheck from "../common/houseCheck";
-//选填信息
-import supplement from "@/pages/buySellSystem/addHouse/components/supplement";
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
-
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
@@ -511,10 +502,15 @@ export default {
     }
   },
   components: {
-    houseUploadExtends,
-    replacePop,
-    entrustPop,
-    supplement
+    //取代
+    houseUploadExtends: () => import("./houseUploadExtends"),
+    //委托人
+    replacePop: () => import("../didLog/replacePop"),
+    //上传
+    entrustPop: () => import("../didLog/entrustPop"),
+    //选填信息
+    supplement: () =>
+      import("@/pages/buySellSystem/addHouse/components/supplement")
   },
   data() {
     return {
