@@ -35,6 +35,7 @@
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
             <el-select
+              class="anchor-point"
               v-model="data.comId"
               @focus="remoteInput"
               @change="queryCBId"
@@ -46,6 +47,7 @@
               :loading="loading"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in options"
                 :key="item.value"
                 :label="item.name"
@@ -53,6 +55,7 @@
               ></el-option>
             </el-select>
             <el-select
+              class="anchor-point"
               v-model="data.cbId"
               filterable
               clearable
@@ -60,6 +63,7 @@
               @change="queryRoomNo"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in cbIdList"
                 :key="item.value"
                 :label="item.name"
@@ -67,12 +71,14 @@
               ></el-option>
             </el-select>
             <el-select
+              class="anchor-point"
               v-model="data.roomNo"
               filterable
               @change="querylistByParams"
               placeholder="房间号"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in roomNoList"
                 :key="item.value"
                 :label="item.name"
@@ -85,7 +91,7 @@
             <el-input
               placeholder="房源编号"
               v-model="data.houseNo"
-              class="set-input200"
+              class="set-input200 anchor-point"
               @change="querylistByParams"
               clearable
             />
@@ -94,7 +100,7 @@
             <h3 class="query-cell-title">业主</h3>
             <el-input
               placeholder="姓名"
-              class="set-input120"
+              class="set-input120 anchor-point"
               @change="querylistByParams"
               v-model="data.customName"
               clearable
@@ -105,7 +111,7 @@
             <el-input
               placeholder="业主电话"
               v-model="data.tel"
-              class="set-input200"
+              class="set-input200 anchor-point"
               @change="querylistByParams"
               clearable
             />
@@ -113,6 +119,7 @@
 
           <div class="query-content-cell cell-interval45">
             <definitionmenu
+              class="anchor-point"
               :renderList="renderList"
               :tableColumn="tableColumn"
               @change="tabColumnChange"
@@ -127,7 +134,7 @@
             <el-input
               placeholder="最小值"
               v-model="data.minPrice"
-              class="set-input90"
+              class="set-input90 anchor-point"
               @change="querylistByParams"
               clearable
             />
@@ -135,7 +142,7 @@
             <el-input
               placeholder="最大值"
               v-model="data.maxPrice"
-              class="set-input90"
+              class="set-input90 anchor-point"
               @change="querylistByParams"
               clearable
             />
@@ -145,7 +152,7 @@
             <el-input
               placeholder="最小值"
               v-model="data.minInArea"
-              class="set-input90"
+              class="set-input90 anchor-point"
               @change="querylistByParams"
               clearable
             />
@@ -153,7 +160,7 @@
             <el-input
               placeholder="最大值"
               v-model="data.maxInArea"
-              class="set-input90"
+              class="set-input90 anchor-point"
               @change="querylistByParams"
               clearable
             />
@@ -164,7 +171,7 @@
             <el-date-picker
               v-model="data.timeSelect"
               type="daterange"
-              class="set-data-pricker"
+              class="set-data-pricker anchor-point"
               @change="querylistByParams"
               range-separator="至"
               start-placeholder="开始日期"
@@ -178,6 +185,7 @@
           <div class="query-content-cell cell-interval45">
             <label class="query-checkbox">
               <input
+                class="anchor-point"
                 type="checkbox"
                 v-model="queryData.keyOwner"
                 value="1"
@@ -187,6 +195,7 @@
             </label>
             <label class="query-checkbox">
               <input
+                class="anchor-point"
                 type="checkbox"
                 v-model="queryData.isOnly"
                 value="1"
@@ -196,12 +205,17 @@
             </label>
           </div>
           <div class="query-content-cell cell-interval45">
-            <el-button type="primary" size="mini" @click="queryMyAgentParams"
+            <el-button
+              type="primary"
+              size="mini"
+              @click="queryMyAgentParams"
+              class=" anchor-point"
               >查询</el-button
             >
           </div>
           <div class="query-content-cell cell-interval25">
             <moreSelect
+              class=" anchor-point"
               @moreSelectChange="moreSelectChange"
               deptUrl="/myHouse/getMyAgent"
             ></moreSelect>
@@ -211,6 +225,7 @@
       <template v-slot:tableColumn>
         <template v-for="item in tableColumn">
           <el-table-column
+            class-name="anchor-point"
             :prop="item.prop"
             :label="item.label"
             :min-width="item.width"
@@ -223,10 +238,15 @@
         </template>
         <el-table-column label="操作" fixed="right" min-width="170">
           <template v-slot="scope">
-            <el-button type="primary" size="mini" @click="toLook(scope.row.id)"
+            <el-button
+              type="primary"
+              size="mini"
+              @click="toLook(scope.row.id)"
+              class="anchor-point"
               >查看</el-button
             >
             <el-button
+              class="anchor-point"
               type="primary"
               size="mini"
               :disabled="btnDeployment"
@@ -250,6 +270,7 @@
       width="20%"
     >
       <el-select
+        class="anchor-point"
         v-model="newAgentName"
         @change="queryAddPerId"
         key-value="accountID"
@@ -260,6 +281,7 @@
         :loading="agentLoading"
       >
         <el-option
+          class="anchor-point"
           v-for="item in AgentPerList"
           :key="item.accountID"
           :label="item.perName"
@@ -272,8 +294,11 @@
         </el-option>
       </el-select>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button @click="dialogVisible = false" class="anchor-point"
+          >取 消</el-button
+        >
         <el-button
+          class="anchor-point"
           type="primary"
           :disabled="!showUpdateAgentPer"
           @click="updateAgentPer"

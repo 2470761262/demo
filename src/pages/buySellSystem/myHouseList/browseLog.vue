@@ -16,6 +16,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+                  class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
@@ -27,6 +28,7 @@
             :loading="loading"
           >
             <el-option
+                    class="anchor-point"
               v-for="item in options"
               :key="item.value"
               :label="item.name"
@@ -34,6 +36,7 @@
             ></el-option>
           </el-select>
           <el-select
+                  class="anchor-point"
             v-model="data.cbId"
             filterable
             clearable
@@ -41,6 +44,7 @@
             @change="queryRoomNo"
           >
             <el-option
+                    class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
               :label="item.name"
@@ -48,12 +52,14 @@
             ></el-option>
           </el-select>
           <el-select
+                  class="anchor-point"
             v-model="data.roomNo"
             filterable
             @change="querySoleAllParams"
             placeholder="房间号"
           >
             <el-option
+                    class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
               :label="item.name"
@@ -66,7 +72,7 @@
           <el-input
             placeholder="房源编号"
             v-model="data.houseNo"
-            class="set-input220"
+            class="set-input220 anchor-point"
             @change="querySoleAllParams"
             clearable
           />
@@ -76,7 +82,7 @@
           <el-input
             placeholder="最小值"
             v-model="data.minPrice"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="querySoleAllParams"
             clearable
           />
@@ -84,7 +90,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxPrice"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="querySoleAllParams"
             clearable
           />
@@ -97,7 +103,7 @@
           <el-input
             placeholder="最小值"
             v-model="data.minInArea"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="querySoleAllParams"
             clearable
           />
@@ -105,7 +111,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxInArea"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="querySoleAllParams"
             clearable
           />
@@ -116,7 +122,7 @@
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
-            class="set-data-pricker"
+            class="set-data-pricker anchor-point"
             @change="querySoleAllParams"
             range-separator="至"
             start-placeholder="开始日期"
@@ -124,10 +130,10 @@
             value-format="yyyy-MM-dd"
             :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut" @click="Remove">清除</span>
+          <span class="query-cell-suffix handlebut anchor-point" @click="Remove">清除</span>
         </div>
         <div class="query-content-cell cell-interval75">
-          <el-button type="primary" size="mini" @click="querySoleAllParams"
+          <el-button type="primary" size="mini" @click="querySoleAllParams" class="anchor-point"
             >查询</el-button
           >
         </div>
@@ -136,6 +142,7 @@
     <template #tableColumn>
       <template v-for="item in tableColumnField">
         <el-table-column
+                class-name="anchor-point"
           :prop="item.prop"
           :label="item.label"
           :min-width="item.width"
@@ -152,6 +159,7 @@
             type="primary"
             size="mini"
             @click="toHouseDetail(scope.row)"
+            class="anchor-point"
             >查看</el-button
           >
         </template>

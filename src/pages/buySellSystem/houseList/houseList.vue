@@ -152,10 +152,7 @@
   opacity: 0.7;
 }
 </style>
-<template
-  @mouseover="log_socket.sendUserAnchorData('房源详情页', 'mouserover')"
-  @mouseleave="log_socket.sendUserAnchorData('房源详情页', 'mouseleave')"
->
+<template>
   <div class="page-back-color">
     <div class="page-house-cell nav-back">
       <div class="page-house-cell house-left-tips"><span>为你推荐</span></div>
