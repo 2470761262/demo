@@ -261,7 +261,7 @@
       <div class="page-query-data-tag">
         <el-tag
           :key="index"
-          class="query-tag"
+          class="query-tag anchor-point"
           v-for="(tag, index) in dynamicTags"
           closable
           :disable-transitions="false"
@@ -270,15 +270,15 @@
         >
       </div>
       <div class="select-tabs-cell" v-if="querySelectFlag">
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="elevatorSelect()" />
           <span>电梯</span>
         </label>
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="keySelect()" />
           <span>钥匙</span>
         </label>
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="onlySelect()" />
           <span>独家</span>
         </label>
@@ -288,14 +288,14 @@
     <div class="select-tabs" v-if="!querySelectFlag">
       <div class="select-tabs-cell">
         <div
-          class="select-tabs-item"
+          class="select-tabs-item anchor-point"
           :class="{ 'is-order': form.sortColumn == 'id' }"
           @click="defaultSelect()"
         >
           <div class="tabs-item-title">默认排序</div>
         </div>
         <div
-          class="select-tabs-item"
+          class="select-tabs-item anchor-point"
           :class="{ 'is-order': form.sortColumn == 'price' }"
           @click="priceSelect()"
         >
@@ -303,7 +303,7 @@
           <i class="el-icon-sort"></i>
         </div>
         <div
-          class="select-tabs-item"
+          class="select-tabs-item anchor-point"
           :class="{ 'is-order': form.sortColumn == 'inArea' }"
           @click="inAreaSelect()"
         >
@@ -312,15 +312,15 @@
         </div>
       </div>
       <div class="select-tabs-cell">
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="elevatorSelect()" />
           <span>电梯</span>
         </label>
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="keySelect()" />
           <span>钥匙</span>
         </label>
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="onlySelect()" />
           <span>独家</span>
         </label>
