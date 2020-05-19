@@ -72,6 +72,16 @@
               ></el-option>
             </el-select>
           </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">编号</h3>
+            <el-input
+              placeholder="房源编号"
+              v-model="queryData.houseNo"
+              class="set-input200"
+              @change="querylistByParams"
+              clearable
+            />
+          </div>
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">提交时间</h3>
             <el-date-picker
@@ -433,6 +443,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 import util from "@/util/util";
 import moreSelect from "@/components/moreSelect";
 import ElImageViewer from "element-ui/packages/image/src/image-viewer";
+import { SMALLThumb } from "@/util/constMap";
 export default {
   mixins: [getMenuRid],
 
@@ -443,11 +454,13 @@ export default {
   },
   computed: {
     showImgList() {
-      let result = this.file8.map(item => {
+      let result = [];
+      this.file8.forEach(item => {
         if (item.subType != 7) {
-          return item.url;
+          result.push(item.url.replace(SMALLThumb, ""));
         }
       });
+      console.log(result, "ffff");
       if (this.showImgIndexImg != null) {
         const index = result.findIndex(item => {
           return item == this.showImgIndexImg;
@@ -567,7 +580,8 @@ export default {
         roomNo: "",
         roomId: "",
         cbId: "",
-        cbName: ""
+        cbName: "",
+        houseNo: ""
       },
       accessoryUrl: require("../../../assets/images/accessory.png"),
       showPopUp: false,
@@ -604,15 +618,15 @@ export default {
       checkId: 0,
       row: {},
       accessoryAllList: [],
-      accessoryMoldList: [
-        { title: "外景图", list: [], type: 1 },
-        { title: "客厅", list: [], type: 2 },
-        { title: "卧室图", list: [], type: 3 },
-        { title: "厨房", list: [], type: 4 },
-        { title: "卫生间", list: [], type: 5 },
-        { title: "户型", list: [], type: 6 },
-        { title: "视频", list: [], type: 7 }
-      ],
+      accessoryMoldList: {
+        1: { title: "外景图", list: [], type: 1 },
+        2: { title: "客厅", list: [], type: 2 },
+        3: { title: "卧室图", list: [], type: 3 },
+        4: { title: "厨房", list: [], type: 4 },
+        5: { title: "卫生间", list: [], type: 5 },
+        6: { title: "户型", list: [], type: 6 },
+        7: { title: "视频", list: [], type: 7 }
+      },
       accessoryListObj: {
         file1: [],
         file2: [],
@@ -641,7 +655,7 @@ export default {
     },
     changeShowImg(url) {
       this.showViewer = true;
-      this.showImgIndexImg = url;
+      this.showImgIndexImg = url.replace(SMALLThumb, "");
     },
     /**
      * 审核项目change
@@ -678,17 +692,22 @@ export default {
       that.$refs.loopImg.setActiveItem(index);
     },
     getFile(list) {
-      this.accessoryMoldList.forEach(item => {
-        item.list = []; //清空数组
-        if (list != null) {
-          list.forEach((element, index) => {
-            if (element.subType == item.type) {
-              element.activeIndex = index;
-              item.list.push(element);
-            }
-          });
-        }
+      console.log(list, "wwww");
+      Object.keys(this.accessoryMoldList).forEach(item => {
+        //清空数组
+        this.accessoryMoldList[item].list = [];
       });
+      if (list != null) {
+        list.forEach((element, index) => {
+          if (element.subType != 7 && !element.url.includes(SMALLThumb)) {
+            element.url = element.url + SMALLThumb;
+          }
+          if (element.subType) {
+            element.activeIndex = index;
+            this.accessoryMoldList[element.subType].list.push(element);
+          }
+        });
+      }
       this.file8 = list;
       console.log(this.file8);
       this.showAccessory = true;
@@ -919,6 +938,7 @@ export default {
         params.status = that.status;
         params.checkProject = that.checkProject;
         params.checkTypeStr = that.type;
+        params.houseNo = that.queryData.houseNo;
       }
       params.sortColumn = "id";
       this.$api
