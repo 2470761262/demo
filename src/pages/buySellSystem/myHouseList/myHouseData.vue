@@ -214,7 +214,7 @@
           <div class="query-content-row">
             <div class="query-row-title">小区搜索</div>
             <el-autocomplete
-              class="query-input"
+              class="query-input anchor-point"
               v-model="queryContent.communityName"
               prefix-icon="el-icon-search"
               :fetch-suggestions="querySearch"
@@ -227,7 +227,7 @@
           <div class="query-content-row">
             <div class="query-row-title">时间搜索</div>
             <el-date-picker
-              class="query-date"
+              class="query-date anchor-point"
               v-model="queryContent.queryTime"
               type="daterange"
               range-separator="-"
@@ -236,7 +236,9 @@
               value-format="yyyy-MM-dd"
             >
             </el-date-picker>
-            <el-button type="primary" @click="reloadList">确定</el-button>
+            <el-button type="primary" class="anchor-point" @click="reloadList"
+              >确定</el-button
+            >
           </div>
         </div>
         <!-- 表格 -->
@@ -245,7 +247,7 @@
             <el-table
               :data="tableDataText"
               highlight-current-row
-              header-cell-class-name="headerCellSet"
+              header-cell-class-name="headerCellSet anchor-point"
               cell-class-name="cellItemSet"
               show-overflow-tooltip
               border
@@ -253,6 +255,7 @@
             >
               <el-table-column type="index" width="50"> </el-table-column>
               <el-table-column
+                class-name="anchor-point"
                 v-for="item in tableDataColumn"
                 :key="item.label"
                 :sort-orders="['ascending', 'descending']"
@@ -269,6 +272,7 @@
         <div class="query-table-foot" v-if="pageJson.total > 1">
           <div class="table-foot-bor">
             <el-pagination
+              class="anchor-point"
               background
               :current-page.sync="pageJson.current"
               hide-on-single-page

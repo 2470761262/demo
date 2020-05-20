@@ -12,14 +12,21 @@
       <div class="page-cell-item">
         <div class="item-before" data-before="*"></div>
         <el-radio-group
+          class="anchor-point"
           v-model="addHouseType"
           @change="houseTypeChange"
           size="mini"
         >
-          <el-radio label="basicInformation" :disabled="disabled"
+          <el-radio
+            class="anchor-point"
+            label="basicInformation"
+            :disabled="disabled"
             >单套录入</el-radio
           >
-          <el-radio label="morePushHouse" :disabled="disabled"
+          <el-radio
+            class="anchor-point"
+            label="morePushHouse"
+            :disabled="disabled"
             >多套录入</el-radio
           >
         </el-radio-group>
@@ -39,6 +46,7 @@
             filterable
             v-addHouse
             remote
+            class="anchor-point"
             :remote-method="remoteCommunityName"
             data-vv-name="communityId"
             data-vv-as="楼盘名称"
@@ -51,6 +59,7 @@
             :disabled="disabled"
           >
             <el-option
+              class="anchor-point"
               v-for="item in selectPageCommunit.list"
               :key="item.value"
               :label="item.name"
@@ -70,6 +79,7 @@
           <el-select
             filterable
             remote
+            class="anchor-point"
             :remote-method="remoteBuildingNo"
             data-vv-name="buildingId"
             data-vv-as="栋座"
@@ -81,6 +91,7 @@
             :disabled="disabled"
           >
             <el-option
+              class="anchor-point"
               v-for="item in selectPageeBuildingNo.list"
               :key="item.value"
               :label="item.name"
@@ -100,6 +111,7 @@
           <el-select
             filterable
             remote
+            class="anchor-point"
             :remote-method="remoteRoomNo"
             data-vv-name="roomId"
             data-vv-as="房间号"
@@ -111,6 +123,7 @@
             :disabled="disabled"
           >
             <el-option
+              class="anchor-point"
               v-for="item in selectPageRoomNo.list"
               :key="item.value"
               :label="item.name"
@@ -129,6 +142,7 @@
     >
       <div class="page-cell-item select-nobor center-flex">
         <el-input
+          class="anchor-point"
           placeholder="请输入业主姓名"
           data-vv-name="customerName"
           data-vv-as="业主姓名"
@@ -140,8 +154,13 @@
           <div slot="prepend" class="item-before" data-before="*">业主姓名</div>
         </el-input>
         <div class="input-after-checkbox">
-          <el-radio-group v-model="formData.sex" size="mini">
+          <el-radio-group
+            v-model="formData.sex"
+            size="mini"
+            class="anchor-point"
+          >
             <el-radio
+              class="anchor-point"
               :label="item.label"
               v-for="(item, index) in sexList"
               :key="index"
@@ -159,6 +178,7 @@
     >
       <div class="page-cell-item select-nobor">
         <el-input
+          class="anchor-point"
           placeholder="默认拨打为第一个号码"
           v-model="formData.tel"
           data-vv-name="tel"
@@ -169,7 +189,7 @@
           <div
             slot="append"
             @click="addTelToList"
-            class="item-after item-before-col"
+            class="item-after item-before-col anchor-point"
           >
             <i class="el-icon-circle-plus-outline"></i>
             <div>新增</div>
@@ -188,6 +208,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            class="anchor-point"
             placeholder="请输入业主电话号码"
             v-model="formData['tel' + item]"
             :data-vv-name="'tel' + item"
@@ -204,7 +225,7 @@
             <div
               slot="append"
               @click="removeTelToList(index, item)"
-              class="item-after item-before-col"
+              class="item-after item-before-col anchor-point"
             >
               <i class="el-icon-circle-plus-outline"></i>
               <div>删除</div>
@@ -223,6 +244,7 @@
         <div class="page-cell-item">
           <div class="item-before" data-before="*">房屋证件</div>
           <el-select
+            class="anchor-point"
             v-model="formData.certificateType"
             v-validate="'required'"
             data-vv-name="certificateType"
@@ -230,6 +252,7 @@
             placeholder="请选择房屋证件"
           >
             <el-option
+              class="anchor-point"
               v-for="item in certificateType"
               :key="item.label"
               :label="item.title"
@@ -246,6 +269,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            class="anchor-point"
             placeholder="请输入售价"
             v-validate="'required|decimal:2|noZero1'"
             data-vv-name="price"
@@ -265,6 +289,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            class="anchor-point"
             placeholder="请输入底价"
             data-vv-name="bottomPrice"
             data-vv-as="底价"
@@ -289,7 +314,11 @@
       :data-tips="errorBags.first('certificateNo')"
     >
       <div class="page-cell-item select-nobor">
-        <el-input placeholder="请输入产权证号" v-model="formData.certificateNo">
+        <el-input
+          class="anchor-point"
+          placeholder="请输入产权证号"
+          v-model="formData.certificateNo"
+        >
           <div slot="prepend" class="item-before">证号</div>
         </el-input>
       </div>
@@ -314,13 +343,13 @@
               data-vv-as="面积"
               v-validate="'decimal:2|noZero1'"
               v-model="changeInput.area"
-              class="min-input"
+              class="min-input anchor-point"
               v-show="changeBut.area"
             />
             <span v-show="!changeBut.area">{{ formData.area || 0 }}平方</span>
           </div>
           <div
-            class="but-append"
+            class="but-append anchor-point"
             :data-tips="changeBut.area ? '完成' : '修改'"
             @click.stop="changeAreaBut"
           >
@@ -351,7 +380,7 @@
                 data-vv-as="室"
                 v-validate="'numeric|noZero|max:2'"
                 data-vv-name="room"
-                class="min-input"
+                class="min-input anchor-point"
               />室
               <input
                 type="text"
@@ -363,7 +392,7 @@
                 data-vv-as="厅"
                 data-vv-name="hall"
                 v-validate="'numeric|noZero|max:2'"
-                class="min-input"
+                class="min-input anchor-point"
               />厅
               <input
                 type="text"
@@ -375,7 +404,7 @@
                 data-vv-as="卫"
                 data-vv-name="toilet"
                 v-validate="'numeric|noZero|max:2'"
-                class="min-input"
+                class="min-input anchor-point"
               />卫
               <input
                 type="text"
@@ -387,7 +416,7 @@
                 data-vv-as="阳台"
                 data-vv-name="balcony"
                 v-validate="'numeric|noZero|max:2'"
-                class="min-input"
+                class="min-input anchor-point"
               />阳台
             </div>
             <span v-show="!changeBut.roomType"
@@ -397,7 +426,7 @@
             >
           </div>
           <div
-            class="but-append"
+            class="but-append anchor-point"
             :data-tips="changeBut.roomType ? '完成' : '修改'"
             @click.stop="changeRoomTypeBut"
           >
@@ -445,10 +474,18 @@
       <div class="page-cell-item-flex">
         <div class="cell-tabs-item-title">土地性质</div>
         <div class="cell-tabs-item-data">
-          <el-select v-model="formData.landCharacteristic" disabled>
-            <el-option :value="null" label="未知"></el-option>
-            <el-option :value="0" label="出让"></el-option>
-            <el-option :value="1" label="划拨"></el-option>
+          <el-select
+            v-model="formData.landCharacteristic"
+            disabled
+            class="anchor-point"
+          >
+            <el-option
+              :value="null"
+              label="未知"
+              class="anchor-point"
+            ></el-option>
+            <el-option :value="0" label="出让" class="anchor-point"></el-option>
+            <el-option :value="1" label="划拨" class="anchor-point"></el-option>
           </el-select>
         </div>
       </div>
@@ -491,6 +528,23 @@ let certificateType = [
   { title: "购房合同", label: 2 },
   { title: "拆迁安置协议书", label: 3 }
 ];
+let updateFileMap = new Map([
+  ["customerName", "Customers"],
+  ["sex", "Sex"],
+  ["tel", "Tel"],
+  ["tel1", "Tel1"],
+  ["tel2", "Tel2"],
+  ["tel3", "Tel3"],
+  ["certificateType", "certificate_type"],
+  ["certificateNo", "certificate_no"],
+  ["price", "Price"],
+  ["bottomPrice", "FloorPrice"],
+  ["area", "InArea"],
+  ["room", "Rooms"],
+  ["hall", "hall"],
+  ["toilet", "toilet"],
+  ["balcony", "balcony"]
+]);
 //import { mapState } from "vuex";
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
@@ -1052,9 +1106,6 @@ export default {
       };
       let method = "post";
       let url = "/draft-house";
-      if (this.paramsObj.editUrl) {
-        url = this.paramsObj.editUrl;
-      }
       if (that.$store.state.addHouse.formData.id != "") {
         data.id = that.$store.state.addHouse.formData.id;
         method = "put";
@@ -1063,6 +1114,20 @@ export default {
         //没有做出修改 或者 没有下一步保存的按钮权限
         console.log("跳过保存，当前权限：", this.nextSaveButton);
         return true;
+      }
+      if (this.paramsObj.editUrl) {
+        url = this.paramsObj.editUrl;
+        data.saleHouseUpdateRecordList = [];
+        Object.keys(this.deffData).forEach(item => {
+          if (item != "id") {
+            data.saleHouseUpdateRecordList.push({
+              houseId: that.$store.state.addHouse.formData.id,
+              updateFiled: updateFileMap.get(item),
+              oldValue: this.$store.state.addHouse.formData.step1[item],
+              newValue: this.deffData[item]
+            });
+          }
+        });
       }
       return this.$api[method]({
         url: url,

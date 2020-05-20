@@ -137,8 +137,9 @@
                 <span calss="cell-data-suffix">套</span>
               </div>
             </div>
-            <div class="query-body-select">
+            <div class="query-body-select anchor-point">
               <el-paging-select
+                class="anchor-point"
                 v-model="queryData.selectCommunity"
                 keyValue="communityName"
                 valueKey="id"
@@ -162,7 +163,7 @@
               ></el-paging-select>
             </div>
             <template v-for="(item, i) in resultArray">
-              <div class="query-item-attention" :key="i">
+              <div class="query-item-attention anchor-point" :key="i">
                 <div class="attention-left overText">
                   {{ item.communityName || "暂无" }}
                 </div>
@@ -181,7 +182,7 @@
                 <div
                   title="取消关注"
                   @click="concernOFF(item.id)"
-                  class="attention-cell-remove el-icon-circle-close"
+                  class="attention-cell-remove el-icon-circle-close anchor-point"
                 ></div>
               </div>
             </template>
@@ -205,6 +206,7 @@
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
             <el-select
+              class="anchor-point"
               v-model="comId"
               @focus="remoteInput"
               @change="queryCBId"
@@ -215,6 +217,7 @@
               filterable
             >
               <el-option
+                class="anchor-point"
                 v-for="item in comList"
                 :key="item.value"
                 :label="item.name"
@@ -222,6 +225,7 @@
               ></el-option>
             </el-select>
             <el-select
+              class="anchor-point"
               v-model="cbId"
               filterable
               clearable
@@ -229,6 +233,7 @@
               @change="queryRoomNo"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in cbIdList"
                 :key="item.value"
                 :label="item.name"
@@ -236,12 +241,14 @@
               ></el-option>
             </el-select>
             <el-select
+              class="anchor-point"
               v-model="roomNo"
               filterable
               @change="querylistByParams"
               placeholder="房间号"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in roomNoList"
                 :key="item.value"
                 :label="item.name"
@@ -253,7 +260,7 @@
             <h3 class="query-cell-title">业主</h3>
             <el-input
               placeholder="姓名"
-              class="set-input120"
+              class="set-input120 anchor-point"
               @change="querylistByParams"
               v-model="queryData.customName"
               clearable
@@ -264,7 +271,7 @@
             <el-input
               placeholder="业主电话"
               v-model="queryData.tel"
-              class="set-input200"
+              class="set-input200 anchor-point"
               @change="querylistByParams"
               clearable
             />
@@ -274,7 +281,7 @@
             <el-input
               placeholder="最小值"
               v-model="queryData.minPrice"
-              class="set-input90"
+              class="set-input90 anchor-point"
               @change="querylistByParams"
               clearable
             />
@@ -282,13 +289,13 @@
             <el-input
               placeholder="最大值"
               v-model="queryData.maxPrice"
-              class="set-input90"
+              class="set-input90 anchor-point"
               @change="querylistByParams"
               clearable
             />
             <span class="query-cell-suffix">万</span>
           </div>
-          <div class="query-content-cell cell-interval45">
+          <div class="query-content-cell cell-interval45 anchor-point">
             <definitionmenu
               :renderList="renderList"
               :tableColumn="tableColumn"
@@ -305,7 +312,7 @@
               placeholder="最小值"
               v-validate="'decimal:2|noZero1'"
               v-model="queryData.minInArea"
-              class="set-input90"
+              class="set-input90 anchor-point"
               @change="changeAreaBut"
               clearable
             />
@@ -313,7 +320,7 @@
             <el-input
               placeholder="最大值"
               v-model="queryData.maxInArea"
-              class="set-input90"
+              class="set-input90 anchor-point"
               @change="changeAreaButMax"
               clearable
             />
@@ -324,7 +331,7 @@
             <el-select
               clearable
               placeholder="房源状态"
-              class="set-select100"
+              class="set-select100 anchor-point"
               @change="querylistByParams"
               v-model="houseType"
             >
@@ -342,6 +349,7 @@
           <div class="query-content-cell cell-interval45">
             <label class="query-checkbox">
               <input
+                class="anchor-point"
                 type="checkbox"
                 v-model="queryData.keyOwner"
                 value="1"
@@ -351,6 +359,7 @@
             </label>
             <label class="query-checkbox">
               <input
+                class="anchor-point"
                 type="checkbox"
                 v-model="queryData.isOnly"
                 value="1"
@@ -360,12 +369,17 @@
             </label>
           </div>
           <div class="query-content-cell cell-interval45">
-            <el-button type="primary" size="mini" @click="querylistByParams"
+            <el-button
+              type="primary"
+              size="mini"
+              @click="querylistByParams"
+              class="anchor-point"
               >查询</el-button
             >
           </div>
           <div class="query-content-cell cell-interval25">
             <moreSelect
+              class="anchor-point"
               :configRule="{
                 deptParentId: false,
                 store: false,
@@ -379,6 +393,7 @@
       <template v-slot:tableColumn>
         <template v-for="item in tableColumn">
           <el-table-column
+            class-name="anchor-point"
             :prop="item.prop"
             :label="item.label"
             :min-width="item.width"
@@ -392,6 +407,7 @@
         <el-table-column label="操作" min-width="170" fixed="right">
           <template v-slot="scope">
             <el-button
+              class="anchor-point"
               type="primary"
               size="mini"
               :disabled="['1', '5'].includes(scope.row.houseType)"
@@ -399,6 +415,7 @@
               >{{ scope.row.houseType | setRowButName }}</el-button
             >
             <el-button
+              class="anchor-point"
               type="primary"
               @click="toHouseDetail(scope.row)"
               size="mini"
@@ -426,6 +443,7 @@
       <template v-slot:floot>
         <div class="text-middle" style="text-align: center;margin: 10px">
           <el-button
+            class="anchor-point"
             size="mini"
             :disabled="!showApplyAgentBtn"
             @click="applyAgent"
@@ -1219,7 +1237,9 @@ export default {
           token: false,
           qs: true,
           data: {
-            comId: this.comId
+            comId: this.comId,
+            page: 1,
+            limit: 50
           }
         })
         .then(e => {
@@ -1244,24 +1264,9 @@ export default {
           qs: true,
           data: {
             comId: this.comId,
-            cbId: this.cbId
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.roomNo = "";
-            this.roomNoList = e.data.data.list;
-          }
-        });
-      this.$api
-        .get({
-          url: "/mateHouse/queryBuildIngHouses",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: this.comId,
-            cbId: this.cbId
+            cbId: this.cbId,
+            page: 1,
+            limit: 200
           }
         })
         .then(e => {

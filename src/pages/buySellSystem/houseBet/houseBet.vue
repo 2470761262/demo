@@ -14,6 +14,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            class="anchor-point"
             v-model="data.comId"
             @change="queryCBId"
             filterable
@@ -25,6 +26,7 @@
             :loading="loading"
           >
             <el-option
+              class="anchor-point"
               v-for="item in options"
               :key="item.value"
               :label="item.name"
@@ -32,6 +34,7 @@
             ></el-option>
           </el-select>
           <el-select
+            class="anchor-point"
             v-model="data.cbId"
             filterable
             placeholder="楼栋"
@@ -39,6 +42,7 @@
             @change="queryRoomNo"
           >
             <el-option
+              class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
               :label="item.name"
@@ -46,6 +50,7 @@
             ></el-option>
           </el-select>
           <el-select
+            class="anchor-point"
             v-model="data.roomNo"
             filterable
             @change="queryHouseBetParams"
@@ -53,6 +58,7 @@
             placeholder="房间号"
           >
             <el-option
+              class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
               :label="item.name"
@@ -60,11 +66,21 @@
             ></el-option>
           </el-select>
         </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">编号</h3>
+          <el-input
+            placeholder="房源编号"
+            v-model="data.houseNo"
+            class="set-input200 anchor-point"
+            @change="queryHouseBetParams"
+            clearable
+          />
+        </div>
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
             placeholder="姓名"
-            class="set-input120"
+            class="set-input120 anchor-point"
             @change="queryHouseBetParams"
             v-model="data.customerName"
             clearable
@@ -75,17 +91,19 @@
           <el-input
             placeholder="业主电话"
             v-model="data.tel"
-            class="set-input200"
+            class="set-input200 anchor-point"
             @change="queryHouseBetParams"
             clearable
           />
         </div>
-        <div class="query-content-cell cell-interval45">
+      </div>
+      <div class="page-list-query-row">
+        <div class="query-content-cell ">
           <h3 class="query-cell-title">价格</h3>
           <el-input
             placeholder="最小值"
             v-model="data.minPrice"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="queryHouseBetParams"
             clearable
           />
@@ -93,27 +111,25 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxPrice"
-            class="set-input90"
+            class="set-input90 anchor-point"
             @change="queryHouseBetParams"
             clearable
           />
           <span class="query-cell-suffix">万</span>
         </div>
-      </div>
-      <div class="page-list-query-row">
-        <div class="query-content-cell">
+        <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">面积</h3>
           <el-input
             placeholder="最小值"
             v-model="data.minInArea"
-            class="set-input90"
+            class="set-input90 anchor-point"
             clearable
           />
           <span class="cut-off-rule"></span>
           <el-input
             placeholder="最大值"
             v-model="data.maxInArea"
-            class="set-input90"
+            class="set-input90 anchor-point"
             clearable
           />
           <span class="query-cell-suffix">㎡</span>
@@ -124,10 +140,11 @@
             v-model="data.status"
             @change="queryHouseBetParams()"
             clearable
-            class="set-select100"
+            class="set-select100 anchor-point"
             placeholder="全部"
           >
             <el-option
+              class="anchor-point"
               v-for="item in betStatusList"
               :key="item.value"
               :label="item.name"
@@ -136,12 +153,17 @@
           </el-select>
         </div>
         <div class="query-content-cell cell-interval75">
-          <el-button type="primary" size="mini" @click="queryHouseBetParams"
+          <el-button
+            type="primary"
+            size="mini"
+            @click="queryHouseBetParams"
+            class="anchor-point"
             >查询</el-button
           >
         </div>
         <div class="query-content-cell cell-interval25">
           <moreSelect
+            class="anchor-point"
             @moreSelectChange="moreSelectChange"
             deptUrl="/myHouse/myBetList"
           ></moreSelect>
@@ -161,6 +183,7 @@
       </template>
       <!--      房源编号、楼盘名称、售价（可排序）、面积（可排序）、单价（可排序）、户型（X室X厅X卫）、对赌鑫币值、预期奖励鑫币值、对赌时间（对赌成功当日）、对赌结果、剩余天数、对赌人、操作（查看）-->
       <el-table-column
+        class-name="anchor-point"
         prop="price"
         label="售价(万元)"
         :sort-orders="['ascending', 'descending']"
@@ -168,6 +191,7 @@
       >
       </el-table-column>
       <el-table-column
+        class-name="anchor-point"
         prop="inArea"
         label="面积(m²)"
         :sort-orders="['ascending', 'descending']"
@@ -175,6 +199,7 @@
       >
       </el-table-column>
       <el-table-column
+        class-name="anchor-point"
         prop="unitPrice"
         label="单价(元/㎡)"
         :sort-orders="['ascending', 'descending']"
@@ -184,6 +209,7 @@
       <el-table-column prop="" label="户型" :formatter="formatHouseType">
       </el-table-column>
       <el-table-column
+        class-name="anchor-point"
         prop="amount"
         label="对赌鑫币"
         :sort-orders="['ascending', 'descending']"
@@ -191,6 +217,7 @@
       >
       </el-table-column>
       <el-table-column
+        class-name="anchor-point"
         prop="createTime"
         label="对赌时间"
         :sort-orders="['ascending', 'descending']"
@@ -209,6 +236,7 @@
       <el-table-column label="操作" fixed="right">
         <template v-slot="scope">
           <el-button
+            class-name="anchor-point"
             type="primary"
             size="mini"
             @click="toHouseDetail(scope.row)"
@@ -256,7 +284,8 @@ export default {
         coId: "",
         empName: "",
         orderAsc: "",
-        timeSelect: ""
+        timeSelect: "",
+        houseNo: ""
       },
       options: [],
       cbIdList: [],
@@ -531,6 +560,7 @@ export default {
         params.minInArea = that.data.minInArea;
         params.maxInArea = that.data.maxInArea;
         params.status = that.data.status;
+        params.houseNo = that.data.houseNo;
         if (that.data.timeSelect.length > 0)
           params.beginTime = that.data.timeSelect[0];
         if (that.data.timeSelect.length > 1)

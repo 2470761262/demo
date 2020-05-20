@@ -69,7 +69,7 @@ function sendSock(agentData, callback) {
 function websocketonmessage(e) {
   if (typeof global_receiveMessageCallback == "function") {
     let result = JSON.parse(e.data);
-    if(result.content&&result.content==="ping"){
+    if (result.content && result.content === "ping") {
       return;
     }
     global_receiveMessageCallback(result);

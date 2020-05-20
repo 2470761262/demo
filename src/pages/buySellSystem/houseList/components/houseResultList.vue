@@ -91,6 +91,7 @@
       height: 100px;
       border-radius: 4px;
       overflow: hidden;
+      align-self: center;
       /deep/.el-image {
         width: 100%;
         height: 100%;
@@ -111,9 +112,11 @@
         display: flex;
         align-items: center;
         .item-data-top-no {
+          //margin-right: 80px;
+          flex: 1;
+          width: 0;
           color: #adadad;
           font-size: 14px;
-          margin-right: 80px;
         }
         .item-data-top-tag {
           display: flex;
@@ -125,13 +128,49 @@
             color: #fff;
           }
         }
+        .broker-content {
+          display: flex;
+          align-items: center;
+          margin-left: 30px;
+          .broker-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+          }
+          .brokerName,
+          .deparName {
+            font-size: 15px;
+            color: #333;
+          }
+        }
       }
       i {
         cursor: pointer;
       }
+      .item-data-downPayment {
+        font-size: 16px;
+        color: #636363;
+      }
       .item-data-middle {
         font-size: 20px;
         color: #636363;
+        margin: 10px 0;
+      }
+      .item-data-plate {
+        // font-size: 14px;
+        //
+        // align-self: flex-start;
+        //
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .plate-warp {
+          padding: 4px 10px;
+          border: 1px solid #ddd;
+          border-radius: 20px;
+        }
       }
       .item-data-bottom {
         display: flex;
@@ -222,7 +261,7 @@
       <div class="page-query-data-tag">
         <el-tag
           :key="index"
-          class="query-tag"
+          class="query-tag anchor-point"
           v-for="(tag, index) in dynamicTags"
           closable
           :disable-transitions="false"
@@ -231,11 +270,15 @@
         >
       </div>
       <div class="select-tabs-cell" v-if="querySelectFlag">
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
+          <input type="checkbox" @click="elevatorSelect()" />
+          <span>电梯</span>
+        </label>
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="keySelect()" />
           <span>钥匙</span>
         </label>
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="onlySelect()" />
           <span>独家</span>
         </label>
@@ -245,14 +288,14 @@
     <div class="select-tabs" v-if="!querySelectFlag">
       <div class="select-tabs-cell">
         <div
-          class="select-tabs-item"
+          class="select-tabs-item anchor-point"
           :class="{ 'is-order': form.sortColumn == 'id' }"
           @click="defaultSelect()"
         >
           <div class="tabs-item-title">默认排序</div>
         </div>
         <div
-          class="select-tabs-item"
+          class="select-tabs-item anchor-point"
           :class="{ 'is-order': form.sortColumn == 'price' }"
           @click="priceSelect()"
         >
@@ -260,7 +303,7 @@
           <i class="el-icon-sort"></i>
         </div>
         <div
-          class="select-tabs-item"
+          class="select-tabs-item anchor-point"
           :class="{ 'is-order': form.sortColumn == 'inArea' }"
           @click="inAreaSelect()"
         >
@@ -269,11 +312,15 @@
         </div>
       </div>
       <div class="select-tabs-cell">
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
+          <input type="checkbox" @click="elevatorSelect()" />
+          <span>电梯</span>
+        </label>
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="keySelect()" />
           <span>钥匙</span>
         </label>
-        <label class="select-checkbox">
+        <label class="select-checkbox anchor-point">
           <input type="checkbox" @click="onlySelect()" />
           <span>独家</span>
         </label>
@@ -286,11 +333,12 @@
     >
       <template v-if="!querySelectFlag">
         <template v-if="renderList.length > 0">
+          <!-- @dblclick="toHouseDetail(item)" -->
           <div
             class="select-for-item"
             v-for="(item, index) in renderList"
             :key="index"
-            @dblclick="toHouseDetail(item)"
+            @click.stop="toHouseDetail(item)"
           >
             <div class="select-for-item-img">
               <el-image
@@ -321,6 +369,24 @@
                     独家
                   </div>
                 </div>
+                <div class="broker-content" v-if="item.plate == 0">
+                  <img
+                    class="broker-img"
+                    :src="item.headimgurl | defaultImg"
+                    alt="经纪人"
+                  />
+                  <div class="brokerName">{{ item.brokerName }}/</div>
+                  <div class="deparName">{{ item.deptName }}</div>
+                </div>
+              </div>
+              <div class="item-data-plate">
+                <!-- 店公共盘 -->
+                <div class="plate-warp" v-if="plateResultMet(item.plate) != ''">
+                  {{ item.plate | plateResult }}
+                </div>
+                <div class="item-data-downPayment"></div>
+                <!-- 参考首付:
+                {{ item.price | downPaymentFilter(downPaymentPercent) }}万 -->
               </div>
               <div class="item-data-middle overText">{{ item.title }}</div>
               <div class="item-data-bottom">
@@ -336,12 +402,12 @@
                 </div>
               </div>
             </div>
-            <div class="select-for-item-but">
+            <!-- <div class="select-for-item-but">
               <i
                 class="el-icon-document icon i"
                 @click.stop="toHouseDetail(item)"
               ></i>
-            </div>
+            </div> -->
           </div>
         </template>
         <template v-else>
@@ -372,6 +438,7 @@
               <el-table-column label="操作" fixed="right" width="80px">
                 <template slot-scope="scope">
                   <el-button
+                    class="anchor-point"
                     size="mini"
                     type="primary"
                     @click="toHouseDetail(scope.row)"
@@ -482,6 +549,16 @@ export default {
           default: true,
           formart: item => item.price + "万元"
         },
+        // {
+        //   prop: "downPayment",
+        //   label: "参考首付",
+        //   width: "120",
+        //   order: false,
+        //   disabled: false,
+        //   default: true,
+        //   formart: item =>
+        //     (item.price * this.downPaymentPercent).toFixed(1) + "万元"
+        // },
         {
           prop: "seenNum",
           label: "被看次数",
@@ -583,10 +660,39 @@ export default {
       ],
       tableColumn: [],
       menuLoading: true, //自定义菜单
-      renderList: []
+      renderList: [],
+      downPaymentPercent: 0.3 //首付的百分比
     };
   },
+  filters: {
+    downPaymentFilter(value, downPaymentPercent) {
+      return (value * downPaymentPercent).toFixed(1);
+    },
+    plateResult(value) {
+      let plate = {
+        //  0: "个人跟单房源",
+        "1": "店公共盘",
+        "4": "公司公盘"
+        //  6: "暂不售",
+        //  7: "我售",
+        //  8: "业主自售",
+        // 9: "他司售",
+        // 10: "无效"
+      };
+      return plate[value] ? plate[value] : "";
+    }
+  },
   methods: {
+    plateResultMet(value) {
+      return this.$options.filters.plateResult(value);
+    },
+    elevatorSelect() {
+      if (this.form.elevator != "") {
+        this.form.elevator = "";
+      } else {
+        this.form.elevator = "1";
+      }
+    },
     tabColumnChange(e, length = 0) {
       console.log(e, "e");
       this.tableColumn = e;
@@ -701,6 +807,20 @@ export default {
             value.maxPrice == "9999" ? "无限" : value.maxPrice
           }万`,
           field: "price",
+          arr: false
+        });
+      }
+      //首付
+      if (value.minDownPayment !== "") {
+        this.dynamicTags.push({
+          title: `首付:${(
+            value.minDownPayment * this.downPaymentPercent
+          ).toFixed(1)}-${
+            value.maxDownPayment == "9999"
+              ? "无限"
+              : (value.maxDownPayment * this.downPaymentPercent).toFixed(1)
+          }万`,
+          field: "downPayment",
           arr: false
         });
       }

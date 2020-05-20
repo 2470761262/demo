@@ -102,7 +102,7 @@
         </div>
       </div>
       <div class="text-col-centent">
-        <el-button type="primary" class="link" @click="navto"
+        <el-button type="primary" class="link anchor-point" @click="navto"
           >前往验真列表</el-button
         >
       </div>

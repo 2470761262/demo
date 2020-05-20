@@ -304,14 +304,35 @@
           </div>
         </div>
       </div>
+      <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
     </section>
   </div>
 </template>
 <script>
 import util from "@/util/util";
+import browsebar from "@/components/browsebar";
+import { formatDate } from "element-ui/src/utils/date-util";
+import houseDetailsHead from "./components/houseDetailsHead";
+import loopImg from "./components/loopImg";
+import detail from "./components/detail";
+import buttonGroup from "./components/buttonGroup";
+import houseMessage from "./components/houseMessage";
+import houseOperation from "./components/houseOperation";
+import houseTask from "./components/houseTask";
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
+  },
+  components: {
+    browsebar
+  },
+  computed: {
+    key() {
+      //解决同一组件路由跳转，数据不刷新问题
+      return this.$route.name !== undefined
+        ? this.$route.name + new Date()
+        : this.$route + new Date();
+    }
   },
   data() {
     return {
@@ -322,6 +343,12 @@ export default {
         cutName: "",
         cutPhone: ""
       },
+      browse: {
+        addTime: null,
+        topTime: null,
+        next: 1,
+        last: 1
+      }, //浏览记录id
       load: {
         loading: true,
         loadingMessage: "努力加载中~"
@@ -331,11 +358,25 @@ export default {
   created() {
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
+      if (this.$route.params.browse) {
+        this.browse.addTime = this.$route.params.browse.addTime;
+        this.browse.topTime = this.$route.params.browse.topTime
+          ? this.$route.params.browse.topTime
+          : formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+        this.browse.next = this.$route.params.browse.next
+          ? this.$route.params.browse.next
+          : 1;
+        this.browse.last = this.$route.params.browse.last
+          ? this.$route.params.browse.last
+          : 1;
+      }
+      util.sessionLocalStorageSet("houseDetails:browse", this.browse);
       util.sessionLocalStorageSet(
         "buildingHouseDetail.vue:houseId",
         this.houseId
       );
     } else {
+      this.browse = util.sessionLocalStorageGet("houseDetails:browse");
       this.houseId = util.sessionLocalStorageGet(
         "buildingHouseDetail.vue:houseId"
       );
@@ -389,6 +430,7 @@ export default {
     },
     getHouseDetails() {
       this.load.loading = true;
+      let that = this;
       this.$api
         .post({
           url: "/building/getBuildingDetail/" + this.houseId,
@@ -398,6 +440,27 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             this.resultData = result.data;
+            let logParam = {
+              Type: 5,
+              HouseId: that.houseId,
+              // houseNo: result.data.HouseNo,
+              Comid: result.data.Comid,
+              CBid: result.data.CBId,
+              BHID: that.houseId,
+              CommunityName: result.data.communityName,
+              BuildingName: result.data.buildingName,
+              RoomNo: result.data.RoomNo,
+              Floor: result.data.Floor,
+              InArea: result.data.InArea,
+              Price: result.data.Price,
+              Decoration: result.data.Decoration,
+              Face: result.data.Face,
+              Buildtype: result.data.buildtype,
+              Rooms: result.data.Rooms,
+              Hall: result.data.hall,
+              Toilet: result.data.toilet
+            };
+            that.addBrowseHouseLog(logParam);
           } else {
             this.$message.error(result.message);
           }
@@ -405,6 +468,29 @@ export default {
         .catch(e => {})
         .finally(() => {
           this.load.loading = false;
+        });
+    },
+    addBrowseHouseLog(param) {
+      let that = this;
+      let url = "/house/browse/add";
+      this.$api
+        .post({
+          url: url,
+          data: param,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log("浏览记录添加成功");
+          } else {
+            console.log("浏览记录添加失败" + result.message);
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            console.log(e.response);
+          }
         });
     },
     addPhone() {

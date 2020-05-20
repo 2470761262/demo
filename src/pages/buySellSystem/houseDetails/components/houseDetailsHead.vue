@@ -137,7 +137,7 @@
   height: 100%;
   top: 0;
   left: 0;
-  opacity: .5;
+  opacity: 0.5;
   z-index: 8888;
   background: #000;
 }
@@ -180,7 +180,7 @@
           >
             <span>{{ item.impression }}</span>
             <i
-              class="el-icon-close icon"
+              class="el-icon-close icon anchor-point"
               :class="{ isDisabled: buttonDisabled }"
               @click="deleteImpression(item.id, index)"
             ></i>
@@ -189,7 +189,7 @@
       </section>
       <!-- 房源印象 -->
       <section
-        class="heard-item"
+        class="heard-item anchor-point"
         :class="{ isDisabled: buttonDisabled }"
         @click="nodePop"
       >
@@ -198,7 +198,7 @@
       </section>
       <!-- 写跟进 -->
       <section
-        class="heard-item"
+        class="heard-item anchor-point"
         :class="{ isDisabled: buttonDisabled }"
         @click="openPopUp('followUpFlag')"
       >
@@ -207,7 +207,7 @@
       </section>
       <!-- 已关注 -->
       <section
-        class="heard-item"
+        class="heard-item anchor-point"
         :class="{ isDisabled: buttonDisabled }"
         @click="changCollectHouse"
       >
@@ -219,7 +219,7 @@
       </section>
       <!-- 举报 -->
       <section
-        class="heard-item"
+        class="heard-item anchor-point"
         :class="{ isDisabled: buttonDisabled }"
         @click="openReport"
       >
@@ -230,6 +230,7 @@
       <article class="heard-item">
         <div class="qr-content">
           <div
+            class="anchor-point"
             id="qrcode"
             v-if="!buttonDisabled && shareQRCode"
             @click="shareQRCodeShow = true"
@@ -237,11 +238,21 @@
           >
             {{ qrData ? "" : "二维码加载失败" }}
           </div>
-          <div class="qr-content-shadow" v-show="shareQRCodeShow"  @click="shareQRCodeShow = false">
-          </div>
-          <div class="qr-content-show" v-show="shareQRCodeShow" @click="shareQRCodeShow = false">
-            <div id="qrcodeShow" class="qrcodeShow" v-show="shareQRCodeShow">
-            </div>
+          <div
+            class="qr-content-shadow anchor-point"
+            v-show="shareQRCodeShow"
+            @click="shareQRCodeShow = false"
+          ></div>
+          <div
+            class="qr-content-show anchor-point"
+            v-show="shareQRCodeShow"
+            @click="shareQRCodeShow = false"
+          >
+            <div
+              id="qrcodeShow"
+              class="qrcodeShow"
+              v-show="shareQRCodeShow"
+            ></div>
           </div>
 
           <div class="qr-code-msg">
@@ -282,12 +293,6 @@
   </section>
 </template>
 <script>
-//写跟进弹出层
-import followUp from "../didLog/followUp";
-//举报弹出层
-import report from "../didLog/report";
-//关注弹出层
-import attention from "../didLog/attention";
 //二维码
 import QRCode from "qrcodejs2";
 //房源审核
@@ -352,9 +357,12 @@ export default {
     }
   },
   components: {
-    followUp,
-    report,
-    attention
+    //写跟进弹出层
+    followUp: () => import("../didLog/followUp"),
+    //举报弹出层
+    report: () => import("../didLog/report"),
+    //关注弹出层
+    attention: () => import("../didLog/attention")
   },
   created() {
     this.getImpressionList();

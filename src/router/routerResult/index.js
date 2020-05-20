@@ -490,6 +490,18 @@ export default [
           import(
             /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/selfDeal.vue"
           )
+      },
+      {
+        //浏览记录
+        path: "/buySellSystem/browseLog",
+        meta: {
+          title: "浏览记录",
+          keepAlive: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/myHouseList/browseLog.vue"
+          )
       }
     ]
   },

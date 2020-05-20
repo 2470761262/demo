@@ -116,12 +116,13 @@
                 v-if="stepsActiveIndex != 0 && stepsActiveIndex != 3"
                 type="primary"
                 @click="prevPage"
-                class="page-previous"
+                class="page-previous anchor-point"
                 >{{ prevText }}</el-button
               >
               <el-button
                 v-if="stepsActiveIndex < 2 || reSetMethod"
                 type="primary"
+                class="anchor-point"
                 @click="nextPage(null)"
                 :loading="butLoading"
                 >{{ nextText }}</el-button
@@ -130,6 +131,7 @@
                 type="primary"
                 v-if="stepsActiveIndex < 3 || reSetMethod"
                 @click="nextPage('draft')"
+                class="anchor-point"
                 :disabled="!submitVerify"
                 :loading="butLoading"
                 >{{ paramsObj.buttonText || "提交验真" }}</el-button
@@ -137,10 +139,12 @@
             </el-button-group>
           </div>
           <div class="right-nav-content" v-scrollCenter="'page-contenr-com'">
-            <el-button @click="navPage('/buySellSystem/houseList')"
+            <el-button
+              class="anchor-point"
+              @click="navPage('/buySellSystem/houseList')"
               >首页</el-button
             >
-            <el-button @click="navPage()">返回</el-button>
+            <el-button class="anchor-point" @click="navPage()">返回</el-button>
           </div>
         </div>
       </div>

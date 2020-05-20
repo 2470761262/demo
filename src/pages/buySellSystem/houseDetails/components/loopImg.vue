@@ -86,7 +86,7 @@
       <template v-if="loopBig.typeStr == 'picUrl'">
         <el-image
           class="loop-item"
-          :src="loopBig.src"
+          :src="loopBig.src + '?x-oss-process=style/bigthumb'"
           :preview-src-list="previewList()"
           fit="cover"
         >
@@ -124,13 +124,14 @@
     <section class="img-list" :class="{ scrolPad: scrollBar }">
       <div
         class="
+        anchor-point
              item-img-prev
              el-icon-arrow-left"
         v-if="scrollBar"
         @click="scrollMove('left')"
       ></div>
       <div
-        class="item-img-next el-icon-arrow-right"
+        class="item-img-next el-icon-arrow-right anchor-point"
         v-if="scrollBar"
         @click="scrollMove('right')"
       ></div>
@@ -143,18 +144,18 @@
             <!-- 循环图片 -->
             <template v-if="item.picUrl">
               <img
-                :src="item.picUrl"
+                :src="item.picUrl + '?x-oss-process=style/thumb'"
                 @click.stop="changeLoop(item)"
                 :key="index"
                 alt=""
-                class="loop-item"
+                class="loop-item anchor-point"
               />
             </template>
             <!-- 视频 -->
             <template v-if="item.videoUrl">
               <video
                 @click="changeLoop(item)"
-                class="loop-item"
+                class="loop-item anchor-point"
                 :src="item.videoUrl"
                 :key="item.id"
               ></video>
@@ -283,7 +284,7 @@ export default {
     previewList() {
       if (this.resultData.saleUploadPicDtoList) {
         return this.resultData.saleUploadPicDtoList.map(item => {
-          return item.picUrl;
+          return item.picUrl + "?x-oss-process=style/bigthumb";
         });
       }
       return [];

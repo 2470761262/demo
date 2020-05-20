@@ -4,7 +4,7 @@
     <template>
       <div class="raido-group">
         <label
-          class="raido-group-label"
+          class="raido-group-label anchor-point"
           v-for="(item, index) in pop.checkList"
           :key="index"
         >
@@ -15,6 +15,7 @@
       </div>
       <div class="el-textarea-content">
         <el-input
+          class="anchor-point"
           type="textarea"
           :placeholder="text"
           v-model="pop.textarea"
@@ -25,6 +26,7 @@
       </div>
       <div class="pop-but">
         <el-button
+          class="anchor-point"
           size="small"
           :class="[cancelButClass]"
           @click="cancel"
@@ -32,6 +34,7 @@
           >取消</el-button
         >
         <el-button
+          class="anchor-point"
           v-if="insertFollow"
           size="small"
           :class="['button-back', sumitButClass]"
@@ -39,7 +42,12 @@
           :loading="pop.loading"
           >提交</el-button
         >
-        <el-button v-else size="small" :disabled="true" :loading="pop.loading"
+        <el-button
+          class="anchor-point"
+          v-else
+          size="small"
+          :disabled="true"
+          :loading="pop.loading"
           >提交</el-button
         >
       </div>

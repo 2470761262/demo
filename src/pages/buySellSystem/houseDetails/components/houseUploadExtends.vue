@@ -166,9 +166,9 @@ export default {
       let thirdIndex = str.indexOf("/", secondIndex + 1);
       let lastIndex = str.lastIndexOf("/");
       let params = {
-        IpStr: str.substring(0, thirdIndex),
-        FileStr: str.substring(thirdIndex + 1, lastIndex),
-        PicName: str.substring(lastIndex + 1, str.length - 1),
+        IpStr: str.substring(0, thirdIndex + 1),
+        FileStr: str.substring(thirdIndex + 1, lastIndex + 1),
+        PicName: str.substring(lastIndex + 1, str.length),
         Type: that.replaceType,
         subType: resourceType == "vedio" ? 7 : detailEnum[picClass - 1]
       };

@@ -186,10 +186,11 @@
   <div class="operation-content">
     <el-tabs
       type="border-card"
+      class="anchor-point"
       @tab-click="changeTabsEvent"
       v-model="changeTabsValue"
     >
-      <el-tab-pane label="跟进记录" name="follow">
+      <el-tab-pane label="跟进记录" name="follow" class="anchor-point">
         <div
           class="list-content"
           infinite-scroll-immediate="false"
@@ -212,7 +213,7 @@
                   <div class="content-item-head ">
                     <div class="content-item-time">{{ item.FollowTime }}</div>
                     <button
-                      class="content-item-but"
+                      class="content-item-but anchor-point"
                       v-if="deleteFollow"
                       @click="deleteFollowById(item.id)"
                       :disabled="isDisabled"
@@ -233,7 +234,7 @@
                     <div class="content-item-time">{{ item.FollowTime }}</div>
 
                     <button
-                      class="content-item-but"
+                      class="content-item-but anchor-point"
                       v-if="deleteFollow"
                       @click="deleteFollowById(item.id)"
                       :disabled="isDisabled"

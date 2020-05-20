@@ -12,7 +12,8 @@ export default [
       { name: "成交对赌", active: "/buySellSystem/houseBet" },
       { name: "验真列表", active: "/buySellSystem/validateHouseList" },
       { name: "审核列表", active: "/buySellSystem/checkHouseList" },
-      { name: "外网房源", active: "/buySellSystem/releaseOutsideHouseList" }
+      { name: "外网房源", active: "/buySellSystem/releaseOutsideHouseList" },
+      { name: "浏览记录", active: "/buySellSystem/browseLog" }
     ]
   },
   {

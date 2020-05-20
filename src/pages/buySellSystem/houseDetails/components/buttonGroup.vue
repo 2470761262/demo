@@ -55,6 +55,7 @@
       <!-- 发布外网 -->
       <div class="button-set">
         <el-button
+          class="anchor-point"
           :disabled="!isShowButton.releaseOutsideHouse"
           @click="certificateType"
           v-if="
@@ -68,6 +69,7 @@
           <span class="button-title">发布外网</span>
         </el-button>
         <el-button
+          class="anchor-point"
           :disabled="!isShowButton.cancelOutsideHouse"
           v-if="
             resultData.isReleaseOutside == 1 &&
@@ -84,6 +86,7 @@
       <!-- 总监推荐 -->
       <div class="button-set">
         <el-button
+          class="anchor-point"
           :disabled="!isShowButton.inspector && !isShowButton.shopOwner"
           @click="nodePop"
           v-if="!isRecommend"
@@ -97,7 +100,12 @@
             >店长推荐</span
           >
         </el-button>
-        <el-button :disabled="isDisabled" v-if="isRecommend" @click="nodePop">
+        <el-button
+          class="anchor-point"
+          :disabled="isDisabled"
+          v-if="isRecommend"
+          @click="nodePop"
+        >
           <i class="icontuijian iconfont "></i>
           <span class="button-title">取消推荐</span>
         </el-button>
@@ -105,6 +113,7 @@
       <!-- 成交对赌 -->
       <div class="button-set">
         <el-button
+          class="anchor-point"
           :disabled="isDisabled"
           @click="showBetView"
           v-if="
@@ -121,7 +130,11 @@
       <!-- 转房源状态 -->
 
       <div class="button-set">
-        <el-button @click="changePopUp" :disabled="isDisabled">
+        <el-button
+          class="anchor-point"
+          @click="changePopUp"
+          :disabled="isDisabled"
+        >
           <i class="iconzhuanhuan iconfont "></i>
           <span class="button-title">转房源状态</span>
         </el-button>
@@ -129,6 +142,7 @@
       <!-- 取消作业方 -->
       <div class="button-set">
         <el-button
+          class="anchor-point"
           :disabled="isDisabled || !isShowButton.cancelMethod"
           @click="openPopUp('cancelTaskFlag')"
         >
@@ -140,6 +154,7 @@
       <!-- 锁定房源 -->
       <div class="button-set">
         <el-button
+          class="anchor-point"
           :disabled="isDisabled || !isShowButton.locking"
           @click="houseLock"
         >
@@ -156,6 +171,7 @@
       <!-- 修改钥匙存放门店 -->
       <div class="button-set" v-if="resultData.agentHouseMethod">
         <el-button
+          class="anchor-point"
           :disabled="
             isDisabled ||
               !(resultData.keyOwner > 0) ||
@@ -185,7 +201,7 @@
     <!-- 成交对赌 -->
     <betPop
       :visible.sync="betPopFlag"
-      v-if="betPopFlag"
+      v-if="betPopFlag && resultData.plate === 0"
       title="说明"
       maskHideEvent
       width="600px"

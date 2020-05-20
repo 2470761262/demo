@@ -144,7 +144,7 @@
             <h3>钥匙类型</h3>
             <div class="raido-group">
               <label
-                class="raido-group-label"
+                class="raido-group-label anchor-point"
                 v-for="(item, index) in pop.checkList"
                 :key="index"
               >
@@ -157,6 +157,7 @@
           <div class="replace-left-row passWord-input" v-if="pop.model == 2">
             <h3>密码</h3>
             <el-input
+              class="anchor-point"
               v-model="password"
               data-vv-as="密码锁"
               data-vv-name="password"
@@ -168,6 +169,7 @@
           <div class="replace-left-row">
             <h3>存放门店</h3>
             <el-select
+              class="anchor-point"
               v-model="stores.model"
               filterable
               remote
@@ -179,6 +181,7 @@
               v-validate="'required'"
             >
               <el-option
+                class="anchor-point"
                 v-for="item in stores.list"
                 :key="item.id"
                 :label="item.deptName"
@@ -191,8 +194,9 @@
           <div class="replace-upload">
             <i class="el-icon-upload icon"></i>
             <label class="replace-upload-but">
-              <input type="file" @change="getFileChange" />
+              <input class="anchor-point" type="file" @change="getFileChange" />
               <input
+                class="anchor-point"
                 type="text"
                 v-model="fileLoad.id"
                 data-vv-as="文件"
@@ -206,6 +210,7 @@
         </div>
         <div class="replace-qr">
           <el-image
+            class="anchor-point"
             :src="fileLoad.url || fileLoad.qrImg"
             fit="cover"
             :preview-src-list="[fileLoad.url ? fileLoad.url : fileLoad.qrImg]"
@@ -216,7 +221,7 @@
             </div>
           </el-image>
           <i
-            class="el-icon-close icon"
+            class="el-icon-close icon anchor-point"
             v-if="fileLoad.url"
             @click="removeImg"
           ></i>
@@ -224,16 +229,23 @@
       </div>
       <div class="fieldError">{{ errorBags.all()[0] }}</div>
       <div class="pop-but">
-        <el-button size="small" @click="hidePop">取消</el-button>
+        <el-button class="anchor-point" size="small" @click="hidePop"
+          >取消</el-button
+        >
         <el-button
           v-if="submitApplyKeyOwner"
           size="small"
-          class="button-back"
+          class="button-back anchor-point"
           :loading="pop.loading"
           @click="result"
           >确定</el-button
         >
-        <el-button v-else size="small" :loading="pop.loading" :disabled="true"
+        <el-button
+          class="anchor-point"
+          v-else
+          size="small"
+          :loading="pop.loading"
+          :disabled="true"
           >确定</el-button
         >
       </div>
@@ -490,9 +502,9 @@ export default {
         let thirdIndex = str.indexOf("/", secondIndex + 1);
         let lastIndex = str.lastIndexOf("/");
         let params = {
-          IpStr: str.substring(0, thirdIndex),
-          FileStr: str.substring(thirdIndex + 1, lastIndex),
-          PicName: str.substring(lastIndex + 1, str.length - 1),
+          IpStr: str.substring(0, thirdIndex + 1),
+          FileStr: str.substring(thirdIndex + 1, lastIndex + 1),
+          PicName: str.substring(lastIndex + 1, str.length),
           Type: that.replaceType
         };
         that.insertPic(params, str);
