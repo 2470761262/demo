@@ -119,6 +119,7 @@
         </el-button>
       </div>
       <!-- 转房源状态 -->
+
       <div class="button-set">
         <el-button @click="changePopUp" :disabled="isDisabled">
           <i class="iconzhuanhuan iconfont "></i>
@@ -165,6 +166,11 @@
         >
           <i class="iconyuechi iconfont "></i>
           <span class="button-title">修改钥匙存放门店</span>
+        </el-button>
+      </div>
+      <div class="button-set">
+        <el-button @click="returnCom">
+          <span class="button-title">查看房源信息</span>
         </el-button>
       </div>
     </div>
@@ -407,6 +413,13 @@ export default {
       })
         .then(value => {})
         .catch(() => {});
+    },
+    returnCom() {
+      //跳转锚点
+      const returnEle = document.querySelector("#toThis");
+      if (returnEle) {
+        returnEle.scrollIntoView(true);
+      }
     },
     /**
      * 是否已经推荐
