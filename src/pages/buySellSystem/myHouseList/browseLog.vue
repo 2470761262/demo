@@ -16,7 +16,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
-                  class="anchor-point"
+            class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
@@ -28,7 +28,7 @@
             :loading="loading"
           >
             <el-option
-                    class="anchor-point"
+              class="anchor-point"
               v-for="item in options"
               :key="item.value"
               :label="item.name"
@@ -36,7 +36,7 @@
             ></el-option>
           </el-select>
           <el-select
-                  class="anchor-point"
+            class="anchor-point"
             v-model="data.cbId"
             filterable
             clearable
@@ -44,7 +44,7 @@
             @change="queryRoomNo"
           >
             <el-option
-                    class="anchor-point"
+              class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
               :label="item.name"
@@ -52,14 +52,14 @@
             ></el-option>
           </el-select>
           <el-select
-                  class="anchor-point"
+            class="anchor-point"
             v-model="data.roomNo"
             filterable
             @change="querySoleAllParams"
             placeholder="房间号"
           >
             <el-option
-                    class="anchor-point"
+              class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
               :label="item.name"
@@ -130,10 +130,16 @@
             value-format="yyyy-MM-dd"
             :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut anchor-point" @click="Remove">清除</span>
+          <span class="query-cell-suffix handlebut anchor-point" @click="Remove"
+            >清除</span
+          >
         </div>
         <div class="query-content-cell cell-interval75">
-          <el-button type="primary" size="mini" @click="querySoleAllParams" class="anchor-point"
+          <el-button
+            type="primary"
+            size="mini"
+            @click="querySoleAllParams"
+            class="anchor-point"
             >查询</el-button
           >
         </div>
@@ -142,7 +148,7 @@
     <template #tableColumn>
       <template v-for="item in tableColumnField">
         <el-table-column
-                class-name="anchor-point"
+          class-name="anchor-point"
           :prop="item.prop"
           :label="item.label"
           :min-width="item.width"

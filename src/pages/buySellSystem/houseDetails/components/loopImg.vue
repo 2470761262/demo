@@ -86,7 +86,7 @@
       <template v-if="loopBig.typeStr == 'picUrl'">
         <el-image
           class="loop-item"
-          :src="loopBig.src"
+          :src="loopBig.src + '?x-oss-process=style/bigthumb'"
           :preview-src-list="previewList()"
           fit="cover"
         >
@@ -144,7 +144,7 @@
             <!-- 循环图片 -->
             <template v-if="item.picUrl">
               <img
-                :src="item.picUrl"
+                :src="item.picUrl + '?x-oss-process=style/thumb'"
                 @click.stop="changeLoop(item)"
                 :key="index"
                 alt=""
@@ -284,7 +284,7 @@ export default {
     previewList() {
       if (this.resultData.saleUploadPicDtoList) {
         return this.resultData.saleUploadPicDtoList.map(item => {
-          return item.picUrl;
+          return item.picUrl + "?x-oss-process=style/bigthumb";
         });
       }
       return [];
