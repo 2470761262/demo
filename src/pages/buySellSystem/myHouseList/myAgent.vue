@@ -29,6 +29,30 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
+      <template v-slot:left>
+        <div class="elTree">
+          <el-input
+            placeholder="输入关键字进行过滤"
+            v-model="filterText"
+            class="treeSearch"
+          ></el-input>
+          <el-tree
+            ref="treeForm"
+            :data="treeData"
+            node-key="nodeId"
+            show-checkbox
+            :props="defaultProps"
+            @check-change="handleCheckChange"
+            :highlight-current="true"
+            :filter-node-method="filterNode"
+            check-strictly
+            :action="''"
+            empty-text="暂无数据，请检查权限"
+            auto-expand-parent
+            v-loading="treeLoading"
+          ></el-tree>
+        </div>
+      </template>
       <template v-slot:top>
         <!-- 楼盘 -->
         <div class="page-list-query-row">
@@ -534,7 +558,19 @@ export default {
       menuLoading: true, //自定义菜单
       renderList: [],
       showUpdateAgentPer: false, //调配功能
-      btnDeployment: true
+      btnDeployment: true,
+      treeData: [], //结构树
+      filterText: "",
+      defaultProps: {
+        children: "childrenNodes",
+        label: "labelName"
+      },
+      treeLoading: false,
+      treeCondition: {
+        0: [], //公司数组
+        1: [], //部门数组
+        2: [] //人员数组
+      }
     };
   },
   mounted() {
@@ -543,6 +579,12 @@ export default {
       this.renderList = e;
       this.queryMyAgent(1);
     });
+    this.getTree();
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    }
   },
   methods: {
     defaultCell({ column }) {
@@ -1014,6 +1056,9 @@ export default {
         params.agentName = that.data.agentName;
         params.houseNo = that.data.houseNo;
       }
+      params.treeCompany = this.treeCondition[0].join(",");
+      params.treeDeptParent = this.treeCondition[1].join(",");
+      params.treeAccount = this.treeCondition[2].join(",");
       params.sortColumn = that.sortColumn;
       params.sortType = that.sortType;
       this.$api
@@ -1066,6 +1111,44 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.queryMyAgent(val);
+    },
+    handleCheckChange(data, checked) {
+      if (checked) {
+        this.treeCondition[data.type].push(data.businessId);
+      } else {
+        this.treeCondition[data.type] = this.treeCondition[data.type].filter(
+          item => {
+            return item != data.businessId;
+          }
+        );
+      }
+      this.queryMyAgent(1);
+    },
+    filterNode(value, data) {
+      if (!value) return true;
+      if (data.labelName != null) {
+        return data.labelName.indexOf(value) !== -1;
+      }
+    },
+    getTree() {
+      this.treeLoading = true;
+      this.$api
+        .post({
+          url: "/myHouse/getMyAgent",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            tree: "1"
+          }
+        })
+        .then(e => {
+          this.treeLoading = false;
+          if (e.data.code == 200 && e.data.data.length > 0) {
+            this.treeData = e.data.data;
+          }
+        })
+        .catch(e => {
+          this.treeLoading = false;
+        });
     }
   }
 };

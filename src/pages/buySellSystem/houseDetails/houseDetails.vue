@@ -243,6 +243,7 @@ export default {
           this.dept.id = util.sessionLocalStorageGet("houseDetails.vue:deptId");
         }
       }
+      this.forID.id = 119553;
       this.lastParams.id = this.forID.id;
       this.getHouseDetails();
     },
