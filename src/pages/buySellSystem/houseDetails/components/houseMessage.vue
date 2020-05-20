@@ -84,7 +84,7 @@
       />
       <div
         class="but-append"
-        v-if="showEdit"
+        v-if="showEdit || editAgentHouse"
         :data-tips="updateHouse.communityDesc ? '修改' : '完成'"
         @click="updateHouseA(1)"
       >
@@ -99,7 +99,7 @@
       <input class="message-row-right border" v-model="step2.roomDesc" v-else />
       <div
         class="but-append"
-        v-if="showEdit"
+        v-if="showEdit || editAgentHouse"
         :data-tips="updateHouse.roomDesc ? '修改' : '完成'"
         @click="updateHouseA(2)"
       >
@@ -114,7 +114,7 @@
       <input class="message-row-right border" v-model="step2.taxDesc" v-else />
       <div
         class="but-append"
-        v-if="showEdit"
+        v-if="showEdit || editAgentHouse"
         :data-tips="updateHouse.taxDesc ? '修改' : '完成'"
         @click="updateHouseA(3)"
       >
@@ -129,7 +129,7 @@
       <input class="message-row-right border" v-model="step2.saleDesc" v-else />
       <div
         class="but-append"
-        v-if="showEdit"
+        v-if="showEdit || editAgentHouse"
         :data-tips="updateHouse.saleDesc ? '修改' : '完成'"
         @click="updateHouseA(4)"
       >
@@ -175,7 +175,7 @@
         </el-select>
         <div
           class="but-append"
-          v-if="showEdit"
+          v-if="showEdit || editAgentHouse"
           :data-tips="updateHouse.certificateType ? '修改' : '完成'"
           @click="updateHouseA(6)"
         >
@@ -213,7 +213,7 @@
         <div
           class="but-append"
           style="width:60px"
-          v-if="showEdit"
+          v-if="showEdit || editAgentHouse"
           :data-tips="updateHouse.sign ? '修改' : '完成'"
           @click="updateHouseA(7)"
         >
@@ -244,7 +244,7 @@
         </el-radio-group>
         <div
           class="but-append"
-          v-if="showEdit"
+          v-if="showEdit || editAgentHouse"
           style="width:80px"
           :data-tips="updateHouse.houseBelong ? '修改' : '完成'"
           @click="updateHouseA(8)"
@@ -287,7 +287,7 @@
         <div
           class="but-append"
           style="width:90px"
-          v-if="showEdit"
+          v-if="showEdit || editAgentHouse"
           :data-tips="updateHouse.primarySchoolUse ? '修改' : '完成'"
           @click="updateHouseA(9)"
         >
@@ -330,7 +330,7 @@
         <div
           class="but-append"
           style="width:80px"
-          v-if="showEdit"
+          v-if="showEdit || editAgentHouse"
           :data-tips="updateHouse.middleSchoolUse ? '修改' : '完成'"
           @click="updateHouseA(10)"
         >
@@ -375,7 +375,7 @@
 
         <div
           class="but-append"
-          v-if="showEdit"
+          v-if="showEdit || editAgentHouse"
           style="width:50px"
           :data-tips="updateHouse.propertyFee ? '修改' : '完成'"
           @click="updateHouseA(5)"
@@ -411,7 +411,7 @@
         ></el-input>
         <div
           class="but-append"
-          v-if="showEdit"
+          v-if="showEdit || editAgentHouse"
           :data-tips="updateHouse.lastPayment ? '修改' : '完成'"
           @click="updateHouseA(12)"
         >
@@ -441,7 +441,7 @@
         </div>
         <div
           class="but-append"
-          v-if="showEdit"
+          v-if="showEdit || editAgentHouse"
           :data-tips="updateHouse.lastSale ? '修改' : '完成'"
           @click="updateHouseA(11)"
         >
@@ -480,6 +480,7 @@ let certificateType = [
 ];
 import util from "@/util/util";
 import * as formReander from "@/util/constMap";
+import but from "@/evenBus/but.js";
 export default {
   inject: ["houseDetails"],
   data() {
@@ -533,8 +534,18 @@ export default {
         followMemo: "" //跟进的内容
       },
       push: {},
-      msg: "1"
+      editAgentHouse: false
     };
+  },
+  mounted() {
+    debugger;
+    let that = this;
+    if (!this.judgeShowEdit) {
+      this.editAgentHouse = true;
+    }
+    but.$on("editAgentHouse", () => {
+      that.editAgentHouse = true;
+    });
   },
   computed: {
     resultData() {
