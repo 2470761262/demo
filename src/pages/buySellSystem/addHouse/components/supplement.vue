@@ -192,6 +192,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just">房源来源</div>
         <el-select
+          class="anchor-point"
           v-model="formData.houseSource"
           placeholder="请选择房源来源"
           v-validate="required ? 'required' : ''"
@@ -199,6 +200,7 @@
           data-vv-name="houseSource"
         >
           <el-option
+            class="anchor-point"
             v-for="item in houseSourceList"
             :key="item.value"
             :label="item.key"
@@ -222,6 +224,7 @@
           data-vv-name="houseNow"
         >
           <el-radio
+            class="anchor-point"
             :label="item.value"
             v-for="item in houseNowList"
             :key="item.key"
@@ -245,6 +248,7 @@
           data-vv-name="decoration"
         >
           <el-radio
+            class="anchor-point"
             :label="item.value"
             v-for="item in decorationList"
             :key="item.key"
@@ -268,6 +272,7 @@
           data-vv-name="sign"
         >
           <el-radio
+            class="anchor-point"
             v-for="item in signList"
             :key="item.key"
             :label="item.value"
@@ -292,6 +297,7 @@
               : 'decimal:2|noZero1|max:14'
           "
           data-vv-as="物业费"
+          class="anchor-point"
           data-vv-name="propertyFee"
           placeholder="请输入物业费"
           style="height:0.3rem;"
@@ -315,6 +321,7 @@
           data-vv-name="houseBelong"
         >
           <el-radio
+            class="anchor-point"
             v-for="item in houseBelongList"
             :key="item.key"
             :label="item.value"
@@ -341,6 +348,7 @@
           v-model="primaryRadio"
         >
           <el-radio
+            class="anchor-point"
             v-for="item in primarySchoolUseList"
             :key="item.value"
             :label="item.value"
@@ -364,6 +372,7 @@
           size="mini"
         >
           <el-radio
+            class="anchor-point"
             :label="item.value"
             v-for="item in primarySchoolUseRenderList"
             :key="item.value"
@@ -388,6 +397,7 @@
           v-model="middleRadio"
         >
           <el-radio
+            class="anchor-point"
             v-for="item in middleSchoolUseList"
             :key="item.value"
             :label="item.value"
@@ -411,6 +421,7 @@
           size="mini"
         >
           <el-radio
+            class="anchor-point"
             :label="item.value"
             v-for="item in middleSchoolUseRenderList"
             :key="item.value"
@@ -437,7 +448,7 @@
         >
           <el-radio
             v-for="item in mortgageList"
-            class="item-flex-avg"
+            class="item-flex-avg anchor-point"
             :key="item.key"
             :label="item.value"
             >{{ item.key }}</el-radio
@@ -462,6 +473,7 @@
       >
         <div class="cell-item-cell no-top">
           <el-select
+            class="anchor-point"
             v-show="formData.mortgage == 1"
             v-model="formData.mortgageBank"
             placeholder="请选择抵押银行"
@@ -470,6 +482,7 @@
             data-vv-name="mortgageBank"
           >
             <el-option
+              class="anchor-point"
               v-for="item in mortgageBankList"
               :key="item.value"
               :label="item.key"
@@ -478,7 +491,7 @@
           </el-select>
           <div class="Division" v-if="formData.mortgage == 1">余贷/月供</div>
           <el-input
-            class="other-input"
+            class="other-input anchor-point"
             v-model="formData.balance"
             v-validate="
               formData.mortgage == 1 && required
@@ -492,7 +505,7 @@
           ></el-input>
           <div class="Division" v-if="formData.mortgage == 1">万元</div>
           <el-input
-            class="other-input"
+            class="other-input anchor-point"
             v-model="formData.monthlyMortgage"
             v-validate="
               formData.mortgage == 1 && required
@@ -519,7 +532,7 @@
         <el-date-picker
           v-model="formData.lastSale"
           type="date"
-          class="other-input"
+          class="other-input anchor-point"
           placeholder="契税发票时间"
           v-validate="required ? 'required' : ''"
           data-vv-as="契税发票时间"
@@ -543,6 +556,7 @@
           @change="changeOnly"
         >
           <el-radio
+            class="anchor-point"
             v-for="item in isowneronlyList"
             :key="item.value"
             :label="item.value"
@@ -576,6 +590,7 @@
       >
         <div class="cell-item-cell no-top">
           <el-select
+            class="anchor-point"
             v-model="formData.paymentMethod"
             placeholder="付款方式"
             v-validate="required ? 'required' : ''"
@@ -583,6 +598,7 @@
             data-vv-name="paymentMethod"
           >
             <el-option
+              class="anchor-point"
               v-for="item in paymentMethodList"
               :key="item.value"
               :label="item.key"
@@ -591,7 +607,7 @@
           </el-select>
           <div class="Division">上次交易金额</div>
           <el-input
-            class="other-input"
+            class="other-input anchor-point"
             v-model="formData.lastPayment"
             v-validate="
               required ? 'decimal:2|max:14|required' : 'decimal:2|max:14'
@@ -613,6 +629,7 @@
       <div class="cell-item-cell el-input-w el-input-w-280">
         <div class="item-before text-just">房源标题</div>
         <el-input
+          class="anchor-point"
           type="text"
           v-model="formData.title"
           placeholder="请输入房源标题"
@@ -632,7 +649,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">小区介绍</div>
         <el-input
-          class="el-textarea"
+          class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入小区介绍"
           v-model="formData.communityDesc"
@@ -653,7 +670,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">户型介绍</div>
         <el-input
-          class="el-textarea"
+          class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入户型介绍"
           v-model="formData.roomDesc"
@@ -674,7 +691,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">税费解析</div>
         <el-input
-          class="el-textarea"
+          class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入税费解析"
           v-model="formData.taxDesc"
@@ -695,7 +712,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">核心卖点</div>
         <el-input
-          class="el-textarea"
+          class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入核心卖点"
           v-model="formData.saleDesc"
@@ -724,6 +741,7 @@
           data-vv-name="followWay"
         >
           <el-radio
+            class="anchor-point"
             v-for="item in followWayList"
             :key="item.key"
             :label="item.value"
@@ -741,7 +759,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">跟进内容</div>
         <el-input
-          class="el-textarea"
+          class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入跟进内容"
           v-model="formData.followMemo"
@@ -766,6 +784,7 @@
           >
             <label for="houseVideoList" class="el-icon-upload">
               <input
+                class="anchor-point"
                 id="houseVideoList"
                 type="file"
                 :disabled="isFromHouseTask ? false : !wxUploadFile"
@@ -778,7 +797,7 @@
               <span>{{ audioFile.id ? "音频.mp3" : "暂无" }}</span>
               <span
                 v-if="audioFile.url"
-                class="removebut el-icon-delete"
+                class="removebut el-icon-delete anchor-point"
                 @click="removeAudio(audioFile.id, audioFile.url)"
               ></span>
             </div>
@@ -790,10 +809,12 @@
                 v-audioLoad
               ></audio>
               <div
+                class="anchor-point"
                 :class="['audio-contenr-but', audioPlay.icon]"
                 @click="openVideo"
               ></div>
               <el-slider
+                class="anchor-point"
                 v-model="audioPlay.nowTime"
                 :format-tooltip="formatTooltip"
                 @input="audioSliderChange"
@@ -809,6 +830,7 @@
           </div>
           <div class="upLoadFile-file-phone">
             <el-image
+              class="anchor-point"
               :src="audioQrCodeImage"
               :preview-src-list="[audioQrCodeImage]"
               fit="cover"

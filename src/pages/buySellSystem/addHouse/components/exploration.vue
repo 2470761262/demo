@@ -24,6 +24,7 @@
       >
         <label for="outdoorImgList" class="el-icon-upload">
           <input
+            class="anchor-point"
             id="outdoorImgList"
             type="file"
             @change="getFile(1, 'outdoorImgList', $event)"
@@ -39,6 +40,7 @@
           :key="item.id"
         >
           <el-image
+            class="anchor-point"
             :src="item.url"
             fit="cover"
             :preview-src-list="fillterImgList('outdoorImgList')"
@@ -49,13 +51,14 @@
             </div>
           </el-image>
           <div
-            class="upLoadFile-remove el-icon-delete"
+            class="upLoadFile-remove el-icon-delete anchor-point"
             @click="deleteImg(item.id, item.url, index, 'outdoorImgList')"
           ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
         <el-image
+          class="anchor-point"
           :src="websockStatus ? qrCodeImg : ''"
           :preview-src-list="[websockStatus ? qrCodeImg : '']"
           fit="cover"
@@ -81,6 +84,7 @@
           <input
             id="livingRoomImgList"
             type="file"
+            class="anchor-point"
             @change="getFile(2, 'livingRoomImgList', $event)"
             :disabled="isFromHouseTask ? false : !wxUploadFile"
             multiple="multiplt"
@@ -94,6 +98,7 @@
           :key="item.id"
         >
           <el-image
+            class="anchor-point"
             :src="item.url"
             :preview-src-list="fillterImgList('livingRoomImgList')"
             fit="cover"
@@ -104,13 +109,14 @@
             </div>
           </el-image>
           <div
-            class="upLoadFile-remove el-icon-delete"
+            class="upLoadFile-remove el-icon-delete anchor-point"
             @click="deleteImg(item.id, item.url, index, 'livingRoomImgList')"
           ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
         <el-image
+          class="anchor-point"
           :src="websockStatus ? qrCodeImg : ''"
           :preview-src-list="[websockStatus ? qrCodeImg : '']"
           fit="cover"
@@ -134,6 +140,7 @@
       >
         <label for="bedroomImgList" class="el-icon-upload">
           <input
+            class="anchor-point"
             id="bedroomImgList"
             type="file"
             @change="getFile(3, 'bedroomImgList', $event)"
@@ -149,6 +156,7 @@
           :key="item.id"
         >
           <el-image
+            class="anchor-point"
             :src="item.url"
             :preview-src-list="fillterImgList('bedroomImgList')"
             fit="cover"
@@ -159,13 +167,14 @@
             </div>
           </el-image>
           <div
-            class="upLoadFile-remove el-icon-delete"
+            class="upLoadFile-remove el-icon-delete anchor-point"
             @click="deleteImg(item.id, item.url, index, 'bedroomImgList')"
           ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
         <el-image
+          class="anchor-point"
           :src="websockStatus ? qrCodeImg : ''"
           :preview-src-list="[websockStatus ? qrCodeImg : '']"
           fit="cover"
@@ -189,6 +198,7 @@
       >
         <label for="kitchenImgList" class="el-icon-upload">
           <input
+            class="anchor-point"
             id="kitchenImgList"
             type="file"
             @change="getFile(4, 'kitchenImgList', $event)"
@@ -204,6 +214,7 @@
           :key="item.id"
         >
           <el-image
+            class="anchor-point"
             :src="item.url"
             :preview-src-list="fillterImgList('kitchenImgList')"
             fit="cover"
@@ -214,13 +225,14 @@
             </div>
           </el-image>
           <div
-            class="upLoadFile-remove el-icon-delete"
+            class="upLoadFile-remove el-icon-delete anchor-point"
             @click="deleteImg(item.id, item.url, index, 'kitchenImgList')"
           ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
         <el-image
+          class="anchor-point"
           :src="websockStatus ? qrCodeImg : ''"
           :preview-src-list="[websockStatus ? qrCodeImg : '']"
           fit="cover"
@@ -244,6 +256,7 @@
       >
         <label for="toiletImgList" class="el-icon-upload">
           <input
+            class="anchor-point"
             id="toiletImgList"
             type="file"
             @change="getFile(5, 'toiletImgList', $event)"
@@ -259,6 +272,7 @@
           :key="item.id"
         >
           <el-image
+            class="anchor-point"
             :src="item.url"
             :preview-src-list="fillterImgList('toiletImgList')"
             fit="cover"
@@ -269,13 +283,14 @@
             </div>
           </el-image>
           <div
-            class="upLoadFile-remove el-icon-delete"
+            class="upLoadFile-remove el-icon-delete anchor-point"
             @click="deleteImg(item.id, item.url, index, 'toiletImgList')"
           ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
         <el-image
+          class="anchor-point"
           :src="websockStatus ? qrCodeImg : ''"
           :preview-src-list="[websockStatus ? qrCodeImg : '']"
           fit="cover"
@@ -299,6 +314,7 @@
       >
         <label for="layoutImgList" class="el-icon-upload">
           <input
+            class="anchor-point"
             id="layoutImgList"
             type="file"
             @change="getFile(6, 'layoutImgList', $event)"
@@ -314,6 +330,7 @@
           :key="item.id"
         >
           <el-image
+            class="anchor-point"
             :src="item.url"
             :preview-src-list="fillterImgList('layoutImgList')"
             fit="cover"
@@ -324,13 +341,14 @@
             </div>
           </el-image>
           <div
-            class="upLoadFile-remove el-icon-delete"
+            class="upLoadFile-remove el-icon-delete anchor-point"
             @click="deleteImg(item.id, item.url, index, 'layoutImgList')"
           ></div>
         </div>
       </div>
       <div class="upLoadFile-file-phone">
         <el-image
+          class="anchor-point"
           :src="websockStatus ? qrCodeImg : ''"
           :preview-src-list="[websockStatus ? qrCodeImg : '']"
           fit="cover"
@@ -356,6 +374,7 @@
           >
             <label for="houseVideoList" class="el-icon-upload">
               <input
+                class="anchor-point"
                 id="houseVideoList"
                 type="file"
                 ref="houseVideoList"
@@ -368,13 +387,14 @@
             <div class="file-list-item" v-if="houseVideo.url">
               <video :src="houseVideo.url" @click="imgdiaLog = true"></video>
               <div
-                class="upLoadFile-remove el-icon-delete"
+                class="upLoadFile-remove el-icon-delete anchor-point"
                 @click="deleteVideo(houseVideo)"
               ></div>
             </div>
           </div>
           <div class="upLoadFile-file-phone">
             <el-image
+              class="anchor-point"
               :src="websockStatus ? qrCodeImgVedio : ''"
               :preview-src-list="[websockStatus ? qrCodeImgVedio : '']"
               fit="cover"

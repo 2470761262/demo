@@ -65,8 +65,12 @@
           @change="houseTypeChange"
           size="mini"
         >
-          <el-radio label="basicInformation">单套录入</el-radio>
-          <el-radio label="morePushHouse">多套录入</el-radio>
+          <el-radio label="basicInformation" class="anchor-point"
+            >单套录入</el-radio
+          >
+          <el-radio label="morePushHouse" class="anchor-point"
+            >多套录入</el-radio
+          >
         </el-radio-group>
         <span class="addhouse-tips">(多套录入仅支持同一小区同一业主)</span>
       </div>
@@ -82,6 +86,7 @@
         <el-select
           filterable
           remote
+          class="anchor-point"
           :remote-method="remoteCommunityName"
           data-vv-name="communityId"
           data-vv-as="楼盘名称"
@@ -93,6 +98,7 @@
           :loading="selectPageCommunit.loading"
         >
           <el-option
+            class="anchor-point"
             v-for="item in selectPageCommunit.list"
             :key="item.value"
             :label="item.name"
@@ -110,6 +116,7 @@
             placeholder="几"
             maxlength="2"
             v-number
+            class="anchor-point"
             data-vv-name="tableForList"
             data-vv-as="套数"
             v-validate="'required'"
@@ -128,6 +135,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            class="anchor-point"
             placeholder="￥"
             v-number.floot
             data-vv-name="tableAvgPirce"
@@ -148,6 +156,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            class="anchor-point"
             placeholder="￥"
             v-number.floot
             data-vv-name="bottomPriceAvgPrice"
@@ -197,6 +206,7 @@
               <div class="for-add-td">{{ index + 1 }}</div>
               <div class="for-add-td select-nobor">
                 <el-select
+                  class="anchor-point"
                   filterable
                   remote
                   :data-vv-name="'buildingId' + (index + 1)"
@@ -208,6 +218,7 @@
                   placeholder="楼栋"
                 >
                   <el-option
+                    class="anchor-point"
                     v-for="item in selectPageBuilding.list"
                     :key="item.value"
                     :label="item.name"
@@ -217,6 +228,7 @@
               </div>
               <div class="for-add-td select-nobor">
                 <el-select
+                  class="anchor-point"
                   filterable
                   remote
                   :remote-method="remoteRoomNo"
@@ -230,6 +242,7 @@
                   placeholder="房间号"
                 >
                   <el-option
+                    class="anchor-point"
                     v-for="item in selectPageRoom.list"
                     :key="item.value"
                     :disabled="
@@ -245,6 +258,7 @@
               <div class="for-add-td select-nobor select-pad-width_70">
                 <div class="tr-flex">
                   <el-input
+                    class="anchor-point"
                     placeholder="售价"
                     v-number.floot
                     @input="updatePirce('tableAvgPirce', 'price')"
@@ -256,6 +270,7 @@
               <div class="for-add-td select-nobor select-pad-width_70">
                 <div class="tr-flex">
                   <el-input
+                    class="anchor-point"
                     placeholder="底价"
                     v-number.floot
                     :data-vv-name="'bottomPrice' + (index + 1)"
@@ -280,6 +295,7 @@
     >
       <div class="page-cell-item select-nobor center-flex">
         <el-input
+          class="anchor-point"
           placeholder="请输入业主姓名"
           data-vv-name="customerName"
           data-vv-as="业主姓名"
@@ -291,6 +307,7 @@
         <div class="input-after-checkbox">
           <el-radio-group v-model="form.sex" size="mini">
             <el-radio
+              class="anchor-point"
               :label="item.label"
               v-for="(item, index) in sexList"
               :key="index"
@@ -308,6 +325,7 @@
     >
       <div class="page-cell-item select-nobor">
         <el-input
+          class="anchor-point"
           placeholder="默认拨打为第一个号码"
           data-vv-name="tel"
           data-vv-as="电话号码"
@@ -318,7 +336,7 @@
           <div
             slot="append"
             @click="addTelToList"
-            class="item-after item-before-col"
+            class="item-after item-before-col anchor-point"
           >
             <i class="el-icon-circle-plus-outline"></i>
             <div>新增</div>
@@ -337,6 +355,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            class="anchor-point"
             placeholder="请输入业主电话号码"
             :data-vv-name="'tel' + item"
             :data-vv-as="'电话号码' + item"
@@ -353,7 +372,7 @@
             <div
               slot="append"
               @click="removeTelToList(index, item)"
-              class="item-after item-before-col"
+              class="item-after item-before-col anchor-point"
             >
               <i class="el-icon-circle-plus-outline"></i>
               <div>删除</div>
@@ -372,6 +391,7 @@
         <div class="page-cell-item">
           <div class="item-before" data-before="*">房屋证件</div>
           <el-select
+            class="anchor-point"
             v-model="form.certificateType"
             v-validate="'required'"
             data-vv-name="certificateType"
@@ -379,6 +399,7 @@
             placeholder="请选择房屋证件"
           >
             <el-option
+              class="anchor-point"
               v-for="item in certificateTypeList"
               :key="item.label"
               :label="item.title"
@@ -427,7 +448,11 @@
     <!-- 证号 -->
     <div class="form-error-tips margin-bot_20">
       <div class="page-cell-item select-nobor">
-        <el-input placeholder="请输入产权证号" v-model="form.certificateNo">
+        <el-input
+          class="anchor-point"
+          placeholder="请输入产权证号"
+          v-model="form.certificateNo"
+        >
           <div slot="prepend" class="item-before">证号</div>
         </el-input>
       </div>
