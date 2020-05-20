@@ -1334,14 +1334,14 @@ export default {
     },
     //中学占用切换
     middleRadioChange(e) {
-      if (e != 1) {
-        this.formData.middleSchoolUseList = "";
+      if (e == 0) {
+        this.formData.middleSchoolUse = "";
         this.$store.state.addHouse.formData.step2.middleSchoolUse = "";
       }
     },
     //小学占用切换
     primaryRadioChange(e) {
-      if (e != 1) {
+      if (e == 0) {
         this.formData.primarySchoolUse = "";
         this.$store.state.addHouse.formData.step2.primarySchoolUse = "";
       }
