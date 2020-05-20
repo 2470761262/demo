@@ -47,8 +47,8 @@ function getData() {
       sign: "", //户口情况
       houseDelivery: "", //交房时间
       houseBelong: "", //附属配套
-      primarySchoolUse: "", //小学学籍占用
-      middleSchoolUse: "", //中学学籍占用
+      primarySchoolUse: -1, //小学学籍占用
+      middleSchoolUse: -1, //中学学籍占用
       mortgage: "", //抵押情况
       mortgageBank: "", //抵押银行
       balance: "", //余贷

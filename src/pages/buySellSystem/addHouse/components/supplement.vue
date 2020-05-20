@@ -1313,6 +1313,7 @@ export default {
             if (e.data.data.primarySchoolUse) {
               this.primaryRadio = 1;
             }
+            console.log(e.data.data, "e.data.data");
             this.$store.dispatch("InitFormData", {
               commitName: "updateStep2",
               json: e.data.data
@@ -1336,14 +1337,24 @@ export default {
     middleRadioChange(e) {
       if (e == 0) {
         this.formData.middleSchoolUse = "";
-        this.$store.state.addHouse.formData.step2.middleSchoolUse = "";
+        this.$store.dispatch("InitFormData", {
+          commitName: "updateStep2",
+          json: {
+            middleSchoolUse: -1
+          }
+        });
       }
     },
     //小学占用切换
     primaryRadioChange(e) {
       if (e == 0) {
         this.formData.primarySchoolUse = "";
-        this.$store.state.addHouse.formData.step2.primarySchoolUse = "";
+        this.$store.dispatch("InitFormData", {
+          commitName: "updateStep2",
+          json: {
+            primarySchoolUse: -1
+          }
+        });
       }
     },
     validateAll() {
