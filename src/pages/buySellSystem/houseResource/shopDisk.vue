@@ -63,6 +63,16 @@
             ></el-option>
           </el-select>
         </div>
+        <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">编号</h3>
+          <el-input
+            placeholder="房源编号"
+            v-model="data.houseNo"
+            class="set-input200"
+            @change="querySaleNotTrackParams"
+            clearable
+          />
+        </div>
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
@@ -83,7 +93,9 @@
             clearable
           />
         </div>
-        <div class="query-content-cell cell-interval45">
+      </div>
+      <div class="page-list-query-row">
+        <div class="query-content-cell ">
           <h3 class="query-cell-title">价格</h3>
           <el-input
             placeholder="最小值"
@@ -102,9 +114,7 @@
           />
           <span class="query-cell-suffix">万</span>
         </div>
-      </div>
-      <div class="page-list-query-row">
-        <div class="query-content-cell">
+        <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">面积</h3>
           <el-input
             placeholder="最小值"
@@ -221,7 +231,8 @@ export default {
         minInArea: "",
         maxInArea: "",
         minPrice: "",
-        maxPrice: ""
+        maxPrice: "",
+        houseNo: ""
       },
       options: [],
       cbIdList: [],
@@ -564,6 +575,7 @@ export default {
         params.maxInArea = that.data.maxInArea;
         params.minPrice = that.data.minPrice;
         params.maxPrice = that.data.maxPrice;
+        params.houseNo = that.data.houseNo;
       }
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;

@@ -1,6 +1,7 @@
 export const USERINFO = "userinfo";
 export const LOGINDATA = "logindata";
 export const TOKEN = "tk";
+export const SMALLThumb = "?x-oss-process=style/thumb";
 export const HOUSEBELONGLIST = [
   {
     key: "车位",

@@ -38,6 +38,16 @@
           </el-select>
         </div>
         <div class="query-content-cell cell-interval45">
+          <h3 class="query-cell-title">编号</h3>
+          <el-input
+            placeholder="房源编号"
+            v-model="data.houseNo"
+            class="set-input200"
+            @change="queryDatalist"
+            clearable
+          />
+        </div>
+        <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">价格</h3>
           <el-input
             placeholder="最小值"
@@ -75,7 +85,9 @@
           />
           <span class="query-cell-suffix">平方</span>
         </div>
-        <div class="query-content-cell cell-interval75">
+      </div>
+      <div class="page-list-query-row">
+        <div class="query-content-cell ">
           <h3 class="query-cell-title">成交时间</h3>
           <el-date-picker
             v-model="data.timeSelect"
@@ -154,7 +166,8 @@ export default {
         cbId: "",
         bhId: "",
         customName: "",
-        tel: ""
+        tel: "",
+        houseNo: ""
       },
       options: [],
       cbIdList: [],
@@ -341,6 +354,7 @@ export default {
       }
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
+      params.houseNo = this.data.houseNo;
       console.log(params);
       this.$api
         .post({

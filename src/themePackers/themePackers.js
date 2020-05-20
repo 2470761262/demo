@@ -17,12 +17,14 @@ let themeData = {
     // if (process.env.NODE_ENV != 'development') {
     // themeData.createStyle(newVal, ordVal);
     // }
+    console.log(newVal, "newValnewValnewValnewValnewValnewValnewVal");
     themeData.createStyle(newVal, ordVal);
     themeData.init(newVal);
     return Promise.resolve();
   },
   init(color) {
     let tremePackers = util.localStorageGet(TREMEPACKERS);
+    console.log(tremePackers, "tremePackerstremePackerstremePackers");
     if (!color) {
       if (tremePackers) {
         document.documentElement.style.setProperty(

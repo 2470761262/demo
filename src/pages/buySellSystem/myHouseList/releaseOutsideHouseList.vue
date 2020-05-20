@@ -86,6 +86,16 @@
               ></el-option>
             </el-select>
           </div>
+          <div class="query-content-cell cell-interval45">
+            <h3 class="query-cell-title">编号</h3>
+            <el-input
+              placeholder="房源编号"
+              v-model="data.houseNo"
+              class="set-input200"
+              @change="querylistByParams"
+              clearable
+            />
+          </div>
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">业主</h3>
             <el-input
@@ -107,6 +117,15 @@
             />
           </div>
           <div class="query-content-cell cell-interval45">
+            <definitionmenu
+              :renderList="tableColumnField"
+              :tableColumn="tableColumn"
+              @change="tabColumnChange"
+            ></definitionmenu>
+          </div>
+        </div>
+        <div class="page-list-query-row">
+          <div class="query-content-cell ">
             <h3 class="query-cell-title">价格</h3>
             <el-input
               placeholder="最小值"
@@ -239,7 +258,8 @@ export default {
         maxPrice: "",
         isKey: "",
         isOnly: "",
-        agentName: ""
+        agentName: "",
+        houseNo: ""
       },
       AgentPerId: "",
       dialogVisible: false,
@@ -815,6 +835,7 @@ export default {
         params.isKey = that.data.isKey;
         params.isOnly = that.data.isOnly;
         params.agentName = that.data.agentName;
+        params.houseNo = that.data.houseNo;
       }
       params.sortColumn = that.sortColumn;
       params.sortType = that.sortType == "descending" ? 0 : 1;

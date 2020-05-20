@@ -70,10 +70,11 @@ http.interceptors.response.use(
     }
     switch (error.response.status) {
       case 500:
-        Message({
-          message: "貌似出现了一点问题~",
-          type: "error"
-        });
+        // Message({
+        //     message: '貌似出现了一点问题~',
+        //     type: 'error'
+        // });
+        console.log("貌似出现了一点问题", error);
         break;
     }
     return Promise.reject(error);

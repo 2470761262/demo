@@ -225,22 +225,22 @@ export default {
           disabled: true,
           default: true
         },
-        {
-          prop: "BuildingName",
-          label: "楼栋号",
-          width: "",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "RoomNo",
-          label: "房间号",
-          width: "",
-          order: false,
-          disabled: true,
-          default: true
-        },
+        // {
+        //   prop: "BuildingName",
+        //   label: "楼栋号",
+        //   width: "",
+        //   order: false,
+        //   disabled: true,
+        //   default: true
+        // },
+        // {
+        //   prop: "RoomNo",
+        //   label: "房间号",
+        //   width: "",
+        //   order: false,
+        //   disabled: true,
+        //   default: true
+        // },
         {
           prop: "InArea",
           label: "面积(m²)",
