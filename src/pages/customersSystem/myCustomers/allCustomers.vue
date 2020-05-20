@@ -17,7 +17,10 @@
     @handleSizeChange="handleSizeChange"
   >
     <template v-slot:top>
-      <allCustomersQuery :fatherMethod="queryCustomerData"></allCustomersQuery>
+      <allCustomersQuery
+        :fatherMethod="queryCustomerData"
+        :fatherQueryGroup="queryParamsGroup"
+      ></allCustomersQuery>
     </template>
     <template v-slot:title>
       <h3 class="page-tab-title">
@@ -76,6 +79,18 @@ export default {
   },
   data() {
     return {
+      queryParamsGroup: [
+        {
+          未带看: 0,
+          首次带看: 0,
+          二次带看: 0,
+          三次带看: 0,
+          四次带看: 0,
+          五次带看以上: 0
+        },
+        { 强烈: 0, 一般: 0, 较弱: 0 },
+        { 在谈: 0, 签约: 0 }
+      ],
       querySelectFlag: true,
       loading: false,
       pageJson: {
@@ -200,6 +215,7 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             console.log(result, "统计我的客源");
+            _that.queryParamsGroup = result.data;
           } else {
             console.log("统计我的客源" + result.message);
             _that.$message({

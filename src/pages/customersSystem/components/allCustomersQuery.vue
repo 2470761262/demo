@@ -188,24 +188,21 @@
           <h3>意向:</h3>
           <ul>
             <li class="is-activate">不限</li>
-            <li>强烈(10)</li>
-            <li>一般(12)</li>
-            <li>较弱(7)</li>
+            <li v-for="(item, index) in fatherQueryGroup[1]" :key="index">
+              {{ index }}({{ item }})
+            </li>
           </ul>
         </div>
         <div class="query-change-item">
           <h3>进度:</h3>
           <ul>
             <li class="is-activate">不限</li>
-            <li>为带看(30)</li>
-            <li>首次带看(12)</li>
-            <li>二次带看(3)</li>
-            <li>三次带看(2)</li>
-            <li>四次带看(5)</li>
-            <li>五次带看(7)</li>
-            <li>五次带看以上(2)</li>
-            <li>再谈(1)</li>
-            <li>签约(2)</li>
+            <li v-for="(item, index) in fatherQueryGroup[0]" :key="index">
+              {{ index }}({{ item }})
+            </li>
+            <li v-for="(item, index) in activeParams" :key="index">
+              {{ index }}({{ item }})
+            </li>
           </ul>
         </div>
         <div class="query-change-item">
@@ -319,6 +316,32 @@ export default {
     fatherMethod: {
       type: Function,
       default: null
+    },
+    fatherQueryGroup: {
+      type: Array,
+      default: () => [
+        {
+          未带看: 0,
+          首次带看: 0,
+          二次带看: 0,
+          三次带看: 0,
+          四次带看: 0,
+          五次带看以上: 0
+        },
+        { 强烈: 0, 一般: 0, 较弱: 0 },
+        { 在谈: 0, 签约: 0 }
+      ]
+    }
+  },
+  computed: {
+    activeParams: function() {
+      let p = {};
+      for (let key in this.fatherQueryGroup[2]) {
+        if (["在谈", "签约"].includes(key)) {
+          p[key] = this.fatherQueryGroup[2][key];
+        }
+      }
+      return p;
     }
   },
   data() {
