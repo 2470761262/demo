@@ -315,6 +315,12 @@
 
 <script>
 export default {
+  props: {
+    fatherMethod: {
+      type: Function,
+      default: null
+    }
+  },
   data() {
     return {
       changeQuery: false,
@@ -325,7 +331,14 @@ export default {
     };
   },
   methods: {
-    search() {},
+    search() {
+      console.log("执行了父组件的方法");
+      if (this.fatherMethod) {
+        this.fatherMethod({});
+      } else {
+        console.log("xx ");
+      }
+    },
     triggerChange() {
       this.changeQuery = !this.changeQuery;
     }
