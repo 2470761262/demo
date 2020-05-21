@@ -6,200 +6,210 @@
       :expand-row-keys='[1,3]'
       row-key="id"
   -->
-  <list-Page
-    :parentData="$data"
-    @sort-change="sortMethod"
-    :border="true"
-    default-expand-all
-    :cellClass="cellClass"
-    headerClass="headerCellSet1"
-    @handleCurrentChange="handleCurrentChange"
-    @handleSizeChange="handleSizeChange"
-  >
-    <template v-slot:top>
-      <section class="query-content">
-        <div class="empty-query">
-          <div class="page-list-query-row" v-if="changeQuery">
-            <div class="query-content-cell">
-              <h3 class="query-cell-title">电话</h3>
-              <el-select
-                clearable
-                placeholder="客户电话"
-                class="set-select120"
-                v-model="sssss"
-              >
-                <el-option
-                  v-for="item in ssslist"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </div>
-            <div class="query-content-cell cell-interval75">
-              <h3 class="query-cell-title">客户意向</h3>
-              <el-select
-                clearable
-                placeholder="全部"
-                class="set-select120"
-                v-model="sssss"
-              >
-                <el-option
-                  v-for="item in ssslist"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </div>
-            <div class="query-content-cell cell-interval75">
-              <h3 class="query-cell-title">带看进度</h3>
-              <el-select
-                clearable
-                placeholder="全部"
-                class="set-select120"
-                v-model="sssss"
-              >
-                <el-option
-                  v-for="item in ssslist"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
-                ></el-option>
-              </el-select>
-            </div>
-          </div>
-          <div class="page-list-query-row" v-if="changeQuery">
-            <div class="query-content-cell">
-              <h3 class="query-cell-title">价格</h3>
-              <el-input
-                placeholder="最小值"
-                v-model="sssss"
-                class="set-input90"
-                clearable
-              />
-              <span class="cut-off-rule"></span>
-              <el-input
-                placeholder="最大值"
-                v-model="sssss"
-                class="set-input90"
-                clearable
-              />
-              <span class="query-cell-suffix">万元</span>
-            </div>
-            <div class="query-content-cell cell-interval75">
-              <h3 class="query-cell-title">面积</h3>
-              <el-input
-                placeholder="最小值"
-                v-model="sssss"
-                class="set-input90"
-                clearable
-              />
-              <span class="cut-off-rule"></span>
-              <el-input
-                placeholder="最大值"
-                v-model="sssss"
-                class="set-input90"
-                clearable
-              />
-              <span class="query-cell-suffix">平方</span>
-            </div>
-            <div class="query-content-cell cell-interval75">
-              <h3 class="query-cell-title">户型</h3>
-              <el-input
-                placeholder="最小值"
-                v-model="sssss"
-                class="set-input90"
-                clearable
-              />
-              <span class="cut-off-rule"></span>
-              <el-input
-                placeholder="最大值"
-                v-model="sssss"
-                class="set-input90"
-                clearable
-              />
-            </div>
-          </div>
-          <div class="page-list-query-row" v-if="changeQuery">
-            <div class="query-content-cell">
-              <h3 class="query-cell-title">带看时间</h3>
-              <el-date-picker
-                v-model="sssss"
-                type="daterange"
-                class="set-data-pricker set-pricker-width260"
-                range-separator="至"
-                start-placeholder="开始日期"
-                :default-time="['00:00:00', '23:59:59']"
-                end-placeholder="结束日期"
-              >
-              </el-date-picker>
-            </div>
-            <div class="query-content-cell  cell-interval180">
-              <h3 class="query-cell-title">录入时间</h3>
-              <el-date-picker
-                v-model="sssss"
-                type="daterange"
-                class="set-data-pricker set-pricker-width260"
-                range-separator="至"
-                start-placeholder="开始日期"
-                :default-time="['00:00:00', '23:59:59']"
-                end-placeholder="结束日期"
-              >
-              </el-date-picker>
-            </div>
-          </div>
-        </div>
-        <span
-          class="el-icon-d-arrow-left icon"
-          :class="{ 'is-active': !changeQuery }"
-          @click="triggerChange"
-        ></span>
-      </section>
-    </template>
-    <template v-slot:title>
-      <h3 class="page-tab-title">
-        <i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span>
-      </h3>
-    </template>
-    <template v-slot:left>
-      <left-attention v-model="querySelectFlag"></left-attention>
-    </template>
-    <template v-slot:tableColumn>
-      <el-table-column type="expand" width="1px">
-        <template v-slot:default="props">
-          <!-- pp属性名请按照实际字段进行修改 -->
-          <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
-          <template v-if="props.row.pp && props.row.pp.length > 0">
-            <div class="flex-expand">
-              <div class="flex-impression-content">
-                <div v-for="(item, index) in props.row.pp" :key="index">
-                  {{ item }}
-                </div>
+  <div class="list-content">
+    <list-Page
+      :parentData="$data"
+      @sort-change="sortMethod"
+      :border="true"
+      default-expand-all
+      :cellClass="cellClass"
+      headerClass="headerCellSet1"
+      @handleCurrentChange="handleCurrentChange"
+      @handleSizeChange="handleSizeChange"
+    >
+      <template v-slot:top>
+        <section class="query-content">
+          <div class="empty-query">
+            <div class="page-list-query-row" v-if="changeQuery">
+              <div class="query-content-cell">
+                <h3 class="query-cell-title">电话</h3>
+                <el-select
+                  clearable
+                  placeholder="客户电话"
+                  class="set-select120"
+                  v-model="sssss"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
               </div>
-              <label class="trigger-impression-btn">
-                <input type="checkbox" />
-                <i class="iconfont"></i>
-              </label>
+              <div class="query-content-cell cell-interval75">
+                <h3 class="query-cell-title">客户意向</h3>
+                <el-select
+                  clearable
+                  placeholder="全部"
+                  class="set-select120"
+                  v-model="sssss"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="query-content-cell cell-interval75">
+                <h3 class="query-cell-title">带看进度</h3>
+                <el-select
+                  clearable
+                  placeholder="全部"
+                  class="set-select120"
+                  v-model="sssss"
+                >
+                  <el-option
+                    v-for="item in ssslist"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </div>
             </div>
-          </template>
-        </template>
-      </el-table-column>
-      <template v-for="item in tableColumn">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :min-width="item.width"
-          :key="item.prop"
-          :formatter="item.formart"
-          show-overflow-tooltip
-          :fixed="item.fixed ? 'right' : false"
-          :sort-orders="['ascending', 'descending']"
-          :sortable="item.order"
-        ></el-table-column>
+            <div class="page-list-query-row" v-if="changeQuery">
+              <div class="query-content-cell">
+                <h3 class="query-cell-title">价格</h3>
+                <el-input
+                  placeholder="最小值"
+                  v-model="sssss"
+                  class="set-input90"
+                  clearable
+                />
+                <span class="cut-off-rule"></span>
+                <el-input
+                  placeholder="最大值"
+                  v-model="sssss"
+                  class="set-input90"
+                  clearable
+                />
+                <span class="query-cell-suffix">万元</span>
+              </div>
+              <div class="query-content-cell cell-interval75">
+                <h3 class="query-cell-title">面积</h3>
+                <el-input
+                  placeholder="最小值"
+                  v-model="sssss"
+                  class="set-input90"
+                  clearable
+                />
+                <span class="cut-off-rule"></span>
+                <el-input
+                  placeholder="最大值"
+                  v-model="sssss"
+                  class="set-input90"
+                  clearable
+                />
+                <span class="query-cell-suffix">平方</span>
+              </div>
+              <div class="query-content-cell cell-interval75">
+                <h3 class="query-cell-title">户型</h3>
+                <el-input
+                  placeholder="最小值"
+                  v-model="sssss"
+                  class="set-input90"
+                  clearable
+                />
+                <span class="cut-off-rule"></span>
+                <el-input
+                  placeholder="最大值"
+                  v-model="sssss"
+                  class="set-input90"
+                  clearable
+                />
+              </div>
+            </div>
+            <div class="page-list-query-row" v-if="changeQuery">
+              <div class="query-content-cell">
+                <h3 class="query-cell-title">带看时间</h3>
+                <el-date-picker
+                  v-model="sssss"
+                  type="daterange"
+                  class="set-data-pricker set-pricker-width260"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  :default-time="['00:00:00', '23:59:59']"
+                  end-placeholder="结束日期"
+                >
+                </el-date-picker>
+              </div>
+              <div class="query-content-cell  cell-interval180">
+                <h3 class="query-cell-title">录入时间</h3>
+                <el-date-picker
+                  v-model="sssss"
+                  type="daterange"
+                  class="set-data-pricker set-pricker-width260"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  :default-time="['00:00:00', '23:59:59']"
+                  end-placeholder="结束日期"
+                >
+                </el-date-picker>
+              </div>
+            </div>
+          </div>
+          <span
+            class="el-icon-d-arrow-left icon"
+            :class="{ 'is-active': !changeQuery }"
+            @click="triggerChange"
+          ></span>
+        </section>
       </template>
-    </template>
-  </list-Page>
+      <template v-slot:title>
+        <h3 class="page-tab-title">
+          <i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span>
+        </h3>
+      </template>
+      <template v-slot:left>
+        <left-attention v-model="querySelectFlag"></left-attention>
+      </template>
+      <template v-slot:tableColumn>
+        <el-table-column type="expand" width="1px">
+          <template v-slot:default="props">
+            <!-- pp属性名请按照实际字段进行修改 -->
+            <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
+            <template v-if="props.row.pp && props.row.pp.length > 0">
+              <div class="flex-expand">
+                <div class="flex-impression-content">
+                  <div v-for="(item, index) in props.row.pp" :key="index">
+                    {{ item }}
+                  </div>
+                </div>
+                <label class="trigger-impression-btn">
+                  <input type="checkbox" />
+                  <i class="iconfont"></i>
+                </label>
+              </div>
+            </template>
+          </template>
+        </el-table-column>
+        <template v-for="item in tableColumn">
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :min-width="item.width"
+            :key="item.prop"
+            :formatter="item.formart"
+            show-overflow-tooltip
+            :fixed="item.fixed ? 'right' : false"
+            :sort-orders="['ascending', 'descending']"
+            :sortable="item.order"
+          ></el-table-column>
+        </template>
+      </template>
+    </list-Page>
+    <!-- 写跟进弹框 -->
+    <write-follow-up
+      v-if="writeFlag"
+      :visible.sync="writeFlag"
+      title="写跟进"
+      style-type="0"
+      width="4.63rem"
+    ></write-follow-up>
+  </div>
 </template>
 
 <script>
@@ -209,10 +219,12 @@ import { setImpression } from "@/util/tabUtil";
 export default {
   components: {
     listPage,
-    leftAttention
+    leftAttention,
+    writeFollowUp: () => import("../components/writeFollowUp")
   },
   data() {
     return {
+      writeFlag: false, //写跟进弹框开关
       sssss: "", //请按照实际字段名进行修改，
       ssslist: [
         //请按照实际字段名进行修改，
@@ -263,7 +275,12 @@ export default {
                 <el-button type="warning" size="mini" icon="el-icon-date">
                   预约带看
                 </el-button>
-                <el-button type="danger" size="mini" icon="el-icon-edit">
+                <el-button
+                  type="danger"
+                  size="mini"
+                  icon="el-icon-edit"
+                  onClick={this.openPop.bind(this, "writeFlag")}
+                >
                   写跟进
                 </el-button>
               </div>
@@ -291,7 +308,8 @@ export default {
           tt: "3房",
           yy: "为带看",
           uu: "站务",
-          ii: "2020-02-01"
+          ii: "2020-02-01",
+          pp: []
         },
         {
           id: 3,
@@ -322,6 +340,14 @@ export default {
     this.$nextTick(setImpression);
   },
   methods: {
+    /**
+     * @example: 打开弹框
+     * @param {string} popName
+     */
+
+    openPop(popName) {
+      this[popName] = true;
+    },
     triggerChange() {
       this.changeQuery = !this.changeQuery;
     },
