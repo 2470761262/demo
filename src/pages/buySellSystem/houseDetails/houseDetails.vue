@@ -73,7 +73,7 @@
         lastTitle="编辑"
         :judgeShowEdit="true"
         :lastParams="lastParams"
-        :showEdit="showEdit"
+        :showEdit="false"
       ></sidebarList>
       <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
 
@@ -93,6 +93,7 @@
       <houseMessage
         class="cell-msg"
         :class="{ 'cell-msg-nest': nest }"
+        :showEdit="showEdit"
       ></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->

@@ -421,7 +421,7 @@
     </section>
     <section class="message-row-group">
       <div class="message-row">
-        <h5 class="message-row-title">上次交易</h5>
+        <h5 class="message-row-title">上次交易{{ showEdit }}</h5>
         <div class="message-row-right" v-if="updateHouse.lastSale">
           {{ resultData.IsTwoYears | emptyRead }}
         </div>
@@ -482,6 +482,12 @@ import util from "@/util/util";
 import * as formReander from "@/util/constMap";
 import but from "@/evenBus/but.js";
 export default {
+  props: {
+    showEdit: {
+      type: Boolean,
+      default: false
+    }
+  },
   inject: ["houseDetails"],
   data() {
     return {
@@ -537,15 +543,7 @@ export default {
       editAgentHouse: false
     };
   },
-  mounted() {
-    let that = this;
-    if (!this.judgeShowEdit) {
-      this.editAgentHouse = true;
-    }
-    but.$on("editAgentHouse", () => {
-      that.editAgentHouse = true;
-    });
-  },
+
   computed: {
     resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
@@ -553,23 +551,23 @@ export default {
       } else {
         return {};
       }
-    },
-    showEdit() {
-      let perId = 0;
-
-      perId = util.localStorageGet("logindata").accountId;
-
-      if (
-        Object.keys(this.houseDetails).length > 0 &&
-        this.houseDetails.data.plate != 1 &&
-        this.houseDetails.data.plate != 4 &&
-        perId == this.houseDetails.data.AgentPer
-      ) {
-        return true;
-      } else {
-        return false;
-      }
     }
+    // showEdit() {
+    //   let perId = 0;
+
+    //   perId = util.localStorageGet("logindata").accountId;
+
+    //   if (
+    //     Object.keys(this.houseDetails).length > 0 &&
+    //     this.houseDetails.data.plate != 1 &&
+    //     this.houseDetails.data.plate != 4 &&
+    //     perId == this.houseDetails.data.AgentPer
+    //   ) {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // }
   },
   filters: {
     elevatorFilter(value) {
