@@ -421,7 +421,7 @@
     </section>
     <section class="message-row-group">
       <div class="message-row">
-        <h5 class="message-row-title">上次交易{{ showEdit }}</h5>
+        <h5 class="message-row-title">上次交易</h5>
         <div class="message-row-right" v-if="updateHouse.lastSale">
           {{ resultData.IsTwoYears | emptyRead }}
         </div>
