@@ -107,7 +107,11 @@ export default {
           order: true,
           formart: row => {
             return (
-              <el-rate value={row.desireIntensity} max={3} disabled></el-rate>
+              <el-rate
+                value={row.desireIntensity + 1}
+                max={3}
+                disabled
+              ></el-rate>
             );
           }
         },
@@ -135,7 +139,13 @@ export default {
           width: "120px",
           order: true,
           formart: (row, column) => {
-            return row.rooms.replace("$", "或");
+            let s = row.rooms.replace("$", "或");
+            var d = s.length - 1;
+            //判断如果以或结尾，去除掉
+            if (d >= 0 && s.lastIndexOf("或") == d) {
+              s = s.substr(0, s.length - 1);
+            }
+            return s;
           }
         },
         {

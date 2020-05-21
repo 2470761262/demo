@@ -451,7 +451,7 @@ export default {
           default: true
         },
         {
-          prop: "outFollow",
+          prop: "outfollow",
           label: "未跟进天数",
           width: "120",
           order: "custom",

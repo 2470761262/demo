@@ -270,11 +270,7 @@
     <div class="cell-pro">
       <div
         class="cell-pro-item"
-        v-if="
-          resultData.agentPerName != null &&
-            resultData.plate != 1 &&
-            resultData.plate != 4
-        "
+        v-if="resultData.agentPerName != null && resultData.plate == 0"
       >
         <el-image
           class="cell-pro-left-img"

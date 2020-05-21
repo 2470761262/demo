@@ -61,8 +61,7 @@
           v-if="
             resultData.isReleaseOutside != 1 &&
               resultData.AgentPer == perId &&
-              resultData.plate != 4 &&
-              resultData.plate != 1
+              resultData.plate == 0
           "
         >
           <i class="iconfabu iconfont "></i>
@@ -74,8 +73,7 @@
           v-if="
             resultData.isReleaseOutside == 1 &&
               resultData.AgentPer == perId &&
-              resultData.plate != 4 &&
-              resultData.plate != 1
+              resultData.plate == 0
           "
           @click="cancelOutsideHouse"
         >
@@ -116,12 +114,7 @@
           class="anchor-point"
           :disabled="isDisabled"
           @click="showBetView"
-          v-if="
-            !isBet &&
-              resultData.AgentPer == perId &&
-              resultData.plate != 4 &&
-              resultData.plate != 1
-          "
+          v-if="!isBet && resultData.AgentPer == perId && resultData.plate == 0"
         >
           <i class="icontuijian iconfont "></i>
           <span class="button-title">成交对赌</span>
