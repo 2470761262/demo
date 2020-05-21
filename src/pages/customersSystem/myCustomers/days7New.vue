@@ -207,6 +207,7 @@
       :visible.sync="writeFlag"
       title="写跟进"
       style-type="0"
+      @followConfirmEmit="confirmEmit"
       width="4.63rem"
     ></write-follow-up>
   </div>
@@ -340,11 +341,13 @@ export default {
     this.$nextTick(setImpression);
   },
   methods: {
+    confirmEmit(e) {
+      console.log("写跟进确定", e);
+    },
     /**
      * @example: 打开弹框
      * @param {string} popName
      */
-
     openPop(popName) {
       this[popName] = true;
     },

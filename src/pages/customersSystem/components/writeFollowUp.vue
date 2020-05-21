@@ -17,7 +17,7 @@
 }
 </style>
 <template>
-  <fixed-popup v-bind="$attrs" v-on="$listeners">
+  <fixed-popup v-bind="$attrs" v-on="$listeners" @confirmEmit="confirmEmit">
     <template>
       <div class="follow-content">
         <i class="is-require">*</i>
@@ -40,6 +40,11 @@ export default {
     return {
       textarea: ""
     };
+  },
+  methods: {
+    confirmEmit() {
+      this.$emit("followConfirmEmit", this.textarea);
+    }
   }
 };
 </script>
