@@ -94,6 +94,7 @@
         class="cell-msg"
         :class="{ 'cell-msg-nest': nest }"
         :showEdit="showEdit"
+        :judgeShowEdit="true"
       ></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->

@@ -490,6 +490,11 @@ export default {
     hisEdit: {
       type: Boolean,
       default: true
+    },
+    judgeShowEdit: {
+      //判断是否为编辑
+      type: Boolean,
+      default: false
     }
   },
   inject: ["houseDetails"],
@@ -549,6 +554,10 @@ export default {
   },
   mounted() {
     let that = this;
+    console.log(
+      "11111111111111",
+      that.hisEdit && (that.showEdit || that.editAgentHouse)
+    );
     if (!this.judgeShowEdit) {
       this.editAgentHouse = true;
     }
