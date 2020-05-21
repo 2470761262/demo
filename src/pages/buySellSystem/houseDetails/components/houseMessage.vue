@@ -538,7 +538,6 @@ export default {
     };
   },
   mounted() {
-    debugger;
     let that = this;
     if (!this.judgeShowEdit) {
       this.editAgentHouse = true;
@@ -603,7 +602,7 @@ export default {
           } else if (
             this.step2.roomDesc != this.resultData.houseTypePresentation
           ) {
-            console.log(this);
+            this.editHouseDetail("roomDesc", this.step2.roomDesc);
           }
           this.updateHouse.roomDesc = flag;
           break;
@@ -721,44 +720,153 @@ export default {
       let sendData = {
         id: this.resultData.id
       };
+      sendData.saleHouseUpdateRecordList = [];
+
+      let perId = 0;
+      perId = util.localStorageGet("logindata").accountId;
       switch (type) {
         case "communityDesc": //小区介绍
           sendData.communityDesc = value;
+          sendData.roomDesc = this.resultData.houseTypePresentation;
+          sendData.taxDesc = this.resultData.taxParsing;
+          sendData.saleDesc = this.resultData.coreSellingPoint;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.communityPresentation
+          });
+
           break;
         case "roomDesc": //户型介绍
+          sendData.communityDesc = this.resultData.communityPresentation;
           sendData.roomDesc = value;
+          sendData.taxDesc = this.resultData.taxParsing;
+          sendData.saleDesc = this.resultData.coreSellingPoint;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.houseTypePresentation
+          });
           break;
         case "taxDesc": //税费情况
+          sendData.communityDesc = this.resultData.communityPresentation;
+          sendData.roomDesc = this.resultData.houseTypePresentation;
           sendData.taxDesc = value;
+          sendData.saleDesc = this.resultData.coreSellingPoint;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.taxParsing
+          });
           break;
         case "saleDesc": //核心卖点
+          sendData.communityDesc = this.resultData.communityPresentation;
+          sendData.roomDesc = this.resultData.houseTypePresentation;
+          sendData.taxDesc = this.resultData.taxParsing;
           sendData.saleDesc = value;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.coreSellingPoint
+          });
+
           break;
         case "propertyFee": //物业费
           sendData.propertyFee = value;
+          sendData.saleDesc = value;
+          sendData.taxDesc = value;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.PropertyFee
+          });
           break;
         case "certificateType": //房屋证件
           sendData.certificateType = value;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.certificateType
+          });
+
           break;
         case "sign": //户口情况
           sendData.sign = value;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.sign
+          });
+
           break;
         case "houseBelong": //附属配套
           sendData.houseBelong = value;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.HouseBelong
+          });
           break;
         case "primarySchoolUse": //小学学籍占用
           sendData.primarySchoolUse = value;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.primarySchoolGrade
+          });
+
           break;
         case "middleSchoolUse": //中学学籍占用
           sendData.middleSchoolUse = value;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.middleSchoolGrade
+          });
+
           break;
         case "lastSale": //上次交易日期
           sendData.lastSale = value;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.IsTwoYears
+          });
           break;
         case "lastPayment": //上次交易金额
           sendData.lastPayment = value;
+          sendData.saleHouseUpdateRecordList.push({
+            modifier: util.localStorageGet("logindata").accountId,
+            HouseId: this.resultData.id,
+            updateFiled: type,
+            newValue: value,
+            oldValue: this.resultData.LastTransactionAmount
+          });
           break;
       }
+      debugger;
       this.$api
         .put({
           url: "/agent_house/editAgentHouse",
