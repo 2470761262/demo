@@ -279,12 +279,14 @@
                 type="text"
                 v-model="minPrice"
                 oninput="value=value.replace(/[^\d]/g,'')"
+                @change="handlerPriceChange"
               />
               <span></span>
               <input
                 type="text"
                 v-model="maxPrice"
                 oninput="value=value.replace(/[^\d]/g,'')"
+                @change="handlerPriceChange"
               />
             </li>
             <li data-btn>
@@ -350,9 +352,19 @@
               200㎡以上
             </li>
             <li class="is-query-input">
-              <input type="text" v-model="minArea" />
+              <input
+                type="text"
+                v-model="minArea"
+                oninput="value=value.replace(/[^\d]/g,'')"
+                @change="handleAreaChange"
+              />
               <span></span>
-              <input type="text" v-model="maxArea" />
+              <input
+                type="text"
+                v-model="maxArea"
+                oninput="value=value.replace(/[^\d]/g,'')"
+                @change="handleAreaChange"
+              />
             </li>
             <li data-btn>
               <button class="is-button" @click="searchWithParams">确定</button>
@@ -362,21 +374,20 @@
         <div class="query-change-item">
           <h3>房型:</h3>
           <ul>
-            <li class="is-activate">不限</li>
-            <li>1房</li>
-            <li>50-70㎡</li>
-            <li>70-90㎡</li>
-            <li>90-110㎡</li>
-            <li>110-130㎡</li>
-            <li>130-150㎡</li>
-            <li>150-200㎡</li>
-            <li>200㎡以上</li>
-            <li class="is-query-input">
-              <input type="text" />
-              <span></span>
-              <input type="text" />
+            <li
+              @click="changeRoomSelectedUnlimit()"
+              :class="{ 'is-activate': roomSelectedUnlimit }"
+            >
+              不限
             </li>
-            <li data-btn><button class="is-button">确定</button></li>
+            <li
+              v-for="(item, index) in roomSelected"
+              :key="index"
+              @click="changeRoomSelected(index)"
+              :class="{ 'is-activate': roomSelected[index] }"
+            >
+              {{ index == 5 ? index + "房以上" : index + "房" }}
+            </li>
           </ul>
         </div>
         <div class="query-just">
@@ -386,15 +397,16 @@
               <li class="flex-item">
                 <div class="is-time">
                   <el-date-picker
-                    v-model="form.tasttime"
+                    v-model="form.pairTime"
                     type="daterange"
                     range-separator="至"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
+                    value-format="yyyy-MM-dd HH:mm:ss"
                   >
                   </el-date-picker>
                 </div>
-                <button class="is-button">确定</button>
+                <button class="is-button" @click="searchPairTime">确定</button>
               </li>
             </ul>
           </div>
@@ -404,15 +416,16 @@
               <li class="flex-item">
                 <div class="is-time">
                   <el-date-picker
-                    v-model="form.tasttime"
+                    v-model="form.addTime"
                     type="daterange"
                     range-separator="至"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
+                    value-format="yyyy-MM-dd HH:mm:ss"
                   >
                   </el-date-picker>
                 </div>
-                <button class="is-button">确定</button>
+                <button class="is-button" @click="searchAddTime">确定</button>
               </li>
             </ul>
           </div>
@@ -488,6 +501,20 @@ export default {
     },
     selectedDesireWeek: function(val) {
       this.updateDesireParams(val, 0);
+    },
+    "form.pairTime": function(newValue, oldValue) {
+      if (!newValue) {
+        this.minLastPairFollowTime = null;
+        this.maxLastPairFollowTime = null;
+        this.searchWithParams();
+      }
+    },
+    "form.addTime": function(newValue, oldValue) {
+      if (!newValue) {
+        this.minAddTime = null;
+        this.maxAddTime = null;
+        this.searchWithParams();
+      }
     }
   },
   data() {
@@ -511,6 +538,14 @@ export default {
         150: false,
         200: false
       },
+      roomSelected: {
+        5: false,
+        4: false,
+        3: false,
+        2: false,
+        1: false
+      },
+      roomSelectedUnlimit: true, //房型 不限 条件。默认选中
       selectedDesire: true,
       selectedDesireStrong: false,
       selectedDesireWeek: false,
@@ -524,18 +559,87 @@ export default {
       selectedPairFiveUp: false,
       selectedPairParams: [], //带看多选条件
       selectedDesireIntensitys: [], //意向多选条件
+      selectedHouseNumbers: [], //房型多选条件
       minPrice: null, //最小价格条件
       maxPrice: null, //最大价格条件
       minArea: null, //最小价格条件
       maxArea: null, //最大价格条件
+      minLastPairFollowTime: null, //最大带看时间条件
+      maxLastPairFollowTime: null, //最大带看时间条件
+      minAddTime: null, //最小录入时间条件
+      maxAddTime: null, //最大录入时间条件
       changeQuery: false,
       form: {
         keyWord: "",
-        tasttime: ""
+        addTime: "",
+        pairTime: ""
       }
     };
   },
   methods: {
+    searchPairTime() {
+      if (this.form.pairTime) {
+        this.minLastPairFollowTime = this.form.pairTime[0];
+        this.maxLastPairFollowTime = this.form.pairTime[1];
+        this.searchWithParams();
+      } else {
+        this.$message({
+          type: "info",
+          message: "请选择搜索带看时间"
+        });
+      }
+    },
+    searchAddTime() {
+      if (this.form.addTime) {
+        this.minAddTime = this.form.addTime[0];
+        this.maxAddTime = this.form.addTime[1];
+        this.searchWithParams();
+      } else {
+        this.$message({
+          type: "info",
+          message: "请选择搜索录入时间"
+        });
+      }
+    },
+    handlerPriceChange() {
+      for (let key in this.priceSelected) {
+        this.priceSelected[key] = false;
+        console.log("ssssss");
+      }
+    },
+    handleAreaChange() {
+      for (let key in this.areaSelected) {
+        this.areaSelected[key] = false;
+      }
+    },
+    changeRoomSelectedUnlimit() {
+      this.roomSelectedUnlimit = true;
+      for (let key in this.roomSelected) {
+        this.roomSelected[key] = false;
+      }
+      this.selectedHouseNumbers = []; //条件置空
+      this.searchWithParams();
+    },
+    changeRoomSelected(field) {
+      this.roomSelectedUnlimit = false;
+      this.roomSelected[field] = !this.roomSelected[field];
+
+      if (this.roomSelected[field]) {
+        //增加选中 房型 条件
+        if (!this.selectedHouseNumbers.includes(field)) {
+          this.selectedHouseNumbers.push(field);
+        }
+      } else {
+        //移除选中改条件
+        var index = this.selectedHouseNumbers.indexOf(field);
+        if (index > -1) {
+          this.selectedHouseNumbers.splice(index, 1);
+          console.log(field, this.selectedHouseNumbers, "移除了房型条件");
+        }
+      }
+
+      this.searchWithParams();
+    },
     changeAreaSelected(min, max) {
       this.areaSelected[min] = true;
       for (let key in this.areaSelected) {
@@ -701,7 +805,12 @@ export default {
         minPrice: this.minPrice,
         maxPrice: this.maxPrice,
         minArea: this.minArea,
-        maxArea: this.maxArea
+        maxArea: this.maxArea,
+        houseNumbers: this.selectedHouseNumbers,
+        minAddTime: this.minAddTime,
+        maxAddTime: this.maxAddTime,
+        minLastPairFollowTime: this.minLastPairFollowTime,
+        maxLastPairFollowTime: this.maxLastPairFollowTime
       });
     },
     search() {
