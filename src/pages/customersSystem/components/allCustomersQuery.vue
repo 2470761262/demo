@@ -177,7 +177,7 @@
           type="text"
           class="select-input-sub"
           placeholder="请输入客户姓名,联系方式"
-          v-model="form.searchData"
+          v-model="form.keyWord"
         />
       </div>
       <button class="select-but-sub" @click="search">开始搜索</button>
@@ -187,17 +187,47 @@
         <div class="query-change-item">
           <h3>意向:</h3>
           <ul>
-            <li class="is-activate">不限</li>
-            <li v-for="(item, index) in fatherQueryGroup[1]" :key="index">
-              {{ index }}({{ item }})
+            <li
+              @click="changeDesireUnlimit"
+              :class="{ 'is-activate': selectedDesire }"
+            >
+              不限
+            </li>
+            <li
+              @click="changeDesireField('selectedDesireWeek')"
+              :class="{ 'is-activate': selectedDesireWeek }"
+            >
+              较弱({{ fatherQueryGroup[1]["较弱"] }})
+            </li>
+            <li
+              @click="changeDesireField('selectedDesireCommon')"
+              :class="{ 'is-activate': selectedDesireCommon }"
+            >
+              一般({{ fatherQueryGroup[1]["一般"] }})
+            </li>
+            <li
+              @click="changeDesireField('selectedDesireStrong')"
+              :class="{ 'is-activate': selectedDesireStrong }"
+            >
+              强烈({{ fatherQueryGroup[1]["强烈"] }})
             </li>
           </ul>
         </div>
         <div class="query-change-item">
           <h3>进度:</h3>
           <ul>
-            <li class="is-activate">不限</li>
-            <li v-for="(item, index) in fatherQueryGroup[0]" :key="index">
+            <li
+              :class="{ 'is-activate': selectedPair }"
+              @click="changePairUnlimit()"
+            >
+              不限
+            </li>
+            <li
+              @click="changePairField(index)"
+              :class="{ 'is-activate': changePairClass(index) }"
+              v-for="(item, index) in fatherQueryGroup[0]"
+              :key="index"
+            >
               {{ index }}({{ item }})
             </li>
             <li v-for="(item, index) in activeParams" :key="index">
@@ -344,23 +374,170 @@ export default {
       return p;
     }
   },
+  watch: {
+    selectedPairNone: function(val) {
+      this.updatePairParams(val, 0);
+    },
+    selectedPairOne: function(val) {
+      this.updatePairParams(val, 1);
+    },
+    selectedPairTwo: function(val) {
+      this.updatePairParams(val, 2);
+    },
+    selectedPairThree: function(val) {
+      this.updatePairParams(val, 3);
+    },
+    selectedPairFour: function(val) {
+      this.updatePairParams(val, 4);
+    },
+    selectedPairFiveUp: function(val) {
+      this.updatePairParams(val, 5);
+    },
+    selectedDesireStrong: function(val) {
+      this.updateDesireParams(val, 2);
+    },
+    selectedDesireCommon: function(val) {
+      this.updateDesireParams(val, 1);
+    },
+    selectedDesireWeek: function(val) {
+      this.updateDesireParams(val, 0);
+    }
+  },
   data() {
     return {
+      selectedDesire: true,
+      selectedDesireStrong: false,
+      selectedDesireWeek: false,
+      selectedDesireCommon: false,
+      selectedPair: true, //进度，不限
+      selectedPairNone: false,
+      selectedPairOne: false,
+      selectedPairTwo: false,
+      selectedPairThree: false,
+      selectedPairFour: false,
+      selectedPairFiveUp: false,
+      selectedPairParams: [], //带看多选条件
+      selectedDesireIntensitys: [], //意向多选条件
       changeQuery: false,
       form: {
-        searchData: "",
+        keyWord: "",
         tasttime: ""
       }
     };
   },
   methods: {
-    search() {
-      console.log("执行了父组件的方法");
-      if (this.fatherMethod) {
-        this.fatherMethod({});
-      } else {
-        console.log("xx ");
+    updateDesireParams(changeVal, value) {
+      if (value == -1) {
+        this.selectedDesireIntensitys = [];
+        this.searchWithParams();
+        return;
       }
+      if (changeVal) {
+        if (!this.selectedDesireIntensitys.includes(value)) {
+          this.selectedDesireIntensitys.push(value);
+          console.log(value, this.selectedDesireIntensitys, "添加了意向条件后");
+        }
+      } else {
+        var index = this.selectedDesireIntensitys.indexOf(value);
+        if (index > -1) {
+          this.selectedDesireIntensitys.splice(index, 1);
+          console.log(value, this.selectedDesireIntensitys, "移除了意向条件");
+        }
+      }
+      this.searchWithParams();
+    },
+    updatePairParams(changeVal, value) {
+      if (value == -1) {
+        this.selectedPairParams = [];
+        this.searchWithParams();
+        return;
+      }
+      if (changeVal) {
+        if (!this.selectedPairParams.includes(value)) {
+          this.selectedPairParams.push(value);
+          console.log(value, this.selectedPairParams, "添加了带看次数条件后");
+        }
+      } else {
+        var index = this.selectedPairParams.indexOf(value);
+        if (index > -1) {
+          this.selectedPairParams.splice(index, 1);
+          console.log(value, this.selectedPairParams, "移除了带看次数条件");
+        }
+      }
+      this.searchWithParams();
+    },
+    changePairUnlimit() {
+      this.selectedPairParams = [];
+      this.selectedPair = true;
+      this.selectedPairNone = false;
+      this.selectedPairOne = false;
+      this.selectedPairTwo = false;
+      this.selectedPairThree = false;
+      this.selectedPairFour = false;
+      this.selectedPairFiveUp = false;
+      this.searchWithParams();
+    },
+    changePairField(field) {
+      if (field == "未带看") this.selectedPairNone = !this.selectedPairNone;
+      if (field == "首次带看") this.selectedPairOne = !this.selectedPairOne;
+      if (field == "二次带看") this.selectedPairTwo = !this.selectedPairTwo;
+      if (field == "三次带看") this.selectedPairThree = !this.selectedPairThree;
+      if (field == "四次带看") this.selectedPairFour = !this.selectedPairFour;
+      if (field == "五次带看以上") {
+        this.selectedPairFiveUp = !this.selectedPairFiveUp;
+      }
+      if (
+        !this.selectedPairNone &&
+        !this.selectedPairOne &&
+        !this.selectedPairTwo &&
+        !this.selectedPairThree &&
+        !this.selectedPairFour &&
+        !this.selectedPairFiveUp
+      ) {
+        this.selectedPair = true;
+      } else {
+        this.selectedPair = false;
+      }
+    },
+    changePairClass(field) {
+      if (field == "未带看") return this.selectedPairNone;
+      if (field == "首次带看") return this.selectedPairOne;
+      if (field == "二次带看") return this.selectedPairTwo;
+      if (field == "三次带看") return this.selectedPairThree;
+      if (field == "四次带看") return this.selectedPairFour;
+      if (field == "五次带看以上") return this.selectedPairFiveUp;
+    },
+    changeDesireUnlimit() {
+      this.selectedDesire = true;
+      this.selectedDesireStrong = this.selectedDesireWeek = this.selectedDesireCommon = false;
+      this.searchWithParams();
+    },
+    changeDesireField(field) {
+      this[field] = !this[field];
+      if (
+        !this.selectedDesireStrong &&
+        !this.selectedDesireWeek &&
+        !this.selectedDesireCommon
+      ) {
+        this.selectedDesire = true; //都没选择，那么“不限”给自动选中
+      } else {
+        this.selectedDesire = false;
+      }
+    },
+    searchWithParams() {
+      if (this.fatherMethod) {
+        this.fatherMethod({
+          keyWord: this.form.keyWord,
+          pairNumbers: this.selectedPairParams,
+          desireIntensitys: this.selectedDesireIntensitys
+        });
+      } else {
+        console.log("父组件未初始化搜索方法");
+      }
+    },
+    search() {
+      console.log("点击关键词搜索按钮的搜索");
+      this.searchWithParams();
     },
     triggerChange() {
       this.changeQuery = !this.changeQuery;
