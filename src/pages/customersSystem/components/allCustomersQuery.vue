@@ -238,38 +238,125 @@
         <div class="query-change-item">
           <h3>价格:</h3>
           <ul>
-            <li class="is-activate">不限</li>
-            <li>50万以下</li>
-            <li>50-100万</li>
-            <li>100-150万</li>
-            <li>150-200万</li>
-            <li>200万以上</li>
-            <li class="is-query-input">
-              <input type="text" />
-              <span></span>
-              <input type="text" />
+            <li
+              @click="changePriceSelected('unlimit')"
+              :class="{ 'is-activate': priceSelected['unlimit'] }"
+            >
+              不限
             </li>
-            <li data-btn><button class="is-button">确定</button></li>
+            <li
+              @click="changePriceSelected(0, 50)"
+              :class="{ 'is-activate': priceSelected['0'] }"
+            >
+              50万以下
+            </li>
+            <li
+              @click="changePriceSelected(50, 100)"
+              :class="{ 'is-activate': priceSelected['50'] }"
+            >
+              50-100万
+            </li>
+            <li
+              @click="changePriceSelected(100, 150)"
+              :class="{ 'is-activate': priceSelected['100'] }"
+            >
+              100-150万
+            </li>
+            <li
+              @click="changePriceSelected(150, 200)"
+              :class="{ 'is-activate': priceSelected['150'] }"
+            >
+              150-200万
+            </li>
+            <li
+              @click="changePriceSelected(200, null)"
+              :class="{ 'is-activate': priceSelected['200'] }"
+            >
+              200万以上
+            </li>
+            <li class="is-query-input">
+              <input
+                type="text"
+                v-model="minPrice"
+                oninput="value=value.replace(/[^\d]/g,'')"
+              />
+              <span></span>
+              <input
+                type="text"
+                v-model="maxPrice"
+                oninput="value=value.replace(/[^\d]/g,'')"
+              />
+            </li>
+            <li data-btn>
+              <button class="is-button" @click="searchWithParams">确定</button>
+            </li>
           </ul>
         </div>
         <div class="query-change-item">
           <h3>面积:</h3>
           <ul>
-            <li class="is-activate">不限</li>
-            <li>50㎡以下</li>
-            <li>50-70㎡</li>
-            <li>70-90㎡</li>
-            <li>90-110㎡</li>
-            <li>110-130㎡</li>
-            <li>130-150㎡</li>
-            <li>150-200㎡</li>
-            <li>200㎡以上</li>
-            <li class="is-query-input">
-              <input type="text" />
-              <span></span>
-              <input type="text" />
+            <li
+              @click="changeAreaSelected('unlimit')"
+              :class="{ 'is-activate': areaSelected['unlimit'] }"
+            >
+              不限
             </li>
-            <li data-btn><button class="is-button">确定</button></li>
+            <li
+              @click="changeAreaSelected(0, 50)"
+              :class="{ 'is-activate': areaSelected['0'] }"
+            >
+              50㎡以下
+            </li>
+            <li
+              @click="changeAreaSelected(50, 70)"
+              :class="{ 'is-activate': areaSelected['50'] }"
+            >
+              50-70㎡
+            </li>
+            <li
+              @click="changeAreaSelected(70, 90)"
+              :class="{ 'is-activate': areaSelected['70'] }"
+            >
+              70-90㎡
+            </li>
+            <li
+              @click="changeAreaSelected(90, 110)"
+              :class="{ 'is-activate': areaSelected['90'] }"
+            >
+              90-110㎡
+            </li>
+            <li
+              @click="changeAreaSelected(110, 130)"
+              :class="{ 'is-activate': areaSelected['110'] }"
+            >
+              110-130㎡
+            </li>
+            <li
+              @click="changeAreaSelected(130, 150)"
+              :class="{ 'is-activate': areaSelected['130'] }"
+            >
+              130-150㎡
+            </li>
+            <li
+              @click="changeAreaSelected(150, 200)"
+              :class="{ 'is-activate': areaSelected['150'] }"
+            >
+              150-200㎡
+            </li>
+            <li
+              @click="changeAreaSelected(200, null)"
+              :class="{ 'is-activate': areaSelected['200'] }"
+            >
+              200㎡以上
+            </li>
+            <li class="is-query-input">
+              <input type="text" v-model="minArea" />
+              <span></span>
+              <input type="text" v-model="maxArea" />
+            </li>
+            <li data-btn>
+              <button class="is-button" @click="searchWithParams">确定</button>
+            </li>
           </ul>
         </div>
         <div class="query-change-item">
@@ -405,6 +492,25 @@ export default {
   },
   data() {
     return {
+      priceSelected: {
+        unlimit: true,
+        0: false,
+        50: false,
+        100: false,
+        150: false,
+        200: false
+      },
+      areaSelected: {
+        unlimit: true,
+        0: false,
+        50: false,
+        70: false,
+        90: false,
+        110: false,
+        130: false,
+        150: false,
+        200: false
+      },
       selectedDesire: true,
       selectedDesireStrong: false,
       selectedDesireWeek: false,
@@ -418,6 +524,10 @@ export default {
       selectedPairFiveUp: false,
       selectedPairParams: [], //带看多选条件
       selectedDesireIntensitys: [], //意向多选条件
+      minPrice: null, //最小价格条件
+      maxPrice: null, //最大价格条件
+      minArea: null, //最小价格条件
+      maxArea: null, //最大价格条件
       changeQuery: false,
       form: {
         keyWord: "",
@@ -426,6 +536,38 @@ export default {
     };
   },
   methods: {
+    changeAreaSelected(min, max) {
+      this.areaSelected[min] = true;
+      for (let key in this.areaSelected) {
+        if (key != min) {
+          this.areaSelected[key] = false;
+        }
+      }
+      if (min == "unlimit") {
+        this.minArea = null;
+        this.maxArea = null;
+      } else {
+        this.minArea = min;
+        this.maxArea = max;
+      }
+      this.searchWithParams();
+    },
+    changePriceSelected(min, max) {
+      this.priceSelected[min] = true;
+      for (let key in this.priceSelected) {
+        if (key != min) {
+          this.priceSelected[key] = false;
+        }
+      }
+      if (min == "unlimit") {
+        this.minPrice = null;
+        this.maxPrice = null;
+      } else {
+        this.minPrice = min;
+        this.maxPrice = max;
+      }
+      this.searchWithParams();
+    },
     updateDesireParams(changeVal, value) {
       if (value == -1) {
         this.selectedDesireIntensitys = [];
@@ -525,15 +667,42 @@ export default {
       }
     },
     searchWithParams() {
-      if (this.fatherMethod) {
-        this.fatherMethod({
-          keyWord: this.form.keyWord,
-          pairNumbers: this.selectedPairParams,
-          desireIntensitys: this.selectedDesireIntensitys
-        });
-      } else {
+      if (!this.fatherMethod) {
         console.log("父组件未初始化搜索方法");
       }
+      if (
+        this.minPrice &&
+        this.maxPrice &&
+        Number(this.minPrice) > Number(this.maxPrice)
+      ) {
+        this.$message({
+          type: "info",
+          message: "最小价格不能大于最大价格"
+        });
+        this.minPrice = this.maxPrice = null;
+        return;
+      }
+      if (
+        this.minArea &&
+        this.maxArea &&
+        Number(this.minArea) > Number(this.maxArea)
+      ) {
+        this.$message({
+          type: "info",
+          message: "最小面积不能大于最大面积"
+        });
+        this.minArea = this.maxArea = null;
+        return;
+      }
+      this.fatherMethod({
+        keyWord: this.form.keyWord,
+        pairNumbers: this.selectedPairParams,
+        desireIntensitys: this.selectedDesireIntensitys,
+        minPrice: this.minPrice,
+        maxPrice: this.maxPrice,
+        minArea: this.minArea,
+        maxArea: this.maxArea
+      });
     },
     search() {
       console.log("点击关键词搜索按钮的搜索");
