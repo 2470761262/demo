@@ -44,10 +44,7 @@
     >
       <div class="flex-row">
         <el-form-item label="姓名:" prop="perName">
-          <el-input
-            v-model="employeeEntity.perName"
-            readonly="readonly"
-          ></el-input>
+          <el-input v-model="employeeEntity.perName"></el-input>
         </el-form-item>
         <el-form-item label="身份证:" prop="cardId">
           <el-input

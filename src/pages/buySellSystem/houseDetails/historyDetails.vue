@@ -76,6 +76,8 @@
       <!-- 房屋其他信息 -->
       <houseMessage
         class="cell-msg"
+        :hisEdit="false"
+        :showEdit="showEdit"
         :class="{ 'cell-msg-nest': nest }"
       ></houseMessage>
       <div class="cell-right no-center">
