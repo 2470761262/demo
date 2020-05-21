@@ -175,7 +175,7 @@
         </el-select>
         <div
           class="but-append"
-          v-if="showEdit || editAgentHouse"
+          v-if="hisEdit && (showEdit || editAgentHouse)"
           :data-tips="updateHouse.certificateType ? '修改' : '完成'"
           @click="updateHouseA(6)"
         >
@@ -489,7 +489,7 @@ export default {
     },
     hisEdit: {
       type: Boolean,
-      default: false
+      default: true
     }
   },
   inject: ["houseDetails"],
@@ -554,7 +554,6 @@ export default {
     }
     but.$on("editAgentHouse", () => {
       that.editAgentHouse = true;
-      console.log("11111111111111", that);
     });
   },
   destroyed() {

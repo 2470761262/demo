@@ -113,6 +113,7 @@ export default {
     }
     but.$on("editAgentHouse", () => {
       that.editAgentHouse = true;
+      console.log("ss", this);
     });
   },
   destroyed() {
