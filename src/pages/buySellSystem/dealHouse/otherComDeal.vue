@@ -3,6 +3,10 @@
   color: red;
   font-size: 14px;
 }
+.elTree {
+  height: 550px;
+  overflow-y: auto;
+}
 </style>
 <template>
   <list-page
@@ -15,6 +19,30 @@
     :dblclick="true"
     @cellDblClick="toHouseDetail"
   >
+    <template v-slot:left>
+      <div class="elTree" v-if="treeData.length > 0">
+        <el-input
+          placeholder="输入关键字进行过滤"
+          v-model="filterText"
+          class="treeSearch"
+        ></el-input>
+        <el-tree
+          ref="treeForm"
+          :data="treeData"
+          node-key="nodeId"
+          show-checkbox
+          :props="defaultProps"
+          @check-change="handleCheckChange"
+          :highlight-current="true"
+          :filter-node-method="filterNode"
+          check-strictly
+          :action="''"
+          empty-text="暂无数据，请检查权限"
+          auto-expand-parent
+          v-loading="treeLoading"
+        ></el-tree>
+      </div>
+    </template>
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -337,11 +365,25 @@ export default {
         }
       ],
       sortColumn: "id", //排序字段
-      sortType: "descending" //排序类型
+      sortType: "descending", //排序类型
+      treeData: [], //结构树
+      filterText: "",
+      defaultProps: {
+        children: "childrenNodes",
+        label: "labelName"
+      },
+      treeLoading: false,
+      treeCondition: {
+        0: [], //公司数组
+        1: [], //部门数组
+        2: [] //人员数组
+      },
+      chooseTree: [] //选中的树节点
     };
   },
   mounted() {
     this.queryOurComDeal(1);
+    this.getTree();
   },
   methods: {
     sortMethod(e) {
@@ -509,6 +551,9 @@ export default {
         }
         params.houseNo = that.data.houseNo;
       }
+      params.treeCompany = this.treeCondition[0].join(",");
+      params.treeDepartment = this.treeCondition[1].join(",");
+      params.treeAccount = this.treeCondition[2].join(",");
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
       console.log(params);
@@ -556,6 +601,59 @@ export default {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryOurComDeal(1);
+    },
+    handleCheckChange(data, checked, indeterminate) {
+      let key = data.type;
+      this.chooseTree = []; //清空数组
+      this.chooseTree.push(data.businessId);
+      if (key == 1) {
+        this.getUnderDepartment(data.childrenNodes);
+      }
+      if (checked) {
+        let set = new Set([...this.treeCondition[key], ...this.chooseTree]);
+        this.treeCondition[key] = [...set];
+      } else {
+        this.treeCondition[key] = this.treeCondition[key].filter(item => {
+          return !this.chooseTree.includes(item);
+        });
+      }
+      this.queryOurComDeal(1);
+    },
+    getUnderDepartment(list) {
+      list.forEach(item => {
+        if (item.type == 1) {
+          this.chooseTree.push(item.businessId);
+          if (item.childrenNodes != null && item.childrenNodes.length > 0) {
+            this.getUnderDepartment(item.childrenNodes);
+          }
+        }
+      });
+    },
+    filterNode(value, data) {
+      if (!value) return true;
+      if (data.labelName != null) {
+        return data.labelName.indexOf(value) !== -1;
+      }
+    },
+    getTree() {
+      this.treeLoading = true;
+      this.$api
+        .post({
+          url: "/tradeHouse/getOtherCompanyTrade",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            tree: "1"
+          }
+        })
+        .then(e => {
+          this.treeLoading = false;
+          if (e.data.code == 200 && e.data.data.length > 0) {
+            this.treeData = e.data.data;
+          }
+        })
+        .catch(e => {
+          this.treeLoading = false;
+        });
     }
   }
 };

@@ -1,4 +1,8 @@
 <style lang="less" scoped>
+.elTree {
+  height: 550px;
+  overflow-y: auto;
+}
 /deep/.cellRed {
   background: #e13d3d;
   color: #fff;
@@ -30,7 +34,7 @@
       @handleCurrentChange="handleCurrentChange"
     >
       <template v-slot:left>
-        <div class="elTree">
+        <div class="elTree" v-if="treeData.length > 0">
           <el-input
             placeholder="输入关键字进行过滤"
             v-model="filterText"
@@ -570,7 +574,8 @@ export default {
         0: [], //公司数组
         1: [], //部门数组
         2: [] //人员数组
-      }
+      },
+      chooseTree: [] //选中的树节点
     };
   },
   mounted() {
@@ -1057,7 +1062,7 @@ export default {
         params.houseNo = that.data.houseNo;
       }
       params.treeCompany = this.treeCondition[0].join(",");
-      params.treeDeptParent = this.treeCondition[1].join(",");
+      params.treeDepartment = this.treeCondition[1].join(",");
       params.treeAccount = this.treeCondition[2].join(",");
       params.sortColumn = that.sortColumn;
       params.sortType = that.sortType;
@@ -1112,17 +1117,32 @@ export default {
       console.log(`当前页: ${val}`);
       this.queryMyAgent(val);
     },
-    handleCheckChange(data, checked) {
+    handleCheckChange(data, checked, indeterminate) {
+      let key = data.type;
+      this.chooseTree = []; //清空数组
+      this.chooseTree.push(data.businessId);
+      if (key == 1) {
+        this.getUnderDepartment(data.childrenNodes);
+      }
       if (checked) {
-        this.treeCondition[data.type].push(data.businessId);
+        let set = new Set([...this.treeCondition[key], ...this.chooseTree]);
+        this.treeCondition[key] = [...set];
       } else {
-        this.treeCondition[data.type] = this.treeCondition[data.type].filter(
-          item => {
-            return item != data.businessId;
-          }
-        );
+        this.treeCondition[key] = this.treeCondition[key].filter(item => {
+          return !this.chooseTree.includes(item);
+        });
       }
       this.queryMyAgent(1);
+    },
+    getUnderDepartment(list) {
+      list.forEach(item => {
+        if (item.type == 1) {
+          this.chooseTree.push(item.businessId);
+          if (item.childrenNodes != null && item.childrenNodes.length > 0) {
+            this.getUnderDepartment(item.childrenNodes);
+          }
+        }
+      });
     },
     filterNode(value, data) {
       if (!value) return true;
