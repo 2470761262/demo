@@ -378,7 +378,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: 1,
-            limit: 50
+            limit: 9999
           }
         })
         .then(e => {
