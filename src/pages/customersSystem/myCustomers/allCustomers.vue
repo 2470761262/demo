@@ -17,7 +17,10 @@
     @handleSizeChange="handleSizeChange"
   >
     <template v-slot:top>
-      <allCustomersQuery></allCustomersQuery>
+      <allCustomersQuery
+        :fatherMethod="queryCustomerData"
+        :fatherQueryGroup="queryParamsGroup"
+      ></allCustomersQuery>
     </template>
     <template v-slot:title>
       <h3 class="page-tab-title">
@@ -76,6 +79,18 @@ export default {
   },
   data() {
     return {
+      queryParamsGroup: [
+        {
+          未带看: 0,
+          首次带看: 0,
+          二次带看: 0,
+          三次带看: 0,
+          四次带看: 0,
+          五次带看以上: 0
+        },
+        { 强烈: 0, 一般: 0, 较弱: 0 },
+        { 在谈: 0, 签约: 0 }
+      ],
       querySelectFlag: true,
       loading: false,
       pageJson: {
@@ -84,20 +99,75 @@ export default {
         pageSize: 10 //每页条数
       },
       tableColumn: [
-        { prop: "qq", label: "姓名", width: "120px", order: false },
+        { prop: "customers", label: "姓名", width: "120px", order: false },
         {
-          prop: "ww",
+          prop: "desireIntensity",
           label: "意向",
           width: "120px",
           order: true,
-          formart: () => <el-rate value={2} max={3} disabled></el-rate>
+          formart: row => {
+            return (
+              <el-rate
+                value={row.desireIntensity + 1}
+                max={3}
+                disabled
+              ></el-rate>
+            );
+          }
         },
-        { prop: "ee", label: "总价", width: "120px", order: true },
-        { prop: "rr", label: "面积", width: "120px", order: true },
-        { prop: "tt", label: "户型", width: "120px", order: true },
-        { prop: "yy", label: "带看进度", width: "120px", order: true },
-        { prop: "uu", label: "上次带看", width: "120px", order: true },
-        { prop: "ii", label: "录入时间", width: "120px", order: true },
+        {
+          prop: "priceRange",
+          label: "总价",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            return row.minPrice + "-" + row.maxPrice;
+          }
+        },
+        {
+          prop: "minArea",
+          label: "面积",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            return row.minArea + "-" + row.maxArea;
+          }
+        },
+        {
+          prop: "rooms",
+          label: "户型",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            let s = row.rooms.replace("$", "或");
+            var d = s.length - 1;
+            //判断如果以或结尾，去除掉
+            if (d >= 0 && s.lastIndexOf("或") == d) {
+              s = s.substr(0, s.length - 1);
+            }
+            return s;
+          }
+        },
+        {
+          prop: "pairNumber",
+          label: "带看进度",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            if (!row.pairNumber || row.pairNumber == 0) {
+              return "未带看";
+            } else {
+              return row.pairNumber + "次";
+            }
+          }
+        },
+        {
+          prop: "lastPairFollowTime",
+          label: "上次带看",
+          width: "120px",
+          order: true
+        },
+        { prop: "addTime", label: "录入时间", width: "120px", order: true },
         {
           prop: "cz",
           label: "操作",
@@ -124,133 +194,87 @@ export default {
       tableData: [
         {
           id: 1,
-          qq: "张先生(男)",
+          customers: "空",
           ee: "90-120万",
           rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01",
+          rooms: "3房",
+          pairNumber: "为带看",
+          lastPairFollowTime: "站务",
+          addTime: "2020-02-01",
           pp: ["活跃呵护", "心机汪", "一是同行"]
-        },
-        {
-          id: 2,
-          qq: "张先生(男)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 3,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01",
-          pp: ["活跃呵护2", "心机汪2", "一是同行2"]
-        },
-        {
-          id: 4,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 5,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 6,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 7,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 8,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 9,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 10,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 11,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
-        },
-        {
-          id: 12,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01"
         }
       ] //存放表格数据
     };
   },
   mounted() {
-    this.$nextTick(setImpression);
+    let _that = this;
+    _that.$nextTick(setImpression);
+    _that.pageJson.currentPage = 1;
+    _that.queryCustomerData({});
+    _that.staticsMyCustomerData();
   },
   methods: {
+    staticsMyCustomerData() {
+      let _that = this;
+      _that.$api
+        .post({
+          url: "/saleCustomer/staticsMyCustomers",
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "统计我的客源");
+            _that.queryParamsGroup = result.data;
+          } else {
+            console.log("统计我的客源" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("统计我的客源失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
+    queryCustomerData(params) {
+      let _that = this;
+      let queryParams = Object.assign(
+        { page: _that.pageJson.currentPage, limit: _that.pageJson.pageSize },
+        params
+      );
+      _that.$api
+        .post({
+          url: "/saleCustomer/listMyCustomers",
+          data: queryParams,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查询我的客源列表");
+            var dataCustomers = result.data.data;
+            //_that.tableData = [..._that.tabl eData, ...dataCustomers];
+            _that.tableData = dataCustomers;
+            _that.pageJson.total = result.data.dataCount;
+            //result.data.pageSum
+          } else {
+            console.log("查询客源列表" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("查询客源列表失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
     /**
      * 设置如果有当前行有印象数据则行先生对应的calss
      */

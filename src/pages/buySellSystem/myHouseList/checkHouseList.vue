@@ -932,10 +932,27 @@ export default {
     },
     //跳转房源详情页面
     toHouseDetail(row) {
-      this.$router.push({
-        name: "houseDetails",
-        params: { houseId: row.eid }
-      });
+      var that = this;
+      this.$api
+        .get({
+          url: "/agent_house/valid/" + row.eid,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            if (e.data.data == 1) {
+              that.$router.push({
+                name: "houseDetails",
+                params: { houseId: row.eid }
+              });
+            } else {
+              that.$router.push({
+                name: "historyDetails",
+                params: { houseId: row.eid, tradeType: 0 }
+              });
+            }
+          }
+        });
     },
     querylistByParams() {
       console.log(this.queryData.timeSelect);

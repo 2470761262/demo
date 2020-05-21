@@ -98,7 +98,7 @@
         </div>
       </div>
       <div class="page-list-query-row">
-        <div class="query-content-cell ">
+        <div class="query-content-cell">
           <h3 class="query-cell-title">价格</h3>
           <el-input
             placeholder="最小值"
@@ -170,7 +170,6 @@
         </div>
       </div>
     </template>
-
     <template #tableColumn="cell">
       <template v-for="item in cell.tableData">
         <el-table-column
@@ -188,34 +187,33 @@
         label="售价(万元)"
         :sort-orders="['ascending', 'descending']"
         sortable="custom"
-      >
-      </el-table-column>
+      ></el-table-column>
       <el-table-column
         class-name="anchor-point"
         prop="inArea"
         label="面积(m²)"
         :sort-orders="['ascending', 'descending']"
         sortable="custom"
-      >
-      </el-table-column>
+      ></el-table-column>
       <el-table-column
         class-name="anchor-point"
         prop="unitPrice"
         label="单价(元/㎡)"
         :sort-orders="['ascending', 'descending']"
         sortable="false"
-      >
-      </el-table-column>
-      <el-table-column prop="" label="户型" :formatter="formatHouseType">
-      </el-table-column>
+      ></el-table-column>
+      <el-table-column
+        prop
+        label="户型"
+        :formatter="formatHouseType"
+      ></el-table-column>
       <el-table-column
         class-name="anchor-point"
         prop="amount"
         label="对赌鑫币"
         :sort-orders="['ascending', 'descending']"
         sortable="custom"
-      >
-      </el-table-column>
+      ></el-table-column>
       <el-table-column
         class-name="anchor-point"
         prop="createTime"
@@ -229,8 +227,7 @@
         prop="status"
         label="对赌结果"
         :formatter="formatHouseBetStatus"
-      >
-      </el-table-column>
+      ></el-table-column>
       <el-table-column prop="brokerName" label="对赌人"></el-table-column>
       <el-table-column prop="endTime" label="到期时间"></el-table-column>
       <el-table-column label="操作" fixed="right">
@@ -349,11 +346,26 @@ export default {
   methods: {
     toHouseDetail(row) {
       var that = this;
-      console.log(row, "进入对赌房源（bsagenthousetbl）详情");
-      that.$router.push({
-        name: "houseDetails",
-        params: { houseId: row.houseId }
-      });
+      this.$api
+        .get({
+          url: "/agent_house/valid/" + row.houseId,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            if (e.data.data == 1) {
+              that.$router.push({
+                name: "houseDetails",
+                params: { houseId: row.houseId }
+              });
+            } else {
+              that.$router.push({
+                name: "historyDetails",
+                params: { houseId: row.houseId }
+              });
+            }
+          }
+        });
     },
     moreSelectChange(e) {
       this.moreSelect = e;

@@ -835,7 +835,7 @@ export default {
           let result = e.data;
           if (result.code == 200) {
             console.log(result.message);
-            this.$alert("", "修改成功", {
+            this.$alert("", "已提交申请成功", {
               dangerouslyUseHTMLString: false
             });
             if (this.backUrl === "hrTree") {
@@ -855,7 +855,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log("修改失败");
+          console.log("提交申请失败");
           console.log(e);
         });
     },
