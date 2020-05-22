@@ -90,7 +90,7 @@ export default {
           四次带看: 0,
           五次带看以上: 0
         },
-        { 强烈: 0, 一般: 0, 较弱: 0 },
+        { 强烈: 0, 一般: 0, 较弱: 0, 无意向: 0 },
         { 在谈: 0, 签约: 0 }
       ],
       querySelectFlag: true,
@@ -109,11 +109,7 @@ export default {
           order: true,
           formart: row => {
             return (
-              <el-rate
-                value={row.desireIntensity + 1}
-                max={3}
-                disabled
-              ></el-rate>
+              <el-rate value={row.desireIntensity} max={3} disabled></el-rate>
             );
           }
         },

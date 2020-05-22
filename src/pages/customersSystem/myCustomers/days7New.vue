@@ -223,14 +223,18 @@ export default {
       desireLists: [
         {
           value: "0",
-          label: "较弱"
+          label: "无意向"
         },
         {
           value: "1",
-          label: "一般"
+          label: "较弱"
         },
         {
           value: "2",
+          label: "一般"
+        },
+        {
+          value: "3",
           label: "强烈"
         }
       ],
@@ -287,11 +291,7 @@ export default {
           order: true,
           formart: row => {
             return (
-              <el-rate
-                value={row.desireIntensity + 1}
-                max={3}
-                disabled
-              ></el-rate>
+              <el-rate value={row.desireIntensity} max={3} disabled></el-rate>
             );
           }
         },
