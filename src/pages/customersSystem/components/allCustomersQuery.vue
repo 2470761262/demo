@@ -238,58 +238,156 @@
         <div class="query-change-item">
           <h3>价格:</h3>
           <ul>
-            <li class="is-activate">不限</li>
-            <li>50万以下</li>
-            <li>50-100万</li>
-            <li>100-150万</li>
-            <li>150-200万</li>
-            <li>200万以上</li>
-            <li class="is-query-input">
-              <input type="text" />
-              <span></span>
-              <input type="text" />
+            <li
+              @click="changePriceSelected('unlimit')"
+              :class="{ 'is-activate': priceSelected['unlimit'] }"
+            >
+              不限
             </li>
-            <li data-btn><button class="is-button">确定</button></li>
+            <li
+              @click="changePriceSelected(0, 50)"
+              :class="{ 'is-activate': priceSelected['0'] }"
+            >
+              50万以下
+            </li>
+            <li
+              @click="changePriceSelected(50, 100)"
+              :class="{ 'is-activate': priceSelected['50'] }"
+            >
+              50-100万
+            </li>
+            <li
+              @click="changePriceSelected(100, 150)"
+              :class="{ 'is-activate': priceSelected['100'] }"
+            >
+              100-150万
+            </li>
+            <li
+              @click="changePriceSelected(150, 200)"
+              :class="{ 'is-activate': priceSelected['150'] }"
+            >
+              150-200万
+            </li>
+            <li
+              @click="changePriceSelected(200, null)"
+              :class="{ 'is-activate': priceSelected['200'] }"
+            >
+              200万以上
+            </li>
+            <li class="is-query-input">
+              <input
+                type="text"
+                v-model="minPrice"
+                oninput="value=value.replace(/[^\d]/g,'')"
+                @change="handlerPriceChange"
+              />
+              <span></span>
+              <input
+                type="text"
+                v-model="maxPrice"
+                oninput="value=value.replace(/[^\d]/g,'')"
+                @change="handlerPriceChange"
+              />
+            </li>
+            <li data-btn>
+              <button class="is-button" @click="searchWithParams">确定</button>
+            </li>
           </ul>
         </div>
         <div class="query-change-item">
           <h3>面积:</h3>
           <ul>
-            <li class="is-activate">不限</li>
-            <li>50㎡以下</li>
-            <li>50-70㎡</li>
-            <li>70-90㎡</li>
-            <li>90-110㎡</li>
-            <li>110-130㎡</li>
-            <li>130-150㎡</li>
-            <li>150-200㎡</li>
-            <li>200㎡以上</li>
-            <li class="is-query-input">
-              <input type="text" />
-              <span></span>
-              <input type="text" />
+            <li
+              @click="changeAreaSelected('unlimit')"
+              :class="{ 'is-activate': areaSelected['unlimit'] }"
+            >
+              不限
             </li>
-            <li data-btn><button class="is-button">确定</button></li>
+            <li
+              @click="changeAreaSelected(0, 50)"
+              :class="{ 'is-activate': areaSelected['0'] }"
+            >
+              50㎡以下
+            </li>
+            <li
+              @click="changeAreaSelected(50, 70)"
+              :class="{ 'is-activate': areaSelected['50'] }"
+            >
+              50-70㎡
+            </li>
+            <li
+              @click="changeAreaSelected(70, 90)"
+              :class="{ 'is-activate': areaSelected['70'] }"
+            >
+              70-90㎡
+            </li>
+            <li
+              @click="changeAreaSelected(90, 110)"
+              :class="{ 'is-activate': areaSelected['90'] }"
+            >
+              90-110㎡
+            </li>
+            <li
+              @click="changeAreaSelected(110, 130)"
+              :class="{ 'is-activate': areaSelected['110'] }"
+            >
+              110-130㎡
+            </li>
+            <li
+              @click="changeAreaSelected(130, 150)"
+              :class="{ 'is-activate': areaSelected['130'] }"
+            >
+              130-150㎡
+            </li>
+            <li
+              @click="changeAreaSelected(150, 200)"
+              :class="{ 'is-activate': areaSelected['150'] }"
+            >
+              150-200㎡
+            </li>
+            <li
+              @click="changeAreaSelected(200, null)"
+              :class="{ 'is-activate': areaSelected['200'] }"
+            >
+              200㎡以上
+            </li>
+            <li class="is-query-input">
+              <input
+                type="text"
+                v-model="minArea"
+                oninput="value=value.replace(/[^\d]/g,'')"
+                @change="handleAreaChange"
+              />
+              <span></span>
+              <input
+                type="text"
+                v-model="maxArea"
+                oninput="value=value.replace(/[^\d]/g,'')"
+                @change="handleAreaChange"
+              />
+            </li>
+            <li data-btn>
+              <button class="is-button" @click="searchWithParams">确定</button>
+            </li>
           </ul>
         </div>
         <div class="query-change-item">
           <h3>房型:</h3>
           <ul>
-            <li class="is-activate">不限</li>
-            <li>1房</li>
-            <li>50-70㎡</li>
-            <li>70-90㎡</li>
-            <li>90-110㎡</li>
-            <li>110-130㎡</li>
-            <li>130-150㎡</li>
-            <li>150-200㎡</li>
-            <li>200㎡以上</li>
-            <li class="is-query-input">
-              <input type="text" />
-              <span></span>
-              <input type="text" />
+            <li
+              @click="changeRoomSelectedUnlimit()"
+              :class="{ 'is-activate': roomSelectedUnlimit }"
+            >
+              不限
             </li>
-            <li data-btn><button class="is-button">确定</button></li>
+            <li
+              v-for="(item, index) in roomSelected"
+              :key="index"
+              @click="changeRoomSelected(index)"
+              :class="{ 'is-activate': roomSelected[index] }"
+            >
+              {{ index == 5 ? index + "房以上" : index + "房" }}
+            </li>
           </ul>
         </div>
         <div class="query-just">
@@ -299,15 +397,16 @@
               <li class="flex-item">
                 <div class="is-time">
                   <el-date-picker
-                    v-model="form.tasttime"
+                    v-model="form.pairTime"
                     type="daterange"
                     range-separator="至"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
+                    value-format="yyyy-MM-dd HH:mm:ss"
                   >
                   </el-date-picker>
                 </div>
-                <button class="is-button">确定</button>
+                <button class="is-button" @click="searchPairTime">确定</button>
               </li>
             </ul>
           </div>
@@ -317,15 +416,16 @@
               <li class="flex-item">
                 <div class="is-time">
                   <el-date-picker
-                    v-model="form.tasttime"
+                    v-model="form.addTime"
                     type="daterange"
                     range-separator="至"
                     start-placeholder="开始日期"
                     end-placeholder="结束日期"
+                    value-format="yyyy-MM-dd HH:mm:ss"
                   >
                   </el-date-picker>
                 </div>
-                <button class="is-button">确定</button>
+                <button class="is-button" @click="searchAddTime">确定</button>
               </li>
             </ul>
           </div>
@@ -401,10 +501,51 @@ export default {
     },
     selectedDesireWeek: function(val) {
       this.updateDesireParams(val, 0);
+    },
+    "form.pairTime": function(newValue, oldValue) {
+      if (!newValue) {
+        this.minLastPairFollowTime = null;
+        this.maxLastPairFollowTime = null;
+        this.searchWithParams();
+      }
+    },
+    "form.addTime": function(newValue, oldValue) {
+      if (!newValue) {
+        this.minAddTime = null;
+        this.maxAddTime = null;
+        this.searchWithParams();
+      }
     }
   },
   data() {
     return {
+      priceSelected: {
+        unlimit: true,
+        0: false,
+        50: false,
+        100: false,
+        150: false,
+        200: false
+      },
+      areaSelected: {
+        unlimit: true,
+        0: false,
+        50: false,
+        70: false,
+        90: false,
+        110: false,
+        130: false,
+        150: false,
+        200: false
+      },
+      roomSelected: {
+        5: false,
+        4: false,
+        3: false,
+        2: false,
+        1: false
+      },
+      roomSelectedUnlimit: true, //房型 不限 条件。默认选中
       selectedDesire: true,
       selectedDesireStrong: false,
       selectedDesireWeek: false,
@@ -418,14 +559,119 @@ export default {
       selectedPairFiveUp: false,
       selectedPairParams: [], //带看多选条件
       selectedDesireIntensitys: [], //意向多选条件
+      selectedHouseNumbers: [], //房型多选条件
+      minPrice: null, //最小价格条件
+      maxPrice: null, //最大价格条件
+      minArea: null, //最小价格条件
+      maxArea: null, //最大价格条件
+      minLastPairFollowTime: null, //最大带看时间条件
+      maxLastPairFollowTime: null, //最大带看时间条件
+      minAddTime: null, //最小录入时间条件
+      maxAddTime: null, //最大录入时间条件
       changeQuery: false,
       form: {
         keyWord: "",
-        tasttime: ""
+        addTime: "",
+        pairTime: ""
       }
     };
   },
   methods: {
+    searchPairTime() {
+      if (this.form.pairTime) {
+        this.minLastPairFollowTime = this.form.pairTime[0];
+        this.maxLastPairFollowTime = this.form.pairTime[1];
+        this.searchWithParams();
+      } else {
+        this.$message({
+          type: "info",
+          message: "请选择搜索带看时间"
+        });
+      }
+    },
+    searchAddTime() {
+      if (this.form.addTime) {
+        this.minAddTime = this.form.addTime[0];
+        this.maxAddTime = this.form.addTime[1];
+        this.searchWithParams();
+      } else {
+        this.$message({
+          type: "info",
+          message: "请选择搜索录入时间"
+        });
+      }
+    },
+    handlerPriceChange() {
+      for (let key in this.priceSelected) {
+        this.priceSelected[key] = false;
+        console.log("ssssss");
+      }
+    },
+    handleAreaChange() {
+      for (let key in this.areaSelected) {
+        this.areaSelected[key] = false;
+      }
+    },
+    changeRoomSelectedUnlimit() {
+      this.roomSelectedUnlimit = true;
+      for (let key in this.roomSelected) {
+        this.roomSelected[key] = false;
+      }
+      this.selectedHouseNumbers = []; //条件置空
+      this.searchWithParams();
+    },
+    changeRoomSelected(field) {
+      this.roomSelectedUnlimit = false;
+      this.roomSelected[field] = !this.roomSelected[field];
+
+      if (this.roomSelected[field]) {
+        //增加选中 房型 条件
+        if (!this.selectedHouseNumbers.includes(field)) {
+          this.selectedHouseNumbers.push(field);
+        }
+      } else {
+        //移除选中改条件
+        var index = this.selectedHouseNumbers.indexOf(field);
+        if (index > -1) {
+          this.selectedHouseNumbers.splice(index, 1);
+          console.log(field, this.selectedHouseNumbers, "移除了房型条件");
+        }
+      }
+
+      this.searchWithParams();
+    },
+    changeAreaSelected(min, max) {
+      this.areaSelected[min] = true;
+      for (let key in this.areaSelected) {
+        if (key != min) {
+          this.areaSelected[key] = false;
+        }
+      }
+      if (min == "unlimit") {
+        this.minArea = null;
+        this.maxArea = null;
+      } else {
+        this.minArea = min;
+        this.maxArea = max;
+      }
+      this.searchWithParams();
+    },
+    changePriceSelected(min, max) {
+      this.priceSelected[min] = true;
+      for (let key in this.priceSelected) {
+        if (key != min) {
+          this.priceSelected[key] = false;
+        }
+      }
+      if (min == "unlimit") {
+        this.minPrice = null;
+        this.maxPrice = null;
+      } else {
+        this.minPrice = min;
+        this.maxPrice = max;
+      }
+      this.searchWithParams();
+    },
     updateDesireParams(changeVal, value) {
       if (value == -1) {
         this.selectedDesireIntensitys = [];
@@ -525,15 +771,47 @@ export default {
       }
     },
     searchWithParams() {
-      if (this.fatherMethod) {
-        this.fatherMethod({
-          keyWord: this.form.keyWord,
-          pairNumbers: this.selectedPairParams,
-          desireIntensitys: this.selectedDesireIntensitys
-        });
-      } else {
+      if (!this.fatherMethod) {
         console.log("父组件未初始化搜索方法");
       }
+      if (
+        this.minPrice &&
+        this.maxPrice &&
+        Number(this.minPrice) > Number(this.maxPrice)
+      ) {
+        this.$message({
+          type: "info",
+          message: "最小价格不能大于最大价格"
+        });
+        this.minPrice = this.maxPrice = null;
+        return;
+      }
+      if (
+        this.minArea &&
+        this.maxArea &&
+        Number(this.minArea) > Number(this.maxArea)
+      ) {
+        this.$message({
+          type: "info",
+          message: "最小面积不能大于最大面积"
+        });
+        this.minArea = this.maxArea = null;
+        return;
+      }
+      this.fatherMethod({
+        keyWord: this.form.keyWord,
+        pairNumbers: this.selectedPairParams,
+        desireIntensitys: this.selectedDesireIntensitys,
+        minPrice: this.minPrice,
+        maxPrice: this.maxPrice,
+        minArea: this.minArea,
+        maxArea: this.maxArea,
+        houseNumbers: this.selectedHouseNumbers,
+        minAddTime: this.minAddTime,
+        maxAddTime: this.maxAddTime,
+        minLastPairFollowTime: this.minLastPairFollowTime,
+        maxLastPairFollowTime: this.maxLastPairFollowTime
+      });
     },
     search() {
       console.log("点击关键词搜索按钮的搜索");

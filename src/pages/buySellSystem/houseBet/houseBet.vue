@@ -1,3 +1,9 @@
+<style lang="less" scoped>
+.elTree {
+  height: 550px;
+  overflow-y: auto;
+}
+</style>
 <template>
   <list-page
     :parentData="$data"
@@ -9,6 +15,30 @@
     :dblclick="true"
     @cellDblClick="toHouseDetail"
   >
+    <template v-slot:left>
+      <div class="elTree" v-if="treeData.length > 0">
+        <el-input
+          placeholder="输入关键字进行过滤"
+          v-model="filterText"
+          class="treeSearch"
+        ></el-input>
+        <el-tree
+          ref="treeForm"
+          :data="treeData"
+          node-key="nodeId"
+          show-checkbox
+          :props="defaultProps"
+          @check-change="handleCheckChange"
+          :highlight-current="true"
+          :filter-node-method="filterNode"
+          check-strictly
+          :action="''"
+          empty-text="暂无数据，请检查权限"
+          auto-expand-parent
+          v-loading="treeLoading"
+        ></el-tree>
+      </div>
+    </template>
     <template v-slot:top>
       <div class="page-list-query-row">
         <div class="query-content-cell">
@@ -265,12 +295,7 @@ export default {
       },
       loading: true,
       showHrTree: false,
-      defaultProps: {
-        children: "childrenNodes",
-        label: "labelName"
-      },
       moreSelect: [],
-      treeData: [],
       curNodeId: [],
       data: {
         comId: "",
@@ -314,45 +339,61 @@ export default {
       ],
       tableData: [],
       sortColumn: "createTime", //排序字段
-      sortType: 1 //排序类型
+      sortType: 1, //排序类型
+      treeData: [], //结构树
+      filterText: "",
+      defaultProps: {
+        children: "childrenNodes",
+        label: "labelName"
+      },
+      treeLoading: false,
+      treeCondition: {
+        0: [], //公司数组
+        1: [], //部门数组
+        2: [] //人员数组
+      },
+      chooseTree: [] //选中的树节点
     };
   },
   mounted() {
     this.queryHouseBet(1);
-    //读取树数据
-    this.$api
-      .post({
-        url: "/sys/tree/bet"
-      })
-      .then(e => {
-        console.log(e.data);
-        let result = e.data;
-        if (result.code == 200) {
-          console.log(result.message);
-          console.log(result.data);
-          this.treeData = result.data;
-        } else {
-          console.log("载入结果" + +result.message);
-          alert(result.message);
-        }
-      })
-      .then(() => {
-        if (this.$route.query.cur != null) {
-          this.curNodeId = [this.$route.query.cur];
-          this.$nextTick(() => {
-            this.handleCheckChange(
-              this.$refs.treeForm.getNode(...this.curNodeId).data,
-              true
-            );
-          });
-        }
-      })
-      .catch(e => {
-        console.log("读取失败");
-        console.log(e);
-      });
+    this.getTree();
   },
   methods: {
+    getTree() {
+      //读取树数据
+      this.$api
+        .post({
+          url: "/sys/tree/bet"
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.treeData = result.data;
+          } else {
+            console.log("载入结果" + +result.message);
+            alert(result.message);
+          }
+        })
+        .then(() => {
+          if (this.$route.query.cur != null) {
+            this.curNodeId = [this.$route.query.cur];
+            this.$nextTick(() => {
+              this.handleCheckChange(
+                this.$refs.treeForm.getNode(...this.curNodeId).data,
+                true
+              );
+            });
+          }
+        })
+        .catch(e => {
+          console.log("读取失败");
+          console.log(e);
+        });
+    },
     toHouseDetail(row) {
       var that = this;
       this.$api
@@ -397,23 +438,19 @@ export default {
       this.queryHouseBet(1);
     },
     handleCheckChange(data, checked, node) {
-      this.showHrTree = false;
-      if (checked == true) {
-        this.data.empName = data.labelName;
-        this.checkedType = data.type;
-        this.$refs.treeForm.setCheckedNodes([data]);
-        // this.jumpNodeId = data.nodeId;
-        console.log(
-          "当前类型：" + this.checkedType + ",ID：" + data.businessId
-        );
-        //  0公司，1部门，2员工，3职位
-        if (this.checkedType === 0) {
-          this.data.coId = data.businessId;
-        } else if (this.checkedType === 1) {
-          this.data.deptId = data.businessId;
-        } else if (this.checkedType === 2) {
-          this.data.empId = data.businessId;
-        }
+      let key = data.type;
+      this.chooseTree = []; //清空数组
+      this.chooseTree.push(data.businessId);
+      if (key == 1) {
+        this.getUnderDepartment(data.childrenNodes);
+      }
+      if (checked) {
+        let set = new Set([...this.treeCondition[key], ...this.chooseTree]);
+        this.treeCondition[key] = [...set];
+      } else {
+        this.treeCondition[key] = this.treeCondition[key].filter(item => {
+          return !this.chooseTree.includes(item);
+        });
       }
       this.queryHouseBetParams();
     },
@@ -489,8 +526,6 @@ export default {
           .get({
             url: "/community/houseBet",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
             data: {
               communityName: query
             }
@@ -514,8 +549,6 @@ export default {
         .get({
           url: "/mateHouse/queryComBuilding",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId
           }
@@ -546,8 +579,6 @@ export default {
         .get({
           url: "/mateHouse/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId,
             cbId: that.data.cbId,
@@ -605,6 +636,9 @@ export default {
         if (that.data.timeSelect.length > 1)
           params.endTime = that.data.timeSelect[1];
       }
+      params.treeCompany = this.treeCondition[0].join(",");
+      params.treeDepartment = this.treeCondition[1].join(",");
+      params.treeAccount = this.treeCondition[2].join(",");
       console.log(params);
       this.$api
         .post({
@@ -651,6 +685,16 @@ export default {
       console.log(`每1页 ${val} 条`);
       this.pageJson.pageSize = val;
       this.queryHouseBet(1);
+    },
+    getUnderDepartment(list) {
+      list.forEach(item => {
+        if (item.type == 1) {
+          this.chooseTree.push(item.businessId);
+          if (item.childrenNodes != null && item.childrenNodes.length > 0) {
+            this.getUnderDepartment(item.childrenNodes);
+          }
+        }
+      });
     }
   }
 };

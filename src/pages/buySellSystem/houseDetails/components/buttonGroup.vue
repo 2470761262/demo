@@ -510,9 +510,9 @@ export default {
         HouseNo: this.resultData.HouseNo
       };
       let reslut = await release.cancelOutsideHouse(params);
-      if (reslut) {
+      if (reslut.data.code == 200) {
         this.resultData.isReleaseOutside = 0;
-        this.$message("操作成功");
+        this.$message(reslut.data.message);
       } else {
         this.$message("操作失败");
       }
@@ -530,9 +530,9 @@ export default {
         this.load.loading = true;
         let reslut = await release.releaseOutsideHouse(params);
         this.load.loading = false;
-        if (reslut) {
+        if (reslut.data.code == 200) {
           this.resultData.isReleaseOutside = 1;
-          this.$message("操作成功");
+          this.$message(reslut.data.message);
         } else {
           this.$message("操作失败");
         }

@@ -1016,6 +1016,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     console.log("离开了供给页面，不需要执行任何请求回调");
+    ``;
     this.isLeavePage = true;
     next();
   },
@@ -1028,6 +1029,11 @@ export default {
         let deffData = util.diffGet(
           this.$store.state.addHouse.formData.step2,
           this.formData
+        );
+        console.log(
+          this.$store.state.addHouse.formData.step2,
+          this.formData,
+          " this.$store.state.addHouse.formData.step2"
         );
         //判断当前是否有修改，如果有修改则length大于0
         let flag = Object.keys(deffData).length > 0 ? true : false;
@@ -1307,11 +1313,21 @@ export default {
             if (e.data.data.houseNow) {
               e.data.data.houseNow = parseInt(e.data.data.houseNow);
             }
-            if (e.data.data.middleSchoolUse) {
+
+            if (e.data.data.middleSchoolUse === 0) {
+              this.middleRadio = 0;
+            } else if (e.data.data.middleSchoolUse >= 1) {
               this.middleRadio = 1;
+            } else {
+              this.middleRadio = 0;
             }
-            if (e.data.data.primarySchoolUse) {
+
+            if (e.data.data.primarySchoolUse === 0) {
+              this.primaryRadio = 0;
+            } else if (e.data.data.primarySchoolUse >= 1) {
               this.primaryRadio = 1;
+            } else {
+              this.primaryRadio = 0;
             }
             console.log(e.data.data, "e.data.data");
             this.$store.dispatch("InitFormData", {
@@ -1336,25 +1352,25 @@ export default {
     //中学占用切换
     middleRadioChange(e) {
       if (e == 0) {
-        this.formData.middleSchoolUse = "";
-        this.$store.dispatch("InitFormData", {
-          commitName: "updateStep2",
-          json: {
-            middleSchoolUse: -1
-          }
-        });
+        this.formData.middleSchoolUse = 0;
+        // this.$store.dispatch("InitFormData", {
+        //   commitName: "updateStep2",
+        //   json: {
+        //     middleSchoolUse: -1
+        //   }
+        // });
       }
     },
     //小学占用切换
     primaryRadioChange(e) {
       if (e == 0) {
-        this.formData.primarySchoolUse = "";
-        this.$store.dispatch("InitFormData", {
-          commitName: "updateStep2",
-          json: {
-            primarySchoolUse: -1
-          }
-        });
+        this.formData.primarySchoolUse = 0;
+        // this.$store.dispatch("InitFormData", {
+        //   commitName: "updateStep2",
+        //   json: {
+        //     primarySchoolUse: -2
+        //   }
+        // });
       }
     },
     validateAll() {

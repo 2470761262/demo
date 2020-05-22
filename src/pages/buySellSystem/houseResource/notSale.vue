@@ -565,8 +565,6 @@ export default {
         .get({
           url: "/mateHouse/queryComBuilding",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId,
             page: 1,
@@ -600,8 +598,6 @@ export default {
         .get({
           url: "/mateHouse/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId,
             cbId: that.data.cbId,
@@ -633,7 +629,7 @@ export default {
     queryNotSale(currentPage) {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
       if (Object.keys(this.moreSelect).length != 0) {
         let selectObject = common.getSelectParams(
           this.transitionList,
