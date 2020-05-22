@@ -106,7 +106,7 @@
             filterable
             clearable
             placeholder="楼栋"
-            @change="queryRoomNo"
+            @change="buildChange"
           >
             <el-option
               class="anchor-point"
@@ -123,6 +123,8 @@
             clearable
             @change="querylistByParams"
             placeholder="房间号"
+            :loading="HouseNoLoading"
+            v-loadmore="loadMore"
           >
             <el-option
               class="anchor-point"
@@ -381,6 +383,13 @@ export default {
   },
   data() {
     return {
+      HouseNoLoading: false,
+      houseNoPage: {
+        // 房间分页数据
+        currentPage: 1,
+        totalPage: 1,
+        limit: 30
+      },
       querySelectFlag: false,
       optionsList: [],
       cbIdList: [],
@@ -991,8 +1000,20 @@ export default {
       this.querylistByParams();
       console.log("queryCBId!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + this.comId);
     },
+    buildChange() {
+      Object.assign(this.$data.houseNoPage, this.$options.data().houseNoPage);
+      this.roomNoList = [];
+      this.queryRoomNo();
+    },
+    loadMore() {
+      if (this.houseNoPage.currentPage < this.houseNoPage.totalPage) {
+        ++this.houseNoPage.currentPage;
+        this.queryRoomNo();
+      }
+    },
     queryRoomNo() {
       var that = this;
+      this.HouseNoLoading = true;
       this.$api
         .get({
           url: "/mateHouse/queryBuildIngHouses",
@@ -1000,17 +1021,21 @@ export default {
           token: false,
           qs: true,
           data: {
-            comId: this.data.comId,
-            cbId: this.data.cbId,
-            page: 1,
-            limit: 9999
+            comId: that.data.comId,
+            cbId: that.data.cbId,
+            page: this.houseNoPage.currentPage,
+            limit: this.houseNoPage.limit
           }
         })
         .then(e => {
           if (e.data.code == 200) {
-            that.data.RoomNo = "";
-            this.roomNoList = e.data.data.list;
+            that.data.roomNo = "";
+            this.roomNoList = [...this.roomNoList, ...e.data.data.list];
+            this.houseNoPage.totalPage = e.data.data.totalPage;
           }
+        })
+        .finally(() => {
+          this.HouseNoLoading = false;
         });
       this.querylistByParams();
     },

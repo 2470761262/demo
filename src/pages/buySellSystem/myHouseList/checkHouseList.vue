@@ -52,7 +52,7 @@
               filterable
               clearable
               placeholder="楼栋"
-              @change="queryRoomNo"
+              @change="buildChange"
             >
               <el-option
                 class="anchor-point"
@@ -68,6 +68,8 @@
               filterable
               @change="querylistByParams"
               placeholder="房间号"
+              :loading="HouseNoLoading"
+              v-loadmore="loadMore"
             >
               <el-option
                 class="anchor-point"
@@ -506,6 +508,13 @@ export default {
   },
   data() {
     return {
+      HouseNoLoading: false,
+      houseNoPage: {
+        // 房间分页数据
+        currentPage: 1,
+        totalPage: 1,
+        limit: 30
+      },
       showViewer: false,
       showImgIndexImg: null,
       type: "",
@@ -902,8 +911,20 @@ export default {
       this.row = row;
       this.showPopUp = true;
     },
+    buildChange() {
+      Object.assign(this.$data.houseNoPage, this.$options.data().houseNoPage);
+      this.roomNoList = [];
+      this.queryRoomNo();
+    },
+    loadMore() {
+      if (this.houseNoPage.currentPage < this.houseNoPage.totalPage) {
+        ++this.houseNoPage.currentPage;
+        this.queryRoomNo();
+      }
+    },
     queryRoomNo() {
       var that = this;
+      this.HouseNoLoading = true;
       this.$api
         .get({
           url: "/mateHouse/queryBuildIngHouses",
@@ -913,15 +934,19 @@ export default {
           data: {
             comId: that.queryData.comId,
             cbId: that.queryData.cbId,
-            page: 1,
-            limit: 50
+            page: this.houseNoPage.currentPage,
+            limit: this.houseNoPage.limit
           }
         })
         .then(e => {
           if (e.data.code == 200) {
             that.queryData.roomNo = "";
-            that.roomNoList = e.data.data.list;
+            this.roomNoList = [...this.roomNoList, ...e.data.data.list];
+            this.houseNoPage.totalPage = e.data.data.totalPage;
           }
+        })
+        .finally(() => {
+          this.HouseNoLoading = false;
         });
       let obj = {};
       obj = this.cbIdList.find(item => {
