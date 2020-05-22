@@ -562,8 +562,8 @@ export default {
       selectedHouseNumbers: [], //房型多选条件
       minPrice: null, //最小价格条件
       maxPrice: null, //最大价格条件
-      minArea: null, //最小价格条件
-      maxArea: null, //最大价格条件
+      minArea: null, //最小面积条件
+      maxArea: null, //最大面积条件
       minLastPairFollowTime: null, //最大带看时间条件
       maxLastPairFollowTime: null, //最大带看时间条件
       minAddTime: null, //最小录入时间条件

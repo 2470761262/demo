@@ -194,17 +194,17 @@ export default {
         }
       ], //定义表格字段
       tableData: [
-        {
-          id: 1,
-          customers: "空",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          rooms: "3房",
-          pairNumber: "为带看",
-          lastPairFollowTime: "站务",
-          addTime: "2020-02-01",
-          pp: ["活跃呵护", "心机汪", "一是同行"]
-        }
+        // {
+        //   id: 1,
+        //   customers: "空",
+        //   ee: "90-120万",
+        //   rr: "80-90㎡",
+        //   rooms: "3房",
+        //   pairNumber: "为带看",
+        //   lastPairFollowTime: "站务",
+        //   addTime: "2020-02-01",
+        //   pp: ["活跃呵护", "心机汪", "一是同行"]
+        // }
       ] //存放表格数据
     };
   },
