@@ -225,6 +225,7 @@ export default {
   },
   data() {
     return {
+      queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       writeFlag: false, //写跟进弹框开关
       sssss: "", //请按照实际字段名进行修改，
       ssslist: [
