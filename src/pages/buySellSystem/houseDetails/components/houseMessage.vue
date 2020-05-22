@@ -900,7 +900,6 @@ export default {
           });
           break;
       }
-      debugger;
       this.$api
         .put({
           url: "/agent_house/editAgentHouse",
