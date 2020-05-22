@@ -63,7 +63,7 @@ let log_socket = {
     let content = this.sendAction(e, accountId);
     if (className && className != "" && className.includes("anchor-point")) {
       content = this.sendAnchorData(e, accountId);
-    }else if(e.target.dataset.anchor){
+    }else if(e.target.dataset && e.target.dataset.anchor){
       content = this.sendAnchorData(e, accountId);
     }
     content = identify + "@$@" + content;
