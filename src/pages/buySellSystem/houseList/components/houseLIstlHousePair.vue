@@ -318,16 +318,25 @@
           <div class="select-input-set">
             <i class="el-icon-search"></i>
             <input
+              data-anchor="首页搜索房源"
               type="text"
               class="select-input-sub anchor-point"
               placeholder="请输入楼盘名称或房源编号"
               v-model="searchData"
             />
           </div>
-          <div class="select-but-sub anchor-point" @click="search">
+          <div
+            class="select-but-sub anchor-point"
+            @click="search"
+            data-anchor="首页开始搜索按钮"
+          >
             开始搜索
           </div>
-          <div class="select-but-reset anchor-point" @click="resetForm('form')">
+          <div
+            class="select-but-reset anchor-point"
+            data-anchor="首页重置按钮"
+            @click="resetForm('form')"
+          >
             <i class="el-icon-refresh reset-icon"></i>
             <span class="select-but-reset-title">重置</span>
           </div>
@@ -337,6 +346,7 @@
       <div class="page-form-inline budingMarinSet">
         <el-form-item label="楼盘名称" prop="comId">
           <el-select
+            data-anchor="首页选择楼盘"
             class="frist-width-select anchor-point"
             v-model="form.comId"
             @focus="remoteInput"
@@ -358,6 +368,7 @@
         </el-form-item>
         <el-form-item label="栋座" prop="cbId" class="page-label-center">
           <el-select
+            data-anchor="首页选择栋座"
             v-model="form.cbId"
             filterable
             clearable
@@ -381,6 +392,7 @@
           class="page-label-center"
         >
           <el-select
+            data-anchor="首页选择房间号"
             v-model="form.roomNo"
             @change="queryRoomNumber"
             filterable
@@ -438,7 +450,9 @@
               </div>
             </template>
             <template v-slot:dot>
-              <div class="tooltipsItem anchor-point">￥</div>
+              <div class="tooltipsItem anchor-point" data-anchor="首页售价">
+                ￥
+              </div>
             </template>
           </vue-slider>
         </el-form-item>
@@ -448,6 +462,7 @@
             placeholder="最小售价(万)"
             clearable
             class="anchor-point"
+            data-anchor="首页最小售价输入框"
             @change="maxChange('custom', '最大售价', 'Price')"
             v-model="custom.minPrice"
           ></el-input>
@@ -457,6 +472,7 @@
             v-number
             class="anchor-point"
             placeholder="最大售价(万)"
+            data-anchor="首页最大售价输入框"
             @change="maxChange('custom', '最大售价', 'Price')"
             clearable
             v-model="custom.maxPrice"
@@ -495,12 +511,15 @@
               </div>
             </template>
             <template v-slot:dot>
-              <div class="tooltipsItem anchor-point">￥</div>
+              <div class="tooltipsItem anchor-point" data-anchor="首页首付">
+                ￥
+              </div>
             </template>
           </vue-slider>
         </el-form-item>
         <div class="custom-content">
           <el-input
+            data-anchor="首页最小售价输入框"
             v-number
             class="anchor-point"
             placeholder="最小首付(万)"
@@ -511,6 +530,7 @@
           <div class="split-line"></div>
 
           <el-input
+            data-anchor="首页最大首付输入框"
             v-number
             class="anchor-point"
             placeholder="最大首付(万)"
@@ -562,12 +582,15 @@
               </div>
             </template>
             <template v-slot:dot>
-              <div class="tooltipsItem anchor-point">㎡</div>
+              <div class="tooltipsItem anchor-point" data-anchor="首页面积拖拉">
+                ㎡
+              </div>
             </template>
           </vue-slider>
         </el-form-item>
         <div class="custom-content">
           <el-input
+            data-anchor="首页最小面积输入框"
             class="anchor-point"
             v-number
             placeholder="最小面积(㎡)"
@@ -577,6 +600,7 @@
           ></el-input>
           <div class="split-line"></div>
           <el-input
+            data-anchor="首页最大面积输入框"
             class="anchor-point"
             v-number
             placeholder="最大面积(㎡)"
@@ -621,12 +645,14 @@
             <template v-slot:dot>
               <div
                 class="tooltipsItem iconxuanzelouceng iconfont anchor-point"
+                data-anchor="首页楼层筛选"
               ></div>
             </template>
           </vue-slider>
         </el-form-item>
         <div class="custom-content">
           <el-input
+            data-anchor="首页最小楼层输入框"
             class="anchor-point"
             v-number
             placeholder="最小楼层(层)"
@@ -636,6 +662,7 @@
           ></el-input>
           <div class="split-line"></div>
           <el-input
+            data-anchor="首页最大楼层输入框"
             class="anchor-point"
             v-number
             placeholder="最大楼层(层)"
@@ -652,16 +679,18 @@
           size="small"
         >
           <div
+            :data-anchor="'首页商圈:' + item.name"
             v-for="(item, index) in businessList"
             :key="index"
             class="checkbox-flex-pad anchor-point"
           >
             <el-tooltip
+              :data-anchor="'首页商圈:' + item.name"
               :content="item.name"
               :disabled="item.name.length < 4"
               placement="top"
             >
-              <el-checkbox :label="item.value" name="business" border>{{
+              <el-checkbox :label="item.value" name="business" border :data-anchor="'首页商圈:' + item.name">{{
                 item.name
               }}</el-checkbox>
             </el-tooltip>
@@ -675,6 +704,7 @@
           size="small"
         >
           <div
+            :data-anchor="'首页房型:' + item.name"
             v-for="(item, index) in houseTypeList"
             :key="index"
             class="checkbox-flex-pad anchor-point"
@@ -698,6 +728,7 @@
           size="small"
         >
           <div
+            :data-anchor="'首页装修:' + item.name"
             v-for="(item, index) in renovationList"
             :key="index"
             class="checkbox-flex-pad anchor-point"
@@ -721,6 +752,7 @@
           size="small"
         >
           <div
+            :data-anchor="'首页房源用途:' + item.name"
             class="checkbox-flex-pad anchor-point"
             v-for="(item, index) in purposeList"
             :key="index"
@@ -744,6 +776,7 @@
           size="small"
         >
           <div
+            :data-anchor="'首页朝向:' + item.name"
             v-for="(item, index) in faceList"
             :key="index"
             class="checkbox-flex-pad anchor-point"
@@ -767,6 +800,7 @@
           size="small"
         >
           <div
+            :data-anchor="'首页小学划片:' + item.name"
             v-for="(item, index) in MathPrimarySchoolListfirst"
             :key="index"
             class="checkbox-flex-pad anchor-point"
@@ -777,8 +811,9 @@
               }}</el-checkbox>
             </el-tooltip>
           </div>
-          <div class="checkbox-flex-pad anchor-point">
+          <div class="checkbox-flex-pad anchor-point" data-anchor="首页小学划片 更多按钮">
             <el-button
+              data-anchor="首页小学划片 更多按钮"
               type="text"
               @click="triggerSchoolSizeFlag('PrimarySizeFlag')"
               >{{ PrimarySizeFlag ? "收起" : "更多" }}</el-button
@@ -794,6 +829,7 @@
           size="small"
         >
           <div
+            :data-anchor="'首页中学划片:' + item.name"
             v-for="(item, index) in MathMiddleSchoolListfirst"
             :key="index"
             class="checkbox-flex-pad anchor-point"
@@ -804,8 +840,10 @@
               }}</el-checkbox>
             </el-tooltip>
           </div>
-          <div class="checkbox-flex-pad anchor-point">
+          <div class="checkbox-flex-pad anchor-point" data-anchor="首页中学划片 更多按钮">
             <el-button
+              class="anchor-point"
+              data-anchor="首页中学划片 更多按钮"
               type="text"
               @click="triggerSchoolSizeFlag('middleSizeFlag')"
               >{{ middleSizeFlag ? "收起" : "更多" }}</el-button

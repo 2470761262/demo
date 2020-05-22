@@ -16,6 +16,8 @@
       headerClass="headerCellSet1"
       @handleCurrentChange="handleCurrentChange"
       @handleSizeChange="handleSizeChange"
+      :dblclick="true"
+      @cellDblClick="toCustomerDetail"
     >
       <template v-slot:top>
         <section class="query-content">
@@ -23,30 +25,25 @@
             <div class="page-list-query-row" v-if="changeQuery">
               <div class="query-content-cell">
                 <h3 class="query-cell-title">电话</h3>
-                <el-select
-                  clearable
+                <el-input
                   placeholder="客户电话"
-                  class="set-select120"
-                  v-model="sssss"
-                >
-                  <el-option
-                    v-for="item in ssslist"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
+                  v-model="queryData.tel"
+                  class="set-input90"
+                  clearable
+                  oninput="value=value.replace(/[^\d]/g,'')"
+                />
               </div>
               <div class="query-content-cell cell-interval75">
                 <h3 class="query-cell-title">客户意向</h3>
                 <el-select
-                  clearable
+                  multiple
                   placeholder="全部"
                   class="set-select120"
-                  v-model="sssss"
+                  collapse-tags
+                  v-model="queryData.selectedDesireIntensitys"
                 >
                   <el-option
-                    v-for="item in ssslist"
+                    v-for="item in desireLists"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -56,13 +53,14 @@
               <div class="query-content-cell cell-interval75">
                 <h3 class="query-cell-title">带看进度</h3>
                 <el-select
-                  clearable
+                  multiple
                   placeholder="全部"
                   class="set-select120"
-                  v-model="sssss"
+                  collapse-tags
+                  v-model="queryData.selectedPairParams"
                 >
                   <el-option
-                    v-for="item in ssslist"
+                    v-for="item in pairNumberlist"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
@@ -75,15 +73,17 @@
                 <h3 class="query-cell-title">价格</h3>
                 <el-input
                   placeholder="最小值"
-                  v-model="sssss"
+                  v-model="queryData.minPrice"
                   class="set-input90"
+                  oninput="value=value.replace(/[^\d]/g,'')"
                   clearable
                 />
                 <span class="cut-off-rule"></span>
                 <el-input
                   placeholder="最大值"
-                  v-model="sssss"
+                  v-model="queryData.maxPrice"
                   class="set-input90"
+                  oninput="value=value.replace(/[^\d]/g,'')"
                   clearable
                 />
                 <span class="query-cell-suffix">万元</span>
@@ -92,14 +92,16 @@
                 <h3 class="query-cell-title">面积</h3>
                 <el-input
                   placeholder="最小值"
-                  v-model="sssss"
+                  v-model="queryData.minArea"
+                  oninput="value=value.replace(/[^\d]/g,'')"
                   class="set-input90"
                   clearable
                 />
                 <span class="cut-off-rule"></span>
                 <el-input
                   placeholder="最大值"
-                  v-model="sssss"
+                  v-model="queryData.maxArea"
+                  oninput="value=value.replace(/[^\d]/g,'')"
                   class="set-input90"
                   clearable
                 />
@@ -109,14 +111,16 @@
                 <h3 class="query-cell-title">户型</h3>
                 <el-input
                   placeholder="最小值"
-                  v-model="sssss"
+                  v-model="queryData.minRooms"
+                  oninput="value=value.replace(/[^\d]/g,'')"
                   class="set-input90"
                   clearable
                 />
                 <span class="cut-off-rule"></span>
                 <el-input
                   placeholder="最大值"
-                  v-model="sssss"
+                  v-model="queryData.maxRooms"
+                  oninput="value=value.replace(/[^\d]/g,'')"
                   class="set-input90"
                   clearable
                 />
@@ -126,26 +130,14 @@
               <div class="query-content-cell">
                 <h3 class="query-cell-title">带看时间</h3>
                 <el-date-picker
-                  v-model="sssss"
+                  v-model="pairTime"
                   type="daterange"
                   class="set-data-pricker set-pricker-width260"
                   range-separator="至"
                   start-placeholder="开始日期"
                   :default-time="['00:00:00', '23:59:59']"
                   end-placeholder="结束日期"
-                >
-                </el-date-picker>
-              </div>
-              <div class="query-content-cell  cell-interval180">
-                <h3 class="query-cell-title">录入时间</h3>
-                <el-date-picker
-                  v-model="sssss"
-                  type="daterange"
-                  class="set-data-pricker set-pricker-width260"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  :default-time="['00:00:00', '23:59:59']"
-                  end-placeholder="结束日期"
+                  value-format="yyyy-MM-dd HH:mm:ss"
                 >
                 </el-date-picker>
               </div>
@@ -228,8 +220,51 @@ export default {
       queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       writeFlag: false, //写跟进弹框开关
       sssss: "", //请按照实际字段名进行修改，
+      desireLists: [
+        {
+          value: "0",
+          label: "无意向"
+        },
+        {
+          value: "1",
+          label: "较弱"
+        },
+        {
+          value: "2",
+          label: "一般"
+        },
+        {
+          value: "3",
+          label: "强烈"
+        }
+      ],
+      pairNumberlist: [
+        {
+          value: "0",
+          label: "未带看"
+        },
+        {
+          value: "1",
+          label: "首次带看"
+        },
+        {
+          value: "2",
+          label: "二次带看"
+        },
+        {
+          value: "3",
+          label: "三次带看"
+        },
+        {
+          value: "4",
+          label: "四次带看"
+        },
+        {
+          value: "5",
+          label: "五次以上"
+        }
+      ],
       ssslist: [
-        //请按照实际字段名进行修改，
         {
           value: "选项1",
           label: "黄金糕"
@@ -248,20 +283,71 @@ export default {
         pageSize: 10 //每页条数
       },
       tableColumn: [
-        { prop: "qq", label: "姓名", width: "120px", order: false },
+        { prop: "customers", label: "姓名", width: "120px", order: false },
         {
-          prop: "ww",
+          prop: "desireIntensity",
           label: "意向",
           width: "120px",
           order: true,
-          formart: () => <el-rate value={2} max={3} disabled></el-rate>
+          formart: row => {
+            return (
+              <el-rate value={row.desireIntensity} max={3} disabled></el-rate>
+            );
+          }
         },
-        { prop: "ee", label: "总价", width: "120px", order: true },
-        { prop: "rr", label: "面积", width: "120px", order: true },
-        { prop: "tt", label: "户型", width: "120px", order: true },
-        { prop: "yy", label: "带看进度", width: "120px", order: true },
-        { prop: "uu", label: "上次带看", width: "120px", order: true },
-        { prop: "ii", label: "录入时间", width: "120px", order: true },
+        {
+          prop: "priceRange",
+          label: "总价",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            return row.minPrice + "-" + row.maxPrice;
+          }
+        },
+        {
+          prop: "minArea",
+          label: "面积",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            return row.minArea + "-" + row.maxArea;
+          }
+        },
+        {
+          prop: "rooms",
+          label: "户型",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            let s = row.rooms.replace("$", "或");
+            var d = s.length - 1;
+            //判断如果以或结尾，去除掉
+            if (d >= 0 && s.lastIndexOf("或") == d) {
+              s = s.substr(0, s.length - 1);
+            }
+            return s;
+          }
+        },
+        {
+          prop: "pairNumber",
+          label: "带看进度",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            if (!row.pairNumber || row.pairNumber == 0) {
+              return "未带看";
+            } else {
+              return row.pairNumber + "次";
+            }
+          }
+        },
+        {
+          prop: "lastPairFollowTime",
+          label: "上次带看",
+          width: "120px",
+          order: true
+        },
+        { prop: "addTime", label: "录入时间", width: "120px", order: true },
         {
           prop: "cz",
           label: "操作",
@@ -291,57 +377,149 @@ export default {
         }
       ], //定义表格数据
       tableData: [
-        {
-          id: 1,
-          qq: "张先生(男)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01",
-          pp: ["活跃呵护", "心机汪", "一是同行"]
-        },
-        {
-          id: 2,
-          qq: "张先生(男)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01",
-          pp: []
-        },
-        {
-          id: 3,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01",
-          pp: ["活跃呵护2", "心机汪2", "一是同行2"]
-        },
-        {
-          id: 4,
-          qq: "张先生(女)",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          tt: "3房",
-          yy: "为带看",
-          uu: "站务",
-          ii: "2020-02-01",
-          pp: []
-        }
-      ] //存放表格数据
+        // {
+        //   id: 1,
+        //   qq: "张先生(男)",
+        //   ee: "90-120万",
+        //   rr: "80-90㎡",
+        //   tt: "3房",
+        //   yy: "为带看",
+        //   uu: "站务",
+        //   ii: "2020-02-01",
+        //   pp: ["活跃呵护", "心机汪", "一是同行"]
+        // }
+      ], //存放表格数据
+      queryData: {
+        tel: "",
+        selectedPairParams: [], //带看多选条件
+        selectedDesireIntensitys: [], //意向多选条件
+        selectedHouseNumbers: [], //房型多选条件
+        minPrice: null, //最小价格条件
+        maxPrice: null, //最大价格条件
+        minArea: null, //最小面积条件
+        maxArea: null, //最大面积条件
+        minRooms: null,
+        maxRooms: null,
+        minLastPairFollowTime: null, //最大带看时间条件
+        maxLastPairFollowTime: null //最大带看时间条件
+      },
+      pairTime: null
     };
+  },
+  watch: {
+    queryData: {
+      handler(val, oldVal) {
+        {
+          let houseNumbers = [];
+          let just1 = false;
+          let just2 = false;
+          let just3 = false;
+          for (let v = 0; v < 6; v++) {
+            just1 =
+              this.queryData.minRooms &&
+              this.queryData.maxRooms &&
+              v <= Number(this.queryData.maxRooms) &&
+              v >= Number(this.queryData.minRooms);
+            just2 =
+              this.queryData.minRooms &&
+              !this.queryData.maxRooms &&
+              v >= Number(this.queryData.minRooms);
+            just3 =
+              !this.queryData.minRooms &&
+              this.queryData.maxRooms &&
+              v <= Number(this.queryData.maxRooms);
+            if (just1 || just2 || just3) {
+              houseNumbers.push(v);
+            }
+          }
+          let v = {
+            tel: this.queryData.tel,
+            houseNumbers: houseNumbers,
+            pairNumbers: this.queryData.selectedPairParams,
+            desireIntensitys: this.queryData.selectedDesireIntensitys,
+            minPrice: this.queryData.minPrice,
+            maxPrice: this.queryData.maxPrice,
+            minArea: this.queryData.minArea,
+            maxArea: this.queryData.maxArea,
+            minLastPairFollowTime: this.queryData.minLastPairFollowTime,
+            maxLastPairFollowTime: this.queryData.maxLastPairFollowTime
+          };
+          this.queryCustomerData(v);
+        }
+      },
+      deep: true
+    },
+    pairTime: function(val) {
+      if (val) {
+        this.queryData.minLastPairFollowTime = val[0];
+        this.queryData.maxLastPairFollowTime = val[1];
+        console.log(
+          this.queryData.minLastPairFollowTime,
+          this.queryData.maxLastPairFollowTime,
+          "设置了起止带看时间"
+        );
+      } else {
+        this.queryData.minLastPairFollowTime = this.queryData.maxLastPairFollowTime = null;
+        console.log("清空了起止带看时间");
+      }
+    }
   },
   mounted() {
     this.$nextTick(setImpression);
+    this.queryCustomerData();
   },
   methods: {
+    toCustomerDetail(item) {
+      let id = item.id;
+      if (!item.id) {
+        that.$message.error("customerId都是空的，如何查看");
+        return;
+      }
+      console.log(id);
+      var that = this;
+      this.$router.push({
+        name: "customerDetail",
+        params: { customerId: id }
+      });
+    },
+    queryCustomerData(params) {
+      let _that = this;
+      let queryParams = Object.assign(
+        {
+          page: _that.pageJson.currentPage,
+          limit: _that.pageJson.pageSize,
+          minAddTime: new Date().setDate(new Date().getDate() - 7)
+        },
+        params
+      );
+      _that.$api
+        .post({
+          url: "/saleCustomer/listMyCustomers",
+          data: queryParams,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查询我的客源列表（七日内新增）");
+            var dataCustomers = result.data.data;
+            _that.tableData = dataCustomers;
+            _that.pageJson.total = result.data.dataCount;
+            //result.data.pageSum
+          } else {
+            console.log("查询客源列表（七日内新增）" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("查询客源列表失败catch（七日内新增）");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
     confirmEmit(e) {
       console.log("写跟进确定", e);
     },

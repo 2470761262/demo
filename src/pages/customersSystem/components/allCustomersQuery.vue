@@ -194,6 +194,12 @@
               不限
             </li>
             <li
+              @click="changeDesireField('selectedDesireNo')"
+              :class="{ 'is-activate': selectedDesireNo }"
+            >
+              无意向({{ fatherQueryGroup[1]["无意向"] }})
+            </li>
+            <li
               @click="changeDesireField('selectedDesireWeek')"
               :class="{ 'is-activate': selectedDesireWeek }"
             >
@@ -458,7 +464,7 @@ export default {
           四次带看: 0,
           五次带看以上: 0
         },
-        { 强烈: 0, 一般: 0, 较弱: 0 },
+        { 强烈: 0, 一般: 0, 较弱: 0, 无意向: 0 },
         { 在谈: 0, 签约: 0 }
       ]
     }
@@ -494,12 +500,15 @@ export default {
       this.updatePairParams(val, 5);
     },
     selectedDesireStrong: function(val) {
-      this.updateDesireParams(val, 2);
+      this.updateDesireParams(val, 3);
     },
     selectedDesireCommon: function(val) {
-      this.updateDesireParams(val, 1);
+      this.updateDesireParams(val, 2);
     },
     selectedDesireWeek: function(val) {
+      this.updateDesireParams(val, 1);
+    },
+    selectedDesireNo: function(val) {
       this.updateDesireParams(val, 0);
     },
     "form.pairTime": function(newValue, oldValue) {
@@ -547,6 +556,7 @@ export default {
       },
       roomSelectedUnlimit: true, //房型 不限 条件。默认选中
       selectedDesire: true,
+      selectedDesireNo: false,
       selectedDesireStrong: false,
       selectedDesireWeek: false,
       selectedDesireCommon: false,
@@ -562,8 +572,8 @@ export default {
       selectedHouseNumbers: [], //房型多选条件
       minPrice: null, //最小价格条件
       maxPrice: null, //最大价格条件
-      minArea: null, //最小价格条件
-      maxArea: null, //最大价格条件
+      minArea: null, //最小面积条件
+      maxArea: null, //最大面积条件
       minLastPairFollowTime: null, //最大带看时间条件
       maxLastPairFollowTime: null, //最大带看时间条件
       minAddTime: null, //最小录入时间条件
@@ -755,7 +765,7 @@ export default {
     },
     changeDesireUnlimit() {
       this.selectedDesire = true;
-      this.selectedDesireStrong = this.selectedDesireWeek = this.selectedDesireCommon = false;
+      this.selectedDesireStrong = this.selectedDesireWeek = this.selectedDesireCommon = this.selectedDesireNo = false;
       this.searchWithParams();
     },
     changeDesireField(field) {
@@ -763,7 +773,8 @@ export default {
       if (
         !this.selectedDesireStrong &&
         !this.selectedDesireWeek &&
-        !this.selectedDesireCommon
+        !this.selectedDesireCommon &&
+        !this.selectedDesireNo
       ) {
         this.selectedDesire = true; //都没选择，那么“不限”给自动选中
       } else {
