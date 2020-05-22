@@ -10,14 +10,10 @@ export default {
         headers: { "Content-Type": "application/json;charset=UTF-8" }
       })
       .then(e => {
-        if (e.data.code == 200) {
-          return true;
-        } else {
-          return false;
-        }
+        return e;
       })
       .catch(e => {
-        return false;
+        return e;
       });
   },
   cancelOutsideHouse(params) {

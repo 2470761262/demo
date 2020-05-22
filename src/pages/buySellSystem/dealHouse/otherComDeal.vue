@@ -73,7 +73,7 @@
             filterable
             clearable
             placeholder="楼栋"
-            @change="queryRoomNo"
+            @change="buildChange"
           >
             <el-option
               class="anchor-point"
@@ -83,7 +83,13 @@
               :value="item.value"
             ></el-option>
           </el-select>
-          <el-select v-model="data.bhId" filterable placeholder="房间号">
+          <el-select
+            v-model="data.bhId"
+            filterable
+            placeholder="房间号"
+            :loading="HouseNoLoading"
+            v-loadmore="loadMore"
+          >
             <el-option
               class="anchor-point"
               v-for="item in roomNoList"
@@ -238,8 +244,14 @@ export default {
   },
   data() {
     return {
+      HouseNoLoading: false,
+      houseNoPage: {
+        // 房间分页数据
+        currentPage: 1,
+        totalPage: 1,
+        limit: 30
+      },
       loading: true,
-
       data: {
         comId: "",
         timeSelect: "",
@@ -429,8 +441,6 @@ export default {
           .get({
             url: "/community/otherComDeal",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
             data: {
               page: 1,
               limit: 50,
@@ -459,8 +469,6 @@ export default {
         .get({
           url: "/mateHouse/queryComBuilding",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId,
             page: 1,
@@ -475,26 +483,40 @@ export default {
           }
         });
     },
+    buildChange() {
+      Object.assign(this.$data.houseNoPage, this.$options.data().houseNoPage);
+      this.roomNoList = [];
+      this.queryRoomNo();
+    },
+    loadMore() {
+      if (this.houseNoPage.currentPage < this.houseNoPage.totalPage) {
+        ++this.houseNoPage.currentPage;
+        this.queryRoomNo();
+      }
+    },
     queryRoomNo() {
       var that = this;
+      this.HouseNoLoading = true;
       that.$api
         .get({
           url: "/mateHouse/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId,
             cbId: that.data.cbId,
-            page: 1,
-            limit: 9999
+            page: this.houseNoPage.currentPage,
+            limit: this.houseNoPage.limit
           }
         })
         .then(e => {
           if (e.data.code == 200) {
             that.data.bhId = "";
-            that.roomNoList = e.data.data.list;
+            this.roomNoList = [...this.roomNoList, ...e.data.data.list];
+            this.houseNoPage.totalPage = e.data.data.totalPage;
           }
+        })
+        .finally(() => {
+          this.HouseNoLoading = false;
         });
     },
     moreSelectChange(e) {

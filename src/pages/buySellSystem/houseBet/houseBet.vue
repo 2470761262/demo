@@ -69,7 +69,7 @@
             filterable
             placeholder="楼栋"
             clearable
-            @change="queryRoomNo"
+            @change="buildChange"
           >
             <el-option
               class="anchor-point"
@@ -86,6 +86,8 @@
             @change="queryHouseBetParams"
             clearable
             placeholder="房间号"
+            :loading="HouseNoLoading"
+            v-loadmore="loadMore"
           >
             <el-option
               class="anchor-point"
@@ -284,6 +286,13 @@ export default {
   },
   data() {
     return {
+      HouseNoLoading: false,
+      houseNoPage: {
+        // 房间分页数据
+        currentPage: 1,
+        totalPage: 1,
+        limit: 30
+      },
       loading: true,
       showHrTree: false,
       moreSelect: [],
@@ -517,8 +526,6 @@ export default {
           .get({
             url: "/community/houseBet",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
             data: {
               communityName: query
             }
@@ -542,8 +549,6 @@ export default {
         .get({
           url: "/mateHouse/queryComBuilding",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId
           }
@@ -555,24 +560,40 @@ export default {
         });
       this.queryHouseBetParams();
     },
+    buildChange() {
+      Object.assign(this.$data.houseNoPage, this.$options.data().houseNoPage);
+      this.roomNoList = [];
+      this.queryRoomNo();
+    },
+    loadMore() {
+      if (this.houseNoPage.currentPage < this.houseNoPage.totalPage) {
+        ++this.houseNoPage.currentPage;
+        this.queryRoomNo();
+      }
+    },
     queryRoomNo() {
       var that = this;
       that.data.roomNo = "";
+      this.HouseNoLoading = true;
       this.$api
         .get({
           url: "/mateHouse/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId,
-            cbId: that.data.cbId
+            cbId: that.data.cbId,
+            page: this.houseNoPage.currentPage,
+            limit: this.houseNoPage.limit
           }
         })
         .then(e => {
           if (e.data.code == 200) {
-            that.roomNoList = e.data.data.list;
+            this.roomNoList = [...this.roomNoList, ...e.data.data.list];
+            this.houseNoPage.totalPage = e.data.data.totalPage;
           }
+        })
+        .finally(() => {
+          this.HouseNoLoading = false;
         });
       this.queryHouseBetParams();
     },
