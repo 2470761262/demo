@@ -165,7 +165,7 @@
           @click="log_socket.sendUserAnchorData(item.title, 'click')"
         >
           <div
-            :class="['for-house-item', { 'item-opacity': item.flag }]"
+            :class="['for-house-item anchor-point', { 'item-opacity': item.flag }]"
             @click="setSelectNav(item)"
             @dblclick="navToPath(item.path)"
           >

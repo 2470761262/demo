@@ -43,6 +43,7 @@ let log_socket = {
       log_socket.socket = new WebSocket(logSocketUri);
       log_socket.socket.onopen = function() {
         log_socket.isConn = true;
+        console.log("日志锚点数据websocket开启成功")
       };
       log_socket.socket.onerror = function(err) {
         console.log(err);
@@ -123,8 +124,8 @@ if (isOpenLog) {
   log_socket.init();
   addLog_eventListener.click();
   addLog_eventListener.dblclick();
-  addLog_eventListener.mouseover();
-  addLog_eventListener.mouseleave();
+  // addLog_eventListener.mouseover();
+  // addLog_eventListener.mouseleave();
 }
 
 export default log_socket;
