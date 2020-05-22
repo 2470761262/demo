@@ -15,6 +15,8 @@
     headerClass="headerCellSet1"
     @handleCurrentChange="handleCurrentChange"
     @handleSizeChange="handleSizeChange"
+    :dblclick="true"
+    @cellDblClick="toCustomerDetail"
   >
     <template v-slot:top>
       <allCustomersQuery
@@ -214,6 +216,19 @@ export default {
     _that.staticsMyCustomerData();
   },
   methods: {
+    toCustomerDetail(item) {
+      let id = item.id;
+      if (!item.id) {
+        that.$message.error("customerId都是空的，如何查看");
+        return;
+      }
+      console.log(id);
+      var that = this;
+      this.$router.push({
+        name: "customerDetail",
+        params: { customerId: id }
+      });
+    },
     staticsMyCustomerData() {
       let _that = this;
       _that.$api
