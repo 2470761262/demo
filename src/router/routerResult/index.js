@@ -1102,6 +1102,7 @@ export default [
   {
     //客户系统 客户详情
     path: "/customersSystem/customersDetail",
+    name: "customerDetail",
     meta: {
       title: "客户详情"
     },

@@ -1,11 +1,23 @@
 <style lang="less" scoped>
-@import url(../../../../assets/publicLess/addHouse.less);
+//@import url(../../../../assets/publicLess/addHouse.less);
 .other-title {
   font-size: 30px;
   font-weight: 400;
   margin-top: 80px;
   &:first-child {
     margin-top: 0;
+  }
+}
+.but-append {
+  cursor: pointer;
+  margin-left: 10px;
+  color: var(--color--primary);
+  align-self: center;
+
+  &::before {
+    content: attr(data-tips);
+    font-size: 18px;
+    text-decoration: underline;
   }
 }
 .message-row {

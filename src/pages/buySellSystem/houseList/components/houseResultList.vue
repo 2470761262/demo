@@ -260,6 +260,7 @@
       <div class="page-query-data-title">所有房源&nbsp;></div>
       <div class="page-query-data-tag">
         <el-tag
+          :data-anchor="'首页列表筛选框' + tag.title +' ' + tag.value"
           :key="index"
           class="query-tag anchor-point"
           v-for="(tag, index) in dynamicTags"
@@ -270,16 +271,16 @@
         >
       </div>
       <div class="select-tabs-cell" v-if="querySelectFlag">
-        <label class="select-checkbox anchor-point">
-          <input type="checkbox" @click="elevatorSelect()" />
+        <label class="select-checkbox anchor-point" data-anchor="首页电梯勾选框">
+          <input type="checkbox" @click="elevatorSelect()" class="anchor-point" data-anchor="首页电梯勾选框" />
           <span>电梯</span>
         </label>
-        <label class="select-checkbox anchor-point">
-          <input type="checkbox" @click="keySelect()" />
+        <label class="select-checkbox anchor-point" data-anchor="首页钥匙勾选框">
+          <input type="checkbox" @click="keySelect()" class="anchor-point" data-anchor="首页钥匙勾选框" />
           <span>钥匙</span>
         </label>
-        <label class="select-checkbox anchor-point">
-          <input type="checkbox" @click="onlySelect()" />
+        <label class="select-checkbox anchor-point" data-anchor="首页独家勾选框">
+          <input type="checkbox" @click="onlySelect()" class="anchor-point" data-anchor="首页独家勾选框"/>
           <span>独家</span>
         </label>
       </div>
@@ -288,40 +289,40 @@
     <div class="select-tabs" v-if="!querySelectFlag">
       <div class="select-tabs-cell">
         <div
-          class="select-tabs-item anchor-point"
+          class="select-tabs-item anchor-point" data-anchor="首页默认排序按钮"
           :class="{ 'is-order': form.sortColumn == 'id' }"
           @click="defaultSelect()"
         >
-          <div class="tabs-item-title">默认排序</div>
+          <div class="tabs-item-title anchor-point" data-anchor="首页默认排序按钮">默认排序</div>
         </div>
         <div
-          class="select-tabs-item anchor-point"
+          class="select-tabs-item anchor-point" data-anchor="首页价格排序按钮"
           :class="{ 'is-order': form.sortColumn == 'price' }"
           @click="priceSelect()"
         >
-          <div class="tabs-item-title">价格</div>
-          <i class="el-icon-sort"></i>
+          <div class="tabs-item-title anchor-point" data-anchor="首页价格排序按钮">价格</div>
+          <i class="el-icon-sort anchor-point" data-anchor="首页价格排序按钮"></i>
         </div>
         <div
-          class="select-tabs-item anchor-point"
+          class="select-tabs-item anchor-point" data-anchor="首页面积排序按钮"
           :class="{ 'is-order': form.sortColumn == 'inArea' }"
           @click="inAreaSelect()"
         >
-          <div class="tabs-item-title">面积</div>
-          <i class="el-icon-sort"></i>
+          <div class="tabs-item-title anchor-point" data-anchor="首页面积排序按钮">面积</div>
+          <i class="el-icon-sort anchor-point" data-anchor="首页面积排序按钮"></i>
         </div>
       </div>
       <div class="select-tabs-cell">
-        <label class="select-checkbox anchor-point">
-          <input type="checkbox" @click="elevatorSelect()" />
+        <label class="select-checkbox anchor-point" data-anchor="首页电梯勾选框">
+          <input type="checkbox" @click="elevatorSelect()" class="anchor-point" data-anchor="首页电梯勾选框" />
           <span>电梯</span>
         </label>
-        <label class="select-checkbox anchor-point">
-          <input type="checkbox" @click="keySelect()" />
+        <label class="select-checkbox anchor-point" data-anchor="首页钥匙勾选框">
+          <input type="checkbox" @click="keySelect()" class="anchor-point" data-anchor="首页钥匙勾选框" />
           <span>钥匙</span>
         </label>
-        <label class="select-checkbox anchor-point">
-          <input type="checkbox" @click="onlySelect()" />
+        <label class="select-checkbox anchor-point" data-anchor="首页独家勾选框">
+          <input type="checkbox" @click="onlySelect()" class="anchor-point" data-anchor="首页独家勾选框"/>
           <span>独家</span>
         </label>
       </div>
@@ -335,7 +336,8 @@
         <template v-if="renderList.length > 0">
           <!-- @dblclick="toHouseDetail(item)" -->
           <div
-            class="select-for-item"
+            class="select-for-item anchor-point"
+            data-anchor="首页房源信息点击列表"
             v-for="(item, index) in renderList"
             :key="index"
             @click.stop="toHouseDetail(item)"
@@ -354,7 +356,7 @@
                 </div>
               </el-image>
             </div>
-            <div class="select-for-item-data">
+            <div class="select-for-item-data anchor-point" data-anchor="首页房源信息点击列表">
               <div class="item-data-top">
                 <div class="item-data-top-no overText">{{ item.houseNo }}</div>
                 <div class="item-data-top-tag">
@@ -439,6 +441,7 @@
                 <template slot-scope="scope">
                   <el-button
                     class="anchor-point"
+                    data-anchor="首页房源列表查看按钮"
                     size="mini"
                     type="primary"
                     @click="toHouseDetail(scope.row)"
