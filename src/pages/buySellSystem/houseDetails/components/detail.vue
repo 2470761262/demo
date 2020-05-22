@@ -1,6 +1,6 @@
 <style lang="less" scoped>
 .detail-content {
-  padding-left: 68px;
+  padding-left: 35px;
   .detail-price-content {
     padding-bottom: 23px;
     border-bottom: 1px solid #cccccc;
@@ -101,8 +101,8 @@
         border-right: none;
       }
       .cell-pro-left-img {
-        width: 90px;
-        height: 90px;
+        width: 75px;
+        height: 75px;
         border-radius: 50%;
         overflow: hidden;
       }
@@ -267,7 +267,7 @@
         </div>
       </div>
     </div>
-    <div class="cell-pro">
+    <div class="cell-pro" style="width:720px">
       <div
         class="cell-pro-item"
         v-if="resultData.agentPerName != null && resultData.plate == 0"
@@ -311,10 +311,22 @@
         }}</el-button>
       </div>
       <div class="cell-pro-item">
-        <div class="cell-pro-detail">
-          <div class="cell-pro-detail-name overText">
-            {{ resultData.Customers | emptyRead }}
+        <el-image
+          class="cell-pro-left-img"
+          :src="resultData.headImgUrl"
+          fit="fill"
+        >
+          <div slot="placeholder" class="image-slot">
+            加载中<span>...</span>
           </div>
+        </el-image>
+        <div class="cell-pro-detail">
+          <el-tooltip :content="resultData.Customers" placement="top">
+            <div class="cell-pro-detail-name overText">
+              {{ resultData.Customers | emptyRead }}
+            </div>
+          </el-tooltip>
+
           <div class="cell-pro-detail-other overText">业主称呼</div>
         </div>
         <el-dropdown @command="contactOwer">
@@ -387,6 +399,7 @@ export default {
     },
     resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
+        console.log(this.houseDetails);
         return this.houseDetails.data;
       } else {
         return {};
