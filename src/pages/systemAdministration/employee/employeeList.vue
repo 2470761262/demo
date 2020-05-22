@@ -475,13 +475,13 @@ export default {
         },
         {
           name: "离职",
-          delFilter: ["在职"],
+          delFilter: ["在职", "离职待审核"],
           lockFilter: ["正常"],
           methodName: "delEmployee"
         },
         {
           name: "复职",
-          delFilter: ["离职"],
+          delFilter: ["离职", "离职待审核"],
           lockFilter: ["正常", "锁定"],
           methodName: "resumeEmployee"
         },
