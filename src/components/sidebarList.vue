@@ -99,6 +99,9 @@ export default {
     hisEdit: {
       type: Boolean,
       default: true
+    },
+    queryUrl: {
+      type: Object
     }
   },
   data() {
@@ -133,7 +136,11 @@ export default {
       if (this.lastParams) {
         routerData.params = this.lastParams;
       }
-      this.$router.push(routerData);
+      if (!this.queryUrl) {
+        this.$router.push(routerData);
+      } else {
+        this.$router.push(this.queryUrl);
+      }
     }
   }
 };

@@ -40,7 +40,7 @@
               filterable
               clearable
               placeholder="楼栋"
-              @change="queryRoomNo"
+              @change="buildChange"
             >
               <el-option
                 v-for="item in cbIdList"
@@ -54,6 +54,8 @@
               filterable
               @change="queryShopownerHouseParams"
               placeholder="房间号"
+              :loading="HouseNoLoading"
+              v-loadmore="loadMore"
             >
               <el-option
                 v-for="item in roomNoList"
@@ -135,8 +137,14 @@ export default {
   },
   data() {
     return {
+      HouseNoLoading: false,
+      houseNoPage: {
+        // 房间分页数据
+        currentPage: 1,
+        totalPage: 1,
+        limit: 30
+      },
       loading: false,
-
       data: {
         comId: "",
         cbId: "",
@@ -329,8 +337,6 @@ export default {
           .get({
             url: "/mateHouse/queryCommunity",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
             data: {
               communityName: query,
               page: 1,
@@ -354,8 +360,6 @@ export default {
         .get({
           url: "/mateHouse/queryComBuilding",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId,
             page: 1,
@@ -371,26 +375,40 @@ export default {
         });
       this.queryShopownerHouseParams();
     },
+    buildChange() {
+      Object.assign(this.$data.houseNoPage, this.$options.data().houseNoPage);
+      this.roomNoList = [];
+      this.queryRoomNo();
+    },
+    loadMore() {
+      if (this.houseNoPage.currentPage < this.houseNoPage.totalPage) {
+        ++this.houseNoPage.currentPage;
+        this.queryRoomNo();
+      }
+    },
     queryRoomNo() {
       var that = this;
+      this.HouseNoLoading = true;
       this.$api
         .get({
           url: "/mateHouse/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
           data: {
             comId: that.data.comId,
             cbId: that.data.cbId,
-            page: 1,
-            limit: 9999
+            page: this.houseNoPage.currentPage,
+            limit: this.houseNoPage.limit
           }
         })
         .then(e => {
           if (e.data.code == 200) {
             that.data.roomNo = "";
-            that.roomNoList = e.data.data.list;
+            this.roomNoList = [...this.roomNoList, ...e.data.data.list];
+            this.houseNoPage.totalPage = e.data.data.totalPage;
           }
+        })
+        .finally(() => {
+          this.HouseNoLoading = false;
         });
       this.queryShopownerHouseParams();
     },

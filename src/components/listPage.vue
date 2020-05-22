@@ -186,7 +186,7 @@
               <slot name="tableColumn" :tableData="tableDataColumn"></slot>
             </el-table>
           </div>
-          <sidebarList v-if="sidebarFlag"></sidebarList>
+          <sidebarList v-if="sidebarFlag" :queryUrl="queryUrl"></sidebarList>
         </div>
       </div>
       <div class="page-body-floot">
@@ -221,6 +221,7 @@ export default {
   },
   data() {
     return {
+      queryUrl: null,
       sidebarFlag: true,
       loading: true,
       pageJson: {

@@ -444,8 +444,6 @@ export default {
           .get({
             url: "/community/ourComDeal",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
             data: {
               page: 1,
               limit: 50,
