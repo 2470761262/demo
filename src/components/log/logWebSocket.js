@@ -63,12 +63,16 @@ let log_socket = {
     let content = this.sendAction(e, accountId);
     if (className && className != "" && className.includes("anchor-point")) {
       content = this.sendAnchorData(e, accountId);
+    }else if(e.target.dataset.anchor){
+      content = this.sendAnchorData(e, accountId);
     }
     content = identify + "@$@" + content;
+    console.log(content)
     this.socket.send(content);
   },
   sendAction(e, accountId) {
     let parent = {
+      version: "1.0.0",
       accountId: accountId,
       screenX: e.screenX,
       screenY: e.screenY,
@@ -78,13 +82,14 @@ let log_socket = {
       baseURI: e.target.baseURI,
       className: e.target.className,
       id: e.target.id,
-      identify: window.navigator.userAgent
+      identify: e.view.clientInformation.userAgent
     };
     let content = "user_action@$:" + JSON.stringify(parent);
     return content;
   },
   sendAnchorData(e, accountId) {
     let parent = {
+      version: "1.0.0",
       accountId: accountId,
       screenX: e.screenX,
       screenY: e.screenY,
@@ -96,8 +101,10 @@ let log_socket = {
       id: e.target.id,
       nodeName: e.target.nodeName,
       innerHTML: e.target.innerHTML,
+      innerTEXT: e.target.innerTEXT,
       placeholder: e.target.placeholder,
-      identify: window.navigator.userAgent
+      identify: e.view.clientInformation.userAgent,
+      anchorName: e.target.dataset.anchor
     };
     let content = "user_anchor@$:" + JSON.stringify(parent);
     return content;
@@ -124,8 +131,8 @@ if (isOpenLog) {
   log_socket.init();
   addLog_eventListener.click();
   addLog_eventListener.dblclick();
-  // addLog_eventListener.mouseover();
-  // addLog_eventListener.mouseleave();
+  addLog_eventListener.mouseover();
+  addLog_eventListener.mouseleave();
 }
 
 export default log_socket;
