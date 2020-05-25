@@ -591,6 +591,12 @@ export default {
           order: true
         },
         {
+          prop: "addPerName",
+          label: "录入人",
+          formart: row => row.addPerName,
+          width: "100"
+        },
+        {
           prop: "roomType",
           label: "户型",
           formart: row => {
