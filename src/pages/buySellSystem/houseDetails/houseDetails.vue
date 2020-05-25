@@ -73,7 +73,7 @@
         lastTitle="编辑"
         :judgeShowEdit="true"
         :lastParams="lastParams"
-        :showEdit="false"
+        :showEdit="showEdit"
       ></sidebarList>
       <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
 
@@ -310,11 +310,7 @@ export default {
               perId = util.localStorageGet("logindata").accountId;
             }
 
-            if (
-              result.data.plate != 1 &&
-              result.data.plate != 4 &&
-              perId == result.data.AgentPer
-            ) {
+            if (result.data.plate == 0 && perId == result.data.AgentPer) {
               //当前跟单人显示编辑按钮
               console.log(
                 perId,

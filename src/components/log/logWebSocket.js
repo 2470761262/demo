@@ -10,7 +10,7 @@ import { LOGINDATA, TOKEN } from "@/util/constMap";
  * 锚点数据是否开启
  * @type {boolean}
  */
-let isOpenLog = false;
+let isOpenLog = true;
 let logSocketUri = "ws://" + process.env.VUE_APP_WEBSOCKET_URI + "/log";
 let identify = process.env.VUE_APP_IDENTIFY;
 
@@ -43,6 +43,7 @@ let log_socket = {
       log_socket.socket = new WebSocket(logSocketUri);
       log_socket.socket.onopen = function() {
         log_socket.isConn = true;
+        console.log("日志锚点数据websocket开启成功")
       };
       log_socket.socket.onerror = function(err) {
         console.log(err);
@@ -62,12 +63,16 @@ let log_socket = {
     let content = this.sendAction(e, accountId);
     if (className && className != "" && className.includes("anchor-point")) {
       content = this.sendAnchorData(e, accountId);
+    }else if(e.target.dataset && e.target.dataset.anchor){
+      content = this.sendAnchorData(e, accountId);
     }
     content = identify + "@$@" + content;
+    console.log(content)
     this.socket.send(content);
   },
   sendAction(e, accountId) {
     let parent = {
+      version: "1.0.0",
       accountId: accountId,
       screenX: e.screenX,
       screenY: e.screenY,
@@ -76,13 +81,15 @@ let log_socket = {
       type: e.type,
       baseURI: e.target.baseURI,
       className: e.target.className,
-      id: e.target.id
+      id: e.target.id,
+      identify: e.view.clientInformation.userAgent
     };
     let content = "user_action@$:" + JSON.stringify(parent);
     return content;
   },
   sendAnchorData(e, accountId) {
     let parent = {
+      version: "1.0.0",
       accountId: accountId,
       screenX: e.screenX,
       screenY: e.screenY,
@@ -94,7 +101,10 @@ let log_socket = {
       id: e.target.id,
       nodeName: e.target.nodeName,
       innerHTML: e.target.innerHTML,
-      placeholder: e.target.placeholder
+      innerTEXT: e.target.innerTEXT,
+      placeholder: e.target.placeholder,
+      identify: e.view.clientInformation.userAgent,
+      anchorName: e.target.dataset.anchor
     };
     let content = "user_anchor@$:" + JSON.stringify(parent);
     return content;

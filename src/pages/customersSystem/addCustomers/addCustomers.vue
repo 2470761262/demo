@@ -190,7 +190,7 @@
               <div class="step-row-title title-required">客户姓名:</div>
               <div class="step-row-query">
                 <el-input
-                  v-model="sssValue"
+                  v-model="formData.customers"
                   placeholder="请输入客户姓名"
                 ></el-input>
               </div>
@@ -199,7 +199,7 @@
             <div class="step-item-inline ">
               <div class="step-row-title title-required">客户性别:</div>
               <div class="step-row-query border">
-                <el-radio-group v-model="sssValue">
+                <el-radio-group v-model="formData.sex">
                   <el-radio
                     :label="item.value"
                     v-for="item in sex"
@@ -217,7 +217,7 @@
               <div class="step-row-title title-required">客户电话:</div>
               <div class="step-row-query">
                 <el-input
-                  v-model="sssValue"
+                  v-model="formData.tel"
                   clearable
                   placeholder="请输入客户电话号码"
                 ></el-input>
@@ -288,9 +288,9 @@
               <div class="step-row-title title-required">购房意向:</div>
               <div class="step-row-query">
                 <el-rate
-                  v-model="formData.rateNum"
+                  v-model="formData.desireIntensity"
                   :max="3"
-                  :texts="['没意思', '有点意思', '很有点意思']"
+                  :texts="['较弱', '一般', '强烈']"
                   show-text
                 >
                 </el-rate>
@@ -517,7 +517,7 @@
       </el-collapse-item>
     </el-collapse>
     <div class="add-foot">
-      <el-button type="primary">提交</el-button>
+      <el-button type="primary" @click="addCusSubmit">提交</el-button>
     </div>
   </section>
 </template>
@@ -529,7 +529,10 @@ export default {
   data() {
     return {
       formData: {
-        rateNum: 0
+        desireIntensity: 0,
+        customers: "",
+        sex: 0,
+        tel: ""
       },
       sssValue1: [], //请按照实际字段名进行修改，
       sssValue: "", //请按照实际字段名进行修改，
@@ -549,6 +552,33 @@ export default {
       collapseActive: 1 //折叠面板当前激活name
     };
   },
-  methods: {}
+  methods: {
+    addCusSubmit() {
+      let _that = this;
+      _that.$api
+        .post({
+          url: "/saleCustomer/addCustomer",
+          data: _that.formData,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "录入客源");
+          } else {
+            console.log("录入客源" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("录入客源失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
+    }
+  }
 };
 </script>

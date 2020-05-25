@@ -60,6 +60,7 @@
         <el-form-item label="电话:">
           <el-input v-model="DeptEntity.tel"></el-input>
         </el-form-item>
+
         <el-form-item label="开业时间">
           <el-date-picker
             v-model="DeptEntity.regDate"
@@ -263,7 +264,13 @@ export default {
         ],
         joinType: [
           { required: true, message: "请选择加入类型", trigger: "blur" }
-        ]
+        ],
+        perName: [
+          { required: true, message: "请选择负责人", trigger: "blur" }
+        ],
+        isArea: [
+          { required: true, message: "请选择是否片区", trigger: "blur" }
+        ],
       },
       sidebarFlag: false,
       loading: false, //控制表格加载动画提示
@@ -377,51 +384,49 @@ export default {
     },
     saveDept() {
       this.btnDis = true;
-      if (
-        /^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(
-          this.DeptEntity.tel
-        )
-      ) {
-        let params = this.DeptEntity;
-        this.$api
-          .post({
-            url: "/department/add",
-            data: params,
-            headers: { "Content-Type": "application/json;charset=UTF-8" }
-          })
-          .then(e => {
-            let result = e.data;
-            if (result.code == 200) {
-              console.log(result.message);
-              this.$alert("", "添加成功", {
-                dangerouslyUseHTMLString: false
+      let params = this.DeptEntity;
+      this.$api
+        .post({
+          url: "/department/add",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            this.$alert("", "添加成功", {
+              dangerouslyUseHTMLString: false
+            });
+            if (this.backUrl === "hrTree") {
+              this.$router.push({
+                path: "/sys/hrTree/hrTree",
+                query: { cur: this.jumpNodeId }
               });
-              if (this.backUrl === "hrTree") {
-                this.$router.push({
-                  path: "/sys/hrTree/hrTree",
-                  query: { cur: this.jumpNodeId }
-                });
-              } else {
-                this.$router.push({ path: "/sys/deptManageList" });
-              }
-              console.log(result.data);
-              this.$message({ message: result.message });
+            } else {
+              this.$router.push({ path: "/sys/deptManageList" });
             }
-          })
-          .catch(e => {
-            //debugger;
-            console.log("添加失败");
-            console.log(e);
-          })
-          .finally(e => {
-            this.btnDis = false;
-          });
-      } else {
-        this.$alert("", "请填写正确的电话号码!!!", {
-          dangerouslyUseHTMLString: false
+            console.log(result.data);
+            this.$message({ message: result.message });
+          }
+        })
+        .catch(e => {
+          //debugger;
+          console.log("添加失败");
+          console.log(e);
+        })
+        .finally(e => {
+          this.btnDis = false;
         });
-        this.btnDis = false;
-      }
+
+      // if (/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(this.DeptEntity.tel)){
+      //
+      // }else {
+      //   this.$alert("", "请填写正确的电话号码!!!", {
+      //     dangerouslyUseHTMLString: false
+      //   });
+      //   this.btnDis = false;
+      // }
     },
     back() {
       if (this.backUrl === "hrTree") {

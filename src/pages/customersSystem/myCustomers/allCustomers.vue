@@ -15,6 +15,8 @@
     headerClass="headerCellSet1"
     @handleCurrentChange="handleCurrentChange"
     @handleSizeChange="handleSizeChange"
+    :dblclick="true"
+    @cellDblClick="toCustomerDetail"
   >
     <template v-slot:top>
       <allCustomersQuery
@@ -88,7 +90,7 @@ export default {
           四次带看: 0,
           五次带看以上: 0
         },
-        { 强烈: 0, 一般: 0, 较弱: 0 },
+        { 强烈: 0, 一般: 0, 较弱: 0, 无意向: 0 },
         { 在谈: 0, 签约: 0 }
       ],
       querySelectFlag: true,
@@ -107,11 +109,7 @@ export default {
           order: true,
           formart: row => {
             return (
-              <el-rate
-                value={row.desireIntensity + 1}
-                max={3}
-                disabled
-              ></el-rate>
+              <el-rate value={row.desireIntensity} max={3} disabled></el-rate>
             );
           }
         },
@@ -192,17 +190,17 @@ export default {
         }
       ], //定义表格字段
       tableData: [
-        {
-          id: 1,
-          customers: "空",
-          ee: "90-120万",
-          rr: "80-90㎡",
-          rooms: "3房",
-          pairNumber: "为带看",
-          lastPairFollowTime: "站务",
-          addTime: "2020-02-01",
-          pp: ["活跃呵护", "心机汪", "一是同行"]
-        }
+        // {
+        //   id: 1,
+        //   customers: "空",
+        //   ee: "90-120万",
+        //   rr: "80-90㎡",
+        //   rooms: "3房",
+        //   pairNumber: "为带看",
+        //   lastPairFollowTime: "站务",
+        //   addTime: "2020-02-01",
+        //   pp: ["活跃呵护", "心机汪", "一是同行"]
+        // }
       ] //存放表格数据
     };
   },
@@ -214,6 +212,19 @@ export default {
     _that.staticsMyCustomerData();
   },
   methods: {
+    toCustomerDetail(item) {
+      let id = item.id;
+      if (!item.id) {
+        that.$message.error("customerId都是空的，如何查看");
+        return;
+      }
+      console.log(id);
+      var that = this;
+      this.$router.push({
+        name: "customerDetail",
+        params: { customerId: id }
+      });
+    },
     staticsMyCustomerData() {
       let _that = this;
       _that.$api
