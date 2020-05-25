@@ -219,12 +219,13 @@
                 <el-input
                   v-model="formData.tel"
                   clearable
+                  oninput="value=value.replace(/[^\d]/g,'')"
                   placeholder="请输入客户电话号码"
                 ></el-input>
               </div>
             </div>
             <!-- 客户籍贯 -->
-            <div class="step-item-inline ">
+            <!-- <div class="step-item-inline ">
               <div class="step-row-title title-required">客户籍贯:</div>
               <div class="step-row-query">
                 <el-select
@@ -240,7 +241,7 @@
                   ></el-option>
                 </el-select>
               </div>
-            </div>
+            </div> -->
           </div>
           <!-- 客户来源  content -->
           <div class="cust-step-row">
@@ -249,12 +250,12 @@
               <div class="step-row-title title-required">客户来源:</div>
               <div class="step-row-query">
                 <el-select
-                  v-model="sssValue"
+                  v-model="formData.source"
                   clearable
                   placeholder="请选择客户来源"
                 >
                   <el-option
-                    v-for="item in ssslist"
+                    v-for="item in customerSource"
                     :key="item.value"
                     :label="item.key"
                     :value="item.value"
@@ -267,12 +268,12 @@
               <div class="step-row-title title-required">客源特性:</div>
               <div class="step-row-query">
                 <el-select
-                  v-model="sssValue"
+                  v-model="formData.resourceType"
                   clearable
                   placeholder="请选择客源特性"
                 >
                   <el-option
-                    v-for="item in ssslist"
+                    v-for="item in customerCharacter"
                     :key="item.value"
                     :label="item.key"
                     :value="item.value"
@@ -307,7 +308,7 @@
                   v-model="sssValue"
                   class="input-olny-botttom"
                 ></el-input>
-                <el-button type="text">添加</el-button>
+                <el-button type="text" @click="客户添加;">添加</el-button>
               </div>
             </div>
           </div>
@@ -337,12 +338,12 @@
               <div class="step-row-title">购买用途:</div>
               <div class="step-row-query">
                 <el-select
-                  v-model="sssValue"
+                  v-model="formData.buildType"
                   clearable
                   placeholder="请选择购买用途"
                 >
                   <el-option
-                    v-for="item in ssslist"
+                    v-for="item in buildTypeList"
                     :key="item.value"
                     :label="item.key"
                     :value="item.value"
@@ -354,12 +355,12 @@
             <div class="step-item-inline">
               <div class="step-row-title">期望装修:</div>
               <div class="step-row-query">
-                <el-radio-group v-model="sssValue">
+                <el-radio-group v-model="formData.decoration">
                   <el-radio
                     :label="item.value"
-                    v-for="item in decoration"
+                    v-for="item in decorationList"
                     :key="item.value"
-                    >{{ item.key }}</el-radio
+                    >{{ item.label }}</el-radio
                   >
                 </el-radio-group>
               </div>
@@ -371,18 +372,34 @@
             <div class="step-item-inline">
               <div class="step-row-title">首付金额:</div>
               <div class="step-row-query step-flex-group" data-unit="万">
-                <el-input v-model="sssValue" placeholder="最小值"></el-input>
+                <el-input
+                  v-model="formData.minFirstPrice"
+                  placeholder="最小值"
+                  oninput="value=value.replace(/[^\d]/g,'')"
+                ></el-input>
                 <span class="input-space"></span>
-                <el-input v-model="sssValue" placeholder="最小值"></el-input>
+                <el-input
+                  v-model="formData.maxFirstPrice"
+                  oninput="value=value.replace(/[^\d]/g,'')"
+                  placeholder="最大值"
+                ></el-input>
               </div>
             </div>
             <!-- 期望总价 -->
             <div class="step-item-inline">
               <div class="step-row-title">期望总价:</div>
               <div class="step-row-query step-flex-group" data-unit="万">
-                <el-input v-model="sssValue" placeholder="最小值"></el-input>
+                <el-input
+                  v-model="formData.minPrice"
+                  oninput="value=value.replace(/[^\d]/g,'')"
+                  placeholder="最小值"
+                ></el-input>
                 <span class="input-space"></span>
-                <el-input v-model="sssValue" placeholder="最小值"></el-input>
+                <el-input
+                  v-model="formData.maxPrice"
+                  oninput="value=value.replace(/[^\d]/g,'')"
+                  placeholder="最大值"
+                ></el-input>
               </div>
             </div>
           </div>
@@ -392,13 +409,21 @@
             <div class="step-item-inline">
               <div class="step-row-title">首付面积:</div>
               <div class="step-row-query step-flex-group" data-unit="万">
-                <el-input v-model="sssValue" placeholder="最小值"></el-input>
+                <el-input
+                  v-model="formData.minArea"
+                  oninput="value=value.replace(/[^\d]/g,'')"
+                  placeholder="最小值"
+                ></el-input>
                 <span class="input-space"></span>
-                <el-input v-model="sssValue" placeholder="最小值"></el-input>
+                <el-input
+                  v-model="formData.maxArea"
+                  oninput="value=value.replace(/[^\d]/g,'')"
+                  placeholder="最大值"
+                ></el-input>
               </div>
             </div>
             <!-- 付款方式 -->
-            <div class="step-item-inline">
+            <!-- <div class="step-item-inline">
               <div class="step-row-title">付款方式:</div>
               <div class="step-row-query">
                 <el-select
@@ -414,7 +439,7 @@
                   ></el-option>
                 </el-select>
               </div>
-            </div>
+            </div> -->
           </div>
         </section>
       </el-collapse-item>
@@ -442,13 +467,13 @@
               <div class="step-row-title ">期望小学:</div>
               <div class="step-row-query">
                 <el-select
-                  v-model="sssValue1"
+                  v-model="formData.school1Array"
                   clearable
                   multiple
                   placeholder="请选择客户期望小学(可多选)"
                 >
                   <el-option
-                    v-for="item in ssslist"
+                    v-for="item in primarySchool"
                     :key="item.value"
                     :label="item.key"
                     :value="item.value"
@@ -461,13 +486,13 @@
               <div class="step-row-title ">期望中学:</div>
               <div class="step-row-query">
                 <el-select
-                  v-model="sssValue1"
+                  v-model="formData.school2Array"
                   clearable
                   multiple
                   placeholder="请选择客户期望中学(可多选)"
                 >
                   <el-option
-                    v-for="item in ssslist"
+                    v-for="item in middleSchool"
                     :key="item.value"
                     :label="item.key"
                     :value="item.value"
@@ -483,13 +508,13 @@
               <div class="step-row-title ">期望楼盘:</div>
               <div class="step-row-query">
                 <el-select
-                  v-model="sssValue1"
+                  v-model="formData.community"
                   clearable
                   multiple
                   placeholder="请选择客户期望楼盘(可多选)"
                 >
                   <el-option
-                    v-for="item in ssslist"
+                    v-for="item in communityList"
                     :key="item.value"
                     :label="item.key"
                     :value="item.value"
@@ -508,7 +533,7 @@
                   type="textarea"
                   placeholder="请输入客户看房经历"
                   :autosize="{ minRows: 4, maxRows: 8 }"
-                  v-model="sssValue"
+                  v-model="formData.remark"
                 ></el-input>
               </div>
             </div>
@@ -532,22 +557,121 @@ export default {
         desireIntensity: 0,
         customers: "",
         sex: 0,
-        tel: ""
+        tel: "",
+        resourceType: "",
+        source: "",
+        buildType: "",
+        minFirstPrice: "",
+        maxFirstPrice: "",
+        minPrice: "",
+        maxPrice: "",
+        minArea: "",
+        maxArea: "",
+        school1: "",
+        school2: "",
+        community: "",
+        remark: ""
       },
       sssValue1: [], //请按照实际字段名进行修改，
       sssValue: "", //请按照实际字段名进行修改，
-      ssslist: [
-        //请按照实际字段名进行修改，
+      decorationList: [
         {
-          value: "选项1",
-          label: "辛苦了"
+          value: "毛胚",
+          label: "毛胚"
         },
         {
-          value: "选项2",
-          label: "谢谢你"
+          value: "简单装修",
+          label: "简单装修"
+        },
+        {
+          value: "精装修",
+          label: "精装修"
         }
       ],
-      decoration: DECORATION, //装修
+      buildTypeList: [
+        {
+          value: "投资",
+          label: "投资"
+        },
+        {
+          value: "自住",
+          label: "自住"
+        },
+        {
+          value: "办公",
+          label: "办公"
+        },
+        {
+          value: "改善",
+          label: "改善"
+        },
+        {
+          value: "就学",
+          label: "就学"
+        }
+      ],
+      customerCharacter: [
+        {
+          value: "私客",
+          label: "私客"
+        },
+        {
+          value: "小组公客",
+          label: "小组公客"
+        }
+      ],
+      customerSource: [
+        {
+          value: "朋友",
+          label: "朋友"
+        },
+        {
+          value: "老乡",
+          label: "老乡"
+        },
+        {
+          value: "亲戚",
+          label: "亲戚"
+        },
+        {
+          value: "转介绍",
+          label: "转介绍"
+        }
+      ],
+      primarySchool: [
+        {
+          value: "莲东小学",
+          label: "莲东小学"
+        },
+        {
+          value: "松涛小学",
+          label: "松涛小学"
+        }
+      ],
+      middleSchool: [
+        {
+          value: "莲东中学",
+          label: "莲东中学"
+        },
+        {
+          value: "一中分校",
+          label: "一中分校"
+        }
+      ],
+      communityList: [
+        {
+          value: "华龙社区",
+          label: "华龙社区"
+        },
+        {
+          value: "卧龙小区",
+          label: "卧龙小区"
+        },
+        {
+          value: "水晶澜庭",
+          label: "水晶澜庭"
+        }
+      ],
       sex: SEX, //性别
       collapseActive: 1 //折叠面板当前激活name
     };
@@ -555,6 +679,24 @@ export default {
   methods: {
     addCusSubmit() {
       let _that = this;
+      if (
+        _that.formData.school1Array &&
+        _that.formData.school1Array instanceof Array
+      ) {
+        _that.formData.school1 = _that.formData.school1Array.join("&");
+      }
+      if (
+        _that.formData.school2Array &&
+        _that.formData.school2Array instanceof Array
+      ) {
+        _that.formData.school2 = _that.formData.school2Array.join("&");
+      }
+
+      _that.formData.community.forEach((item, index, array) => {
+        console.log(index, item, "循环到位");
+        _that.formData["community" + (index + 1)] = item;
+      });
+      console.log(_that.formData, "录入客户参数");
       _that.$api
         .post({
           url: "/saleCustomer/addCustomer",
@@ -563,6 +705,10 @@ export default {
         })
         .then(e => {
           let result = e.data;
+          _that.$message({
+            type: "info",
+            message: result.message
+          });
           if (result.code == 200) {
             console.log(result, "录入客源");
           } else {
