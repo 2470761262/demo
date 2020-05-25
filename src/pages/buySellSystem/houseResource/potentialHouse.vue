@@ -313,23 +313,24 @@ export default {
           disabled: false,
           default: true,
           formart: item => (item.inArea || 0) + "㎡"
-        },
-        {
-          prop: "customers",
-          label: "业主",
-          width: "",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "tel",
-          label: "业主电话",
-          width: "",
-          order: false,
-          disabled: false,
-          default: true
         }
+        // ,
+        // {
+        //   prop: "customers",
+        //   label: "业主",
+        //   width: "",
+        //   order: false,
+        //   disabled: false,
+        //   default: true
+        // },
+        // {
+        //   prop: "tel",
+        //   label: "业主电话",
+        //   width: "",
+        //   order: false,
+        //   disabled: false,
+        //   default: true
+        // }
       ],
       // tableColumn: [],
       tableData: [],
