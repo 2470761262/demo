@@ -172,7 +172,7 @@ export default {
       department: {},
       queryData: {
         DeptName: "",
-        del: null,
+        del: 0,
         isLocked: null,
         flag: false,
         type: null

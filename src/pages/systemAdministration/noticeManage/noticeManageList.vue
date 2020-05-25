@@ -164,13 +164,19 @@ export default {
         query: { noticeId: noticeId }
       });
     },
+    editNotice(noticeId) {
+      this.$router.push({
+        name: "manageEditNotice",
+        params: { noticeId: noticeId }
+      });
+    },
     distributeEvent(e, noticeId) {
       this[e](noticeId);
     },
     getOpeBtns(type) {
       let array = [
-        { name: "查看", isType: "1,3", methosName: "showNoticeDetail" }
-        // { name: '编辑', isType: '1', methosName: 'test1' }
+        { name: "查看", isType: "1,3", methosName: "showNoticeDetail" },
+        { name: "编辑", isType: "2", methosName: "editNotice" }
       ];
       // return array.filter((item) => {
       //   return item.isType.includes(type)

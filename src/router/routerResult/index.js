@@ -595,6 +595,18 @@ export default [
       )
   },
   {
+    //系统管理 修改公告
+    path: "/sys/editNotice",
+    name: "manageEditNotice",
+    meta: {
+      title: "修改公告"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "addNotice" */ "@/pages/systemAdministration/noticeManage/editNotice.vue"
+      )
+  },
+  {
     //系统管理 公告详情
     path: "/sys/noticeDetail",
     meta: {
