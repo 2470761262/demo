@@ -872,7 +872,7 @@ export default {
       } else {
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
-        params.roomNo = that.data.roomNo;
+        params.bhId = that.data.roomNo;
         params.beginTime = that.data.timeSelect[0];
         params.endTime = that.data.timeSelect[1];
         params.customName = that.data.customName;

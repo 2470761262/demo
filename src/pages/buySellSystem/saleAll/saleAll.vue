@@ -617,7 +617,7 @@ export default {
       this.HouseNoLoading = true;
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHouses",
+          url: "/mateHouse/queryBuildIngHousesBySale",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             comId: that.data.comId,
