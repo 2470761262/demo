@@ -16,6 +16,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            data-anchor="潜在出售楼盘筛选"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
@@ -28,6 +29,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="潜在出售楼盘筛选"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
@@ -40,6 +42,7 @@
             v-model="data.cbId"
             filterable
             clearable
+            data-anchor="潜在出售楼栋筛选"
             placeholder="楼栋"
             @change="buildChange"
           >
@@ -47,6 +50,7 @@
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
+              data-anchor="潜在出售楼栋筛选"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -55,12 +59,14 @@
             class="anchor-point"
             v-model="data.roomNo"
             filterable
+            data-anchor="潜在出售房间号筛选"
             @change="queryPotentialHouseParams"
             placeholder="房间号"
             :loading="HouseNoLoading"
             v-loadmore="loadMore"
           >
             <el-option
+              data-anchor="潜在出售房间号筛选"
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
@@ -73,6 +79,7 @@
           <h3 class="query-cell-title">业主</h3>
           <el-input
             placeholder="姓名"
+            data-anchor="潜在出售业主姓名搜索"
             v-model="data.customName"
             class="set-input120 anchor-point"
             @change="queryPotentialHouseParams"
@@ -85,6 +92,7 @@
             placeholder="业主电话"
             v-model="data.tel"
             class="set-input200 anchor-point"
+            data-anchor="潜在出售业主电话搜索"
             @change="queryPotentialHouseParams"
             clearable
           />
@@ -93,6 +101,7 @@
           <h3 class="query-cell-title">价格</h3>
           <el-input
             placeholder="最小值"
+            data-anchor="潜在出售价格最小值筛选"
             v-model="data.minPrice"
             class="set-input90 anchor-point"
             @change="queryPotentialHouseParams"
@@ -102,6 +111,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxPrice"
+            data-anchor="潜在出售价格最大值筛选"
             class="set-input90 anchor-point"
             @change="queryPotentialHouseParams"
             clearable
@@ -115,6 +125,7 @@
           <el-input
             placeholder="最小值"
             v-model="data.minInArea"
+            data-anchor="潜在出售面积最小值筛选"
             class="set-input90 anchor-point"
             @change="queryPotentialHouseParams"
             clearable
@@ -122,6 +133,7 @@
           <span class="cut-off-rule"></span>
           <el-input
             placeholder="最大值"
+            data-anchor="潜在出售面积最大值筛选"
             v-model="data.maxInArea"
             class="set-input90 anchor-point"
             @change="queryPotentialHouseParams"
@@ -134,6 +146,7 @@
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
+            data-anchor="潜在出售录入时间筛选"
             class="set-data-pricker anchor-point"
             @change="queryPotentialHouseParams"
             range-separator="至"
@@ -141,7 +154,10 @@
             end-placeholder="结束日期"
             :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut anchor-point" @click="Remove"
+          <span
+            class="query-cell-suffix handlebut anchor-point"
+            data-anchor="潜在出售清除按钮"
+            @click="Remove"
             >清除</span
           >
         </div>
@@ -150,6 +166,7 @@
             class="anchor-point"
             type="primary"
             size="mini"
+            data-anchor="潜在出售查询按钮"
             @click="queryPotentialHouseParams"
             >查询</el-button
           >
@@ -181,6 +198,7 @@
           <el-button
             class="anchor-point"
             type="primary"
+            data-anchor="潜在出售查看按钮"
             size="mini"
             @click="toHouseDetail(scope.row)"
             v-if="scope.row.houseType !== 1"
@@ -188,6 +206,7 @@
           >
           <el-button
             class="anchor-point"
+            data-anchor="潜在出售转在售按钮"
             type="primary"
             size="mini"
             @click="
