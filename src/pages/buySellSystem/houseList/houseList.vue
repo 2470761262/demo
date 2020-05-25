@@ -167,7 +167,10 @@
         >
           <div
             :data-anchor="item.title"
-            :class="['for-house-item anchor-point', { 'item-opacity': item.flag }]"
+            :class="[
+              'for-house-item anchor-point',
+              { 'item-opacity': item.flag }
+            ]"
             @click="setSelectNav(item)"
             @dblclick="navToPath(item.path)"
           >
