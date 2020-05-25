@@ -305,12 +305,21 @@
               <div class="step-row-title">客户印象</div>
               <div class="step-row-query">
                 <el-input
-                  v-model="sssValue"
+                  v-model="myImpression"
                   class="input-olny-botttom"
                 ></el-input>
-                <el-button type="text" @click="客户添加;">添加</el-button>
+                <el-button type="text" @click="addCusImpression"
+                  >添加</el-button
+                >
               </div>
             </div>
+          </div>
+          <div class="cust-step-row">
+            <ul>
+              <li v-for="(item, index) in formData.myImpression" :key="index">
+                {{ item }}
+              </li>
+            </ul>
           </div>
         </section>
       </el-collapse-item>
@@ -469,14 +478,18 @@
                 <el-select
                   v-model="formData.school1Array"
                   clearable
+                  filterable
+                  remote
+                  :remote-method="queryPrimarySchoolByKeyWord"
+                  :loading="searchLoading"
                   multiple
                   placeholder="请选择客户期望小学(可多选)"
                 >
                   <el-option
                     v-for="item in primarySchool"
-                    :key="item.value"
-                    :label="item.key"
-                    :value="item.value"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.name"
                   ></el-option>
                 </el-select>
               </div>
@@ -488,14 +501,18 @@
                 <el-select
                   v-model="formData.school2Array"
                   clearable
+                  filterable
+                  remote
+                  :remote-method="queryMiddleSchoolByKeyWord"
+                  :loading="searchLoading"
                   multiple
                   placeholder="请选择客户期望中学(可多选)"
                 >
                   <el-option
                     v-for="item in middleSchool"
-                    :key="item.value"
-                    :label="item.key"
-                    :value="item.value"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.name"
                   ></el-option>
                 </el-select>
               </div>
@@ -510,13 +527,17 @@
                 <el-select
                   v-model="formData.community"
                   clearable
+                  filterable
+                  remote
+                  :remote-method="queryCommunityByKeyWord"
+                  :loading="searchLoading"
                   multiple
                   placeholder="请选择客户期望楼盘(可多选)"
                 >
                   <el-option
                     v-for="item in communityList"
                     :key="item.value"
-                    :label="item.key"
+                    :label="item.name"
                     :value="item.value"
                   ></el-option>
                 </el-select>
@@ -553,7 +574,9 @@ import but from "@/evenBus/but";
 export default {
   data() {
     return {
+      searchLoading: false,
       formData: {
+        myImpression: [],
         desireIntensity: 0,
         customers: "",
         sex: 0,
@@ -572,7 +595,6 @@ export default {
         community: "",
         remark: ""
       },
-      sssValue1: [], //请按照实际字段名进行修改，
       sssValue: "", //请按照实际字段名进行修改，
       decorationList: [
         {
@@ -638,45 +660,125 @@ export default {
           label: "转介绍"
         }
       ],
-      primarySchool: [
-        {
-          value: "莲东小学",
-          label: "莲东小学"
-        },
-        {
-          value: "松涛小学",
-          label: "松涛小学"
-        }
-      ],
-      middleSchool: [
-        {
-          value: "莲东中学",
-          label: "莲东中学"
-        },
-        {
-          value: "一中分校",
-          label: "一中分校"
-        }
-      ],
-      communityList: [
-        {
-          value: "华龙社区",
-          label: "华龙社区"
-        },
-        {
-          value: "卧龙小区",
-          label: "卧龙小区"
-        },
-        {
-          value: "水晶澜庭",
-          label: "水晶澜庭"
-        }
-      ],
+      primarySchool: [],
+      middleSchool: [],
+      communityList: [],
       sex: SEX, //性别
+      myImpression: "",
       collapseActive: 1 //折叠面板当前激活name
     };
   },
   methods: {
+    queryPrimarySchoolByKeyWord(query) {
+      if (query !== "") {
+        let _that = this;
+        this.searchLoading = true;
+        _that.$api
+          .get({
+            url: "/community/primarySchoolList",
+            qs: true,
+            data: { primarySchoolName: query }
+          })
+          .then(e => {
+            _that.searchLoading = false;
+            let result = e.data;
+            if (result.code == 200) {
+              console.log(result, "查询小学");
+              _that.primarySchool = result.data.list;
+            } else {
+              console.log("查询小学" + result.message);
+              _that.$message({
+                type: "info",
+                message: result.message
+              });
+            }
+          })
+          .catch(e => {
+            _that.searchLoading = false;
+            console.log("查询小学失败catch");
+            console.log(e);
+          })
+          .finally(() => {});
+      } else {
+        this.primarySchool = [];
+      }
+    },
+    queryMiddleSchoolByKeyWord(query) {
+      if (query !== "") {
+        let _that = this;
+        this.searchLoading = true;
+        _that.$api
+          .get({
+            url: "/community/middleSchoolList",
+            qs: true,
+            data: { middleSchoolName: query }
+          })
+          .then(e => {
+            _that.searchLoading = false;
+            let result = e.data;
+            if (result.code == 200) {
+              console.log(result, "查询中学");
+              _that.middleSchool = result.data.list;
+            } else {
+              console.log("查询中学" + result.message);
+              _that.$message({
+                type: "info",
+                message: result.message
+              });
+            }
+          })
+          .catch(e => {
+            _that.searchLoading = false;
+            console.log("查询中学失败catch");
+            console.log(e);
+          })
+          .finally(() => {});
+      } else {
+        this.middleSchool = [];
+      }
+    },
+    queryCommunityByKeyWord(query) {
+      if (query !== "") {
+        let _that = this;
+        this.searchLoading = true;
+        _that.$api
+          .get({
+            url: "/community/houseList",
+            qs: true,
+            data: { communityName: query }
+          })
+          .then(e => {
+            _that.searchLoading = false;
+            let result = e.data;
+            if (result.code == 200) {
+              console.log(result, "查询楼盘");
+              _that.communityList = result.data.list;
+            } else {
+              console.log("查询楼盘" + result.message);
+              _that.$message({
+                type: "info",
+                message: result.message
+              });
+            }
+          })
+          .catch(e => {
+            _that.searchLoading = false;
+            console.log("查询楼盘失败catch");
+            console.log(e);
+          })
+          .finally(() => {});
+      } else {
+        this.communityList = [];
+      }
+    },
+    addCusImpression() {
+      if (
+        this.myImpression &&
+        !this.formData.myImpression.includes(this.myImpression)
+      ) {
+        this.formData.myImpression.push(this.myImpression);
+      }
+    },
     addCusSubmit() {
       let _that = this;
       if (
