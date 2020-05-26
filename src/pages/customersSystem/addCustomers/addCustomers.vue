@@ -813,6 +813,9 @@ export default {
           });
           if (result.code == 200) {
             console.log(result, "录入客源");
+            _that.$router.push({
+              name: "allCustomers"
+            });
           } else {
             console.log("录入客源" + result.message);
             _that.$message({
