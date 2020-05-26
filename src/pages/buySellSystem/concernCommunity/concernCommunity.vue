@@ -1313,7 +1313,7 @@ export default {
             comId: this.comId,
             cbId: this.cbId,
             page: this.houseNoPage.currentPage,
-            limit: this.houseNoPage.limit
+            limit: 300
           }
         })
         .then(e => {
