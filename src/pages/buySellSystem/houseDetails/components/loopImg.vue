@@ -128,11 +128,13 @@
              item-img-prev
              el-icon-arrow-left"
         v-if="scrollBar"
+        data-anchor="房源详情轮播图left => click"
         @click="scrollMove('left')"
       ></div>
       <div
         class="item-img-next el-icon-arrow-right anchor-point"
         v-if="scrollBar"
+        data-anchor="房源详情轮播图right => click"
         @click="scrollMove('right')"
       ></div>
       <div
@@ -145,6 +147,7 @@
             <template v-if="item.picUrl">
               <img
                 :src="item.picUrl + '?x-oss-process=style/thumb'"
+                data-anchor="房源详情轮播图图片 => click"
                 @click.stop="changeLoop(item)"
                 :key="index"
                 alt=""
@@ -154,6 +157,7 @@
             <!-- 视频 -->
             <template v-if="item.videoUrl">
               <video
+                data-anchor="房源详情轮播图视频 => click"
                 @click="changeLoop(item)"
                 class="loop-item anchor-point"
                 :src="item.videoUrl"
@@ -218,14 +222,12 @@ export default {
         let resultList = [...saleUploadVideoDtoList, ...saleUploadPicDtoList];
         if (!resultList[0]) {
           //设置默认的itemImg
-          for (let i = 0; i < 7; i++) {
-            resultList.push({
-              typeStr: "picUrl",
-              picUrl:
-                "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png",
-              default: true
-            });
-          }
+          resultList = Array.from({ length: 7 }).fill({
+            typeStr: "picUrl",
+            picUrl:
+              "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png",
+            default: true
+          });
         } else {
           this.changeLoop(resultList[0]);
         }

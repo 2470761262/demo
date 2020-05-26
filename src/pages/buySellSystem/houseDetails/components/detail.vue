@@ -249,6 +249,7 @@
         <div
           class="cell-tabs-nav anchor-point"
           v-if="!isShowBuilding && !buttonDisabled"
+          data-anchor="房源详情楼栋号显示 => click"
           @click="getShowBuliding"
         >
           楼栋号
@@ -293,6 +294,7 @@
           class="cell-pro-but anchor-point"
           v-if="resultData.agentPerName"
           @click="oneTouchDialPhone"
+          data-anchor="房源详情一键拨号 => click"
           :disabled="!touchedDialPhone"
         >
           一键拨号
@@ -303,6 +305,7 @@
           class="cell-pro-but anchor-point"
           v-if="applyAgentRule"
           :disabled="agentApply"
+          data-anchor="房源详情申请跟单人||转在售 => click"
           @click="callTaskAgent"
           >{{ housePageType != "notSale" ? "申请跟单人" : "转在售" }}</el-button
         >
@@ -330,26 +333,34 @@
           <div class="cell-pro-detail-other overText">业主称呼</div>
         </div>
         <el-dropdown @command="contactOwer">
-          <el-button class="cell-pro-but anchor-point" :disabled="isDisabled">
+          <el-button
+            data-anchor="房源详情查看号码 => click"
+            class="cell-pro-but anchor-point"
+            :disabled="isDisabled"
+          >
             查看号码<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item
+              :data-anchor="'房源详情查看号码 => click =>' + resultData.Tel"
               v-if="resultData.Tel != ''"
               v-text="resultData.Tel"
               command=""
             ></el-dropdown-item>
             <el-dropdown-item
+              :data-anchor="'房源详情查看号码 => click =>' + resultData.Tel1"
               v-if="resultData.Tel1 != ''"
               v-text="resultData.Tel1"
               command="1"
             ></el-dropdown-item>
             <el-dropdown-item
+              :data-anchor="'房源详情查看号码 => click =>' + resultData.Tel2"
               v-if="resultData.Tel2 != ''"
               v-text="resultData.Tel2"
               command="2"
             ></el-dropdown-item>
             <el-dropdown-item
+              :data-anchor="'房源详情查看号码 => click =>' + resultData.Tel3"
               v-if="resultData.Tel3 != ''"
               v-text="resultData.Tel3"
               command="3"
@@ -358,6 +369,7 @@
         </el-dropdown>
         <!-- <button>查看号码</button> -->
         <button
+          data-anchor="房源详情一键拨号 => click"
           class="cell-pro-but anchor-point"
           @click="dialPhoneToFD"
           :disabled="!touchedDialPhone"

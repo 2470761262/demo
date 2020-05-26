@@ -180,6 +180,7 @@
           >
             <span>{{ item.impression }}</span>
             <i
+              data-anchor="房源详情印象删除 => click"
               class="el-icon-close icon anchor-point"
               :class="{ isDisabled: buttonDisabled }"
               @click="deleteImpression(item.id, index)"
@@ -191,6 +192,7 @@
       <section
         class="heard-item anchor-point"
         :class="{ isDisabled: buttonDisabled }"
+        data-anchor="房源详情印象弹框打开 => click"
         @click="nodePop"
       >
         <i class="iconyinxiang iconfont icon"></i>
@@ -200,6 +202,7 @@
       <section
         class="heard-item anchor-point"
         :class="{ isDisabled: buttonDisabled }"
+        data-anchor="房源详情写跟进弹框打开 => click"
         @click="openPopUp('followUpFlag')"
       >
         <i class="el-icon-edit icon"></i>
@@ -208,6 +211,7 @@
       <!-- 已关注 -->
       <section
         class="heard-item anchor-point"
+        data-anchor="房源详情印已关注||关注 => click"
         :class="{ isDisabled: buttonDisabled }"
         @click="changCollectHouse"
       >
@@ -219,6 +223,7 @@
       </section>
       <!-- 举报 -->
       <section
+        data-anchor="房源详情印举报弹框打开 => click"
         class="heard-item anchor-point"
         :class="{ isDisabled: buttonDisabled }"
         @click="openReport"
@@ -230,6 +235,7 @@
       <article class="heard-item">
         <div class="qr-content">
           <div
+            data-anchor="房源详情二维码点击 => click"
             class="anchor-point"
             id="qrcode"
             v-if="!buttonDisabled && shareQRCode"

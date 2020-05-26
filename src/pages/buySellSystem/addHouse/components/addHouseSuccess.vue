@@ -102,7 +102,11 @@
         </div>
       </div>
       <div class="text-col-centent">
-        <el-button type="primary" class="link anchor-point" @click="navto"
+        <el-button
+          data-anchor="添加房源前往验真列表 => click"
+          type="primary"
+          class="link anchor-point"
+          @click="navto"
           >前往验真列表</el-button
         >
       </div>
