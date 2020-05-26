@@ -72,12 +72,27 @@
     <transition name="el-fade-in-linear">
       <div class="attention-content" v-if="queryFlag">
         <div class="attention-select">
-          <el-select
+          <!-- <el-select
             v-model="imdataimdata"
             filterable
             placeholder="请输入您添加过的客源印象"
           >
-          </el-select>
+          </el-select> -->
+          <el-paging-select
+            class="anchor-point"
+            keyValue="impression"
+            valueKey="id"
+            clearable
+            type="radio"
+            frist
+            placeholder="请输入您添加过的客源印象"
+            @load="queryMyImpressionList"
+            @change="queryMyImpressionList"
+            @valueChange="selectImpressionChange"
+            :isPageEnd="impressionIsPageEnd"
+            :loading="loadingImpression"
+            :data="myImpressionsList"
+          ></el-paging-select>
         </div>
         <div class="but-group">
           <el-button type="text">一键还原</el-button>
@@ -116,10 +131,74 @@ export default {
   },
   data() {
     return {
-      imdataimdata: ""
+      imdataimdata: "",
+      selectPage: 0,
+      impressionIsPageEnd: false,
+      loadingImpression: false,
+      myImpressionsList: []
     };
   },
+  mounted() {},
   methods: {
+    selectImpressionChange(value) {
+      //选择印象后
+      if (value) {
+        this.$message({
+          message: "您选择了" + value,
+          type: "success"
+        });
+      }
+    },
+    queryMyImpressionList(name, type) {
+      if (type == "change") {
+        console.log(type);
+        this.selectPage = 1;
+        this.myImpressionsList = [];
+        this.impressionIsPageEnd = false;
+      }
+      let _that = this;
+      if (!this.impressionIsPageEnd) {
+        this.loadingImpression = true;
+      }
+      this.$api
+        .post({
+          url: "/saleCustomerImpression/queryMyImperssions",
+          data: { name: name, page: _that.selectPage, limit: 10 },
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            if (type == "change") {
+              console.log(type);
+              this.selectPage = 1;
+              this.myImpressionsList = [];
+              this.impressionIsPageEnd = false;
+            }
+            console.log(this.selectPage);
+            if (result.data.totalPage >= this.selectPage) {
+              ++this.selectPage;
+            } else {
+              this.impressionIsPageEnd = true;
+              return false;
+            }
+            var arrayCommunity = result.data.list;
+            this.myImpressionsList = [
+              ...this.myImpressionsList,
+              ...arrayCommunity
+            ];
+          } else {
+            console.log("查询我的客户then：" + result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询我的客户印象失败catch");
+          console.log(e);
+        })
+        .finally(() => {
+          this.loadingImpression = false;
+        });
+    },
     /**
      * 切换左侧
      */
