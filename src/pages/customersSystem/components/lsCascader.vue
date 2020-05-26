@@ -1,125 +1,33 @@
 <style lang="less" scoped>
-.cascader-content {
-  //  position: relative;
-  .cascader-content-head {
-    display: flex;
-    height: 45px;
-    background: #f2f2f2;
-    border-radius: 30px;
-    overflow: hidden;
-    padding: 0 10px;
-    box-sizing: border-box;
-    align-items: center;
-    position: relative;
-    z-index: 5;
-    border: 1px solid #eae8e4;
-    .head-icon {
-      height: 35px;
-      width: 35px;
-      border-radius: 50%;
-      background: #fff;
-    }
-    .head-input {
-      flex: 1;
-      margin-left: 20px;
-      display: flex;
-      input {
-        flex: 1;
-        width: 0;
-        outline: none;
-        border: none;
-        background: inherit;
-        height: 30px;
-        font-size: 16px;
-        margin-right: 10px;
-        border-bottom: 1px solid black;
-        &:nth-child(1) {
-          flex: 2 0 auto;
-        }
-        &:last-child {
-          margin-right: 0;
-        }
-        &:first-of-type {
-          border-bottom: 0;
-        }
-        &:focus {
-          // border-color: none;
-          // border-color: var(--color--primary);
-        }
-      }
-    }
-  }
-  .cascader-content-foot {
-    width: 100%;
-    margin-top: -15px;
-    padding-top: 15px;
-    border: 2px solid #ddd;
-    border-bottom-left-radius: 30px;
-    border-bottom-right-radius: 30px;
-    box-sizing: border-box;
-    display: flex;
-    background: #f1f1f1;
-    overflow: hidden;
-    .foot-left-tips {
-      width: 220px;
-      text-align: center;
-      font-size: 16px;
-      color: #666;
-      padding-top: 10px;
-    }
-    .fool-right-scroll {
-      flex: 1;
-      //   height: 0;
-      max-height: 200px;
-      overflow: auto;
-      padding-top: 10px;
-      box-sizing: border-box;
-      &::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-      &::-webkit-scrollbar-button,
-      &::-webkit-scrollbar-track,
-      &::-webkit-scrollbar-track-piece {
-        display: none;
-      }
-      &::-webkit-scrollbar-thumb {
-        background: #999;
-        border-radius: 50px;
-      }
-      &.is-childred-one {
-        margin-left: 65px;
-      }
-      &.scroll-pad-bor {
-        padding-left: 20px;
-        border-left: 2px solid #ddd;
-      }
-      li {
-        font-size: 16px;
-        color: #666;
-        margin-bottom: 20px;
-        cursor: pointer;
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-    }
-  }
+@import url(../less/popScroll);
+.head-input {
+  .head-input();
+}
+.foot-left-tips {
+  width: 220px;
+  text-align: center;
+  font-size: 16px;
+  color: #666;
+  padding-top: 10px;
+}
+.fool-right-scroll {
+  .fool-right-scroll();
 }
 </style>
 <template>
-  <div class="cascader-content">
-    <div class="cascader-content-head">
-      <div class="head-icon"></div>
+  <down-content :down-ul-flag="cascaderRenderList.length > 0">
+    <template v-slot:head>
       <div class="head-input">
         <input
           type="text"
           v-model="cascaderCommunity.input"
+          @input="communityInput"
           @focus="openScroll('cascaderCommunity')"
-          placeholder="选择带看楼盘"
+          placeholder="请选择带看楼盘"
         />
         <input
           type="text"
+          @input="buildInput"
           @focus="openScroll('cascaderBuild')"
           placeholder="楼栋"
           v-model="cascaderBuild.input"
@@ -127,14 +35,15 @@
         />
         <input
           type="text"
+          @input="houseInput"
           placeholder="房间号"
           @focus="openScroll('cascaderHouse')"
           v-model="cascaderHouse.input"
           v-if="cascaderBuild.next"
         />
       </div>
-    </div>
-    <div class="cascader-content-foot" v-if="cascaderRenderList.length > 0">
+    </template>
+    <template v-slot:fool>
       <div class="foot-left-tips" v-show="getLevel !== 0">
         {{ tipsList[getLevel] }}
       </div>
@@ -153,13 +62,18 @@
           {{ item.value }}
         </li>
       </ul>
-    </div>
-  </div>
+    </template>
+  </down-content>
 </template>
 
 <script>
 import util from "@/util/util";
+import downContent from "../customersDetail/components/downContent";
 export default {
+  props: ["value"],
+  components: {
+    downContent
+  },
   computed: {
     /**
      * @example: 获取当前的激活等级
@@ -173,11 +87,33 @@ export default {
     }
   },
   methods: {
+    //楼盘Input输入input事件
+    communityInput: util.debounce(300, function(e) {
+      // Todo
+      // remot get data
+    }),
+
+    //楼栋输入input事件
+    buildInput: util.debounce(300, function(e) {
+      // Todo
+      // remot get data
+      console.log(this);
+    }),
+
+    //房间号input输入input事件
+    houseInput: util.debounce(300, function(e) {
+      // Todo
+      // remot get data
+      console.log(this);
+    }),
+
     check(item) {
       const level = this.getLevel;
 
       //设置选中的数据添加到一个集合
       this.$set(this.checkList, level, item);
+
+      this.$emit("input", this.checkList);
 
       //把当前设置的之后的值都删除掉，保证一致
       this.checkList.splice(level + 1, this.checkList.length - 1);
@@ -194,6 +130,7 @@ export default {
 
       this.cascaderRenderList = [];
     },
+
     /**
      * @example: 激活时把对应的list给renderList
      * @param {cascaderName} string
@@ -218,6 +155,7 @@ export default {
         next: false,
 
         list: [
+          //测试数据
           { key: 1, value: "国贸天琴弯 - 天悦(龙岩)" },
           { key: 2, value: "国贸天琴弯 - 天悦(龙岩1)" },
           { key: 3, value: "国贸天琴弯 - 天悦(龙岩2)" },
@@ -236,6 +174,7 @@ export default {
         next: false,
 
         list: [
+          //测试数据
           { key: 1, value: "01号楼" },
           { key: 2, value: "02号楼" },
           { key: 3, value: "03号楼" },
@@ -255,6 +194,7 @@ export default {
         next: false,
 
         list: [
+          //测试数据
           { key: 1, value: "1301" },
           { key: 2, value: "1302" },
           { key: 3, value: "1303" },
