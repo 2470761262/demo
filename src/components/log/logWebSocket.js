@@ -72,7 +72,7 @@ let log_socket = {
   },
   sendAction(e, accountId) {
     let parent = {
-      version: "1.0.0",
+      version: "1.0.1",
       accountId: accountId,
       screenX: e.screenX,
       screenY: e.screenY,
@@ -82,14 +82,15 @@ let log_socket = {
       baseURI: e.target.baseURI,
       className: e.target.className,
       id: e.target.id,
-      identify: e.view.clientInformation.userAgent
+      identify: e.view.clientInformation.userAgent,
+      placeholder: e.target.placeholder,
     };
     let content = "user_action@$:" + JSON.stringify(parent);
     return content;
   },
   sendAnchorData(e, accountId) {
     let parent = {
-      version: "1.0.0",
+      version: "1.0.1",
       accountId: accountId,
       screenX: e.screenX,
       screenY: e.screenY,
