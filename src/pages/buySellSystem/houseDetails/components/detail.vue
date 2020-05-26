@@ -312,6 +312,7 @@
       </div>
       <div class="cell-pro-item">
         <el-image
+          v-if="resultData.headImgUrl"
           class="cell-pro-left-img"
           :src="resultData.headImgUrl"
           fit="fill"
@@ -320,6 +321,13 @@
             加载中<span>...</span>
           </div>
         </el-image>
+        <div
+          v-else
+          class="cell-pro-left-img"
+          style="background:rgb(232,232,230)"
+        >
+          <div slot="placeholder" class="image-slot"></div>
+        </div>
         <div class="cell-pro-detail">
           <el-tooltip :content="resultData.Customers" placement="top">
             <div class="cell-pro-detail-name overText">
