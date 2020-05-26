@@ -380,7 +380,11 @@ export default {
       this.wxUploadFile = false;
       this.$api
         .post({
-          url: `/agent_house/editHousePicture/${this.$store.state.addHouse.formData.id}`
+          url: `/agent_house/editHousePicture`,
+          headers: { "Content-Type": "application/json" },
+          data: {
+            id: this.$store.state.addHouse.formData.id
+          }
         })
         .then(e => {
           console.log(e);
