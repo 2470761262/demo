@@ -198,8 +198,10 @@
           v-validate="required ? 'required' : ''"
           data-vv-as="房源来源"
           data-vv-name="houseSource"
+          data-anchor="添加房源房源来源 => select"
         >
           <el-option
+            data-anchor="添加房源房源来源 => select => option"
             class="anchor-point"
             v-for="item in houseSourceList"
             :key="item.value"
@@ -224,6 +226,7 @@
           data-vv-name="houseNow"
         >
           <el-radio
+            data-anchor="添加房源房屋现状 => radio"
             class="anchor-point"
             :label="item.value"
             v-for="item in houseNowList"
@@ -248,6 +251,7 @@
           data-vv-name="decoration"
         >
           <el-radio
+            data-anchor="添加房源装修类型 => radio"
             class="anchor-point"
             :label="item.value"
             v-for="item in decorationList"
@@ -272,6 +276,7 @@
           data-vv-name="sign"
         >
           <el-radio
+            data-anchor="添加房源户口情况 => radio"
             class="anchor-point"
             v-for="item in signList"
             :key="item.key"
@@ -289,6 +294,7 @@
       <div class="cell-item-cell el-input-w">
         <div class="item-before text-just">物业费</div>
         <el-input
+          data-anchor="添加房源物业费 => input"
           type="text"
           v-model="formData.propertyFee"
           v-validate="
@@ -321,6 +327,7 @@
           data-vv-name="houseBelong"
         >
           <el-radio
+            data-anchor="添加房源附属配套 => radio"
             class="anchor-point"
             v-for="item in houseBelongList"
             :key="item.key"
@@ -348,6 +355,7 @@
           v-model="primaryRadio"
         >
           <el-radio
+            data-anchor="添加房源学籍占用 => radio"
             class="anchor-point"
             v-for="item in primarySchoolUseList"
             :key="item.value"
@@ -372,6 +380,7 @@
           size="mini"
         >
           <el-radio
+            data-anchor="添加房源小学学籍占用 => radio"
             class="anchor-point"
             :label="item.value"
             v-for="item in primarySchoolUseRenderList"
@@ -397,6 +406,7 @@
           v-model="middleRadio"
         >
           <el-radio
+            :data-anchor="'添加房源中学学籍占用 => radio' + item.key"
             class="anchor-point"
             v-for="item in middleSchoolUseList"
             :key="item.value"
@@ -421,6 +431,7 @@
           size="mini"
         >
           <el-radio
+            :data-anchor="'添加房源中学学籍占用 => radio' + item.key"
             class="anchor-point"
             :label="item.value"
             v-for="item in middleSchoolUseRenderList"
@@ -447,6 +458,7 @@
           data-vv-name="mortgageChange"
         >
           <el-radio
+            data-anchor="添加房源抵押情况 => radio"
             v-for="item in mortgageList"
             class="item-flex-avg anchor-point"
             :key="item.key"
@@ -473,6 +485,7 @@
       >
         <div class="cell-item-cell no-top">
           <el-select
+            data-anchor="添加房源抵押银行 => select"
             class="anchor-point"
             v-show="formData.mortgage == 1"
             v-model="formData.mortgageBank"
@@ -482,6 +495,7 @@
             data-vv-name="mortgageBank"
           >
             <el-option
+              data-anchor="添加房源抵押银行 => select => option"
               class="anchor-point"
               v-for="item in mortgageBankList"
               :key="item.value"
@@ -493,6 +507,7 @@
           <el-input
             class="other-input anchor-point"
             v-model="formData.balance"
+            data-anchor="添加房源余贷 => input"
             v-validate="
               formData.mortgage == 1 && required
                 ? 'decimal:2|max:14|required'
@@ -505,6 +520,7 @@
           ></el-input>
           <div class="Division" v-if="formData.mortgage == 1">万元</div>
           <el-input
+            data-anchor="添加房源月供 => input"
             class="other-input anchor-point"
             v-model="formData.monthlyMortgage"
             v-validate="
@@ -530,6 +546,7 @@
         :data-tips="errorBags.first('lastSale')"
       >
         <el-date-picker
+          data-anchor="添加房源上次交易 => input"
           v-model="formData.lastSale"
           type="date"
           class="other-input anchor-point"
@@ -556,6 +573,7 @@
           @change="changeOnly"
         >
           <el-radio
+            data-anchor="添加房源唯一住房 => radio"
             class="anchor-point"
             v-for="item in isowneronlyList"
             :key="item.value"
@@ -590,6 +608,7 @@
       >
         <div class="cell-item-cell no-top">
           <el-select
+            data-anchor="添加房源付款方式 => select"
             class="anchor-point"
             v-model="formData.paymentMethod"
             placeholder="付款方式"
@@ -598,6 +617,7 @@
             data-vv-name="paymentMethod"
           >
             <el-option
+              data-anchor="添加房源付款方式 => select => option"
               class="anchor-point"
               v-for="item in paymentMethodList"
               :key="item.value"
@@ -607,6 +627,7 @@
           </el-select>
           <div class="Division">上次交易金额</div>
           <el-input
+            data-anchor="添加房源上次交易金额 => input"
             class="other-input anchor-point"
             v-model="formData.lastPayment"
             v-validate="
@@ -629,6 +650,7 @@
       <div class="cell-item-cell el-input-w el-input-w-280">
         <div class="item-before text-just">房源标题</div>
         <el-input
+          data-anchor="添加房源房源标题 => input"
           class="anchor-point"
           type="text"
           v-model="formData.title"
@@ -649,6 +671,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">小区介绍</div>
         <el-input
+          data-anchor="添加房源小区介绍 => textarea"
           class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入小区介绍"
@@ -670,6 +693,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">户型介绍</div>
         <el-input
+          data-anchor="添加房源户型介绍 => textarea"
           class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入户型介绍"
@@ -691,6 +715,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">税费解析</div>
         <el-input
+          data-anchor="添加房源税费解析 => textarea"
           class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入税费解析"
@@ -712,6 +737,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">核心卖点</div>
         <el-input
+          data-anchor="添加房源核心卖点 => textarea"
           class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入核心卖点"
@@ -741,6 +767,7 @@
           data-vv-name="followWay"
         >
           <el-radio
+            data-anchor="添加房源跟进类型 => radio"
             class="anchor-point"
             v-for="item in followWayList"
             :key="item.key"
@@ -759,6 +786,7 @@
       <div class="cell-item-cell">
         <div class="item-before text-just flex-start">跟进内容</div>
         <el-input
+          data-anchor="添加房源跟进内容 => textarea"
           class="el-textarea anchor-point"
           type="textarea"
           placeholder="请输入跟进内容"
@@ -784,6 +812,7 @@
           >
             <label for="houseVideoList" class="el-icon-upload">
               <input
+                data-anchor="添加房源音频文件上传 => input"
                 class="anchor-point"
                 id="houseVideoList"
                 type="file"
@@ -796,6 +825,7 @@
             <div class="audio-title">
               <span>{{ audioFile.id ? "音频.mp3" : "暂无" }}</span>
               <span
+                data-anchor="添加房源音频文件删除 => click"
                 v-if="audioFile.url"
                 class="removebut el-icon-delete anchor-point"
                 @click="removeAudio(audioFile.id, audioFile.url)"
@@ -811,9 +841,11 @@
               <div
                 class="anchor-point"
                 :class="['audio-contenr-but', audioPlay.icon]"
+                data-anchor="添加房源音频文件播放 => click"
                 @click="openVideo"
               ></div>
               <el-slider
+                data-anchor="添加房源音频文件播放时间滑动 => click"
                 class="anchor-point"
                 v-model="audioPlay.nowTime"
                 :format-tooltip="formatTooltip"

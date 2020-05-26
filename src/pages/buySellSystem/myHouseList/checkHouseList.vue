@@ -29,6 +29,7 @@
       <template v-slot:left>
         <div class="elTree" v-if="treeData.length > 0">
           <el-input
+            data-anchor="审核列表树 => input"
             placeholder="输入关键字进行过滤"
             v-model="filterText"
             class="treeSearch"
@@ -55,6 +56,7 @@
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
             <el-select
+              data-anchor="审核列表楼盘 => select"
               class="anchor-point"
               v-model="queryData.comId"
               @focus="remoteInput"
@@ -67,6 +69,7 @@
               :loading="loading"
             >
               <el-option
+                data-anchor="审核列表楼盘 => select => option"
                 class="anchor-point"
                 v-for="item in comList"
                 :key="item.value"
@@ -75,6 +78,7 @@
               ></el-option>
             </el-select>
             <el-select
+              data-anchor="审核列表楼栋 => select"
               class="anchor-point"
               v-model="queryData.cbId"
               filterable
@@ -83,6 +87,7 @@
               @change="buildChange"
             >
               <el-option
+                data-anchor="审核列表楼栋 => select => option"
                 class="anchor-point"
                 v-for="item in cbIdList"
                 :key="item.value"
@@ -91,6 +96,7 @@
               ></el-option>
             </el-select>
             <el-select
+              data-anchor="审核列表房间号 => select"
               class="anchor-point"
               v-model="queryData.roomId"
               filterable
@@ -100,6 +106,7 @@
               v-loadmore="loadMore"
             >
               <el-option
+                data-anchor="审核列表房间号 => select => option"
                 class="anchor-point"
                 v-for="item in roomNoList"
                 :key="item.value"
@@ -111,6 +118,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">编号</h3>
             <el-input
+              data-anchor="审核列表房源编号 => input"
               placeholder="房源编号"
               v-model="queryData.houseNo"
               class="set-input200"
@@ -121,6 +129,7 @@
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">提交时间</h3>
             <el-date-picker
+              data-anchor="审核列表提交时间 => input"
               v-model="queryData.timeSelect"
               type="daterange"
               class="set-data-pricker anchor-point"
@@ -131,6 +140,7 @@
               end-placeholder="结束日期"
             ></el-date-picker>
             <span
+              data-anchor="审核列表清除 => click"
               class="query-cell-suffix handlebut anchor-point"
               @click="Remove"
               >清除</span
@@ -141,6 +151,7 @@
           <div class="query-content-cell ">
             <h3 class="query-cell-title">审核项目</h3>
             <el-select
+              data-anchor="审核列表审核项目 => select"
               filterable
               v-model="checkProject"
               clearable
@@ -149,6 +160,7 @@
               placeholder="全部"
             >
               <el-option
+                data-anchor="审核列表审核项目 => select => option"
                 class="anchor-point"
                 v-for="item in checkProjectList"
                 :key="item.value"
@@ -161,6 +173,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">审核类型</h3>
             <el-select
+              data-anchor="审核列表审核类型 => select"
               filterable
               v-model="type"
               clearable
@@ -169,6 +182,7 @@
               placeholder="全部"
             >
               <el-option
+                data-anchor="审核列表审核类型 => select => option"
                 class="anchor-point"
                 v-for="item in typeList"
                 :key="item.value"
@@ -181,6 +195,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">审核状态</h3>
             <el-select
+              data-anchor="审核列表审核状态 => select"
               filterable
               v-model="status"
               clearable
@@ -189,6 +204,7 @@
               placeholder="全部"
             >
               <el-option
+                data-anchor="审核列表审核状态 => select => option"
                 class="anchor-point"
                 v-for="item in stateList"
                 :key="item.value"
@@ -200,6 +216,7 @@
           </div>
           <div class="query-content-cell cell-interval75">
             <el-button
+              data-anchor="审核列表查询 => click"
               type="primary"
               size="mini"
               @click="querylistByParams"
@@ -265,6 +282,7 @@
             <el-image
               v-if="scope.row.accessory == 1"
               :src="accessoryUrl"
+              data-anchor="审核列表附件 => table => image"
               @click="getAccessory(scope.row)"
             >
             </el-image>
@@ -276,6 +294,7 @@
               class="anchor-point"
               type="primary"
               size="mini"
+              data-anchor="审核列表审核 => click"
               v-if="
                 scope.row.tag == 0 && scope.row.checkProject == '房源转状态'
               "
@@ -287,6 +306,7 @@
               class="anchor-point"
               type="primary"
               size="mini"
+              data-anchor="审核列表审核 => click"
               v-if="
                 scope.row.tag == 0 && scope.row.checkProject != '房源转状态'
               "
@@ -295,6 +315,7 @@
               >审核</el-button
             >
             <el-button
+              data-anchor="审核列表已审核 => click"
               size="mini"
               type="warning"
               v-if="scope.row.tag != 0"
@@ -302,6 +323,7 @@
               >已审核</el-button
             >
             <el-button
+              data-anchor="审核列表查看详情 => click"
               class="anchor-point"
               type="primary"
               v-if="!(scope.row.checkProject == 13)"
@@ -324,8 +346,12 @@
         <div>
           <span>审核状态:</span>
           <el-radio-group v-model="checkStatus">
-            <el-radio :label="1">通过</el-radio>
-            <el-radio :label="2">不通过</el-radio>
+            <el-radio :label="1" data-anchor="审核列表通过 => radio"
+              >通过</el-radio
+            >
+            <el-radio :label="2" data-anchor="审核列表不通过 => radio"
+              >不通过</el-radio
+            >
           </el-radio-group>
         </div>
         <div v-if="row.checkProject == 1 || row.replaceType == 2">
@@ -368,6 +394,7 @@
         </div>
         <div>
           <el-input
+            data-anchor="审核列表审核说明 => input"
             class="anchor-point"
             type="textarea"
             placeholder="请输入审核说明"
@@ -377,10 +404,17 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="showPopUp = false" class="anchor-point"
+        <el-button
+          data-anchor="审核列表取消 => click"
+          @click="showPopUp = false"
+          class="anchor-point"
           >取 消</el-button
         >
-        <el-button type="primary" @click="checkHouse()" class="anchor-point"
+        <el-button
+          data-anchor="审核列表确 定 => click"
+          type="primary"
+          @click="checkHouse()"
+          class="anchor-point"
           >确 定</el-button
         >
       </span>
@@ -973,7 +1007,7 @@ export default {
             comId: that.queryData.comId,
             cbId: that.queryData.cbId,
             page: this.houseNoPage.currentPage,
-            limit: this.houseNoPage.limit
+            limit: 300
           }
         })
         .then(e => {

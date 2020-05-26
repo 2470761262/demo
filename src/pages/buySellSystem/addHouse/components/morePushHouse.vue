@@ -65,10 +65,16 @@
           @change="houseTypeChange"
           size="mini"
         >
-          <el-radio label="basicInformation" class="anchor-point"
+          <el-radio
+            data-anchor="添加房源单套录入 => click"
+            label="basicInformation"
+            class="anchor-point"
             >单套录入</el-radio
           >
-          <el-radio label="morePushHouse" class="anchor-point"
+          <el-radio
+            data-anchor="添加房源多套录入 => click"
+            label="morePushHouse"
+            class="anchor-point"
             >多套录入</el-radio
           >
         </el-radio-group>
@@ -84,6 +90,7 @@
       <div class="page-cell-item select-nobor">
         <div class="item-before" data-before="*">楼盘</div>
         <el-select
+          data-anchor="添加房源多套录入楼盘 => select"
           filterable
           remote
           class="anchor-point"
@@ -98,6 +105,7 @@
           :loading="selectPageCommunit.loading"
         >
           <el-option
+            data-anchor="添加房源多套录入楼盘 => select => option"
             class="anchor-point"
             v-for="item in selectPageCommunit.list"
             :key="item.value"
@@ -113,6 +121,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            data-anchor="添加房源多套录入设置套数 => input"
             placeholder="几"
             maxlength="2"
             v-number
@@ -135,6 +144,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            data-anchor="添加房源多套录入设置总售价 => input"
             class="anchor-point"
             placeholder="￥"
             v-number.floot
@@ -156,6 +166,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            data-anchor="添加房源多套录入设置总底价 => input"
             class="anchor-point"
             placeholder="￥"
             v-number.floot
@@ -213,11 +224,13 @@
                   :data-vv-as="'楼栋' + (index + 1)"
                   v-validate="'required'"
                   :remote-method="remoteBuildingNo"
+                  data-anchor="添加房源多套录入楼栋 => select"
                   @change="remoteBuildingNoChange($event, index)"
                   v-model="item.buildingId"
                   placeholder="楼栋"
                 >
                   <el-option
+                    data-anchor="添加房源多套录入楼栋 => select => option"
                     class="anchor-point"
                     v-for="item in selectPageBuilding.list"
                     :key="item.value"
@@ -228,6 +241,7 @@
               </div>
               <div class="for-add-td select-nobor">
                 <el-select
+                  data-anchor="添加房源多套录入房间号 => select"
                   class="anchor-point"
                   filterable
                   remote
@@ -242,6 +256,7 @@
                   placeholder="房间号"
                 >
                   <el-option
+                    data-anchor="添加房源多套录入房间号 => select => option"
                     class="anchor-point"
                     v-for="item in selectPageRoom.list"
                     :key="item.value"
@@ -258,6 +273,7 @@
               <div class="for-add-td select-nobor select-pad-width_70">
                 <div class="tr-flex">
                   <el-input
+                    data-anchor="添加房源多套录入售价 => input"
                     class="anchor-point"
                     placeholder="售价"
                     v-number.floot
@@ -270,6 +286,7 @@
               <div class="for-add-td select-nobor select-pad-width_70">
                 <div class="tr-flex">
                   <el-input
+                    data-anchor="添加房源多套录入底价 => input"
                     class="anchor-point"
                     placeholder="底价"
                     v-number.floot
@@ -295,6 +312,7 @@
     >
       <div class="page-cell-item select-nobor center-flex">
         <el-input
+          data-anchor="添加房源多套录入业主姓名 => input"
           class="anchor-point"
           placeholder="请输入业主姓名"
           data-vv-name="customerName"
@@ -307,6 +325,7 @@
         <div class="input-after-checkbox">
           <el-radio-group v-model="form.sex" size="mini">
             <el-radio
+              data-anchor="添加房源多套录入业主性别 => radio"
               class="anchor-point"
               :label="item.label"
               v-for="(item, index) in sexList"
@@ -325,6 +344,7 @@
     >
       <div class="page-cell-item select-nobor">
         <el-input
+          data-anchor="添加房源多套录入业主电话号码 => radio"
           class="anchor-point"
           placeholder="默认拨打为第一个号码"
           data-vv-name="tel"
@@ -335,6 +355,7 @@
           <div slot="prepend" class="item-before" data-before="*">手机号</div>
           <div
             slot="append"
+            data-anchor="添加房源多套录入业主新增电话号码 => radio"
             @click="addTelToList"
             class="item-after item-before-col anchor-point"
           >
@@ -355,6 +376,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            data-anchor="添加房源多套录入业主电话号码 => input"
             class="anchor-point"
             placeholder="请输入业主电话号码"
             :data-vv-name="'tel' + item"
@@ -371,6 +393,7 @@
             <div slot="prepend" class="item-before">手机号{{ item }}</div>
             <div
               slot="append"
+              data-anchor="添加房源多套录入删除业主电话号码 => input"
               @click="removeTelToList(index, item)"
               class="item-after item-before-col anchor-point"
             >
@@ -391,6 +414,7 @@
         <div class="page-cell-item">
           <div class="item-before" data-before="*">房屋证件</div>
           <el-select
+            data-anchor="添加房源多套录入房屋证件 => select"
             class="anchor-point"
             v-model="form.certificateType"
             v-validate="'required'"
@@ -399,6 +423,7 @@
             placeholder="请选择房屋证件"
           >
             <el-option
+              data-anchor="添加房源多套录入房屋证件 => input => option"
               class="anchor-point"
               v-for="item in certificateTypeList"
               :key="item.label"
@@ -449,6 +474,7 @@
     <div class="form-error-tips margin-bot_20">
       <div class="page-cell-item select-nobor">
         <el-input
+          data-anchor="添加房源产权证号 => input"
           class="anchor-point"
           placeholder="请输入产权证号"
           v-model="form.certificateNo"

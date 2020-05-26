@@ -125,9 +125,9 @@
         justify-content: center;
         padding-bottom: 20px;
         .floot-btn {
-          width: 180px;
-          height: 48px;
-          font-size: 20px;
+          width: 120px;
+          height: 30px;
+          font-size: 17px;
           border-radius: 30px;
           padding: 0;
           border: none;

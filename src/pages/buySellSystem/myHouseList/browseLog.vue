@@ -16,6 +16,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            data-anchor="浏览记录楼盘 => select"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
@@ -28,6 +29,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="浏览记录楼盘 => select => option"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
@@ -36,6 +38,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="浏览记录楼栋 => select"
             class="anchor-point"
             v-model="data.cbId"
             filterable
@@ -44,6 +47,7 @@
             @change="buildChange"
           >
             <el-option
+              data-anchor="浏览记录楼栋 => select => option"
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
@@ -52,6 +56,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="浏览记录房间号 => select"
             class="anchor-point"
             v-model="data.roomNo"
             filterable
@@ -61,6 +66,7 @@
             v-loadmore="loadMore"
           >
             <el-option
+              data-anchor="浏览记录房间号 => select => option"
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
@@ -72,6 +78,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">房源编号</h3>
           <el-input
+            data-anchor="浏览记录房源编号 => input"
             placeholder="房源编号"
             v-model="data.houseNo"
             class="set-input220 anchor-point"
@@ -82,6 +89,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">价格</h3>
           <el-input
+            data-anchor="浏览记录价格最小值 => input"
             placeholder="最小值"
             v-model="data.minPrice"
             class="set-input90 anchor-point"
@@ -90,6 +98,7 @@
           />
           <span class="cut-off-rule"></span>
           <el-input
+            data-anchor="浏览记录价格最大值 => input"
             placeholder="最大值"
             v-model="data.maxPrice"
             class="set-input90 anchor-point"
@@ -103,6 +112,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">面积</h3>
           <el-input
+            data-anchor="浏览记录面积最小值 => input"
             placeholder="最小值"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
@@ -111,6 +121,7 @@
           />
           <span class="cut-off-rule"></span>
           <el-input
+            data-anchor="浏览记录面积最大值 => input"
             placeholder="最大值"
             v-model="data.maxInArea"
             class="set-input90 anchor-point"
@@ -122,6 +133,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">浏览时间</h3>
           <el-date-picker
+            data-anchor="浏览记录浏览时间 => input"
             v-model="data.timeSelect"
             type="daterange"
             class="set-data-pricker anchor-point"
@@ -138,6 +150,7 @@
         </div>
         <div class="query-content-cell cell-interval75">
           <el-button
+            data-anchor="浏览记录查询 => click"
             type="primary"
             size="mini"
             @click="querySoleAllParams"
@@ -164,6 +177,7 @@
       <el-table-column label="操作" fixed="right" min-width="150">
         <template v-slot="scope">
           <el-button
+            data-anchor="浏览记录查看详情 => click"
             type="primary"
             size="mini"
             @click="toHouseDetail(scope.row)"
@@ -564,7 +578,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: this.houseNoPage.currentPage,
-            limit: this.houseNoPage.limit
+            limit: 300
           }
         })
         .then(e => {

@@ -313,23 +313,24 @@ export default {
           disabled: false,
           default: true,
           formart: item => (item.inArea || 0) + "㎡"
-        },
-        {
-          prop: "customers",
-          label: "业主",
-          width: "",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "tel",
-          label: "业主电话",
-          width: "",
-          order: false,
-          disabled: false,
-          default: true
         }
+        // ,
+        // {
+        //   prop: "customers",
+        //   label: "业主",
+        //   width: "",
+        //   order: false,
+        //   disabled: false,
+        //   default: true
+        // },
+        // {
+        //   prop: "tel",
+        //   label: "业主电话",
+        //   width: "",
+        //   order: false,
+        //   disabled: false,
+        //   default: true
+        // }
       ],
       // tableColumn: [],
       tableData: [],
@@ -522,7 +523,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: this.houseNoPage.currentPage,
-            limit: this.houseNoPage.limit
+            limit: 300
           }
         })
         .then(e => {

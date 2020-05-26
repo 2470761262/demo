@@ -159,7 +159,7 @@
       <div class="message-row">
         <h5 class="message-row-title">电梯配套</h5>
         <div class="message-row-right">
-          {{ resultData.elevator | elevatorFilter }}
+          {{ resultData.Elevator | elevatorFilter }}
         </div>
       </div>
     </section>

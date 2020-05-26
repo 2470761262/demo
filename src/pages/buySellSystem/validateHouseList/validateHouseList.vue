@@ -69,6 +69,7 @@
       <template v-slot:left>
         <div class="elTree" v-if="treeData.length > 0">
           <el-input
+            data-anchor="验真列表树 => input"
             placeholder="输入关键字进行过滤"
             v-model="filterText"
             class="treeSearch"
@@ -95,6 +96,7 @@
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
             <el-select
+              data-anchor="验真列表楼盘 => select"
               class="anchor-point"
               v-model="data.comId"
               @focus="remoteInput"
@@ -107,6 +109,7 @@
               :loading="loading"
             >
               <el-option
+                data-anchor="验真列表楼盘 => select => option"
                 class="anchor-point"
                 v-for="item in options"
                 :key="item.value"
@@ -115,6 +118,7 @@
               ></el-option>
             </el-select>
             <el-select
+              data-anchor="验真列表楼栋 => select"
               class="anchor-point"
               v-model="data.cbId"
               filterable
@@ -123,6 +127,7 @@
               @change="buildChange"
             >
               <el-option
+                data-anchor="验真列表楼栋 => select => option"
                 class="anchor-point"
                 v-for="item in cbIdList"
                 :key="item.value"
@@ -131,6 +136,7 @@
               ></el-option>
             </el-select>
             <el-select
+              data-anchor="验真列表房间号 => select"
               class="anchor-point"
               v-model="data.roomNo"
               filterable
@@ -140,6 +146,7 @@
               v-loadmore="loadMore"
             >
               <el-option
+                data-anchor="验真列表房间号 => select => option"
                 class="anchor-point"
                 v-for="item in roomNoList"
                 :key="item.value"
@@ -151,6 +158,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">编号</h3>
             <el-input
+              data-anchor="验真列表房源编号 => input"
               placeholder="房源编号"
               v-model="data.houseNo"
               class="set-input200 anchor-point"
@@ -161,6 +169,7 @@
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">业主</h3>
             <el-input
+              data-anchor="验真列表业主姓名 => input"
               placeholder="姓名"
               v-model="data.customName"
               class="set-input120 anchor-point"
@@ -171,6 +180,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">电话</h3>
             <el-input
+              data-anchor="验真列表业主电话 => input"
               placeholder="业主电话"
               v-model="data.tel"
               class="set-input200 anchor-point"
@@ -181,6 +191,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">价格</h3>
             <el-input
+              data-anchor="验真列表价格最小值 => input"
               placeholder="最小值"
               v-model="data.minPrice"
               class="set-input90 anchor-point"
@@ -189,6 +200,7 @@
             />
             <span class="cut-off-rule"></span>
             <el-input
+              data-anchor="验真列表价格最大值 => input"
               placeholder="最大值"
               v-model="data.maxPrice"
               class="set-input90 anchor-point"
@@ -202,6 +214,7 @@
           <div class="query-content-cell">
             <h3 class="query-cell-title">面积</h3>
             <el-input
+              data-anchor="验真列表面积最小值 => input"
               placeholder="最小值"
               v-model="data.minInArea"
               class="set-input90 anchor-point"
@@ -210,6 +223,7 @@
             />
             <span class="cut-off-rule"></span>
             <el-input
+              data-anchor="验真列表面积最大值 => input"
               placeholder="最大值"
               v-model="data.maxInArea"
               class="set-input90 anchor-point"
@@ -221,6 +235,7 @@
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">录入时间</h3>
             <el-date-picker
+              data-anchor="验真列表录入时间 => input"
               v-model="data.timeSelect"
               type="daterange"
               class="set-data-pricker anchor-point"
@@ -267,6 +282,7 @@
               </el-select>
             </div>
             <span
+              data-anchor="验真列表清除 => input"
               class="query-cell-suffix handlebut anchor-point"
               @click="Remove"
               >清除</span
@@ -274,6 +290,7 @@
           </div>
           <div class="query-content-cell cell-interval25">
             <el-button
+              data-anchor="验真列表查询 => input"
               class="anchor-point"
               type="primary"
               size="mini"
@@ -311,6 +328,7 @@
                 class="anchor-point"
                 :type="item.buttonType"
                 size="mini"
+                :data-anchor="'验真列表查询' + item.name + '=> input'"
                 :disabled="item.disabled"
                 @click.stop="distributeEvent(item.methodName, scope.row)"
                 v-for="(item, index) in isForBut(scope.row.checkStatus)"
@@ -992,7 +1010,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: this.houseNoPage.currentPage,
-            limit: this.houseNoPage.limit
+            limit: 300
           }
         })
         .then(e => {

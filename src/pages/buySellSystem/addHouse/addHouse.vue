@@ -113,6 +113,7 @@
           <div class="page-contenr-but">
             <el-button-group>
               <el-button
+                :data-anchor="'添加房源 => click =>' + prevText"
                 v-if="stepsActiveIndex != 0 && stepsActiveIndex != 3"
                 type="primary"
                 @click="prevPage"
@@ -120,6 +121,7 @@
                 >{{ prevText }}</el-button
               >
               <el-button
+                :data-anchor="'添加房源 => click =>' + nextText"
                 v-if="stepsActiveIndex < 2 || reSetMethod"
                 type="primary"
                 class="anchor-point"
@@ -128,6 +130,9 @@
                 >{{ nextText }}</el-button
               >
               <el-button
+                :data-anchor="
+                  '添加房源 => click =>' + paramsObj.buttonText || '提交验真'
+                "
                 type="primary"
                 v-if="stepsActiveIndex < 3 || reSetMethod"
                 @click="nextPage('draft')"
@@ -140,11 +145,17 @@
           </div>
           <div class="right-nav-content" v-scrollCenter="'page-contenr-com'">
             <el-button
+              data-anchor="添加房源首页 => click"
               class="anchor-point"
               @click="navPage('/buySellSystem/houseList')"
               >首页</el-button
             >
-            <el-button class="anchor-point" @click="navPage()">返回</el-button>
+            <el-button
+              data-anchor="添加房源返回 => click"
+              class="anchor-point"
+              @click="navPage()"
+              >返回</el-button
+            >
           </div>
         </div>
       </div>

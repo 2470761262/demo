@@ -61,6 +61,7 @@ span {
         <div class="definition-flex-cell definition-back">
           <div class="pop-title">更多筛选</div>
           <div
+            data-anchor="更多筛选组件关闭 => click"
             class="el-icon-close anchor-point"
             @click="visible = false"
           ></div>
@@ -71,6 +72,7 @@ span {
               <div class="selectType" v-if="mergeConfig.comId">
                 <span>楼盘名称</span>
                 <el-select
+                  data-anchor="更多筛选组件楼盘名称 => select"
                   v-model="more.comId"
                   style="width:60%"
                   class="anchor-point"
@@ -83,6 +85,7 @@ span {
                   :remote-method="remoteMethod"
                 >
                   <el-option
+                    data-anchor="更多筛选组件楼盘名称 => select => option"
                     class="anchor-point"
                     v-for="item in moreOptions"
                     :key="item.value"
@@ -94,6 +97,7 @@ span {
               <div class="selectType">
                 <span v-if="mergeConfig.cbId">栋座</span>
                 <el-select
+                  data-anchor="更多筛选组件栋座 => select"
                   v-if="mergeConfig.cbId"
                   v-model="more.cbId"
                   style="width:30%"
@@ -104,6 +108,7 @@ span {
                   @change="queryRoomNo()"
                 >
                   <el-option
+                    data-anchor="更多筛选组件栋座 => select => option"
                     class="anchor-point"
                     v-for="item in moreCbIdList"
                     :key="item.value"
@@ -113,6 +118,7 @@ span {
                 </el-select>
                 <span v-if="mergeConfig.bhId">房号</span>
                 <el-select
+                  data-anchor="更多筛选组件房间号 => select"
                   class="anchor-point"
                   v-if="mergeConfig.bhId"
                   v-model="more.bhId"
@@ -122,6 +128,7 @@ span {
                   placeholder="请选择房间号"
                 >
                   <el-option
+                    data-anchor="更多筛选组件房间号 => select => option"
                     class="anchor-point"
                     v-for="item in moreRoomNoList"
                     :key="item.value"
@@ -135,6 +142,7 @@ span {
               <div class="selectType">
                 <span v-if="mergeConfig.minInArea">建筑面积</span>
                 <el-input
+                  data-anchor="更多筛选组件建筑面积最小值 => input"
                   class="anchor-point"
                   style="width:30%"
                   clearable
@@ -143,6 +151,7 @@ span {
                 ></el-input>
                 <span v-if="mergeConfig.maxInArea">-</span>
                 <el-input
+                  data-anchor="更多筛选组件建筑面积最大值 => input"
                   class="anchor-point"
                   style="width:30%"
                   clearable
@@ -154,6 +163,7 @@ span {
               <div class="selectType">
                 <span v-if="mergeConfig.minPrice">总价</span>
                 <el-input
+                  data-anchor="更多筛选组件建筑总价最小值 => input"
                   class="anchor-point"
                   style="width:30%"
                   v-model="more.minPrice"
@@ -163,6 +173,7 @@ span {
                 ></el-input>
                 <span v-if="mergeConfig.minPrice">万</span>
                 <el-input
+                  data-anchor="更多筛选组件建筑总价最大值 => input"
                   class="anchor-point"
                   v-model="more.maxPrice"
                   style="width:30%"
@@ -177,6 +188,7 @@ span {
               <div class="selectType" v-if="mergeConfig.addTime">
                 <span>录入时间</span>
                 <el-date-picker
+                  data-anchor="更多筛选组件录入时间 => input"
                   class="anchor-point"
                   v-model="more.addTime"
                   type="daterange"
@@ -190,6 +202,7 @@ span {
               <div class="selectType" v-if="mergeConfig.followTime">
                 <span>跟进时间</span>
                 <el-date-picker
+                  data-anchor="更多筛选组件跟进时间 => input"
                   class="anchor-point"
                   v-model="more.followTime"
                   type="daterange"
@@ -205,12 +218,14 @@ span {
               <div class="selectType" v-if="mergeConfig.propertyYear">
                 <span>产权年限</span>
                 <el-select
+                  data-anchor="更多筛选组件产权年限 => select"
                   class="anchor-point"
                   v-model="more.propertyYear"
                   clearable
                   style="width:70%"
                 >
                   <el-option
+                    data-anchor="更多筛选组件产权年限 => select => option"
                     class="anchor-point"
                     v-for="item in PropertyList"
                     :key="item.value"
@@ -222,6 +237,7 @@ span {
               <div class="selectType">
                 <span>楼层</span>
                 <el-input
+                  data-anchor="更多筛选组件楼层最小值 => input"
                   class="anchor-point"
                   style="width:30%"
                   clearable
@@ -230,6 +246,7 @@ span {
                 ></el-input
                 >-
                 <el-input
+                  data-anchor="更多筛选组件楼层最大值 => input"
                   class="anchor-point"
                   v-model="more.maxFloor"
                   v-if="mergeConfig.maxFloor"
@@ -242,12 +259,14 @@ span {
               <div class="selectType" v-if="mergeConfig.area">
                 <span>物理区域</span>
                 <el-select
+                  data-anchor="更多筛选组件物理区域 => select"
                   class="anchor-point"
                   v-model="more.area"
                   clearable
                   style="width:70%"
                 >
                   <el-option
+                    data-anchor="更多筛选组件物理区域 => select => option"
                     class="anchor-point"
                     v-for="item in RegionList"
                     :key="item.value"
@@ -267,12 +286,14 @@ span {
                 </el-select>-->
                 <span>委托</span>
                 <el-select
+                  data-anchor="更多筛选组件委托 => select"
                   class="anchor-point"
                   v-model="more.entrustType"
                   clearable
                   style="width:30%"
                 >
                   <el-option
+                    data-anchor="更多筛选组件委托 => select => option"
                     class="anchor-point"
                     v-for="item in EntrustList"
                     :key="item.value"
@@ -286,12 +307,14 @@ span {
               <div class="selectType" v-if="mergeConfig.taskType">
                 <span>作业类型</span>
                 <el-select
+                  data-anchor="更多筛选组件作业类型 => select"
                   class="anchor-point"
                   v-model="more.taskType"
                   clearable
                   style="width:70%"
                 >
                   <el-option
+                    data-anchor="更多筛选组件作业类型 => select => option"
                     class="anchor-point"
                     v-for="item in taskList"
                     :key="item.value"
@@ -303,12 +326,14 @@ span {
               <div class="selectType" v-if="mergeConfig.buildType">
                 <span>房屋用途</span>
                 <el-select
+                  data-anchor="更多筛选组件房屋用途 => select"
                   class="anchor-point"
                   v-model="more.buildType"
                   clearable
                   style="width:70%"
                 >
                   <el-option
+                    data-anchor="更多筛选组件房屋用途 => select => option"
                     class="anchor-point"
                     v-for="item in buildTypeList"
                     :key="item.value"
@@ -321,6 +346,7 @@ span {
             <div class="line" style="display:flex;align-items:center">
               <span v-if="mergeConfig.deptParentId">区域</span>
               <el-select
+                data-anchor="更多筛选组件区域 => select"
                 class="anchor-point"
                 v-model="more.deptParentId"
                 :remote-method="remoteArea"
@@ -331,6 +357,7 @@ span {
                 style="width:35%"
               >
                 <el-option
+                  data-anchor="更多筛选组件区域 => select => option"
                   class="anchor-point"
                   v-for="item in deptParentList"
                   :key="item.depId"
@@ -339,6 +366,7 @@ span {
                 ></el-option>
               </el-select>
               <el-select
+                data-anchor="更多筛选组件区域 => select"
                 class="anchor-point"
                 v-model="more.store"
                 @change="queryPer"
@@ -347,6 +375,7 @@ span {
                 style="width:30%"
               >
                 <el-option
+                  data-anchor="更多筛选组件区域 => select => option"
                   class="anchor-point"
                   v-for="item in storeList"
                   :key="item.depId"
@@ -355,6 +384,7 @@ span {
                 ></el-option>
               </el-select>
               <el-select
+                data-anchor="更多筛选组件区域 => select"
                 class="anchor-point"
                 v-model="more.personnel"
                 clearable
@@ -362,6 +392,7 @@ span {
                 style="width:20%"
               >
                 <el-option
+                  data-anchor="更多筛选组件区域 => select => option"
                   class="anchor-point"
                   v-for="item in perList"
                   :key="item.accountId"
@@ -374,6 +405,7 @@ span {
         </div>
         <div class="center-but">
           <el-button
+            data-anchor="更多筛选组件搜索 => click"
             class="anchor-point"
             type="primary"
             size="mini"
@@ -381,6 +413,7 @@ span {
             >搜索</el-button
           >
           <el-button
+            data-anchor="更多筛选组件清空 => click"
             class="anchor-point"
             type="primary"
             size="mini"
@@ -390,6 +423,7 @@ span {
         </div>
       </div>
       <el-button
+        data-anchor="更多筛选更多筛选 => click"
         class="anchor-point"
         slot="reference"
         size="mini"

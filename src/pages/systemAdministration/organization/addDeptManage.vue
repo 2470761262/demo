@@ -265,12 +265,8 @@ export default {
         joinType: [
           { required: true, message: "请选择加入类型", trigger: "blur" }
         ],
-        perName: [
-          { required: true, message: "请选择负责人", trigger: "blur" }
-        ],
-        isArea: [
-          { required: true, message: "请选择是否片区", trigger: "blur" }
-        ],
+        perName: [{ required: true, message: "请选择负责人", trigger: "blur" }],
+        isArea: [{ required: true, message: "请选择是否片区", trigger: "blur" }]
       },
       sidebarFlag: false,
       loading: false, //控制表格加载动画提示

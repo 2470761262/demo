@@ -114,6 +114,7 @@
       >
         <label class="poper-li-label">
           <input
+            :data-anchor="$attrs.placeholder + ' li => click '"
             class="anchor-point"
             :type="type"
             :name="inputName"
@@ -141,6 +142,7 @@
       class="result-input-content anchor-point"
       slot="reference"
       ref="onlayInput"
+      :data-anchor="$attrs.placeholder + '=> input'"
       @click="visible = !visible"
     >
       <!-- <input :placeholder="$attrs.placeholder || '选中您的数据'"
@@ -149,6 +151,7 @@
              clearable
              @focus.stop="triggerSelect"> -->
       <input
+        :data-anchor="$attrs.placeholder + '=> input'"
         :placeholder="$attrs.placeholder || '选中您的数据'"
         class="anchor-point"
         @input="debounce('filterInputChange')"

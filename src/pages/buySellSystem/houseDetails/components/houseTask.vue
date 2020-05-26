@@ -192,6 +192,7 @@
           </div>
         </template>
         <el-button
+          data-anchor="房源详情申请跟单人 => click"
           v-else-if="applyAgentRule"
           :disabled="isDisabled || agentApply"
           @click="openAgentPop"
@@ -233,6 +234,7 @@
           <el-button
             :disabled="isDisabled"
             class="anchor-point"
+            data-anchor="房源详情钥匙人取代 => click"
             @click="openPop('keyPopFlag', 4, 'keyType', 3)"
           >
             <i class="el-icon-sunny icon"></i>
@@ -243,6 +245,7 @@
           v-else-if="applyKeyOwnerRule"
           :disabled="isDisabled"
           class="anchor-point"
+          data-anchor="房源详情申请钥匙人 => click"
           @click="openPop('keyPopFlag', 0, 'keyType', 0)"
         >
           <span>申请钥匙人</span>
@@ -283,6 +286,7 @@
           <el-button
             :disabled="isDisabled"
             class="anchor-point"
+            data-anchor="房源详情委托人取代 => click"
             @click="openPop('entrustPopFlag', 4, 'entrustType', 2)"
           >
             <i class="el-icon-sunny icon"></i>
@@ -292,6 +296,7 @@
         <el-button
           v-else-if="applyOnlyOwnerRule"
           :disabled="isDisabled"
+          data-anchor="房源详情申请委托人 => click"
           class="anchor-point"
           @click="openPop('entrustPopFlag', 1, 'entrustType', 0)"
         >
@@ -332,6 +337,7 @@
           <el-button
             :disabled="isDisabled"
             class="anchor-point"
+            data-anchor="房源详情取代实勘人 => click"
             @click="openPop('houseUploadflag', 4, 'houseUploadType', 5)"
           >
             <i class="el-icon-sunny icon"></i>
@@ -339,6 +345,7 @@
           </el-button>
         </template>
         <el-button
+          data-anchor="房源详情申请实勘人 => click"
           v-else-if="applyRealOwnerRule"
           :disabled="isDisabled"
           class="anchor-point"
@@ -383,6 +390,7 @@
       <template v-slot:floot>
         <div class="text-middle">
           <el-button
+            data-anchor="房源详情上传提交 => click"
             v-if="submitApplyRealOwner"
             size="mini"
             :disabled="isDisabled"
@@ -421,6 +429,7 @@
       <template>
         <div class="text-middle">
           <el-button
+            data-anchor="房源详情申请为跟单人提交 => click"
             class="anchor-point"
             v-if="submitApplyAgent"
             size="mini"
