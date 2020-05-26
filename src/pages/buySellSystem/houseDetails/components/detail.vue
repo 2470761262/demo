@@ -268,7 +268,7 @@
         </div>
       </div>
     </div>
-    <div class="cell-pro" style="width:720px">
+    <div class="cell-pro">
       <div
         class="cell-pro-item"
         v-if="resultData.agentPerName != null && resultData.plate == 0"
