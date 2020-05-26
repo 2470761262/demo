@@ -201,8 +201,10 @@
             >清除</span
           >
         </div>
-        <div class="query-content-cell cell-interval75">
-          data-anchor="他司成交清除按钮"
+        <div
+          class="query-content-cell cell-interval75"
+          data-anchor="他司成交查询按钮"
+        >
           <el-button type="primary" size="mini" @click="queryDatalist"
             >查询</el-button
           >
