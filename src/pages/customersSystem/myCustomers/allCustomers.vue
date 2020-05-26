@@ -36,10 +36,18 @@
       <el-table-column type="expand" width="1px">
         <template v-slot:default="props">
           <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
-          <template v-if="props.row.pp && props.row.pp.length > 0">
+          <template
+            v-if="
+              myImpressions.hasOwnProperty(props.row.id) &&
+                myImpressions[props.row.id].length > 0
+            "
+          >
             <div class="flex-expand">
               <div class="flex-impression-content">
-                <div v-for="(item, index) in props.row.pp" :key="index">
+                <div
+                  v-for="(item, index) in myImpressions[props.row.id]"
+                  :key="index"
+                >
                   {{ item }}
                 </div>
               </div>
@@ -204,7 +212,8 @@ export default {
         //   addTime: "2020-02-01",
         //   pp: ["活跃呵护", "心机汪", "一是同行"]
         // }
-      ] //存放表格数据
+      ], //存放表格数据
+      myImpressions: {} //对客户的印象，
     };
   },
   mounted() {
@@ -273,6 +282,7 @@ export default {
             var dataCustomers = result.data.data;
             //_that.tableData = [..._that.tabl eData, ...dataCustomers];
             _that.tableData = dataCustomers;
+            _that.myImpressions = result.data.myImpression;
             _that.pageJson.total = result.data.dataCount;
             //result.data.pageSum
           } else {
