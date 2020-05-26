@@ -122,7 +122,9 @@
     <div class="record-content-foot">
       <el-button class="task-button">取消再谈</el-button>
       <el-button class="task-button">预约带看</el-button>
-      <el-button class="task-button">添加带看</el-button>
+      <el-button class="task-button" @click="openPop('beltlookFlag')"
+        >添加带看</el-button
+      >
     </div>
     <add-belt-look
       :visible.sync="beltlookFlag"
@@ -145,8 +147,18 @@ export default {
   },
   data() {
     return {
-      beltlookFlag: true // 添加带看弹框开关
+      beltlookFlag: false // 添加带看弹框开关
     };
+  },
+  methods: {
+    /**
+     * @example:统一打开弹框
+     * @param {string} popName  弹框对应的名字
+     */
+
+    openPop(popName) {
+      this[popName] = true;
+    }
   }
 };
 </script>

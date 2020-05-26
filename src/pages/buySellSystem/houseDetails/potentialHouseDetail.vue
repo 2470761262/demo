@@ -217,6 +217,9 @@
           <el-button class="right-btn" type="primary" @click="tosele"
             >转在售</el-button
           >
+          <!-- <el-button class="right-btn" type="primary" @click="oneTouchDialPhone"
+            >一键拨号</el-button
+          > -->
         </div>
         <div class="page-title-just">
           <div class="title-just-item">
@@ -355,6 +358,7 @@
 </template>
 <script>
 import util from "@/util/util";
+import but from "@/evenBus/but.js";
 import browsebar from "@/components/browsebar";
 import { formatDate } from "element-ui/src/utils/date-util";
 export default {
@@ -399,6 +403,7 @@ export default {
     }
   },
   created() {
+    // this.getPotentialRules();
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       this.houseType = this.$route.params.houseType;
@@ -445,6 +450,25 @@ export default {
     }
   },
   methods: {
+    getPotentialRules() {
+      let that = this;
+      this.$api
+        .get({
+          url: "/building/buildingDetailsFunction"
+        })
+        .then(e => {
+          e.data.data.functionRuleList.forEach(element => {
+            if (that.isShowButton.hasOwnProperty(element.rUrl)) {
+              that.isShowButton[element.rUrl] = true;
+              console.log("----------", element.rUrl);
+              but.$emit(element.rUrl);
+            }
+          });
+          but.$emit("dialPhone", that.isShowButton.dialPhone);
+          but.$emit("shareQRCode", that.isShowButton.shareQRCode);
+        })
+        .catch(e => {});
+    },
     getTradeHouseTradeDetail() {
       return this.$api
         .post({
@@ -533,8 +557,94 @@ export default {
             console.log(e.response);
           }
         });
+    },
+    oneTouchDialPhone() {
+      let phone = this.resultData.OwnerTel;
+      if (!phone) {
+        this.$message({
+          message: "该业主号码为空"
+        });
+        return;
+      }
+      let p = {
+        contactPhone: phone
+      };
+      this.dailPhone(1, p);
+    },
+    dailPhone(contactPerType, phoneObj) {
+      let that = this;
+      //console.log(that.houseDetails);
+      this.$confirm("确定一键拨号吗？", "友情提醒", {
+        distinguishCancelAndClose: true,
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        showConfirmButton: that.touchedDialPhone
+      })
+        .then(() => {
+          console.log(that.houseDetails);
+          let oldParams = {
+            id: that.resultData.id,
+            houseType: 0,
+            housePrice: 100,
+            houseArea: 100,
+            contactPerType: contactPerType, //电话联系人类型，0为经纪人，1为业主
+            remark: that.resultData.communityName
+          };
+          let dailParams = {};
+          Object.assign(dailParams, oldParams, phoneObj);
+          if (contactPerType == 0) {
+            //联系人类型如果是经纪人，才需要联系人id
+            dailParams.contactPerId = that.resultData.AgentPer; //联系人id
+            dailParams.unitName = that.resultData.agentPerDepartmentName;
+            dailParams.contactPerName = that.resultData.agentPerName;
+          } else {
+            debugger;
+            dailParams.unitName = that.resultData.communityName; //联系人是业主，名称取小区名
+            dailParams.contactPerName =
+              that.resultData.customers == null
+                ? that.resultData.buildingName + "的房东"
+                : that.resultData.customers;
+          }
+          that.$api
+            .post({
+              url: "/noticeManage/common/potentialOneTouchDialPhone",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              data: dailParams
+            })
+            .then(e => {
+              let result = e.data;
+              console.log(result);
+              if (result.code == 200) {
+                this.$message({
+                  type: "info",
+                  message: "请注意查收微信消息"
+                });
+                but.$emit("followReolad", true);
+              } else {
+                this.$message({
+                  type: "info",
+                  message: result.message
+                });
+              }
+            })
+            .catch(e => {
+              console.log("【【【【uups,一键拨号失败】】】】");
+              console.log(e);
+              this.$message({
+                type: "info",
+                message: "一键拨号失败"
+              });
+            });
+        })
+        .catch(action => {
+          this.$message({
+            type: "info",
+            message: "取消拨号"
+          });
+        });
     }
   },
+
   destroyed() {}
 };
 </script>

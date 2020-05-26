@@ -10,7 +10,7 @@ import { LOGINDATA, TOKEN } from "@/util/constMap";
  * 锚点数据是否开启
  * @type {boolean}
  */
-let isOpenLog = true;
+let isOpenLog = false;
 let logSocketUri = "ws://" + process.env.VUE_APP_WEBSOCKET_URI + "/log";
 let identify = process.env.VUE_APP_IDENTIFY;
 
@@ -83,7 +83,7 @@ let log_socket = {
       className: e.target.className,
       id: e.target.id,
       identify: e.view.clientInformation.userAgent,
-      placeholder: e.target.placeholder,
+      placeholder: e.target.placeholder
     };
     let content = "user_action@$:" + JSON.stringify(parent);
     return content;
@@ -102,10 +102,8 @@ let log_socket = {
       id: e.target.id,
       nodeName: e.target.nodeName,
       innerHTML: e.target.innerHTML,
-      innerTEXT: e.target.innerTEXT,
       placeholder: e.target.placeholder,
-      identify: e.view.clientInformation.userAgent,
-      anchorName: e.target.dataset.anchor
+      identify: window.navigator.userAgent
     };
     let content = "user_anchor@$:" + JSON.stringify(parent);
     return content;
@@ -132,8 +130,8 @@ if (isOpenLog) {
   log_socket.init();
   addLog_eventListener.click();
   addLog_eventListener.dblclick();
-  addLog_eventListener.mouseover();
-  addLog_eventListener.mouseleave();
+  // addLog_eventListener.mouseover();
+  // addLog_eventListener.mouseleave();
 }
 
 export default log_socket;
