@@ -119,7 +119,7 @@ export default {
           width: "120px",
           order: true,
           formart: (row, column) => {
-            return row.minPrice + "-" + row.maxPrice;
+            return (row.minPrice || "/") + "-" + (row.maxPrice || "/");
           }
         },
         {
@@ -128,7 +128,7 @@ export default {
           width: "120px",
           order: true,
           formart: (row, column) => {
-            return row.minArea + "-" + row.maxArea;
+            return (row.minArea || "/") + "-" + (row.maxArea || "/");
           }
         },
         {
@@ -137,7 +137,7 @@ export default {
           width: "120px",
           order: true,
           formart: (row, column) => {
-            let s = "";
+            let s = "/";
             if (row.rooms) {
               s = row.rooms.replace("$", "或");
               var d = s.length - 1;

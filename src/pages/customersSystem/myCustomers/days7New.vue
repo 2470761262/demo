@@ -301,7 +301,7 @@ export default {
           width: "120px",
           order: true,
           formart: (row, column) => {
-            return row.minPrice + "-" + row.maxPrice;
+            return (row.minPrice || "/") + "-" + (row.maxPrice || "/");
           }
         },
         {
@@ -310,7 +310,7 @@ export default {
           width: "120px",
           order: true,
           formart: (row, column) => {
-            return row.minArea + "-" + row.maxArea;
+            return (row.minArea || "/") + "-" + (row.maxArea || "/");
           }
         },
         {
@@ -319,6 +319,9 @@ export default {
           width: "120px",
           order: true,
           formart: (row, column) => {
+            if (!row.rooms) {
+              return "/";
+            }
             let s = row.rooms.replace("$", "或");
             var d = s.length - 1;
             //判断如果以或结尾，去除掉
