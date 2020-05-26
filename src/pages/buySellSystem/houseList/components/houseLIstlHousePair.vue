@@ -690,9 +690,13 @@
               :disabled="item.name.length < 4"
               placement="top"
             >
-              <el-checkbox :label="item.value" name="business" border :data-anchor="'首页商圈:' + item.name">{{
-                item.name
-              }}</el-checkbox>
+              <el-checkbox
+                :label="item.value"
+                name="business"
+                border
+                :data-anchor="'首页商圈:' + item.name"
+                >{{ item.name }}</el-checkbox
+              >
             </el-tooltip>
           </div>
         </el-checkbox-group>
@@ -811,7 +815,10 @@
               }}</el-checkbox>
             </el-tooltip>
           </div>
-          <div class="checkbox-flex-pad anchor-point" data-anchor="首页小学划片 更多按钮">
+          <div
+            class="checkbox-flex-pad anchor-point"
+            data-anchor="首页小学划片 更多按钮"
+          >
             <el-button
               data-anchor="首页小学划片 更多按钮"
               type="text"
@@ -840,7 +847,10 @@
               }}</el-checkbox>
             </el-tooltip>
           </div>
-          <div class="checkbox-flex-pad anchor-point" data-anchor="首页中学划片 更多按钮">
+          <div
+            class="checkbox-flex-pad anchor-point"
+            data-anchor="首页中学划片 更多按钮"
+          >
             <el-button
               class="anchor-point"
               data-anchor="首页中学划片 更多按钮"

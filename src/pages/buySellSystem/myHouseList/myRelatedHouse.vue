@@ -13,6 +13,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            data-anchor="我的相关楼盘 => select"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
@@ -25,6 +26,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="我的相关楼盘 => select => option"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
@@ -33,6 +35,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="我的相关楼栋 => select"
             class="anchor-point"
             v-model="data.cbId"
             filterable
@@ -41,6 +44,7 @@
             @change="buildChange"
           >
             <el-option
+              data-anchor="我的相关楼栋 => select => option"
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
@@ -49,6 +53,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="我的相关房间号 => select "
             class="anchor-point"
             v-model="data.roomNo"
             filterable
@@ -58,6 +63,7 @@
             v-loadmore="loadMore"
           >
             <el-option
+              data-anchor="我的相关房间号 => select => option"
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
@@ -69,6 +75,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">编号</h3>
           <el-input
+            data-anchor="我的相关房源编号 => input"
             placeholder="房源编号"
             v-model="data.houseNo"
             class="set-input200 anchor-point"
@@ -79,6 +86,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
+            data-anchor="我的相关房业主姓名 => input"
             placeholder="姓名"
             class="set-input120 anchor-point"
             @change="querySaleNotTrackParams"
@@ -89,6 +97,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">电话</h3>
           <el-input
+            data-anchor="我的相关房业主电话 => input"
             placeholder="业主电话"
             v-model="data.tel"
             class="set-input200 anchor-point"
@@ -111,6 +120,7 @@
         <div class="query-content-cell ">
           <h3 class="query-cell-title">价格</h3>
           <el-input
+            data-anchor="我的相关最小值价格 => input"
             placeholder="最小值"
             v-model="data.minPrice"
             @change="querySaleNotTrackParams"
@@ -119,6 +129,7 @@
           />
           <span class="cut-off-rule"></span>
           <el-input
+            data-anchor="我的相关最大值价格 => input"
             placeholder="最大值"
             v-model="data.maxPrice"
             @change="querySaleNotTrackParams"
@@ -129,6 +140,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">面积</h3>
           <el-input
+            data-anchor="我的相关最小面积 => input"
             placeholder="最小面积"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
@@ -137,6 +149,7 @@
           />
           <span class="cut-off-rule"></span>
           <el-input
+            data-anchor="我的相关最大面积 => input"
             placeholder="最大面积"
             v-model="data.maxInArea"
             class="set-input90 anchor-point"
@@ -148,6 +161,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">作业类型</h3>
           <el-select
+            data-anchor="我的相关作业类型 => select"
             class="anchor-point"
             v-model="workType"
             value-key="item.value"
@@ -155,6 +169,7 @@
             placeholder="请选择类型"
           >
             <el-option
+              data-anchor="我的相关作业类型 => select => option"
               class="anchor-point"
               v-for="item in option"
               :key="item.value"
@@ -166,6 +181,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">录入时间</h3>
           <el-date-picker
+            data-anchor="我的相关录入时间 => input"
             v-model="data.timeSelect"
             type="daterange"
             class="set-data-pricker anchor-point"
@@ -175,7 +191,10 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut anchor-point" @click="remove"
+          <span
+            data-anchor="我的相关清除 => click"
+            class="query-cell-suffix handlebut anchor-point"
+            @click="remove"
             >清除</span
           >
         </div>
@@ -183,6 +202,7 @@
           <el-button
             type="primary"
             size="mini"
+            data-anchor="我的相关查询 => click"
             @click="querySaleNotTrackParams"
             class="anchor-point"
             >查询</el-button
@@ -221,6 +241,7 @@
             class="anchor-point"
             type="primary"
             size="mini"
+            data-anchor="我的相关查询详情 => click"
             @click="distributeEvent(item.methosName, scope.row.id)"
             v-for="(item, index) in isForBut(2)"
             :key="index"

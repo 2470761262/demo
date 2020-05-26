@@ -214,6 +214,7 @@
           <div class="query-content-row">
             <div class="query-row-title">小区搜索</div>
             <el-autocomplete
+              data-anchor="我的数据小区搜索 => input"
               class="query-input anchor-point"
               v-model="queryContent.communityName"
               prefix-icon="el-icon-search"
@@ -227,6 +228,7 @@
           <div class="query-content-row">
             <div class="query-row-title">时间搜索</div>
             <el-date-picker
+              data-anchor="我的数据时间搜索 => input"
               class="query-date anchor-point"
               v-model="queryContent.queryTime"
               type="daterange"
@@ -236,7 +238,11 @@
               value-format="yyyy-MM-dd"
             >
             </el-date-picker>
-            <el-button type="primary" class="anchor-point" @click="reloadList"
+            <el-button
+              data-anchor="我的数据确定 => click"
+              type="primary"
+              class="anchor-point"
+              @click="reloadList"
               >确定</el-button
             >
           </div>
@@ -464,7 +470,6 @@ export default {
         .get({
           url: "/community/myDataList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
           qs: true,
           data: {
             communityName: value,

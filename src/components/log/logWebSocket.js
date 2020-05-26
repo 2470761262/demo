@@ -43,7 +43,7 @@ let log_socket = {
       log_socket.socket = new WebSocket(logSocketUri);
       log_socket.socket.onopen = function() {
         log_socket.isConn = true;
-        console.log("日志锚点数据websocket开启成功")
+        console.log("日志锚点数据websocket开启成功");
       };
       log_socket.socket.onerror = function(err) {
         console.log(err);
@@ -63,11 +63,11 @@ let log_socket = {
     let content = this.sendAction(e, accountId);
     if (className && className != "" && className.includes("anchor-point")) {
       content = this.sendAnchorData(e, accountId);
-    }else if(e.target.dataset && e.target.dataset.anchor){
+    } else if (e.target.dataset && e.target.dataset.anchor) {
       content = this.sendAnchorData(e, accountId);
     }
     content = identify + "@$@" + content;
-    console.log(content)
+    console.log(content);
     this.socket.send(content);
   },
   sendAction(e, accountId) {

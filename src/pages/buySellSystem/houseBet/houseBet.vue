@@ -18,6 +18,7 @@
     <template v-slot:left>
       <div class="elTree" v-if="treeData.length > 0">
         <el-input
+          data-anchor="我的对赌树 => input"
           placeholder="输入关键字进行过滤"
           v-model="filterText"
           class="treeSearch"
@@ -44,6 +45,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            data-anchor="我的对赌楼盘 => select"
             class="anchor-point"
             v-model="data.comId"
             @change="queryCBId"
@@ -56,6 +58,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="我的对赌楼盘 => select => option"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
@@ -64,6 +67,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="我的对赌楼栋 => select "
             class="anchor-point"
             v-model="data.cbId"
             filterable
@@ -72,6 +76,7 @@
             @change="buildChange"
           >
             <el-option
+              data-anchor="我的对赌楼栋 => select => option"
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
@@ -80,6 +85,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="我的对赌房间号 => select"
             class="anchor-point"
             v-model="data.roomNo"
             filterable
@@ -90,6 +96,7 @@
             v-loadmore="loadMore"
           >
             <el-option
+              data-anchor="我的对赌房间号 => select => option"
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
@@ -101,6 +108,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">编号</h3>
           <el-input
+            data-anchor="我的对赌房源编号 => input"
             placeholder="房源编号"
             v-model="data.houseNo"
             class="set-input200 anchor-point"
@@ -111,6 +119,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
+            data-anchor="我的对赌姓名 => input"
             placeholder="姓名"
             class="set-input120 anchor-point"
             @change="queryHouseBetParams"
@@ -121,6 +130,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">电话</h3>
           <el-input
+            data-anchor="我的对赌业主电话 => input"
             placeholder="业主电话"
             v-model="data.tel"
             class="set-input200 anchor-point"
@@ -133,6 +143,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">价格</h3>
           <el-input
+            data-anchor="我的对赌价格最小值 => input"
             placeholder="最小值"
             v-model="data.minPrice"
             class="set-input90 anchor-point"
@@ -141,6 +152,7 @@
           />
           <span class="cut-off-rule"></span>
           <el-input
+            data-anchor="我的对赌价格最大值 => input"
             placeholder="最大值"
             v-model="data.maxPrice"
             class="set-input90 anchor-point"
@@ -152,6 +164,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">面积</h3>
           <el-input
+            data-anchor="我的对赌面积最小值 => input"
             placeholder="最小值"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
@@ -159,6 +172,7 @@
           />
           <span class="cut-off-rule"></span>
           <el-input
+            data-anchor="我的对赌面积最大值 => input"
             placeholder="最大值"
             v-model="data.maxInArea"
             class="set-input90 anchor-point"
@@ -169,6 +183,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">对赌结果</h3>
           <el-select
+            data-anchor="我的对赌对赌结果 => select"
             v-model="data.status"
             @change="queryHouseBetParams()"
             clearable
@@ -176,6 +191,7 @@
             placeholder="全部"
           >
             <el-option
+              data-anchor="我的对赌对赌结果 => select => option"
               class="anchor-point"
               v-for="item in betStatusList"
               :key="item.value"
@@ -186,6 +202,7 @@
         </div>
         <div class="query-content-cell cell-interval75">
           <el-button
+            data-anchor="我的对赌查询 => click"
             type="primary"
             size="mini"
             @click="queryHouseBetParams"
@@ -268,6 +285,7 @@
             class-name="anchor-point"
             type="primary"
             size="mini"
+            data-anchor="我的对赌查看详情 => click"
             @click="toHouseDetail(scope.row)"
             >查看</el-button
           >

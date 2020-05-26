@@ -36,6 +36,7 @@
       <template v-slot:left>
         <div class="elTree" v-if="treeData.length > 0">
           <el-input
+            data-anchor="外网房源树 => click"
             placeholder="输入关键字进行过滤"
             v-model="filterText"
             class="treeSearch"
@@ -63,6 +64,7 @@
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
             <el-select
+              data-anchor="外网房源楼盘 => select"
               class="anchor-point"
               v-model="data.comId"
               @focus="remoteInput"
@@ -75,6 +77,7 @@
               :loading="loading"
             >
               <el-option
+                data-anchor="外网房源楼盘 => select => option"
                 class="anchor-point"
                 v-for="item in options"
                 :key="item.value"
@@ -83,6 +86,7 @@
               ></el-option>
             </el-select>
             <el-select
+              data-anchor="外网房源楼栋 => select"
               class="anchor-point"
               v-model="data.cbId"
               filterable
@@ -91,6 +95,7 @@
               @change="buildChange"
             >
               <el-option
+                data-anchor="外网房源楼栋 => select => option"
                 class="anchor-point"
                 v-for="item in cbIdList"
                 :key="item.value"
@@ -99,6 +104,7 @@
               ></el-option>
             </el-select>
             <el-select
+              data-anchor="外网房源房间号 => select"
               class="anchor-point"
               v-model="data.roomNo"
               filterable
@@ -108,6 +114,7 @@
               v-loadmore="loadMore"
             >
               <el-option
+                data-anchor="外网房源房间号 => select => option"
                 class="anchor-point"
                 v-for="item in roomNoList"
                 :key="item.value"
@@ -119,6 +126,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">编号</h3>
             <el-input
+              data-anchor="外网房源房源编号 => input"
               placeholder="房源编号"
               v-model="data.houseNo"
               class="set-input200"
@@ -129,6 +137,7 @@
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">业主</h3>
             <el-input
+              data-anchor="外网房源业主姓名 => input"
               placeholder="姓名"
               class="set-input120 anchor-point"
               @change="querylistByParams"
@@ -139,6 +148,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">电话</h3>
             <el-input
+              data-anchor="外网房源业主电话 => input"
               placeholder="业主电话"
               v-model="data.tel"
               class="set-input200 anchor-point"
@@ -158,6 +168,7 @@
           <div class="query-content-cell ">
             <h3 class="query-cell-title">价格</h3>
             <el-input
+              data-anchor="外网房源价格最小值 => input"
               placeholder="最小值"
               v-model="data.minPrice"
               class="set-input90 anchor-point"
@@ -166,6 +177,7 @@
             />
             <span class="cut-off-rule"></span>
             <el-input
+              data-anchor="外网房源价格最大值 => input"
               placeholder="最大值"
               v-model="data.maxPrice"
               class="set-input90 anchor-point"
@@ -176,6 +188,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">面积</h3>
             <el-input
+              data-anchor="外网房源面积最小值 => input"
               placeholder="最小值"
               v-model="data.minInArea"
               class="set-input90 anchor-point"
@@ -184,6 +197,7 @@
             />
             <span class="cut-off-rule"></span>
             <el-input
+              data-anchor="外网房源面积最大值 => input"
               placeholder="最大值"
               v-model="data.maxInArea"
               class="set-input90 anchor-point"
@@ -195,6 +209,7 @@
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">录入时间</h3>
             <el-date-picker
+              data-anchor="外网房源录入时间 => input"
               v-model="data.timeSelect"
               type="daterange"
               class="set-data-pricker anchor-point"
@@ -205,6 +220,7 @@
               end-placeholder="结束日期"
             ></el-date-picker>
             <span
+              data-anchor="外网房源清除 => click"
               class="query-cell-suffix handlebut anchor-point"
               @click="remove"
               >清除</span
@@ -215,6 +231,7 @@
             <el-button
               type="primary"
               size="mini"
+              data-anchor="外网房源查询 => click"
               @click="queryMyAgentParams"
               class="anchor-point"
               >查询</el-button
@@ -241,6 +258,7 @@
             <el-button
               type="primary"
               size="mini"
+              data-anchor="外网房源查看 => click"
               @click="toLook(scope.row.id)"
               class="anchor-point"
               >查看</el-button
