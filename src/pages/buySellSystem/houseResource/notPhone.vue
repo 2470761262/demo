@@ -16,6 +16,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            data-anchor="无号码楼盘筛选"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
@@ -28,6 +29,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="无号码楼盘筛选"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
@@ -40,10 +42,12 @@
             v-model="data.cbId"
             filterable
             clearable
+            data-anchor="无号码楼栋筛选"
             placeholder="楼栋"
             @change="buildChange"
           >
             <el-option
+              data-anchor="无号码楼栋筛选"
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
@@ -57,6 +61,7 @@
             filterable
             @change="queryNotPhoneParams"
             placeholder="房间号"
+            data-anchor="无号码房间号筛选"
             :loading="HouseNoLoading"
             v-loadmore="loadMore"
           >
@@ -64,6 +69,7 @@
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
+              data-anchor="无号码房间号筛选"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -105,6 +111,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">面积</h3>
           <el-input
+            data-anchor="无号码面积最小值筛选"
             placeholder="最小值"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
@@ -117,10 +124,14 @@
             v-model="data.maxInArea"
             class="set-input90 anchor-point"
             @change="queryNotPhoneParams"
+            data-anchor="无号码面积最大值筛选"
             clearable
           />
           <span class="query-cell-suffix">平方</span>
-          <span class="query-cell-suffix handlebut anchor-point" @click="Remove"
+          <span
+            class="query-cell-suffix handlebut anchor-point"
+            data-anchor="无号码清除按钮"
+            @click="Remove"
             >清除</span
           >
         </div>
@@ -180,12 +191,14 @@
             class="anchor-point"
             type="primary"
             size="mini"
+            data-anchor="无号码录入号码按钮"
             @click="addPhone(scope.row.bhId, scope.row.id)"
             style=""
             >录入号码</el-button
           >
           <el-button
             class="anchor-point"
+            data-anchor="无号码转在售按钮"
             type="primary"
             size="mini"
             @click="

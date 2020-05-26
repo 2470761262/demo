@@ -1218,7 +1218,7 @@ export default {
       var that = this;
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHouses",
+          url: "/mateHouse/queryBuildIngHousesBySale",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           qs: true,

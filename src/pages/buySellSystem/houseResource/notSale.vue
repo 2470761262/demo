@@ -16,6 +16,7 @@
           <el-select
             class="anchor-point"
             v-model="data.comId"
+            data-anchor="暂不售楼盘筛选"
             @focus="remoteInput"
             @change="queryCBId"
             filterable
@@ -26,6 +27,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="暂不售楼盘筛选"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
@@ -34,6 +36,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="暂不售楼栋筛选"
             class="anchor-point"
             v-model="data.cbId"
             filterable
@@ -42,6 +45,7 @@
             @change="buildChange"
           >
             <el-option
+              data-anchor="暂不售楼栋筛选"
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
@@ -53,12 +57,14 @@
             class="anchor-point"
             v-model="data.roomNo"
             filterable
+            data-anchor="暂不售房间号筛选"
             @change="queryNotSaleParams"
             placeholder="房间号"
             :loading="HouseNoLoading"
             v-loadmore="loadMore"
           >
             <el-option
+              data-anchor="暂不售房间号筛选"
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
@@ -71,6 +77,7 @@
           <h3 class="query-cell-title">编号</h3>
           <el-input
             placeholder="房源编号"
+            data-anchor="暂不售房源编号搜索"
             v-model="data.houseNo"
             class="set-input200"
             @change="queryNotSaleParams"
@@ -80,6 +87,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
+            data-anchor="暂不售业主姓名搜索"
             placeholder="姓名"
             v-model="data.customName"
             class="set-input120 anchor-point"
@@ -91,6 +99,7 @@
           <h3 class="query-cell-title">电话</h3>
           <el-input
             placeholder="业主电话"
+            data-anchor="暂不售业主电话搜索"
             v-model="data.tel"
             class="set-input200 anchor-point"
             @change="queryNotSaleParams"
@@ -104,6 +113,7 @@
           <el-input
             placeholder="最小值"
             v-model="data.minPrice"
+            data-anchor="暂不售价格最小值筛选"
             class="set-input90 anchor-point"
             @change="queryNotSaleParams"
             clearable
@@ -112,6 +122,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxPrice"
+            data-anchor="暂不售价格最大值筛选"
             class="set-input90 anchor-point"
             @change="queryNotSaleParams"
             clearable
@@ -121,6 +132,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">面积</h3>
           <el-input
+            data-anchor="暂不售面积最小值筛选"
             placeholder="最小值"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
@@ -130,6 +142,7 @@
           <span class="cut-off-rule"></span>
           <el-input
             placeholder="最大值"
+            data-anchor="暂不售面积最大值筛选"
             v-model="data.maxInArea"
             class="set-input90 anchor-point"
             @change="queryNotSaleParams"
@@ -142,6 +155,7 @@
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
+            data-anchor="暂不售录入时间筛选"
             class="set-data-pricker anchor-point"
             @change="queryNotSaleParams"
             range-separator="至"
@@ -149,7 +163,10 @@
             end-placeholder="结束日期"
             :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut anchor-point" @click="Remove"
+          <span
+            class="query-cell-suffix handlebut anchor-point"
+            data-anchor="暂不售清除按钮"
+            @click="Remove"
             >清除</span
           >
         </div>
@@ -157,6 +174,7 @@
           <el-button
             class="anchor-point"
             type="primary"
+            data-anchor="暂不售查询按钮"
             size="mini"
             @click="queryNotSaleParams"
             >查询</el-button
@@ -197,11 +215,13 @@
           <el-button
             class="anchor-point"
             type="primary"
+            data-anchor="暂不售查看按钮"
             size="mini"
             @click="toLook(scope.row.id)"
             >查看</el-button
           >
           <el-button
+            data-anchor="暂不售转在售按钮"
             class="anchor-point"
             type="primary"
             size="mini"

@@ -45,6 +45,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            data-anchor="我司成交楼盘筛选"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
@@ -58,6 +59,7 @@
           >
             <el-option
               class="anchor-point"
+              data-anchor="我司成交楼盘筛选"
               v-for="item in options"
               :key="item.value"
               :label="item.name"
@@ -80,12 +82,14 @@
           <el-input
             placeholder="最小值"
             v-model="data.minPrice"
+            data-anchor="我司成交价格最小值"
             class="set-input90 anchor-point"
             @change="queryDatalist"
             clearable
           />
           <span class="cut-off-rule"></span>
           <el-input
+            data-anchor="我司成交价格最小值"
             placeholder="最大值"
             v-model="data.maxPrice"
             class="set-input90 anchor-point"
@@ -98,6 +102,7 @@
           <h3 class="query-cell-title">面积</h3>
           <el-input
             placeholder="最小值"
+            data-anchor="我司成交面积最小值"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
             @change="queryDatalist"
@@ -106,6 +111,7 @@
           <span class="cut-off-rule"></span>
           <el-input
             placeholder="最大值"
+            data-anchor="我司成交面积最大值"
             v-model="data.maxInArea"
             class="set-input90 anchor-point"
             @change="queryDatalist"
@@ -120,6 +126,7 @@
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
+            data-anchor="我司成交成交时间"
             class="set-data-pricker anchor-point"
             @change="queryDatalist"
             range-separator="至"
@@ -127,7 +134,10 @@
             end-placeholder="结束日期"
             :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut anchor-point" @click="Remove"
+          <span
+            class="query-cell-suffix handlebut anchor-point"
+            @click="Remove"
+            data-anchor="我司成交清除按钮"
             >清除</span
           >
         </div>
@@ -136,6 +146,7 @@
             class="anchor-point"
             type="primary"
             size="mini"
+            data-anchor="我司成交查询按钮"
             @click="queryDatalist"
             >查询</el-button
           >

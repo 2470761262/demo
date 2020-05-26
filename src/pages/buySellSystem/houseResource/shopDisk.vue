@@ -42,6 +42,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            data-anchor="店公盘楼盘筛选"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
@@ -54,6 +55,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="店公盘楼盘筛选"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
@@ -66,11 +68,13 @@
             v-model="data.cbId"
             filterable
             clearable
+            data-anchor="店公盘楼栋筛选"
             placeholder="楼栋"
             @change="buildChange"
           >
             <el-option
               class="anchor-point"
+              data-anchor="店公盘楼栋筛选"
               v-for="item in cbIdList"
               :key="item.value"
               :label="item.name"
@@ -81,6 +85,7 @@
             class="anchor-point"
             v-model="data.roomNo"
             filterable
+            data-anchor="店公盘房间号筛选"
             @change="querySaleNotTrackParams"
             placeholder="房间号"
             :loading="HouseNoLoading"
@@ -88,6 +93,7 @@
           >
             <el-option
               class="anchor-point"
+              data-anchor="店公盘房间号筛选"
               v-for="item in roomNoList"
               :key="item.value"
               :label="item.name"
@@ -98,6 +104,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">编号</h3>
           <el-input
+            data-anchor="店公盘房源编号搜索"
             placeholder="房源编号"
             v-model="data.houseNo"
             class="set-input200"
@@ -109,6 +116,7 @@
           <h3 class="query-cell-title">业主</h3>
           <el-input
             placeholder="姓名"
+            data-anchor="店公盘业主姓名搜索"
             v-model="data.customName"
             class="set-input120 anchor-point"
             @change="querySaleNotTrackParams"
@@ -118,6 +126,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">电话</h3>
           <el-input
+            data-anchor="店公盘业主电话搜索"
             placeholder="业主电话"
             v-model="data.tel"
             class="set-input200 anchor-point"
@@ -131,6 +140,7 @@
           <h3 class="query-cell-title">价格</h3>
           <el-input
             placeholder="最小值"
+            data-anchor="店公盘价格最小值筛选"
             v-model="data.minPrice"
             class="set-input90 anchor-point"
             @change="querySaleNotTrackParams"
@@ -139,6 +149,7 @@
           <span class="cut-off-rule"></span>
           <el-input
             placeholder="最大值"
+            data-anchor="店公盘价格最大值筛选"
             v-model="data.maxPrice"
             class="set-input90 anchor-point"
             @change="querySaleNotTrackParams"
@@ -150,6 +161,7 @@
           <h3 class="query-cell-title">面积</h3>
           <el-input
             placeholder="最小值"
+            data-anchor="店公盘面积最小值筛选"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
             @change="querySaleNotTrackParams"
@@ -159,6 +171,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxInArea"
+            data-anchor="店公盘面积最大值筛选"
             class="set-input90 anchor-point"
             @change="querySaleNotTrackParams"
             clearable
@@ -170,6 +183,7 @@
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
+            data-anchor="店公盘录入时间筛选"
             class="set-data-pricker anchor-point"
             @change="querySaleNotTrackParams"
             range-separator="至"
@@ -177,13 +191,17 @@
             end-placeholder="结束日期"
             :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut anchor-point" @click="Remove"
+          <span
+            class="query-cell-suffix handlebut anchor-point"
+            @click="Remove"
+            data-anchor="店公盘筛选按钮"
             >清除</span
           >
         </div>
         <div class="query-content-cell cell-interval75">
           <el-button
             class="anchor-point"
+            data-anchor="店公盘查询按钮"
             type="primary"
             size="mini"
             @click="querySaleNotTrackParams"
@@ -226,6 +244,7 @@
             class="anchor-point"
             type="primary"
             size="mini"
+            data-anchor="店公盘查看按钮"
             @click="toLook(scope.row)"
             >查看</el-button
           >
@@ -585,7 +604,7 @@ export default {
       this.HouseNoLoading = true;
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHouses",
+          url: "/mateHouse/queryBuildIngHousesBySale",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             comId: that.data.comId,

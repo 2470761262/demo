@@ -46,6 +46,7 @@
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
+            data-anchor="在售无跟单楼盘筛选"
             filterable
             remote
             clearable
@@ -55,6 +56,7 @@
           >
             <el-option
               class="anchor-point"
+              data-anchor="在售无跟单楼盘筛选"
               v-for="item in options"
               :key="item.value"
               :label="item.name"
@@ -66,6 +68,7 @@
             v-model="data.cbId"
             filterable
             clearable
+            data-anchor="在售无跟单楼栋筛选"
             placeholder="楼栋"
             @change="buildChange"
           >
@@ -73,6 +76,7 @@
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
+              data-anchor="在售无跟单楼栋筛选"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -83,6 +87,7 @@
             filterable
             @change="querySaleNotTrackParams"
             placeholder="房间号"
+            data-anchor="在售无跟单房间号筛选"
             :loading="HouseNoLoading"
             v-loadmore="loadMore"
           >
@@ -91,6 +96,7 @@
               v-for="item in roomNoList"
               :key="item.value"
               :label="item.name"
+              data-anchor="在售无跟单房间号筛选"
               :value="item.value"
             ></el-option>
           </el-select>
@@ -98,6 +104,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">编号</h3>
           <el-input
+            data-anchor="在售无跟单房源编号搜索"
             placeholder="房源编号"
             v-model="data.houseNo"
             class="set-input200"
@@ -108,6 +115,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
+            data-anchor="在售无跟单业主姓名搜索"
             placeholder="姓名"
             v-model="data.customName"
             class="set-input120 anchor-point"
@@ -118,6 +126,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">电话</h3>
           <el-input
+            data-anchor="在售无跟单业主电话搜索"
             placeholder="业主电话"
             v-model="data.tel"
             class="set-input200 anchor-point"
@@ -130,6 +139,7 @@
         <div class="query-content-cell ">
           <h3 class="query-cell-title">价格</h3>
           <el-input
+            data-anchor="在售无跟单价格最小值筛选"
             placeholder="最小值"
             v-model="data.minPrice"
             class="set-input90 anchor-point"
@@ -139,6 +149,7 @@
           <span class="cut-off-rule"></span>
           <el-input
             placeholder="最大值"
+            data-anchor="在售无跟单价格最大值筛选"
             v-model="data.maxPrice"
             class="set-input90 anchor-point"
             @change="querySaleNotTrackParams"
@@ -149,6 +160,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">面积</h3>
           <el-input
+            data-anchor="在售无跟单面积最小值筛选"
             placeholder="最小值"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
@@ -159,6 +171,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxInArea"
+            data-anchor="在售无跟单面积最大值筛选"
             class="set-input90 anchor-point"
             @change="querySaleNotTrackParams"
             clearable
@@ -170,6 +183,7 @@
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
+            data-anchor="在售无跟单录入时间筛选"
             class="set-data-pricker anchor-point"
             @change="querySaleNotTrackParams"
             range-separator="至"
@@ -177,13 +191,17 @@
             end-placeholder="结束日期"
             :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut anchor-point" @click="Remove"
+          <span
+            class="query-cell-suffix handlebut anchor-point"
+            data-anchor="在售无跟单清除按钮"
+            @click="Remove"
             >清除</span
           >
         </div>
         <div class="query-content-cell cell-interval75">
           <el-button
             class="anchor-point"
+            data-anchor="在售无跟单查询按钮"
             type="primary"
             size="mini"
             @click="querySaleNotTrackParams"
@@ -225,6 +243,7 @@
           <el-button
             class="anchor-point"
             type="primary"
+            data-anchor="在售无跟单查看按钮"
             size="mini"
             @click="toLook(scope.row.id)"
             >查看</el-button
@@ -587,7 +606,7 @@ export default {
       this.HouseNoLoading = true;
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHouses",
+          url: "/mateHouse/queryBuildIngHousesBySale",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             comId: that.data.comId,

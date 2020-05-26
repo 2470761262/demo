@@ -43,6 +43,7 @@
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
             class="anchor-point"
+            data-anchor="全部在售楼盘筛选"
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
@@ -54,6 +55,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="全部在售楼盘筛选"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
@@ -66,11 +68,13 @@
             v-model="data.cbId"
             filterable
             clearable
+            data-anchor="全部在售楼栋筛选"
             placeholder="楼栋"
             @change="buildChange"
           >
             <el-option
               class="anchor-point"
+              data-anchor="全部在售楼栋筛选"
               v-for="item in cbIdList"
               :key="item.value"
               :label="item.name"
@@ -80,6 +84,7 @@
           <el-select
             class="anchor-point"
             v-model="data.roomNo"
+            data-anchor="全部在售房间号筛选"
             filterable
             @change="querySoleAllParams"
             placeholder="房间号"
@@ -90,6 +95,7 @@
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
+              data-anchor="全部在售房间号筛选"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -100,6 +106,7 @@
           <el-input
             placeholder="房源编号"
             v-model="data.houseNo"
+            data-anchor="全部在售房源编号搜索"
             class="set-input200"
             @change="querySoleAllParams"
             clearable
@@ -108,6 +115,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
+            data-anchor="全部在售业主姓名搜索"
             placeholder="姓名"
             v-model="data.customName"
             class="set-input120 anchor-point"
@@ -118,6 +126,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">电话</h3>
           <el-input
+            data-anchor="全部在售业主电话搜索"
             placeholder="业主电话"
             v-model="data.tel"
             class="set-input200 anchor-point"
@@ -132,6 +141,7 @@
           <el-input
             placeholder="最小值"
             v-model="data.minPrice"
+            data-anchor="全部在售价格最小值筛选"
             class="set-input90 anchor-point"
             @change="querySoleAllParams"
             clearable
@@ -141,6 +151,7 @@
             placeholder="最大值"
             v-model="data.maxPrice"
             class="set-input90 anchor-point"
+            data-anchor="全部在售价格最大值筛选"
             @change="querySoleAllParams"
             clearable
           />
@@ -149,6 +160,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">面积</h3>
           <el-input
+            data-anchor="全部在售面积最小值筛选"
             placeholder="最小值"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
@@ -159,6 +171,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxInArea"
+            data-anchor="全部在售面积最大值筛选"
             class="set-input90 anchor-point"
             @change="querySoleAllParams"
             clearable
@@ -168,6 +181,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">录入时间</h3>
           <el-date-picker
+            data-anchor="全部在售录入时间筛选"
             v-model="data.timeSelect"
             type="daterange"
             class="set-data-pricker anchor-point"
@@ -178,7 +192,10 @@
             value-format="yyyy-MM-dd"
             :default-time="['00:00:00', '23:59:59']"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut anchor-point" @click="Remove"
+          <span
+            class="query-cell-suffix handlebut anchor-point"
+            @click="Remove"
+            data-anchor="全部在售清除按钮"
             >清除</span
           >
         </div>
@@ -187,6 +204,7 @@
             class="anchor-point"
             type="primary"
             size="mini"
+            data-anchor="全部在售查询按钮"
             @click="querySoleAllParams"
             >查询</el-button
           >
@@ -227,6 +245,7 @@
             class="anchor-point"
             type="primary"
             size="mini"
+            data-anchor="全部在售查看按钮"
             @click="toLook(scope.row.id)"
             >查看</el-button
           >
@@ -598,7 +617,7 @@ export default {
       this.HouseNoLoading = true;
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHouses",
+          url: "/mateHouse/queryBuildIngHousesBySale",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             comId: that.data.comId,

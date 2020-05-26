@@ -48,6 +48,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            data-anchor="业主自售楼盘筛选"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
@@ -60,6 +61,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="业主自售楼盘筛选"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
@@ -68,6 +70,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="业主自售楼栋筛选"
             class="anchor-point"
             v-model="data.cbId"
             filterable
@@ -76,6 +79,7 @@
             @change="buildChange"
           >
             <el-option
+              data-anchor="业主自售楼栋筛选"
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
@@ -86,12 +90,14 @@
           <el-select
             v-model="data.bhId"
             filterable
+            data-anchor="业主自售房间号筛选"
             placeholder="房间号"
             class="anchor-point"
             :loading="HouseNoLoading"
             v-loadmore="loadMore"
           >
             <el-option
+              data-anchor="业主自售房间号筛选"
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
@@ -104,6 +110,7 @@
           <h3 class="query-cell-title">编号</h3>
           <el-input
             placeholder="房源编号"
+            data-anchor="业主自售房源编号搜索"
             v-model="data.houseNo"
             class="set-input200 anchor-point"
             @change="queryDatalist"
@@ -113,6 +120,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
+            data-anchor="业主自售姓名搜索"
             placeholder="姓名"
             v-model="data.customName"
             class="set-input120 anchor-point"
@@ -125,6 +133,7 @@
           <el-input
             placeholder="业主电话"
             v-model="data.tel"
+            data-anchor="业主自售电话搜索"
             class="set-input200 anchor-point"
             @change="queryDatalist"
             clearable
@@ -137,6 +146,7 @@
           <el-input
             placeholder="最小值"
             v-model="data.minPrice"
+            data-anchor="业主自售价格最小值筛选"
             class="set-input90 anchor-point"
             @change="queryDatalist"
             clearable
@@ -145,6 +155,7 @@
           <el-input
             placeholder="最大值"
             v-model="data.maxPrice"
+            data-anchor="业主自售价格最大值筛选"
             class="set-input90 anchor-point"
             @change="queryDatalist"
             clearable
@@ -158,6 +169,7 @@
             v-model="data.minInArea"
             class="set-input90 anchor-point"
             @change="queryDatalist"
+            data-anchor="业主自售面积最小值筛选"
             clearable
           />
           <span class="cut-off-rule"></span>
@@ -166,6 +178,7 @@
             v-model="data.maxInArea"
             class="set-input90 anchor-point"
             @change="queryDatalist"
+            data-anchor="业主自售面积最大值筛选"
             clearable
           />
           <span class="query-cell-suffix">平方</span>
@@ -175,6 +188,7 @@
           <el-date-picker
             v-model="data.timeSelect"
             type="daterange"
+            data-anchor="业主自售录入时间筛选"
             class="set-data-pricker anchor-point"
             @change="queryDatalist"
             range-separator="至"
@@ -188,6 +202,7 @@
           <el-button
             class="anchor-point"
             type="primary"
+            data-anchor="业主自售查询按钮"
             size="mini"
             @click="queryDatalist"
             >查询</el-button
@@ -223,6 +238,7 @@
         <template v-slot="scope">
           <el-button
             class="anchor-point"
+            data-anchor="业主自售查看按钮"
             type="primary"
             size="mini"
             @click="toHouseDetail(scope.row)"
