@@ -217,9 +217,9 @@
           <el-button class="right-btn" type="primary" @click="tosele"
             >转在售</el-button
           >
-          <el-button class="right-btn" type="primary" @click="oneTouchDialPhone"
+          <!-- <el-button class="right-btn" type="primary" @click="oneTouchDialPhone"
             >一键拨号</el-button
-          >
+          > -->
         </div>
         <div class="page-title-just">
           <div class="title-just-item">
@@ -403,7 +403,7 @@ export default {
     }
   },
   created() {
-    this.getPotentialRules();
+    // this.getPotentialRules();
     if (this.$route.params.houseId) {
       this.houseId = this.$route.params.houseId;
       this.houseType = this.$route.params.houseType;

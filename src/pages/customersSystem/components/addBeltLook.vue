@@ -121,7 +121,7 @@ import lsCascader from "./lsCascader";
 import lsAddAccompany from "./lsAddAccompany";
 export default {
   $_veeValidate: {
-    validator: "new"
+    validator: "new" // give me my own validator scope.
   },
   components: {
     lsCascader,
@@ -141,10 +141,7 @@ export default {
   },
   methods: {
     confirmEmit() {
-      this.$validator.validateAll().then(e => {
-        console.log(e, this.$validator);
-        console.log(this.errorBags);
-      });
+      this.$validator.validateAll().then(e => {});
     }
   }
 };
