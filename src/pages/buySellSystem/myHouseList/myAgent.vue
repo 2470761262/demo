@@ -1054,7 +1054,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: this.houseNoPage.currentPage,
-            limit: this.houseNoPage.limit
+            limit: 300
           }
         })
         .then(e => {
