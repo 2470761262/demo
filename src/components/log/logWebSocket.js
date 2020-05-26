@@ -83,7 +83,7 @@ let log_socket = {
       className: e.target.className,
       id: e.target.id,
       identify: e.view.clientInformation.userAgent,
-      placeholder: e.target.placeholder,
+      placeholder: e.target.placeholder
     };
     let content = "user_action@$:" + JSON.stringify(parent);
     return content;

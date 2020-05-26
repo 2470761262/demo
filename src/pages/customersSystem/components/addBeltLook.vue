@@ -60,19 +60,12 @@
         <div class="belt-content-item">
           <span class="item-require">*</span>
           <div class="item-right">
-            <!-- <ls-cascader
+            <ls-cascader
               ata-vv-name="cascaderResultg"
               data-vv-as="请选择楼盘"
               v-validate="'required'"
               v-model="cascaderResult"
-            ></ls-cascader> -->
-            <input
-              type="text"
-              ata-vv-name="cascaderResultg"
-              data-vv-as="请选择楼盘"
-              v-validate="'required'"
-              v-model="cascaderResultg"
-            />
+            ></ls-cascader>
           </div>
         </div>
         <div class="belt-content-item">
@@ -131,12 +124,11 @@ export default {
     validator: "new"
   },
   components: {
-    //  lsCascader,
+    lsCascader,
     lsAddAccompany
   },
   data() {
     return {
-      cascaderResultg: "",
       textarea: "",
       isTalk: 0, //是否再谈
       accompanyResult: [], //陪同人
