@@ -392,7 +392,9 @@ export default {
             that.$message(result.message);
           }
         })
-        .catch(e => {});
+        .catch(e => {
+          that.$message("操作失败");
+        });
     },
     //打开推荐弹窗
     nodePop() {

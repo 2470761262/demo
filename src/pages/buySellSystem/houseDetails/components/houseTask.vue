@@ -481,9 +481,6 @@ export default {
       }
     },
     agentApply() {
-      // if (!this.dept.id) {
-      //   return false;
-      // }
       let loginDeptId = util.localStorageGet("logindata").deptId;
       if (Object.keys(this.houseDetails).length > 0) {
         let detailData = this.houseDetails.data;
@@ -703,15 +700,16 @@ export default {
             alias: _value,
             rules: "required",
             getter: function() {
-              if (_that.$refs.houseUpload[_key] instanceof Array) {
-                return _that.$refs.houseUpload[_key];
-              } else {
-                if (Object.keys(_that.$refs.houseUpload[_key]).length == 0) {
-                  return "";
-                } else {
-                  return _that.$refs.houseUpload[_key];
-                }
-              }
+              return _that.$refs.houseUpload[_key];
+              // if (_that.$refs.houseUpload[_key] instanceof Array) {  视频必填
+              //   return _that.$refs.houseUpload[_key];
+              // } else {
+              //   if (Object.keys(_that.$refs.houseUpload[_key]).length == 0) {
+              //     return "";
+              //   } else {
+              //     return _that.$refs.houseUpload[_key];
+              //   }
+              // }
             }
           });
         });
@@ -730,7 +728,9 @@ export default {
                 resultIdList.push(item.id);
               });
             } else {
-              resultIdList.push(_that.$refs.houseUpload[_key].id);
+              if (Object.keys(_that.$refs.houseUpload[_key]).length > 0) {
+                resultIdList.push(_that.$refs.houseUpload[_key].id);
+              }
             }
           });
           console.log(resultIdList);
