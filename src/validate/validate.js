@@ -94,6 +94,21 @@ Validator.extend("chineseLen", {
   validate: value => value.length > 1
 });
 
+//级联
+Validator.extend("cascader", {
+  compare: ["length", "errorMsg", "nowLength"],
+  messages: {
+    zh_CN: (field, args) => {
+      console.log(field, args);
+      return args[1][args[2]] + "不能为空";
+    }
+  },
+  validate: (value, compare) => {
+    console.log("value, compare", value, compare);
+    return value.length > compare[0];
+  }
+});
+
 Vue.use(VeeValidate, config);
 // 使用中文提示
 Validator.localize("zh_CN", veeMessage);

@@ -10,7 +10,7 @@ import { LOGINDATA, TOKEN } from "@/util/constMap";
  * 锚点数据是否开启
  * @type {boolean}
  */
-let isOpenLog = true;
+let isOpenLog = false;
 let logSocketUri = "ws://" + process.env.VUE_APP_WEBSOCKET_URI + "/log";
 let identify = process.env.VUE_APP_IDENTIFY;
 

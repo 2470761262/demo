@@ -61,9 +61,12 @@
           <span class="item-require">*</span>
           <div class="item-right">
             <ls-cascader
-              ata-vv-name="cascaderResultg"
+              ata-vv-name="cascaderResult"
               data-vv-as="请选择楼盘"
-              v-validate="'required'"
+              v-validate="{
+                required: true,
+                cascader: [2, ['楼盘', '楼栋', '房间号'], cascaderResult.length]
+              }"
               v-model="cascaderResult"
             ></ls-cascader>
           </div>
