@@ -58,6 +58,7 @@
           class="anchor-point"
           :disabled="!isShowButton.releaseOutsideHouse"
           @click="certificateType"
+          data-anchor="房源详情发布外网 => click"
           v-if="
             resultData.isReleaseOutside != 1 &&
               resultData.AgentPer == perId &&
@@ -68,6 +69,7 @@
           <span class="button-title">发布外网</span>
         </el-button>
         <el-button
+          data-anchor="房源详情取消发布 => click"
           class="anchor-point"
           :disabled="!isShowButton.cancelOutsideHouse"
           v-if="
@@ -84,6 +86,7 @@
       <!-- 总监推荐 -->
       <div class="button-set">
         <el-button
+          data-anchor="房源详情总监推荐||店长推荐 => click"
           class="anchor-point"
           :disabled="!isShowButton.inspector && !isShowButton.shopOwner"
           @click="nodePop"
@@ -99,6 +102,7 @@
           >
         </el-button>
         <el-button
+          data-anchor="房源详情取消推荐 => click"
           class="anchor-point"
           :disabled="isDisabled"
           v-if="isRecommend"
@@ -111,6 +115,7 @@
       <!-- 成交对赌 -->
       <div class="button-set">
         <el-button
+          data-anchor="房源详情成交对赌 => click"
           class="anchor-point"
           :disabled="isDisabled"
           @click="showBetView"
@@ -124,6 +129,7 @@
 
       <div class="button-set">
         <el-button
+          data-anchor="房源详情转房源状态 => click"
           class="anchor-point"
           @click="changePopUp"
           :disabled="isDisabled"
@@ -135,6 +141,7 @@
       <!-- 取消作业方 -->
       <div class="button-set">
         <el-button
+          data-anchor="房源详情取消角色人 => click"
           class="anchor-point"
           :disabled="isDisabled || !isShowButton.cancelMethod"
           @click="openPopUp('cancelTaskFlag')"
@@ -147,6 +154,7 @@
       <!-- 锁定房源 -->
       <div class="button-set">
         <el-button
+          data-anchor="房源详情解锁房源||锁定房源 => click"
           class="anchor-point"
           :disabled="isDisabled || !isShowButton.locking"
           @click="houseLock"
@@ -164,6 +172,7 @@
       <!-- 修改钥匙存放门店 -->
       <div class="button-set" v-if="resultData.agentHouseMethod">
         <el-button
+          data-anchor="房源详情修改钥匙存放门店 => click"
           class="anchor-point"
           :disabled="
             isDisabled ||
@@ -178,7 +187,10 @@
         </el-button>
       </div>
       <div class="button-set">
-        <el-button @click="returnCom">
+        <el-button
+          @click="returnCom"
+          data-anchor="房源详情查看房源信息 => click"
+        >
           <span class="button-title">查看房源信息</span>
         </el-button>
       </div>

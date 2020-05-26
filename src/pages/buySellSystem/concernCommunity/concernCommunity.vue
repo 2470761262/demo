@@ -181,6 +181,7 @@
                 </div>
                 <div
                   title="取消关注"
+                  data-anchor="取消关注核心盘"
                   @click="concernOFF(item.id)"
                   class="attention-cell-remove el-icon-circle-close anchor-point"
                 ></div>
@@ -206,6 +207,7 @@
           <div class="query-content-cell">
             <h3 class="query-cell-title">楼盘</h3>
             <el-select
+              data-anchor="核心盘楼盘 => select"
               class="anchor-point"
               v-model="comId"
               @focus="remoteInput"
@@ -217,6 +219,7 @@
               filterable
             >
               <el-option
+                data-anchor="核心盘楼盘 => select => option"
                 class="anchor-point"
                 v-for="item in comList"
                 :key="item.value"
@@ -225,6 +228,7 @@
               ></el-option>
             </el-select>
             <el-select
+              data-anchor="核心盘楼栋 => select"
               class="anchor-point"
               v-model="cbId"
               filterable
@@ -234,6 +238,7 @@
             >
               <el-option
                 class="anchor-point"
+                data-anchor="核心盘楼栋 => select => option"
                 v-for="item in cbIdList"
                 :key="item.value"
                 :label="item.name"
@@ -241,6 +246,7 @@
               ></el-option>
             </el-select>
             <el-select
+              data-anchor="核心盘房间号 => select"
               class="anchor-point"
               v-model="roomNo"
               filterable
@@ -250,6 +256,7 @@
               v-loadmore="loadMore"
             >
               <el-option
+                data-anchor="核心盘房间号 => select => option"
                 class="anchor-point"
                 v-for="item in roomNoList"
                 :key="item.value"
@@ -261,6 +268,7 @@
           <div class="query-content-cell cell-interval75">
             <h3 class="query-cell-title">业主</h3>
             <el-input
+              data-anchor="核心盘业主 => input"
               placeholder="姓名"
               class="set-input120 anchor-point"
               @change="querylistByParams"
@@ -271,6 +279,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">电话</h3>
             <el-input
+              data-anchor="核心盘业主电话 => input"
               placeholder="业主电话"
               v-model="queryData.tel"
               class="set-input200 anchor-point"
@@ -281,6 +290,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">价格</h3>
             <el-input
+              data-anchor="核心盘价格最小值 => input"
               placeholder="最小值"
               v-model="queryData.minPrice"
               class="set-input90 anchor-point"
@@ -289,6 +299,7 @@
             />
             <span class="cut-off-rule"></span>
             <el-input
+              data-anchor="核心盘价格最大值 => input"
               placeholder="最大值"
               v-model="queryData.maxPrice"
               class="set-input90 anchor-point"
@@ -311,6 +322,7 @@
           <div class="query-content-cell">
             <h3 class="query-cell-title">面积</h3>
             <el-input
+              data-anchor="核心盘面积最小值 => input"
               placeholder="最小值"
               v-validate="'decimal:2|noZero1'"
               v-model="queryData.minInArea"
@@ -320,6 +332,7 @@
             />
             <span class="cut-off-rule"></span>
             <el-input
+              data-anchor="核心盘面积最大值 => input"
               placeholder="最大值"
               v-model="queryData.maxInArea"
               class="set-input90 anchor-point"
@@ -331,6 +344,7 @@
           <div class="query-content-cell cell-interval45">
             <h3 class="query-cell-title">房源状态</h3>
             <el-select
+              data-anchor="核心盘房源状态 => select"
               clearable
               placeholder="房源状态"
               class="set-select100 anchor-point"
@@ -338,19 +352,24 @@
               v-model="houseType"
             >
               <el-option
+                data-anchor="核心盘房源状态 => select => option"
                 v-for="item in houseTypeList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
-            <span class="query-cell-suffix handlebut" @click="remove"
+            <span
+              data-anchor="核心盘清除筛选 => span"
+              class="query-cell-suffix handlebut"
+              @click="remove"
               >清除</span
             >
           </div>
           <div class="query-content-cell cell-interval45">
             <label class="query-checkbox">
               <input
+                data-anchor="核心盘钥匙 => checkbox"
                 class="anchor-point"
                 type="checkbox"
                 v-model="queryData.keyOwner"
@@ -361,6 +380,7 @@
             </label>
             <label class="query-checkbox">
               <input
+                data-anchor="核心盘独家 => checkbox"
                 class="anchor-point"
                 type="checkbox"
                 v-model="queryData.isOnly"
@@ -374,6 +394,7 @@
             <el-button
               type="primary"
               size="mini"
+              data-anchor="核心盘查询 => click"
               @click="querylistByParams"
               class="anchor-point"
               >查询</el-button
@@ -412,6 +433,9 @@
               class="anchor-point"
               type="primary"
               size="mini"
+              :data-anchor="
+                '核心盘查看详情' + scope.row.houseType + ' => click'
+              "
               :disabled="['1', '5'].includes(scope.row.houseType)"
               @click="houseOperate(scope.row)"
               >{{ scope.row.houseType | setRowButName }}</el-button
@@ -419,6 +443,7 @@
             <el-button
               class="anchor-point"
               type="primary"
+              data-anchor="核心盘查看详情 => click"
               @click="toHouseDetail(scope.row)"
               size="mini"
               >查看</el-button
@@ -445,6 +470,7 @@
       <template v-slot:floot>
         <div class="text-middle" style="text-align: center;margin: 10px">
           <el-button
+            data-anchor="核心盘申请为跟单人提交 => click"
             class="anchor-point"
             size="mini"
             :disabled="!showApplyAgentBtn"
@@ -1287,7 +1313,7 @@ export default {
             comId: this.comId,
             cbId: this.cbId,
             page: this.houseNoPage.currentPage,
-            limit: this.houseNoPage.limit
+            limit: 300
           }
         })
         .then(e => {

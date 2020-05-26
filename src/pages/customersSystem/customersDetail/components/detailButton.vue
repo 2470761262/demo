@@ -27,6 +27,7 @@
     display: flex;
     padding-top: 20px;
     .heard-scroll-tag {
+      margin-right: 10px;
       display: flex;
       overflow-x: auto;
       overflow-y: hidden;
@@ -80,7 +81,6 @@
       }
     }
     .add-impression {
-      margin-left: 10px;
       padding-top: 0;
       padding-bottom: 10px;
       //align-self: flex-start;
@@ -164,6 +164,52 @@
   background: #cccccc;
   margin-top: 10px;
 }
+.remove-content {
+  .pop-head {
+    span {
+      color: red;
+      margin-right: 10px;
+    }
+    font-size: 17px;
+  }
+  .radio-content {
+    padding: 40px 15px;
+    display: flex;
+    align-items: center;
+    .radio-content-item {
+      // display: flex;
+      flex: 1;
+      margin-right: 40px;
+      &:last-child {
+        margin-right: 0;
+      }
+      justify-content: center;
+      //  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+
+      align-items: center;
+      input {
+        display: none;
+      }
+      input:checked ~ div {
+        background: #fed566;
+        color: #fff;
+        border: none;
+      }
+      div {
+        // flex: 1;
+        font-size: 16px;
+        height: 33px;
+        box-sizing: border-box;
+        border-radius: 6px;
+        color: #666;
+        border: 1px solid #ddd;
+        text-align: center;
+        line-height: 31px;
+        cursor: pointer;
+      }
+    }
+  }
+}
 </style>
 <template>
   <div class="page-content-head">
@@ -177,21 +223,20 @@
       ></el-rate>
     </div>
     <div class="customers-head-impression">
-      <div class="heard-scroll-tag">
-        <div class="tag-content">
-          <span>转介绍</span>
-          <i class="el-icon-close icon"></i>
-        </div>
-        <div class="tag-content">
-          <span>精准客户</span>
-          <i class="el-icon-close icon"></i>
-        </div>
-        <div class="tag-content">
-          <span>周末看房</span>
-          <i class="el-icon-close icon"></i>
+      <div class="heard-scroll-tag" v-if="impressionList.length > 0">
+        <div
+          class="tag-content"
+          v-for="(item, index) in impressionList"
+          :key="index"
+        >
+          <span>{{ item.text }}</span>
+          <i
+            class="el-icon-close icon"
+            @click="removeImpression(item, index)"
+          ></i>
         </div>
       </div>
-      <el-button type="text" class="add-impression"
+      <el-button type="text" class="add-impression" @click="addImpression"
         ><i class="el-icon-circle-plus"></i> 印象</el-button
       >
     </div>
@@ -220,16 +265,115 @@
         >转状态</el-button
       >
 
-      <el-button class="customers-button-item" icon="el-icon-delete"
+      <el-button
+        class="customers-button-item"
+        icon="el-icon-delete"
+        @click="openPop('removePop')"
         >删除</el-button
       >
       <el-button class="customers-button-item" icon="iconfont iconzhuanhuan"
         >PASS客户</el-button
       >
     </div>
+    <!-- 删除 -->
+    <fixed-popup
+      :visible.sync="removePop"
+      v-if="removePop"
+      style-type="0"
+      title="删除"
+      width="3.28rem"
+      @confirmEmit="confirmEmitRemovePop"
+    >
+      <template>
+        <div class="remove-content">
+          <div class="pop-head"><span>*</span>请选择删除客户的原因</div>
+          <div class="radio-content">
+            <label class="radio-content-item">
+              <input
+                v-model.number="removeCheck"
+                type="radio"
+                name="removePop"
+                value="0"
+              />
+              <div>客户无意向</div>
+            </label>
+            <label class="radio-content-item">
+              <input
+                v-model.number="removeCheck"
+                type="radio"
+                name="removePop"
+                value="1"
+              />
+              <div>空号</div>
+            </label>
+          </div>
+        </div>
+      </template>
+    </fixed-popup>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      removeCheck: "0",
+      removePop: false, //删除按钮弹框开关
+      impressionList: []
+    };
+  },
+  methods: {
+    /**
+     * @example: 打开弹框
+     * @param {popName} string 弹出层开关
+     */
+    openPop(popName) {
+      this[popName] = true;
+    },
+    /**
+     * 删除弹框确认按钮
+     */
+    confirmEmitRemovePop() {},
+    /**
+     * 删除印象
+     */
+    removeImpression(index) {
+      this.impressionList.splice(index, 1);
+    },
+    /**
+     * 添加印象
+     */
+    addImpression() {
+      let _that = this;
+      this.$prompt(null, "房源印象显示在房源左上角,仅自己可见", {
+        confirmButtonText: "添加",
+        cancelButtonText: "取消",
+        inputPlaceholder: "推荐5个字以内",
+        lockScroll: false,
+        inputValidator: e => {
+          if (!e || e.length > 5) return "不能是空, 或者不能大于5个字";
+          if (!e || /(.+)\1{2,}/.test(e)) {
+            return "不能连续输入重复的字符";
+          }
+        },
+        beforeClose(action, instance, done) {
+          if (action === "confirm") {
+            instance.confirmButtonLoading = true;
+            instance.confirmButtonText = "执行中...";
+            // _that.insertImpression(instance.inputValue);
+            setTimeout(() => {
+              _that.impressionList.push({ text: instance.inputValue });
+              done();
+              instance.confirmButtonLoading = false;
+            }, 500);
+          } else {
+            done();
+          }
+        }
+      })
+        .then(value => {})
+        .catch(() => {});
+    }
+  }
+};
 </script>

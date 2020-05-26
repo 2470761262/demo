@@ -124,6 +124,14 @@
       <el-button class="task-button">预约带看</el-button>
       <el-button class="task-button">添加带看</el-button>
     </div>
+    <add-belt-look
+      :visible.sync="beltlookFlag"
+      v-if="beltlookFlag"
+      title="添加带看"
+      style-type="0"
+      width="4.63rem"
+    >
+    </add-belt-look>
   </div>
 </template>
 
@@ -131,7 +139,14 @@
 import leftProgress from "./leftProgress";
 export default {
   components: {
-    leftProgress
+    leftProgress,
+    //添加带看
+    addBeltLook: () => import("../../components/addBeltLook")
+  },
+  data() {
+    return {
+      beltlookFlag: true // 添加带看弹框开关
+    };
   }
 };
 </script>

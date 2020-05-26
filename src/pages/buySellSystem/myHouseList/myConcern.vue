@@ -81,6 +81,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
+            data-anchor="我的关注楼盘 => select"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
@@ -93,6 +94,7 @@
             :loading="loading"
           >
             <el-option
+              data-anchor="我的关注楼盘 => select => option"
               class="anchor-point"
               v-for="item in optionsList"
               :key="item.value"
@@ -101,6 +103,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="我的关注楼栋 => select"
             class="anchor-point"
             v-model="data.cbId"
             filterable
@@ -109,6 +112,7 @@
             @change="buildChange"
           >
             <el-option
+              data-anchor="我的关注楼栋 => select => option"
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
@@ -117,6 +121,7 @@
             ></el-option>
           </el-select>
           <el-select
+            data-anchor="我的关注房间号 => select"
             class="anchor-point"
             v-model="data.roomNo"
             filterable
@@ -127,6 +132,7 @@
             v-loadmore="loadMore"
           >
             <el-option
+              data-anchor="我的关注房间号 => select => option"
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
@@ -138,6 +144,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">编号</h3>
           <el-input
+            data-anchor="我的关注房源编号 => input"
             placeholder="房源编号"
             v-model="data.houseNo"
             class="set-input200 anchor-point"
@@ -148,6 +155,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">业主</h3>
           <el-input
+            data-anchor="我的关注业主姓名 => input"
             placeholder="姓名"
             class="set-input120 anchor-point"
             @change="querylistByParams"
@@ -158,6 +166,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">电话</h3>
           <el-input
+            data-anchor="我的关注业主电话 => input"
             placeholder="业主电话"
             v-model="data.tel"
             class="set-input200 anchor-point"
@@ -180,6 +189,7 @@
         <div class="query-content-cell ">
           <h3 class="query-cell-title">价格</h3>
           <el-input
+            data-anchor="我的关注价格最小值 => input"
             placeholder="最小值"
             v-model="data.minPrice"
             class="set-input90 anchor-point"
@@ -188,6 +198,7 @@
           />
           <span class="cut-off-rule"></span>
           <el-input
+            data-anchor="我的关注价格最大值 => input"
             placeholder="最大值"
             v-model="data.maxPrice"
             class="set-input90 anchor-point"
@@ -198,6 +209,7 @@
         <div class="query-content-cell cell-interval45">
           <h3 class="query-cell-title">面积</h3>
           <el-input
+            data-anchor="我的关注面积最小值 => input"
             placeholder="最小值"
             v-model="data.minInArea"
             class="set-input90 anchor-point"
@@ -206,6 +218,7 @@
           />
           <span class="cut-off-rule"></span>
           <el-input
+            data-anchor="我的关注面积最大值 => input"
             placeholder="最大值"
             v-model="data.maxInArea"
             class="set-input90 anchor-point"
@@ -217,6 +230,7 @@
         <div class="query-content-cell cell-interval75">
           <h3 class="query-cell-title">录入时间</h3>
           <el-date-picker
+            data-anchor="我的关注录入时间 => input"
             v-model="data.timeSelect"
             type="daterange"
             class="set-data-pricker anchor-point"
@@ -226,13 +240,17 @@
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           ></el-date-picker>
-          <span class="query-cell-suffix handlebut anchor-point" @click="remove"
+          <span
+            data-anchor="我的关注清除 => click"
+            class="query-cell-suffix handlebut anchor-point"
+            @click="remove"
             >清除</span
           >
         </div>
         <div class="query-content-cell cell-interval45">
           <label class="query-checkbox">
             <input
+              data-anchor="我的关注钥匙 => checkbox"
               class="anchor-point"
               type="checkbox"
               v-model="queryData.keyOwner"
@@ -243,6 +261,7 @@
           </label>
           <label class="query-checkbox">
             <input
+              data-anchor="我的关注独家 => checkbox"
               class="anchor-point"
               type="checkbox"
               v-model="queryData.isOnly"
@@ -254,6 +273,7 @@
         </div>
         <div class="query-content-cell cell-interval45">
           <el-button
+            data-anchor="我的关注查询 => click"
             type="primary"
             size="mini"
             @click="querylistByParams"
@@ -284,10 +304,12 @@
             @focus="removeImpressionInput"
             @change="selectImpression($event)"
             filterable
+            data-anchor="我的关注房源印象 => select"
             placeholder="请输入您添加过的房源印象"
             :loading="loading"
           >
             <el-option
+              data-anchor="我的关注房源印象 => select => option"
               class="anchor-point"
               v-for="item in MyImpressionList"
               :key="item.index"
@@ -297,16 +319,25 @@
           </el-select>
         </div>
         <div class="but-group">
-          <el-button class="anchor-point" type="text" @click="show(1)"
+          <el-button
+            data-anchor="我的关注房一键还原 => click"
+            class="anchor-point"
+            type="text"
+            @click="show(1)"
             >一键还原</el-button
           >
-          <el-button class="anchor-point" type="text" @click="show(0)"
+          <el-button
+            data-anchor="我的关注房一键清除 => click"
+            class="anchor-point"
+            type="text"
+            @click="show(0)"
             >一键清除</el-button
           >
         </div>
         <div class="attention-scroll-content" v-if="showImpression">
           <span v-for="item in ImpressionList" :key="item.index">
             <el-tag
+              data-anchor="我的关注房印象tag => click"
               class="scroll-content-tag anchor-point"
               @close="handleClose(item.index)"
               closable
@@ -317,6 +348,7 @@
       </div>
       <div
         class="hide-query anchor-point"
+        data-anchor="我的关注房印象切换显示窗口 => click"
         @click="() => (querySelectFlag = !querySelectFlag)"
         :class="
           querySelectFlag ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'
@@ -344,6 +376,7 @@
             type="primary"
             @click="toHouseDetail(scope.row.id)"
             size="mini"
+            data-anchor="我的关注查看 => click"
             >查看</el-button
           >
           <el-button
@@ -353,6 +386,7 @@
             slot="reference"
             @click="ifOFF(scope.row.id)"
             size="mini"
+            data-anchor="我的关注取消关注 => click"
             >取消关注</el-button
           >
           <el-button
@@ -361,6 +395,7 @@
             slot="reference"
             size="mini"
             class="anchor-point"
+            data-anchor="我的关注印象关注 => click"
             >印象关注</el-button
           >
         </template>
@@ -1024,7 +1059,7 @@ export default {
             comId: that.data.comId,
             cbId: that.data.cbId,
             page: this.houseNoPage.currentPage,
-            limit: this.houseNoPage.limit
+            limit: 300
           }
         })
         .then(e => {

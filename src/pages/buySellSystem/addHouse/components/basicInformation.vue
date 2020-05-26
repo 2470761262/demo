@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-@import url(../../../../assets/publicLess/addHouse.less);
+@import url(~@/assets/publicLess/addHouse.less);
 </style>
 <template>
   <div
@@ -18,12 +18,14 @@
           size="mini"
         >
           <el-radio
+            data-anchor="添加房源单套录入 => radio"
             class="anchor-point"
             label="basicInformation"
             :disabled="disabled"
             >单套录入</el-radio
           >
           <el-radio
+            data-anchor="添加房源多套录入 => radio"
             class="anchor-point"
             label="morePushHouse"
             :disabled="disabled"
@@ -43,6 +45,7 @@
         <div class="page-cell-item select-nobor">
           <div class="item-before" data-before="*">楼盘</div>
           <el-select
+            data-anchor="添加房源楼盘 => select"
             filterable
             v-addHouse
             remote
@@ -59,6 +62,7 @@
             :disabled="disabled"
           >
             <el-option
+              data-anchor="添加房源楼盘 => select => option"
               class="anchor-point"
               v-for="item in selectPageCommunit.list"
               :key="item.value"
@@ -77,6 +81,7 @@
         <div class="page-cell-item">
           <div class="item-before" data-before="*">栋座</div>
           <el-select
+            data-anchor="添加房源栋座 => select"
             filterable
             remote
             class="anchor-point"
@@ -91,6 +96,7 @@
             :disabled="disabled"
           >
             <el-option
+              data-anchor="添加房源栋座 => select => option"
               class="anchor-point"
               v-for="item in selectPageeBuildingNo.list"
               :key="item.value"
@@ -109,6 +115,7 @@
         <div class="page-cell-item">
           <div class="item-before" data-before="*">房间号</div>
           <el-select
+            data-anchor="添加房源房间号 => select"
             filterable
             remote
             class="anchor-point"
@@ -123,6 +130,7 @@
             :disabled="disabled"
           >
             <el-option
+              data-anchor="添加房源房间号 => select => option"
               class="anchor-point"
               v-for="item in selectPageRoomNo.list"
               :key="item.value"
@@ -142,6 +150,7 @@
     >
       <div class="page-cell-item select-nobor center-flex">
         <el-input
+          data-anchor="添加房源业主姓名 => input"
           class="anchor-point"
           placeholder="请输入业主姓名"
           data-vv-name="customerName"
@@ -160,6 +169,7 @@
             class="anchor-point"
           >
             <el-radio
+              data-anchor="添加房源业主性别 => radio"
               class="anchor-point"
               :label="item.label"
               v-for="(item, index) in sexList"
@@ -184,10 +194,12 @@
           data-vv-name="tel"
           data-vv-as="电话号码"
           v-validate="'required|phoneLen|phone'"
+          data-anchor="添加房源业主手机号 => input"
         >
           <div slot="prepend" class="item-before" data-before="*">手机号</div>
           <div
             slot="append"
+            data-anchor="添加房源业主新增手机号 => click"
             @click="addTelToList"
             class="item-after item-before-col anchor-point"
           >
@@ -213,6 +225,7 @@
             v-model="formData['tel' + item]"
             :data-vv-name="'tel' + item"
             :data-vv-as="'电话号码' + item"
+            data-anchor="添加房源业主新增手机号 => input"
             v-validate="{
               phone: true,
               isSame: [
@@ -224,6 +237,7 @@
             <div slot="prepend" class="item-before">手机号{{ item }}</div>
             <div
               slot="append"
+              data-anchor="添加房源业主删除新增手机号 => click"
               @click="removeTelToList(index, item)"
               class="item-after item-before-col anchor-point"
             >
@@ -244,6 +258,7 @@
         <div class="page-cell-item">
           <div class="item-before" data-before="*">房屋证件</div>
           <el-select
+            data-anchor="添加房源房屋证件 => select"
             class="anchor-point"
             v-model="formData.certificateType"
             v-validate="'required'"
@@ -252,6 +267,7 @@
             placeholder="请选择房屋证件"
           >
             <el-option
+              data-anchor="添加房源房屋证件 => select => option"
               class="anchor-point"
               v-for="item in certificateType"
               :key="item.label"
@@ -269,6 +285,7 @@
       >
         <div class="page-cell-item select-nobor">
           <el-input
+            data-anchor="添加房源售价 => input"
             class="anchor-point"
             placeholder="请输入售价"
             v-validate="'required|decimal:2|noZero1'"
@@ -291,6 +308,7 @@
           <el-input
             class="anchor-point"
             placeholder="请输入底价"
+            data-anchor="添加房源底价 => input"
             data-vv-name="bottomPrice"
             data-vv-as="底价"
             v-validate="{
@@ -315,6 +333,7 @@
     >
       <div class="page-cell-item select-nobor">
         <el-input
+          data-anchor="添加房源产权证号 => input"
           class="anchor-point"
           placeholder="请输入产权证号"
           v-model="formData.certificateNo"
@@ -334,6 +353,7 @@
         <div class="cell-tabs-item-data">
           <div class="item-deep-data">
             <input
+              data-anchor="添加房源面积 => input"
               type="text"
               key="area"
               maxlength="8"
@@ -349,6 +369,7 @@
             <span v-show="!changeBut.area">{{ formData.area || 0 }}平方</span>
           </div>
           <div
+            data-anchor="添加房源面积修改||完成 => click"
             class="but-append anchor-point"
             :data-tips="changeBut.area ? '完成' : '修改'"
             @click.stop="changeAreaBut"
@@ -371,6 +392,7 @@
               v-show="changeBut.roomType"
             >
               <input
+                data-anchor="添加房源室 => click"
                 type="text"
                 key="room"
                 maxlength="2"
@@ -383,6 +405,7 @@
                 class="min-input anchor-point"
               />室
               <input
+                data-anchor="添加房源厅 => click"
                 type="text"
                 key="hall"
                 maxlength="2"
@@ -395,6 +418,7 @@
                 class="min-input anchor-point"
               />厅
               <input
+                data-anchor="添加房源卫 => click"
                 type="text"
                 key="toilet"
                 maxlength="2"
@@ -407,6 +431,7 @@
                 class="min-input anchor-point"
               />卫
               <input
+                data-anchor="添加房源阳台 => click"
                 type="text"
                 key="balcony"
                 maxlength="2"
@@ -428,6 +453,7 @@
           <div
             class="but-append anchor-point"
             :data-tips="changeBut.roomType ? '完成' : '修改'"
+            data-anchor="添加房源房型完成||修改 => click"
             @click.stop="changeRoomTypeBut"
           >
             <i class="el-icon-question"></i>
@@ -477,6 +503,7 @@
           <el-select
             v-model="formData.landCharacteristic"
             disabled
+            data-anchor="添加房源土地性质 => select"
             class="anchor-point"
           >
             <el-option
@@ -484,8 +511,18 @@
               label="未知"
               class="anchor-point"
             ></el-option>
-            <el-option :value="0" label="出让" class="anchor-point"></el-option>
-            <el-option :value="1" label="划拨" class="anchor-point"></el-option>
+            <el-option
+              :value="0"
+              label="出让"
+              class="anchor-point"
+              data-anchor="添加房源土地性质出让 => select => option"
+            ></el-option>
+            <el-option
+              :value="1"
+              label="划拨"
+              class="anchor-point"
+              data-anchor="添加房源土地性质划拨 => select => option"
+            ></el-option>
           </el-select>
         </div>
       </div>

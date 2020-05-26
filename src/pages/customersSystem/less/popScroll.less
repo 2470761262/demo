@@ -1,0 +1,78 @@
+.head-input(@flag:true) when (@flag = true) {
+    flex: 1;
+    margin-left: 20px;
+    display: flex;
+    input {
+      flex: 1;
+      width: 0;
+      outline: none;
+      border: none;
+      background: inherit;
+      height: 30px;
+      font-size: 16px;
+      margin-right: 10px;
+      border-bottom: 1px solid black;
+      &:nth-child(1) {
+        flex: 1.7 0 auto;
+      }
+      &:last-child {
+        margin-right: 0;
+      }
+      &:first-of-type {
+        border-bottom: 0;
+      }
+    }
+  }
+  
+  .head-input(@flag:true) when (@flag = false) {
+    flex: 1;
+    margin-left: 20px;
+    display: flex;
+    input {
+      flex: 1;
+      width: 0;
+      outline: none;
+      border: none;
+      background: inherit;
+      height: 30px;
+      font-size: 16px;
+    }
+  }
+
+
+.fool-right-scroll() {
+    flex: 1;
+    max-height: 200px;
+    overflow: auto;
+    padding-top: 10px;
+    box-sizing: border-box;
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    &::-webkit-scrollbar-button,
+    &::-webkit-scrollbar-track,
+    &::-webkit-scrollbar-track-piece {
+      display: none;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: #999;
+      border-radius: 50px;
+    }
+    &.is-childred-one {
+      margin-left: 65px;
+    }
+    &.scroll-pad-bor {
+      padding-left: 20px;
+      border-left: 2px solid #ddd;
+    }
+    li {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 20px;
+      cursor: pointer;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }

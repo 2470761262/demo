@@ -43,7 +43,7 @@ let log_socket = {
       log_socket.socket = new WebSocket(logSocketUri);
       log_socket.socket.onopen = function() {
         log_socket.isConn = true;
-        console.log("日志锚点数据websocket开启成功")
+        console.log("日志锚点数据websocket开启成功");
       };
       log_socket.socket.onerror = function(err) {
         console.log(err);
@@ -63,16 +63,16 @@ let log_socket = {
     let content = this.sendAction(e, accountId);
     if (className && className != "" && className.includes("anchor-point")) {
       content = this.sendAnchorData(e, accountId);
-    }else if(e.target.dataset && e.target.dataset.anchor){
+    } else if (e.target.dataset && e.target.dataset.anchor) {
       content = this.sendAnchorData(e, accountId);
     }
     content = identify + "@$@" + content;
-    console.log(content)
+    console.log(content);
     this.socket.send(content);
   },
   sendAction(e, accountId) {
     let parent = {
-      version: "1.0.0",
+      version: "1.0.1",
       accountId: accountId,
       screenX: e.screenX,
       screenY: e.screenY,
@@ -82,14 +82,15 @@ let log_socket = {
       baseURI: e.target.baseURI,
       className: e.target.className,
       id: e.target.id,
-      identify: e.view.clientInformation.userAgent
+      identify: e.view.clientInformation.userAgent,
+      placeholder: e.target.placeholder
     };
     let content = "user_action@$:" + JSON.stringify(parent);
     return content;
   },
   sendAnchorData(e, accountId) {
     let parent = {
-      version: "1.0.0",
+      version: "1.0.1",
       accountId: accountId,
       screenX: e.screenX,
       screenY: e.screenY,
@@ -101,10 +102,8 @@ let log_socket = {
       id: e.target.id,
       nodeName: e.target.nodeName,
       innerHTML: e.target.innerHTML,
-      innerTEXT: e.target.innerTEXT,
       placeholder: e.target.placeholder,
-      identify: e.view.clientInformation.userAgent,
-      anchorName: e.target.dataset.anchor
+      identify: window.navigator.userAgent
     };
     let content = "user_anchor@$:" + JSON.stringify(parent);
     return content;
@@ -131,8 +130,8 @@ if (isOpenLog) {
   log_socket.init();
   addLog_eventListener.click();
   addLog_eventListener.dblclick();
-  addLog_eventListener.mouseover();
-  addLog_eventListener.mouseleave();
+  // addLog_eventListener.mouseover();
+  // addLog_eventListener.mouseleave();
 }
 
 export default log_socket;

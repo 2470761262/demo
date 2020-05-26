@@ -56,6 +56,7 @@
             :key="index"
           >
             <input
+              :data-anchor="'自定义菜单 => click =>' + item.label"
               type="checkbox"
               @click="setListCheck(item)"
               :checked="item.default"
@@ -66,6 +67,7 @@
         </div>
         <div class="center-but">
           <el-button
+            data-anchor="自定义菜单确定 => click"
             class="anchor-point"
             type="primary"
             size="mini"
@@ -73,6 +75,7 @@
             >确定</el-button
           >
           <el-button
+            data-anchor="自定义菜单恢复默认 => click"
             class="anchor-point"
             type="primary"
             size="mini"
@@ -85,6 +88,7 @@
         class="anchor-point"
         slot="reference"
         size="mini"
+        data-anchor="自定义菜单 => click"
         :loading="loading"
         type="primary"
         >自定义菜单</el-button
