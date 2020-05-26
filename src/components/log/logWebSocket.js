@@ -102,10 +102,8 @@ let log_socket = {
       id: e.target.id,
       nodeName: e.target.nodeName,
       innerHTML: e.target.innerHTML,
-      innerTEXT: e.target.innerTEXT,
       placeholder: e.target.placeholder,
-      identify: e.view.clientInformation.userAgent,
-      anchorName: e.target.dataset.anchor
+      identify: window.navigator.userAgent
     };
     let content = "user_anchor@$:" + JSON.stringify(parent);
     return content;
@@ -132,8 +130,8 @@ if (isOpenLog) {
   log_socket.init();
   addLog_eventListener.click();
   addLog_eventListener.dblclick();
-  addLog_eventListener.mouseover();
-  addLog_eventListener.mouseleave();
+  // addLog_eventListener.mouseover();
+  // addLog_eventListener.mouseleave();
 }
 
 export default log_socket;
