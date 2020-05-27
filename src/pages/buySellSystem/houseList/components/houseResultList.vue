@@ -315,7 +315,7 @@
         <div
           class="select-tabs-item anchor-point"
           data-anchor="首页默认排序按钮"
-          :class="{ 'is-order': form.sortColumn == 'id' }"
+          :class="{ 'is-order': form.sortColumn == 'lastFollowTime' }"
           @click="defaultSelect()"
         >
           <div
@@ -814,8 +814,8 @@ export default {
       }
     },
     defaultSelect() {
-      this.form.sortColumn = "id";
-      this.form.sortType = "ascending";
+      this.form.sortColumn = "lastFollowTime";
+      this.form.sortType = "descending";
     },
     priceSelect() {
       this.form.sortColumn = "price";

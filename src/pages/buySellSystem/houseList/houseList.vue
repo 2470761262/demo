@@ -408,7 +408,7 @@ export default {
         maxDownPayment: "",
         minDownPayment: "",
         face: [],
-        sortColumn: "id",
+        sortColumn: "lastFollowTime",
         sortType: "descending",
         searchInfo: "",
         isOnly: "",
