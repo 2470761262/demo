@@ -9,23 +9,22 @@ function forSetStep(state, val, stepName) {
 }
 export default {
   state: {
-    detail: {
-      a: 1,
-      ab1: 1,
-      ad2: 1
-    }
+    detail: {}
   },
   mutations: {
     updateDetail(state, value) {
       state.detail = value;
+    },
+    resetDetail(state, value) {
+      state.detail = {};
     }
     // updateIsformDataNoCommit(state, val) {
     //   state.isformDataNoCommit = val;
     // }
   },
   actions: {
-    actionsUpdateDetail({ commit }, value) {
-      commit("updateDetail", value);
-    }
+    // actionsUpdateDetail({ commit }, value) {
+    //   commit("updateDetail", value);
+    // }
   }
 };
