@@ -270,7 +270,7 @@ export default {
     queryCustomerData(params) {
       let _that = this;
       let queryParams = Object.assign(
-        { limit: _that.pageJson.pageSize },
+        { limit: _that.pageJson.pageSize, del: 0 },
         params
       );
       console.log(this);

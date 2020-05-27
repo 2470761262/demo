@@ -531,7 +531,7 @@ export default [
           )
       },
       {
-        //全部私客
+        //7日内新增私客
         path: "/customersSystem/days7New",
         name: "days7New",
         meta: {
@@ -540,6 +540,66 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "days7New" */ "@/pages/customersSystem/myCustomers/days7New.vue"
+          )
+      },
+      {
+        //30日内带看私客
+        path: "/customersSystem/lookIn30Days",
+        name: "lookIn30Days",
+        meta: {
+          title: "30日内带看"
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "lookIn30Days" */ "@/pages/customersSystem/myCustomers/lookIn30Days.vue"
+          )
+      },
+      {
+        //30以上未维护私客
+        path: "/customersSystem/outOfContactOver30Days",
+        name: "outOfContactOver30Days",
+        meta: {
+          title: "30以上未维护"
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "outOfContactOver30Days" */ "@/pages/customersSystem/myCustomers/outOfContactOver30Days.vue"
+          )
+      },
+      {
+        //已购私客
+        path: "/customersSystem/isBuyCustomer",
+        name: "isBuyCustomer",
+        meta: {
+          title: "已购"
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "isBuyCustomer" */ "@/pages/customersSystem/myCustomers/isBuyCustomer.vue"
+          )
+      },
+      {
+        //暂不购私客
+        path: "/customersSystem/noBuyCustomer",
+        name: "noBuyCustomer",
+        meta: {
+          title: "暂不购"
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "noBuyCustomer" */ "@/pages/customersSystem/myCustomers/noBuyCustomer.vue"
+          )
+      },
+      {
+        //回收站私客
+        path: "/customersSystem/recycleBinCustomer",
+        name: "recycleBinCustomer",
+        meta: {
+          title: "回收站"
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "recycleBinCustomer" */ "@/pages/customersSystem/myCustomers/recycleBinCustomer.vue"
           )
       }
     ]

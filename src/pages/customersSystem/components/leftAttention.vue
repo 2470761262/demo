@@ -134,6 +134,11 @@ export default {
     fatherMethod: {
       type: Function,
       default: null
+    },
+    parentPageType: {
+      //标识当前组件被哪个父页面引用
+      type: String,
+      default: "allMyCustomers"
     }
   },
   data() {
@@ -164,7 +169,9 @@ export default {
       }
       if (this.fatherMethod) {
         let queryParams = { customerIds: customerIds, page: 1 };
-        if (otherParams) {
+        console.log(this.parentPageType, queryParams);
+        if (this.parentPageType == "allMyCustomers" && otherParams) {
+          //只有我的所有私客 页面 才需要组合条件
           queryParams = Object.assign(queryParams, otherParams);
         }
         this.fatherMethod(queryParams);
