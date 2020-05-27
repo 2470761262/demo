@@ -38,12 +38,17 @@
 export default {
   data() {
     return {
-      textarea: ""
+      textarea: "",
+      activeProData:null
     };
   },
   methods: {
     confirmEmit() {
-      this.$emit("followConfirmEmit", this.textarea);
+      this.$emit("followConfirmEmit", this);
+      this.close();
+    },
+    close(){
+      this.$emit("update:visible",false);
     }
   }
 };
