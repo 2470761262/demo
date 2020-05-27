@@ -206,7 +206,7 @@
           </div>
         </el-main>
         <div class="footerContainer right">
-          <el-button type="primary" @click="update">编辑</el-button>
+          <el-button type="primary" @click="update">保存</el-button>
           <el-button>取消</el-button>
         </div>
       </el-container>

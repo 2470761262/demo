@@ -315,11 +315,15 @@
             </div>
           </div>
           <div class="cust-step-row">
-            <ul>
-              <li v-for="(item, index) in formData.myImpression" :key="index">
-                {{ item }}
-              </li>
-            </ul>
+            <el-tag
+              v-for="(item, index) in formData.myImpression"
+              :key="index"
+              size="small"
+              @close="closeImpression(item)"
+              class="scroll-content-tag"
+              closable
+              >{{ item }}</el-tag
+            >
           </div>
         </section>
       </el-collapse-item>
@@ -769,6 +773,12 @@ export default {
           .finally(() => {});
       } else {
         this.communityList = [];
+      }
+    },
+    closeImpression(name) {
+      let index = this.formData.myImpression.indexOf(name);
+      if (index > -1) {
+        this.formData.myImpression.splice(index, 1);
       }
     },
     addCusImpression() {

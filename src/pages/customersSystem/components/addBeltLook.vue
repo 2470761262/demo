@@ -1,38 +1,10 @@
 <style lang="less" scoped>
+@import url(../less/popScroll);
 .error-tips {
   color: red;
 }
 .belt-content {
-  padding: 15px 0;
-  .belt-content-item {
-    display: flex;
-    align-items: center;
-    margin-top: 30px;
-    &:first-child {
-      margin-top: 0;
-    }
-    .item-require {
-      color: red;
-      margin-right: 10px;
-      font-size: 20px;
-    }
-    .item-right {
-      flex: 1;
-      .item-picker {
-        width: 100%;
-      }
-      .check-content {
-        display: flex;
-        font-size: 16px;
-        color: #666;
-        align-items: center;
-        .label-content {
-          flex: 1;
-          margin-left: 50px;
-        }
-      }
-    }
-  }
+  .belt-content();
 }
 </style>
 <template>
@@ -44,11 +16,11 @@
           <span class="item-require">*</span>
           <div class="item-right">
             <el-date-picker
-              data-vv-name="time"
+              data-vv-name="beltTime"
               data-vv-as="请选择带看时间"
               v-validate="'required'"
               class="item-picker"
-              v-model="contentJson.time"
+              v-model="beltTime"
               type="daterange"
               range-separator="至"
               start-placeholder="选择开始时间"
@@ -136,10 +108,7 @@ export default {
       isTalk: 0, //是否再谈
       accompanyResult: [], //陪同人
       cascaderResult: [], //带看楼盘
-      contentJson: {
-        time: [],
-        building: []
-      }
+      beltTime: [] //带看时间
     };
   },
   methods: {
