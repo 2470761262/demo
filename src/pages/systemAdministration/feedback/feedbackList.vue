@@ -3,6 +3,11 @@
   margin: 10px;
   display: inline-block;
 }
+.accept-tips {
+  margin-left: 30px;
+  font-size: 18px;
+  color: #666;
+}
 </style>
 <template>
   <div>
@@ -41,6 +46,7 @@
             @click="queryAddFloorListParams"
             >查询</el-button
           >
+          <span class="accept-tips">一经采纳将奖励10~100鑫币不等</span>
         </div>
       </template>
 
