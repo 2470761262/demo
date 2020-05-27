@@ -79,7 +79,6 @@
               <template v-slot:head>
                 <el-date-picker
                   class="date-picker"
-                  v-validate="{ required: false, phone: true }"
                   v-model="reserveTime"
                   type="datetime"
                   placeholder="选择带看时间"
