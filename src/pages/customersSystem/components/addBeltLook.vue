@@ -1,38 +1,10 @@
 <style lang="less" scoped>
+@import url(../less/popScroll);
 .error-tips {
   color: red;
 }
 .belt-content {
-  padding: 15px 0;
-  .belt-content-item {
-    display: flex;
-    align-items: center;
-    margin-top: 30px;
-    &:first-child {
-      margin-top: 0;
-    }
-    .item-require {
-      color: red;
-      margin-right: 10px;
-      font-size: 20px;
-    }
-    .item-right {
-      flex: 1;
-      .item-picker {
-        width: 100%;
-      }
-      .check-content {
-        display: flex;
-        font-size: 16px;
-        color: #666;
-        align-items: center;
-        .label-content {
-          flex: 1;
-          margin-left: 50px;
-        }
-      }
-    }
-  }
+  .belt-content();
 }
 </style>
 <template>
@@ -44,11 +16,11 @@
           <span class="item-require">*</span>
           <div class="item-right">
             <el-date-picker
-              data-vv-name="time"
+              data-vv-name="beltTime"
               data-vv-as="请选择带看时间"
               v-validate="'required'"
               class="item-picker"
-              v-model="contentJson.time"
+              v-model="beltTime"
               type="daterange"
               range-separator="至"
               start-placeholder="选择开始时间"
@@ -61,9 +33,12 @@
           <span class="item-require">*</span>
           <div class="item-right">
             <ls-cascader
-              ata-vv-name="cascaderResultg"
+              ata-vv-name="cascaderResult"
               data-vv-as="请选择楼盘"
-              v-validate="'required'"
+              v-validate="{
+                required: true,
+                cascader: [2, ['楼盘', '楼栋', '房间号'], cascaderResult.length]
+              }"
               v-model="cascaderResult"
             ></ls-cascader>
           </div>
@@ -127,21 +102,38 @@ export default {
     lsCascader,
     lsAddAccompany
   },
+  props: {
+    customerId: {
+      type: Number, // 定义接收到的数据的类型
+      default: 0,
+      required: false //规定这个数据是否必传,默认false
+    }
+  },
   data() {
     return {
       textarea: "",
       isTalk: 0, //是否再谈
       accompanyResult: [], //陪同人
       cascaderResult: [], //带看楼盘
-      contentJson: {
-        time: [],
-        building: []
-      }
+      beltTime: [] //带看时间
     };
   },
   methods: {
     confirmEmit() {
-      this.$validator.validateAll().then(e => {});
+      let that = this;
+      this.$validator.validateAll().then(e => {
+        if (!e) return;
+        if (this.customerId && this.customerId != 0) {
+          //在该组件内响应添加带看
+          console.log(this.customerId, "添加带看在组件内响应");
+          this.$emit("update:visible", false);
+        } else {
+          console.log(
+            "添加带看在父组件内响应，请在父组件内注册事件confirmAddLook"
+          );
+          that.$emit("confirmAddLook", this.$data);
+        }
+      });
     }
   }
 };

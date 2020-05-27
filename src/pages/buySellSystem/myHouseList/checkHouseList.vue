@@ -272,9 +272,14 @@
             {{ scope.row.checkStatus }}
           </template>
         </el-table-column>
-        <el-table-column label="备注说明">
+        <el-table-column label="审核说明">
           <template v-slot="scope">
             {{ scope.row.checkMemo }}
+          </template>
+        </el-table-column>
+        <el-table-column label="举报说明" v-if="checkProject == '11'">
+          <template v-slot="scope">
+            {{ scope.row.ownerMemo }}
           </template>
         </el-table-column>
         <el-table-column label="附件">

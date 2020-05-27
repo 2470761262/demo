@@ -18,6 +18,7 @@
     height: 0;
     overflow: auto;
     box-sizing: border-box;
+    padding-top: 10px;
     &::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -121,9 +122,14 @@
     </div>
     <div class="record-content-foot">
       <el-button class="task-button">取消再谈</el-button>
-      <el-button class="task-button">预约带看</el-button>
-      <el-button class="task-button">添加带看</el-button>
+      <el-button class="task-button" @click="openPop('reserveFlag')"
+        >预约带看</el-button
+      >
+      <el-button class="task-button" @click="openPop('beltlookFlag')"
+        >添加带看</el-button
+      >
     </div>
+    <!-- 添加带看 -->
     <add-belt-look
       :visible.sync="beltlookFlag"
       v-if="beltlookFlag"
@@ -132,21 +138,44 @@
       width="4.63rem"
     >
     </add-belt-look>
+
+    <!-- 预约带看 -->
+    <reserve-belt-look
+      :visible.sync="reserveFlag"
+      v-if="reserveFlag"
+      title="预约带看"
+      style-type="0"
+      width="4.63rem"
+    >
+    </reserve-belt-look>
   </div>
 </template>
 
 <script>
-import leftProgress from "./leftProgress";
+import leftProgress from "../otherCom/leftProgress";
 export default {
   components: {
     leftProgress,
     //添加带看
-    addBeltLook: () => import("../../components/addBeltLook")
+    addBeltLook: () => import("../../components/addBeltLook"),
+    //预约带看
+    reserveBeltLook: () => import("../../components/reserveBeltLook")
   },
   data() {
     return {
-      beltlookFlag: true // 添加带看弹框开关
+      reserveFlag: false, //预约带看弹框开关
+      beltlookFlag: false // 添加带看弹框开关
     };
+  },
+  methods: {
+    /**
+     * @example:统一打开弹框
+     * @param {string} popName  弹框对应的名字
+     */
+
+    openPop(popName) {
+      this[popName] = true;
+    }
   }
 };
 </script>
