@@ -84,10 +84,22 @@
               "
               >答复</el-button
             >
+            <el-button type="warning" size="mini" @click="openAccept(scope.row)"
+              >采纳</el-button
+            >
           </template>
         </el-table-column>
       </template>
     </list-page>
+    <fixed-popup
+      :visible.sync="visible"
+      v-if="visible"
+      title="是否采纳?"
+      width="3.5rem"
+      style-type="0"
+      @confirmEmit="confirmEmit"
+    >
+    </fixed-popup>
     <el-dialog title="给予答复" :visible.sync="dialogVisible" width="40%">
       <div>{{ accountName }}的反馈：{{ message }}</div>
       <div style="display:flex;margin-top:20px;flex-wrap:wrap;">
@@ -121,6 +133,8 @@ export default {
   },
   data() {
     return {
+      acceptActiveRow: null,
+      visible: false,
       loading: false,
       dialogVisible: false,
       pics: "",
@@ -186,6 +200,16 @@ export default {
     this.queryAddFloorList(1);
   },
   methods: {
+    /**
+     * @example: 打开采纳弹框 并且设置当前点击的行为采纳row
+     */
+    openAccept(value) {
+      this.visible = true;
+      this.acceptActiveRow = value;
+    },
+    confirmEmit() {
+      console.log("是否采纳确定触发事件");
+    },
     // queryTabData() {
     //   console.log(this, "111");
     // },
