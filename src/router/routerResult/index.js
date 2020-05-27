@@ -601,6 +601,42 @@ export default [
           import(
             /* webpackChunkName: "recycleBinCustomer" */ "@/pages/customersSystem/myCustomers/recycleBinCustomer.vue"
           )
+      },
+      {
+        //小组公客
+        path: "/customersSystem/groupPublicCustomer",
+        name: "groupPublicCustomer",
+        meta: {
+          title: "小组公客"
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "groupPublicCustomer" */ "@/pages/customersSystem/publicCustomers/groupPublicCustomer.vue"
+          )
+      },
+      {
+        //区域公客
+        path: "/customersSystem/areaPublicCustomer",
+        name: "areaPublicCustomer",
+        meta: {
+          title: "小组公客"
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "areaPublicCustomer" */ "@/pages/customersSystem/publicCustomers/areaPublicCustomer.vue"
+          )
+      },
+      {
+        //公司公客
+        path: "/customersSystem/companyPublicCustomer",
+        name: "companyPublicCustomer",
+        meta: {
+          title: "公司公客"
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "companyPublicCustomer" */ "@/pages/customersSystem/publicCustomers/companyPublicCustomer.vue"
+          )
       }
     ]
   },

@@ -364,10 +364,18 @@ export default {
             return (
               <div>
                 <el-button type="primary" size="mini" icon="el-icon-phone">
-                  还原
+                  一键拨号
                 </el-button>
                 <el-button type="warning" size="mini" icon="el-icon-date">
-                  永久删除
+                  预约带看
+                </el-button>
+                <el-button
+                  type="danger"
+                  size="mini"
+                  icon="el-icon-edit"
+                  onClick={this.openPop.bind(this, "writeFlag")}
+                >
+                  写跟进
                 </el-button>
               </div>
             );
@@ -497,7 +505,8 @@ export default {
       _that.queryParams = Object.assign(_that.queryParams, {
         page: page,
         limit: _that.pageJson.pageSize,
-        del: 1
+        del: 0,
+        minLastPairFollowTime: new Date().setDate(new Date().getDate() - 7)
       });
       _that.$api
         .post({

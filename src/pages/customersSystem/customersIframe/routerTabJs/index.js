@@ -20,22 +20,24 @@ export default [
     name: "小组公客",
     icon: "iconzaishouwugendan iconfont",
     active: "2",
-    children: [{ name: "小组公客", active: "/buySellSystem/shopDisk" }]
+    children: [
+      { name: "小组公客", active: "/customersSystem/groupPublicCustomer" }
+    ]
   },
   {
     name: "区域公客",
     icon: "iconzaishouwugendan iconfont",
     active: "3",
-    children: [{ name: "全部在售", active: "/buySellSystem/saleAll" }]
+    children: [
+      { name: "区域公客", active: "/customersSystem/areaPublicCustomer" }
+    ]
   },
   {
     name: "公司公客",
     icon: "iconzaishouwugendan iconfont",
     active: "4",
     children: [
-      { name: "我司成交", active: "/buySellSystem/ourComDeal" },
-      { name: "他司成交", active: "/buySellSystem/otherComDeal" },
-      { name: "业主自售", active: "/buySellSystem/selfDeal" }
+      { name: "公司公客", active: "/customersSystem/companyPublicCustomer" }
     ]
   }
 ];
