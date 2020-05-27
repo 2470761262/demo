@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+//@import url(../customersDetail/less/popScroll);
 .remove-content {
   .pop-head {
     span {
@@ -8,41 +9,7 @@
     font-size: 17px;
   }
   .radio-content {
-    padding: 40px 15px;
-    display: flex;
-    align-items: center;
-    .radio-content-item {
-      // display: flex;
-      flex: 1;
-      margin-right: 40px;
-      &:last-child {
-        margin-right: 0;
-      }
-      justify-content: center;
-      //  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-
-      align-items: center;
-      input {
-        display: none;
-      }
-      input:checked ~ div {
-        background: #fed566;
-        color: #fff;
-        border: none;
-      }
-      div {
-        // flex: 1;
-        font-size: 16px;
-        height: 33px;
-        box-sizing: border-box;
-        border-radius: 6px;
-        color: #666;
-        border: 1px solid #ddd;
-        text-align: center;
-        line-height: 31px;
-        cursor: pointer;
-      }
-    }
+    //.radio-content();
   }
 }
 </style>

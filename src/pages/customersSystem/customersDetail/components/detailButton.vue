@@ -241,8 +241,7 @@
       title="删除"
       width="3.28rem"
       @transmitConfirm="removeTransmit"
-      >confirmEmitRemovePop
-    </remove>
+    />
     <!-- 转公客-->
     <turn-clientele
       :visible.sync="turnPop"
@@ -251,18 +250,16 @@
       title="转公客"
       width="3.28rem"
       @transmitConfirm="turnTransmit"
-    >
-    </turn-clientele>
+    />
     <!-- 转状态 -->
     <turn-type
       :visible.sync="turnTypePop"
       v-if="turnTypePop"
       style-type="0"
-      title="转转台"
-      width="3.28rem"
+      title="转状态"
+      width="4rem"
       @transmitConfirm="turnTypeTransmit"
-    >
-    </turn-type>
+    />
   </div>
 </template>
 
