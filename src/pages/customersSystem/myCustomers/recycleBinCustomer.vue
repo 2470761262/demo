@@ -165,12 +165,19 @@
       <template v-slot:tableColumn>
         <el-table-column type="expand" width="1px">
           <template v-slot:default="props">
-            <!-- pp属性名请按照实际字段进行修改 -->
-            <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
-            <template v-if="props.row.pp && props.row.pp.length > 0">
+            <!-- 判断当前列是否 如果有则显示印象 且长度大于0 -->
+            <template
+              v-if="
+                myImpressions.hasOwnProperty(props.row.id) &&
+                  myImpressions[props.row.id].length > 0
+              "
+            >
               <div class="flex-expand">
                 <div class="flex-impression-content">
-                  <div v-for="(item, index) in props.row.pp" :key="index">
+                  <div
+                    v-for="(item, index) in myImpressions[props.row.id]"
+                    :key="index"
+                  >
                     {{ item }}
                   </div>
                 </div>
@@ -403,7 +410,8 @@ export default {
       },
       addTime: null,
       queryParams: {}, //上方的条件组合
-      customerParams: {} //左侧印象选中的条件
+      customerParams: {}, //左侧印象选中的条件
+      myImpressions: {}
     };
   },
   watch: {
@@ -512,6 +520,7 @@ export default {
             var dataCustomers = result.data.data;
             _that.tableData = dataCustomers;
             _that.pageJson.total = result.data.dataCount;
+            _that.myImpressions = result.data.myImpression;
             //result.data.pageSum
           } else {
             console.log("查询客源列表（30日内带看）" + result.message);
@@ -544,7 +553,10 @@ export default {
      * 设置如果有当前行有印象数据则行先生对应的calss
      */
     cellClass({ row }) {
-      if (row.hasOwnProperty("pp")) {
+      if (
+        this.myImpressions.hasOwnProperty(row.id) &&
+        this.myImpressions[row.id].length > 0
+      ) {
         return "cellset";
       }
       return "cellItemSet";

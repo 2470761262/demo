@@ -38,7 +38,7 @@
     <template v-slot:tableColumn>
       <el-table-column type="expand" width="1px">
         <template v-slot:default="props">
-          <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
+          <!-- 判断当前列是否有  如果有则显示印象 且长度大于0 -->
           <template
             v-if="
               myImpressions.hasOwnProperty(props.row.id) &&
@@ -308,7 +308,10 @@ export default {
      * 设置如果有当前行有印象数据则行先生对应的calss
      */
     cellClass({ row }) {
-      if (row.hasOwnProperty("pp")) {
+      if (
+        this.myImpressions.hasOwnProperty(row.id) &&
+        this.myImpressions[row.id].length > 0
+      ) {
         return "cellset";
       }
       return "cellItemSet";

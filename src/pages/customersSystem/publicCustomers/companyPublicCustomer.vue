@@ -155,13 +155,6 @@
           <i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span>
         </h3>
       </template>
-      <template v-slot:left>
-        <left-attention
-          v-model="querySelectFlag"
-          :fatherMethod="queryCustomerDataLeft"
-          :parentPageType="'lookIn30Days'"
-        ></left-attention>
-      </template>
       <template v-slot:tableColumn>
         <el-table-column type="expand" width="1px">
           <template v-slot:default="props">
@@ -211,12 +204,10 @@
 
 <script>
 import listPage from "@/components/listPage";
-import leftAttention from "../components/leftAttention";
 import { setImpression } from "@/util/tabUtil";
 export default {
   components: {
     listPage,
-    leftAttention,
     writeFollowUp: () => import("../components/writeFollowUp")
   },
   data() {
@@ -492,7 +483,7 @@ export default {
     },
     queryCustomerDataLeft(p) {
       let _that = this;
-      console.log(p, "右侧印象触发查询");
+      console.log(p, "公司公客右侧印象触发查询");
       if (p) {
         this.customerParams = p;
       } else {
@@ -506,7 +497,7 @@ export default {
         page: page,
         limit: _that.pageJson.pageSize,
         del: 0,
-        minLastPairFollowTime: new Date().setDate(new Date().getDate() - 7)
+        plate: 4
       });
       _that.$api
         .post({
@@ -517,13 +508,13 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            console.log(result, "查询我的客源列表（30日内带看）");
+            console.log(result, "查询公司公客列表");
             var dataCustomers = result.data.data;
             _that.tableData = dataCustomers;
             _that.pageJson.total = result.data.dataCount;
             //result.data.pageSum
           } else {
-            console.log("查询客源列表（30日内带看）" + result.message);
+            console.log("查询公司公客" + result.message);
             _that.$message({
               type: "info",
               message: result.message
@@ -531,7 +522,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log("查询客源列表失败catch（30日内带看）");
+          console.log("查询公司公客列表失败catch");
           console.log(e);
         })
         .finally(() => {});
