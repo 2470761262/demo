@@ -16,7 +16,8 @@ let identify = process.env.VUE_APP_IDENTIFY;
 
 let addLog_eventListener = {
   click() {
-    document.addEventListener("click", ev => log_socket.sendUserActionData(ev));
+    document.addEventListener("click", ev =>
+        log_socket.sendUserActionData(ev));
   },
   mouseover() {
     document.addEventListener("mouseover", ev =>
@@ -56,7 +57,6 @@ let log_socket = {
     }
   },
   sendUserActionData(e) {
-    console.log(e);
     let accountId = log_socket.getAccountId();
     let target = e.target;
     let className = target.className;
@@ -114,6 +114,9 @@ let log_socket = {
     return accountId;
   },
   sendUserAnchorData(name, event) {
+    if(!this.isConn){
+      return;
+    }
     let accountId = log_socket.getAccountId();
     let data = {
       accountId: accountId,
@@ -130,8 +133,8 @@ if (isOpenLog) {
   log_socket.init();
   addLog_eventListener.click();
   addLog_eventListener.dblclick();
-  // addLog_eventListener.mouseover();
-  // addLog_eventListener.mouseleave();
+  addLog_eventListener.mouseover();
+  addLog_eventListener.mouseleave();
 }
 
 export default log_socket;
