@@ -265,7 +265,7 @@
 </template>
 
 <script>
-import leftProgress from "./leftProgress";
+import leftProgress from "../otherCom/leftProgress";
 export default {
   components: {
     leftProgress

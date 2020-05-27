@@ -128,9 +128,9 @@
             </div>
             <div class="page-list-query-row" v-if="changeQuery">
               <div class="query-content-cell">
-                <h3 class="query-cell-title">带看时间</h3>
+                <h3 class="query-cell-title">录入时间</h3>
                 <el-date-picker
-                  v-model="pairTime"
+                  v-model="addTime"
                   type="daterange"
                   class="set-data-pricker set-pricker-width260"
                   range-separator="至"
@@ -159,13 +159,13 @@
         <left-attention
           v-model="querySelectFlag"
           :fatherMethod="queryCustomerDataLeft"
-          :parentPageType="'days7New'"
+          :parentPageType="'lookIn30Days'"
         ></left-attention>
       </template>
       <template v-slot:tableColumn>
         <el-table-column type="expand" width="1px">
           <template v-slot:default="props">
-            <!-- 判断当前列  如果有则显示印象 且长度大于0 -->
+            <!-- 判断当前列是否有  如果有则显示印象 且长度大于0 -->
             <template
               v-if="
                 myImpressions.hasOwnProperty(props.row.id) &&
@@ -296,7 +296,6 @@ export default {
       querySelectFlag: false, //侧边印象开关
       loading: false,
       pageJson: {
-        currentPage: 1, //当前页码
         total: 50, //总记录数
         pageSize: 10 //每页条数
       },
@@ -388,7 +387,7 @@ export default {
                   type="danger"
                   size="mini"
                   icon="el-icon-edit"
-                  onclick={this.openPop.bind(this, "writeFlag", e)}
+                  onClick={this.openPop.bind(this, "writeFlag", e)}
                 >
                   写跟进
                 </el-button>
@@ -410,7 +409,6 @@ export default {
         //   pp: ["活跃呵护", "心机汪", "一是同行"]
         // }
       ], //存放表格数据
-
       queryData: {
         tel: "",
         selectedPairParams: [], //带看多选条件
@@ -422,11 +420,11 @@ export default {
         maxArea: null, //最大面积条件
         minRooms: null,
         maxRooms: null,
-        minLastPairFollowTime: null, //最大带看时间条件
-        maxLastPairFollowTime: null //最大带看时间条件
+        minAddTime: null, //最大带看时间条件
+        maxAddTime: null //最大带看时间条件
       },
-      pairTime: null,
-      queryParams: {},
+      addTime: null,
+      queryParams: {}, //上方的条件组合
       customerParams: {}, //左侧印象选中的条件
       myImpressions: {}
     };
@@ -474,18 +472,18 @@ export default {
       },
       deep: true
     },
-    pairTime: function(val) {
+    addTime: function(val) {
       if (val) {
-        this.queryData.minLastPairFollowTime = val[0];
-        this.queryData.maxLastPairFollowTime = val[1];
+        this.queryData.minAddTime = val[0];
+        this.queryData.maxAddTime = val[1];
         console.log(
-          this.queryData.minLastPairFollowTime,
-          this.queryData.maxLastPairFollowTime,
-          "设置了起止带看时间"
+          this.queryData.minAddTime,
+          this.queryData.maxAddTime,
+          "设置了起止录入时间"
         );
       } else {
-        this.queryData.minLastPairFollowTime = this.queryData.maxLastPairFollowTime = null;
-        console.log("清空了起止带看时间");
+        this.queryData.minAddTime = this.queryData.maxAddTime = null;
+        console.log("清空了录入时间");
       }
     }
   },
@@ -523,7 +521,7 @@ export default {
         page: page,
         limit: _that.pageJson.pageSize,
         del: 0,
-        minAddTime: new Date().setDate(new Date().getDate() - 7)
+        minLastPairFollowTime: new Date().setDate(new Date().getDate() - 7)
       });
       _that.$api
         .post({
@@ -534,14 +532,15 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            console.log(result, "查询我的客源列表（七日内新增）");
+            console.log(result, "查询我的客源列表（30日内带看）");
             var dataCustomers = result.data.data;
             _that.tableData = dataCustomers;
             _that.pageJson.total = result.data.dataCount;
             _that.myImpressions = result.data.myImpression;
+
             //result.data.pageSum
           } else {
-            console.log("查询客源列表（七日内新增）" + result.message);
+            console.log("查询客源列表（30日内带看）" + result.message);
             _that.$message({
               type: "info",
               message: result.message
@@ -549,10 +548,20 @@ export default {
           }
         })
         .catch(e => {
-          console.log("查询客源列表失败catch（七日内新增）");
+          console.log("查询客源列表失败catch（30日内带看）");
           console.log(e);
         })
         .finally(() => {});
+    },
+    /**
+     * @example: 打开弹框
+     * @param {string} popName
+     */
+    openPop(popName, e) {
+      let _that = this;
+      // //把当前行的值保存到临时变量activeProdata
+      _that.activeProdata = e;
+      this[popName] = true;
     },
     confirmEmit(e) {
       let _that = this;
@@ -562,7 +571,6 @@ export default {
       let activeProdata = _that.activeProdata;
       //获取当前客户id
       let cid = activeProdata.id;
-      // console.log(_that.activeProdata)
       _that.formData.EntructId = cid;
       _that.formData.Memo = textarea;
       _that.$api
@@ -597,16 +605,6 @@ export default {
         })
         .finally(() => {});
     },
-    /**
-     * @example: 打开弹框
-     * @param {string} popName
-     */
-    openPop(popName, e) {
-      let _that = this;
-      //把当前行的值保存到临时变量activeProdata
-      _that.activeProdata = e;
-      this[popName] = true;
-    },
     triggerChange() {
       this.changeQuery = !this.changeQuery;
     },
@@ -614,7 +612,10 @@ export default {
      * 设置如果有当前行有印象数据则行先生对应的calss
      */
     cellClass({ row }) {
-      if (row.hasOwnProperty("pp")) {
+      if (
+        this.myImpressions.hasOwnProperty(row.id) &&
+        this.myImpressions[row.id].length > 0
+      ) {
         return "cellset";
       }
       return "cellItemSet";

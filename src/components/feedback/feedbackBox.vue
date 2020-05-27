@@ -24,6 +24,12 @@
     cursor: pointer !important;
   }
 }
+.accept-tips {
+  margin-left: 30px;
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 20px;
+}
 </style>
 <template>
   <div class="nav-breadcrumb">
@@ -32,6 +38,7 @@
       :visible.sync="outerVisible"
       :before-close="beforeClose"
     >
+      <p class="accept-tips">一经采纳将奖励10~100鑫币不等</p>
       <div class="text item">
         <el-form class="form" label-width="80px" style="width: 100%">
           <el-form-item label="功能点">

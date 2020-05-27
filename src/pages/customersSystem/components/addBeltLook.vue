@@ -102,6 +102,13 @@ export default {
     lsCascader,
     lsAddAccompany
   },
+  props: {
+    customerId: {
+      type: Number, // 定义接收到的数据的类型
+      default: 0,
+      required: false //规定这个数据是否必传,默认false
+    }
+  },
   data() {
     return {
       textarea: "",
@@ -113,7 +120,20 @@ export default {
   },
   methods: {
     confirmEmit() {
-      this.$validator.validateAll().then(e => {});
+      let that = this;
+      this.$validator.validateAll().then(e => {
+        if (!e) return;
+        if (this.customerId && this.customerId != 0) {
+          //在该组件内响应添加带看
+          console.log(this.customerId, "添加带看在组件内响应");
+          this.$emit("update:visible", false);
+        } else {
+          console.log(
+            "添加带看在父组件内响应，请在父组件内注册事件confirmAddLook"
+          );
+          that.$emit("confirmAddLook", this.$data);
+        }
+      });
     }
   }
 };
