@@ -15,7 +15,10 @@
 }
 </style>
 <template>
-  <down-content :down-ul-flag="cascaderRenderList.length > 0">
+  <down-content
+    :down-ul-flag="cascaderRenderList.length > 0"
+    icon-class="iconwodefangyuan iconfont"
+  >
     <template v-slot:head>
       <div class="head-input">
         <input

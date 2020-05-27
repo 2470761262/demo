@@ -8,7 +8,7 @@
 }
 </style>
 <template>
-  <down-content :down-ul-flag="focusFlag">
+  <down-content :down-ul-flag="focusFlag" icon-class="iconzongjian iconfont">
     <template v-slot:head>
       <div class="head-input">
         <input

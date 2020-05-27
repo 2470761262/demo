@@ -18,6 +18,7 @@
     height: 0;
     overflow: auto;
     box-sizing: border-box;
+    padding-top: 10px;
     &::-webkit-scrollbar {
       width: 6px;
       height: 6px;
@@ -151,7 +152,7 @@
 </template>
 
 <script>
-import leftProgress from "./leftProgress";
+import leftProgress from "../otherCom/leftProgress";
 export default {
   components: {
     leftProgress,
@@ -162,7 +163,7 @@ export default {
   },
   data() {
     return {
-      reserveFlag: true, //预约带看弹框开关
+      reserveFlag: false, //预约带看弹框开关
       beltlookFlag: false // 添加带看弹框开关
     };
   },

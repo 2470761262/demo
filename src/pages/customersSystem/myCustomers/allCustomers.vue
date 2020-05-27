@@ -6,77 +6,89 @@
       :expand-row-keys='[1,3]'
       row-key="id"
   -->
-  <list-Page
-    :parentData="$data"
-    @sort-change="sortMethod"
-    :border="true"
-    default-expand-all
-    :cellClass="cellClass"
-    headerClass="headerCellSet1"
-    @handleCurrentChange="handleCurrentChange"
-    @handleSizeChange="handleSizeChange"
-    :dblclick="true"
-    @cellDblClick="toCustomerDetail"
-  >
-    <template v-slot:top>
-      <allCustomersQuery
-        :fatherMethod="queryCustomerData"
-        :fatherQueryGroup="queryParamsGroup"
-      ></allCustomersQuery>
-    </template>
-    <template v-slot:title>
-      <h3 class="page-tab-title">
-        <i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span>
-      </h3>
-    </template>
-    <template v-slot:left>
-      <left-attention
-        v-model="querySelectFlag"
-        :fatherMethod="queryCustomerData"
-      ></left-attention>
-    </template>
-    <template v-slot:tableColumn>
-      <el-table-column type="expand" width="1px">
-        <template v-slot:default="props">
-          <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
-          <template
-            v-if="
-              myImpressions.hasOwnProperty(props.row.id) &&
-                myImpressions[props.row.id].length > 0
-            "
-          >
-            <div class="flex-expand">
-              <div class="flex-impression-content">
-                <div
-                  v-for="(item, index) in myImpressions[props.row.id]"
-                  :key="index"
-                >
-                  {{ item }}
-                </div>
-              </div>
-              <label class="trigger-impression-btn">
-                <input type="checkbox" />
-                <i class="iconfont"></i>
-              </label>
-            </div>
-          </template>
-        </template>
-      </el-table-column>
-      <template v-for="item in tableColumn">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :min-width="item.width"
-          :key="item.prop"
-          :formatter="item.formart"
-          show-overflow-tooltip
-          :fixed="item.fixed ? 'right' : false"
-          :sort-orders="['ascending', 'descending']"
-          :sortable="item.order"
-        ></el-table-column>
+  <div class="list-content">
+    <list-Page
+      :parentData="$data"
+      @sort-change="sortMethod"
+      :border="true"
+      default-expand-all
+      :cellClass="cellClass"
+      headerClass="headerCellSet1"
+      @handleCurrentChange="handleCurrentChange"
+      @handleSizeChange="handleSizeChange"
+      :dblclick="true"
+      @cellDblClick="toCustomerDetail"
+    >
+      <template v-slot:top>
+        <allCustomersQuery
+          :fatherMethod="queryCustomerData"
+          :fatherQueryGroup="queryParamsGroup"
+        ></allCustomersQuery>
       </template>
-    </template>
-  </list-Page>
+      <template v-slot:title>
+        <h3 class="page-tab-title">
+          <i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span>
+        </h3>
+      </template>
+      <template v-slot:left>
+        <left-attention
+          v-model="querySelectFlag"
+          :fatherMethod="queryCustomerData"
+        ></left-attention>
+      </template>
+      <template v-slot:tableColumn>
+        <el-table-column type="expand" width="1px">
+          <template v-slot:default="props">
+            <!-- 判断当前列是否有  如果有则显示印象 且长度大于0 -->
+            <template
+              v-if="
+                myImpressions.hasOwnProperty(props.row.id) &&
+                  myImpressions[props.row.id].length > 0
+              "
+            >
+              <div class="flex-expand">
+                <div class="flex-impression-content">
+                  <div
+                    v-for="(item, index) in myImpressions[props.row.id]"
+                    :key="index"
+                  >
+                    {{ item }}
+                  </div>
+                </div>
+                <label class="trigger-impression-btn">
+                  <input type="checkbox" />
+                  <i class="iconfont"></i>
+                </label>
+              </div>
+            </template>
+          </template>
+        </el-table-column>
+        <template v-for="item in tableColumn">
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :min-width="item.width"
+            :key="item.prop"
+            :formatter="item.formart"
+            show-overflow-tooltip
+            :fixed="item.fixed ? 'right' : false"
+            :sort-orders="['ascending', 'descending']"
+            :sortable="item.order"
+          ></el-table-column>
+        </template>
+      </template>
+    </list-Page>
+    <!-- 添加带看 -->
+    <add-belt-look
+      :visible.sync="beltlookFlag"
+      v-if="beltlookFlag"
+      title="添加带看"
+      style-type="0"
+      width="4.63rem"
+      v-bind:customerId="currentClickCustomerId"
+    >
+    </add-belt-look>
+  </div>
 </template>
 
 <script>
@@ -89,10 +101,14 @@ export default {
   components: {
     listPage,
     allCustomersQuery,
-    leftAttention
+    leftAttention,
+    //添加带看
+    addBeltLook: () => import("@/pages/customersSystem/components/addBeltLook")
   },
   data() {
     return {
+      currentClickCustomerId: 0,
+      beltlookFlag: false,
       queryParamsGroup: [
         {
           未带看: 0,
@@ -187,14 +203,19 @@ export default {
           width: "300px",
           order: false,
           fixed: true,
-          formart: () => {
+          formart: (row, column) => {
             return (
               <div>
                 <el-button type="primary" size="mini" icon="el-icon-phone">
                   一键拨号
                 </el-button>
-                <el-button type="warning" size="mini" icon="el-icon-date">
-                  预约带看
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onClick={this.openBetAdd.bind(this, row.id)}
+                >
+                  添加带看
                 </el-button>
                 <el-button type="danger" size="mini" icon="el-icon-edit">
                   写跟进
@@ -228,6 +249,13 @@ export default {
     _that.staticsMyCustomerData();
   },
   methods: {
+    openBetAdd(customerId) {
+      this.currentClickCustomerId = customerId;
+      this.beltlookFlag = true;
+    },
+    confirmAddLook(e) {
+      console.log(e, "eeeeeeeeeeeeee");
+    },
     toCustomerDetail(item) {
       let id = item.id;
       if (!item.id) {
@@ -270,9 +298,10 @@ export default {
     queryCustomerData(params) {
       let _that = this;
       let queryParams = Object.assign(
-        { limit: _that.pageJson.pageSize },
+        { limit: _that.pageJson.pageSize, del: 0 },
         params
       );
+      console.log(this);
       _that.$api
         .post({
           url: "/saleCustomer/listMyCustomers",
@@ -307,7 +336,10 @@ export default {
      * 设置如果有当前行有印象数据则行先生对应的calss
      */
     cellClass({ row }) {
-      if (row.hasOwnProperty("pp")) {
+      if (
+        this.myImpressions.hasOwnProperty(row.id) &&
+        this.myImpressions[row.id].length > 0
+      ) {
         return "cellset";
       }
       return "cellItemSet";
