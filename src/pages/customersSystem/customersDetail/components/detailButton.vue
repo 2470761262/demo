@@ -164,52 +164,6 @@
   background: #cccccc;
   margin-top: 10px;
 }
-.remove-content {
-  .pop-head {
-    span {
-      color: red;
-      margin-right: 10px;
-    }
-    font-size: 17px;
-  }
-  .radio-content {
-    padding: 40px 15px;
-    display: flex;
-    align-items: center;
-    .radio-content-item {
-      // display: flex;
-      flex: 1;
-      margin-right: 40px;
-      &:last-child {
-        margin-right: 0;
-      }
-      justify-content: center;
-      //  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-
-      align-items: center;
-      input {
-        display: none;
-      }
-      input:checked ~ div {
-        background: #fed566;
-        color: #fff;
-        border: none;
-      }
-      div {
-        // flex: 1;
-        font-size: 16px;
-        height: 33px;
-        box-sizing: border-box;
-        border-radius: 6px;
-        color: #666;
-        border: 1px solid #ddd;
-        text-align: center;
-        line-height: 31px;
-        cursor: pointer;
-      }
-    }
-  }
-}
 </style>
 <template>
   <div class="page-content-head">
@@ -258,7 +212,10 @@
       >
     </div>
     <div class="customers-button-gruop">
-      <el-button class="customers-button-item" icon="el-icon-refresh"
+      <el-button
+        class="customers-button-item"
+        icon="el-icon-refresh"
+        @click="openPop('turnPop')"
         >转公客</el-button
       >
       <el-button class="customers-button-item" icon="el-icon-refresh"
@@ -275,74 +232,100 @@
         >PASS客户</el-button
       >
     </div>
-    <!-- 删除 -->
-    <fixed-popup
+
+    <!-- 删除-->
+    <remove
       :visible.sync="removePop"
       v-if="removePop"
       style-type="0"
       title="删除"
       width="3.28rem"
-      @confirmEmit="confirmEmitRemovePop"
+      @transmitConfirm="removeTransmit"
+      >confirmEmitRemovePop
+    </remove>
+    <!-- 转公客-->
+    <turn-clientele
+      :visible.sync="turnPop"
+      v-if="turnPop"
+      style-type="0"
+      title="转公客"
+      width="3.28rem"
+      @transmitConfirm="turnTransmit"
     >
-      <template>
-        <div class="remove-content">
-          <div class="pop-head"><span>*</span>请选择删除客户的原因</div>
-          <div class="radio-content">
-            <label class="radio-content-item">
-              <input
-                v-model.number="removeCheck"
-                type="radio"
-                name="removePop"
-                value="0"
-              />
-              <div>客户无意向</div>
-            </label>
-            <label class="radio-content-item">
-              <input
-                v-model.number="removeCheck"
-                type="radio"
-                name="removePop"
-                value="1"
-              />
-              <div>空号</div>
-            </label>
-          </div>
-        </div>
-      </template>
-    </fixed-popup>
+    </turn-clientele>
+    <!-- 转状态 -->
+    <turn-type
+      :visible.sync="turnTypePop"
+      v-if="turnTypePop"
+      style-type="0"
+      title="转转台"
+      width="3.28rem"
+      @transmitConfirm="turnTypeTransmit"
+    >
+    </turn-type>
   </div>
 </template>
 
 <script>
 export default {
+  components: {
+    //转公客
+    turnClientele: () => import("../didLog/turnClientele"),
+    //删除
+    remove: () => import("../didLog/remove"),
+    //转状态
+    turnType: () => import("../didLog/turnType")
+  },
   data() {
     return {
-      removeCheck: "0",
+      turnPop: false, //转公客开关
       removePop: false, //删除按钮弹框开关
+      turnTypePop: true, //转状态按钮弹框开关
       impressionList: []
     };
   },
   methods: {
     /**
+     * @example: 转公客确认触发
+     */
+
+    turnTransmit() {},
+
+    /**
+     * @example: 删除弹框确认按钮
+     */
+
+    removeTransmit(e) {
+      console.log("removeTransmit -> e", e);
+    },
+
+    /**
+     * @example: 转状态弹框确认按钮
+     */
+
+    turnTypeTransmit() {},
+
+    /**
      * @example: 打开弹框
      * @param {popName} string 弹出层开关
      */
+
     openPop(popName) {
       this[popName] = true;
     },
+
     /**
-     * 删除弹框确认按钮
+     * @example: 删除印象
      */
-    confirmEmitRemovePop() {},
-    /**
-     * 删除印象
-     */
+
     removeImpression(index) {
       this.impressionList.splice(index, 1);
     },
+
     /**
-     * 添加印象
+     * @example: 添加印象
      */
+
     addImpression() {
       let _that = this;
       this.$prompt(null, "房源印象显示在房源左上角,仅自己可见", {
