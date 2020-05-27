@@ -159,7 +159,7 @@
         <left-attention
           v-model="querySelectFlag"
           :fatherMethod="queryCustomerDataLeft"
-          :parentPageType="'lookIn30Days'"
+          :parentPageType="'recycleBinCustomer'"
         ></left-attention>
       </template>
       <template v-slot:tableColumn>
