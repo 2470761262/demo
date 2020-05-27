@@ -1,34 +1,14 @@
 <style lang="less" scoped>
-.content-type {
+@import url(../../less/popScroll);
+.radio-content {
+  .radio-content();
+  .radio-content-item {
+    flex: 0 0 110px;
+  }
 }
 </style>
 <template>
-  <fixed-popup v-bind="$attrs" v-on="$listeners" @confirmEmit="confirmEmit">
-    <template>
-      <div class="content-type">
-        <div class="radio-content">
-          <label class="radio-content-item">
-            <input
-              v-model.number="Check"
-              type="radio"
-              name="removePop"
-              value="0"
-            />
-            <div>客户无意向</div>
-          </label>
-          <label class="radio-content-item">
-            <input
-              v-model.number="Check"
-              type="radio"
-              name="removePop"
-              value="1"
-            />
-            <div>空号</div>
-          </label>
-        </div>
-      </div>
-    </template>
-  </fixed-popup>
+  <div></div>
 </template>
 
 <script>

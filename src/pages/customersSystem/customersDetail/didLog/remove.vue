@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-//@import url(../customersDetail/less/popScroll);
+@import url(../../less/popScroll);
 .remove-content {
   .pop-head {
     span {
@@ -9,7 +9,7 @@
     font-size: 17px;
   }
   .radio-content {
-    //.radio-content();
+    .radio-content();
   }
 }
 </style>
