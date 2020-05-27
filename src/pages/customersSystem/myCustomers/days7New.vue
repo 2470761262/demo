@@ -156,17 +156,28 @@
         </h3>
       </template>
       <template v-slot:left>
-        <left-attention v-model="querySelectFlag"></left-attention>
+        <left-attention
+          v-model="querySelectFlag"
+          :fatherMethod="queryCustomerDataLeft"
+          :parentPageType="'days7New'"
+        ></left-attention>
       </template>
       <template v-slot:tableColumn>
         <el-table-column type="expand" width="1px">
           <template v-slot:default="props">
-            <!-- pp属性名请按照实际字段进行修改 -->
-            <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
-            <template v-if="props.row.pp && props.row.pp.length > 0">
+            <!-- 判断当前列  如果有则显示印象 且长度大于0 -->
+            <template
+              v-if="
+                myImpressions.hasOwnProperty(props.row.id) &&
+                  myImpressions[props.row.id].length > 0
+              "
+            >
               <div class="flex-expand">
                 <div class="flex-impression-content">
-                  <div v-for="(item, index) in props.row.pp" :key="index">
+                  <div
+                    v-for="(item, index) in myImpressions[props.row.id]"
+                    :key="index"
+                  >
                     {{ item }}
                   </div>
                 </div>
@@ -217,11 +228,11 @@ export default {
   },
   data() {
     return {
-      formData:{
+      formData: {
         //客户id
-        EntructId:"",
+        EntructId: "",
         //内容
-        Memo:""
+        Memo: ""
       },
       //点击写跟进后，用来保存当前行的数据的临时变量
       activeProdata: null,
@@ -365,7 +376,7 @@ export default {
           width: "300px",
           order: false,
           fixed: true,
-          formart: (e) => {
+          formart: e => {
             return (
               <div>
                 <el-button type="primary" size="mini" icon="el-icon-phone">
@@ -378,7 +389,7 @@ export default {
                   type="danger"
                   size="mini"
                   icon="el-icon-edit"
-                  onClick={this.openPop.bind(this, "writeFlag",e)}
+                  onClick={this.openPop.bind(this, "writeFlag", e)}
                 >
                   写跟进
                 </el-button>
@@ -400,7 +411,7 @@ export default {
         //   pp: ["活跃呵护", "心机汪", "一是同行"]
         // }
       ], //存放表格数据
-     
+
       queryData: {
         tel: "",
         selectedPairParams: [], //带看多选条件
@@ -415,7 +426,10 @@ export default {
         minLastPairFollowTime: null, //最大带看时间条件
         maxLastPairFollowTime: null //最大带看时间条件
       },
-      pairTime: null
+      pairTime: null,
+      queryParams: {},
+      customerParams: {}, //左侧印象选中的条件
+      myImpressions: {}
     };
   },
   watch: {
@@ -444,7 +458,7 @@ export default {
               houseNumbers.push(v);
             }
           }
-          let v = {
+          this.queryParams = {
             tel: this.queryData.tel,
             houseNumbers: houseNumbers,
             pairNumbers: this.queryData.selectedPairParams,
@@ -453,10 +467,10 @@ export default {
             maxPrice: this.queryData.maxPrice,
             minArea: this.queryData.minArea,
             maxArea: this.queryData.maxArea,
-            minLastPairFollowTime: this.queryData.minLastPairFollowTime,
-            maxLastPairFollowTime: this.queryData.maxLastPairFollowTime
+            minAddTime: this.queryData.minAddTime,
+            maxAddTime: this.queryData.maxAddTime
           };
-          this.queryCustomerData(v);
+          this.queryCustomerData(1);
         }
       },
       deep: true
@@ -478,7 +492,7 @@ export default {
   },
   mounted() {
     this.$nextTick(setImpression);
-    this.queryCustomerData();
+    this.queryCustomerData(1);
   },
   methods: {
     toCustomerDetail(item) {
@@ -494,20 +508,28 @@ export default {
         params: { customerId: id }
       });
     },
-    queryCustomerData(params) {
+    queryCustomerDataLeft(p) {
       let _that = this;
-      let queryParams = Object.assign(
-        {
-          page: _that.pageJson.currentPage,
-          limit: _that.pageJson.pageSize,
-          minAddTime: new Date().setDate(new Date().getDate() - 7)
-        },
-        params
-      );
+      console.log(p, "右侧印象触发查询");
+      if (p) {
+        this.customerParams = p;
+      } else {
+        this.customerParams = {};
+      }
+      this.queryCustomerData(1);
+    },
+    queryCustomerData(page) {
+      let _that = this;
+      _that.queryParams = Object.assign(_that.queryParams, {
+        page: page,
+        limit: _that.pageJson.pageSize,
+        del: 0,
+        minAddTime: new Date().setDate(new Date().getDate() - 7)
+      });
       _that.$api
         .post({
           url: "/saleCustomer/listMyCustomers",
-          data: queryParams,
+          data: Object.assign(_that.queryParams, _that.customerParams),
           headers: { "Content-Type": "application/json" }
         })
         .then(e => {
@@ -517,6 +539,7 @@ export default {
             var dataCustomers = result.data.data;
             _that.tableData = dataCustomers;
             _that.pageJson.total = result.data.dataCount;
+            _that.myImpressions = result.data.myImpression;
             //result.data.pageSum
           } else {
             console.log("查询客源列表（七日内新增）" + result.message);
@@ -535,16 +558,16 @@ export default {
     confirmEmit(e) {
       let _that = this;
       //获取文本值
-      let textarea=e.textarea;
+      let textarea = e.textarea;
       //获取当前行的值
-      let activeProdata=_that.activeProdata;
+      let activeProdata = _that.activeProdata;
       //获取当前客户id
-      let cid=activeProdata.id;
+      let cid = activeProdata.id;
       // console.log(_that.activeProdata)
-      _that.formData.EntructId=cid;
-      _that.formData.Memo=textarea;
+      _that.formData.EntructId = cid;
+      _that.formData.Memo = textarea;
       _that.$api
-       .post({
+        .post({
           url: "/saleCustomer/addSaleCusFlower",
           data: _that.formData,
           headers: { "Content-Type": "application/json" }
@@ -583,10 +606,10 @@ export default {
      * @example: 打开弹框
      * @param {string} popName
      */
-    openPop(popName,e) {
+    openPop(popName, e) {
       let _that = this;
       //把当前行的值保存到临时变量activeProdata
-      _that.activeProdata=e;
+      _that.activeProdata = e;
       this[popName] = true;
     },
     triggerChange() {
@@ -609,12 +632,17 @@ export default {
      * @param {number} e
      * 设置一页显示多少个
      */
-    handleSizeChange(e) {},
+    handleSizeChange(e) {
+      this.pageJson.pageSize = e;
+      this.queryCustomerData(1);
+    },
     /**
      * 前往多少页
      * @param {number} e
      */
-    handleCurrentChange(e) {}
+    handleCurrentChange(e) {
+      this.queryCustomerData(e);
+    }
   }
 };
 </script>
