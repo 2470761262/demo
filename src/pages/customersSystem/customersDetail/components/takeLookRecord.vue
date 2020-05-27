@@ -121,11 +121,14 @@
     </div>
     <div class="record-content-foot">
       <el-button class="task-button">取消再谈</el-button>
-      <el-button class="task-button">预约带看</el-button>
+      <el-button class="task-button" @click="openPop('reserveFlag')"
+        >预约带看</el-button
+      >
       <el-button class="task-button" @click="openPop('beltlookFlag')"
         >添加带看</el-button
       >
     </div>
+    <!-- 添加带看 -->
     <add-belt-look
       :visible.sync="beltlookFlag"
       v-if="beltlookFlag"
@@ -134,6 +137,16 @@
       width="4.63rem"
     >
     </add-belt-look>
+
+    <!-- 预约带看 -->
+    <reserve-belt-look
+      :visible.sync="reserveFlag"
+      v-if="reserveFlag"
+      title="预约带看"
+      style-type="0"
+      width="4.63rem"
+    >
+    </reserve-belt-look>
   </div>
 </template>
 
@@ -143,10 +156,13 @@ export default {
   components: {
     leftProgress,
     //添加带看
-    addBeltLook: () => import("../../components/addBeltLook")
+    addBeltLook: () => import("../../components/addBeltLook"),
+    //预约带看
+    reserveBeltLook: () => import("../../components/reserveBeltLook")
   },
   data() {
     return {
+      reserveFlag: true, //预约带看弹框开关
       beltlookFlag: false // 添加带看弹框开关
     };
   },

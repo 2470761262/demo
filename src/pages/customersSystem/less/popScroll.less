@@ -76,3 +76,37 @@
       }
     }
   }
+
+ 
+  .belt-content() {
+    padding: 15px 0;
+    .belt-content-item {
+      display: flex;
+      align-items: center;
+      margin-top: 30px;
+      &:first-child {
+        margin-top: 0;
+      }
+      .item-require {
+        color: red;
+        margin-right: 10px;
+        font-size: 20px;
+      }
+      .item-right {
+        flex: 1;
+        .item-picker {
+          width: 100%;
+        }
+        .check-content {
+          display: flex;
+          font-size: 16px;
+          color: #666;
+          align-items: center;
+          .label-content {
+            flex: 1;
+            margin-left: 50px;
+          }
+        }
+      }
+    }
+  }
