@@ -25,6 +25,7 @@
               range-separator="至"
               start-placeholder="选择开始时间"
               end-placeholder="选择结束时间"
+              value-format="yyyy-MM-dd HH:mm:ss"
             >
             </el-date-picker>
           </div>
@@ -120,18 +121,59 @@ export default {
   },
   methods: {
     confirmEmit() {
-      let that = this;
+      let _that = this;
       this.$validator.validateAll().then(e => {
         if (!e) return;
         if (this.customerId && this.customerId != 0) {
           //在该组件内响应添加带看
           console.log(this.customerId, "添加带看在组件内响应");
-          this.$emit("update:visible", false);
+          console.log(this.accompanyResult, "陪同人");
+          console.log(this.cascaderResult, "带看楼盘");
+          console.log(this.beltTime, "带看时间");
+          // this.cascaderResult[0].value//楼盘id
+          // this.cascaderResult[1].value//楼栋id
+          // this.cascaderResult[2].value//房间id
+          let params = {
+            houseEid: 70,
+            memo: _that.textarea,
+            startTime: _that.beltTime[0],
+            endTime: _that.beltTime[0],
+            cusEid: _that.customerId,
+            dzTogether: this.accompanyResult[0].key
+          };
+          _that.$api
+            .post({
+              url: "/saleCustomer/addPairRecord",
+              data: params,
+              headers: { "Content-Type": "application/json" }
+            })
+            .then(e => {
+              let result = e.data;
+              _that.$message({
+                type: "info",
+                message: result.message
+              });
+              if (result.code == 200) {
+                console.log(result, "添加带看");
+                this.$emit("update:visible", false);
+              } else {
+                console.log("录入客源" + result.message);
+                _that.$message({
+                  type: "info",
+                  message: result.message
+                });
+              }
+            })
+            .catch(e => {
+              console.log("录入客源失败catch");
+              console.log(e);
+            })
+            .finally(() => {});
         } else {
           console.log(
             "添加带看在父组件内响应，请在父组件内注册事件confirmAddLook"
           );
-          that.$emit("confirmAddLook", this.$data);
+          _that.$emit("confirmAddLook", this.$data);
         }
       });
     }

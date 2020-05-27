@@ -47,7 +47,11 @@ export default {
     return {
       accompany: "",
       focusFlag: false,
-      accompanyList: [{ key: 1, value: "李政橙", type: "房源跟单方" }] //测试数据
+      accompanyList: [
+        { key: -1, value: "无", type: "" },
+        { key: 2, value: "跟单人", type: "房源跟单方" },
+        { key: 1, value: "跟单人店长", type: "店长" }
+      ]
     };
   },
   methods: {
