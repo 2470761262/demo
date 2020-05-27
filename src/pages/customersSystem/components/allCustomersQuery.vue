@@ -447,6 +447,7 @@
 </template>
 
 <script>
+import util from "@/util/util";
 export default {
   props: {
     fatherMethod: {
@@ -809,7 +810,8 @@ export default {
         this.minArea = this.maxArea = null;
         return;
       }
-      this.fatherMethod({
+      let allParams = {
+        page: 1,
         keyWord: this.form.keyWord,
         pairNumbers: this.selectedPairParams,
         desireIntensitys: this.selectedDesireIntensitys,
@@ -822,7 +824,15 @@ export default {
         maxAddTime: this.maxAddTime,
         minLastPairFollowTime: this.minLastPairFollowTime,
         maxLastPairFollowTime: this.maxLastPairFollowTime
-      });
+      };
+      let otherParams = util.localStorageGet(
+        "customers:allCustomers:impressionSelected"
+      );
+      util.localStorageSet("customers:allCustomers:allParams", allParams);
+      if (otherParams) {
+        allParams = Object.assign(allParams, otherParams);
+      }
+      this.fatherMethod(allParams);
     },
     search() {
       console.log("点击关键词搜索按钮的搜索");

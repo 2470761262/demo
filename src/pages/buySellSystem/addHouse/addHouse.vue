@@ -366,8 +366,31 @@ export default {
               //console.log("0000000000", element.rUrl);
               //but.$emit("wxUploadFile");
               that.wxUploadFile = true;
+              if (this.paramsObj.editUrl) {
+                //编辑
+                this.getEditHousePicture();
+              }
             }
           });
+        })
+        .catch(() => {});
+    },
+    getEditHousePicture() {
+      this.$api;
+      this.wxUploadFile = false;
+      this.$api
+        .post({
+          url: `/agent_house/editHousePicture`,
+          headers: { "Content-Type": "application/json" },
+          data: {
+            id: this.$store.state.addHouse.formData.id
+          }
+        })
+        .then(e => {
+          console.log(e);
+          if (e.data.code == 200) {
+            this.wxUploadFile = e.data.data;
+          }
         })
         .catch(() => {});
     }

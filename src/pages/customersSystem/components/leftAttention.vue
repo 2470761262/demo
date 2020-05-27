@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 <style lang="less" scoped>
 .attention-content {
   margin-right: 15px;
@@ -95,17 +96,18 @@
           ></el-paging-select>
         </div>
         <div class="but-group">
-          <el-button type="text">一键还原</el-button>
-          <el-button type="text">一键清除</el-button>
+          <el-button type="text" @click="restore">一键还原</el-button>
+          <el-button type="text" @click="restore">一键清除</el-button>
         </div>
         <div class="attention-scroll-content">
           <el-tag
-            v-for="item in 6"
-            :key="item.index"
+            v-for="item in selectedImpressions"
+            :key="item.id"
             size="small"
+            @close="closeImpression(item.id)"
             class="scroll-content-tag"
             closable
-            >活跃客户(3)</el-tag
+            >{{ item.impression }}</el-tag
           >
         </div>
       </div>
@@ -119,6 +121,7 @@
 </template>
 
 <script>
+import util from "@/util/util";
 export default {
   model: {
     prop: "queryFlag",
@@ -127,6 +130,10 @@ export default {
   props: {
     queryFlag: {
       type: Boolean
+    },
+    fatherMethod: {
+      type: Function,
+      default: null
     }
   },
   data() {
@@ -135,18 +142,93 @@ export default {
       selectPage: 0,
       impressionIsPageEnd: false,
       loadingImpression: false,
-      myImpressionsList: []
+      myImpressionsList: [],
+      selectedImpressions: []
     };
   },
-  mounted() {},
-  methods: {
-    selectImpressionChange(value) {
-      //选择印象后
-      if (value) {
-        this.$message({
-          message: "您选择了" + value,
-          type: "success"
+  watch: {
+    selectedImpressions: function(val) {
+      let otherParams = util.localStorageGet("customers:query:allParams");
+      let customerIds = [];
+      if (val.length > 0) {
+        console.log(val, "准备通过印象搜索");
+        val.forEach((item, index) => {
+          customerIds.push(item.customerId);
         });
+        console.log(customerIds, "条件，客户id：");
+        util.localStorageSet("customers:allCustomers:impressionSelected", {
+          customerIds: customerIds
+        });
+      } else {
+        util.localStorageRemove("customers:allCustomers:impressionSelected");
+      }
+      if (this.fatherMethod) {
+        let queryParams = { customerIds: customerIds, page: 1 };
+        if (otherParams) {
+          queryParams = Object.assign(queryParams, otherParams);
+        }
+        this.fatherMethod(queryParams);
+      } else {
+        console.log("无法调用父组件方法，因为未初始化");
+      }
+    }
+  },
+  mounted() {
+    util.localStorageRemove("customers:query:impressionSelected");
+  },
+  methods: {
+    restore() {
+      this.selectedImpressions = [];
+    },
+    closeImpression(id) {
+      let that = this;
+      that.selectedImpressions.forEach((item, index) => {
+        if (item.id == id) {
+          that.selectedImpressions.splice(index, 1);
+          return;
+        }
+      });
+    },
+    selectImpressionChange(value) {
+      let that = this;
+      if (value) {
+        this.$api
+          .get({
+            url: "/saleCustomerImpression/" + value,
+            qs: true
+          })
+          .then(e => {
+            let result = e.data;
+            console.log(result, "选择了某个印象");
+            if (result.code == 200) {
+              let hasSelected = false;
+              that.selectedImpressions.forEach((item, index) => {
+                if (item.id == value) {
+                  that.$message({
+                    message: "已经选择过了",
+                    type: "info"
+                  });
+                  hasSelected = true;
+                }
+              });
+              if (!hasSelected) {
+                that.selectedImpressions.push(result.data);
+              }
+            } else {
+              that.$message({
+                message: result.message,
+                type: "info"
+              });
+              console.log("查询我的客户then：" + result.message);
+            }
+          })
+          .catch(e => {
+            console.log("查询我的客户印象失败catch");
+            console.log(e);
+          })
+          .finally(() => {
+            this.loadingImpression = false;
+          });
       }
     },
     queryMyImpressionList(name, type) {

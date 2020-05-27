@@ -30,7 +30,10 @@
       </h3>
     </template>
     <template v-slot:left>
-      <left-attention v-model="querySelectFlag"></left-attention>
+      <left-attention
+        v-model="querySelectFlag"
+        :fatherMethod="queryCustomerData"
+      ></left-attention>
     </template>
     <template v-slot:tableColumn>
       <el-table-column type="expand" width="1px">
@@ -81,6 +84,7 @@ import listPage from "@/components/listPage";
 import allCustomersQuery from "../components/allCustomersQuery";
 import leftAttention from "../components/leftAttention";
 import { setImpression } from "@/util/tabUtil";
+import util from "@/util/util";
 export default {
   components: {
     listPage,
@@ -220,7 +224,7 @@ export default {
     let _that = this;
     _that.$nextTick(setImpression);
     _that.pageJson.currentPage = 1;
-    _that.queryCustomerData({});
+    _that.queryCustomerData({ page: 1 });
     _that.staticsMyCustomerData();
   },
   methods: {
@@ -266,7 +270,7 @@ export default {
     queryCustomerData(params) {
       let _that = this;
       let queryParams = Object.assign(
-        { page: _that.pageJson.currentPage, limit: _that.pageJson.pageSize },
+        { limit: _that.pageJson.pageSize },
         params
       );
       _that.$api
@@ -316,12 +320,30 @@ export default {
      * @param {number} e
      * 设置一页显示多少个
      */
-    handleSizeChange(e) {},
+    handleSizeChange(e) {
+      this.pageJson.pageSize = e;
+      console.log(e, "xxxxxxxxxxxxxxxxxxxxx");
+      this.queryCustomerData({ page: 1 });
+    },
     /**
      * 前往多少页
      * @param {number} e
      */
-    handleCurrentChange(e) {}
+    handleCurrentChange(e) {
+      this.pageJson.currentPage = e;
+      let p2 = util.localStorageGet(
+        "customers:allCustomers:impressionSelected"
+      );
+      let p1 = util.localStorageGet("customers:allCustomers:allParams");
+      let p = {};
+      if (p2) {
+        p = Object.assign(p, p2);
+      }
+      if (p1) {
+        p = Object.assign(p, p1);
+      }
+      this.queryCustomerData({ page: this.pageJson.currentPage });
+    }
   }
 };
 </script>

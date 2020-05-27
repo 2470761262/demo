@@ -52,6 +52,7 @@
           </el-image>
           <div
             class="upLoadFile-remove el-icon-delete anchor-point"
+            v-if="isFromHouseTask ? true : wxUploadFile"
             @click="deleteImg(item.id, item.url, index, 'outdoorImgList')"
           ></div>
         </div>
@@ -110,6 +111,7 @@
           </el-image>
           <div
             class="upLoadFile-remove el-icon-delete anchor-point"
+            v-if="isFromHouseTask ? true : wxUploadFile"
             @click="deleteImg(item.id, item.url, index, 'livingRoomImgList')"
           ></div>
         </div>
@@ -168,6 +170,7 @@
           </el-image>
           <div
             class="upLoadFile-remove el-icon-delete anchor-point"
+            v-if="isFromHouseTask ? true : wxUploadFile"
             @click="deleteImg(item.id, item.url, index, 'bedroomImgList')"
           ></div>
         </div>
@@ -226,6 +229,7 @@
           </el-image>
           <div
             class="upLoadFile-remove el-icon-delete anchor-point"
+            v-if="isFromHouseTask ? true : wxUploadFile"
             @click="deleteImg(item.id, item.url, index, 'kitchenImgList')"
           ></div>
         </div>
@@ -284,6 +288,7 @@
           </el-image>
           <div
             class="upLoadFile-remove el-icon-delete anchor-point"
+            v-if="isFromHouseTask ? true : wxUploadFile"
             @click="deleteImg(item.id, item.url, index, 'toiletImgList')"
           ></div>
         </div>
@@ -342,6 +347,7 @@
           </el-image>
           <div
             class="upLoadFile-remove el-icon-delete anchor-point"
+            v-if="isFromHouseTask ? true : wxUploadFile"
             @click="deleteImg(item.id, item.url, index, 'layoutImgList')"
           ></div>
         </div>
@@ -388,6 +394,7 @@
               <video :src="houseVideo.url" @click="imgdiaLog = true"></video>
               <div
                 class="upLoadFile-remove el-icon-delete anchor-point"
+                v-if="isFromHouseTask ? true : wxUploadFile"
                 @click="deleteVideo(houseVideo)"
               ></div>
             </div>
