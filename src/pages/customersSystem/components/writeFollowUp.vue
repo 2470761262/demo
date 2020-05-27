@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       textarea: "",
-      activeProData:null
+      activeProData: null
     };
   },
   methods: {
@@ -47,8 +47,8 @@ export default {
       this.$emit("followConfirmEmit", this);
       this.close();
     },
-    close(){
-      this.$emit("update:visible",false);
+    close() {
+      this.$emit("update:visible", false);
     }
   }
 };

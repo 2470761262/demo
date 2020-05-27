@@ -277,7 +277,7 @@
             {{ scope.row.checkMemo }}
           </template>
         </el-table-column>
-        <el-table-column label="举报说明" v-if="checkProject=='11'">
+        <el-table-column label="举报说明" v-if="checkProject == '11'">
           <template v-slot="scope">
             {{ scope.row.ownerMemo }}
           </template>

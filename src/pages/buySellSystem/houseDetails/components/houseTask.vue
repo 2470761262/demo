@@ -166,11 +166,7 @@
         data-detail="跟单人"
       >
         <template
-          v-if="
-            resultData.agentPerName != null &&
-              resultData.plate != 1 &&
-              resultData.plate != 4
-          "
+          v-if="resultData.agentPerName != null && resultData.plate == 0"
         >
           <el-image
             class="task-pro-img"

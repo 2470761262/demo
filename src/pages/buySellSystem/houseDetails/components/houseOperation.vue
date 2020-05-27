@@ -485,7 +485,7 @@ export default {
       let that = this;
       let params = {
         page: that.pair.page,
-        limit: 7,
+        limit: 8,
         houseId: that.houseId.id
       };
       this.$api

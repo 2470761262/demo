@@ -87,6 +87,16 @@
       @followConfirmEmit="confirmEmit"
       width="4.63rem"
     ></write-follow-up>
+    <!-- 添加带看 -->
+    <add-belt-look
+      :visible.sync="beltlookFlag"
+      v-if="beltlookFlag"
+      title="添加带看"
+      style-type="0"
+      width="4.63rem"
+      v-bind:customerId="currentClickCustomerId"
+    >
+    </add-belt-look>
   </div>
 </template>
 
@@ -101,7 +111,9 @@ export default {
     listPage,
     allCustomersQuery,
     leftAttention,
-    writeFollowUp: () => import("../components/writeFollowUp")
+    writeFollowUp: () => import("../components/writeFollowUp"),
+    //添加带看
+    addBeltLook: () => import("@/pages/customersSystem/components/addBeltLook")
   },
   data() {
     return {
@@ -111,6 +123,9 @@ export default {
         //内容
         Memo: ""
       },
+      currentClickCustomerId: 0,
+      beltlookFlag: false,
+
       queryParamsGroup: [
         {
           未带看: 0,
@@ -207,20 +222,25 @@ export default {
           width: "300px",
           order: false,
           fixed: true,
-          formart: e => {
+          formart: (row, column) => {
             return (
               <div>
                 <el-button type="primary" size="mini" icon="el-icon-phone">
                   一键拨号
                 </el-button>
-                <el-button type="warning" size="mini" icon="el-icon-date">
-                  预约带看
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onClick={this.openBetAdd.bind(this, row.id)}
+                >
+                  添加带看
                 </el-button>
                 <el-button
                   type="danger"
                   size="mini"
                   icon="el-icon-edit"
-                  onclick={this.openPop.bind(this, "writeFlag", e)}
+                  onclick={this.openPop.bind(this, "writeFlag", row)}
                 >
                   写跟进
                 </el-button>
@@ -253,6 +273,13 @@ export default {
     _that.staticsMyCustomerData();
   },
   methods: {
+    openBetAdd(customerId) {
+      this.currentClickCustomerId = customerId;
+      this.beltlookFlag = true;
+    },
+    confirmAddLook(e) {
+      console.log(e, "eeeeeeeeeeeeee");
+    },
     toCustomerDetail(item) {
       let id = item.id;
       if (!item.id) {
