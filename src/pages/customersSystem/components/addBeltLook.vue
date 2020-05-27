@@ -113,7 +113,11 @@ export default {
   },
   methods: {
     confirmEmit() {
-      this.$validator.validateAll().then(e => {});
+      this.close();
+      //   this.$validator.validateAll().then(e => {
+      //     if (!e) return;
+      //     console.log("验证通过");
+      //   });
     }
   }
 };

@@ -131,14 +131,13 @@
           border-radius: 30px;
           padding: 0;
           border: none;
+          margin-left: 0;
           &:nth-child(1) {
             background: #cccccc;
+            margin-right: 20px;
           }
           &:nth-child(2) {
             background: @style2;
-          }
-          & + .floot-btn {
-            margin-left: 20px;
           }
         }
       }
@@ -178,7 +177,7 @@
               <el-button
                 class="floot-btn"
                 type="info"
-                v-if="mergeConfig.cancelBtnShow"
+                v-show="mergeConfig.cancelBtnShow"
                 @click="close"
                 >{{ mergeConfig.cancelBtnText }}</el-button
               >
@@ -186,7 +185,7 @@
                 class="floot-btn"
                 type="info"
                 @click="confirm"
-                v-if="mergeConfig.confirmBtnShow"
+                v-show="mergeConfig.confirmBtnShow"
                 >{{ mergeConfig.confirmBtnText }}</el-button
               >
             </div>

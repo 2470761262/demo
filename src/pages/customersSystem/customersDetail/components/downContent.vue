@@ -18,6 +18,10 @@
       width: 35px;
       border-radius: 50%;
       background: #fff;
+      line-height: 35px;
+      font-size: 20px;
+      text-align: center;
+      color: #666;
     }
   }
   .cascader-content-foot {
@@ -37,7 +41,7 @@
 <template>
   <div class="cascader-content">
     <div class="cascader-content-head">
-      <div class="head-icon"></div>
+      <div class="head-icon" :class="iconClass"></div>
       <slot name="head"></slot>
     </div>
     <div class="cascader-content-foot" v-show="downUlFlag">
@@ -48,6 +52,6 @@
 
 <script>
 export default {
-  props: ["downUlFlag"]
+  props: ["downUlFlag", "iconClass"]
 };
 </script>

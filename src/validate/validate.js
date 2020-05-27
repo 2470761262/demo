@@ -96,15 +96,17 @@ Validator.extend("chineseLen", {
 
 //级联
 Validator.extend("cascader", {
-  compare: ["length", "errorMsg", "nowLength"],
+  compare: ["length", "errorMsg", "nowLength", "continue"],
   messages: {
     zh_CN: (field, args) => {
-      console.log(field, args);
       return args[1][args[2]] + "不能为空";
     }
   },
   validate: (value, compare) => {
-    console.log("value, compare", value, compare);
+    //因为数据是数据，veevalidate不能像string那样来正常跳过验证
+    if (compare[3] != undefined && compare[3]) {
+      return true;
+    }
     return value.length > compare[0];
   }
 });

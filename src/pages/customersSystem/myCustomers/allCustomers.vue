@@ -273,6 +273,7 @@ export default {
         { limit: _that.pageJson.pageSize },
         params
       );
+      console.log(this);
       _that.$api
         .post({
           url: "/saleCustomer/listMyCustomers",
