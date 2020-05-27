@@ -65,6 +65,7 @@
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   border-radius: 30px;
   background: #fff;
+  z-index: 2000;
   p {
     &:nth-child(1) {
       margin-bottom: 5px;
