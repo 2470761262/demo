@@ -2,81 +2,92 @@
 @import url("../less/custTab.less");
 </style>
 <template>
-  <!-- 
-      :expand-row-keys='[1,3]'
-      row-key="id"
-  -->
-  <list-Page
-    :parentData="$data"
-    @sort-change="sortMethod"
-    :border="true"
-    default-expand-all
-    :cellClass="cellClass"
-    headerClass="headerCellSet1"
-    @handleCurrentChange="handleCurrentChange"
-    @handleSizeChange="handleSizeChange"
-    :dblclick="true"
-    @cellDblClick="toCustomerDetail"
-  >
-    <template v-slot:top>
-      <allCustomersQuery
-        :fatherMethod="queryCustomerData"
-        :fatherQueryGroup="queryParamsGroup"
-      ></allCustomersQuery>
-    </template>
-    <template v-slot:title>
-      <h3 class="page-tab-title">
-        <i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span>
-      </h3>
-    </template>
-    <template v-slot:left>
-      <left-attention
-        v-model="querySelectFlag"
-        :fatherMethod="queryCustomerData"
-      ></left-attention>
-    </template>
-    <template v-slot:tableColumn>
-      <el-table-column type="expand" width="1px">
-        <template v-slot:default="props">
-          <!-- 判断当前列是否有  如果有则显示印象 且长度大于0 -->
-          <template
-            v-if="
-              myImpressions.hasOwnProperty(props.row.id) &&
-                myImpressions[props.row.id].length > 0
-            "
-          >
-            <div class="flex-expand">
-              <div class="flex-impression-content">
-                <div
-                  v-for="(item, index) in myImpressions[props.row.id]"
-                  :key="index"
-                >
-                  {{ item }}
-                </div>
-              </div>
-              <label class="trigger-impression-btn">
-                <input type="checkbox" />
-                <i class="iconfont"></i>
-              </label>
-            </div>
-          </template>
-        </template>
-      </el-table-column>
-      <template v-for="item in tableColumn">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :min-width="item.width"
-          :key="item.prop"
-          :formatter="item.formart"
-          show-overflow-tooltip
-          :fixed="item.fixed ? 'right' : false"
-          :sort-orders="['ascending', 'descending']"
-          :sortable="item.order"
-        ></el-table-column>
+  <div>
+    <!-- 
+        :expand-row-keys='[1,3]'
+        row-key="id"
+    -->
+    <list-Page
+      :parentData="$data"
+      @sort-change="sortMethod"
+      :border="true"
+      default-expand-all
+      :cellClass="cellClass"
+      headerClass="headerCellSet1"
+      @handleCurrentChange="handleCurrentChange"
+      @handleSizeChange="handleSizeChange"
+      :dblclick="true"
+      @cellDblClick="toCustomerDetail"
+    >
+      <template v-slot:top>
+        <allCustomersQuery
+          :fatherMethod="queryCustomerData"
+          :fatherQueryGroup="queryParamsGroup"
+        ></allCustomersQuery>
       </template>
-    </template>
-  </list-Page>
+      <template v-slot:title>
+        <h3 class="page-tab-title">
+          <i class="iconzaishouwugendan iconfont"></i>
+          <span>客源列表</span>
+        </h3>
+      </template>
+      <template v-slot:left>
+        <left-attention
+          v-model="querySelectFlag"
+          :fatherMethod="queryCustomerData"
+        ></left-attention>
+      </template>
+      <template v-slot:tableColumn>
+        <el-table-column type="expand" width="1px">
+          <template v-slot:default="props">
+            <!-- 判断当前列是否有  如果有则显示印象 且长度大于0 -->
+            <template
+              v-if="
+                myImpressions.hasOwnProperty(props.row.id) &&
+                  myImpressions[props.row.id].length > 0
+              "
+            >
+              <div class="flex-expand">
+                <div class="flex-impression-content">
+                  <div
+                    v-for="(item, index) in myImpressions[props.row.id]"
+                    :key="index"
+                  >
+                    {{ item }}
+                  </div>
+                </div>
+                <label class="trigger-impression-btn">
+                  <input type="checkbox" />
+                  <i class="iconfont"></i>
+                </label>
+              </div>
+            </template>
+          </template>
+        </el-table-column>
+        <template v-for="item in tableColumn">
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :min-width="item.width"
+            :key="item.prop"
+            :formatter="item.formart"
+            show-overflow-tooltip
+            :fixed="item.fixed ? 'right' : false"
+            :sort-orders="['ascending', 'descending']"
+            :sortable="item.order"
+          ></el-table-column>
+        </template>
+      </template>
+    </list-Page>
+    <write-follow-up
+      v-if="writeFlag"
+      :visible.sync="writeFlag"
+      title="写跟进"
+      style-type="0"
+      @followConfirmEmit="confirmEmit"
+      width="4.63rem"
+    ></write-follow-up>
+  </div>
 </template>
 
 <script>
@@ -89,10 +100,17 @@ export default {
   components: {
     listPage,
     allCustomersQuery,
-    leftAttention
+    leftAttention,
+    writeFollowUp: () => import("../components/writeFollowUp")
   },
   data() {
     return {
+      formData: {
+        //客户id
+        EntructId: "",
+        //内容
+        Memo: ""
+      },
       queryParamsGroup: [
         {
           未带看: 0,
@@ -107,6 +125,8 @@ export default {
       ],
       querySelectFlag: true,
       loading: false,
+      activeProdata: null, //点击写跟进后，用来保存当前行的数据的临时变量
+      writeFlag: false, //写跟进弹框开关
       pageJson: {
         currentPage: 1, //当前页码
         total: 50, //总记录数
@@ -187,7 +207,7 @@ export default {
           width: "300px",
           order: false,
           fixed: true,
-          formart: () => {
+          formart: e => {
             return (
               <div>
                 <el-button type="primary" size="mini" icon="el-icon-phone">
@@ -196,7 +216,12 @@ export default {
                 <el-button type="warning" size="mini" icon="el-icon-date">
                   预约带看
                 </el-button>
-                <el-button type="danger" size="mini" icon="el-icon-edit">
+                <el-button
+                  type="danger"
+                  size="mini"
+                  icon="el-icon-edit"
+                  onclick={this.openPop.bind(this, "writeFlag", e)}
+                >
                   写跟进
                 </el-button>
               </div>
@@ -263,6 +288,58 @@ export default {
         })
         .catch(e => {
           console.log("统计我的客源失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
+    /**
+     * @example: 打开弹框
+     * @param {string} popName
+     */
+    openPop(popName, e) {
+      let _that = this;
+      // //把当前行的值保存到临时变量activeProdata
+      _that.activeProdata = e;
+      this[popName] = true;
+    },
+    confirmEmit(e) {
+      let _that = this;
+      //获取文本值
+      let textarea = e.textarea;
+      //获取当前行的值
+      let activeProdata = _that.activeProdata;
+      //获取当前客户id
+      let cid = activeProdata.id;
+      _that.formData.EntructId = cid;
+      _that.formData.Memo = textarea;
+      _that.$api
+        .post({
+          url: "/saleCustomer/addSaleCusFlower",
+          data: _that.formData,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          _that.$message({
+            type: "info",
+            message: result.message
+          });
+          if (result.code == 200) {
+            console.log(result, "写跟进");
+            _that.$message({
+              type: "success",
+              message: result.message
+            });
+          } else {
+            console.log("写跟进" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("写跟进失败catch");
           console.log(e);
         })
         .finally(() => {});
