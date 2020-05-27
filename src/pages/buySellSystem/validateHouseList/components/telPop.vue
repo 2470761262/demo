@@ -2,6 +2,7 @@
 .didLog {
   /deep/.didLog-content-sroll {
     padding: 0 !important;
+    width: 350px;
   }
 }
 .pop-custome-head {
@@ -36,6 +37,7 @@
   border-bottom: 1px solid #dddddd;
   display: flex;
   .pop-custome-head {
+    width: 100%;
     padding-left: 0;
     margin-bottom: 0;
   }

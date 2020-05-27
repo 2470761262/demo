@@ -212,6 +212,13 @@ export default {
   },
   data() {
     return {
+      formData: {
+        //客户id
+        EntructId: "",
+        //内容
+        Memo: ""
+      },
+      activeProdata: null, //点击写跟进后，用来保存当前行的数据的临时变量
       queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       writeFlag: false, //写跟进弹框开关
       sssss: "", //请按照实际字段名进行修改，
@@ -351,7 +358,7 @@ export default {
           width: "300px",
           order: false,
           fixed: true,
-          formart: () => {
+          formart: e => {
             return (
               <div>
                 <el-button type="primary" size="mini" icon="el-icon-phone">
@@ -364,7 +371,7 @@ export default {
                   type="danger"
                   size="mini"
                   icon="el-icon-edit"
-                  onClick={this.openPop.bind(this, "writeFlag")}
+                  onClick={this.openPop.bind(this, "writeFlag", e)}
                 >
                   写跟进
                 </el-button>
@@ -527,15 +534,53 @@ export default {
         })
         .finally(() => {});
     },
-    confirmEmit(e) {
-      console.log("写跟进确定", e);
-    },
-    /**
-     * @example: 打开弹框
-     * @param {string} popName
-     */
-    openPop(popName) {
+    openPop(popName, e) {
+      let _that = this;
+      // //把当前行的值保存到临时变量activeProdata
+      _that.activeProdata = e;
       this[popName] = true;
+    },
+    confirmEmit(e) {
+      let _that = this;
+      //获取文本值
+      let textarea = e.textarea;
+      //获取当前行的值
+      let activeProdata = _that.activeProdata;
+      //获取当前客户id
+      let cid = activeProdata.id;
+      _that.formData.EntructId = cid;
+      _that.formData.Memo = textarea;
+      _that.$api
+        .post({
+          url: "/saleCustomer/addSaleCusFlower",
+          data: _that.formData,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          _that.$message({
+            type: "info",
+            message: result.message
+          });
+          if (result.code == 200) {
+            console.log(result, "写跟进");
+            _that.$message({
+              type: "success",
+              message: result.message
+            });
+          } else {
+            console.log("写跟进" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("写跟进失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
     },
     triggerChange() {
       this.changeQuery = !this.changeQuery;

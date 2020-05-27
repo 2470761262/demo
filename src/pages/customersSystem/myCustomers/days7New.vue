@@ -234,8 +234,7 @@ export default {
         //内容
         Memo: ""
       },
-      //点击写跟进后，用来保存当前行的数据的临时变量
-      activeProdata: null,
+      activeProdata: null, //点击写跟进后，用来保存当前行的数据的临时变量
       queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       writeFlag: false, //写跟进弹框开关
       sssss: "", //请按照实际字段名进行修改，
@@ -389,7 +388,7 @@ export default {
                   type="danger"
                   size="mini"
                   icon="el-icon-edit"
-                  onClick={this.openPop.bind(this, "writeFlag", e)}
+                  onclick={this.openPop.bind(this, "writeFlag", e)}
                 >
                   写跟进
                 </el-button>
@@ -580,9 +579,6 @@ export default {
           });
           if (result.code == 200) {
             console.log(result, "写跟进");
-            // _that.$router.push({
-            //   name: "allCustomers"
-            // });
             _that.$message({
               type: "success",
               message: result.message
@@ -600,7 +596,6 @@ export default {
           console.log(e);
         })
         .finally(() => {});
-      // console.log("写跟进确定", textarea,cid);
     },
     /**
      * @example: 打开弹框
