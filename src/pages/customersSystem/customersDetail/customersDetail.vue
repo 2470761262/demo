@@ -67,6 +67,7 @@ import seeTakeProgress from "./components/seeTakeProgress";
 import takeLookRecord from "./components/takeLookRecord";
 //跟进记录 & 推荐记录
 import follow from "./components/follow";
+import { mapState, mapActions } from "vuex";
 export default {
   components: {
     detailButton,
@@ -74,6 +75,29 @@ export default {
     seeTakeProgress,
     takeLookRecord,
     follow
-  }
+  },
+  computed: {
+    ...mapState({
+      detail: value => {
+        return value.customers.detail;
+      }
+    })
+  },
+  mounted() {
+    this.ajax(343);
+  },
+  methods: {
+    ...mapActions(["actionsUpdateDetail"]),
+    ajax() {
+      this.$store.dispatch("actionsUpdateDetail", {
+        name: 1,
+        age: 5
+      });
+
+      //this.detail
+      console.log("ajax -> this.detail", this.detail);
+    }
+  },
+  destroyed() {}
 };
 </script>
