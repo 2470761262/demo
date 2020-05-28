@@ -392,6 +392,14 @@ export default {
                 >
                   写跟进
                 </el-button>
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onclick={this.modifyCustomer.bind(this, e)}
+                >
+                  修改
+                </el-button>
               </div>
             );
           }
@@ -493,6 +501,12 @@ export default {
     this.queryCustomerData(1);
   },
   methods: {
+    modifyCustomer(row) {
+      this.$router.push({
+        name: "modifyCustomers",
+        params: { customer: row, myImpression: this.myImpressions[row.id] }
+      });
+    },
     toCustomerDetail(item) {
       let id = item.id;
       if (!item.id) {
