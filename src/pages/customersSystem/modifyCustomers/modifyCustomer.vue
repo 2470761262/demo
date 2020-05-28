@@ -524,7 +524,6 @@
           </div>
           <!-- 期望楼盘 content -->
           <div class="cust-step-row">
-            <!-- 期望楼盘 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望楼盘:</div>
               <div class="step-row-query">
@@ -579,25 +578,29 @@ export default {
   data() {
     return {
       searchLoading: false,
+      gogo: {
+        sdsd: ["北城小学"]
+      },
       formData: {
-        myImpression: [],
-        desireIntensity: 0,
-        customers: "",
-        sex: 0,
-        tel: "",
-        resourceType: "",
-        source: "",
-        buildType: "",
-        minFirstPrice: "",
-        maxFirstPrice: "",
-        minPrice: "",
-        maxPrice: "",
-        minArea: "",
-        maxArea: "",
-        school1: "",
-        school2: "",
-        community: "",
-        remark: ""
+        // school1Array: ["北城小学"]
+        // myImpression: [],
+        // desireIntensity: 0,
+        // customers: "",
+        // sex: 0,
+        // tel: "",
+        // resourceType: "",
+        // source: "",
+        // buildType: "",
+        // minFirstPrice: "",
+        // maxFirstPrice: "",
+        // minPrice: "",
+        // maxPrice: "",
+        // minArea: "",
+        // maxArea: "",
+        // school1: "",
+        // school2: "",
+        // community: "",
+        // remark: ""
       },
       sssValue: "", //请按照实际字段名进行修改，
       decorationList: [
@@ -676,19 +679,26 @@ export default {
     if (this.$route.params.customer) {
       //开始回显数据
       let customer = this.$route.params.customer;
-      console.log(customer);
+
       this.formData = customer;
+      console.log(customer);
       this.formData.myImpression = this.$route.params.myImpression;
-      this.formData.community = [
+      console.log([
         customer.community1,
         customer.community2,
         customer.community3
-      ];
+      ]);
+      const filexBuild = [
+        customer.community1,
+        customer.community2,
+        customer.community3
+      ].filter(item => item != undefined && item != null);
+      this.$set(this.formData, "community", filexBuild);
       if (customer.school1) {
-        this.formData.school1Array = customer.school1.split("$");
+        this.$set(this.formData, "school1Array", customer.school1.split("$"));
       }
       if (customer.school2) {
-        this.formData.school2Array = customer.school2.split("$");
+        this.$set(this.formData, "school2Array", customer.school2.split("$"));
       }
       //结束回显数据
       console.log(this.formData, "this.formData");
