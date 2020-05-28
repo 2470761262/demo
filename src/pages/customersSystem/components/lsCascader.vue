@@ -179,7 +179,7 @@ export default {
       let _that = this;
       this.$api
         .get({
-          url: "/community/communityList",
+          url: "/community/houseList",
           qs: true,
           data: { communityName: name, page: page }
         })

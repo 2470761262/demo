@@ -375,7 +375,7 @@ export default {
     queryCustomerData(params) {
       let _that = this;
       let queryParams = Object.assign(
-        { limit: _that.pageJson.pageSize, del: 0, plate: 0 },
+        { limit: _that.pageJson.pageSize, del: 0, isPrivate: true },
         params
       );
       console.log(this);

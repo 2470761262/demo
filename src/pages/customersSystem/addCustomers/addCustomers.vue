@@ -747,7 +747,7 @@ export default {
         this.searchLoading = true;
         _that.$api
           .get({
-            url: "/community/communityList",
+            url: "/community/houseList",
             qs: true,
             data: { communityName: query }
           })
