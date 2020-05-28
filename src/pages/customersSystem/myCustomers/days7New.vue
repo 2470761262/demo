@@ -381,8 +381,13 @@ export default {
                 <el-button type="primary" size="mini" icon="el-icon-phone">
                   一键拨号
                 </el-button>
-                <el-button type="warning" size="mini" icon="el-icon-date">
-                  预约带看
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onclick={this.modifyCustomer.bind(this, e)}
+                >
+                  修改
                 </el-button>
                 <el-button
                   type="danger"
@@ -607,6 +612,12 @@ export default {
       //把当前行的值保存到临时变量activeProdata
       _that.activeProdata = e;
       this[popName] = true;
+    },
+    modifyCustomer(row) {
+      this.$router.push({
+        name: "modifyCustomers",
+        params: { customer: row, myImpression: this.myImpressions[row.id] }
+      });
     },
     triggerChange() {
       this.changeQuery = !this.changeQuery;
