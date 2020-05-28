@@ -228,6 +228,7 @@ export default {
   },
   data() {
     return {
+      queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       formData: {
         //客户id
         EntructId: "",
