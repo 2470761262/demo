@@ -523,6 +523,7 @@ export default {
         page: page,
         limit: _that.pageJson.pageSize,
         del: 0,
+        plate: 0,
         minAddTime: new Date().setDate(new Date().getDate() - 7)
       });
       _that.$api

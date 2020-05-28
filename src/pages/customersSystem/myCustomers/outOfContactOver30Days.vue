@@ -521,6 +521,7 @@ export default {
         page: page,
         limit: _that.pageJson.pageSize,
         del: 0,
+        plate: 0,
         maxModTime: new Date().setDate(new Date().getDate() - 30)
       });
       _that.$api
