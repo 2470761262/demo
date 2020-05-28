@@ -228,6 +228,7 @@ export default {
   },
   data() {
     return {
+      queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       formData: {
         //客户id
         EntructId: "",
@@ -521,6 +522,7 @@ export default {
         page: page,
         limit: _that.pageJson.pageSize,
         del: 0,
+        isPrivate: true,
         maxModTime: new Date().setDate(new Date().getDate() - 30)
       });
       _that.$api

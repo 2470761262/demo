@@ -197,7 +197,7 @@
             </div>
             <!-- 客户性别 -->
             <div class="step-item-inline ">
-              <div class="step-row-title title-required">客户性别:</div>
+              <!-- <div class="step-row-title title-required">客户性别:</div>
               <div class="step-row-query border">
                 <el-radio-group v-model="formData.sex">
                   <el-radio
@@ -207,7 +207,7 @@
                     >{{ item.key }}</el-radio
                   >
                 </el-radio-group>
-              </div>
+              </div> -->
             </div>
           </div>
           <!-- 客户电话 &  客户籍贯 content -->
@@ -265,7 +265,7 @@
             </div>
             <!--  客源特性 -->
             <div class="step-item-inline ">
-              <div class="step-row-title title-required">客源特性:</div>
+              <!-- <div class="step-row-title title-required">客源特性:</div>
               <div class="step-row-query">
                 <el-select
                   v-model="formData.resourceType"
@@ -279,7 +279,7 @@
                     :value="item.value"
                   ></el-option>
                 </el-select>
-              </div>
+              </div> -->
             </div>
           </div>
           <!-- 购房意向 content -->
@@ -490,8 +490,8 @@
                   placeholder="请选择客户期望小学(可多选)"
                 >
                   <el-option
-                    v-for="item in primarySchool"
-                    :key="item.name"
+                    v-for="(item, index) in primarySchool"
+                    :key="index"
                     :label="item.name"
                     :value="item.name"
                   ></el-option>
@@ -513,8 +513,8 @@
                   placeholder="请选择客户期望中学(可多选)"
                 >
                   <el-option
-                    v-for="item in middleSchool"
-                    :key="item.name"
+                    v-for="(item, index) in middleSchool"
+                    :key="index"
                     :label="item.name"
                     :value="item.name"
                   ></el-option>
@@ -524,7 +524,6 @@
           </div>
           <!-- 期望楼盘 content -->
           <div class="cust-step-row">
-            <!-- 期望楼盘 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望楼盘:</div>
               <div class="step-row-query">
@@ -539,8 +538,8 @@
                   placeholder="请选择客户期望楼盘(可多选)"
                 >
                   <el-option
-                    v-for="item in communityList"
-                    :key="item.value"
+                    v-for="(item, index) in communityList"
+                    :key="index"
                     :label="item.name"
                     :value="item.value"
                   ></el-option>
@@ -567,7 +566,7 @@
       </el-collapse-item>
     </el-collapse>
     <div class="add-foot">
-      <el-button type="primary" @click="addCusSubmit">提交</el-button>
+      <el-button type="primary" @click="addCusSubmit">修改</el-button>
     </div>
   </section>
 </template>
@@ -579,25 +578,29 @@ export default {
   data() {
     return {
       searchLoading: false,
+      gogo: {
+        sdsd: ["北城小学"]
+      },
       formData: {
-        myImpression: [],
-        desireIntensity: 0,
-        customers: "",
-        sex: 0,
-        tel: "",
-        resourceType: "",
-        source: "",
-        buildType: "",
-        minFirstPrice: "",
-        maxFirstPrice: "",
-        minPrice: "",
-        maxPrice: "",
-        minArea: "",
-        maxArea: "",
-        school1: "",
-        school2: "",
-        community: "",
-        remark: ""
+        // school1Array: ["北城小学"]
+        // myImpression: [],
+        // desireIntensity: 0,
+        // customers: "",
+        // sex: 0,
+        // tel: "",
+        // resourceType: "",
+        // source: "",
+        // buildType: "",
+        // minFirstPrice: "",
+        // maxFirstPrice: "",
+        // minPrice: "",
+        // maxPrice: "",
+        // minArea: "",
+        // maxArea: "",
+        // school1: "",
+        // school2: "",
+        // community: "",
+        // remark: ""
       },
       sssValue: "", //请按照实际字段名进行修改，
       decorationList: [
@@ -671,6 +674,39 @@ export default {
       myImpression: "",
       collapseActive: 1 //折叠面板当前激活name
     };
+  },
+  created() {
+    if (this.$route.params.customer) {
+      //开始回显数据
+      let customer = this.$route.params.customer;
+
+      this.formData = customer;
+      console.log(customer);
+      this.formData.myImpression = this.$route.params.myImpression;
+      console.log([
+        customer.community1,
+        customer.community2,
+        customer.community3
+      ]);
+      const filexBuild = [
+        customer.community1,
+        customer.community2,
+        customer.community3
+      ].filter(item => item != undefined && item != null);
+      this.$set(this.formData, "community", filexBuild);
+      if (customer.school1) {
+        this.$set(this.formData, "school1Array", customer.school1.split("$"));
+      }
+      if (customer.school2) {
+        this.$set(this.formData, "school2Array", customer.school2.split("$"));
+      }
+      //结束回显数据
+      console.log(this.formData, "this.formData");
+      this.$message({
+        type: "info",
+        message: customer.id
+      });
+    }
   },
   methods: {
     queryPrimarySchoolByKeyWord(query) {
@@ -805,13 +841,12 @@ export default {
       }
 
       _that.formData.community.forEach((item, index, array) => {
-        console.log(index, item, "循环到位");
         _that.formData["community" + (index + 1)] = item;
       });
-      console.log(_that.formData, "录入客户参数");
+      console.log(_that.formData, "修改客户参数");
       _that.$api
         .post({
-          url: "/saleCustomer/addCustomer",
+          url: "/saleCustomer/modifyCustomer",
           data: _that.formData,
           headers: { "Content-Type": "application/json" }
         })
@@ -822,12 +857,12 @@ export default {
             message: result.message
           });
           if (result.code == 200) {
-            console.log(result, "录入客源");
+            console.log(result, "修改客源");
             _that.$router.push({
               name: "allCustomers"
             });
           } else {
-            console.log("录入客源" + result.message);
+            console.log("修改客源" + result.message);
             _that.$message({
               type: "info",
               message: result.message

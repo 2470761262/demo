@@ -120,6 +120,71 @@ export default {
     };
   },
   methods: {
+    addPairRecord(params, callback) {
+      let _that = this;
+      _that.$api
+        .post({
+          url: "/saleCustomer/addPairRecord",
+          data: params,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          _that.$message({
+            type: "info",
+            message: result.message
+          });
+          if (result.code == 200) {
+            console.log(result, "添加带看");
+            callback();
+          } else {
+            console.log("录入客源" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("录入客源失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
+    getHouseAgentInfo(params, callback) {
+      let _that = this;
+      _that.$api
+        .post({
+          url: "/saleCustomer/getAgentHouseByCommunity",
+          data: params,
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查找房源id");
+            if (result.data) {
+              callback(result.data);
+            } else {
+              _that.$message({
+                type: "info",
+                message: "该房间未录入房源哈"
+              });
+            }
+          } else {
+            console.log("查找房源id" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("录入客源失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
     confirmEmit() {
       let _that = this;
       this.$validator.validateAll().then(e => {
@@ -130,9 +195,9 @@ export default {
           console.log(this.accompanyResult, "陪同人");
           console.log(this.cascaderResult, "带看楼盘");
           console.log(this.beltTime, "带看时间");
-          // this.cascaderResult[0].value//楼盘id
-          // this.cascaderResult[1].value//楼栋id
-          // this.cascaderResult[2].value//房间id
+          let communityId = this.cascaderResult[0].value; //楼盘id
+          let communityBuildingId = this.cascaderResult[1].value; //楼栋id
+          let buildingHouseId = this.cascaderResult[2].value; //房间id
           let params = {
             houseEid: 70,
             memo: _that.textarea,
@@ -141,34 +206,19 @@ export default {
             cusEid: _that.customerId,
             dzTogether: this.accompanyResult[0].key
           };
-          _that.$api
-            .post({
-              url: "/saleCustomer/addPairRecord",
-              data: params,
-              headers: { "Content-Type": "application/json" }
-            })
-            .then(e => {
-              let result = e.data;
-              _that.$message({
-                type: "info",
-                message: result.message
-              });
-              if (result.code == 200) {
-                console.log(result, "添加带看");
-                this.$emit("update:visible", false);
-              } else {
-                console.log("录入客源" + result.message);
-                _that.$message({
-                  type: "info",
-                  message: result.message
-                });
-              }
-            })
-            .catch(e => {
-              console.log("录入客源失败catch");
-              console.log(e);
-            })
-            .finally(() => {});
+          _that.getHouseAgentInfo(
+            {
+              communityId: communityId,
+              communityBuildingId: communityBuildingId,
+              buildingHouseId: buildingHouseId
+            },
+            house => {
+              params.houseEid = house.id;
+              _that.addPairRecord(params, s =>
+                _that.$emit("update:visible", false)
+              );
+            }
+          );
         } else {
           console.log(
             "添加带看在父组件内响应，请在父组件内注册事件confirmAddLook"

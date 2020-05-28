@@ -90,7 +90,11 @@
               "
               >答复</el-button
             >
-            <el-button type="warning" size="mini" @click="openAccept(scope.row)"
+            <el-button
+              type="warning"
+              size="mini"
+              :disabled="scope.row.adopted"
+              @click="openAccept(scope.row)"
               >采纳</el-button
             >
           </template>
@@ -105,6 +109,16 @@
       style-type="0"
       @confirmEmit="confirmEmit"
     >
+      <div>
+        <span style="margin-left: 20px;font-size: larger">奖励：</span>
+        <el-input-number
+          style="width:60%"
+          v-model="reward"
+          :min="1"
+          :max="1000"
+          size="medium"
+        />
+      </div>
     </fixed-popup>
     <el-dialog title="给予答复" :visible.sync="dialogVisible" width="40%">
       <div>{{ accountName }}的反馈：{{ message }}</div>
@@ -143,12 +157,14 @@ export default {
       visible: false,
       loading: false,
       dialogVisible: false,
+      adoptVisible: false,
       pics: "",
       accountName: "",
       accounId: "",
       message: "",
       id: "",
       msg: "",
+      reward: 10,
       showForm: false,
       queryData: {
         keyword: ""
@@ -187,14 +203,21 @@ export default {
         {
           prop: "replyPer",
           label: "答复人",
-          width: "200px",
+          // width: "200px",
           formatter: row => row.replyPer
         },
         {
           prop: "replyDel",
           label: "答复状态",
-          width: "200px",
+          // width: "200px",
           formatter: row => (row.replyDel == 1 ? "已答复" : "未答复")
+        },
+        {
+          prop: "adopted",
+          label: "是否采纳",
+          // width: "200px",
+          formatter: row =>
+            row.adopted == 1 ? "已采纳，并奖励" + row.reward + "鑫币" : "未采纳"
         }
       ],
       tableData: [],
@@ -214,7 +237,54 @@ export default {
       this.acceptActiveRow = value;
     },
     confirmEmit() {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
       console.log("是否采纳确定触发事件");
+      let that = this;
+      if (this.reward < 0) {
+        this.$message({
+          type: "info",
+          message: "不给奖励就算了，还扣钱？"
+        });
+        return false;
+      }
+      this.$api
+        .post({
+          url: "/sys/onlineFeedback/adopt/" + that.acceptActiveRow.id,
+          data: {
+            id: 1,
+            reward: that.reward
+          },
+          qs: true
+        })
+        .then(e => {
+          console.log(e.data);
+          let data = e.data;
+          if (data.code == 200) {
+            that.msg = "";
+            this.$message({
+              type: "info",
+              message: "采纳成功"
+            });
+            that.visible = false;
+            that.queryAddFloorListParams();
+          } else {
+            that.reward = 10;
+            that.$message({
+              message: data.message,
+              type: "warning"
+            });
+          }
+        })
+        .catch(e => {
+          console.log("上传失败");
+          console.log(e);
+        })
+        .finally(e => {
+          this.loading = false;
+        });
     },
     // queryTabData() {
     //   console.log(this, "111");
@@ -249,8 +319,10 @@ export default {
             that.pageJson.currentPage = data.data.currPage;
             that.tableData = data.data.list;
           } else {
-            // console.log("查询反馈列表结果：" + result.message);
-            // alert(result.message);
+            that.$message({
+              message: data.message,
+              type: "warning"
+            });
           }
         })
         .catch(e => {
@@ -307,8 +379,10 @@ export default {
             that.dialogVisible = false;
           } else {
             that.msg = "";
-            // console.log("上传结果：" + result.message);
-            // alert(result.message);
+            that.$message({
+              message: data.message,
+              type: "warning"
+            });
           }
         })
         .catch(e => {
