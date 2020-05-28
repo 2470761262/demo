@@ -383,9 +383,17 @@ export default {
           disabled: false,
           default: true
         },
+        // {
+        //   prop: "brokerName",
+        //   label: "跟单人",
+        //   width: "120",
+        //   order: false,
+        //   disabled: false,
+        //   default: true
+        // },
         {
-          prop: "brokerName",
-          label: "跟单人",
+          prop: "addName",
+          label: "录入人",
           width: "120",
           order: false,
           disabled: false,
@@ -429,14 +437,6 @@ export default {
         {
           prop: "decoration",
           label: "装修",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "addName",
-          label: "录入人",
           width: "120",
           order: false,
           disabled: false,

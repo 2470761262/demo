@@ -296,8 +296,8 @@ export default {
         { value: "3", label: "录入" },
         { value: "4", label: "钥匙" },
         { value: "5", label: "委托" },
-        { value: "6", label: "实勘" },
-        { value: "7", label: "锁定" }
+        { value: "6", label: "实勘" }
+        // { value: "7", label: "锁定" }
       ],
       options: [],
       cbIdList: [],
