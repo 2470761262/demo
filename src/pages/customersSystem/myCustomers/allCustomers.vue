@@ -2,7 +2,7 @@
 @import url("../less/custTab.less");
 </style>
 <template>
-  <div>
+  <div class="list-content">
     <!-- 
         :expand-row-keys='[1,3]'
         row-key="id"
@@ -97,6 +97,15 @@
       v-bind:customerId="currentClickCustomerId"
     >
     </add-belt-look>
+    <!-- 删除-->
+    <remove
+      :visible.sync="removePop"
+      v-if="removePop"
+      style-type="0"
+      title="删除"
+      width="3.28rem"
+      @transmitConfirm="removeTransmit"
+    />
   </div>
 </template>
 
@@ -113,10 +122,13 @@ export default {
     leftAttention,
     writeFollowUp: () => import("../components/writeFollowUp"),
     //添加带看
-    addBeltLook: () => import("@/pages/customersSystem/components/addBeltLook")
+    addBeltLook: () => import("@/pages/customersSystem/components/addBeltLook"),
+    remove: () =>
+      import("@/pages/customersSystem/customersDetail/didLog/remove")
   },
   data() {
     return {
+      removePop: false, //删除按钮弹框开关
       queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       formData: {
         //客户id
@@ -220,7 +232,7 @@ export default {
         {
           prop: "cz",
           label: "操作",
-          width: "350px",
+          width: "400px",
           order: false,
           fixed: true,
           formart: (row, column) => {
@@ -258,6 +270,14 @@ export default {
                 >
                   修改
                 </el-button>
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onclick={this.openDeleteCustomer.bind(this, row)}
+                >
+                  删除
+                </el-button>
               </div>
             );
           }
@@ -287,6 +307,54 @@ export default {
     _that.staticsMyCustomerData();
   },
   methods: {
+    openDeleteCustomer(e) {
+      if (e.tag == 2 || e.tag == 3 || e.del == -1) {
+        this.$message({
+          type: "info",
+          message: "该客户正在删除审核中，或审核失败"
+        });
+      } else {
+        this.removePop = true;
+        this.currentClickCustomerId = e.id;
+      }
+    },
+    removeTransmit(e) {
+      let that = this;
+      let memo = e == 0 ? "客户无意向" : "空号";
+      if (!that.currentClickCustomerId || that.currentClickCustomerId == 0) {
+        this.$message({
+          type: "info",
+          message: "未获取客户id，无法删除"
+        });
+        return;
+      }
+      that.$api
+        .post({
+          url: "/saleCustomer/deleteCustomer",
+          qs: true,
+          data: { customerId: that.currentClickCustomerId, memo: memo }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log(result);
+          if (result.code == 200) {
+            this.$message({
+              type: "info",
+              message: "提交删除申请成功，请等待审核！"
+            });
+            that.removePop = true;
+          } else {
+            this.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("【【【【uups,客源删除申请失败】】】】");
+          console.log(e);
+        });
+    },
     dialPhone(row) {
       let that = this;
       console.log(row, "点击了一键拨号");
