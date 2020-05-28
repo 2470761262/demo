@@ -184,7 +184,7 @@
   <div class="detail-content">
     <div class="detail-price-content">
       <div class="detail-price">
-        <span>{{ resultData.tradePrice || resultData.Price }}</span>
+        <span>{{ (resultData.tradePrice).toFixed(1) || (resultData.Price).toFixed(1) }}</span>
         <span v-if="resultData.tradePrice || resultData.Price">万元</span>
       </div>
       <div class="detail-price-avg">
