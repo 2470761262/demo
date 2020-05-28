@@ -361,9 +361,6 @@ export default {
           formart: e => {
             return (
               <div>
-                <el-button type="primary" size="mini" icon="el-icon-phone">
-                  一键拨号
-                </el-button>
                 <el-button type="warning" size="mini" icon="el-icon-date">
                   预约带看
                 </el-button>
