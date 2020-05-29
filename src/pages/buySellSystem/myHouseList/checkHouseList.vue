@@ -15,6 +15,16 @@
   height: 550px;
   overflow-y: auto;
 }
+.el-carousel-box {
+  margin-top: 20px;
+  display: flex;
+  .old-el-carousel {
+    width: 50%;
+  }
+  .new-el-carousel {
+    width: 100%;
+  }
+}
 </style>
 <template>
   <div class="page-row-flex">
@@ -429,67 +439,64 @@
       width="60%"
       :modal-append-to-body="false"
     >
-      <div style="display:flex" slot="title">
-        <div
-          v-for="(item, index) in accessoryMoldList"
-          :key="index"
-          style="width:100%"
-        >
-          <div style="margin-left:10px;" v-if="item.list.length > 0">
-            <el-carousel
-              :autoplay="false"
-              height="60px"
-              @change="changeFile($event, index)"
+      <div slot="title">
+        <div style="display:flex">
+          <el-tabs
+            v-model="activeName"
+            v-if="accessoryTable"
+            @tab-click="accesssoryTabClick"
+          >
+            <el-tab-pane
+              :name="item.name"
+              v-for="(item, index) in accessoryFile"
+              :key="index"
             >
-              <el-carousel-item
-                v-for="(item1, index1) in item.list"
-                :key="index1"
+              <div
+                slot="label"
+                v-if="item.newsFileListFlag || item.oldFileListFlag"
               >
-                <video
-                  :src="item1.url"
-                  height="100%"
-                  width="100%"
-                  @click="cutPic(item1.activeIndex)"
-                  v-if="item.type == 7"
-                ></video>
-                <el-image
-                  :src="item1.url"
-                  :fit="fill"
-                  v-if="item.type != 7"
-                  style="width:100%;height:100%"
-                  @click="cutPic(item1.activeIndex)"
-                >
-                </el-image>
-              </el-carousel-item>
-            </el-carousel>
-            <span>{{ item.title }}</span>
-            <span>({{ item.list.length }})</span>
-          </div>
+                <div slot="label">
+                  <span>{{ item.title }}</span>
+                </div>
+                <span slot="label">新({{ item.newsFileList.length }})</span>
+                <span slot="label">旧({{ item.oldFileList.length }})</span>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </div>
       </div>
-      <div style="margin-top:20px;">
-        <el-carousel :autoplay="false" height="600px" ref="loopImg">
-          <el-carousel-item
-            v-for="(item, index) in file8"
-            :key="index"
-            class="anchor-point"
-          >
-            <img
-              :src="item.url"
-              @click="changeShowImg(item.url)"
-              v-if="item.subType != 7"
-              style="width:100%;height:100%;object-fit:scale-down;"
-            />
-            <video
-              :src="item.url"
-              controls="controls"
-              v-else
-              height="100%"
-              style="object-fit: scale-down;"
-              width="100%"
-            ></video>
-          </el-carousel-item>
-        </el-carousel>
+      <div class="el-carousel-box">
+        <div
+          :class="
+            bigAccessoryFile.length > 1 ? 'old-el-carousel' : 'new-el-carousel'
+          "
+          v-for="(element, index1) in bigAccessoryFile"
+          :key="index1"
+        >
+          <div v-if="bigAccessoryFile.length > 1">{{ element.title }}</div>
+          <el-carousel :autoplay="false" height="600px" :ref="element.ref">
+            <el-carousel-item
+              v-for="(item, index) in element.data"
+              :key="index"
+              class="anchor-point"
+            >
+              <img
+                :src="item.url"
+                @click="changeShowImg(item.url, index1)"
+                v-if="item.subType != 7"
+                style="width:100%;height:100%;object-fit:scale-down;"
+              />
+              <video
+                :src="item.url"
+                controls="controls"
+                v-else
+                height="100%"
+                style="object-fit: scale-down;"
+                width="100%"
+              ></video>
+            </el-carousel-item>
+          </el-carousel>
+        </div>
       </div>
       <el-image-viewer
         v-if="showViewer"
@@ -556,20 +563,22 @@ export default {
   computed: {
     showImgList() {
       let result = [];
-      this.file8.forEach(item => {
+      this.bigAccessoryFile[this.showImgIndex].data.forEach(item => {
         if (item.subType != 7) {
           result.push(item.url.replace(SMALLThumb, ""));
         }
       });
-      console.log(result, "ffff");
       if (this.showImgIndexImg != null) {
-        const index = result.findIndex(item => {
+        let index = result.findIndex(item => {
           return item == this.showImgIndexImg;
         });
         if (index) {
-          result.unshift(result.splice(index, 1));
+          let data = result[index];
+          result.splice(index, 1); //移除元素避免重复
+          result.unshift(data); //往前添加元素
         }
       }
+      console.log(result, "ffff");
       return result;
     }
   },
@@ -726,25 +735,72 @@ export default {
       checkId: 0,
       row: {},
       accessoryAllList: [],
-      accessoryMoldList: {
-        1: { title: "外景图", list: [], type: 1 },
-        2: { title: "客厅", list: [], type: 2 },
-        3: { title: "卧室图", list: [], type: 3 },
-        4: { title: "厨房", list: [], type: 4 },
-        5: { title: "卫生间", list: [], type: 5 },
-        6: { title: "户型", list: [], type: 6 },
-        7: { title: "视频", list: [], type: 7 }
+      bigAccessoryFile: [],
+      accessoryFile: {
+        1: {
+          title: "外景图",
+          newsFileList: [],
+          oldFileList: [],
+          type: 1,
+          newsFileListFlag: false,
+          oldFileListFlag: false,
+          name: "first"
+        },
+        2: {
+          title: "客厅",
+          newsFileList: [],
+          oldFileList: [],
+          type: 2,
+          newsFileListFlag: false,
+          oldFileListFlag: false,
+          name: "second"
+        },
+        3: {
+          title: "卧室图",
+          newsFileList: [],
+          oldFileList: [],
+          type: 3,
+          newsFileListFlag: false,
+          oldFileListFlag: false,
+          name: "third"
+        },
+        4: {
+          title: "厨房",
+          newsFileList: [],
+          oldFileList: [],
+          type: 4,
+          newsFileListFlag: false,
+          oldFileListFlag: false,
+          name: "fourth"
+        },
+        5: {
+          title: "卫生间",
+          newsFileList: [],
+          oldFileList: [],
+          type: 5,
+          newsFileListFlag: false,
+          oldFileListFlag: false,
+          name: "fifth"
+        },
+        6: {
+          title: "户型",
+          newsFileList: [],
+          oldFileList: [],
+          type: 6,
+          newsFileListFlag: false,
+          oldFileListFlag: false,
+          name: "sixth"
+        },
+        7: {
+          title: "视频",
+          newsFileList: [],
+          oldFileList: [],
+          type: 7,
+          newsFileListFlag: false,
+          oldFileListFlag: false,
+          name: "seventh"
+        }
       },
-      accessoryListObj: {
-        file1: [],
-        file2: [],
-        file3: [],
-        file4: [],
-        file5: [],
-        file6: [],
-        file7: []
-      },
-      file8: [],
       showAccessory: false,
       fill: "fill",
       btnDisabled: {
@@ -763,20 +819,32 @@ export default {
         1: [], //部门数组
         2: [] //人员数组
       },
-      chooseTree: [] //选中的树节点
+      chooseTree: [], //选中的树节点
+      activeName: "first",
+      resetAccessory: {}, //重置附件
+      accessoryTable: false, //是否展示tab切换
+      bigAccessoryFileKey: "", //大图展示的key值
+      showImgIndex: 0 //展示大的数组索引
     };
   },
   mounted() {
     this.querylist(1);
     this.getTree();
+    this.resetAccessory = util.deepCopy(this.accessoryFile);
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    }
   },
   methods: {
     iamgeViewClose() {
       this.showViewer = false;
       this.showImgIndexImg = null;
     },
-    changeShowImg(url) {
+    changeShowImg(url, index) {
       this.showViewer = true;
+      this.showImgIndex = index;
       this.showImgIndexImg = url.replace(SMALLThumb, "");
     },
     /**
@@ -804,34 +872,65 @@ export default {
       this.moreSelect = e;
       this.querylist(1, "id", "descending");
     },
-    changeFile(e, index) {
-      let checkProjectList = this.accessoryMoldList[index].list;
-      let activeIndex = checkProjectList[e].activeIndex;
-      this.cutPic(activeIndex);
+    accesssoryTabClick(tab, event) {
+      let key = parseInt(tab.index) + 1;
+      this.bigAccessoryFile.forEach(item => {
+        item.data = this.accessoryFile[key][item.key];
+      });
     },
-    cutPic(index) {
-      let that = this;
-      that.$refs.loopImg.setActiveItem(index);
-    },
+    /**
+     * 解析附件
+     *
+     */
     getFile(list) {
       console.log(list, "wwww");
-      Object.keys(this.accessoryMoldList).forEach(item => {
-        //清空数组
-        this.accessoryMoldList[item].list = [];
-      });
+      this.bigAccessoryFile = [];
+      this.accessoryTable = false;
+      this.bigAccessoryFileKey = "";
+      this.accessoryFile = util.deepCopy(this.resetAccessory); //重置json;
+      let data = [];
       if (list != null) {
-        list.forEach((element, index) => {
-          if (element.subType != 7 && !element.url.includes(SMALLThumb)) {
-            element.url = element.url + SMALLThumb;
-          }
-          if (element.subType) {
-            element.activeIndex = index;
-            this.accessoryMoldList[element.subType].list.push(element);
+        Object.keys(list).forEach(item => {
+          if (list[item] != null) {
+            list[item].forEach((element, index) => {
+              if (element.subType != 7 && !element.url.includes(SMALLThumb)) {
+                element.url = element.url + SMALLThumb;
+              }
+              if (element.subType) {
+                element.activeIndex = index;
+                this.accessoryTable = true;
+                this.accessoryFile[element.subType][item].push(element);
+                this.accessoryFile[element.subType][item + "Flag"] = true;
+              }
+            });
+            //如果有外景图等附件大图显示为第一种附件
+            if (this.bigAccessoryFileKey == "") {
+              Object.keys(this.accessoryFile).forEach(accesy => {
+                if (
+                  this.accessoryFile[accesy][item].length > 0 &&
+                  data.length == 0
+                ) {
+                  data = this.accessoryFile[accesy][item];
+                  this.activeName = this.accessoryFile[accesy].name;
+                }
+              });
+            } else {
+              data = this.accessoryFile[this.bigAccessoryFileKey][item];
+            }
+            if (data.length == 0) {
+              //如果没有外景图等附件就默认为当前数组
+              data = list[item];
+            }
+            console.log(this.accessoryFile, " this.accessoryFile");
+            let title = item == "oldFileList" ? "原图" : "取代图";
+            this.bigAccessoryFile.push({
+              title: title,
+              data: data,
+              key: item
+            });
           }
         });
       }
-      this.file8 = list;
-      console.log(this.file8);
       this.showAccessory = true;
     },
     getAccessory(row) {
@@ -861,7 +960,7 @@ export default {
             if (row.Type == 13) {
               result.data.push({ CheckID: checkId, url: row.picUrl });
             }
-            console.log(result.data);
+            console.log(result.data, "ffffff");
             that.accessoryAllList.push({ key: checkId, value: result.data });
 
             that.getFile(result.data);
