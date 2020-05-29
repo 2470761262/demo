@@ -391,13 +391,7 @@ export default {
           order: false,
           disabled: false,
           default: true,
-          formart: item =>
-            (item.rooms != null ? item.rooms : 0) +
-            "室" +
-            (item.hall != null ? item.rooms : 0) +
-            "厅" +
-            (item.toilet != null ? item.rooms : 0) +
-            "卫"
+          formart: item => this.houseFormat
         },
         {
           prop: "unitPrice",
@@ -501,6 +495,27 @@ export default {
     this.getTree();
   },
   methods: {
+    houseFormat(rooms, hall, toilet) {
+      let ro,
+        ha,
+        to = "";
+      if (rooms != null && rooms != "" && rooms != undefined) {
+        ro = rooms + "室";
+      } else {
+        ro = "0" + "室";
+      }
+      if (hall != null && hall != "" && hall != undefined) {
+        ha = hall + "厅";
+      } else {
+        ha = "0" + "厅";
+      }
+      if (toilet != null && toilet != "" && toilet != undefined) {
+        to = toilet + "卫";
+      } else {
+        to = "0" + "卫";
+      }
+      return ro + ha + to;
+    },
     moreSelectChange(e) {
       this.moreSelect = e;
       this.queryVerifyHouseDatas(1);
