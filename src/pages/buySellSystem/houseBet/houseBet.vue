@@ -377,6 +377,11 @@ export default {
     this.queryHouseBet(1);
     this.getTree();
   },
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    }
+  },
   methods: {
     getTree() {
       //读取树数据
@@ -396,17 +401,17 @@ export default {
             alert(result.message);
           }
         })
-        .then(() => {
-          if (this.$route.query.cur != null) {
-            this.curNodeId = [this.$route.query.cur];
-            this.$nextTick(() => {
-              this.handleCheckChange(
-                this.$refs.treeForm.getNode(...this.curNodeId).data,
-                true
-              );
-            });
-          }
-        })
+        // .then(() => {
+        //   if (this.$route.query.cur != null) {
+        //     this.curNodeId = [this.$route.query.cur];
+        //     this.$nextTick(() => {
+        //       this.handleCheckChange(
+        //         this.$refs.treeForm.getNode(...this.curNodeId).data,
+        //         true
+        //       );
+        //     });
+        //   }
+        // })
         .catch(e => {
           console.log("读取失败");
           console.log(e);
@@ -475,7 +480,9 @@ export default {
     filterNode(value, data) {
       console.log(value, data);
       if (!value) return true;
-      return data.label.indexOf(value) !== -1;
+      if (data.labelName != null) {
+        return data.labelName.indexOf(value) !== -1;
+      }
     },
     formatHouseType(row, column) {
       //if (row.rooms) {

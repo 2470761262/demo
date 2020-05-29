@@ -761,6 +761,11 @@ export default {
     this.queryVerifyHouseByParams(1);
     this.getTree();
   },
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    }
+  },
   methods: {
     /**
      *  展开验证电话弹框
@@ -1228,6 +1233,7 @@ export default {
       });
     },
     filterNode(value, data) {
+      console.log(value, data);
       if (!value) return true;
       if (data.labelName != null) {
         return data.labelName.indexOf(value) !== -1;

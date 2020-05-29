@@ -325,6 +325,11 @@ export default {
     this.queryOurComDeal(1);
     this.getTree();
   },
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    }
+  },
   methods: {
     toHouseDetail(row) {
       // let that = this;

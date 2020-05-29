@@ -509,6 +509,11 @@ export default {
     this.queryMyAgent(1);
     this.getTree();
   },
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    }
+  },
   methods: {
     defaultCell({ column }) {
       if (column.label == "操作") {
