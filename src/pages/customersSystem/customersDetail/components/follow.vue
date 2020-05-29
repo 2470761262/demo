@@ -203,13 +203,15 @@
       </h3>
     </div>
     <div class="record-content-scroll" v-show="showBox == 0">
-      <left-progress v-for="(item, index) in 15" :key="index">
+      <left-progress v-for="(item, index) in list" :key="index">
         <template>
           <div class="follow-content">
-            <div class="follow-content-head">2020-01-06 11:04:21</div>
+            <div class="follow-content-head">{{ item.FollowTime }}</div>
             <div class="follow-content-foot">
-              <div class="follow-fool-title">吴寿坤(紫金二店):</div>
-              <div class="follow-fool-msg">客户现在想买国贸天琴湾3房</div>
+              <div class="follow-fool-title">
+                {{ item.FollowPer }}(紫金二店):
+              </div>
+              <div class="follow-fool-msg">{{ item.Memo }}</div>
             </div>
           </div>
         </template>
@@ -266,14 +268,41 @@
 
 <script>
 import leftProgress from "../otherCom/leftProgress";
+import { mapState, mapMutations } from "vuex";
+import moment from "moment";
 export default {
   components: {
     leftProgress
   },
   data() {
     return {
+      list: [],
       showBox: 0
     };
+  },
+  watch: {
+    detail: {
+      deep: true,
+      handler(newValue) {
+        console.log("follow", newValue);
+        if (newValue.code == 200) {
+          //设置带看进度
+          this.list = newValue.data;
+        } else {
+          this.$message({
+            type: "info",
+            message: newValue.message
+          });
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapState({
+      detail: value => {
+        return value.customers.follow.cusFollow;
+      }
+    })
   }
 };
 </script>

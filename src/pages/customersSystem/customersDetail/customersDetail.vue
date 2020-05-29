@@ -91,6 +91,8 @@ export default {
   },
   mounted() {
     this.ajax();
+    this.processAajx();
+    this.flolowAjax();
   },
   methods: {
     ...mapMutations(["updateDetail", "resetDetail"]),
@@ -123,6 +125,74 @@ export default {
         })
         .catch(e => {
           console.log("获取客户详情失败");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
+    //带看记录
+    processAajx() {
+      let _that = this;
+      //获取页面传过来的客户id
+      let id = _that.$route.params.customerId;
+      //因为rout.push传值一刷新就会消失，所以需要保存到session里
+      if (id != null) {
+        util.sessionLocalStorageSet("cosDetail:id", id);
+      } else {
+        id = util.sessionLocalStorageGet("cosDetail:id");
+      }
+      //执行ajax请求，获取基础信息
+      _that.$api
+        .post({
+          url: "/saleCustomerDetail/getSalePairProcess",
+          data: { id: id },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log("带客看房进度", e);
+          if (result.code == 200) {
+            //result.data.pageSum
+            this.$store.commit("updateProcess", {
+              salePairProcess: result
+            });
+          }
+        })
+        .catch(e => {
+          console.log("获取带客看房进度失败");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
+    //获取跟进信息
+    flolowAjax() {
+      let _that = this;
+      //获取页面传过来的客户id
+      let id = _that.$route.params.customerId;
+      //因为rout.push传值一刷新就会消失，所以需要保存到session里
+      if (id != null) {
+        util.sessionLocalStorageSet("cosDetail:id", id);
+      } else {
+        id = util.sessionLocalStorageGet("cosDetail:id");
+      }
+      //执行ajax请求，获取基础信息
+      _that.$api
+        .post({
+          url: "/saleCustomerDetail/getSaleCusFlower",
+          data: { id: id },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log("获取跟进记录", e);
+          if (result.code == 200) {
+            //result.data.pageSum
+            this.$store.commit("updateFollow", {
+              cusFollow: result
+            });
+          }
+        })
+        .catch(e => {
+          console.log("获取跟进记录失败");
           console.log(e);
         })
         .finally(() => {});

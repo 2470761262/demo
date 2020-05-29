@@ -9,7 +9,9 @@ function forSetStep(state, val, stepName) {
 }
 export default {
   state: {
-    detail: {}
+    detail: {},
+    process: {},
+    follow: {}
   },
   mutations: {
     updateDetail(state, value) {
@@ -17,6 +19,18 @@ export default {
     },
     resetDetail(state, value) {
       state.detail = {};
+    },
+    updateProcess(state, value) {
+      state.process = value;
+    },
+    resetProcess(state, value) {
+      state.process = {};
+    },
+    updateFollow(state, value) {
+      state.follow = value;
+    },
+    resetFollow(state, value) {
+      state.follow = {};
     }
     // updateIsformDataNoCommit(state, val) {
     //   state.isformDataNoCommit = val;

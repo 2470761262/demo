@@ -90,7 +90,7 @@
   <div class="look-record-content">
     <h3 class="record-content-title">带看记录</h3>
     <div class="record-content-scroll">
-      <left-progress v-for="(item, index) in 5" :key="index">
+      <left-progress v-for="(item, index) in list" :key="index">
         <template v-slot:default="scope">
           <div class="task-progress-body">
             <div class="progress-head">
@@ -100,20 +100,20 @@
               >
                 预约带看
               </div>
-              <div class="head-time">2020-01-06 11:04:21</div>
+              <div class="head-time">{{ item.StartTime }}</div>
             </div>
             <div class="progress-data-item">
               <div class="data-item-title">带看时间:</div>
-              <div class="data-item-msg">2020-02-16 10:05:01</div>
+              <div class="data-item-msg">{{ item.EndTime }}</div>
             </div>
             <div class="progress-data-item">
               <div class="data-item-title">带看楼盘:</div>
-              <div class="data-item-msg">国贸天琴湾</div>
+              <div class="data-item-msg">{{ item.communityName }}</div>
             </div>
             <div class="progress-data-item">
               <div class="data-item-title">带看总结:</div>
               <div class="data-item-msg">
-                还要再考虑一下，下周一在一次跟进回访
+                {{ item.Memo }}
               </div>
             </div>
           </div>
@@ -153,6 +153,8 @@
 
 <script>
 import leftProgress from "../otherCom/leftProgress";
+import { mapState, mapMutations } from "vuex";
+import moment from "moment";
 export default {
   components: {
     leftProgress,
@@ -163,6 +165,7 @@ export default {
   },
   data() {
     return {
+      list: [],
       reserveFlag: false, //预约带看弹框开关
       beltlookFlag: false // 添加带看弹框开关
     };
@@ -176,6 +179,29 @@ export default {
     openPop(popName) {
       this[popName] = true;
     }
+  },
+  watch: {
+    detail: {
+      deep: true,
+      handler(newValue) {
+        if (newValue.code == 200) {
+          //设置带看进度
+          this.list = newValue.data.SalePairOrderTblDtoList;
+        } else {
+          this.$message({
+            type: "info",
+            message: newValue.message
+          });
+        }
+      }
+    }
+  },
+  computed: {
+    ...mapState({
+      detail: value => {
+        return value.customers.process.salePairProcess;
+      }
+    })
   }
 };
 </script>
