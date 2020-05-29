@@ -333,7 +333,7 @@ export default {
           order: "custom",
           disabled: false,
           default: true,
-          format: item => item.unitpaice + "元/㎡"
+          formart: item => Number(item.unitPrice).toFixed(1) + "元/㎡"
         },
         {
           prop: "",
