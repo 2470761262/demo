@@ -494,6 +494,11 @@ export default {
     });
     this.getTree();
   },
+  watch: {
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
+    }
+  },
   methods: {
     houseFormat(rooms, hall, toilet) {
       let ro,

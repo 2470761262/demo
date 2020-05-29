@@ -278,7 +278,8 @@ export default {
       turnPop: false, //转公客开关
       removePop: false, //删除按钮弹框开关
       turnTypePop: true, //转状态按钮弹框开关
-      impressionList: []
+      impressionList: [],
+      customerId: null
     };
   },
   methods: {
@@ -294,6 +295,41 @@ export default {
 
     removeTransmit(e) {
       console.log("removeTransmit -> e", e);
+      if (!this.customerId || this.customerId == 0) {
+        this.$message({
+          type: "info",
+          message: "客户id为空，无法删除"
+        });
+        return;
+      }
+      let memo = e == 0 ? "客户无意向" : "空号";
+      let that = this;
+      that.$api
+        .post({
+          url: "/saleCustomer/deleteCustomer",
+          qs: true,
+          data: { customerId: that.customerId, memo: memo }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log(result);
+          if (result.code == 200) {
+            this.$message({
+              type: "info",
+              message: "提交删除申请成功，请等待审核！"
+            });
+            that.removePop = true;
+          } else {
+            this.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("【【【【uups,客源删除申请失败】】】】");
+          console.log(e);
+        });
     },
 
     /**

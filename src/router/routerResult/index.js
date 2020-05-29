@@ -1230,5 +1230,17 @@ export default [
       import(
         /* webpackChunkName: "customersDetail" */ "@/pages/customersSystem/customersDetail/customersDetail.vue"
       )
+  },
+  {
+    //客户审核管理
+    path: "/customersSystem/checkCustomerList",
+    name: "checkCustomerList",
+    meta: {
+      title: "客户审核列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "checkCustomerList" */ "@/pages/customersSystem/checkCustomer/checkCustomerList.vue"
+      )
   }
 ];
