@@ -880,7 +880,7 @@ export default {
     },
     /**
      * 解析附件
-     *
+     *@param {Array} list //附件数组
      */
     getFile(list) {
       console.log(list, "wwww");
