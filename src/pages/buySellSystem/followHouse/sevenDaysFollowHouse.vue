@@ -143,7 +143,7 @@ export default {
           prop: "hall",
           label: "户型",
           width: "170",
-          formart: item => this.houseFormat
+          formart: item => this.houseFormat(item.rooms, item.hall, item.toilet)
         },
         { prop: "decoration", label: "装修程度", width: "160" }
         // ,

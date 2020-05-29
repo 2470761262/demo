@@ -391,7 +391,7 @@ export default {
           order: false,
           disabled: false,
           default: true,
-          formart: item => this.houseFormat
+          formart: item => this.houseFormat(item.rooms, item.hall, item.toilet)
         },
         {
           prop: "unitPrice",
