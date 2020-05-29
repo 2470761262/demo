@@ -143,13 +143,7 @@ export default {
           prop: "hall",
           label: "户型",
           width: "170",
-          formart: item =>
-            (item.rooms != null ? item.rooms : 0) +
-            "室" +
-            (item.hall != null ? item.rooms : 0) +
-            "厅" +
-            (item.toilet != null ? item.rooms : 0) +
-            "卫"
+          formart: item => this.houseFormat(item.rooms, item.hall, item.toilet)
         },
         { prop: "decoration", label: "装修程度", width: "160" }
         // ,
@@ -181,6 +175,27 @@ export default {
     this.querylist();
   },
   methods: {
+    houseFormat(rooms, hall, toilet) {
+      let ro,
+        ha,
+        to = "";
+      if (rooms != null && rooms != "" && rooms != undefined) {
+        ro = rooms + "室";
+      } else {
+        ro = "0" + "室";
+      }
+      if (hall != null && hall != "" && hall != undefined) {
+        ha = hall + "厅";
+      } else {
+        ha = "0" + "厅";
+      }
+      if (toilet != null && toilet != "" && toilet != undefined) {
+        to = toilet + "卫";
+      } else {
+        to = "0" + "卫";
+      }
+      return ro + ha + to;
+    },
     navPage(id) {
       this.$router.push({ name: "houseDetails", params: { houseId: id } });
     },
