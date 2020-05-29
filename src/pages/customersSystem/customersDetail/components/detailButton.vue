@@ -218,7 +218,10 @@
         @click="openPop('turnPop')"
         >转公客</el-button
       >
-      <el-button class="customers-button-item" icon="el-icon-refresh"
+      <el-button
+        class="customers-button-item"
+        icon="el-icon-refresh"
+        @click="openPop('turnTypePop')"
         >转状态</el-button
       >
 
