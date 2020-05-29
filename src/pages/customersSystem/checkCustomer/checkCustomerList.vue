@@ -12,7 +12,6 @@
       @sort-change="sortMethod"
       :border="true"
       default-expand-all
-      :cellClass="cellClass"
       headerClass="headerCellSet1"
       @handleCurrentChange="handleCurrentChange"
       @handleSizeChange="handleSizeChange"
@@ -23,14 +22,39 @@
         <section class="query-content">
           <div class="empty-query">
             <div class="page-list-query-row" v-if="changeQuery">
+              <div class="query-content-cell">
+                <h3 class="query-cell-title">客户姓名</h3>
+                <el-input
+                  placeholder="客户姓名"
+                  v-model="queryData.customerName"
+                  class="set-input90"
+                  clearable
+                />
+              </div>
               <div class="query-content-cell cell-interval75">
-                <h3 class="query-cell-title">审核类型</h3>
+                <h3 class="query-cell-title">审核状态</h3>
                 <el-select
-                  multiple
+                  clearable
+                  placeholder="全部"
+                  class="set-select120"
+                  v-model="queryData.tag"
+                >
+                  <el-option
+                    v-for="item in checkStatusList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </div>
+              <div class="query-content-cell cell-interval75">
+                <h3 class="query-cell-title">申请类型</h3>
+                <el-select
+                  clearable
                   placeholder="全部"
                   class="set-select120"
                   collapse-tags
-                  v-model="queryData.selectedPairParams"
+                  v-model="queryData.type"
                 >
                   <el-option
                     v-for="item in checkTypeList"
@@ -75,7 +99,6 @@
 
 <script>
 import listPage from "@/components/listPage";
-import { setImpression } from "@/util/tabUtil";
 export default {
   components: {
     listPage
@@ -83,14 +106,20 @@ export default {
   data() {
     return {
       queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
-      formData: {
-        //客户id
-        EntructId: "",
-        //内容
-        Memo: ""
-      },
-      activeProdata: null, //点击写跟进后，用来保存当前行的数据的临时变量
-      writeFlag: false, //写跟进弹框开关
+      checkStatusList: [
+        {
+          value: "0",
+          label: "未审核"
+        },
+        {
+          value: "1",
+          label: "审核通过"
+        },
+        {
+          value: "2",
+          label: "未通过"
+        }
+      ],
       checkTypeList: [
         {
           value: "5",
@@ -102,7 +131,6 @@ export default {
         }
       ],
       changeQuery: true, //顶部开关
-      querySelectFlag: false, //侧边印象开关
       loading: false,
       pageJson: {
         total: 50, //总记录数
@@ -110,22 +138,19 @@ export default {
       },
       tableColumn: [
         {
-          prop: "rooms",
+          prop: "customerName",
           label: "客户名称",
           width: "120px",
-          order: true,
-          formart: (row, column) => {
-            return "连表查询";
-          }
+          order: true
         },
         {
           prop: "type",
-          label: "审核类型",
+          label: "申请类型",
           width: "120px",
           order: false,
           formart: (row, column) => {
             if (row.type == 5) {
-              return "类型转换";
+              return "状态转换";
             } else if (row.type == 6) {
               return "删除申请";
             }
@@ -149,30 +174,37 @@ export default {
           }
         },
         {
+          prop: "addPerName",
+          label: "提审人",
+          width: "120px",
+          order: true
+        },
+
+        { prop: "addTime", label: "提审时间", width: "120px", order: true },
+        {
+          prop: "ownerMemo",
+          label: "提审原因",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            if (row.ownerMemo && row.ownerMemo.length > 15) {
+              return row.ownerMemo.substring(0, 14) + "...";
+            }
+            return row.ownerMemo;
+          }
+        },
+        {
           prop: "checkMemo",
           label: "审核意见",
           width: "120px",
           order: true,
           formart: (row, column) => {
-            return "审核意见";
+            if (row.checkMemo && row.checkMemo.length > 15) {
+              return row.checkMemo.substring(0, 14) + "...";
+            }
+            return row.checkMemo;
           }
         },
-        {
-          prop: "checkPer",
-          label: "审核人",
-          width: "120px",
-          order: true,
-          formart: (row, column) => {
-            return "超人";
-          }
-        },
-        {
-          prop: "checkTime",
-          label: "最近审核时间",
-          width: "120px",
-          order: true
-        },
-        { prop: "addTime", label: "提审时间", width: "120px", order: true },
         {
           prop: "cz",
           label: "操作",
@@ -180,111 +212,162 @@ export default {
           order: false,
           fixed: true,
           formart: e => {
-            return (
-              <div>
-                <el-button type="warning" size="mini" icon="el-icon-date">
-                  审核
-                </el-button>
-              </div>
-            );
+            if (e.tag == 0) {
+              //未审核
+              return (
+                <div>
+                  <el-button
+                    type="warning"
+                    size="mini"
+                    icon="el-icon-date"
+                    onClick={this.checkOK.bind(this, e)}
+                  >
+                    通过
+                  </el-button>
+                  <el-button
+                    type="warning"
+                    size="mini"
+                    icon="el-icon-date"
+                    onClick={this.checkNotOK.bind(this, e)}
+                  >
+                    不通过
+                  </el-button>
+                </div>
+              );
+            } else {
+              return (
+                <div>
+                  <el-button type="warning" size="mini" icon="el-icon-date">
+                    查看
+                  </el-button>
+                </div>
+              );
+            }
           }
         }
       ], //定义表格数据
-      tableData: [
-        // {
-        //   id: 1,
-        //   qq: "张先生(男)",
-        //   ee: "90-120万",
-        //   rr: "80-90㎡",
-        //   tt: "3房",
-        //   yy: "为带看",
-        //   uu: "站务",
-        //   ii: "2020-02-01",
-        //   pp: ["活跃呵护", "心机汪", "一是同行"]
-        // }
-      ], //存放表格数据
+      tableData: [], //存放表格数据
       queryData: {
-        tel: "",
-        selectedPairParams: [], //带看多选条件
-        selectedDesireIntensitys: [], //意向多选条件
-        selectedHouseNumbers: [], //房型多选条件
-        minPrice: null, //最小价格条件
-        maxPrice: null, //最大价格条件
-        minArea: null, //最小面积条件
-        maxArea: null, //最大面积条件
-        minRooms: null,
-        maxRooms: null,
-        minAddTime: null, //最大带看时间条件
-        maxAddTime: null //最大带看时间条件
+        customerName: "",
+        type: null, //申请类型
+        tag: null //审核状态
       },
-      addTime: null,
-      queryParams: {}, //上方的条件组合
-      customerParams: {} //左侧印象选中的条件
+      queryParams: {} //上方的条件组合
     };
   },
   watch: {
     queryData: {
       handler(val, oldVal) {
         {
-          let houseNumbers = [];
-          let just1 = false;
-          let just2 = false;
-          let just3 = false;
-          for (let v = 0; v < 6; v++) {
-            just1 =
-              this.queryData.minRooms &&
-              this.queryData.maxRooms &&
-              v <= Number(this.queryData.maxRooms) &&
-              v >= Number(this.queryData.minRooms);
-            just2 =
-              this.queryData.minRooms &&
-              !this.queryData.maxRooms &&
-              v >= Number(this.queryData.minRooms);
-            just3 =
-              !this.queryData.minRooms &&
-              this.queryData.maxRooms &&
-              v <= Number(this.queryData.maxRooms);
-            if (just1 || just2 || just3) {
-              houseNumbers.push(v);
-            }
-          }
           this.queryParams = {
-            tel: this.queryData.tel,
-            houseNumbers: houseNumbers,
-            pairNumbers: this.queryData.selectedPairParams,
-            desireIntensitys: this.queryData.selectedDesireIntensitys,
-            minPrice: this.queryData.minPrice,
-            maxPrice: this.queryData.maxPrice,
-            minArea: this.queryData.minArea,
-            maxArea: this.queryData.maxArea,
-            minAddTime: this.queryData.minAddTime,
-            maxAddTime: this.queryData.maxAddTime
+            customerName: this.queryData.customerName,
+            type: this.queryData.type,
+            tag: this.queryData.tag
           };
-          this.queryCustomerData(1);
+          this.queryCustomerCheckData(1);
         }
       },
       deep: true
-    },
-    addTime: function(val) {
-      if (val) {
-        this.queryData.minAddTime = val[0];
-        this.queryData.maxAddTime = val[1];
-        console.log(
-          this.queryData.minAddTime,
-          this.queryData.maxAddTime,
-          "设置了起止录入时间"
-        );
-      } else {
-        this.queryData.minAddTime = this.queryData.maxAddTime = null;
-        console.log("清空了录入时间");
-      }
     }
   },
   mounted() {
-    this.$nextTick(setImpression);
-    this.queryCustomerData(1);
+    this.queryCustomerCheckData(1);
   },
   methods: {
+    checkOK(row) {
+      let that = this;
+      if (row.type == 5) {
+        console.log("状态转换审核通过");
+        this.$message({
+          type: "success",
+          message: "状态审核未实现"
+        });
+      } else if (row.type == 6) {
+        console.log("删除审核通过");
+        this.$confirm("确定这样操作吗?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        })
+          .then(() => {
+            that.checkOperation(row.customerId, 1, "审核通过", function() {
+              row.tag = 1; //更新审核状态
+            });
+          })
+          .catch(() => {});
+      }
+    },
+    checkOperation(customerId, tag, memo, callBack) {
+      let that = this;
+      let checkParams = {
+        eid: customerId, //客源id
+        tag: tag,
+        checkMemo: memo
+      };
+      console.log(checkParams, "即将删除审核");
+      that.$api
+        .post({
+          url: "/saleCustomerCheck/checkCustomerOperation",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: checkParams
+        })
+        .then(e => {
+          let result = e.data;
+          console.log(result);
+          if (result.code == 200) {
+            callBack();
+            this.$message({
+              type: "info",
+              message: "操作成功"
+            });
+          } else {
+            this.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("【【【【uups,删除客源审核失败】】】】");
+          console.log(e);
+        });
+    },
+    checkNotOK(row) {
+      if (row.type == 5) {
+        console.log("状态转换审核不通过");
+        this.$message({
+          type: "success",
+          message: "状态审核未实现"
+        });
+      } else if (row.type == 6) {
+        console.log("删除审核不通过");
+        let that = this;
+        this.$prompt("请输入原因", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消"
+          //inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          //inputErrorMessage: "邮箱格式不正确"
+        })
+          .then(({ value }) => {
+            if (!value) {
+              this.$message({
+                type: "success",
+                message: "请输入原因"
+              });
+              return;
+            }
+            that.checkOperation(row.customerId, 2, value, function() {
+              row.tag = 2; //更新审核状态
+            });
+          })
+          .catch(() => {
+            this.$message({
+              type: "info",
+              message: "取消"
+            });
+          });
+      }
+    },
     toCustomerDetail(item) {
       let id = item.id;
       if (!item.id) {
@@ -298,40 +381,30 @@ export default {
         params: { customerId: id }
       });
     },
-    queryCustomerDataLeft(p) {
-      let _that = this;
-      console.log(p, "区域公客右侧印象触发查询");
-      if (p) {
-        this.customerParams = p;
-      } else {
-        this.customerParams = {};
-      }
-      this.queryCustomerData(1);
-    },
-    queryCustomerData(page) {
+    queryCustomerCheckData(page) {
       let _that = this;
       _that.queryParams = Object.assign(_that.queryParams, {
         page: page,
-        limit: _that.pageJson.pageSize,
-        del: 0,
-        plates: [2, 3]
+        limit: _that.pageJson.pageSize
       });
+      _that.loading = true;
       _that.$api
         .post({
-          url: "/saleCustomer/listMyCustomers",
-          data: Object.assign(_that.queryParams, _that.customerParams),
+          url: "/saleCustomer/listCustomerCheck",
+          data: _that.queryParams,
           headers: { "Content-Type": "application/json" }
         })
         .then(e => {
           let result = e.data;
+          _that.loading = false;
           if (result.code == 200) {
-            console.log(result, "查询区域公客公客列表（）");
-            var dataCustomers = result.data.data;
+            console.log(result, "查询客源审核列表（）");
+            var dataCustomers = result.data.list;
             _that.tableData = dataCustomers;
-            _that.pageJson.total = result.data.dataCount;
+            _that.pageJson.total = result.data.totalCount;
             //result.data.pageSum
           } else {
-            console.log("查询区域公客列表" + result.message);
+            console.log("查询客源审核列表" + result.message);
             _that.$message({
               type: "info",
               message: result.message
@@ -339,74 +412,15 @@ export default {
           }
         })
         .catch(e => {
-          console.log("查询区域公客失败catch");
-          console.log(e);
-        })
-        .finally(() => {});
-    },
-    /**
-     * @example: 打开弹框
-     * @param {string} popName
-     */
-    openPop(popName, e) {
-      let _that = this;
-      // //把当前行的值保存到临时变量activeProdata
-      _that.activeProdata = e;
-      this[popName] = true;
-    },
-    confirmEmit(e) {
-      let _that = this;
-      //获取文本值
-      let textarea = e.textarea;
-      //获取当前行的值
-      let activeProdata = _that.activeProdata;
-      //获取当前客户id
-      let cid = activeProdata.id;
-      _that.formData.EntructId = cid;
-      _that.formData.Memo = textarea;
-      _that.$api
-        .post({
-          url: "/saleCustomer/addSaleCusFlower",
-          data: _that.formData,
-          headers: { "Content-Type": "application/json" }
-        })
-        .then(e => {
-          let result = e.data;
-          _that.$message({
-            type: "info",
-            message: result.message
-          });
-          if (result.code == 200) {
-            console.log(result, "写跟进");
-            _that.$message({
-              type: "success",
-              message: result.message
-            });
-          } else {
-            console.log("写跟进" + result.message);
-            _that.$message({
-              type: "info",
-              message: result.message
-            });
-          }
-        })
-        .catch(e => {
-          console.log("写跟进失败catch");
+          _that.loading = false;
+
+          console.log("查询客源审核失败catch");
           console.log(e);
         })
         .finally(() => {});
     },
     triggerChange() {
       this.changeQuery = !this.changeQuery;
-    },
-    /**
-     * 设置如果有当前行有印象数据则行先生对应的calss
-     */
-    cellClass({ row }) {
-      if (row.hasOwnProperty("pp")) {
-        return "cellset";
-      }
-      return "cellItemSet";
     },
     /**
      * 排序触发
@@ -418,14 +432,14 @@ export default {
      */
     handleSizeChange(e) {
       this.pageJson.pageSize = e;
-      this.queryCustomerData(1);
+      this.queryCustomerCheckData(1);
     },
     /**
      * 前往多少页
      * @param {number} e
      */
     handleCurrentChange(e) {
-      this.queryCustomerData(e);
+      this.queryCustomerCheckData(e);
     }
   }
 };
