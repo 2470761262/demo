@@ -23,35 +23,8 @@
         <section class="query-content">
           <div class="empty-query">
             <div class="page-list-query-row" v-if="changeQuery">
-              <div class="query-content-cell">
-                <h3 class="query-cell-title">电话</h3>
-                <el-input
-                  placeholder="客户电话"
-                  v-model="queryData.tel"
-                  class="set-input90"
-                  clearable
-                  oninput="value=value.replace(/[^\d]/g,'')"
-                />
-              </div>
               <div class="query-content-cell cell-interval75">
-                <h3 class="query-cell-title">客户意向</h3>
-                <el-select
-                  multiple
-                  placeholder="全部"
-                  class="set-select120"
-                  collapse-tags
-                  v-model="queryData.selectedDesireIntensitys"
-                >
-                  <el-option
-                    v-for="item in desireLists"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </div>
-              <div class="query-content-cell cell-interval75">
-                <h3 class="query-cell-title">带看进度</h3>
+                <h3 class="query-cell-title">审核类型</h3>
                 <el-select
                   multiple
                   placeholder="全部"
@@ -60,86 +33,12 @@
                   v-model="queryData.selectedPairParams"
                 >
                   <el-option
-                    v-for="item in pairNumberlist"
+                    v-for="item in checkTypeList"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value"
                   ></el-option>
                 </el-select>
-              </div>
-            </div>
-            <div class="page-list-query-row" v-if="changeQuery">
-              <div class="query-content-cell">
-                <h3 class="query-cell-title">价格</h3>
-                <el-input
-                  placeholder="最小值"
-                  v-model="queryData.minPrice"
-                  class="set-input90"
-                  oninput="value=value.replace(/[^\d]/g,'')"
-                  clearable
-                />
-                <span class="cut-off-rule"></span>
-                <el-input
-                  placeholder="最大值"
-                  v-model="queryData.maxPrice"
-                  class="set-input90"
-                  oninput="value=value.replace(/[^\d]/g,'')"
-                  clearable
-                />
-                <span class="query-cell-suffix">万元</span>
-              </div>
-              <div class="query-content-cell cell-interval75">
-                <h3 class="query-cell-title">面积</h3>
-                <el-input
-                  placeholder="最小值"
-                  v-model="queryData.minArea"
-                  oninput="value=value.replace(/[^\d]/g,'')"
-                  class="set-input90"
-                  clearable
-                />
-                <span class="cut-off-rule"></span>
-                <el-input
-                  placeholder="最大值"
-                  v-model="queryData.maxArea"
-                  oninput="value=value.replace(/[^\d]/g,'')"
-                  class="set-input90"
-                  clearable
-                />
-                <span class="query-cell-suffix">平方</span>
-              </div>
-              <div class="query-content-cell cell-interval75">
-                <h3 class="query-cell-title">户型</h3>
-                <el-input
-                  placeholder="最小值"
-                  v-model="queryData.minRooms"
-                  oninput="value=value.replace(/[^\d]/g,'')"
-                  class="set-input90"
-                  clearable
-                />
-                <span class="cut-off-rule"></span>
-                <el-input
-                  placeholder="最大值"
-                  v-model="queryData.maxRooms"
-                  oninput="value=value.replace(/[^\d]/g,'')"
-                  class="set-input90"
-                  clearable
-                />
-              </div>
-            </div>
-            <div class="page-list-query-row" v-if="changeQuery">
-              <div class="query-content-cell">
-                <h3 class="query-cell-title">录入时间</h3>
-                <el-date-picker
-                  v-model="addTime"
-                  type="daterange"
-                  class="set-data-pricker set-pricker-width260"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  :default-time="['00:00:00', '23:59:59']"
-                  end-placeholder="结束日期"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                >
-                </el-date-picker>
               </div>
             </div>
           </div>
@@ -152,29 +51,10 @@
       </template>
       <template v-slot:title>
         <h3 class="page-tab-title">
-          <i class="iconzaishouwugendan iconfont"></i> <span>客源列表</span>
+          <i class="iconzaishouwugendan iconfont"></i> <span>客源审核列表</span>
         </h3>
       </template>
       <template v-slot:tableColumn>
-        <el-table-column type="expand" width="1px">
-          <template v-slot:default="props">
-            <!-- pp属性名请按照实际字段进行修改 -->
-            <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
-            <template v-if="props.row.pp && props.row.pp.length > 0">
-              <div class="flex-expand">
-                <div class="flex-impression-content">
-                  <div v-for="(item, index) in props.row.pp" :key="index">
-                    {{ item }}
-                  </div>
-                </div>
-                <label class="trigger-impression-btn">
-                  <input type="checkbox" />
-                  <i class="iconfont"></i>
-                </label>
-              </div>
-            </template>
-          </template>
-        </el-table-column>
         <template v-for="item in tableColumn">
           <el-table-column
             :prop="item.prop"
@@ -190,15 +70,6 @@
         </template>
       </template>
     </list-Page>
-    <!-- 写跟进弹框 -->
-    <write-follow-up
-      v-if="writeFlag"
-      :visible.sync="writeFlag"
-      title="写跟进"
-      style-type="0"
-      @followConfirmEmit="confirmEmit"
-      width="4.63rem"
-    ></write-follow-up>
   </div>
 </template>
 
@@ -207,8 +78,7 @@ import listPage from "@/components/listPage";
 import { setImpression } from "@/util/tabUtil";
 export default {
   components: {
-    listPage,
-    writeFollowUp: () => import("../components/writeFollowUp")
+    listPage
   },
   data() {
     return {
@@ -221,59 +91,14 @@ export default {
       },
       activeProdata: null, //点击写跟进后，用来保存当前行的数据的临时变量
       writeFlag: false, //写跟进弹框开关
-      sssss: "", //请按照实际字段名进行修改，
-      desireLists: [
-        {
-          value: "0",
-          label: "无意向"
-        },
-        {
-          value: "1",
-          label: "较弱"
-        },
-        {
-          value: "2",
-          label: "一般"
-        },
-        {
-          value: "3",
-          label: "强烈"
-        }
-      ],
-      pairNumberlist: [
-        {
-          value: "0",
-          label: "未带看"
-        },
-        {
-          value: "1",
-          label: "首次带看"
-        },
-        {
-          value: "2",
-          label: "二次带看"
-        },
-        {
-          value: "3",
-          label: "三次带看"
-        },
-        {
-          value: "4",
-          label: "四次带看"
-        },
+      checkTypeList: [
         {
           value: "5",
-          label: "五次以上"
-        }
-      ],
-      ssslist: [
-        {
-          value: "选项1",
-          label: "黄金糕"
+          label: "类型转换"
         },
         {
-          value: "选项2",
-          label: "双皮奶"
+          value: "6",
+          label: "删除申请"
         }
       ],
       changeQuery: true, //顶部开关
@@ -284,74 +109,70 @@ export default {
         pageSize: 10 //每页条数
       },
       tableColumn: [
-        { prop: "customers", label: "姓名", width: "120px", order: false },
-        {
-          prop: "desireIntensity",
-          label: "意向",
-          width: "120px",
-          order: true,
-          formart: row => {
-            return (
-              <el-rate value={row.desireIntensity} max={3} disabled></el-rate>
-            );
-          }
-        },
-        {
-          prop: "priceRange",
-          label: "总价",
-          width: "120px",
-          order: true,
-          formart: (row, column) => {
-            return (row.minPrice || "/") + "-" + (row.maxPrice || "/");
-          }
-        },
-        {
-          prop: "minArea",
-          label: "面积",
-          width: "120px",
-          order: true,
-          formart: (row, column) => {
-            return (row.minArea || "/") + "-" + (row.maxArea || "/");
-          }
-        },
         {
           prop: "rooms",
-          label: "户型",
+          label: "客户名称",
           width: "120px",
           order: true,
           formart: (row, column) => {
-            if (!row.rooms) {
-              return "/";
-            }
-            let s = row.rooms.replace("$", "或");
-            var d = s.length - 1;
-            //判断如果以或结尾，去除掉
-            if (d >= 0 && s.lastIndexOf("或") == d) {
-              s = s.substr(0, s.length - 1);
-            }
-            return s;
+            return "连表查询";
           }
         },
         {
-          prop: "pairNumber",
-          label: "带看进度",
+          prop: "type",
+          label: "审核类型",
+          width: "120px",
+          order: false,
+          formart: (row, column) => {
+            if (row.type == 5) {
+              return "类型转换";
+            } else if (row.type == 6) {
+              return "删除申请";
+            }
+            return "未知";
+          }
+        },
+        {
+          prop: "tag",
+          label: "审核状态",
           width: "120px",
           order: true,
           formart: (row, column) => {
-            if (!row.pairNumber || row.pairNumber == 0) {
-              return "未带看";
-            } else {
-              return row.pairNumber + "次";
+            if (row.tag == 0) {
+              return "未审核";
+            } else if (row.tag == 1) {
+              return "审核通过";
+            } else if (row.tag == 2) {
+              return "未通过";
             }
+            return "未知";
           }
         },
         {
-          prop: "lastPairFollowTime",
-          label: "上次带看",
+          prop: "checkMemo",
+          label: "审核意见",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            return "审核意见";
+          }
+        },
+        {
+          prop: "checkPer",
+          label: "审核人",
+          width: "120px",
+          order: true,
+          formart: (row, column) => {
+            return "超人";
+          }
+        },
+        {
+          prop: "checkTime",
+          label: "最近审核时间",
           width: "120px",
           order: true
         },
-        { prop: "addTime", label: "录入时间", width: "120px", order: true },
+        { prop: "addTime", label: "提审时间", width: "120px", order: true },
         {
           prop: "cz",
           label: "操作",
@@ -362,15 +183,7 @@ export default {
             return (
               <div>
                 <el-button type="warning" size="mini" icon="el-icon-date">
-                  预约带看
-                </el-button>
-                <el-button
-                  type="danger"
-                  size="mini"
-                  icon="el-icon-edit"
-                  onClick={this.openPop.bind(this, "writeFlag", e)}
-                >
-                  写跟进
+                  审核
                 </el-button>
               </div>
             );

@@ -212,6 +212,7 @@ export default {
   },
   data() {
     return {
+      queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       formData: {
         //客户id
         EntructId: "",
@@ -219,7 +220,6 @@ export default {
         Memo: ""
       },
       activeProdata: null, //点击写跟进后，用来保存当前行的数据的临时变量
-      queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       writeFlag: false, //写跟进弹框开关
       sssss: "", //请按照实际字段名进行修改，
       desireLists: [
@@ -361,9 +361,6 @@ export default {
           formart: e => {
             return (
               <div>
-                <el-button type="primary" size="mini" icon="el-icon-phone">
-                  一键拨号
-                </el-button>
                 <el-button type="warning" size="mini" icon="el-icon-date">
                   预约带看
                 </el-button>

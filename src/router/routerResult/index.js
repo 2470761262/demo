@@ -1208,6 +1208,18 @@ export default [
       )
   },
   {
+    //客户系统 修改客户
+    path: "/customersSystem/modifyCustomers",
+    name: "modifyCustomers",
+    meta: {
+      title: "修改客户"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "modifyCustomers" */ "@/pages/customersSystem/modifyCustomers/modifyCustomer.vue"
+      )
+  },
+  {
     //客户系统 客户详情
     path: "/customersSystem/customersDetail",
     name: "customerDetail",
@@ -1217,6 +1229,18 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "customersDetail" */ "@/pages/customersSystem/customersDetail/customersDetail.vue"
+      )
+  },
+  {
+    //客户审核管理
+    path: "/customersSystem/checkCustomerList",
+    name: "checkCustomerList",
+    meta: {
+      title: "客户审核列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "checkCustomerList" */ "@/pages/customersSystem/checkCustomer/checkCustomerList.vue"
       )
   }
 ];

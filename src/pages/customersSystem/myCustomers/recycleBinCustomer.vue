@@ -504,6 +504,7 @@ export default {
       let _that = this;
       _that.queryParams = Object.assign(_that.queryParams, {
         page: page,
+        isPrivate: true,
         limit: _that.pageJson.pageSize,
         del: 1
       });

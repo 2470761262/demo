@@ -392,7 +392,12 @@ export default {
           disabled: false,
           default: true,
           formart: item =>
-            item.rooms + "室" + item.hall + "厅" + item.toilet + "卫"
+            (item.rooms != null ? item.rooms : 0) +
+            "室" +
+            (item.hall != null ? item.rooms : 0) +
+            "厅" +
+            (item.toilet != null ? item.rooms : 0) +
+            "卫"
         },
         {
           prop: "unitPrice",

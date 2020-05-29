@@ -2,7 +2,7 @@
 @import url("../less/custTab.less");
 </style>
 <template>
-  <div>
+  <div class="list-content">
     <!-- 
         :expand-row-keys='[1,3]'
         row-key="id"
@@ -97,6 +97,15 @@
       v-bind:customerId="currentClickCustomerId"
     >
     </add-belt-look>
+    <!-- 删除-->
+    <remove
+      :visible.sync="removePop"
+      v-if="removePop"
+      style-type="0"
+      title="删除"
+      width="3.28rem"
+      @transmitConfirm="removeTransmit"
+    />
   </div>
 </template>
 
@@ -113,10 +122,14 @@ export default {
     leftAttention,
     writeFollowUp: () => import("../components/writeFollowUp"),
     //添加带看
-    addBeltLook: () => import("@/pages/customersSystem/components/addBeltLook")
+    addBeltLook: () => import("@/pages/customersSystem/components/addBeltLook"),
+    remove: () =>
+      import("@/pages/customersSystem/customersDetail/didLog/remove")
   },
   data() {
     return {
+      removePop: false, //删除按钮弹框开关
+      queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       formData: {
         //客户id
         EntructId: "",
@@ -219,13 +232,18 @@ export default {
         {
           prop: "cz",
           label: "操作",
-          width: "300px",
+          width: "400px",
           order: false,
           fixed: true,
           formart: (row, column) => {
             return (
               <div>
-                <el-button type="primary" size="mini" icon="el-icon-phone">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-phone"
+                  onClick={this.dialPhone.bind(this, row)}
+                >
                   一键拨号
                 </el-button>
                 <el-button
@@ -243,6 +261,22 @@ export default {
                   onclick={this.openPop.bind(this, "writeFlag", row)}
                 >
                   写跟进
+                </el-button>
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onclick={this.modifyCustomer.bind(this, row)}
+                >
+                  修改
+                </el-button>
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onclick={this.openDeleteCustomer.bind(this, row)}
+                >
+                  删除
                 </el-button>
               </div>
             );
@@ -273,6 +307,118 @@ export default {
     _that.staticsMyCustomerData();
   },
   methods: {
+    openDeleteCustomer(e) {
+      if (e.tag == 2 || e.tag == 3 || e.del == -1) {
+        this.$message({
+          type: "info",
+          message: "该客户正在删除审核中，或审核失败"
+        });
+      } else {
+        this.removePop = true;
+        this.currentClickCustomerId = e.id;
+      }
+    },
+    removeTransmit(e) {
+      let that = this;
+      let memo = e == 0 ? "客户无意向" : "空号";
+      if (!that.currentClickCustomerId || that.currentClickCustomerId == 0) {
+        this.$message({
+          type: "info",
+          message: "未获取客户id，无法删除"
+        });
+        return;
+      }
+      that.$api
+        .post({
+          url: "/saleCustomer/deleteCustomer",
+          qs: true,
+          data: { customerId: that.currentClickCustomerId, memo: memo }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log(result);
+          if (result.code == 200) {
+            this.$message({
+              type: "info",
+              message: "提交删除申请成功，请等待审核！"
+            });
+            that.removePop = true;
+          } else {
+            this.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("【【【【uups,客源删除申请失败】】】】");
+          console.log(e);
+        });
+    },
+    dialPhone(row) {
+      let that = this;
+      console.log(row, "点击了一键拨号");
+      if (!row.tel) {
+        this.$message({
+          type: "info",
+          message: "无客源号码"
+        });
+        return;
+      }
+      this.$confirm("确定拨号?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let dailParams = {
+            customerId: row.id,
+            remark: "客源一键拨号",
+            customerName: row.customers,
+            contactPhone: row.tel,
+            customerNo: row.customerNo,
+            customerPlate: row.plate
+          };
+          console.log(dailParams, "即将一键拨号");
+          that.$api
+            .post({
+              url: "/saleCustomer/DialPhoneToCustomer",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              data: dailParams
+            })
+            .then(e => {
+              let result = e.data;
+              console.log(result);
+              if (result.code == 200) {
+                this.$message({
+                  type: "info",
+                  message: "请注意查收微信消息"
+                });
+                //but.$emit("followReolad", true);
+              } else {
+                this.$message({
+                  type: "info",
+                  message: result.message
+                });
+              }
+            })
+            .catch(e => {
+              console.log("【【【【uups,客源一键拨号失败】】】】");
+              console.log(e);
+              this.$message({
+                type: "info",
+                message: "客源一键拨号失败"
+              });
+            });
+        })
+        .catch(() => {});
+    },
+    modifyCustomer(row) {
+      this.$router.push({
+        name: "modifyCustomers",
+        params: { customer: row, myImpression: this.myImpressions[row.id] }
+      });
+    },
     openBetAdd(customerId) {
       this.currentClickCustomerId = customerId;
       this.beltlookFlag = true;
@@ -374,7 +520,7 @@ export default {
     queryCustomerData(params) {
       let _that = this;
       let queryParams = Object.assign(
-        { limit: _that.pageJson.pageSize, del: 0 },
+        { limit: _that.pageJson.pageSize, del: 0, isPrivate: true },
         params
       );
       console.log(this);

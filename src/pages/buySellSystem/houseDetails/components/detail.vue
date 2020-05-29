@@ -184,11 +184,18 @@
   <div class="detail-content">
     <div class="detail-price-content">
       <div class="detail-price">
-        <span>{{ resultData.tradePrice||resultData.Price}}</span>
-        <span v-if="resultData.tradePrice||resultData.Price">万元</span>
+        <span>{{ resultData.tradePrice || resultData.Price }}</span>
+        <span v-if="resultData.tradePrice || resultData.Price">万元</span>
       </div>
       <div class="detail-price-avg">
-        {{ resultData.InArea?(((resultData.tradePrice||resultData.Price)*10000/resultData.InArea).toFixed(1) | emptyRead("元/㎡")) :"暂无" }}
+        {{
+          resultData.InArea
+            ? Number.parseInt(
+                ((resultData.tradePrice || resultData.Price) * 10000) /
+                  resultData.InArea
+              ).toFixed(1) || emptyRead("元/㎡")
+            : "暂无"
+        }}
       </div>
     </div>
     <div class="content-flex content-pad">

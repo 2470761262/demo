@@ -378,11 +378,21 @@ export default {
           formart: e => {
             return (
               <div>
-                <el-button type="primary" size="mini" icon="el-icon-phone">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-phone"
+                  onClick={this.dialPhone.bind(this, e)}
+                >
                   一键拨号
                 </el-button>
-                <el-button type="warning" size="mini" icon="el-icon-date">
-                  预约带看
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onclick={this.modifyCustomer.bind(this, e)}
+                >
+                  修改
                 </el-button>
                 <el-button
                   type="danger"
@@ -494,6 +504,64 @@ export default {
     this.queryCustomerData(1);
   },
   methods: {
+    dialPhone(row) {
+      let that = this;
+      console.log(row, "点击了一键拨号");
+      if (!row.tel) {
+        this.$message({
+          type: "info",
+          message: "无客源号码"
+        });
+        return;
+      }
+      this.$confirm("确定拨号?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let dailParams = {
+            customerId: row.id,
+            remark: "客源一键拨号",
+            customerName: row.customers,
+            contactPhone: row.tel,
+            customerNo: row.customerNo,
+            customerPlate: row.plate
+          };
+          console.log(dailParams, "即将一键拨号");
+          that.$api
+            .post({
+              url: "/saleCustomer/DialPhoneToCustomer",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              data: dailParams
+            })
+            .then(e => {
+              let result = e.data;
+              console.log(result);
+              if (result.code == 200) {
+                this.$message({
+                  type: "info",
+                  message: "请注意查收微信消息"
+                });
+                //but.$emit("followReolad", true);
+              } else {
+                this.$message({
+                  type: "info",
+                  message: result.message
+                });
+              }
+            })
+            .catch(e => {
+              console.log("【【【【uups,客源一键拨号失败】】】】");
+              console.log(e);
+              this.$message({
+                type: "info",
+                message: "客源一键拨号失败"
+              });
+            });
+        })
+        .catch(() => {});
+    },
     toCustomerDetail(item) {
       let id = item.id;
       if (!item.id) {
@@ -523,6 +591,7 @@ export default {
         page: page,
         limit: _that.pageJson.pageSize,
         del: 0,
+        isPrivate: true,
         minAddTime: new Date().setDate(new Date().getDate() - 7)
       });
       _that.$api
@@ -606,6 +675,12 @@ export default {
       //把当前行的值保存到临时变量activeProdata
       _that.activeProdata = e;
       this[popName] = true;
+    },
+    modifyCustomer(row) {
+      this.$router.push({
+        name: "modifyCustomers",
+        params: { customer: row, myImpression: this.myImpressions[row.id] }
+      });
     },
     triggerChange() {
       this.changeQuery = !this.changeQuery;
