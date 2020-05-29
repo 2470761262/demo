@@ -190,30 +190,36 @@ export default {
             dc.maxPrice = kong;
           }
           dc.hopeAllPay = dc.minPrice + "-" + dc.maxPrice + "万";
-          //装修需求
           let reg = new RegExp("\\$", "g");
-          if (dc.decoration.indexOf("$") != -1) {
-            dc.decoration = dc.decoration.replace(reg, ",");
-            dc.decoration = dc.decoration.substr(0, dc.decoration.length - 1);
+          //装修需求
+          if (dc.decoration) {
+            if (dc.decoration.indexOf("$") != -1) {
+              dc.decoration = dc.decoration.replace(reg, ",");
+              dc.decoration = dc.decoration.substr(0, dc.decoration.length - 1);
+            }
           }
 
           //购买户型
-          if (dc.rooms.indexOf("$") != -1) {
-            dc.rooms = dc.rooms.replace(reg, ",");
-            dc.rooms = dc.rooms.substr(0, dc.rooms.length - 1);
+          if (dc.rooms) {
+            if (dc.rooms.indexOf("$") != -1) {
+              dc.rooms = dc.rooms.replace(reg, ",");
+              dc.rooms = dc.rooms.substr(0, dc.rooms.length - 1);
+            }
           }
-          //期望中学
-          if (dc.school1.indexOf("$") != -1) {
-            dc.school1 = dc.school1.replace(reg, ",");
-            dc.school1 = dc.school1.substr(0, dc.school1.length - 1);
+          if (dc.school1) {
+            //期望中学
+            if (dc.school1.indexOf("$") != -1) {
+              dc.school1 = dc.school1.replace(reg, ",");
+              dc.school1 = dc.school1.substr(0, dc.school1.length - 1);
+            }
           }
-
-          //期望小学
-          if (dc.school2.indexOf("$") != -1) {
-            dc.school2 = dc.school2.replace(reg, ",");
-            dc.school2 = dc.school2.substr(0, dc.school2.length - 1);
+          if (dc.school2) {
+            //期望小学
+            if (dc.school2.indexOf("$") != -1) {
+              dc.school2 = dc.school2.replace(reg, ",");
+              dc.school2 = dc.school2.substr(0, dc.school2.length - 1);
+            }
           }
-
           //上次带看
           if (dc.lastPairFollowTime)
             dc.lastPairFollowTime = moment(dc.lastPairFollowTime).format(
