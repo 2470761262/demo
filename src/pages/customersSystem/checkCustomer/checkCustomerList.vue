@@ -184,7 +184,7 @@ export default {
         {
           prop: "ownerMemo",
           label: "提审原因",
-          width: "120px",
+          width: "180px",
           order: true,
           formart: (row, column) => {
             if (row.ownerMemo && row.ownerMemo.length > 15) {
@@ -278,33 +278,36 @@ export default {
       let that = this;
       if (row.type == 5) {
         console.log("状态转换审核通过");
-        this.$message({
-          type: "success",
-          message: "状态审核未实现"
-        });
       } else if (row.type == 6) {
         console.log("删除审核通过");
-        this.$confirm("确定这样操作吗?", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消",
-          type: "warning"
-        })
-          .then(() => {
-            that.checkOperation(row.customerId, 1, "审核通过", function() {
-              row.tag = 1; //更新审核状态
-            });
-          })
-          .catch(() => {});
       }
+      this.$confirm("确定这样操作吗?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          that.checkOperation(row, 1, "审核通过", function() {
+            row.tag = 1; //更新审核状态
+          });
+        })
+        .catch(() => {});
     },
-    checkOperation(customerId, tag, memo, callBack) {
+    checkOperation(row, tag, memo, callBack) {
+      //type,5类型转换审核，6删除审核
+      //tag 1通过，2不通过
       let that = this;
+      let type = row.type;
+      let customerId = row.customerId;
       let checkParams = {
+        type: type,
         eid: customerId, //客源id
         tag: tag,
-        checkMemo: memo
+        checkMemo: memo,
+        resourceType: row.resourceType
       };
-      console.log(checkParams, "即将删除审核");
+      let tip = type == 6 ? "删除审核" : "类型状态审核";
+      console.log(checkParams, "即将" + tip);
       that.$api
         .post({
           url: "/saleCustomerCheck/checkCustomerOperation",
@@ -328,45 +331,41 @@ export default {
           }
         })
         .catch(e => {
-          console.log("【【【【uups,删除客源审核失败】】】】");
+          console.log("【【【【uups," + tip + "失败】】】】");
           console.log(e);
         });
     },
     checkNotOK(row) {
       if (row.type == 5) {
         console.log("状态转换审核不通过");
-        this.$message({
-          type: "success",
-          message: "状态审核未实现"
-        });
       } else if (row.type == 6) {
         console.log("删除审核不通过");
-        let that = this;
-        this.$prompt("请输入原因", "提示", {
-          confirmButtonText: "确定",
-          cancelButtonText: "取消"
-          //inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-          //inputErrorMessage: "邮箱格式不正确"
-        })
-          .then(({ value }) => {
-            if (!value) {
-              this.$message({
-                type: "success",
-                message: "请输入原因"
-              });
-              return;
-            }
-            that.checkOperation(row.customerId, 2, value, function() {
-              row.tag = 2; //更新审核状态
-            });
-          })
-          .catch(() => {
-            this.$message({
-              type: "info",
-              message: "取消"
-            });
-          });
       }
+      let that = this;
+      this.$prompt("请输入原因", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+        //inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+        //inputErrorMessage: "邮箱格式不正确"
+      })
+        .then(({ value }) => {
+          if (!value) {
+            this.$message({
+              type: "success",
+              message: "请输入原因"
+            });
+            return;
+          }
+          that.checkOperation(row, 2, value, function() {
+            row.tag = 2; //更新审核状态
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消"
+          });
+        });
     },
     toCustomerDetail(item) {
       let id = item.id;
