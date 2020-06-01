@@ -211,7 +211,7 @@
         ><i class="el-icon-phone"></i>一键拨号</el-button
       >
     </div>
-    <div class="customers-button-gruop">
+    <div class="customers-button-gruop" v-if="showOperationButton">
       <el-button
         class="customers-button-item"
         icon="el-icon-refresh"
@@ -270,7 +270,7 @@
 
 <script>
 export default {
-  props: ["customer"],
+  props: ["customer", "showOperationButton"],
   components: {
     //转公客
     turnClientele: () => import("../didLog/turnClientele"),
