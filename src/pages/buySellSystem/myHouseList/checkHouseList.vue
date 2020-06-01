@@ -880,23 +880,26 @@ export default {
     },
     /**
      * 解析附件
-     *
+     *@param {Array} list //附件数组
      */
     getFile(list) {
       console.log(list, "wwww");
+      //重置标记
       this.bigAccessoryFile = [];
       this.accessoryTable = false;
       this.bigAccessoryFileKey = "";
-      this.accessoryFile = util.deepCopy(this.resetAccessory); //重置json;
+      this.accessoryFile = util.deepCopy(this.resetAccessory); //重置外景图等附件数组;
       let data = [];
       if (list != null) {
         Object.keys(list).forEach(item => {
+          //循环解析数组
           if (list[item] != null) {
             list[item].forEach((element, index) => {
               if (element.subType != 7 && !element.url.includes(SMALLThumb)) {
                 element.url = element.url + SMALLThumb;
               }
               if (element.subType) {
+                //保存外景图等附件信息
                 element.activeIndex = index;
                 this.accessoryTable = true;
                 this.accessoryFile[element.subType][item].push(element);

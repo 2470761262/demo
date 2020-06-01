@@ -172,7 +172,7 @@ export default {
             dc.maxArea = kong;
           }
           dc.hopeArea = dc.minArea + "-" + dc.maxArea + "平";
-
+          console.log("basic---------------", dc.hopeArea);
           //首付金额
           if (dc.minFirstPrice == null) {
             dc.minFirstPrice = kongValue;
@@ -229,7 +229,6 @@ export default {
           if (dc.addTime) dc.addTime = moment(dc.addTime).format("YYYY-MM-DD");
         }
 
-        console.log("---------------", dc);
         return dc ? dc : {};
       }
     })

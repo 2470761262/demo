@@ -163,7 +163,6 @@
           v-for="(item, index) in houseMenuList"
           :key="index"
           :class="[item.cellTop, { 'item-hot': item.hot }]"
-          @click="log_socket.sendUserAnchorData(item.title, 'click')"
         >
           <div
             :data-anchor="item.title"
