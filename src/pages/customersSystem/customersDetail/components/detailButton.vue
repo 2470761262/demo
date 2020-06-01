@@ -207,7 +207,7 @@
           <span class="overText">9</span>
         </div>
       </div>
-      <el-button type="primary" class="customers-phone"
+      <el-button type="primary" class="customers-phone" @click="dailPhone"
         ><i class="el-icon-phone"></i>一键拨号</el-button
       >
     </div>
@@ -218,7 +218,10 @@
         @click="openPop('turnPop')"
         >转公客</el-button
       >
-      <el-button class="customers-button-item" icon="el-icon-refresh"
+      <el-button
+        class="customers-button-item"
+        icon="el-icon-refresh"
+        @click="openPop('turnTypePop')"
         >转状态</el-button
       >
 
@@ -265,6 +268,7 @@
 
 <script>
 export default {
+  props: ["customer"],
   components: {
     //转公客
     turnClientele: () => import("../didLog/turnClientele"),
@@ -277,12 +281,70 @@ export default {
     return {
       turnPop: false, //转公客开关
       removePop: false, //删除按钮弹框开关
-      turnTypePop: true, //转状态按钮弹框开关
-      impressionList: [],
-      customerId: null
+      turnTypePop: false, //转状态按钮弹框开关
+      impressionList: []
     };
   },
   methods: {
+    dailPhone() {
+      let row = this.customer;
+      let that = this;
+      console.log(row, "点击了一键拨号");
+      if (!row.tel) {
+        this.$message({
+          type: "info",
+          message: "无客源号码"
+        });
+        return;
+      }
+      this.$confirm("确定拨号?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let dailParams = {
+            customerId: row.id,
+            remark: "客源一键拨号",
+            customerName: row.customers,
+            contactPhone: row.tel,
+            customerNo: row.customerNo,
+            customerPlate: row.plate
+          };
+          console.log(dailParams, "即将一键拨号");
+          that.$api
+            .post({
+              url: "/saleCustomer/DialPhoneToCustomer",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              data: dailParams
+            })
+            .then(e => {
+              let result = e.data;
+              console.log(result);
+              if (result.code == 200) {
+                this.$message({
+                  type: "info",
+                  message: "请注意查收微信消息"
+                });
+                //but.$emit("followReolad", true);
+              } else {
+                this.$message({
+                  type: "info",
+                  message: result.message
+                });
+              }
+            })
+            .catch(e => {
+              console.log("【【【【uups,客源一键拨号失败】】】】");
+              console.log(e);
+              this.$message({
+                type: "info",
+                message: "客源一键拨号失败"
+              });
+            });
+        })
+        .catch(() => {});
+    },
     /**
      * @example: 转公客确认触发
      */
@@ -295,7 +357,7 @@ export default {
 
     removeTransmit(e) {
       console.log("removeTransmit -> e", e);
-      if (!this.customerId || this.customerId == 0) {
+      if (!this.customer || !this.customer.id || this.customer.id == 0) {
         this.$message({
           type: "info",
           message: "客户id为空，无法删除"
@@ -308,7 +370,7 @@ export default {
         .post({
           url: "/saleCustomer/deleteCustomer",
           qs: true,
-          data: { customerId: that.customerId, memo: memo }
+          data: { customerId: that.customer.id, memo: memo }
         })
         .then(e => {
           let result = e.data;
@@ -318,7 +380,8 @@ export default {
               type: "info",
               message: "提交删除申请成功，请等待审核！"
             });
-            that.removePop = true;
+            that.removePop = false;
+            that.$emit("deleteCustomerApply");
           } else {
             this.$message({
               type: "info",

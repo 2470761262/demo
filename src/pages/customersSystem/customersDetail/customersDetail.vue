@@ -43,7 +43,11 @@
 <template>
   <section class="page-content">
     <div class="head-content">
-      <detail-button class="head-content-button"></detail-button>
+      <detail-button
+        class="head-content-button"
+        :customer="customer"
+        @deleteCustomerApply="deleteCustomerApply"
+      ></detail-button>
       <basics class="basics"></basics>
     </div>
     <div class="head-progress">
@@ -72,7 +76,8 @@ import util from "@/util/util";
 export default {
   data() {
     return {
-      queryParams: []
+      queryParams: [],
+      customer: null
     };
   },
   components: {
@@ -95,6 +100,12 @@ export default {
     this.flolowAjax();
   },
   methods: {
+    deleteCustomerApply() {
+      this.$router.push({
+        name: "customersIframe",
+        params: { xx: 1 }
+      });
+    },
     ...mapMutations(["updateDetail", "resetDetail"]),
     ajax() {
       let _that = this;
@@ -118,6 +129,7 @@ export default {
           console.log("获取客户详情结果", e);
           if (result.code == 200) {
             //result.data.pageSum
+            this.customer = result.data;
             this.$store.commit("updateDetail", {
               cusDetail: result
             });
