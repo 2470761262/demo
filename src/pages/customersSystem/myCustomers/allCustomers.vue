@@ -330,7 +330,7 @@ export default {
       }
       that.$api
         .post({
-          url: "/saleCustomer/deleteCustomer",
+          url: "/saleCustomerOperation/deleteCustomer",
           qs: true,
           data: { customerId: that.currentClickCustomerId, memo: memo }
         })

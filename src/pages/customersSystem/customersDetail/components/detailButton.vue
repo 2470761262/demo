@@ -221,8 +221,9 @@
       <el-button
         class="customers-button-item"
         icon="el-icon-refresh"
+        :disabled="isDisabledTypePop"
         @click="openPop('turnTypePop')"
-        >转状态</el-button
+        >{{ turnTypeTitle }}</el-button
       >
 
       <el-button
@@ -261,7 +262,8 @@
       style-type="0"
       title="转状态"
       width="4rem"
-      @transmitConfirm="turnTypeTransmit"
+      @confirmTurnType="turnTypeTransmit"
+      :customerId="customer.id"
     />
   </div>
 </template>
@@ -282,7 +284,9 @@ export default {
       turnPop: false, //转公客开关
       removePop: false, //删除按钮弹框开关
       turnTypePop: false, //转状态按钮弹框开关
-      impressionList: []
+      impressionList: [],
+      isDisabledTypePop: false,
+      turnTypeTitle: "转状态"
     };
   },
   methods: {
@@ -368,7 +372,7 @@ export default {
       let that = this;
       that.$api
         .post({
-          url: "/saleCustomer/deleteCustomer",
+          url: "/saleCustomerOperation/deleteCustomer",
           qs: true,
           data: { customerId: that.customer.id, memo: memo }
         })
@@ -399,7 +403,11 @@ export default {
      * @example: 转状态弹框确认按钮
      */
 
-    turnTypeTransmit() {},
+    turnTypeTransmit() {
+      console.log("转状态后响应");
+      this.turnTypeTitle = "状态审核中";
+      this.isDisabledTypePop = true;
+    },
 
     /**
      * @example: 打开弹框

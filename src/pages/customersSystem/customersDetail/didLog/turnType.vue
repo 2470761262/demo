@@ -16,7 +16,7 @@
       <div class="belt-content">
         <div class="belt-content-item">
           <div class="item-right">
-            <el-radio-group v-model="formData.isBuy" @change="statusChange">
+            <el-radio-group v-model="formData.isBuyStr" @change="statusChange">
               <el-radio-button label="已购"></el-radio-button>
               <el-radio-button label="暂不购"></el-radio-button>
             </el-radio-group>
@@ -66,6 +66,7 @@
                 clearable
                 v-model="formData.buyAmount"
                 style="width:60%;margin-left:20px"
+                oninput="value=value.replace(/[^\d]/g,'')"
                 placeholder="成交金额"
               ></el-input>
             </div>
@@ -101,7 +102,8 @@ export default {
         buyAmount: null,
         buyTime: null,
         buyWay: "我司成交",
-        isBuy: "已购", //1已购，2暂不购
+        isBuyStr: "已购",
+        isBuy: 1, //1已购，2暂不购
         community: ""
       },
       status: null,
@@ -154,11 +156,11 @@ export default {
         this.isVisible = true;
       }
     },
-    addPairRecord(params, callback) {
+    changeStatusApply(params, callback) {
       let _that = this;
       _that.$api
         .post({
-          url: "/saleCustomer/addPairRecord",
+          url: "/saleCustomerOperation/changeStatus",
           data: params,
           headers: { "Content-Type": "application/json" }
         })
@@ -169,10 +171,10 @@ export default {
             message: result.message
           });
           if (result.code == 200) {
-            console.log(result, "添加带看");
+            console.log(result, "申请转状态");
             callback();
           } else {
-            console.log("录入客源" + result.message);
+            console.log("申请转状态" + result.message);
             _that.$message({
               type: "info",
               message: result.message
@@ -180,7 +182,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log("录入客源失败catch");
+          console.log("申请转状态失败catch");
           console.log(e);
         })
         .finally(() => {});
@@ -190,27 +192,47 @@ export default {
       // this.$validator.validateAll().then(e => {
       //   if (!e) return;
       // });
-      if (_that.formData.isBuy == "已购") {
+      if (_that.formData.isBuyStr == "已购") {
         _that.formData.isBuy = 1;
       } else {
         _that.formData.isBuy = 2;
+        _that.formData.remark = "该客户暂不考虑购房";
       }
-      if (_that.formData.isBuy == 1 && !_that.formData.community) {
-        _that.$message({
-          type: "info",
-          message: "请指定成交楼盘"
-        });
-        return;
+      if (_that.formData.isBuy == 1) {
+        if (!_that.formData.community) {
+          _that.$message({
+            type: "info",
+            message: "请指定成交楼盘"
+          });
+          return;
+        }
+        _that.formData.buyCommunity = _that.formData.community.split(":")[1];
+        _that.formData.buyCommunityId = _that.formData.community.split(":")[0];
+        if (!_that.formData.buyTime) {
+          _that.$message({
+            type: "info",
+            message: "请指定成交时间"
+          });
+          return;
+        }
+        if (!_that.formData.buyAmount) {
+          _that.$message({
+            type: "info",
+            message: "请指定成交金额"
+          });
+          return;
+        }
+        _that.formData.remark = "该客户已购房，状态申请";
       }
       console.log(this.formData);
       if (this.customerId && this.customerId != 0) {
         //在该组件内响应添加带看
-        console.log(this.customerId, "添加带看在组件内响应");
-      } else {
-        console.log(
-          "添加带看在父组件内响应，请在父组件内注册事件confirmTurnType"
-        );
-        _that.$emit("confirmTurnType", this.$data);
+        console.log(this.customerId, "转状态申请在组件内响应");
+        this.formData.customerId = this.customerId;
+        _that.changeStatusApply(this.formData, s => {
+          _that.$emit("update:visible", false); //状态申请成功后关闭当前窗口
+          _that.$emit("confirmTurnType", _that.$data);
+        });
       }
     }
   }
