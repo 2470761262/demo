@@ -45,7 +45,7 @@
     <div class="head-content">
       <detail-button
         class="head-content-button"
-        :customerId="customerId"
+        :customer="customer"
         @deleteCustomerApply="deleteCustomerApply"
       ></detail-button>
       <basics class="basics"></basics>
@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       queryParams: [],
-      customerId: null
+      customer: null
     };
   },
   components: {
@@ -117,7 +117,6 @@ export default {
       } else {
         id = util.sessionLocalStorageGet("cosDetail:id");
       }
-      this.customerId = id;
       //执行ajax请求，获取基础信息
       _that.$api
         .post({
@@ -130,6 +129,7 @@ export default {
           console.log("获取客户详情结果", e);
           if (result.code == 200) {
             //result.data.pageSum
+            this.customer = result.data;
             this.$store.commit("updateDetail", {
               cusDetail: result
             });

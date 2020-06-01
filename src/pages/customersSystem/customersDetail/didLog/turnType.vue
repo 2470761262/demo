@@ -43,7 +43,6 @@
             <div class="check-content">
               <span>成交金额</span>
               <el-input
-                v-validate="'required'"
                 clearable
                 style="width:60%;margin-left:20px"
                 placeholder="成交金额"
@@ -51,13 +50,12 @@
             </div>
             <div class="check-content">
               <span>成交时间</span>
-              <el-input
-                data-vv-as="带看想法"
-                v-validate="'required'"
-                style="width:60%;margin-left:20px"
-                clearable
-                placeholder="对本次带看有什么想说的?"
-              ></el-input>
+              <el-date-picker
+                v-model="value1"
+                type="date"
+                placeholder="选择日期"
+              >
+              </el-date-picker>
             </div>
           </div>
         </div>
