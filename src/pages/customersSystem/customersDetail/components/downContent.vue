@@ -44,7 +44,7 @@
       <div class="head-icon" :class="iconClass"></div>
       <slot name="head"></slot>
     </div>
-    <div class="cascader-content-foot" v-show="downUlFlag">
+    <div class="cascader-content-foot" v-show="downUlFlag" v-if="isNeedFooL">
       <slot name="fool"></slot>
     </div>
   </div>
@@ -52,6 +52,19 @@
 
 <script>
 export default {
-  props: ["downUlFlag", "iconClass"]
+  props: {
+    downUlFlag: {
+      type: Boolean,
+      default: false
+    },
+    iconClass: {
+      type: String,
+      default: ""
+    },
+    isNeedFooL: {
+      type: Boolean,
+      default: true
+    }
+  }
 };
 </script>

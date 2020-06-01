@@ -111,7 +111,7 @@ let log_socket = {
     let loginData = util.localStorageGet(LOGINDATA);
     let accountId = loginData.accountId;
     return accountId;
-  },
+  }
   // sendUserAnchorData(name, event) {
   //   if (!this.isConn) {
   //     return;

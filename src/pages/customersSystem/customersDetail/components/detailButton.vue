@@ -231,7 +231,10 @@
         @click="openPop('removePop')"
         >删除</el-button
       >
-      <el-button class="customers-button-item" icon="iconfont iconzhuanhuan"
+      <el-button
+        @click="openPop('passPop')"
+        class="customers-button-item"
+        icon="iconfont iconzhuanhuan"
         >PASS客户</el-button
       >
     </div>
@@ -263,6 +266,14 @@
       width="4rem"
       @transmitConfirm="turnTypeTransmit"
     />
+
+    <pass-customer
+      :visible.sync="passPop"
+      v-if="passPop"
+      style-type="0"
+      title="PASS客户"
+      width="7.4rem"
+    />
   </div>
 </template>
 
@@ -275,10 +286,13 @@ export default {
     //删除
     remove: () => import("../didLog/remove"),
     //转状态
-    turnType: () => import("../didLog/turnType")
+    turnType: () => import("../didLog/turnType"),
+    //pass客户
+    passCustomer: () => import("../didLog/passCustomer")
   },
   data() {
     return {
+      passPop: false, //pass客户
       turnPop: false, //转公客开关
       removePop: false, //删除按钮弹框开关
       turnTypePop: false, //转状态按钮弹框开关
