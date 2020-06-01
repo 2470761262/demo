@@ -112,20 +112,20 @@ let log_socket = {
     let accountId = loginData.accountId;
     return accountId;
   },
-  sendUserAnchorData(name, event) {
-    if (!this.isConn) {
-      return;
-    }
-    let accountId = log_socket.getAccountId();
-    let data = {
-      accountId: accountId,
-      name: name,
-      event: event
-    };
-    let content = "user_anchor@$:" + JSON.stringify(data);
-    console.log(content);
-    log_socket.socket.send(content);
-  }
+  // sendUserAnchorData(name, event) {
+  //   if (!this.isConn) {
+  //     return;
+  //   }
+  //   let accountId = log_socket.getAccountId();
+  //   let data = {
+  //     accountId: accountId,
+  //     name: name,
+  //     event: event
+  //   };
+  //   let content = "user_anchor@$:" + JSON.stringify(data);
+  //   console.log(content);
+  //   log_socket.socket.send(content);
+  // }
 };
 
 if (isOpenLog) {

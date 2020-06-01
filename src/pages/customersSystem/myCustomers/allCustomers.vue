@@ -342,7 +342,7 @@ export default {
               type: "info",
               message: "提交删除申请成功，请等待审核！"
             });
-            that.removePop = true;
+            that.removePop = false;
           } else {
             this.$message({
               type: "info",

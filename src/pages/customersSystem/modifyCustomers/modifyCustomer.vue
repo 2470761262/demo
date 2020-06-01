@@ -682,7 +682,11 @@ export default {
 
       this.formData = customer;
       console.log(customer);
-      this.formData.myImpression = this.$route.params.myImpression;
+      this.$set(
+        this.formData,
+        "myImpression",
+        this.$route.params.myImpression || []
+      );
       console.log([
         customer.community1,
         customer.community2,
@@ -818,12 +822,21 @@ export default {
       }
     },
     addCusImpression() {
-      if (
-        this.myImpression &&
-        !this.formData.myImpression.includes(this.myImpression)
-      ) {
-        this.formData.myImpression.push(this.myImpression);
+      if (!this.myImpression) {
+        this.$message({
+          type: "info",
+          message: "请输入印象"
+        });
+        return;
       }
+      if (this.formData.myImpression.includes(this.myImpression)) {
+        this.$message({
+          type: "info",
+          message: "已存在印象"
+        });
+        return;
+      }
+      this.formData.myImpression.push(this.myImpression);
     },
     addCusSubmit() {
       let _that = this;
