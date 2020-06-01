@@ -94,7 +94,7 @@
       title="添加带看"
       style-type="0"
       width="4.63rem"
-      v-bind:customerId="currentClickCustomerId"
+      :customerId="currentClickCustomerId"
     >
     </add-belt-look>
     <!-- 删除-->
