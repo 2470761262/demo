@@ -531,6 +531,18 @@ const houseTypeCheck = [
   { label: "无效", value: 3 }
 ];
 /**
+ * 举报类型
+ */
+const reportCheck = [
+  { value: "5", label: "虚假实勘" },
+  { value: "6", label: "虚假委托" },
+  { value: "7", label: "虚假钥匙" },
+  { value: "8", label: "虚假跟进" },
+  { value: "9", label: "房屋已售" },
+  { value: "10", label: "虚假业主号码" },
+  { value: "11", label: "其他" }
+];
+/**
  * 默认类型
  */
 const defaultCheck = [
@@ -792,6 +804,9 @@ export default {
           break;
         case "8":
           this.typeList = houseTypeCheck;
+          break;
+        case "11":
+          this.typeList = reportCheck;
           break;
         default:
           this.typeList = defaultCheck;
