@@ -437,7 +437,7 @@ export default {
           );
           e.data.data.forEach(element => {
             json.dayList.push(element.createTime);
-            json.agentCount.push(element.agentCount);
+            //json.agentCount.push(element.agentCount);
             json.lookCustomersCount.push(element.lookCustomersCount);
             json.houseMoviesCount.push(element.houseMoviesCount);
             if (element.createTime == yesterday) {
@@ -600,7 +600,7 @@ export default {
           }
         },
         legend: {
-          data: ["房源跟单数", "看房客户数", "房源被看次数"]
+          data: ["看房客户数", "房源被看次数"]
         },
         toolbox: {
           feature: {
@@ -633,12 +633,6 @@ export default {
           }
         },
         series: [
-          {
-            name: "房源跟单数",
-            type: "line",
-            stack: "总量",
-            data: data.agentCount
-          },
           {
             name: "看房客户数",
             type: "line",

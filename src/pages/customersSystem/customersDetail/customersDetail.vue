@@ -46,6 +46,7 @@
       <detail-button
         class="head-content-button"
         :customer="customer"
+        :showOperationButton="showOperationButton"
         @deleteCustomerApply="deleteCustomerApply"
       ></detail-button>
       <basics class="basics"></basics>
@@ -77,7 +78,8 @@ export default {
   data() {
     return {
       queryParams: [],
-      customer: null
+      customer: null,
+      showOperationButton: true
     };
   },
   components: {
@@ -130,6 +132,10 @@ export default {
           if (result.code == 200) {
             //result.data.pageSum
             this.customer = result.data;
+            if (this.customer && this.customer.tag == 3) {
+              //审核中，不显示操作按钮
+              this.showOperationButton = false;
+            }
             this.$store.commit("updateDetail", {
               cusDetail: result
             });
