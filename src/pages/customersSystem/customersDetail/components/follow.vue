@@ -209,7 +209,7 @@
             <div class="follow-content-head">{{ item.FollowTime }}</div>
             <div class="follow-content-foot">
               <div class="follow-fool-title">
-                {{ item.FollowPer }}(紫金二店):
+                {{ item.perName }}( {{ item.deptName }}):
               </div>
               <div class="follow-fool-msg">{{ item.Memo }}</div>
             </div>
