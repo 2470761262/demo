@@ -268,6 +268,7 @@
 
 <script>
 export default {
+  props: ["customerId"],
   components: {
     //转公客
     turnClientele: () => import("../didLog/turnClientele"),
@@ -280,9 +281,8 @@ export default {
     return {
       turnPop: false, //转公客开关
       removePop: false, //删除按钮弹框开关
-      turnTypePop: true, //转状态按钮弹框开关
-      impressionList: [],
-      customerId: null
+      turnTypePop: false, //转状态按钮弹框开关
+      impressionList: []
     };
   },
   methods: {
@@ -321,7 +321,8 @@ export default {
               type: "info",
               message: "提交删除申请成功，请等待审核！"
             });
-            that.removePop = true;
+            that.removePop = false;
+            that.$emit("deleteCustomerApply");
           } else {
             this.$message({
               type: "info",

@@ -43,7 +43,11 @@
 <template>
   <section class="page-content">
     <div class="head-content">
-      <detail-button class="head-content-button"></detail-button>
+      <detail-button
+        class="head-content-button"
+        :customerId="customerId"
+        @deleteCustomerApply="deleteCustomerApply"
+      ></detail-button>
       <basics class="basics"></basics>
     </div>
     <div class="head-progress">
@@ -72,7 +76,8 @@ import util from "@/util/util";
 export default {
   data() {
     return {
-      queryParams: []
+      queryParams: [],
+      customerId: null
     };
   },
   components: {
@@ -95,6 +100,12 @@ export default {
     this.flolowAjax();
   },
   methods: {
+    deleteCustomerApply() {
+      this.$router.push({
+        name: "customersIframe",
+        params: { xx: 1 }
+      });
+    },
     ...mapMutations(["updateDetail", "resetDetail"]),
     ajax() {
       let _that = this;
@@ -106,6 +117,7 @@ export default {
       } else {
         id = util.sessionLocalStorageGet("cosDetail:id");
       }
+      this.customerId = id;
       //执行ajax请求，获取基础信息
       _that.$api
         .post({
