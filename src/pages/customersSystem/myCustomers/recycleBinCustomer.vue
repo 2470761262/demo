@@ -378,9 +378,6 @@ export default {
                 >
                   还原
                 </el-button>
-                <el-button type="warning" size="mini" icon="el-icon-date">
-                  永久删除
-                </el-button>
               </div>
             );
           }
@@ -503,6 +500,13 @@ export default {
                 this.$message({
                   type: "info",
                   message: "还原成功"
+                });
+                that.tableData.forEach((item, index) => {
+                  console.log(item, index, customerId);
+                  if (item.id == customerId) {
+                    that.tableData.splice(index, 1);
+                    return;
+                  }
                 });
                 //but.$emit("followReolad", true);
               } else {
