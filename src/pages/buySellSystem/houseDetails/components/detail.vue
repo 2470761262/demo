@@ -509,8 +509,8 @@ export default {
           path: "/buySellSystem/addHouse",
           query: {
             comId: _that.resultData.Comid,
-            cbId: _that.resultData.CBId,
-            bhId: _that.resultData.id,
+            cbId: _that.resultData.CBid,
+            bhId: _that.resultData.BHID,
             communityName: _that.resultData.CommunityName,
             buildingName: _that.resultData.BuildingName,
             roomNo: _that.resultData.RoomNo,

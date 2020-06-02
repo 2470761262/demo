@@ -189,11 +189,14 @@
         </template>
         <el-button
           data-anchor="房源详情申请跟单人 => click"
-          v-else-if="applyAgentRule"
+          v-else-if="applyAgentRule && resultData.plate < 6"
           :disabled="isDisabled || agentApply"
           @click="openAgentPop"
         >
           <span>申请跟单人</span>
+        </el-button>
+        <el-button v-else-if="resultData.plate >= 6" @click="turnOnSale">
+          <span>转在售</span>
         </el-button>
         <el-button v-else :disabled="true">
           <span>申请跟单人</span>
@@ -588,6 +591,24 @@ export default {
     but.$off("callTaskAgent");
   },
   methods: {
+    /**
+     * 转在售
+     */
+    turnOnSale() {
+      let _that = this;
+      this.$router.push({
+        path: "/buySellSystem/addHouse",
+        query: {
+          comId: _that.resultData.Comid,
+          cbId: _that.resultData.CBid,
+          bhId: _that.resultData.BHID,
+          communityName: _that.resultData.CommunityName,
+          buildingName: _that.resultData.BuildingName,
+          roomNo: _that.resultData.RoomNo,
+          flag: "history"
+        }
+      });
+    },
     /**
      * 申请跟单人
      */
