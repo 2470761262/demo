@@ -605,7 +605,9 @@ export default {
           communityName: _that.resultData.CommunityName,
           buildingName: _that.resultData.BuildingName,
           roomNo: _that.resultData.RoomNo,
-          flag: "history"
+          flag: "potentia",
+          customerName: _that.resultData.Customers,
+          tel: _that.resultData.Tel
         }
       });
     },
