@@ -199,6 +199,16 @@
       @followConfirmEmit="confirmEmit"
       width="4.63rem"
     ></write-follow-up>
+    <!-- 添加带看 -->
+    <add-belt-look
+      :visible.sync="beltlookFlag"
+      v-if="beltlookFlag"
+      title="添加带看"
+      style-type="0"
+      width="4.63rem"
+      :customerId="currentClickCustomerId"
+    >
+    </add-belt-look>
   </div>
 </template>
 
@@ -208,10 +218,14 @@ import { setImpression } from "@/util/tabUtil";
 export default {
   components: {
     listPage,
-    writeFollowUp: () => import("../components/writeFollowUp")
+    writeFollowUp: () => import("../components/writeFollowUp"),
+    //添加带看
+    addBeltLook: () => import("@/pages/customersSystem/components/addBeltLook")
   },
   data() {
     return {
+      currentClickCustomerId: 0,
+      beltlookFlag: false,
       queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       formData: {
         //客户id
@@ -361,8 +375,13 @@ export default {
           formart: e => {
             return (
               <div>
-                <el-button type="warning" size="mini" icon="el-icon-date">
-                  预约带看
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onClick={this.openBetAdd.bind(this, e.id)}
+                >
+                  添加带看
                 </el-button>
                 <el-button
                   type="danger"
@@ -472,6 +491,10 @@ export default {
     this.queryCustomerData(1);
   },
   methods: {
+    openBetAdd(customerId) {
+      this.currentClickCustomerId = customerId;
+      this.beltlookFlag = true;
+    },
     toCustomerDetail(item) {
       let id = item.id;
       if (!item.id) {

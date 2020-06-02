@@ -310,15 +310,23 @@
       <div class="cell-pro-item center" v-else>
         <el-button
           class="cell-pro-but anchor-point"
-          v-if="applyAgentRule"
+          v-if="applyAgentRule && resultData.plate < 6"
           :disabled="agentApply"
-          data-anchor="房源详情申请跟单人||转在售 => click"
+          data-anchor="房源详情申请跟单人 => click"
           @click="callTaskAgent"
-          >{{ housePageType != "notSale" ? "申请跟单人" : "转在售" }}</el-button
+          ><span>申请跟单人</span>
+        </el-button>
+        <el-button
+          class="cell-pro-but anchor-point"
+          v-else-if="resultData.plate >= 6"
+          @click="turnOnSale"
+          data-anchor="房源详情转在售 => click"
         >
-        <el-button class="cell-pro-but" :disabled="true" v-else>{{
-          housePageType != "notSale" ? "申请跟单人" : "转在售"
-        }}</el-button>
+          <span> 转在售</span>
+        </el-button>
+        <el-button class="cell-pro-but" :disabled="true" v-else>
+          <span>申请跟单人</span>
+        </el-button>
       </div>
       <div class="cell-pro-item">
         <el-image
@@ -433,9 +441,6 @@ export default {
       }
     },
     agentApply() {
-      // if (!this.dept.id) {
-      //   return false;
-      // }
       let loginDeptId = util.localStorageGet("logindata").deptId;
       if (Object.keys(this.houseDetails).length > 0) {
         let detailData = this.houseDetails.data;
@@ -501,23 +506,27 @@ export default {
   mounted() {},
   methods: {
     callTaskAgent() {
-      if (this.housePageType != "notSale") {
-        but.$emit("callTaskAgent");
-      } else {
-        let _that = this;
-        this.$router.push({
-          path: "/buySellSystem/addHouse",
-          query: {
-            comId: _that.resultData.Comid,
-            cbId: _that.resultData.CBId,
-            bhId: _that.resultData.id,
-            communityName: _that.resultData.CommunityName,
-            buildingName: _that.resultData.BuildingName,
-            roomNo: _that.resultData.RoomNo,
-            flag: "history"
-          }
-        });
-      }
+      but.$emit("callTaskAgent");
+    },
+    /**
+     * 转在售
+     */
+    turnOnSale() {
+      let _that = this;
+      this.$router.push({
+        path: "/buySellSystem/addHouse",
+        query: {
+          comId: _that.resultData.Comid,
+          cbId: _that.resultData.CBid,
+          bhId: _that.resultData.BHID,
+          communityName: _that.resultData.CommunityName,
+          buildingName: _that.resultData.BuildingName,
+          roomNo: _that.resultData.RoomNo,
+          flag: "potentia",
+          customerName: _that.resultData.Customers,
+          tel: _that.resultData.Tel
+        }
+      });
     },
     getShowBuliding() {
       let that = this;

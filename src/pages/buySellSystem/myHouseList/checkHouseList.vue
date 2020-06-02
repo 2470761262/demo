@@ -904,9 +904,9 @@ export default {
       this.accessoryTable = false;
       this.bigAccessoryFileKey = "";
       this.accessoryFile = util.deepCopy(this.resetAccessory); //重置外景图等附件数组;
-      let data = [];
       if (list != null) {
         Object.keys(list).forEach(item => {
+          let data = [];
           //循环解析数组
           if (list[item] != null) {
             list[item].forEach((element, index) => {
@@ -930,6 +930,7 @@ export default {
                 ) {
                   data = this.accessoryFile[accesy][item];
                   this.activeName = this.accessoryFile[accesy].name;
+                  this.bigAccessoryFileKey = accesy;
                 }
               });
             } else {

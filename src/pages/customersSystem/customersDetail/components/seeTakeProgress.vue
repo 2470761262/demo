@@ -191,7 +191,7 @@ export default {
           ).format("YYYY-MM-DD");
 
           //设置是否签约
-          if (newValue.data.saleCusPropertyTbl.isBuy == 1) {
+          if (newValue.data.saleCusPropertyTbl.isBuy == 4) {
             this.list[7].type = "progress-item-content-success";
             this.list[7].date = moment(
               newValue.data.saleCusPropertyTbl.buyTime

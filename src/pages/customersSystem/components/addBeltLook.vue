@@ -136,6 +136,8 @@ export default {
           });
           if (result.code == 200) {
             console.log(result, "添加带看");
+            //takeLookRecord.vue 重新加载ajax
+            _that.$emit("progressData");
             callback();
           } else {
             console.log("录入客源" + result.message);
@@ -214,6 +216,11 @@ export default {
             },
             house => {
               params.houseEid = house.id;
+              params.houseTitle = house.Title;
+              params.communityName = house.CommunityName;
+              params.buildingName = house.BuildingName;
+              params.roomNo = house.RoomNo;
+              params.houseAgentPer = house.AgentPer;
               _that.addPairRecord(params, s =>
                 _that.$emit("update:visible", false)
               );
