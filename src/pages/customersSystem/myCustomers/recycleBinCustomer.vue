@@ -367,10 +367,15 @@ export default {
           width: "300px",
           order: false,
           fixed: true,
-          formart: () => {
+          formart: row => {
             return (
               <div>
-                <el-button type="primary" size="mini" icon="el-icon-phone">
+                <el-button
+                  type="primary"
+                  size="mini"
+                  icon="el-icon-phone"
+                  onclick={this.recoverCustomer.bind(this, row.id)}
+                >
                   还原
                 </el-button>
                 <el-button type="warning" size="mini" icon="el-icon-date">
@@ -477,6 +482,47 @@ export default {
     this.queryCustomerData(1);
   },
   methods: {
+    recoverCustomer(customerId) {
+      let that = this;
+      this.$confirm("确定还原?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          console.log(customerId, "即将还原客户");
+          that.$api
+            .get({
+              url: "/saleCustomerOperation/recoverCustomer/" + customerId,
+              qs: true
+            })
+            .then(e => {
+              let result = e.data;
+              console.log(result);
+              if (result.code == 200) {
+                this.$message({
+                  type: "info",
+                  message: "还原成功"
+                });
+                //but.$emit("followReolad", true);
+              } else {
+                this.$message({
+                  type: "info",
+                  message: result.message
+                });
+              }
+            })
+            .catch(e => {
+              console.log("【【【【uups,客源还原失败】】】】");
+              console.log(e);
+              this.$message({
+                type: "info",
+                message: "客源还原失败"
+              });
+            });
+        })
+        .catch(() => {});
+    },
     toCustomerDetail(item) {
       let id = item.id;
       if (!item.id) {

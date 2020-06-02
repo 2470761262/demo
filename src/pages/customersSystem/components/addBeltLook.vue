@@ -216,6 +216,11 @@ export default {
             },
             house => {
               params.houseEid = house.id;
+              params.houseTitle = house.Title;
+              params.communityName = house.CommunityName;
+              params.buildingName = house.BuildingName;
+              params.roomNo = house.RoomNo;
+              params.houseAgentPer = house.AgentPer;
               _that.addPairRecord(params, s =>
                 _that.$emit("update:visible", false)
               );
