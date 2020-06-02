@@ -213,6 +213,15 @@
       @followConfirmEmit="confirmEmit"
       width="4.63rem"
     ></write-follow-up>
+    <!-- 添加带看 -->
+    <add-belt-look
+      :visible.sync="beltlookFlag"
+      v-if="beltlookFlag"
+      title="添加带看"
+      style-type="0"
+      width="4.63rem"
+      :customerId="currentClickCustomerId"
+    />
   </div>
 </template>
 
@@ -224,7 +233,9 @@ export default {
   components: {
     listPage,
     leftAttention,
-    writeFollowUp: () => import("../components/writeFollowUp")
+    writeFollowUp: () => import("../components/writeFollowUp"),
+    //添加带看
+    addBeltLook: () => import("@/pages/customersSystem/components/addBeltLook")
   },
   data() {
     return {
@@ -235,6 +246,8 @@ export default {
         //内容
         Memo: ""
       },
+      currentClickCustomerId: 0,
+      beltlookFlag: false,
       activeProdata: null, //点击写跟进后，用来保存当前行的数据的临时变量
       writeFlag: false, //写跟进弹框开关
       sssss: "", //请按照实际字段名进行修改，
@@ -385,8 +398,13 @@ export default {
                 >
                   一键拨号
                 </el-button>
-                <el-button type="warning" size="mini" icon="el-icon-date">
-                  预约带看
+                <el-button
+                  type="warning"
+                  size="mini"
+                  icon="el-icon-date"
+                  onClick={this.openBetAdd.bind(this, e.id)}
+                >
+                  添加带看
                 </el-button>
                 <el-button
                   type="danger"
@@ -505,6 +523,10 @@ export default {
     this.queryCustomerData(1);
   },
   methods: {
+    openBetAdd(customerId) {
+      this.currentClickCustomerId = customerId;
+      this.beltlookFlag = true;
+    },
     dialPhone(row) {
       let that = this;
       console.log(row, "点击了一键拨号");

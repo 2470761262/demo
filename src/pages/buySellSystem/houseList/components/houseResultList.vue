@@ -469,7 +469,9 @@
               <div class="item-data-bottom">
                 <div class="item-data-bottom-detali overText">
                   {{ item.communityName }} &nbsp;/&nbsp;{{ item.inArea }}㎡
-                  &nbsp;/&nbsp;{{ item.rooms }}房2厅1卫
+                  &nbsp;/&nbsp;{{ item.rooms }}房{{ item.hall || 0 }}厅{{
+                    item.toilet || 0
+                  }}卫
                 </div>
                 <div class="item-data-bottom-price overText">
                   ￥{{ item.price }}万

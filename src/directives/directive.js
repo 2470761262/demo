@@ -102,6 +102,7 @@ export default {
             let disY = e.clientY - drag.offsetTop;
             drag.style.position = "absolute";
             document.onmousemove = e => {
+              console.log(e, drag.offsetLeft, drag.offsetTop);
               let left = e.clientX - disX;
               let top = e.clientY - disY;
               //移动当前元素

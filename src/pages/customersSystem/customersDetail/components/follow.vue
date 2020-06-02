@@ -183,6 +183,25 @@
     }
   }
 }
+.text-area {
+  box-shadow: inset 2px 4px 10px rgba(0, 0, 0, 0.3);
+  padding: 10px 20px;
+  margin-bottom: 10px;
+  textarea {
+    width: 100%;
+    resize: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 16px;
+  }
+  .text-area-button {
+    margin-left: auto;
+    display: block;
+    background: rgba(227, 71, 72);
+    color: #fff;
+  }
+}
 </style>
 <template>
   <div class="look-record-content">
@@ -203,19 +222,29 @@
       </h3>
     </div>
     <div class="record-content-scroll" v-show="showBox == 0">
+      <div class="text-area">
+        <textarea
+          rows="5"
+          placeholder="对这个客户想说点什么?请写下来吧"
+        ></textarea>
+        <el-button class="text-area-button">提交</el-button>
+      </div>
       <left-progress v-for="(item, index) in list" :key="index">
         <template>
           <div class="follow-content">
             <div class="follow-content-head">{{ item.FollowTime }}</div>
             <div class="follow-content-foot">
               <div class="follow-fool-title">
-                {{ item.FollowPer }}(紫金二店):
+                {{ item.perName }}( {{ item.deptName }}):
               </div>
               <div class="follow-fool-msg">{{ item.Memo }}</div>
             </div>
           </div>
         </template>
       </left-progress>
+      <div v-if="list.length == 0">
+        暂无数据.
+      </div>
     </div>
     <div class="record-content-scroll" v-show="showBox == 1">
       <left-progress v-for="(item, index) in 7" :key="index">
@@ -259,6 +288,9 @@
           </div>
         </template>
       </left-progress>
+      <div v-if="list.length == 0">
+        暂无数据.
+      </div>
     </div>
     <div class="record-content-foot">
       <el-button class="task-button" v-show="showBox === 1">添加推荐</el-button>

@@ -152,7 +152,8 @@ export default {
       load: {
         loading: true,
         loadingMessage: "努力加载中~"
-      }
+      },
+      showEdit: false
     };
   },
   created() {

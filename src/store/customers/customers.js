@@ -11,7 +11,9 @@ export default {
   state: {
     detail: {},
     process: {},
-    follow: {}
+    follow: {},
+    extend: {},
+    impress: {}
   },
   mutations: {
     updateDetail(state, value) {
@@ -31,6 +33,18 @@ export default {
     },
     resetFollow(state, value) {
       state.follow = {};
+    },
+    updateExtend(state, value) {
+      state.extend = value;
+    },
+    resetExtend(state, value) {
+      state.extend = {};
+    },
+    updateImpress(state, value) {
+      state.impress = value;
+    },
+    reseImpress(state, value) {
+      state.impress = {};
     }
     // updateIsformDataNoCommit(state, val) {
     //   state.isformDataNoCommit = val;

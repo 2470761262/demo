@@ -830,18 +830,54 @@ export default {
     },
     getFile(list) {
       console.log(list, "wwww");
-      Object.keys(this.accessoryMoldList).forEach(item => {
-        //清空数组
-        this.accessoryMoldList[item].list = [];
-      });
+      //重置标记
+      this.bigAccessoryFile = [];
+      this.accessoryTable = false;
+      this.bigAccessoryFileKey = "";
+      this.accessoryFile = util.deepCopy(this.resetAccessory); //重置外景图等附件数组;
       if (list != null) {
-        list.forEach((element, index) => {
-          if (element.subType != 7 && !element.url.includes(SMALLThumb)) {
-            element.url = element.url + SMALLThumb;
-          }
-          if (element.subType) {
-            element.activeIndex = index;
-            this.accessoryMoldList[element.subType].list.push(element);
+        Object.keys(list).forEach(item => {
+          let data = [];
+          //循环解析数组
+          if (list[item] != null) {
+            list[item].forEach((element, index) => {
+              if (element.subType != 7 && !element.url.includes(SMALLThumb)) {
+                element.url = element.url + SMALLThumb;
+              }
+              if (element.subType) {
+                //保存外景图等附件信息
+                element.activeIndex = index;
+                this.accessoryTable = true;
+                this.accessoryFile[element.subType][item].push(element);
+                this.accessoryFile[element.subType][item + "Flag"] = true;
+              }
+            });
+            //如果有外景图等附件大图显示为第一种附件
+            if (this.bigAccessoryFileKey == "") {
+              Object.keys(this.accessoryFile).forEach(accesy => {
+                if (
+                  this.accessoryFile[accesy][item].length > 0 &&
+                  data.length == 0
+                ) {
+                  data = this.accessoryFile[accesy][item];
+                  this.activeName = this.accessoryFile[accesy].name;
+                  this.bigAccessoryFileKey = accesy;
+                }
+              });
+            } else {
+              data = this.accessoryFile[this.bigAccessoryFileKey][item];
+            }
+            if (data.length == 0) {
+              //如果没有外景图等附件就默认为当前数组
+              data = list[item];
+            }
+            console.log(this.accessoryFile, " this.accessoryFile");
+            let title = item == "oldFileList" ? "原图" : "取代图";
+            this.bigAccessoryFile.push({
+              title: title,
+              data: data,
+              key: item
+            });
           }
         });
       }

@@ -53,34 +53,6 @@
 /deep/.el-header {
   background: var(--color--primary);
 }
-.feedback-suspension {
-  position: fixed;
-  z-index: 20;
-  right: 40px;
-  bottom: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-  border-radius: 30px;
-  background: #fff;
-  z-index: 2000;
-  p {
-    &:nth-child(1) {
-      margin-bottom: 5px;
-      font-size: 15px;
-    }
-    &:nth-child(2) {
-      color: #40a375;
-    }
-  }
-  img[alt="在线反馈"] {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-  }
-}
 </style>
 <template>
   <section class="page-cell-conter">
@@ -106,16 +78,7 @@
               <router-view />
             </keep-alive>
           </transition>
-          <div class="feedback-suspension " @click="triggerFeedback">
-            <img
-              src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/5/27/6a6b1cc898c74452ac219dcc85fc2e33.png"
-              alt="在线反馈"
-            />
-            <div>
-              <p>在线反馈</p>
-              <p>反馈可以赚鑫币哦</p>
-            </div>
-          </div>
+          <right-fixed-chunk @click="triggerFeedback"></right-fixed-chunk>
           <!-- <transition name="el">
             <router-view v-if="!$route.meta.keepAlive" />
           </transition>-->
@@ -132,12 +95,14 @@ import util from "@/util/util";
 import { LOGINDATA } from "@/util/constMap";
 import but from "@/evenBus/but";
 import getToken from "@/minxi/getUrlToken";
+import rightFixedChunk from "@/components/rightFixedChunk";
 export default {
   mixins: [getToken],
   name: "menuFrame",
   components: {
     asideNav,
-    headerContent
+    headerContent,
+    rightFixedChunk
   },
   data() {
     return {
