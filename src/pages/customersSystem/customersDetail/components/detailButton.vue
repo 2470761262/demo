@@ -168,10 +168,12 @@
 <template>
   <div class="page-content-head">
     <div class="customers-head">
-      <div class="customers-head-name" data-sex="男">李先生</div>
+      <div class="customers-head-name" :data-sex="dataItem.sex">
+        {{ dataItem.customerName }}
+      </div>
       <el-rate
         class="customers-head-rate"
-        :value="2"
+        :value="dataItem.desireIntensity"
         :max="3"
         disabled
       ></el-rate>
@@ -183,33 +185,30 @@
           v-for="(item, index) in impressionList"
           :key="index"
         >
-          <span>{{ item.text }}</span>
-          <i
-            class="el-icon-close icon"
-            @click="removeImpression(item, index)"
-          ></i>
+          <span>{{ item.impression }}</span>
+          <i class="el-icon-close icon" @click="removeImpression(item)"></i>
         </div>
       </div>
-      <el-button type="text" class="add-impression" @click="addImpression"
-        ><i class="el-icon-circle-plus"></i> 印象</el-button
-      >
+      <el-button type="text" class="add-impression" @click="addImpression">
+        <i class="el-icon-circle-plus"></i> 印象
+      </el-button>
     </div>
     <div class="line-break"></div>
     <div class="customers-body">
       <div class="customers-body-detail">
         <div class="body-detail-row" data-before="拥有人数" data-after="人">
-          <span class="overText">2</span>
+          <span class="overText">{{ dataItem.haveAgents }}</span>
         </div>
         <div class="body-detail-row" data-before="公司看房套数" data-after="套">
-          <span class="overText">15</span>
+          <span class="overText">{{ dataItem.lookHouses }}</span>
         </div>
         <div class="body-detail-row" data-before="我的带看套数" data-after="套">
-          <span class="overText">9</span>
+          <span class="overText">{{ dataItem.myLookHouses }}</span>
         </div>
       </div>
-      <el-button type="primary" class="customers-phone" @click="dailPhone"
-        ><i class="el-icon-phone"></i>一键拨号</el-button
-      >
+      <el-button type="primary" class="customers-phone" @click="dailPhone">
+        <i class="el-icon-phone"></i>一键拨号
+      </el-button>
     </div>
     <div class="customers-button-gruop" v-if="showOperationButton">
       <el-button
@@ -280,6 +279,8 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import util from "@/util/util";
 export default {
   props: ["customer", "showOperationButton"],
   components: {
@@ -300,10 +301,78 @@ export default {
       turnTypePop: false, //转状态按钮弹框开关
       impressionList: [],
       isDisabledTypePop: false,
-      turnTypeTitle: "转状态"
+      turnTypeTitle: "转状态",
+      dataItem: {
+        id: "",
+        customerName: "加载中",
+        desireIntensity: 0,
+        haveAgents: 0,
+        lookHouses: 0,
+        myLookHouses: 0,
+        sex: "性别不详"
+      }
     };
   },
+  mounted() {
+    let _that = this;
+    _that.setName();
+  },
+  computed: {
+    ...mapState({
+      detail: value => {
+        return value.customers.extend.cusExtend;
+      },
+      impress: value => {
+        return value.customers.impress.impression;
+      }
+    })
+  },
+  watch: {
+    impress: {
+      deep: true,
+      handler(newValue) {
+        let _that = this;
+        if (newValue.code == 200) {
+          console.log("detailButton.vue--------获取用户印象记录", newValue);
+          _that.impressionList = newValue.data;
+        } else {
+          this.$message({
+            type: "info",
+            message: newValue.message
+          });
+        }
+      }
+    },
+    detail: {
+      deep: true,
+      handler(newValue) {
+        if (newValue.code == 200) {
+          console.log("detailButton.vue--------获取用户拓展信息记录", newValue);
+          let _that = this;
+          _that.dataItem.id = newValue.data.bsAgentCustomersTbl.id;
+          _that.dataItem.customerName =
+            newValue.data.bsAgentCustomersTbl.customers;
+          _that.dataItem.haveAgents = newValue.data.haveAgents;
+          _that.dataItem.lookHouses = newValue.data.lookHouses;
+          _that.dataItem.myLookHouses = newValue.data.myLookHouses;
+          _that.dataItem.desireIntensity = newValue.data.desireIntensity;
+          let sex = newValue.data.bsAgentCustomersTbl.sex;
+          if (sex == 0) _that.dataItem.sex = "男";
+          if (sex == 1) _that.dataItem.sex = "女";
+        } else {
+          this.$message({
+            type: "info",
+            message: newValue.message
+          });
+        }
+      }
+    }
+  },
   methods: {
+    //设置客户姓名
+    setName() {
+      console.log(1111);
+    },
     dailPhone() {
       let row = this.customer;
       let that = this;
@@ -436,8 +505,46 @@ export default {
      * @example: 删除印象
      */
 
-    removeImpression(index) {
-      this.impressionList.splice(index, 1);
+    removeImpression(item) {
+      let _that = this;
+      _that.$api
+        .post({
+          url: "/saleCustomerDetail/deleteImpression",
+          data: {
+            id: item.id
+          },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          //获取印象
+          _that.$api
+            .post({
+              url: "/saleCustomerDetail/getSaleCusImpressions",
+              data: { id: _that.dataItem.id },
+              headers: { "Content-Type": "application/json" }
+            })
+            .then(e => {
+              let result = e.data;
+              console.log("获取用户印象记录", e);
+              if (result.code == 200) {
+                //result.data.pageSum
+                _that.$store.commit("updateImpress", {
+                  impression: result
+                });
+              }
+            })
+            .catch(e => {
+              console.log("获取印象记录失败");
+              console.log(e);
+            })
+            .finally(() => {});
+        })
+        .catch(e => {
+          console.log("takeLookRecord.vue------------", "添加印象失败");
+          console.log("takeLookRecord.vue------------", e);
+        })
+        .finally(() => {});
     },
 
     /**
@@ -461,12 +568,57 @@ export default {
           if (action === "confirm") {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = "执行中...";
-            // _that.insertImpression(instance.inputValue);
-            setTimeout(() => {
-              _that.impressionList.push({ text: instance.inputValue });
-              done();
-              instance.confirmButtonLoading = false;
-            }, 500);
+            _that.$api
+              .post({
+                url: "/saleCustomerDetail/addImpression",
+                data: {
+                  impression: instance.inputValue,
+                  customerId: _that.dataItem.id
+                },
+                headers: { "Content-Type": "application/json" }
+              })
+              .then(e => {
+                let result = e.data;
+                //获取印象
+                _that.$api
+                  .post({
+                    url: "/saleCustomerDetail/getSaleCusImpressions",
+                    data: { id: _that.dataItem.id },
+                    headers: { "Content-Type": "application/json" }
+                  })
+                  .then(e => {
+                    let result = e.data;
+                    console.log("获取用户印象记录", e);
+                    if (result.code == 200) {
+                      //result.data.pageSum
+                      _that.$store.commit("updateImpress", {
+                        impression: result
+                      });
+                    }
+                    done();
+                    instance.confirmButtonLoading = false;
+                  })
+                  .catch(e => {
+                    console.log("获取印象记录失败");
+                    console.log(e);
+                  })
+                  .finally(() => {});
+              })
+              .catch(e => {
+                console.log("takeLookRecord.vue------------", "添加印象失败");
+                console.log("takeLookRecord.vue------------", e);
+              })
+              .finally(() => {});
+            // console.log(
+            //   "-----------5555555555555-----------------------------",
+            //   instance.inputValue
+            // );
+            // // _that.insertImpression(instance.inputValue);
+            // setTimeout(() => {
+            //   // _that.impressionList.push({ text: instance.inputValue });
+            //   done();
+            //   instance.confirmButtonLoading = false;
+            // }, 500);
           } else {
             done();
           }

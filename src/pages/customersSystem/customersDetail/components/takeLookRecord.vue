@@ -90,7 +90,7 @@
   <div class="look-record-content">
     <h3 class="record-content-title">带看记录</h3>
     <div class="record-content-scroll">
-      <left-progress v-for="(item, index) in list" :key="index">
+      <left-progress v-for="(item, index) in list" :key="index" color="3b6edc">
         <template v-slot:default="scope">
           <div class="task-progress-body">
             <div class="progress-head">
@@ -98,7 +98,7 @@
                 class="head-tips-chunk"
                 :style="{ 'background-color': '#' + scope.color }"
               >
-                预约带看
+                带看记录
               </div>
               <div class="head-time">{{ item.StartTime }}</div>
             </div>

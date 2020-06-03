@@ -523,7 +523,7 @@ const taskProCheck = [
  */
 const replaceCheck = [
   { label: "钥匙取代", value: 3 },
-  { label: "实勘取代", value: 5 },
+  { label: "实勘取代", value: 13 },
   { label: "普通委托取代", value: "2,44" },
   { label: "独家委托取代", value: "1,44" },
   { label: "限时委托取代", value: "3,44" }
@@ -898,7 +898,6 @@ export default {
      *@param {Array} list //附件数组
      */
     getFile(list) {
-      console.log(list, "wwww");
       //重置标记
       this.bigAccessoryFile = [];
       this.accessoryTable = false;
@@ -940,7 +939,6 @@ export default {
               //如果没有外景图等附件就默认为当前数组
               data = list[item];
             }
-            console.log(this.accessoryFile, " this.accessoryFile");
             let title = item == "oldFileList" ? "原图" : "取代图";
             this.bigAccessoryFile.push({
               title: title,
@@ -979,7 +977,6 @@ export default {
             if (row.Type == 13) {
               result.data.push({ CheckID: checkId, url: row.picUrl });
             }
-            console.log(result.data, "ffffff");
             that.accessoryAllList.push({ key: checkId, value: result.data });
 
             that.getFile(result.data);

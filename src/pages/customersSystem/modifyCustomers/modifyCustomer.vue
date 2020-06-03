@@ -706,10 +706,6 @@ export default {
       }
       //结束回显数据
       console.log(this.formData, "this.formData");
-      this.$message({
-        type: "info",
-        message: customer.id
-      });
     }
   },
   methods: {
@@ -837,6 +833,7 @@ export default {
         return;
       }
       this.formData.myImpression.push(this.myImpression);
+      this.myImpression = "";
     },
     addCusSubmit() {
       let _that = this;

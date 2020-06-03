@@ -567,7 +567,9 @@
       </el-collapse-item>
     </el-collapse>
     <div class="add-foot">
-      <el-button type="primary" @click="addCusSubmit">提交</el-button>
+      <el-button type="primary" @click="addCusSubmit" :disabled="canSubmit"
+        >提交</el-button
+      >
     </div>
   </section>
 </template>
@@ -578,6 +580,7 @@ import but from "@/evenBus/but";
 export default {
   data() {
     return {
+      canSubmit: false,
       searchLoading: false,
       formData: {
         myImpression: [],
@@ -782,12 +785,22 @@ export default {
       }
     },
     addCusImpression() {
-      if (
-        this.myImpression &&
-        !this.formData.myImpression.includes(this.myImpression)
-      ) {
-        this.formData.myImpression.push(this.myImpression);
+      if (!this.myImpression) {
+        this.$message({
+          type: "info",
+          message: "请输入印象"
+        });
+        return;
       }
+      if (this.formData.myImpression.includes(this.myImpression)) {
+        this.$message({
+          type: "info",
+          message: "已存在印象"
+        });
+        return;
+      }
+      this.formData.myImpression.push(this.myImpression);
+      this.myImpression = "";
     },
     addCusSubmit() {
       let _that = this;
@@ -809,6 +822,7 @@ export default {
         _that.formData["community" + (index + 1)] = item;
       });
       console.log(_that.formData, "录入客户参数");
+      _that.canSubmit = true;
       _that.$api
         .post({
           url: "/saleCustomer/addCustomer",
@@ -821,6 +835,7 @@ export default {
             type: "info",
             message: result.message
           });
+          _that.canSubmit = false;
           if (result.code == 200) {
             console.log(result, "录入客源");
             _that.$router.push({
@@ -835,10 +850,13 @@ export default {
           }
         })
         .catch(e => {
+          _that.canSubmit = false;
           console.log("录入客源失败catch");
           console.log(e);
         })
-        .finally(() => {});
+        .finally(() => {
+          _that.canSubmit = false;
+        });
     }
   }
 };
