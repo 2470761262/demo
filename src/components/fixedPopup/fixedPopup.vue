@@ -184,6 +184,7 @@
               <el-button
                 class="floot-btn"
                 type="info"
+                :loading="confirmLoading"
                 @click="confirm"
                 v-show="mergeConfig.confirmBtnShow"
                 >{{ mergeConfig.confirmBtnText }}</el-button
@@ -275,7 +276,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      confirmLoading: false
+    };
   },
   methods: {
     maskHide() {
@@ -295,7 +298,9 @@ export default {
       }
     },
     confirm() {
-      this.$emit("confirmEmit");
+      this.$emit("confirmEmit", () => {
+        this.confirmLoading = true;
+      });
     },
     close() {
       this.$emit("update:visible", false);
