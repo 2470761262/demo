@@ -214,6 +214,8 @@ export default {
       if (paramsObj) {
         this.paramsObj = paramsObj;
       }
+    } else if (method == "tosale") {
+      this.disabled = true;
     }
   },
   watch: {
