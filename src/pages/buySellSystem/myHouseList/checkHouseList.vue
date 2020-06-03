@@ -898,7 +898,6 @@ export default {
      *@param {Array} list //附件数组
      */
     getFile(list) {
-      console.log(list, "wwww");
       //重置标记
       this.bigAccessoryFile = [];
       this.accessoryTable = false;
@@ -940,7 +939,6 @@ export default {
               //如果没有外景图等附件就默认为当前数组
               data = list[item];
             }
-            console.log(this.accessoryFile, " this.accessoryFile");
             let title = item == "oldFileList" ? "原图" : "取代图";
             this.bigAccessoryFile.push({
               title: title,
@@ -979,7 +977,6 @@ export default {
             if (row.Type == 13) {
               result.data.push({ CheckID: checkId, url: row.picUrl });
             }
-            console.log(result.data, "ffffff");
             that.accessoryAllList.push({ key: checkId, value: result.data });
 
             that.getFile(result.data);
