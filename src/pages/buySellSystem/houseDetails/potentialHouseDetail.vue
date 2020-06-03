@@ -217,9 +217,14 @@
           <el-button class="right-btn" type="primary" @click="tosele"
             >转在售</el-button
           >
-          <!-- <el-button class="right-btn" type="primary" @click="oneTouchDialPhone"
+
+          <el-button
+            class="right-btn"
+            type="primary"
+            @click="oneTouchDialPhone"
+            v-if="1 != 1"
             >一键拨号</el-button
-          > -->
+          >
         </div>
         <div class="page-title-just">
           <div class="title-just-item">
@@ -487,6 +492,7 @@ export default {
       this.$router.push({
         path: "/buySellSystem/addHouse",
         query: {
+          method: "tosale",
           comId: _that.resultData.Comid,
           cbId: _that.resultData.CBId,
           bhId: _that.resultData.id,

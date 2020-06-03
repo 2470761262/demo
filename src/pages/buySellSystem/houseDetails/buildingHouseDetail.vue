@@ -390,6 +390,7 @@ export default {
         path: "/buySellSystem/addHouse",
         disabledStatus: false,
         query: {
+          method: "tosale",
           comId: _that.resultData.Comid,
           cbId: _that.resultData.CBId,
           bhId: _that.resultData.id,

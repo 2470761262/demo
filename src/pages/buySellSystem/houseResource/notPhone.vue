@@ -388,6 +388,7 @@ export default {
       that.$router.push({
         path: "/buySellSystem/addHouse",
         query: {
+          method: "tosale",
           comId: comId,
           cbId: cbId,
           bhId: bhId,

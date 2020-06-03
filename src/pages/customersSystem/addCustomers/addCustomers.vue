@@ -580,7 +580,7 @@ import but from "@/evenBus/but";
 export default {
   data() {
     return {
-      canSubmit: true,
+      canSubmit: false,
       searchLoading: false,
       formData: {
         myImpression: [],
@@ -785,12 +785,22 @@ export default {
       }
     },
     addCusImpression() {
-      if (
-        this.myImpression &&
-        !this.formData.myImpression.includes(this.myImpression)
-      ) {
-        this.formData.myImpression.push(this.myImpression);
+      if (!this.myImpression) {
+        this.$message({
+          type: "info",
+          message: "请输入印象"
+        });
+        return;
       }
+      if (this.formData.myImpression.includes(this.myImpression)) {
+        this.$message({
+          type: "info",
+          message: "已存在印象"
+        });
+        return;
+      }
+      this.formData.myImpression.push(this.myImpression);
+      this.myImpression = "";
     },
     addCusSubmit() {
       let _that = this;
