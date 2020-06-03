@@ -799,12 +799,8 @@ export default {
         });
         return;
       }
-      if (
-        this.myImpression &&
-        !this.formData.myImpression.includes(this.myImpression)
-      ) {
-        this.formData.myImpression.push(this.myImpression);
-      }
+      this.formData.myImpression.push(this.myImpression);
+      this.myImpression = "";
     },
     addCusSubmit() {
       let _that = this;

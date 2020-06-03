@@ -833,6 +833,7 @@ export default {
         return;
       }
       this.formData.myImpression.push(this.myImpression);
+      this.myImpression = "";
     },
     addCusSubmit() {
       let _that = this;
