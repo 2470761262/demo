@@ -694,7 +694,7 @@ export default {
         case "7":
           return "转在售";
         default:
-          return "占位符";
+          return "转跟单";
       }
     }
   },
