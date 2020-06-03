@@ -154,6 +154,26 @@
           }
         }
       }
+      .query-condition-div {
+        display: flex;
+        align-items: center;
+        margin-top: 10px;
+        margin-left: 150px;
+        .select {
+          width: 20%;
+          margin-left: 10px;
+        }
+        .font {
+          font-size: 15px;
+          margin-left: 10px;
+        }
+        .reset {
+          font-size: 15px;
+          margin-left: 10px;
+          color: rgb(18, 130, 77);
+          cursor: pointer;
+        }
+      }
     }
     .echart-canvas {
       //height: 454px;
@@ -291,11 +311,70 @@
         </div>
       </section>
     </section>
-    <section class="echart-data">
+    <section class="echart-data" v-loading="dailyLoading">
       <div class="echart-data-content">
         <h3 class="query-heander-abs">
           <span>今日推荐</span>
         </h3>
+        <div class="query-condition-div">
+          <span class="font">区域</span>
+          <el-select
+            data-anchor="更多筛选组件区域 => select"
+            v-model="queryCondition.deptParentId"
+            :remote-method="remoteArea"
+            clearable
+            @focus="remoteSelect"
+            @change="queryShop"
+            class="select"
+          >
+            <el-option
+              data-anchor="更多筛选组件区域 => select => option"
+              class="anchor-point"
+              v-for="item in deptParentList"
+              :key="item.depId"
+              :value="item.depId"
+              :label="item.depName"
+            ></el-option>
+          </el-select>
+          <span class="font">门店</span>
+          <el-select
+            data-anchor="更多筛选组件区域 => select"
+            class="select"
+            v-model="queryCondition.store"
+            @change="queryPer"
+            clearable
+          >
+            <el-option
+              data-anchor="更多筛选组件区域 => select => option"
+              class="anchor-point"
+              v-for="item in storeList"
+              :key="item.depId"
+              :value="item.depId"
+              :label="item.depName"
+            ></el-option>
+          </el-select>
+          <span class="font">个人</span>
+          <el-select
+            data-anchor="更多筛选组件区域 => select"
+            class="select"
+            v-model="queryCondition.personnel"
+            clearable
+            @change="changeAccount"
+          >
+            <el-option
+              data-anchor="更多筛选组件区域 => select => option"
+              class="anchor-point"
+              v-for="item in perList"
+              :key="item.accountId"
+              :value="item.accountId"
+              :label="item.perName"
+            ></el-option>
+          </el-select>
+          <div class="reset" @click="resetData">
+            <i class="el-icon-refresh-left"></i>
+            <span>重置</span>
+          </div>
+        </div>
         <div class="data-content-progress">
           <div class="progress-layout">
             <progress-content
@@ -370,6 +449,7 @@ import {
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
 import { formatDate } from "element-ui/src/utils/date-util";
+import util from "@/util/util";
 export default {
   components: {
     progressContent
@@ -408,25 +488,66 @@ export default {
       beforeYesterday: {},
       sortColumn: "customerCount",
       sortType: 1,
-      progress: {}
+      progress: {},
+      queryCondition: {
+        deptParentId: "",
+        store: "",
+        personnel: "",
+        companyId: ""
+      },
+      deptParentList: [],
+      storeList: [],
+      perList: [],
+      dailyLoading: true,
+      resetQueryCondition: {} //重置查询条件
     };
   },
-
   mounted() {
     addResizeListener(this.$refs.chart, this.resetEcharts);
     this.getList();
-    this.getStatisticsList("company").then(e => {
-      if (e.data.data) {
-        this.companyProportion = e.data.data;
-      }
+    this.getCompanyDate().then(e => {
+      this.getSevenData();
+    });
+    this.resetQueryCondition = util.deepCopy(this.queryCondition); //深度copy一份查询条件
+  },
+  destroyed() {
+    removeResizeListener(this.$refs.chart, this.resetEcharts);
+  },
+  methods: {
+    /**
+     * 重置数据
+     */
+    resetData() {
+      this.queryCondition = util.deepCopy(this.resetQueryCondition); //重置查询条件
+      this.storeList = [];
+      this.perList = [];
+      this.getCompanyDate().then(e => {
+        this.getSevenData();
+      });
+    },
+    /**
+     * 获取公司的数据
+     */
+    getCompanyDate() {
+      return this.getStatisticsList("company").then(e => {
+        if (e.data.data) {
+          this.companyProportion = e.data.data;
+        }
+      });
+    },
+    /**
+     * 获取7天内的统计数据
+     */
+    getSevenData() {
+      this.dailyLoading = true;
       this.getStatisticsList().then(e => {
+        let json = {
+          dayList: [],
+          agentCount: [],
+          lookCustomersCount: [],
+          houseMoviesCount: []
+        };
         if (e.data.data.length > 0) {
-          let json = {
-            dayList: [],
-            agentCount: [],
-            lookCustomersCount: [],
-            houseMoviesCount: []
-          };
           var yesterday = formatDate(
             new Date().setDate(new Date().getDate() - 1),
             "MM-dd"
@@ -456,15 +577,103 @@ export default {
               this.beforeYesterday = element;
             }
           });
-          this.draw(json);
+        } else {
+          this.beforeYesterday = "";
+          this.yesterday = "";
         }
+        this.draw(json);
+        this.dailyLoading = false;
       });
-    });
-  },
-  destroyed() {
-    removeResizeListener(this.$refs.chart, this.resetEcharts);
-  },
-  methods: {
+    },
+    /**
+     * 人员改变事件
+     */
+    changeAccount() {
+      this.getSevenData();
+    },
+    /**
+     * 获取人员
+     */
+    queryPer() {
+      var that = this;
+      //清空选中的人员
+      this.queryCondition.personnel = "";
+      this.getSevenData(); //获取选择的部门数据
+      this.$api
+        .post({
+          url: `/myHouse/myData`,
+          token: false,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_PER",
+            areaOrStoreId: this.queryCondition.store
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.perList = e.data.data;
+          }
+        });
+    },
+    /**
+     * 获取门店
+     */
+    queryShop(e) {
+      var that = this;
+      let companyId = this.deptParentList.filter(item => item.depId == e);
+      this.queryCondition.companyId = companyId[0].companyId;
+      //清空选中的数据
+      this.queryCondition.personnel = "";
+      this.perList = [];
+      this.queryCondition.store = "";
+      //重新加载数据
+      this.getCompanyDate().then(e => {
+        this.getSevenData();
+      });
+      this.$api
+        .post({
+          url: `/myHouse/myData`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_SHOP",
+            areaOrStoreId: this.queryCondition.deptParentId
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.storeList = e.data.data;
+          }
+        });
+    },
+    remoteSelect() {
+      if (this.queryCondition.deptParentId.length == 0) {
+        this.remoteArea();
+      }
+    },
+    /**
+     * 获取区域
+     */
+    remoteArea(query) {
+      var that = this;
+      if (query !== "") {
+        this.$api
+          .post({
+            url: `/myHouse/myData`,
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: {
+              selectType: "MORE_SELECT_AREA"
+            }
+          })
+          .then(e => {
+            console.log(e.data);
+            if (e.data.code == 200) {
+              that.deptParentList = e.data.data;
+            }
+          });
+      } else {
+        this.deptParentList = [];
+      }
+    },
     getCommunity(value) {
       return this.$api
         .get({
@@ -548,7 +757,11 @@ export default {
           url: "/myHouse/myData",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
-            type: type
+            type: type,
+            areaId: this.queryCondition.deptParentId,
+            departmentId: this.queryCondition.store,
+            accountId: this.queryCondition.personnel,
+            companyId: this.queryCondition.companyId
           }
         })
         .then(e => {
