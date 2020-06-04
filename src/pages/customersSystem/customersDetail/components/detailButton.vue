@@ -212,6 +212,7 @@
     </div>
     <div class="customers-button-gruop" v-if="showOperationButton">
       <el-button
+        v-if="cusBShow"
         class="customers-button-item"
         icon="el-icon-refresh"
         @click="openPop('turnPop')"
@@ -310,7 +311,8 @@ export default {
         lookHouses: 0,
         myLookHouses: 0,
         sex: "性别不详"
-      }
+      },
+      cusBShow: false //转公客是否显示
     };
   },
   mounted() {
@@ -359,6 +361,11 @@ export default {
           let sex = newValue.data.bsAgentCustomersTbl.sex;
           if (sex == 0) _that.dataItem.sex = "男";
           if (sex == 1) _that.dataItem.sex = "女";
+
+          //设置是否显示转公客按钮
+          let group = [1, 2, 3, 4];
+          if (!group.includes(newValue.data.bsAgentCustomersTbl.plate))
+            _that.cusBShow = true;
         } else {
           this.$message({
             type: "info",
@@ -455,6 +462,7 @@ export default {
                 type: "info",
                 message: "转公客成功"
               });
+              _that.cusBShow = false;
             }
             if (result.data == -3) {
               _that.$message({
