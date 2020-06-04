@@ -476,8 +476,8 @@ export default {
             maxPrice: this.queryData.maxPrice,
             minArea: this.queryData.minArea,
             maxArea: this.queryData.maxArea,
-            minAddTime: this.queryData.minAddTime,
-            maxAddTime: this.queryData.maxAddTime
+            minLastPairFollowTime: this.queryData.minLastPairFollowTime,
+            maxLastPairFollowTime: this.queryData.maxLastPairFollowTime
           };
           this.queryCustomerData(1);
         }
