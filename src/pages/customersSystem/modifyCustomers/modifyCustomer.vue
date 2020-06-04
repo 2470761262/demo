@@ -484,6 +484,7 @@
                   clearable
                   filterable
                   remote
+                  @focus="queryPrimarySchoolByKeyWord"
                   :remote-method="queryPrimarySchoolByKeyWord"
                   :loading="searchLoading"
                   multiple
@@ -507,6 +508,7 @@
                   clearable
                   filterable
                   remote
+                  @focus="queryMiddleSchoolByKeyWord"
                   :remote-method="queryMiddleSchoolByKeyWord"
                   :loading="searchLoading"
                   multiple
@@ -532,6 +534,7 @@
                   clearable
                   filterable
                   remote
+                  @focus="queryCommunityByKeyWord"
                   :remote-method="queryCommunityByKeyWord"
                   :loading="searchLoading"
                   multiple
@@ -713,106 +716,103 @@ export default {
   },
   methods: {
     queryPrimarySchoolByKeyWord(query) {
-      if (query !== "") {
-        let _that = this;
-        this.searchLoading = true;
-        _that.$api
-          .get({
-            url: "/community/primarySchoolList",
-            qs: true,
-            data: { primarySchoolName: query }
-          })
-          .then(e => {
-            _that.searchLoading = false;
-            let result = e.data;
-            if (result.code == 200) {
-              console.log(result, "查询小学");
-              _that.primarySchool = result.data.list;
-            } else {
-              console.log("查询小学" + result.message);
-              _that.$message({
-                type: "info",
-                message: result.message
-              });
-            }
-          })
-          .catch(e => {
-            _that.searchLoading = false;
-            console.log("查询小学失败catch");
-            console.log(e);
-          })
-          .finally(() => {});
-      } else {
-        this.primarySchool = [];
+      if (query instanceof Object) {
+        query = "";
       }
+      let _that = this;
+      this.searchLoading = true;
+      _that.$api
+        .get({
+          url: "/community/primarySchoolList",
+          qs: true,
+          data: { primarySchoolName: query }
+        })
+        .then(e => {
+          _that.searchLoading = false;
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查询小学");
+            _that.primarySchool = result.data.list;
+          } else {
+            console.log("查询小学" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          _that.searchLoading = false;
+          console.log("查询小学失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
     },
     queryMiddleSchoolByKeyWord(query) {
-      if (query !== "") {
-        let _that = this;
-        this.searchLoading = true;
-        _that.$api
-          .get({
-            url: "/community/middleSchoolList",
-            qs: true,
-            data: { middleSchoolName: query }
-          })
-          .then(e => {
-            _that.searchLoading = false;
-            let result = e.data;
-            if (result.code == 200) {
-              console.log(result, "查询中学");
-              _that.middleSchool = result.data.list;
-            } else {
-              console.log("查询中学" + result.message);
-              _that.$message({
-                type: "info",
-                message: result.message
-              });
-            }
-          })
-          .catch(e => {
-            _that.searchLoading = false;
-            console.log("查询中学失败catch");
-            console.log(e);
-          })
-          .finally(() => {});
-      } else {
-        this.middleSchool = [];
+      if (query instanceof Object) {
+        query = "";
       }
+      let _that = this;
+      this.searchLoading = true;
+      _that.$api
+        .get({
+          url: "/community/middleSchoolList",
+          qs: true,
+          data: { middleSchoolName: query }
+        })
+        .then(e => {
+          _that.searchLoading = false;
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查询中学");
+            _that.middleSchool = result.data.list;
+          } else {
+            console.log("查询中学" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          _that.searchLoading = false;
+          console.log("查询中学失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
     },
     queryCommunityByKeyWord(query) {
-      if (query !== "") {
-        let _that = this;
-        this.searchLoading = true;
-        _that.$api
-          .get({
-            url: "/community/houseList",
-            qs: true,
-            data: { communityName: query }
-          })
-          .then(e => {
-            _that.searchLoading = false;
-            let result = e.data;
-            if (result.code == 200) {
-              console.log(result, "查询楼盘");
-              _that.communityList = result.data.list;
-            } else {
-              console.log("查询楼盘" + result.message);
-              _that.$message({
-                type: "info",
-                message: result.message
-              });
-            }
-          })
-          .catch(e => {
-            _that.searchLoading = false;
-            console.log("查询楼盘失败catch");
-            console.log(e);
-          })
-          .finally(() => {});
-      } else {
-        this.communityList = [];
+      if (query instanceof Object) {
+        query = "";
       }
+      let _that = this;
+      this.searchLoading = true;
+      _that.$api
+        .get({
+          url: "/community/houseList",
+          qs: true,
+          data: { communityName: query }
+        })
+        .then(e => {
+          _that.searchLoading = false;
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查询楼盘");
+            _that.communityList = result.data.list;
+          } else {
+            console.log("查询楼盘" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          _that.searchLoading = false;
+          console.log("查询楼盘失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
     },
     closeImpression(name) {
       let index = this.formData.myImpression.indexOf(name);
@@ -848,6 +848,9 @@ export default {
     validateParams() {
       if (!this.formData.customers) {
         return "客户姓名不能为空";
+      }
+      if (this.formData.customers.length > 10) {
+        return "客户姓名不能超过10个字符";
       }
       if (
         this.formData.tel == null ||

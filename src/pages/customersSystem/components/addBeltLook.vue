@@ -21,12 +21,12 @@
           <span class="item-require">*</span>
           <div class="item-right">
             <el-date-picker
+              type="datetimerange"
               data-vv-name="beltTime"
               data-vv-as="请选择带看时间"
               v-validate="'required'"
               class="item-picker"
               v-model="beltTime"
-              type="daterange"
               range-separator="至"
               start-placeholder="选择开始时间"
               end-placeholder="选择结束时间"
