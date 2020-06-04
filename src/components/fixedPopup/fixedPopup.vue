@@ -184,6 +184,7 @@
               <el-button
                 class="floot-btn"
                 type="info"
+                :loading="loading"
                 @click="confirm"
                 v-show="mergeConfig.confirmBtnShow"
                 >{{ mergeConfig.confirmBtnText }}</el-button
@@ -206,6 +207,10 @@ const defaultBtnData = {
 import util from "@/util/util";
 export default {
   props: {
+    loading: {
+      type: Boolean,
+      default: false
+    },
     visible: {
       type: Boolean,
       default: false
@@ -273,9 +278,6 @@ export default {
         }
       }
     }
-  },
-  data() {
-    return {};
   },
   methods: {
     maskHide() {

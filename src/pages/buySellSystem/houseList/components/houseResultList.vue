@@ -33,13 +33,13 @@
   .select-tabs-item {
     display: flex;
     align-items: center;
-    margin-right: 98px;
+    margin-right: 55px;
     cursor: pointer;
     &:last-child {
       margin-right: 0;
     }
     .tabs-item-title {
-      font-size: 18px;
+      font-size: 20px;
     }
     .el-icon-sort {
       font-size: 18px;
@@ -47,7 +47,7 @@
   }
 }
 .select-checkbox {
-  margin-right: 40px;
+  margin-right: 30px;
   &:last-child {
     margin-right: 0;
   }
@@ -340,6 +340,23 @@
           <i
             class="el-icon-sort anchor-point"
             data-anchor="首页价格排序按钮"
+          ></i>
+        </div>
+        <div
+          class="select-tabs-item anchor-point"
+          data-anchor="首页面单价排序按钮"
+          :class="{ 'is-order': form.sortColumn == 'unitPrice' }"
+          @click="unitPriceSelect()"
+        >
+          <div
+            class="tabs-item-title anchor-point"
+            data-anchor="首页单价排序按钮"
+          >
+            单价
+          </div>
+          <i
+            class="el-icon-sort anchor-point"
+            data-anchor="首页单价排序按钮"
           ></i>
         </div>
         <div
@@ -830,6 +847,15 @@ export default {
     },
     inAreaSelect() {
       this.form.sortColumn = "inArea";
+      if (this.form.sortType == "ascending") {
+        this.form.sortType = "descending";
+      } else {
+        this.form.sortType = "ascending";
+      }
+      console.log(this.form.sortType);
+    },
+    unitPriceSelect() {
+      this.form.sortColumn = "unitPrice";
       if (this.form.sortType == "ascending") {
         this.form.sortType = "descending";
       } else {

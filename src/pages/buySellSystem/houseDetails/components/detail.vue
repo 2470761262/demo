@@ -516,6 +516,7 @@ export default {
       this.$router.push({
         path: "/buySellSystem/addHouse",
         query: {
+          method: "tosale",
           comId: _that.resultData.Comid,
           cbId: _that.resultData.CBid,
           bhId: _that.resultData.BHID,

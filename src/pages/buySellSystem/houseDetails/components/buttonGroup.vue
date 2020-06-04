@@ -521,7 +521,8 @@ export default {
     },
     async cancelOutsideHouse() {
       let params = {
-        HouseNo: this.resultData.HouseNo
+        HouseNo: this.resultData.HouseNo,
+        id: this.houseId.id
       };
       let reslut = await release.cancelOutsideHouse(params);
       if (reslut.data.code == 200) {

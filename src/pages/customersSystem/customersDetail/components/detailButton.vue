@@ -436,7 +436,52 @@ export default {
      * @example: 转公客确认触发
      */
 
-    turnTransmit() {},
+    turnTransmit() {
+      let _that = this;
+      //获取客户id
+      let id = util.sessionLocalStorageGet("cosDetail:id");
+      _that.$api
+        .post({
+          url: "/saleCustomerDetail/convertBCus",
+          data: { eid: id },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log("转公客记录", e);
+          if (result.code == 200) {
+            if (result.data == 1) {
+              _that.$message({
+                type: "info",
+                message: "转公客成功"
+              });
+            }
+            if (result.data == -3) {
+              _that.$message({
+                type: "info",
+                message: "转换失败"
+              });
+            }
+            if (result.data == -4) {
+              _that.$message({
+                type: "info",
+                message: "该私客已经在公盘,转换失败"
+              });
+            }
+            //result.data.pageSum
+            // this.$store.commit("updateFollow", {
+            //   cusFollow: result
+            // });
+          }
+        })
+        .catch(e => {
+          console.log("转公客失败");
+          console.log(e);
+        })
+        .finally(() => {
+          _that.turnPop = false;
+        });
+    },
 
     /**
      * @example: 删除弹框确认按钮
