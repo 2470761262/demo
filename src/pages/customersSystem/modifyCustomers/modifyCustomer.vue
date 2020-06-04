@@ -421,7 +421,7 @@
             <!-- 首付面积 -->
             <div class="step-item-inline">
               <div class="step-row-title">首付面积:</div>
-              <div class="step-row-query step-flex-group" data-unit="万">
+              <div class="step-row-query step-flex-group" data-unit="平方">
                 <el-input
                   v-model="formData.minArea"
                   oninput="value=value.replace(/[^\d]/g,'')"
@@ -566,7 +566,9 @@
       </el-collapse-item>
     </el-collapse>
     <div class="add-foot">
-      <el-button type="primary" @click="addCusSubmit">修改</el-button>
+      <el-button type="primary" @click="modifyCusSubmit" :disabled="canSubmit"
+        >修改</el-button
+      >
     </div>
   </section>
 </template>
@@ -672,7 +674,8 @@ export default {
       communityList: [],
       sex: SEX, //性别
       myImpression: "",
-      collapseActive: 1 //折叠面板当前激活name
+      collapseActive: 1, //折叠面板当前激活name
+      canSubmit: false
     };
   },
   created() {
@@ -832,9 +835,75 @@ export default {
         });
         return;
       }
+      if (this.myImpression.length > 5) {
+        this.$message({
+          type: "info",
+          message: "印象字数不能超过五个"
+        });
+        return;
+      }
       this.formData.myImpression.push(this.myImpression);
+      this.myImpression = "";
     },
-    addCusSubmit() {
+    validateParams() {
+      if (!this.formData.customers) {
+        return "客户姓名不能为空";
+      }
+      if (
+        this.formData.tel == null ||
+        this.formData.tel == undefined ||
+        this.formData.tel == ""
+      ) {
+        return "客户电话不能为空";
+      }
+      if (!/^1[3456789]\d{9}$/.test(this.formData.tel)) {
+        return "客户电话有误";
+      }
+      console.log(this.formData);
+      if (
+        !this.formData.hasOwnProperty("sex") ||
+        this.formData.sex == null ||
+        this.formData.sex == undefined
+      ) {
+        return "客户性别为空";
+      }
+      if (
+        !this.formData.desireIntensity ||
+        this.formData.desireIntensity == 0
+      ) {
+        return "购房意向为空";
+      }
+
+      if (
+        this.formData.minFirstPrice &&
+        this.formData.maxFirstPrice &&
+        Number(this.formData.maxFirstPrice) <
+          Number(this.formData.minFirstPrice)
+      ) {
+        return "首付金额最大值不能小于最小值";
+      }
+      if (
+        this.formData.minPrice &&
+        this.formData.maxPrice &&
+        Number(this.formData.maxPrice) < Number(this.formData.minPrice)
+      ) {
+        return "期望总价最大值不能小于最小值";
+      }
+      let n = this.formData.minPrice || this.formData.maxPrice || 0;
+      let m = this.formData.maxFirstPrice || this.formData.minFirstPrice || 0;
+      if (Number(m) > Number(n)) {
+        return "首付金额不能大于期望总价";
+      }
+      if (
+        this.formData.minArea &&
+        this.formData.maxArea &&
+        Number(this.formData.maxArea) < Number(this.formData.minArea)
+      ) {
+        return "期望面积最大值不能小于最小值";
+      }
+      return "";
+    },
+    modifyCusSubmit() {
       let _that = this;
       if (
         _that.formData.school1Array &&
@@ -853,6 +922,15 @@ export default {
         _that.formData["community" + (index + 1)] = item;
       });
       console.log(_that.formData, "修改客户参数");
+      let tt = _that.validateParams();
+      if (tt) {
+        _that.$message({
+          type: "info",
+          message: tt
+        });
+        return;
+      }
+      _that.canSubmit = true;
       _that.$api
         .post({
           url: "/saleCustomer/modifyCustomer",
@@ -876,11 +954,13 @@ export default {
               type: "info",
               message: result.message
             });
+            _that.canSubmit = false;
           }
         })
         .catch(e => {
           console.log("录入客源失败catch");
           console.log(e);
+          _that.canSubmit = false;
         })
         .finally(() => {});
     }

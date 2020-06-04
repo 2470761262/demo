@@ -218,12 +218,11 @@ export default {
   methods: {
     reloadAjax() {
       let _that = this;
-      let obj = this.detail.data.saleCusPropertyTbl;
       //重新获取数据
       _that.$api
         .post({
           url: "/saleCustomerDetail/getSalePairProcess",
-          data: { id: obj.Eid },
+          data: { id: util.sessionLocalStorageGet("cosDetail:id") },
           headers: { "Content-Type": "application/json" }
         })
         .then(e => {
