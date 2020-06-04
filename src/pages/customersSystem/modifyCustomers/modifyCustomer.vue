@@ -421,7 +421,7 @@
             <!-- 首付面积 -->
             <div class="step-item-inline">
               <div class="step-row-title">首付面积:</div>
-              <div class="step-row-query step-flex-group" data-unit="万">
+              <div class="step-row-query step-flex-group" data-unit="平方">
                 <el-input
                   v-model="formData.minArea"
                   oninput="value=value.replace(/[^\d]/g,'')"
@@ -835,6 +835,13 @@ export default {
         });
         return;
       }
+      if (this.myImpression.length > 5) {
+        this.$message({
+          type: "info",
+          message: "印象字数不能超过五个"
+        });
+        return;
+      }
       this.formData.myImpression.push(this.myImpression);
       this.myImpression = "";
     },
@@ -881,6 +888,11 @@ export default {
         Number(this.formData.maxPrice) < Number(this.formData.minPrice)
       ) {
         return "期望总价最大值不能小于最小值";
+      }
+      let n = this.formData.minPrice || this.formData.maxPrice || 0;
+      let m = this.formData.maxFirstPrice || this.formData.minFirstPrice || 0;
+      if (Number(m) > Number(n)) {
+        return "首付金额不能大于期望总价";
       }
       if (
         this.formData.minArea &&
