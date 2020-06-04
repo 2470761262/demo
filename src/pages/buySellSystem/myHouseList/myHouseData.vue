@@ -316,7 +316,7 @@
         <h3 class="query-heander-abs">
           <span>今日推荐</span>
         </h3>
-        <div class="query-condition-div">
+        <div class="query-condition-div" v-if="false">
           <span class="font">区域</span>
           <el-select
             data-anchor="更多筛选组件区域 => select"
