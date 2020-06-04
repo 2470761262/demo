@@ -53,15 +53,24 @@
     </div>
     <section class="tab-content">
       <el-table :data="tableData" tooltip-effect="dark">
-        <el-table-column type="selection" width="55"> </el-table-column>
+        <el-table-column label="" width="65">
+          <template scope="scope">
+            <el-radio
+              prop="id"
+              :label="scope.row.id"
+              v-model="templateRadio"
+              @change.native="getTemplateRow(scope.$index, scope.row)"
+            ></el-radio>
+          </template>
+        </el-table-column>
+        <el-table-column prop="name" label="姓名" width="100"></el-table-column>
         <el-table-column
-          v-for="item in tableColumn"
-          :prop="item.prop"
-          :label="item.label"
-          :key="item.prop"
-          :formatter="item.formart"
-          show-overflow-tooltip
+          prop="xinCode"
+          label="鑫币总数"
+          width="100"
         ></el-table-column>
+        <el-table-column prop="area" label="区域"></el-table-column>
+        <el-table-column prop="companyName" label="公司名称"></el-table-column>
       </el-table>
     </section>
     <div class="foot-page">
@@ -96,24 +105,25 @@ export default {
   data() {
     return {
       tableData: [],
-      tableColumn: [
-        {
-          prop: "name",
-          label: "姓名"
-        },
-        {
-          prop: "xinCode",
-          label: "鑫币"
-        },
-        {
-          prop: "area",
-          label: "区域"
-        },
-        {
-          prop: "companyName",
-          label: "公司名称"
-        }
-      ]
+      templateRadio: ""
+      // tableColumn: [
+      //   {
+      //     prop: "name",
+      //     label: "姓名"
+      //   },
+      //   {
+      //     prop: "xinCode",
+      //     label: "鑫币"
+      //   },
+      //   {
+      //     prop: "area",
+      //     label: "区域"
+      //   },
+      //   {
+      //     prop: "companyName",
+      //     label: "公司名称"
+      //   }
+      // ]
     };
   }
 };
