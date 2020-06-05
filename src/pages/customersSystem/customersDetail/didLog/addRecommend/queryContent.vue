@@ -610,7 +610,7 @@ export default {
   },
   data() {
     return {
-      queryFlag: true,
+      queryFlag: false,
       searchInfo: "", //关键字
       RegionList: [], //商圈
       faceList: [], //朝向
