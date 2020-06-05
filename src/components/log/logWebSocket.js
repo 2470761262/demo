@@ -10,7 +10,12 @@ import { LOGINDATA, TOKEN } from "@/util/constMap";
  * 锚点数据是否开启
  * @type {boolean}
  */
-let isOpenLog = process.env.VUE_APP_OPEN_ANCHOR ? (process.env.VUE_APP_OPEN_ANCHOR == "False" || process.env.VUE_APP_OPEN_ANCHOR == "false" ? false : true) : false;
+let isOpenLog = process.env.VUE_APP_OPEN_ANCHOR
+  ? process.env.VUE_APP_OPEN_ANCHOR == "False" ||
+    process.env.VUE_APP_OPEN_ANCHOR == "false"
+    ? false
+    : true
+  : false;
 /**
  * 锚点服务地址
  * @type {string}
@@ -65,7 +70,7 @@ let log_socket = {
   },
   sendUserActionData(e) {
     //判断如果socket未连接或配置不开启log则不进入
-    if(!log_socket.isConn || !isOpenLog){
+    if (!log_socket.isConn || !isOpenLog) {
       return;
     }
     let accountId = log_socket.getAccountId();

@@ -88,7 +88,9 @@
         <el-button
           data-anchor="房源详情总监推荐||店长推荐 => click"
           class="anchor-point"
-          :disabled="isDisabled || !isShowButton.inspector && !isShowButton.shopOwner"
+          :disabled="
+            isDisabled || (!isShowButton.inspector && !isShowButton.shopOwner)
+          "
           @click="nodePop"
           v-if="!isRecommend"
         >
@@ -258,7 +260,13 @@ import release from "../common/releaseHouse.js";
 import houseCheck from "../common/houseCheck";
 import but from "@/evenBus/but.js";
 export default {
-  inject: ["houseDetails", "houseId", "load", "buttonDisabled", "buttonLocking"],
+  inject: [
+    "houseDetails",
+    "houseId",
+    "load",
+    "buttonDisabled",
+    "buttonLocking"
+  ],
   components: {
     releasePop,
     betPop,

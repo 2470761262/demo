@@ -54,7 +54,7 @@
     <section class="tab-content">
       <el-table :data="tableData" tooltip-effect="dark">
         <el-table-column label="" width="65">
-          <template scope="scope">
+          <template v-slot="scope">
             <el-radio
               prop="id"
               :label="scope.row.id"
