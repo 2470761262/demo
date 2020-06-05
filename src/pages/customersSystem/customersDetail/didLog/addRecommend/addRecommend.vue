@@ -121,6 +121,7 @@ export default {
           });
           if (result.code == 200) {
             console.log("推荐成功");
+            this.$emit("successCommit");
             this.$emit("update:visible", false);
           }
         })
