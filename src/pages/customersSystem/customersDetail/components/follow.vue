@@ -421,7 +421,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log("获取推荐房源记录失败");
+          console.log("获取推荐房源记录失败!");
           console.log(e);
         })
         .finally(() => {});
