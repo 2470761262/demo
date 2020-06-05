@@ -130,6 +130,9 @@
       flex-direction: column;
       .query-heander-abs {
         display: inline-flex;
+        position: relative;
+        z-index: 2;
+        background: #fff;
         span {
           .tips-abs;
         }
