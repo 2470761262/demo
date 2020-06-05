@@ -10,8 +10,16 @@ import { LOGINDATA, TOKEN } from "@/util/constMap";
  * 锚点数据是否开启
  * @type {boolean}
  */
-let isOpenLog = false;
+let isOpenLog = process.env.VUE_APP_OPEN_ANCHOR ? (process.env.VUE_APP_OPEN_ANCHOR == "False" || process.env.VUE_APP_OPEN_ANCHOR == "false" ? false : true) : false;
+/**
+ * 锚点服务地址
+ * @type {string}
+ */
 let logSocketUri = "ws://" + process.env.VUE_APP_WEBSOCKET_URI + "/log";
+/**
+ * 锚点客户端标识
+ * @type {string}
+ */
 let identify = process.env.VUE_APP_IDENTIFY;
 
 let addLog_eventListener = {
@@ -56,6 +64,10 @@ let log_socket = {
     }
   },
   sendUserActionData(e) {
+    //判断如果socket未连接或配置不开启log则不进入
+    if(!log_socket.isConn || !isOpenLog){
+      return;
+    }
     let accountId = log_socket.getAccountId();
     let target = e.target;
     let className = target.className;
@@ -102,7 +114,8 @@ let log_socket = {
       nodeName: e.target.nodeName,
       innerHTML: e.target.innerHTML,
       placeholder: e.target.placeholder,
-      identify: window.navigator.userAgent
+      identify: e.view.clientInformation.userAgent,
+      anchorName: e.target.dataset.anchor
     };
     let content = "user_anchor@$:" + JSON.stringify(parent);
     return content;
@@ -112,20 +125,6 @@ let log_socket = {
     let accountId = loginData.accountId;
     return accountId;
   }
-  // sendUserAnchorData(name, event) {
-  //   if (!this.isConn) {
-  //     return;
-  //   }
-  //   let accountId = log_socket.getAccountId();
-  //   let data = {
-  //     accountId: accountId,
-  //     name: name,
-  //     event: event
-  //   };
-  //   let content = "user_anchor@$:" + JSON.stringify(data);
-  //   console.log(content);
-  //   log_socket.socket.send(content);
-  // }
 };
 
 if (isOpenLog) {
