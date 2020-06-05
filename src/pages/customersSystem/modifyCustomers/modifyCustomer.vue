@@ -912,6 +912,12 @@ export default {
       ) {
         return "首付金额最大值不能小于最小值";
       }
+      if (this.formData.minPrice && Number(this.formData.minPrice) > 2000) {
+        return "期望总价最小值不能超过2000万";
+      }
+      if (this.formData.maxPrice && Number(this.formData.maxPrice) > 2000) {
+        return "期望总价最大值不能超过2000万";
+      }
       if (
         this.formData.minPrice &&
         this.formData.maxPrice &&
