@@ -197,17 +197,18 @@
             </div>
             <!-- 客户性别 -->
             <div class="step-item-inline ">
-              <!-- <div class="step-row-title title-required">客户性别:</div>
+              <div class="step-row-title title-required">客户性别:</div>
               <div class="step-row-query border">
                 <el-radio-group v-model="formData.sex">
                   <el-radio
+                    v-model="formData.sex"
                     :label="item.value"
                     v-for="item in sex"
-                    :key="item.value"
-                    >{{ item.key }}</el-radio
+                    :key="item.key"
+                    >{{ item.value }}</el-radio
                   >
                 </el-radio-group>
-              </div> -->
+              </div>
             </div>
           </div>
           <!-- 客户电话 &  客户籍贯 content -->
@@ -577,15 +578,12 @@
 </template>
 
 <script>
-import { SEX, DECORATION } from "@/util/constMap";
+import { DECORATION } from "@/util/constMap";
 import but from "@/evenBus/but";
 export default {
   data() {
     return {
       searchLoading: false,
-      gogo: {
-        sdsd: ["北城小学"]
-      },
       formData: {
         // school1Array: ["北城小学"]
         // myImpression: [],
@@ -675,7 +673,17 @@ export default {
       primarySchool: [],
       middleSchool: [],
       communityList: [],
-      sex: SEX, //性别
+      sex: [
+        //性别
+        {
+          key: 0,
+          value: "男"
+        },
+        {
+          key: 1,
+          value: "女"
+        }
+      ], //性别
       myImpression: "",
       collapseActive: 1, //折叠面板当前激活name
       canSubmit: false
@@ -725,6 +733,8 @@ export default {
               result.data.minFirstPrice || result.data.MinFirstPrice;
             this.formData.maxFirstPrice =
               result.data.maxFirstPrice || result.data.MaxFirstPrice;
+            this.formData.sex = Number(result.data.sex);
+            console.log(this.formData, "this.formData", "回显数据");
           }
         })
         .catch(e => {
@@ -733,7 +743,6 @@ export default {
         })
         .finally(() => {});
       //结束回显数据
-      console.log(this.formData, "this.formData", "回显数据");
     }
   },
   methods: {

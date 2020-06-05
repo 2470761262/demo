@@ -96,8 +96,10 @@
           ></el-paging-select>
         </div>
         <div class="but-group">
-          <el-button type="text" @click="restore">一键还原</el-button>
-          <el-button type="text" @click="restore">一键清除</el-button>
+          <el-button type="text" @click="restoreImpression">一键还原</el-button>
+          <el-button type="text" @click="clearAllImpression"
+            >一键清除</el-button
+          >
         </div>
         <div class="attention-scroll-content">
           <el-tag
@@ -148,7 +150,8 @@ export default {
       impressionIsPageEnd: false,
       loadingImpression: false,
       myImpressionsList: [],
-      selectedImpressions: []
+      selectedImpressions: [],
+      beforeImpressions: []
     };
   },
   watch: {
@@ -184,7 +187,18 @@ export default {
     util.localStorageRemove("customers:query:impressionSelected");
   },
   methods: {
-    restore() {
+    restoreImpression() {
+      if (
+        this.beforeImpressions == null ||
+        this.beforeImpressions.length == 0
+      ) {
+        this.selectedImpressions = [];
+      } else {
+        this.selectedImpressions = this.beforeImpressions;
+      }
+    },
+    clearAllImpression() {
+      this.beforeImpressions = this.selectedImpressions; //保存之前的，用于一键还原
       this.selectedImpressions = [];
     },
     closeImpression(id) {
