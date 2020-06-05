@@ -8,7 +8,12 @@
 }
 </style>
 <template>
-  <fixed-popup v-bind="$attrs" v-on="$listeners" @confirmEmit="confirmEmit">
+  <fixed-popup
+    v-bind="$attrs"
+    v-on="$listeners"
+    @confirmEmit="confirmEmit"
+    :loading="isWorking"
+  >
     <template>
       <strong class="error-tips">{{ errorBags.all()[0] }}</strong>
       <div class="belt-content">
@@ -16,12 +21,12 @@
           <span class="item-require">*</span>
           <div class="item-right">
             <el-date-picker
+              type="datetimerange"
               data-vv-name="beltTime"
               data-vv-as="请选择带看时间"
               v-validate="'required'"
               class="item-picker"
               v-model="beltTime"
-              type="daterange"
               range-separator="至"
               start-placeholder="选择开始时间"
               end-placeholder="选择结束时间"
@@ -112,6 +117,7 @@ export default {
   },
   data() {
     return {
+      isWorking: false,
       textarea: "",
       isTalk: 0, //是否再谈
       accompanyResult: [], //陪同人
@@ -120,7 +126,7 @@ export default {
     };
   },
   methods: {
-    addPairRecord(params, callback) {
+    addPairRecord(params, callback, failCallBack) {
       let _that = this;
       _that.$api
         .post({
@@ -145,15 +151,17 @@ export default {
               type: "info",
               message: result.message
             });
+            failCallBack();
           }
         })
         .catch(e => {
           console.log("录入客源失败catch");
           console.log(e);
+          failCallBack();
         })
         .finally(() => {});
     },
-    getHouseAgentInfo(params, callback) {
+    getHouseAgentInfo(params, callback, failCallBack) {
       let _that = this;
       _that.$api
         .post({
@@ -172,6 +180,7 @@ export default {
                 type: "info",
                 message: "该房间未录入房源哈"
               });
+              failCallBack();
             }
           } else {
             console.log("查找房源id" + result.message);
@@ -179,15 +188,17 @@ export default {
               type: "info",
               message: result.message
             });
+            failCallBack();
           }
         })
         .catch(e => {
           console.log("录入客源失败catch");
           console.log(e);
+          failCallBack();
         })
         .finally(() => {});
     },
-    confirmEmit() {
+    confirmEmit(done) {
       let _that = this;
       this.$validator.validateAll().then(e => {
         if (!e) return;
@@ -208,6 +219,7 @@ export default {
             cusEid: _that.customerId,
             dzTogether: this.accompanyResult[0].key
           };
+          _that.isWorking = true;
           _that.getHouseAgentInfo(
             {
               communityId: communityId,
@@ -221,9 +233,19 @@ export default {
               params.buildingName = house.BuildingName;
               params.roomNo = house.RoomNo;
               params.houseAgentPer = house.AgentPer;
-              _that.addPairRecord(params, s =>
-                _that.$emit("update:visible", false)
+              _that.addPairRecord(
+                params,
+                s => {
+                  _that.$emit("update:visible", false);
+                  _that.isWorking = false;
+                },
+                d => {
+                  _that.isWorking = false;
+                }
               );
+            },
+            d => {
+              _that.isWorking = false;
             }
           );
         } else {

@@ -502,6 +502,17 @@ export default [
           import(
             /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/myHouseList/browseLog.vue"
           )
+      },
+      {
+        //锁定列表-已锁定
+        path: "/buySellSystem/lockingList",
+        meta: {
+          title: "锁定列表"
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "lockingList" */ "@/pages/buySellSystem/lockingList/lockingList.vue"
+          )
       }
     ]
   },

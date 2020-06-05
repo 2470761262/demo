@@ -815,8 +815,10 @@ export default {
           break;
         case "propertyFee": //物业费
           sendData.propertyFee = value;
-          sendData.saleDesc = value;
-          sendData.taxDesc = value;
+          sendData.communityDesc = this.resultData.communityPresentation;
+          sendData.roomDesc = this.resultData.houseTypePresentation;
+          sendData.taxDesc = this.resultData.taxParsing;
+          sendData.saleDesc = this.resultData.coreSellingPoint;
           sendData.saleHouseUpdateRecordList.push({
             modifier: util.localStorageGet("logindata").accountId,
             HouseId: this.resultData.id,

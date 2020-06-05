@@ -225,6 +225,13 @@ export default {
     },
     goSubmit() {
       let that = this;
+      if (
+        that.form.suggest == undefined ||
+        that.form.functionPoint == undefined
+      ) {
+        this.$message.error("请填写功能点或反馈内容");
+        return false;
+      }
       console.log(that.form, "save");
       this.btnLoadding = true;
       that.$api
@@ -237,8 +244,6 @@ export default {
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
-            console.log(result.message);
-            console.log(result.data);
             this.$message.success("提交成功.谢谢您的反馈");
             this.outerVisible = false;
             this.form = {};

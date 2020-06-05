@@ -197,17 +197,18 @@
             </div>
             <!-- 客户性别 -->
             <div class="step-item-inline ">
-              <!-- <div class="step-row-title title-required">客户性别:</div>
+              <div class="step-row-title title-required">客户性别:</div>
               <div class="step-row-query border">
                 <el-radio-group v-model="formData.sex">
                   <el-radio
+                    v-model="formData.sex"
                     :label="item.value"
                     v-for="item in sex"
-                    :key="item.value"
-                    >{{ item.key }}</el-radio
+                    :key="item.key"
+                    >{{ item.value }}</el-radio
                   >
                 </el-radio-group>
-              </div> -->
+              </div>
             </div>
           </div>
           <!-- 客户电话 &  客户籍贯 content -->
@@ -420,8 +421,8 @@
           <div class="cust-step-row">
             <!-- 首付面积 -->
             <div class="step-item-inline">
-              <div class="step-row-title">首付面积:</div>
-              <div class="step-row-query step-flex-group" data-unit="万">
+              <div class="step-row-title">期望面积:</div>
+              <div class="step-row-query step-flex-group" data-unit="平方">
                 <el-input
                   v-model="formData.minArea"
                   oninput="value=value.replace(/[^\d]/g,'')"
@@ -484,6 +485,7 @@
                   clearable
                   filterable
                   remote
+                  @focus="queryPrimarySchoolByKeyWord"
                   :remote-method="queryPrimarySchoolByKeyWord"
                   :loading="searchLoading"
                   multiple
@@ -507,6 +509,7 @@
                   clearable
                   filterable
                   remote
+                  @focus="queryMiddleSchoolByKeyWord"
                   :remote-method="queryMiddleSchoolByKeyWord"
                   :loading="searchLoading"
                   multiple
@@ -532,6 +535,7 @@
                   clearable
                   filterable
                   remote
+                  @focus="queryCommunityByKeyWord"
                   :remote-method="queryCommunityByKeyWord"
                   :loading="searchLoading"
                   multiple
@@ -566,21 +570,20 @@
       </el-collapse-item>
     </el-collapse>
     <div class="add-foot">
-      <el-button type="primary" @click="addCusSubmit">修改</el-button>
+      <el-button type="primary" @click="modifyCusSubmit" :disabled="canSubmit"
+        >修改</el-button
+      >
     </div>
   </section>
 </template>
 
 <script>
-import { SEX, DECORATION } from "@/util/constMap";
+import { DECORATION } from "@/util/constMap";
 import but from "@/evenBus/but";
 export default {
   data() {
     return {
       searchLoading: false,
-      gogo: {
-        sdsd: ["北城小学"]
-      },
       formData: {
         // school1Array: ["北城小学"]
         // myImpression: [],
@@ -670,9 +673,20 @@ export default {
       primarySchool: [],
       middleSchool: [],
       communityList: [],
-      sex: SEX, //性别
+      sex: [
+        //性别
+        {
+          key: 0,
+          value: "男"
+        },
+        {
+          key: 1,
+          value: "女"
+        }
+      ], //性别
       myImpression: "",
-      collapseActive: 1 //折叠面板当前激活name
+      collapseActive: 1, //折叠面板当前激活name
+      canSubmit: false
     };
   },
   created() {
@@ -704,112 +718,132 @@ export default {
       if (customer.school2) {
         this.$set(this.formData, "school2Array", customer.school2.split("$"));
       }
+      //执行ajax请求，获取基础信息
+      this.$api
+        .post({
+          url: "/saleCustomerDetail/getACusDetail",
+          data: { id: customer.id },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log("获取客户详情结果", e);
+          if (result.code == 200) {
+            this.formData.minFirstPrice =
+              result.data.minFirstPrice || result.data.MinFirstPrice;
+            this.formData.maxFirstPrice =
+              result.data.maxFirstPrice || result.data.MaxFirstPrice;
+            this.formData.sex = Number(result.data.sex);
+            console.log(this.formData, "this.formData", "回显数据");
+          }
+        })
+        .catch(e => {
+          console.log("获取客户详情异常失败");
+          console.log(e);
+        })
+        .finally(() => {});
       //结束回显数据
-      console.log(this.formData, "this.formData");
     }
   },
   methods: {
     queryPrimarySchoolByKeyWord(query) {
-      if (query !== "") {
-        let _that = this;
-        this.searchLoading = true;
-        _that.$api
-          .get({
-            url: "/community/primarySchoolList",
-            qs: true,
-            data: { primarySchoolName: query }
-          })
-          .then(e => {
-            _that.searchLoading = false;
-            let result = e.data;
-            if (result.code == 200) {
-              console.log(result, "查询小学");
-              _that.primarySchool = result.data.list;
-            } else {
-              console.log("查询小学" + result.message);
-              _that.$message({
-                type: "info",
-                message: result.message
-              });
-            }
-          })
-          .catch(e => {
-            _that.searchLoading = false;
-            console.log("查询小学失败catch");
-            console.log(e);
-          })
-          .finally(() => {});
-      } else {
-        this.primarySchool = [];
+      if (query instanceof Object) {
+        query = "";
       }
+      let _that = this;
+      this.searchLoading = true;
+      _that.$api
+        .get({
+          url: "/community/primarySchoolList",
+          qs: true,
+          data: { primarySchoolName: query }
+        })
+        .then(e => {
+          _that.searchLoading = false;
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查询小学");
+            _that.primarySchool = result.data.list;
+          } else {
+            console.log("查询小学" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          _that.searchLoading = false;
+          console.log("查询小学失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
     },
     queryMiddleSchoolByKeyWord(query) {
-      if (query !== "") {
-        let _that = this;
-        this.searchLoading = true;
-        _that.$api
-          .get({
-            url: "/community/middleSchoolList",
-            qs: true,
-            data: { middleSchoolName: query }
-          })
-          .then(e => {
-            _that.searchLoading = false;
-            let result = e.data;
-            if (result.code == 200) {
-              console.log(result, "查询中学");
-              _that.middleSchool = result.data.list;
-            } else {
-              console.log("查询中学" + result.message);
-              _that.$message({
-                type: "info",
-                message: result.message
-              });
-            }
-          })
-          .catch(e => {
-            _that.searchLoading = false;
-            console.log("查询中学失败catch");
-            console.log(e);
-          })
-          .finally(() => {});
-      } else {
-        this.middleSchool = [];
+      if (query instanceof Object) {
+        query = "";
       }
+      let _that = this;
+      this.searchLoading = true;
+      _that.$api
+        .get({
+          url: "/community/middleSchoolList",
+          qs: true,
+          data: { middleSchoolName: query }
+        })
+        .then(e => {
+          _that.searchLoading = false;
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查询中学");
+            _that.middleSchool = result.data.list;
+          } else {
+            console.log("查询中学" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          _that.searchLoading = false;
+          console.log("查询中学失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
     },
     queryCommunityByKeyWord(query) {
-      if (query !== "") {
-        let _that = this;
-        this.searchLoading = true;
-        _that.$api
-          .get({
-            url: "/community/houseList",
-            qs: true,
-            data: { communityName: query }
-          })
-          .then(e => {
-            _that.searchLoading = false;
-            let result = e.data;
-            if (result.code == 200) {
-              console.log(result, "查询楼盘");
-              _that.communityList = result.data.list;
-            } else {
-              console.log("查询楼盘" + result.message);
-              _that.$message({
-                type: "info",
-                message: result.message
-              });
-            }
-          })
-          .catch(e => {
-            _that.searchLoading = false;
-            console.log("查询楼盘失败catch");
-            console.log(e);
-          })
-          .finally(() => {});
-      } else {
-        this.communityList = [];
+      if (query instanceof Object) {
+        query = "";
       }
+      let _that = this;
+      this.searchLoading = true;
+      _that.$api
+        .get({
+          url: "/community/houseList",
+          qs: true,
+          data: { communityName: query }
+        })
+        .then(e => {
+          _that.searchLoading = false;
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查询楼盘");
+            _that.communityList = result.data.list;
+          } else {
+            console.log("查询楼盘" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          _that.searchLoading = false;
+          console.log("查询楼盘失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
     },
     closeImpression(name) {
       let index = this.formData.myImpression.indexOf(name);
@@ -832,10 +866,78 @@ export default {
         });
         return;
       }
+      if (this.myImpression.length > 5) {
+        this.$message({
+          type: "info",
+          message: "印象字数不能超过五个"
+        });
+        return;
+      }
       this.formData.myImpression.push(this.myImpression);
       this.myImpression = "";
     },
-    addCusSubmit() {
+    validateParams() {
+      if (!this.formData.customers) {
+        return "客户姓名不能为空";
+      }
+      if (this.formData.customers.length > 10) {
+        return "客户姓名不能超过10个字符";
+      }
+      if (
+        this.formData.tel == null ||
+        this.formData.tel == undefined ||
+        this.formData.tel == ""
+      ) {
+        return "客户电话不能为空";
+      }
+      if (!/^1[3456789]\d{9}$/.test(this.formData.tel)) {
+        return "客户电话有误";
+      }
+      console.log(this.formData);
+      if (
+        !this.formData.hasOwnProperty("sex") ||
+        this.formData.sex == null ||
+        this.formData.sex == undefined
+      ) {
+        return "客户性别为空";
+      }
+      if (
+        !this.formData.desireIntensity ||
+        this.formData.desireIntensity == 0
+      ) {
+        return "购房意向为空";
+      }
+
+      if (
+        this.formData.minFirstPrice &&
+        this.formData.maxFirstPrice &&
+        Number(this.formData.maxFirstPrice) <
+          Number(this.formData.minFirstPrice)
+      ) {
+        return "首付金额最大值不能小于最小值";
+      }
+      if (
+        this.formData.minPrice &&
+        this.formData.maxPrice &&
+        Number(this.formData.maxPrice) < Number(this.formData.minPrice)
+      ) {
+        return "期望总价最大值不能小于最小值";
+      }
+      let n = this.formData.minPrice || this.formData.maxPrice || 0;
+      let m = this.formData.maxFirstPrice || this.formData.minFirstPrice || 0;
+      if (Number(m) > Number(n)) {
+        return "首付金额不能大于期望总价";
+      }
+      if (
+        this.formData.minArea &&
+        this.formData.maxArea &&
+        Number(this.formData.maxArea) < Number(this.formData.minArea)
+      ) {
+        return "期望面积最大值不能小于最小值";
+      }
+      return "";
+    },
+    modifyCusSubmit() {
       let _that = this;
       if (
         _that.formData.school1Array &&
@@ -854,6 +956,15 @@ export default {
         _that.formData["community" + (index + 1)] = item;
       });
       console.log(_that.formData, "修改客户参数");
+      let tt = _that.validateParams();
+      if (tt) {
+        _that.$message({
+          type: "info",
+          message: tt
+        });
+        return;
+      }
+      _that.canSubmit = true;
       _that.$api
         .post({
           url: "/saleCustomer/modifyCustomer",
@@ -877,11 +988,13 @@ export default {
               type: "info",
               message: result.message
             });
+            _that.canSubmit = false;
           }
         })
         .catch(e => {
           console.log("录入客源失败catch");
           console.log(e);
+          _that.canSubmit = false;
         })
         .finally(() => {});
     }
