@@ -420,7 +420,7 @@
           <div class="cust-step-row">
             <!-- 首付面积 -->
             <div class="step-item-inline">
-              <div class="step-row-title">首付面积:</div>
+              <div class="step-row-title">期望面积:</div>
               <div class="step-row-query step-flex-group" data-unit="平方">
                 <el-input
                   v-model="formData.minArea"
@@ -710,8 +710,30 @@ export default {
       if (customer.school2) {
         this.$set(this.formData, "school2Array", customer.school2.split("$"));
       }
+      //执行ajax请求，获取基础信息
+      this.$api
+        .post({
+          url: "/saleCustomerDetail/getACusDetail",
+          data: { id: customer.id },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log("获取客户详情结果", e);
+          if (result.code == 200) {
+            this.formData.minFirstPrice =
+              result.data.minFirstPrice || result.data.MinFirstPrice;
+            this.formData.maxFirstPrice =
+              result.data.maxFirstPrice || result.data.MaxFirstPrice;
+          }
+        })
+        .catch(e => {
+          console.log("获取客户详情异常失败");
+          console.log(e);
+        })
+        .finally(() => {});
       //结束回显数据
-      console.log(this.formData, "this.formData");
+      console.log(this.formData, "this.formData", "回显数据");
     }
   },
   methods: {
