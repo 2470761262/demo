@@ -293,8 +293,22 @@
       </div>
     </div>
     <div class="record-content-foot">
-      <el-button class="task-button" v-show="showBox === 1">添加推荐</el-button>
+      <el-button
+        class="task-button"
+        v-show="showBox === 1"
+        @click="openPop('addPop')"
+        >添加推荐</el-button
+      >
     </div>
+    <!-- 添加推荐 -->
+    <add-recommend
+      :visible.sync="addPop"
+      v-if="addPop"
+      title="添加推荐"
+      style-type="0"
+      width="7.5rem"
+    >
+    </add-recommend>
   </div>
 </template>
 
@@ -304,12 +318,15 @@ import { mapState, mapMutations } from "vuex";
 import moment from "moment";
 export default {
   components: {
-    leftProgress
+    leftProgress,
+    //添加推挤
+    addRecommend: () => import("../didLog/addRecommend/addRecommend")
   },
   data() {
     return {
       list: [],
-      showBox: 0
+      showBox: 0,
+      addPop: false //添加推荐弹出层开关
     };
   },
   watch: {
@@ -327,6 +344,11 @@ export default {
           });
         }
       }
+    }
+  },
+  methods: {
+    openPop(popName) {
+      this[popName] = true;
     }
   },
   computed: {
