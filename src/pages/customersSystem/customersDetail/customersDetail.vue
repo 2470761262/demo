@@ -75,6 +75,7 @@ import follow from "./components/follow";
 import { mapState, mapMutations } from "vuex";
 import util from "@/util/util";
 export default {
+  name: "customersDetail",
   data() {
     return {
       queryParams: [],

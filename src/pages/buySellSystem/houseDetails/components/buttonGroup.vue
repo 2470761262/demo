@@ -88,7 +88,7 @@
         <el-button
           data-anchor="房源详情总监推荐||店长推荐 => click"
           class="anchor-point"
-          :disabled="!isShowButton.inspector && !isShowButton.shopOwner"
+          :disabled="isDisabled || !isShowButton.inspector && !isShowButton.shopOwner"
           @click="nodePop"
           v-if="!isRecommend"
         >
@@ -156,7 +156,7 @@
         <el-button
           data-anchor="房源详情解锁房源||锁定房源 => click"
           class="anchor-point"
-          :disabled="isDisabled || !isShowButton.locking"
+          :disabled="roleButtonDisabled || !isShowButton.locking"
           @click="houseLock"
         >
           <!-- v-if="isShowButton.locking" -->
@@ -258,7 +258,7 @@ import release from "../common/releaseHouse.js";
 import houseCheck from "../common/houseCheck";
 import but from "@/evenBus/but.js";
 export default {
-  inject: ["houseDetails", "houseId", "load", "buttonDisabled"],
+  inject: ["houseDetails", "houseId", "load", "buttonDisabled", "buttonLocking"],
   components: {
     releasePop,
     betPop,
@@ -268,8 +268,13 @@ export default {
   },
   computed: {
     isDisabled() {
+      return this.buttonDisabled || this.buttonLocking.value;
+    },
+
+    roleButtonDisabled() {
       return this.buttonDisabled;
     },
+
     resultData() {
       if (Object.keys(this.houseDetails).length > 0) {
         return this.houseDetails.data;
@@ -525,7 +530,7 @@ export default {
         id: this.houseId.id
       };
       let reslut = await release.cancelOutsideHouse(params);
-      if (reslut.data.code == 200) {
+      if (reslut) {
         this.resultData.isReleaseOutside = 0;
         this.$message(reslut.data.message);
       } else {

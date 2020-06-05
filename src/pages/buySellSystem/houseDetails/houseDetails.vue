@@ -71,9 +71,10 @@
       <sidebarList
         lastItemSet
         lastTitle="编辑"
-        :judgeShowEdit="true"
+        :judgeShowEdit="!buttonLocking.value"
         :lastParams="lastParams"
-        :showEdit="showEdit"
+        :showEdit="showEdit && !buttonLocking.value"
+        :hisEdit="!buttonLocking.value"
       ></sidebarList>
       <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
 
@@ -93,8 +94,9 @@
       <houseMessage
         class="cell-msg"
         :class="{ 'cell-msg-nest': nest }"
-        :showEdit="showEdit"
-        :judgeShowEdit="true"
+        :showEdit="showEdit && !buttonLocking.value"
+        :judgeShowEdit="!buttonLocking.value"
+        :hisEdit="!buttonLocking.value"
       ></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->
@@ -124,7 +126,7 @@ export default {
   provide() {
     return {
       houseId: this.forID,
-      dept: this.dept,
+      buttonLocking: this.buttonLocking,
       houseDetails: this.houseDetails,
       load: this.load,
       buttonDisabled: this.buttonDisabled,
@@ -188,6 +190,9 @@ export default {
       },
       detailType: undefined, //标识房源详情类型，决定调用哪个详情接口地址
       buttonDisabled: false,
+      buttonLocking: {
+        value: false
+      },
       browse: {
         addTime: null,
         topTime: null,
@@ -321,12 +326,8 @@ export default {
               that.showEdit = true;
             }
 
-            if (
-              result.data.plate != 1 &&
-              result.data.plate != 4 &&
-              result.data.plate != 0
-            ) {
-              this.buttonDisabled = true;
+            if (result.data.plate > 6 || result.data.isLocking) {
+              this.buttonLocking.value = true;
             }
             this.$set(this.houseDetails, "data", result.data);
             let rooms,

@@ -1261,12 +1261,14 @@ export default {
         this.loading = true;
         this.$api
           .get({
-            url: "/mateHouse/queryCommunity",
+            url: "/community/check",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
             data: {
+              communityName: query,
               page: 1,
-              limit: 50,
-              communityName: query
+              limit: 50
             }
           })
           .then(e => {
