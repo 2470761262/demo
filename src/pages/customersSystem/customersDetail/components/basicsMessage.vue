@@ -166,7 +166,7 @@ export default {
           dc = dc.data;
           //期望面积
           if (dc.minArea == null) {
-            dc.minArea = kongValue;
+            dc.minArea = kong;
           }
           if (dc.maxArea == null) {
             dc.maxArea = kong;
@@ -175,10 +175,10 @@ export default {
           console.log("basic---------------", dc.hopeArea);
           //首付金额
           if (dc.minFirstPrice == null) {
-            dc.minFirstPrice = kongValue;
+            dc.minFirstPrice = kong;
           }
           if (dc.maxFirstPrice == null) {
-            dc.maxFirstPrice = kongValue;
+            dc.maxFirstPrice = kong;
           }
           dc.hopeFirtPay = dc.minFirstPrice + "-" + dc.maxFirstPrice + "万";
 

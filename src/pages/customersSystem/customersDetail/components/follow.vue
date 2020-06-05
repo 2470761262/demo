@@ -226,8 +226,9 @@
         <textarea
           rows="5"
           placeholder="对这个客户想说点什么?请写下来吧"
+          v-model="message"
         ></textarea>
-        <el-button class="text-area-button">提交</el-button>
+        <el-button class="text-area-button" @click="confirm">提交</el-button>
       </div>
       <left-progress v-for="(item, index) in list" :key="index">
         <template>
@@ -293,8 +294,22 @@
       </div>
     </div>
     <div class="record-content-foot">
-      <el-button class="task-button" v-show="showBox === 1">添加推荐</el-button>
+      <el-button
+        class="task-button"
+        v-show="showBox === 1"
+        @click="openPop('addPop')"
+        >添加推荐</el-button
+      >
     </div>
+    <!-- 添加推荐 -->
+    <add-recommend
+      :visible.sync="addPop"
+      v-if="addPop"
+      title="添加推荐"
+      style-type="0"
+      width="7.5rem"
+    >
+    </add-recommend>
   </div>
 </template>
 
@@ -302,15 +317,87 @@
 import leftProgress from "../otherCom/leftProgress";
 import { mapState, mapMutations } from "vuex";
 import moment from "moment";
+import util from "@/util/util";
 export default {
   components: {
-    leftProgress
+    leftProgress,
+    //添加推挤
+    addRecommend: () => import("../didLog/addRecommend/addRecommend")
   },
   data() {
     return {
+      message: "", //写跟进内容
       list: [],
-      showBox: 0
+      showBox: 0,
+      addPop: false, //添加推荐弹出层开关
+      formData: { EntructId: "", Memo: "" }
     };
+  },
+  methods: {
+    openPop(popName) {
+      this[popName] = true;
+    },
+    confirm() {
+      let _that = this;
+      _that.formData.EntructId = util.sessionLocalStorageGet("cosDetail:id");
+      _that.formData.Memo = _that.message;
+      _that.$api
+        .post({
+          url: "/saleCustomer/addSaleCusFlower",
+          data: _that.formData,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          _that.$message({
+            type: "info",
+            message: result.message
+          });
+          if (result.code == 200) {
+            console.log(result, "写跟进");
+            _that.$message({
+              type: "success",
+              message: result.message
+            });
+            //重新加载ajax
+            _that.$api
+              .post({
+                url: "/saleCustomerDetail/getSaleCusFlower",
+                data: { id: util.sessionLocalStorageGet("cosDetail:id") },
+                headers: { "Content-Type": "application/json" }
+              })
+              .then(e => {
+                let result = e.data;
+                console.log("获取跟进记录", e);
+                if (result.code == 200) {
+                  //result.data.pageSum
+                  this.$store.commit("updateFollow", {
+                    cusFollow: result
+                  });
+                }
+              })
+              .catch(e => {
+                console.log("获取跟进记录失败");
+                console.log(e);
+              })
+              .finally(() => {});
+          } else {
+            console.log("写跟进" + result.message);
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          console.log("写跟进失败catch");
+          console.log(e);
+        })
+        .finally(() => {
+          //清除输入框的值
+          _that.message = "";
+        });
+    }
   },
   watch: {
     detail: {

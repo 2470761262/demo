@@ -337,14 +337,14 @@ import followUp from "../didLog/followUp";
 import playAudio from "@/components/audio";
 import but from "@/evenBus/but.js";
 export default {
-  inject: ["houseId", "buttonDisabled"],
+  inject: ["houseId", "buttonDisabled", "buttonLocking"],
   components: {
     playAudio,
     followUp
   },
   computed: {
     isDisabled() {
-      return this.buttonDisabled;
+      return this.buttonDisabled || this.buttonLocking.value;
     }
   },
   data() {

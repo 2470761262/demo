@@ -113,6 +113,11 @@
           /deep/.el-input__inner {
             border-radius: 0;
           }
+          &.no-suffix {
+            /deep/.el-input__suffix {
+              display: none;
+            }
+          }
           /deep/.el-select {
             width: 100%;
             .el-input__inner {
@@ -383,7 +388,7 @@
           <div class="cust-step-row">
             <!-- 首付金额 -->
             <div class="step-item-inline">
-              <div class="step-row-title">首付金额:</div>
+              <div class="step-row-title">期望首付:</div>
               <div class="step-row-query step-flex-group" data-unit="万">
                 <el-input
                   v-model="formData.minFirstPrice"
@@ -478,7 +483,7 @@
             <!-- 期望小学 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望小学:</div>
-              <div class="step-row-query">
+              <div class="step-row-query no-suffix">
                 <el-select
                   v-model="formData.school1Array"
                   clearable
@@ -502,7 +507,7 @@
             <!--  客源特性 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望中学:</div>
-              <div class="step-row-query">
+              <div class="step-row-query no-suffix">
                 <el-select
                   v-model="formData.school2Array"
                   clearable
@@ -529,7 +534,7 @@
             <!-- 期望楼盘 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望楼盘:</div>
-              <div class="step-row-query">
+              <div class="step-row-query no-suffix">
                 <el-select
                   v-model="formData.community"
                   clearable
@@ -589,7 +594,7 @@ export default {
         myImpression: [],
         desireIntensity: 0,
         customers: "",
-        sex: 0,
+        sex: 1,
         tel: "",
         resourceType: "",
         source: "",
@@ -673,7 +678,17 @@ export default {
       primarySchool: [],
       middleSchool: [],
       communityList: [],
-      sex: SEX, //性别
+      sex: [
+        //性别
+        {
+          value: 0,
+          key: "男"
+        },
+        {
+          value: 1,
+          key: "女"
+        }
+      ], //性别
       myImpression: "",
       collapseActive: 1 //折叠面板当前激活name
     };

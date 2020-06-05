@@ -197,7 +197,7 @@
             </div>
             <!-- 客户性别 -->
             <div class="step-item-inline ">
-              <!-- <div class="step-row-title title-required">客户性别:</div>
+              <div class="step-row-title title-required">客户性别:</div>
               <div class="step-row-query border">
                 <el-radio-group v-model="formData.sex">
                   <el-radio
@@ -207,7 +207,7 @@
                     >{{ item.key }}</el-radio
                   >
                 </el-radio-group>
-              </div> -->
+              </div>
             </div>
           </div>
           <!-- 客户电话 &  客户籍贯 content -->
@@ -420,7 +420,7 @@
           <div class="cust-step-row">
             <!-- 首付面积 -->
             <div class="step-item-inline">
-              <div class="step-row-title">首付面积:</div>
+              <div class="step-row-title">期望面积:</div>
               <div class="step-row-query step-flex-group" data-unit="平方">
                 <el-input
                   v-model="formData.minArea"
@@ -577,21 +577,18 @@
 </template>
 
 <script>
-import { SEX, DECORATION } from "@/util/constMap";
+import { DECORATION } from "@/util/constMap";
 import but from "@/evenBus/but";
 export default {
   data() {
     return {
       searchLoading: false,
-      gogo: {
-        sdsd: ["北城小学"]
-      },
       formData: {
         // school1Array: ["北城小学"]
         // myImpression: [],
         // desireIntensity: 0,
         // customers: "",
-        // sex: 0,
+        //sex: 0,
         // tel: "",
         // resourceType: "",
         // source: "",
@@ -675,7 +672,17 @@ export default {
       primarySchool: [],
       middleSchool: [],
       communityList: [],
-      sex: SEX, //性别
+      sex: [
+        //性别
+        {
+          value: 0,
+          key: "男"
+        },
+        {
+          value: 1,
+          key: "女"
+        }
+      ], //性别
       myImpression: "",
       collapseActive: 1, //折叠面板当前激活name
       canSubmit: false
@@ -685,33 +692,53 @@ export default {
     if (this.$route.params.customer) {
       //开始回显数据
       let customer = this.$route.params.customer;
-
-      this.formData = customer;
-      console.log(customer);
-      this.$set(
-        this.formData,
-        "myImpression",
-        this.$route.params.myImpression || []
-      );
-      console.log([
-        customer.community1,
-        customer.community2,
-        customer.community3
-      ]);
-      const filexBuild = [
-        customer.community1,
-        customer.community2,
-        customer.community3
-      ].filter(item => item != undefined && item != null);
-      this.$set(this.formData, "community", filexBuild);
-      if (customer.school1) {
-        this.$set(this.formData, "school1Array", customer.school1.split("$"));
-      }
-      if (customer.school2) {
-        this.$set(this.formData, "school2Array", customer.school2.split("$"));
-      }
+      //执行ajax请求，获取基础信息
+      this.$api
+        .post({
+          url: "/saleCustomerDetail/getACusDetail",
+          data: { id: customer.id },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          console.log("获取客户详情结果", result.data);
+          if (result.code == 200) {
+            this.formData = result.data;
+            this.$set(
+              this.formData,
+              "myImpression",
+              this.$route.params.myImpression || []
+            );
+            console.log("印象印象", this.$route.params.myImpression);
+            const filexBuild = [
+              this.formData.community1,
+              this.formData.community2,
+              this.formData.community3
+            ].filter(item => item != undefined && item != null);
+            this.$set(this.formData, "community", filexBuild);
+            if (this.formData.school1) {
+              this.$set(
+                this.formData,
+                "school1Array",
+                customer.school1.split("$")
+              );
+            }
+            if (this.formData.school2) {
+              this.$set(
+                this.formData,
+                "school2Array",
+                customer.school2.split("$")
+              );
+            }
+            console.log(this.formData, "this.formData", "回显数据");
+          }
+        })
+        .catch(e => {
+          console.log("获取客户详情异常失败");
+          console.log(e);
+        })
+        .finally(() => {});
       //结束回显数据
-      console.log(this.formData, "this.formData");
     }
   },
   methods: {
