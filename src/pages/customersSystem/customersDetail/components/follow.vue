@@ -257,7 +257,7 @@
         <template>
           <div class="recommend-content">
             <div class="recommend-head">
-              <div class="recommend-head-title">{{ item.id }}</div>
+              <div class="recommend-head-title">{{ item.addTime }}</div>
               <el-button
                 type="text"
                 class="el-icon-close"
@@ -325,6 +325,7 @@
       title="添加推荐"
       style-type="0"
       width="7.5rem"
+      @successCommit="successCommit"
     >
     </add-recommend>
   </div>
@@ -363,6 +364,15 @@ export default {
     this.recommendAjax();
   },
   methods: {
+    successCommit() {
+      let _that = this;
+      Object.assign(
+        this.$data.recommandPage,
+        this.$options.data.call(this).recommandPage
+      );
+      this.recommendList = [];
+      this.recommendAjax();
+    },
     //删除推荐
     delete1(obj) {
       let _that = this;
@@ -427,7 +437,6 @@ export default {
         .finally(() => {});
     },
     buttomLoad() {
-      console.log("-----------------*------------");
       let _that = this;
       _that.recommendAjax();
     },
