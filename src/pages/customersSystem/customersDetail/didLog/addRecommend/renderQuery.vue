@@ -128,7 +128,12 @@
       element-loading-text="不如跳舞 ~ UrbbrGroun"
     >
       <div class="row-house-item" v-for="item in queryData" :key="item.id">
-        <el-checkbox v-model="houseChecked" :label="item.id"></el-checkbox>
+        <el-checkbox
+          v-model="houseChecked"
+          :true-label="item.id"
+          false-label=""
+          @change="houseCheckChange"
+        ></el-checkbox>
         <el-image class="item-pic" :src="item.picUrl"></el-image>
         <div class="item-msg">
           <div class="msg-head">
@@ -161,7 +166,7 @@ export default {
       loading: true,
       dynamicTags: [],
       queryData: [],
-      houseChecked: []
+      houseChecked: ""
     };
   },
   watch: {
@@ -175,12 +180,21 @@ export default {
     }
   },
   methods: {
+    /**
+     * @example: 房源checkchange
+     */
+    houseCheckChange(value) {
+      const checkItem = this.queryData.filter(item => item.id === value);
+      this.$emit("change", checkItem);
+    },
+
     goDetail(item) {
       this.$router.push({
         name: "houseDetails",
         params: { houseId: item.id }
       });
     },
+
     renderTag(value) {
       //清空
       this.dynamicTags = [];
@@ -262,11 +276,13 @@ export default {
         });
       }
     },
+
     filterSplice(e) {
       return this.form[e.field].findIndex(item => {
         return item == e.value;
       });
     },
+
     //标签关闭
     handleClose(e) {
       if (e.arr) {
@@ -277,6 +293,7 @@ export default {
         but.$emit("removeTag", e);
       }
     },
+
     appendFormTag(to, titleName, fieldName) {
       //房型
       to.forEach(item => {
@@ -288,8 +305,13 @@ export default {
         });
       });
     },
+
     getHouseData(value) {
       this.loading = true;
+      //搜索时清空之前的推荐数据
+      this.houseChecked = "";
+      this.$emit("change", []);
+
       Object.keys(value).forEach(item => {
         if (value[item] instanceof Array) {
           value[item] = value[item].join(",");
