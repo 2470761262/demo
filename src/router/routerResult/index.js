@@ -1235,7 +1235,8 @@ export default [
     path: "/customersSystem/customersDetail",
     name: "customerDetail",
     meta: {
-      title: "客户详情"
+      title: "客户详情",
+      keepAlive: true
     },
     component: () =>
       import(

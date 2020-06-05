@@ -31,5 +31,25 @@ export default new Router({
       },
       children: routerResult
     }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    // 从第二页返回首页时savedPosition为undefined
+    if (savedPosition || typeof savedPosition === "undefined") {
+      //后退
+      // 只处理设置了路由元信息的组件
+      from.meta.keepAlive =
+        typeof from.meta.keepAlive === "undefined" ? undefined : false;
+      to.meta.keepAlive =
+        typeof to.meta.keepAlive === "undefined" ? undefined : true;
+      if (savedPosition) {
+        return savedPosition;
+      }
+    } else {
+      //前进
+      from.meta.keepAlive =
+        typeof from.meta.keepAlive === "undefined" ? undefined : true;
+      to.meta.keepAlive =
+        typeof to.meta.keepAlive === "undefined" ? undefined : false;
+    }
+  }
 });

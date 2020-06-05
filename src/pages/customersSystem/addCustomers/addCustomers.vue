@@ -113,6 +113,11 @@
           /deep/.el-input__inner {
             border-radius: 0;
           }
+          &.no-suffix {
+            /deep/.el-input__suffix {
+              display: none;
+            }
+          }
           /deep/.el-select {
             width: 100%;
             .el-input__inner {
@@ -478,7 +483,7 @@
             <!-- 期望小学 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望小学:</div>
-              <div class="step-row-query">
+              <div class="step-row-query no-suffix">
                 <el-select
                   v-model="formData.school1Array"
                   clearable
@@ -502,7 +507,7 @@
             <!--  客源特性 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望中学:</div>
-              <div class="step-row-query">
+              <div class="step-row-query no-suffix">
                 <el-select
                   v-model="formData.school2Array"
                   clearable
@@ -529,7 +534,7 @@
             <!-- 期望楼盘 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望楼盘:</div>
-              <div class="step-row-query">
+              <div class="step-row-query no-suffix">
                 <el-select
                   v-model="formData.community"
                   clearable

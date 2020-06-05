@@ -69,19 +69,19 @@
         <feedback ref="feedback" />
         <div class="children-page">
           <!-- 二级页面 router-view -->
-          <transition name="el">
+          <!-- <transition name="el">
             <keep-alive
               :max="3"
               include="houseList,otherIframe,customersIframe"
             >
-              <!-- <router-view v-if="$route.meta.keepAlive" /> -->
               <router-view />
             </keep-alive>
-          </transition>
+          </transition> -->
+          <keep-alive>
+            <router-view v-if="$route.meta.keepAlive" />
+          </keep-alive>
+          <router-view v-if="!$route.meta.keepAlive" />
           <right-fixed-chunk @click="triggerFeedback"></right-fixed-chunk>
-          <!-- <transition name="el">
-            <router-view v-if="!$route.meta.keepAlive" />
-          </transition>-->
         </div>
       </el-main>
     </el-container>
