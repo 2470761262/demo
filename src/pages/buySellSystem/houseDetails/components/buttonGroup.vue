@@ -525,7 +525,7 @@ export default {
         id: this.houseId.id
       };
       let reslut = await release.cancelOutsideHouse(params);
-      if (reslut.data.code == 200) {
+      if (reslut) {
         this.resultData.isReleaseOutside = 0;
         this.$message(reslut.data.message);
       } else {
