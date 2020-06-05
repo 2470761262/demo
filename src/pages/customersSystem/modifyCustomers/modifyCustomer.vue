@@ -201,11 +201,10 @@
               <div class="step-row-query border">
                 <el-radio-group v-model="formData.sex">
                   <el-radio
-                    v-model="formData.sex"
                     :label="item.value"
                     v-for="item in sex"
-                    :key="item.key"
-                    >{{ item.value }}</el-radio
+                    :key="item.value"
+                    >{{ item.key }}</el-radio
                   >
                 </el-radio-group>
               </div>
@@ -589,7 +588,7 @@ export default {
         // myImpression: [],
         // desireIntensity: 0,
         // customers: "",
-        // sex: 0,
+        //sex: 0,
         // tel: "",
         // resourceType: "",
         // source: "",
@@ -676,12 +675,12 @@ export default {
       sex: [
         //性别
         {
-          key: 0,
-          value: "男"
+          value: 0,
+          key: "男"
         },
         {
-          key: 1,
-          value: "女"
+          value: 1,
+          key: "女"
         }
       ], //性别
       myImpression: "",
@@ -693,31 +692,6 @@ export default {
     if (this.$route.params.customer) {
       //开始回显数据
       let customer = this.$route.params.customer;
-
-      this.formData = customer;
-      console.log(customer);
-      this.$set(
-        this.formData,
-        "myImpression",
-        this.$route.params.myImpression || []
-      );
-      console.log([
-        customer.community1,
-        customer.community2,
-        customer.community3
-      ]);
-      const filexBuild = [
-        customer.community1,
-        customer.community2,
-        customer.community3
-      ].filter(item => item != undefined && item != null);
-      this.$set(this.formData, "community", filexBuild);
-      if (customer.school1) {
-        this.$set(this.formData, "school1Array", customer.school1.split("$"));
-      }
-      if (customer.school2) {
-        this.$set(this.formData, "school2Array", customer.school2.split("$"));
-      }
       //执行ajax请求，获取基础信息
       this.$api
         .post({
@@ -727,13 +701,35 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          console.log("获取客户详情结果", e);
+          console.log("获取客户详情结果", result.data);
           if (result.code == 200) {
-            this.formData.minFirstPrice =
-              result.data.minFirstPrice || result.data.MinFirstPrice;
-            this.formData.maxFirstPrice =
-              result.data.maxFirstPrice || result.data.MaxFirstPrice;
-            this.formData.sex = Number(result.data.sex);
+            this.formData = result.data;
+            this.$set(
+              this.formData,
+              "myImpression",
+              this.$route.params.myImpression || []
+            );
+            console.log("印象印象", this.$route.params.myImpression);
+            const filexBuild = [
+              this.formData.community1,
+              this.formData.community2,
+              this.formData.community3
+            ].filter(item => item != undefined && item != null);
+            this.$set(this.formData, "community", filexBuild);
+            if (this.formData.school1) {
+              this.$set(
+                this.formData,
+                "school1Array",
+                customer.school1.split("$")
+              );
+            }
+            if (this.formData.school2) {
+              this.$set(
+                this.formData,
+                "school2Array",
+                customer.school2.split("$")
+              );
+            }
             console.log(this.formData, "this.formData", "回显数据");
           }
         })
