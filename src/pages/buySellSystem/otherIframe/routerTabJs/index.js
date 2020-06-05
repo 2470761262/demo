@@ -43,5 +43,14 @@ export default [
       { name: "他司成交", active: "/buySellSystem/otherComDeal" },
       { name: "业主自售", active: "/buySellSystem/selfDeal" }
     ]
+  },
+  {
+    name: "锁定房源",
+    icon: "iconzaishouwugendan iconfont",
+    active: "5",
+    children: [
+      { name: "已锁定", active: "/buySellSystem/lockingList" }
+      // { name: "锁定记录", active: "/buySellSystem/lockedRecords" }
+    ]
   }
 ];

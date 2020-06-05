@@ -1,0 +1,518 @@
+<style lang="less" scoped></style>
+<template>
+  <list-page
+    @sort-change="sortMethod"
+    :parentData="$data"
+    :dblclick="true"
+    @queryTabData="queryTabData"
+    @handleClick="handleClick"
+    @handleSizeChange="handleSizeChange"
+    @handleCurrentChange="handleCurrentChange"
+  >
+    <template v-slot:top>
+      <div class="page-list-query-row">
+        <div class="query-content-cell">
+          <h3 class="query-cell-title">楼盘</h3>
+          <el-select
+            v-model="data.comId"
+            @focus="remoteInput"
+            @change="queryCBId"
+            filterable
+            remote
+            clearable
+            placeholder="楼盘名称"
+            :remote-method="remoteMethod"
+            :loading="loading"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <el-select
+            v-model="data.cbId"
+            filterable
+            clearable
+            placeholder="楼栋"
+            @change="queryRoomNo"
+          >
+            <el-option
+              v-for="item in cbIdList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+          <el-select
+            v-model="data.bhId"
+            filterable
+            @change="queryLockedAllParams"
+            placeholder="房间号"
+          >
+            <el-option
+              v-for="item in roomNoList"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            ></el-option>
+          </el-select>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">房源编号</h3>
+          <el-input
+            placeholder="房源编号"
+            v-model="data.houseNo"
+            class="set-input120 anchor-point"
+            @change="queryLockedAllParams"
+            clearable
+          />
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <h3 class="query-cell-title">锁定时间</h3>
+          <el-date-picker
+            v-model="data.timeSelect"
+            type="daterange"
+            class="set-data-pricker"
+            @change="queryLockedAllParams"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            value-format="yyyy-MM-dd"
+            :default-time="['00:00:00', '23:59:59']"
+          ></el-date-picker>
+          <span class="query-cell-suffix handlebut" @click="Remove">清除</span>
+        </div>
+        <div class="query-content-cell cell-interval75">
+          <el-button type="primary" size="mini" @click="queryLockedAllParams"
+            >查询</el-button
+          >
+        </div>
+        <div class="query-content-cell cell-interval25">
+          <definitionmenu
+            :renderList="renderList"
+            :tableColumn="tableColumn"
+            @change="tabColumnChange"
+            :loading="menuLoading"
+            :resetList="tableColumnField"
+          ></definitionmenu>
+        </div>
+      </div>
+    </template>
+    <template #tableColumn>
+      <template v-for="item in tableColumn">
+        <el-table-column
+          :prop="item.prop"
+          :label="item.label"
+          :min-width="item.width"
+          :key="item.prop"
+          show-overflow-tooltip
+          :formatter="item.formart"
+          :sort-orders="['ascending', 'descending']"
+          :sortable="item.order"
+        ></el-table-column>
+      </template>
+      <el-table-column label="操作" fixed="right" min-width="150">
+        <template v-slot="scope">
+          <el-button
+            v-if="showUnlockBtn"
+            type="primary"
+            size="mini"
+            @click="unLock(scope.row.id)"
+            >解锁</el-button
+          >
+          <el-button
+            type="primary"
+            v-if="showDetailBtn"
+            size="mini"
+            @click="toLook(scope.row.id)"
+            >查看</el-button
+          >
+        </template>
+      </el-table-column>
+    </template>
+  </list-page>
+</template>
+<script>
+import listPage from "@/components/listPage";
+import getMenuRid from "@/minxi/getMenuRid";
+import houseContrast from "@/minxi/houseContrast";
+import definitionmenu from "@/components/definitionMenu";
+import moreSelect from "@/components/moreSelect";
+import common from "../houseResource/common/common";
+import tableMenu from "@/util/getTableMenu";
+export default {
+  mixins: [getMenuRid, houseContrast],
+  components: {
+    listPage,
+    definitionmenu
+  },
+  data() {
+    return {
+      loading: true,
+      showUnlockBtn: false,
+      showDetailBtn: false,
+      data: {
+        comId: "",
+        cbId: "",
+        bhId: "",
+        timeSelect: "",
+        customName: "",
+        houseNo: ""
+      },
+      options: [],
+      cbIdList: [],
+      roomNoList: [],
+      moreSelect: [],
+      pageJson: {
+        currentPage: 1, //当前页码
+        total: 0, //总记录数
+        pageSize: 10 //每页条数
+      },
+      tableColumnField: [
+        {
+          prop: "houseNo",
+          label: "房源编号",
+          width: "200",
+          order: false,
+          disabled: false,
+          default: true
+        },
+        {
+          prop: "communityName",
+          label: "小区名称",
+          order: false,
+          width: "150",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "buildingName",
+          label: "楼栋名称",
+          order: false,
+          width: "150",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "roomNo",
+          label: "房间号",
+          order: false,
+          width: "150",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "plate",
+          label: "状态",
+          order: false,
+          width: "150",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "agentName",
+          label: "跟单人",
+          order: false,
+          width: "100",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "lockName",
+          label: "锁定人",
+          order: false,
+          width: "100",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "lockTime",
+          label: "锁定时间",
+          order: false,
+          width: "160",
+          disabled: true,
+          default: true
+        },
+        {
+          prop: "lockRecord",
+          label: "锁定原因",
+          width: "200",
+          order: false,
+          disabled: false,
+          default: true
+        }
+      ],
+      tableColumn: [],
+      tableData: [],
+      transitionList: [
+        {
+          key: "bhId",
+          value: [{ paramsKey: "roomNo", index: -1 }]
+        },
+        {
+          key: "area",
+          value: [{ paramsKey: "business", index: -1 }]
+        },
+        {
+          key: "buildType",
+          value: [{ paramsKey: "purpose", index: -1 }]
+        },
+        {
+          key: "addTime",
+          value: [
+            { paramsKey: "beginTime", index: 0 },
+            { paramsKey: "endTime", index: 1 }
+          ]
+        },
+        {
+          key: "followTime",
+          value: [
+            { paramsKey: "beginFollowTime", index: 0 },
+            { paramsKey: "endFollowTime", index: 1 }
+          ]
+        }
+      ],
+      sortColumn: "id", //排序字段
+      sortType: "descending", //排序类型
+      menuLoading: true, //自定义菜单
+      renderList: []
+    };
+  },
+  mounted() {
+    tableMenu.getTableMenu(this.tableColumnField, 15).then(e => {
+      this.menuLoading = false;
+      this.renderList = e;
+      this.queryLockedHouseDatas(1);
+    });
+  },
+  methods: {
+    moreSelectChange(e) {
+      this.moreSelect = e;
+      this.queryLockedHouseDatas(1);
+    },
+    sortMethod(e) {
+      console.log(e, "eeee排序");
+      this.sortColumn = e.prop;
+      this.sortType = e.order;
+      this.queryLockedHouseDatas(1);
+    },
+    tabColumnChange(e, length = 0) {
+      this.tableColumn = e;
+      if (length > 0) {
+        let prop = e.map(item => {
+          return { prop: item.prop };
+        });
+        tableMenu.insert(prop, 15);
+      }
+    },
+    // queryTabData() {
+    //   console.log(this, "111");
+    // },
+    formatHouseType(row, column) {
+      return (
+        (row.Rooms || 0) +
+        "室" +
+        (row.hall || 0) +
+        "厅" +
+        (row.toilet || 0) +
+        "卫"
+      );
+    },
+
+    toLook(id) {
+      var that = this;
+      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+    },
+    queryLockedAllParams() {
+      this.queryLockedHouseDatas(1);
+    },
+    remoteInput() {
+      if (this.data.comId.length == 0) {
+        this.remoteMethod();
+      }
+    },
+    remoteMethod(query) {
+      var that = this;
+      if (query !== "") {
+        this.loading = true;
+
+        this.$api
+          .get({
+            url: "/community/saleAll",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
+            data: {
+              communityName: query,
+              page: 1,
+              limit: 50
+            }
+          })
+          .then(e => {
+            console.log(e.data);
+            if (e.data.code == 200) {
+              that.loading = false;
+              that.options = e.data.data.list;
+            }
+          });
+      } else {
+        this.options = [];
+      }
+    },
+    Remove() {
+      let that = this;
+      let tab = this.tableColumn;
+      let renderList = this.renderList;
+      Object.assign(this.$data, this.$options.data.call(this));
+      this.renderList = renderList;
+      this.menuLoading = false;
+      this.tabColumnChange(tab);
+      this.queryLockedHouseDatas(1);
+    },
+    queryCBId() {
+      var that = this;
+      if (that.data.comId == "") {
+        that.data.bhId = "";
+        that.data.cbId = "";
+      }
+      this.$api
+        .get({
+          url: "/mateHouse/queryComBuilding",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            comId: that.data.comId,
+            page: 1,
+            limit: 100
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.data.bhId = "";
+            that.data.cbId = "";
+            that.cbIdList = e.data.data.list;
+          }
+        });
+      this.queryLockedAllParams();
+    },
+    queryRoomNo() {
+      var that = this;
+      this.$api
+        .get({
+          url: "/mateHouse/queryBuildIngHouses",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            comId: that.data.comId,
+            cbId: that.data.cbId,
+            page: 1,
+            limit: 500
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.data.bhId = "";
+            that.roomNoList = e.data.data.list;
+          }
+        });
+      this.queryLockedAllParams();
+    },
+    queryLockedHouseDatas(currentPage) {
+      var that = this;
+      that.loading = true;
+      let params = { limit: that.pageJson.pageSize, page: currentPage };
+      if (Object.keys(this.moreSelect).length != 0) {
+        let selectObject = common.getSelectParams(
+          this.transitionList,
+          this.moreSelect
+        );
+        Object.assign(params, selectObject);
+      } else {
+        console.log(this.data.timeSelect, "data.timeSelect");
+        params.comId = that.data.comId;
+        params.cbId = that.data.cbId;
+        params.bhId = that.data.bhId;
+        params.beginTime = that.data.timeSelect[0];
+        params.endTime = that.data.timeSelect[1];
+        params.houseNo = that.data.houseNo;
+      }
+      params.sortColumn = this.sortColumn;
+      params.sortType = this.sortType;
+      this.$api
+        .post({
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          url: "/lockingHouse/lockedList",
+          data: params
+        })
+        .then(e => {
+          console.log(e.data);
+          that.loading = false;
+          let data = e.data;
+          if (data.code == 200) {
+            that.pageJson.total = data.data.data.totalCount;
+            that.tableData = data.data.data.list;
+            let btnList = data.data.btnList;
+            if (btnList && btnList.length > 0) {
+              btnList.forEach(btn => {
+                if (btn.rName == "解锁") {
+                  that.showUnlockBtn = true;
+                }
+                if (btn.rName == "查看") {
+                  that.showDetailBtn = true;
+                }
+              });
+            }
+          } else {
+            // console.log("查询全部在售房源列表结果：" + result.message);
+            // alert(result.message);
+          }
+        })
+        .catch(e => {
+          console.log("查询全部在售列表失败");
+          console.log(e);
+        });
+    },
+    unLock(id) {
+      let that = this;
+      let params = {
+        Eid: id,
+        Islocking: 0
+      };
+      this.$api
+        .post({
+          url: "/agentHouse/property/locking",
+          data: params,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.$message(result.message);
+          if (result.code == 200) {
+            this.queryLockedAllParams(1);
+          }
+        })
+        .catch(e => {});
+    },
+    handleClick() {},
+    queryTabData() {
+      this.$emit("queryTabData");
+      console.log(this.queryData);
+      this.queryLockedAllParams(1);
+    },
+    handleSizeChange(val) {
+      console.log(`设置了每页 ${val} 条`);
+      this.pageJson.pageSize = val;
+      this.queryLockedHouseDatas(1);
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.queryLockedHouseDatas(val);
+    }
+  }
+};
+</script>

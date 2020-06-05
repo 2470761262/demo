@@ -141,7 +141,7 @@
                 type="text"
                 placeholder="请输入内容"
                 v-model="notice.newsTitle"
-                maxlength="10"
+                maxlength="60"
                 show-word-limit
               ></el-input>
             </div>
