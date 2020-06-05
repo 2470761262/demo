@@ -334,6 +334,9 @@ export default {
     };
   },
   methods: {
+    openPop(popName) {
+      this[popName] = true;
+    },
     confirm() {
       let _that = this;
       _that.formData.EntructId = util.sessionLocalStorageGet("cosDetail:id");
@@ -411,11 +414,6 @@ export default {
           });
         }
       }
-    }
-  },
-  methods: {
-    openPop(popName) {
-      this[popName] = true;
     }
   },
   computed: {
