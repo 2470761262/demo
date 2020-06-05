@@ -46,7 +46,7 @@
             ></el-option>
           </el-select>
           <el-select
-            v-model="data.roomNo"
+            v-model="data.bhId"
             filterable
             @change="queryLockedAllParams"
             placeholder="房间号"
@@ -156,7 +156,7 @@ export default {
       data: {
         comId: "",
         cbId: "",
-        roomNo: "",
+        bhId: "",
         timeSelect: "",
         customName: "",
         houseNo: ""
@@ -374,7 +374,7 @@ export default {
     queryCBId() {
       var that = this;
       if (that.data.comId == "") {
-        that.data.roomNo = "";
+        that.data.bhId = "";
         that.data.cbId = "";
       }
       this.$api
@@ -391,7 +391,7 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-            that.data.roomNo = "";
+            that.data.bhId = "";
             that.data.cbId = "";
             that.cbIdList = e.data.data.list;
           }
@@ -415,7 +415,7 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-            that.data.roomNo = "";
+            that.data.bhId = "";
             that.roomNoList = e.data.data.list;
           }
         });
@@ -435,7 +435,7 @@ export default {
         console.log(this.data.timeSelect, "data.timeSelect");
         params.comId = that.data.comId;
         params.cbId = that.data.cbId;
-        params.roomNo = that.data.roomNo;
+        params.bhId = that.data.bhId;
         params.beginTime = that.data.timeSelect[0];
         params.endTime = that.data.timeSelect[1];
         params.houseNo = that.data.houseNo;
