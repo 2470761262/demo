@@ -1,4 +1,8 @@
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.color {
+  background: var(--color--primary) !important;
+}
+</style>
 <template>
   <fixedPopup v-bind="$attrs" v-on="$listeners">
     <template>
@@ -37,13 +41,13 @@
           class="anchor-point"
           v-if="insertFollow"
           size="small"
-          :class="['button-back', sumitButClass]"
+          :class="['button-back', sumitButClass, 'color']"
           @click="result"
           :loading="pop.loading"
           >提交</el-button
         >
         <el-button
-          class="anchor-point"
+          class="anchor-point color"
           v-else
           size="small"
           :disabled="true"

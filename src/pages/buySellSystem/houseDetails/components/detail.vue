@@ -79,7 +79,7 @@
       }
       .cell-tabs-nav {
         align-self: center;
-        color: #0e834e;
+        color: var(--color--primary);
         font-size: 20px;
         margin-left: 15px;
         text-decoration: underline;
@@ -126,7 +126,7 @@
         padding: 10px;
         color: #fff;
         border-radius: 4px;
-        background: #0d824b;
+        background: var(--color--primary);
         font-size: 16px;
         cursor: pointer;
         border: none;
