@@ -56,12 +56,12 @@
       <div class="button-set">
         <el-button
           class="anchor-point"
-          :disabled="!isShowButton.releaseOutsideHouse"
+          :disabled="!isShowButton.releaseOutsideHouse || resultData.isLocking == 1"
           @click="certificateType"
           data-anchor="房源详情发布外网 => click"
           v-if="
             resultData.isReleaseOutside != 1 &&
-              resultData.AgentPer == perId &&
+              // resultData.AgentPer == perId &&
               resultData.plate == 0
           "
         >
@@ -71,7 +71,7 @@
         <el-button
           data-anchor="房源详情取消发布 => click"
           class="anchor-point"
-          :disabled="!isShowButton.cancelOutsideHouse"
+          :disabled="!isShowButton.cancelOutsideHouse || resultData.isLocking == 1"
           v-if="
             resultData.isReleaseOutside == 1 &&
               resultData.AgentPer == perId &&
