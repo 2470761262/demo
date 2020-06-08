@@ -385,6 +385,20 @@
               </div>
             </div>
           </div>
+          <div class="cust-step-row">
+            <div class="step-item-inline">
+              <div class="step-row-title">期望房型:</div>
+            </div>
+            <div class="step-row-query">
+              <el-checkbox-group v-model="roomList">
+                <el-checkbox label="1房"></el-checkbox>
+                <el-checkbox label="2房"></el-checkbox>
+                <el-checkbox label="3房"></el-checkbox>
+                <el-checkbox label="4房"></el-checkbox>
+                <el-checkbox label="5房以上"></el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </div>
           <!-- 首付金额 & 期望总价 content-->
           <div class="cust-step-row">
             <!-- 首付金额 -->
@@ -611,7 +625,7 @@ export default {
         community: "",
         remark: ""
       },
-      sssValue: "", //请按照实际字段名进行修改，
+      roomList: [],
       decorationList: [
         {
           value: "毛胚",
@@ -948,6 +962,11 @@ export default {
         console.log(index, item, "循环到位");
         _that.formData["community" + (index + 1)] = item;
       });
+      let rooms = "";
+      _that.roomList.forEach((item, index) => {
+        rooms += item + "$";
+      });
+      _that.formData.rooms = rooms;
       console.log(_that.formData, "录入客户参数");
       let tt = _that.validateParams();
       if (tt) {
