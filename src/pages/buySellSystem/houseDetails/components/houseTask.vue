@@ -8,7 +8,6 @@
   font-weight: 400;
   margin-top: 80px;
 }
-
 .task-pro-flex {
   display: flex;
 
@@ -90,7 +89,11 @@
       height: 35px;
       line-height: 35px;
       padding: 0;
-      background-image: linear-gradient(115deg, #0d8f51 60%, #10a65f);
+      background-image: linear-gradient(
+        115deg,
+        var(--color--primary) 60%,
+        var(--color--primary)
+      );
       letter-spacing: 4px;
 
       &[disabled="disabled"] {
@@ -243,7 +246,7 @@
         <el-button
           v-else-if="applyKeyOwnerRule"
           :disabled="isDisabled"
-          class="anchor-point"
+          class="anchor-point color"
           data-anchor="房源详情申请钥匙人 => click"
           @click="openPop('keyPopFlag', 0, 'keyType', 0)"
         >

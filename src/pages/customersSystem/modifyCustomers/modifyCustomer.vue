@@ -218,8 +218,9 @@
               <div class="step-row-query">
                 <el-input
                   v-model="formData.tel"
-                  clearable
-                  oninput="value=value.replace(/[^\d]/g,'')"
+                  maxlength="11"
+                  show-word-limit
+                  @input="inputPhone"
                   placeholder="请输入客户电话号码"
                 ></el-input>
               </div>
@@ -742,6 +743,10 @@ export default {
     }
   },
   methods: {
+    inputPhone(vv) {
+      this.formData.tel = vv;
+      //value=value.replace(/[^\d]/g,'')
+    },
     queryPrimarySchoolByKeyWord(query) {
       if (query instanceof Object) {
         query = "";
@@ -945,15 +950,35 @@ export default {
         _that.formData.school1Array &&
         _that.formData.school1Array instanceof Array
       ) {
+        if (_that.formData.school1Array.length > 3) {
+          _that.$message({
+            type: "info",
+            message: "最多只能选三个小学"
+          });
+          return;
+        }
         _that.formData.school1 = _that.formData.school1Array.join("&");
       }
       if (
         _that.formData.school2Array &&
         _that.formData.school2Array instanceof Array
       ) {
+        if (_that.formData.school2Array.length > 3) {
+          _that.$message({
+            type: "info",
+            message: "最多只能选三个中学"
+          });
+          return;
+        }
         _that.formData.school2 = _that.formData.school2Array.join("&");
       }
-
+      if (_that.formData.community.length > 3) {
+        _that.$message({
+          type: "info",
+          message: "最多只能选三个楼盘"
+        });
+        return;
+      }
       _that.formData.community.forEach((item, index, array) => {
         _that.formData["community" + (index + 1)] = item;
       });

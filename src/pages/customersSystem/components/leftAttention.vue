@@ -186,6 +186,10 @@ export default {
   mounted() {
     util.localStorageRemove("customers:query:impressionSelected");
   },
+  created() {
+    //刷新要清除
+    util.localStorageRemove("customers:allCustomers:impressionSelected");
+  },
   methods: {
     restoreImpression() {
       if (
