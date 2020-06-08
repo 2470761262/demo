@@ -156,32 +156,7 @@
         </h3>
       </template>
       <template v-slot:tableColumn>
-        <el-table-column type="expand" width="1px">
-          <template v-slot:default="props">
-            <!-- 判断当前列  如果有则显示印象 且长度大于0 -->
-            <template
-              v-if="
-                myImpressions.hasOwnProperty(props.row.id) &&
-                  myImpressions[props.row.id].length > 0
-              "
-            >
-              <div class="flex-expand">
-                <div class="flex-impression-content">
-                  <div
-                    v-for="(item, index) in myImpressions[props.row.id]"
-                    :key="index"
-                  >
-                    {{ item }}
-                  </div>
-                </div>
-                <label class="trigger-impression-btn">
-                  <input type="checkbox" class="impression-btn" />
-                  <i class="iconfont"></i>
-                </label>
-              </div>
-            </template>
-          </template>
-        </el-table-column>
+        <el-table-column type="expand" width="1px"> </el-table-column>
         <template v-for="item in tableColumn">
           <el-table-column
             :prop="item.prop"
@@ -221,7 +196,6 @@
 
 <script>
 import listPage from "@/components/listPage";
-import setImpression from "@/util/tabUtil";
 export default {
   components: {
     listPage,
@@ -287,16 +261,6 @@ export default {
           label: "五次以上"
         }
       ],
-      ssslist: [
-        {
-          value: "选项1",
-          label: "黄金糕"
-        },
-        {
-          value: "选项2",
-          label: "双皮奶"
-        }
-      ],
       changeQuery: true, //顶部开关
       querySelectFlag: false, //侧边印象开关
       loading: false,
@@ -344,12 +308,7 @@ export default {
             if (!row.rooms) {
               return "/";
             }
-            let s = row.rooms.replace("$", "或");
-            var d = s.length - 1;
-            //判断如果以或结尾，去除掉
-            if (d >= 0 && s.lastIndexOf("或") == d) {
-              s = s.substr(0, s.length - 1);
-            }
+            let s = row.rooms.split("$").join("或");
             return s;
           }
         },
@@ -545,10 +504,6 @@ export default {
             var dataCustomers = result.data.data;
             _that.tableData = dataCustomers;
             _that.pageJson.total = result.data.dataCount;
-            //result.data.pageSum
-            _that.$nextTick(() => {
-              setImpression.removeIsEmptyTd();
-            });
           } else {
             console.log("查询公司公客" + result.message);
             _that.$message({
@@ -613,18 +568,6 @@ export default {
     },
     triggerChange() {
       this.changeQuery = !this.changeQuery;
-    },
-    /**
-     * 设置如果有当前行有印象数据则行先生对应的calss
-     */
-    cellClass({ row }) {
-      if (
-        this.myImpressions.hasOwnProperty(row.id) &&
-        this.myImpressions[row.id].length > 0
-      ) {
-        return "cellset";
-      }
-      return "cellItemSet";
     },
     /**
      * 排序触发

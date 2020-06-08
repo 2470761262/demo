@@ -133,6 +133,7 @@
         position: relative;
         z-index: 2;
         background: #fff;
+        flex-shrink: 0;
         span {
           .tips-abs;
         }
