@@ -221,7 +221,7 @@
 
 <script>
 import listPage from "@/components/listPage";
-import { setImpression } from "@/util/tabUtil";
+import setImpression from "@/util/tabUtil";
 export default {
   components: {
     listPage,
