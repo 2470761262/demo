@@ -275,6 +275,10 @@
       style-type="0"
       title="PASS客户"
       width="7.4rem"
+      @search="search"
+      @pageSearch="pageButtonSearch"
+      @passAccount="passAccount"
+      :pageInfo="employeePageInfo"
     />
   </div>
 </template>
@@ -312,7 +316,15 @@ export default {
         myLookHouses: 0,
         sex: "性别不详"
       },
-      cusBShow: false //转公客是否显示
+      cusBShow: false, //转公客是否显示
+      recommandPage: {
+        pageSize: 0,
+        limit: 10,
+        page: 1,
+        totalPage: 0,
+        perName: ""
+      },
+      employeePageInfo: []
     };
   },
   mounted() {
@@ -679,6 +691,90 @@ export default {
       })
         .then(value => {})
         .catch(() => {});
+    },
+    //搜索框获取员工信息
+    search(e) {
+      let name = e.target.value;
+      let _that = this;
+      _that.recommandPage.perName = name;
+      _that.$api
+        .post({
+          url: "/saleCustomerDetail/getAccountInfo",
+          data: _that.recommandPage,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          _that.employeePageInfo = e.data.data;
+          console.log(e);
+        })
+        .catch(e => {
+          console.log("takeLookRecord.vue------------", e);
+        })
+        .finally(() => {});
+    },
+    //底部分页按钮获取员工信息
+    pageButtonSearch(obj) {
+      let _that = this;
+      _that.recommandPage.perName = obj.name;
+      _that.recommandPage.page = obj.page;
+      _that.$api
+        .post({
+          url: "/saleCustomerDetail/getAccountInfo",
+          data: _that.recommandPage,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          _that.employeePageInfo = e.data.data;
+          console.log(e);
+        })
+        .catch(e => {
+          console.log("takeLookRecord.vue------------", e);
+        })
+        .finally(() => {});
+    },
+    //pass客户
+    passAccount(accountId) {
+      let _that = this;
+      _that.$api
+        .post({
+          url: "/saleCustomerDetail/isCanPASS",
+          data: {
+            customerId: util.sessionLocalStorageGet("cosDetail:id")
+          },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          console.log(e);
+          //获取返回结果
+          let out = e.data.data;
+          if (out == 1) {
+            // retObj.Add("Code", 20003);
+          } else if (out == -1) {
+            this.$message({
+              type: "info",
+              message: "距离上一次pass还未超过30天"
+            });
+          } else if (out == -2) {
+            this.$message({
+              type: "info",
+              message: "没有权限操作"
+            });
+          } else if (out == -3) {
+            this.$message({
+              type: "info",
+              message: "该客户还在等待，接收人操作"
+            });
+          } else if (out == -4) {
+            this.$message({
+              type: "info",
+              message: "已有pass方"
+            });
+          }
+        })
+        .catch(e => {
+          console.log("takeLookRecord.vue------------", e);
+        })
+        .finally(() => {});
     }
   }
 };
