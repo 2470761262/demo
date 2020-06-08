@@ -247,41 +247,58 @@
         暂无数据.
       </div>
     </div>
-    <div class="record-content-scroll" v-show="showBox == 1">
-      <left-progress v-for="(item, index) in 7" :key="index">
+    <div
+      class="record-content-scroll"
+      v-show="showBox == 1"
+      v-infinite-scroll="buttomLoad"
+      style="overflow:auto"
+    >
+      <left-progress v-for="item in recommendList" :key="item.id">
         <template>
           <div class="recommend-content">
             <div class="recommend-head">
-              <div class="recommend-head-title">2001-09-06 11:04:21</div>
-              <el-button type="text" class="el-icon-close"></el-button>
+              <div class="recommend-head-title">{{ item.addTime }}</div>
+              <el-button
+                type="text"
+                class="el-icon-close"
+                @click="delete1(item)"
+              ></el-button>
             </div>
             <div class="recommend-body">
               <el-image
                 class="recommend-body-image"
-                src="http://img.0be.cn/FileUpload/PicFile_Agent2020/PicFile_Agent202003/20200323/base6420200323200224615_35024.jpg?x-oss-process=style/thumb"
+                :src="item.housePic"
               ></el-image>
               <div class="recommend-body-data">
                 <div class="body-data-head">
                   <div class="head-title">
-                    国贸天琴湾-天悦
+                    {{ item.communityName }}
                   </div>
-                  <div class="head-no">X+CS201910096157</div>
+                  <div class="head-no">{{ item.houseNo }}</div>
                 </div>
                 <div class="body-data-foot">
                   <div class="foot-left">
-                    <div><span>157㎡</span>4室2厅2卫</div>
                     <div>
-                      <span class="price">328</span
-                      ><span class="unit">万</span>20878平
+                      <span>{{ item.houseArea || kong }} ㎡</span
+                      >{{ item.houseRoom || kong }}室{{
+                        item.houseHall || kong
+                      }}厅{{ item.houseToilet || kong }}卫
+                    </div>
+                    <div>
+                      <span class="price">{{ item.housePrice || kong }}</span
+                      ><span class="unit">万</span
+                      >{{ item.houseArea || kong }}平
                     </div>
                   </div>
                   <div class="foot-right">
                     <img
                       class="foot-right-img"
-                      src="https://wx.qlogo.cn/mmopen/vi_32/DYAIOgq83epTLLaOTYK4DlMakQOhLVUkTxTCyheeo9sskl0ZcppyC8YUKibh5ictz6XCZBGIntsxrIfvF4MQf6rQ/132"
+                      :src="item.houseAgentHeadImage"
                       alt=""
                     />
-                    <h3 class="foot-right-name">谢谢你</h3>
+                    <h3 class="foot-right-name">
+                      {{ item.houseAgentPerName || kong }}
+                    </h3>
                   </div>
                 </div>
               </div>
@@ -294,8 +311,23 @@
       </div>
     </div>
     <div class="record-content-foot">
-      <el-button class="task-button" v-show="showBox === 1">添加推荐</el-button>
+      <el-button
+        class="task-button"
+        v-show="showBox === 1"
+        @click="openPop('addPop')"
+        >添加推荐</el-button
+      >
     </div>
+    <!-- 添加推荐 -->
+    <add-recommend
+      :visible.sync="addPop"
+      v-if="addPop"
+      title="添加推荐"
+      style-type="0"
+      width="7.5rem"
+      @successCommit="successCommit"
+    >
+    </add-recommend>
   </div>
 </template>
 
@@ -306,17 +338,111 @@ import moment from "moment";
 import util from "@/util/util";
 export default {
   components: {
-    leftProgress
+    leftProgress,
+    //添加推挤
+    addRecommend: () => import("../didLog/addRecommend/addRecommend")
   },
   data() {
     return {
+      kong: "-",
       message: "", //写跟进内容
       list: [],
       showBox: 0,
-      formData: { EntructId: "", Memo: "" }
+      formData: { EntructId: "", Memo: "" },
+      recommandPage: {
+        pageSize: 0,
+        limit: 10,
+        page: 1,
+        totalPage: 0,
+        customerId: util.sessionLocalStorageGet("cosDetail:id")
+      },
+      recommendList: [],
+      addPop: false //添加推荐弹出层开关
     };
   },
+  mounted() {
+    this.recommendAjax();
+  },
   methods: {
+    successCommit() {
+      let _that = this;
+      Object.assign(
+        this.$data.recommandPage,
+        this.$options.data.call(this).recommandPage
+      );
+      this.recommendList = [];
+      this.recommendAjax();
+    },
+    //删除推荐
+    delete1(obj) {
+      let _that = this;
+      _that.$api
+        .post({
+          url: "/saleCustomerDetail/deleteSaleCustomerRecommendList",
+          data: { id: obj.id },
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.recommendList.some((item, i) => {
+              if (item.id == obj.id) {
+                this.recommendList.splice(i, 1);
+                return true;
+              }
+            });
+            _that.$message({
+              type: "success",
+              message: result.message
+            });
+          } else {
+            _that.$message({
+              message: result.message,
+              type: "warning"
+            });
+          }
+        })
+        .catch(e => {
+          console.log("获取推荐房源记录失败");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
+    //获取推荐房源
+    recommendAjax() {
+      let _that = this;
+      //获取页面传过来的客户id
+      let id = _that.$route.params.customerId;
+      _that.$api
+        .post({
+          url: "/saleCustomerDetail/getSaleCustomerRecommendList",
+          data: _that.recommandPage,
+          headers: { "Content-Type": "application/json" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            _that.recommandPage.totalPage = e.data.data.totalPage;
+            if (_that.recommandPage.page <= _that.recommandPage.totalPage) {
+              //读取成功后，要把当前页数+1
+              _that.recommandPage.page = e.data.data.currPage + 1;
+            }
+            _that.recommendList = _that.recommendList.concat(e.data.data.list);
+          }
+        })
+        .catch(e => {
+          console.log("获取推荐房源记录失败!");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
+    buttomLoad() {
+      let _that = this;
+      _that.recommendAjax();
+    },
+    openPop(popName) {
+      this[popName] = true;
+    },
     confirm() {
       let _that = this;
       _that.formData.EntructId = util.sessionLocalStorageGet("cosDetail:id");
@@ -334,7 +460,6 @@ export default {
             message: result.message
           });
           if (result.code == 200) {
-            console.log(result, "写跟进");
             _that.$message({
               type: "success",
               message: result.message
@@ -348,7 +473,7 @@ export default {
               })
               .then(e => {
                 let result = e.data;
-                console.log("获取跟进记录", e);
+                console.log("获取跟进记录");
                 if (result.code == 200) {
                   //result.data.pageSum
                   this.$store.commit("updateFollow", {
@@ -358,11 +483,9 @@ export default {
               })
               .catch(e => {
                 console.log("获取跟进记录失败");
-                console.log(e);
               })
               .finally(() => {});
           } else {
-            console.log("写跟进" + result.message);
             _that.$message({
               type: "info",
               message: result.message
@@ -371,7 +494,6 @@ export default {
         })
         .catch(e => {
           console.log("写跟进失败catch");
-          console.log(e);
         })
         .finally(() => {
           //清除输入框的值

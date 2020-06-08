@@ -30,7 +30,7 @@
 }
 </style>
 <template>
-  <fixed-popup v-bind="$attrs" v-on="$listeners">
+  <fixed-popup v-bind="$attrs" v-on="$listeners" @confirmEmit="confirmEmit">
     <div class="query-content">
       <down-content
         :down-ul-flag="false"
@@ -54,7 +54,7 @@
     <section class="tab-content">
       <el-table :data="tableData" tooltip-effect="dark">
         <el-table-column label="" width="65">
-          <template scope="scope">
+          <template v-slot="scope">
             <el-radio
               prop="id"
               :label="scope.row.id"
@@ -101,6 +101,9 @@ export default {
         companyName: "绿色鑫家园(龙岩)"
       });
     }
+  },
+  methods: {
+    confirmEmit() {}
   },
   data() {
     return {

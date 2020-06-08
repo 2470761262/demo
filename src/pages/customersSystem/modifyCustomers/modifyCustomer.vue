@@ -197,7 +197,7 @@
             </div>
             <!-- 客户性别 -->
             <div class="step-item-inline ">
-              <!-- <div class="step-row-title title-required">客户性别:</div>
+              <div class="step-row-title title-required">客户性别:</div>
               <div class="step-row-query border">
                 <el-radio-group v-model="formData.sex">
                   <el-radio
@@ -207,7 +207,7 @@
                     >{{ item.key }}</el-radio
                   >
                 </el-radio-group>
-              </div> -->
+              </div>
             </div>
           </div>
           <!-- 客户电话 &  客户籍贯 content -->
@@ -218,8 +218,9 @@
               <div class="step-row-query">
                 <el-input
                   v-model="formData.tel"
-                  clearable
-                  oninput="value=value.replace(/[^\d]/g,'')"
+                  maxlength="11"
+                  show-word-limit
+                  @input="inputPhone"
                   placeholder="请输入客户电话号码"
                 ></el-input>
               </div>
@@ -577,21 +578,18 @@
 </template>
 
 <script>
-import { SEX, DECORATION } from "@/util/constMap";
+import { DECORATION } from "@/util/constMap";
 import but from "@/evenBus/but";
 export default {
   data() {
     return {
       searchLoading: false,
-      gogo: {
-        sdsd: ["北城小学"]
-      },
       formData: {
         // school1Array: ["北城小学"]
         // myImpression: [],
         // desireIntensity: 0,
         // customers: "",
-        // sex: 0,
+        //sex: 0,
         // tel: "",
         // resourceType: "",
         // source: "",
@@ -675,7 +673,17 @@ export default {
       primarySchool: [],
       middleSchool: [],
       communityList: [],
-      sex: SEX, //性别
+      sex: [
+        //性别
+        {
+          value: 0,
+          key: "男"
+        },
+        {
+          value: 1,
+          key: "女"
+        }
+      ], //性别
       myImpression: "",
       collapseActive: 1, //折叠面板当前激活name
       canSubmit: false
@@ -685,31 +693,6 @@ export default {
     if (this.$route.params.customer) {
       //开始回显数据
       let customer = this.$route.params.customer;
-
-      this.formData = customer;
-      console.log(customer);
-      this.$set(
-        this.formData,
-        "myImpression",
-        this.$route.params.myImpression || []
-      );
-      console.log([
-        customer.community1,
-        customer.community2,
-        customer.community3
-      ]);
-      const filexBuild = [
-        customer.community1,
-        customer.community2,
-        customer.community3
-      ].filter(item => item != undefined && item != null);
-      this.$set(this.formData, "community", filexBuild);
-      if (customer.school1) {
-        this.$set(this.formData, "school1Array", customer.school1.split("$"));
-      }
-      if (customer.school2) {
-        this.$set(this.formData, "school2Array", customer.school2.split("$"));
-      }
       //执行ajax请求，获取基础信息
       this.$api
         .post({
@@ -719,12 +702,36 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          console.log("获取客户详情结果", e);
+          console.log("获取客户详情结果", result.data);
           if (result.code == 200) {
-            this.formData.minFirstPrice =
-              result.data.minFirstPrice || result.data.MinFirstPrice;
-            this.formData.maxFirstPrice =
-              result.data.maxFirstPrice || result.data.MaxFirstPrice;
+            this.formData = result.data;
+            this.$set(
+              this.formData,
+              "myImpression",
+              this.$route.params.myImpression || []
+            );
+            console.log("印象印象", this.$route.params.myImpression);
+            const filexBuild = [
+              this.formData.community1,
+              this.formData.community2,
+              this.formData.community3
+            ].filter(item => item != undefined && item != null);
+            this.$set(this.formData, "community", filexBuild);
+            if (this.formData.school1) {
+              this.$set(
+                this.formData,
+                "school1Array",
+                customer.school1.split("$")
+              );
+            }
+            if (this.formData.school2) {
+              this.$set(
+                this.formData,
+                "school2Array",
+                customer.school2.split("$")
+              );
+            }
+            console.log(this.formData, "this.formData", "回显数据");
           }
         })
         .catch(e => {
@@ -733,10 +740,13 @@ export default {
         })
         .finally(() => {});
       //结束回显数据
-      console.log(this.formData, "this.formData", "回显数据");
     }
   },
   methods: {
+    inputPhone(vv) {
+      this.formData.tel = vv;
+      //value=value.replace(/[^\d]/g,'')
+    },
     queryPrimarySchoolByKeyWord(query) {
       if (query instanceof Object) {
         query = "";
@@ -907,6 +917,12 @@ export default {
       ) {
         return "首付金额最大值不能小于最小值";
       }
+      if (this.formData.minPrice && Number(this.formData.minPrice) > 2000) {
+        return "期望总价最小值不能超过2000万";
+      }
+      if (this.formData.maxPrice && Number(this.formData.maxPrice) > 2000) {
+        return "期望总价最大值不能超过2000万";
+      }
       if (
         this.formData.minPrice &&
         this.formData.maxPrice &&
@@ -934,15 +950,35 @@ export default {
         _that.formData.school1Array &&
         _that.formData.school1Array instanceof Array
       ) {
+        if (_that.formData.school1Array.length > 3) {
+          _that.$message({
+            type: "info",
+            message: "最多只能选三个小学"
+          });
+          return;
+        }
         _that.formData.school1 = _that.formData.school1Array.join("&");
       }
       if (
         _that.formData.school2Array &&
         _that.formData.school2Array instanceof Array
       ) {
+        if (_that.formData.school2Array.length > 3) {
+          _that.$message({
+            type: "info",
+            message: "最多只能选三个中学"
+          });
+          return;
+        }
         _that.formData.school2 = _that.formData.school2Array.join("&");
       }
-
+      if (_that.formData.community.length > 3) {
+        _that.$message({
+          type: "info",
+          message: "最多只能选三个楼盘"
+        });
+        return;
+      }
       _that.formData.community.forEach((item, index, array) => {
         _that.formData["community" + (index + 1)] = item;
       });

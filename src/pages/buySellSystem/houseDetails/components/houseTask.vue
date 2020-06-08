@@ -466,7 +466,7 @@ export default {
     buttonDisabled: {
       default: false
     },
-    dept: {
+    buttonLocking: {
       default: {}
     },
     paramsObj: {
@@ -475,7 +475,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return this.buttonDisabled;
+      return this.buttonDisabled || this.buttonLocking.value;
     },
     supplementObj() {
       if (Object.keys(this.paramsObj).length > 0) {

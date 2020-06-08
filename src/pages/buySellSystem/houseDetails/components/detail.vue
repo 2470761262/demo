@@ -302,7 +302,7 @@
           v-if="resultData.agentPerName"
           @click="oneTouchDialPhone"
           data-anchor="房源详情一键拨号 => click"
-          :disabled="!touchedDialPhone"
+          :disabled="isDisabled || !touchedDialPhone"
         >
           一键拨号
         </button>
@@ -311,7 +311,7 @@
         <el-button
           class="cell-pro-but anchor-point"
           v-if="applyAgentRule && resultData.plate < 6"
-          :disabled="agentApply"
+          :disabled="isDisabled || agentApply"
           data-anchor="房源详情申请跟单人 => click"
           @click="callTaskAgent"
           ><span>申请跟单人</span>
@@ -319,6 +319,7 @@
         <el-button
           class="cell-pro-but anchor-point"
           v-else-if="resultData.plate >= 6"
+          :disabled="isDisabled"
           @click="turnOnSale"
           data-anchor="房源详情转在售 => click"
         >
@@ -395,7 +396,7 @@
           data-anchor="房源详情一键拨号 => click"
           class="cell-pro-but anchor-point"
           @click="dialPhoneToFD"
-          :disabled="!touchedDialPhone"
+          :disabled="isDisabled || !touchedDialPhone"
         >
           一键拨号
         </button>
@@ -419,7 +420,7 @@ export default {
     buttonDisabled: {
       default: false
     },
-    dept: {
+    buttonLocking: {
       default: {}
     }
   },
@@ -430,7 +431,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return this.buttonDisabled;
+      return this.buttonDisabled || this.buttonLocking.value;
     },
     resultData() {
       if (Object.keys(this.houseDetails).length > 0) {

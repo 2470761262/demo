@@ -57,7 +57,7 @@
                   </div>
                 </div>
                 <label class="trigger-impression-btn">
-                  <input type="checkbox" />
+                  <input type="checkbox" class="impression-btn" />
                   <i class="iconfont"></i>
                 </label>
               </div>
@@ -113,7 +113,7 @@
 import listPage from "@/components/listPage";
 import allCustomersQuery from "../components/allCustomersQuery";
 import leftAttention from "../components/leftAttention";
-import { setImpression } from "@/util/tabUtil";
+import setImpression from "@/util/tabUtil";
 import util from "@/util/util";
 export default {
   components: {
@@ -232,7 +232,7 @@ export default {
         {
           prop: "cz",
           label: "操作",
-          width: "400px",
+          width: "450px",
           order: false,
           fixed: true,
           formart: (row, column) => {
@@ -301,7 +301,6 @@ export default {
   },
   mounted() {
     let _that = this;
-    _that.$nextTick(setImpression);
     _that.pageJson.currentPage = 1;
     _that.queryCustomerData({ page: 1 });
     _that.staticsMyCustomerData();
@@ -540,6 +539,9 @@ export default {
             _that.myImpressions = result.data.myImpression;
             _that.pageJson.total = result.data.dataCount;
             //result.data.pageSum
+            _that.$nextTick(() => {
+              setImpression.removeIsEmptyTd();
+            });
           } else {
             console.log("查询客源列表" + result.message);
             _that.$message({

@@ -182,7 +182,7 @@
                   </div>
                 </div>
                 <label class="trigger-impression-btn">
-                  <input type="checkbox" />
+                  <input type="checkbox" class="impression-btn" />
                   <i class="iconfont"></i>
                 </label>
               </div>
@@ -219,7 +219,7 @@
 <script>
 import listPage from "@/components/listPage";
 import leftAttention from "../components/leftAttention";
-import { setImpression } from "@/util/tabUtil";
+import setImpression from "@/util/tabUtil";
 export default {
   components: {
     listPage,
@@ -500,7 +500,6 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(setImpression);
     this.queryCustomerData(1);
   },
   methods: {
@@ -609,6 +608,9 @@ export default {
             _that.pageJson.total = result.data.dataCount;
             _that.myImpressions = result.data.myImpression;
             //result.data.pageSum
+            _that.$nextTick(() => {
+              setImpression.removeIsEmptyTd();
+            });
           } else {
             console.log("查询客源列表（七日内新增）" + result.message);
             _that.$message({
@@ -689,7 +691,10 @@ export default {
      * 设置如果有当前行有印象数据则行先生对应的calss
      */
     cellClass({ row }) {
-      if (row.hasOwnProperty("pp")) {
+      if (
+        this.myImpressions.hasOwnProperty(row.id) &&
+        this.myImpressions[row.id].length > 0
+      ) {
         return "cellset";
       }
       return "cellItemSet";

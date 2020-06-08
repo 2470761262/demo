@@ -233,6 +233,7 @@ export default {
               params.buildingName = house.BuildingName;
               params.roomNo = house.RoomNo;
               params.houseAgentPer = house.AgentPer;
+              params.isTalk = _that.isTalk;
               _that.addPairRecord(
                 params,
                 s => {

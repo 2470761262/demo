@@ -191,7 +191,7 @@
       <!-- 房源印象 -->
       <section
         class="heard-item anchor-point"
-        :class="{ isDisabled: buttonDisabled }"
+        :class="{ isDisabled: isDisabled }"
         data-anchor="房源详情印象弹框打开 => click"
         @click="nodePop"
       >
@@ -201,7 +201,7 @@
       <!-- 写跟进 -->
       <section
         class="heard-item anchor-point"
-        :class="{ isDisabled: buttonDisabled }"
+        :class="{ isDisabled: isDisabled }"
         data-anchor="房源详情写跟进弹框打开 => click"
         @click="openPopUp('followUpFlag')"
       >
@@ -212,7 +212,7 @@
       <section
         class="heard-item anchor-point"
         data-anchor="房源详情印已关注||关注 => click"
-        :class="{ isDisabled: buttonDisabled }"
+        :class="{ isDisabled: isDisabled }"
         @click="changCollectHouse"
       >
         <i
@@ -225,7 +225,7 @@
       <section
         data-anchor="房源详情印举报弹框打开 => click"
         class="heard-item anchor-point"
-        :class="{ isDisabled: buttonDisabled }"
+        :class="{ isDisabled: isDisabled }"
         @click="openReport"
       >
         <i class=" iconfont colorRed icon iconjubao"></i>
@@ -238,7 +238,7 @@
             data-anchor="房源详情二维码点击 => click"
             class="anchor-point"
             id="qrcode"
-            v-if="!buttonDisabled && shareQRCode"
+            v-if="!isDisabled && shareQRCode"
             @click="shareQRCodeShow = true"
             :class="{ qrcode: qrData }"
           >
@@ -305,7 +305,7 @@ import QRCode from "qrcodejs2";
 import houseCheck from "../common/houseCheck";
 import but from "@/evenBus/but.js";
 export default {
-  inject: ["houseDetails", "houseId", "buttonDisabled"],
+  inject: ["houseDetails", "houseId", "buttonDisabled", "buttonLocking"],
   watch: {
     houseDetails: {
       deep: true,
@@ -388,7 +388,7 @@ export default {
   },
   computed: {
     isDisabled() {
-      return this.buttonDisabled;
+      return this.buttonDisabled || this.buttonLocking.value;
     },
     resultData() {
       if (Object.keys(this.houseDetails).length > 0) {

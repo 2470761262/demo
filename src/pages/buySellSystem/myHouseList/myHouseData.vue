@@ -130,6 +130,9 @@
       flex-direction: column;
       .query-heander-abs {
         display: inline-flex;
+        position: relative;
+        z-index: 2;
+        background: #fff;
         span {
           .tips-abs;
         }
@@ -145,7 +148,7 @@
         .progress-layout {
           display: flex;
           justify-content: center;
-          margin-top: 40px;
+          margin-top: 20px;
           /deep/.progress-content {
             margin-right: 40px;
             &:last-child {
@@ -157,10 +160,10 @@
       .query-condition-div {
         display: flex;
         align-items: center;
+        justify-content: center;
         margin-top: 10px;
-        margin-left: 150px;
         .select {
-          width: 20%;
+          width: 190px;
           margin-left: 10px;
         }
         .font {
@@ -316,10 +319,10 @@
         <h3 class="query-heander-abs">
           <span>今日推荐</span>
         </h3>
-        <div class="query-condition-div" v-if="false">
+        <div class="query-condition-div">
           <span class="font">区域</span>
           <el-select
-            data-anchor="更多筛选组件区域 => select"
+            data-anchor="我的数据更多筛选区域 => select"
             v-model="queryCondition.deptParentId"
             :remote-method="remoteArea"
             clearable
@@ -328,7 +331,7 @@
             class="select"
           >
             <el-option
-              data-anchor="更多筛选组件区域 => select => option"
+              data-anchor="我的数据更多筛选区域 => select => option"
               class="anchor-point"
               v-for="item in deptParentList"
               :key="item.depId"
@@ -338,14 +341,15 @@
           </el-select>
           <span class="font">门店</span>
           <el-select
-            data-anchor="更多筛选组件区域 => select"
+            data-anchor="我的数据更多筛选门店 => select"
             class="select"
             v-model="queryCondition.store"
+            @focus="getDepartmentAuthority"
             @change="queryPer"
             clearable
           >
             <el-option
-              data-anchor="更多筛选组件区域 => select => option"
+              data-anchor="我的数据更多筛选门店 => select => option"
               class="anchor-point"
               v-for="item in storeList"
               :key="item.depId"
@@ -355,14 +359,14 @@
           </el-select>
           <span class="font">个人</span>
           <el-select
-            data-anchor="更多筛选组件区域 => select"
+            data-anchor="我的数据更多筛选个人呢 => select"
             class="select"
             v-model="queryCondition.personnel"
             clearable
             @change="changeAccount"
           >
             <el-option
-              data-anchor="更多筛选组件区域 => select => option"
+              data-anchor="我的数据更多筛选个人 => select => option"
               class="anchor-point"
               v-for="item in perList"
               :key="item.accountId"
@@ -648,6 +652,33 @@ export default {
     remoteSelect() {
       if (this.queryCondition.deptParentId.length == 0) {
         this.remoteArea();
+      }
+    },
+    /**
+     * 获取店长权限
+     */
+    getDepartmentAuthority() {
+      if (
+        this.queryCondition.deptParentId != "" ||
+        this.deptParentList.length > 0 ||
+        this.storeList.length > 0
+      ) {
+        //如果选择了区域直接返回
+        return true;
+      } else {
+        this.$api
+          .post({
+            url: `/myHouse/myData`,
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: {
+              departmentAuthority: "MORE_SELECT_AREA"
+            }
+          })
+          .then(e => {
+            if (e.data.code == 200) {
+              this.storeList = e.data.data;
+            }
+          });
       }
     },
     /**

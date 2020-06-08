@@ -124,6 +124,7 @@
         display: flex;
         justify-content: center;
         padding-bottom: 20px;
+        margin-top: 5px;
         .floot-btn {
           width: 120px;
           height: 30px;
@@ -172,6 +173,7 @@
           <div class="didLog-content-sroll">
             <slot> </slot>
           </div>
+          <slot name="otherTips"></slot>
           <slot name="floot">
             <div class="style-2" v-if="isStyleType2">
               <el-button

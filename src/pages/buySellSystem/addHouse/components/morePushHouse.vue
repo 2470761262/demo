@@ -685,6 +685,9 @@ export default {
       this.tableFor[index].roomNo = this.selectPageRoom.list[
         findResultIndex
       ].name;
+      this.tableFor[index].floor = this.selectPageRoom.list[
+        findResultIndex
+      ].floor;
     },
     //输入的套数改变
     houseListChange(e) {

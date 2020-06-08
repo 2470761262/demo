@@ -125,13 +125,13 @@
         v-if="cancelTalkingButton"
         class="task-button"
         @click="openPop('talkingFlag')"
-        >取消再谈</el-button
+        >取消在谈</el-button
       >
       <el-button
         v-if="addTalkingButton"
         class="task-button"
         @click="openPop('addTalkingFlag')"
-        >添加再谈</el-button
+        >转在谈</el-button
       >
       <!-- <el-button class="task-button" @click="openPop('reserveFlag')"
         >预约带看</el-button
@@ -262,7 +262,7 @@ export default {
       _that.$api
         .post({
           url: "/saleCustomerDetail/updateTalking",
-          data: { id: obj.id, Eid: obj.Eid, isBuy: 0 },
+          data: { id: obj.id, eid: obj.eid, isBuy: 0 },
           headers: { "Content-Type": "application/json" }
         })
         .then(e => {
@@ -285,7 +285,7 @@ export default {
       _that.$api
         .post({
           url: "/saleCustomerDetail/updateTalking",
-          data: { id: obj.id, Eid: obj.Eid, isBuy: 3 },
+          data: { id: obj.id, eid: obj.eid, isBuy: 3 },
           headers: { "Content-Type": "application/json" }
         })
         .then(e => {
@@ -296,7 +296,7 @@ export default {
             _that.$api
               .post({
                 url: "/saleCustomerDetail/getSalePairProcess",
-                data: { id: obj.Eid },
+                data: { id: obj.eid },
                 headers: { "Content-Type": "application/json" }
               })
               .then(e => {

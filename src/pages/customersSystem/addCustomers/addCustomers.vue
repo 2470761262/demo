@@ -113,6 +113,11 @@
           /deep/.el-input__inner {
             border-radius: 0;
           }
+          &.no-suffix {
+            /deep/.el-input__suffix {
+              display: none;
+            }
+          }
           /deep/.el-select {
             width: 100%;
             .el-input__inner {
@@ -218,8 +223,9 @@
               <div class="step-row-query">
                 <el-input
                   v-model="formData.tel"
-                  clearable
-                  oninput="value=value.replace(/[^\d]/g,'')"
+                  maxlength="11"
+                  show-word-limit
+                  @input="inputPhone"
                   placeholder="请输入客户电话号码"
                 ></el-input>
               </div>
@@ -383,7 +389,7 @@
           <div class="cust-step-row">
             <!-- 首付金额 -->
             <div class="step-item-inline">
-              <div class="step-row-title">首付金额:</div>
+              <div class="step-row-title">期望首付:</div>
               <div class="step-row-query step-flex-group" data-unit="万">
                 <el-input
                   v-model="formData.minFirstPrice"
@@ -478,7 +484,7 @@
             <!-- 期望小学 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望小学:</div>
-              <div class="step-row-query">
+              <div class="step-row-query no-suffix">
                 <el-select
                   v-model="formData.school1Array"
                   clearable
@@ -502,7 +508,7 @@
             <!--  客源特性 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望中学:</div>
-              <div class="step-row-query">
+              <div class="step-row-query no-suffix">
                 <el-select
                   v-model="formData.school2Array"
                   clearable
@@ -529,7 +535,7 @@
             <!-- 期望楼盘 -->
             <div class="step-item-inline ">
               <div class="step-row-title ">期望楼盘:</div>
-              <div class="step-row-query">
+              <div class="step-row-query no-suffix">
                 <el-select
                   v-model="formData.community"
                   clearable
@@ -545,7 +551,7 @@
                     v-for="item in communityList"
                     :key="item.value"
                     :label="item.name"
-                    :value="item.value"
+                    :value="item.name"
                   ></el-option>
                 </el-select>
               </div>
@@ -589,7 +595,7 @@ export default {
         myImpression: [],
         desireIntensity: 0,
         customers: "",
-        sex: 0,
+        sex: 1,
         tel: "",
         resourceType: "",
         source: "",
@@ -673,12 +679,26 @@ export default {
       primarySchool: [],
       middleSchool: [],
       communityList: [],
-      sex: SEX, //性别
+      sex: [
+        //性别
+        {
+          value: 0,
+          key: "男"
+        },
+        {
+          value: 1,
+          key: "女"
+        }
+      ], //性别
       myImpression: "",
       collapseActive: 1 //折叠面板当前激活name
     };
   },
   methods: {
+    inputPhone(vv) {
+      this.formData.tel = vv;
+      //value=value.replace(/[^\d]/g,'')
+    },
     queryPrimarySchoolByKeyWord(query) {
       if (query instanceof Object) {
         //如果空字符串，传过来是一个对象
@@ -895,15 +915,35 @@ export default {
         _that.formData.school1Array &&
         _that.formData.school1Array instanceof Array
       ) {
+        if (_that.formData.school1Array.length > 3) {
+          _that.$message({
+            type: "info",
+            message: "最多只能选三个小学"
+          });
+          return;
+        }
         _that.formData.school1 = _that.formData.school1Array.join("&");
       }
       if (
         _that.formData.school2Array &&
         _that.formData.school2Array instanceof Array
       ) {
+        if (_that.formData.school2Array.length > 3) {
+          _that.$message({
+            type: "info",
+            message: "最多只能选三个中学"
+          });
+          return;
+        }
         _that.formData.school2 = _that.formData.school2Array.join("&");
       }
-
+      if (_that.formData.community.length > 3) {
+        _that.$message({
+          type: "info",
+          message: "最多只能选三个楼盘"
+        });
+        return;
+      }
       _that.formData.community.forEach((item, index, array) => {
         console.log(index, item, "循环到位");
         _that.formData["community" + (index + 1)] = item;
