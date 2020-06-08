@@ -30,7 +30,7 @@
 }
 </style>
 <template>
-  <fixed-popup v-bind="$attrs" v-on="$listeners">
+  <fixed-popup v-bind="$attrs" v-on="$listeners" @confirmEmit="confirmEmit">
     <div class="query-content">
       <down-content
         :down-ul-flag="false"
@@ -101,6 +101,9 @@ export default {
         companyName: "绿色鑫家园(龙岩)"
       });
     }
+  },
+  methods: {
+    confirmEmit() {}
   },
   data() {
     return {

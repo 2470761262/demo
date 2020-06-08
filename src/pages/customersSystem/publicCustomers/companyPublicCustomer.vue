@@ -158,17 +158,24 @@
       <template v-slot:tableColumn>
         <el-table-column type="expand" width="1px">
           <template v-slot:default="props">
-            <!-- pp属性名请按照实际字段进行修改 -->
-            <!-- 判断当前列是否有 'pp' 这个属性 如果有则显示印象 且长度大于0 -->
-            <template v-if="props.row.pp && props.row.pp.length > 0">
+            <!-- 判断当前列  如果有则显示印象 且长度大于0 -->
+            <template
+              v-if="
+                myImpressions.hasOwnProperty(props.row.id) &&
+                  myImpressions[props.row.id].length > 0
+              "
+            >
               <div class="flex-expand">
                 <div class="flex-impression-content">
-                  <div v-for="(item, index) in props.row.pp" :key="index">
+                  <div
+                    v-for="(item, index) in myImpressions[props.row.id]"
+                    :key="index"
+                  >
                     {{ item }}
                   </div>
                 </div>
                 <label class="trigger-impression-btn">
-                  <input type="checkbox" />
+                  <input type="checkbox" class="impression-btn" />
                   <i class="iconfont"></i>
                 </label>
               </div>
@@ -214,7 +221,7 @@
 
 <script>
 import listPage from "@/components/listPage";
-import { setImpression } from "@/util/tabUtil";
+import setImpression from "@/util/tabUtil";
 export default {
   components: {
     listPage,
@@ -487,7 +494,6 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(setImpression);
     this.queryCustomerData(1);
   },
   methods: {
@@ -540,6 +546,9 @@ export default {
             _that.tableData = dataCustomers;
             _that.pageJson.total = result.data.dataCount;
             //result.data.pageSum
+            _that.$nextTick(() => {
+              setImpression.removeIsEmptyTd();
+            });
           } else {
             console.log("查询公司公客" + result.message);
             _that.$message({
@@ -609,7 +618,10 @@ export default {
      * 设置如果有当前行有印象数据则行先生对应的calss
      */
     cellClass({ row }) {
-      if (row.hasOwnProperty("pp")) {
+      if (
+        this.myImpressions.hasOwnProperty(row.id) &&
+        this.myImpressions[row.id].length > 0
+      ) {
         return "cellset";
       }
       return "cellItemSet";

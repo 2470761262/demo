@@ -165,7 +165,7 @@
       <template v-slot:tableColumn>
         <el-table-column type="expand" width="1px">
           <template v-slot:default="props">
-            <!-- 判断当前列是否有  如果有则显示印象 且长度大于0 -->
+            <!-- 判断当前列  如果有则显示印象 且长度大于0 -->
             <template
               v-if="
                 myImpressions.hasOwnProperty(props.row.id) &&
@@ -182,7 +182,7 @@
                   </div>
                 </div>
                 <label class="trigger-impression-btn">
-                  <input type="checkbox" />
+                  <input type="checkbox" class="impression-btn" />
                   <i class="iconfont"></i>
                 </label>
               </div>
@@ -219,7 +219,7 @@
 <script>
 import listPage from "@/components/listPage";
 import leftAttention from "../components/leftAttention";
-import { setImpression } from "@/util/tabUtil";
+import setImpression from "@/util/tabUtil";
 export default {
   components: {
     listPage,
@@ -498,7 +498,6 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(setImpression);
     this.queryCustomerData(1);
   },
   methods: {
@@ -613,6 +612,9 @@ export default {
             _that.pageJson.total = result.data.dataCount;
             _that.myImpressions = result.data.myImpression;
             //result.data.pageSum
+            _that.$nextTick(() => {
+              setImpression.removeIsEmptyTd();
+            });
           } else {
             console.log("查询客源列表（30日内带看）" + result.message);
             _that.$message({
