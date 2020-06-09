@@ -226,23 +226,17 @@
               </div>
             </div>
             <!-- 客户籍贯 -->
-            <!-- <div class="step-item-inline ">
+            <div class="step-item-inline ">
               <div class="step-row-title title-required">客户籍贯:</div>
               <div class="step-row-query">
-                <el-select
-                  v-model="sssValue"
-                  clearable
-                  placeholder="请选择客户籍贯"
-                >
-                  <el-option
-                    v-for="item in ssslist"
-                    :key="item.value"
-                    :label="item.key"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
+                <el-input
+                  v-model="formData.nativePlace"
+                  maxlength="8"
+                  show-word-limit
+                  placeholder="请输入客户籍贯"
+                ></el-input>
               </div>
-            </div> -->
+            </div>
           </div>
           <!-- 客户来源  content -->
           <div class="cust-step-row">
