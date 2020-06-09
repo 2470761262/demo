@@ -111,7 +111,7 @@
     font-size: 12px !important;
   }
   .button-back {
-    background: #108f51;
+    background: var(--color--primary);
     /deep/span {
       color: #fff;
     }

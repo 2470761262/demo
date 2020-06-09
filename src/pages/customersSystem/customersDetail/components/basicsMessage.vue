@@ -41,7 +41,10 @@
     <div class="basics-layout-content">
       <div class="basics-layout-item">
         <div class="basics-layout-item-title">客户籍贯</div>
-        <div class="basics-layout-item-message" v-html="detail.areaId || kong">
+        <div
+          class="basics-layout-item-message"
+          v-html="detail.nativePlace || kong"
+        >
           新罗区
         </div>
       </div>

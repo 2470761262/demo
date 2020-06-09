@@ -199,12 +199,7 @@ export default {
           formart: (row, column) => {
             let s = "/";
             if (row.rooms) {
-              s = row.rooms.replace("$", "或");
-              var d = s.length - 1;
-              //判断如果以或结尾，去除掉
-              if (d >= 0 && s.lastIndexOf("或") == d) {
-                s = s.substr(0, s.length - 1);
-              }
+              s = row.rooms.split("$").join("或");
             }
             return s;
           }

@@ -114,7 +114,8 @@ export default {
             roomNo: name,
             comId: _that.cascaderCommunity.inputValue, //当前选择的楼盘id
             cbId: _that.cascaderBuild.inputValue, //当前选择的楼栋id
-            page: page
+            page: page,
+            isRelateHouse: true
           }
         })
         .then(e => {

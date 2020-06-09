@@ -226,23 +226,17 @@
               </div>
             </div>
             <!-- 客户籍贯 -->
-            <!-- <div class="step-item-inline ">
+            <div class="step-item-inline ">
               <div class="step-row-title title-required">客户籍贯:</div>
               <div class="step-row-query">
-                <el-select
-                  v-model="sssValue"
-                  clearable
-                  placeholder="请选择客户籍贯"
-                >
-                  <el-option
-                    v-for="item in ssslist"
-                    :key="item.value"
-                    :label="item.key"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
+                <el-input
+                  v-model="formData.nativePlace"
+                  maxlength="8"
+                  show-word-limit
+                  placeholder="请输入客户籍贯"
+                ></el-input>
               </div>
-            </div> -->
+            </div>
           </div>
           <!-- 客户来源  content -->
           <div class="cust-step-row">
@@ -378,6 +372,20 @@
                   >
                 </el-radio-group>
               </div>
+            </div>
+          </div>
+          <div class="cust-step-row">
+            <div class="step-item-inline">
+              <div class="step-row-title">期望房型:</div>
+            </div>
+            <div class="step-row-query">
+              <el-checkbox-group v-model="roomList">
+                <el-checkbox label="1房"></el-checkbox>
+                <el-checkbox label="2房"></el-checkbox>
+                <el-checkbox label="3房"></el-checkbox>
+                <el-checkbox label="4房"></el-checkbox>
+                <el-checkbox label="5房以上"></el-checkbox>
+              </el-checkbox-group>
             </div>
           </div>
           <!-- 首付金额 & 期望总价 content-->
@@ -670,6 +678,7 @@ export default {
           label: "转介绍"
         }
       ],
+      roomList: [],
       primarySchool: [],
       middleSchool: [],
       communityList: [],
@@ -715,21 +724,24 @@ export default {
               this.formData.community1,
               this.formData.community2,
               this.formData.community3
-            ].filter(item => item != undefined && item != null);
+            ].filter(item => item != undefined && item != null && item != "");
             this.$set(this.formData, "community", filexBuild);
             if (this.formData.school1) {
               this.$set(
                 this.formData,
                 "school1Array",
-                customer.school1.split("$")
+                this.formData.school1.split("$")
               );
             }
             if (this.formData.school2) {
               this.$set(
                 this.formData,
                 "school2Array",
-                customer.school2.split("$")
+                this.formData.school2.split("$")
               );
+            }
+            if (this.formData.rooms) {
+              this.roomList = this.formData.rooms.split("$");
             }
             console.log(this.formData, "this.formData", "回显数据");
           }
@@ -979,6 +991,11 @@ export default {
         });
         return;
       }
+      let rooms = "";
+      _that.roomList.forEach((item, index) => {
+        rooms += item + "$";
+      });
+      _that.formData.rooms = rooms;
       _that.formData.community.forEach((item, index, array) => {
         _that.formData["community" + (index + 1)] = item;
       });

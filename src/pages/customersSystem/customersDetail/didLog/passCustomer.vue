@@ -39,7 +39,12 @@
       >
         <template v-slot:head>
           <div class="head-input">
-            <input type="text" placeholder="请输入指定接收方" />
+            <input
+              type="text"
+              placeholder="请输入指定接收方"
+              @keydown.enter="passSearch"
+              @blur="passSearch"
+            />
           </div>
         </template>
       </down-content>
@@ -52,24 +57,28 @@
       </div>
     </div>
     <section class="tab-content">
-      <el-table :data="tableData" tooltip-effect="dark">
+      <el-table :data="pageInfo.list" tooltip-effect="dark">
         <el-table-column label="" width="65">
           <template v-slot="scope">
             <el-radio
-              prop="id"
-              :label="scope.row.id"
+              :label="scope.row.accountId"
               v-model="templateRadio"
-              @change.native="getTemplateRow(scope.$index, scope.row)"
-            ></el-radio>
+              @change="getTemplateRow(scope.$index, scope.row)"
+              >{{ null }}</el-radio
+            >
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="100"></el-table-column>
         <el-table-column
-          prop="xinCode"
+          prop="perName"
+          label="姓名"
+          width="100"
+        ></el-table-column>
+        <el-table-column
+          prop="score"
           label="鑫币总数"
           width="100"
         ></el-table-column>
-        <el-table-column prop="area" label="区域"></el-table-column>
+        <el-table-column prop="pdeptName" label="区域"></el-table-column>
         <el-table-column prop="companyName" label="公司名称"></el-table-column>
       </el-table>
     </section>
@@ -78,7 +87,9 @@
         background
         hide-on-single-page
         layout="prev,pager,next,jumper,total"
-        :total="1000"
+        :total="pageInfo.totalCount"
+        :page-size="pageInfo.pageSize"
+        @current-change="handleCurrentChange"
       >
       </el-pagination>
     </div>
@@ -88,27 +99,67 @@
 <script>
 import downContent from "../components/downContent";
 export default {
+  props: {
+    pageInfo: {
+      default: () => {
+        return {
+          totalCount: 0,
+          currPage: 1,
+          pageSize: 10,
+          list: []
+        };
+      }
+    }
+  },
   components: {
     downContent
   },
   mounted() {
     for (let i = 0; i < 10; i++) {
       this.tableData.push({
-        id: i + 1,
-        name: "谢谢你" + i,
-        xinCode: 40 + i,
-        area: "中城片区",
+        accountId: i + 1,
+        perName: "谢谢你" + i,
+        score: 40 + i,
+        pdeptName: "中城片区",
         companyName: "绿色鑫家园(龙岩)"
       });
     }
   },
   methods: {
-    confirmEmit() {}
+    confirmEmit() {
+      if (this.selectedPerId == "") {
+        this.$message({
+          type: "info",
+          message: "没有选中任何员工"
+        });
+      } else {
+        this.$emit("passAccount", this.selectedPerId);
+      }
+    },
+    passSearch(e) {
+      // console.log(e);
+      this.keyWord = e.target.value;
+
+      this.$emit("search", e);
+    },
+    getTemplateRow(a, b) {
+      this.selectedPerId = b.accountId;
+    },
+    handleCurrentChange(val) {
+      var _that = this;
+      let list = {
+        name: _that.keyWord,
+        page: val
+      };
+      this.$emit("pageSearch", list);
+    }
   },
   data() {
     return {
       tableData: [],
-      templateRadio: ""
+      templateRadio: "",
+      keyWord: "",
+      selectedPerId: ""
       // tableColumn: [
       //   {
       //     prop: "name",

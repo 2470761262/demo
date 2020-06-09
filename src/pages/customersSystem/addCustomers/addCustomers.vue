@@ -231,23 +231,17 @@
               </div>
             </div>
             <!-- 客户籍贯 -->
-            <!-- <div class="step-item-inline ">
-              <div class="step-row-title title-required">客户籍贯:</div>
+            <div class="step-item-inline ">
+              <div class="step-row-title">客户籍贯:</div>
               <div class="step-row-query">
-                <el-select
-                  v-model="sssValue"
-                  clearable
-                  placeholder="请选择客户籍贯"
-                >
-                  <el-option
-                    v-for="item in ssslist"
-                    :key="item.value"
-                    :label="item.key"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
+                <el-input
+                  v-model="formData.nativePlace"
+                  maxlength="8"
+                  show-word-limit
+                  placeholder="请输入客户籍贯"
+                ></el-input>
               </div>
-            </div> -->
+            </div>
           </div>
           <!-- 客户来源  content -->
           <div class="cust-step-row">
@@ -383,6 +377,20 @@
                   >
                 </el-radio-group>
               </div>
+            </div>
+          </div>
+          <div class="cust-step-row">
+            <div class="step-item-inline">
+              <div class="step-row-title">期望房型:</div>
+            </div>
+            <div class="step-row-query">
+              <el-checkbox-group v-model="roomList">
+                <el-checkbox label="1房"></el-checkbox>
+                <el-checkbox label="2房"></el-checkbox>
+                <el-checkbox label="3房"></el-checkbox>
+                <el-checkbox label="4房"></el-checkbox>
+                <el-checkbox label="5房以上"></el-checkbox>
+              </el-checkbox-group>
             </div>
           </div>
           <!-- 首付金额 & 期望总价 content-->
@@ -609,9 +617,10 @@ export default {
         school1: "",
         school2: "",
         community: "",
-        remark: ""
+        remark: "",
+        nativePlace: ""
       },
-      sssValue: "", //请按照实际字段名进行修改，
+      roomList: [],
       decorationList: [
         {
           value: "毛胚",
@@ -948,6 +957,11 @@ export default {
         console.log(index, item, "循环到位");
         _that.formData["community" + (index + 1)] = item;
       });
+      let rooms = "";
+      _that.roomList.forEach((item, index) => {
+        rooms += item + "$";
+      });
+      _that.formData.rooms = rooms;
       console.log(_that.formData, "录入客户参数");
       let tt = _that.validateParams();
       if (tt) {
