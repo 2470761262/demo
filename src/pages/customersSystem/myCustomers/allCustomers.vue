@@ -544,21 +544,7 @@ export default {
             _that.myImpressions = result.data.myImpression;
             _that.pageJson.total = result.data.dataCount;
             result.data.operationList.forEach((item, index) => {
-              if (item.rName == "一键拨号") {
-                _that.dialButtonEnable = false;
-              }
-              if (item.rName == "修改客户") {
-                _that.modifyCustomerButtonEable = false;
-              }
-              if (item.rName == "添加带看") {
-                _that.addLookButtonEable = false;
-              }
-              if (item.rName == "写跟进") {
-                _that.addFollowLookButtonEable = false;
-              }
-              if (item.rName == "删除客户") {
-                _that.deleteCustomerButtonEable = false;
-              }
+              _that[item.rUrl] = false;
             });
             //result.data.pageSum
             _that.$nextTick(() => {

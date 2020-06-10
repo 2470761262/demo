@@ -509,12 +509,7 @@ export default {
             _that.tableData = dataCustomers;
             _that.pageJson.total = result.data.dataCount;
             result.data.operationList.forEach((item, index) => {
-              if (item.rName == "添加带看") {
-                _that.addLookButtonEable = false;
-              }
-              if (item.rName == "写跟进") {
-                _that.addFollowLookButtonEable = false;
-              }
+              _that[item.rUrl] = false;
             });
           } else {
             console.log("查询公司公客" + result.message);
