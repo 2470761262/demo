@@ -713,7 +713,7 @@ export default {
           let result = e.data;
           console.log("获取客户详情结果", result.data);
           if (result.code == 200) {
-            this.formData = result.data;
+            this.formData = result.data.data;
             this.$set(
               this.formData,
               "myImpression",

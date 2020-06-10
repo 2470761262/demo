@@ -355,6 +355,7 @@ export default {
                   type="warning"
                   size="mini"
                   icon="el-icon-date"
+                  disabled={this.addLookButtonEable}
                   onClick={this.openBetAdd.bind(this, e.id)}
                 >
                   添加带看
@@ -363,6 +364,7 @@ export default {
                   type="danger"
                   size="mini"
                   icon="el-icon-edit"
+                  disabled={this.addFollowLookButtonEable}
                   onClick={this.openPop.bind(this, "writeFlag", e)}
                 >
                   写跟进
@@ -401,7 +403,9 @@ export default {
       },
       addTime: null,
       queryParams: {}, //上方的条件组合
-      customerParams: {} //左侧印象选中的条件
+      customerParams: {}, //左侧印象选中的条件
+      addLookButtonEable: true, //添加带看权限
+      addFollowLookButtonEable: true //添加跟进权限
     };
   },
   watch: {
@@ -514,6 +518,14 @@ export default {
             var dataCustomers = result.data.data;
             _that.tableData = dataCustomers;
             _that.pageJson.total = result.data.dataCount;
+            result.data.operationList.forEach((item, index) => {
+              if (item.rName == "添加带看") {
+                _that.addLookButtonEable = false;
+              }
+              if (item.rName == "写跟进") {
+                _that.addFollowLookButtonEable = false;
+              }
+            });
           } else {
             console.log("查询区域公客列表" + result.message);
             _that.$message({

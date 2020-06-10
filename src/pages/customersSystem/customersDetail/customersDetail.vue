@@ -130,7 +130,7 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          console.log("获取客户详情结果", e);
+          console.log("获取客户详情结果.....", result);
           if (result.code == 200) {
             //result.data.pageSum
             this.customer = result.data;
@@ -139,7 +139,7 @@ export default {
               this.showOperationButton = false;
             }
             this.$store.commit("updateDetail", {
-              cusDetail: result
+              cusDetail: result.data
             });
           }
         })
