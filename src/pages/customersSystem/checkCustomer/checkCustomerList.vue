@@ -220,6 +220,7 @@ export default {
                     type="warning"
                     size="mini"
                     icon="el-icon-date"
+                    disabled={this.checkCustomerOperation}
                     onClick={this.checkOK.bind(this, e)}
                   >
                     通过
@@ -228,6 +229,7 @@ export default {
                     type="warning"
                     size="mini"
                     icon="el-icon-date"
+                    disabled={this.checkCustomerOperation}
                     onClick={this.checkNotOK.bind(this, e)}
                   >
                     不通过
@@ -252,7 +254,8 @@ export default {
         type: null, //申请类型
         tag: null //审核状态
       },
-      queryParams: {} //上方的条件组合
+      queryParams: {}, //上方的条件组合
+      checkCustomerOperation: true //审核操作按钮权限控制
     };
   },
   watch: {
@@ -398,10 +401,12 @@ export default {
           _that.loading = false;
           if (result.code == 200) {
             console.log(result, "查询客源审核列表（）");
-            var dataCustomers = result.data.list;
+            var dataCustomers = result.data.data.list;
             _that.tableData = dataCustomers;
-            _that.pageJson.total = result.data.totalCount;
-            //result.data.pageSum
+            _that.pageJson.total = result.data.data.totalCount;
+            result.data.operationList.forEach((item, index) => {
+              _that[item.rUrl] = false;
+            });
           } else {
             console.log("查询客源审核列表" + result.message);
             _that.$message({

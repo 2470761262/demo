@@ -332,7 +332,10 @@ export default {
             if (!row.rooms) {
               return "/";
             }
-            let s = row.rooms.split("$").join("或");
+            let s = row.rooms
+              .split("$")
+              .filter(item => item != undefined && item != null && item != "")
+              .join("或");
             return s;
           }
         },

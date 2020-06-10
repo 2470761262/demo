@@ -32,8 +32,10 @@
       background-color: rgb(84, 92, 100);
     }
     .children-page {
-      height: calc(100% - 26px);
+      min-height: calc(100% - 26px);
       box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
     }
   }
 }

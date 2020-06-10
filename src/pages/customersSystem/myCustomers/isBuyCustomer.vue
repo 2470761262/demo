@@ -339,7 +339,10 @@ export default {
             if (!row.rooms) {
               return "/";
             }
-            let s = row.rooms.split("$").join("或");
+            let s = row.rooms
+              .split("$")
+              .filter(item => item != undefined && item != null && item != "")
+              .join("或");
             return s;
           }
         },
@@ -376,6 +379,7 @@ export default {
                   type="primary"
                   size="mini"
                   icon="el-icon-phone"
+                  disabled={this.dialButtonEnable}
                   onClick={this.dialPhone.bind(this, e)}
                 >
                   一键拨号
@@ -384,6 +388,7 @@ export default {
                   type="danger"
                   size="mini"
                   icon="el-icon-edit"
+                  disabled={this.addFollowLookButtonEable}
                   onClick={this.openPop.bind(this, "writeFlag", e)}
                 >
                   写跟进
@@ -392,6 +397,7 @@ export default {
                   type="warning"
                   size="mini"
                   icon="el-icon-date"
+                  disabled={this.modifyCustomerButtonEable}
                   onclick={this.modifyCustomer.bind(this, e)}
                 >
                   修改
@@ -431,7 +437,12 @@ export default {
       addTime: null,
       queryParams: {}, //上方的条件组合
       customerParams: {}, //左侧印象选中的条件
-      myImpressions: {} //对客户的印象，
+      myImpressions: {}, //对客户的印象，\
+      dialButtonEnable: true, //一键拨号按钮权限
+      addLookButtonEable: true, //添加带看权限
+      addFollowLookButtonEable: true, //添加跟进
+      modifyCustomerButtonEable: true, //修改权限控制
+      deleteCustomerButtonEable: true //删除权限控制
     };
   },
   watch: {
@@ -606,7 +617,9 @@ export default {
             _that.tableData = dataCustomers;
             _that.pageJson.total = result.data.dataCount;
             _that.myImpressions = result.data.myImpression;
-            //result.data.pageSum
+            result.data.operationList.forEach((item, index) => {
+              _that[item.rUrl] = false;
+            });
             _that.$nextTick(() => {
               setImpression.removeIsEmptyTd();
             });

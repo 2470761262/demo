@@ -1,8 +1,9 @@
 <style lang="less" scoped>
 .page-cell {
-  height: 100%;
+  //height: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1;
 }
 </style>
 <template>

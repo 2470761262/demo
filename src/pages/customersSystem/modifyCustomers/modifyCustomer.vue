@@ -674,8 +674,44 @@ export default {
           label: "亲戚"
         },
         {
+          value: "鑫家网",
+          label: "鑫家网"
+        },
+        {
+          value: "58",
+          label: "58"
+        },
+        {
+          value: "58",
+          label: "58"
+        },
+        {
+          value: "安居客",
+          label: "安居客"
+        },
+        {
+          value: "朋友圈",
+          label: "朋友圈"
+        },
+        {
+          value: "摆排",
+          label: "摆排"
+        },
+        {
           value: "转介绍",
           label: "转介绍"
+        },
+        {
+          value: "业主转客户",
+          label: "业主转客户"
+        },
+        {
+          value: "重复购买",
+          label: "重复购买"
+        },
+        {
+          value: "其他",
+          label: "其他"
         }
       ],
       roomList: [],
@@ -713,7 +749,7 @@ export default {
           let result = e.data;
           console.log("获取客户详情结果", result.data);
           if (result.code == 200) {
-            this.formData = result.data;
+            this.formData = result.data.data;
             this.$set(
               this.formData,
               "myImpression",
