@@ -236,6 +236,7 @@ export default {
                 <el-button
                   type="primary"
                   size="mini"
+                  disabled={this.dialButtonEnable}
                   icon="el-icon-phone"
                   onClick={this.dialPhone.bind(this, row)}
                 >
@@ -245,6 +246,7 @@ export default {
                   type="warning"
                   size="mini"
                   icon="el-icon-date"
+                  disabled={this.addLookButtonEable}
                   onClick={this.openBetAdd.bind(this, row.id)}
                 >
                   添加带看
@@ -252,6 +254,7 @@ export default {
                 <el-button
                   type="danger"
                   size="mini"
+                  disabled={this.addFollowLookButtonEable}
                   icon="el-icon-edit"
                   onclick={this.openPop.bind(this, "writeFlag", row)}
                 >
@@ -261,6 +264,7 @@ export default {
                   type="warning"
                   size="mini"
                   icon="el-icon-date"
+                  disabled={this.modifyCustomerButtonEable}
                   onclick={this.modifyCustomer.bind(this, row)}
                 >
                   修改
@@ -268,6 +272,7 @@ export default {
                 <el-button
                   type="warning"
                   size="mini"
+                  disabled={this.deleteCustomerButtonEable}
                   icon="el-icon-date"
                   onclick={this.openDeleteCustomer.bind(this, row)}
                 >
@@ -291,7 +296,12 @@ export default {
         //   pp: ["活跃呵护", "心机汪", "一是同行"]
         // }
       ], //存放表格数据
-      myImpressions: {} //对客户的印象，
+      myImpressions: {}, //对客户的印象，
+      dialButtonEnable: true, //一键拨号按钮权限
+      addLookButtonEable: true, //添加带看权限
+      addFollowLookButtonEable: true, //添加跟进
+      modifyCustomerButtonEable: true, //修改权限控制
+      deleteCustomerButtonEable: true //删除权限控制
     };
   },
   mounted() {
@@ -533,6 +543,23 @@ export default {
             _that.tableData = dataCustomers;
             _that.myImpressions = result.data.myImpression;
             _that.pageJson.total = result.data.dataCount;
+            result.data.operationList.forEach((item, index) => {
+              if (item.rName == "一键拨号") {
+                _that.dialButtonEnable = false;
+              }
+              if (item.rName == "修改客户") {
+                _that.modifyCustomerButtonEable = false;
+              }
+              if (item.rName == "添加带看") {
+                _that.addLookButtonEable = false;
+              }
+              if (item.rName == "写跟进") {
+                _that.addFollowLookButtonEable = false;
+              }
+              if (item.rName == "删除客户") {
+                _that.deleteCustomerButtonEable = false;
+              }
+            });
             //result.data.pageSum
             _that.$nextTick(() => {
               setImpression.removeIsEmptyTd();
