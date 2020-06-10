@@ -752,13 +752,17 @@ export default {
           let out = e.data.data;
           //判断是否能pass客户
           //可以pass客户，调用pass客户接口
+          console.log("可以pass客户1", e);
           if (out == 1) {
             //接收人id
             let receiveOwner = account.accountId;
+            console.log("可以pass客户2", e);
             //接收人部门id
             let deptParentId = account.deptParentId;
+            console.log("可以pass客户3", e);
             //客户id
             let customerId = util.sessionLocalStorageGet("cosDetail:id");
+            console.log("可以pass客户4", e);
             _that.$api
               .post({
                 url: "/saleCustomerDetail/passCustomer",
