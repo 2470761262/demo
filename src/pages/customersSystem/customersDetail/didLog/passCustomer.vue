@@ -127,13 +127,13 @@ export default {
   },
   methods: {
     confirmEmit() {
-      if (this.selectedPerId == "") {
+      if (this.selectedPer.length == 0) {
         this.$message({
           type: "info",
           message: "没有选中任何员工"
         });
       } else {
-        this.$emit("passAccount", this.selectedPerId);
+        this.$emit("passAccount", this.selectedPer);
       }
     },
     passSearch(e) {
@@ -143,7 +143,7 @@ export default {
       this.$emit("search", e);
     },
     getTemplateRow(a, b) {
-      this.selectedPerId = b.accountId;
+      this.selectedPer = b;
     },
     handleCurrentChange(val) {
       var _that = this;
@@ -159,7 +159,7 @@ export default {
       tableData: [],
       templateRadio: "",
       keyWord: "",
-      selectedPerId: ""
+      selectedPer: {}
       // tableColumn: [
       //   {
       //     prop: "name",

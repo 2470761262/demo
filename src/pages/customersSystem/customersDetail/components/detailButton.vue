@@ -733,7 +733,7 @@ export default {
         .finally(() => {});
     },
     //pass客户
-    passAccount(accountId) {
+    passAccount(account) {
       let _that = this;
       _that.$api
         .post({
@@ -747,8 +747,71 @@ export default {
           console.log(e);
           //获取返回结果
           let out = e.data.data;
+          //判断是否能pass客户
+          //可以pass客户，调用pass客户接口
           if (out == 1) {
-            // retObj.Add("Code", 20003);
+            //接收人id
+            let receiveOwner = account.accountId;
+            //接收人部门id
+            let deptParentId = account.deptParentId;
+            //客户id
+            let customerId = util.sessionLocalStorageGet("cosDetail:id");
+            _that.$api
+              .post({
+                url: "/saleCustomerDetail/passCustomer",
+                data: {
+                  customerId: customerId,
+                  receiveOwner: receiveOwner,
+                  DeptParentID: deptParentId
+                },
+                headers: { "Content-Type": "application/json" }
+              })
+              .then(e => {
+                let out = e.data.data;
+                if (out == 1) {
+                  this.$message({
+                    type: "info",
+                    message: "Pass成功,等待接收方确认"
+                  });
+                  _that.passPop = false;
+                }
+                if (out == -1) {
+                  this.$message({
+                    type: "info",
+                    message: "Pass失败，接收方区域存在30天有交互记录的客户"
+                  });
+                }
+                if (out == -2) {
+                  this.$message({
+                    type: "info",
+                    message: "Pass失败，该客户存在一条记录未审核"
+                  });
+                }
+                if (out == -3) {
+                  this.$message({
+                    type: "info",
+                    message: "Pass失败，接收方存在相同号码的客户未审核"
+                  });
+                }
+                if (out == -4) {
+                  this.$message({
+                    type: "info",
+                    message: "Pass失败，接收方已存在该pass客户，并还未超过30天"
+                  });
+                }
+                if (out == -5) {
+                  this.$message({
+                    type: "info",
+                    message: "Pass失败，接收方和pass方不能相同"
+                  });
+                }
+              })
+              .catch(e => {
+                console.log("takeLookRecord.vue------------", e);
+              })
+              .finally(() => {});
+
+            console.log(receiveOwner, deptParentId, customerId);
           } else if (out == -1) {
             this.$message({
               type: "info",
