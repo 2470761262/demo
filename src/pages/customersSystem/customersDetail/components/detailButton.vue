@@ -7,6 +7,7 @@
     display: flex;
     .customers-head-name {
       font-size: 30px;
+      flex: 1;
       &::after {
         content: "(" attr(data-sex) ")";
         color: #cccccc;
@@ -14,8 +15,9 @@
       }
     }
     .customers-head-rate {
-      align-self: center;
-      margin-left: 30px;
+      // align-self: center;
+      // margin-left: 30px;
+      flex-shrink: 0;
       /deep/.el-rate__icon {
         font-size: 30px;
       }
