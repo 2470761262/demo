@@ -251,6 +251,7 @@
       class="record-content-scroll"
       v-show="showBox == 1"
       v-infinite-scroll="buttomLoad"
+      infinite-scroll-disabled="busy"
       style="overflow:auto"
     >
       <left-progress v-for="item in recommendList" :key="item.id">
@@ -357,7 +358,8 @@ export default {
         customerId: util.sessionLocalStorageGet("cosDetail:id")
       },
       recommendList: [],
-      addPop: false //添加推荐弹出层开关
+      addPop: false, //添加推荐弹出层开关
+      busy: false
     };
   },
   mounted() {
@@ -411,6 +413,7 @@ export default {
     //获取推荐房源
     recommendAjax() {
       let _that = this;
+      _that.busy = "true";
       //获取页面传过来的客户id
       let id = _that.$route.params.customerId;
       _that.$api
@@ -434,7 +437,9 @@ export default {
           console.log("获取推荐房源记录失败!");
           console.log(e);
         })
-        .finally(() => {});
+        .finally(() => {
+          _that.busy = "false";
+        });
     },
     buttomLoad() {
       let _that = this;
