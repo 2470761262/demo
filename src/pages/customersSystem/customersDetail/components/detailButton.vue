@@ -12,6 +12,7 @@
         content: "(" attr(data-sex) ")";
         color: #cccccc;
         font-size: 20px;
+        white-space: nowrap;
       }
     }
     .customers-head-rate {
