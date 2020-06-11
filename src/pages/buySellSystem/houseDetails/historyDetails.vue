@@ -109,7 +109,8 @@ export default {
       houseId: this.forID,
       houseDetails: this.houseDetails,
       load: this.load,
-      buttonDisabled: true
+      buttonDisabled: true,
+      buttonLocking: this.buttonLocking
     };
   },
   computed: {
@@ -153,7 +154,10 @@ export default {
         loading: true,
         loadingMessage: "努力加载中~"
       },
-      showEdit: false
+      showEdit: false,
+      buttonLocking: {
+        value: false
+      }
     };
   },
   created() {
@@ -253,6 +257,10 @@ export default {
               }
             }
             this.$set(this.houseDetails, "data", result.data);
+            if (result.data.isLocking) {
+              //如果锁定房源的话就禁用
+              this.buttonLocking.value = true;
+            }
             let rooms,
               hall,
               toilet = 0;

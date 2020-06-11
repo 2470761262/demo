@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  flex: 1;
   .page-steps {
     padding: 15px 40px !important;
     border: 1px solid #b4b4b4;
@@ -34,7 +35,7 @@
         overflow: hidden !important;
       }
       .page-contenr-com-posi {
-        position: absolute;
+        position: relative;
         background: #fff;
         border-left: 1px solid #999;
         border-right: 1px solid #999;
@@ -348,12 +349,14 @@ export default {
       }
     },
     getNextSaveButton() {
+      debugger;
       let that = this;
       this.$api
         .get({
           url: "/agent_house/nextSaveButton"
         })
         .then(e => {
+          debugger;
           e.data.data.functionRuleList.forEach(element => {
             if (element.rUrl == "nextSaveButton") {
               //that.nextSaveData = true;
