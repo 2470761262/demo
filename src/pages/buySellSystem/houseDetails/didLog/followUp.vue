@@ -1,7 +1,5 @@
 <style lang="less" scoped>
-.color {
-  background: var(--color--primary) !important;
-}
+@import url(../less/didLogCss);
 </style>
 <template>
   <fixedPopup v-bind="$attrs" v-on="$listeners">
@@ -60,7 +58,6 @@
 </template>
 
 <script>
-import "../less/didLogCss.less";
 import but from "@/evenBus/but.js";
 export default {
   inject: ["houseId"],
