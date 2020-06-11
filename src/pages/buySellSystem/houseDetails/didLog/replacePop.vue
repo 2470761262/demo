@@ -124,12 +124,6 @@
   /deep/span {
     font-size: 12px !important;
   }
-  .button-back {
-    background: var(--color--primary);
-    /deep/span {
-      color: #fff;
-    }
-  }
 }
 #uploadFile {
   display: none;
@@ -235,7 +229,7 @@
         <el-button
           v-if="submitApplyKeyOwner"
           size="small"
-          class="button-back anchor-point"
+          class="anchor-point"
           :loading="pop.loading"
           @click="result"
           >确定</el-button
