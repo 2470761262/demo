@@ -15,7 +15,7 @@
   }
   .record-content-scroll {
     flex: 1;
-    height: 0;
+    min-height: 0;
     overflow: auto;
     box-sizing: border-box;
     padding-top: 10px;
