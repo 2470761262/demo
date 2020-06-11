@@ -45,7 +45,7 @@
           >提交</el-button
         >
         <el-button
-          class="anchor-point color"
+          class="anchor-point"
           v-else
           size="small"
           :disabled="true"

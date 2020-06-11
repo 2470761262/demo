@@ -133,7 +133,7 @@ export default {
           console.log("获取客户详情结果.....", result);
           if (result.code == 200) {
             //result.data.pageSum
-            this.customer = result.data;
+            this.customer = result.data.data;
             if (this.customer && this.customer.tag == 3) {
               //审核中，不显示操作按钮
               this.showOperationButton = false;
