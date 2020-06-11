@@ -21,6 +21,12 @@
   /deep/span {
     font-size: 12px !important;
   }
+  .button-back {
+    background: var(--color--primary);
+    /deep/span {
+      color: #fff;
+    }
+  }
 }
 </style>
 <template>
@@ -95,7 +101,7 @@
         <el-button
           size="small"
           :disabled="!showSubmitBtn"
-          class="anchor-point"
+          class="button-back anchor-point"
           :loading="pop.loading"
           @click="result"
           >确定</el-button
