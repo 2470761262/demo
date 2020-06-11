@@ -41,13 +41,13 @@
           class="anchor-point"
           v-if="insertFollow"
           size="small"
-          :class="['button-back', sumitButClass, 'color']"
+          :class="['button-back', sumitButClass]"
           @click="result"
           :loading="pop.loading"
           >提交</el-button
         >
         <el-button
-          class="anchor-point color"
+          class="anchor-point"
           v-else
           size="small"
           :disabled="true"

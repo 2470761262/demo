@@ -360,7 +360,7 @@
           <el-button
             data-anchor="房源详情查看号码 => click"
             class="cell-pro-but anchor-point"
-            :disabled="isDisabled"
+            :disabled="callDisabled"
           >
             查看号码<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
@@ -396,7 +396,7 @@
           data-anchor="房源详情一键拨号 => click"
           class="cell-pro-but anchor-point"
           @click="dialPhoneToFD"
-          :disabled="isDisabled || !touchedDialPhone"
+          :disabled="callDisabled || !touchedDialPhone"
         >
           一键拨号
         </button>
@@ -430,6 +430,9 @@ export default {
     }
   },
   computed: {
+    callDisabled() {
+      return this.buttonLocking.value;
+    },
     isDisabled() {
       return this.buttonDisabled || this.buttonLocking.value;
     },
