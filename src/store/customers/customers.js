@@ -13,7 +13,8 @@ export default {
     process: {},
     follow: {},
     extend: {},
-    impress: {}
+    impress: {},
+    auth: {}
   },
   mutations: {
     updateDetail(state, value) {
@@ -43,9 +44,16 @@ export default {
     updateImpress(state, value) {
       state.impress = value;
     },
-    reseImpress(state, value) {
+    resetImpress(state, value) {
       state.impress = {};
+    },
+    updateAuth(state, value) {
+      state.auth = value;
+    },
+    resetAuth(state, value) {
+      state.auth = {};
     }
+
     // updateIsformDataNoCommit(state, val) {
     //   state.isformDataNoCommit = val;
     // }

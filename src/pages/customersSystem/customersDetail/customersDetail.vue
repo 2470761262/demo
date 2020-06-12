@@ -99,9 +99,6 @@ export default {
   },
   mounted() {
     this.ajax();
-    this.processAajx();
-    this.flolowAjax();
-    this.exAjax();
   },
   methods: {
     deleteCustomerApply() {
@@ -133,6 +130,13 @@ export default {
           console.log("获取客户详情结果.....", result);
           if (result.code == 200) {
             //result.data.pageSum
+
+            //获取用户权限，通过vuex存到全局变量，再在各个子页面调用以便判断是否禁止按钮
+            let authList = result.data.operationList;
+            this.$store.commit("updateAuth", {
+              authDetail: authList
+            });
+
             this.customer = result.data.data;
             if (this.customer && this.customer.tag == 3) {
               //审核中，不显示操作按钮
@@ -141,6 +145,11 @@ export default {
             this.$store.commit("updateDetail", {
               cusDetail: result.data
             });
+
+            //加载剩余数据
+            this.processAajx();
+            this.flolowAjax();
+            this.exAjax();
           }
         })
         .catch(e => {
@@ -154,6 +163,7 @@ export default {
       let _that = this;
       //获取页面传过来的客户id
       let id = _that.$route.params.customerId;
+
       //因为rout.push传值一刷新就会消失，所以需要保存到session里
       if (id != null) {
         util.sessionLocalStorageSet("cosDetail:id", id);

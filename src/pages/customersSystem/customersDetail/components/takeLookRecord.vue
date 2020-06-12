@@ -125,18 +125,23 @@
         v-if="cancelTalkingButton"
         class="task-button"
         @click="openPop('talkingFlag')"
+        :disabled="buttonEnable.talkingButton"
         >取消在谈</el-button
       >
       <el-button
         v-if="addTalkingButton"
         class="task-button"
         @click="openPop('addTalkingFlag')"
+        :disabled="buttonEnable.talkingButton"
         >转在谈</el-button
       >
       <!-- <el-button class="task-button" @click="openPop('reserveFlag')"
         >预约带看</el-button
       > -->
-      <el-button class="task-button" @click="openPop('beltlookFlag')"
+      <el-button
+        class="task-button"
+        @click="openPop('beltlookFlag')"
+        :disabled="buttonEnable.followButton"
         >添加带看</el-button
       >
     </div>
@@ -181,6 +186,7 @@
       title="添加再谈"
       width="3.28rem"
       @transmitConfirm="addTalkingTransmit"
+      :disabled="buttonEnable.talkingButton"
     >
     </add-talking>
   </div>
@@ -212,7 +218,11 @@ export default {
       addTalkingFlag: false,
       cancelTalkingButton: true, //取消再谈按钮是否显示
       addTalkingButton: false, //添加再谈按钮是否显示
-      currentClickCustomerId: 0
+      currentClickCustomerId: 0,
+      buttonEnable: {
+        talkingButton: true, //转状态按钮
+        followButton: true
+      }
     };
   },
   methods: {
@@ -356,12 +366,29 @@ export default {
           });
         }
       }
+    },
+    auth: {
+      deep: true,
+      handler(newValue) {
+        let _that = this;
+        for (let i in newValue) {
+          //添加取消在谈;
+          if (newValue[i].rUrl == "talkingButtonEable")
+            _that.buttonEnable.talkingButton = false;
+          //添加带看
+          if (newValue[i].rUrl == "addLookButtonEable")
+            _that.buttonEnable.followButton = false;
+        }
+      }
     }
   },
   computed: {
     ...mapState({
       detail: value => {
         return value.customers.process.salePairProcess;
+      },
+      auth: value => {
+        return value.customers.auth.authDetail;
       }
     })
   }
