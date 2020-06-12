@@ -79,7 +79,7 @@
               <router-view />
             </keep-alive>
           </transition> -->
-          <keep-alive>
+          <keep-alive :max="3">
             <router-view v-if="$route.meta.keepAlive" />
           </keep-alive>
           <router-view v-if="!$route.meta.keepAlive" />

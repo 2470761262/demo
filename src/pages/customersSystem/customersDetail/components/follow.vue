@@ -224,11 +224,17 @@
     <div class="record-content-scroll" v-show="showBox == 0">
       <div class="text-area">
         <textarea
+          :disabled="buttonEnable.addFollowButton"
           rows="5"
           placeholder="对这个客户想说点什么?请写下来吧"
           v-model="message"
         ></textarea>
-        <el-button class="text-area-button" @click="confirm">提交</el-button>
+        <el-button
+          class="text-area-button"
+          @click="confirm"
+          :disabled="buttonEnable.addFollowButton"
+          >提交</el-button
+        >
       </div>
       <left-progress v-for="(item, index) in list" :key="index">
         <template>
@@ -316,6 +322,7 @@
         class="task-button"
         v-show="showBox === 1"
         @click="openPop('addPop')"
+        :disabled="buttonEnable.recommondButton"
         >添加推荐</el-button
       >
     </div>
@@ -359,7 +366,11 @@ export default {
       },
       recommendList: [],
       addPop: false, //添加推荐弹出层开关
-      busy: false
+      busy: false,
+      buttonEnable: {
+        recommondButton: true,
+        addFollowButton: true
+      }
     };
   },
   mounted() {
@@ -454,7 +465,7 @@ export default {
       _that.formData.Memo = _that.message;
       _that.$api
         .post({
-          url: "/saleCustomer/addSaleCusFlower",
+          url: "/saleCustomerDetail/addSaleCusFlower",
           data: _that.formData,
           headers: { "Content-Type": "application/json" }
         })
@@ -521,12 +532,29 @@ export default {
           });
         }
       }
+    },
+    auth: {
+      deep: true,
+      handler(newValue) {
+        let _that = this;
+        for (let i in newValue) {
+          //添加取消在谈;
+          if (newValue[i].rUrl == "recommondListButtonEnable")
+            _that.buttonEnable.recommondButton = false;
+          //添加带看
+          if (newValue[i].rUrl == "addFollowLookButtonEable")
+            _that.buttonEnable.addFollowButton = false;
+        }
+      }
     }
   },
   computed: {
     ...mapState({
       detail: value => {
         return value.customers.follow.cusFollow;
+      },
+      auth: value => {
+        return value.customers.auth.authDetail;
       }
     })
   }

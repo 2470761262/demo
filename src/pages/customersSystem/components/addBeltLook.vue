@@ -130,7 +130,7 @@ export default {
       let _that = this;
       _that.$api
         .post({
-          url: "/saleCustomer/addPairRecord",
+          url: "/saleCustomerDetail/addPairRecord",
           data: params,
           headers: { "Content-Type": "application/json" }
         })

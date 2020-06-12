@@ -209,7 +209,12 @@
           <span class="overText">{{ dataItem.myLookHouses }}</span>
         </div>
       </div>
-      <el-button type="primary" class="customers-phone" @click="dailPhone">
+      <el-button
+        :disabled="buttonEnble.oneCall"
+        type="primary"
+        class="customers-phone"
+        @click="dailPhone"
+      >
         <i class="el-icon-phone"></i>一键拨号
       </el-button>
     </div>
@@ -219,12 +224,13 @@
         class="customers-button-item"
         icon="el-icon-refresh"
         @click="openPop('turnPop')"
+        :disabled="buttonEnble.convertButton"
         >转公客</el-button
       >
       <el-button
         class="customers-button-item"
         icon="el-icon-refresh"
-        :disabled="isDisabledTypePop"
+        :disabled="buttonEnble.turnTypeButton"
         @click="openPop('turnTypePop')"
         >{{ turnTypeTitle }}</el-button
       >
@@ -233,12 +239,14 @@
         class="customers-button-item"
         icon="el-icon-delete"
         @click="openPop('removePop')"
+        :disabled="buttonEnble.deleteButton"
         >删除</el-button
       >
       <el-button
         @click="openPop('passPop')"
         class="customers-button-item"
         icon="iconfont iconzhuanhuan"
+        :disabled="buttonEnble.passButton"
         >PASS客户</el-button
       >
     </div>
@@ -327,7 +335,15 @@ export default {
         totalPage: 0,
         perName: ""
       },
-      employeePageInfo: []
+      employeePageInfo: [],
+      //用于按钮置灰
+      buttonEnble: {
+        turnTypeButton: true, //转状态按钮
+        deleteButton: true, //删除按钮
+        passButton: true, //pass客户按钮
+        convertButton: true, //转公客按钮
+        oneCall: true
+      }
     };
   },
   mounted() {
@@ -341,10 +357,40 @@ export default {
       },
       impress: value => {
         return value.customers.impress.impression;
+      },
+      auths: value => {
+        return value.customers.auth.authDetail;
       }
     })
   },
   watch: {
+    auths: {
+      deep: true,
+      handler(newValue) {
+        let _that = this;
+        for (let i in newValue) {
+          //删除按钮
+          if (newValue[i].rUrl == "deleteCustomerButtonEable")
+            _that.buttonEnble.deleteButton = false;
+
+          //一键拨号
+          if (newValue[i].rUrl == "dialButtonEnable")
+            _that.buttonEnble.oneCall = false;
+
+          //转状态
+          if (newValue[i].rUrl == "changeStatusButtonEnable")
+            _that.buttonEnble.turnTypeButton = false;
+
+          //pass客户
+          if (newValue[i].rUrl == "passCusButtonEnable")
+            _that.buttonEnble.passButton = false;
+
+          //转公客
+          if (newValue[i].rUrl == "convertCustomerButtonEable")
+            _that.buttonEnble.convertButton = false;
+        }
+      }
+    },
     impress: {
       deep: true,
       handler(newValue) {
@@ -523,7 +569,7 @@ export default {
       let that = this;
       that.$api
         .post({
-          url: "/saleCustomerOperation/deleteCustomer",
+          url: "/saleCustomerDetail/deleteCustomer",
           qs: true,
           data: { customerId: that.customer.id, memo: memo }
         })
@@ -557,7 +603,7 @@ export default {
     turnTypeTransmit() {
       console.log("转状态后响应");
       this.turnTypeTitle = "状态审核中";
-      this.isDisabledTypePop = true;
+      this.buttonEnble.turnTypeButton = true;
     },
 
     /**
@@ -737,6 +783,14 @@ export default {
     },
     //pass客户
     passAccount(account) {
+      //如果没有选择pass方，则提示错误
+      if (account.accountId == null) {
+        this.$message({
+          type: "info",
+          message: "请先选择pass方"
+        });
+        return;
+      }
       let _that = this;
       _that.$api
         .post({
