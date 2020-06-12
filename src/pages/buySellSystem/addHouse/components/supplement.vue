@@ -231,6 +231,7 @@
             :label="item.value"
             v-for="item in houseNowList"
             :key="item.key"
+            :value="item.value"
             >{{ item.key }}</el-radio
           >
         </el-radio-group>
