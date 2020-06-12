@@ -682,10 +682,6 @@ export default {
           label: "58"
         },
         {
-          value: "58",
-          label: "58"
-        },
-        {
           value: "安居客",
           label: "安居客"
         },
