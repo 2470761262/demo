@@ -198,7 +198,11 @@
         >
           <span>申请跟单人</span>
         </el-button>
-        <el-button v-else-if="resultData.plate >= 6" @click="turnOnSale">
+        <el-button
+          v-else-if="resultData.plate >= 6"
+          :disabled="lockingDisabled"
+          @click="turnOnSale"
+        >
           <span>转在售</span>
         </el-button>
         <el-button v-else :disabled="true">
@@ -474,6 +478,9 @@ export default {
     }
   },
   computed: {
+    lockingDisabled() {
+      return this.buttonLocking.value;
+    },
     isDisabled() {
       return this.buttonDisabled || this.buttonLocking.value;
     },
