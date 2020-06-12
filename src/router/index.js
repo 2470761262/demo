@@ -45,11 +45,16 @@ export default new Router({
         return savedPosition;
       }
     } else {
-      //前进
-      from.meta.keepAlive =
-        typeof from.meta.keepAlive === "undefined" ? undefined : true;
-      to.meta.keepAlive =
-        typeof to.meta.keepAlive === "undefined" ? undefined : false;
+      //如果有skipKeepAlive属性则代表自己在内部添加跳转逻辑，跳过统一缓存
+      if (!from.meta.skipKeepAlive == true) {
+        //前进
+        from.meta.keepAlive =
+          typeof from.meta.keepAlive === "undefined" ? undefined : true;
+        to.meta.keepAlive =
+          typeof to.meta.keepAlive === "undefined" ? undefined : false;
+      } else {
+        to.meta.skipKeepAlive = false;
+      }
     }
   }
 });

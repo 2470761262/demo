@@ -83,6 +83,13 @@ export default {
       showOperationButton: true
     };
   },
+  beforeRouteLeave(to, from, next) {
+    if (to.matched[1].path == "/customersSystem/customersIframe") {
+      from.meta.keepAlive = false;
+      from.meta.skipKeepAlive = true;
+    }
+    next();
+  },
   components: {
     detailButton,
     basics,
