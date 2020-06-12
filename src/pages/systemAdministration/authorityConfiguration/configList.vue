@@ -34,6 +34,7 @@
     :expand-row-keys="expandKey"
     @handleSizeChange="handleSizeChange"
     @handleCurrentChange="handleCurrentChange"
+    :cell-style="tableCellClassName"
   >
     <template v-slot:top>
       <div class="query-cell">
@@ -343,6 +344,15 @@ export default {
         path: "/sys/authority/setAuthority",
         query: { accountId: e.id }
       });
+    },
+    tableCellClassName({ row, rowIndex }) {
+      if (
+        this.queryData.keyword.length > 0 &&
+        row.title.indexOf(this.queryData.keyword) > -1
+      ) {
+        return { "background-color": "#FAEBD7" };
+      }
+      return "";
     }
   }
 };
