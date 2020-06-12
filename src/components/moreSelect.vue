@@ -268,8 +268,8 @@ span {
                   <el-option
                     data-anchor="更多筛选组件物理区域 => select => option"
                     class="anchor-point"
-                    v-for="item in RegionList"
-                    :key="item.value"
+                    v-for="(item, index) in RegionList"
+                    :key="index"
                     :label="item.name"
                     :value="item.value"
                   ></el-option>
