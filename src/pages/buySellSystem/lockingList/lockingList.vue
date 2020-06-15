@@ -281,7 +281,7 @@ export default {
     };
   },
   mounted() {
-    tableMenu.getTableMenu(this.tableColumnField, 15).then(e => {
+    tableMenu.getTableMenu(this.tableColumnField, 17).then(e => {
       this.menuLoading = false;
       this.renderList = e;
       this.queryLockedHouseDatas(1);
@@ -304,7 +304,7 @@ export default {
         let prop = e.map(item => {
           return { prop: item.prop };
         });
-        tableMenu.insert(prop, 15);
+        tableMenu.insert(prop, 17);
       }
     },
     // queryTabData() {
