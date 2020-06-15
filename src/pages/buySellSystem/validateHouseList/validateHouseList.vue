@@ -428,12 +428,12 @@
         <div class="div-line">
           <div class="span-width">
             <span class="font-small-title">面积：</span>
-            <span>{{ nowRow.area || 0 }}/㎡</span>
+            <span>{{ nowRow.inArea || 0 }}/㎡</span>
           </div>
           <div class="span-width">
             <span class="font-small-title">户型：</span>
             <span>{{
-              (nowRow.room || 0) +
+              (nowRow.rooms || 0) +
                 "室" +
                 (nowRow.hall || 0) +
                 "厅" +
