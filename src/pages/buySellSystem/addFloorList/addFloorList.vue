@@ -159,10 +159,10 @@ export default {
         }
       ],
       typeOptions: [
-        {
-          value: "0",
-          label: "材料"
-        },
+        // {
+        //   value: "0",
+        //   label: "材料"
+        // },
         {
           value: "1",
           label: "面积"
@@ -171,9 +171,13 @@ export default {
           value: "2",
           label: "房型"
         },
+        // {
+        //   value: "3",
+        //   label: "业主号码"
+        // },
         {
-          value: "3",
-          label: "业主号码"
+          value: "4",
+          label: "楼盘补充"
         }
       ],
       queryData: {
