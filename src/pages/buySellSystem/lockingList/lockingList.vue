@@ -482,6 +482,7 @@ export default {
         Eid: id,
         Islocking: 0
       };
+      that.loading = true;
       this.$api
         .post({
           url: "/agentHouse/property/locking",
@@ -495,6 +496,7 @@ export default {
           if (result.code == 200) {
             this.queryLockedAllParams(1);
           }
+          that.loading = false;
         })
         .catch(e => {});
     },
