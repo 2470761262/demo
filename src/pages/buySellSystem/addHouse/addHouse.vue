@@ -349,14 +349,14 @@ export default {
       }
     },
     getNextSaveButton() {
-      debugger;
+      //debugger;
       let that = this;
       this.$api
         .get({
           url: "/agent_house/nextSaveButton"
         })
         .then(e => {
-          debugger;
+          //debugger;
           e.data.data.functionRuleList.forEach(element => {
             if (element.rUrl == "nextSaveButton") {
               //that.nextSaveData = true;

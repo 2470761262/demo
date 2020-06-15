@@ -66,6 +66,7 @@
               :on-success="uploadFinished"
               :on-preview="handlePictureCardPreview"
               :on-remove="handleRemove"
+              :file-list="form.pics"
             >
               <i class="el-icon-plus"></i>
             </el-upload>
@@ -216,7 +217,8 @@ export default {
         if (!that.form.pics) {
           that.form.pics = [];
         }
-        that.form.pics.push(response.data.url);
+        //that.form.pics.push(response.data.url);
+        that.form.pics.push({ name: "picUrl", url: response.data.url });
       }
       console.log(this.uploadUrl, file, fileList, "file list ....");
     },
@@ -234,6 +236,13 @@ export default {
       }
       console.log(that.form, "save");
       this.btnLoadding = true;
+      var pics = [];
+      if (that.form.pics) {
+        for (let i = 0; i < that.form.pics.length; i++) {
+          pics.push(that.form.pics[i].url);
+        }
+      }
+      that.form.pics = pics;
       that.$api
         .put({
           url: "/sys/onlineFeedback",
@@ -347,6 +356,7 @@ export default {
       console.log(r, "消息内容");
       //。。。执行你需要的业务逻辑
       this.form.pics.push({ name: "picUrl", url: r.content.picUrl });
+      //this.form.pics.push(r.content.picUrl);
       console.log(this.form.pics, "231");
     }
   }

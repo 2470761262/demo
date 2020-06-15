@@ -604,7 +604,7 @@ export default {
             dailParams.unitName = that.resultData.agentPerDepartmentName;
             dailParams.contactPerName = that.resultData.agentPerName;
           } else {
-            debugger;
+            //debugger;
             dailParams.unitName = that.resultData.communityName; //联系人是业主，名称取小区名
             dailParams.contactPerName =
               that.resultData.customers == null
