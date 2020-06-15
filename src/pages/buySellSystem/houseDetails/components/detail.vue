@@ -319,7 +319,7 @@
         <el-button
           class="cell-pro-but anchor-point"
           v-else-if="resultData.plate >= 6"
-          :disabled="isDisabled"
+          :disabled="lockingDisabled"
           @click="turnOnSale"
           data-anchor="房源详情转在售 => click"
         >
@@ -360,7 +360,7 @@
           <el-button
             data-anchor="房源详情查看号码 => click"
             class="cell-pro-but anchor-point"
-            :disabled="callDisabled"
+            :disabled="lockingDisabled"
           >
             查看号码<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
@@ -396,7 +396,7 @@
           data-anchor="房源详情一键拨号 => click"
           class="cell-pro-but anchor-point"
           @click="dialPhoneToFD"
-          :disabled="callDisabled || !touchedDialPhone"
+          :disabled="lockingDisabled || !touchedDialPhone"
         >
           一键拨号
         </button>
@@ -430,7 +430,7 @@ export default {
     }
   },
   computed: {
-    callDisabled() {
+    lockingDisabled() {
       return this.buttonLocking.value;
     },
     isDisabled() {

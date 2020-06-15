@@ -85,9 +85,9 @@
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
             :file-list="
-              setEntity.siteLogo && [
-                { name: 'siteLogo', url: setEntity.siteLogo }
-              ]
+              setEntity.siteLogo
+                ? [{ name: 'siteLogo', url: setEntity.siteLogo }]
+                : []
             "
             :on-success="resultImgNane('siteLogo')"
           >
@@ -105,9 +105,9 @@
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
             :file-list="
-              setEntity.sitebLogo && [
-                { name: 'sitebLogo', url: setEntity.sitebLogo }
-              ]
+              setEntity.sitebLogo
+                ? [{ name: 'sitebLogo', url: setEntity.sitebLogo }]
+                : []
             "
             :on-success="resultImgNane('sitebLogo')"
           >
@@ -127,9 +127,9 @@
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
             :file-list="
-              setEntity.sitemLogo && [
-                { name: 'sitemLogo', url: setEntity.sitemLogo }
-              ]
+              setEntity.sitemLogo
+                ? [{ name: 'sitemLogo', url: setEntity.sitemLogo }]
+                : []
             "
             :on-success="resultImgNane('sitemLogo')"
           >
@@ -147,9 +147,9 @@
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
             :file-list="
-              setEntity.siteHeadImg && [
-                { name: 'siteHeadImg', url: setEntity.siteHeadImg }
-              ]
+              setEntity.siteHeadImg
+                ? [{ name: 'siteHeadImg', url: setEntity.siteHeadImg }]
+                : []
             "
             :on-success="resultImgNane('siteHeadImg')"
           >
