@@ -45,6 +45,13 @@
           font-weight: 500;
           text-align: center;
           min-height: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .icon-style {
+          font-size: 24px;
+          margin-right: 10px;
         }
         .el-icon-close {
           font-size: 20px;
@@ -166,7 +173,7 @@
         <div class="didLog-content-box">
           <div class="didLog-content-box-title">
             <h3 :style="{ 'text-align': titleDirection }">
-              <i :class="iconClass"></i>{{ title }}
+              <i class="icon-style" :class="iconClass"></i>{{ title }}
             </h3>
             <i class="el-icon-close anchor-point" @click.stop="close"></i>
           </div>

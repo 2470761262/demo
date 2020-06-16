@@ -17,7 +17,13 @@
 }
 </style>
 <template>
-  <fixed-popup v-bind="$attrs" v-on="$listeners" @confirmEmit="confirmEmit">
+  <fixed-popup
+    v-bind="$attrs"
+    v-on="$listeners"
+    @confirmEmit="confirmEmit"
+    :butJson="{ confirmBtnText: '提交' }"
+    iconClass="iconzaishouwugendan iconfont"
+  >
     <template>
       <div class="follow-content">
         <i class="is-require">*</i>
@@ -25,7 +31,7 @@
           type="textarea"
           resize="none"
           :autosize="{ minRows: 5, maxRows: 7 }"
-          placeholder="对这个客户想说点什么？请写下来把"
+          placeholder="对这个客户想说点什么？请写下来吧"
           v-model="textarea"
         >
         </el-input>
