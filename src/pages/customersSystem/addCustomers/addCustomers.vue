@@ -1018,9 +1018,13 @@ export default {
           });
           _that.canSubmit = false;
           if (result.code == 200) {
-            console.log(result, "录入客源");
+            console.log(result, "录入客源成功");
             _that.$router.push({
-              name: "allCustomers"
+              name: "addOrModifyCustomerResult",
+              params: {
+                customer: { id: result.data.id },
+                flag: "add"
+              }
             });
           } else {
             console.log("录入客源" + result.message);
