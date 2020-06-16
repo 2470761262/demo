@@ -566,7 +566,7 @@ export default {
       console.log("websocket连接成功!!!!");
       that.websockStatus = true;
     },
-    receiveMessage(r) {
+    receiveMessagePic(r) {
       let that = this;
       console.log(r, "接收到了消息");
       if (r.content.resourceType == "vedio") {
@@ -600,7 +600,7 @@ export default {
         user,
         this.websocketOpen
       );
-      this.socketApi.initReceiveMessageCallBack(this.receiveMessage);
+      this.socketApi.initReceiveMessageCallBack(this.receiveMessagePic);
       console.log("用户【" + user + "】接入完毕");
     },
     getQrCodeForVedio(callback) {
