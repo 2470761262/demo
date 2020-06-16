@@ -1220,6 +1220,7 @@ export default [
   {
     //客户系统 新增客户
     path: "/customersSystem/addCustomers",
+    name: "addCustomers",
     meta: {
       title: "新增客户"
     },
@@ -1263,6 +1264,19 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "checkCustomerList" */ "@/pages/customersSystem/checkCustomer/checkCustomerList.vue"
+      )
+  },
+  {
+    //新增修改客户后跳转的页面
+    path: "/customersSystem/addOrModifyCustomerResult",
+    name: "addOrModifyCustomerResult",
+    meta: {
+      title: "操作成功",
+      keepAlive: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "allCustomers" */ "@/pages/customersSystem/addCustomers/addOrModifyCustomerResult.vue"
       )
   }
 ];

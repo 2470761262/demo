@@ -200,7 +200,7 @@
           <div class="formItem">
             关联接口:
             <el-select
-              :disabled="false"
+              :disabled="true"
               v-model="ruleObj.ruleUrls"
               multiple
               filterable
