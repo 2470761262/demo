@@ -58,7 +58,7 @@
     </div>
     <section class="tab-content">
       <el-table :data="pageInfo.list" tooltip-effect="dark">
-        <el-table-column label="" width="65">
+        <el-table-column label width="65">
           <template v-slot="scope">
             <el-radio
               :label="scope.row.accountId"
@@ -90,8 +90,7 @@
         :total="pageInfo.totalCount"
         :page-size="pageInfo.pageSize"
         @current-change="handleCurrentChange"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
   </fixed-popup>
 </template>
@@ -139,7 +138,13 @@ export default {
     passSearch(e) {
       // console.log(e);
       this.keyWord = e.target.value;
-
+      if (this.keyWord.trim() == "") {
+        this.$message({
+          type: "info",
+          message: "输入参数为空，无法查询"
+        });
+        return;
+      }
       this.$emit("search", e);
     },
     getTemplateRow(a, b) {

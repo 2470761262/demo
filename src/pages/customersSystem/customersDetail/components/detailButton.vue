@@ -327,7 +327,7 @@ export default {
         myLookHouses: 0,
         sex: "性别不详"
       },
-      cusBShow: false, //转公客是否显示
+      cusBShow: true, //转公客是否显示
       recommandPage: {
         pageSize: 0,
         limit: 10,
