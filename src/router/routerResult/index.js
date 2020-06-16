@@ -534,7 +534,8 @@ export default [
         path: "/customersSystem/allCustomers",
         name: "allCustomers",
         meta: {
-          title: "全部私客"
+          title: "全部私客",
+          keepAlive: true
         },
         component: () =>
           import(
@@ -546,7 +547,8 @@ export default [
         path: "/customersSystem/days7New",
         name: "days7New",
         meta: {
-          title: "7日内新增"
+          title: "7日内新增",
+          keepAlive: true
         },
         component: () =>
           import(
@@ -558,7 +560,8 @@ export default [
         path: "/customersSystem/lookIn30Days",
         name: "lookIn30Days",
         meta: {
-          title: "30日内带看"
+          title: "30日内带看",
+          keepAlive: true
         },
         component: () =>
           import(
@@ -570,7 +573,8 @@ export default [
         path: "/customersSystem/outOfContactOver30Days",
         name: "outOfContactOver30Days",
         meta: {
-          title: "30以上未维护"
+          title: "30以上未维护",
+          keepAlive: true
         },
         component: () =>
           import(
@@ -582,7 +586,8 @@ export default [
         path: "/customersSystem/isBuyCustomer",
         name: "isBuyCustomer",
         meta: {
-          title: "已购"
+          title: "已购",
+          keepAlive: true
         },
         component: () =>
           import(
@@ -594,7 +599,8 @@ export default [
         path: "/customersSystem/noBuyCustomer",
         name: "noBuyCustomer",
         meta: {
-          title: "暂不购"
+          title: "暂不购",
+          keepAlive: true
         },
         component: () =>
           import(
@@ -606,7 +612,8 @@ export default [
         path: "/customersSystem/recycleBinCustomer",
         name: "recycleBinCustomer",
         meta: {
-          title: "回收站"
+          title: "回收站",
+          keepAlive: true
         },
         component: () =>
           import(
@@ -618,7 +625,8 @@ export default [
         path: "/customersSystem/groupPublicCustomer",
         name: "groupPublicCustomer",
         meta: {
-          title: "小组公客"
+          title: "小组公客",
+          keepAlive: true
         },
         component: () =>
           import(
@@ -630,7 +638,8 @@ export default [
         path: "/customersSystem/areaPublicCustomer",
         name: "areaPublicCustomer",
         meta: {
-          title: "小组公客"
+          title: "小组公客",
+          keepAlive: true
         },
         component: () =>
           import(
@@ -642,7 +651,8 @@ export default [
         path: "/customersSystem/companyPublicCustomer",
         name: "companyPublicCustomer",
         meta: {
-          title: "公司公客"
+          title: "公司公客",
+          keepAlive: true
         },
         component: () =>
           import(
