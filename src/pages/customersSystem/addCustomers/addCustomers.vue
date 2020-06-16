@@ -994,6 +994,7 @@ export default {
         rooms += item + "$";
       });
       _that.formData.rooms = rooms;
+      _that.formData.origin = "PC";
       console.log(_that.formData, "录入客户参数");
       let tt = _that.validateParams();
       if (tt) {
