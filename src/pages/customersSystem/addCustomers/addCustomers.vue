@@ -172,18 +172,18 @@
 </style>
 <template>
   <section class="add-content">
-    <el-collapse v-model="collapseActive">
+    <el-collapse v-model="collapseActive" @change="collapseChange">
       <!-- 客户信息 -->
       <el-collapse-item :name="1">
         <!-- collapse title -->
         <template slot="title">
           <div
             class="collapse-title"
-            :class="{ 'collapse-title-active': collapseActive != 1 }"
+            :class="{ 'collapse-title-active': !isCollapseType[0] }"
           >
             客户信息<i
               :class="
-                collapseActive == 1 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
+                !isCollapseType[0] ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
               "
             ></i>
           </div>
@@ -335,11 +335,11 @@
         <template slot="title">
           <div
             class="collapse-title"
-            :class="{ 'collapse-title-active': collapseActive != 2 }"
+            :class="{ 'collapse-title-active': !isCollapseType[1] }"
           >
             求购信息<i
               :class="
-                collapseActive == 2 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
+                !isCollapseType[1] ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
               "
             ></i>
           </div>
@@ -478,11 +478,11 @@
         <template slot="title">
           <div
             class="collapse-title"
-            :class="{ 'collapse-title-active': collapseActive != 3 }"
+            :class="{ 'collapse-title-active': !isCollapseType[2] }"
           >
             其他需求<i
               :class="
-                collapseActive == 3 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
+                !isCollapseType[2] ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
               "
             ></i>
           </div>
@@ -733,10 +733,21 @@ export default {
         }
       ], //性别
       myImpression: "",
-      collapseActive: 1 //折叠面板当前激活name
+      isCollapseType: [true, false, false],
+      collapseActive: [1] //折叠面板当前激活name
     };
   },
   methods: {
+    collapseChange(value) {
+      let collapseName = [1, 2, 3];
+      for (let index = 0; index < collapseName.length; index++) {
+        if (this.collapseActive.includes(collapseName[index])) {
+          this.isCollapseType[index] = true;
+        } else {
+          this.isCollapseType[index] = false;
+        }
+      }
+    },
     inputPhone(vv) {
       this.formData.tel = vv;
       //value=value.replace(/[^\d]/g,'')
