@@ -985,6 +985,9 @@ export default {
         });
         return;
       }
+      _that.formData.community1 = "";
+      _that.formData.community2 = "";
+      _that.formData.community3 = "";
       _that.formData.community.forEach((item, index, array) => {
         console.log(index, item, "循环到位");
         _that.formData["community" + (index + 1)] = item;
