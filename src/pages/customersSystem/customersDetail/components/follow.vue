@@ -299,12 +299,16 @@
                   </div>
                   <div class="foot-right">
                     <img
+                      v-if="item.houseAgentHeadImage == null ? fasle : true"
                       class="foot-right-img"
                       :src="item.houseAgentHeadImage"
                       alt=""
                     />
-                    <h3 class="foot-right-name">
-                      {{ item.houseAgentPerName || kong }}
+                    <h3
+                      class="foot-right-name"
+                      v-if="item.houseAgentPerName == null ? fasle : true"
+                    >
+                      {{ item.houseAgentPerName }}
                     </h3>
                   </div>
                 </div>
