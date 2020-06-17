@@ -117,7 +117,7 @@
     <div
       class="hide-query"
       @click="triggerLeft"
-      :class="queryFlag ? 'el-icon-d-arrow-right' : 'el-icon-d-arrow-left'"
+      :class="queryFlag ? 'el-icon-d-arrow-left' : 'el-icon-d-arrow-right'"
     ></div>
   </div>
 </template>
