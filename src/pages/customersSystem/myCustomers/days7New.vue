@@ -128,6 +128,21 @@
             </div>
             <div class="page-list-query-row" v-if="changeQuery">
               <div class="query-content-cell">
+                <h3 class="query-cell-title">录入时间</h3>
+                <el-date-picker
+                  v-model="addTime"
+                  type="daterange"
+                  class="set-data-pricker set-pricker-width260"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  :default-time="['00:00:00', '23:59:59']"
+                  :picker-options="pickerOptions"
+                  end-placeholder="结束日期"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                >
+                </el-date-picker>
+              </div>
+              <div class="query-content-cell cell-interval75">
                 <h3 class="query-cell-title">带看时间</h3>
                 <el-date-picker
                   v-model="pairTime"
@@ -228,6 +243,13 @@ export default {
   },
   data() {
     return {
+      pickerOptions: {
+        disabledDate(time) {
+          let startDate = new Date().setDate(new Date().getDate() - 7);
+          let endDate = new Date();
+          return time <= startDate || time >= endDate;
+        }
+      },
       formData: {
         //客户id
         EntructId: "",
@@ -237,7 +259,6 @@ export default {
       activeProdata: null, //点击写跟进后，用来保存当前行的数据的临时变量
       queryUrl: { path: "../customersSystem/addCustomers", query: { a: 1 } },
       writeFlag: false, //写跟进弹框开关
-      sssss: "", //请按照实际字段名进行修改，
       desireLists: [
         {
           value: "0",
@@ -421,7 +442,6 @@ export default {
         //   pp: ["活跃呵护", "心机汪", "一是同行"]
         // }
       ], //存放表格数据
-
       queryData: {
         tel: "",
         selectedPairParams: [], //带看多选条件
@@ -433,9 +453,12 @@ export default {
         maxArea: null, //最大面积条件
         minRooms: null,
         maxRooms: null,
+        minAddTime: null, //最小录入时间条件
+        maxAddTime: null, //最大录入时间条件
         minLastPairFollowTime: null, //最大带看时间条件
         maxLastPairFollowTime: null //最大带看时间条件
       },
+      addTime: null,
       pairTime: null,
       queryParams: {},
       customerParams: {}, //左侧印象选中的条件
@@ -482,6 +505,8 @@ export default {
             maxPrice: this.queryData.maxPrice,
             minArea: this.queryData.minArea,
             maxArea: this.queryData.maxArea,
+            minAddTime: this.queryData.minAddTime,
+            maxAddTime: this.queryData.maxAddTime,
             minLastPairFollowTime: this.queryData.minLastPairFollowTime,
             maxLastPairFollowTime: this.queryData.maxLastPairFollowTime
           };
@@ -489,6 +514,20 @@ export default {
         }
       },
       deep: true
+    },
+    addTime: function(val) {
+      if (val) {
+        this.queryData.minAddTime = val[0];
+        this.queryData.maxAddTime = val[1];
+        console.log(
+          this.queryData.minAddTime,
+          this.queryData.maxAddTime,
+          "设置了起止录入时间"
+        );
+      } else {
+        this.queryData.minAddTime = this.queryData.maxAddTime = null;
+        console.log("清空了录入时间");
+      }
     },
     pairTime: function(val) {
       if (val) {
@@ -596,9 +635,14 @@ export default {
         page: page,
         limit: _that.pageJson.pageSize,
         del: 0,
-        isPrivate: true,
-        minAddTime: new Date().setDate(new Date().getDate() - 7)
+        isPrivate: true
       });
+      if (!_that.queryParams.minAddTime) {
+        //没有选择范围，则指定七天内
+        _that.queryParams.minAddTime = new Date().setDate(
+          new Date().getDate() - 7
+        );
+      }
       _that.$api
         .post({
           url: "/saleCustomer/listMyCustomers",

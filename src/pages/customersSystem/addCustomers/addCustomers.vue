@@ -995,6 +995,7 @@ export default {
         rooms += item + "$";
       });
       _that.formData.rooms = rooms;
+      _that.formData.origin = "PC";
       console.log(_that.formData, "录入客户参数");
       let tt = _that.validateParams();
       if (tt) {
@@ -1019,9 +1020,13 @@ export default {
           });
           _that.canSubmit = false;
           if (result.code == 200) {
-            console.log(result, "录入客源");
+            console.log(result, "录入客源成功");
             _that.$router.push({
-              name: "allCustomers"
+              name: "addOrModifyCustomerResult",
+              params: {
+                customer: { id: result.data.id },
+                flag: "add"
+              }
             });
           } else {
             console.log("录入客源" + result.message);
