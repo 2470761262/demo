@@ -266,13 +266,13 @@ const HosueList = [
     cellTop: "no-cell-top"
   },
   {
-    title: "我的核心盘",
+    title: "外网房源",
     icon: "iconhexin iconfont",
-    path: "/buySellSystem/concernCommunity",
+    path: "/buySellSystem/releaseOutsideHouseList",
     hot: false,
     flag: false,
     type: 4,
-    url: "/mateHouse/getMateHouse/myKernelHouse",
+    url: "/mateHouse/getMateHouse/releaseOutsideHouseList",
     cellTop: "no-cell-top"
   },
   {

@@ -1413,7 +1413,10 @@ export default {
     },
     validateAll() {
       let that = this;
-      if (this.isNextDisable) {
+      if (
+        this.isNextDisable &&
+        !(that.isFromHouseTask ? false : !that.wxUploadFile)
+      ) {
         this.$message.error("二维码加载中...请稍后");
         return;
       }
