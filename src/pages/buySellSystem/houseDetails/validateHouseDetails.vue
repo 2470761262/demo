@@ -59,6 +59,7 @@
       <houseMessage
         class="cell-msg"
         :class="{ 'cell-msg-nest': nest }"
+        :hisEdit="false"
       ></houseMessage>
       <div class="cell-right no-center">
         <!-- 操作 -->
@@ -87,7 +88,8 @@ export default {
       houseId: this.forID,
       houseDetails: this.houseDetails,
       load: this.load,
-      buttonDisabled: true
+      buttonDisabled: true,
+      buttonLocking: false
     };
   },
   computed: {
@@ -145,45 +147,10 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
-            if (
-              result.data.remark != null &&
-              result.data.remark.indexOf("$") != -1
-            ) {
-              var Arry1 = result.data.remark.split("$");
-              for (var i = 0; i < Arry1.length; i++) {
-                var Arry2 = Arry1[i].split("@");
-                switch (Arry2[0]) {
-                  case "小区介绍":
-                    result.data.communityPresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.communityDesc =
-                      Arry2[1];
-                    break;
-                  case "户型介绍":
-                    result.data.houseTypePresentation = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.roomDesc =
-                      Arry2[1];
-                    break;
-                  case "税费解析":
-                    result.data.taxParsing = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.taxDesc =
-                      Arry2[1];
-                    break;
-                  case "核心卖点":
-                    result.data.coreSellingPoint = Arry2[1];
-                    that.$store.state.addHouse.formData.step2.saleDesc =
-                      Arry2[1];
-                    break;
-                }
-                if (result.data.applyAgentVo != null) {
-                  REMARK.forEach(element => {
-                    if (element.key == Arry2[0]) {
-                      let obj = element.value;
-                      result.data.applyAgentVo[obj] = Arry2[1];
-                    }
-                  });
-                }
-              }
-            }
+            result.data.communityPresentation = result.data.communityDesc;
+            result.data.houseTypePresentation = result.data.roomDesc;
+            result.data.taxParsing = result.data.taxDesc;
+            result.data.coreSellingPoint = result.data.saleDesc;
             if (result.data.checkSign == 1) {
               result.data.validateText = "待验真";
             } else if (result.data.checkSign == 2) {

@@ -167,7 +167,11 @@
       <div class="message-row">
         <h5 class="message-row-title">房屋证件</h5>
         <div class="message-row-right" v-if="updateHouse.certificateType">
-          {{ step2.certificateType | mapFilter("CERTIFICATETYPE") | emptyRead }}
+          {{
+            resultData.certificateType
+              | mapFilter("CERTIFICATETYPE")
+              | emptyRead
+          }}
         </div>
         <el-select
           v-else
