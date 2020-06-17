@@ -1117,9 +1117,10 @@ export default {
         disabledDate(time) {
           return time.getTime() > Date.now();
         }
-      }
+      },
       //nextSaveData: false,
-      //uploadFile: false
+      //uploadFile: false,
+      isNextDisable: false
     };
   },
   methods: {
@@ -1162,6 +1163,7 @@ export default {
     //获取扫码上传语音二维码
     getQrCode(data, callback) {
       let that = this;
+      that.isNextDisable = true;
       if (that.isFromHouseTask ? false : !that.wxUploadFile) {
         return;
       }
@@ -1185,6 +1187,9 @@ export default {
         .catch(e => {
           console.log("查询二维码失败");
           console.log(e);
+        })
+        .finally(e => {
+          that.isNextDisable = false;
         });
     },
     uploadFileInfo(url, callback) {
@@ -1408,6 +1413,10 @@ export default {
     },
     validateAll() {
       let that = this;
+      if (this.isNextDisable) {
+        this.$message.error("二维码加载中...请稍后");
+        return;
+      }
       return this.$validator
         .validateAll()
         .then(e => {

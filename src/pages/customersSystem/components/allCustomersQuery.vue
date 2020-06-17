@@ -194,16 +194,10 @@
               不限
             </li>
             <li
-              @click="changeDesireField('selectedDesireNo')"
-              :class="{ 'is-activate': selectedDesireNo }"
+              @click="changeDesireField('selectedDesireStrong')"
+              :class="{ 'is-activate': selectedDesireStrong }"
             >
-              无意向({{ fatherQueryGroup[1]["无意向"] }})
-            </li>
-            <li
-              @click="changeDesireField('selectedDesireWeek')"
-              :class="{ 'is-activate': selectedDesireWeek }"
-            >
-              较弱({{ fatherQueryGroup[1]["较弱"] }})
+              强烈({{ fatherQueryGroup[1]["强烈"] }})
             </li>
             <li
               @click="changeDesireField('selectedDesireCommon')"
@@ -212,10 +206,16 @@
               一般({{ fatherQueryGroup[1]["一般"] }})
             </li>
             <li
-              @click="changeDesireField('selectedDesireStrong')"
-              :class="{ 'is-activate': selectedDesireStrong }"
+              @click="changeDesireField('selectedDesireWeek')"
+              :class="{ 'is-activate': selectedDesireWeek }"
             >
-              强烈({{ fatherQueryGroup[1]["强烈"] }})
+              较弱({{ fatherQueryGroup[1]["较弱"] }})
+            </li>
+            <li
+              @click="changeDesireField('selectedDesireNo')"
+              :class="{ 'is-activate': selectedDesireNo }"
+            >
+              无意向({{ fatherQueryGroup[1]["无意向"] }})
             </li>
           </ul>
         </div>

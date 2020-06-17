@@ -56,8 +56,10 @@
       <see-take-progress></see-take-progress>
     </div>
     <div class="head-record-content">
-      <take-look-record></take-look-record>
-      <follow></follow>
+      <take-look-record
+        :takeLookOperationButton="takeLookOperationButton"
+      ></take-look-record>
+      <follow :takeLookOperationButton="takeLookOperationButton"></follow>
     </div>
   </section>
 </template>
@@ -80,7 +82,8 @@ export default {
     return {
       queryParams: [],
       customer: null,
-      showOperationButton: true
+      showOperationButton: false, //是否显示 一键拨号、转公客、状态状态、删除、pass客户
+      takeLookOperationButton: true //是否显示 取消在谈，添加带看，客源推荐，写跟进
     };
   },
   beforeRouteLeave(to, from, next) {
@@ -144,9 +147,30 @@ export default {
               authDetail: authList
             });
 
+            //一开始先显示按钮
+            this.showOperationButton = true;
+
             this.customer = result.data.data;
             if (this.customer && this.customer.tag == 3) {
               //审核中，不显示操作按钮
+              this.showOperationButton = false;
+              //不显示跟进按钮
+              this.takeLookOperationButton = false;
+            }
+
+            if (this.customer && this.customer.del == 1) {
+              //删除了，不显示操作按钮
+              this.showOperationButton = false;
+              //不显示跟进按钮
+              this.takeLookOperationButton = false;
+            }
+
+            //判断是否在公客中
+            //1小组公盘； 2小区公盘； 3大区公盘；4公司公盘
+
+            let plate = [1, 2, 3, 4];
+            if (plate.indexOf(this.customer.plate) != -1) {
+              //不在私盘
               this.showOperationButton = false;
             }
             this.$store.commit("updateDetail", {

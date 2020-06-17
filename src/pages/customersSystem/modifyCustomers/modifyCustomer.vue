@@ -1056,7 +1056,11 @@ export default {
           if (result.code == 200) {
             console.log(result, "修改客源");
             _that.$router.push({
-              name: "allCustomers"
+              name: "addOrModifyCustomerResult",
+              params: {
+                customer: { id: _that.formData.id },
+                flag: "modify"
+              }
             });
           } else {
             console.log("修改客源" + result.message);
