@@ -155,7 +155,7 @@ export default {
       });
     },
     //扫码上传回显
-    receiveMessage(r) {
+    receiveMessagePic(r) {
       let that = this;
       console.log(r, "rdsasad");
       let resourceType = r.content.resourceType;

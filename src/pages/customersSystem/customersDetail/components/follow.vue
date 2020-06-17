@@ -60,6 +60,7 @@
     padding: 0 20px;
     margin: 25px -15px 0;
     justify-content: center;
+    flex-shrink: 0;
     .task-button {
       flex: 0 0 calc((100% - 90px) / 3);
       // margin: 0 15px;

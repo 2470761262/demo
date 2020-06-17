@@ -33,6 +33,15 @@
   padding-left: 20px;
   box-sizing: border-box;
 }
+.pro-query {
+  display: flex;
+  margin-bottom: 20px;
+  .query-name {
+    flex: 1;
+    width: 0;
+    margin: 0 20px;
+  }
+}
 </style>
 <template>
   <div class="form-content">
@@ -428,6 +437,20 @@
             width="50%"
             :before-close="handleClose"
           >
+            <div class="pro-query">
+              <div class="title">姓名搜索:</div>
+              <el-input
+                class="query-name"
+                type="text"
+                placeholder="请输入要搜索的姓名"
+                v-model="queryName"
+                show-word-limit
+              ></el-input>
+              <el-button size="mini" type="primary" @click="getPrincipal(1)"
+                >搜索</el-button
+              >
+            </div>
+
             <list-page
               :parentData="$data"
               highlight-current-row
@@ -504,6 +527,7 @@ export default {
       }
     };
     return {
+      queryName: "",
       perPostReadOnly: true,
       roleTree: [],
       positionTree: [],
@@ -636,11 +660,11 @@ export default {
       params.type = 0;
       params.del = 0;
       params.isLocked = this.employeeEntity.isLocked;
+      params.keyWord = this.queryName;
       this.$api
         .post({
           url: "/employee/selectPrincipal",
           data: params,
-          token: false,
           headers: { "Content-Type": "application/json" }
         })
         .then(e => {

@@ -37,6 +37,7 @@
     display: flex;
     padding: 0 20px;
     margin: 25px -15px 0;
+    flex-shrink: 0;
     .task-button {
       flex: 0 0 calc((100% - 90px) / 2);
       margin: 0 15px;
