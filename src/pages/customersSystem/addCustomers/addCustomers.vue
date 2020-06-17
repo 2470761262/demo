@@ -1,6 +1,7 @@
 <style lang="less" scoped>
 .add-content {
   min-height: 100%;
+  flex: 1;
   background: #fff;
   /deep/.el-collapse-item__header {
     .el-collapse-item__arrow {
@@ -104,7 +105,7 @@
           }
           &.border {
             border: 1px solid #dcdfe6;
-            height: 40px;
+            min-height: 40px;
             box-sizing: border-box;
             padding: 0 15px;
             font-size: 0;
@@ -122,7 +123,7 @@
             width: 100%;
             .el-input__inner {
               padding-right: 40px;
-              height: 40px !important;
+              min-height: 40px !important;
             }
             .is-focus {
               .el-input__suffix {
@@ -171,7 +172,7 @@
 </style>
 <template>
   <section class="add-content">
-    <el-collapse accordion v-model="collapseActive">
+    <el-collapse v-model="collapseActive">
       <!-- 客户信息 -->
       <el-collapse-item :name="1">
         <!-- collapse title -->
@@ -380,17 +381,17 @@
             </div>
           </div>
           <div class="cust-step-row">
-            <div class="step-item-inline">
+            <div class="step-item-block">
               <div class="step-row-title">期望房型:</div>
-            </div>
-            <div class="step-row-query">
-              <el-checkbox-group v-model="roomList">
-                <el-checkbox label="1房"></el-checkbox>
-                <el-checkbox label="2房"></el-checkbox>
-                <el-checkbox label="3房"></el-checkbox>
-                <el-checkbox label="4房"></el-checkbox>
-                <el-checkbox label="5房以上"></el-checkbox>
-              </el-checkbox-group>
+              <div class="step-row-query">
+                <el-checkbox-group v-model="roomList">
+                  <el-checkbox label="1房"></el-checkbox>
+                  <el-checkbox label="2房"></el-checkbox>
+                  <el-checkbox label="3房"></el-checkbox>
+                  <el-checkbox label="4房"></el-checkbox>
+                  <el-checkbox label="5房以上"></el-checkbox>
+                </el-checkbox-group>
+              </div>
             </div>
           </div>
           <!-- 首付金额 & 期望总价 content-->
