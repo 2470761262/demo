@@ -1,6 +1,7 @@
 <style lang="less" scoped>
 .add-content {
   min-height: 100%;
+  flex: 1;
   background: #fff;
   /deep/.el-collapse-item__header {
     .el-collapse-item__arrow {
@@ -104,7 +105,7 @@
           }
           &.border {
             border: 1px solid #dcdfe6;
-            height: 40px;
+            min-height: 40px;
             box-sizing: border-box;
             padding: 0 15px;
             font-size: 0;
@@ -122,7 +123,7 @@
             width: 100%;
             .el-input__inner {
               padding-right: 40px;
-              height: 40px !important;
+              min-height: 40px !important;
             }
             .is-focus {
               .el-input__suffix {
@@ -171,18 +172,18 @@
 </style>
 <template>
   <section class="add-content">
-    <el-collapse accordion v-model="collapseActive">
+    <el-collapse v-model="collapseActive" @change="collapseChange">
       <!-- 客户信息 -->
       <el-collapse-item :name="1">
         <!-- collapse title -->
         <template slot="title">
           <div
             class="collapse-title"
-            :class="{ 'collapse-title-active': collapseActive != 1 }"
+            :class="{ 'collapse-title-active': !isCollapseType[0] }"
           >
             客户信息<i
               :class="
-                collapseActive == 1 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
+                !isCollapseType[0] ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
               "
             ></i>
           </div>
@@ -334,11 +335,11 @@
         <template slot="title">
           <div
             class="collapse-title"
-            :class="{ 'collapse-title-active': collapseActive != 2 }"
+            :class="{ 'collapse-title-active': !isCollapseType[1] }"
           >
             求购信息<i
               :class="
-                collapseActive == 2 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
+                !isCollapseType[1] ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
               "
             ></i>
           </div>
@@ -380,17 +381,17 @@
             </div>
           </div>
           <div class="cust-step-row">
-            <div class="step-item-inline">
+            <div class="step-item-block">
               <div class="step-row-title">期望房型:</div>
-            </div>
-            <div class="step-row-query">
-              <el-checkbox-group v-model="roomList">
-                <el-checkbox label="1房"></el-checkbox>
-                <el-checkbox label="2房"></el-checkbox>
-                <el-checkbox label="3房"></el-checkbox>
-                <el-checkbox label="4房"></el-checkbox>
-                <el-checkbox label="5房以上"></el-checkbox>
-              </el-checkbox-group>
+              <div class="step-row-query">
+                <el-checkbox-group v-model="roomList">
+                  <el-checkbox label="1房"></el-checkbox>
+                  <el-checkbox label="2房"></el-checkbox>
+                  <el-checkbox label="3房"></el-checkbox>
+                  <el-checkbox label="4房"></el-checkbox>
+                  <el-checkbox label="5房以上"></el-checkbox>
+                </el-checkbox-group>
+              </div>
             </div>
           </div>
           <!-- 首付金额 & 期望总价 content-->
@@ -477,11 +478,11 @@
         <template slot="title">
           <div
             class="collapse-title"
-            :class="{ 'collapse-title-active': collapseActive != 3 }"
+            :class="{ 'collapse-title-active': !isCollapseType[2] }"
           >
             其他需求<i
               :class="
-                collapseActive == 3 ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
+                !isCollapseType[2] ? 'el-icon-arrow-down' : 'el-icon-arrow-up'
               "
             ></i>
           </div>
@@ -732,10 +733,21 @@ export default {
         }
       ], //性别
       myImpression: "",
-      collapseActive: 1 //折叠面板当前激活name
+      isCollapseType: [true, false, false],
+      collapseActive: [1] //折叠面板当前激活name
     };
   },
   methods: {
+    collapseChange(value) {
+      let collapseName = [1, 2, 3];
+      for (let index = 0; index < collapseName.length; index++) {
+        if (this.collapseActive.includes(collapseName[index])) {
+          this.isCollapseType[index] = true;
+        } else {
+          this.isCollapseType[index] = false;
+        }
+      }
+    },
     inputPhone(vv) {
       this.formData.tel = vv;
       //value=value.replace(/[^\d]/g,'')
@@ -985,6 +997,9 @@ export default {
         });
         return;
       }
+      _that.formData.community1 = "";
+      _that.formData.community2 = "";
+      _that.formData.community3 = "";
       _that.formData.community.forEach((item, index, array) => {
         console.log(index, item, "循环到位");
         _that.formData["community" + (index + 1)] = item;
@@ -994,6 +1009,7 @@ export default {
         rooms += item + "$";
       });
       _that.formData.rooms = rooms;
+      _that.formData.origin = "PC";
       console.log(_that.formData, "录入客户参数");
       let tt = _that.validateParams();
       if (tt) {
@@ -1018,9 +1034,13 @@ export default {
           });
           _that.canSubmit = false;
           if (result.code == 200) {
-            console.log(result, "录入客源");
+            console.log(result, "录入客源成功");
             _that.$router.push({
-              name: "allCustomers"
+              name: "addOrModifyCustomerResult",
+              params: {
+                customer: { id: result.data.id },
+                flag: "add"
+              }
             });
           } else {
             console.log("录入客源" + result.message);

@@ -135,9 +135,13 @@
 //     border-radius: 50px;
 //   }
 // }
-// /deep/.el-table__fixed-right {
-//   height: 100% !important;
-// }
+/deep/.el-table__fixed-right {
+  height: 100% !important;
+  pointer-events: none;
+  .el-button {
+    pointer-events: auto;
+  }
+}
 /deep/.hover-row {
   color: #262626;
 }

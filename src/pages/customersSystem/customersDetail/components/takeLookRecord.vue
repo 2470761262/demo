@@ -37,6 +37,7 @@
     display: flex;
     padding: 0 20px;
     margin: 25px -15px 0;
+    flex-shrink: 0;
     .task-button {
       flex: 0 0 calc((100% - 90px) / 2);
       margin: 0 15px;
@@ -120,7 +121,7 @@
         </template>
       </left-progress>
     </div>
-    <div class="record-content-foot">
+    <div class="record-content-foot" v-if="takeLookOperationButton">
       <el-button
         v-if="cancelTalkingButton"
         class="task-button"
@@ -198,6 +199,7 @@ import { mapState, mapMutations } from "vuex";
 import moment from "moment";
 import util from "@/util/util";
 export default {
+  props: ["takeLookOperationButton"],
   components: {
     leftProgress,
     //添加带看
@@ -225,6 +227,7 @@ export default {
       }
     };
   },
+  mounted() {},
   methods: {
     reloadAjax() {
       let _that = this;

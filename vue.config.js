@@ -2,6 +2,9 @@ const path = require("path"); //引入path模块
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
+const webpack = require("webpack");
+// const CompressionWebpackPlugin = require("compression-webpack-plugin");
+// const productionGzipExtensions = ["js", "css"];
 const isProduction = process.env.NODE_ENV === "production";
 module.exports = {
   /* 部署生产环境和开发环境下的URL：可对当前环境进行区分，baseUrl 从 Vue CLI 3.3 起已弃用，要使用publicPath */
@@ -44,6 +47,22 @@ module.exports = {
     //   vue: "Vue",
     //   "element-ui": "ELEMENT"
     // };
+    if (isProduction) {
+      const plugins = [
+        new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
+        //     new CompressionWebpackPlugin({
+        //       algorithm: "gzip",
+        //       test: new RegExp("\\.(" + productionGzipExtensions.join("|") + ")$"),
+        //       threshold: 10240,
+        //       minRatio: 0.8
+        //     })
+        //     // new webpack.optimize.LimitChunkCountPlugin({
+        //     //   maxChunks: 5,
+        //     //   minChunkSize: 100
+        //     // })
+      ];
+      config.plugins.push(...plugins);
+    }
   },
   /* webpack-dev-server 相关配置 */
   devServer: {

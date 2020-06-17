@@ -60,6 +60,7 @@
     padding: 0 20px;
     margin: 25px -15px 0;
     justify-content: center;
+    flex-shrink: 0;
     .task-button {
       flex: 0 0 calc((100% - 90px) / 3);
       // margin: 0 15px;
@@ -222,7 +223,7 @@
       </h3>
     </div>
     <div class="record-content-scroll" v-show="showBox == 0">
-      <div class="text-area">
+      <div class="text-area" v-if="takeLookOperationButton">
         <textarea
           :disabled="buttonEnable.addFollowButton"
           rows="5"
@@ -317,7 +318,7 @@
         暂无数据.
       </div>
     </div>
-    <div class="record-content-foot">
+    <div class="record-content-foot" v-if="takeLookOperationButton">
       <el-button
         class="task-button"
         v-show="showBox === 1"
@@ -345,6 +346,7 @@ import { mapState, mapMutations } from "vuex";
 import moment from "moment";
 import util from "@/util/util";
 export default {
+  props: ["takeLookOperationButton"],
   components: {
     leftProgress,
     //添加推挤

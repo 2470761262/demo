@@ -6,6 +6,11 @@
       flex: 0 0 40%;
     }
   }
+  &.flex-row30 {
+    /deep/.el-form-item {
+      flex: 0 0 30%;
+    }
+  }
   /deep/.el-form-item {
     flex: 0 0 20%;
     .el-select {
@@ -73,7 +78,7 @@
           <el-color-picker v-model="setEntity.siteBgColor4"></el-color-picker>
         </el-form-item>
       </div>
-      <div class="flex-row flex-row40">
+      <div class="flex-row flex-row30">
         <el-form-item label="logo(主页):">
           <el-upload
             :action="uploadUrl"
@@ -114,8 +119,6 @@
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
-      </div>
-      <div class="flex-row flex-row40">
         <el-form-item label="中图Logo:">
           <el-upload
             :action="uploadUrl"
@@ -136,6 +139,8 @@
             <i class="el-icon-plus"></i>
           </el-upload>
         </el-form-item>
+      </div>
+      <div class="flex-row flex-row30">
         <el-form-item label="默认头像:">
           <el-upload
             :action="uploadUrl"
@@ -152,6 +157,26 @@
                 : []
             "
             :on-success="resultImgNane('siteHeadImg')"
+          >
+            <i class="el-icon-plus"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="登录背景图:">
+          <el-upload
+            :action="uploadUrl"
+            :limit="1"
+            :on-preview="preview"
+            :on-exceed="exceed"
+            :headers="header"
+            :show-file-list="true"
+            list-type="picture-card"
+            :before-upload="beforeAvatarUpload"
+            :file-list="
+              setEntity.siteHeadImg
+                ? [{ name: 'loginBackGround', url: setEntity.loginBackGround }]
+                : []
+            "
+            :on-success="resultImgNane('loginBackGround')"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -254,14 +279,15 @@ export default {
         siteLogo: "",
         sitebLogo: "",
         sitemLogo: "",
-        siteHeadImg: ""
+        siteHeadImg: "",
+        loginBackGround: ""
       },
       showViewer: false,
       dialogImageUrl: ""
     };
   },
   created() {
-    this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
+    this.uploadUrl = this.$api.baseUrl() + "/company/upload";
     this.header = { tk: util.localStorageGet(TOKEN) };
     this.loadSiteInfo();
   },
@@ -327,13 +353,13 @@ export default {
     resultImgNane(ImgName) {
       return function(res, file) {
         if (res.code == 200) {
-          this.setEntity[ImgName] = res.data.url;
+          this.setEntity[ImgName] = res.data;
         }
       }.bind(this);
     },
     preview(file) {
       if (file.response.code == 200) {
-        this.dialogImageUrl = file.response.data.url;
+        this.dialogImageUrl = file.response.data;
         this.showViewer = true;
       }
     },

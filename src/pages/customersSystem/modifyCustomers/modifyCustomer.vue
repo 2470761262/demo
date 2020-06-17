@@ -550,10 +550,10 @@
                   placeholder="请选择客户期望楼盘(可多选)"
                 >
                   <el-option
-                    v-for="(item, index) in communityList"
-                    :key="index"
+                    v-for="item in communityList"
+                    :key="item.value"
                     :label="item.name"
-                    :value="item.value"
+                    :value="item.name"
                   ></el-option>
                 </el-select>
               </div>
@@ -1028,6 +1028,10 @@ export default {
         rooms += item + "$";
       });
       _that.formData.rooms = rooms;
+      _that.formData.community1 = "";
+      _that.formData.community2 = "";
+      _that.formData.community3 = "";
+
       _that.formData.community.forEach((item, index, array) => {
         _that.formData["community" + (index + 1)] = item;
       });
@@ -1056,7 +1060,11 @@ export default {
           if (result.code == 200) {
             console.log(result, "修改客源");
             _that.$router.push({
-              name: "allCustomers"
+              name: "addOrModifyCustomerResult",
+              params: {
+                customer: { id: _that.formData.id },
+                flag: "modify"
+              }
             });
           } else {
             console.log("修改客源" + result.message);
