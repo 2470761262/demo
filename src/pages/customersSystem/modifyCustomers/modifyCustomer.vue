@@ -298,6 +298,23 @@
                 </el-rate>
               </div>
             </div>
+            <!-- 付款方式 -->
+            <div class="step-item-inline">
+              <div class="step-row-title  title-required">付款方式:</div>
+              <div class="step-row-query">
+                <el-select
+                  v-model="formData.payWay"
+                  placeholder="请选择付款方式"
+                >
+                  <el-option
+                    v-for="item in payWayList"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.name"
+                  ></el-option>
+                </el-select>
+              </div>
+            </div>
           </div>
           <!-- 客户印象 conetnt-->
           <div class="cust-step-row">
@@ -381,17 +398,17 @@
             </div>
           </div>
           <div class="cust-step-row">
-            <div class="step-item-inline">
+            <div class="step-item-block">
               <div class="step-row-title">期望房型:</div>
-            </div>
-            <div class="step-row-query">
-              <el-checkbox-group v-model="roomList">
-                <el-checkbox label="1房"></el-checkbox>
-                <el-checkbox label="2房"></el-checkbox>
-                <el-checkbox label="3房"></el-checkbox>
-                <el-checkbox label="4房"></el-checkbox>
-                <el-checkbox label="5房以上"></el-checkbox>
-              </el-checkbox-group>
+              <div class="step-row-query  step-flex-group">
+                <el-checkbox-group v-model="roomList">
+                  <el-checkbox label="1房"></el-checkbox>
+                  <el-checkbox label="2房"></el-checkbox>
+                  <el-checkbox label="3房"></el-checkbox>
+                  <el-checkbox label="4房"></el-checkbox>
+                  <el-checkbox label="5房以上"></el-checkbox>
+                </el-checkbox-group>
+              </div>
             </div>
           </div>
           <!-- 首付金额 & 期望总价 content-->
@@ -450,24 +467,6 @@
                 ></el-input>
               </div>
             </div>
-            <!-- 付款方式 -->
-            <!-- <div class="step-item-inline">
-              <div class="step-row-title">付款方式:</div>
-              <div class="step-row-query">
-                <el-select
-                  v-model="sssValue"
-                  clearable
-                  placeholder="请选择付款方式"
-                >
-                  <el-option
-                    v-for="item in ssslist"
-                    :key="item.value"
-                    :label="item.key"
-                    :value="item.value"
-                  ></el-option>
-                </el-select>
-              </div>
-            </div> -->
           </div>
         </section>
       </el-collapse-item>
@@ -556,10 +555,10 @@
                   placeholder="请选择客户期望楼盘(可多选)"
                 >
                   <el-option
-                    v-for="(item, index) in communityList"
-                    :key="index"
+                    v-for="item in communityList"
+                    :key="item.value"
                     :label="item.name"
-                    :value="item.value"
+                    :value="item.name"
                   ></el-option>
                 </el-select>
               </div>
@@ -619,7 +618,24 @@ export default {
         // community: "",
         // remark: ""
       },
-      sssValue: "", //请按照实际字段名进行修改，
+      payWayList: [
+        {
+          name: "一次性",
+          value: "一次性"
+        },
+        {
+          name: "商业贷款",
+          value: "商业贷款"
+        },
+        {
+          name: "公积金贷款",
+          value: "公积金贷款"
+        },
+        {
+          name: "组合贷款",
+          value: "组合贷款"
+        }
+      ],
       decorationList: [
         {
           value: "毛胚",
@@ -968,6 +984,9 @@ export default {
       ) {
         return "购房意向为空";
       }
+      if (!this.formData.payWay) {
+        return "付款方式为空";
+      }
 
       if (
         this.formData.minFirstPrice &&
@@ -1044,6 +1063,10 @@ export default {
         rooms += item + "$";
       });
       _that.formData.rooms = rooms;
+      _that.formData.community1 = "";
+      _that.formData.community2 = "";
+      _that.formData.community3 = "";
+
       _that.formData.community.forEach((item, index, array) => {
         _that.formData["community" + (index + 1)] = item;
       });
