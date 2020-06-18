@@ -275,7 +275,7 @@
       v-if="turnTypePop"
       style-type="0"
       title="转状态"
-      width="4rem"
+      width="4.48rem"
       @confirmTurnType="turnTypeTransmit"
       :customerId="customer.id"
     />

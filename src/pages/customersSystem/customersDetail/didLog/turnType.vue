@@ -1,45 +1,204 @@
 <style lang="less" scoped>
 @import url(../../less/popScroll);
-.error-tips {
-  color: red;
+
+.type-content {
+  .pop-head {
+    span {
+      color: red;
+      margin-right: 10px;
+    }
+    font-size: 17px;
+  }
+  .radio-content {
+    .radio-content();
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 20px;
+    .radio-content-item {
+      flex: none;
+      div {
+        padding: 0 30px;
+      }
+    }
+  }
 }
-.belt-content {
-  .belt-content();
+.split-line {
+  height: 4px;
+  background: #f2f2f2;
+  margin: 20px 0;
 }
-.isVisible {
-  display: none;
+@height: 33px;
+@line-height: 33px;
+.type-content-inline {
+  flex: 1;
+  margin-right: 20px;
+  &:last-child {
+    margin-right: 0;
+  }
+  .radio-content {
+    padding: 0;
+    margin-left: 15px;
+    width: 160px;
+  }
+  .select-set {
+    height: @height;
+    line-height: @line-height;
+    .set-input;
+  }
+  .set-input() {
+    /deep/.el-input__inner {
+      height: @height;
+      line-height: @line-height;
+    }
+  }
+  .input-suffix {
+    color: black;
+    font-size: 16px;
+    margin-left: 5px;
+  }
+  .el-input {
+    .set-input;
+    /deep/.el-input__inner {
+      border: none;
+      border-bottom: 1px solid #ddd;
+    }
+  }
+}
+.flex-content {
+  display: flex;
+}
+.mragin-line {
+  margin-top: 20px;
+  width: 50%;
+  .picker-set {
+    width: 160px;
+    /deep/.el-input__inner {
+      height: @height;
+      line-height: @line-height;
+    }
+    /deep/.el-input__prefix,
+    /deep/.el-input__suffix {
+      .el-input__icon {
+        line-height: @line-height;
+      }
+    }
+  }
 }
 </style>
 <template>
   <fixed-popup v-bind="$attrs" v-on="$listeners" @confirmEmit="confirmEmit">
     <template>
-      <div class="belt-content">
-        <div class="belt-content-item">
-          <div class="item-right">
-            <el-radio-group v-model="formData.isBuyStr" @change="statusChange">
-              <el-radio-button label="已购"></el-radio-button>
-              <el-radio-button label="暂不购"></el-radio-button>
-            </el-radio-group>
+      <div class="type-content">
+        <div class="pop-head"><span>*</span>请选择转换原因</div>
+        <div class="radio-content">
+          <label class="radio-content-item">
+            <input
+              v-model="formData.isBuyStr"
+              type="radio"
+              name="removePop"
+              value="已购"
+              @change="statusChange"
+            />
+            <div>已购</div>
+          </label>
+          <label class="radio-content-item">
+            <input
+              v-model="formData.isBuyStr"
+              type="radio"
+              name="removePop"
+              value="暂不购"
+              @change="statusChange"
+            />
+            <div>暂不购</div>
+          </label>
+        </div>
+        <div class="radio-content" v-if="!isVisible">
+          <el-radio v-model="formData.buyWay" :label="'我司成交'"
+            >我司成交</el-radio
+          >
+          <el-radio v-model="formData.buyWay" :label="'他司成交'"
+            >他司成交</el-radio
+          >
+          <el-radio v-model="formData.buyWay" :label="'客户自购'"
+            >客户自购</el-radio
+          >
+        </div>
+      </div>
+      <div class="split-line" v-if="!isVisible"></div>
+      <div class="flex-content" v-if="!isVisible">
+        <div class="type-content type-content-inline">
+          <div class="pop-head"><span>*</span>成交楼盘</div>
+          <div class="radio-content">
+            <el-select
+              class="select-set"
+              v-model="formData.community"
+              clearable
+              filterable
+              remote
+              :remote-method="queryCommunityByKeyWord"
+              :loading="searchLoading"
+              placeholder="请输入楼盘称呼"
+            >
+              <el-option
+                v-for="item in communityList"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value + ':' + item.name"
+              ></el-option>
+            </el-select>
           </div>
         </div>
-        <div :class="{ isVisible: isVisible }">
-          <div class="item-right">
-            <div class="check-content">
-              <div class="label-content">
-                <el-radio v-model="formData.buyWay" :label="'我司成交'"
-                  >我司成交</el-radio
-                >
-                <el-radio v-model="formData.buyWay" :label="'他司成交'"
-                  >他司成交</el-radio
-                >
-                <el-radio v-model="formData.buyWay" :label="'客户自购'"
-                  >客户自购</el-radio
-                >
-              </div>
+        <div class="type-content type-content-inline">
+          <div class="pop-head"><span>*</span>成交金额</div>
+          <div class="radio-content">
+            <el-input
+              clearable
+              v-model="formData.buyAmount"
+              oninput="value=value.replace(/[^\d]/g,'')"
+              placeholder="请输入成交价"
+            ></el-input>
+            <div class="input-suffix">万</div>
+          </div>
+        </div>
+      </div>
+      <div class="type-content mragin-line" v-if="!isVisible">
+        <div class="pop-head"><span>*</span>成交时间</div>
+        <div class="radio-content">
+          <el-date-picker
+            type="date"
+            class="picker-set"
+            v-model="formData.buyTime"
+            placeholder="请选择成交时间"
+          >
+          </el-date-picker>
+        </div>
+      </div>
+      <!-- <div class="type-content-item">
+        <div class="item-right">
+          <el-radio-group v-model="formData.isBuyStr" @change="statusChange">
+            <el-radio-button label="已购"></el-radio-button>
+            <el-radio-button label="暂不购"></el-radio-button>
+          </el-radio-group>
+        </div>
+      </div>
+      <div :class="{ isVisible: isVisible }">
+        <div class="item-right">
+          <div class="check-content">
+            <div class="label-content">
+              <el-radio v-model="formData.buyWay" :label="'我司成交'"
+                >我司成交</el-radio
+              >
+              <el-radio v-model="formData.buyWay" :label="'他司成交'"
+                >他司成交</el-radio
+              >
+              <el-radio v-model="formData.buyWay" :label="'客户自购'"
+                >客户自购</el-radio
+              >
             </div>
           </div>
         </div>
-        <div :class="{ isVisible: isVisible }">
+      </div> -->
+      <!-- <div :class="{ isVisible: isVisible }">
           <div class="item-right">
             <div class="check-content">
               <span>成交楼盘</span>
@@ -80,8 +239,8 @@
               </el-date-picker>
             </div>
           </div>
-        </div>
-      </div>
+        </div> -->
+      <!-- </div> -->
     </template>
   </fixed-popup>
 </template>
@@ -101,7 +260,7 @@ export default {
       formData: {
         buyAmount: null,
         buyTime: null,
-        buyWay: "我司成交",
+        buyWay: "",
         isBuyStr: "已购",
         isBuy: 1, //1已购，2暂不购
         community: ""
@@ -150,7 +309,7 @@ export default {
     statusChange(e) {
       console.log("切换了", e, this.formData.isBuy);
 
-      if (e == "已购") {
+      if (this.formData.isBuyStr == "已购") {
         this.isVisible = false;
       } else {
         this.isVisible = true;
