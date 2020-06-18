@@ -399,7 +399,7 @@
           </div>
           <div class="cust-step-row">
             <div class="step-item-block">
-              <div class="step-row-title">期望房型:</div>
+              <div class="step-row-title"购买房型:</div>
               <div class="step-row-query  step-flex-group">
                 <el-checkbox-group v-model="roomList">
                   <el-checkbox label="1房"></el-checkbox>

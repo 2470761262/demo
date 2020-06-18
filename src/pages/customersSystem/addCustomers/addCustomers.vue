@@ -399,7 +399,7 @@
           </div>
           <div class="cust-step-row">
             <div class="step-item-block">
-              <div class="step-row-title">期望房型:</div>
+              <div class="step-row-title">购买房型:</div>
               <div class="step-row-query  step-flex-group">
                 <el-checkbox-group v-model="roomList">
                   <el-checkbox label="1房"></el-checkbox>
@@ -415,7 +415,7 @@
           <div class="cust-step-row">
             <!-- 首付金额 -->
             <div class="step-item-inline">
-              <div class="step-row-title">期望首付:</div>
+              <div class="step-row-title">首付金额:</div>
               <div class="step-row-query step-flex-group" data-unit="万">
                 <el-input
                   v-model="formData.minFirstPrice"
