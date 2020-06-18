@@ -144,6 +144,7 @@
             :before-upload="beforeAvatarUpload"
             :file-list="file.siteHeadImgList"
             :on-success="resultImgNane('siteHeadImg')"
+            :on-remove="remove"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
