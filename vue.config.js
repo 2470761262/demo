@@ -75,7 +75,7 @@ module.exports = {
     /* 使用代理 */
     proxy: {
       "/api": {
-        target: "http://bweb.yongxinjia.com/",
+        target: "http://localhost:8086/",
         changeOrigin: true,
         pathRewrite: {
           "^/api": ""
