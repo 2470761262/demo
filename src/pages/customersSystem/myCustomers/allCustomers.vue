@@ -151,7 +151,7 @@ export default {
         { 强烈: 0, 一般: 0, 较弱: 0, 无意向: 0 },
         { 在谈: 0, 签约: 0 }
       ],
-      querySelectFlag: true,
+      querySelectFlag: false,
       loading: false,
       activeProdata: null, //点击写跟进后，用来保存当前行的数据的临时变量
       writeFlag: false, //写跟进弹框开关
@@ -589,7 +589,6 @@ export default {
      */
     handleSizeChange(e) {
       this.pageJson.pageSize = e;
-      console.log(e, "xxxxxxxxxxxxxxxxxxxxx");
       this.queryCustomerData({ page: 1 });
     },
     /**
