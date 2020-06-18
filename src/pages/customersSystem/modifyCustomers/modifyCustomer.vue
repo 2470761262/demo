@@ -748,7 +748,8 @@ export default {
         }
       ], //性别
       myImpression: "",
-      collapseActive: 1, //折叠面板当前激活name
+      isCollapseType: [true, false, false],
+      collapseActive: [1], //折叠面板当前激活name
       canSubmit: false
     };
   },

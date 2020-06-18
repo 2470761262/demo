@@ -28,6 +28,7 @@
               class="item-picker"
               v-model="beltTime"
               range-separator="至"
+              :picker-options="pickerOptions"
               start-placeholder="选择开始时间"
               end-placeholder="选择结束时间"
               value-format="yyyy-MM-dd HH:mm:ss"
@@ -117,6 +118,14 @@ export default {
   },
   data() {
     return {
+      pickerOptions: {
+        disabledDate(time) {
+          //限制只能选今天到今天前三十天内
+          let startDate = new Date().setDate(new Date().getDate() - 30);
+          let endDate = new Date();
+          return time <= startDate || time >= endDate;
+        }
+      },
       isWorking: false,
       textarea: "",
       isTalk: 0, //是否再谈
