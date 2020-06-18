@@ -85,7 +85,6 @@ export default {
         rooms,
         toilet
       } = this.houseCheckItem[0];
-
       let mergeParams = {
         customerName: this.detail.customers,
         customerId: this.detail.id, //客户id
@@ -96,7 +95,11 @@ export default {
         housePrice: price,
         houseNo,
         houseArea: inArea,
-        houseId: id
+        houseId: id,
+        houseAgentPerName: this.houseCheckItem[0].perName,
+        houseAgentHeadImage: this.houseCheckItem[0].headImgUrl,
+        houseAveragePrice: this.houseCheckItem[0].unitPrice,
+        housePic: this.houseCheckItem[0].picUrl
       };
 
       //合并用户数据和房源数据

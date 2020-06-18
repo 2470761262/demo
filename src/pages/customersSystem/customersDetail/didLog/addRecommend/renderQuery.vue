@@ -125,7 +125,7 @@
     <section
       class="result-content"
       v-loading="loading"
-      element-loading-text="不如跳舞 ~ UrbbrGroun"
+      element-loading-text="查询中...请稍等"
     >
       <div class="row-house-item" v-for="item in queryData" :key="item.id">
         <el-checkbox
@@ -239,10 +239,10 @@ export default {
       }
 
       //房间号
-      if (value.roomNumber != null && value.roomNumber != "") {
+      if (value.roomNo != null && value.roomNo != "") {
         this.dynamicTags.push({
-          title: `房间号:${value.roomNumber}`,
-          field: "roomNumber",
+          title: `房间号:${value.roomNo}`,
+          field: "roomNo",
           arr: false
         });
       }
@@ -305,22 +305,33 @@ export default {
         });
       });
     },
-
+    dealArrayList(obj, fieldName) {
+      if (obj[fieldName] == "") {
+        obj[fieldName] = null;
+      } else {
+        obj[fieldName] = obj[fieldName].split(",");
+      }
+    },
     getHouseData(value) {
       this.loading = true;
       //搜索时清空之前的推荐数据
       this.houseChecked = "";
       this.$emit("change", []);
 
-      Object.keys(value).forEach(item => {
-        if (value[item] instanceof Array) {
-          value[item] = value[item].join(",");
-        }
-      });
+      // Object.keys(value).forEach(item => {
+      //   if (value[item] instanceof Array) {
+      //     value[item] = value[item].join(",");
+      //   }
+      // });
       let restuleParms = Object.assign({}, value, {
         page: 1,
         limit: 5
       });
+      // this.dealArrayList(restuleParms, "business"); //商圈
+      // this.dealArrayList(restuleParms, "renovation"); //装修
+      // this.dealArrayList(restuleParms, "purpose"); //房屋用途
+      // this.dealArrayList(restuleParms, "face"); //朝向
+      console.log(restuleParms, "推荐房源查询条件");
       this.$api
         .post({
           url: "/saleCustomerRecommend/recommendHouseList",
