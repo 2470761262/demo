@@ -131,11 +131,10 @@
                 <h3 class="query-cell-title">录入时间</h3>
                 <el-date-picker
                   v-model="addTime"
-                  type="daterange"
+                  type="datetimerange"
                   class="set-data-pricker set-pricker-width260"
                   range-separator="至"
                   start-placeholder="开始日期"
-                  :default-time="['00:00:00', '23:59:59']"
                   :picker-options="pickerOptions"
                   end-placeholder="结束日期"
                   value-format="yyyy-MM-dd HH:mm:ss"
@@ -146,7 +145,7 @@
                 <h3 class="query-cell-title">带看时间</h3>
                 <el-date-picker
                   v-model="pairTime"
-                  type="daterange"
+                  type="datetimerange"
                   class="set-data-pricker set-pricker-width260"
                   range-separator="至"
                   start-placeholder="开始日期"
@@ -246,7 +245,7 @@ export default {
       pickerOptions: {
         disabledDate(time) {
           let startDate = new Date().setDate(new Date().getDate() - 7);
-          let endDate = new Date().setDate(new Date().getDate() + 1);
+          let endDate = new Date();
           return time <= startDate || time >= endDate;
         }
       },

@@ -144,7 +144,7 @@
                 <h3 class="query-cell-title">带看时间</h3>
                 <el-date-picker
                   v-model="pairTime"
-                  type="daterange"
+                  type="datetimerange"
                   class="set-data-pricker set-pricker-width260"
                   range-separator="至"
                   start-placeholder="开始日期"
