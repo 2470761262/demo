@@ -61,8 +61,8 @@
     element-loading-custom-class="loadingTop"
     :element-loading-text="load.loadingMessage"
   >
-    <house-details-head></house-details-head>
-    <section class="page-house-cell">
+    <house-details-head v-if="!load.loading"></house-details-head>
+    <section class="page-house-cell" v-if="!load.loading">
       <!-- 轮播图 -->
       <loopImg class="cell-left" :class="{ 'cell-left-nest': nest }"></loopImg>
       <!-- 房屋详情 -->
@@ -88,8 +88,8 @@
       <!--      </div>-->
     </section>
     <!--按钮组 -->
-    <buttonGroup></buttonGroup>
-    <section class="page-house-cell marginTop">
+    <buttonGroup v-if="!load.loading"></buttonGroup>
+    <section class="page-house-cell marginTop" v-if="!load.loading">
       <!-- 房屋其他信息 -->
       <houseMessage
         class="cell-msg"
@@ -314,18 +314,6 @@ export default {
             if (util.localStorageGet("logindata")) {
               perId = util.localStorageGet("logindata").accountId;
             }
-
-            if (result.data.plate == 0 && perId == result.data.AgentPer) {
-              //当前跟单人显示编辑按钮
-              console.log(
-                perId,
-                result.data.plate,
-                result.data.AgentPer,
-                "result.data.plateresult.data.plateresult.data.plate"
-              );
-              that.showEdit = true;
-            }
-
             if (result.data.plate > 6 || result.data.isLocking) {
               this.buttonLocking.value = true;
             }

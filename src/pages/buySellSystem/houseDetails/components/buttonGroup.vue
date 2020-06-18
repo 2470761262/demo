@@ -528,7 +528,11 @@ export default {
             if (that.isShowButton.hasOwnProperty(element.rUrl)) {
               that.isShowButton[element.rUrl] = true;
               console.log("----------", element.rUrl);
-              but.$emit(element.rUrl);
+              but.$emit(
+                element.rUrl,
+                element.authorityUnderName,
+                this.resultData
+              );
             }
           });
           but.$emit("dialPhone", that.isShowButton.dialPhone);
