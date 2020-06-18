@@ -263,7 +263,11 @@
     <div class="query-head">
       <div class="head-left">
         <i class="el-icon-search"></i>
-        <input type="text" placeholder="请输入关键字" v-model="searchInfo" />
+        <input
+          type="text"
+          placeholder="请输入楼盘名称或房源编号"
+          v-model="searchInfo"
+        />
       </div>
       <button class="query-left-button" @click="goSearch">开始搜索</button>
       <button class="query-reset" @click="resetFormData">
@@ -700,7 +704,7 @@ export default {
         this.form.roomNumber = "";
         this.form.comId = "";
         this.form.cbId = "";
-        this.form.roomNo = "";
+        this.form.bhId = "";
         this.communitySelect.value = {};
         this.buildingSelect.value = {};
         this.roomSelect.value = {};
@@ -709,13 +713,13 @@ export default {
         this.form.cbNo = "";
         this.form.roomNumber = "";
         this.form.cbId = "";
-        this.form.roomNo = "";
+        this.form.bhId = "";
         this.buildingSelect.value = {};
         this.roomSelect.value = {};
       }
       if (e.field == "roomNumber") {
         this.form.roomNumber = "";
-        this.form.roomNo = "";
+        this.form.bhId = "";
         this.roomSelect.value = {};
       }
       if (e.field == "searchInfo") {
@@ -818,7 +822,7 @@ export default {
       //清空房间号
       this.roomSelect.value = {};
       this.form.roomNumber = "";
-      this.form.roomNo = "";
+      this.form.bhId = "";
       this.remoteBuilding();
     },
     /**
@@ -854,7 +858,7 @@ export default {
       //清空房间号
       this.roomSelect.value = {};
       this.form.roomNumber = "";
-      this.form.roomNo = "";
+      this.form.bhId = "";
 
       this.remoteRoom();
     },
@@ -888,7 +892,7 @@ export default {
      */
     roomChange(item) {
       this.form.roomNumber = item.name;
-      this.form.roomNo = item.value;
+      this.form.bhId = item.value;
     },
     /**
      * @example: Data属性的取反

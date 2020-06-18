@@ -1,25 +1,64 @@
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.content {
+  flex: 1;
+  background: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 100px;
+  .tips-image {
+    width: 350px;
+    height: 270px;
+    margin-left: -20px;
+  }
+  .btn-shadow {
+    height: 37px;
+    width: 174px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    background: #f7d10a;
+    margin-right: 65px;
+    cursor: pointer;
+    &.green {
+      background: #0d834a;
+    }
+    &:active {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12), 0 0 10px rgba(0, 0, 0, 0.06);
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+</style>
 <template>
-  <div>
+  <div class="content">
     <div>
-      <el-image
-        style="width: 100px; height: 100px"
-        :src="flag == 'add' ? url : url2"
-        :fit="fit"
-      ></el-image>
+      <el-image class="tips-image" :src="flag == 'add' ? url : url2"></el-image>
     </div>
     <div>
-      <el-button type="warning" @click="toCustomerDetail">查看客户</el-button>
-      <el-button type="success" round v-if="flag == 'add'" @click="addCustomer"
-        >再次录入</el-button
+      <button class="btn-shadow" @click="toCustomerDetail">
+        查看客户
+      </button>
+      <button
+        class="btn-shadow green"
+        v-if="flag == 'add'"
+        @click="addCustomer"
       >
-      <el-button
-        type="success"
-        round
+        再次录入
+      </button>
+      <button
+        class="btn-shadow green"
         v-if="flag == 'modify'"
         @click="modifyCusomter"
-        >再次修改</el-button
       >
+        再次修改
+      </button>
     </div>
   </div>
 </template>

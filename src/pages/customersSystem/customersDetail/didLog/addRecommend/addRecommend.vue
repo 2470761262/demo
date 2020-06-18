@@ -1,6 +1,11 @@
 <style lang="less" scoped></style>
 <template>
-  <fixed-popup v-bind="$attrs" v-on="$listeners" @confirmEmit="confirmEmit">
+  <fixed-popup
+    v-bind="$attrs"
+    v-on="$listeners"
+    @confirmEmit="confirmEmit"
+    :loading="isWorking"
+  >
     <section>
       <query-content @reset="reset"></query-content>
     </section>
@@ -26,6 +31,7 @@ export default {
   },
   data() {
     return {
+      isWorking: false,
       form: {
         searchInfo: "",
         communityName: "", //楼盘名
@@ -85,7 +91,6 @@ export default {
         rooms,
         toilet
       } = this.houseCheckItem[0];
-
       let mergeParams = {
         customerName: this.detail.customers,
         customerId: this.detail.id, //客户id
@@ -96,7 +101,11 @@ export default {
         housePrice: price,
         houseNo,
         houseArea: inArea,
-        houseId: id
+        houseId: id,
+        houseAgentPerName: this.houseCheckItem[0].perName,
+        houseAgentHeadImage: this.houseCheckItem[0].headImgUrl,
+        houseAveragePrice: this.houseCheckItem[0].unitPrice,
+        housePic: this.houseCheckItem[0].picUrl
       };
 
       //合并用户数据和房源数据
@@ -106,6 +115,7 @@ export default {
       //     this.houseCheckItem[0]
       //   );
       console.log(mergeParams, "添加推荐参数");
+      this.isWorking = true;
       this.$api
         .post({
           url: "/saleCustomerRecommend/recommendHouse",
@@ -119,6 +129,7 @@ export default {
             type: "info",
             message: result.message
           });
+          this.isWorking = false;
           if (result.code == 200) {
             console.log("推荐成功");
             this.$emit("successCommit");
@@ -126,6 +137,7 @@ export default {
           }
         })
         .catch(e => {
+          this.isWorking = false;
           console.log("【【【【uups,推荐房源失败】】】】");
           console.log(e);
         });
