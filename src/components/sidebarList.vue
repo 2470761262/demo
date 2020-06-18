@@ -114,15 +114,33 @@ export default {
     if (!this.judgeShowEdit) {
       this.editAgentHouse = true;
     }
-    but.$on("editAgentHouse", () => {
-      that.editAgentHouse = true;
-      console.log("ss", this);
+    but.$on("editAgentHouse", (authorityUnderName, houseDatails) => {
+      if (
+        houseDatails.plate == 0 &&
+        this.getEditAuthority(authorityUnderName, houseDatails)
+      ) {
+        that.editAgentHouse = true;
+      }
     });
   },
   destroyed() {
     but.$off("editAgentHouse");
   },
   methods: {
+    getEditAuthority(authorityUnderName, houseDatails) {
+      return (
+        (authorityUnderName.coIdList &&
+          authorityUnderName.coIdList.includes(
+            houseDatails.agentPerCompanyId
+          )) ||
+        (authorityUnderName.deptList &&
+          authorityUnderName.deptList.includes(
+            houseDatails.agentPerDepartmentId
+          )) ||
+        (authorityUnderName.accountId &&
+          houseDatails.AgentPer == authorityUnderName.accountId)
+      );
+    },
     goHome() {
       this.$router.push({ path: "/buySellSystem/houseList" });
     },

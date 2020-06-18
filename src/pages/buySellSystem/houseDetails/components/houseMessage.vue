@@ -577,8 +577,13 @@ export default {
     if (!this.judgeShowEdit) {
       this.editAgentHouse = true;
     }
-    but.$on("editAgentHouse", () => {
-      that.editAgentHouse = true;
+    but.$on("editAgentHouse", (authorityUnderName, houseDatails) => {
+      if (
+        houseDatails.plate == 0 &&
+        this.getEditAuthority(authorityUnderName, houseDatails)
+      ) {
+        that.editAgentHouse = true;
+      }
     });
   },
   destroyed() {
@@ -618,6 +623,20 @@ export default {
     }
   },
   methods: {
+    getEditAuthority(authorityUnderName, houseDatails) {
+      return (
+        (authorityUnderName.coIdList &&
+          authorityUnderName.coIdList.includes(
+            houseDatails.agentPerCompanyId
+          )) ||
+        (authorityUnderName.deptList &&
+          authorityUnderName.deptList.includes(
+            houseDatails.agentPerDepartmentId
+          )) ||
+        (authorityUnderName.accountId &&
+          houseDatails.AgentPer == authorityUnderName.accountId)
+      );
+    },
     updateHouseA(type) {
       let that = this;
       let flag = true;
