@@ -626,7 +626,7 @@ export default {
         limit: _that.pageJson.pageSize,
         del: 0,
         isPrivate: true,
-        minLastPairFollowTime: new Date().setDate(new Date().getDate() - 7)
+        minLastPairFollowTime: new Date().setDate(new Date().getDate() - 30)
       });
       _that.$api
         .post({
