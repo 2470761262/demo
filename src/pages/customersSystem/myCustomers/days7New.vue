@@ -246,7 +246,7 @@ export default {
       pickerOptions: {
         disabledDate(time) {
           let startDate = new Date().setDate(new Date().getDate() - 7);
-          let endDate = new Date();
+          let endDate = new Date().setDate(new Date().getDate() + 1);
           return time <= startDate || time >= endDate;
         }
       },

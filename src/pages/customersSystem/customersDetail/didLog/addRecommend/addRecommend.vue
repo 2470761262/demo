@@ -1,6 +1,11 @@
 <style lang="less" scoped></style>
 <template>
-  <fixed-popup v-bind="$attrs" v-on="$listeners" @confirmEmit="confirmEmit">
+  <fixed-popup
+    v-bind="$attrs"
+    v-on="$listeners"
+    @confirmEmit="confirmEmit"
+    :loading="isWorking"
+  >
     <section>
       <query-content @reset="reset"></query-content>
     </section>
@@ -26,6 +31,7 @@ export default {
   },
   data() {
     return {
+      isWorking: false,
       form: {
         searchInfo: "",
         communityName: "", //楼盘名
@@ -109,6 +115,7 @@ export default {
       //     this.houseCheckItem[0]
       //   );
       console.log(mergeParams, "添加推荐参数");
+      this.isWorking = true;
       this.$api
         .post({
           url: "/saleCustomerRecommend/recommendHouse",
@@ -122,6 +129,7 @@ export default {
             type: "info",
             message: result.message
           });
+          this.isWorking = false;
           if (result.code == 200) {
             console.log("推荐成功");
             this.$emit("successCommit");
@@ -129,6 +137,7 @@ export default {
           }
         })
         .catch(e => {
+          this.isWorking = false;
           console.log("【【【【uups,推荐房源失败】】】】");
           console.log(e);
         });
