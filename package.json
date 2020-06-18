@@ -45,6 +45,7 @@
     "postcss-plugin-px2rem": "^0.8.1",
     "prettier": "^1.19.1",
     "qrcodejs2": "0.0.2",
+    "style-resources-loader": "^1.3.3",
     "vue-template-compiler": "^2.6.10"
   }
 }
