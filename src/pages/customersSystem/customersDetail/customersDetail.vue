@@ -111,11 +111,9 @@ export default {
     this.ajax();
   },
   methods: {
-    deleteCustomerApply() {
-      this.$router.push({
-        name: "customersIframe",
-        params: { xx: 1 }
-      });
+    deleteCustomerApply(id) {
+      console.log("删除后刷新页面");
+      location.reload(); //刷新当前页面
     },
     ...mapMutations(["updateDetail", "resetDetail"]),
     ajax() {
