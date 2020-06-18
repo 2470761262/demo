@@ -89,12 +89,9 @@
             :show-file-list="true"
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
-            :file-list="
-              setEntity.siteLogo
-                ? [{ name: 'siteLogo', url: setEntity.siteLogo }]
-                : []
-            "
+            :file-list="file.siteLogoList"
             :on-success="resultImgNane('siteLogo')"
+            :on-remove="remove"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -109,12 +106,9 @@
             :show-file-list="true"
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
-            :file-list="
-              setEntity.sitebLogo
-                ? [{ name: 'sitebLogo', url: setEntity.sitebLogo }]
-                : []
-            "
+            :file-list="file.sitebLogoList"
             :on-success="resultImgNane('sitebLogo')"
+            :on-remove="remove"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -129,12 +123,9 @@
             :show-file-list="true"
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
-            :file-list="
-              setEntity.sitemLogo
-                ? [{ name: 'sitemLogo', url: setEntity.sitemLogo }]
-                : []
-            "
+            :file-list="file.sitemLogoList"
             :on-success="resultImgNane('sitemLogo')"
+            :on-remove="remove"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -151,11 +142,7 @@
             :show-file-list="true"
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
-            :file-list="
-              setEntity.siteHeadImg
-                ? [{ name: 'siteHeadImg', url: setEntity.siteHeadImg }]
-                : []
-            "
+            :file-list="file.siteHeadImgList"
             :on-success="resultImgNane('siteHeadImg')"
           >
             <i class="el-icon-plus"></i>
@@ -171,12 +158,9 @@
             :show-file-list="true"
             list-type="picture-card"
             :before-upload="beforeAvatarUpload"
-            :file-list="
-              setEntity.siteHeadImg
-                ? [{ name: 'loginBackGround', url: setEntity.loginBackGround }]
-                : []
-            "
+            :file-list="file.loginBackGroundList"
             :on-success="resultImgNane('loginBackGround')"
+            :on-remove="remove"
           >
             <i class="el-icon-plus"></i>
           </el-upload>
@@ -283,7 +267,14 @@ export default {
         loginBackGround: ""
       },
       showViewer: false,
-      dialogImageUrl: ""
+      dialogImageUrl: "",
+      file: {
+        sitebLogoList: [],
+        siteLogoList: [],
+        sitemLogoList: [],
+        siteHeadImgList: [],
+        loginBackGroundList: []
+      }
     };
   },
   created() {
@@ -292,6 +283,9 @@ export default {
     this.loadSiteInfo();
   },
   methods: {
+    remove(e) {
+      this.setEntity[e.name] = ""; //删除图片
+    },
     back() {
       this.$router.push({ path: "/sys/companyList" });
     },
@@ -309,6 +303,18 @@ export default {
             console.log(result.data);
             if (result.data) {
               that.setEntity = result.data;
+              Object.keys(that.setEntity).forEach(item => {
+                if (
+                  this.file.hasOwnProperty(item + "List") &&
+                  util.isNotNull(this.setEntity[item])
+                ) {
+                  console.log(item, "lllll");
+                  this.file[item + "List"].push({
+                    name: item,
+                    url: this.setEntity[item]
+                  });
+                }
+              });
             }
           }
         })
