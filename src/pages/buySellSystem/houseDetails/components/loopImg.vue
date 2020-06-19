@@ -286,7 +286,7 @@ export default {
     previewList() {
       if (this.resultData.saleUploadPicDtoList) {
         return this.resultData.saleUploadPicDtoList.map(item => {
-          return item.picUrl + "?x-oss-process=style/bigthumb";
+          return item.picUrl + "?x-oss-process=style/middlethumb";
         });
       }
       return [];
