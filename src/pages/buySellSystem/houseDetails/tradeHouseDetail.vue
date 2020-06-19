@@ -73,6 +73,7 @@
 <script>
 import util from "@/util/util";
 import getMenuRid from "@/minxi/getMenuRid";
+import getToken from "@/minxi/getUrlToken";
 import houseDetailsHead from "./components/houseDetailsHead";
 import loopImg from "./components/loopImg";
 import detail from "./components/detail";
@@ -104,7 +105,7 @@ export default {
       return !util.localStorageGet("nest");
     }
   },
-  mixins: [getMenuRid],
+  mixins: [getMenuRid, getToken],
   components: {
     houseDetailsHead, //房源详情头部
     loopImg, // 轮播
