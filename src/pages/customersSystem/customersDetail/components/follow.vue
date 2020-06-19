@@ -300,14 +300,14 @@
                   </div>
                   <div class="foot-right">
                     <img
-                      v-if="item.houseAgentHeadImage == null ? fasle : true"
+                      v-if="item.houseAgentHeadImage == null ? false : true"
                       class="foot-right-img"
                       :src="item.houseAgentHeadImage"
                       alt=""
                     />
                     <h3
                       class="foot-right-name"
-                      v-if="item.houseAgentPerName == null ? fasle : true"
+                      v-if="item.houseAgentPerName == null ? false : true"
                     >
                       {{ item.houseAgentPerName }}
                     </h3>
