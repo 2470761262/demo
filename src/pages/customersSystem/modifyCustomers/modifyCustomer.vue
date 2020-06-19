@@ -235,12 +235,18 @@
             <div class="step-item-inline ">
               <div class="step-row-title title-required">客户籍贯:</div>
               <div class="step-row-query">
-                <el-input
+                <el-select
                   v-model="formData.nativePlace"
-                  maxlength="8"
-                  show-word-limit
+                  clearable
                   placeholder="请输入客户籍贯"
-                ></el-input>
+                >
+                  <el-option
+                    v-for="item in nativePlaceList"
+                    :key="item.name"
+                    :label="item.name"
+                    :value="item.name"
+                  ></el-option>
+                </el-select>
               </div>
             </div>
           </div>
@@ -682,6 +688,7 @@ export default {
           label: "小组公客"
         }
       ],
+      nativePlaceList: [],
       customerSource: [
         {
           value: "朋友",
@@ -809,7 +816,39 @@ export default {
       //结束回显数据
     }
   },
+  mounted() {
+    this.queryRegionList();
+  },
   methods: {
+    queryRegionList() {
+      let _that = this;
+      this.searchLoading = true;
+      _that.$api
+        .get({
+          url: "/community/regionList",
+          qs: true,
+          data: { page: 1, limit: 20 }
+        })
+        .then(e => {
+          _that.searchLoading = false;
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result, "查询籍贯");
+            _that.nativePlaceList = result.data.list;
+          } else {
+            _that.$message({
+              type: "info",
+              message: result.message
+            });
+          }
+        })
+        .catch(e => {
+          _that.searchLoading = false;
+          console.log("查询籍贯失败catch");
+          console.log(e);
+        })
+        .finally(() => {});
+    },
     collapseChange(value) {
       let collapseName = [1, 2, 3];
       for (let index = 0; index < collapseName.length; index++) {
