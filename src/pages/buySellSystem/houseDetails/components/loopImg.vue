@@ -85,9 +85,10 @@
       <!-- 图片 -->
       <template v-if="loopBig.typeStr == 'picUrl'">
         <el-image
+          ref="loogImg"
           class="loop-item"
           :src="loopBig.src + '?x-oss-process=style/middlethumb'"
-          :preview-src-list="previewList()"
+          :preview-src-list="previewList"
           fit="cover"
         >
           <div slot="placeholder" class="image-slot">
@@ -148,8 +149,8 @@
               <img
                 :src="item.picUrl + '?x-oss-process=style/thumb'"
                 data-anchor="房源详情轮播图图片 => click"
-                @click.stop="changeLoop(item)"
-                :key="index"
+                @click.stop="changeLoop(item, index)"
+                :key="item.id"
                 alt=""
                 class="loop-item anchor-point"
               />
@@ -200,6 +201,35 @@ export default {
     but.$off("betExpire");
   },
   computed: {
+    previewList() {
+      //预览大图
+      this.$nextTick(() => {
+        if (this.$refs.loogImg.$children[0].index != 0) {
+          // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+          this.$refs.loogImg.$children[0].index = 0;
+        }
+        console.log(this.$refs.loogImg.$children[0]);
+      });
+      if (this.resultData.saleUploadPicDtoList) {
+        let afterArr = JSON.parse(
+          JSON.stringify(this.resultData.saleUploadPicDtoList)
+        );
+        let after = [];
+        let before = [];
+        afterArr.forEach((item, index) => {
+          if (index < this.activeInedx) {
+            after.push(item);
+          } else {
+            before.push(item);
+          }
+        });
+        before = before.concat(after);
+        return before.map(item => {
+          return item.picUrl + "?x-oss-process=style/middlethumb";
+        });
+      }
+      return [];
+    },
     moveX() {
       return `transform: translateX(${this.renderX}px)`;
     },
@@ -238,6 +268,7 @@ export default {
   },
   data() {
     return {
+      activeInedx: 0,
       loopBig: {},
       scrollBar: true,
       translateX: 0,
@@ -282,22 +313,19 @@ export default {
 
       this.renderX = -this.translateX;
     },
-    //预览大图
-    previewList() {
-      if (this.resultData.saleUploadPicDtoList) {
-        return this.resultData.saleUploadPicDtoList.map(item => {
-          return item.picUrl + "?x-oss-process=style/middlethumb";
-        });
-      }
-      return [];
-    },
-    changeLoop(item) {
+    changeLoop(item, index = 0) {
       if (item.default) {
         return;
       }
+
+      if (this.resultData.saleUploadVideoDtoList.length > 0) {
+        index -= 1;
+      }
+
       if ("picUrl" in item) {
         this.$set(this.loopBig, "typeStr", "picUrl");
         this.$set(this.loopBig, "src", item.picUrl);
+        this.activeInedx = index;
       } else if ("videoUrl" in item) {
         this.$set(this.loopBig, "typeStr", "videoUrl");
         this.$set(this.loopBig, "src", item.videoUrl);
