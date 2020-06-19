@@ -86,7 +86,7 @@
       <template v-if="loopBig.typeStr == 'picUrl'">
         <el-image
           class="loop-item"
-          :src="loopBig.src + '?x-oss-process=style/bigthumb'"
+          :src="loopBig.src + '?x-oss-process=style/middlethumb'"
           :preview-src-list="previewList()"
           fit="cover"
         >
