@@ -86,12 +86,18 @@ Validator.extend("isChinese", {
   }
 });
 
-//中文长度
-Validator.extend("chineseLen", {
+//arrLength
+Validator.extend("arrGTLength", {
+  compare: ["length", "message"],
   messages: {
-    zh_CN: field => field + "不得少于两个字"
+    zh_CN: (field, args) => {
+      if (args[1] == undefined) return field + "长度不能小于" + args[0];
+      return args[1];
+    }
   },
-  validate: value => value.length > 1
+  validate: (value, compare) => {
+    return value > parseInt(compare[0]);
+  }
 });
 
 //级联
