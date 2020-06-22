@@ -20,6 +20,7 @@ export default {
     if (token == "" || token == null)
       //兼容部分低版本浏览器通过上面的方法获取不到token问题
       token = util.getQueryVariable("tk");
+
     console.log(util.localStorageGet("tk"), token, "util.localStorageGet(tk)");
     if (
       !util.localStorageGet(LOGINDATA) ||
