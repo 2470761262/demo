@@ -169,7 +169,17 @@
                 v-for="(item, index) in pop.checkList"
                 :key="index"
               >
-                <input type="radio" :value="item.value" v-model="pop.model" />
+                <input
+                  type="radio"
+                  :value="item.value"
+                  v-model="pop.model"
+                  data-vv-as="委托类型未选择"
+                  data-vv-name="onlyType"
+                  v-validate="{
+                    required: true,
+                    arrGTLength: [0, '委托类型未选择']
+                  }"
+                />
                 <i></i>
                 <span>{{ item.title }}</span>
               </label>
