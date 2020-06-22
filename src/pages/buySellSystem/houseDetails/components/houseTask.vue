@@ -653,6 +653,9 @@ export default {
                   .headImgUrl.includes("http")
                   ? util.localStorageGet("logindata").headImgUrl
                   : null;
+                this.resultData.agentPerDepartmentName = util.localStorageGet(
+                  "logindata"
+                ).deptName;
               } else {
                 that.$message(result.message);
               }

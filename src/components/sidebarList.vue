@@ -128,6 +128,7 @@ export default {
   },
   methods: {
     getEditAuthority(authorityUnderName, houseDatails) {
+      if (!authorityUnderName) return;
       return (
         (authorityUnderName.coIdList &&
           authorityUnderName.coIdList.includes(
