@@ -986,9 +986,11 @@ export default {
         "step",
         JSON.parse(JSON.stringify(this.$store.state.addHouse.formData.step2))
       );
-      if(this.$store.state.addHouse.formData.step2.houseNow){
+      if (this.$store.state.addHouse.formData.step2.houseNow) {
         // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.step.houseNow = parseInt(this.$store.state.addHouse.formData.step2.houseNow);
+        this.step.houseNow = parseInt(
+          this.$store.state.addHouse.formData.step2.houseNow
+        );
       }
       return this.step;
     }

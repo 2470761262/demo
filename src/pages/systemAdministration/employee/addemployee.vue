@@ -62,18 +62,18 @@
         </el-form-item>
         <el-form-item label="密码:" prop="loginPwd">
           <el-input
-            type="text"
+            type="password"
             placeholder="请输入内容"
             v-model="employeeEntity.loginPwd"
-            show-word-limit
+            auto-complete="new-password"
           ></el-input>
         </el-form-item>
-        <el-form-item label="重复密码:" prop="loginPwd">
+        <el-form-item label="重复密码:" prop="verifyPassword">
           <el-input
-            type="text"
+            type="password"
             placeholder="请输入内容"
-            v-model="employeeEntity.loginPwd"
-            show-word-limit
+            v-model="employeeEntity.verifyPassword"
+            auto-complete="new-password"
           ></el-input>
         </el-form-item>
         <el-form-item label="姓名:" prop="perName">
@@ -236,6 +236,7 @@
                   @check="treeCheck"
                   :highlight-current="true"
                   :filter-node-method="filterNode"
+                  :check-strictly="true"
                 ></el-tree>
               </div>
             </template>
@@ -244,6 +245,7 @@
             type="text"
             v-model="employeeEntity.deptName"
             @focus="getDialogVisible()"
+            @blur="clear('perDept')"
           ></el-input>
         </el-form-item>
 
@@ -474,14 +476,15 @@
             type="text"
             v-model="employeeEntity.jieShaoName"
             @focus="getDialogVisible1()"
+            @blur="clear('jieShaoNameId')"
           ></el-input>
         </el-form-item>
       </div>
 
-      <div class="footerContainer el-top">
+      <el-form-item class="footerContainer el-top">
         <el-button type="primary" @click="saveEmployee()">确定</el-button>
         <el-button type="primary" @click="back()">返回</el-button>
-      </div>
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -526,6 +529,21 @@ export default {
         callback(new Error("电话号码不正确"));
       }
     };
+    var checkPassWord = (rule, value, callback) => {
+      if (this.employeeEntity.loginPwd != this.employeeEntity.verifyPassword) {
+        return callback(new Error("重复密码必选与密码一致"));
+      } else {
+        callback();
+      }
+    };
+    var checkPerRole = (rule, value, callback) => {
+      if (!util.isNotNull(this.employeeEntity.perRole)) {
+        return callback(new Error("岗位未选择"));
+      } else {
+        callback();
+      }
+    };
+
     return {
       queryName: "",
       perPostReadOnly: true,
@@ -539,33 +557,49 @@ export default {
           { required: true, message: "请输入登录账号", trigger: "blur" }
         ],
         loginPwd: [{ required: true, message: "请输入密码", trigger: "blur" }],
+        verifyPassword: [
+          {
+            required: true,
+            message: "请输入重复密码",
+            trigger: "blur"
+          },
+          {
+            validator: checkPassWord,
+            trigger: "blur"
+          }
+        ],
         perName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         cardId: [
           { required: true, message: "身份证不能为空", trigger: "blur" },
           { validator: checkCardId, trigger: "blur" }
         ],
-        sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
-        status: [{ required: true, message: "请选择状态", trigger: "blur" }],
-        education: [{ required: true, message: "请选择学历", trigger: "blur" }],
+        sex: [{ required: true, message: "请选择性别", trigger: "change" }],
+        status: [{ required: true, message: "请选择状态", trigger: "change" }],
+        education: [
+          { required: true, message: "请选择学历", trigger: "change" }
+        ],
         tel: [{ required: true, validator: checkTel, trigger: "blur" }],
         birthday: [{ required: true, message: "请选择生日", trigger: "blur" }],
-        perDept: [{ required: true, message: "请选择部门", trigger: "blur" }],
-        perPost: [{ required: true, message: "请选择角色", trigger: "blur" }],
-        perRole: [{ required: true, message: "请选择岗位", trigger: "blur" }],
+        perDept: [{ required: true, message: "请选择部门", trigger: "change" }],
+        perPost: [{ required: true, message: "请选择角色", trigger: "change" }],
+        perRole: [{ validator: checkPerRole, trigger: "change" }],
         regTime: [
-          { required: true, message: "请选择入职时间", trigger: "blur" }
+          { required: true, message: "请选择入职时间", trigger: "change" }
         ],
-        levelNo: [{ required: true, message: "请选择星级", trigger: "blur" }],
+        levelNo: [{ required: true, message: "请选择星级", trigger: "change" }],
         isGold: [
           { required: true, message: "请选择是否菁英", trigger: "blur" }
         ],
         jieShaoNameId: [
-          { required: true, message: "请选择介绍人", trigger: "blur" }
+          { required: true, message: "请选择介绍人", trigger: "change" }
         ]
       },
       defaultProps: {
         children: "childrenNodes",
-        label: "labelName"
+        label: "labelName",
+        disabled: (data, node) => {
+          return data.type == 1 ? false : true;
+        }
       },
       loading: false, //控制表格加载动画提示
       queryData: {
@@ -644,15 +678,20 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    clear(name) {
+      this.employeeEntity[name] = null;
+    },
     getDialogVisible1() {
       this.dialogVisible1 = true;
-      this.getPrincipal(1);
-      this.tableDataColumn = [
-        { prop: "perName", label: "姓名" },
-        { prop: "deptName", label: "部门" },
-        { prop: "companyName", label: "公司" },
-        { prop: "positionName", label: "岗位" }
-      ];
+      if (this.tableData.length == 0) {
+        this.getPrincipal(1);
+        this.tableDataColumn = [
+          { prop: "perName", label: "姓名" },
+          { prop: "deptName", label: "部门" },
+          { prop: "companyName", label: "公司" },
+          { prop: "positionName", label: "岗位" }
+        ];
+      }
     },
     getPrincipal(currentPage) {
       let params = { limit: this.pageJson.pageSize, page: currentPage };
@@ -867,39 +906,21 @@ export default {
           console.log("查询角色失败");
         });
     },
-    checkChange(e, data, childData) {
-      console.log(e, data, childData, "checkChange");
+    checkChange(data, checked, childData) {
+      if (checked) {
+        this.$refs.tree2.setCheckedNodes([data]);
+      }
     },
     treeCheck(e, data) {
       if (e.type == 1) {
-        this.$api
-          .get({
-            url: "/department/" + e.businessId,
-            token: false
-          })
-          .then(e => {
-            console.log(e.data);
-            let result = e.data;
-            if (result.code == 200) {
-              console.log(result.message);
-              console.log(result.data);
-              this.employeeEntity.perDept = result.data.id;
-              this.employeeEntity.deptName = result.data.deptName;
-            } else {
-              console.log("查询部门详情结果：" + result.message);
-              alert(result.message);
-            }
-          })
-          .catch(e => {
-            console.log("查询部门详情失败");
-            console.log(e);
-          });
+        this.employeeEntity.perDept = e.businessId;
+        this.employeeEntity.deptName = e.labelName;
+        this.dialogVisible = false;
       } else {
         this.$alert("", "请选择一个部门节点!!!", {
           dangerouslyUseHTMLString: false
         });
       }
-      console.log(e, data, "check..");
     },
     //树输入筛选
     filterNode(value, data) {
@@ -909,7 +930,9 @@ export default {
     },
     getDialogVisible() {
       this.dialogVisible = true;
-      this.getDept();
+      if (this.treeData.length == 0) {
+        this.getDept();
+      }
     },
     handleClose() {
       this.dialogVisible = false;
@@ -942,16 +965,11 @@ export default {
           console.log(e);
         });
     },
-    saveEmployee() {
-      if (this.iscardId()) {
-        if (
-          /^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(
-            this.employeeEntity.tel
-          )
-        ) {
-          //this.employeeEntity.birthday=this.employeeEntity.birthday.toLocaleString();
-          //this.employeeEntity.regTime=this.employeeEntity.regTime.toLocaleString();
-          //this.employeeEntity.graduation=this.employeeEntity.graduation.toLocaleString();
+    saveEmployee(formName) {
+      this.$refs.form.validate(valid => {
+        if (!valid) {
+          return false;
+        } else {
           let params = this.employeeEntity;
           this.$api
             .post({
@@ -972,16 +990,8 @@ export default {
               console.log("添加失败");
               console.log(e);
             });
-        } else {
-          this.$alert("", "请填写正确的电话号码!!!", {
-            dangerouslyUseHTMLString: false
-          });
         }
-      } else {
-        this.$alert("", "请填写正确的身份证号或银行卡号!!!", {
-          dangerouslyUseHTMLString: false
-        });
-      }
+      });
     },
     back() {
       this.$router.push({ path: "/sys/employeeList" });
@@ -998,6 +1008,7 @@ export default {
       console.log(row);
       this.employeeEntity.jieShaoName = row.perName;
       this.employeeEntity.jieShaoNameId = row.accountId;
+      this.dialogVisible1 = false;
     },
     iscardId() {
       console.log(this.employeeEntity.cardId);
