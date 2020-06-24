@@ -149,7 +149,7 @@
               <el-button
                 type="primary"
                 size="mini"
-                @click="distributeEvent(item.methodName, scope.row.id)"
+                @click="distributeEvent(item.methodName, scope.row.accountId)"
                 v-for="(item, index) in getOpeBtns(
                   scope.row.del,
                   scope.row.isLocked
@@ -219,14 +219,15 @@ export default {
         pageSize: 10 //每页条数
       },
       tableDataColumn: [
-        { prop: "perName", label: "姓名", width: "120px" },
-        { prop: "loginUser", label: "登录名", width: "150px" },
-        { prop: "deptName", label: "部门", width: "180px" },
-        { prop: "postName", label: "角色", width: "150px" },
+        { prop: "perName", label: "姓名", width: "100px" },
+        { prop: "loginUser", label: "登录名", width: "120px" },
         { prop: "companyName", label: "公司", width: "180px" },
+        { prop: "deptName", label: "部门", width: "180px" },
+        { prop: "positionName", label: "角色", width: "150px" },
         { prop: "roleName", label: "岗位", width: "150px" },
         { prop: "del", label: "状态", width: "80px" },
-        { prop: "isLocked", label: "情况", width: "80px" }
+        { prop: "isLocked", label: "情况", width: "80px" },
+        { prop: "loginDatetime", label: "最近登录时间", width: "180px" }
       ],
       tableData: [],
       treeData: [],
@@ -464,8 +465,6 @@ export default {
         });
     },
     getOpeBtns(del, locked) {
-      console.log(del, "【【【【【1】】】】】");
-      console.log(locked, "【【【【【2】】】】】");
       let array = [
         {
           name: "编辑",
@@ -584,11 +583,11 @@ export default {
         this.checkedId = data.businessId;
         this.checkedType = data.type;
         this.$refs.tree2.setCheckedNodes([data]);
-        console.log(this.checkedId, this.checkedType);
         this.queryEmployeeDatas(1);
       } else {
         this.checkedId = null;
         this.checkedType = null;
+        this.queryEmployeeDatas(1);
       }
     }
   }
