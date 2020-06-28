@@ -7,6 +7,7 @@ module.exports = {
       selectorBlackList: [/^html$/, ".page-cell-main-menu"],
       unitPrecision: 5,
       minPixelValue: 2
-    }
+    },
+    "postcss-lsx-zr":{}
   }
 };
