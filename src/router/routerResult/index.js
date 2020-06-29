@@ -1072,6 +1072,17 @@ export default [
         /* webpackChunkName: "authorityConfigurationSetAuthority" */ "@/pages/systemAdministration/authorityConfiguration/setAuthority.vue"
       )
   },
+  {
+    //客源系统 新整客户
+    path: "/customers/addCustomers",
+    meta: {
+      title: "新增客源"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue"
+      )
+  },
   
  
 ];
