@@ -57,17 +57,8 @@
         <i class="el-icon-location"></i>
         <span>新客源系统</span>
       </template>
-      <el-menu-item index="/customersSystem/customersIframe"
-        >客源管理</el-menu-item
-      >
-      <el-menu-item index="/customersSystem/checkCustomerList"
-        >客户审核</el-menu-item
-      >
-      <el-menu-item index="/customersSystem/addCustomers"
-        >录入客户</el-menu-item
-      >
-      <el-menu-item index="/customersSystem/customersDetail"
-        >客户详情</el-menu-item
+      <el-menu-item index="/customers/addCustomers"
+        >新增客源</el-menu-item
       >
     </el-submenu>
     <el-submenu
