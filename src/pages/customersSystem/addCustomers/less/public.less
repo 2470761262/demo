@@ -1,0 +1,28 @@
+.input() {
+    /deep/.el-input__inner {
+        height: 100%;
+        line-height: 100%;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 1);
+        border: 1px solid rgba(206, 206, 206, 1);
+        font-size: 16PX;
+        &::placeholder {
+            font-size: 16PX;
+            line-height: 18PX;
+            color: rgba(144, 147, 153, 1);
+        }
+
+        &:focus {
+            border-color: var(--color--primary);
+        }
+    }
+
+    /deep/.el-input__clear {
+        font-family: "iconfont" !important;
+        font-size: 18PX;
+
+        &::before {
+            content: "\e644";
+        }
+    }
+}
