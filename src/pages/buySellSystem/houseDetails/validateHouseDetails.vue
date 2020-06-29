@@ -44,7 +44,7 @@
       <!-- 轮播图 -->
       <loopImg class="cell-left" :class="{ 'cell-left-nest': nest }"></loopImg>
       <!-- 房屋详情 -->
-      <detail class="cell-right"></detail>
+      <detail class="cell-right" :phoneDisabled="true"></detail>
       <!-- 右侧功能按钮 -->
       <sidebarList
         lastItemSet

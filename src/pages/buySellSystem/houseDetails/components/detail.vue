@@ -360,7 +360,7 @@
           <el-button
             data-anchor="房源详情查看号码 => click"
             class="cell-pro-but anchor-point"
-            :disabled="lockingDisabled"
+            :disabled="lockingDisabled || phoneDisabled"
           >
             查看号码<i class="el-icon-arrow-down el-icon--right"></i>
           </el-button>
@@ -396,7 +396,7 @@
           data-anchor="房源详情一键拨号 => click"
           class="cell-pro-but anchor-point"
           @click="dialPhoneToFD"
-          :disabled="lockingDisabled || !touchedDialPhone"
+          :disabled="lockingDisabled || !touchedDialPhone || phoneDisabled"
         >
           一键拨号
         </button>
@@ -427,6 +427,10 @@ export default {
   props: {
     housePageType: {
       type: String
+    },
+    phoneDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -529,7 +533,10 @@ export default {
           roomNo: _that.resultData.RoomNo,
           flag: "potentia",
           customerName: _that.resultData.Customers,
-          tel: _that.resultData.Tel
+          tel: _that.resultData.Tel,
+          tel1: _that.resultData.Tel1,
+          tel2: _that.resultData.Tel2,
+          tel3: _that.resultData.Tel3
         }
       });
     },

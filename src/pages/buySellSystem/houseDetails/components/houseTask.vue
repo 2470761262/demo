@@ -617,7 +617,10 @@ export default {
           roomNo: _that.resultData.RoomNo,
           flag: "potentia",
           customerName: _that.resultData.Customers,
-          tel: _that.resultData.Tel
+          tel: _that.resultData.Tel,
+          tel1: _that.resultData.Tel1,
+          tel2: _that.resultData.Tel2,
+          tel3: _that.resultData.Tel3
         }
       });
     },
