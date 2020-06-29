@@ -517,24 +517,6 @@ export default [
     ]
   },
   {
-    //客源系统 三级路由
-    path: "/customersSystem/customersIframe",
-    name: "customersIframe",
-    redirect: "/customersSystem/allCustomers",
-    meta: {
-      title: "客源系统"
-    },
-    component: () =>
-      import(
-        /* webpackChunkName: "customersIframe" */ "@/pages/customersSystem/customersIframe/customersIframe.vue"
-      ),
-    children: [
-     
-      
-    
-    ]
-  },
-  {
     //系统管理 公告管理
     path: "/sys/noticeManageList",
     meta: {
