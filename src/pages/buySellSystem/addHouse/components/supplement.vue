@@ -300,8 +300,8 @@
           v-model="formData.propertyFee"
           v-validate="
             required
-              ? 'decimal:2|noZero1|max:14|required'
-              : 'decimal:2|noZero1|max:14'
+              ? 'decimal:2|zero|max:14|required'
+              : 'decimal:2|zero|max:14'
           "
           data-vv-as="物业费"
           class="anchor-point"
@@ -370,14 +370,14 @@
     <div class="cell-item-cell no-top" v-if="primaryRadio == 1">
       <div class="item-before"></div>
       <div
-        :class="{ 'after-tips': errorBags.has('primarySchoolUse') }"
-        :data-tips="errorBags.first('primarySchoolUse')"
+        :class="{ 'after-tips': errorBags.has('primarySchoolGrade') }"
+        :data-tips="errorBags.first('primarySchoolGrade')"
       >
         <el-radio-group
           v-validate="{ required: primaryRadio == 1 }"
-          data-vv-name="primarySchoolUse"
+          data-vv-name="primarySchoolGrade"
           data-vv-as="小学学籍占用"
-          v-model="formData.primarySchoolUse"
+          v-model="formData.primarySchoolGrade"
           size="mini"
         >
           <el-radio
@@ -421,14 +421,14 @@
     <div class="cell-item-cell no-top" v-if="middleRadio == 1">
       <div class="item-before"></div>
       <div
-        :class="{ 'after-tips': errorBags.has('middleSchoolUse') }"
-        :data-tips="errorBags.first('middleSchoolUse')"
+        :class="{ 'after-tips': errorBags.has('middleSchoolGrade') }"
+        :data-tips="errorBags.first('middleSchoolGrade')"
       >
         <el-radio-group
           v-validate="{ required: middleRadio == 1 }"
-          data-vv-name="middleSchoolUse"
+          data-vv-name="middleSchoolGrade"
           data-vv-as="中学学籍占用"
-          v-model="formData.middleSchoolUse"
+          v-model="formData.middleSchoolGrade"
           size="mini"
         >
           <el-radio
@@ -909,8 +909,10 @@ let updateFileMap = new Map([
   ["sign", "Sign"],
   ["propertyFee", "PropertyFee"],
   ["houseBelong", "HouseBelong"],
-  ["primarySchoolUse", "primary_school_grade"],
-  ["middleSchoolUse", "middle_school_grade"],
+  ["primarySchoolUse", "primary_school_use"],
+  ["middleSchoolUse", "middle_school_use"],
+  ["primarySchoolGrade", "primary_school_grade"],
+  ["middleSchoolGrade", "middle_school_grade"],
   ["mortgage", "Mortgage"],
   ["mortgageBank", "MortgageLoanBank"],
   ["balance", "Balance"],
@@ -1395,27 +1397,28 @@ export default {
     },
     //中学占用切换
     middleRadioChange(e) {
-      if (e == 0) {
-        this.formData.middleSchoolUse = 0;
-        // this.$store.dispatch("InitFormData", {
-        //   commitName: "updateStep2",
-        //   json: {
-        //     middleSchoolUse: -1
-        //   }
-        // });
-      }
+      this.formData.middleSchoolUse = e;
+      //if (e == 0) {
+
+      // this.$store.dispatch("InitFormData", {
+      //   commitName: "updateStep2",
+      //   json: {
+      //     middleSchoolUse: -1
+      //   }
+      // });
+      //}
     },
     //小学占用切换
     primaryRadioChange(e) {
-      if (e == 0) {
-        this.formData.primarySchoolUse = 0;
-        // this.$store.dispatch("InitFormData", {
-        //   commitName: "updateStep2",
-        //   json: {
-        //     primarySchoolUse: -2
-        //   }
-        // });
-      }
+      this.formData.primarySchoolUse = e;
+      //if (e == 0) {
+      // this.$store.dispatch("InitFormData", {
+      //   commitName: "updateStep2",
+      //   json: {
+      //     primarySchoolUse: -2
+      //   }
+      // });
+      // }
     },
     validateAll() {
       let that = this;
