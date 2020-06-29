@@ -45,6 +45,16 @@ Validator.extend("noZero1", {
       value
     )
 });
+//要么不输，要输只能输入正整数和正小数，且可以0
+Validator.extend("zero", {
+  messages: {
+    zh_CN: field => field + "正整数和正小数"
+  },
+  validate: value =>
+    /^([1-9]?\d+(\.\d*)|(\\s&&[^\\f\\n\\r\\t\\v])|0|([1-9]*[1-9][0-9]*)?)$/.test(
+      value
+    )
+});
 //比较大小
 Validator.extend("isGreater", {
   compare: ["compare", "title"],

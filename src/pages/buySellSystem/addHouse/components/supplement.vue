@@ -300,8 +300,8 @@
           v-model="formData.propertyFee"
           v-validate="
             required
-              ? 'decimal:2|noZero1|max:14|required'
-              : 'decimal:2|noZero1|max:14'
+              ? 'decimal:2|zero|max:14|required'
+              : 'decimal:2|zero|max:14'
           "
           data-vv-as="物业费"
           class="anchor-point"
