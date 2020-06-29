@@ -372,7 +372,7 @@
       <div class="message-row">
         <h5 class="message-row-title">物业费</h5>
         <div class="message-row-right" v-if="updateHouse.propertyFee">
-          {{ resultData.PropertyFee | emptyRead("元/平") }}
+          {{ resultData.PropertyFee | emptyReadZero("元/平") }}
         </div>
         <el-input
           v-else

@@ -180,6 +180,13 @@ export default {
       }
       return beforeCompany + value + afterCompany;
     });
+    Vue.filter("emptyReadZero", (value, afterCompany = "", beforeCompany = "") => {
+      let result = ["", null, "无"].every(item => item != value);
+      if (!result&&value!=0) {
+        return "暂无";
+      }
+      return beforeCompany + value + afterCompany;
+    });
 
     Vue.filter("defaultImg", value => {
       if (value == "" || value == null) {
