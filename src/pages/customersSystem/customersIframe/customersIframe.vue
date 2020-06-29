@@ -1,7 +1,6 @@
 <script>
 import otherIframe from "@/pages/buySellSystem/otherIframe/otherIframe";
 import rouetTabsArray from "./routerTabJs/index";
-import setImpression from "@/util/tabUtil";
 export default {
   name: "customersIframe",
   extends: otherIframe,
@@ -12,10 +11,8 @@ export default {
     };
   },
   created() {
-    setImpression.agencyImpressionClick();
   },
   destroyed() {
-    setImpression.removeImpressionClick();
   }
 };
 </script>
