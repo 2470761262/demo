@@ -7,7 +7,7 @@ module.exports = {
       selectorBlackList: [/^html$/, ".page-cell-main-menu"],
       unitPrecision: 5,
       minPixelValue: 2,
-      propBlackList:["border"]
+      propBlackList:["border","border-radius"]
     },
     "postcss-lsx-zr":{}
   }
