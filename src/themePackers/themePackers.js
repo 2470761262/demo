@@ -2,6 +2,7 @@ import util from "@/util/util";
 import { TREMEPACKERS, TREMEDEFTULTCOLOR } from "@/util/constMap";
 //const version = require('element-ui/package.json').version // element-ui version from node_modules
 const defaultColor = "#409EFF"; // 不可修改
+const tint = 0.76;
 let themeData = {
   chalk: "",
   createImport(val, ordVal = defaultColor) {
@@ -17,28 +18,39 @@ let themeData = {
     // if (process.env.NODE_ENV != 'development') {
     // themeData.createStyle(newVal, ordVal);
     // }
-    console.log(newVal, "newValnewValnewValnewValnewValnewValnewVal");
     themeData.createStyle(newVal, ordVal);
     themeData.init(newVal);
     return Promise.resolve();
   },
   init(color) {
     let tremePackers = util.localStorageGet(TREMEPACKERS);
-    console.log(tremePackers, "tremePackerstremePackerstremePackers");
+    console.log(tremePackers, "tremePackers", color);
     if (!color) {
       if (tremePackers) {
         document.documentElement.style.setProperty(
           "--color--primary",
           tremePackers
         );
+        document.documentElement.style.setProperty(
+          "--color--opticyBackground",
+          tintColor(tremePackers.replace("#", ""), tint)
+        );
       } else {
         document.documentElement.style.setProperty(
           "--color--primary",
           defaultColor
         );
+        document.documentElement.style.setProperty(
+          "--color--opticyBackground",
+          tintColor(defaultColor.replace("#", ""), tint)
+        );
       }
     } else {
       document.documentElement.style.setProperty("--color--primary", color);
+      document.documentElement.style.setProperty(
+        "--color--opticyBackground",
+        tintColor(color.replace("#", ""), tint)
+      );
       util.localStorageSet(TREMEPACKERS, color);
     }
   },
@@ -120,26 +132,6 @@ let themeData = {
     });
   },
   getThemeCluster(theme) {
-    const tintColor = (color, tint) => {
-      let red = parseInt(color.slice(0, 2), 16);
-      let green = parseInt(color.slice(2, 4), 16);
-      let blue = parseInt(color.slice(4, 6), 16);
-
-      if (tint === 0) {
-        // when primary color is in its rgb space
-        return [red, green, blue].join(",");
-      } else {
-        red += Math.round(tint * (255 - red));
-        green += Math.round(tint * (255 - green));
-        blue += Math.round(tint * (255 - blue));
-
-        red = red.toString(16);
-        green = green.toString(16);
-        blue = blue.toString(16);
-
-        return `#${red}${green}${blue}`;
-      }
-    };
     const shadeColor = (color, shade) => {
       let red = parseInt(color.slice(0, 2), 16);
       let green = parseInt(color.slice(2, 4), 16);
@@ -163,5 +155,24 @@ let themeData = {
     return clusters;
   }
 };
+const tintColor = (color, tint) => {
+  let red = parseInt(color.slice(0, 2), 16);
+  let green = parseInt(color.slice(2, 4), 16);
+  let blue = parseInt(color.slice(4, 6), 16);
 
+  if (tint === 0) {
+    // when primary color is in its rgb space
+    return [red, green, blue].join(",");
+  } else {
+    red += Math.round(tint * (255 - red));
+    green += Math.round(tint * (255 - green));
+    blue += Math.round(tint * (255 - blue));
+
+    red = red.toString(16);
+    green = green.toString(16);
+    blue = blue.toString(16);
+
+    return `#${red}${green}${blue}`;
+  }
+};
 export default themeData;
