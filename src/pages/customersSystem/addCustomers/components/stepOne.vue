@@ -100,12 +100,51 @@
     </div>
     <div class="input-group is-required">
       <div class="input-head">客户来源</div>
-      <select-cascader />
+      <select-cascader :cascaderList="cascaderList" />
     </div>
   </section>
 </template>
 
 <script>
+const cascaderList = [
+  {
+    title: "人际开发",
+    value: 0,
+    children: [
+      { title: "公众号", value: 0 },
+      { title: "APP", value: 1 },
+      { title: "小程序", value: 2 }
+    ]
+  },
+  {
+    title: "二次开发",
+    value: 1,
+    children: [
+      { title: "公众号", value: 0 },
+      { title: "APP", value: 1 },
+      { title: "小程序", value: 2 }
+    ]
+  },
+  {
+    title: "网络端口",
+    value: 2,
+    children: [
+      { title: "公众号", value: 0 },
+      { title: "APP", value: 1 },
+      { title: "小程序", value: 2 }
+    ]
+  },
+  {
+    title: "鑫家网",
+    value: 3,
+    children: [
+      { title: "公众号", value: 0 },
+      { title: "APP", value: 1 },
+      { title: "小程序", value: 2 }
+    ]
+  }
+];
+
 import { SEX } from "@/util/constMap";
 import selectCascader from "./selectCascader";
 export default {
@@ -115,7 +154,8 @@ export default {
   data() {
     return {
       mock: "",
-      sex: SEX
+      sex: SEX,
+      cascaderList: cascaderList
     };
   }
 };
