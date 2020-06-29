@@ -1166,6 +1166,10 @@ export default {
           }
         });
       }
+
+      data.price = this.formData.price;
+      data.area = this.formData.area;
+      console.log(this.formData, "this.formData", this.deffData);
       return this.$api[method]({
         url: url,
         data: data,
