@@ -900,7 +900,8 @@ export default {
           roomNo: roomNo,
           flag: "potentia",
           customerName: null,
-          tel: null
+          tel: null,
+          method: 'tosale'
         }
       });
     },
