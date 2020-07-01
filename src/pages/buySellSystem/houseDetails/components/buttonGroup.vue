@@ -545,10 +545,10 @@ export default {
         HouseNo: this.resultData.HouseNo,
         id: this.houseId.id
       };
-      let reslut = await release.cancelOutsideHouse(params);
-      if (reslut) {
+      let result = await release.cancelOutsideHouse(params);
+      if (result) {
         this.resultData.isReleaseOutside = 0;
-        this.$message(reslut.data.message);
+        this.$message(result);
       } else {
         this.$message("操作失败");
       }
@@ -564,11 +564,11 @@ export default {
         };
         this.load.loadingMessage = "正在发布";
         this.load.loading = true;
-        let reslut = await release.releaseOutsideHouse(params);
+        let result = await release.releaseOutsideHouse(params);
         this.load.loading = false;
-        if (reslut.data.code == 200) {
+        if (result.data.code == 200) {
           this.resultData.isReleaseOutside = 1;
-          this.$message(reslut.data.message);
+          this.$message(result.data.message);
         } else {
           this.$message("操作失败");
         }

@@ -27,7 +27,7 @@ export default {
       })
       .then(e => {
         if (e.data.code == 200) {
-          return true;
+          return e.data.message;
         } else {
           return false;
         }
