@@ -135,11 +135,10 @@ export default {
         this.load.loading = true;
         result = await release.releaseOutsideHouse(params);
         this.load.loading = false;
-        if (result) {
+        console.log("212121", result.data.code);
+        if (result.data.code == 200) {
           this.resultData.isReleaseOutside = 1;
           this.$message("操作成功");
-        } else {
-          this.$message("操作失败");
         }
       }
     },
