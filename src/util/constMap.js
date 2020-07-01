@@ -466,6 +466,26 @@ export const ONLYTYPE = [
   }
 ];
 
+export const BUYINTENTION = [
+  //委托类型
+  {
+    key: "无意向",
+    value: 0
+  },
+  {
+    key: "较弱",
+    value: 1
+  },
+  {
+    key: "一般",
+    value: 2
+  },
+  {
+    key: "强烈",
+    value: 3
+  }
+];
+
 export const SEX = [
   //性别
   {
