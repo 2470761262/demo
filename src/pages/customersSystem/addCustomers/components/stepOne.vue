@@ -467,6 +467,7 @@ export default {
      */
     addImpressionConfirm() {
       this.tags.push(this.mock1);
+      this.mock1 = "";
       this.followUpFlag = false;
     },
     /**
