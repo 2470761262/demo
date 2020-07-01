@@ -705,7 +705,10 @@ export default {
       this.formData.communityName = this.$route.query.communityName;
       this.formData.buildingNo = this.$route.query.buildingName;
       this.formData.customerName = this.$route.query.customerName;
-      this.formData.tel = this.$route.query.tel;
+      this.getPotentiaTel(this.$route.query);
+      // this.formData.tel = this.$route.query.tel;
+      // this.formData.tel1 = this.$route.query.tel1;
+      // this.addTel.push(1);
     }
     console.log(this.$route.query.flag);
     // this.getNextSaveButton();
@@ -717,6 +720,21 @@ export default {
     this.addHouseType = this.houseType;
   },
   methods: {
+    /**
+     * 解析转在售电话号码
+     * @param value 接收的值
+     */
+    getPotentiaTel(value) {
+      let telArry = ["tel", "tel1", "tel2", "tel3"];
+      telArry.forEach((item, index) => {
+        if (value[item]) {
+          this.formData[item] = value[item];
+          if (index > 0) {
+            this.addTel.push(index);
+          }
+        }
+      });
+    },
     //补充楼盘
     addedbuilding() {
       this.$router.push({ path: "/buySellSystem/CommunityReplenish" });
