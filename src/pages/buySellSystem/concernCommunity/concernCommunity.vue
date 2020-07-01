@@ -864,46 +864,83 @@ export default {
           break;
         case "6":
           this.toSale(
+            row.eid,
             row.comId,
             row.cbId,
             row.bhId,
             row.communityName,
             row.buildingName,
-            row.roomNo
+            row.customers,
+            row.roomNo,
+            row.tel
           );
           break;
         case "7":
           this.toSale(
+            row.eid,
             row.comId,
             row.cbId,
             row.bhId,
             row.communityName,
             row.buildingName,
-            row.roomNo
+            row.customers,
+            row.roomNo,
+            row.tel
           );
           break;
         default:
           break;
       }
     },
-    toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
+    toSale(
+      id,
+      comId,
+      cbId,
+      bhId,
+      communityName,
+      buildingName,
+      customers,
+      roomNo,
+      tel
+    ) {
       var that = this;
-      that.$router.push({
-        path: "/buySellSystem/addHouse",
-        disabledStatus: false,
-        query: {
-          comId: comId,
-          cbId: cbId,
-          bhId: bhId,
-          communityName: communityName,
-          buildingName: buildingName,
-          roomNo: roomNo,
-          flag: "potentia",
-          customerName: null,
-          tel: null,
-          method: 'tosale'
-        }
-      });
+      console.log(bhId);
+      this.$api
+        .post({
+          url: "/agent_house/getTels/" + id,
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          let tel1 = "",
+            tel2 = "",
+            tel3 = "";
+          if (result.code == 200) {
+            tel = result.data.Tel;
+            tel1 = result.data.Tel1;
+            tel2 = result.data.Tel2;
+            tel3 = result.data.Tel3;
+          }
+          that.$router.push({
+            path: "/buySellSystem/addHouse",
+            disabledStatus: false,
+            query: {
+              comId: comId,
+              cbId: cbId,
+              bhId: bhId,
+              communityName: communityName,
+              buildingName: buildingName,
+              roomNo: roomNo,
+              flag: "potentia",
+              customerName: customers,
+              method: "tosale",
+              tel: tel,
+              tel1: tel1,
+              tel2: tel2,
+              tel3: tel3
+            }
+          });
+        });
     },
     /**
      * 转跟单

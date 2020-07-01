@@ -227,6 +227,7 @@
             size="mini"
             @click="
               toSale(
+                scope.row.id,
                 scope.row.comId,
                 scope.row.cbId,
                 scope.row.bhId,
@@ -515,6 +516,7 @@ export default {
       });
     },
     toSale(
+      id,
       comId,
       cbId,
       bhId,
@@ -526,21 +528,41 @@ export default {
     ) {
       var that = this;
       console.log(bhId);
-      that.$router.push({
-        path: "/buySellSystem/addHouse",
-        query: {
-          method: "tosale",
-          comId: comId,
-          cbId: cbId,
-          bhId: bhId,
-          communityName: communityName,
-          buildingName: buildingName,
-          roomNo: roomNo,
-          flag: "potentia",
-          customerName: customers,
-          tel: tel
-        }
-      });
+      this.$api
+        .post({
+          url: "/agent_house/getTels/" + id,
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          let tel1 = "",
+            tel2 = "",
+            tel3 = "";
+          if (result.code == 200) {
+            tel = result.data.Tel;
+            tel1 = result.data.Tel1;
+            tel2 = result.data.Tel2;
+            tel3 = result.data.Tel3;
+          }
+          that.$router.push({
+            path: "/buySellSystem/addHouse",
+            query: {
+              method: "tosale",
+              comId: comId,
+              cbId: cbId,
+              bhId: bhId,
+              communityName: communityName,
+              buildingName: buildingName,
+              roomNo: roomNo,
+              flag: "potentia",
+              customerName: customers,
+              tel: tel,
+              tel1: tel1,
+              tel2: tel2,
+              tel3: tel3
+            }
+          });
+        });
     },
     queryNotSaleParams() {
       this.queryNotSale(1);
