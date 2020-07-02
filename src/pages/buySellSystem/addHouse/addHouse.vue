@@ -307,6 +307,10 @@ export default {
       let comName = this.$refs.com.$options.name;
       let flag = false;
       this.butLoading = true;
+      if (parmse == "draft" && this.reSetMethod) {
+        //点击提交验真按钮且标记为验真编辑
+        this.reSetMethod = false;
+      }
       switch (comName) {
         case "basicInformation":
           flag = await this.$refs.com.validateAll();

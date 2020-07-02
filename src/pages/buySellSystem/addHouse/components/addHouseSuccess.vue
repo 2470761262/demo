@@ -139,7 +139,10 @@ export default {
   },
   created() {},
   mounted() {
-    if (util.sessionLocalStorageGet("editHouse")) {
+    if (
+      util.sessionLocalStorageGet("editHouse") &&
+      util.sessionLocalStorageGet("editHouse").method != "reset"
+    ) {
       this.edit = true;
     } else {
       this.getQr();
