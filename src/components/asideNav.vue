@@ -57,8 +57,12 @@
         <i class="el-icon-location"></i>
         <span>新客源系统</span>
       </template>
-      <el-menu-item index="/customers/addCustomers"
-        >新增客源</el-menu-item
+      <el-menu-item index="/customers/addCustomers">新增客源</el-menu-item>
+      <el-menu-item index="/customers/privateCustomersList"
+        >私客列表</el-menu-item
+      >
+      <el-menu-item index="/customers/publicCustomersList"
+        >公客列表</el-menu-item
       >
     </el-submenu>
     <el-submenu

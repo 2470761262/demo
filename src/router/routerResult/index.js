@@ -1083,6 +1083,26 @@ export default [
         /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue"
       )
   },
-  
- 
+  {
+    //客源系统 私客列表
+    path: "/customers/privateCustomersList",
+    meta: {
+      title: "私客列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "privateCustomersList" */ "@/pages/customersSystem/privateCustomersList/privateCustomersList.vue"
+      )
+  },
+  {
+    //客源系统 私客列表
+    path: "/customers/publicCustomersList",
+    meta: {
+      title: "私客列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersList/publicCustomersList.vue"
+      )
+  }
 ];
