@@ -297,6 +297,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       inspector: false,
       Shopowner: false,
       releasePopFlag: false,
@@ -491,11 +492,16 @@ export default {
     //锁定或解锁房源
     houseLock() {
       let that = this;
+      let flag = this.loading;
+      if (flag) {
+        return;
+      }
       let isLocking = this.resultData.isLocking == 1 ? 0 : 1;
       if (this.resultData.isLocking == undefined) {
         this.$message("操作失败");
         return;
       }
+      this.loading = true;
       let params = {
         Eid: this.houseId.id,
         Islocking: isLocking
@@ -514,7 +520,10 @@ export default {
             that.resultData.isLocking = isLocking;
           }
         })
-        .catch(e => {});
+        .catch(e => {})
+        .finally(e => {
+          this.loading = false;
+        });
     },
     //获取按钮权限
     getAgentRules() {
