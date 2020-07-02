@@ -531,6 +531,11 @@ export default {
         lastSale: true,
         lastPayment: true
       },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      },
       certificateType: certificateType,
       primarySchoolUseRenderList: formReander.PRIMARYSCHOOLUSE, //小学占用
       middleSchoolUseRenderList: formReander.MIDDLESCHOOLUSE, //中学占用
