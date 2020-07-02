@@ -1098,7 +1098,7 @@ export default [
     //客源系统 私客列表
     path: "/customers/publicCustomersList",
     meta: {
-      title: "私客列表"
+      title: "公客列表"
     },
     component: () =>
       import(
