@@ -141,7 +141,7 @@ export default {
   mounted() {
     if (
       util.sessionLocalStorageGet("editHouse") &&
-      util.sessionLocalStorageGet("editHouse").method != "reset"
+      util.sessionLocalStorageGet("editHouse").paramsObj
     ) {
       this.edit = true;
     } else {
