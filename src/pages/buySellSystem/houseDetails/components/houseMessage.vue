@@ -531,6 +531,11 @@ export default {
         lastSale: true,
         lastPayment: true
       },
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      },
       certificateType: certificateType,
       primarySchoolUseRenderList: formReander.PRIMARYSCHOOLUSE, //小学占用
       middleSchoolUseRenderList: formReander.MIDDLESCHOOLUSE, //中学占用
@@ -884,7 +889,7 @@ export default {
           });
           break;
         case "primarySchoolUse": //小学学籍占用
-          sendData.primarySchoolUse = value;
+          sendData.primarySchoolGrade = value;
           sendData.saleHouseUpdateRecordList.push({
             modifier: util.localStorageGet("logindata").accountId,
             HouseId: this.resultData.id,
@@ -895,7 +900,7 @@ export default {
 
           break;
         case "middleSchoolUse": //中学学籍占用
-          sendData.middleSchoolUse = value;
+          sendData.middleSchoolGrade = value;
           sendData.saleHouseUpdateRecordList.push({
             modifier: util.localStorageGet("logindata").accountId,
             HouseId: this.resultData.id,
