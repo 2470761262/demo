@@ -40,10 +40,10 @@ export default {
     return {
       form: {
         searchType: "", //搜索类别 1--客户信息 2--客户印象
-        customersType: 0, //客户类别
+        customersType: 1, //客户类别
         KeyWord: "", //关键词
-        Intend: "", //意愿
-        Progress: "", //进度
+        Intend: [], //意愿
+        Progress: [], //进度
         MinPrice: "", //最低价
         MaxPrice: "", //最高价
         MinArea: "", //最小面积

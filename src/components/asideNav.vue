@@ -65,6 +65,9 @@
         >公客列表</el-menu-item
       >
       <el-menu-item index="/customers/customersDetail">客源</el-menu-item>
+      <el-menu-item index="/customers/publicCustomersDetail"
+        >公客详情</el-menu-item
+      >
     </el-submenu>
     <el-submenu
       :index="item.id + ''"

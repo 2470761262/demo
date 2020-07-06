@@ -1095,7 +1095,7 @@ export default [
       )
   },
   {
-    //客源系统 私客列表
+    //客源系统 公客列表
     path: "/customers/publicCustomersList",
     meta: {
       title: "公客列表"
@@ -1103,6 +1103,17 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersList/publicCustomersList.vue"
+      )
+  },
+  {
+    //客源系统 公客详情
+    path: "/customers/publicCustomersDetail",
+    meta: {
+      title: "公客详情"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersDetail/publicCustomersDetail.vue"
       )
   }
 ];

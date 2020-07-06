@@ -9,7 +9,7 @@
     display: flex;
     width: 240px;
     height: 50px;
-    border: 1px solid green;
+    border: 1px solid @backgroud;
     border-radius: 8px;
     .SwitchItemOn,
     .SwitchItem {
@@ -27,7 +27,7 @@
     }
 
     .SwitchItemOn {
-      background: green;
+      background: @backgroud;
       > i,
       > span {
         color: #ffffff;
@@ -37,7 +37,7 @@
       background: #ffffff;
       > i,
       > span {
-        color: green;
+        color: @backgroud;
       }
     }
   }
@@ -48,7 +48,7 @@
     .SearchItem {
       display: flex;
       justify-content: space-between;
-      width: 495px;
+      min-width: 495px;
       height: 50px;
       border-radius: 4px;
       border: 1px solid #cecece;
@@ -105,7 +105,7 @@
     }
     .NavigateItem {
       margin-left: 20px;
-      width: 95px;
+      padding: 0 14px;
       height: 50px;
       text-align: center;
       line-height: 50px;
@@ -113,7 +113,7 @@
       border-radius: 8px;
       color: green;
       // prettier-ignore
-      font-size: 18PX;
+      font-size: 16PX;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -137,7 +137,9 @@
       border-bottom: 2px solid #ffffff;
     }
     .tapSwitchItemOn {
-      border-bottom: 2px solid green;
+      border-bottom: 2px solid @backgroud;
+      color: @backgroud;
+      font-weight: bold;
     }
   }
   .ChooseItemRow {
@@ -405,11 +407,7 @@
         </div>
       </div>
 
-      <el-form-item
-        label="意愿等级"
-        class="ItemRow ChooseItemRow"
-        prop="Intend"
-      >
+      <el-form-item label="意愿等级" class="ItemRow ChooseItemRow">
         <el-checkbox-group v-model="form.Intend" class="ChooseItemBox">
           <div
             class="ChooseItem"
