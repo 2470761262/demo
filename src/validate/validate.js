@@ -64,13 +64,6 @@ Validator.extend("isGreater", {
     }
   },
   validate: (value, compare) => {
-    console.log(
-      value,
-      compare,
-      "value, compare",
-      value,
-      compare[0] == "" ? 0 : compare[0]
-    );
     return Number(value) <= Number(compare[0] == "" ? 0 : compare[0]);
   }
 });
@@ -117,6 +110,24 @@ Validator.extend("arrGTLength", {
   }
 });
 
+Validator.extend("arrFlatLength", {
+  compare: ["length", "message"],
+  messages: {
+    zh_CN: (field, args) => {
+      if (args[1] == undefined) return field + "长度不能小于" + args[0];
+      return args[1];
+    }
+  },
+  validate: (value, compare) => {
+    const keyList = Object.keys(value);
+    if (keyList.length == 0) return false;
+    let resultLength = keyList.reduce((prev, next, index) => {
+      if (index == 1) return [...value[prev], ...value[next]];
+      else return [...prev, ...value[next]];
+    });
+    return resultLength.length > parseInt(compare[0]);
+  }
+});
 
 Vue.use(VeeValidate, config);
 // 使用中文提示

@@ -1,5 +1,6 @@
 <style lang="less" scoped>
 @import "../less/form.less";
+
 .step-content {
   .step-content();
   padding: 0 24px 24px;
@@ -59,7 +60,8 @@
           data-vv-name="cascader"
           data-vv-as="客户来源"
           v-validate="'required|length:2'"
-          v-model="cascaderList"
+          :cascaderList="cascaderList"
+          v-model="cascaderValue"
         />
       </div>
       <!-- 客户电话 -->
@@ -163,7 +165,7 @@
         <div class="input-head">客户印象</div>
         <div class="tag-content">
           <el-tag
-            v-for="(tag, index) in tags"
+            v-for="(tag, index) in impressionTags"
             :key="index"
             closable
             type="info"
@@ -178,7 +180,7 @@
           @click="openPop('followUpFlag')"
           >添加</el-button
         >
-        <div class="alert-content warning" v-if="tags.length != 0">
+        <div class="alert-content warning" v-if="impressionTags.length != 0">
           提示:最多可添加五条客源印象
         </div>
       </div>
@@ -207,11 +209,45 @@
       <!-- 需求类型 -->
       <div class="input-group is-required">
         <div class="input-head">需求类型</div>
-        <el-button type="primary" class="primary-btn">添加</el-button>
-        <!-- <div class="alert-content warning" v-if="tags.length != 0">
-          提示:最多可添加五条客源印象
-        </div> -->
+        <div class="tag-content">
+          <el-tag
+            v-for="(tag, index) in demandData.rendList"
+            :key="index"
+            closable
+            type="info"
+            @close="moreHandleClose(tag)"
+          >
+            {{ tag.title }}
+          </el-tag>
+        </div>
+        <el-button
+          type="primary"
+          class="primary-btn"
+          @click="openPop('moreSelectFlag')"
+          >添加</el-button
+        >
+        <div
+          :class="{
+            'after-error-tips': errorBags.has('moreSelect')
+          }"
+          :data-error="errorBags.first('moreSelect')"
+        ></div>
       </div>
+      <!-- 多选弹出层 -->
+      <demand-more-select
+        ref="moreSelect"
+        styleType="0"
+        :visible.sync="moreSelectFlag"
+        width="506px"
+        title="选择需求信息(多选)"
+        @demandConfirm="demandConfirm"
+        v-model="demandValue"
+        data-vv-name="moreSelect"
+        data-vv-as="需求信息"
+        v-validate="'required|arrFlatLength:0'"
+      >
+      </demand-more-select>
+      <!--    -->
     </section>
   </section>
 </template>
@@ -261,28 +297,67 @@ const cascaderList = [
 
 import { SEX, BUYINTENTION } from "@/util/constMap";
 import selectCascader from "./selectCascader";
+import demandMoreSelect from "./demandMoreSelect";
 export default {
+  name: "stepOne",
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
   },
   components: {
-    selectCascader
+    selectCascader,
+    demandMoreSelect //需求多选组件
   },
   data() {
     return {
-      followUpFlag: false,
+      demandValue: {
+        //客户需求value
+        // list0: [],
+        // list1: [],
+        // list2: []
+      },
+      moreSelectFlag: false, //需求信息多选开关
+      followUpFlag: false, //印象弹框开关
       mock: "",
       mock1: "",
       sex: SEX,
       addTel: [],
       cascaderList: cascaderList,
       buyintention: BUYINTENTION,
-      tags: []
+      cascaderValue: [], //客户来源的结果数组
+      impressionTags: [], //印象的结果数组
+      demandData: {
+        rendList: [], //接收渲染数组
+        secondList: [], //二手需求数组
+        newHouseList: [], //新房需求数组
+        leaseList: [] //租赁需求数组
+      }
     };
   },
   methods: {
+    /**
+     * @example: 客户需求在当前删除
+     */
+    moreHandleClose(tag) {
+      this.$refs.moreSelect.removeActive(tag, true);
+      this.$refs.moreSelect.confirmEmit();
+    },
+    /**
+     * @example: 获取需求信息弹出框保存按钮提交的数据
+     * @param {rendList} Array 用于渲染的ui数组
+     * @param {list0} Array 提交后台已经拆分的数据
+     * @param {list1} Array 提交后台已经拆分的数据
+     * @param {list2} Array 提交后台已经拆分的数据
+     */
+    demandConfirm({ rendList, dataJson: { list0, list1, list2 } }) {
+      this.demandData.rendList = rendList;
+
+      //   this.demandData.secondList = list0;
+      //   this.demandData.newHouseList = list1;
+      //   this.demandData.leaseList = list2;
+      this.moreSelectFlag = false;
+    },
     submitResult(value) {
-      console.log(value);
+      console.log(value, 11111);
     },
     //添加电话号码12
     addTelToList() {
@@ -297,6 +372,10 @@ export default {
       }
       this.addTel.sort();
     },
+    /**
+     * @example: 删除动态添加的电话号码
+     * @param {Number} index 删除的下标
+     */
     removeTelToList(index) {
       this.addTel.splice(index, 1);
     },
@@ -311,7 +390,7 @@ export default {
      * @example: 弹框组件确定点击事件
      */
     addImpressionConfirm() {
-      this.tags.push(this.mock1);
+      this.impressionTags.push(this.mock1);
       this.mock1 = "";
       this.followUpFlag = false;
     },
@@ -319,7 +398,13 @@ export default {
      * @example: 印象数组删除
      */
     handleClose(index) {
-      this.tags.splice(index, 1);
+      this.impressionTags.splice(index, 1);
+    },
+    /**
+     * @example: 验证当前页面表单
+     */
+    validate() {
+      return this.$validator.validateAll().then(e => e);
     }
   }
 };

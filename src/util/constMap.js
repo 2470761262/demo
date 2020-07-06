@@ -497,3 +497,30 @@ export const SEX = [
     value: 0
   }
 ];
+
+export const PURCHASEPURPOSE = [
+  {
+    key: "刚需",
+    value: "刚需"
+  },
+  {
+    key: "投资",
+    value: "投资"
+  },
+  {
+    key: "办公",
+    value: "办公"
+  },
+  {
+    key: "改善",
+    value: "改善"
+  },
+  {
+    key: "教育",
+    value: "教育"
+  },
+  {
+    key: "其他",
+    value: "其他"
+  }
+];

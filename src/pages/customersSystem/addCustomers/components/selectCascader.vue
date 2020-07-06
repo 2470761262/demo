@@ -162,10 +162,10 @@ export default {
       type: String,
       default: "title"
     },
-    advanceValue: {
+    value: {
       type: Array
     },
-    value: {
+    cascaderList: {
       type: Array,
       default: () => []
     }
@@ -215,25 +215,22 @@ export default {
     }
   },
   watch: {
-    value: {
+    cascaderList: {
       immediate: true,
       handler(val, oldVal) {
-        this.rednerCascader = JSON.parse(
-          JSON.stringify(
-            val.map(item => {
-              item.active = false;
-              return item;
-            })
-          )
-        );
+        this.rednerCascader = JSON.parse(JSON.stringify(val)).map(item => {
+          item.active = false;
+          return item;
+        });
       }
     },
-    advanceValue: {
+    value: {
       immediate: true,
       handler(value) {
         if (value) {
           this.result = loopResultList(value, this.rednerCascader);
-          this.inputValue = this.result[this.result.length - 1].title;
+          if (this.result.length != 0)
+            this.inputValue = this.result[this.result.length - 1].title;
         }
       }
     }

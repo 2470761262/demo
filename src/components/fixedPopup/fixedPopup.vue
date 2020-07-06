@@ -139,7 +139,7 @@
                 class="floot-btn close-btn"
                 type="info"
                 v-show="mergeConfig.cancelBtnShow"
-                @click="close"
+                @click="btnClose"
                 >{{ mergeConfig.cancelBtnText }}</el-button
               >
               <el-button
@@ -211,6 +211,11 @@ export default {
       default: () => {
         return {};
       }
+    },
+    customFlag: {
+      //是否自定义取消按钮事件
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -255,6 +260,13 @@ export default {
     },
     close() {
       this.$emit("update:visible", false);
+    },
+    btnClose() {
+      if (!this.customFlag) {
+        this.customFlag();
+      } else {
+        this.$emit("customBtn");
+      }
     }
   }
 };
