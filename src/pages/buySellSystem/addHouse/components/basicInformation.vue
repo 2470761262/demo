@@ -585,6 +585,7 @@ let updateFileMap = new Map([
 //import { mapState } from "vuex";
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
+import releaseHouse from "@/pages/buySellSystem/houseDetails/common/releaseHouse.js";
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
@@ -1117,6 +1118,7 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             this.$store.commit("updateId", e.data.data.id);
+            this.$store.commit("updateHouseNo", e.data.data.houseNo); //更新房源编号
             this.$store
               .dispatch("InitFormData", {
                 commitName: "updateStep1",
@@ -1195,6 +1197,11 @@ export default {
       })
         .then(e => {
           if (e.data.code == 200) {
+            if (this.paramsObj.editUrl) {
+              //更新成功,同步更新外网
+              data.houseNo = this.$store.state.addHouse.formData.houseNo;
+              releaseHouse.updateOutsideHouse(data);
+            }
             //存入Vuex;
             if (e.data.data != null) {
               that.$store.commit("updateId", e.data.data);
