@@ -620,7 +620,8 @@ export default {
           tel: _that.resultData.Tel,
           tel1: _that.resultData.Tel1,
           tel2: _that.resultData.Tel2,
-          tel3: _that.resultData.Tel3
+          tel3: _that.resultData.Tel3,
+          method: "tosale"
         }
       });
     },

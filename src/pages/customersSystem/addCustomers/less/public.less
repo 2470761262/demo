@@ -1,5 +1,5 @@
 .input() {
-    /deep/.el-input__inner {
+    /deep/.el-input__inner,/deep/.el-textarea__inner {
         height: 48px;
         line-height: 48px;
         border-radius: 4px;
@@ -17,7 +17,18 @@
             border-color: var(--color--primary);
         }
     }
-
+    /deep/ .suffix-tips{
+        font-size: 16px;
+        font-style:normal;
+        line-height: 48px;
+        margin-right: 16px;
+    }
+    /deep/.el-icon-arrow-up{
+        font-size: 16PX;
+        &::before{
+            content: "\e790";
+        }
+    }
     /deep/.el-input__clear {
         font-family: "iconfont" !important;
         font-size: 18PX;

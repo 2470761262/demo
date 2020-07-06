@@ -49,7 +49,7 @@
       <sidebarList
         lastItemSet
         lastTitle="编辑"
-        :lastParams="{ id: forID.id, method: 'reset' }"
+        :lastParams="{ id: forID.id, method: 'edit' }"
       ></sidebarList>
     </section>
     <!--按钮组 -->

@@ -7,7 +7,7 @@
     font-size: 24PX;
     color: rgba(48, 49, 51, 1);
     line-height: 32px;
-    margin: 24px 0;
+    padding: 24px 0;
   }
   .split-line {
     height: 1px;
@@ -17,6 +17,20 @@
   .input-group {
     @width: 506px;
     margin-top: 35px;
+    .input-group-split{
+        display: flex;
+        width: 506px;
+        align-items: center;
+        .input-split{
+            width: 8px;
+            height: 1px;
+            background:rgba(96,98,102,1);
+            margin: 0 19px;
+        }
+        .input-content{
+            flex: 1;
+        }
+    }
     &:first-of-type {
       margin-top: 16px;
     }
@@ -102,6 +116,17 @@
       width: @width;
       height: 48px;
       .input;
+      &.is-suffix{
+          /deep/.el-input__suffix{
+              right: 0;
+          }
+          /deep/.el-input__inner{
+              padding-right: 48px;
+          }
+      }
+      &.is-auto-height{
+          height: auto;
+      }
     }
     .radio-content {
       cursor: pointer;

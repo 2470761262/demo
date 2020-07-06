@@ -1082,6 +1082,7 @@ export default [
       import(
         /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue"
       )
+<<<<<<< HEAD
   },
   {
     //客源系统 新整客户
@@ -1104,5 +1105,7 @@ export default [
       import(
         /* webpackChunkName: "takeLook" */ "@/pages/customersSystem/customersDetail/takeLook.vue"
       )
+=======
+>>>>>>> 10b446e1e98952f3ee3e3000c8057e718299fc47
   }
 ];

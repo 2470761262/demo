@@ -17,7 +17,7 @@ Validator.extend("phone", {
     zh_CN: field => field + "格式有误"
   },
   validate: value =>
-    !!/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1}))+\d{8})$/.test(
+    !!/^(((13[0-9]{1})|(19[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(17[0-9]{1})|(18[0-9]{1})|(14[0-9]{1}))+\d{8})$/.test(
       value
     )
 });
@@ -64,13 +64,6 @@ Validator.extend("isGreater", {
     }
   },
   validate: (value, compare) => {
-    console.log(
-      value,
-      compare,
-      "value, compare",
-      value,
-      compare[0] == "" ? 0 : compare[0]
-    );
     return Number(value) <= Number(compare[0] == "" ? 0 : compare[0]);
   }
 });
@@ -117,12 +110,32 @@ Validator.extend("arrGTLength", {
   }
 });
 
+<<<<<<< HEAD
 //中文长度不少于10个
 Validator.extend("chineseLens", {
   messages: {
     zh_CN: field => field + "不得少于10个字"
   },
   validate: value => value.length > 9
+=======
+Validator.extend("arrFlatLength", {
+  compare: ["length", "message"],
+  messages: {
+    zh_CN: (field, args) => {
+      if (args[1] == undefined) return field + "长度不能小于" + args[0];
+      return args[1];
+    }
+  },
+  validate: (value, compare) => {
+    const keyList = Object.keys(value);
+    if (keyList.length == 0) return false;
+    let resultLength = keyList.reduce((prev, next, index) => {
+      if (index == 1) return [...value[prev], ...value[next]];
+      else return [...prev, ...value[next]];
+    });
+    return resultLength.length > parseInt(compare[0]);
+  }
+>>>>>>> 10b446e1e98952f3ee3e3000c8057e718299fc47
 });
 
 Vue.use(VeeValidate, config);

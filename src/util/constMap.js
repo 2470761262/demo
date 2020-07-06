@@ -23,7 +23,8 @@ export const HOUSEBELONGLIST = [
 
 export const TREMEPACKERS = "tremePackers"; //默认皮肤缓存
 export const TREMEDEFTULTCOLOR = "#0d824b"; //默认皮肤颜色
-
+export const FONTSIZEBASE = 12; //基础字体大小
+export const FONTSIZEBASENAME = "fontsizebase"; //基础字体大小
 export const HOUSEUSE = [
   // 房屋用途 houseUse
   {
@@ -495,5 +496,32 @@ export const SEX = [
   {
     key: "女",
     value: 0
+  }
+];
+
+export const PURCHASEPURPOSE = [
+  {
+    key: "刚需",
+    value: "刚需"
+  },
+  {
+    key: "投资",
+    value: "投资"
+  },
+  {
+    key: "办公",
+    value: "办公"
+  },
+  {
+    key: "改善",
+    value: "改善"
+  },
+  {
+    key: "教育",
+    value: "教育"
+  },
+  {
+    key: "其他",
+    value: "其他"
   }
 ];

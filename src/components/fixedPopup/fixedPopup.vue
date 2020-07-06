@@ -5,7 +5,11 @@
   left: 0;
   right: 0;
   bottom: 0;
+<<<<<<< HEAD
   z-index: 2000;
+=======
+  z-index: 1995;
+>>>>>>> 10b446e1e98952f3ee3e3000c8057e718299fc47
   display: flex;
   justify-content: center;
   align-items: center;
@@ -139,7 +143,7 @@
                 class="floot-btn close-btn"
                 type="info"
                 v-show="mergeConfig.cancelBtnShow"
-                @click="close"
+                @click="btnClose"
                 >{{ mergeConfig.cancelBtnText }}</el-button
               >
               <el-button
@@ -211,6 +215,11 @@ export default {
       default: () => {
         return {};
       }
+    },
+    customFlag: {
+      //是否自定义取消按钮事件
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -255,6 +264,13 @@ export default {
     },
     close() {
       this.$emit("update:visible", false);
+    },
+    btnClose() {
+      if (!this.customFlag) {
+        this.customFlag();
+      } else {
+        this.$emit("customBtn");
+      }
     }
   }
 };
