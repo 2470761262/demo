@@ -1083,6 +1083,26 @@ export default [
         /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue"
       )
   },
-  
- 
+  {
+    //客源系统 新整客户
+    path: "/customers/customersDetail",
+    meta: {
+      title: "新增客源"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "customersDetail" */ "@/pages/customersSystem/customersDetail/customersDetail.vue"
+      )
+  },
+  {
+    //客源系统 添加带看
+    path: "/customers/takeLook",
+    meta: {
+      title: "添加带看"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "takeLook" */ "@/pages/customersSystem/customersDetail/takeLook.vue"
+      )
+  }
 ];

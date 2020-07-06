@@ -59,6 +59,7 @@
       </template>
       <el-menu-item index="/customers/addCustomers">新增客源</el-menu-item>
       <el-menu-item index="/customers/customersDetail">客源</el-menu-item>
+      <el-menu-item index="/customers/takeLook">添加带看</el-menu-item>
     </el-submenu>
     <el-submenu
       :index="item.id + ''"
