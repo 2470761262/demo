@@ -110,14 +110,13 @@ Validator.extend("arrGTLength", {
   }
 });
 
-<<<<<<< HEAD
 //中文长度不少于10个
 Validator.extend("chineseLens", {
   messages: {
     zh_CN: field => field + "不得少于10个字"
   },
   validate: value => value.length > 9
-=======
+});
 Validator.extend("arrFlatLength", {
   compare: ["length", "message"],
   messages: {
@@ -135,7 +134,6 @@ Validator.extend("arrFlatLength", {
     });
     return resultLength.length > parseInt(compare[0]);
   }
->>>>>>> 10b446e1e98952f3ee3e3000c8057e718299fc47
 });
 
 Vue.use(VeeValidate, config);
