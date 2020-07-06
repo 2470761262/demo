@@ -2,6 +2,7 @@
 function getData() {
   return {
     id: "",
+    houseNo: "",
     // 基础信息
     step1: {
       communityName: "", //楼盘
@@ -97,6 +98,9 @@ export default {
     },
     updateId(state, val) {
       state.formData.id = val;
+    },
+    updateHouseNo(state, val) {
+      state.formData.houseNo = val;
     },
     updateStep1(state, val) {
       forSetStep(state, val, "step1");

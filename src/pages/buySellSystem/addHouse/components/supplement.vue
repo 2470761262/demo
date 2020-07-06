@@ -891,6 +891,7 @@
 import * as formReander from "@/util/constMap";
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
+import releaseHouse from "@/pages/buySellSystem/houseDetails/common/releaseHouse.js";
 //import func from '../../../../../vue-temp/vue-editor-bridge';
 const USE = [
   {
@@ -1515,6 +1516,11 @@ export default {
         .then(e => {
           console.log(e);
           if (e.data.code == 200) {
+            if (this.paramsObj.editUrl) {
+              //更新成功,同步更新外网
+              sendData.houseNo = this.$store.state.addHouse.formData.houseNo;
+              releaseHouse.updateOutsideHouse(sendData);
+            }
             //存入Vuex;
             that.$store.commit("updateStep2", that.deffData);
             return true;
