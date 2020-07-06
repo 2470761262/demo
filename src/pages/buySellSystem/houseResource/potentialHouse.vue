@@ -435,7 +435,7 @@ export default {
           roomNo: roomNo,
           flag: "potentia",
           customerName: customers,
-          tel: tel
+          tel: null
         }
       });
     },

@@ -35,5 +35,24 @@ export default {
       .catch(e => {
         return false;
       });
+  },
+  /**
+   * 修改外网房源
+   * @param {object} params  修改字段
+   */
+  updateOutsideHouse(params) {
+    let that = this;
+    return api
+      .post({
+        url: "/outsideHouse//updateOutsideHouse",
+        data: params,
+        headers: { "Content-Type": "application/json;charset=UTF-8" }
+      })
+      .then(e => {
+        return e;
+      })
+      .catch(e => {
+        return false;
+      });
   }
 };

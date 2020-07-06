@@ -1082,7 +1082,5 @@ export default [
       import(
         /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue"
       )
-  },
-  
- 
+  }
 ];
