@@ -23,7 +23,8 @@ export const HOUSEBELONGLIST = [
 
 export const TREMEPACKERS = "tremePackers"; //默认皮肤缓存
 export const TREMEDEFTULTCOLOR = "#0d824b"; //默认皮肤颜色
-
+export const FONTSIZEBASE = 12; //基础字体大小
+export const FONTSIZEBASENAME = "fontsizebase"; //基础字体大小
 export const HOUSEUSE = [
   // 房屋用途 houseUse
   {
