@@ -184,7 +184,9 @@
   <div class="detail-content">
     <div class="detail-price-content">
       <div class="detail-price">
-        <span>{{ resultData.tradePrice || resultData.Price }}</span>
+        <span>{{
+          resultData.tradePrice || resultData.Price | priceFilter
+        }}</span>
         <span v-if="resultData.tradePrice || resultData.Price">万元</span>
       </div>
       <div class="detail-price-avg">
@@ -669,6 +671,9 @@ export default {
     },
     keyStorageFilter(value, keyOwnerName) {
       return keyOwnerName == null ? "暂无" : value;
+    },
+    priceFilter(value) {
+      return value.toFixed(2);
     }
   },
   destroyed() {
