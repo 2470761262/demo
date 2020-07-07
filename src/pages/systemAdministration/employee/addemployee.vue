@@ -210,6 +210,7 @@
           <el-date-picker
             v-model="employeeEntity.birthday"
             type="date"
+            :picker-options="pickerOptions"
             placeholder="选择日期"
           ></el-date-picker>
         </el-form-item>
@@ -627,6 +628,11 @@ export default {
       roleNameList: null,
       dialogVisible: false,
       dialogVisible1: false,
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      },
       employeeEntity: {
         loginUser: null,
         loginPwd: null,
@@ -966,10 +972,15 @@ export default {
         });
     },
     saveEmployee(formName) {
+      let flag = this.loading;
+      if (flag) {
+        return;
+      }
       this.$refs.form.validate(valid => {
         if (!valid) {
           return false;
         } else {
+          this.loading = true;
           let params = this.employeeEntity;
           this.$api
             .post({
@@ -989,6 +1000,9 @@ export default {
             .catch(e => {
               console.log("添加失败");
               console.log(e);
+            })
+            .finally(e => {
+              this.loading = false;
             });
         }
       });

@@ -8,8 +8,42 @@
         // prettier-ignore
         font-size: 24PX;
         color: rgba(48, 49, 51, 1);
-        line-height: 32px;
-        padding: 24px 0;
+        & + .el-tag {
+          margin-left: 8px;
+        }
+      }
+    }
+    .alert-content {
+      padding: 16px 0;
+      // prettier-ignore
+      font-size: 16PX;
+      width: @width;
+      box-sizing: border-box;
+      text-indent: 24px;
+      margin-top: 16px;
+      &.warning {
+        background: rgba(255, 150, 0, 0.07);
+        color: rgba(255, 150, 0, 1);
+      }
+    }
+    .input-assist-tips {
+      width: @width;
+      // prettier-ignore
+      font-size: 16PX;
+      color: rgba(48, 49, 51, 1);
+      margin-bottom: 16px;
+    }
+    .input-pack {
+      display: flex;
+      .input();
+      .inline-remove-btn {
+        // prettier-ignore
+        font-size: 18PX;
+        color: rgba(243, 58, 58, 1);
+        cursor: pointer;
+        align-self: center;
+        margin-left: 16px;
+      }
     }
 
     .split-line {
@@ -191,6 +225,34 @@
             font-size: 16PX
         }
     }
+    .checkbox-content {
+      cursor: pointer;
+      display: inline-block;
+      margin-right: 16px;
+      input[type="checkbox"] {
+        display: none;
+      }
+      input[type="checkbox"]:checked + .checkbox-title {
+        background: @backgroud;
+        color: rgba(255, 255, 255, 1);
+      }
+      .checkbox-title {
+        height: 48px;
+        background: rgba(240, 242, 245, 1);
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // prettier-ignore
+        font-size: 16PX;
+        color: rgba(144, 147, 153, 1);
+        // prettier-ignore
+        line-height: 21PX;
+        margin-bottom: 16px;
+        padding: 0 16px;
+      }
+    }
+  }
 }
 
 .error-tips {
