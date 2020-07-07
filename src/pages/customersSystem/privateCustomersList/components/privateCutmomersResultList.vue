@@ -2,19 +2,16 @@
 .ResultWarp {
   position: relative;
   .ResultTil {
-    // prettier-ignore
-    font-size:30PX ;
+    font-size: @font24;
     margin-bottom: 25px;
   }
   .ResultListHeaderCell {
     background: #f0f2f5;
     padding-left: 45px;
-    // prettier-ignore
-    font-size:18PX ;
+    font-size: @font16;
     .ResultListTableCell {
       padding-left: 45px;
-      // prettier-ignore
-      font-size:18PX ;
+      font-size: @font16;
     }
   }
 }
@@ -80,17 +77,51 @@ export default {
       renderList: [],
       menuLoading: true, //自定义菜单
       tableColumn: [],
-      tableData: []
+      tableData: [],
+      attentionStatus: 0, //是否关注，1关注，0暂不关注
+      limit: 15, //分页参数，每页条数
+      page: 1, //分页参数，第几页
+      pageTotal: 0, //总页数
+      sortDirection: "", //排序方式，DESC降序（默认），ASC升序
+      sortColumn: "", //排序字段，默认id
+      customerIds: [] //客户id，数字数组
     };
   },
   created() {},
   mounted() {
+    console.log(111111111);
+
+    this.apply();
+
     tableMenu.getTableMenu(this.tableDataColumn, 1).then(e => {
       this.menuLoading = false;
       this.renderList = e;
     });
   },
   methods: {
+    apply() {
+      var that = this;
+      this.$api
+        .post({
+          url: "/saleCustomer/listMyCustomers",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            limit: this.limit,
+            page: this.page
+          }
+        })
+        .then(e => {
+          console.log(e);
+          if (e.data.code == 200) {
+            this.tableData = e.data;
+          } else if (e.data.code == 400) {
+            alert(e.data.message);
+            console.log("失败     " + e.data);
+          }
+        });
+    },
     tabColumnChange(e, length = 0) {
       let that = this;
       that.tableColumn = e;

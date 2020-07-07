@@ -2,6 +2,7 @@
 .content {
   width: 100%;
   display: flex;
+  position: relative;
 }
 .left-content,
 .right-content {
@@ -14,7 +15,9 @@
   width: 70%;
 }
 .right-content {
-  width: 30%;
+  width: 375px;
+  position: fixed;
+  right: 0;
 }
 </style>
 <template>
@@ -36,6 +39,9 @@ export default {
   components: {
     privateCutmomersPair,
     customerFollowDetail
+  },
+  data() {
+    return {};
   }
 };
 </script>

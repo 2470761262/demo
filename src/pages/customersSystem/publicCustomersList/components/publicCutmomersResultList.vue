@@ -2,19 +2,16 @@
 .ResultWarp {
   position: relative;
   .ResultTil {
-    // prettier-ignore
-    font-size:30PX ;
+    font-size: @font24;
     margin-bottom: 25px;
   }
   .ResultListHeaderCell {
     background: #f0f2f5;
     padding-left: 45px;
-    // prettier-ignore
-    font-size:18PX ;
+    font-size: @font16;
     .ResultListTableCell {
       padding-left: 45px;
-      // prettier-ignore
-      font-size:18PX ;
+      font-size: @font16;
     }
   }
 }

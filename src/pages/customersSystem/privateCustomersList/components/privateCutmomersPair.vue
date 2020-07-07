@@ -21,8 +21,7 @@
       > i,
       > span {
         line-height: 40px;
-        // prettier-ignore
-        font-size: 18PX;
+        font-size: @font16;
       }
     }
 
@@ -42,7 +41,7 @@
     }
   }
   .ItemRow {
-    margin: 30px 0;
+    margin: 24px 0;
   }
   .SearchItemRow {
     .SearchItem {
@@ -69,8 +68,7 @@
           height: inherit;
           text-align: center;
           border: 0;
-          // prettier-ignore
-          font-size: 16PX;
+          font-size: @font16;
           color: #606266;
         }
         .el-input-suniff {
@@ -86,20 +84,18 @@
           width: 100%;
           line-height: 50px;
           border: 0;
-          // prettier-ignore
-          font-size: 16PX;
+          font-size: @font16;
         }
       }
       .SubmitItem {
         width: 80px;
         height: 50px;
-        background: green;
+        background: @backgroud;
         text-align: center;
         > i {
           line-height: 50px;
           color: #ffffff;
-          // prettier-ignore
-          font-size:24PX;
+          font-size: @font24;
         }
       }
     }
@@ -109,11 +105,10 @@
       height: 50px;
       text-align: center;
       line-height: 50px;
-      border: 1px solid green;
+      border: 1px solid @backgroud;
       border-radius: 8px;
-      color: green;
-      // prettier-ignore
-      font-size: 16PX;
+      color: @backgroud;
+      font-size: @font16;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
@@ -130,8 +125,7 @@
       margin-right: 35px;
       height: 50px;
       line-height: 50px;
-      // prettier-ignore
-      font-size:22PX ;
+      font-size: @font18;
     }
     .tapSwitchItem {
       border-bottom: 2px solid #ffffff;
@@ -163,14 +157,14 @@
           height: 100%;
           text-align: center;
           vertical-align: middle;
-          // prettier-ignore
-          font-size: 18PX;
+          font-size: @font14;
+          line-height: 32px;
         }
         .is-checked {
-          border: 1px solid var(--color--primary) !important;
+          border: 1px solid @backgroud !important;
           border-radius: 4px;
           /deep/.el-checkbox__label {
-            color: var(--color--primary);
+            color: @backgroud;
           }
         }
         .el-checkbox {
@@ -180,6 +174,8 @@
           padding: 0 15px;
           border: 1px solid #fff;
           border-radius: 4px;
+          height: 32px;
+          line-height: 32px;
         }
       }
     }
@@ -201,25 +197,25 @@
           height: 100%;
           text-align: center;
           vertical-align: middle;
-          // prettier-ignore
-          font-size: 18PX;
+          font-size: @font14;
+          line-height: 32px;
         }
         .is-checked {
-          border: 1px solid var(--color--primary) !important;
+          border: 1px solid @backgroud !important;
           border-radius: 4px;
           /deep/.el-radio__label {
-            color: var(--color--primary);
+            color: @backgroud;
           }
         }
         .el-radio {
           //margin-right: 0 !important;
           transition: all 0.2s ease-in;
-          height: 35px;
+          height: 32px;
+          line-height: 32px;
           margin-right: 20px;
           padding: 0 15px;
           border: 1px solid #fff;
           border-radius: 4px;
-          line-height: 35px;
         }
       }
     }
@@ -247,16 +243,18 @@
         border-radius: 4px;
         padding: 0 10px;
         margin: 0 10px;
+        height: 36px;
+        line-height: 36px;
+
         > span {
           color: #686a6e;
-          // prettier-ignore
-          font-size: 18PX;
+          font-size: @font14;
           white-space: nowrap;
         }
         /deep/.el-input {
           width: 100px;
-          height: 40px;
-          line-height: 40px;
+          height: 36px;
+          line-height: 36px;
           i {
             line-height: inherit;
           }
@@ -265,8 +263,7 @@
             line-height: inherit;
             height: inherit;
             text-align: center;
-            // prettier-ignore
-            font-size: 18PX;
+            font-size: @font14;
           }
         }
       }
@@ -276,9 +273,8 @@
         width: 70px;
         height: 40px;
         line-height: 40px;
-        // prettier-ignore
-        font-size: 16PX;
-        background: var(--color--primary);
+        font-size: @font14;
+        background: @backgroud;
         color: #ffffff;
         text-align: center;
       }
@@ -292,7 +288,8 @@
         }
         /deep/.el-range-input {
           width: 155px;
-          height: 40px;
+          height: 36px;
+          line-height: 36px;
           border: 1px solid #cecece;
           border-radius: 4px;
         }
@@ -314,9 +311,8 @@
       width: 70px;
       height: 40px;
       line-height: 40px;
-      // prettier-ignore
-      font-size: 16PX;
-      background: var(--color--primary);
+      font-size: @font14;
+      background: @backgroud;
       color: #ffffff;
       text-align: center;
     }
@@ -324,18 +320,17 @@
   /deep/.el-form-item__label {
     width: 125px !important;
     line-height: 40px;
-    // prettier-ignore
-    font-size: 18PX;
+    font-size: @font14;
     font-weight: bold;
     text-align: left;
+    line-height: 32px;
   }
   .FoldRow {
     .FoldItem {
       margin: 0 auto;
       width: 150px;
       text-align: center;
-      // prettier-ignore
-      font-size: 18PX;
+      font-size: @font16;
       color: #247257;
       > i {
         margin-left: 10px;
@@ -408,13 +403,16 @@
       </div>
 
       <el-form-item label="意愿等级" class="ItemRow ChooseItemRow">
-        <el-checkbox-group v-model="form.Intend" class="ChooseItemBox">
+        <el-checkbox-group
+          v-model="form.desireIntensitys"
+          class="ChooseItemBox"
+        >
           <div
             class="ChooseItem"
             v-for="(item, index) in IntendList"
             :key="index"
           >
-            <el-checkbox :label="item.value" name="Intend">{{
+            <el-checkbox :label="item.value" name="desireIntensitys">{{
               item.name
             }}</el-checkbox>
           </div>
@@ -517,13 +515,13 @@
           class="ItemRow ChooseItemRow"
           prop="HouseType"
         >
-          <el-radio-group v-model="form.HouseType" class="RadioItemBox">
+          <el-radio-group v-model="form.houseNumbers" class="RadioItemBox">
             <div
               class="RadioItem"
               v-for="(item, index) in HouseTypeList"
               :key="index"
             >
-              <el-radio :label="item.value" name="HouseType">
+              <el-radio :label="item.value" name="houseNumbers">
                 {{ item.name }}
               </el-radio>
             </div>
@@ -638,15 +636,15 @@ const IntendListModle = [
   },
   {
     name: "强烈",
-    value: 2
+    value: 0
   },
   {
     name: "一般",
-    value: 3
+    value: 2
   },
   {
     name: "较弱",
-    value: 4
+    value: 1
   },
   {
     name: "暂不关注",

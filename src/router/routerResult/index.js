@@ -1116,5 +1116,4 @@ export default [
         /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersDetail/publicCustomersDetail.vue"
       )
   }
-  }
 ];

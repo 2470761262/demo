@@ -8,8 +8,7 @@
   padding-bottom: 24px;
   border-bottom: 1px solid #f0f2f5;
   .MainTitle {
-    // prettier-ignore
-    font-size: 24PX;
+    font-size: @font24;
     line-height: 36px;
     font-weight: bold;
   }
@@ -20,8 +19,7 @@
     border-radius: 4px;
     background: @backgroud;
     color: #ffffff;
-    // prettier-ignore
-    font-size: 16PX;
+    font-size: @font16;
   }
 }
 .FollowCardZone {
@@ -79,15 +77,13 @@
           padding: 12px 0;
           display: flex;
           .cellMsgTil {
-            // prettier-ignore
-            font-size: 14PX;
+            font-size: @font14;
             width: 94px;
             color: #606266;
           }
           .cellMsgText {
             margin-right: 120px;
-            // prettier-ignore
-            font-size: 14PX;
+            font-size: @font14;
           }
         }
       }

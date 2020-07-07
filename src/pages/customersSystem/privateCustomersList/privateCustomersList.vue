@@ -41,14 +41,14 @@ export default {
       form: {
         searchType: "", //搜索类别 1--客户信息 2--客户印象
         customersType: 1, //客户类别
-        KeyWord: "", //关键词
-        Intend: [], //意愿
+        keyWord: "", //关键词
+        desireIntensitys: [], //意愿
         Progress: [], //进度
         MinPrice: "", //最低价
         MaxPrice: "", //最高价
         MinArea: "", //最小面积
         MaxArea: "", //最大面积
-        HouseType: "", //房型
+        houseNumbers: "", //房型s
         StartDelegate: "", //委托开始时间
         EndDelegate: "", //委托结束时间
         StartMaintenance: "", //维护开始时间
