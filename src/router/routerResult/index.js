@@ -1114,6 +1114,18 @@ export default [
     component: () =>
       import(
         /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersDetail/publicCustomersDetail.vue"
+        //客源系统 新整客户
+      )
+  },
+  {
+    //客源系统 添加带看
+    path: "/customers/takeLook",
+    meta: {
+      title: "添加带看"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "takeLook" */ "@/pages/customersSystem/customersDetail/takeLook.vue"
       )
   }
 ];

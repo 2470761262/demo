@@ -68,6 +68,7 @@
       <el-menu-item index="/customers/publicCustomersDetail"
         >公客详情</el-menu-item
       >
+      <el-menu-item index="/customers/takeLook">添加带看</el-menu-item>
     </el-submenu>
     <el-submenu
       :index="item.id + ''"

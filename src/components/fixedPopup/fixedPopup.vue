@@ -263,7 +263,7 @@ export default {
     },
     btnClose() {
       if (!this.customFlag) {
-        this.customFlag();
+        this.close();
       } else {
         this.$emit("customBtn");
       }
