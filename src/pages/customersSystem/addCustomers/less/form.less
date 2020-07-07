@@ -1,4 +1,5 @@
 @import "./public";
+@width: 506px;
 .step-content() {
  // padding: 0 24px 24px;
  // background: rgba(255, 255, 255, 1);
@@ -15,11 +16,10 @@
     background: rgba(240, 242, 245, 1);
   }
   .input-group {
-    @width: 506px;
     margin-top: 35px;
     .input-group-split{
         display: flex;
-        width: 506px;
+        width: @width;
         align-items: center;
         .input-split{
             width: 8px;
@@ -181,6 +181,23 @@
   .el-select-dropdown__item {
     height: 48px;
     line-height: 48px;
-    font-size: 16px;
+    font-size: 16PX;
   }
+}
+.btn-primary (){
+    border-radius: 4px;
+    font-size: @font14;
+    color: @backgroud;
+    padding: 0 16px;
+    outline: none;
+    background: #fff;
+    border: 1px solid @backgroud;
+    margin-left: 16px;
+    cursor: pointer;
+}
+.btn-primary-back(){
+    .btn-primary;
+    background: @backgroud;
+    color: #fff;
+    border:none;
 }

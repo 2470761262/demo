@@ -1,1083 +1,772 @@
 <style lang="less" scoped>
-.query-data-pad {
-  padding: 0 20px;
-}
-.page-query-data {
-  display: flex;
-  .page-query-data-title {
-    font-size: 16px;
-    line-height: 32px;
-    margin-right: 15px;
-  }
-  .page-query-data-tag {
-    flex: 1;
-    .query-tag {
-      margin-right: 10px;
-      margin-bottom: 10px;
-      font-size: 16px;
-    }
-  }
-}
-.i {
-  cursor: pointer;
-}
-.select-tabs {
-  display: flex;
-  justify-content: space-between;
-  padding: 15px 0;
-  border-top: 1px solid #d7d7d7;
-  border-bottom: 1px solid #d7d7d7;
-}
-.select-tabs-cell {
-  display: flex;
-  .select-tabs-item {
+@import "~@/pages/customersSystem/addCustomers/less/form.less";
+.page-result-content {
+  padding: 0 24px;
+  background: #fff;
+  .page-result-head {
     display: flex;
-    align-items: center;
-    margin-right: 55px;
-    cursor: pointer;
-    &:last-child {
-      margin-right: 0;
+    // justify-content: space-between;
+    //padding: 24px 0;
+    padding-top: 24px;
+    .head-content-input {
+      width: 494px;
+      height: 48px;
+      display: flex;
+      .content-input {
+        width: 411px;
+        border: 1px solid rgba(206, 206, 206, 1);
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+        text-indent: 16px;
+        // line-height: 48px;
+        height: 100%;
+        box-sizing: border-box;
+        outline: none;
+        font-size: @font16;
+        &::placeholder {
+          font-size: @font16;
+        }
+      }
+      .inquire-content {
+        flex: 1;
+        background: @backgroud;
+        outline: none;
+        border: 0;
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+        font-size: @font24;
+        color: #fff;
+      }
     }
-    .tabs-item-title {
-      font-size: 20px;
-    }
-    .el-icon-sort {
-      font-size: 18px;
+    .head-fun-right {
+      flex: 1;
+      text-align: right;
+      .btn-primary {
+        color: @backgroud;
+        border-radius: 4px;
+        height: 100%;
+        box-sizing: border-box;
+        &.active {
+          background: @backgroud;
+        }
+      }
     }
   }
-}
-.select-checkbox {
-  margin-right: 30px;
-  &:last-child {
-    margin-right: 0;
-  }
-  input {
-    display: none;
-  }
-  span {
-    display: flex;
-    align-items: center;
-    font-size: 18px;
+  // <!-- nav类型切换 -->
+  .tab-content {
+    //  display: flex;
     &::after {
       content: "";
-      border: 1px solid #767676;
-      width: 17px;
-      height: 17px;
-      box-sizing: border-box;
-      margin-left: 10px;
-      line-height: 1;
-      text-align: center;
+      display: block;
+      height: 1px;
+      margin-top: 13px;
+      background: rgba(240, 242, 245, 1);
     }
-  }
-  input[type="checkbox"]:checked + span {
-    &::after {
-      content: "\2713";
-    }
-  }
-  input[type="radio"]:checked + span {
-    &::after {
-      content: "\2713";
-    }
-  }
-}
-.select-for-warp {
-  min-height: 400px;
-  .select-for-item {
-    display: flex;
-    padding: 12px 0;
-    border-bottom: 1px solid #dbdbdb;
-    .select-for-item-img {
-      width: 140px;
-      height: 100px;
-      border-radius: 4px;
-      overflow: hidden;
-      align-self: center;
-      /deep/.el-image {
-        width: 100%;
-        height: 100%;
-      }
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-    .select-for-item-data {
-      margin-left: 50px;
-      flex: 1;
+    .tab-content-nav {
       display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      .item-data-top {
-        display: flex;
-        align-items: center;
-        .item-data-top-no {
-          //margin-right: 80px;
-          flex: 1;
-          width: 0;
-          color: #adadad;
-          font-size: 14px;
-        }
-        .item-data-top-tag {
-          display: flex;
-          .top-tag-item {
-            font-size: 14px;
-            padding: 2px 8px;
-            background: var(--color--primary);
-            border-radius: 4px;
-            color: #fff;
-          }
-        }
-        .broker-content {
-          display: flex;
-          align-items: center;
-          margin-left: 30px;
-          .broker-img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
-          }
-          .brokerName,
-          .deparName {
-            font-size: 15px;
-            color: #333;
-          }
-        }
-      }
-      i {
+      margin-top: 32px;
+      .tab-content-item {
+        font-size: @font16;
+        margin-right: 32px;
+        position: relative;
+        color: rgba(96, 98, 102, 1);
         cursor: pointer;
-      }
-      .item-data-downPayment {
-        font-size: 16px;
-        color: #636363;
-      }
-      .item-data-middle {
-        font-size: 20px;
-        color: #636363;
-        margin: 10px 0;
-      }
-      .item-data-plate {
-        // font-size: 14px;
-        //
-        // align-self: flex-start;
-        //
-        margin-top: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        .plate-warp {
-          padding: 4px 10px;
-          border: 1px solid #ddd;
-          border-radius: 20px;
+        &.active {
+          color: @backgroud;
+          font-weight: bold;
+
+          &::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            height: 2px;
+            background: @backgroud;
+            width: 100%;
+            left: 0;
+          }
+        }
+        &:last-child {
+          margin-right: 0;
         }
       }
-      .item-data-bottom {
-        display: flex;
-        .item-data-bottom-detali {
-          color: #636363;
-          font-size: 16px;
-          align-self: flex-end;
-          flex: 1;
-          width: 0;
-        }
-        .item-data-bottom-price {
-          font-size: 20px;
-          color: #e5a670;
-          line-height: 1;
-        }
-        .item-data-bottom-avgPirce {
-          align-self: flex-end;
-          margin-left: 10px;
-          color: #636363;
-          font-size: 14px;
-        }
-      }
-    }
-    .select-for-item-but {
-      margin: 0 30px;
-      height: 50px;
-      width: 50px;
-      color: #fff;
-      font-size: 30px;
-      align-self: center;
-      background: var(--color--primary);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
   }
-}
-.select-page-nav {
-  display: flex;
-  margin-top: 30px;
-  justify-content: center;
-  /deep/.el-pagination {
-    .el-pagination__total {
-      font-size: 15px;
-    }
-    li {
-      font-size: 15px;
-      border: 1px solid #dcdfe6;
-      border-radius: 4px;
-      margin-right: 10px;
+  // <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
+  .cascader-content {
+    display: flex;
+    padding: 24px 0;
+    border-bottom: 1px solid #f0f2f5;
+    .input-content {
+      @width: auto;
+      margin-right: 24px;
       &:last-child {
         margin-right: 0;
       }
+      .step-content > .input-group > .input-content;
     }
-    .el-pagination__jump {
-      font-size: 15px;
+    .cascader-content-build {
+      flex: 1;
+    }
+    .btn-primary-back {
+      margin-left: 0;
     }
   }
-}
-.flex-cell {
-  display: flex;
+  .search-content {
+    &.no-frist {
+      .search-content-item {
+        &:first-child {
+          margin-top: 19px;
+        }
+      }
+    }
+    .search-content-item {
+      display: flex;
+      margin-top: 19px;
+      align-items: center;
+      &:first-child {
+        margin-top: 24px;
+      }
 
-  .flex-cell-tab {
-    flex: 1;
-    width: 0;
-  }
-  .menuMarin {
-    margin-right: 60px;
-    margin-left: 20px;
+      .search-item-title {
+        width: 80px;
+        font-size: @font14;
+        font-weight: bold;
+        color: rgba(48, 49, 51, 1);
+        flex-shrink: 0;
+      }
+      .search-item-right {
+        display: flex;
+        align-items: center;
+        &.is-samall {
+          flex-wrap: wrap;
+          @media screen and (max-width: 1450px) {
+            .input-group,
+            .btn-primary-back {
+              // margin-bottom: 0px;
+              margin-top: 10px;
+            }
+            .data-content {
+              flex: 0 0 100%;
+            }
+          }
+        }
+        .input-group {
+          @width: auto;
+          margin-bottom: 5px;
+          .step-content > .input-group;
+          .input-content {
+            width: 110px;
+            height: 36px;
+            @media screen and (max-width: 1450px) {
+              width: 140px;
+            }
+          }
+          margin-top: 0;
+
+          /deep/.el-input__inner {
+            line-height: 36px !important;
+            height: 36px !important;
+            padding-left: 10px;
+            font-size: @font14 !important;
+            padding-right: 36px !important;
+            //min-width: 110px;
+            &::placeholder {
+              font-size: @font14 !important;
+              //  line-height: 34px !important;
+            }
+          }
+          .suffix-tips {
+            line-height: 36px !important;
+            font-size: @font14 !important;
+            margin-right: 8px !important;
+          }
+        }
+        /deep/.el-radio {
+          margin-bottom: 5px;
+          .el-radio__input {
+            display: none;
+          }
+          &.is-checked {
+            border-color: @backgroud !important;
+          }
+          &.is-bordered {
+            padding: 9px 16px;
+            height: auto;
+            margin-right: 24px;
+            margin-left: 0;
+            border-color: transparent;
+          }
+          .el-radio__label {
+            padding: 0;
+            font-size: @font14;
+          }
+        }
+        /deep/.el-checkbox-group {
+          margin-bottom: 5px;
+        }
+        /deep/.el-checkbox {
+          margin-right: 24px;
+          .el-checkbox__label {
+            font-size: @font14;
+          }
+        }
+        .select-content {
+          margin-bottom: 5px;
+          .input-content {
+            @width: auto;
+            margin-right: 24px;
+            height: 36px !important;
+            &:last-child {
+              margin-right: 0;
+            }
+            .step-content > .input-group > .input-content;
+            /deep/.el-input__inner {
+              height: 36px !important;
+              line-height: 36px !important;
+              font-size: @font14 !important;
+              &::placeholder {
+                font-size: @font14 !important;
+              }
+            }
+            /deep/.el-input__icon {
+              line-height: 36px !important;
+            }
+          }
+        }
+        .btn-primary-back {
+          height: 36px;
+          margin-bottom: 5px;
+          font-size: @font14;
+          flex-shrink: 0;
+        }
+      }
+    }
   }
 }
-.image-slot {
-  height: 100%;
+.change-content {
+  text-align: center;
+  padding-bottom: 24px;
+  margin-top: 24px;
+  cursor: pointer;
+  color: @backgroud;
+  font-size: @font16;
+  .iconfont {
+    margin-left: 8px;
+    font-size: @font14;
+    transition: transform 0.3s;
+    transform: rotateZ(180deg);
+    display: inline-block;
+    &.rotate {
+      transform: rotateZ(0deg) !important;
+    }
+  }
 }
-.is-order {
-  color: var(--color--primary);
-  font-weight: 600;
+.btn-primary {
+  .btn-primary();
+}
+.btn-primary-back {
+  .btn-primary-back();
+}
+.options-item {
+  .options-item;
 }
 </style>
 <template>
-  <div class="query-data-pad">
-    <div
-      class="page-query-data"
-      v-if="dynamicTags.length > 0 || querySelectFlag"
-    >
-      <div class="page-query-data-title">所有房源&nbsp;></div>
-      <div class="page-query-data-tag">
-        <el-tag
-          :data-anchor="'首页列表筛选框' + tag.title + ' ' + tag.value"
+  <div class="page-result-content">
+    <div class="page-result-head">
+      <div class="head-content-input">
+        <input
+          type="text"
+          placeholder="请输入房源编号,楼盘名称"
+          class="content-input"
+        />
+        <button class="inquire-content">
+          <i class="el-icon-search"></i>
+        </button>
+      </div>
+      <button class="btn-primary">录入客源</button>
+      <div class="head-fun-right">
+        <button class="btn-primary">管理入口</button>
+        <button class="btn-primary">我的房源</button>
+      </div>
+    </div>
+    <!-- nav类型切换 -->
+    <div class="tab-content">
+      <div class="tab-content-nav">
+        <div
+          class="tab-content-item "
+          :class="{ active: typeActiveIndex == index }"
+          v-for="(item, index) in typeList"
           :key="index"
-          class="query-tag anchor-point"
-          v-for="(tag, index) in dynamicTags"
-          closable
-          :disable-transitions="false"
-          @close="handleClose(tag)"
-          >{{ tag.title }}{{ tag.value }}</el-tag
+          @click="changeNavTypeIndex(index)"
         >
-      </div>
-      <div class="select-tabs-cell" v-if="querySelectFlag">
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页电梯勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="elevatorSelect()"
-            class="anchor-point"
-            data-anchor="首页电梯勾选框"
-          />
-          <span>电梯</span>
-        </label>
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页钥匙勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="keySelect()"
-            class="anchor-point"
-            data-anchor="首页钥匙勾选框"
-          />
-          <span>钥匙</span>
-        </label>
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页独家勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="onlySelect()"
-            class="anchor-point"
-            data-anchor="首页独家勾选框"
-          />
-          <span>独家</span>
-        </label>
+          {{ item.label }}
+        </div>
       </div>
     </div>
-    <!-- 缩小时不显示 -->
-    <div class="select-tabs" v-if="!querySelectFlag">
-      <div class="select-tabs-cell">
-        <div
-          class="select-tabs-item anchor-point"
-          data-anchor="首页默认排序按钮"
-          :class="{ 'is-order': form.sortColumn == 'lastFollowTime' }"
-          @click="defaultSelect()"
+    <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
+    <div class="cascader-content">
+      <div class="cascader-content-build">
+        <!-- 楼栋 -->
+        <el-select
+          v-model="mock"
+          placeholder="请输入楼盘名称"
+          class="input-content"
+          clearable
+          filterable
+          popper-class="options-item"
         >
-          <div
-            class="tabs-item-title anchor-point"
-            data-anchor="首页默认排序按钮"
+          <el-option
+            class="options-item"
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           >
-            默认排序
-          </div>
-        </div>
-        <div
-          class="select-tabs-item anchor-point"
-          data-anchor="首页价格排序按钮"
-          :class="{ 'is-order': form.sortColumn == 'price' }"
-          @click="priceSelect()"
+          </el-option>
+        </el-select>
+        <!-- 栋座 -->
+        <el-select
+          v-model="mock"
+          placeholder="请输入栋座"
+          clearable
+          filterable
+          class="input-content"
+          popper-class="options-item"
         >
-          <div
-            class="tabs-item-title anchor-point"
-            data-anchor="首页价格排序按钮"
+          <el-option
+            class="options-item"
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           >
-            价格
-          </div>
-          <i
-            class="el-icon-sort anchor-point"
-            data-anchor="首页价格排序按钮"
-          ></i>
-        </div>
-        <div
-          class="select-tabs-item anchor-point"
-          data-anchor="首页面单价排序按钮"
-          :class="{ 'is-order': form.sortColumn == 'unitPrice' }"
-          @click="unitPriceSelect()"
+          </el-option>
+        </el-select>
+        <!-- 房间号 -->
+        <el-select
+          v-model="mock"
+          placeholder="请输入房间号"
+          clearable
+          filterable
+          popper-class="options-item"
+          class="input-content"
         >
-          <div
-            class="tabs-item-title anchor-point"
-            data-anchor="首页单价排序按钮"
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           >
-            单价
-          </div>
-          <i
-            class="el-icon-sort anchor-point"
-            data-anchor="首页单价排序按钮"
-          ></i>
-        </div>
-        <div
-          class="select-tabs-item anchor-point"
-          data-anchor="首页面积排序按钮"
-          :class="{ 'is-order': form.sortColumn == 'inArea' }"
-          @click="inAreaSelect()"
-        >
-          <div
-            class="tabs-item-title anchor-point"
-            data-anchor="首页面积排序按钮"
-          >
-            面积
-          </div>
-          <i
-            class="el-icon-sort anchor-point"
-            data-anchor="首页面积排序按钮"
-          ></i>
+          </el-option>
+        </el-select>
+      </div>
+
+      <el-input type="text" placeholder="跟单人姓名" class="input-content" />
+      <button class="btn-primary-back">搜索</button>
+    </div>
+    <!-- 查询盒子 -->
+    <div class="search-content">
+      <!-- 范围 -->
+      <div class="search-content-item">
+        <div class="search-item-title">范围</div>
+        <div class="search-item-right">
+          <el-radio-group v-model="mock1" size="small">
+            <el-radio label="1" border>不限</el-radio>
+            <el-radio label="2" border>跟单房源</el-radio>
+            <el-radio label="3" border>店公共盘</el-radio>
+            <el-radio label="4" border>公司公盘</el-radio>
+          </el-radio-group>
         </div>
       </div>
-      <div class="select-tabs-cell">
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页电梯勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="elevatorSelect()"
-            class="anchor-point"
-            data-anchor="首页电梯勾选框"
-          />
-          <span>电梯</span>
-        </label>
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页钥匙勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="keySelect()"
-            class="anchor-point"
-            data-anchor="首页钥匙勾选框"
-          />
-          <span>钥匙</span>
-        </label>
-        <label
-          class="select-checkbox anchor-point"
-          data-anchor="首页独家勾选框"
-        >
-          <input
-            type="checkbox"
-            @click="onlySelect()"
-            class="anchor-point"
-            data-anchor="首页独家勾选框"
-          />
-          <span>独家</span>
-        </label>
+      <!-- 类型 -->
+      <div class="search-content-item">
+        <div class="search-item-title">类型</div>
+        <div class="search-item-right">
+          <el-radio-group v-model="mock1" size="small">
+            <el-radio label="1" border>不限</el-radio>
+            <el-radio label="2" border>我的相关</el-radio>
+            <el-radio label="3" border>关注房源</el-radio>
+            <el-radio label="4" border>3天新上房源</el-radio>
+          </el-radio-group>
+        </div>
+      </div>
+      <!-- 商圈 -->
+      <div class="search-content-item">
+        <div class="search-item-title">商圈</div>
+        <div class="search-item-right">
+          <el-radio-group v-model="mock1" size="small">
+            <el-radio label="1" border>不限</el-radio>
+            <el-radio label="2" border>中城</el-radio>
+            <el-radio label="3" border>东城</el-radio>
+            <el-radio label="4" border>南城</el-radio>
+            <el-radio label="5" border>北城</el-radio>
+            <el-radio label="6" border>莲东</el-radio>
+            <el-radio label="7" border>曹溪</el-radio>
+            <el-radio label="8" border>东肖</el-radio>
+            <el-radio label="9" border>西城</el-radio>
+            <el-radio label="10" border>大洋</el-radio>
+          </el-radio-group>
+        </div>
       </div>
     </div>
-    <div
-      class="select-for-warp"
-      v-loading="loading"
-      element-loading-text="我在去获取数据的路上了~"
-    >
-      <template v-if="!querySelectFlag">
-        <template v-if="renderList.length > 0">
-          <!-- @dblclick="toHouseDetail(item)" -->
-          <div
-            class="select-for-item anchor-point"
-            data-anchor="首页房源信息点击列表"
-            v-for="(item, index) in renderList"
-            :key="index"
-            @click.stop="toHouseDetail(item)"
-          >
-            <div class="select-for-item-img">
-              <el-image
-                :src="item.picUrl + '?x-oss-process=style/thumb'"
-                fit="cover"
+    <div class="search-content no-frist" v-show="panelChange">
+      <!-- 范围 -->
+      <div class="search-content-item">
+        <div class="search-item-title">范围</div>
+        <div class="search-item-right is-samall">
+          <div class="data-content">
+            <el-radio-group v-model="mock1" size="small">
+              <el-radio label="1" border>不限</el-radio>
+              <el-radio label="2" border>100万以下</el-radio>
+              <el-radio label="3" border>100-150万</el-radio>
+              <el-radio label="4" border>150-200万</el-radio>
+              <el-radio label="5" border>200-250万</el-radio>
+              <el-radio label="6" border>250-300万</el-radio>
+              <el-radio label="7" border>300-500万</el-radio>
+              <el-radio label="8" border>500-1000万</el-radio>
+              <el-radio label="9" border>1000万以上</el-radio>
+            </el-radio-group>
+          </div>
+          <div class="input-group">
+            <div class="input-group-split">
+              <el-input
+                placeholder="最小值"
+                class="input-content is-suffix"
+                v-model="mock"
               >
-                <div slot="placeholder" class="image-slot">
-                  加载中
-                  <span>...</span>
-                </div>
-                <div slot="error" fit="cover" class="image-slot">
-                  <el-image :src="'' | houseMiniImg"></el-image>
-                </div>
-              </el-image>
-            </div>
-            <div
-              class="select-for-item-data anchor-point"
-              data-anchor="首页房源信息点击列表"
-            >
-              <div class="item-data-top">
-                <div class="item-data-top-no overText">{{ item.houseNo }}</div>
-                <div class="item-data-top-tag">
-                  <div class="top-tag-item overText" v-if="item.keyOwner > 0">
-                    钥匙
-                  </div>
-                  <div
-                    class="top-tag-item overText"
-                    style="margin-left:5px"
-                    v-if="item.isOnly > 0"
-                  >
-                    独家
-                  </div>
-                </div>
-                <div class="broker-content" v-if="item.plate == 0">
-                  <img
-                    class="broker-img"
-                    :src="item.headimgurl | defaultImg"
-                    alt="经纪人"
-                  />
-                  <div class="brokerName">{{ item.brokerName }}/</div>
-                  <div class="deparName">{{ item.deptName }}</div>
-                </div>
-              </div>
-              <div class="item-data-plate">
-                <!-- 店公共盘 -->
-                <div class="plate-warp" v-if="plateResultMet(item.plate) != ''">
-                  {{ item.plate | plateResult }}
-                </div>
-                <div class="item-data-downPayment"></div>
-                <!-- 参考首付:
-                {{ item.price | downPaymentFilter(downPaymentPercent) }}万 -->
-              </div>
-              <div class="item-data-middle overText">{{ item.title }}</div>
-              <div class="item-data-bottom">
-                <div class="item-data-bottom-detali overText">
-                  {{ item.communityName }} &nbsp;/&nbsp;{{ item.inArea }}㎡
-                  &nbsp;/&nbsp;{{ item.rooms }}房{{ item.hall || 0 }}厅{{
-                    item.toilet || 0
-                  }}卫
-                </div>
-                <div class="item-data-bottom-price overText">
-                  ￥{{ item.price }}万
-                </div>
-                <div class="item-data-bottom-avgPirce overText">
-                  {{ item.unitPrice }}元/平
-                </div>
-              </div>
-            </div>
-            <!-- <div class="select-for-item-but">
-              <i
-                class="el-icon-document icon i"
-                @click.stop="toHouseDetail(item)"
-              ></i>
-            </div> -->
-          </div>
-        </template>
-        <template v-else>
-          <el-alert title="暂无数据" type="primary" center show-icon></el-alert>
-        </template>
-      </template>
-      <template v-else>
-        <div class="flex-cell">
-          <div class="flex-cell-tab">
-            <el-table
-              :data="renderList"
-              v-if="tableColumn.length > 0"
-              @sort-change="sortMethod"
-              :default-sort="{ prop: 'price', order: 'descending' }"
-              border
-            >
-              <el-table-column
-                v-for="(item, index) in tableColumn"
-                :key="index"
-                :prop="item.prop"
-                :label="item.label"
-                :min-width="item.width"
-                :sortable="item.order"
-                :formatter="item.formart"
-                :sort-orders="['ascending', 'descending']"
-                show-overflow-tooltip
-              ></el-table-column>
-              <el-table-column label="操作" fixed="right" width="80px">
-                <template slot-scope="scope">
-                  <el-button
-                    class="anchor-point"
-                    data-anchor="首页房源列表查看按钮"
-                    size="mini"
-                    type="primary"
-                    @click="toHouseDetail(scope.row)"
-                    >查看</el-button
-                  >
+                <template v-slot:suffix>
+                  <i class="suffix-tips">万元</i>
                 </template>
-              </el-table-column>
-            </el-table>
+              </el-input>
+              <i class="input-split"></i>
+              <el-input
+                placeholder="最大值"
+                class="input-content is-suffix"
+                v-model="mock"
+              >
+                <template v-slot:suffix>
+                  <i class="suffix-tips">万元</i>
+                </template>
+              </el-input>
+            </div>
           </div>
-          <definitionmenu
-            class="menuMarin"
-            :loading="menuLoading"
-            :renderList="menuRenderList"
-            :tableColumn="tableColumn"
-            :resetList="tableColumnField"
-            @change="tabColumnChange"
-          ></definitionmenu>
+          <button class="btn-primary-back">确定</button>
         </div>
-      </template>
+      </div>
+      <!-- 面积 -->
+      <div class="search-content-item">
+        <div class="search-item-title">面积</div>
+        <div class="search-item-right is-samall">
+          <div class="data-content">
+            <el-radio-group v-model="mock1" size="small">
+              <el-radio label="1" border>不限</el-radio>
+              <el-radio label="2" border>50㎡以下</el-radio>
+              <el-radio label="3" border>50-70㎡</el-radio>
+              <el-radio label="4" border>70-90㎡</el-radio>
+              <el-radio label="5" border>90-110㎡</el-radio>
+              <el-radio label="6" border>110-130㎡</el-radio>
+              <el-radio label="7" border>130-150㎡</el-radio>
+              <el-radio label="8" border>150-200㎡</el-radio>
+              <el-radio label="9" border>200㎡以上</el-radio>
+            </el-radio-group>
+          </div>
+          <div class="input-group">
+            <div class="input-group-split">
+              <el-input
+                placeholder="最小值"
+                class="input-content is-suffix"
+                v-model="mock"
+              >
+                <template v-slot:suffix>
+                  <i class="suffix-tips">㎡</i>
+                </template>
+              </el-input>
+              <i class="input-split"></i>
+              <el-input
+                placeholder="最大值"
+                class="input-content is-suffix"
+                v-model="mock"
+              >
+                <template v-slot:suffix>
+                  <i class="suffix-tips">㎡</i>
+                </template>
+              </el-input>
+            </div>
+          </div>
+          <button class="btn-primary-back">确定</button>
+        </div>
+      </div>
+      <!-- 房型 -->
+      <div class="search-content-item">
+        <div class="search-item-title">房型</div>
+        <div class="search-item-right is-samall">
+          <div class="data-content">
+            <el-radio-group v-model="mock1" size="small">
+              <el-radio label="1" border>不限</el-radio>
+              <el-radio label="2" border>1房</el-radio>
+              <el-radio label="3" border>2房</el-radio>
+              <el-radio label="4" border>3房</el-radio>
+              <el-radio label="5" border>4房</el-radio>
+              <el-radio label="6" border>5房</el-radio>
+              <el-radio label="7" border>5房以上</el-radio>
+            </el-radio-group>
+          </div>
+          <div class="input-group">
+            <div class="input-group-split">
+              <el-input
+                placeholder="最小值"
+                class="input-content is-suffix"
+                v-model="mock"
+              >
+                <template v-slot:suffix>
+                  <i class="suffix-tips">房</i>
+                </template>
+              </el-input>
+              <i class="input-split"></i>
+              <el-input
+                placeholder="最大值"
+                class="input-content is-suffix"
+                v-model="mock"
+              >
+                <template v-slot:suffix>
+                  <i class="suffix-tips">房</i>
+                </template>
+              </el-input>
+            </div>
+          </div>
+          <button class="btn-primary-back">确定</button>
+        </div>
+      </div>
+      <!-- 房型 -->
+      <div class="search-content-item">
+        <div class="search-item-title">房型</div>
+        <div class="search-item-right">
+          <el-radio label="1" border v-model="mock3">不限</el-radio>
+          <el-checkbox-group v-model="mock2">
+            <el-checkbox label="东"></el-checkbox>
+            <el-checkbox label="东南"></el-checkbox>
+            <el-checkbox label="南"></el-checkbox>
+            <el-checkbox label="西南"></el-checkbox>
+            <el-checkbox label="西"></el-checkbox>
+            <el-checkbox label="西北"></el-checkbox>
+            <el-checkbox label="北"></el-checkbox>
+            <el-checkbox label="东北"></el-checkbox>
+            <el-checkbox label="南北"></el-checkbox>
+          </el-checkbox-group>
+        </div>
+      </div>
+      <!-- 用途 -->
+      <div class="search-content-item">
+        <div class="search-item-title">用途</div>
+        <div class="search-item-right">
+          <el-radio label="1" border v-model="mock3">不限</el-radio>
+          <el-checkbox-group v-model="mock2">
+            <el-checkbox label="普通住宅"></el-checkbox>
+            <el-checkbox label="车位"></el-checkbox>
+            <el-checkbox label="别墅"></el-checkbox>
+            <el-checkbox label="商业"></el-checkbox>
+          </el-checkbox-group>
+        </div>
+      </div>
+      <!-- 小学 -->
+      <div class="search-content-item">
+        <div class="search-item-title">小学</div>
+        <div class="search-item-right">
+          <el-radio-group v-model="mock1" size="small">
+            <el-radio label="1" border>不限</el-radio>
+            <el-radio label="2" border>龙岩实验学校</el-radio>
+            <el-radio label="3" border>西安小学</el-radio>
+            <el-radio label="4" border>中街小学</el-radio>
+          </el-radio-group>
+          <div class="select-content">
+            <el-select
+              v-model="mock"
+              placeholder="请输入划片小学"
+              class="input-content"
+              clearable
+              filterable
+              popper-class="options-item"
+            >
+              <el-option
+                class="options-item"
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </div>
+          <button class="btn-primary-back">确定</button>
+        </div>
+      </div>
+      <!-- 中学 -->
+      <div class="search-content-item">
+        <div class="search-item-title">中学</div>
+        <div class="search-item-right">
+          <el-radio-group v-model="mock1" size="small">
+            <el-radio label="1" border>不限</el-radio>
+            <el-radio label="2" border>龙岩初级中学</el-radio>
+            <el-radio label="3" border>龙岩七中</el-radio>
+            <el-radio label="4" border>龙岩八中</el-radio>
+          </el-radio-group>
+          <div class="select-content">
+            <el-select
+              v-model="mock"
+              placeholder="请输入划片中学"
+              class="input-content"
+              clearable
+              filterable
+              popper-class="options-item"
+            >
+              <el-option
+                class="options-item"
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </div>
+          <button class="btn-primary-back">确定</button>
+        </div>
+      </div>
     </div>
-    <div class="select-page-nav">
-      <el-pagination
-        @current-change="handleCurrentChange"
-        :current-page="pageJson.currentPage"
-        :page-size="pageJson.pageSize"
-        layout="total, prev, pager, next, jumper"
-        :total="pageJson.total"
-      ></el-pagination>
+    <div class="change-content" @click="panelChangeBtn">
+      展开选项/收起<i
+        class="iconfont iconxingzhuangjiehe1"
+        :class="{ rotate: panelChange }"
+      ></i>
     </div>
   </div>
 </template>
 
 <script>
-import definitionmenu from "@/components/definitionMenu";
-import tableMenu from "@/util/getTableMenu";
+//切换tab类型
+const TYPELIST = [
+  {
+    label: "全部房源",
+    value: 0
+  },
+  {
+    label: "学区找房",
+    value: 1
+  },
+  {
+    label: "成交房源",
+    value: 2
+  },
+  {
+    label: "成交对赌",
+    value: 3
+  },
+  {
+    label: "地图找房",
+    value: 4
+  }
+];
 export default {
-  inject: ["form", "Slider"],
-  components: {
-    definitionmenu
-  },
-  props: {
-    querySelectFlag: {
-      type: Boolean,
-      default: true
-    }
-  },
-  watch: {
-    form: {
-      deep: true,
-      // immediate: true,
-      handler: function(value, ordvalue) {
-        this.renderTag(value);
-        this.getHouseData(JSON.parse(JSON.stringify(value)));
-      }
-    }
-  },
-  created() {
-    tableMenu.getTableMenu(this.tableColumnField, 16).then(e => {
-      this.menuLoading = false;
-      this.menuRenderList = e;
-      console.log(this.renderList, "this.renderListthis.renderList");
-      this.renderTag(this.form);
-      this.getHouseData(JSON.parse(JSON.stringify(this.form)));
-    });
-  },
   data() {
     return {
-      dynamicTags: [],
-      menuRenderList: [],
-      loading: false,
-      pageJson: {
-        total: 1,
-        pageSize: 8,
-        currentPage: 1
-      },
-      tableColumnField: [
+      typeList: TYPELIST,
+      typeActiveIndex: 0, //nav类型激活Index
+      panelChange: true, //折叠面板
+      mock: "",
+      mock1: "1",
+      mock2: [],
+      mock3: "",
+      options: [
         {
-          prop: "houseNo",
-          label: "房源编号",
-          width: "170",
-          order: false,
-          disabled: false,
-          default: true
+          value: "选项1",
+          label: "黄金糕"
         },
         {
-          prop: "communityName",
-          label: "小区名称",
-          order: false,
-          width: "150",
-          disabled: true,
-          default: true
+          value: "选项2",
+          label: "双皮奶"
         },
         {
-          prop: "inArea",
-          label: "面积(m²)",
-          width: "110",
-          order: "custom",
-          disabled: false,
-          default: true,
-          formart: item => item.inArea + "m²"
+          value: "选项3",
+          label: "蚵仔煎"
         },
         {
-          prop: "price",
-          label: "售价(万元)",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true,
-          formart: item => item.price + "万元"
-        },
-        // {
-        //   prop: "downPayment",
-        //   label: "参考首付",
-        //   width: "120",
-        //   order: false,
-        //   disabled: false,
-        //   default: true,
-        //   formart: item =>
-        //     (item.price * this.downPaymentPercent).toFixed(1) + "万元"
-        // },
-        {
-          prop: "seenNum",
-          label: "被看次数",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true
+          value: "选项4",
+          label: "龙须面"
         },
         {
-          prop: "outfollow",
-          label: "未跟进天数",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "noSeenDay",
-          label: "未被看天数",
-          width: "120",
-          order: true,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "addTime",
-          label: "添加时间",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "brokerName",
-          label: "跟单人",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true,
-          formart: item =>
-            item.brokerName != undefined ? item.brokerName : item.agentName
-        },
-        {
-          prop: "houseType",
-          label: "户型",
-          width: "150",
-          order: false,
-          disabled: false,
-          default: true,
-          formart: item =>
-            (item.rooms || 0) +
-            "室" +
-            (item.hall || 0) +
-            "厅" +
-            (item.toilet || 0) +
-            "卫"
-        },
-        {
-          prop: "unitPrice",
-          label: "单价(元/㎡)",
-          width: "120",
-          order: "custom",
-          disabled: false,
-          default: true,
-          format: item => item.unitPrice + "元/㎡"
-        },
-        {
-          prop: "face",
-          label: "朝向",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "floor",
-          label: "楼层",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "decoration",
-          label: "装修",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "addName",
-          label: "录入人",
-          width: "120",
-          order: false,
-          disabled: false,
-          default: true
+          value: "选项5",
+          label: "北京烤鸭"
         }
       ],
-      tableColumn: [],
-      menuLoading: true, //自定义菜单
-      renderList: [],
-      downPaymentPercent: 0.3 //首付的百分比
+      RegionList: [], //商圈
+      faceList: [], //朝向
+      PrimarySchoolList: [], //小学
+      MiddleSchoolList: [], //中学
+      RoomsList: [], //房型
+      RenovationList: [], //装修
+      PurposeList: [] //用途
     };
   },
-  filters: {
-    downPaymentFilter(value, downPaymentPercent) {
-      return (value * downPaymentPercent).toFixed(1);
-    },
-    plateResult(value) {
-      let plate = {
-        //  0: "个人跟单房源",
-        "1": "店公共盘",
-        "4": "公司公盘"
-        //  6: "暂不售",
-        //  7: "我售",
-        //  8: "业主自售",
-        // 9: "他司售",
-        // 10: "无效"
-      };
-      return plate[value] ? plate[value] : "";
-    }
+  created() {
+    this.mapGetPanelData();
   },
   methods: {
-    plateResultMet(value) {
-      return this.$options.filters.plateResult(value);
-    },
-    elevatorSelect() {
-      if (this.form.elevator != "") {
-        this.form.elevator = "";
-      } else {
-        this.form.elevator = "1";
+    /**
+     * @example: 修改nav类型激活Index
+     * @param {Number}  index
+     */
+    changeNavTypeIndex(index) {
+      if (index != this.typeActiveIndex) {
+        this.typeActiveIndex = index;
       }
     },
-    tabColumnChange(e, length = 0) {
-      console.log(e, "e");
-      this.tableColumn = e;
-      if (length > 0) {
-        let prop = e.map(item => {
-          return { prop: item.prop };
-        });
-        tableMenu.insert(prop, 16);
-      }
+    /**
+     * @example: 折叠面板
+     */
+    panelChangeBtn() {
+      this.panelChange = !this.panelChange;
     },
-    toHouseDetail(item) {
-      let id = item.id;
-      console.log(item, "谢谢谢谢谢谢谢谢");
-      if (item.hasOwnProperty("houseId")) {
-        id = item.houseId;
-      }
-      this.$router.push({
-        name: "houseDetails",
-        params: { houseId: id, dept: item.perDept }
-      });
-    },
-    //远程排序
-    sortMethod(item) {
-      this.form.sortColumn = item.prop;
-      this.form.sortType = item.order;
-      //  this.getHouseData(JSON.parse(JSON.stringify(value)));
-      console.log(item);
-    },
-    keySelect() {
-      if (this.form.keyOwner != "") {
-        this.form.keyOwner = "";
-      } else {
-        this.form.keyOwner = "1";
-      }
-    },
-    onlySelect() {
-      if (this.form.isOnly != "") {
-        this.form.isOnly = "";
-      } else {
-        this.form.isOnly = "1";
-      }
-    },
-    defaultSelect() {
-      this.form.sortColumn = "lastFollowTime";
-      this.form.sortType = "descending";
-    },
-    priceSelect() {
-      this.form.sortColumn = "price";
-      if (this.form.sortType == "ascending") {
-        this.form.sortType = "descending";
-      } else {
-        this.form.sortType = "ascending";
-      }
-      console.log(this.form.sortType);
-    },
-    inAreaSelect() {
-      this.form.sortColumn = "inArea";
-      if (this.form.sortType == "ascending") {
-        this.form.sortType = "descending";
-      } else {
-        this.form.sortType = "ascending";
-      }
-      console.log(this.form.sortType);
-    },
-    unitPriceSelect() {
-      this.form.sortColumn = "unitPrice";
-      if (this.form.sortType == "ascending") {
-        this.form.sortType = "descending";
-      } else {
-        this.form.sortType = "ascending";
-      }
-      console.log(this.form.sortType);
-    },
-    InitPageJson() {
-      this.pageJson = { total: 1, currentPage: 1, pageSize: 8 };
-    },
-    getHouseData(value, initPage = true) {
-      let that = this;
-      this.loading = true;
-      Object.keys(value).forEach(item => {
-        if (value[item] instanceof Array) {
-          value[item] = value[item].join(",");
-        }
-      });
-      let actionUrl = value.action;
-      value.action = "";
-      console.log(value, "==============>?");
-      let restuleParms = Object.assign({}, value, {
-        page: that.pageJson.currentPage,
-        limit: that.pageJson.pageSize
-      });
+    /**
+     * @example: 获取筛选列表
+     * @param {String}  constant 列表名称
+     */
+    queryConstant(constant) {
       return this.$api
         .get({
-          url: actionUrl,
-          token: false,
-          data: restuleParms
-        })
-        .then(e => {
-          let data = e.data;
-          if (initPage) that.InitPageJson();
-          if (data.code == 200) {
-            console.log(data);
-            that.renderList = data.data.data;
-            that.pageJson.total = data.data.dataCount;
+          url: "/mateHouse/queryConstant",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            constant: constant
           }
         })
-        .finally(() => {
-          that.loading = false;
+        .then(e => {
+          if (e.data.code == 200) {
+            return [e.data.data, constant];
+          }
         });
     },
-    //创建需要渲染的标签
-    renderTag(value) {
-      let that = this;
-      console.log(value);
-      //清空
-      this.dynamicTags = [];
-      //价格
-      if (value.minPrice !== "") {
-        this.dynamicTags.push({
-          title: `价格:${value.minPrice}-${
-            value.maxPrice == "9999" ? "无限" : value.maxPrice
-          }万`,
-          field: "price",
-          arr: false
+    /**
+     * @example: 统一获取列表数据
+     */
+    mapGetPanelData() {
+      //需要获取接口的数据对象
+      //key 传递接口的数据参数
+      //value 返回值结果对象名称
+      const panelMap = new Map([
+        ["Region", "RegionList"],
+        ["face", "faceList"],
+        ["PrimarySchoo", "PrimarySchoolList"],
+        ["MiddleSchool", "MiddleSchoolList"],
+        ["Rooms", "RoomsList"],
+        ["Renovation", "RenovationList"],
+        ["Purpose", "PurposeList"]
+      ]);
+      for (let item of panelMap.keys()) {
+        this.queryConstant(item).then(([data, itemName]) => {
+          this[panelMap.get(itemName)] = data;
         });
       }
-      //首付
-      if (value.minDownPayment !== "") {
-        this.dynamicTags.push({
-          title: `首付:${(
-            value.minDownPayment * this.downPaymentPercent
-          ).toFixed(1)}-${
-            value.maxDownPayment == "9999"
-              ? "无限"
-              : (value.maxDownPayment * this.downPaymentPercent).toFixed(1)
-          }万`,
-          field: "downPayment",
-          arr: false
-        });
-      }
-      //面积
-      if (value.minInArea !== "") {
-        this.dynamicTags.push({
-          title: `面积:${value.minInArea}-${
-            value.maxInArea == "9999" ? "无限" : value.maxInArea
-          }㎡`,
-          field: "area",
-          arr: false
-        });
-      }
-      //楼层
-      if (value.minFloor !== "") {
-        this.dynamicTags.push({
-          title: `楼层:${value.minFloor}-${
-            value.maxFloor == "9999" ? "无限" : value.maxFloor
-          }层`,
-          field: "floot",
-          arr: false
-        });
-      }
-
-      //楼栋号
-      if (value.cbNo != null && value.cbNo != "") {
-        this.dynamicTags.push({
-          title: `楼栋号:${value.cbNo}`,
-          field: "cbNo",
-          arr: false
-        });
-      }
-
-      //房间号
-      if (value.roomNumber != null && value.roomNumber != "") {
-        this.dynamicTags.push({
-          title: `房间号:${value.roomNumber}`,
-          field: "roomNumber",
-          arr: false
-        });
-      }
-      //楼盘名称
-      if (value.communityName != null && value.communityName != "") {
-        this.dynamicTags.push({
-          title: `楼盘名称:${value.communityName}`,
-          field: "communityName",
-          arr: false
-        });
-      }
-      //房源类型
-      if (value.title != null && value.title != "") {
-        this.dynamicTags.push({
-          title: `房源类型:${value.title}`,
-          field: "type",
-          arr: false
-        });
-      } else {
-        this.dynamicTags.push({
-          title: `房源类型:全部在售`,
-          field: "type",
-          arr: false
-        });
-      }
-      //商圈
-      this.appendFormTag(value.business, "商圈", "business");
-      //房型
-      this.appendFormTag(value.houseType, "房型", "houseType");
-      //装修
-      this.appendFormTag(value.renovation, "装修", "renovation");
-      //房屋用途
-      this.appendFormTag(value.purpose, "房屋用途", "purpose");
-      //朝向
-      this.appendFormTag(value.face, "朝向", "face");
-      //小学
-      this.appendFormTag(value.primarySchool, "小学", "primarySchool");
-      //中学
-      this.appendFormTag(value.middleSchool, "中学", "middleSchool");
-      if (value.searchInfo != null && value.searchInfo != "") {
-        this.dynamicTags.push({
-          title: `搜索关键字:${value.searchInfo}`,
-          field: "searchInfo",
-          arr: false
-        });
-      }
-    },
-    appendFormTag(to, titleName, fieldName) {
-      //房型
-      to.forEach(item => {
-        this.dynamicTags.push({
-          title: `${titleName}:`,
-          value: `${item}`,
-          field: `${fieldName}`,
-          arr: true
-        });
-      });
-    },
-    filterSplice(e) {
-      return this.form[e.field].findIndex(item => {
-        return item == e.value;
-      });
-    },
-    //标签关闭
-    handleClose(e) {
-      if (e.arr) {
-        // 删除多选
-        this.form[e.field].splice(this.filterSplice(e), 1);
-      } else {
-        // 删除 slider
-
-        if (e.field == "price") {
-          this.Slider.priceSlider = [20, 20];
-          this.form.maxPrice = "";
-          this.form.minPrice = "";
-        }
-        if (e.field == "area") {
-          this.Slider.areaSlider = [20, 20];
-          this.form.maxInArea = "";
-          this.form.minInArea = "";
-        }
-        if (e.field == "floot") {
-          this.Slider.flootSlider = [-2, -2];
-          this.form.maxFloor = "";
-          this.form.minFloor = "";
-        }
-        if (e.field == "communityName") {
-          this.form.communityName = "";
-          this.form.cbNo = "";
-          this.form.roomNumber = "";
-          this.form.comId = "";
-          this.form.cbId = "";
-          this.form.roomNo = "";
-        }
-        if (e.field == "cbNo") {
-          this.form.cbNo = "";
-          this.form.roomNumber = "";
-          this.form.cbId = "";
-          this.form.roomNo = "";
-        }
-        if (e.field == "roomNumber") {
-          this.form.roomNumber = "";
-          this.form.roomNo = "";
-        }
-        if (e.field == "searchInfo") {
-          this.form.searchInfo = "";
-        }
-      }
-    },
-    //跳转第几页
-    handleCurrentChange(e) {
-      this.pageJson.currentPage = e;
-      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
     }
   }
 };
