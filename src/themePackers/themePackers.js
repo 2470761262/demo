@@ -11,7 +11,7 @@ const tint = 0.76;
 let themeData = {
   dom: document.documentElement,
   chalk: "",
-  createImport(val, ordVal = defaultColor, font = 14) {
+  createImport(val, ordVal = defaultColor, font) {
     let newVal = val;
     if (newVal == undefined) {
       let storeColor = util.localStorageGet(TREMEPACKERS);

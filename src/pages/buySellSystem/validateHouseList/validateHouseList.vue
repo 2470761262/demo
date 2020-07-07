@@ -1042,7 +1042,7 @@ export default {
       let array = [
         {
           name: "邀请验真",
-          isType: "待业主验真,待店长验真,已过期,草稿",
+          isType: "待业主验真,待店长验真,草稿",
           methodName: "getVerifyImg",
           buttonType: "primary"
         },

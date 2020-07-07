@@ -1082,5 +1082,39 @@ export default [
       import(
         /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue"
       )
+  },
+  {
+    //客源系统 私客列表
+    path: "/customers/privateCustomersList",
+    meta: {
+      title: "私客列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "privateCustomersList" */ "@/pages/customersSystem/privateCustomersList/privateCustomersList.vue"
+      )
+  },
+  {
+    //客源系统 公客列表
+    path: "/customers/publicCustomersList",
+    meta: {
+      title: "公客列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersList/publicCustomersList.vue"
+      )
+  },
+  {
+    //客源系统 公客详情
+    path: "/customers/publicCustomersDetail",
+    meta: {
+      title: "公客详情"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersDetail/publicCustomersDetail.vue"
+        //客源系统 新整客户
+      )
   }
 ];
