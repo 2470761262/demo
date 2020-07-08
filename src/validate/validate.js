@@ -60,7 +60,11 @@ Validator.extend("isGreater", {
   compare: ["compare", "title"],
   messages: {
     zh_CN: (field, args) => {
-      return `${field}不能大于${args[1]}:${args[0] == "" ? 0 : args[0]}`;
+      if (args[1]) {
+        return `${field}不能大于${args[1]}:${args[0] == "" ? 0 : args[0]}`;
+      } else {
+        return `${field}不能大于${args[0]}`;
+      }
     }
   },
   validate: (value, compare) => {
