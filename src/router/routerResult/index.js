@@ -1084,25 +1084,37 @@ export default [
       )
   },
   {
-    //客源系统 新整客户
-    path: "/customers/customersDetail",
+    //客源系统 私客列表
+    path: "/customers/privateCustomersList",
     meta: {
-      title: "新增客源"
+      title: "私客列表"
     },
     component: () =>
       import(
-        /* webpackChunkName: "customersDetail" */ "@/pages/customersSystem/customersDetail/customersDetail.vue"
+        /* webpackChunkName: "privateCustomersList" */ "@/pages/customersSystem/privateCustomersList/privateCustomersList.vue"
       )
   },
   {
-    //客源系统 添加带看
-    path: "/customers/takeLook",
+    //客源系统 公客列表
+    path: "/customers/publicCustomersList",
     meta: {
-      title: "添加带看"
+      title: "公客列表"
     },
     component: () =>
       import(
-        /* webpackChunkName: "takeLook" */ "@/pages/customersSystem/customersDetail/takeLook.vue"
+        /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersList/publicCustomersList.vue"
+      )
+  },
+  {
+    //客源系统 公客详情
+    path: "/customers/publicCustomersDetail",
+    meta: {
+      title: "公客详情"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "publicCustomersList" */ "@/pages/customersSystem/publicCustomersDetail/publicCustomersDetail.vue"
+        //客源系统 新整客户
       )
   }
 ];

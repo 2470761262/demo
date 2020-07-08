@@ -35,7 +35,6 @@
         <label class="radio-content" v-for="item in sex" :key="item.value">
           <input
             type="radio"
-            name="sex"
             :value="item.value"
             v-model="mock"
             data-vv-name="customeSex"

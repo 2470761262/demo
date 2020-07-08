@@ -174,7 +174,7 @@
           v-for="item in decoration"
           :key="item.value"
         >
-          <input type="radio" name="sex" :value="item.value" v-model="mock" />
+          <input type="radio" :value="item.value" v-model="mock" />
           <div class="radio-title">{{ item.key }}</div>
         </label>
       </div>
