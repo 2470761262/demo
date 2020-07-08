@@ -107,7 +107,7 @@
           <div :class="index == 0 ? 'fristCellDot' : 'cellDot'">
             <div></div>
           </div>
-          <div class="cellTime">{{ item.Time }}</div>
+          <div class="cellTime">{{ item.AddTime || "暂无" }}</div>
         </div>
         <div
           class="cellMsgBox"
@@ -116,20 +116,20 @@
           <div class="cellMsg">
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进人：</div>
-              <div class="cellMsgText">{{ item.Per }}</div>
+              <div class="cellMsgText">{{ item.perName || "暂无" }}</div>
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进类型：</div>
-              <div class="cellMsgText">{{ item.Type }}</div>
+              <div class="cellMsgText">{{ item.FollowType || "暂无" }}</div>
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进方式：</div>
-              <div class="cellMsgText">{{ item.Way }}</div>
+              <div class="cellMsgText">{{ item.FollowWay || "暂无" }}</div>
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进内容：</div>
               <div class="cellMsgText">
-                {{ item.Text }}
+                {{ item.Memo || "暂无" }}
               </div>
             </div>
           </div>
@@ -141,37 +141,37 @@
 
 <script>
 export default {
+  inject: ["customerId"],
   data() {
     return {
-      FollowData: [
-        {
-          Time: "2020-10-10 22:22:22",
-          Per: "林俊杰",
-          Type: "日常回访",
-          Way: "电话",
-          Text:
-            "跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容"
-        },
-        {
-          Time: "2020-10-10 22:22:22",
-
-          Per: "林俊杰",
-          Type: "日常回访",
-          Way: "电话",
-          Text:
-            "跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容"
-        },
-        {
-          Time: "2020-10-10 22:22:22",
-
-          Per: "林俊杰",
-          Type: "日常回访",
-          Way: "电话",
-          Text:
-            "跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容"
-        }
-      ]
+      FollowData: []
     };
+  },
+  mounted() {
+    this.apply();
+  },
+  methods: {
+    apply() {
+      var that = this;
+      this.$api
+        .post({
+          url: "/saleCustomerDetail/getFollowAndTakeLook",
+          qs: true,
+          data: {
+            customerId: that.customerId
+          }
+        })
+        .then(e => {
+          console.log(e.data);
+          let json = e.data;
+          if (json.code == 200) {
+            this.FollowData = json.data.saleList;
+          } else if (json.code == 400) {
+            alert(json.message);
+            console.log("失败     " + json);
+          }
+        });
+    }
   }
 };
 </script>
