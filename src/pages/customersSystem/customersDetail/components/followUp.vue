@@ -235,7 +235,7 @@ export default {
   },
   components: {
     //写跟进弹出层
-    followUpDialog: () => import("../didlog/followUpDialog")
+    followUpDialog: () => import("../didLog/followUpDialog")
   },
   created() {
     this.getData();
