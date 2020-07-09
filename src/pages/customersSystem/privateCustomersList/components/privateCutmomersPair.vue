@@ -68,7 +68,7 @@
           height: inherit;
           text-align: center;
           border: 0;
-          font-size: @font16;
+          font-size: 16px;
           color: #606266;
         }
         .el-input-suniff {
@@ -178,6 +178,24 @@
           line-height: 32px;
         }
       }
+    }
+    .switchItem,
+    .switchItemOn {
+      margin-left: 20px;
+      padding: 0 15px;
+      border: 1px solid;
+      border-radius: 4px;
+      height: 32px;
+      line-height: 34px;
+      font-size: @font14;
+    }
+    .switchItem {
+      color: #606266;
+      border-color: #fff;
+    }
+    .switchItemOn {
+      color: @backgroud;
+      border-color: @backgroud;
     }
     .RadioItemBox {
       display: flex;
@@ -299,6 +317,7 @@
         top: 0;
         left: -20px;
         color: #cecece;
+        pointer-events: none;
         > i {
           margin-left: 160px;
         }
@@ -372,7 +391,7 @@
           <div class="InputItem">
             <input
               placeholder="请输入楼盘名称或房源编号"
-              v-model="form.KeyWord"
+              v-model="form.keyWord"
             />
           </div>
           <div class="SubmitItem">
@@ -392,9 +411,7 @@
           v-for="(item, index) in customersTypeList"
           :key="index"
           :class="
-            item.type == form.customersType
-              ? 'tapSwitchItemOn'
-              : 'tapSwitchItem'
+            item.type == customersType ? 'tapSwitchItemOn' : 'tapSwitchItem'
           "
           @click="setCustomersType(item)"
         >
@@ -404,47 +421,62 @@
 
       <el-form-item label="意愿等级" class="ItemRow ChooseItemRow">
         <el-checkbox-group
-          v-model="form.desireIntensitys"
+          v-model="Intend"
           class="ChooseItemBox"
+          @change="getUnlimit('Intend', 'desireIntensitys', 4)"
         >
           <div
             class="ChooseItem"
             v-for="(item, index) in IntendList"
             :key="index"
           >
-            <el-checkbox :label="item.value" name="desireIntensitys">{{
-              item.name
-            }}</el-checkbox>
+            <el-checkbox :label="item.value" name="Intend">
+              {{ item.name }}
+            </el-checkbox>
           </div>
         </el-checkbox-group>
+        <div
+          :class="form.attentionStatus == true ? 'switchItemOn' : 'switchItem'"
+          @click="getAttention"
+        >
+          暂不关注
+        </div>
       </el-form-item>
       <el-form-item
         label="看房进度"
         class="ItemRow ChooseItemRow"
         prop="Progress"
       >
-        <el-checkbox-group v-model="form.Progress" class="ChooseItemBox">
+        <el-checkbox-group
+          v-model="Progress"
+          class="ChooseItemBox"
+          @change="getUnlimit('Progress', 'pairNumbers', -1)"
+        >
           <div
             class="ChooseItem"
             v-for="(item, index) in ProgressList"
             :key="index"
           >
-            <el-checkbox :label="item.value" name="Progress">{{
-              item.name
-            }}</el-checkbox>
+            <el-checkbox :label="item.value" name="Progress">
+              {{ item.name }}
+            </el-checkbox>
           </div>
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="意向价格" class="ItemRow ChooseItemRow" prop="Price">
-        <el-radio-group v-model="form.Price" class="RadioItemBox">
+        <el-radio-group
+          v-model="Price"
+          class="RadioItemBox"
+          @change="getLimit('Price', 'minPrice', 'maxPrice')"
+        >
           <div
             class="RadioItem"
             v-for="(item, index) in PriceList"
             :key="index"
           >
-            <el-radio :label="item.value" name="Price">
-              {{ item.name }}
-            </el-radio>
+            <el-radio :label="item.value" name="Price">{{
+              item.name
+            }}</el-radio>
           </div>
         </el-radio-group>
         <div class="InputItem">
@@ -453,9 +485,9 @@
               v-number
               placeholder="最小值"
               clearable
-              v-model="form.MinPrice"
+              v-model="MinPrice"
             ></el-input>
-            <span>单位</span>
+            <span>万</span>
           </div>
           <div class="split-line"></div>
           <div class="InputItemCell">
@@ -463,11 +495,14 @@
               v-number
               placeholder="最大值"
               clearable
-              v-model="form.MaxPrice"
+              v-model="MaxPrice"
             ></el-input>
-            <span>单位</span>
+            <span>万</span>
           </div>
-          <el-button>确定</el-button>
+          <el-button
+            @click="submitInput('MinPrice', 'MaxPrice', 'minPrice', 'maxPrice')"
+            >确定</el-button
+          >
         </div>
       </el-form-item>
       <div v-show="ShowMorePair == true">
@@ -476,15 +511,19 @@
           class="ItemRow ChooseItemRow"
           prop="Area"
         >
-          <el-radio-group v-model="form.Area" class="RadioItemBox">
+          <el-radio-group
+            v-model="Area"
+            class="RadioItemBox"
+            @change="getLimit('Area', 'minArea', 'maxArea')"
+          >
             <div
               class="RadioItem"
               v-for="(item, index) in AreaList"
               :key="index"
             >
-              <el-radio :label="item.value" name="Area">{{
-                item.name
-              }}</el-radio>
+              <el-radio :label="item.value" name="Area">
+                {{ item.name }}
+              </el-radio>
             </div>
           </el-radio-group>
           <div class="InputItem">
@@ -493,9 +532,9 @@
                 v-number
                 placeholder="最小值"
                 clearable
-                v-model="form.MinArea"
+                v-model="MinArea"
               ></el-input>
-              <span>单位</span>
+              <span>㎡</span>
             </div>
             <div class="split-line"></div>
             <div class="InputItemCell">
@@ -503,11 +542,14 @@
                 v-number
                 placeholder="最大值"
                 clearable
-                v-model="form.MaxArea"
+                v-model="MaxArea"
               ></el-input>
-              <span>单位</span>
+              <span>㎡</span>
             </div>
-            <el-button>确定</el-button>
+            <el-button
+              @click="submitInput('MinArea', 'MaxArea', 'minArea', 'maxArea')"
+              >确定</el-button
+            >
           </div>
         </el-form-item>
         <el-form-item
@@ -521,9 +563,9 @@
               v-for="(item, index) in HouseTypeList"
               :key="index"
             >
-              <el-radio :label="item.value" name="houseNumbers">
-                {{ item.name }}
-              </el-radio>
+              <el-radio :label="item.value" name="houseNumbers">{{
+                item.name
+              }}</el-radio>
             </div>
           </el-radio-group>
         </el-form-item>
@@ -535,6 +577,7 @@
           <div class="timePickerItem">
             <el-date-picker
               v-model="DelegateTime"
+              value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
               start-placeholder="开始日期"
@@ -545,7 +588,10 @@
               <i class="el-icon-date"></i>
             </div>
           </div>
-          <el-button>确定</el-button>
+          <el-button
+            @click="getTime('DelegateTime', 'minAddTime', 'maxAddTime')"
+            >确定</el-button
+          >
         </el-form-item>
         <el-form-item
           label="维护时间"
@@ -555,6 +601,7 @@
           <div class="timePickerItem">
             <el-date-picker
               v-model="MaintenanceTime"
+              value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
               start-placeholder="开始日期"
@@ -565,7 +612,12 @@
               <i class="el-icon-date"></i>
             </div>
           </div>
-          <el-button>确定</el-button>
+          <el-button
+            @click="
+              getTime('MaintenanceTime', 'minMainTainTime', 'maxMainTainTime')
+            "
+            >确定</el-button
+          >
         </el-form-item>
         <el-form-item
           label="上次带看"
@@ -575,6 +627,7 @@
           <div class="timePickerItem">
             <el-date-picker
               v-model="TakelookTime"
+              value-format="yyyy-MM-dd"
               type="daterange"
               range-separator="-"
               start-placeholder="开始日期"
@@ -585,7 +638,16 @@
               <i class="el-icon-date"></i>
             </div>
           </div>
-          <el-button>确定</el-button>
+          <el-button
+            @click="
+              getTime(
+                'TakelookTime',
+                'minLastPairFollowTime',
+                'maxLastPairFollowTime'
+              )
+            "
+            >确定</el-button
+          >
         </el-form-item>
       </div>
     </el-form>
@@ -630,9 +692,10 @@ const cusTypeList = [
 ];
 
 const IntendListModle = [
+  //意愿
   {
     name: "不限",
-    value: 1
+    value: 4
   },
   {
     name: "强烈",
@@ -645,32 +708,28 @@ const IntendListModle = [
   {
     name: "较弱",
     value: 1
-  },
-  {
-    name: "暂不关注",
-    value: 5
   }
 ];
 const ProgressListModle = [
   {
     name: "不限",
-    value: 1
+    value: -1
   },
   {
     name: "未带看",
-    value: 2
+    value: 0
   },
   {
     name: "首看",
-    value: 3
+    value: 1
   },
   {
     name: "复看",
-    value: 4
+    value: 2
   },
   {
     name: "三看及以上",
-    value: 5
+    value: 3
   },
   {
     name: "签约",
@@ -680,83 +739,83 @@ const ProgressListModle = [
 const PriceListModle = [
   {
     name: "不限",
-    value: 1
+    value: [0]
   },
   {
     name: "50万以下",
-    value: 2
+    value: [0, 50]
   },
   {
     name: "50-100万",
-    value: 3
+    value: [50, 100]
   },
   {
     name: "100-150万",
-    value: 4
+    value: [100, 150]
   },
   {
     name: "150-200万",
-    value: 5
+    value: [150, 200]
   },
   {
     name: "200万以上",
-    value: 6
+    value: [200]
   }
 ];
 const AreaListModle = [
   {
     name: "不限",
-    value: 1
+    value: [0]
   },
   {
     name: "50㎡以下",
-    value: 2
+    value: [0, 50]
   },
   {
     name: "50-90㎡",
-    value: 3
+    value: [50, 90]
   },
   {
     name: "90-120㎡",
-    value: 4
+    value: [90, 120]
   },
   {
     name: "120-150㎡",
-    value: 5
+    value: [120, 150]
   },
   {
     name: "150-180㎡",
-    value: 6
+    value: [150, 180]
   },
   {
     name: "180㎡以上",
-    value: 7
+    value: [180]
   }
 ];
 const HouseTypeListModle = [
   {
     name: "不限",
-    value: 1
+    value: ""
   },
   {
     name: "一房",
-    value: 2
+    value: 1
   },
   {
     name: "两房",
-    value: 3
+    value: 2
   },
   {
     name: "三房",
-    value: 4
+    value: 3
   },
   {
     name: "四房",
-    value: 5
+    value: 4
   },
   {
     name: "四房以上",
-    value: 6
+    value: 5
   }
 ];
 export default {
@@ -764,15 +823,24 @@ export default {
   data() {
     return {
       customersTypeList: cusTypeList,
+      customersType: 1,
       IntendList: IntendListModle,
+      Intend: ["4"],
       ProgressList: ProgressListModle,
+      Progress: ["-1"],
       PriceList: PriceListModle,
+      Price: "", //价格，需要处理数据
+      MinPrice: "",
+      MaxPrice: "",
       AreaList: AreaListModle,
+      Area: "", //面积，需要处理数据
+      MinArea: "",
+      MaxArea: "",
       HouseTypeList: HouseTypeListModle,
       DelegateTime: "",
       MaintenanceTime: "",
       TakelookTime: "",
-      ShowMorePair: false,
+      ShowMorePair: true,
       FoldText: "展开选项/收起"
     };
   },
@@ -781,7 +849,70 @@ export default {
   },
   methods: {
     setCustomersType(item, resetAll) {
-      this.form.customersType = item.type;
+      switch (item.type) {
+        case 1:
+          this.form.requireTypes = [];
+          break;
+        case 2:
+          this.form.requireTypes = [1, 2, 4];
+          break;
+        case 3:
+          this.form.requireTypes = [8, 16, 32];
+          break;
+        case 4:
+          this.form.requireTypes = [64, 128, 256];
+          break;
+        case 5:
+          this.form.attentionStatus = 1;
+          break;
+        default:
+          break;
+      }
+      this.customersType = item.type;
+    },
+    getAttention() {
+      console.log(this.form.attentionStatus);
+      this.form.attentionStatus = !this.form.attentionStatus;
+    },
+    getUnlimit(key1, key2, value) {
+      let l = this[key1].length;
+      let i = this[key1].indexOf(value);
+
+      if (this[key1][l - 1] == value) {
+        this[key1] = [value];
+        this.form[key2] = [];
+      } else if (l > 1 && i != -1) {
+        this[key1].splice(i, 1);
+        this.form[key2] = this[key1];
+      } else {
+        this.form[key2] = this[key1];
+      }
+      console.log(this.form[key2], this[key1]);
+    },
+
+    getLimit(key, key1, key2) {
+      this.form[key1] = this[key][0];
+      this.form[key2] = this[key][1] ? this[key][1] : "";
+      console.log(this.form[key1], this.form[key2]);
+    },
+
+    submitInput(key1, key2, keya, keyb) {
+      let a = this[key1];
+      if (a > this[key2]) {
+        this[key1] = this[key2];
+        this[key2] = a;
+      }
+      this.form[keya] = this[key1];
+      this.form[keyb] = this[key2];
+    },
+    getTime(key, key1, key2) {
+      if (this[key].length > 0) {
+        console.log(this[key]);
+        this[key1] = this[key][0] + " 00:00:00";
+        this[key2] = this[key][1] + " 00:00:00";
+      } else {
+        alert("请先选择起止时间");
+      }
     },
     ShowMore() {
       this.ShowMorePair = !this.ShowMorePair;

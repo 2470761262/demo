@@ -36,12 +36,19 @@ import privateCutmomersPair from "@/pages/customersSystem/publicCustomersDetail/
 import customerFollowDetail from "@/pages/customersSystem/publicCustomersDetail/components/customerFollowDetail.vue";
 
 export default {
+  provide() {
+    return {
+      customerId: this.customerId
+    };
+  },
   components: {
     privateCutmomersPair,
     customerFollowDetail
   },
   data() {
-    return {};
+    return {
+      customerId: 238933
+    };
   }
 };
 </script>

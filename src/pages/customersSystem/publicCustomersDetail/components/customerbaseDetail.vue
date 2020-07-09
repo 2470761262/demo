@@ -188,8 +188,10 @@
   <div class="part-Warp">
     <div class="MainMsgZone">
       <div class="MainMsgTil">
-        周杰伦
-        <span>男</span>
+        {{ cusbaseData.bsAgentCustomersTbl.Customers || "暂无" }}
+        <span>
+          {{ cusbaseData.bsAgentCustomersTbl.sex == 0 ? "男" : "女" }}
+        </span>
       </div>
       <div class="MainMsgOption">
         <div class="White" @click="openClaimFixed">认领客户</div>
@@ -199,27 +201,39 @@
     <div class="SubMsgZone">
       <div class="SubMsgRow">
         <div class="SubMsgTil">委托来源：</div>
-        <div class="SubMsgText">朋友</div>
+        <div class="SubMsgText">
+          {{ cusbaseData.bsAgentCustomersTbl.Source || "暂无" }}
+        </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">客户需求：</div>
-        <div class="SubMsgText">买二手住宅</div>
+        <div class="SubMsgText">
+          {{ cusbaseData.customerRequire[0] || "暂无" }}
+        </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">委托时间：</div>
-        <div class="SubMsgText">2020-06-22</div>
+        <div class="SubMsgText">
+          {{ cusbaseData.bsAgentCustomersTbl.AddTime || "暂无" }}
+        </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">购房意向：</div>
-        <div class="SubMsgText">一般</div>
+        <div class="SubMsgText">
+          {{ desireIntensity || "暂无" }}
+        </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">上次维护时间：</div>
-        <div class="SubMsgText">2020-06-22</div>
+        <div class="SubMsgText">
+          {{ cusbaseData.bsAgentCustomersTbl.maintainTime || "暂无" }}
+        </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">进池时间：</div>
-        <div class="SubMsgText">2020-06-22</div>
+        <div class="SubMsgText">
+          {{ cusbaseData.bsAgentCustomersTbl.ModTime || "暂无" }}
+        </div>
       </div>
     </div>
 
@@ -302,6 +316,7 @@
             <el-checkbox-group
               v-model="mergeCus.mergePhone"
               class="ChooseItemBox"
+              disable
             >
               <div
                 class="ChooseItem"
@@ -366,15 +381,19 @@ const phoneListModle = [
   }
 ];
 export default {
+  inject: ["customerId"],
   data() {
     return {
+      cusbaseData: [], //客户信息
+      Source: "", //委托来源
+      desireIntensity: "", //购房意向
       nameList: nameListModle,
       phoneList: phoneListModle,
       FlagList: {
         AddfollowFlag: false,
         ClaimFlag: false,
         ClaimCheckFlag: false,
-        MergeFlag: true
+        MergeFlag: false
       },
       mergeCus: {
         mergeName: "",
@@ -385,7 +404,110 @@ export default {
   created() {
     console.log(this.FlagList);
   },
+  mounted() {
+    this.apply();
+  },
   methods: {
+    apply() {
+      var that = this;
+      this.$api
+        .post({
+          url: "/saleCustomerDetail/getACusEx",
+          qs: true,
+          data: {
+            customerId: that.customerId
+          }
+        })
+        .then(e => {
+          console.log(e.data);
+          let json = e.data;
+          if (json.code == 200) {
+            this.cusbaseData = json.data;
+            switch (this.cusbaseData.bsAgentCustomersTbl.Source) {
+              case 11:
+                this.Source = "老客户";
+                break;
+              case 12:
+                this.Source = "转介绍";
+                break;
+              case 13:
+                this.Source = "亲戚朋友";
+                break;
+              case 14:
+                this.Source = "同学";
+                break;
+              case 21:
+                this.Source = "业主资料";
+                break;
+              case 22:
+                this.Source = "重复购买";
+                break;
+              case 31:
+                this.Source = "58同城";
+                break;
+              case 32:
+                this.Source = "安居客";
+                break;
+              case 33:
+                this.Source = "朋友圈";
+                break;
+              case 34:
+                this.Source = "其他网络";
+                break;
+              case 41:
+                this.Source = "公众号";
+                break;
+              case 42:
+                this.Source = "小程序";
+                break;
+              case 43:
+                this.Source = "APP";
+                break;
+              default:
+                break;
+            }
+            switch (this.cusbaseData.saleCusPropertyTbl.desireIntensity) {
+              case 0:
+                this.desireIntensity = "无意向";
+                break;
+              case 1:
+                this.desireIntensity = "较弱";
+                break;
+              case 2:
+                this.desireIntensity = "一般";
+                break;
+              case 3:
+                this.desireIntensity = "强烈";
+                break;
+              default:
+                break;
+            }
+          } else if (json.code == 400) {
+            alert(json.message);
+            console.log("失败     " + json);
+          }
+        });
+    },
+    DialPhone() {
+      var that = this;
+      this.$api
+        .post({
+          url: "/saleCustomerDetail/DialPhoneToCustomer",
+          qs: true,
+          data: {
+            customerId: that.customerId
+          }
+        })
+        .then(e => {
+          console.log(e.data);
+          let json = e.data;
+          if (json.code == 200) {
+          } else if (json.code == 400) {
+            alert(json.message);
+            console.log("失败     " + json);
+          }
+        });
+    },
     openClaimFixed() {
       this.FlagList.ClaimFlag = true;
     }
