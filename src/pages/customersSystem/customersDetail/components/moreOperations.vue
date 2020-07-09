@@ -22,6 +22,10 @@
         <span>暂不关注</span>
         <i class="el-icon-arrow-right"></i>
       </li>
+      <li @click="attention()">
+        <span>取消暂不关注</span>
+        <i class="el-icon-arrow-right"></i>
+      </li>
       <li @click="openDevelop()">
         <span>转为成交</span>
         <i class="el-icon-arrow-right"></i>
@@ -67,6 +71,7 @@
 
 <script>
 export default {
+  inject: ["customerId"],
   data() {
     return {
       impressionFlag: false,
@@ -86,6 +91,34 @@ export default {
     operationLogDialog: () => import("../didlog/operationLogDialog")
   },
   methods: {
+    /**
+     * @example: 研发提示弹窗
+     */
+    attention() {
+      let that = this;
+      that.$api
+        .post({
+          url: "/saleCustomerDetail/attention",
+          data: { customerId: this.customerId },
+          qs: true,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              type: "success",
+              message: "已取消该客户的暂不关注"
+            });
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
     /**
      * @example: 研发提示弹窗
      */

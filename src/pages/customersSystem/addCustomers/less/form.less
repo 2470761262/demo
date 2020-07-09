@@ -190,6 +190,34 @@
             // prettier-ignore
             font-size: 16PX
         }
+
+        .checkbox-content {
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 16px;
+            input[type="checkbox"] {
+              display: none;
+            }
+            input[type="checkbox"]:checked + .checkbox-title {
+              background: @backgroud;
+              color: rgba(255, 255, 255, 1);
+            }
+            .checkbox-title {
+              height: 48px;
+              background: rgba(240, 242, 245, 1);
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              // prettier-ignore
+              font-size: 16PX;
+              color: rgba(144, 147, 153, 1);
+              // prettier-ignore
+              line-height: 21PX;
+              margin-bottom: 16px;
+              padding: 0 16px;
+            }
+        }
     }
 }
 

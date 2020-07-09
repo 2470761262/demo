@@ -259,6 +259,11 @@ export default {
      * @example: 跳转到添加带看页面
      */
     toPage() {
+      this.$router.push({
+        name: "",
+
+        params: { id: idParams }
+      });
       this.$router.push("takeLook");
     }
   }

@@ -7,7 +7,7 @@
       <div class="input-group is-required input-group-top">
         <div class="input-head">带看类型</div>
         <el-select
-          v-model="value"
+          v-model="requireType"
           popper-class="options-item"
           class="input-content"
           placeholder="请选择带看类型"
@@ -17,9 +17,9 @@
         >
           <el-option
             v-for="item in lookTypeList"
-            :key="item.value"
-            :label="item.key"
-            :value="item.value"
+            :key="item.key"
+            :label="item.value"
+            :value="item.key"
           ></el-option>
         </el-select>
         <div
@@ -37,7 +37,8 @@
           type="date"
           class="input-content"
           placeholder="选择日期"
-          disabled
+          @change="changTime"
+          :picker-options="startDateDisabled"
         >
         </el-date-picker>
       </div>
@@ -53,9 +54,11 @@
           end-placeholder="结束时间"
           placeholder="选择时间范围"
           format="HH:mm"
+          value-format="HH:mm"
           data-vv-as="带看时间"
           data-vv-name="timeValue"
           v-validate="'required'"
+          @change="changTime"
         >
         </el-time-picker>
         <div
@@ -118,6 +121,7 @@
             class="select-content"
             placeholder="请选择房号"
             data-vv-as="带看房源"
+            @change="roomChange(hous)"
             :data-vv-name="'roomNo' + idx"
             v-validate="{
               required: hous.cbId == '' || hous.comId == '' || hous.roomNo == ''
@@ -155,7 +159,7 @@
             type="radio"
             name="feedback"
             :value="item.value"
-            v-model="value"
+            v-model="Cusfeedback"
             data-vv-name="way"
             data-vv-as="带看反馈"
             v-validate="'required'"
@@ -173,7 +177,7 @@
       <div class="input-group is-required">
         <div class="input-head">带看总结</div>
         <el-input
-          v-model="value"
+          v-model="memo"
           clearable
           type="textarea"
           rows="8"
@@ -209,42 +213,77 @@ export default {
   },
   data() {
     return {
-      value: "",
+      requireType: "",
       dateValue: "",
       timeValue: "",
+      startDateDisabled: {},
+      customerId: 205448,
+      startTime: "",
+      endTime: "",
+      Cusfeedback: "", //带看反馈
+      memo: "", // 带看总结
+      houseEidList: [],
       addHouse: [
         {
           comId: "",
           cbId: "",
           roomNo: "",
+          agentPer: "",
+          houseEid: "",
           cbIdList: [], //楼栋
           roomNoList: [] //房间号
         }
       ],
       comList: [], //楼盘
-      lookTypeList: [
-        { key: "新房", value: 1 },
-        { key: "二手商铺", value: 2 },
-        { key: "二手房", value: 3 }
-      ],
+      lookTypeList: [],
       feedbackList: [
-        { key: "有意向", value: 4 },
-        { key: "在考虑", value: 5 },
-        { key: "不满意", value: 6 }
+        { key: "有意向", value: 0 },
+        { key: "在考虑", value: 1 },
+        { key: "不满意", value: 2 }
       ]
     };
   },
   created() {
     let time = new Date();
     this.dateValue = time.toLocaleDateString();
+    // 限制开始日期不能超过当前日期
+    this.startDateDisabled.disabledDate = times => {
+      return times.getTime() > Date.now();
+    };
+    this.getCusRequired();
   },
   methods: {
+    // 获取客户需求列表
+    getCusRequired() {
+      let that = this;
+      that.$api
+        .post({
+          url: "/saleCustomerDetail/getCusRequired",
+          data: { customerId: this.customerId },
+          qs: true,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.lookTypeList = e.data.data;
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
     // 添加房源
     addHouseToList() {
       let house = {
         comId: "",
         cbId: "",
         roomNo: "",
+        agentPer: "",
+        houseEid: "",
         cbIdList: [], //楼栋
         roomNoList: [] //房间号
       };
@@ -253,6 +292,13 @@ export default {
     // 删除房源
     removeHouseToList(idx) {
       this.addHouse.splice(idx, 1);
+    },
+    // 改变时间事件
+    changTime() {
+      this.startTime =
+        this.dateValue.toLocaleDateString() + " " + this.timeValue[0];
+      this.endTime =
+        this.dateValue.toLocaleDateString() + " " + this.timeValue[1];
     },
     //楼盘、楼栋、房号三级联动
     remoteInput(comId) {
@@ -327,15 +373,75 @@ export default {
         })
         .finally(() => {});
     },
+    roomChange(hous) {
+      let that = this;
+      let postData = {
+        communityId: hous.comId,
+        communityBuildingId: hous.cbId,
+        buildingHouseId: hous.roomNo
+      };
+      that.$api
+        .post({
+          url: "saleCustomerDetailApplet/getAgentHouseByCommunity",
+          data: postData,
+          qs: true,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            hous.houseEid = e.data.data.id;
+            hous.agentPer = e.data.data.AgentPer;
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
     // 返回
     close() {
       this.$router.go(-1);
     },
     // 完成
     confirm() {
+      let that = this;
+      let postData = {
+        requireType: that.requireType,
+        startTime: that.startTime,
+        endTime: that.endTime,
+        cusEid: that.customerId,
+        Cusfeedback: that.Cusfeedback,
+        memo: that.memo,
+        houseEid: [],
+        houseAgentPer: []
+      };
+      that.addHouse.foreach(item => {
+        postData.houseEid.push(item.houseEid);
+        postData.houseAgentPer.push(item.agentPer);
+      });
       this.$validator.validateAll().then(result => {
         if (result) {
-          console.log(1);
+          that.$api
+            .post({
+              url: "/saleCustomerDetail/addPairRecord",
+              data: postData,
+              qs: true,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              }
+            })
+            .then(e => {
+              // if (e.data.code == 200) {
+              // }
+            })
+            .catch(e => {
+              if (e.response != undefined) {
+                that.$message(e.response.data.message);
+              }
+            });
         }
       });
     }

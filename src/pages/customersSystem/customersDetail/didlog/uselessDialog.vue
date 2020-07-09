@@ -1,5 +1,10 @@
 <template>
-  <fixedPopup v-bind="$attrs" v-on="$listeners" @confirmEmit="fromSubmit()">
+  <fixedPopup
+    v-bind="$attrs"
+    v-on="$listeners"
+    @confirmEmit="fromSubmit()"
+    :loading="isLoading"
+  >
     <div class="useless-content">
       <div
         class="input-group is-required"

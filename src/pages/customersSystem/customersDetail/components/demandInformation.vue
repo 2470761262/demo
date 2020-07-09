@@ -27,7 +27,7 @@
             <div class="msg-title">
               <span class="msg-headline">需求信息</span>
               <span class="msg-time"
-                >更新时间：{{ customer.data.modTime }}</span
+                >更新时间：{{ customer.data.ModTime }}</span
               >
               <span class="msg-update">修改</span>
             </div>

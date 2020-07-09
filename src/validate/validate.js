@@ -121,6 +121,18 @@ Validator.extend("chineseLens", {
   },
   validate: value => value.length > 9
 });
+//长度不超过多少
+Validator.extend("overstep", {
+  messages: {
+    zh_CN: (field, args) => {
+      return field + "不超过" + args[0] + "个字";
+    }
+  },
+  validate: (value, compare) => {
+    return value.length <= compare[0];
+  }
+});
+
 Validator.extend("arrFlatLength", {
   compare: ["length", "message"],
   messages: {
