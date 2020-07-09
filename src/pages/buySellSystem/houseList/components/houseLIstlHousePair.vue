@@ -132,6 +132,7 @@
         cell-class-name="tab-cell-item"
         default-expand-all
         @sort-change="sortMethod"
+        @row-dblclick="navDetailt"
       >
         <el-table-column type="expand" width="1px">
           <template v-slot:default>
@@ -285,6 +286,15 @@ export default {
     window.removeEventListener("resize", this.addListener);
   },
   methods: {
+    /**
+     * @example: 双击前往详情
+     */
+    navDetailt(item) {
+      this.$router.push({
+        name: "houseDetails",
+        params: { houseId: item.id, dept: item.perDept }
+      });
+    },
     /**
      * @example: 远程排序
      */
