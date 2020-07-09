@@ -78,8 +78,12 @@
                     <div class="car-row">
                       <div class="car-title">带看房源：</div>
                       <div class="car-right">
-                        {{ item.communityName }}{{ item.buildingName
-                        }}{{ item.roomNo }}
+                        <p
+                          v-for="(housingResource, idx) in item.housingResource"
+                          :key="idx"
+                        >
+                          {{ housingResource }}
+                        </p>
                       </div>
                     </div>
                     <div class="car-row">
@@ -177,8 +181,12 @@
                   <div class="car-row">
                     <div class="car-title">带看房源：</div>
                     <div class="car-right">
-                      {{ item.communityName }}{{ item.buildingName
-                      }}{{ item.roomNo }}
+                      <p
+                        v-for="(housingResource, idx) in item.housingResource"
+                        :key="idx"
+                      >
+                        {{ housingResource }}
+                      </p>
                     </div>
                   </div>
                   <!-- <div class="car-row">
@@ -286,20 +294,31 @@ export default {
       });
       for (let i = 0; i < that.lookAtData.length; i++) {
         that.lookAtData[i].housingResource = [];
-        for (let j = 0; j < that.lookAtData.length; j++) {
-          if (that.lookAtData[i].AddTime == that.lookAtData[j].AddTime) {
-            let housingResource =
-              that.lookAtData[j].communityName +
-              that.lookAtData[j].buildingName +
-              that.lookAtData[j].roomNo;
-            that.lookAtData[i].housingResource.push(housingResource);
+        if (that.lookAtData[i].currentLookId) {
+          for (let j = 0; j < that.lookAtData.length; j++) {
+            if (
+              that.lookAtData[i].currentLookId ==
+              that.lookAtData[j].currentLookId
+            ) {
+              let housingResource =
+                that.lookAtData[j].communityName +
+                that.lookAtData[j].buildingName +
+                that.lookAtData[j].roomNo;
+              that.lookAtData[i].housingResource.push(housingResource);
+            }
           }
+        } else {
+          let housingResource =
+            that.lookAtData[i].communityName +
+            that.lookAtData[i].buildingName +
+            that.lookAtData[i].roomNo;
+          that.lookAtData[i].housingResource.push(housingResource);
         }
       }
-      // 数组去重，相同日期的带看只需要一条
+      // 数组去重，相同currentLookId的带看只需要一条
       const res = new Map();
       that.lookAtData = that.lookAtData.filter(
-        arr => !res.has(arr.AddTime) && res.set(arr.AddTime, 1)
+        arr => !res.has(arr.currentLookId) && res.set(arr.currentLookId, 1)
       );
       //数组合并
       that.allData = that.followData.concat(that.lookAtData);
