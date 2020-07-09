@@ -124,7 +124,12 @@
             @change="roomChange(hous)"
             :data-vv-name="'roomNo' + idx"
             v-validate="{
-              required: hous.cbId == '' || hous.comId == '' || hous.roomNo == ''
+              required:
+                hous.cbId == '' || hous.comId == '' || hous.roomNo == '',
+              isSame: [
+                [...addHouse.map((housList, index) => housList.roomNo)],
+                '房源'
+              ]
             }"
           >
             <el-option
@@ -201,7 +206,12 @@
       <el-button class="floot-btn close-btn" type="info" @click="close"
         >返回</el-button
       >
-      <el-button class="floot-btn success-btn" @click="confirm">完成</el-button>
+      <el-button
+        class="floot-btn success-btn"
+        @click="confirm"
+        v-loading.fullscreen.lock="fullscreenLoading"
+        >完成</el-button
+      >
     </div>
   </div>
 </template>
@@ -240,12 +250,13 @@ export default {
         { key: "有意向", value: 0 },
         { key: "在考虑", value: 1 },
         { key: "不满意", value: 2 }
-      ]
+      ],
+      fullscreenLoading: false
     };
   },
   created() {
     let time = new Date();
-    this.dateValue = time.toLocaleDateString();
+    this.dateValue = time;
     // 限制开始日期不能超过当前日期
     this.startDateDisabled.disabledDate = times => {
       return times.getTime() > Date.now();
@@ -295,10 +306,11 @@ export default {
     },
     // 改变时间事件
     changTime() {
-      this.startTime =
-        this.dateValue.toLocaleDateString() + " " + this.timeValue[0];
-      this.endTime =
-        this.dateValue.toLocaleDateString() + " " + this.timeValue[1];
+      if (this.timeValue) {
+        let time = this.dateValue.toLocaleDateString();
+        this.startTime = time + " " + this.timeValue[0];
+        this.endTime = time + " " + this.timeValue[1];
+      }
     },
     //楼盘、楼栋、房号三级联动
     remoteInput(comId) {
@@ -396,6 +408,8 @@ export default {
           }
         })
         .catch(e => {
+          hous.houseEid = "";
+          hous.agentPer = "";
           if (e.response != undefined) {
             that.$message(e.response.data.message);
           }
@@ -413,31 +427,41 @@ export default {
         startTime: that.startTime,
         endTime: that.endTime,
         cusEid: that.customerId,
-        Cusfeedback: that.Cusfeedback,
+        cusfeedback: that.Cusfeedback,
         memo: that.memo,
-        houseEid: [],
-        houseAgentPer: []
+        houseEids: [],
+        houseAgentPers: []
       };
-      that.addHouse.foreach(item => {
-        postData.houseEid.push(item.houseEid);
-        postData.houseAgentPer.push(item.agentPer);
+      that.addHouse.forEach(item => {
+        if (item.houseEid) {
+          postData.houseEids.push(item.houseEid);
+        } else {
+          postData.houseEids.push("");
+        }
+        if (item.agentPer) {
+          postData.houseAgentPers.push(item.agentPer);
+        } else {
+          postData.houseAgentPers.push("");
+        }
       });
       this.$validator.validateAll().then(result => {
         if (result) {
+          this.fullscreenLoading = true;
           that.$api
             .post({
               url: "/saleCustomerDetail/addPairRecord",
               data: postData,
-              qs: true,
               headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
+                "Content-Type": "application/json"
               }
             })
             .then(e => {
-              // if (e.data.code == 200) {
-              // }
+              if (e.data.code == 200) {
+                that.close();
+              }
             })
             .catch(e => {
+              this.fullscreenLoading = false;
               if (e.response != undefined) {
                 that.$message(e.response.data.message);
               }
