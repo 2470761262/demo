@@ -236,15 +236,15 @@ export default {
           default: true,
           format: item => item.unitPrice + "元/㎡"
         },
-        {
-          prop: "brokerName",
-          label: "跟单人",
-          order: false,
-          disabled: false,
-          default: true,
-          formart: item =>
-            item.brokerName != undefined ? item.brokerName : item.agentName
-        },
+        // {
+        //   prop: "brokerName",
+        //   label: "跟单人",
+        //   order: false,
+        //   disabled: false,
+        //   default: true,
+        //   formart: item =>
+        //     item.brokerName != undefined ? item.brokerName : item.agentName
+        // },
         {
           prop: "floor",
           label: "楼层",
