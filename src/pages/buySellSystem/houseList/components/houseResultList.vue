@@ -76,6 +76,9 @@
         position: relative;
         color: rgba(96, 98, 102, 1);
         cursor: pointer;
+        &.small {
+          font-size: @font14;
+        }
         &.active {
           color: @backgroud;
           font-weight: bold;
@@ -110,7 +113,7 @@
       .step-content > .input-group > .input-content;
     }
     .cascader-content-build {
-      flex: 1;
+      margin-right: 40px;
     }
     .btn-primary-back {
       margin-left: 0;
@@ -296,6 +299,21 @@
 </style>
 <template>
   <div class="page-result-content">
+    <!-- 房屋类型 -->
+    <div class="tab-content">
+      <div class="tab-content-nav">
+        <div
+          class="tab-content-item small"
+          :class="{ active: 0 == index }"
+          v-for="(item, index) in navToPage"
+          :key="index"
+          @click="navToPageBtn(item)"
+        >
+          {{ item.title }}
+        </div>
+      </div>
+    </div>
+    <!-- 头部按钮, 搜索 -->
     <div class="page-result-head">
       <div class="head-content-input">
         <input
@@ -308,10 +326,13 @@
           <i class="el-icon-search"></i>
         </button>
       </div>
-      <button class="btn-primary" @click="navToPath('/buySellSystem/addHouse')">
-        录入房源
-      </button>
       <div class="head-fun-right">
+        <button
+          class="btn-primary"
+          @click="navToPath('/buySellSystem/addHouse')"
+        >
+          录入房源
+        </button>
         <button
           class="btn-primary"
           @click="navToPath('/buySellSystem/concernCommunity')"
@@ -464,9 +485,9 @@
       </div>
     </div>
     <div class="search-content no-frist" v-show="panelChange">
-      <!-- 范围 -->
+      <!-- 价钱 -->
       <div class="search-content-item">
-        <div class="search-item-title">范围</div>
+        <div class="search-item-title">价钱</div>
         <div class="search-item-right is-samall">
           <div class="data-content">
             <el-radio-group
@@ -883,20 +904,26 @@ const AREALIST = [
   { title: "150-200㎡", value: { minInArea: "150", maxInArea: "200" } },
   { title: "200㎡以上", value: { minInArea: "200", maxInArea: "" } }
 ];
-
+//楼层
 const FLOORLIST = [
   { title: "不限", value: { minFloor: "", maxFloor: "" } },
   { title: "地下室", value: { minFloor: "0", maxFloor: "-4" } },
   { title: "一层", value: { minFloor: "1", maxFloor: "1" } },
   { title: "顶层", value: { minFloor: "MAX_FLOOR", maxFloor: "MAX_FLOOR" } }
 ];
-
-//const SCOPETYPELIST = []
+//跳转tab
+const NAVTOPAGE = [
+  { title: "买卖", private: true, url: "" },
+  { title: "租赁", private: false, url: "" },
+  { title: "新房", private: false, url: "" },
+  { title: "商铺写字楼", private: false, url: "" },
+  { title: "小区", private: false, url: "" }
+];
 export default {
   inject: ["form"],
   data() {
     return {
-      mock1: "",
+      navToPage: NAVTOPAGE, //顶部跳转tab
       agentPerName: "", //跟单人姓名
       houseNoOrName: "", //房源编号,楼盘名称
       primarySchool: "", //小学select
@@ -971,6 +998,19 @@ export default {
   },
   methods: {
     /**
+     * @example: 顶部Tab点击
+     * @param {Object} item
+     */
+    navToPageBtn(item) {
+      if (!item.private) {
+        this.$msgbox({
+          title: "开发中",
+          message: <div>开发中。。。</div>,
+          showCancelButton: false
+        });
+      }
+    },
+    /**
      * @example: 搜索跟单人姓名
      */
 
@@ -986,7 +1026,7 @@ export default {
      */
 
     handleHouseNoOrName() {
-      this.form.searchInfo = this.houseNoOrName;
+      this.form.keyWord = this.houseNoOrName;
     },
     /**
      * @example: 学校selectChange选择

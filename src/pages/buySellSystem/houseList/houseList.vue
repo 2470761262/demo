@@ -52,9 +52,9 @@ export default {
         //   maxDownPayment: "",
         //   minDownPayment: "",
         face: [],
-        sortColumn: "lastFollowTime",
-        sortType: "descending",
-        searchInfo: "" //keyword
+        sortColumn: "price",
+        sortType: 1,
+        keyWord: "" //keyword
         // isOnly: "",
         // keyOwner: "",
         // elevator: ""

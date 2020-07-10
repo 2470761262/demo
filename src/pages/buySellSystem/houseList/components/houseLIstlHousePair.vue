@@ -135,9 +135,10 @@
         @row-dblclick="navDetailt"
       >
         <el-table-column type="expand" width="1px">
-          <template v-slot:default>
-            <span class="tag-item">成交对赌</span>
-            <span class="tag-item">钥匙</span>
+          <template v-slot:default="{ row }">
+            <span class="tag-item" v-for="item in row.tags" :key="item">{{
+              item
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -188,8 +189,6 @@ export default {
           label: "楼盘名称",
           order: false,
           width: "260",
-          disabled: true,
-          default: true,
           formart: item => {
             return (
               <div class="tab-com-item">
@@ -203,8 +202,6 @@ export default {
           prop: "houseType",
           label: "户型",
           order: false,
-          disabled: false,
-          default: true,
           formart: item =>
             (item.rooms || 0) +
             "-" +
@@ -216,49 +213,35 @@ export default {
           prop: "inArea",
           label: "面积",
           order: "custom",
-          disabled: false,
-          default: true,
           formart: item => item.inArea + "m²"
         },
         {
           prop: "price",
           label: "总价",
           order: "custom",
-          disabled: false,
-          default: true,
           formart: item => item.price + "万元"
         },
         {
           prop: "unitPrice",
           label: "单价",
           order: "custom",
-          disabled: false,
-          default: true,
           format: item => item.unitPrice + "元/㎡"
         },
-        // {
-        //   prop: "brokerName",
-        //   label: "跟单人",
-        //   order: false,
-        //   disabled: false,
-        //   default: true,
-        //   formart: item =>
-        //     item.brokerName != undefined ? item.brokerName : item.agentName
-        // },
         {
           prop: "floor",
           label: "楼层",
-          order: false,
-          disabled: false,
-          default: true
+          order: false
         },
-
         {
-          prop: "agentPerName",
+          prop: "addTime",
+          label: "挂牌",
+          order: true,
+          width: "200"
+        },
+        {
+          prop: "brokerName",
           label: "跟单人",
-          order: false,
-          disabled: false,
-          default: true
+          order: false
         }
       ],
       pageJson: {
@@ -299,8 +282,15 @@ export default {
      * @example: 远程排序
      */
     sortMethod(item) {
-      this.form.sortColumn = item.prop;
-      this.form.sortType = item.order;
+      switch (item.order) {
+        case "ascending":
+          this.form.sortColumn = item.prop;
+          this.form.sortType = 0;
+          break;
+        case "descending":
+          this.form.sortColumn = item.prop;
+          this.form.sortType = 1;
+      }
     },
     handleSizeChange(pageSize) {
       this.pageJson.pageSize = pageSize;
@@ -357,8 +347,10 @@ export default {
         limit: this.pageJson.pageSize
       });
       return this.$api
-        .get({
-          url: "/mateHouse/getMateHouse/soleAllHouse",
+        .post({
+          //  url: "/mateHouse/getMateHouse/soleAllHouse",
+          url: "/mateHouse/getMateHouse/soleAllHouseIndex",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: restuleParms
         })
         .then(e => {

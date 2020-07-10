@@ -33,7 +33,14 @@ export default router => {
   });
   router.afterEach((to, from) => {
     if (document.querySelector(".el-main")) {
-      document.querySelector(".el-main").scrollTop = 0;
+      if (from.meta.isScrollTop) {
+        util.sessionLocalStorageSet(
+          "scrollTop",
+          document.querySelector(".el-main").scrollTop
+        );
+      } else {
+        util.sessionLocalStorageSet("scrollTop", 0);
+      }
     }
   });
 };
