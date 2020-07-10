@@ -229,7 +229,7 @@ export default {
         customerId: this.customer.data.id,
         remark: "给客户" + this.customer.data.Customers + "拨打电话",
         customerName: this.customer.data.Customers,
-        contactPhone: 15959453171,
+        contactPhone: phone,
         customerNo: this.customer.data.CustomerNo,
         customerPlate: 0
       };
