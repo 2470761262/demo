@@ -329,12 +329,6 @@
       <div class="head-fun-right">
         <button
           class="btn-primary"
-          @click="navToPath('/buySellSystem/addHouse')"
-        >
-          录入房源
-        </button>
-        <button
-          class="btn-primary"
           @click="navToPath('/buySellSystem/concernCommunity')"
         >
           管理入口
@@ -344,6 +338,12 @@
           @click="navToPath('/buySellSystem/myAgent')"
         >
           我的房源
+        </button>
+        <button
+          class="btn-primary"
+          @click="navToPath('/buySellSystem/addHouse')"
+        >
+          录入房源
         </button>
       </div>
     </div>
@@ -441,53 +441,54 @@
       />
       <button class="btn-primary-back" @click="handleAgentPerName">搜索</button>
     </div>
-    <!-- 查询盒子 -->
-    <div class="search-content">
-      <!-- 范围 -->
-      <div class="search-content-item">
-        <div class="search-item-title">范围</div>
-        <div class="search-item-right">
-          <el-radio-group v-model="form.plate" size="small">
-            <el-radio label="" border>不限</el-radio>
-            <el-radio label="0" border>跟单房源</el-radio>
-            <el-radio label="1" border>店公共盘</el-radio>
-            <el-radio label="4" border>公司公盘</el-radio>
-          </el-radio-group>
-        </div>
-      </div>
-      <!-- 类型 -->
-      <div class="search-content-item">
-        <div class="search-item-title">类型</div>
-        <div class="search-item-right">
-          <el-radio-group v-model="form.type" size="small">
-            <el-radio label="" border>不限</el-radio>
-            <el-radio label="1" border>我的相关</el-radio>
-            <el-radio label="2" border>关注房源</el-radio>
-            <el-radio label="3" border>3天新上房源</el-radio>
-          </el-radio-group>
-        </div>
-      </div>
-      <!-- 商圈 -->
-      <div class="search-content-item" v-if="RegionList.length != 0">
-        <div class="search-item-title">商圈</div>
-        <div class="search-item-right">
-          <el-radio-group v-model="form.business" size="small">
-            <el-radio label="" border>不限</el-radio>
-            <el-radio
-              :label="item.value"
-              border
-              v-for="item in RegionList"
-              :key="item.value"
-              >{{ item.name }}</el-radio
-            >
-          </el-radio-group>
-        </div>
-      </div>
-    </div>
     <div class="search-content no-frist" v-show="panelChange">
-      <!-- 价钱 -->
+      <!-- 查询盒子 -->
+      <div class="search-content">
+        <!-- 范围 -->
+        <div class="search-content-item">
+          <div class="search-item-title">范围</div>
+          <div class="search-item-right">
+            <el-radio-group v-model="form.plate" size="small">
+              <el-radio label="" border>不限</el-radio>
+              <el-radio label="0" border>跟单房源</el-radio>
+              <el-radio label="1" border>店公共盘</el-radio>
+              <el-radio label="4" border>公司公盘</el-radio>
+            </el-radio-group>
+          </div>
+        </div>
+        <!-- 类型 -->
+        <div class="search-content-item">
+          <div class="search-item-title">类型</div>
+          <div class="search-item-right">
+            <el-radio-group v-model="form.type" size="small">
+              <el-radio label="" border>不限</el-radio>
+              <el-radio label="1" border>我的相关</el-radio>
+              <el-radio label="2" border>关注房源</el-radio>
+              <el-radio label="3" border>3天新上房源</el-radio>
+            </el-radio-group>
+          </div>
+        </div>
+        <!-- 商圈 -->
+        <div class="search-content-item" v-if="RegionList.length != 0">
+          <div class="search-item-title">商圈</div>
+          <div class="search-item-right">
+            <el-radio-group v-model="form.business" size="small">
+              <el-radio label="" border>不限</el-radio>
+              <el-radio
+                :label="item.value"
+                border
+                v-for="item in RegionList"
+                :key="item.value"
+                >{{ item.name }}</el-radio
+              >
+            </el-radio-group>
+          </div>
+        </div>
+      </div>
+
+      <!-- 价格 -->
       <div class="search-content-item">
-        <div class="search-item-title">价钱</div>
+        <div class="search-item-title">价格</div>
         <div class="search-item-right is-samall">
           <div class="data-content">
             <el-radio-group
@@ -965,7 +966,7 @@ export default {
       buildForList: [], //楼盘select数据
       buildLoading: false, //楼盘select loading
       typeActiveIndex: 0, //nav类型激活Index
-      panelChange: true, //折叠面板
+      panelChange: false, //折叠面板
       RegionList: [], //商圈
       faceList: [], //朝向
       PrimarySchoolList: [], //小学
