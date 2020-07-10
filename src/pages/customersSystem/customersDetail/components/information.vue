@@ -237,8 +237,9 @@ export default {
         .post({
           url: "/saleCustomerDetail/DialPhoneToCustomer",
           data: postData,
+          qs: true,
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/x-www-form-urlencoded"
           }
         })
         .then(e => {
