@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+@import url("../../publicCustomersDetail/less/form");
 .part-Warp {
   padding: 24px;
 }
@@ -22,12 +23,13 @@
   .MainMsgOption {
     .White,
     .Green {
-      padding: 0 16px;
+      width: 96px;
       height: 36px;
       line-height: 36px;
-      border: 1px solid;
       border-radius: 4px;
-      font-size: @font16;
+      font-size: 16px;
+      overflow: hidden;
+      text-align: center;
     }
     .White {
       background: #ffffff;
@@ -36,9 +38,13 @@
       margin-bottom: 16px;
     }
     .Green {
-      background: @backgroud;
-      border: 1px solid #ffffff;
-      color: #ffffff;
+      /deep/ .el-button {
+        width: 100px;
+        text-align: center;
+        background: @backgroud;
+        border: 1px solid #ffffff;
+        color: #ffffff;
+      }
     }
   }
 }
@@ -50,10 +56,12 @@
     justify-content: space-between;
     .SubMsgTil,
     .SubMsgText {
+      white-space: nowrap;
       font-size: @font18;
     }
     .SubMsgTil {
       color: #606266;
+      margin-right: 15px;
     }
     .SubMsgText {
     }
@@ -63,123 +71,13 @@
   margin: 32px 24px 0;
   font-size: @font18;
 }
-.foot-btn-content {
-  display: flex;
-  justify-content: flex-end;
-  padding: 24px;
-  .floot-btn {
-    width: 136px;
-    height: 48px;
-    font-size: @font16;
-  }
-  .close-btn {
-    background: #fff;
-    color: rgba(144, 147, 153, 1);
-    border: 1px solid rgba(206, 206, 206, 1);
-  }
-  .success-btn {
-    background: @backgroud;
-    color: rgba(255, 255, 255, 1);
-    border: none;
-  }
-  .floot-btn + .floot-btn {
-    margin-left: 16px;
-  }
-}
-.ChooseTil {
-  margin: 16px 24px;
-  font-size: @font16;
-  display: flex;
-  > div {
-    margin: 5px 10px 5px 0;
-    width: 6px;
-    height: 6px;
-    background: #f62f2f;
-    border-radius: 50%;
-  }
-}
-.ChooseItemRow {
-  display: flex;
-  margin: 0 24px;
-
-  .ChooseItemBox {
-    display: flex;
-    flex-wrap: wrap;
-    .ChooseItem {
-      /deep/.el-checkbox__input {
-        width: 0 !important;
-        height: 0 !important;
-        overflow: hidden;
-      }
-      /deep/.el-checkbox__label {
-        padding-left: 0 !important;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        vertical-align: middle;
-        font-size: @font16;
-        line-height: 48px;
-      }
-      .is-checked {
-        border: 1px solid var(--color--primary) !important;
-        border-radius: 4px;
-        /deep/.el-checkbox__label {
-          color: var(--color--primary);
-        }
-      }
-      .el-checkbox {
-        //margin-right: 0 !important;
-        transition: all 0.2s ease-in;
-        height: 48px;
-        margin: 8px 20px 8px 0;
-        padding: 0 15px;
-        border: 1px solid #fff;
-        border-radius: 4px;
-        line-height: 48px;
-        background: #f0f2f5;
-      }
-    }
-  }
-  .RadioItemBox {
-    display: flex;
-    flex-wrap: wrap;
-    .RadioItem {
-      /deep/.el-radio__input {
-        width: 0 !important;
-        height: 0 !important;
-        overflow: hidden;
-      }
-      /deep/.el-radio__label {
-        padding-left: 0 !important;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        vertical-align: middle;
-        font-size: @font16;
-        line-height: 48px;
-      }
-      .is-checked {
-        border: 1px solid var(--color--primary) !important;
-        border-radius: 4px;
-        /deep/.el-radio__label {
-          color: var(--color--primary);
-        }
-      }
-      .el-radio {
-        //margin-right: 0 !important;
-        transition: all 0.2s ease-in;
-        height: 48px;
-        margin-right: 20px;
-        padding: 0 15px;
-        border: 1px solid #fff;
-        border-radius: 4px;
-        line-height: 48px;
-        background: #f0f2f5;
-      }
+.phone-list {
+  div {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f2f5;
+    cursor: pointer;
+    &:last-child {
+      border-bottom: none;
     }
   }
 }
@@ -194,8 +92,24 @@
         </span>
       </div>
       <div class="MainMsgOption">
-        <div class="White" @click="openClaimFixed">认领客户</div>
-        <div class="Green">一键拨号</div>
+        <div class="White" @click="openFixed('ClaimFlag', function() {})">
+          认领客户
+        </div>
+        <el-popover placement="bottom" trigger="click" class="Green">
+          <div class="phone-list">
+            <div
+              v-for="(item, idx) in callList"
+              :key="idx"
+              @click="callUp(item.phone)"
+            >
+              {{ item.phone }}
+            </div>
+          </div>
+          <el-button slot="reference" @click="getPhone"
+            ><span>一键拨号</span></el-button
+          >
+        </el-popover>
+        <!-- <div class="Green">一键拨号</div> -->
       </div>
     </div>
     <div class="SubMsgZone">
@@ -252,7 +166,10 @@
           </div>
           <div class="foot-btn-content">
             <el-button class="floot-btn close-btn" type="info">取消</el-button>
-            <el-button class="floot-btn success-btn" type="info"
+            <el-button
+              class="floot-btn success-btn"
+              type="info"
+              @click="openFixed('ClaimCheckFlag', function() {})"
               >提交</el-button
             >
           </div>
@@ -316,7 +233,7 @@
             <el-checkbox-group
               v-model="mergeCus.mergePhone"
               class="ChooseItemBox"
-              disable
+              disable="true"
             >
               <div
                 class="ChooseItem"
@@ -387,6 +304,7 @@ export default {
       cusbaseData: [], //客户信息
       Source: "", //委托来源
       desireIntensity: "", //购房意向
+      callList: [],
       nameList: nameListModle,
       phoneList: phoneListModle,
       FlagList: {
@@ -488,28 +406,80 @@ export default {
           }
         });
     },
-    DialPhone() {
-      var that = this;
+    getPhone() {
+      let that = this;
       this.$api
         .post({
-          url: "/saleCustomerDetail/DialPhoneToCustomer",
+          url: "/saleCustomerDetail/getTelPhone",
+          data: { customerId: that.customerId },
           qs: true,
-          data: {
-            customerId: that.customerId
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
           }
         })
         .then(e => {
-          console.log(e.data);
-          let json = e.data;
-          if (json.code == 200) {
-          } else if (json.code == 400) {
-            alert(json.message);
-            console.log("失败     " + json);
+          if (e.data.code == 200) {
+            that.callList = e.data.data;
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
           }
         });
     },
-    openClaimFixed() {
-      this.FlagList.ClaimFlag = true;
+    callUp(phone) {
+      let that = this;
+      let postData = {
+        customerId: this.customerId,
+        remark:
+          "给客户" +
+          this.cusbaseData.bsAgentCustomersTbl.Customers +
+          "拨打电话",
+        customerName: this.cusbaseData.bsAgentCustomersTbl.Customers,
+        contactPhone: phone,
+        customerNo: this.cusbaseData.bsAgentCustomersTbl.CustomerNo,
+        customerPlate: 0
+      };
+      that.$api
+        .post({
+          url: "/saleCustomerDetail/DialPhoneToCustomer",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              type: "success",
+              message: "号码已发送至微信"
+            });
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
+    openFixed(flag, callback) {
+      this.FlagList[flag] = true;
+      callback();
+    },
+    checkClaim() {
+      //确认是否能认领，若能
+      this.FlagList.ClaimFlag = false;
+      //查看是否要合并
+      this.checkMerge();
+    },
+    checkMerge() {
+      //确认是否合并，若要
+      this.FlagList.ClaimCheckFlag = false;
+    },
+    toMerge() {
+      //进行合并
+      this.FlagList.MergeFlag = false;
     }
   }
 };

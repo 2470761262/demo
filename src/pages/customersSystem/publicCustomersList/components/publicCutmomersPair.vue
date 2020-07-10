@@ -84,7 +84,7 @@
           width: 100%;
           line-height: 50px;
           border: 0;
-          font-size: @font16;
+          font-size: 16px;
         }
       }
       .SubmitItem {

@@ -48,6 +48,7 @@
       :data="tableData"
       header-cell-class-name="ResultListCell ResultListHeaderBack"
       cell-class-name="ResultListCell"
+      @row-click="navigateTo"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
         <el-table-column
@@ -93,33 +94,39 @@ export default {
         {
           prop: "mainTainTime",
           label: "上次维护时间",
-          width: "180"
+          width: "180",
+          formart: item => item.mainTainTime || "暂无"
         },
         {
           prop: "customers",
           label: "姓名",
-          width: "180"
+          width: "180",
+          formart: item => item.customers || "暂无"
         },
-        {
-          prop: "source",
-          label: "渠道",
-          width: "130"
-        },
+
         {
           prop: "sex",
           label: "性别",
           width: "120px",
-          formart: item => (item.sex == 0 ? "男" : "女")
+          formart: item => (item.sex == 0 ? "男" : "女") || "暂无"
         },
         {
-          prop: "source",
+          prop: "plateChangeTime",
           label: "进池时间",
-          width: "180px"
+          width: "180px",
+          formart: item => item.plateChangeTime || "暂无"
         },
         {
-          prop: "source",
+          prop: "plateChangeReason",
+          label: "进池原因",
+          width: "130",
+          formart: item => this.Reason(item.plateChangeReason) || "暂无"
+        },
+        {
+          prop: "requireType",
           label: "购房需求",
-          width: "130px"
+          width: "130px",
+          formart: item => this.houserequire(item.requireType) || "暂无"
         }
       ],
       renderList: [],
@@ -187,6 +194,70 @@ export default {
             console.log("失败     " + json);
           }
         });
+    },
+    houserequire(i) {
+      let type;
+      switch (i) {
+        case 1:
+          type = "买二手住宅";
+          break;
+        case 2:
+          type = "买二手商铺";
+          break;
+        case 4:
+          type = "买二手写字楼";
+          break;
+        case 8:
+          type = "买新房住宅";
+          break;
+        case 16:
+          type = "买新房商铺";
+          break;
+        case 32:
+          type = "买新房写字楼";
+          break;
+        case 64:
+          type = "租赁住宅";
+          break;
+        case 128:
+          type = "租赁商铺";
+          break;
+        case 256:
+          type = "租赁写字楼";
+          break;
+        default:
+          break;
+      }
+      return type;
+    },
+    Reason(i) {
+      let type;
+      switch (i) {
+        case 1:
+          type = "无效转入";
+          break;
+        case 2:
+          type = "离职转入";
+          break;
+        case 3:
+          type = "滚动转入";
+          break;
+        case 4:
+          type = "核销房源转入";
+          break;
+        case 5:
+          type = "超期未维护转入";
+          break;
+        default:
+          break;
+      }
+      return type;
+    },
+    navigateTo(row) {
+      this.$router.push({
+        path: "/customers/publicCustomersDetail",
+        params: { customerId: row.id }
+      });
     },
     handleSizeChange(val) {
       this.limit = val;

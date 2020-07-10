@@ -48,6 +48,7 @@
       :data="tableData"
       header-cell-class-name="ResultListCell ResultListHeaderBack"
       cell-class-name="ResultListCell"
+      @row-click="navigateTo"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
         <el-table-column
@@ -93,34 +94,38 @@ export default {
         {
           prop: "mainTainTime",
           label: "上次维护时间",
-          width: "180"
+          width: "180",
+          formart: item => item.mainTainTime || "暂无"
         },
         {
           prop: "customers",
           label: "姓名",
-          width: "180"
+          width: "180",
+          formart: item => item.customers || "暂无"
         },
         {
-          prop: "source",
+          prop: "online",
           label: "渠道",
-          width: "130"
+          width: "130",
+          formart: item => (item.online == 0 ? "线下" : "线上") || "暂无"
         },
         {
           prop: "sex",
           label: "性别",
           width: "120px",
-          formart: item => (item.sex == 0 ? "男" : "女")
+          formart: item => (item.sex == 0 ? "男" : "女") || "暂无"
         },
         {
-          prop: "source",
+          prop: "sourceType",
           label: "客户来源",
-          width: "110px"
+          width: "110px",
+          formart: item => this.housesource(item.sourceType) || "暂无"
         },
         {
           prop: "requireType",
           label: "购房需求",
           width: "130px",
-          formart: item => this.houserequire(item.requireType)
+          formart: item => this.houserequire(item.requireType) || "暂无"
         }
       ],
       renderList: [],
@@ -166,6 +171,7 @@ export default {
     apply() {
       var that = this;
       this.$api
+
         .post({
           url: "/saleCustomer/listMyCustomers",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -187,7 +193,7 @@ export default {
             minArea: that.form.minArea, //最小面积
             maxArea: that.form.maxArea, //最大面积
             houseNumbers:
-              that.form.houseNumbers.length > 0 ? [that.form.houseNumbers] : [], //房型 需要处理数据
+              that.form.houseNumbers == "" ? [] : [that.form.houseNumbers], //房型 需要处理数据
             minAddTime: that.form.minAddTime, //委托开始时间
             maxAddTime: that.form.maxAddTime, //委托结束时间
             minMainTainTime: that.form.minMainTainTime, //维护开始时间
@@ -251,6 +257,59 @@ export default {
           break;
       }
       return type;
+    },
+    housesource(i) {
+      let type;
+      switch (i) {
+        case 11:
+          type = "老客户";
+          break;
+        case 12:
+          type = "转介绍";
+          break;
+        case 13:
+          type = "亲戚朋友";
+          break;
+        case 14:
+          type = "同学";
+          break;
+        case 21:
+          type = "业主资料";
+          break;
+        case 22:
+          type = "重复购买";
+          break;
+        case 31:
+          type = "58同城";
+          break;
+        case 32:
+          type = "安居客";
+          break;
+        case 33:
+          type = "朋友圈";
+          break;
+        case 34:
+          type = "其他网络";
+          break;
+        case 41:
+          type = "公众号";
+          break;
+        case 42:
+          type = "小程序";
+          break;
+        case 43:
+          type = "APP";
+          break;
+        default:
+          break;
+      }
+      return type;
+    },
+    navigateTo(row) {
+      this.$router.push({
+        path: "/customers/customersDetail",
+        params: { customerId: row.id }
+      });
     }
   }
 };

@@ -84,7 +84,7 @@
           width: 100%;
           line-height: 50px;
           border: 0;
-          font-size: @font16;
+          font-size: 16px;
         }
       }
       .SubmitItem {
@@ -142,7 +142,7 @@
     .ChooseItemBox {
       display: flex;
       flex-wrap: wrap;
-      margin: 0px -15px 0;
+      padding: 0 10px;
       .ChooseItem {
         /deep/.el-checkbox__input {
           width: 0 !important;
@@ -200,7 +200,7 @@
     .RadioItemBox {
       display: flex;
       flex-wrap: wrap;
-      margin: 0px -15px 0;
+      padding: 0 10px;
       .RadioItem {
         /deep/.el-radio__input {
           width: 0 !important;
@@ -229,8 +229,8 @@
           //margin-right: 0 !important;
           transition: all 0.2s ease-in;
           height: 32px;
-          line-height: 32px;
           margin-right: 20px;
+          line-height: 32px;
           padding: 0 15px;
           border: 1px solid #fff;
           border-radius: 4px;
@@ -301,8 +301,12 @@
       position: relative;
       /deep/.el-input__inner {
         border-color: #ffffff;
-        /deep/.el-input__icon {
+        width: 375px;
+        /deep/.el-range__icon {
           display: none;
+        }
+        /deep/.el-range__close-icon {
+          margin-left: 5px;
         }
         /deep/.el-range-input {
           width: 155px;
@@ -343,6 +347,7 @@
     font-weight: bold;
     text-align: left;
     line-height: 32px;
+    margin-right: 15px;
   }
   .FoldRow {
     .FoldItem {
@@ -351,6 +356,7 @@
       text-align: center;
       font-size: @font16;
       color: #247257;
+      white-space: nowrap;
       > i {
         margin-left: 10px;
         transform: rotate(-90deg);
@@ -358,6 +364,371 @@
       .ShowMore {
         transform: rotate(90deg) !important;
       }
+    }
+  }
+}
+.SwtichBox {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  right: 0;
+  display: flex;
+  width: 240px;
+  height: 50px;
+  border: 1px solid @backgroud;
+  border-radius: 8px;
+  .SwitchItemOn,
+  .SwitchItem {
+    margin: 5px;
+    width: 110px;
+    height: 40px;
+    text-align: center;
+    border-radius: 4px;
+    > i,
+    > span {
+      line-height: 40px;
+      font-size: @font16;
+    }
+  }
+
+  .SwitchItemOn {
+    background: @backgroud;
+    > i,
+    > span {
+      color: #ffffff;
+    }
+  }
+  .SwitchItem {
+    background: #ffffff;
+    > i,
+    > span {
+      color: @backgroud;
+    }
+  }
+}
+.ItemRow {
+  margin: 24px 0;
+}
+.SearchItemRow {
+  .SearchItem {
+    display: flex;
+    justify-content: space-between;
+    min-width: 495px;
+    height: 50px;
+    border-radius: 4px;
+    border: 1px solid #cecece;
+    overflow: hidden;
+    .selectItem {
+      margin: 10px 0;
+      border-right: 1px solid #cecece;
+    }
+    /deep/.el-input {
+      width: 110px;
+      height: 30px;
+      line-height: 30px;
+      i {
+        line-height: inherit;
+      }
+      .el-input__inner {
+        line-height: inherit;
+        height: inherit;
+        text-align: center;
+        border: 0;
+        font-size: 16px;
+        color: #606266;
+      }
+      .el-input-suniff {
+        color: #606266;
+      }
+    }
+    .InputItem {
+      width: 280px;
+      height: 50px;
+      overflow: hidden;
+      padding-left: 20px;
+      > input {
+        width: 100%;
+        line-height: 50px;
+        border: 0;
+        font-size: @font16;
+      }
+    }
+    .SubmitItem {
+      width: 80px;
+      height: 50px;
+      background: @backgroud;
+      text-align: center;
+      > i {
+        line-height: 50px;
+        color: #ffffff;
+        font-size: @font24;
+      }
+    }
+  }
+  .NavigateItem {
+    margin-left: 20px;
+    padding: 0 14px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    border: 1px solid @backgroud;
+    border-radius: 8px;
+    color: @backgroud;
+    font-size: @font16;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
+/deep/.el-form-item__content {
+  display: flex;
+}
+.tapSwitchRow {
+  display: flex;
+  border-bottom: 1px solid #f0f2f5;
+  .tapSwitchItem,
+  .tapSwitchItemOn {
+    margin-right: 35px;
+    height: 50px;
+    line-height: 50px;
+    font-size: @font18;
+  }
+  .tapSwitchItem {
+    border-bottom: 2px solid #ffffff;
+  }
+  .tapSwitchItemOn {
+    border-bottom: 2px solid @backgroud;
+    color: @backgroud;
+    font-weight: bold;
+  }
+}
+.ChooseItemRow {
+  display: flex;
+  height: 30px;
+  .ChooseItemBox {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 10px;
+    .ChooseItem {
+      /deep/.el-checkbox__input {
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden;
+      }
+      /deep/.el-checkbox__label {
+        padding-left: 0 !important;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        vertical-align: middle;
+        font-size: @font14;
+        line-height: 32px;
+      }
+      .is-checked {
+        border: 1px solid @backgroud !important;
+        border-radius: 4px;
+        /deep/.el-checkbox__label {
+          color: @backgroud;
+        }
+      }
+      .el-checkbox {
+        //margin-right: 0 !important;
+        transition: all 0.2s ease-in;
+        margin-right: 20px;
+        padding: 0 15px;
+        border: 1px solid #fff;
+        border-radius: 4px;
+        height: 32px;
+        line-height: 32px;
+      }
+    }
+  }
+  .switchItem,
+  .switchItemOn {
+    margin-left: 20px;
+    padding: 0 15px;
+    border: 1px solid;
+    border-radius: 4px;
+    height: 32px;
+    line-height: 34px;
+    font-size: @font14;
+  }
+  .switchItem {
+    color: #606266;
+    border-color: #fff;
+  }
+  .switchItemOn {
+    color: @backgroud;
+    border-color: @backgroud;
+  }
+  .RadioItemBox {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 0 10px;
+    .RadioItem {
+      /deep/.el-radio__input {
+        width: 0 !important;
+        height: 0 !important;
+        overflow: hidden;
+      }
+      /deep/.el-radio__label {
+        padding-left: 0 !important;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        vertical-align: middle;
+        font-size: @font14;
+        line-height: 32px;
+      }
+      .is-checked {
+        border: 1px solid @backgroud !important;
+        border-radius: 4px;
+        /deep/.el-radio__label {
+          color: @backgroud;
+        }
+      }
+      .el-radio {
+        //margin-right: 0 !important;
+        transition: all 0.2s ease-in;
+        height: 32px;
+        margin-right: 20px;
+        line-height: 32px;
+        padding: 0 15px;
+        border: 1px solid #fff;
+        border-radius: 4px;
+      }
+    }
+  }
+  .InputItem {
+    display: flex;
+    align-self: center;
+    margin-top: 10px;
+    .split-line {
+      width: 20px;
+      position: relative;
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 2px;
+        width: 20px;
+        transform: translate(-50%, -50%);
+        background: #686a6e;
+      }
+    }
+    .InputItemCell {
+      display: flex;
+      border: 1px solid #cecece;
+      border-radius: 4px;
+      padding: 0 10px;
+      margin: 0 10px;
+      height: 36px;
+      line-height: 36px;
+
+      > span {
+        color: #686a6e;
+        font-size: @font14;
+        white-space: nowrap;
+      }
+      /deep/.el-input {
+        width: 100px;
+        height: 36px;
+        line-height: 36px;
+        i {
+          line-height: inherit;
+        }
+        .el-input__inner {
+          border-color: #fff;
+          line-height: inherit;
+          height: inherit;
+          text-align: center;
+          font-size: @font14;
+        }
+      }
+    }
+    /deep/.el-button {
+      margin-left: 20px;
+      padding: 0;
+      width: 70px;
+      height: 40px;
+      line-height: 40px;
+      font-size: @font14;
+      background: @backgroud;
+      color: #ffffff;
+      text-align: center;
+    }
+  }
+  .timePickerItem {
+    position: relative;
+    /deep/.el-input__inner {
+      border-color: #ffffff;
+      width: 375px;
+      /deep/.el-range__icon {
+        display: none;
+      }
+      /deep/.el-range__close-icon {
+        margin-left: 5px;
+      }
+      /deep/.el-range-input {
+        width: 155px;
+        height: 36px;
+        line-height: 36px;
+        border: 1px solid #cecece;
+        border-radius: 4px;
+      }
+    }
+    .elIcon {
+      position: absolute;
+      top: 0;
+      left: -20px;
+      color: #cecece;
+      pointer-events: none;
+      > i {
+        margin-left: 160px;
+      }
+    }
+  }
+
+  /deep/.el-button {
+    margin-left: 20px;
+    padding: 0;
+    width: 70px;
+    height: 40px;
+    line-height: 40px;
+    font-size: @font14;
+    background: @backgroud;
+    color: #ffffff;
+    text-align: center;
+  }
+}
+/deep/.el-form-item__label {
+  width: 125px !important;
+  line-height: 40px;
+  font-size: @font14;
+  font-weight: bold;
+  text-align: left;
+  line-height: 32px;
+  margin-right: 15px;
+}
+.FoldRow {
+  .FoldItem {
+    margin: 0 auto;
+    width: 150px;
+    text-align: center;
+    font-size: @font16;
+    color: #247257;
+    white-space: nowrap;
+    > i {
+      margin-left: 10px;
+      transform: rotate(-90deg);
+    }
+    .ShowMore {
+      transform: rotate(90deg) !important;
     }
   }
 }
@@ -463,20 +834,19 @@
           </div>
         </el-checkbox-group>
       </el-form-item>
+
       <el-form-item label="意向价格" class="ItemRow ChooseItemRow" prop="Price">
         <el-radio-group
           v-model="Price"
           class="RadioItemBox"
-          @change="getLimit('Price', 'minPrice', 'maxPrice')"
+          @change="getLimit('PriceList', Price, 'minPrice', 'maxPrice')"
         >
           <div
             class="RadioItem"
             v-for="(item, index) in PriceList"
             :key="index"
           >
-            <el-radio :label="item.value" name="Price">{{
-              item.name
-            }}</el-radio>
+            <el-radio :label="item.id" name="Price">{{ item.name }}</el-radio>
           </div>
         </el-radio-group>
         <div class="InputItem">
@@ -505,7 +875,8 @@
           >
         </div>
       </el-form-item>
-      <div v-show="ShowMorePair == true">
+
+      <div v-show="ShowMorePair">
         <el-form-item
           label="意向面积"
           class="ItemRow ChooseItemRow"
@@ -514,16 +885,14 @@
           <el-radio-group
             v-model="Area"
             class="RadioItemBox"
-            @change="getLimit('Area', 'minArea', 'maxArea')"
+            @change="getLimit('AreaList', Area, 'minArea', 'maxArea')"
           >
             <div
               class="RadioItem"
               v-for="(item, index) in AreaList"
               :key="index"
             >
-              <el-radio :label="item.value" name="Area">
-                {{ item.name }}
-              </el-radio>
+              <el-radio :label="item.id" name="Area">{{ item.name }} </el-radio>
             </div>
           </el-radio-group>
           <div class="InputItem">
@@ -606,6 +975,7 @@
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              clearable
             ></el-date-picker>
             <div class="elIcon">
               <i class="el-icon-date"></i>
@@ -739,56 +1109,69 @@ const ProgressListModle = [
 const PriceListModle = [
   {
     name: "不限",
+    id: 0,
     value: [0]
   },
   {
     name: "50万以下",
+    id: 1,
     value: [0, 50]
   },
   {
     name: "50-100万",
+    id: 2,
     value: [50, 100]
   },
   {
     name: "100-150万",
+    id: 3,
     value: [100, 150]
   },
   {
     name: "150-200万",
+    id: 4,
     value: [150, 200]
   },
   {
     name: "200万以上",
+    id: 5,
     value: [200]
   }
 ];
 const AreaListModle = [
   {
     name: "不限",
+    id: 0,
     value: [0]
   },
   {
     name: "50㎡以下",
+    id: 1,
     value: [0, 50]
   },
   {
     name: "50-90㎡",
+    id: 2,
     value: [50, 90]
   },
   {
     name: "90-120㎡",
+    id: 3,
     value: [90, 120]
   },
   {
     name: "120-150㎡",
+    id: 4,
     value: [120, 150]
   },
   {
     name: "150-180㎡",
+    id: 5,
     value: [150, 180]
   },
   {
     name: "180㎡以上",
+    id: 6,
     value: [180]
   }
 ];
@@ -825,15 +1208,15 @@ export default {
       customersTypeList: cusTypeList,
       customersType: 1,
       IntendList: IntendListModle,
-      Intend: ["4"],
+      Intend: [4],
       ProgressList: ProgressListModle,
-      Progress: ["-1"],
+      Progress: [-1],
       PriceList: PriceListModle,
-      Price: "", //价格，需要处理数据
+      Price: 0, //价格，需要处理数据
       MinPrice: "",
       MaxPrice: "",
       AreaList: AreaListModle,
-      Area: "", //面积，需要处理数据
+      Area: 0, //面积，需要处理数据
       MinArea: "",
       MaxArea: "",
       HouseTypeList: HouseTypeListModle,
@@ -845,10 +1228,39 @@ export default {
     };
   },
   created() {
-    console.log(this.form);
+    this.apply();
   },
   methods: {
+    apply() {
+      var that = this;
+      this.$api
+        .post({
+          url: "/saleCustomer/staticsMyCustomersCount",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false
+        })
+        .then(e => {
+          console.log("11111111111111111", e.data);
+          let json = e.data;
+          if (json.code == 200) {
+            this.customersTypeList[1].count = json.data.buySecondHouse;
+            this.customersTypeList[2].count = json.data.buyNewHouse;
+            this.customersTypeList[3].count = json.data.rentHouse;
+            this.customersTypeList[4].count = json.data.hasDealedHouse;
+            this.customersTypeList[0].count =
+              this.customersTypeList[1].count +
+              this.customersTypeList[2].count +
+              this.customersTypeList[3].count +
+              this.customersTypeList[4].count;
+          } else if (json.code == 400) {
+            alert(json.message);
+            console.log("失败     " + json);
+          }
+        });
+    },
+
     setCustomersType(item, resetAll) {
+      this.form.isBuy = 0;
       switch (item.type) {
         case 1:
           this.form.requireTypes = [];
@@ -863,7 +1275,7 @@ export default {
           this.form.requireTypes = [64, 128, 256];
           break;
         case 5:
-          this.form.attentionStatus = 1;
+          this.form.isBuy = 1;
           break;
         default:
           break;
@@ -887,13 +1299,13 @@ export default {
       } else {
         this.form[key2] = this[key1];
       }
-      console.log(this.form[key2], this[key1]);
     },
 
-    getLimit(key, key1, key2) {
-      this.form[key1] = this[key][0];
-      this.form[key2] = this[key][1] ? this[key][1] : "";
-      console.log(this.form[key1], this.form[key2]);
+    getLimit(list, id, key1, key2) {
+      this.form[key1] = this[list][id]["value"][0];
+      this.form[key2] = this[list][id]["value"][1]
+        ? this[list][id]["value"][1]
+        : "";
     },
 
     submitInput(key1, key2, keya, keyb) {
@@ -908,8 +1320,8 @@ export default {
     getTime(key, key1, key2) {
       if (this[key].length > 0) {
         console.log(this[key]);
-        this[key1] = this[key][0] + " 00:00:00";
-        this[key2] = this[key][1] + " 00:00:00";
+        this.form[key1] = this[key][0] + " 00:00:00";
+        this.form[key2] = this[key][1] + " 00:00:00";
       } else {
         alert("请先选择起止时间");
       }
