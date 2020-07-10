@@ -169,7 +169,7 @@
             <el-button
               class="floot-btn success-btn"
               type="info"
-              @click="openFixed('ClaimCheckFlag', function() {})"
+              @click="checkClaim()"
               >提交</el-button
             >
           </div>
@@ -213,14 +213,14 @@
             姓名
           </div>
           <div class="ChooseItemRow">
-            <el-radio-group v-model="mergeCus.mergeName" class="RadioItemBox">
+            <el-radio-group v-model="mergeCus.mergePer" class="RadioItemBox">
               <div
                 class="RadioItem"
                 v-for="(item, index) in nameList"
                 :key="index"
               >
-                <el-radio :label="item.value" name="Price">
-                  {{ item.name }}
+                <el-radio :label="item.id" name="mergePer">
+                  {{ item.customers }}
                 </el-radio>
               </div>
             </el-radio-group>
@@ -230,19 +230,15 @@
             手机号(多选)
           </div>
           <div class="ChooseItemRow">
-            <el-checkbox-group
-              v-model="mergeCus.mergePhone"
-              class="ChooseItemBox"
-              disable="true"
-            >
+            <div class="ChooseItemBox">
               <div
-                class="ChooseItem"
+                class="showItem"
                 v-for="(item, index) in phoneList"
                 :key="index"
               >
-                <el-checkbox :label="item.value">{{ item.name }}</el-checkbox>
+                <div>{{ item }}</div>
               </div>
-            </el-checkbox-group>
+            </div>
           </div>
           <div class="foot-btn-content">
             <el-button class="floot-btn close-btn" type="info">取消</el-button>
@@ -257,46 +253,6 @@
 </template>
 
 <script>
-const nameListModle = [
-  {
-    name: "林俊杰",
-    value: 1
-  },
-  {
-    name: "周杰伦",
-    value: 2
-  },
-  {
-    name: "张学友",
-    value: 3
-  }
-];
-const phoneListModle = [
-  {
-    name: "188****8888",
-    value: 1
-  },
-  {
-    name: "187****6666",
-    value: 2
-  },
-  {
-    name: "185*****9999",
-    value: 3
-  },
-  {
-    name: "188****8888",
-    value: 4
-  },
-  {
-    name: "187****6666",
-    value: 5
-  },
-  {
-    name: "185*****9999",
-    value: 6
-  }
-];
 export default {
   inject: ["customerId"],
   data() {
@@ -305,8 +261,8 @@ export default {
       Source: "", //委托来源
       desireIntensity: "", //购房意向
       callList: [],
-      nameList: nameListModle,
-      phoneList: phoneListModle,
+      nameList: [],
+      phoneList: [],
       FlagList: {
         AddfollowFlag: false,
         ClaimFlag: false,
@@ -314,8 +270,10 @@ export default {
         MergeFlag: false
       },
       mergeCus: {
-        mergeName: "",
-        mergePhone: []
+        Per: "",
+        Name: "",
+        id: "",
+        list: []
       }
     };
   },
@@ -468,14 +426,62 @@ export default {
       callback();
     },
     checkClaim() {
-      //确认是否能认领，若能
-      this.FlagList.ClaimFlag = false;
-      //查看是否要合并
-      this.checkMerge();
+      var that = this;
+      this.$api
+        .post({
+          url: "/saleCustomerDetail/canTakeCus",
+          qs: true,
+          data: {
+            customerId: that.customerId
+          }
+        })
+        .then(e => {
+          console.log(e.data);
+          let json = e.data;
+          if (json.code == 200) {
+            //处理数据
+            this.nameList = json.data.cus;
+            this.phoneList = json.data.phones;
+            //确认是否能认领，若能,查看是否要合并
+            if (json.data.cus.length == 1) {
+              //无需合并，直接认领
+              this.mergeCus.Per = this.nameList[0].id;
+              console.log(this.mergeCus);
+              this.toClaim();
+            } else {
+              //需要合并 进行提示
+              this.FlagList.ClaimCheckFlag = true;
+            }
+          } else if (json.code == 400) {
+            alert(json.message);
+            console.log("失败     " + json);
+          }
+          this.FlagList.ClaimFlag = false;
+        });
     },
-    checkMerge() {
-      //确认是否合并，若要
-      this.FlagList.ClaimCheckFlag = false;
+    toClaim() {
+      //进行认领
+      var that = this;
+      this.$api
+        .post({
+          url: "/saleCustomerDetail/takeCus",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          data: {
+            customerId: that.mergeCus.Per
+            //  list: that.mergeCus.list
+          }
+        })
+        .then(e => {
+          console.log(e.data);
+          let json = e.data;
+          if (json.code == 200) {
+            alert("认领成功！");
+          } else if (json.code == 400) {
+            alert(json.message);
+            console.log("失败     " + json);
+          }
+        });
     },
     toMerge() {
       //进行合并

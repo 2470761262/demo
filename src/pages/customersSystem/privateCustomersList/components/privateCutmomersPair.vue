@@ -281,7 +281,7 @@
             line-height: inherit;
             height: inherit;
             text-align: center;
-            font-size: @font14;
+            font-size: 16px;
           }
         }
       }
@@ -760,7 +760,12 @@
             <el-option label="客源印象" value="2"></el-option>
           </el-select>
           <div class="InputItem">
-            <input placeholder="请输入客户姓名或印象" v-model="form.keyWord" />
+            <input
+              :placeholder="
+                form.searchType == '1' ? '请输入客户信息' : '请输入客源印象'
+              "
+              v-model="form.keyWord"
+            />
           </div>
           <div class="SubmitItem" @click="submit">
             <i class="el-icon-search"></i>
