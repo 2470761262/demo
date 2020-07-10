@@ -760,12 +760,9 @@
             <el-option label="客源印象" value="2"></el-option>
           </el-select>
           <div class="InputItem">
-            <input
-              placeholder="请输入楼盘名称或房源编号"
-              v-model="form.keyWord"
-            />
+            <input placeholder="请输入客户姓名或印象" v-model="form.keyWord" />
           </div>
-          <div class="SubmitItem">
+          <div class="SubmitItem" @click="submit">
             <i class="el-icon-search"></i>
           </div>
         </div>
@@ -951,16 +948,13 @@
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              @change="getTime('DelegateTime', 'minAddTime', 'maxAddTime')"
             ></el-date-picker>
             <div class="elIcon">
               <i class="el-icon-date"></i>
               <i class="el-icon-date"></i>
             </div>
           </div>
-          <el-button
-            @click="getTime('DelegateTime', 'minAddTime', 'maxAddTime')"
-            >确定</el-button
-          >
         </el-form-item>
         <el-form-item
           label="维护时间"
@@ -975,19 +969,15 @@
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              clearable
+              @change="
+                getTime('MaintenanceTime', 'minMainTainTime', 'maxMainTainTime')
+              "
             ></el-date-picker>
             <div class="elIcon">
               <i class="el-icon-date"></i>
               <i class="el-icon-date"></i>
             </div>
           </div>
-          <el-button
-            @click="
-              getTime('MaintenanceTime', 'minMainTainTime', 'maxMainTainTime')
-            "
-            >确定</el-button
-          >
         </el-form-item>
         <el-form-item
           label="上次带看"
@@ -1002,22 +992,19 @@
               range-separator="-"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              @change="
+                getTime(
+                  'TakelookTime',
+                  'minLastPairFollowTime',
+                  'maxLastPairFollowTime'
+                )
+              "
             ></el-date-picker>
             <div class="elIcon">
               <i class="el-icon-date"></i>
               <i class="el-icon-date"></i>
             </div>
           </div>
-          <el-button
-            @click="
-              getTime(
-                'TakelookTime',
-                'minLastPairFollowTime',
-                'maxLastPairFollowTime'
-              )
-            "
-            >确定</el-button
-          >
         </el-form-item>
       </div>
     </el-form>
@@ -1069,7 +1056,7 @@ const IntendListModle = [
   },
   {
     name: "强烈",
-    value: 0
+    value: 3
   },
   {
     name: "一般",
@@ -1275,6 +1262,7 @@ export default {
           this.form.requireTypes = [64, 128, 256];
           break;
         case 5:
+          this.form.requireTypes = [];
           this.form.isBuy = 1;
           break;
         default:
@@ -1318,12 +1306,13 @@ export default {
       this.form[keyb] = this[key2];
     },
     getTime(key, key1, key2) {
-      if (this[key].length > 0) {
+      if (this[key] != null) {
         console.log(this[key]);
         this.form[key1] = this[key][0] + " 00:00:00";
         this.form[key2] = this[key][1] + " 00:00:00";
       } else {
-        alert("请先选择起止时间");
+        this.form[key1] = "";
+        this.form[key2] = "";
       }
     },
     ShowMore() {
@@ -1331,6 +1320,9 @@ export default {
     },
     navigateTo(path) {
       this.$router.push({ path: path });
+    },
+    submit() {
+      this.form.submitSearch = !this.form.submitSearch;
     }
   }
 };

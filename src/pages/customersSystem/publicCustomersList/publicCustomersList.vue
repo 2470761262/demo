@@ -39,6 +39,7 @@ export default {
   data() {
     return {
       form: {
+        submitSearch: false,
         KeyWord: "", //关键词
         requireTypes: 1, //需求类型参数 (示例：买二手房[1,2,4]，买新房[8,16,32]，租赁[64，128，256]
         plate: "", //0我的私客，1门店公客，2区域公客，4公司公客

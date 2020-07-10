@@ -363,11 +363,11 @@
         <div class="SearchItem">
           <div class="InputItem">
             <input
-              placeholder="请输入楼盘名称或房源编号"
+              placeholder="请输入客户姓名或联系方式、客源印象"
               v-model="form.KeyWord"
             />
           </div>
-          <div class="SubmitItem">
+          <div class="SubmitItem" @click="submit">
             <i class="el-icon-search"></i>
           </div>
         </div>
@@ -510,6 +510,9 @@ export default {
   methods: {
     navigateTo(path) {
       this.$router.push({ path: path });
+    },
+    submit() {
+      this.form.submitSearch = !this.form.submitSearch;
     }
   }
 };

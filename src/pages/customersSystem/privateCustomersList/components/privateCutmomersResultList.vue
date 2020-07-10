@@ -186,7 +186,7 @@ export default {
               that.form.requireTypes == "" ? [] : that.form.requireTypes, //需求类型参数
             desireIntensitys: that.form.desireIntensitys, //意愿
             pairNumbers: that.form.pairNumbers, //带看次数，多选，数字数组
-            attentionStatus: that.form.attentionStatus ? 1 : 0, //是否关注
+            attentionStatus: that.form.attentionStatus ? 0 : 1, //是否关注
             isBuy: that.form.isBuy == 1 ? 1 : 0, //是否成交
             minPrice: that.form.minPrice, //最低价
             maxPrice: that.form.maxPrice, //最高价
