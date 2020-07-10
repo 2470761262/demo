@@ -5,6 +5,9 @@
   .step-content();
   padding: 0 24px 24px;
   background: rgba(255, 255, 255, 1);
+  .impression-box {
+    padding-bottom: 36px;
+  }
 }
 </style>
 <template>
@@ -190,14 +193,27 @@
         width="auto"
         @confirmEmit="addImpressionConfirm"
       >
-        <div class="input-group is-required pop-content">
+        <div
+          class="input-group is-required impression-box"
+          :class="{ 'error-tips': errorBags.has('impression') }"
+        >
           <div class="input-head">客户客源印象</div>
+
           <el-input
             v-model="mock1"
             class="input-content"
             clearable
-            placeholder="请输入客户印象"
+            placeholder="请输入客源印象"
+            data-vv-name="impression"
+            data-vv-as="客源印象"
+            v-validate="'required|overstep:5'"
           />
+          <div
+            :class="{
+              'after-error-tips': errorBags.has('impression')
+            }"
+            :data-error="errorBags.first('impression')"
+          ></div>
         </div>
       </fixed-popup>
     </section>
@@ -389,9 +405,13 @@ export default {
      * @example: 弹框组件确定点击事件
      */
     addImpressionConfirm() {
-      this.impressionTags.push(this.mock1);
-      this.mock1 = "";
-      this.followUpFlag = false;
+      this.$validator.validate("impression").then(result => {
+        if (result) {
+          this.impressionTags.push(this.mock1);
+          this.mock1 = "";
+          this.followUpFlag = false;
+        }
+      });
     },
     /**
      * @example: 印象数组删除

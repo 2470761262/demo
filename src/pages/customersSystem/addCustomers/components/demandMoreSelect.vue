@@ -146,15 +146,15 @@ const listData = [
     children: [
       {
         title: "住宅",
-        value: 0
-      },
-      {
-        title: "商铺",
         value: 1
       },
       {
-        title: "写字楼",
+        title: "商铺",
         value: 2
+      },
+      {
+        title: "写字楼",
+        value: 4
       }
     ]
   },
@@ -164,15 +164,15 @@ const listData = [
     children: [
       {
         title: "住宅",
-        value: 0
+        value: 8
       },
       {
         title: "商铺",
-        value: 1
+        value: 16
       },
       {
         title: "写字楼",
-        value: 2
+        value: 32
       }
     ]
   },
@@ -182,15 +182,15 @@ const listData = [
     children: [
       {
         title: "住宅",
-        value: 0
+        value: 64
       },
       {
         title: "商铺",
-        value: 1
+        value: 128
       },
       {
         title: "写字楼",
-        value: 2
+        value: 256
       }
     ]
   }

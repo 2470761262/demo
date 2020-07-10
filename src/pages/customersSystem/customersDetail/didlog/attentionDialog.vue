@@ -1,32 +1,37 @@
 <template>
-  <fixedPopup v-bind="$attrs" v-on="$listeners" @confirmEmit="fromSubmit()">
+  <fixedPopup
+    v-bind="$attrs"
+    v-on="$listeners"
+    @confirmEmit="fromSubmit()"
+    :loading="isLoading"
+  >
     <div class="attention-content">
       <div
         class="input-group is-required"
-        :class="{ 'error-tips': errorBags.has('attention') }"
+        :class="{ 'error-tips': errorBags.has('periodTime') }"
       >
         <div class="input-head">不关注时间</div>
         <el-input
-          v-model="attention"
+          v-model="periodTime"
           class="input-content"
           clearable
           placeholder="请输入暂不关注时间"
-          data-vv-name="attention"
+          data-vv-name="periodTime"
           data-vv-as="暂不关注时间"
           v-validate="'required|noZero|isGreater:30'"
         />
         <div
           :class="{
-            'after-error-tips': errorBags.has('attention')
+            'after-error-tips': errorBags.has('periodTime')
           }"
-          :data-error="errorBags.first('attention')"
+          :data-error="errorBags.first('periodTime')"
         ></div>
       </div>
 
       <div class="input-group">
         <div class="input-head">不关注理由</div>
         <el-input
-          v-model="attentionReason"
+          v-model="remark"
           clearable
           type="textarea"
           rows="5"
@@ -39,28 +44,57 @@
 
 <script>
 export default {
+  inject: ["customerId"],
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
   },
   data() {
     return {
-      attention: "",
-      attentionReason: "",
-      attentionList: [
-        { key: "外公司成交", value: 1 },
-        { key: "暂不考虑", value: 2 },
-        { key: "疑似同业", value: 3 },
-        { key: "其他原因", value: 4 }
-      ]
+      isLoading: false,
+      periodTime: "",
+      remark: ""
     };
   },
   methods: {
     fromSubmit() {
+      let that = this;
+      let postData = {
+        customerId: this.customerId,
+        periodTime: this.periodTime,
+        remark: this.remark
+      };
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.$emit("update:visible", false);
+          that.isLoading = true;
+          that.$api
+            .post({
+              url: "/saleCustomerDetail/not/attention",
+              data: postData,
+              qs: true,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              }
+            })
+            .then(e => {
+              if (e.data.code == 200) {
+                this.$message({
+                  type: "success",
+                  message: "暂不关注客户成功"
+                });
+                that.close();
+              }
+            })
+            .catch(e => {
+              that.isLoading = false;
+              if (e.response != undefined) {
+                that.$message(e.response.data.message);
+              }
+            });
         }
       });
+    },
+    close() {
+      this.$emit("update:visible", false);
     }
   }
 };

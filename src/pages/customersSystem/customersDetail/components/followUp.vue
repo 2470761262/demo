@@ -35,7 +35,7 @@
                     class="car-icon-s"
                   ></i
                 ></i>
-                <div v-if="!item.typ">
+                <div v-if="!item.type">
                   <p class="time-txt">{{ item.FollowTime }}</p>
                   <section class="list-car">
                     <div class="car-row">
@@ -57,24 +57,40 @@
                   </section>
                 </div>
 
-                <div v-if="item.typ">
+                <div v-if="item.type">
                   <p class="time-txt">{{ item.AddTime }}</p>
                   <section class="list-car">
                     <div class="car-row">
                       <div class="car-title">带看类型：</div>
-                      <div class="car-right">{{ item.salePairType }}</div>
+                      <div class="car-right">{{ item.salePairType[0] }}</div>
+                    </div>
+                    <div class="car-row">
+                      <div class="car-title">带看经纪：</div>
+                      <div class="car-right">
+                        {{ item.perName }} - {{ item.companyName }}
+                        {{ item.deptName }}
+                      </div>
+                    </div>
+                    <div class="car-row">
+                      <div class="car-title">带看日期：</div>
+                      <div class="car-right">{{ item.st }}</div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看房源：</div>
-                      <div class="car-right">{{ item.FollowType }}</div>
-                    </div>
-                    <div class="car-row">
-                      <div class="car-title">带看户型：</div>
-                      <div class="car-right">{{ item.FollowWay }}</div>
+                      <div class="car-right">
+                        <p
+                          v-for="(housingResource, idx) in item.housingResource"
+                          :key="idx"
+                        >
+                          {{ housingResource }}
+                        </p>
+                      </div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看反馈：</div>
-                      <div class="car-right">{{ item.FollowWay }}</div>
+                      <div class="car-right">
+                        {{ item.Cusfeedback | cusfeedbackName }}
+                      </div>
                     </div>
                     <div class="car-row car-mar-no">
                       <div class="car-title">带看总结：</div>
@@ -149,19 +165,39 @@
                 <section class="list-car">
                   <div class="car-row">
                     <div class="car-title">带看类型：</div>
-                    <div class="car-right">{{ item.salePairType }}</div>
+                    <div class="car-right">{{ item.salePairType[0] }}</div>
+                  </div>
+                  <div class="car-row">
+                    <div class="car-title">带看经纪：</div>
+                    <div class="car-right">
+                      {{ item.perName }} - {{ item.companyName }}
+                      {{ item.deptName }}
+                    </div>
+                  </div>
+                  <div class="car-row">
+                    <div class="car-title">带看日期：</div>
+                    <div class="car-right">{{ item.st }}</div>
                   </div>
                   <div class="car-row">
                     <div class="car-title">带看房源：</div>
-                    <div class="car-right">{{ item.FollowType }}</div>
+                    <div class="car-right">
+                      <p
+                        v-for="(housingResource, idx) in item.housingResource"
+                        :key="idx"
+                      >
+                        {{ housingResource }}
+                      </p>
+                    </div>
                   </div>
-                  <div class="car-row">
+                  <!-- <div class="car-row">
                     <div class="car-title">带看户型：</div>
                     <div class="car-right">{{ item.FollowWay }}</div>
-                  </div>
+                  </div> -->
                   <div class="car-row">
                     <div class="car-title">带看反馈：</div>
-                    <div class="car-right">{{ item.FollowWay }}</div>
+                    <div class="car-right">
+                      {{ item.Cusfeedback | cusfeedbackName }}
+                    </div>
                   </div>
                   <div class="car-row car-mar-no">
                     <div class="car-title">带看总结：</div>
@@ -204,6 +240,18 @@ export default {
   created() {
     this.getData();
   },
+  filters: {
+    cusfeedbackName(value) {
+      switch (value) {
+        case 0:
+          return "有意向";
+        case 1:
+          return "在考虑";
+        case 2:
+          return "不满意";
+      }
+    }
+  },
   methods: {
     handleClick() {},
     /**
@@ -223,14 +271,8 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             that.followData = e.data.data.saleList;
-            that.followData.forEach(item => {
-              item.type = 0;
-            });
             that.lookAtData = e.data.data.salePairOrderTblDtoList;
-            that.lookAtData.forEach(item => {
-              item.type = 1;
-            });
-            that.allData = that.followData.concat(that.lookAtData);
+            that.processingData();
           }
         })
         .catch(e => {
@@ -238,6 +280,54 @@ export default {
             that.$message(e.response.data.message);
           }
         });
+    },
+    /**
+     * @example: 研发提示弹窗
+     */
+    processingData() {
+      let that = this;
+      that.followData.forEach(item => {
+        item.type = 0;
+      });
+      that.lookAtData.forEach(item => {
+        item.type = 1;
+      });
+      for (let i = 0; i < that.lookAtData.length; i++) {
+        that.lookAtData[i].housingResource = [];
+        if (that.lookAtData[i].currentLookId) {
+          for (let j = 0; j < that.lookAtData.length; j++) {
+            if (
+              that.lookAtData[i].currentLookId ==
+              that.lookAtData[j].currentLookId
+            ) {
+              let housingResource =
+                that.lookAtData[j].communityName +
+                that.lookAtData[j].buildingName +
+                that.lookAtData[j].roomNo;
+              that.lookAtData[i].housingResource.push(housingResource);
+            }
+          }
+        } else {
+          let housingResource =
+            that.lookAtData[i].communityName +
+            that.lookAtData[i].buildingName +
+            that.lookAtData[i].roomNo;
+          that.lookAtData[i].housingResource.push(housingResource);
+        }
+      }
+      // 数组去重，相同currentLookId的带看只需要一条
+      const res = new Map();
+      that.lookAtData = that.lookAtData.filter(
+        arr => !res.has(arr.currentLookId) && res.set(arr.currentLookId, 1)
+      );
+      //数组合并
+      that.allData = that.followData.concat(that.lookAtData);
+      //数组按日期排序
+      that.allData.sort((a, b) => {
+        let x = a.AddTime;
+        let y = b.AddTime;
+        return x < y ? (x > y ? 1 : 0) : -1;
+      });
     },
     /**
      * @example: 研发提示弹窗

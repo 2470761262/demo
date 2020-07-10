@@ -74,23 +74,6 @@
         >
       </div>
       <i class="split-line"></i>
-      <!-- 购买用途 -->
-      <div class="input-group">
-        <div class="input-head">购买用途</div>
-        <el-select
-          v-model="mock"
-          popper-class="options-item"
-          class="input-content"
-          placeholder="请选择客户购买用途"
-        >
-          <el-option
-            v-for="item in purchasepurpose"
-            :key="item.value"
-            :label="item.key"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </div>
       <!-- 期望总价 -->
       <div class="input-group">
         <div class="input-head">期望总价</div>
@@ -118,7 +101,32 @@
       </div>
       <!-- 首付金额 -->
       <div class="input-group">
-        <div class="input-head">期望总价</div>
+        <div class="input-head">首付金额</div>
+        <div class="input-group-split">
+          <el-input
+            placeholder="最小值"
+            class="input-content is-suffix"
+            v-model="mock"
+          >
+            <template v-slot:suffix>
+              <i class="suffix-tips">万元</i>
+            </template>
+          </el-input>
+          <i class="input-split"></i>
+          <el-input
+            placeholder="最大值"
+            class="input-content is-suffix"
+            v-model="mock"
+          >
+            <template v-slot:suffix>
+              <i class="suffix-tips">万元</i>
+            </template>
+          </el-input>
+        </div>
+      </div>
+      <!-- 期望单价 -->
+      <div class="input-group">
+        <div class="input-head">期望单价</div>
         <div class="input-group-split">
           <el-input
             placeholder="最小值"
@@ -166,6 +174,47 @@
           </el-input>
         </div>
       </div>
+      <!-- 购买房型 -->
+      <div class="input-group">
+        <div class="input-head">购买房型</div>
+        <label
+          class="checkbox-content"
+          v-for="item in houseTypeList"
+          :key="item.value"
+        >
+          <input type="checkbox" :value="item.value" />
+          <div class="checkbox-title">{{ item.key }}</div>
+        </label>
+      </div>
+      <!-- 购买用途 -->
+      <div class="input-group">
+        <div class="input-head">购买用途</div>
+        <el-select
+          v-model="mock"
+          popper-class="options-item"
+          class="input-content"
+          placeholder="请选择客户购买用途"
+        >
+          <el-option
+            v-for="item in purchasepurpose"
+            :key="item.value"
+            :label="item.key"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </div>
+      <!-- 期望楼层 -->
+      <div class="input-group">
+        <div class="input-head">期望楼层</div>
+        <label
+          class="checkbox-content"
+          v-for="item in floorList"
+          :key="item.value"
+        >
+          <input type="checkbox" :value="item.value" />
+          <div class="checkbox-title">{{ item.key }}</div>
+        </label>
+      </div>
       <!-- 期望装修 -->
       <div class="input-group">
         <div class="input-head">期望装修</div>
@@ -178,14 +227,86 @@
           <div class="radio-title">{{ item.key }}</div>
         </label>
       </div>
-      <!-- 购房类型 -->
+      <!-- 商铺类型 -->
       <div class="input-group">
-        <div class="input-head">购房类型</div>
+        <div class="input-head">商铺类型</div>
+        <label
+          class="checkbox-content"
+          v-for="item in houseTypeList"
+          :key="item.value"
+        >
+          <input type="checkbox" :value="item.value" />
+          <div class="checkbox-title">{{ item.key }}</div>
+        </label>
+      </div>
+      <!-- 商铺用途 -->
+      <div class="input-group">
+        <div class="input-head">商铺用途</div>
+        <label
+          class="checkbox-content"
+          v-for="item in houseTypeList"
+          :key="item.value"
+        >
+          <input type="checkbox" :value="item.value" />
+          <div class="checkbox-title">{{ item.key }}</div>
+        </label>
+      </div>
+      <!-- 附属设施 -->
+      <div class="input-group">
+        <div class="input-head">附属设施</div>
+        <label
+          class="checkbox-content"
+          v-for="item in houseTypeList"
+          :key="item.value"
+        >
+          <input type="checkbox" :value="item.value" />
+          <div class="checkbox-title">{{ item.key }}</div>
+        </label>
+      </div>
+      <!-- 其他需求 -->
+      <div class="input-group">
+        <div class="input-head">其他需求</div>
+        <label
+          class="checkbox-content"
+          v-for="item in houseTypeList"
+          :key="item.value"
+        >
+          <input type="checkbox" :value="item.value" />
+          <div class="checkbox-title">{{ item.key }}</div>
+        </label>
+      </div>
+      <!-- 楼栋需求 -->
+      <div class="input-group">
+        <div class="input-head">楼栋需求</div>
+        <label
+          class="checkbox-content"
+          v-for="item in houseTypeList"
+          :key="item.value"
+        >
+          <input type="checkbox" :value="item.value" />
+          <div class="checkbox-title">{{ item.key }}</div>
+        </label>
+      </div>
+      <!-- 房间需求 -->
+      <div class="input-group">
+        <div class="input-head">房间需求</div>
+        <label
+          class="checkbox-content"
+          v-for="item in houseTypeList"
+          :key="item.value"
+        >
+          <input type="checkbox" :value="item.value" />
+          <div class="checkbox-title">{{ item.key }}</div>
+        </label>
+      </div>
+      <!-- 付款方式 -->
+      <div class="input-group">
+        <div class="input-head">付款方式</div>
         <el-select
           v-model="mock"
           popper-class="options-item"
           class="input-content"
-          placeholder="请选择客户购买类型"
+          placeholder="请选择付款方式"
         >
           <el-option
             v-for="item in purchasepurpose"
@@ -253,7 +374,7 @@
         </el-select>
       </div>
       <!-- 看房经历 -->
-      <div class="input-group">
+      <!-- <div class="input-group">
         <div class="input-head">看房经历</div>
         <el-input
           type="textarea"
@@ -264,7 +385,7 @@
           resize="none"
           :autosize="{ minRows: 3, maxRows: 6 }"
         />
-      </div>
+      </div> -->
     </section>
   </section>
 </template>
@@ -298,6 +419,54 @@ export default {
         {
           value: "选项5",
           label: "学校5"
+        }
+      ],
+      houseTypeList: [
+        {
+          key: "1房",
+          value: 1
+        },
+        {
+          key: "2房",
+          value: 2
+        },
+        {
+          key: "3房",
+          value: 3
+        },
+        {
+          key: "4房",
+          value: 4
+        },
+        {
+          key: "4房以上",
+          value: 5
+        }
+      ],
+      floorList: [
+        {
+          key: "不限",
+          value: 1
+        },
+        {
+          key: "低楼层",
+          value: 2
+        },
+        {
+          key: "中楼层",
+          value: 3
+        },
+        {
+          key: "高楼层",
+          value: 4
+        },
+        {
+          key: "不要一楼",
+          value: 5
+        },
+        {
+          key: "不要顶楼",
+          value: 6
         }
       ]
     };

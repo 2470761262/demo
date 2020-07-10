@@ -1,5 +1,10 @@
 <template>
-  <fixedPopup v-bind="$attrs" v-on="$listeners" @confirmEmit="fromSubmit()">
+  <fixedPopup
+    v-bind="$attrs"
+    v-on="$listeners"
+    @confirmEmit="fromSubmit()"
+    :loading="isLoading"
+  >
     <div class="useless-content">
       <div
         class="input-group is-required"
@@ -31,6 +36,7 @@
           clearable
           type="textarea"
           rows="8"
+          maxlength="200"
           placeholder="请填写客户理由"
           data-vv-name="uselessReason"
           data-vv-as="客户理由"
@@ -53,6 +59,7 @@
 
 <script>
 export default {
+  inject: ["customerId"],
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
   },
@@ -61,20 +68,55 @@ export default {
       useless: "",
       uselessReason: "",
       uselessList: [
-        { key: "外公司成交", value: 1 },
-        { key: "暂不考虑", value: 2 },
-        { key: "疑似同业", value: 3 },
-        { key: "其他原因", value: 4 }
-      ]
+        { key: "外公司成交", value: 11 },
+        { key: "暂不考虑", value: 12 },
+        { key: "疑似同业", value: 13 },
+        { key: "其他原因", value: 14 }
+      ],
+      isLoading: false
     };
   },
   methods: {
     fromSubmit() {
+      let that = this;
+      let postData = {
+        id: this.customerId,
+        plateChangeReason: 1,
+        plateChangeSubReason: this.useless,
+        plateChangeRemark: this.uselessReason
+      };
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.$emit("update:visible", false);
+          that.isLoading = true;
+          that.$api
+            .post({
+              url: "/saleCustomerDetail/turnInvalid",
+              data: postData,
+              qs: true,
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+              }
+            })
+            .then(e => {
+              if (e.data.code == 200) {
+                this.$message({
+                  type: "success",
+                  message: "客户转无效成功"
+                });
+                that.close();
+              }
+            })
+            .catch(e => {
+              that.isLoading = false;
+              if (e.response != undefined) {
+                that.$message(e.response.data.message);
+              }
+            });
         }
       });
+    },
+    close() {
+      this.$emit("update:visible", false);
     }
   }
 };
