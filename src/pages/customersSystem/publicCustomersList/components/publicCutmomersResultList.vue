@@ -168,7 +168,7 @@ export default {
       var that = this;
       this.$api
         .post({
-          url: "/saleCustomer/listMyCustomers",
+          url: "/saleCustomer/listPublicCustomers",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           data: {
