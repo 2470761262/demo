@@ -61,6 +61,9 @@
     font-size: @font16;
     text-align: center;
   }
+  /deep/.tab-cell-left {
+    text-align: left;
+  }
   .tab-page-flex {
     display: flex;
     .tab-image {
@@ -218,7 +221,7 @@
         :data="renderList"
         :default-sort="{ prop: 'price', order: 'descending' }"
         header-cell-class-name="header-tab-cell"
-        cell-class-name="tab-cell-item"
+        :cell-class-name="tabDirection"
         default-expand-all
         @sort-change="sortMethod"
         @row-dblclick="navDetailt"
@@ -368,6 +371,12 @@ export default {
   },
   methods: {
     /**
+     * @example: 设置Tab方向
+     */
+    tabDirection({ column }) {
+      return column.label == "楼盘名称" ? "tab-cell-left" : "tab-cell-item";
+    },
+    /**
      * @example: 双击前往详情
      */
     navDetailt(item) {
@@ -380,13 +389,18 @@ export default {
      * @example: 远程排序
      */
     sortMethod(item) {
-      switch (item.order) {
+      let order = JSON.parse(JSON.stringify(item));
+      //户型修改为prop为rooms
+      if (item.column.property == "houseType") {
+        order.prop = "rooms";
+      }
+      switch (order.order) {
         case "ascending":
-          this.form.sortColumn = item.prop;
+          this.form.sortColumn = order.prop;
           this.form.sortType = 0;
           break;
         case "descending":
-          this.form.sortColumn = item.prop;
+          this.form.sortColumn = order.prop;
           this.form.sortType = 1;
       }
     },

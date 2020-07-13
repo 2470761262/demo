@@ -2,12 +2,21 @@
 .page-content {
   flex: 1;
   background: #fff;
+  display: flex;
+  flex-direction: column;
+  .scroll-tab {
+    flex: 1;
+    height: 0;
+    overflow: auto;
+  }
 }
 </style>
 <template>
   <div class="page-content">
     <house-result-list></house-result-list>
-    <house-list-house-pair></house-list-house-pair>
+    <div class="scroll-tab">
+      <house-list-house-pair></house-list-house-pair>
+    </div>
   </div>
 </template>
 <script>

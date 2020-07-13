@@ -13,8 +13,9 @@
       top: 80PX;
       //  left: 0;
       //  right: 0;
-      width: 100%;
+      //  width: 100%;
       background: #fff;
+      // prettier-ignore
     }
   }
   .head-nav-type {
@@ -250,18 +251,8 @@
       .search-item-right {
         display: flex;
         align-items: center;
-        &.is-samall {
-          flex-wrap: wrap;
-          @media screen and (max-width: 1450px) {
-            .input-group,
-            .btn-primary-back {
-              // margin-bottom: 0px;
-              margin-top: 10px;
-            }
-            .data-content {
-              flex: 0 0 100%;
-            }
-          }
+        /deep/.el-radio-group {
+          white-space: nowrap;
         }
         // prettier-ignore
         @height26: 26PX;
@@ -574,8 +565,8 @@
       </div>
     </div>
     <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div>
-    <!-- 查询盒子 -->
-    <div class="search-content">
+
+    <div class="search-content no-frist" v-show="panelChange">
       <!-- 范围 -->
       <div class="search-content-item">
         <div class="search-item-title">范围</div>
@@ -616,12 +607,10 @@
           </el-radio-group>
         </div>
       </div>
-    </div>
-    <div class="search-content no-frist" v-show="panelChange">
       <!-- 价钱 -->
       <div class="search-content-item">
-        <div class="search-item-title">价钱</div>
-        <div class="search-item-right is-samall">
+        <div class="search-item-title">价格</div>
+        <div class="search-item-right ">
           <div class="data-content">
             <el-radio-group
               v-model="price.radioCheck"
@@ -633,6 +622,7 @@
                   'maxPrice',
                   'price',
                   $event,
+                  true,
                   'name'
                 )
               "
@@ -680,7 +670,7 @@
       <!-- 面积 -->
       <div class="search-content-item">
         <div class="search-item-title">面积</div>
-        <div class="search-item-right is-samall">
+        <div class="search-item-right ">
           <div class="data-content">
             <el-radio-group
               v-model="area.radioCheck"
@@ -692,6 +682,7 @@
                   'maxInArea',
                   'area',
                   $event,
+                  true,
                   'name'
                 )
               "
@@ -739,7 +730,7 @@
       <!-- 房型 -->
       <div class="search-content-item" v-if="RoomsList.length != 0">
         <div class="search-item-title">房型</div>
-        <div class="search-item-right is-samall">
+        <div class="search-item-right ">
           <div class="data-content">
             <el-radio-group
               v-model="room.value"
@@ -785,7 +776,7 @@
       <!-- 楼层 -->
       <div class="search-content-item">
         <div class="search-item-title">楼层</div>
-        <div class="search-item-right is-samall">
+        <div class="search-item-right ">
           <div class="data-content">
             <el-radio-group
               v-model="floor.radioCheck"
@@ -1112,7 +1103,7 @@ export default {
       buildForList: [], //楼盘select数据
       buildLoading: false, //楼盘select loading
       typeActiveIndex: 0, //nav类型激活Index
-      panelChange: true, //折叠面板
+      panelChange: false, //折叠面板
       RegionList: [], //商圈
       faceList: [], //朝向
       areaList: [], //面积
@@ -1159,9 +1150,8 @@ export default {
 
     scrollFixed(e) {
       this.isFixedHeight = getComputedStyle(this.$refs.filexContent).height;
-      //   const elMain = document.querySelector(".el-main").offsetLeft;
-      //   console.log();
-      //  this.$refs.filexContent.style.cssText = `left:${elMain}px;right:0;`;
+      const left = document.querySelector(".el-main").offsetLeft;
+      this.$refs.filexContent.style.width = window.innerWidth - left + "px";
     },
     /**
      * @example: 顶部Tab点击
@@ -1207,6 +1197,10 @@ export default {
      * @param {Number}  index
      */
     changeNavTypeIndex(index) {
+      if (index == 1 || index == 4) {
+        this.navToPageBtn({ private: false });
+        return;
+      }
       if (index != this.typeActiveIndex) {
         this.typeActiveIndex = index;
       }
@@ -1414,12 +1408,20 @@ export default {
      * @param { string } field 同上
      * @param { string } event change结果
      */
-    packCheckChange(scopeList, min, max, field, event, properName = "title") {
+    packCheckChange(
+      scopeList,
+      min,
+      max,
+      field,
+      event,
+      IsParse = false,
+      properName = "title"
+    ) {
       const [result] = this[scopeList].filter((fItem, fIndex) => {
         if (fItem[properName] == event) return fItem;
       });
 
-      const { value } = JSON.parse(JSON.stringify(result));
+      const value = IsParse ? JSON.parse(result.value) : result.value;
 
       this.form[min] = value[min];
 
