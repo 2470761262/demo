@@ -37,9 +37,8 @@ export default {
         houseType: [],
         renovation: [],
         purpose: [],
-        //   orientation: [],
-        primarySchool: "",
-        middleSchool: "",
+        primarySchool: [],
+        middleSchool: [],
         comId: "",
         cbId: "",
         roomNo: "",
@@ -49,15 +48,15 @@ export default {
         maxInArea: "",
         minPrice: "",
         maxPrice: "",
-        //   maxDownPayment: "",
-        //   minDownPayment: "",
         face: [],
         sortColumn: "price",
         sortType: 1,
-        keyWord: "" //keyword
-        // isOnly: "",
-        // keyOwner: "",
-        // elevator: ""
+        keyWord: "", //keyword
+        isOnly: "", //是否独家
+        isKey: "", //是否钥匙
+        //  isBet: "", //是否对赌
+        isReal: "", //是否实勘
+        isElevator: "" //是否电梯
       }
     };
   }

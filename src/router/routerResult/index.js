@@ -5,7 +5,9 @@ export default [
     meta: {
       keepAlive: true,
       title: "首页",
-      isScrollTop: true //是否需要记录坐标
+      isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
     },
     component: () =>
       import(

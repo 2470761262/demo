@@ -1,6 +1,5 @@
 <style lang="less" scoped>
 .tab-page {
-  padding: 0 24px;
   /deep/.header-tab-cell {
     height: 64px;
     font-size: @font16;
@@ -8,13 +7,59 @@
     color: rgba(48, 49, 51, 1);
     font-weight: normal;
     .cell {
+      justify-content: center;
       display: flex;
       align-items: center;
+    }
+  }
+  .tab-filter-radio {
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 46px;
+    margin-bottom: 10px;
+    .filter-radio-item {
+      display: flex;
+      cursor: pointer;
+      // prettier-ignore
+      margin-left: 30PX;
+      align-items: center;
+      input {
+        display: none;
+      }
+      input[type="checkbox"]:checked + span {
+        &::before {
+          content: "\2713";
+          color: black;
+          font-size: @font16;
+        }
+      }
+      &:first-child {
+        margin-left: 0;
+      }
+      span {
+        font-size: @font16;
+        color: #606266;
+        display: flex;
+        align-items: center;
+        &::before {
+          content: "";
+          // prettier-ignore
+          width: 16PX;
+          // prettier-ignore
+          height: 16PX;
+          // prettier-ignore
+          line-height: 16PX;
+          margin-right: 8px;
+          text-align: center;
+          border: 1px solid #f0f2f5;
+        }
+      }
     }
   }
   /deep/.tab-cell-item {
     height: 64px;
     font-size: @font16;
+    text-align: center;
   }
   .tab-page-flex {
     display: flex;
@@ -50,7 +95,7 @@
 /deep/.el-table__body-wrapper,
 /deep/.el-table__fixed-body-wrapper {
   .el-table__expanded-cell {
-    padding: 0 0 10px 10px;
+    padding: 0 0 10px 28px;
   }
 
   .el-table__expand-column {
@@ -76,8 +121,14 @@
 }
 .tab-com-item {
   margin-top: 10px;
+  .tab-house-title {
+    font-size: @font16;
+    font-weight: 600;
+    color: black;
+  }
   .tab-houseno {
     margin-top: 10px;
+    font-size: @font12;
   }
 }
 
@@ -108,6 +159,44 @@
 </style>
 <template>
   <div class="tab-page">
+    <div class="tab-filter-radio">
+      <label class="filter-radio-item">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isKey"
+        />
+        <span>钥匙</span>
+      </label>
+      <label class="filter-radio-item">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isOnly"
+        />
+        <span>独家</span>
+      </label>
+      <label class="filter-radio-item">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isReal"
+        />
+        <span>实勘</span>
+      </label>
+      <label class="filter-radio-item">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isElevator"
+        />
+        <span>电梯</span>
+      </label>
+    </div>
     <div class="tab-page-flex">
       <div class="tab-image">
         <div class="tab-image-head">户型图</div>
@@ -192,7 +281,7 @@ export default {
           formart: item => {
             return (
               <div class="tab-com-item">
-                <div>{item.communityName}</div>
+                <div class="tab-house-title">{item.communityName}</div>
                 <div class="tab-houseno">{item.houseNo}</div>
               </div>
             );
@@ -201,36 +290,45 @@ export default {
         {
           prop: "houseType",
           label: "户型",
-          order: false,
+          order: "custom",
           formart: item =>
             (item.rooms || 0) +
             "-" +
             (item.hall || 0) +
             "-" +
-            (item.toilet || 0)
+            (item.toilet || 0) +
+            "-" +
+            (item.balcony || 0)
         },
         {
           prop: "inArea",
           label: "面积",
           order: "custom",
-          formart: item => item.inArea + "m²"
+          formart: item => item.inArea + "平"
         },
         {
           prop: "price",
           label: "总价",
           order: "custom",
-          formart: item => item.price + "万元"
+          formart: item => item.price + "万"
         },
         {
           prop: "unitPrice",
           label: "单价",
           order: "custom",
-          format: item => item.unitPrice + "元/㎡"
+          formart: item => item.unitPrice + "元/平"
         },
         {
-          prop: "floor",
-          label: "楼层",
-          order: false
+          prop: "seenNumRecent",
+          label: "30天带看",
+          order: "custom",
+          formart: item => item.seenNumRecent || "0"
+        },
+        {
+          prop: "saleReson",
+          label: "出售原因",
+          order: false,
+          formart: item => item.saleReson || "暂无"
         },
         {
           prop: "addTime",

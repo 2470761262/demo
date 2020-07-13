@@ -1,19 +1,61 @@
 <style lang="less" scoped>
 @import "~@/pages/customersSystem/addCustomers/less/form.less";
 .page-result-content {
-  padding: 0 24px;
+  //padding: 0 24px;
   background: #fff;
+  .page-posi-sticky {
+    position: static;
+    background: #fff;
+    z-index: 100;
+    &.filex-content {
+      position: fixed;
+      z-index: 100;
+      // prettier-ignore
+      top: 80PX;
+      width: 100%;
+      background: #fff;
+    }
+  }
+  .head-nav-type {
+    background: #f6f7fb;
+    display: flex;
+    border-bottom: 1px solid #f0f2f5;
+    .nav-type-item {
+      font-size: @font16;
+      font-weight: 600;
+      color: #606266;
+      cursor: pointer;
+      // prettier-ignore
+      padding: 20PX 55PX;
+      &.active {
+        color: @backgroud;
+        border-left: 1px solid #f0f2f5;
+        border-right: 1px solid #f0f2f5;
+        background: #fff;
+      }
+      &:first-child {
+        border-left: none;
+      }
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
   .page-result-head {
     display: flex;
     // justify-content: space-between;
     //padding: 24px 0;
-    padding-top: 24px;
+    margin-top: 15px;
+    padding: 0 15px;
     .head-content-input {
-      width: 494px;
-      height: 48px;
+      // prettier-ignore
+      width: 455PX;
+      // prettier-ignore
+      height: 40PX;
       display: flex;
       .content-input {
-        width: 411px;
+        // prettier-ignore
+        width: 390PX;
         border: 1px solid rgba(206, 206, 206, 1);
         border-top-left-radius: 4px;
         border-bottom-left-radius: 4px;
@@ -25,6 +67,7 @@
         font-size: @font16;
         &::placeholder {
           font-size: @font16;
+          color: #d2d2d2;
         }
       }
       .inquire-content {
@@ -41,18 +84,22 @@
     }
     .head-fun-right {
       flex: 1;
-      text-align: right;
-      .fun-right-border {
-        .btn-primary {
-          min-width: 115px;
-          margin-left: 0;
-          border: none;
-          color: @backgroud;
-          border-radius: 4px;
-          height: 100%;
-          &.active {
-            background: @backgroud;
-          }
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      margin-top: 15px;
+      .btn-primary {
+        display: flex;
+        align-items: center;
+        margin-left: 30px;
+        font-size: @font16;
+        border-radius: 30px;
+        padding-top: 7px;
+        padding-bottom: 7px;
+        height: auto;
+        i {
+          font-size: @font16;
+          margin-right: 5px;
         }
       }
     }
@@ -64,15 +111,20 @@
       content: "";
       display: block;
       height: 1px;
-      margin-top: 13px;
+      // prettier-ignore
+      margin-top: 9PX;
       background: rgba(240, 242, 245, 1);
     }
     .tab-content-nav {
       display: flex;
-      margin-top: 32px;
+      // prettier-ignore
+      margin-top: 15PX;
+      // prettier-ignore
+      padding: 0 15PX;
       .tab-content-item {
-        font-size: @font16;
-        margin-right: 32px;
+        font-size: @font18;
+        // prettier-ignore
+        margin-right: 32PX;
         position: relative;
         color: rgba(96, 98, 102, 1);
         cursor: pointer;
@@ -81,16 +133,29 @@
         }
         &.active {
           color: @backgroud;
-          font-weight: bold;
-
+          //   font-weight: bold;
+          display: flex;
+          align-items: center;
           &::after {
             content: "";
             position: absolute;
-            bottom: -15px;
+            // prettier-ignore
+            bottom: -10PX;
+
             height: 2px;
             background: @backgroud;
             width: 100%;
             left: 0;
+          }
+          &::before {
+            content: "";
+            margin-right: 8px;
+            background: @backgroud;
+            // prettier-ignore
+            width: 6PX;
+            // prettier-ignore
+            height: 6PX;
+            border-radius: 50%;
           }
         }
         &:last-child {
@@ -102,45 +167,84 @@
   // <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
   .cascader-content {
     display: flex;
-    padding: 24px 0;
+    // prettier-ignore
+    padding: 15PX;
+
     border-bottom: 1px solid #f0f2f5;
+    // prettier-ignore
+    @height35:35PX;
     .input-content {
       @width: auto;
-      margin-right: 24px;
+      // prettier-ignore
+      margin-right: 18PX;
+      height: @height35 !important;
       &:last-child {
         margin-right: 0;
       }
       .step-content > .input-group > .input-content;
+      &.input_180 {
+        // prettier-ignore
+        width: 180PX;
+      }
+      &.input_120 {
+        // prettier-ignore
+        width: 120PX;
+      }
+      &.input_102 {
+        // prettier-ignore
+        width: 102PX;
+      }
+      /deep/.el-input__inner {
+        text-align: center;
+        background: #f0f7fc;
+        border: none;
+        font-size: @font14;
+        height: @height35;
+        line-height: @height35;
+        // box-shadow: ;
+        &::placeholder {
+          font-size: @font14;
+        }
+      }
+      /deep/.el-icon-circle-close {
+        line-height: @height35 !important;
+      }
     }
     .cascader-content-build {
-      margin-right: 40px;
+      // prettier-ignore
+      margin-right: 18PX;
     }
     .btn-primary-back {
       margin-left: 0;
+      height: @height35;
+      padding: 0 35px;
     }
   }
   .search-content {
     &.no-frist {
       .search-content-item {
         &:first-child {
-          margin-top: 19px;
+          // prettier-ignore
+          margin-top: 19PX;
         }
       }
     }
     .search-content-item {
       display: flex;
-      margin-top: 19px;
+      // prettier-ignore
+      margin-top: 20PX;
       align-items: center;
+      padding: 0 15px;
       &:first-child {
-        margin-top: 24px;
+        margin-top: 18px;
       }
 
       .search-item-title {
-        width: 80px;
-        font-size: @font14;
-        font-weight: bold;
-        color: rgba(48, 49, 51, 1);
+        margin-right: 20px;
+        font-size: @font16;
+        color: black;
         flex-shrink: 0;
+        margin-bottom: 5px;
       }
       .search-item-right {
         display: flex;
@@ -158,13 +262,18 @@
             }
           }
         }
+        // prettier-ignore
+        @height26: 26PX;
         .input-group {
           @width: auto;
           margin-bottom: 5px;
+
           .step-content > .input-group;
           .input-content {
-            width: 110px;
-            height: 36px;
+            // prettier-ignore
+            width: 90PX;
+
+            height: @height26;
             @media screen and (max-width: 1450px) {
               width: 140px;
             }
@@ -175,41 +284,48 @@
           margin-top: 0;
 
           /deep/.el-input__inner {
-            line-height: 36px !important;
-            height: 36px !important;
+            line-height: @height26 !important;
+            height: @height26 !important;
             padding-left: 10px;
-            font-size: @font14 !important;
-            padding-right: 36px !important;
+            font-size: @font12 !important;
+            padding-right: 24px !important;
             //min-width: 110px;
             &::placeholder {
-              font-size: @font14 !important;
+              font-size: @font12 !important;
               //  line-height: 34px !important;
             }
           }
           .suffix-tips {
-            line-height: 36px !important;
-            font-size: @font14 !important;
+            line-height: @height26 !important;
+            font-size: @font12 !important;
             margin-right: 8px !important;
           }
         }
         /deep/.el-radio {
           margin-bottom: 5px;
+          &:first-child {
+            margin-right: 25px;
+          }
+          margin-right: 41px;
           .el-radio__input {
             display: none;
           }
           &.is-checked {
-            border-color: @backgroud !important;
+            background: @backgroud;
+            .el-radio__label {
+              color: #fff;
+            }
           }
           &.is-bordered {
-            padding: 9px 16px;
             height: auto;
-            margin-right: 24px;
+            padding: 4px 5px;
+            //  margin-right: 30px;
             margin-left: 0;
-            border-color: transparent;
+            border: none;
           }
           .el-radio__label {
             padding: 0;
-            font-size: @font14;
+            font-size: @font16;
           }
         }
         /deep/.el-checkbox-group {
@@ -218,34 +334,41 @@
         /deep/.el-checkbox {
           margin-right: 24px;
           .el-checkbox__label {
-            font-size: @font14;
+            font-size: @font16;
           }
         }
+
         .select-content {
           margin-bottom: 5px;
           .input-content {
-            @width: auto;
-            margin-right: 24px;
-            height: 36px !important;
+            // prettier-ignore
+            @width: 140PX;
+            // prettier-ignore
+            margin-right: 24PX;
+            // prettier-ignore
+            height: @height26 !important;
             &:last-child {
               margin-right: 0;
             }
             .step-content > .input-group > .input-content;
             /deep/.el-input__inner {
-              height: 36px !important;
-              line-height: 36px !important;
-              font-size: @font14 !important;
+              height: @height26 !important;
+              line-height: @height26 !important;
+              font-size: @font12 !important;
               &::placeholder {
-                font-size: @font14 !important;
+                font-size: @font12!important;
               }
             }
             /deep/.el-input__icon {
-              line-height: 36px !important;
+              line-height: @height26 !important;
             }
           }
         }
         .btn-primary-back {
-          height: 36px;
+          // prettier-ignore
+          height: 26PX;
+          // prettier-ignore
+          padding: 0 6PX;
           margin-bottom: 5px;
           font-size: @font14;
           flex-shrink: 0;
@@ -287,24 +410,27 @@
   .options-item;
   .el-select-dropdown__item {
     display: flex;
+    // prettier-ignore
+    height: 40PX;
     /deep/span {
       flex: 1;
       width: 0;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      font-size: @font14;
     }
   }
 }
 </style>
 <template>
   <div class="page-result-content">
-    <!-- 房屋类型 -->
-    <div class="tab-content">
-      <div class="tab-content-nav">
+    <div class="page-posi-sticky filex-content" ref="filexContent">
+      <!-- 房屋类型 -->
+      <div class="head-nav-type">
         <div
-          class="tab-content-item small"
-          :class="{ active: 0 == index }"
+          class="nav-type-item"
+          :class="{ active: index == 0 }"
           v-for="(item, index) in navToPage"
           :key="index"
           @click="navToPageBtn(item)"
@@ -312,135 +438,141 @@
           {{ item.title }}
         </div>
       </div>
-    </div>
-    <!-- 头部按钮, 搜索 -->
-    <div class="page-result-head">
-      <div class="head-content-input">
-        <input
-          type="text"
-          placeholder="请输入房源编号,楼盘名称"
-          class="content-input"
-          v-model="houseNoOrName"
-        />
-        <button class="inquire-content" @click="handleHouseNoOrName">
-          <i class="el-icon-search"></i>
-        </button>
-      </div>
-      <div class="head-fun-right">
-        <button
-          class="btn-primary"
-          @click="navToPath('/buySellSystem/addHouse')"
-        >
-          录入房源
-        </button>
-        <button
-          class="btn-primary"
-          @click="navToPath('/buySellSystem/concernCommunity')"
-        >
-          管理入口
-        </button>
-        <button
-          class="btn-primary"
-          @click="navToPath('/buySellSystem/myAgent')"
-        >
-          我的房源
-        </button>
-      </div>
-    </div>
-    <!-- nav类型切换 -->
-    <div class="tab-content">
-      <div class="tab-content-nav">
-        <div
-          class="tab-content-item "
-          :class="{ active: typeActiveIndex == index }"
-          v-for="(item, index) in typeList"
-          :key="index"
-          @click="changeNavTypeIndex(index)"
-        >
-          {{ item.label }}
+      <!-- 头部按钮, 搜索 -->
+      <div class="page-result-head">
+        <div class="head-content-input">
+          <input
+            type="text"
+            placeholder="请输入房源编号,楼盘名称"
+            class="content-input"
+            v-model="houseNoOrName"
+          />
+          <button class="inquire-content" @click="handleHouseNoOrName">
+            <i class="el-icon-search"></i>
+          </button>
+        </div>
+        <div class="head-fun-right">
+          <button
+            class="btn-primary"
+            @click="navToPath('/buySellSystem/addHouse')"
+          >
+            <i class="iconwodefangyuan iconfont"></i>
+            录入房源
+          </button>
+          <button
+            class="btn-primary"
+            @click="navToPath('/buySellSystem/concernCommunity')"
+          >
+            <i class="iconwodefangyuan iconfont"></i>
+            管理入口
+          </button>
+          <button
+            class="btn-primary"
+            @click="navToPath('/buySellSystem/myAgent')"
+          >
+            <i class="iconwodefangyuan iconfont"></i>
+            我的房源
+          </button>
         </div>
       </div>
-    </div>
-    <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
-    <div class="cascader-content">
-      <div class="cascader-content-build">
-        <!-- 楼栋 -->
-        <el-select
-          v-model="buildOptData"
-          placeholder="请输入楼盘名称"
-          class="input-content"
-          clearable
-          filterable
-          remote
-          popper-class="options-custom-item"
-          @focus="remoteBuildInput"
-          @change="remoteBuildChange"
-          :remote-method="buildRemoteMethod"
-          :loading="buildLoading"
-          value-key="value"
-        >
-          <el-option
-            v-for="item in buildForList"
-            :key="item.value"
-            :label="item.name"
-            :value="item"
+      <!-- nav类型切换 -->
+      <div class="tab-content">
+        <div class="tab-content-nav">
+          <div
+            class="tab-content-item "
+            :class="{ active: typeActiveIndex == index }"
+            v-for="(item, index) in typeList"
+            :key="index"
+            @click="changeNavTypeIndex(index)"
           >
-          </el-option>
-        </el-select>
-        <!-- 栋座 -->
-        <el-select
-          v-model="towerOptData"
-          placeholder="请输入栋座"
-          clearable
-          filterable
-          class="input-content"
-          popper-class="options-custom-item"
-          value-key="value"
-          remote
-          :remote-method="queryRoomNo"
-          @change="remoteRoomNoChange"
-          :loading="towerLoading"
-        >
-          <el-option
-            v-for="item in towerForList"
-            :key="item.value"
-            :label="item.name"
-            :value="item"
-          >
-          </el-option>
-        </el-select>
-        <!-- 房间号 -->
-        <el-select
-          v-model="roomOptData"
-          placeholder="请输入房间号"
-          clearable
-          filterable
-          popper-class="options-custom-item"
-          class="input-content"
-          remote
-          :remote-method="queryRoomData"
-          :loading="roomLoading"
-          value-key="value"
-          @change="queryRoomDataChange"
-        >
-          <el-option
-            v-for="item in roomForList"
-            :key="item.value"
-            :label="item.name"
-            :value="item"
-          >
-          </el-option>
-        </el-select>
+            {{ item.label }}
+          </div>
+        </div>
       </div>
+      <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
+      <div class="cascader-content">
+        <div class="cascader-content-build">
+          <!-- 楼栋 -->
+          <el-select
+            v-model="buildOptData"
+            placeholder="请输入楼盘名称"
+            class="input-content input_180"
+            clearable
+            filterable
+            remote
+            popper-class="options-custom-item"
+            @focus="remoteBuildInput"
+            @change="remoteBuildChange"
+            :remote-method="buildRemoteMethod"
+            :loading="buildLoading"
+            value-key="value"
+          >
+            <el-option
+              v-for="item in buildForList"
+              :key="item.value"
+              :label="item.name"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+          <!-- 栋座 -->
+          <el-select
+            v-model="towerOptData"
+            placeholder="请输入栋座"
+            clearable
+            filterable
+            class="input-content input_120"
+            popper-class="options-custom-item"
+            value-key="value"
+            remote
+            :remote-method="queryRoomNo"
+            @change="remoteRoomNoChange"
+            :loading="towerLoading"
+          >
+            <el-option
+              v-for="item in towerForList"
+              :key="item.value"
+              :label="item.name"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+          <!-- 房间号 -->
+          <el-select
+            v-model="roomOptData"
+            placeholder="请输入房号"
+            clearable
+            filterable
+            popper-class="options-custom-item"
+            class="input-content input_120"
+            remote
+            :remote-method="queryRoomData"
+            :loading="roomLoading"
+            value-key="value"
+            @change="queryRoomDataChange"
+          >
+            <el-option
+              v-for="item in roomForList"
+              :key="item.value"
+              :label="item.name"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+        </div>
 
-      <el-input
-        type="text"
-        v-model="agentPerName"
-        placeholder="跟单人姓名"
-        class="input-content"
-      />
-      <button class="btn-primary-back" @click="handleAgentPerName">搜索</button>
+        <el-input
+          type="text"
+          v-model="agentPerName"
+          placeholder="跟单人姓名"
+          class="input-content input_102"
+        />
+        <button class="btn-primary-back" @click="handleAgentPerName">
+          搜索
+        </button>
+      </div>
     </div>
+    <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div>
     <!-- 查询盒子 -->
     <div class="search-content">
       <!-- 范围 -->
@@ -495,20 +627,21 @@
               size="small"
               @change="
                 packCheckChange(
-                  'scopepricelist',
+                  'priceList',
                   'minPrice',
                   'maxPrice',
                   'price',
-                  $event
+                  $event,
+                  'name'
                 )
               "
             >
               <el-radio
-                :label="item.title"
+                :label="item.name"
                 border
-                v-for="item in scopepricelist"
-                :key="item.title"
-                >{{ item.title }}</el-radio
+                v-for="item in priceList"
+                :key="item.name"
+                >{{ item.name }}</el-radio
               >
             </el-radio-group>
           </div>
@@ -553,20 +686,21 @@
               size="small"
               @change="
                 packCheckChange(
-                  'arealist',
+                  'areaList',
                   'minInArea',
                   'maxInArea',
                   'area',
-                  $event
+                  $event,
+                  'name'
                 )
               "
             >
               <el-radio
-                :label="item.title"
+                :label="item.name"
                 border
-                v-for="item in arealist"
-                :key="item.title"
-                >{{ item.title }}</el-radio
+                v-for="item in areaList"
+                :key="item.name"
+                >{{ item.name }}</el-radio
               >
             </el-radio-group>
           </div>
@@ -778,12 +912,29 @@
       <div class="search-content-item" v-if="PrimarySchoolList.length != 0">
         <div class="search-item-title">小学</div>
         <div class="search-item-right">
-          <el-radio-group v-model="form.primarySchool" size="small">
+          <!-- <el-radio-group v-model="form.primarySchool" size="small">
             <el-radio label="" border>不限</el-radio>
             <el-radio border v-for="item in mathPrimary" :key="item.value">{{
               item.name
             }}</el-radio>
-          </el-radio-group>
+          </el-radio-group> -->
+          <el-radio
+            label="不限"
+            border
+            v-model="primarySchoolRadio"
+            @change="radioChange('primarySchool', true)"
+            >不限</el-radio
+          >
+          <el-checkbox-group
+            v-model="form.primarySchool"
+            @change="formCheckBoxChange('primarySchoolRadio')"
+          >
+            <el-checkbox
+              :label="item.name"
+              v-for="item in mathPrimary"
+              :key="item.value"
+            ></el-checkbox>
+          </el-checkbox-group>
           <div class="select-content">
             <el-select
               v-model="primarySchool"
@@ -792,7 +943,7 @@
               clearable
               filterable
               popper-class="options-custom-item"
-              @change="schoolChange('primarySchool')"
+              @change="schoolChange('primarySchool', $event)"
             >
               <el-option
                 class="options-item"
@@ -811,7 +962,7 @@
       <div class="search-content-item" v-if="MiddleSchoolList.length != 0">
         <div class="search-item-title">中学</div>
         <div class="search-item-right">
-          <el-radio-group v-model="form.middleSchool" size="small">
+          <!-- <el-radio-group v-model="form.middleSchool" size="small">
             <el-radio label="" border>不限</el-radio>
             <el-radio
               :label="item.value"
@@ -820,7 +971,24 @@
               :key="item.value"
               >{{ item.name }}</el-radio
             >
-          </el-radio-group>
+          </el-radio-group> -->
+          <el-radio
+            label="不限"
+            border
+            v-model="middleSchoolRadio"
+            @change="radioChange('middleSchool', true)"
+            >不限</el-radio
+          >
+          <el-checkbox-group
+            v-model="form.middleSchool"
+            @change="formCheckBoxChange('middleSchoolRadio')"
+          >
+            <el-checkbox
+              :label="item.name"
+              v-for="item in mathMiddle"
+              :key="item.value"
+            ></el-checkbox>
+          </el-checkbox-group>
           <div class="select-content">
             <el-select
               v-model="middleSchool"
@@ -829,7 +997,7 @@
               clearable
               filterable
               popper-class="options-custom-item"
-              @change="schoolChange('middleSchool')"
+              @change="schoolChange('middleSchool', $event)"
             >
               <el-option
                 class="options-item"
@@ -880,30 +1048,6 @@ const TYPELIST = [
     value: 4
   }
 ];
-//范围价钱
-const SCOPEPRICELIST = [
-  { title: "不限", value: { minPrice: "", maxPrice: "" } },
-  { title: "100万以下", value: { minPrice: "0", maxPrice: "100" } },
-  { title: "100-150万", value: { minPrice: "100", maxPrice: "150" } },
-  { title: "150-200万", value: { minPrice: "150", maxPrice: "200" } },
-  { title: "200-250万", value: { minPrice: "200", maxPrice: "250" } },
-  { title: "250-300万", value: { minPrice: "250", maxPrice: "300" } },
-  { title: "300-500万", value: { minPrice: "300", maxPrice: "500" } },
-  { title: "500-1000万", value: { minPrice: "500", maxPrice: "1000" } },
-  { title: "1000万以上", value: { minPrice: "1000", maxPrice: "" } }
-];
-//范围面积
-const AREALIST = [
-  { title: "不限", value: { minInArea: "", maxInArea: "" } },
-  { title: "50㎡以下", value: { minInArea: "0", maxInArea: "50" } },
-  { title: "50-70㎡", value: { minInArea: "50", maxInArea: "70" } },
-  { title: "70-90㎡", value: { minInArea: "70", maxInArea: "90" } },
-  { title: "90-110㎡", value: { minInArea: "90", maxInArea: "110" } },
-  { title: "110-130㎡", value: { minInArea: "110", maxInArea: "130" } },
-  { title: "130-150㎡", value: { minInArea: "130", maxInArea: "150" } },
-  { title: "150-200㎡", value: { minInArea: "150", maxInArea: "200" } },
-  { title: "200㎡以上", value: { minInArea: "200", maxInArea: "" } }
-];
 //楼层
 const FLOORLIST = [
   { title: "不限", value: { minFloor: "", maxFloor: "" } },
@@ -923,12 +1067,15 @@ export default {
   inject: ["form"],
   data() {
     return {
+      isFixedHeight: "0px",
       navToPage: NAVTOPAGE, //顶部跳转tab
       agentPerName: "", //跟单人姓名
       houseNoOrName: "", //房源编号,楼盘名称
       primarySchool: "", //小学select
       middleSchool: "", //中学Select
+      middleSchoolRadio: "不限", //中学不限
       purposeRadio: "不限", //房屋用途radio不限
+      primarySchoolRadio: "不限", //小学校radio
       renovationRadio: "不限", //装修radio不限
       faceRadio: "不限", //朝向radio不限
       price: {
@@ -953,8 +1100,7 @@ export default {
       },
       typeList: TYPELIST,
       floorlist: FLOORLIST, //楼层
-      scopepricelist: SCOPEPRICELIST, //范围价钱
-      arealist: AREALIST, //面积范围
+      // arealist: AREALIST, //面积范围
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
       roomLoading: false, //房间号select loading
@@ -968,6 +1114,8 @@ export default {
       panelChange: true, //折叠面板
       RegionList: [], //商圈
       faceList: [], //朝向
+      areaList: [], //面积
+      priceList: [], //价钱
       PrimarySchoolList: [], //小学
       MiddleSchoolList: [], //中学
       RoomsList: [], //房型
@@ -996,7 +1144,21 @@ export default {
   created() {
     this.mapGetPanelData();
   },
+  mounted() {
+    this.scrollFixed();
+    window.addEventListener("resize", this.scrollFixed);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.scrollFixed);
+  },
   methods: {
+    /**
+     * @example: 获取当前定位的高度,设置需要支撑的元素高度
+     */
+
+    scrollFixed(e) {
+      this.isFixedHeight = getComputedStyle(this.$refs.filexContent).height;
+    },
     /**
      * @example: 顶部Tab点击
      * @param {Object} item
@@ -1034,7 +1196,7 @@ export default {
      * @param {string} e
      */
     schoolChange(field, e) {
-      this.form[field] = e;
+      this.form[field].push(e);
     },
     /**
      * @example: 修改nav类型激活Index
@@ -1080,11 +1242,13 @@ export default {
       const panelMap = new Map([
         ["Region", "RegionList"],
         ["face", "faceList"],
-        ["PrimarySchoo", "PrimarySchoolList"],
+        ["PrimarySchool", "PrimarySchoolList"],
         ["MiddleSchool", "MiddleSchoolList"],
         ["Rooms", "RoomsList"],
         ["Renovation", "RenovationList"],
-        ["Purpose", "PurposeList"]
+        ["Purpose", "PurposeList"],
+        ["Price", "priceList"],
+        ["Area", "areaList"]
       ]);
       for (let item of panelMap.keys()) {
         this.queryConstant(item).then(([data, itemName]) => {
@@ -1246,12 +1410,12 @@ export default {
      * @param { string } field 同上
      * @param { string } event change结果
      */
-    packCheckChange(scopeList, min, max, field, event) {
+    packCheckChange(scopeList, min, max, field, event, properName = "title") {
       const [result] = this[scopeList].filter((fItem, fIndex) => {
-        if (fItem.title == event) return fItem;
+        if (fItem[properName] == event) return fItem;
       });
 
-      const { value } = result;
+      const { value } = JSON.parse(JSON.stringify(result));
 
       this.form[min] = value[min];
 
@@ -1301,8 +1465,11 @@ export default {
      * @example: 朝向radio change 事件
      * @param {string } field
      */
-    radioChange(field) {
+    radioChange(field, isClear) {
       this.form[field] = [];
+      if (isClear) {
+        this[field] = "";
+      }
     },
     /**
      * @example: 朝向checkboxChange事件

@@ -39,6 +39,11 @@
     }
   }
 }
+.is-map-nav {
+  .el-main {
+    padding: 0;
+  }
+}
 .el-background {
   background: #e2e2e2 !important;
   width: auto !important;
@@ -63,12 +68,16 @@
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
-    <el-container class="page-cell-main-menu" id="page-cell-main">
+    <el-container
+      :class="{ 'is-map-nav': !isPad }"
+      class="page-cell-main-menu "
+      id="page-cell-main"
+    >
       <el-aside class="el-background" v-if="asideNavFlag">
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
-        <feedback ref="feedback" />
+        <feedback ref="feedback" v-show="isMapNav" />
         <div class="children-page">
           <!-- 二级页面 router-view -->
           <!-- <transition name="el">
@@ -112,6 +121,14 @@ export default {
       loginUserData: {},
       menuDatasInParent: []
     };
+  },
+  computed: {
+    isMapNav() {
+      return !this.$route.meta.isMapNav;
+    },
+    isPad() {
+      return !this.$route.meta.isPad;
+    }
   },
   methods: {
     /**
