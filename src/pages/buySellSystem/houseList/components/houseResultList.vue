@@ -4,7 +4,6 @@
   //padding: 0 24px;
   background: #fff;
   .page-posi-sticky {
-    position: static;
     background: #fff;
     z-index: 100;
     &.filex-content {
@@ -12,6 +11,8 @@
       z-index: 100;
       // prettier-ignore
       top: 80PX;
+      //  left: 0;
+      //  right: 0;
       width: 100%;
       background: #fff;
     }
@@ -1153,11 +1154,14 @@ export default {
   },
   methods: {
     /**
-     * @example: 获取当前定位的高度,设置需要支撑
+     * @example: 获取当前定位的高度，
      */
 
     scrollFixed(e) {
       this.isFixedHeight = getComputedStyle(this.$refs.filexContent).height;
+      //   const elMain = document.querySelector(".el-main").offsetLeft;
+      //   console.log();
+      //  this.$refs.filexContent.style.cssText = `left:${elMain}px;right:0;`;
     },
     /**
      * @example: 顶部Tab点击
