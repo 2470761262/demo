@@ -1153,7 +1153,7 @@ export default {
   },
   methods: {
     /**
-     * @example: 获取当前定位的高度,设置需要支撑的元素高度
+     * @example: 获取当前定位的高度,设置需要支撑
      */
 
     scrollFixed(e) {

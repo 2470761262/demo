@@ -199,7 +199,7 @@
     </div>
     <div class="tab-page-flex">
       <div class="tab-image">
-        <div class="tab-image-head">户型图</div>
+        <div class="tab-image-head">房源图</div>
         <div
           class="tab-image-content"
           v-for="item in renderList"
