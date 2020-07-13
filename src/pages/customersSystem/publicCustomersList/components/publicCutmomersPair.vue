@@ -363,7 +363,7 @@
         <div class="SearchItem">
           <div class="InputItem">
             <input
-              placeholder="请输入客户姓名或联系方式、客源印象"
+              placeholder="请输入客户姓名或联系方式"
               v-model="form.KeyWord"
             />
           </div>
