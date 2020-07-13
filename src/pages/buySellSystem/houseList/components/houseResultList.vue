@@ -27,6 +27,9 @@
       font-weight: 600;
       color: #606266;
       cursor: pointer;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
       // prettier-ignore
       padding: 20PX 55PX;
       &.active {
@@ -69,7 +72,6 @@
         font-size: @font16;
         &::placeholder {
           font-size: @font16;
-          color: #d2d2d2;
         }
       }
       .inquire-content {
@@ -394,6 +396,12 @@
 }
 .btn-primary-back {
   .btn-primary-back();
+  &.btn-reset {
+    // prettier-ignore
+    height: 40PX;
+    // prettier-ignore
+    width: 65PX;
+  }
 }
 .options-item {
   .options-item;
@@ -443,6 +451,9 @@
             <i class="el-icon-search"></i>
           </button>
         </div>
+        <button class="btn-primary-back btn-reset" @click="resetData">
+          重置
+        </button>
         <div class="head-fun-right">
           <button
             class="btn-primary"
@@ -1145,6 +1156,30 @@ export default {
   },
   methods: {
     /**
+     * @example: 重置
+     */
+    resetData() {
+      //Object.assign(this.$data, this.$options.data.call(this));
+      Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
+      Object.assign(this.$data.price, this.$options.data().price);
+      Object.assign(this.$data.area, this.$options.data().area);
+      Object.assign(this.$data.floor, this.$options.data().floor);
+      Object.assign(this.$data.room, this.$options.data().room);
+      this.typeActiveIndex = 0;
+      this.roomOptData = {};
+      this.towerOptData = {};
+      this.buildOptData = {};
+      this.agentPerName = ""; //跟单人姓名
+      this.houseNoOrName = ""; //房源编号,楼盘名称
+      this.primarySchool = ""; //小学select
+      this.middleSchool = ""; //中学Select
+      this.middleSchoolRadio = "不限"; //中学不限
+      this.purposeRadio = "不限"; //房屋用途radio不限
+      this.primarySchoolRadio = "不限"; //小学校radio
+      this.renovationRadio = "不限"; //装修radio不限
+      this.faceRadio = "不限"; //朝向radio不限
+    },
+    /**
      * @example: 获取当前定位的高度，
      */
 
@@ -1197,7 +1232,7 @@ export default {
      * @param {Number}  index
      */
     changeNavTypeIndex(index) {
-      if (index == 1 || index == 4) {
+      if (index == 1 || index == 4 || index == 2) {
         this.navToPageBtn({ private: false });
         return;
       }
