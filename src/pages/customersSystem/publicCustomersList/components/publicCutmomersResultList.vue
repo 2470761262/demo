@@ -76,7 +76,7 @@
         :page-sizes="[15, 25, 35]"
         :page-size="limit"
         layout=" prev, pager, next, sizes,jumper"
-        :total="pageSum"
+        :total="dataCount"
       >
       </el-pagination>
     </div>
@@ -256,7 +256,7 @@ export default {
     navigateTo(row) {
       this.$router.push({
         path: "/customers/publicCustomersDetail",
-        params: { customerId: row.id }
+        query: { customerId: row.id }
       });
     },
     handleSizeChange(val) {

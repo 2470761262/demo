@@ -104,7 +104,11 @@
       <button class="AddFollow" @click="OpenAddFollow">写跟进</button>
     </div>
     <div class="FollowCardZone">
-      <div class="FollowCell" v-for="(item, index) in FollowData" :key="index">
+      <div
+        class="FollowCell"
+        v-for="(item, index) in FollowData.data"
+        :key="index"
+      >
         <div class="cellTilRow">
           <div class="cellTil">跟进信息</div>
           <div :class="index == 0 ? 'fristCellDot' : 'cellDot'">
@@ -114,7 +118,7 @@
         </div>
         <div
           class="cellMsgBox"
-          :class="index == FollowData.length - 1 ? 'lastCellMsgBox ' : ''"
+          :class="index == FollowData.data.length - 1 ? 'lastCellMsgBox ' : ''"
         >
           <div class="cellMsg">
             <div class="cellMsgRow">
@@ -282,10 +286,9 @@ const defaultListModle = [
   }
 ];
 export default {
-  inject: ["customerId"],
+  inject: ["customerId", "FollowData"],
   data() {
     return {
-      FollowData: [],
       addFollowFlag: false,
       typeList: typeListModle,
       wayList: wayListModle,
@@ -298,31 +301,9 @@ export default {
       }
     };
   },
-  mounted() {
-    this.apply();
-  },
+  mounted() {},
   methods: {
-    apply() {
-      var that = this;
-      this.$api
-        .post({
-          url: "/saleCustomerDetail/getFollowAndTakeLook",
-          qs: true,
-          data: {
-            customerId: that.customerId
-          }
-        })
-        .then(e => {
-          console.log(e.data);
-          let json = e.data;
-          if (json.code == 200) {
-            this.FollowData = json.data.saleList;
-          } else if (json.code == 400) {
-            alert(json.message);
-            console.log("失败     " + json);
-          }
-        });
-    },
+    //添加跟进
     followUp() {
       var that = this;
       this.$api

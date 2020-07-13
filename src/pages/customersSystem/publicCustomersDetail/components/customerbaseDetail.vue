@@ -86,13 +86,13 @@
   <div class="part-Warp">
     <div class="MainMsgZone">
       <div class="MainMsgTil">
-        {{ cusbaseData.bsAgentCustomersTbl.Customers || "暂无" }}
+        {{ cusbaseData.Customers || "暂无" }}
         <span>
-          {{ cusbaseData.bsAgentCustomersTbl.sex == 0 ? "男" : "女" }}
+          {{ cusbaseData.sex == 0 ? "男" : "女" }}
         </span>
       </div>
       <div class="MainMsgOption">
-        <div class="White" @click="openFixed('ClaimFlag', function() {})">
+        <div class="White" @click="checkClaim()">
           认领客户
         </div>
         <el-popover placement="bottom" trigger="click" class="Green">
@@ -116,44 +116,44 @@
       <div class="SubMsgRow">
         <div class="SubMsgTil">委托来源：</div>
         <div class="SubMsgText">
-          {{ cusbaseData.bsAgentCustomersTbl.Source || "暂无" }}
+          {{ cusbaseData.Source || "暂无" }}
         </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">客户需求：</div>
         <div class="SubMsgText">
-          {{ cusbaseData.customerRequire[0] || "暂无" }}
+          {{ cusbaseData.customerRequire || "暂无" }}
         </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">委托时间：</div>
         <div class="SubMsgText">
-          {{ cusbaseData.bsAgentCustomersTbl.AddTime || "暂无" }}
+          {{ cusbaseData.AddTime || "暂无" }}
         </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">购房意向：</div>
         <div class="SubMsgText">
-          {{ desireIntensity || "暂无" }}
+          {{ cusbaseData.desireIntensity || "暂无" }}
         </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">上次维护时间：</div>
         <div class="SubMsgText">
-          {{ cusbaseData.bsAgentCustomersTbl.maintainTime || "暂无" }}
+          {{ cusbaseData.maintainTime || "暂无" }}
         </div>
       </div>
       <div class="SubMsgRow">
         <div class="SubMsgTil">进池时间：</div>
         <div class="SubMsgText">
-          {{ cusbaseData.bsAgentCustomersTbl.ModTime || "暂无" }}
+          {{ cusbaseData.ModTime || "暂无" }}
         </div>
       </div>
     </div>
 
     <fixedPopup
-      :visible.sync="FlagList.ClaimFlag"
-      v-if="FlagList.ClaimFlag"
+      :visible.sync="ClaimFlag"
+      v-if="ClaimFlag"
       title="确认认领吗？"
       width="960px"
       typeClass="none"
@@ -165,11 +165,16 @@
             认领后，可以在客源列表页面中找到这个客户
           </div>
           <div class="foot-btn-content">
-            <el-button class="floot-btn close-btn" type="info">取消</el-button>
+            <el-button
+              class="floot-btn close-btn"
+              type="info"
+              @click="openOrcloseFix('ClaimFlag', false)"
+              >取消</el-button
+            >
             <el-button
               class="floot-btn success-btn"
               type="info"
-              @click="checkClaim()"
+              @click="claimOrMerge()"
               >提交</el-button
             >
           </div>
@@ -177,8 +182,8 @@
       </template>
     </fixedPopup>
     <fixedPopup
-      :visible.sync="FlagList.ClaimCheckFlag"
-      v-if="FlagList.ClaimCheckFlag"
+      :visible.sync="ClaimCheckFlag"
+      v-if="ClaimCheckFlag"
       title="提示"
       width="960px"
       typeClass="none"
@@ -190,17 +195,25 @@
             当前认领的客户已有在您的私客列表中，是否继续认领
           </div>
           <div class="foot-btn-content">
-            <el-button class="floot-btn close-btn" type="info">取消</el-button>
-            <el-button class="floot-btn success-btn" type="info"
-              >提交</el-button
+            <el-button
+              class="floot-btn close-btn"
+              type="info"
+              @click="openOrcloseFix('ClaimCheckFlag', false)"
+              >取消</el-button
+            >
+            <el-button
+              class="floot-btn success-btn"
+              type="info"
+              @click="openToMerge"
+              >确认</el-button
             >
           </div>
         </div>
       </template>
     </fixedPopup>
     <fixedPopup
-      :visible.sync="FlagList.MergeFlag"
-      v-if="FlagList.MergeFlag"
+      :visible.sync="MergeFlag"
+      v-if="MergeFlag"
       title="合并确认"
       width="554px"
       typeClass="none"
@@ -213,13 +226,13 @@
             姓名
           </div>
           <div class="ChooseItemRow">
-            <el-radio-group v-model="mergeCus.mergePer" class="RadioItemBox">
+            <el-radio-group v-model="mergeCus.Per" class="RadioItemBox">
               <div
                 class="RadioItem"
                 v-for="(item, index) in nameList"
                 :key="index"
               >
-                <el-radio :label="item.id" name="mergePer">
+                <el-radio :label="item.id" name="Per">
                   {{ item.customers }}
                 </el-radio>
               </div>
@@ -241,8 +254,16 @@
             </div>
           </div>
           <div class="foot-btn-content">
-            <el-button class="floot-btn close-btn" type="info">取消</el-button>
-            <el-button class="floot-btn success-btn" type="info"
+            <el-button
+              class="floot-btn close-btn"
+              type="info"
+              @click="openOrcloseFix('MergeFlag', false)"
+              >取消</el-button
+            >
+            <el-button
+              class="floot-btn success-btn"
+              type="info"
+              @click="toMerge()"
               >提交</el-button
             >
           </div>
@@ -254,21 +275,18 @@
 
 <script>
 export default {
-  inject: ["customerId"],
+  inject: ["customerId", "cusbaseData"],
   data() {
     return {
-      cusbaseData: [], //客户信息
       Source: "", //委托来源
       desireIntensity: "", //购房意向
       callList: [],
       nameList: [],
       phoneList: [],
-      FlagList: {
-        AddfollowFlag: false,
-        ClaimFlag: false,
-        ClaimCheckFlag: false,
-        MergeFlag: false
-      },
+      AddfollowFlag: false,
+      ClaimFlag: false,
+      ClaimCheckFlag: false,
+      MergeFlag: false,
       mergeCus: {
         Per: "",
         Name: "",
@@ -277,12 +295,8 @@ export default {
       }
     };
   },
-  created() {
-    console.log(this.FlagList);
-  },
-  mounted() {
-    this.apply();
-  },
+  created() {},
+  mounted() {},
   methods: {
     apply() {
       var that = this;
@@ -421,9 +435,8 @@ export default {
           }
         });
     },
-    openFixed(flag, callback) {
-      this.FlagList[flag] = true;
-      callback();
+    openOrcloseFix(key, val) {
+      this[key] = val;
     },
     checkClaim() {
       var that = this;
@@ -439,53 +452,74 @@ export default {
           console.log(e.data);
           let json = e.data;
           if (json.code == 200) {
+            this.ClaimFlag = true;
             //处理数据
             this.nameList = json.data.cus;
+            this.mergeCus.Per = this.nameList[0].id;
             this.phoneList = json.data.phones;
-            //确认是否能认领，若能,查看是否要合并
-            if (json.data.cus.length == 1) {
-              //无需合并，直接认领
-              this.mergeCus.Per = this.nameList[0].id;
-              console.log(this.mergeCus);
-              this.toClaim();
-            } else {
-              //需要合并 进行提示
-              this.FlagList.ClaimCheckFlag = true;
-            }
           } else if (json.code == 400) {
+            this.ClaimFlag = false;
+
             alert(json.message);
             console.log("失败     " + json);
           }
-          this.FlagList.ClaimFlag = false;
         });
     },
-    toClaim() {
-      //进行认领
-      var that = this;
-      this.$api
-        .post({
-          url: "/saleCustomerDetail/takeCus",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          data: {
-            customerId: that.mergeCus.Per
-            //  list: that.mergeCus.list
-          }
-        })
-        .then(e => {
-          console.log(e.data);
-          let json = e.data;
-          if (json.code == 200) {
-            alert("认领成功！");
-          } else if (json.code == 400) {
-            alert(json.message);
-            console.log("失败     " + json);
-          }
-        });
+    claimOrMerge() {
+      this.ClaimFlag = false;
+      if (this.nameList.length == 1) {
+        //无需合并，直接认领
+        console.log(this.mergeCus);
+        this.toClaim(true);
+      } else {
+        //需要合并 进行提示
+        this.ClaimCheckFlag = true;
+      }
+    },
+    openToMerge() {
+      this.ClaimCheckFlag = false;
+      this.MergeFlag = true;
     },
     toMerge() {
-      //进行合并
-      this.FlagList.MergeFlag = false;
+      //判断是否有选择
+      if (this.mergeCus.Per != "") {
+        //进行合并
+        this.MergeFlag = false;
+        let list = [];
+        for (let i = 0; i < this.nameList.length; i++) {
+          list.push(this.nameList[i].id);
+        }
+        list.splice(list.indexOf(this.mergeCus.Per), 1);
+        this.mergeCus.list = list;
+        console.log(this.mergeCus);
+        this.toClaim(true);
+      }
+    },
+    toClaim(flag) {
+      //进行认领
+      var that = this;
+      if (flag) {
+        this.$api
+          .post({
+            url: "/saleCustomerDetail/takeCus",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            data: {
+              customerId: that.mergeCus.Per,
+              list: that.mergeCus.list
+            }
+          })
+          .then(e => {
+            console.log(e.data);
+            let json = e.data;
+            if (json.code == 200) {
+              alert("认领成功！");
+            } else if (json.code == 400) {
+              alert(json.message);
+              console.log("失败     " + json);
+            }
+          });
+      }
     }
   }
 };
