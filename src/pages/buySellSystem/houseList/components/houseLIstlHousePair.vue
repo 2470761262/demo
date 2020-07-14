@@ -267,6 +267,7 @@
         :page-size="pageJson.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageJson.dataCount"
+        :current-page="pageJson.currentPage"
       >
       </el-pagination>
     </div>
@@ -419,6 +420,8 @@ export default {
       if (item.column.property == "houseType") {
         order.prop = "rooms";
       }
+      this.InitPageJson();
+      //this.pageJson.currentPage = 1;
       switch (order.order) {
         case "ascending":
           this.form.sortColumn = order.prop;
@@ -466,7 +469,8 @@ export default {
       this.pageJson = {
         total: 1,
         currentPage: 1,
-        pageSize: this.pageJson.pageSize
+        pageSize: this.pageJson.pageSize,
+        dataCount: 0
       };
     },
     getHouseData(value, initPage = true) {
