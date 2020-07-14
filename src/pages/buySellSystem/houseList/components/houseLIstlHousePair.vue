@@ -214,17 +214,21 @@
         <div class="tab-image-head">房源图</div>
         <div
           class="tab-image-content"
-          v-for="item in renderList"
-          :key="item.id"
+          v-for="(item, index) in renderList"
+          :key="index"
         >
           <el-image
-            lazy
+            :lazy="true"
             class="tab-image-item"
             :src="item.picUrl + '?x-oss-process=style/thumb'"
             @error="houseImageErorHandle(item)"
             scroll-container=".scroll-tab"
           >
           </el-image>
+          <!-- <gggg
+           
+          >
+          </gggg> -->
         </div>
       </div>
       <el-table
@@ -281,8 +285,12 @@ import {
   addResizeListener,
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
+//import gggg from "@/components/gggg.vue";
 export default {
   inject: ["form"],
+  components: {
+    // gggg
+  },
   data() {
     return {
       renderList: [],
@@ -482,7 +490,7 @@ export default {
       //     value[item] = value[item].join(",");
       //   }
       // });
-
+      if (initPage) this.InitPageJson();
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
@@ -496,7 +504,6 @@ export default {
         })
         .then(e => {
           let data = e.data;
-          if (initPage) this.InitPageJson();
           if (data.code == 200) {
             this.renderList = data.data.data;
             this.pageJson.total = data.data.pageSum;
