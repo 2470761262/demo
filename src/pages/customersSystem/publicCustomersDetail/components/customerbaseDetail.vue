@@ -485,7 +485,15 @@ export default {
             console.log(e.data);
             let json = e.data;
             if (json.code == 200) {
-              alert("认领成功！");
+              this.$message({
+                type: "success",
+                message: "认领成功！"
+              });
+              //跳转至私客页面
+              this.$router.push({
+                path: "/customers/customersDetail",
+                query: { customerId: this.customerId }
+              });
             } else if (json.code == 400) {
               alert(json.message);
               console.log("失败     " + json);
