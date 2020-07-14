@@ -38,9 +38,10 @@
       }
       span {
         font-size: @font16;
-        color: #606266;
+        color: black;
         display: flex;
         align-items: center;
+        font-weight: 600;
         &::before {
           content: "";
           // prettier-ignore
@@ -51,7 +52,7 @@
           line-height: 16PX;
           margin-right: 8px;
           text-align: center;
-          border: 1px solid #f0f2f5;
+          border: 1px solid black;
         }
       }
     }

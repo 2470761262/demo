@@ -1420,6 +1420,8 @@ export default {
     floorBtn() {
       if (this.form.isTopFloor == "1") {
         this.form.isTopFloor = "";
+        this.floor.radioCheck = "";
+        return;
       }
       this.submitFormBtn("floor", "minFloor", "maxFloor");
     },
@@ -1428,6 +1430,8 @@ export default {
         this.form.isTopFloor = "1";
         this.form.minFloor = "";
         this.form.maxFloor = "";
+        this.floor.minFloor = "";
+        this.floor.maxFloor = "";
       } else {
         if (this.form.isTopFloor == "1") {
           this.form.isTopFloor = "";
