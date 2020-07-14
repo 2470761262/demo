@@ -383,7 +383,10 @@ export default {
       deep: true,
       immediate: true,
       handler: function(value, ordvalue) {
-        this.getHouseData(JSON.parse(JSON.stringify(value)));
+        this.getHouseData(JSON.parse(JSON.stringify(value))).then(() => {
+          dom.querySelector(".scroll-tab").scrollTop = 0;
+          this.$parent.ListeningScroll();
+        });
       }
     }
   },
@@ -452,12 +455,7 @@ export default {
 
     currentchange(pageIndex) {
       this.pageJson.currentPage = pageIndex;
-      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false).then(
-        () => {
-          dom.querySelector(".scroll-tab").scrollTop = 0;
-          this.$parent.ListeningScroll();
-        }
-      );
+      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
     },
     addListener() {
       let rdList = dom.querySelectorAll(".el-table__body-wrapper tbody > tr");
