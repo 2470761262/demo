@@ -762,7 +762,9 @@
           <div class="InputItem">
             <input
               :placeholder="
-                form.searchType == '1' ? '请输入客户信息' : '请输入客源印象'
+                form.searchType == '1'
+                  ? '请输入客户姓名或联系方式'
+                  : '请输入客源印象'
               "
               v-model="form.keyWord"
             />
