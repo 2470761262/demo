@@ -60,11 +60,17 @@
     height: 64px;
     font-size: @font16;
     text-align: center;
+    .cell {
+      white-space: nowrap;
+    }
   }
   /deep/.tab-cell-left {
     text-align: left;
-
+    white-space: nowrap;
     padding-left: 32px;
+    cell {
+      white-space: nowrap;
+    }
   }
   .tab-page-flex {
     display: flex;
@@ -282,7 +288,7 @@ export default {
           prop: "communityName",
           label: "楼盘名称",
           order: false,
-          width: "260",
+          width: "230",
           formart: item => {
             return (
               <div class="tab-com-item">
@@ -346,8 +352,7 @@ export default {
         {
           prop: "addTime",
           label: "挂牌",
-          order: true,
-          width: "200"
+          order: true
         },
         {
           prop: "brokerName",

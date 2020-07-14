@@ -455,24 +455,24 @@
         <div class="head-fun-right">
           <button
             class="btn-primary"
-            @click="navToPath('/buySellSystem/addHouse')"
-          >
-            <i class="iconjichuguanli1 iconfont"></i>
-            录入房源
-          </button>
-          <button
-            class="btn-primary"
             @click="navToPath('/buySellSystem/concernCommunity')"
           >
-            <i class="icondaohang_wodefangyuan1 iconfont"></i>
+            <i class=" iconjichuguanli1 iconfont"></i>
             管理入口
           </button>
           <button
-            class="btn-primary house-back"
+            class="btn-primary "
             @click="navToPath('/buySellSystem/myAgent')"
           >
-            <i class="iconluru iconfont"></i>
+            <i class="icondaohang_wodefangyuan1 iconfont"></i>
             我的房源
+          </button>
+          <button
+            class="btn-primary house-back"
+            @click="navToPath('/buySellSystem/addHouse')"
+          >
+            <i class=" iconluru iconfont"></i>
+            录入房源
           </button>
         </div>
       </div>
