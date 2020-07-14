@@ -451,6 +451,9 @@ const rentWayList = [
 ];
 import { PURCHASEPURPOSE, DECORATION } from "@/util/constMap";
 export default {
+  $_veeValidate: {
+    validator: "new" // give me my own validator scope.
+  },
   data() {
     return {
       data: {

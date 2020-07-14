@@ -92,7 +92,7 @@ export default {
       }
     },
     // 提交按钮
-    async submit() {
+    submit() {
       let newxFlag = true;
       // newxFlag = await this.$refs.childreCom.validate();
       let that = this;
@@ -165,12 +165,12 @@ export default {
               item.requireType != 128 &&
               item.requireType != 256
             ) {
-              item.maxFirstPrice = multiplication(item.maxFirstPrice, 10000);
-              item.minFirstPrice = multiplication(item.minFirstPrice, 10000);
-              item.maxPrice = multiplication(item.maxPrice, 10000);
-              item.minPrice = multiplication(item.minPrice, 10000);
-              item.maxUnitPrice = multiplication(item.maxUnitPrice, 10000);
-              item.minUnitPrice = multiplication(item.minUnitPrice, 10000);
+              item.maxFirstPrice = item.maxFirstPrice * 10000;
+              item.minFirstPrice = item.minFirstPrice * 10000;
+              item.maxPrice = item.maxPrice * 10000;
+              item.minPrice = item.minPrice * 10000;
+              item.maxUnitPrice = item.maxUnitPrice * 10000;
+              item.minUnitPrice = item.minUnitPrice * 10000;
             }
           });
         }
@@ -202,12 +202,12 @@ export default {
                 item.requireType != 128 &&
                 item.requireType != 256
               ) {
-                item.maxFirstPrice = division(item.maxFirstPrice, 10000);
-                item.minFirstPrice = division(item.maxFirstPrice, 10000);
-                item.maxPrice = division(item.maxFirstPrice, 10000);
-                item.minPrice = division(item.maxFirstPrice, 10000);
-                item.maxUnitPrice = division(item.maxFirstPrice, 10000);
-                item.minUnitPrice = division(item.maxFirstPrice, 10000);
+                item.maxFirstPrice = item.maxFirstPrice / 10000;
+                item.minFirstPrice = item.maxFirstPrice / 10000;
+                item.maxPrice = item.maxFirstPrice / 10000;
+                item.minPrice = item.maxFirstPrice / 10000;
+                item.maxUnitPrice = item.maxFirstPrice / 10000;
+                item.minUnitPrice = item.maxFirstPrice / 10000;
               }
             });
             that.fullscreenLoading = false;
