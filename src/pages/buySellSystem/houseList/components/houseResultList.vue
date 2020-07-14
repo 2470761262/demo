@@ -1289,18 +1289,15 @@ export default {
       const { name = undefined, value = undefined } = item;
 
       //如果删除或者手动删除传入空字符串将会把楼栋数据清理为空字符串
-      this.form.communityName = name ? name : "";
       this.form.comId = value ? value : "";
 
       //清理楼栋数据
       this.towerForList = [];
       this.form.cbId = "";
-      this.form.queryRoomNo = "";
       this.towerOptData = {};
 
       //清理房间号数据
-      this.form.roomNumber = "";
-      this.form.roomNo = "";
+      this.form.bhId = "";
       this.roomOptData = {};
       this.roomForList = [];
 
@@ -1341,7 +1338,7 @@ export default {
           data: {
             comId: this.form.comId,
             comBuildingName: name == undefined ? "" : name.trim(),
-            limit: 300
+            limit: 20
           }
         })
         .then(e => {
@@ -1361,12 +1358,10 @@ export default {
       const { name = undefined, value = undefined } = item;
 
       //如果删除或者手动删除传入空字符串将会把楼栋数据清理为空字符串
-      this.form.queryRoomNo = name ? name : "";
       this.form.cbId = value ? value : "";
 
       //清理房间号数据
-      this.form.roomNumber = "";
-      this.form.roomNo = "";
+      this.form.bhId = "";
       this.roomOptData = {};
       this.roomForList = [];
 
@@ -1385,7 +1380,7 @@ export default {
           data: {
             comId: this.form.comId,
             cbId: this.form.cbId,
-            limit: 300,
+            limit: 20,
             roomNo: e == undefined ? "" : e.trim()
           }
         })
@@ -1405,8 +1400,7 @@ export default {
     queryRoomDataChange(item) {
       const { name = undefined, value = undefined } = item;
 
-      this.form.roomNumber = name ? name : "";
-      this.form.roomNo = value ? value : "";
+      this.form.bhId = value ? value : "";
     },
     /**
      * @example: 价钱范围,面积范围,面积范围,统一提交输入框的数据到form
