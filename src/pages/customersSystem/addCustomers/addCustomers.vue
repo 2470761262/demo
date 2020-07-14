@@ -21,11 +21,18 @@
 </style>
 <template>
   <section class="content">
-    <component :is="componentName" ref="childreCom"></component>
+    <keep-alive>
+      <component :is="componentName" ref="childreCom"></component>
+    </keep-alive>
     <div class="floot-content">
       <el-button>返回</el-button>
-      <el-button type="primary" @click="nextStep">下一步</el-button>
-      <el-button type="primary">完成</el-button>
+      <el-button type="primary" @click="nextStep">{{ stepName }}</el-button>
+      <el-button
+        type="primary"
+        @click="submit"
+        v-loading.fullscreen.lock="fullscreenLoading"
+        >完成</el-button
+      >
     </div>
   </section>
 </template>
@@ -42,22 +49,258 @@ export default {
   },
   data() {
     return {
-      componentName: "stepTwo",
-      comNextIndex: 0
+      componentName: "stepOne",
+      comNextIndex: 0,
+      stepName: "下一步",
+      fullscreenLoading: false
     };
+  },
+  created() {
+    this.getCommunityList();
+    this.getPrimarySchoolList();
+    this.getMiddleSchoolList();
+    this.getBusinessList();
   },
   methods: {
     async nextStep() {
       let newxFlag = true;
       switch (this.componentName) {
         case "stepOne":
-          //   newxFlag = await this.$refs.childreCom.validate();
+          newxFlag = await this.$refs.childreCom.validate();
           break;
       }
-
       if (newxFlag) {
-        this.componentName = ComList[++this.comNextIndex];
+        if (this.comNextIndex == 0) {
+          this.$store.commit("updateStep1", this.$refs.childreCom.formData);
+          this.componentName = ComList[++this.comNextIndex];
+          this.stepName = "上一步";
+        } else {
+          this.$refs.childreCom.updataStep2();
+          this.componentName = ComList[--this.comNextIndex];
+          this.stepName = "下一步";
+        }
       }
+    },
+    async submit() {
+      let newxFlag = true;
+      // newxFlag = await this.$refs.childreCom.validate();
+      let that = this;
+      let step2 = this.$store.state.addCustomers.formData.step2;
+      let postData = {};
+      let demandValue = this.$store.state.addCustomers.demandValue;
+      if (newxFlag) {
+        if (step2.length == 0) {
+          postData = this.$refs.childreCom.formData;
+          if (demandValue.list0.length != 0) {
+            for (let i = 0; i < demandValue.list0.length; i++) {
+              let requireType = { requireType: demandValue.list0[i] };
+              postData.requirements.push(requireType);
+            }
+          }
+          if (demandValue.list1.length != 0) {
+            for (let i = 0; i < demandValue.list1.length; i++) {
+              let requireType = { requireType: demandValue.list1[i] };
+              postData.requirements.push(requireType);
+            }
+          }
+          if (demandValue.list2.length != 0) {
+            for (let i = 0; i < demandValue.list2.length; i++) {
+              let requireType = { requireType: demandValue.list2[i] };
+              postData.requirements.push(requireType);
+            }
+          }
+        } else {
+          postData = this.$store.state.addCustomers.formData.step1;
+          postData.requirements = this.$store.state.addCustomers.formData.step2;
+          postData.requirements.forEach((item, idx) => {
+            if (item.businessCircleList.length != 0)
+              item.businessCircle = item.businessCircleList.join("$");
+            if (item.middleSchoolList.length != 0)
+              item.middleSchool = item.middleSchoolList.join("$");
+            if (item.primarySchoolList.length != 0)
+              item.primarySchool = item.primarySchoolList.join("$");
+            if (item.roomsList.length != 0)
+              item.rooms = item.roomsList.join("$");
+            if (item.community.length != 0) {
+              item.community.forEach((com, idx) => {
+                let items = com.split(",");
+                item["community" + (idx + 1)] = items[0];
+                item["community" + (idx + 1) + "Id"] = items[1];
+              });
+            }
+            if (
+              item.requireType != 64 &&
+              item.requireType != 128 &&
+              item.requireType != 256
+            ) {
+              item.maxFirstPrice = item.maxFirstPrice * 10000;
+              item.minFirstPrice = item.minFirstPrice * 10000;
+              item.maxPrice = item.maxPrice * 10000;
+              item.minPrice = item.minPrice * 10000;
+              item.maxUnitPrice = item.maxUnitPrice * 10000;
+              item.minUnitPrice = item.minUnitPrice * 10000;
+            }
+          });
+        }
+        postData.sourceType = postData.sourceList[0];
+        postData.Source = postData.sourceList[1];
+        postData.origin = "PC";
+        that.fullscreenLoading = true;
+        that.$api
+          .post({
+            url: "/saleCustomerOperation/addCustomer",
+            data: postData,
+            headers: {
+              "Content-Type": "application/json"
+            }
+          })
+          .then(e => {
+            if (e.data.code == 200) {
+              console.log("=======>");
+            }
+          })
+          .catch(e => {
+            postData.requirements.forEach((item, idx) => {
+              if (
+                item.requireType != 64 &&
+                item.requireType != 128 &&
+                item.requireType != 256
+              ) {
+                item.maxFirstPrice = item.maxFirstPrice / 10000;
+                item.minFirstPrice = item.maxFirstPrice / 10000;
+                item.maxPrice = item.maxFirstPrice / 10000;
+                item.minPrice = item.maxFirstPrice / 10000;
+                item.maxUnitPrice = item.maxFirstPrice / 10000;
+                item.minUnitPrice = item.maxFirstPrice / 10000;
+              }
+            });
+            that.fullscreenLoading = false;
+            if (e.response != undefined) {
+              that.$message(e.response.data.message);
+            }
+          });
+      }
+      console.log(postData);
+    },
+    // 获取楼盘列表
+    getCommunityList() {
+      let that = this;
+      let postData = {
+        page: 1,
+        limit: 10000
+      };
+      that.$api
+        .post({
+          url: "/community/communityList",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$store.dispatch("InitFormData", {
+              commitName: "updateCommunityList",
+              json: e.data.data.list
+            });
+            // this.communityList = e.data.data.list;
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
+    // 获取小学列表
+    getPrimarySchoolList() {
+      let that = this;
+      let postData = {
+        page: 1,
+        limit: 10000
+      };
+      that.$api
+        .post({
+          url: "/community/primarySchoolList",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$store.dispatch("InitFormData", {
+              commitName: "updatePrimarySchoolList",
+              json: e.data.data.list
+            });
+            // this.primarySchoolList = e.data.data.list;
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
+    // 获取中学列表
+    getMiddleSchoolList() {
+      let that = this;
+      let postData = {
+        page: 1,
+        limit: 10000
+      };
+      that.$api
+        .post({
+          url: "/community/middleSchoolList",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$store.dispatch("InitFormData", {
+              commitName: "updateMiddleSchoolList",
+              json: e.data.data.list
+            });
+            // this.middleSchoolList = e.data.data.list;
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
+    // 获取商圈列表
+    getBusinessList() {
+      let that = this;
+      let postData = {
+        page: 1,
+        limit: 10000
+      };
+      that.$api
+        .post({
+          url: "/community/businessList",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$store.dispatch("InitFormData", {
+              commitName: "updateBusinessList",
+              json: e.data.data
+            });
+            // this.businessList = e.data.data.list;
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
     }
   }
 };

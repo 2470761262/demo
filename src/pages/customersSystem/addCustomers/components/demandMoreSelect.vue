@@ -218,9 +218,10 @@ export default {
   },
   watch: {
     value: {
+      // deep: true,
       immediate: true,
       handler: function(val, oldVal) {
-        if (val.length != undefined)
+        if (Object.keys(val).length != 0)
           this.dataJson = JSON.parse(JSON.stringify(val));
       }
     },
