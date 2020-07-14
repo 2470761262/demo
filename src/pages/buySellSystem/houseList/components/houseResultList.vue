@@ -444,6 +444,7 @@
             placeholder="请输入房源编号,楼盘名称"
             class="content-input"
             v-model="houseNoOrName"
+            @keydown.enter="handleHouseNoOrName"
           />
           <button class="inquire-content" @click="handleHouseNoOrName">
             <i class="el-icon-search"></i>
