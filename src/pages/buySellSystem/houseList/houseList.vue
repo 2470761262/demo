@@ -15,8 +15,8 @@
 </style>
 <template>
   <div class="page-content">
-    <house-result-list></house-result-list>
-    <div class="scroll-tab">
+    <house-result-list ref="resultList"></house-result-list>
+    <div class="scroll-tab" ref="scrollTab">
       <house-list-house-pair></house-list-house-pair>
     </div>
   </div>
@@ -34,13 +34,20 @@ export default {
     houseResultList,
     houseListHousePair
   },
-  mounted() {
-    document
-      .querySelector(".scroll-tab")
-      .addEventListener("scroll", this.ListeningScroll);
-  },
   activated() {
-    document.querySelector(".scroll-tab").scrollTop = this.scrollTop;
+    this.$nextTick(() => {
+      this.$refs.scrollTab.addEventListener("scroll", this.ListeningScroll);
+      document
+        .querySelector(".el-main")
+        .addEventListener("scroll", this.elMainScroll);
+    });
+    this.$refs.scrollTab.scrollTop = this.scrollTop;
+  },
+  deactivated() {
+    this.$refs.scrollTab.removeEventListener("scroll", this.ListeningScroll);
+    document
+      .querySelector(".el-main")
+      .removeEventListener("scroll", this.elMainScroll);
   },
   data() {
     return {
@@ -79,6 +86,14 @@ export default {
     };
   },
   methods: {
+    elMainScroll() {
+      const { clientHeight, scrollHeight, scrollTop } = document.querySelector(
+        ".el-main"
+      );
+      if (clientHeight + scrollTop >= scrollHeight) {
+        this.$refs.resultList.panelChange = false;
+      }
+    },
     ListeningScroll(e) {
       this.scrollTop = e ? e.target.scrollTop : 0;
     }

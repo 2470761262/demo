@@ -17,6 +17,9 @@
     justify-content: flex-end;
     padding-right: 46px;
     margin-bottom: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
     .filter-radio-item {
       display: flex;
       cursor: pointer;
@@ -225,10 +228,6 @@
             scroll-container=".scroll-tab"
           >
           </el-image>
-          <!-- <gggg
-           
-          >
-          </gggg> -->
         </div>
       </div>
       <el-table
