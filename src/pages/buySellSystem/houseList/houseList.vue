@@ -49,10 +49,6 @@ export default {
         plate: "", //范围
         type: "", //类型
         agentPerName: "", //跟单人姓名
-        title: "全部在售",
-        communityName: "", //楼盘名
-        cbNo: "", //楼栋号
-        roomNumber: "", //房间号
         bussinessDistrict: "",
         roomTypeList: [],
         decorationList: [],
@@ -61,7 +57,7 @@ export default {
         middleSchoolList: [],
         comId: "",
         cbId: "",
-        roomNo: "",
+        bhId: "",
         minFloor: "",
         maxFloor: "",
         minInArea: "",
