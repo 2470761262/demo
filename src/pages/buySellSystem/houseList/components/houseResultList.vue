@@ -1424,6 +1424,8 @@ export default {
     floorChange(e) {
       if (e == "顶层") {
         this.form.isTopFloor = "1";
+        this.form.minFloor = "";
+        this.form.maxFloor = "";
       } else {
         if (this.form.isTopFloor == "1") {
           this.form.isTopFloor = "";
