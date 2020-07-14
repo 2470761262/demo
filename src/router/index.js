@@ -45,7 +45,8 @@ export default new Router({
       to.meta.keepAlive =
         typeof to.meta.keepAlive === "undefined" ? undefined : true;
       if (savedPosition) {
-        caceDom.querySelector(".el-main").scrollTop = to.meta.scrollTop;
+        if (caceDom.querySelector(".el-main"))
+          caceDom.querySelector(".el-main").scrollTop = to.meta.scrollTop;
         // return savedPosition;
       }
     } else {
