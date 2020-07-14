@@ -36,6 +36,7 @@
       border: 1px solid @backgroud;
       color: @backgroud;
       margin-bottom: 16px;
+      cursor: pointer;
     }
     .Green {
       /deep/ .el-button {
@@ -92,10 +93,19 @@
         </span>
       </div>
       <div class="MainMsgOption">
-        <div class="White" @click="checkClaim()">
+        <div
+          class="White"
+          @click="checkClaim()"
+          v-if="ruleList.customerDetailForTakeCus"
+        >
           认领客户
         </div>
-        <el-popover placement="bottom" trigger="click" class="Green">
+        <el-popover
+          placement="bottom"
+          trigger="click"
+          class="Green"
+          v-if="ruleList.dialButtonEnable"
+        >
           <div class="phone-list">
             <div
               v-for="(item, idx) in callList"
@@ -116,7 +126,7 @@
       <div class="SubMsgRow">
         <div class="SubMsgTil">委托来源：</div>
         <div class="SubMsgText">
-          {{ cusbaseData.Source || "暂无" }}
+          {{ cusbaseData.Source | Source }}
         </div>
       </div>
       <div class="SubMsgRow">
@@ -134,7 +144,7 @@
       <div class="SubMsgRow">
         <div class="SubMsgTil">购房意向：</div>
         <div class="SubMsgText">
-          {{ cusbaseData.desireIntensity || "暂无" }}
+          {{ cusbaseData.desireIntensity | desireIntensity }}
         </div>
       </div>
       <div class="SubMsgRow">
@@ -275,7 +285,7 @@
 
 <script>
 export default {
-  inject: ["customerId", "cusbaseData"],
+  inject: ["customerId", "cusbaseData", "ruleList"],
   data() {
     return {
       Source: "", //委托来源
@@ -295,89 +305,53 @@ export default {
       }
     };
   },
+  filters: {
+    Source(value) {
+      switch (value) {
+        case 11:
+          return "老客户";
+        case 12:
+          return "转介绍";
+        case 13:
+          return "亲戚朋友";
+        case 14:
+          return "同学";
+        case 21:
+          return "业主资料";
+        case 22:
+          return "重复购买";
+        case 31:
+          return "58同城";
+        case 32:
+          return "安居客";
+        case 33:
+          return "朋友圈";
+        case 34:
+          return "其他网络";
+        case 41:
+          return "公众号";
+        case 42:
+          return "小程序";
+        case 43:
+          return "APP";
+      }
+    },
+    desireIntensity(value) {
+      switch (value) {
+        case 0:
+          return "无意向";
+        case 1:
+          return "较弱";
+        case 2:
+          return "一般";
+        case 3:
+          return "强烈";
+      }
+    }
+  },
   created() {},
   mounted() {},
   methods: {
-    apply() {
-      var that = this;
-      this.$api
-        .post({
-          url: "/saleCustomerDetail/getACusEx",
-          qs: true,
-          data: {
-            customerId: that.customerId
-          }
-        })
-        .then(e => {
-          console.log(e.data);
-          let json = e.data;
-          if (json.code == 200) {
-            this.cusbaseData = json.data;
-            switch (this.cusbaseData.bsAgentCustomersTbl.Source) {
-              case 11:
-                this.Source = "老客户";
-                break;
-              case 12:
-                this.Source = "转介绍";
-                break;
-              case 13:
-                this.Source = "亲戚朋友";
-                break;
-              case 14:
-                this.Source = "同学";
-                break;
-              case 21:
-                this.Source = "业主资料";
-                break;
-              case 22:
-                this.Source = "重复购买";
-                break;
-              case 31:
-                this.Source = "58同城";
-                break;
-              case 32:
-                this.Source = "安居客";
-                break;
-              case 33:
-                this.Source = "朋友圈";
-                break;
-              case 34:
-                this.Source = "其他网络";
-                break;
-              case 41:
-                this.Source = "公众号";
-                break;
-              case 42:
-                this.Source = "小程序";
-                break;
-              case 43:
-                this.Source = "APP";
-                break;
-              default:
-                break;
-            }
-            switch (this.cusbaseData.saleCusPropertyTbl.desireIntensity) {
-              case 0:
-                this.desireIntensity = "无意向";
-                break;
-              case 1:
-                this.desireIntensity = "较弱";
-                break;
-              case 2:
-                this.desireIntensity = "一般";
-                break;
-              case 3:
-                this.desireIntensity = "强烈";
-                break;
-              default:
-                break;
-            }
-          } else if (json.code == 400) {
-            alert(json.message);
-            console.log("失败     " + json);
-          }
-        });
-    },
     getPhone() {
       let that = this;
       this.$api
@@ -402,16 +376,14 @@ export default {
     },
     callUp(phone) {
       let that = this;
+      console.log(phone);
       let postData = {
         customerId: this.customerId,
-        remark:
-          "给客户" +
-          this.cusbaseData.bsAgentCustomersTbl.Customers +
-          "拨打电话",
-        customerName: this.cusbaseData.bsAgentCustomersTbl.Customers,
+        remark: "给客户" + this.cusbaseData.Customers + "拨打电话",
+        customerName: this.cusbaseData.Customers,
         contactPhone: phone,
-        customerNo: this.cusbaseData.bsAgentCustomersTbl.CustomerNo,
-        customerPlate: 0
+        customerNo: this.cusbaseData.CustomerNo,
+        customerPlate: "公客"
       };
       that.$api
         .post({

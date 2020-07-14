@@ -92,6 +92,7 @@
         height: 50px;
         background: @backgroud;
         text-align: center;
+        cursor: pointer;
         > i {
           line-height: 50px;
           color: #ffffff;
@@ -112,6 +113,7 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
+      cursor: pointer;
     }
   }
   /deep/.el-form-item__content {

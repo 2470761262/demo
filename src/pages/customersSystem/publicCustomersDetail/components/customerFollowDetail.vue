@@ -21,6 +21,7 @@
     background: @backgroud;
     color: #ffffff;
     font-size: @font16;
+    cursor: pointer;
   }
 }
 .FollowCardZone {
@@ -77,6 +78,7 @@
         .cellMsgRow {
           padding: 12px 0;
           display: flex;
+          align-items: center;
           .cellMsgTil {
             white-space: nowrap;
             font-size: @font14;
@@ -101,9 +103,18 @@
   <div class="part-Warp">
     <div class="MainTitleRow">
       <div class="MainTitle">跟进记录</div>
-      <button class="AddFollow" @click="OpenAddFollow">写跟进</button>
+      <button
+        class="AddFollow"
+        @click="OpenAddFollow"
+        v-if="ruleList.addFollowLookButtonEable"
+      >
+        写跟进
+      </button>
     </div>
-    <div class="FollowCardZone">
+    <div
+      class="FollowCardZone"
+      v-if="ruleList.customerDetailForFollowAndTakeLook"
+    >
       <div
         class="FollowCell"
         v-for="(item, index) in FollowData.data"
@@ -135,7 +146,13 @@
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进内容：</div>
-              <div class="cellMsgText">
+
+              <VueAudio
+                v-if="item.FollowType == '电话跟进'"
+                :theUrl="item.Memo.slice(6)"
+                :theControlList="theControlList"
+              ></VueAudio>
+              <div class="cellMsgText" v-else>
                 {{ item.Memo || "暂无" }}
               </div>
             </div>
@@ -285,8 +302,12 @@ const defaultListModle = [
     name: "和其他同事看房中"
   }
 ];
+import VueAudio from "@/pages/customersSystem/publicCustomersDetail/components/vueAudio";
 export default {
-  inject: ["customerId", "FollowData"],
+  components: {
+    VueAudio
+  },
+  inject: ["customerId", "FollowData", "ruleList"],
   data() {
     return {
       addFollowFlag: false,
@@ -298,7 +319,8 @@ export default {
         FollowWay: "",
         defaultext: "",
         Memo: ""
-      }
+      },
+      theControlList: "onlyOnePlaying"
     };
   },
   mounted() {},
