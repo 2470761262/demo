@@ -4,6 +4,7 @@
   background: #fff;
   display: flex;
   flex-direction: column;
+  height: 0;
   .scroll-tab {
     flex: 1;
     height: 0;
@@ -32,8 +33,17 @@ export default {
     houseResultList,
     houseListHousePair
   },
+  mounted() {
+    document
+      .querySelector(".scroll-tab")
+      .addEventListener("scroll", this.ListeningScroll);
+  },
+  activated() {
+    document.querySelector(".scroll-tab").scrollTop = this.scrollTop;
+  },
   data() {
     return {
+      scrollTop: 0,
       form: {
         plate: "", //范围
         type: "", //类型
@@ -68,6 +78,11 @@ export default {
         isElevator: "" //是否电梯
       }
     };
+  },
+  methods: {
+    ListeningScroll(e) {
+      this.scrollTop = e ? e.target.scrollTop : 0;
+    }
   }
 };
 </script>

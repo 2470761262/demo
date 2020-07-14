@@ -63,6 +63,8 @@
   }
   /deep/.tab-cell-left {
     text-align: left;
+
+    padding-left: 32px;
   }
   .tab-page-flex {
     display: flex;
@@ -98,7 +100,7 @@
 /deep/.el-table__body-wrapper,
 /deep/.el-table__fixed-body-wrapper {
   .el-table__expanded-cell {
-    padding: 0 0 10px 28px;
+    padding: 0 0 10px 42px;
   }
 
   .el-table__expand-column {
@@ -210,9 +212,9 @@
         >
           <el-image
             lazy
-            fit="cover"
             class="tab-image-item"
             :src="item.picUrl + '?x-oss-process=style/thumb'"
+            @error="houseImageErorHandle(item)"
           >
           </el-image>
         </div>
@@ -371,6 +373,16 @@ export default {
   },
   methods: {
     /**
+     * @example: 处理ErrorImage
+     * @param {type}
+     */
+
+    houseImageErorHandle(item) {
+      item.picUrl =
+        "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png";
+      console.log("houseImageErorHandle -> item", item);
+    },
+    /**
      * @example: 设置Tab方向
      */
     tabDirection({ column }) {
@@ -417,10 +429,8 @@ export default {
       this.pageJson.currentPage = pageIndex;
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), false).then(
         () => {
-          dom.querySelector(".change-content").scrollIntoView({
-            // block: "start",
-            //behavior: "smooth"
-          });
+          dom.querySelector(".scroll-tab").scrollTop = 0;
+          this.$parent.ListeningScroll();
         }
       );
     },

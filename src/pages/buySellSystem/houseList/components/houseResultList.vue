@@ -6,17 +6,17 @@
   .page-posi-sticky {
     background: #fff;
     z-index: 100;
-    &.filex-content {
-      position: fixed;
-      z-index: 100;
-      // prettier-ignore
-      top: 80PX;
-      //  left: 0;
-      //  right: 0;
-      //  width: 100%;
-      background: #fff;
-      // prettier-ignore
-    }
+    // &.filex-content {
+    //   position: fixed;
+    //   z-index: 100;
+    //   // prettier-ignore
+    //   top: 80PX;
+    //   //  left: 0;
+    //   //  right: 0;
+    //   //  width: 100%;
+    //   background: #fff;
+    //   // prettier-ignore
+    // }
   }
   .head-nav-type {
     background: #f6f7fb;
@@ -373,8 +373,8 @@
 }
 .change-content {
   text-align: center;
-  padding-bottom: 24px;
-  margin-top: 24px;
+  padding-bottom: 4px;
+  margin-top: 10px;
   color: @backgroud;
   font-size: @font16;
   span {
@@ -575,7 +575,7 @@
         </button>
       </div>
     </div>
-    <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div>
+    <!-- <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div> -->
 
     <div class="search-content no-frist" v-show="panelChange">
       <!-- 范围 -->
@@ -1146,13 +1146,6 @@ export default {
   },
   created() {
     this.mapGetPanelData();
-  },
-  mounted() {
-    this.scrollFixed();
-    window.addEventListener("resize", this.scrollFixed);
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.scrollFixed);
   },
   methods: {
     /**
