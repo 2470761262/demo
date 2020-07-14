@@ -458,11 +458,11 @@ export default {
     },
     getHouseData(value, initPage = true) {
       // this.loading = true;
-      Object.keys(value).forEach(item => {
-        if (value[item] instanceof Array) {
-          value[item] = value[item].join(",");
-        }
-      });
+      // Object.keys(value).forEach(item => {
+      //   if (value[item] instanceof Array) {
+      //     value[item] = value[item].join(",");
+      //   }
+      // });
 
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,

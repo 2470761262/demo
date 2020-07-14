@@ -606,7 +606,7 @@
       <div class="search-content-item" v-if="RegionList.length != 0">
         <div class="search-item-title">商圈</div>
         <div class="search-item-right">
-          <el-radio-group v-model="form.business" size="small">
+          <el-radio-group v-model="form.bussinessDistrict" size="small">
             <el-radio label="" border>不限</el-radio>
             <el-radio
               :label="item.value"
@@ -752,8 +752,8 @@
               <el-radio
                 :label="item.value"
                 border
-                v-for="item in RoomsList"
-                :key="item.value"
+                v-for="(item, index) in RoomsList"
+                :key="index"
                 >{{ item.name }}</el-radio
               >
             </el-radio-group>
@@ -850,11 +850,11 @@
             label="不限"
             border
             v-model="faceRadio"
-            @change="radioChange('face')"
+            @change="radioChange('faceList')"
             >不限</el-radio
           >
           <el-checkbox-group
-            v-model="form.face"
+            v-model="form.faceList"
             @change="formCheckBoxChange('faceRadio')"
           >
             <el-checkbox
@@ -873,11 +873,11 @@
             label="不限"
             border
             v-model="renovationRadio"
-            @change="radioChange('renovation')"
+            @change="radioChange('decorationList')"
             >不限</el-radio
           >
           <el-checkbox-group
-            v-model="form.renovation"
+            v-model="form.decorationList"
             @change="formCheckBoxChange('renovationRadio')"
           >
             <el-checkbox
@@ -896,11 +896,11 @@
             label="不限"
             border
             v-model="purposeRadio"
-            @change="radioChange('purpose')"
+            @change="radioChange('houseUseList')"
             >不限</el-radio
           >
           <el-checkbox-group
-            v-model="form.purpose"
+            v-model="form.houseUseList"
             @change="formCheckBoxChange('purposeRadio')"
           >
             <el-checkbox
@@ -925,11 +925,11 @@
             label="不限"
             border
             v-model="primarySchoolRadio"
-            @change="radioChange('primarySchool', true)"
+            @change="radioChange('primarySchoolList', true)"
             >不限</el-radio
           >
           <el-checkbox-group
-            v-model="form.primarySchool"
+            v-model="form.primarySchoolList"
             @change="formCheckBoxChange('primarySchoolRadio')"
           >
             <el-checkbox
@@ -946,7 +946,7 @@
               clearable
               filterable
               popper-class="options-custom-item"
-              @change="schoolChange('primarySchool', $event)"
+              @change="schoolChange('primarySchoolList', $event)"
             >
               <el-option
                 class="options-item"
@@ -979,11 +979,11 @@
             label="不限"
             border
             v-model="middleSchoolRadio"
-            @change="radioChange('middleSchool', true)"
+            @change="radioChange('middleSchoolList', true)"
             >不限</el-radio
           >
           <el-checkbox-group
-            v-model="form.middleSchool"
+            v-model="form.middleSchoolList"
             @change="formCheckBoxChange('middleSchoolRadio')"
           >
             <el-checkbox
@@ -1000,7 +1000,7 @@
               clearable
               filterable
               popper-class="options-custom-item"
-              @change="schoolChange('middleSchool', $event)"
+              @change="schoolChange('middleSchoolList', $event)"
             >
               <el-option
                 class="options-item"
@@ -1054,9 +1054,9 @@ const TYPELIST = [
 //楼层
 const FLOORLIST = [
   { title: "不限", value: { minFloor: "", maxFloor: "" } },
-  { title: "地下室", value: { minFloor: "0", maxFloor: "-4" } },
+  { title: "地下室", value: { minFloor: "-4", maxFloor: "-1" } },
   { title: "一层", value: { minFloor: "1", maxFloor: "1" } },
-  { title: "顶层", value: { minFloor: "MAX_FLOOR", maxFloor: "MAX_FLOOR" } }
+  { title: "顶层", value: { isTopFloor: "1" } }
 ];
 //跳转tab
 const NAVTOPAGE = [
@@ -1465,7 +1465,7 @@ export default {
     roomChange(value) {
       this.room.maxRoom = "";
       this.room.minRoom = "";
-      this.form.houseType = value == "不限" ? [] : [value];
+      this.form.roomTypeList = value == "不限" ? [] : [value];
     },
     /**
      * @example: room确定查询按钮事件
@@ -1493,7 +1493,7 @@ export default {
         result.push(parseInt(this.room.minRoom) + i);
       }
       this.room.value = "";
-      this.form.houseType = result;
+      this.form.roomTypeList = result;
     },
     /**
      * @example: 朝向radio change 事件
