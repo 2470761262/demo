@@ -82,13 +82,13 @@ export default {
   },
   components: {
     // 客源印象
-    impressionDIalog: () => import("../didLog/impressionDialog"),
+    impressionDIalog: () => import("../didlog/impressionDialog"),
     // 转无效
-    uselessDialog: () => import("../didLog/uselessDialog"),
+    uselessDialog: () => import("../didlog/uselessDialog"),
     // 转无效
-    attentionDialog: () => import("../didLog/attentionDialog"),
+    attentionDialog: () => import("../didlog/attentionDialog"),
     // 操作日志
-    operationLogDialog: () => import("../didLog/operationLogDialog")
+    operationLogDialog: () => import("../didlog/operationLogDialog")
   },
   methods: {
     /**
