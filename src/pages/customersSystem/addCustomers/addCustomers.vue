@@ -53,7 +53,9 @@ export default {
       componentName: "stepOne",
       comNextIndex: 0,
       stepName: "下一步",
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      customerId: this.$route.query.customerId,
+      step: this.$route.query.step
     };
   },
   created() {
@@ -61,6 +63,13 @@ export default {
     this.getPrimarySchoolList();
     this.getMiddleSchoolList();
     this.getBusinessList();
+    if (this.customerId) {
+      // this.getData();
+    }
+    if (this.step == 2) {
+      // this.componentName = "stepTwo";
+      // this.comNextIndex = 1;
+    }
   },
   methods: {
     async nextStep() {
@@ -82,6 +91,7 @@ export default {
         }
       }
     },
+    // 提交按钮
     async submit() {
       let newxFlag = true;
       // newxFlag = await this.$refs.childreCom.validate();
@@ -206,6 +216,75 @@ export default {
             }
           });
       }
+    },
+    // 获取用户信息
+    getData() {
+      let that = this;
+      let fromData = {
+        Customers: "", //客户姓名
+        sex: 1, //性别
+        tels: [], //客户号码
+        desireIntensity: "", //购买意向
+        nativePlace: "", //籍贯
+        Source: 0, //客源来源
+        sourceType: 0,
+        myImpression: [], //印象的结果数组
+        requirements: [], //客户需求（传后端用）
+        sourceList: [] //客源来源列表
+      };
+      let postData = {
+        customerId: this.customerId
+      };
+      that.$api
+        .post({
+          url: "/saleCustomerDetail/getACusEx",
+          data: postData,
+          qs: true,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            let data = e.data.data;
+            fromData.Customers = data.bsAgentCustomersTbl.Customers;
+            fromData.sex = data.bsAgentCustomersTbl.sex;
+            fromData.nativePlace = data.bsAgentCustomersTbl.nativePlace;
+            fromData.Source = data.bsAgentCustomersTbl.Source;
+            fromData.sourceType = data.bsAgentCustomersTbl.sourceType;
+            fromData.sourceList.push(data.bsAgentCustomersTbl.sourceType);
+            fromData.sourceList.push(data.bsAgentCustomersTbl.Source);
+            // this.$set(that.demand, "data", data.customerRequire);
+            // this.$set(that.demandList, "data", data.requireList);
+            // this.$set(that.customerDeal, "data", data.saleCusPropertyTbl);
+            // this.$set(that.telList, "data", data.telList);
+            // that.customer.data = data.bsAgentCustomersTbl;
+            that.demandList.data.forEach(item => {
+              switch (item.requireType) {
+                case 1:
+                case 2:
+                case 4:
+                  this.demandValue.list0.push(item.requireType);
+                  break;
+                case 8:
+                case 16:
+                case 32:
+                  this.demandValue.list1.push(item.requireType);
+                  break;
+                case 64:
+                case 128:
+                case 256:
+                  this.demandValue.list2.push(item.requireType);
+                  break;
+              }
+            });
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
     },
     // 获取楼盘列表
     getCommunityList() {

@@ -32,7 +32,8 @@ export default {
       getImpressions: this.getImpressions,
       telList: this.telList,
       permissionList: this.permissionList,
-      getInformation: this.getInformation
+      getInformation: this.getInformation,
+      demandValue: this.demandValue
     };
   },
   components: {
@@ -90,7 +91,13 @@ export default {
           isDisable: false,
           name: "customerDetail-Attention"
         } //取消关注
-      } //权限列表
+      }, //权限列表
+      demandValue: {
+        //客户需求value
+        list0: [],
+        list1: [],
+        list2: []
+      }
     };
   },
   created() {
@@ -128,6 +135,27 @@ export default {
             that.customer.myLookHouses = data.myLookHouses;
             // that.tel = data.telList[0].phone;
             that.modificationPermission(data.ruleList);
+            that.demandList.data.forEach(item => {
+              item.middleSchool = item.middleSchool.split("$");
+              item.primarySchool = item.primarySchool.split("$");
+              switch (item.requireType) {
+                case 1:
+                case 2:
+                case 4:
+                  this.demandValue.list0.push(item.requireType);
+                  break;
+                case 8:
+                case 16:
+                case 32:
+                  this.demandValue.list1.push(item.requireType);
+                  break;
+                case 64:
+                case 128:
+                case 256:
+                  this.demandValue.list2.push(item.requireType);
+                  break;
+              }
+            });
           }
         })
         .catch(e => {

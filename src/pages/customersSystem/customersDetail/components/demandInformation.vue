@@ -2,6 +2,7 @@
   <div class="demand-box">
     <div
       class="demand-btn"
+      @click="moreSelectFlag = true"
       v-if="permissionList.modifyCustomerButtonEable.isDisable"
     >
       新增需求
@@ -36,6 +37,7 @@
               >
               <span
                 class="msg-update"
+                @click="demandConfirm"
                 v-if="permissionList.modifyCustomerButtonEable.isDisable"
                 >修改</span
               >
@@ -45,52 +47,78 @@
                 <div class="msg-row">
                   <span class="msg-row-title">期望首付：</span>
                   <div class="msg-row-txt">
-                    {{ item.minFirstPrice }} - {{ item.maxFirstPrice }}万
+                    {{ item.minFirstPrice | formatMoney }} -
+                    {{ item.maxFirstPrice | formatMoney }}万
                   </div>
                 </div>
-                <div class="msg-row">
-                  <span class="msg-row-title">装修需求：</span>
-                  <div class="msg-row-txt">{{ item.decoration }}</div>
-                </div>
-              </section>
-              <section class="msg-row-group">
                 <div class="msg-row">
                   <span class="msg-row-title">期望面积：</span>
                   <div class="msg-row-txt">
                     {{ item.minArea }} - {{ item.maxArea }}m²
                   </div>
                 </div>
+                <div
+                  class="msg-row"
+                  v-if="
+                    item.requireType == 64 ||
+                      item.requireType == 128 ||
+                      item.requireType == 256
+                  "
+                >
+                  <span class="msg-row-title">期望租金：</span>
+                  <div class="msg-row-txt">
+                    {{ item.minPrice }} -
+                    {{ item.maxPrice }}
+                  </div>
+                </div>
+                <div class="msg-row" v-else>
+                  <span class="msg-row-title">期望总价：</span>
+                  <div class="msg-row-txt">
+                    {{ item.minPrice | formatMoney }} -
+                    {{ item.maxPrice | formatMoney }}万
+                  </div>
+                </div>
                 <div class="msg-row">
-                  <span class="msg-row-title">期望小学：</span>
-                  <div class="msg-row-txt">{{ item.primarySchool }}</div>
+                  <span class="msg-row-title">付款方式：</span>
+                  <div class="msg-row-txt">
+                    {{ item.payWay | formatPayWay }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">购买户型：</span>
+                  <div class="msg-row-txt">{{ item.rooms | formatSymbol }}</div>
                 </div>
               </section>
               <section class="msg-row-group">
                 <div class="msg-row">
-                  <span class="msg-row-title">期望总价：</span>
+                  <span class="msg-row-title">装修需求：</span>
+                  <div class="msg-row-txt">{{ item.decoration }}</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望小学：</span>
                   <div class="msg-row-txt">
-                    {{ item.minPrice }} - {{ item.maxPrice }}万
+                    <p
+                      v-for="(primarySchool, idx) in item.primarySchool"
+                      :key="idx"
+                    >
+                      {{ primarySchool }}
+                    </p>
                   </div>
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">期望中学：</span>
-                  <div class="msg-row-txt">{{ item.middleSchool }}</div>
-                </div>
-              </section>
-              <section class="msg-row-group">
-                <div class="msg-row">
-                  <span class="msg-row-title">付款方式：</span>
-                  <div class="msg-row-txt">{{ item.payWay }}</div>
+                  <div class="msg-row-txt">
+                    <p
+                      v-for="(middleSchool, idx) in item.middleSchool"
+                      :key="idx"
+                    >
+                      {{ middleSchool }}
+                    </p>
+                  </div>
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">看房经历：</span>
                   <div class="msg-row-txt">{{ item.remark }}</div>
-                </div>
-              </section>
-              <section class="msg-row-group">
-                <div class="msg-row">
-                  <span class="msg-row-title">购买户型：</span>
-                  <div class="msg-row-txt">{{ item.rooms }}</div>
                 </div>
               </section>
             </div>
@@ -107,61 +135,63 @@
         </el-tab-pane>
       </el-tabs>
     </template>
+    <!-- 多选弹出层 -->
+    <demand-more-select
+      ref="moreSelect"
+      styleType="0"
+      :visible.sync="moreSelectFlag"
+      width="506px"
+      title="选择需求信息(多选)"
+      @demandConfirm="demandConfirm"
+      v-model="demandValueData"
+      data-vv-name="moreSelect"
+      data-vv-as="需求信息"
+      v-validate="'required|arrFlatLength:0'"
+    >
+    </demand-more-select>
   </div>
 </template>
 
 <script>
+import { division } from "../../../../util/accurateComputeUtil";
+import demandMoreSelect from "../../addCustomers/components/demandMoreSelect";
 export default {
-  inject: ["demand", "demandList", "customer", "permissionList"],
+  inject: [
+    "demand",
+    "demandList",
+    "customer",
+    "permissionList",
+    "demandValue",
+    "customerId"
+  ],
   data() {
     return {
-      demandData: [
-        {
-          tabsType: "买新房",
-          name: "1",
-          updateTime: "2020-06-20 23:07:03",
-          downPayment: "300万",
-          fitment: "精装修",
-          area: "100-200㎡",
-          primarySchool: "实验小学",
-          totalPrice: "600-900万",
-          middleSchool: "漳州一中",
-          paymentMethod: "未填写",
-          experience: "首次看房",
-          housType: "三房"
-        },
-        {
-          tabsType: "买二手商铺",
-          name: "2",
-          updateTime: "2020-06-20 23:07:03",
-          downPayment: "1300万",
-          fitment: "毛胚",
-          area: "300-400㎡",
-          primarySchool: "未填写",
-          totalPrice: "700-900万",
-          middleSchool: "未填写",
-          paymentMethod: "未填写",
-          experience: "二次看房",
-          housType: "铺面"
-        },
-        {
-          tabsType: "买二手房",
-          name: "3",
-          updateTime: "2020-06-20 23:07:03",
-          downPayment: "600万",
-          fitment: "精装修",
-          area: "100-200㎡",
-          primarySchool: "英才小学",
-          totalPrice: "600-900万",
-          middleSchool: "厦门一中",
-          paymentMethod: "未填写",
-          experience: "首次看房",
-          housType: "三房"
-        }
-      ],
+      moreSelectFlag: false,
       changeTabsValue: "0",
-      demandTabsValue: "demand"
+      demandTabsValue: "demand",
+      demandValueData: this.demandValue
     };
+  },
+  components: { demandMoreSelect },
+  filters: {
+    formatMoney(val) {
+      return division(val, 10000);
+    },
+    formatPayWay(val) {
+      switch (val) {
+        case 1:
+          return "一次性";
+        case 2:
+          return "商业贷款";
+        case 4:
+          return "公积金贷款";
+        case 8:
+          return "组合贷款";
+      }
+    },
+    formatSymbol(val) {
+      return val.replace(/\$/g, ",");
+    }
   },
   methods: {
     /**
@@ -169,6 +199,13 @@ export default {
      */
     handleClick(e) {
       this.demandTabsValue = "demand";
+    },
+    demandConfirm() {
+      this.$store.commit("updateDemandValue", this.demandValueData);
+      this.$router.push({
+        path: "/customers/addCustomers",
+        query: { customerId: this.customerId, step: 2 }
+      });
     }
   }
 };
@@ -241,17 +278,18 @@ export default {
         }
       }
       .msg-content {
+        display: flex;
         .msg-row-group {
-          display: flex;
-          margin-bottom: 33px;
-          &:last-child {
-            margin-bottom: 5px;
+          flex: 0.5;
+          &:first-child {
+            margin-right: 48px;
           }
           .msg-row {
             display: flex;
             flex: 0.5;
             //prettier-ignore
             font-size: @font16;
+            margin-bottom: 33px;
             .msg-row-title {
               display: inline-block;
               color: #606266;
@@ -260,9 +298,9 @@ export default {
               display: inline-block;
               margin-left: auto;
               color: #303133;
-            }
-            &:first-child {
-              margin-right: 48px;
+              p {
+                text-align: right;
+              }
             }
           }
         }
