@@ -7,6 +7,10 @@
   .page-posi-sticky {
     background: #fff;
     z-index: 100;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 100;
   }
   .head-nav-type {
     background: #f6f7fb;
@@ -423,7 +427,7 @@
 </style>
 <template>
   <div class="page-result-content">
-    <div class="page-posi-sticky filex-content" ref="filexContent">
+    <div class="page-posi-sticky filex-content">
       <!-- 房屋类型 -->
       <div class="head-nav-type">
         <div
@@ -1159,15 +1163,6 @@ export default {
       this.primarySchoolRadio = "不限"; //小学校radio
       this.renovationRadio = "不限"; //装修radio不限
       this.faceRadio = "不限"; //朝向radio不限
-    },
-    /**
-     * @example: 获取当前定位的高度，
-     */
-
-    scrollFixed(e) {
-      this.isFixedHeight = getComputedStyle(this.$refs.filexContent).height;
-      const left = document.querySelector(".el-main").offsetLeft;
-      this.$refs.filexContent.style.width = window.innerWidth - left + "px";
     },
     /**
      * @example: 顶部Tab点击
