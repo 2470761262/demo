@@ -1154,6 +1154,9 @@ export default {
       this.roomOptData = {};
       this.towerOptData = {};
       this.buildOptData = {};
+      this.roomForList = [];
+      this.towerForList = [];
+      this.buildForList = [];
       this.agentPerName = ""; //跟单人姓名
       this.houseNoOrName = ""; //房源编号,楼盘名称
       this.primarySchool = ""; //小学select
