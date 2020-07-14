@@ -336,6 +336,14 @@ export default {
           formart: item => item.saleReson || "暂无"
         },
         {
+          prop: "floor",
+          label: "楼层",
+          order: true,
+          formart: item => {
+            return `${item.floorNum || "暂无"}/${item.floor || "暂无"}`;
+          }
+        },
+        {
           prop: "addTime",
           label: "挂牌",
           order: true,

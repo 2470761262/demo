@@ -3,6 +3,7 @@
 .page-result-content {
   //padding: 0 24px;
   background: #fff;
+  //box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   .page-posi-sticky {
     background: #fff;
     z-index: 100;
@@ -72,6 +73,7 @@
         font-size: @font16;
         &::placeholder {
           font-size: @font16;
+          color: #a6aaaf;
         }
       }
       .inquire-content {
@@ -104,6 +106,11 @@
         i {
           font-size: @font16;
           margin-right: 5px;
+        }
+        &.house-back {
+          background: @backgroud;
+          color: #fff;
+          box-shadow: 0 4px 10px @opacityBackground;
         }
       }
     }
@@ -208,6 +215,7 @@
         // box-shadow: ;
         &::placeholder {
           font-size: @font14;
+          color: #a6aaaf;
         }
       }
       /deep/.el-icon-circle-close {
@@ -320,6 +328,7 @@
           .el-radio__label {
             padding: 0;
             font-size: @font16;
+            font-weight: 400;
           }
         }
         /deep/.el-checkbox-group {
@@ -373,7 +382,7 @@
 }
 .change-content {
   text-align: center;
-  padding-bottom: 4px;
+  margin-bottom: 4px;
   margin-top: 10px;
   color: @backgroud;
   font-size: @font16;
@@ -459,21 +468,21 @@
             class="btn-primary"
             @click="navToPath('/buySellSystem/addHouse')"
           >
-            <i class="iconwodefangyuan iconfont"></i>
+            <i class="iconjichuguanli1 iconfont"></i>
             录入房源
           </button>
           <button
             class="btn-primary"
             @click="navToPath('/buySellSystem/concernCommunity')"
           >
-            <i class="iconwodefangyuan iconfont"></i>
+            <i class="icondaohang_wodefangyuan1 iconfont"></i>
             管理入口
           </button>
           <button
-            class="btn-primary"
+            class="btn-primary house-back"
             @click="navToPath('/buySellSystem/myAgent')"
           >
-            <i class="iconwodefangyuan iconfont"></i>
+            <i class="iconluru iconfont"></i>
             我的房源
           </button>
         </div>
@@ -792,15 +801,7 @@
             <el-radio-group
               v-model="floor.radioCheck"
               size="small"
-              @change="
-                packCheckChange(
-                  'floorlist',
-                  'minFloor',
-                  'maxFloor',
-                  'floor',
-                  $event
-                )
-              "
+              @change="floorChange"
             >
               <el-radio
                 :label="item.title"
@@ -834,10 +835,7 @@
               </el-input>
             </div>
           </div>
-          <button
-            class="btn-primary-back"
-            @click="submitFormBtn('floor', 'minFloor', 'maxFloor')"
-          >
+          <button class="btn-primary-back" @click="floorBtn">
             确定
           </button>
         </div>
@@ -1229,8 +1227,14 @@ export default {
         this.navToPageBtn({ private: false });
         return;
       }
+      this.resetData();
       if (index != this.typeActiveIndex) {
         this.typeActiveIndex = index;
+      }
+      switch (index) {
+        case 3:
+          this.form.isBet = "1";
+          break;
       }
     },
     /**
@@ -1427,6 +1431,22 @@ export default {
       this[field].radioCheck = ""; //
       this.form[min] = this[field][min];
       this.form[max] = this[field][max];
+    },
+    floorBtn() {
+      if (this.form.isTopFloor == "1") {
+        this.form.isTopFloor = "";
+      }
+      this.submitFormBtn("floor", "minFloor", "maxFloor");
+    },
+    floorChange(e) {
+      if (e == "顶层") {
+        this.form.isTopFloor = "1";
+      } else {
+        if (this.form.isTopFloor == "1") {
+          this.form.isTopFloor = "";
+        }
+        this.packCheckChange("floorlist", "minFloor", "maxFloor", "floor", e);
+      }
     },
     /**
      * @example:传参封装方法 需要checkbox多选的统一封装

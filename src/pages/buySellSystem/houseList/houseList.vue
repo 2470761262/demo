@@ -9,6 +9,7 @@
     flex: 1;
     height: 0;
     overflow: auto;
+    min-height: 400px;
   }
 }
 </style>
@@ -75,7 +76,9 @@ export default {
         isKey: "", //是否钥匙
         //  isBet: "", //是否对赌
         isReal: "", //是否实勘
-        isElevator: "" //是否电梯
+        isElevator: "", //是否电梯
+        isTopFloor: "", //是否是顶层
+        isBet: "" //对赌
       }
     };
   },
