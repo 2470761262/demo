@@ -62,7 +62,12 @@
                     </div>
                     <div class="car-row car-mar-no">
                       <div class="car-title">跟进内容：</div>
-                      <div class="car-right">{{ item.Memo }}</div>
+                      <VueAudio
+                        v-if="item.FollowType == '电话跟进'"
+                        :theUrl="item.Memo.slice(6)"
+                        theControlList="onlyOnePlaying"
+                      ></VueAudio>
+                      <div class="car-right" v-else>{{ item.Memo }}</div>
                     </div>
                   </section>
                 </div>
