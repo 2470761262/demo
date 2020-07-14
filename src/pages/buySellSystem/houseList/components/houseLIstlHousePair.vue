@@ -222,6 +222,7 @@
             class="tab-image-item"
             :src="item.picUrl + '?x-oss-process=style/thumb'"
             @error="houseImageErorHandle(item)"
+            scroll-container=".scroll-tab"
           >
           </el-image>
         </div>
