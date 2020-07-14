@@ -6,6 +6,7 @@
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 10;
+  margin-bottom: 8px;
   .page-posi-sticky {
     background: #fff;
     z-index: 100;
