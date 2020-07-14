@@ -455,7 +455,12 @@ export default {
 
     currentchange(pageIndex) {
       this.pageJson.currentPage = pageIndex;
-      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
+      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false).then(
+        () => {
+          dom.querySelector(".scroll-tab").scrollTop = 0;
+          this.$parent.ListeningScroll();
+        }
+      );
     },
     addListener() {
       let rdList = dom.querySelectorAll(".el-table__body-wrapper tbody > tr");
