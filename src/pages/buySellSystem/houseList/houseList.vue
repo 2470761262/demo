@@ -42,12 +42,12 @@ export default {
         communityName: "", //楼盘名
         cbNo: "", //楼栋号
         roomNumber: "", //房间号
-        business: "",
-        houseType: [],
-        renovation: [],
-        purpose: [],
-        primarySchool: [],
-        middleSchool: [],
+        bussinessDistrict: "",
+        roomTypeList: [],
+        decorationList: [],
+        houseUseList: [],
+        primarySchoolList: [],
+        middleSchoolList: [],
         comId: "",
         cbId: "",
         roomNo: "",
@@ -57,7 +57,7 @@ export default {
         maxInArea: "",
         minPrice: "",
         maxPrice: "",
-        face: [],
+        faceList: [],
         sortColumn: "price",
         sortType: 1,
         keyWord: "", //keyword
