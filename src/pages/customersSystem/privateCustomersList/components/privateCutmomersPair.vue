@@ -741,14 +741,14 @@
   <div class="pariWarp">
     <div class="SwtichBox">
       <div class="SwitchItemOn">
-        <i></i>
+        <i class="iconfont iconcube-kehu"></i>
         <span>私客库</span>
       </div>
       <div
         class="SwitchItem"
         @click="navigateTo('/customers/publicCustomersList')"
       >
-        <i></i>
+        <i class="iconfont iconkehu"></i>
         <span>公客池</span>
       </div>
     </div>
