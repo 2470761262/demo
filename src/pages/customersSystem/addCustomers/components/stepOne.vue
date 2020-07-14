@@ -5,6 +5,9 @@
   .step-content();
   padding: 0 24px 24px;
   background: rgba(255, 255, 255, 1);
+  .impression-box {
+    padding-bottom: 36px;
+  }
 }
 </style>
 <template>
@@ -15,29 +18,36 @@
       <!-- 客户姓名 -->
       <div
         class="input-group is-required"
-        :class="{ 'error-tips': errorBags.has('customeName') }"
+        :class="{ 'error-tips': errorBags.has('Customers') }"
       >
         <div class="input-head">客户姓名</div>
 
         <el-input
-          v-model="mock"
+          v-model="formData.Customers"
           class="input-content"
           clearable
+          maxlength="5"
           placeholder="请输入客户的姓名"
-          data-vv-name="customeName"
+          data-vv-name="Customers"
           data-vv-as="客户姓名"
-          v-validate="'required'"
+          v-validate="'required|isChinese|chineseLen'"
         />
+        <div
+          :class="{
+            'after-error-tips': errorBags.has('Customers')
+          }"
+          :data-error="errorBags.first('Customers')"
+        ></div>
       </div>
       <!-- 客户性别 -->
       <div class="input-group is-required">
         <div class="input-head">客户性别</div>
-        <label class="radio-content" v-for="item in sex" :key="item.value">
+        <label class="radio-content" v-for="item in sexList" :key="item.value">
           <input
             type="radio"
             :value="item.value"
-            v-model="mock"
-            data-vv-name="customeSex"
+            v-model="formData.sex"
+            data-vv-name="sex"
             data-vv-as="客户性别"
             v-validate="'required'"
           />
@@ -45,9 +55,9 @@
         </label>
         <div
           :class="{
-            'after-error-tips': errorBags.has('customeSex')
+            'after-error-tips': errorBags.has('sex')
           }"
-          :data-error="errorBags.first('customeSex')"
+          :data-error="errorBags.first('sex')"
         ></div>
       </div>
       <!-- 客户来源 -->
@@ -60,9 +70,10 @@
           data-vv-as="客户来源"
           v-validate="'required|length:2'"
           :cascaderList="cascaderList"
-          v-model="cascaderValue"
+          v-model="formData.sourceList"
         />
       </div>
+
       <!-- 客户电话 -->
       <div
         class="input-group is-required "
@@ -79,7 +90,7 @@
         </div>
         <div class="input-assist-tips" v-if="addTel.length != 0">客户电话1</div>
         <el-input
-          v-model="mock"
+          v-model="formData.tels[0]"
           class="input-content"
           clearable
           placeholder="请输入客户的电话号码"
@@ -91,7 +102,8 @@
         />
         <div
           :class="{
-            'after-error-tips': mock.length != 0 && errorBags.has('phone')
+            'after-error-tips':
+              formData.tels.length != 0 && errorBags.has('phone')
           }"
           :data-error="errorBags.first('phone')"
         ></div>
@@ -108,7 +120,7 @@
         </div>
         <div class="input-pack">
           <el-input
-            v-model="mock"
+            v-model="formData.tels[index + 1]"
             class="input-content"
             clearable
             placeholder="请输入客户的电话号码"
@@ -116,7 +128,16 @@
             show-word-limit
             :data-vv-name="'phone' + (index + 2)"
             data-vv-as="客户号码"
-            v-validate="'phone'"
+            v-validate="{
+              phone: true,
+              isSame: [
+                [
+                  formData.tels[0],
+                  ...addTel.map((tel, index) => formData.tels[index + 1])
+                ],
+                '手机号'
+              ]
+            }"
           />
           <i
             class="el-icon-remove inline-remove-btn"
@@ -126,7 +147,7 @@
         <div
           :class="{
             'after-error-tips':
-              mock.length != 0 && errorBags.has('phone' + (index + 2))
+              formData.tels.length != 0 && errorBags.has('phone' + (index + 2))
           }"
           :data-error="errorBags.first('phone' + (index + 2))"
         ></div>
@@ -136,7 +157,7 @@
         <div class="input-head">购房意向</div>
         <!-- class="input-content" -->
         <el-select
-          v-model="mock"
+          v-model="formData.desireIntensity"
           popper-class="options-item"
           class="input-content"
           placeholder="请选择购房意向"
@@ -150,21 +171,34 @@
         </el-select>
       </div>
       <!-- 客户籍贯 -->
-      <div class="input-group">
+      <div
+        class="input-group"
+        :class="{ 'error-tips': errorBags.has('nativePlace') }"
+      >
         <div class="input-head">客户籍贯</div>
         <el-input
-          v-model="mock"
+          v-model="formData.nativePlace"
           class="input-content"
           clearable
+          maxlength="5"
           placeholder="请输入客户的籍贯"
+          data-vv-name="nativePlace"
+          data-vv-as="客户籍贯"
+          v-validate="'isChinese'"
         />
+        <div
+          :class="{
+            'after-error-tips': errorBags.has('nativePlace')
+          }"
+          :data-error="errorBags.first('nativePlace')"
+        ></div>
       </div>
       <!-- 客户印象 -->
       <div class="input-group">
         <div class="input-head">客户印象</div>
         <div class="tag-content">
           <el-tag
-            v-for="(tag, index) in impressionTags"
+            v-for="(tag, index) in formData.myImpression"
             :key="index"
             closable
             type="info"
@@ -179,25 +213,42 @@
           @click="openPop('followUpFlag')"
           >添加</el-button
         >
-        <div class="alert-content warning" v-if="impressionTags.length != 0">
+        <div
+          class="alert-content warning"
+          v-if="formData.myImpression.length != 0"
+        >
           提示:最多可添加五条客源印象
         </div>
       </div>
       <!-- 客户客源印象 -->
       <fixed-popup
         styleType="0"
+        v-if="followUpFlag"
         :visible.sync="followUpFlag"
         width="auto"
         @confirmEmit="addImpressionConfirm"
       >
-        <div class="input-group is-required pop-content">
+        <div
+          class="input-group is-required impression-box"
+          :class="{ 'error-tips': errorBags.has('impression') }"
+        >
           <div class="input-head">客户客源印象</div>
+
           <el-input
             v-model="mock1"
             class="input-content"
             clearable
-            placeholder="请输入客户印象"
+            placeholder="请输入客源印象"
+            data-vv-name="impression"
+            data-vv-as="客源印象"
+            v-validate="'required|overstep:5'"
           />
+          <div
+            :class="{
+              'after-error-tips': errorBags.has('impression')
+            }"
+            :data-error="errorBags.first('impression')"
+          ></div>
         </div>
       </fixed-popup>
     </section>
@@ -255,41 +306,39 @@
 const cascaderList = [
   {
     title: "人际开发",
-    value: 0,
+    value: 1,
     children: [
-      { title: "公众号0", value: 0 },
-      { title: "APP0", value: 1 },
-      { title: "小程序0", value: 2 }
+      { title: "老客户", value: 11 },
+      { title: "转介绍", value: 12 },
+      { title: "亲朋好友", value: 13 },
+      { title: "同学", value: 14 }
     ]
   },
   {
     title: "二次开发",
-    value: 1,
+    value: 2,
     children: [
-      { title: "公众号1", value: 3 },
-      { title: "APP1", value: 4 },
-      { title: "小程序1", value: 5 }
+      { title: "业主资料", value: 21 },
+      { title: "重复购买", value: 22 }
     ]
   },
   {
     title: "网络端口",
-    value: 2,
+    value: 3,
     children: [
-      { title: "公众号2", value: 6 },
-      { title: "APP2", value: 7 },
-      { title: "小程序2", value: 8 }
+      { title: "58同城", value: 31 },
+      { title: "安居客", value: 32 },
+      { title: "朋友圈", value: 33 },
+      { title: "其他网络", value: 34 }
     ]
   },
   {
     title: "鑫家网",
-    value: 3,
+    value: 4,
     children: [
-      { title: "公众号3", value: 9 },
-      { title: "APP3", value: 10 },
-      { title: "小程序3", value: 11 },
-      { title: "小程序3", value: 12 },
-      { title: "小程序3", value: 13 },
-      { title: "小程序3", value: 14 }
+      { title: "公众号", value: 41 },
+      { title: "小程序", value: 42 },
+      { title: "APP", value: 43 }
     ]
   }
 ];
@@ -297,6 +346,7 @@ const cascaderList = [
 import { SEX, BUYINTENTION } from "@/util/constMap";
 import selectCascader from "./selectCascader";
 import demandMoreSelect from "./demandMoreSelect";
+import { mapState } from "vuex";
 export default {
   name: "stepOne",
   $_veeValidate: {
@@ -308,22 +358,26 @@ export default {
   },
   data() {
     return {
-      demandValue: {
-        //客户需求value
-        // list0: [],
-        // list1: [],
-        // list2: []
+      formData: {
+        Customers: "", //客户姓名
+        sex: 1, //性别
+        tels: [""], //客户号码
+        desireIntensity: "", //购买意向
+        nativePlace: "", //籍贯
+        Source: 0, //客源来源
+        sourceType: 0,
+        myImpression: [], //印象的结果数组
+        requirements: [], //客户需求（传后端用）
+        sourceList: [] //客源来源列表
       },
+      mock1: "", //客源印象
       moreSelectFlag: false, //需求信息多选开关
       followUpFlag: false, //印象弹框开关
-      mock: "",
-      mock1: "",
-      sex: SEX,
+      sexList: SEX, //性别列表
       addTel: [],
       cascaderList: cascaderList,
       buyintention: BUYINTENTION,
-      cascaderValue: [], //客户来源的结果数组
-      impressionTags: [], //印象的结果数组
+      demandValue: {},
       demandData: {
         rendList: [], //接收渲染数组
         secondList: [], //二手需求数组
@@ -349,14 +403,19 @@ export default {
      */
     demandConfirm({ rendList, dataJson: { list0, list1, list2 } }) {
       this.demandData.rendList = rendList;
-
+      this.$store.commit("updateDemandValue", this.demandValue);
+      // this.$store.commit("updateDemandData", this.demandData);
       //   this.demandData.secondList = list0;
       //   this.demandData.newHouseList = list1;
       //   this.demandData.leaseList = list2;
       this.moreSelectFlag = false;
     },
     submitResult(value) {
-      console.log(value, 11111);
+      // if (value) {
+      //   this.formData.Source = value[1];
+      // } else {
+      //   this.formData.Source = "";
+      // }
     },
     //添加电话号码12
     addTelToList() {
@@ -389,15 +448,27 @@ export default {
      * @example: 弹框组件确定点击事件
      */
     addImpressionConfirm() {
-      this.impressionTags.push(this.mock1);
-      this.mock1 = "";
-      this.followUpFlag = false;
+      if (this.formData.myImpression.length < 5) {
+        this.$validator.validate("impression").then(result => {
+          if (result) {
+            this.formData.myImpression.push(this.mock1);
+            this.mock1 = "";
+            this.followUpFlag = false;
+          }
+        });
+      } else {
+        this.followUpFlag = false;
+        this.$message({
+          type: "error",
+          message: "客源印象不能超过5个"
+        });
+      }
     },
     /**
      * @example: 印象数组删除
      */
     handleClose(index) {
-      this.impressionTags.splice(index, 1);
+      this.formData.myImpression.splice(index, 1);
     },
     /**
      * @example: 验证当前页面表单

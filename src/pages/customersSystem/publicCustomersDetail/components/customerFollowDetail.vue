@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+@import url("../../publicCustomersDetail/less/form");
 .part-Warp {
   padding: 24px;
 }
@@ -77,8 +78,10 @@
           padding: 12px 0;
           display: flex;
           .cellMsgTil {
+            white-space: nowrap;
             font-size: @font14;
-            width: 94px;
+            width: 75px;
+            margin-right: 15px;
             color: #606266;
           }
           .cellMsgText {
@@ -98,80 +101,240 @@
   <div class="part-Warp">
     <div class="MainTitleRow">
       <div class="MainTitle">跟进记录</div>
-      <button class="AddFollow">写跟进</button>
+      <button class="AddFollow" @click="OpenAddFollow">写跟进</button>
     </div>
     <div class="FollowCardZone">
-      <div class="FollowCell" v-for="(item, index) in FollowData" :key="index">
+      <div
+        class="FollowCell"
+        v-for="(item, index) in FollowData.data"
+        :key="index"
+      >
         <div class="cellTilRow">
           <div class="cellTil">跟进信息</div>
           <div :class="index == 0 ? 'fristCellDot' : 'cellDot'">
             <div></div>
           </div>
-          <div class="cellTime">{{ item.Time }}</div>
+          <div class="cellTime">{{ item.AddTime || "暂无" }}</div>
         </div>
         <div
           class="cellMsgBox"
-          :class="index == FollowData.length - 1 ? 'lastCellMsgBox ' : ''"
+          :class="index == FollowData.data.length - 1 ? 'lastCellMsgBox ' : ''"
         >
           <div class="cellMsg">
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进人：</div>
-              <div class="cellMsgText">{{ item.Per }}</div>
+              <div class="cellMsgText">{{ item.perName || "暂无" }}</div>
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进类型：</div>
-              <div class="cellMsgText">{{ item.Type }}</div>
+              <div class="cellMsgText">{{ item.FollowType || "暂无" }}</div>
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进方式：</div>
-              <div class="cellMsgText">{{ item.Way }}</div>
+              <div class="cellMsgText">{{ item.FollowWay || "暂无" }}</div>
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进内容：</div>
               <div class="cellMsgText">
-                {{ item.Text }}
+                {{ item.Memo || "暂无" }}
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <fixedPopup
+      :visible.sync="addFollowFlag"
+      v-if="addFollowFlag"
+      title="写跟进"
+      width="554px"
+      typeClass="none"
+      styleType="0"
+    >
+      <template v-slot:floot>
+        <div style="margin-top：20px">
+          <div class="ChooseTil">
+            <div></div>
+            跟进类型
+          </div>
+          <div class="ChooseItemRow">
+            <el-select
+              v-model="follow.FollowType"
+              placeholder="请选择"
+              class="SelectItem"
+            >
+              <el-option
+                v-for="item in typeList"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              >
+              </el-option>
+            </el-select>
+          </div>
+          <div class="ChooseTil">
+            <div></div>
+            跟进方式
+          </div>
+          <div class="ChooseItemRow">
+            <el-radio-group v-model="follow.FollowWay" class="RadioItemBox">
+              <div
+                class="RadioItem"
+                v-for="(item, index) in wayList"
+                :key="index"
+              >
+                <el-radio :label="item.value" name="Price">
+                  {{ item.name }}
+                </el-radio>
+              </div>
+            </el-radio-group>
+          </div>
+          <div class="ChooseTil">
+            <div></div>
+            跟进内容
+          </div>
+          <div class="ChooseItemRow">
+            <el-radio-group
+              v-model="follow.defaultext"
+              class="RadioItemBox"
+              @change="getText"
+            >
+              <div
+                class="RadioItem"
+                v-for="(item, index) in defaultList"
+                :key="index"
+              >
+                <el-radio :label="item.name" name="Price">
+                  {{ item.name }}
+                </el-radio>
+              </div>
+            </el-radio-group>
+          </div>
+          <div class="ChooseItemRow">
+            <el-input
+              type="textarea"
+              placeholder="请填写跟进内容"
+              v-model="follow.Memo"
+              class="textareaItem"
+            >
+            </el-input>
+          </div>
+          <div class="foot-btn-content">
+            <el-button class="floot-btn close-btn" type="info">取消</el-button>
+            <el-button
+              class="floot-btn success-btn"
+              type="info"
+              @click="followUp"
+              >提交</el-button
+            >
+          </div>
+        </div>
+      </template>
+    </fixedPopup>
   </div>
 </template>
 
 <script>
+const typeListModle = [
+  {
+    name: "首次跟进",
+    value: "首次跟进"
+  },
+  {
+    name: "日常回访",
+    value: "日常回访"
+  },
+  {
+    name: "带看后回访",
+    value: "带看后回访"
+  }
+];
+const wayListModle = [
+  {
+    name: "微信",
+    value: "微信"
+  },
+  {
+    name: "电话",
+    value: "电话"
+  },
+  {
+    name: "短信",
+    value: "短信"
+  },
+  {
+    name: "面访",
+    value: "面访"
+  },
+  {
+    name: "视频",
+    value: "视频"
+  }
+];
+const defaultListModle = [
+  {
+    name: "短期内无法看房"
+  },
+  {
+    name: "联系不上"
+  },
+  {
+    name: "需求明确，无适合房源"
+  },
+  {
+    name: "和其他同事看房中"
+  }
+];
 export default {
+  inject: ["customerId", "FollowData"],
   data() {
     return {
-      FollowData: [
-        {
-          Time: "2020-10-10 22:22:22",
-          Per: "林俊杰",
-          Type: "日常回访",
-          Way: "电话",
-          Text:
-            "跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容"
-        },
-        {
-          Time: "2020-10-10 22:22:22",
-
-          Per: "林俊杰",
-          Type: "日常回访",
-          Way: "电话",
-          Text:
-            "跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容"
-        },
-        {
-          Time: "2020-10-10 22:22:22",
-
-          Per: "林俊杰",
-          Type: "日常回访",
-          Way: "电话",
-          Text:
-            "跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容跟进内容"
-        }
-      ]
+      addFollowFlag: false,
+      typeList: typeListModle,
+      wayList: wayListModle,
+      defaultList: defaultListModle,
+      follow: {
+        FollowType: "",
+        FollowWay: "",
+        defaultext: "",
+        Memo: ""
+      }
     };
+  },
+  mounted() {},
+  methods: {
+    //添加跟进
+    followUp() {
+      var that = this;
+      this.$api
+        .post({
+          url: "/saleCustomerDetail/addSaleCusFlower",
+          qs: true,
+          data: {
+            EntructId: that.customerId,
+            Memo: that.follow.Memo,
+            FollowWay: that.follow.FollowWay,
+            FollowType: that.follow.FollowType
+          }
+        })
+        .then(e => {
+          console.log(e.data);
+          let json = e.data;
+          if (json.code == 200) {
+            this.apply();
+            this.addFollowFlag = false;
+          } else if (json.code == 400) {
+            alert(json.message);
+            console.log("失败     " + json);
+          }
+        });
+    },
+    OpenAddFollow() {
+      this.addFollowFlag = true;
+    },
+    getText() {
+      this.follow.Memo = this.follow.defaultext;
+    }
   }
 };
 </script>

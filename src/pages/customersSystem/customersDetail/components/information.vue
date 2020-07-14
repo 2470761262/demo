@@ -1,7 +1,7 @@
 <template>
   <div class="infor-box">
     <div class="infor-row">
-      <span class="infor-name">{{ customer.data.customers }}</span>
+      <span class="infor-name">{{ customer.data.Customers }}</span>
       <span class="infor-sex">{{ customer.data.sex === 0 ? "男" : "女" }}</span>
     </div>
     <div class="infor-row flex">
@@ -10,7 +10,12 @@
         <div>
           <p v-for="(item, idx) in phoneList" :key="idx">{{ item.phone }}</p>
         </div>
-        <el-button slot="reference" @click="getPhone">查看号码</el-button>
+        <el-button
+          slot="reference"
+          @click="getPhone"
+          v-if="permissionList.customerDetailForTelephone.isDisable"
+          >查看号码</el-button
+        >
       </el-popover>
       <el-popover placement="bottom" trigger="click" class="infor-dial">
         <div class="phone-list">
@@ -18,11 +23,15 @@
             v-for="(item, idx) in phoneList"
             :key="idx"
             @click="callUp(item.phone)"
+            v-loading="callLoading"
           >
             {{ item.phone }}
           </div>
         </div>
-        <el-button slot="reference" @click="getPhone"
+        <el-button
+          slot="reference"
+          @click="getPhone"
+          v-if="permissionList.dialButtonEnable.isDisable"
           ><span>一键拨号</span></el-button
         >
       </el-popover>
@@ -37,6 +46,7 @@
         <i
           data-anchor="客源详情印象删除 => click"
           class="el-icon-close"
+          v-if="permissionList.customerDetailForDeleteImpression.isDisable"
           @click="deleteImpression(item.id, index)"
         ></i>
       </div>
@@ -51,7 +61,7 @@
     <section class="message-row flex">
       <div class="message-title">委托来源：</div>
       <div class="message-txt">
-        {{ customer.data.source | formatSource }} /
+        {{ customer.data.Source | formatSource }} /
         {{ customer.data.sourceType | formatSourceType }}
       </div>
     </section>
@@ -92,12 +102,18 @@
 
 <script>
 export default {
-  inject: ["demand", "customer", "customerDeal", "impressionList", "telList"],
+  inject: [
+    "demand",
+    "customer",
+    "customerDeal",
+    "impressionList",
+    "telList",
+    "permissionList"
+  ],
   data() {
     return {
       sex: "男",
-      // phone: "159****3171",
-      tel: "15959453171",
+      callLoading: false,
       noData: "暂无",
       phoneList: []
     };
@@ -224,23 +240,26 @@ export default {
      */
     callUp(phone) {
       let that = this;
+      that.callLoading = true;
       let postData = {
         customerId: this.customer.data.id,
-        remark: "给客户" + this.customer.data.customers + "拨打电话",
-        customerName: this.customer.data.customers,
+        remark: "给客户" + this.customer.data.Customers + "拨打电话",
+        customerName: this.customer.data.Customers,
         contactPhone: phone,
-        customerNo: this.customer.data.customerNo,
+        customerNo: this.customer.data.CustomerNo,
         customerPlate: 0
       };
       that.$api
         .post({
           url: "/saleCustomerDetail/DialPhoneToCustomer",
           data: postData,
+          qs: true,
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/x-www-form-urlencoded"
           }
         })
         .then(e => {
+          that.callLoading = false;
           if (e.data.code == 200) {
             this.$message({
               type: "success",
@@ -249,6 +268,7 @@ export default {
           }
         })
         .catch(e => {
+          that.callLoading = false;
           if (e.response != undefined) {
             that.$message(e.response.data.message);
           }

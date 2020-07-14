@@ -39,22 +39,25 @@ export default {
   data() {
     return {
       form: {
-        searchType: "", //搜索类别 1--客户信息 2--客户印象
-        customersType: 1, //客户类别
+        submitSearch: false,
+        searchType: "1", //搜索类别 1--客户信息 2--客户印象
+        requireTypes: [], //需求类型参数 (示例：买二手房[1,2,4]，买新房[8,16,32]，租赁[64，128，256]
         keyWord: "", //关键词
-        desireIntensitys: [], //意愿
-        Progress: [], //进度
-        MinPrice: "", //最低价
-        MaxPrice: "", //最高价
-        MinArea: "", //最小面积
-        MaxArea: "", //最大面积
-        houseNumbers: "", //房型s
-        StartDelegate: "", //委托开始时间
-        EndDelegate: "", //委托结束时间
-        StartMaintenance: "", //维护开始时间
-        EndMaintenance: "", //维护结束时间
-        StartTakelook: "", //带看开始时间
-        EndTakelook: "" //带看结束时间
+        desireIntensitys: [], //意愿 多选，0强烈，1较弱，2一般 4不限，需要处理数据
+        pairNumbers: [], //带看次数，多选，数字数组
+        attentionStatus: false, //是否关注 1关注 其余暂不关注，需要处理数据
+        isBuy: 0, //是否成交，0否，1是 需要处理数据
+        minPrice: "", //最低价
+        maxPrice: "", //最高价
+        minArea: "", //最小面积
+        maxArea: "", //最大面积
+        houseNumbers: "", //房型 需要处理数据
+        minAddTime: "", //委托开始时间
+        maxAddTime: "", //委托结束时间
+        minMainTainTime: "", //维护开始时间
+        maxMainTainTime: "", //维护结束时间
+        minLastPairFollowTime: "", //带看开始时间
+        maxLastPairFollowTime: "" //带看结束时间
       }
     };
   },

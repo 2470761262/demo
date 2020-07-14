@@ -30,7 +30,10 @@ export default {
       customerDeal: this.customerDeal,
       impressionList: this.impressionList,
       getImpressions: this.getImpressions,
-      telList: this.telList
+      telList: this.telList,
+      permissionList: this.permissionList,
+      getInformation: this.getInformation,
+      demandValue: this.demandValue
     };
   },
   components: {
@@ -50,9 +53,51 @@ export default {
         myLookHouses: 0 //我的带看套数
       }, //客户信息
       customerDeal: {}, //客户买卖信息
-      customerId: 205448,
+      customerId: this.$route.query.customerId,
       impressionList: {}, //客户印象
-      telList: {}
+      telList: {},
+      permissionList: {
+        dialButtonEnable: { isDisable: false, name: "dialButtonEnable" }, //一键拨号
+        addLookButtonEable: { isDisable: false, name: "addLookButtonEable" }, //添加带看
+        addFollowLookButtonEable: {
+          isDisable: false,
+          name: "addFollowLookButtonEable"
+        }, //添加跟进
+        modifyCustomerButtonEable: {
+          isDisable: false,
+          name: "modifyCustomerButtonEable"
+        }, //修改客户
+        customerDetailForAddImpression: {
+          isDisable: false,
+          name: "customerDetailForAddImpression"
+        }, //添加印象
+        customerDetailForDeleteImpression: {
+          isDisable: false,
+          name: "customerDetailForDeleteImpression"
+        }, //删除印象
+        customerDetailForTelephone: {
+          isDisable: false,
+          name: "customerDetailForTelephone"
+        }, //获取手机号
+        customerDetailForTurnInvalid: {
+          isDisable: false,
+          name: "customerDetailForTurnInvalid"
+        }, //转无效
+        customerDetailUnAttention: {
+          isDisable: false,
+          name: "customerDetail-unAttention"
+        }, //暂不关注
+        customerDetailAttention: {
+          isDisable: false,
+          name: "customerDetail-Attention"
+        } //取消关注
+      }, //权限列表
+      demandValue: {
+        //客户需求value
+        list0: [],
+        list1: [],
+        list2: []
+      }
     };
   },
   created() {
@@ -89,6 +134,28 @@ export default {
             that.customer.lookHouses = data.lookHouses;
             that.customer.myLookHouses = data.myLookHouses;
             // that.tel = data.telList[0].phone;
+            that.modificationPermission(data.ruleList);
+            that.demandList.data.forEach(item => {
+              item.middleSchool = item.middleSchool.split("$");
+              item.primarySchool = item.primarySchool.split("$");
+              switch (item.requireType) {
+                case 1:
+                case 2:
+                case 4:
+                  this.demandValue.list0.push(item.requireType);
+                  break;
+                case 8:
+                case 16:
+                case 32:
+                  this.demandValue.list1.push(item.requireType);
+                  break;
+                case 64:
+                case 128:
+                case 256:
+                  this.demandValue.list2.push(item.requireType);
+                  break;
+              }
+            });
           }
         })
         .catch(e => {
@@ -119,6 +186,19 @@ export default {
           }
         })
         .catch();
+    },
+    /**
+     * @example: 修改权限
+     */
+    modificationPermission(ruleList) {
+      for (let item in this.permissionList) {
+        for (let i = 0; i < ruleList.length; i++) {
+          if (ruleList[i].rurl == this.permissionList[item].name) {
+            this.permissionList[item].isDisable = true;
+            break;
+          }
+        }
+      }
     }
   }
 };

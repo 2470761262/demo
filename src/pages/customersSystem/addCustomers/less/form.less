@@ -6,7 +6,7 @@
     // background: rgba(255, 255, 255, 1);
     .title {
         // prettier-ignore
-        font-size: 24PX;
+        font-size: @font24;
         color: rgba(48, 49, 51, 1);
         line-height: 32px;
         padding: 24px 0;
@@ -59,7 +59,7 @@
         .input-head {
             width: @width;
             // prettier-ignore
-            font-size: 16PX;
+            font-size: @font16;
             // prettier-ignore
             line-height: 21px;
             color: rgba(48, 49, 51, 1);
@@ -86,7 +86,7 @@
                 height: 36px;
                 line-height: 34px;
                 // prettier-ignore
-                font-size: 16PX;
+                font-size: @font16;
                 color: rgba(48, 49, 51, 1);
 
                 &+.el-tag {
@@ -97,8 +97,7 @@
 
         .alert-content {
             padding: 16px 0;
-            // prettier-ignore
-            font-size: 16PX;
+            font-size: @font16;
             width: @width;
             box-sizing: border-box;
             text-indent: 24px;
@@ -112,8 +111,7 @@
 
         .input-assist-tips {
             width: @width;
-            // prettier-ignore
-            font-size: 16PX;
+            font-size: @font16;
             color: rgba(48, 49, 51, 1);
             margin-bottom: 16px;
         }
@@ -122,8 +120,7 @@
             display: flex;
 
             .inline-remove-btn {
-                // prettier-ignore
-                font-size: 18PX;
+                font-size: @font18;
                 color: rgba(243, 58, 58, 1);
                 cursor: pointer;
                 align-self: center;
@@ -176,8 +173,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                // prettier-ignore
-                font-size: 16PX;
+                font-size: @font16;
                 color: rgba(144, 147, 153, 1);
                 // prettier-ignore
                 line-height: 21PX;
@@ -187,9 +183,66 @@
         .primary-btn {
             min-width: 86px;
             height: 48px;
-            // prettier-ignore
-            font-size: 16PX
+            font-size: @font16;
         }
+
+        .checkbox-content {
+            cursor: pointer;
+            display: inline-block;
+            margin-right: 16px;
+            input[type="checkbox"] {
+              display: none;
+            }
+            input[type="checkbox"]:checked + .checkbox-title {
+              background: @backgroud;
+              color: rgba(255, 255, 255, 1);
+            }
+            .checkbox-title {
+              height: 48px;
+              background: rgba(240, 242, 245, 1);
+              border-radius: 4px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: @font16;
+              color: rgba(144, 147, 153, 1);
+              // prettier-ignore
+              line-height: 21PX;
+              margin-bottom: 16px;
+              padding: 0 16px;
+            }
+        }
+    }
+    /deep/ .el-checkbox-button, .el-checkbox-button__inner {
+        margin-right: 16px
+    }
+    /deep/ .el-checkbox-button:last-child .el-checkbox-button__inner {
+        border-radius: 4px;
+    }
+    /deep/ .el-checkbox-button:first-child .el-checkbox-button__inner {
+        border-radius: 4px;
+        border:none
+    }
+    /deep/ .el-checkbox-button__inner {
+        height: 48px;
+        background: rgba(240, 242, 245, 1);
+        border-radius: 4px;
+        display: flex;
+        border: none;
+        align-items: center;
+        justify-content: center;
+        font-size: @font16;
+        color: rgba(144, 147, 153, 1);
+        // prettier-ignore
+        line-height: 21PX;
+        padding: 0 16px;
+        & :first-child {
+            border: none
+        }
+    }
+    /deep/ .el-checkbox-button.is-checked .el-checkbox-button__inner {
+        color: #fff;
+        background: @backgroud;
     }
 }
 
@@ -215,7 +268,7 @@
     .el-select-dropdown__item {
         height: 48px;
         line-height: 48px;
-        font-size: 16PX;
+        font-size: @font16;
     }
 }
 

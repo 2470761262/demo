@@ -35,6 +35,14 @@ Validator.extend("noZero", {
   },
   validate: value => /^[1-9]\d*$/.test(value)
 });
+//正整数和小数点后两位
+Validator.extend("flota", {
+  messages: {
+    zh_CN: field => field + "需要是正整数和正小数,小数点不超过两位"
+  },
+  validate: value =>
+    /^(([1-9][0-9]*)|(([0]\.\d{1,2}|[1-9][0-9]*\.\d{1,2})))$/.test(value)
+});
 //要么不输，要输只能输入正整数和正小数，且不为0
 Validator.extend("noZero1", {
   messages: {
@@ -121,6 +129,18 @@ Validator.extend("chineseLens", {
   },
   validate: value => value.length > 9
 });
+//长度不超过多少
+Validator.extend("overstep", {
+  messages: {
+    zh_CN: (field, args) => {
+      return field + "不超过" + args[0] + "个字";
+    }
+  },
+  validate: (value, compare) => {
+    return value.length <= compare[0];
+  }
+});
+
 Validator.extend("arrFlatLength", {
   compare: ["length", "message"],
   messages: {

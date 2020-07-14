@@ -1079,6 +1079,7 @@ export default [
     //客源系统 新整客户
     path: "/customers/addCustomers",
     meta: {
+      keepAlive: true,
       title: "新增客源"
     },
     component: () =>

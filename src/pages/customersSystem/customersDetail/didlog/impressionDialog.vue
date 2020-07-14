@@ -1,5 +1,10 @@
 <template>
-  <fixedPopup v-bind="$attrs" v-on="$listeners" @confirmEmit="fromSubmit()">
+  <fixedPopup
+    v-bind="$attrs"
+    v-on="$listeners"
+    @confirmEmit="fromSubmit()"
+    :loading="isLoading"
+  >
     <div class="impression-content">
       <div
         class="input-group is-required"
@@ -14,7 +19,7 @@
           placeholder="请输入客源印象"
           data-vv-name="impression"
           data-vv-as="客源印象"
-          v-validate="'required'"
+          v-validate="'required|overstep:5'"
         />
       </div>
     </div>
@@ -29,18 +34,20 @@ export default {
   },
   data() {
     return {
-      impression: ""
+      impression: "",
+      isLoading: false
     };
   },
   methods: {
     fromSubmit() {
       let that = this;
+      let postData = {
+        customerId: this.customerId,
+        impression: this.impression
+      };
       this.$validator.validateAll().then(result => {
         if (result) {
-          let postData = {
-            customerId: this.customerId,
-            impression: this.impression
-          };
+          that.isLoading = true;
           that.$api
             .post({
               url: "/saleCustomerDetail/addImpression",
@@ -57,6 +64,7 @@ export default {
               }
             })
             .catch(e => {
+              that.isLoading = false;
               if (e.response != undefined) {
                 that.$message(e.response.data.message);
               }

@@ -84,7 +84,7 @@
           width: 100%;
           line-height: 50px;
           border: 0;
-          font-size: @font16;
+          font-size: 16px;
         }
       }
       .SubmitItem {
@@ -363,11 +363,11 @@
         <div class="SearchItem">
           <div class="InputItem">
             <input
-              placeholder="请输入楼盘名称或房源编号"
+              placeholder="请输入客户姓名或联系方式"
               v-model="form.KeyWord"
             />
           </div>
-          <div class="SubmitItem">
+          <div class="SubmitItem" @click="submit">
             <i class="el-icon-search"></i>
           </div>
         </div>
@@ -383,13 +383,13 @@
         class="ItemRow ChooseItemRow"
         prop="HouseType"
       >
-        <el-radio-group v-model="form.customerNeeds" class="RadioItemBox">
+        <el-radio-group v-model="form.requireTypes" class="RadioItemBox">
           <div
             class="RadioItem"
             v-for="(item, index) in customerNeedsList"
             :key="index"
           >
-            <el-radio :label="item.value" name="customerNeeds">{{
+            <el-radio :label="item.value" name="requireTypes">{{
               item.name
             }}</el-radio>
           </div>
@@ -400,13 +400,13 @@
         class="ItemRow ChooseItemRow"
         prop="HouseType"
       >
-        <el-radio-group v-model="form.PublicType" class="RadioItemBox">
+        <el-radio-group v-model="form.plate" class="RadioItemBox">
           <div
             class="RadioItem"
             v-for="(item, index) in PublicTypeList"
             :key="index"
           >
-            <el-radio :label="item.value" name="PublicType">{{
+            <el-radio :label="item.value" name="plate">{{
               item.name
             }}</el-radio>
           </div>
@@ -417,13 +417,13 @@
         class="ItemRow ChooseItemRow"
         prop="Reason"
       >
-        <el-radio-group v-model="form.Reason" class="RadioItemBox">
+        <el-radio-group v-model="form.plateChangeReason" class="RadioItemBox">
           <div
             class="RadioItem"
             v-for="(item, index) in ReasonList"
             :key="index"
           >
-            <el-radio :label="item.value" name="Reason">{{
+            <el-radio :label="item.value" name="plateChangeReason">{{
               item.name
             }}</el-radio>
           </div>
@@ -440,29 +440,29 @@ const customerNeedsModle = [
   },
   {
     name: "买二手",
-    value: 2
+    value: [1, 2, 4]
   },
   {
     name: "租赁",
-    value: 3
+    value: [8, 15, 32]
   },
   {
     name: "买新房",
-    value: 4
+    value: [64, 128, 256]
   }
 ];
 const PublicTypeModle = [
   {
     name: "不限",
-    value: 1
+    value: ""
   },
   {
     name: "门店公客",
-    value: 2
+    value: 1
   },
   {
     name: "区域公客",
-    value: 3
+    value: 2
   },
   {
     name: "公司公客",
@@ -472,23 +472,27 @@ const PublicTypeModle = [
 const ReasonModle = [
   {
     name: "不限",
-    value: 1
+    value: ""
   },
   {
     name: "无效转入",
-    value: 2
+    value: 1
   },
   {
     name: "离职转入",
-    value: 3
+    value: 2
   },
   {
     name: "滚动转入",
-    value: 4
+    value: 3
   },
   {
     name: "核销房源转入",
     value: 4
+  },
+  {
+    name: "超期未维护转",
+    value: 5
   }
 ];
 export default {
@@ -506,6 +510,9 @@ export default {
   methods: {
     navigateTo(path) {
       this.$router.push({ path: path });
+    },
+    submit() {
+      this.form.submitSearch = !this.form.submitSearch;
     }
   }
 };

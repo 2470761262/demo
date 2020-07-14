@@ -2,30 +2,56 @@
   <div class="more-box">
     <div class="more-title">更多操作</div>
     <ul class="more-list">
-      <li>
+      <li
+        @click="demandConfirm"
+        v-if="permissionList.modifyCustomerButtonEable.isDisable"
+      >
         <span>修改基本信息</span>
         <i class="el-icon-arrow-right"></i>
       </li>
-      <li @click="openPopUp('impressionFlag')">
+
+      <li
+        @click="openPopUp('impressionFlag')"
+        v-if="permissionList.customerDetailForAddImpression.isDisable"
+      >
         <span>客源印象</span>
         <i class="el-icon-arrow-right"></i>
       </li>
-      <li @click="openPopUp('uselessFlag')">
+
+      <li
+        @click="openPopUp('uselessFlag')"
+        v-if="permissionList.customerDetailForTurnInvalid.isDisable"
+      >
         <span>无效客源</span>
         <i class="el-icon-arrow-right"></i>
       </li>
+
       <li @click="openPopUp('operationLogFlag')">
         <span>操作日志</span>
         <i class="el-icon-arrow-right"></i>
       </li>
-      <li @click="openPopUp('attentionFlag')">
+
+      <li
+        @click="openPopUp('attentionFlag')"
+        v-if="permissionList.customerDetailUnAttention.isDisable"
+      >
         <span>暂不关注</span>
         <i class="el-icon-arrow-right"></i>
       </li>
+
+      <li
+        @click="attention()"
+        v-if="permissionList.customerDetailAttention.isDisable"
+      >
+        <span>取消暂不关注</span>
+        <i class="el-icon-arrow-right"></i>
+      </li>
+
       <li @click="openDevelop()">
         <span>转为成交</span>
         <i class="el-icon-arrow-right"></i>
       </li>
+
       <li @click="openDevelop()">
         <span>发起合作</span>
         <i class="el-icon-arrow-right"></i>
@@ -67,6 +93,7 @@
 
 <script>
 export default {
+  inject: ["customerId", "permissionList"],
   data() {
     return {
       impressionFlag: false,
@@ -89,6 +116,35 @@ export default {
     /**
      * @example: 研发提示弹窗
      */
+    attention() {
+      let that = this;
+      that.$api
+        .post({
+          url: "/saleCustomerDetail/attention",
+          data: { customerId: this.customerId },
+          qs: true,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.$message({
+              type: "success",
+              message: "已取消该客户的暂不关注"
+            });
+            that.getInformation();
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
+    },
+    /**
+     * @example: 研发提示弹窗
+     */
     openDevelop() {
       this.$alert("该功能正在开发中，敬请期待", "提示", {
         confirmButtonText: "确定",
@@ -101,6 +157,12 @@ export default {
      */
     openPopUp(PopName) {
       this[PopName] = true;
+    },
+    demandConfirm() {
+      this.$router.push({
+        path: "/customers/addCustomers",
+        query: { customerId: this.customerId }
+      });
     }
   }
 };
@@ -109,6 +171,7 @@ export default {
 <style lang="less" scoped>
 .more-box {
   padding: 24px;
+  padding-bottom: 0;
   margin-top: 16px;
   background-color: #fff;
   border-radius: 8px;
