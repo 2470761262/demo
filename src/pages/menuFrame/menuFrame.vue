@@ -32,7 +32,6 @@
       background-color: rgb(84, 92, 100);
     }
     .children-page {
-      min-height: calc(100% - 26px);
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
@@ -78,7 +77,7 @@
       </el-aside>
       <el-main>
         <feedback ref="feedback" v-show="isMapNav" />
-        <div class="children-page">
+        <div class="children-page" :style="isMapNavStyle">
           <!-- 二级页面 router-view -->
           <!-- <transition name="el">
             <keep-alive
@@ -128,6 +127,13 @@ export default {
     },
     isPad() {
       return !this.$route.meta.isPad;
+    },
+    isMapNavStyle() {
+      if (this.isMapNav) {
+        return { "min-height": "calc(100% - 26px)" };
+      } else {
+        return { "min-height": "100%" };
+      }
     }
   },
   methods: {
