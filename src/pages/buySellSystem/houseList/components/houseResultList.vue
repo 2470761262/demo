@@ -3,7 +3,9 @@
 .page-result-content {
   //padding: 0 24px;
   background: #fff;
-  //box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
   .page-posi-sticky {
     background: #fff;
     z-index: 100;
