@@ -2,34 +2,53 @@
   <div class="more-box">
     <div class="more-title">更多操作</div>
     <ul class="more-list">
-      <li>
+      <li v-if="permissionList.modifyCustomerButtonEable.isDisable">
         <span>修改基本信息</span>
         <i class="el-icon-arrow-right"></i>
       </li>
-      <li @click="openPopUp('impressionFlag')">
+
+      <li
+        @click="openPopUp('impressionFlag')"
+        v-if="permissionList.customerDetailForAddImpression.isDisable"
+      >
         <span>客源印象</span>
         <i class="el-icon-arrow-right"></i>
       </li>
-      <li @click="openPopUp('uselessFlag')">
+
+      <li
+        @click="openPopUp('uselessFlag')"
+        v-if="permissionList.customerDetailForTurnInvalid.isDisable"
+      >
         <span>无效客源</span>
         <i class="el-icon-arrow-right"></i>
       </li>
+
       <li @click="openPopUp('operationLogFlag')">
         <span>操作日志</span>
         <i class="el-icon-arrow-right"></i>
       </li>
-      <li @click="openPopUp('attentionFlag')">
+
+      <li
+        @click="openPopUp('attentionFlag')"
+        v-if="permissionList.customerDetailUnAttention.isDisable"
+      >
         <span>暂不关注</span>
         <i class="el-icon-arrow-right"></i>
       </li>
-      <li @click="attention()">
+
+      <li
+        @click="attention()"
+        v-if="permissionList.customerDetailAttention.isDisable"
+      >
         <span>取消暂不关注</span>
         <i class="el-icon-arrow-right"></i>
       </li>
+
       <li @click="openDevelop()">
         <span>转为成交</span>
         <i class="el-icon-arrow-right"></i>
       </li>
+
       <li @click="openDevelop()">
         <span>发起合作</span>
         <i class="el-icon-arrow-right"></i>
@@ -71,7 +90,7 @@
 
 <script>
 export default {
-  inject: ["customerId"],
+  inject: ["customerId", "permissionList"],
   data() {
     return {
       impressionFlag: false,
@@ -111,6 +130,7 @@ export default {
               type: "success",
               message: "已取消该客户的暂不关注"
             });
+            that.getInformation();
           }
         })
         .catch(e => {
@@ -142,6 +162,7 @@ export default {
 <style lang="less" scoped>
 .more-box {
   padding: 24px;
+  padding-bottom: 0;
   margin-top: 16px;
   background-color: #fff;
   border-radius: 8px;

@@ -20,7 +20,8 @@ function getData() {
       buyDestination: null, //购买用途,单选(刚需，投资，办公，改善，教育，其他)
       community1: "", //期望楼盘
       community1Id: null, //期望楼盘 CommunityTbl的ID
-      decoration: [], //期望装修（毛胚，简单装修，精装修）
+      decoration: "", //期望装修（毛胚，简单装修，精装修）
+      decorationList: [], //期望装修列表
       facilities: [], //附属设施（位运算（多选）：1可明火、2可外摆、4停车位、8天然气、16网络、32中央空调、64其他）
       floor: [], //期望楼层（位运算（多选）:1低楼层,2中楼层，4高楼层，8不要一楼,16不要顶楼）
       manageCompanyType: null, //物业类型-买新房（1普通住宅、2别墅、4商铺、8写字楼、16其他）

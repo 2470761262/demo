@@ -227,7 +227,7 @@ export default {
       dateValue: "",
       timeValue: "",
       startDateDisabled: {},
-      customerId: 205448,
+      customerId: this.$route.query.customerId,
       startTime: "",
       endTime: "",
       Cusfeedback: "", //带看反馈

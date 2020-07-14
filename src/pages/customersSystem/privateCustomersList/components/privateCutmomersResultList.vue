@@ -308,7 +308,7 @@ export default {
     navigateTo(row) {
       this.$router.push({
         path: "/customers/customersDetail",
-        params: { customerId: row.id }
+        query: { customerId: row.id }
       });
     }
   }

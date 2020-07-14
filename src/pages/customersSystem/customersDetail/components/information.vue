@@ -10,7 +10,12 @@
         <div>
           <p v-for="(item, idx) in phoneList" :key="idx">{{ item.phone }}</p>
         </div>
-        <el-button slot="reference" @click="getPhone">查看号码</el-button>
+        <el-button
+          slot="reference"
+          @click="getPhone"
+          v-if="permissionList.customerDetailForTelephone.isDisable"
+          >查看号码</el-button
+        >
       </el-popover>
       <el-popover placement="bottom" trigger="click" class="infor-dial">
         <div class="phone-list">
@@ -23,7 +28,10 @@
             {{ item.phone }}
           </div>
         </div>
-        <el-button slot="reference" @click="getPhone"
+        <el-button
+          slot="reference"
+          @click="getPhone"
+          v-if="permissionList.dialButtonEnable.isDisable"
           ><span>一键拨号</span></el-button
         >
       </el-popover>
@@ -38,6 +46,7 @@
         <i
           data-anchor="客源详情印象删除 => click"
           class="el-icon-close"
+          v-if="permissionList.customerDetailForDeleteImpression.isDisable"
           @click="deleteImpression(item.id, index)"
         ></i>
       </div>
@@ -93,7 +102,14 @@
 
 <script>
 export default {
-  inject: ["demand", "customer", "customerDeal", "impressionList", "telList"],
+  inject: [
+    "demand",
+    "customer",
+    "customerDeal",
+    "impressionList",
+    "telList",
+    "permissionList"
+  ],
   data() {
     return {
       sex: "男",

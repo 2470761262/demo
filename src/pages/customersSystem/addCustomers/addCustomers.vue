@@ -40,6 +40,7 @@
 <script>
 //异步组件工厂方法
 import componentsFactory from "@/util/componentsFactory";
+import { multiplication, division } from "../../../util/accurateComputeUtil";
 //记录步骤组件名字
 const ComList = ["stepOne", "stepTwo"];
 export default {
@@ -113,14 +114,35 @@ export default {
           postData = this.$store.state.addCustomers.formData.step1;
           postData.requirements = this.$store.state.addCustomers.formData.step2;
           postData.requirements.forEach((item, idx) => {
-            if (item.businessCircleList.length != 0)
+            if (item.businessCircleList.length != 0) {
               item.businessCircle = item.businessCircleList.join("$");
-            if (item.middleSchoolList.length != 0)
+            } else {
+              item.businessCircle = "";
+            }
+
+            if (item.middleSchoolList.length != 0) {
               item.middleSchool = item.middleSchoolList.join("$");
-            if (item.primarySchoolList.length != 0)
+            } else {
+              item.middleSchool = "";
+            }
+
+            if (item.primarySchoolList.length != 0) {
               item.primarySchool = item.primarySchoolList.join("$");
-            if (item.roomsList.length != 0)
+            } else {
+              item.primarySchool = "";
+            }
+
+            if (item.roomsList.length != 0) {
               item.rooms = item.roomsList.join("$");
+            } else {
+              item.rooms = "";
+            }
+
+            if (item.decorationList.length != 0) {
+              item.decoration = item.decorationList.join("$");
+            } else {
+              item.decoration = "";
+            }
             if (item.community.length != 0) {
               item.community.forEach((com, idx) => {
                 let items = com.split(",");
@@ -133,12 +155,12 @@ export default {
               item.requireType != 128 &&
               item.requireType != 256
             ) {
-              item.maxFirstPrice = item.maxFirstPrice * 10000;
-              item.minFirstPrice = item.minFirstPrice * 10000;
-              item.maxPrice = item.maxPrice * 10000;
-              item.minPrice = item.minPrice * 10000;
-              item.maxUnitPrice = item.maxUnitPrice * 10000;
-              item.minUnitPrice = item.minUnitPrice * 10000;
+              item.maxFirstPrice = multiplication(item.maxFirstPrice, 10000);
+              item.minFirstPrice = multiplication(item.minFirstPrice, 10000);
+              item.maxPrice = multiplication(item.maxPrice, 10000);
+              item.minPrice = multiplication(item.minPrice, 10000);
+              item.maxUnitPrice = multiplication(item.maxUnitPrice, 10000);
+              item.minUnitPrice = multiplication(item.minUnitPrice, 10000);
             }
           });
         }
@@ -146,6 +168,7 @@ export default {
         postData.Source = postData.sourceList[1];
         postData.origin = "PC";
         that.fullscreenLoading = true;
+        console.log(postData);
         that.$api
           .post({
             url: "/saleCustomerOperation/addCustomer",
@@ -156,7 +179,10 @@ export default {
           })
           .then(e => {
             if (e.data.code == 200) {
-              console.log("=======>");
+              that.fullscreenLoading = false;
+              this.$router.push({
+                path: "/customers/privateCustomersList"
+              });
             }
           })
           .catch(e => {
@@ -166,12 +192,12 @@ export default {
                 item.requireType != 128 &&
                 item.requireType != 256
               ) {
-                item.maxFirstPrice = item.maxFirstPrice / 10000;
-                item.minFirstPrice = item.maxFirstPrice / 10000;
-                item.maxPrice = item.maxFirstPrice / 10000;
-                item.minPrice = item.maxFirstPrice / 10000;
-                item.maxUnitPrice = item.maxFirstPrice / 10000;
-                item.minUnitPrice = item.maxFirstPrice / 10000;
+                item.maxFirstPrice = division(item.maxFirstPrice, 10000);
+                item.minFirstPrice = division(item.maxFirstPrice, 10000);
+                item.maxPrice = division(item.maxFirstPrice, 10000);
+                item.minPrice = division(item.maxFirstPrice, 10000);
+                item.maxUnitPrice = division(item.maxFirstPrice, 10000);
+                item.minUnitPrice = division(item.maxFirstPrice, 10000);
               }
             });
             that.fullscreenLoading = false;
@@ -180,7 +206,6 @@ export default {
             }
           });
       }
-      console.log(postData);
     },
     // 获取楼盘列表
     getCommunityList() {

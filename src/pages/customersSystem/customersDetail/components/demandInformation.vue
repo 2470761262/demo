@@ -1,6 +1,11 @@
 <template>
   <div class="demand-box">
-    <div class="demand-btn">新增需求</div>
+    <div
+      class="demand-btn"
+      v-if="permissionList.modifyCustomerButtonEable.isDisable"
+    >
+      新增需求
+    </div>
     <el-tabs
       v-model="changeTabsValue"
       @tab-click="handleClick"
@@ -29,7 +34,11 @@
               <span class="msg-time"
                 >更新时间：{{ customer.data.ModTime }}</span
               >
-              <span class="msg-update">修改</span>
+              <span
+                class="msg-update"
+                v-if="permissionList.modifyCustomerButtonEable.isDisable"
+                >修改</span
+              >
             </div>
             <div class="msg-content">
               <section class="msg-row-group">
@@ -103,7 +112,7 @@
 
 <script>
 export default {
-  inject: ["demand", "demandList", "customer"],
+  inject: ["demand", "demandList", "customer", "permissionList"],
   data() {
     return {
       demandData: [
