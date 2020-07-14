@@ -393,6 +393,7 @@
 
   .SwitchItemOn {
     background: @backgroud;
+    cursor: pointer;
     > i,
     > span {
       color: #ffffff;
@@ -458,6 +459,7 @@
       height: 50px;
       background: @backgroud;
       text-align: center;
+      cursor: pointer;
       > i {
         line-height: 50px;
         color: #ffffff;
@@ -478,6 +480,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    cursor: pointer;
   }
 }
 /deep/.el-form-item__content {
@@ -492,6 +495,7 @@
     height: 50px;
     line-height: 50px;
     font-size: @font18;
+    cursor: pointer;
   }
   .tapSwitchItem {
     border-bottom: 2px solid #ffffff;
