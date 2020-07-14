@@ -44,6 +44,14 @@ export default {
     this.$refs.scrollTab.scrollTop = this.scrollTop;
   },
   deactivated() {
+    if (document.querySelector(".el-main")) {
+      this.$refs.scrollTab.removeEventListener("scroll", this.ListeningScroll);
+      document
+        .querySelector(".el-main")
+        .removeEventListener("scroll", this.elMainScroll);
+    }
+  },
+  beforeDestroy() {
     this.$refs.scrollTab.removeEventListener("scroll", this.ListeningScroll);
     document
       .querySelector(".el-main")
