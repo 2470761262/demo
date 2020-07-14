@@ -68,10 +68,11 @@ export default {
       useless: "",
       uselessReason: "",
       uselessList: [
-        { key: "外公司成交", value: 11 },
-        { key: "暂不考虑", value: 12 },
-        { key: "疑似同业", value: 13 },
-        { key: "其他原因", value: 14 }
+        { key: "本公司成交", value: "OUR_COMPANY_BARGAIN" },
+        { key: "外公司成交", value: "OTHER_COMPANY_BARGAIN" },
+        { key: "暂不考虑", value: "LEAVE_OUT" },
+        { key: "疑似同业", value: "SUSPECTED_COUNTERPARTS" },
+        { key: "其他原因", value: "OTHER_CAUSE" }
       ],
       isLoading: false
     };
@@ -81,8 +82,8 @@ export default {
       let that = this;
       let postData = {
         id: this.customerId,
-        plateChangeReason: 1,
-        plateChangeSubReason: this.useless,
+        plateChangeReasonEnum: "STATUS_CHANGE_TRANSFER",
+        plateChangeSubReasonEnum: this.useless,
         plateChangeRemark: this.uselessReason
       };
       this.$validator.validateAll().then(result => {

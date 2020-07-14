@@ -5,6 +5,8 @@
   .step-content();
   padding: 0 24px 24px;
   background: rgba(255, 255, 255, 1);
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
   overflow: hidden;
   .split-line {
     margin-top: 39px;
@@ -50,426 +52,249 @@
 </style>
 <template>
   <section>
-    <section class="step-content">
+    <div class="step-content">
       <div class="heade-content">
         <div class="heade-content-left">
-          <div class="demand-item">
-            租赁住宅
-          </div>
-          <div class="demand-item active">
-            买二手住宅
-          </div>
-          <div class="demand-item">
-            租赁商铺
-          </div>
-          <div class="demand-item">
-            买二手写字楼
-          </div>
-          <div class="demand-item">
-            租赁写字楼
+          <div
+            class="demand-item"
+            v-for="(item, idx) in headerList"
+            :key="idx"
+            :class="headerActive == item ? 'active' : ''"
+            @click="changeDemand(item, idx)"
+          >
+            {{ item | formatdemand }}
           </div>
         </div>
-        <el-button class="heade-btn-change" type="primary"
+        <el-button
+          class="heade-btn-change"
+          type="primary"
+          @click="moreSelectFlag = true"
           >修改需求类型</el-button
         >
       </div>
       <i class="split-line"></i>
-      <!-- 期望总价 -->
-      <div class="input-group">
-        <div class="input-head">期望总价</div>
-        <div class="input-group-split">
-          <el-input
-            placeholder="最小值"
-            class="input-content is-suffix"
-            v-model="mock"
-          >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
-          </el-input>
-          <i class="input-split"></i>
-          <el-input
-            placeholder="最大值"
-            class="input-content is-suffix"
-            v-model="mock"
-          >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
-          </el-input>
-        </div>
-      </div>
-      <!-- 首付金额 -->
-      <div class="input-group">
-        <div class="input-head">首付金额</div>
-        <div class="input-group-split">
-          <el-input
-            placeholder="最小值"
-            class="input-content is-suffix"
-            v-model="mock"
-          >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
-          </el-input>
-          <i class="input-split"></i>
-          <el-input
-            placeholder="最大值"
-            class="input-content is-suffix"
-            v-model="mock"
-          >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
-          </el-input>
-        </div>
-      </div>
-      <!-- 期望单价 -->
-      <div class="input-group">
-        <div class="input-head">期望单价</div>
-        <div class="input-group-split">
-          <el-input
-            placeholder="最小值"
-            class="input-content is-suffix"
-            v-model="mock"
-          >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
-          </el-input>
-          <i class="input-split"></i>
-          <el-input
-            placeholder="最大值"
-            class="input-content is-suffix"
-            v-model="mock"
-          >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
-          </el-input>
-        </div>
-      </div>
-      <!-- 期望面积 -->
-      <div class="input-group">
-        <div class="input-head">期望面积</div>
-        <div class="input-group-split">
-          <el-input
-            placeholder="最小值"
-            class="input-content is-suffix"
-            v-model="mock"
-          >
-            <template v-slot:suffix>
-              <i class="suffix-tips">㎡</i>
-            </template>
-          </el-input>
-          <i class="input-split"></i>
-          <el-input
-            placeholder="最大值"
-            class="input-content is-suffix"
-            v-model="mock"
-          >
-            <template v-slot:suffix>
-              <i class="suffix-tips">㎡</i>
-            </template>
-          </el-input>
-        </div>
-      </div>
-      <!-- 购买房型 -->
-      <div class="input-group">
-        <div class="input-head">购买房型</div>
-        <label
-          class="checkbox-content"
-          v-for="item in houseTypeList"
-          :key="item.value"
-        >
-          <input type="checkbox" :value="item.value" />
-          <div class="checkbox-title">{{ item.key }}</div>
-        </label>
-      </div>
-      <!-- 购买用途 -->
-      <div class="input-group">
-        <div class="input-head">购买用途</div>
-        <el-select
-          v-model="mock"
-          popper-class="options-item"
-          class="input-content"
-          placeholder="请选择客户购买用途"
-        >
-          <el-option
-            v-for="item in purchasepurpose"
-            :key="item.value"
-            :label="item.key"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </div>
-      <!-- 期望楼层 -->
-      <div class="input-group">
-        <div class="input-head">期望楼层</div>
-        <label
-          class="checkbox-content"
-          v-for="item in floorList"
-          :key="item.value"
-        >
-          <input type="checkbox" :value="item.value" />
-          <div class="checkbox-title">{{ item.key }}</div>
-        </label>
-      </div>
-      <!-- 期望装修 -->
-      <div class="input-group">
-        <div class="input-head">期望装修</div>
-        <label
-          class="radio-content"
-          v-for="item in decoration"
-          :key="item.value"
-        >
-          <input type="radio" :value="item.value" v-model="mock" />
-          <div class="radio-title">{{ item.key }}</div>
-        </label>
-      </div>
-      <!-- 商铺类型 -->
-      <div class="input-group">
-        <div class="input-head">商铺类型</div>
-        <label
-          class="checkbox-content"
-          v-for="item in houseTypeList"
-          :key="item.value"
-        >
-          <input type="checkbox" :value="item.value" />
-          <div class="checkbox-title">{{ item.key }}</div>
-        </label>
-      </div>
-      <!-- 商铺用途 -->
-      <div class="input-group">
-        <div class="input-head">商铺用途</div>
-        <label
-          class="checkbox-content"
-          v-for="item in houseTypeList"
-          :key="item.value"
-        >
-          <input type="checkbox" :value="item.value" />
-          <div class="checkbox-title">{{ item.key }}</div>
-        </label>
-      </div>
-      <!-- 附属设施 -->
-      <div class="input-group">
-        <div class="input-head">附属设施</div>
-        <label
-          class="checkbox-content"
-          v-for="item in houseTypeList"
-          :key="item.value"
-        >
-          <input type="checkbox" :value="item.value" />
-          <div class="checkbox-title">{{ item.key }}</div>
-        </label>
-      </div>
-      <!-- 其他需求 -->
-      <div class="input-group">
-        <div class="input-head">其他需求</div>
-        <label
-          class="checkbox-content"
-          v-for="item in houseTypeList"
-          :key="item.value"
-        >
-          <input type="checkbox" :value="item.value" />
-          <div class="checkbox-title">{{ item.key }}</div>
-        </label>
-      </div>
-      <!-- 楼栋需求 -->
-      <div class="input-group">
-        <div class="input-head">楼栋需求</div>
-        <label
-          class="checkbox-content"
-          v-for="item in houseTypeList"
-          :key="item.value"
-        >
-          <input type="checkbox" :value="item.value" />
-          <div class="checkbox-title">{{ item.key }}</div>
-        </label>
-      </div>
-      <!-- 房间需求 -->
-      <div class="input-group">
-        <div class="input-head">房间需求</div>
-        <label
-          class="checkbox-content"
-          v-for="item in houseTypeList"
-          :key="item.value"
-        >
-          <input type="checkbox" :value="item.value" />
-          <div class="checkbox-title">{{ item.key }}</div>
-        </label>
-      </div>
-      <!-- 付款方式 -->
-      <div class="input-group">
-        <div class="input-head">付款方式</div>
-        <el-select
-          v-model="mock"
-          popper-class="options-item"
-          class="input-content"
-          placeholder="请选择付款方式"
-        >
-          <el-option
-            v-for="item in purchasepurpose"
-            :key="item.value"
-            :label="item.key"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </div>
-    </section>
-    <i class="split-step-content"></i>
-    <section class="step-content">
-      <!-- 期望小学 -->
-      <div class="input-group">
-        <div class="input-head">期望小学</div>
-        <el-select
-          v-model="seleMock"
-          multiple
-          popper-class="options-item"
-          class="input-content"
-          placeholder="请选择客期望小学（多选）"
-        >
-          <el-option
-            v-for="item in textMock"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </div>
-      <!-- 期望中学 -->
-      <div class="input-group">
-        <div class="input-head">期望中学</div>
-        <el-select
-          v-model="seleMock"
-          multiple
-          popper-class="options-item"
-          class="input-content"
-          placeholder="请选择客期望中学（多选）"
-        >
-          <el-option
-            v-for="item in textMock"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </div>
-      <!-- 期望楼盘 -->
-      <div class="input-group">
-        <div class="input-head">期望楼盘</div>
-        <el-select
-          v-model="seleMock"
-          multiple
-          popper-class="options-item"
-          class="input-content"
-          placeholder="请选择客期望楼盘（多选）"
-        >
-          <el-option
-            v-for="item in textMock"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          ></el-option>
-        </el-select>
-      </div>
-      <!-- 看房经历 -->
-      <!-- <div class="input-group">
-        <div class="input-head">看房经历</div>
-        <el-input
-          type="textarea"
-          class="input-content is-auto-height"
-          placeholder="请输入客户的看房经历"
-          v-model="mock"
-          clearable
-          resize="none"
-          :autosize="{ minRows: 3, maxRows: 6 }"
-        />
-      </div> -->
-    </section>
+    </div>
+    <old-hous
+      v-show="isOldHous"
+      :requirement="headerActive"
+      ref="old"
+    ></old-hous>
+    <new-hous v-show="isNewHous" ref="new"></new-hous>
+    <tenement
+      v-show="isTenement"
+      :requirement="headerActive"
+      ref="ten"
+    ></tenement>
+    <!-- 多选弹出层 -->
+    <demand-more-select
+      ref="moreSelect"
+      styleType="0"
+      :visible.sync="moreSelectFlag"
+      width="506px"
+      title="选择需求信息(多选)"
+      @demandConfirm="demandConfirm"
+      v-model="demandValue"
+      data-vv-name="moreSelect"
+      data-vv-as="需求信息"
+      v-validate="'required|arrFlatLength:0'"
+    >
+    </demand-more-select>
   </section>
 </template>
 
 <script>
 import { PURCHASEPURPOSE, DECORATION } from "@/util/constMap";
+import demandMoreSelect from "./demandMoreSelect";
+import oldHous from "./oldHous";
+import newHous from "./newHous";
+import tenement from "./tenement";
+import util from "@/util/util";
 export default {
+  components: {
+    demandMoreSelect, //需求多选组件
+    oldHous,
+    newHous,
+    tenement
+  },
   data() {
     return {
-      mock: "",
-      purchasepurpose: PURCHASEPURPOSE,
-      decoration: DECORATION,
-      seleMock: [],
-      textMock: [
-        {
-          value: "选项1",
-          label: "学校1"
-        },
-        {
-          value: "选项2",
-          label: "学校2"
-        },
-        {
-          value: "选项3",
-          label: "学校3"
-        },
-        {
-          value: "选项4",
-          label: "学校4"
-        },
-        {
-          value: "选项5",
-          label: "学校5"
-        }
-      ],
-      houseTypeList: [
-        {
-          key: "1房",
-          value: 1
-        },
-        {
-          key: "2房",
-          value: 2
-        },
-        {
-          key: "3房",
-          value: 3
-        },
-        {
-          key: "4房",
-          value: 4
-        },
-        {
-          key: "4房以上",
-          value: 5
-        }
-      ],
-      floorList: [
-        {
-          key: "不限",
-          value: 1
-        },
-        {
-          key: "低楼层",
-          value: 2
-        },
-        {
-          key: "中楼层",
-          value: 3
-        },
-        {
-          key: "高楼层",
-          value: 4
-        },
-        {
-          key: "不要一楼",
-          value: 5
-        },
-        {
-          key: "不要顶楼",
-          value: 6
-        }
-      ]
+      moreSelectFlag: false,
+      demandValue: this.$store.state.addCustomers.demandValue,
+      headerList: [],
+      headerActive: 0,
+      requirements: []
     };
+  },
+  computed: {
+    isOldHous() {
+      return (
+        this.headerActive == 1 ||
+        this.headerActive == 2 ||
+        this.headerActive == 4
+      );
+    },
+    isNewHous() {
+      return (
+        this.headerActive == 8 ||
+        this.headerActive == 16 ||
+        this.headerActive == 32
+      );
+    },
+    isTenement() {
+      return (
+        this.headerActive == 64 ||
+        this.headerActive == 128 ||
+        this.headerActive == 256
+      );
+    }
+  },
+  filters: {
+    formatdemand(val) {
+      switch (val) {
+        case 1:
+          return "买二手住宅";
+        case 2:
+          return "买二手商铺";
+        case 4:
+          return "买二手写字楼";
+        case 8:
+          return "买新房住宅";
+        case 16:
+          return "买新房商铺";
+        case 32:
+          return "买新房写字楼";
+        case 64:
+          return "租赁住宅";
+        case 128:
+          return "租赁商铺";
+        case 256:
+          return "租赁写字楼";
+      }
+    }
+  },
+  created() {
+    this.changeDemandValue();
+  },
+  methods: {
+    // 修改需求保存
+    demandConfirm() {
+      this.$store.commit("updateDemandValue", this.demandValue);
+      this.changeDemandValue();
+      this.moreSelectFlag = false;
+    },
+    //改变头部标题
+    changeDemandValue() {
+      this.headerList = [];
+      if (this.demandValue.list0.length != 0) {
+        this.headerList.push(...this.demandValue.list0);
+      }
+      if (this.demandValue.list1.length != 0) {
+        this.headerList.push(...this.demandValue.list1);
+      }
+      if (this.demandValue.list2.length != 0) {
+        this.headerList.push(...this.demandValue.list2);
+      }
+      if (this.headerActive == 0) {
+        this.headerActive = this.headerList[0];
+      }
+      this.changeStoreStep2();
+      this.$nextTick(() => {
+        this.getStep2();
+      });
+    },
+    changeStoreStep2() {
+      let formData = this.$store.state.addCustomers.formData;
+      this.requirements = formData.step2;
+      // 先添加
+      for (let i = 0; i < this.headerList.length; i++) {
+        let demandTemplate = util.deepCopy(formData.demandTemplate);
+        demandTemplate.requireType = this.headerList[i];
+        let isExist = false;
+        for (let j = 0; j < this.requirements.length; j++) {
+          if (this.requirements[j].requireType == this.headerList[i]) {
+            isExist = true;
+            break;
+          }
+        }
+        if (!isExist) {
+          this.requirements.push(demandTemplate);
+        }
+      }
+      // 删除多余的requirements
+      for (let i = 0; i < this.requirements.length; i++) {
+        let isExist = false;
+        for (let j = 0; j < this.headerList.length; j++) {
+          if (this.requirements[i].requireType == this.headerList[j]) {
+            isExist = true;
+            break;
+          }
+        }
+        if (!isExist) {
+          this.requirements.splice(i, 1);
+        }
+      }
+      this.$store.commit("updateStep2", this.requirements);
+    },
+    async changeDemand(item, idx) {
+      await this.updataStep2(this.headerActive);
+      this.headerActive = item;
+      this.getStep2(item);
+    },
+    //更新step2的数据
+    updataStep2() {
+      let formData = this.$store.state.addCustomers.formData.step2;
+      let moduleName = "";
+      switch (this.headerActive) {
+        case 1:
+        case 2:
+        case 4:
+          moduleName = "old";
+          break;
+        case 8:
+        case 16:
+        case 32:
+          moduleName = "old";
+          break;
+        case 64:
+        case 128:
+        case 256:
+          moduleName = "ten";
+      }
+      for (let i = 0; i < formData.length; i++) {
+        if (formData[i].requireType == this.headerActive) {
+          formData[i] = this.$refs[moduleName].data;
+        }
+      }
+      this.$store.commit("updateStep2", formData);
+    },
+    // 反写step2的数据
+    getStep2() {
+      let formData = util.deepCopy(
+        this.$store.state.addCustomers.formData.step2
+      );
+      let moduleName = "";
+      switch (this.headerActive) {
+        case 1:
+        case 2:
+        case 4:
+          moduleName = "old";
+          break;
+        case 8:
+        case 16:
+        case 32:
+          moduleName = "old";
+          break;
+        case 64:
+        case 128:
+        case 256:
+          moduleName = "ten";
+      }
+      for (let i = 0; i < formData.length; i++) {
+        if (formData[i].requireType == this.headerActive) {
+          this.$refs[moduleName].data = formData[i];
+        }
+      }
+    }
   }
 };
 </script>

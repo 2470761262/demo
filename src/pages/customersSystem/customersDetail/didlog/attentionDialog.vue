@@ -82,6 +82,7 @@ export default {
                   message: "暂不关注客户成功"
                 });
                 that.close();
+                that.getInformation();
               }
             })
             .catch(e => {

@@ -4,8 +4,18 @@
       <div class="title">跟进信息</div>
       <div class="btn-box">
         <div class="btn font-g" @click="openDevelop()">预约带看</div>
-        <div class="btn font-g" @click="toPage()">添加带看</div>
-        <div class="btn back font-w" @click="openPopUp('followUpFlag')">
+        <div
+          class="btn font-g"
+          @click="toPage()"
+          v-if="permissionList.addLookButtonEable.isDisable"
+        >
+          添加带看
+        </div>
+        <div
+          class="btn back font-w"
+          @click="openPopUp('followUpFlag')"
+          v-if="permissionList.addFollowLookButtonEable.isDisable"
+        >
           写跟进
         </div>
       </div>
@@ -223,7 +233,7 @@
 
 <script>
 export default {
-  inject: ["customerId"],
+  inject: ["customerId", "permissionList"],
   data() {
     return {
       followUpFlag: false, //跟进开关
@@ -235,7 +245,7 @@ export default {
   },
   components: {
     //写跟进弹出层
-    followUpDialog: () => import("../didLog/followUpDialog")
+    followUpDialog: () => import("../didlog/followUpDialog")
   },
   created() {
     this.getData();
@@ -349,7 +359,10 @@ export default {
      * @example: 跳转到添加带看页面
      */
     toPage() {
-      this.$router.push("takeLook");
+      this.$router.push({
+        path: "takeLook",
+        query: { customerId: this.customerId }
+      });
     }
   }
 };
