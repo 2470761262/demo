@@ -108,7 +108,7 @@ export default {
           prop: "online",
           label: "渠道",
           width: "130",
-          formart: item => (item.online == 0 ? "线下" : "线上") || "暂无"
+          formart: item => (item.onLine == 0 ? "线下" : "线上") || "暂无"
         },
         {
           prop: "sex",
