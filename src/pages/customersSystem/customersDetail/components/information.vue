@@ -65,8 +65,8 @@
     <section class="message-row flex">
       <div class="message-title">委托来源：</div>
       <div class="message-txt">
-        {{ customer.data.Source | formatSource }} /
-        {{ customer.data.sourceType | formatSourceType }}
+        {{ customer.data.sourceType | formatSourceType }} /
+        {{ customer.data.Source | formatSource }}
       </div>
     </section>
     <section class="message-row flex">
@@ -157,12 +157,16 @@ export default {
           return "一般";
         case 3:
           return "强烈";
+        default:
+          return "暂无";
       }
     },
     formatTime(value) {
       if (value) {
         let time = value.split(" ");
         return time[0];
+      } else {
+        return "暂无";
       }
     },
     formatSource(value) {

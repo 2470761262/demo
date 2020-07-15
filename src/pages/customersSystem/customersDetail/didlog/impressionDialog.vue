@@ -16,6 +16,7 @@
           v-model="impression"
           class="input-content"
           clearable
+          maxlength="5"
           placeholder="请输入客源印象"
           data-vv-name="impression"
           data-vv-as="客源印象"

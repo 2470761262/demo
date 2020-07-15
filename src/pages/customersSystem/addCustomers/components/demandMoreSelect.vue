@@ -218,11 +218,12 @@ export default {
   },
   watch: {
     value: {
-      // deep: true,
+      deep: true,
       immediate: true,
       handler: function(val, oldVal) {
-        if (Object.keys(val).length != 0)
+        if (Object.keys(val).length != 0) {
           this.dataJson = JSON.parse(JSON.stringify(val));
+        }
       }
     },
     "$attrs.visible"(value) {
@@ -235,6 +236,7 @@ export default {
           this.dataJson = this.orderDataJson;
         }
       }
+      console.log("attrs.visible", this.dataJson);
     }
   },
   methods: {

@@ -1,1264 +1,534 @@
 <style lang="less" scoped>
-.query-warp {
-  padding-left: 20px;
-  position: relative;
-}
-.page-form-inline {
-  display: flex;
-  //margin-top: 20px;
-  margin-bottom: 50px;
-  /deep/.el-form-item__content {
-    margin-left: 105px !important;
-  }
-  &.form-item-flex1 {
-    .el-form-item {
-      flex: 1;
+.tab-page {
+  /deep/.header-tab-cell {
+    height: 64px;
+    font-size: @font16;
+    background: rgba(240, 242, 245, 1);
+    color: rgba(48, 49, 51, 1);
+    font-weight: normal;
+    .cell {
+      justify-content: center;
+      display: flex;
+      align-items: center;
     }
   }
-  .page-label-center {
-    /deep/.el-form-item__label {
-      width: 90px !important;
-    }
-    /deep/.el-form-item__content {
-      margin-left: 90px !important;
-    }
-    /deep/ label {
-      text-align: center;
-    }
-  }
-  /deep/.el-input-group__append {
-    color: #606266;
-    background: none;
-    border: none;
-  }
-  //   &::after {
-  //     content: attr(data-tips);
-  //     line-height: 40px;
-  //     font-size: 14px;
-  //     margin-left: 20px;
-  //     color: #606266;
-  //     overflow: hidden;
-  //     white-space: nowrap;
-  //     text-overflow: ellipsis;
-  //   }
-}
-.page-form-tips {
-  height: 50px;
-  border-bottom: 1px solid #f2f2f2;
-  margin-bottom: 20px;
-  //line-height: 50px;
-  display: table-cell;
-  vertical-align: middle;
-}
-.dividingLine {
-  height: 1px;
-  background: #c0c4cc;
-  width: 10px;
-  align-self: center;
-  margin: 0 10px 20px;
-}
-/deep/.is-bordered {
-  margin-left: 0 !important;
-}
-.marLeft20 {
-  margin-left: 15px;
-  flex-shrink: 0;
-  width: 140px;
-  /deep/.el-input__inner {
-    height: 32px !important;
-    line-height: 32px !important;
-  }
-}
-.select-input {
-  display: flex;
-  margin-bottom: 20px;
-  .select-input-set {
+  .tab-filter-radio {
     display: flex;
-    align-items: center;
-    flex: 1;
-    border: 2px solid var(--color--primary);
-    height: 45px;
-    box-sizing: border-box;
-    box-shadow: inset 0 0 7px var(--color--primary);
-    .el-icon-search {
-      font-size: 26px;
-      margin: 0 10px;
-      color: #c3c3c3;
-    }
-    .select-input-sub {
-      outline: none;
-      border: none;
-      font-size: 18px;
-      flex: 1;
-      background: inherit;
-      &::-webkit-input-placeholder {
-        color: #c3c3c3;
-      }
-    }
-  }
-  .select-but-sub {
-    background: var(--color--primary);
-    width: 175px;
-    display: flex;
-    align-items: center;
-    color: #fff;
-    font-size: 18px;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .select-but-reset {
-    margin-left: 35px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: black;
-    width: 115px;
-    border: 2px solid var(--color--primary);
-    cursor: pointer;
-    .reset-icon {
-      color: inherit;
-      font-size: 20px;
-      margin: 0 10px;
-    }
-    .select-but-reset-title {
-      font-size: 18px;
-      color: inherit;
-      white-space: nowrap;
-    }
-  }
-}
-.merge-tooltip {
-  position: absolute;
-  left: 50%;
-  bottom: 100%;
-  transform: translate(-50%, -15px);
-}
-/deep/.vue-slider-dot-tooltip-inner {
-  border-color: var(--color--primary);
-  background-color: var(--color--primary);
-}
-/deep/.vue-slider-dot {
-  width: 25px !important;
-  height: 25px !important;
-}
-/deep/.vue-slider-process {
-  background-color: var(--color--primary);
-}
-/deep/.vue-slider-ltr {
-  height: 8px !important;
-  .vue-slider-mark {
-    width: 8px !important;
-    .vue-slider-mark-step {
-      background: #fff;
-    }
-  }
-  .vue-slider-rail {
-    .vue-slider-marks {
-      background-color: var(--color--primary);
-      opacity: 0.4;
-    }
-  }
-}
-.tooltipsItem {
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  border-radius: 50%;
-  color: var(--color--primary);
-  text-align: center;
-  line-height: 21px;
-  border: 2px solid var(--color--primary);
-  box-sizing: border-box;
-  font-weight: 600;
-}
-.vue-slider-index1 {
-  /deep/.vue-slider-rail {
+    justify-content: flex-end;
+    padding-right: 46px;
+    padding-bottom: 10px;
+    position: sticky;
+    top: 0px;
     z-index: 10;
-  }
-}
-.vue-slider-index2 {
-  /deep/.vue-slider-rail {
-    z-index: 12;
-  }
-}
-.checkbox-flex {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0px -15px 0;
-  .checkbox-flex-pad {
-    width: 16.666%;
-    //margin-bottom: 15px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    line-height: normal;
-    margin-bottom: 10px;
-    /deep/.el-checkbox__input {
-      width: 0 !important;
-      height: 0 !important;
-      overflow: hidden;
+    background: #fff;
+    .filter-radio-item {
+      display: flex;
+      cursor: pointer;
+      // prettier-ignore
+      margin-left: 30PX;
+      align-items: center;
+      input {
+        display: none;
+      }
+      input[type="checkbox"]:checked + span {
+        &::before {
+          content: "\2713";
+          color: black;
+          font-size: @font16;
+        }
+      }
+      &:first-child {
+        margin-left: 0;
+      }
+      span {
+        font-size: @font16;
+        color: black;
+        display: flex;
+        align-items: center;
+        font-weight: 600;
+        &::before {
+          content: "";
+          // prettier-ignore
+          width: 16PX;
+          // prettier-ignore
+          height: 16PX;
+          // prettier-ignore
+          line-height: 16PX;
+          margin-right: 8px;
+          text-align: center;
+          border: 1px solid black;
+        }
+      }
     }
-    /deep/.el-checkbox__label {
-      padding-left: 0 !important;
-      overflow: hidden;
-      text-overflow: ellipsis;
+  }
+  /deep/.tab-cell-item {
+    height: 64px;
+    font-size: @font16;
+    text-align: center;
+    .cell {
       white-space: nowrap;
-      width: 100%;
-      text-align: center;
-      vertical-align: middle;
-      font-size: 15px;
-    }
-    .is-checked {
-      background: var(--color--primary);
-      /deep/.el-checkbox__label {
-        color: #fff;
-      }
-    }
-    .el-checkbox {
-      margin-right: 0 !important;
-      transition: all 0.2s ease-in;
-      width: 100%;
     }
   }
-}
-.budingMarinSet {
-  margin-bottom: 0;
-  margin-top: 30px;
-  /deep/.el-form-item__label {
-    margin-right: 0 !important;
-    //width: 105px !important;
-  }
-  /deep/.el-input__inner {
-    border-radius: 0;
-  }
-  /deep/.el-form-item {
-    margin-bottom: 50px;
-  }
-}
-.marginBotEmp {
-  margin-bottom: 0;
-}
-.ohter-item {
-  /deep/.el-form-item__content {
-    margin-left: 0 !important;
-  }
-  /deep/.select-input {
-    .marginBotEmp !important;
-  }
-}
-/deep/.el-form-item {
-  .el-form-item__label {
-    font-size: 15px;
-    text-align: justify;
-    line-height: 40px;
-    height: 40px;
-    overflow: hidden;
-    margin-right: 16px;
-    padding-right: 0;
-    &:after {
-      display: inline-block;
-      width: 100%;
-      height: 0;
-      content: "";
+  /deep/.tab-cell-left {
+    text-align: left;
+    white-space: nowrap;
+    padding-left: 32px;
+    cell {
+      white-space: nowrap;
     }
   }
-}
-.frist-width-select {
-  width: 180px;
-}
-/deep/.el-form-item__label {
-  width: 75px;
-}
-.custom-set {
-  flex-direction: column;
-  .custom-content {
+  .tab-page-flex {
     display: flex;
-    align-self: center;
-    margin-top: 20px;
-    margin-left: 105px;
-    .split-line {
-      width: 40px;
-      position: relative;
-      &::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        height: 2px;
-        width: 20px;
-        transform: translate(-50%, -50%);
-        background: #ddd;
-      }
-    }
-    /deep/.el-input {
-      width: 140px;
-      height: 30px;
-      line-height: 30px;
-      i {
-        line-height: inherit;
-      }
-      .el-input__inner {
-        line-height: inherit;
-        height: inherit;
+    .tab-image {
+      display: flex;
+      flex-direction: column;
+      width: 150px;
+      .tab-image-head {
+        height: 64px;
+        font-size: @font16;
+        background: rgba(240, 242, 245, 1);
+        color: rgba(48, 49, 51, 1);
+        line-height: 64px;
         text-align: center;
+        position: sticky;
+        top: 31px;
+        z-index: 10;
+      }
+      .tab-image-content {
+        height: 128px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid rgba(240, 242, 245, 1);
+        box-sizing: border-box;
+        .tab-image-item {
+          margin-top: 10px;
+          width: 130px;
+          height: 90px;
+          border-radius: 4px;
+        }
       }
     }
   }
+}
+/deep/.el-table__body-wrapper,
+/deep/.el-table__fixed-body-wrapper {
+  .el-table__expanded-cell {
+    padding: 0 0 10px 42px;
+  }
+
+  .el-table__expand-column {
+    //   display: none;
+    overflow: hidden;
+  }
+}
+/deep/.el-table__body-wrapper {
+  tbody {
+    tr {
+      td {
+        border-bottom: none;
+      }
+    }
+    tr:not(.el-table__row) {
+      td {
+        border-bottom: 1px solid rgba(240, 242, 245, 1);
+        height: 39px;
+        box-sizing: border-box;
+      }
+    }
+  }
+}
+.tab-com-item {
+  margin-top: 10px;
+  .tab-house-title {
+    font-size: @font16;
+    font-weight: 600;
+    color: black;
+  }
+  .tab-houseno {
+    margin-top: 10px;
+    font-size: @font12;
+  }
+}
+
+.tag-item {
+  display: inline-block;
+  background: @backgroud;
+  color: #fff;
+  margin-right: 15px;
+  font-size: @font14;
+  border-radius: 4px;
+  padding: 5px 10px;
+}
+/deep/.caret-wrapper {
+  height: auto;
+  .sort-caret {
+    position: static;
+    &:first-child {
+      margin-bottom: 3px;
+    }
+  }
+}
+.tab-page-floot {
+  padding-top: 16px;
+  padding-bottom: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+/deep/.el-table__header-wrapper {
+  position: sticky;
+  top: 31px;
+  z-index: 10;
+}
+/deep/.el-table {
+  overflow: visible;
 }
 </style>
 <template>
-  <div class="query-warp">
-    <el-form
-      ref="form"
-      @submit.native.prevent
-      :model="form"
-      label-position="left"
-    >
-      <el-form-item prop="type" class="ohter-item">
-        <div class="select-input">
-          <div class="select-input-set">
-            <i class="el-icon-search"></i>
-            <input
-              data-anchor="首页搜索房源"
-              type="text"
-              class="select-input-sub anchor-point"
-              placeholder="请输入楼盘名称或房源编号"
-              v-model="searchData"
-            />
-          </div>
-          <div
-            class="select-but-sub anchor-point"
-            @click="search"
-            data-anchor="首页开始搜索按钮"
-          >
-            开始搜索
-          </div>
-          <div
-            class="select-but-reset anchor-point"
-            data-anchor="首页重置按钮"
-            @click="resetForm('form')"
-          >
-            <i class="el-icon-refresh reset-icon"></i>
-            <span class="select-but-reset-title">重置</span>
-          </div>
-        </div>
-      </el-form-item>
-      <!-- 楼盘 -->
-      <div class="page-form-inline budingMarinSet">
-        <el-form-item label="楼盘名称" prop="comId">
-          <el-select
-            data-anchor="首页选择楼盘"
-            class="frist-width-select anchor-point"
-            v-model="form.comId"
-            @focus="remoteInput"
-            @change="queryCBId"
-            filterable
-            remote
-            clearable
-            placeholder="请输入楼盘进行搜索"
-            :remote-method="remoteMethod"
-            :loading="loading"
-          >
-            <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="栋座" prop="cbId" class="page-label-center">
-          <el-select
-            data-anchor="首页选择栋座"
-            v-model="form.cbId"
-            filterable
-            clearable
-            class="anchor-point"
-            placeholder="请选择楼栋"
-            @change="queryRoomNo"
-            @focus="queryCBId"
-          >
-            <el-option
-              v-for="item in cbIdList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item
-          label="房间号"
-          prop="roomNo"
-          clearable
-          class="page-label-center"
+  <div class="tab-page">
+    <div class="tab-filter-radio">
+      <label class="filter-radio-item">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isKey"
+        />
+        <span>钥匙</span>
+      </label>
+      <label class="filter-radio-item">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isOnly"
+        />
+        <span>独家</span>
+      </label>
+      <label class="filter-radio-item">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isReal"
+        />
+        <span>实勘</span>
+      </label>
+      <label class="filter-radio-item">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isElevator"
+        />
+        <span>电梯</span>
+      </label>
+    </div>
+    <div class="tab-page-flex">
+      <div class="tab-image">
+        <div class="tab-image-head">房源图</div>
+        <div
+          class="tab-image-content"
+          v-for="(item, index) in renderList"
+          :key="index"
         >
-          <el-select
-            data-anchor="首页选择房间号"
-            v-model="form.roomNo"
-            @change="queryRoomNumber"
-            filterable
-            class="anchor-point"
-            placeholder="请选择房间号"
-          >
-            <el-option
-              v-for="item in roomNoList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </div>
-      <!-- 售价 -->
-      <div class="page-form-inline form-item-flex1 custom-set">
-        <el-form-item label="售价">
-          <vue-slider
-            v-model="Slider.priceSlider"
-            :data="[
-              '20',
-              '60',
-              '80',
-              '100',
-              '120',
-              '140',
-              '200',
-              '300',
-              '9999'
-            ]"
-            :marks="priceSliderMarks"
-            tooltip="none"
+          <el-image
             :lazy="true"
-            @change="priceSliderChange"
-            :contained="true"
+            class="tab-image-item"
+            :src="item.picUrl + '?x-oss-process=style/thumb'"
+            @error="houseImageErorHandle(item)"
+            scroll-container=".scroll-tab"
           >
-            <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process" :style="style">
-                <div
-                  v-show="end != 0"
-                  :class="[
-                    'merge-tooltip',
-                    'vue-slider-dot-tooltip-inner',
-                    'vue-slider-dot-tooltip-inner-top'
-                  ]"
-                >
-                  {{ Slider.priceSlider[index] }}￥ -
-                  {{
-                    Slider.priceSlider[index + 1] == "9999"
-                      ? "无限"
-                      : Slider.priceSlider[index + 1]
-                  }}￥
-                </div>
-              </div>
-            </template>
-            <template v-slot:dot>
-              <div class="tooltipsItem anchor-point" data-anchor="首页售价">
-                ￥
-              </div>
-            </template>
-          </vue-slider>
-        </el-form-item>
-        <div class="custom-content">
-          <el-input
-            v-number
-            placeholder="最小售价(万)"
-            clearable
-            class="anchor-point"
-            data-anchor="首页最小售价输入框"
-            @change="maxChange('custom', '最大售价', 'Price')"
-            v-model="custom.minPrice"
-          ></el-input>
-          <div class="split-line"></div>
-
-          <el-input
-            v-number
-            class="anchor-point"
-            placeholder="最大售价(万)"
-            data-anchor="首页最大售价输入框"
-            @change="maxChange('custom', '最大售价', 'Price')"
-            clearable
-            v-model="custom.maxPrice"
-          ></el-input>
+          </el-image>
         </div>
       </div>
-      <!-- 首付 -->
-      <div class="page-form-inline form-item-flex1 custom-set" v-if="false">
-        <el-form-item label="首付">
-          <vue-slider
-            v-model="Slider.downPaymentSlider"
-            :data="['6', '18', '24', '30', '36', '42', '60', '90', '9999']"
-            :marks="downPaymentSliderMarks"
-            tooltip="none"
-            :lazy="true"
-            @change="downPaymentSliderChange"
-            :contained="true"
-          >
-            <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process" :style="style">
-                <div
-                  v-show="end != 0"
-                  :class="[
-                    'merge-tooltip',
-                    'vue-slider-dot-tooltip-inner',
-                    'vue-slider-dot-tooltip-inner-top'
-                  ]"
-                >
-                  {{ Slider.downPaymentSlider[index] }}￥ -
-                  {{
-                    Slider.downPaymentSlider[index + 1] == "9999"
-                      ? "无限"
-                      : Slider.downPaymentSlider[index + 1]
-                  }}￥
-                </div>
-              </div>
-            </template>
-            <template v-slot:dot>
-              <div class="tooltipsItem anchor-point" data-anchor="首页首付">
-                ￥
-              </div>
-            </template>
-          </vue-slider>
-        </el-form-item>
-        <div class="custom-content">
-          <el-input
-            data-anchor="首页最小售价输入框"
-            v-number
-            class="anchor-point"
-            placeholder="最小首付(万)"
-            clearable
-            @change="maxChange('custom', '最大售价', 'DownPayment')"
-            v-model="custom.minDownPayment"
-          ></el-input>
-          <div class="split-line"></div>
-
-          <el-input
-            data-anchor="首页最大首付输入框"
-            v-number
-            class="anchor-point"
-            placeholder="最大首付(万)"
-            @change="maxChange('custom', '最大售价', 'DownPayment')"
-            clearable
-            v-model="custom.maxDownPayment"
-          ></el-input>
-        </div>
-      </div>
-      <div class="page-form-inline form-item-flex1 custom-set">
-        <el-form-item label="面积">
-          <vue-slider
-            class="vue-slider-index1"
-            v-model="Slider.areaSlider"
-            :data="[
-              '20',
-              '60',
-              '80',
-              '100',
-              '120',
-              '140',
-              '200',
-              '300',
-              '9999'
-            ]"
-            :marks="areaSliderMarks"
-            tooltip="none"
-            :lazy="true"
-            @change="areaSliderChange"
-            :contained="true"
-          >
-            <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process" :style="style">
-                <div
-                  v-show="end != 0"
-                  :class="[
-                    'merge-tooltip',
-                    'vue-slider-dot-tooltip-inner',
-                    'vue-slider-dot-tooltip-inner-top'
-                  ]"
-                >
-                  {{ Slider.areaSlider[index] }}㎡ -
-                  {{
-                    Slider.areaSlider[index + 1] == "9999"
-                      ? "无限"
-                      : Slider.areaSlider[index + 1]
-                  }}㎡
-                </div>
-              </div>
-            </template>
-            <template v-slot:dot>
-              <div class="tooltipsItem anchor-point" data-anchor="首页面积拖拉">
-                ㎡
-              </div>
-            </template>
-          </vue-slider>
-        </el-form-item>
-        <div class="custom-content">
-          <el-input
-            data-anchor="首页最小面积输入框"
-            class="anchor-point"
-            v-number
-            placeholder="最小面积(㎡)"
-            clearable
-            @change="maxChange('custom', '最大面积', 'InArea')"
-            v-model="custom.minInArea"
-          ></el-input>
-          <div class="split-line"></div>
-          <el-input
-            data-anchor="首页最大面积输入框"
-            class="anchor-point"
-            v-number
-            placeholder="最大面积(㎡)"
-            @change="maxChange('custom', '最大面积', 'InArea')"
-            clearable
-            v-model="custom.maxInArea"
-          ></el-input>
-        </div>
-      </div>
-      <!-- 楼层 -->
-      <div class="page-form-inline form-item-flex1 custom-set">
-        <el-form-item label="楼层">
-          <vue-slider
-            class="vue-slider-index2"
-            v-model="Slider.flootSlider"
-            :data="['-2', '5', '10', '15', '20', '25', '30', '40', '9999']"
-            :marks="flootSliderMarks"
-            tooltip="none"
-            :lazy="true"
-            :contained="true"
-            @change="flootSliderChange"
-          >
-            <template v-slot:process="{ start, end, style, index }">
-              <div class="vue-slider-process" :style="style">
-                <div
-                  v-show="end != 0"
-                  :class="[
-                    'merge-tooltip',
-                    'vue-slider-dot-tooltip-inner',
-                    'vue-slider-dot-tooltip-inner-top'
-                  ]"
-                >
-                  {{ Slider.flootSlider[index] }}层 -
-                  {{
-                    Slider.flootSlider[index + 1] == "9999"
-                      ? "无限"
-                      : Slider.flootSlider[index + 1]
-                  }}层
-                </div>
-              </div>
-            </template>
-            <template v-slot:dot>
-              <div
-                class="tooltipsItem iconxuanzelouceng iconfont anchor-point"
-                data-anchor="首页楼层筛选"
-              ></div>
-            </template>
-          </vue-slider>
-        </el-form-item>
-        <div class="custom-content">
-          <el-input
-            data-anchor="首页最小楼层输入框"
-            class="anchor-point"
-            v-number
-            placeholder="最小楼层(层)"
-            clearable
-            @change="maxChange('custom', '最大楼层', 'Floor')"
-            v-model="custom.minFloor"
-          ></el-input>
-          <div class="split-line"></div>
-          <el-input
-            data-anchor="首页最大楼层输入框"
-            class="anchor-point"
-            v-number
-            placeholder="最大楼层(层)"
-            @change="maxChange('custom', '最大楼层', 'Floor')"
-            clearable
-            v-model="custom.maxFloor"
-          ></el-input>
-        </div>
-      </div>
-      <el-form-item label="商圈" prop="business">
-        <el-checkbox-group
-          class="checkbox-flex"
-          v-model="form.business"
-          size="small"
-        >
-          <div
-            :data-anchor="'首页商圈:' + item.name"
-            v-for="(item, index) in businessList"
-            :key="index"
-            class="checkbox-flex-pad anchor-point"
-          >
-            <el-tooltip
-              :data-anchor="'首页商圈:' + item.name"
-              :content="item.name"
-              :disabled="item.name.length < 4"
-              placement="top"
-            >
-              <el-checkbox
-                :label="item.value"
-                name="business"
-                border
-                :data-anchor="'首页商圈:' + item.name"
-                >{{ item.name }}</el-checkbox
-              >
-            </el-tooltip>
-          </div>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="房型" prop="houseType">
-        <el-checkbox-group
-          v-model="form.houseType"
-          class="checkbox-flex"
-          size="small"
-        >
-          <div
-            :data-anchor="'首页房型:' + item.name"
-            v-for="(item, index) in houseTypeList"
-            :key="index"
-            class="checkbox-flex-pad anchor-point"
-          >
-            <el-tooltip
-              :content="item.name"
-              :disabled="item.name.length < 4"
-              placement="top"
-            >
-              <el-checkbox :label="item.value" name="houseType" border>{{
-                item.name
-              }}</el-checkbox>
-            </el-tooltip>
-          </div>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="装修" prop="renovation">
-        <el-checkbox-group
-          v-model="form.renovation"
-          class="checkbox-flex"
-          size="small"
-        >
-          <div
-            :data-anchor="'首页装修:' + item.name"
-            v-for="(item, index) in renovationList"
-            :key="index"
-            class="checkbox-flex-pad anchor-point"
-          >
-            <el-tooltip
-              :content="item.name"
-              :disabled="item.name.length < 4"
-              placement="top"
-            >
-              <el-checkbox :label="item.value" name="renovation" border>{{
-                item.name
-              }}</el-checkbox>
-            </el-tooltip>
-          </div>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="房源用途" prop="purpose">
-        <el-checkbox-group
-          v-model="form.purpose"
-          class="checkbox-flex"
-          size="small"
-        >
-          <div
-            :data-anchor="'首页房源用途:' + item.name"
-            class="checkbox-flex-pad anchor-point"
-            v-for="(item, index) in purposeList"
-            :key="index"
-          >
-            <el-tooltip
-              :content="item.name"
-              :disabled="item.name.length < 4"
-              placement="top"
-            >
-              <el-checkbox :label="item.value" name="purpose" border>{{
-                item.name
-              }}</el-checkbox>
-            </el-tooltip>
-          </div>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="朝向" prop="face">
-        <el-checkbox-group
-          v-model="form.face"
-          class="checkbox-flex"
-          size="small"
-        >
-          <div
-            :data-anchor="'首页朝向:' + item.name"
-            v-for="(item, index) in faceList"
-            :key="index"
-            class="checkbox-flex-pad anchor-point"
-          >
-            <el-tooltip
-              :content="item.name"
-              :disabled="item.name.length < 4"
-              placement="top"
-            >
-              <el-checkbox :label="item.value" name="face" border>{{
-                item.name
-              }}</el-checkbox>
-            </el-tooltip>
-          </div>
-        </el-checkbox-group>
-      </el-form-item>
-      <el-form-item label="小学划片" prop="primarySchool">
-        <el-checkbox-group
-          v-model="form.primarySchool"
-          class="checkbox-flex"
-          size="small"
-        >
-          <div
-            :data-anchor="'首页小学划片:' + item.name"
-            v-for="(item, index) in MathPrimarySchoolListfirst"
-            :key="index"
-            class="checkbox-flex-pad anchor-point"
-          >
-            <el-tooltip :content="item.name" placement="top">
-              <el-checkbox :label="item.value" name="primarySchool" border>{{
-                item.name
-              }}</el-checkbox>
-            </el-tooltip>
-          </div>
-          <div
-            class="checkbox-flex-pad anchor-point"
-            data-anchor="首页小学划片 更多按钮"
-          >
-            <el-button
-              data-anchor="首页小学划片 更多按钮"
-              type="text"
-              @click="triggerSchoolSizeFlag('PrimarySizeFlag')"
-              >{{ PrimarySizeFlag ? "收起" : "更多" }}</el-button
-            >
-          </div>
-        </el-checkbox-group>
-        <div class="marLeft20"></div>
-      </el-form-item>
-      <el-form-item label="中学划片" prop="middleSchool">
-        <el-checkbox-group
-          v-model="form.middleSchool"
-          class="checkbox-flex"
-          size="small"
-        >
-          <div
-            :data-anchor="'首页中学划片:' + item.name"
-            v-for="(item, index) in MathMiddleSchoolListfirst"
-            :key="index"
-            class="checkbox-flex-pad anchor-point"
-          >
-            <el-tooltip :content="item.name" placement="top">
-              <el-checkbox :label="item.value" name="middleSchool" border>{{
-                item.name
-              }}</el-checkbox>
-            </el-tooltip>
-          </div>
-          <div
-            class="checkbox-flex-pad anchor-point"
-            data-anchor="首页中学划片 更多按钮"
-          >
-            <el-button
-              class="anchor-point"
-              data-anchor="首页中学划片 更多按钮"
-              type="text"
-              @click="triggerSchoolSizeFlag('middleSizeFlag')"
-              >{{ middleSizeFlag ? "收起" : "更多" }}</el-button
-            >
-          </div>
-        </el-checkbox-group>
-      </el-form-item>
-    </el-form>
+      <el-table
+        :data="renderList"
+        :default-sort="{ prop: 'price', order: 'descending' }"
+        header-cell-class-name="header-tab-cell"
+        :cell-class-name="tabDirection"
+        default-expand-all
+        @sort-change="sortMethod"
+        @row-dblclick="navDetailt"
+      >
+        <el-table-column type="expand" width="1px">
+          <template v-slot:default="{ row }">
+            <span class="tag-item" v-for="item in row.tags" :key="item">{{
+              item
+            }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-for="(item, index) in tableColumnField"
+          :key="index"
+          :prop="item.prop"
+          :label="item.label"
+          :width="item.width"
+          :sortable="item.order"
+          :formatter="item.formart"
+          :sort-orders="['ascending', 'descending']"
+          show-overflow-tooltip
+        ></el-table-column>
+      </el-table>
+    </div>
+    <div class="tab-page-floot">
+      <!-- 
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage4"
+     -->
+      <el-pagination
+        @current-change="currentchange"
+        @size-change="handleSizeChange"
+        :page-sizes="[30, 50, 70]"
+        :page-size="pageJson.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pageJson.dataCount"
+        :current-page="pageJson.currentPage"
+      >
+      </el-pagination>
+    </div>
   </div>
 </template>
 <script>
-const areaSliderMarks = {
-  "20": "20㎡",
-  "60": "60㎡",
-  "80": "80㎡",
-  "100": "100㎡",
-  "120": "120㎡",
-  "140": "140㎡",
-  "200": "200㎡",
-  "300": "300㎡",
-  "9999": "∞"
-};
-const priceSliderMarks = {
-  "20": "20万",
-  "60": "60万",
-  "80": "80万",
-  "100": "100万",
-  "120": "120万",
-  "140": "140万",
-  "200": "200万",
-  "300": "300万",
-  "9999": "∞"
-};
-const downPaymentSliderMarks = {
-  "6": "6万",
-  "18": "18万",
-  "24": "24万",
-  "30": "30万",
-  "36": "36万",
-  "42": "42万",
-  "60": "60万",
-  "90": "90万",
-  "9999": "∞"
-};
-const flootSliderMarks = {
-  "-2": "-2层",
-  "5": "5层",
-  "10": "10层",
-  "15": "15层",
-  "20": "20层",
-  "25": "25层",
-  "30": "30层",
-  "40": "40层",
-  "9999": "∞"
-};
-import VueSlider from "vue-slider-component";
-import "vue-slider-component/theme/default.css";
+const dom = document;
+import {
+  addResizeListener,
+  removeResizeListener
+} from "element-ui/src/utils/resize-event";
+//import gggg from "@/components/gggg.vue";
 export default {
-  name: "houseResultList",
-  inject: ["form", "Slider"],
+  inject: ["form"],
   components: {
-    VueSlider
-  },
-  computed: {
-    MathPrimarySchoolListfirst() {
-      let sliceSize = [0, 11];
-      if (this.PrimarySizeFlag) {
-        sliceSize = [0, this.primarySchoolList.length - 1];
-      }
-      return this.primarySchoolList.slice(...sliceSize);
-    },
-    MathMiddleSchoolListfirst() {
-      let sliceSize = [0, 11];
-      if (this.middleSizeFlag) {
-        sliceSize = [0, this.middleSchoolList.length - 1];
-      }
-      return this.middleSchoolList.slice(...sliceSize);
-    }
+    // gggg
   },
   data() {
     return {
-      custom: {
-        // 自定义
-        minPrice: "",
-        maxPrice: "",
-        minInArea: "",
-        maxInArea: "",
-        minFloor: "",
-        maxFloor: "",
-        maxDownPayment: "",
-        minDownPayment: ""
-      },
-      PrimarySizeFlag: false,
-      middleSizeFlag: false,
-      searchData: "",
-      areaSliderMarks: areaSliderMarks,
-      priceSliderMarks: priceSliderMarks,
-      flootSliderMarks: flootSliderMarks,
-      downPaymentSliderMarks: downPaymentSliderMarks,
-      primarySchoolInput: "",
-      middleSchoolInput: "",
-      businessList: [],
-      houseTypeList: [],
-      renovationList: [],
-      purposeList: [],
-      orientationList: [],
-      primarySchoolList: [],
-      middleSchoolList: [],
-      faceList: [],
-      options: [],
-      cbIdList: [],
-      roomNoList: [],
-      loading: false,
-      downPaymentPercent: 0.3 //首付的百分比
+      renderList: [],
+      tableColumnField: [
+        {
+          prop: "communityName",
+          label: "楼盘名称",
+          order: false,
+          width: "230",
+          formart: item => {
+            return (
+              <div class="tab-com-item">
+                <div class="tab-house-title">{item.communityName}</div>
+                <div class="tab-houseno">{item.houseNo}</div>
+              </div>
+            );
+          }
+        },
+        {
+          prop: "houseType",
+          label: "户型",
+          order: "custom",
+          formart: item =>
+            (item.rooms || 0) +
+            "-" +
+            (item.hall || 0) +
+            "-" +
+            (item.toilet || 0) +
+            "-" +
+            (item.balcony || 0)
+        },
+        {
+          prop: "inArea",
+          label: "面积",
+          order: "custom",
+          formart: item => item.inArea + "平"
+        },
+        {
+          prop: "price",
+          label: "总价",
+          order: "custom",
+          formart: item => item.price + "万"
+        },
+        {
+          prop: "unitPrice",
+          label: "单价",
+          order: "custom",
+          formart: item => item.unitPrice + "元/平"
+        },
+        {
+          prop: "seenNumRecent",
+          label: "30天带看",
+          order: "custom",
+          formart: item => item.seenNumRecent || "0"
+        },
+        {
+          prop: "saleReson",
+          label: "出售原因",
+          order: false,
+          formart: item => item.saleReson || "暂无"
+        },
+        {
+          prop: "floor",
+          label: "楼层",
+          order: true,
+          formart: item => {
+            return `${item.floor}/${item.floorNum}`;
+          }
+        },
+        {
+          prop: "addTime",
+          label: "挂牌",
+          order: true
+        },
+        {
+          prop: "brokerName",
+          label: "跟单人",
+          order: false
+        }
+      ],
+      pageJson: {
+        total: 1,
+        pageSize: 30,
+        currentPage: 1,
+        dataCount: 0
+      }
     };
   },
-  mounted() {
-    //商圈
-    this.queryConstant("Region").then(e => {
-      this.businessList = e;
-    });
-    //朝向
-    this.queryConstant("face").then(e => {
-      this.faceList = e;
-    });
-    //小学
-    this.queryConstant("PrimarySchool").then(e => {
-      this.primarySchoolList = e;
-    });
-
-    //中学
-    this.queryConstant("MiddleSchool").then(e => {
-      this.middleSchoolList = e;
-    });
-
-    //房型
-    this.queryConstant("Rooms").then(e => {
-      this.houseTypeList = e;
-    });
-
-    //装修
-    this.queryConstant("Renovation").then(e => {
-      this.renovationList = e;
-    });
-
-    //用途
-    this.queryConstant("Purpose").then(e => {
-      this.purposeList = e;
-    });
+  watch: {
+    form: {
+      deep: true,
+      immediate: true,
+      handler: function(value, ordvalue) {
+        this.getHouseData(JSON.parse(JSON.stringify(value))).then(() => {
+          dom.querySelector(".scroll-tab").scrollTop = 0;
+          this.$parent.ListeningScroll();
+        });
+      }
+    }
   },
-
+  mounted() {
+    window.addEventListener("resize", this.addListener);
+    this.$once("addListener", this.addListener);
+  },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.addListener);
+  },
   methods: {
-    //自定义面积 价格 售价 change监听
-    maxChange(topFiled, msg, field) {
-      let min = this[topFiled]["min" + field];
-      let max = this[topFiled]["max" + field];
+    /**
+     * @example: 处理ErrorImage
+     * @param {type}
+     */
 
-      //输入时把滑块数据清空
-      switch (field) {
-        case "Price":
-          this.Slider.priceSlider = [20, 20];
-          break;
-        case "DownPayment":
-          this.Slider.downPaymentSlider = [6, 6];
-          //首付等于总价的3分之1
-          min = min != "" ? min / this.downPaymentPercent : "";
-          max = max != "" ? max / this.downPaymentPercent : "";
-          break;
-        case "InArea":
-          this.Slider.areaSlider = [20, 20];
-          break;
-        case "Floor":
-          this.Slider.flootSlider = [-2, -2];
-          break;
-      }
-
-      if (max == "") {
-        this.form["min" + field] = min;
-        this.form["max" + field] = "9999";
-        return;
-      } else if (min == "") {
-        this.form["min" + field] = 0;
-        this.form["max" + field] = max;
-        return;
-      }
-      if (min != "" && max != "" && parseInt(min) > parseInt(max)) {
-        this.$message.warning("不能大于" + msg);
-        return;
-      }
-      this.form["min" + field] = min;
-      this.form["max" + field] = max;
+    houseImageErorHandle(item) {
+      item.picUrl =
+        "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png";
+      console.log("houseImageErorHandle -> item", item);
     },
-    triggerSchoolSizeFlag(value) {
-      this[value] = !this[value];
+    /**
+     * @example: 设置Tab方向
+     */
+    tabDirection({ column }) {
+      return column.label == "楼盘名称" ? "tab-cell-left" : "tab-cell-item";
     },
-    //滑块参数更新
-    flootSliderChange(e) {
-      if (e[0] == -2 && e[1] == -2) {
-        this.form.minFloor = "";
-        this.form.maxFloor = "";
-      } else {
-        this.form.minFloor = e[0];
-        this.form.maxFloor = e[1];
-      }
-      //清空自定义数据
-      this.custom.minFloor = "";
-      this.custom.maxFloor = "";
-    },
-    //滑块参数更新
-    areaSliderChange(e) {
-      if (e[0] == 20 && e[1] == 20) {
-        this.form.minInArea = "";
-        this.form.maxInArea = "";
-      } else {
-        this.form.minInArea = e[0];
-        this.form.maxInArea = e[1];
-      }
-      //清空自定义数据
-      this.custom.minInArea = "";
-      this.custom.maxInArea = "";
-    },
-    //售价滑块参数更新
-    priceSliderChange(e) {
-      if (e[0] == 20 && e[1] == 20) {
-        this.form.minPrice = "";
-        this.form.maxPrice = "";
-      } else {
-        this.form.minPrice = e[0];
-        this.form.maxPrice = e[1];
-      }
-      //清空自定义数据
-      this.custom.minPrice = "";
-      this.custom.maxPrice = "";
-    },
-    //首付滑块参数更新
-    downPaymentSliderChange(e) {
-      if (e[0] == 6 && e[1] == 6) {
-        this.form.minDownPayment = "";
-        this.form.maxDownPayment = "";
-      } else {
-        this.form.minDownPayment = e[0] / this.downPaymentPercent;
-        this.form.maxDownPayment = e[1] / this.downPaymentPercent;
-      }
-      //清空自定义数据
-      this.custom.minDownPayment = "";
-      this.custom.maxDownPayment = "";
-    },
-    //重置表单
-    resetForm(formName) {
-      this.searchData = "";
-      this.$parent.setSelectNav(null, true);
-      Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
-      Object.assign(this.$data.custom, this.$options.data().custom);
-      this.Slider.priceSlider = [20, 20];
-      this.Slider.areaSlider = [20, 20];
-      this.Slider.flootSlider = [-2, -2];
-      this.searchData = "";
-    },
-    addInputToList(toList, inputName) {
-      let findFlag = this.form[toList].some(item => {
-        return item == this[inputName];
+    /**
+     * @example: 双击前往详情
+     */
+    navDetailt(item) {
+      this.$router.push({
+        name: "houseDetails",
+        params: { houseId: item.id, dept: item.perDept }
       });
-      if (!findFlag) {
-        this[toList + "List"].push(this[inputName]);
-        this.form[toList].push(this[inputName]);
-      } else {
-        this.$message({
-          message: "您已经添加过了哦~",
-          type: "warning"
-        });
-        this[inputName] = "";
+    },
+    /**
+     * @example: 远程排序
+     */
+    sortMethod(item) {
+      let order = JSON.parse(JSON.stringify(item));
+      //户型修改为prop为rooms
+      if (item.column.property == "houseType") {
+        order.prop = "rooms";
+      }
+      this.InitPageJson();
+      //this.pageJson.currentPage = 1;
+      switch (order.order) {
+        case "ascending":
+          this.form.sortColumn = order.prop;
+          this.form.sortType = 0;
+          break;
+        case "descending":
+          this.form.sortColumn = order.prop;
+          this.form.sortType = 1;
       }
     },
+    handleSizeChange(pageSize) {
+      this.pageJson.pageSize = pageSize;
+      this.getHouseData(JSON.parse(JSON.stringify(this.form)), true);
+    },
+    /**
+     * @example: 分页组件页面改变时触发
+     * @param {number} pageIndex
+     */
 
-    queryConstant(constant) {
+    currentchange(pageIndex) {
+      this.pageJson.currentPage = pageIndex;
+      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false).then(
+        () => {
+          dom.querySelector(".scroll-tab").scrollTop = 0;
+          this.$parent.ListeningScroll();
+        }
+      );
+    },
+    addListener() {
+      let rdList = dom.querySelectorAll(".el-table__body-wrapper tbody > tr");
+      let trImage = dom.querySelectorAll(".tab-image > .tab-image-content");
+      let index = 0;
+      for (let i = 0, end = rdList.length; i < end; i += 2) {
+        let prevTr = getComputedStyle(rdList[i == 0 ? 0 : i]).height;
+        let nextTr = getComputedStyle(rdList[i == 0 ? 1 : i + 1]).height;
+
+        if (index < end / 2) {
+          trImage[index].style.height =
+            parseFloat(prevTr) + parseFloat(nextTr) + "px";
+          index++;
+        }
+      }
+    },
+    InitPageJson() {
+      this.pageJson = {
+        total: 1,
+        currentPage: 1,
+        pageSize: this.pageJson.pageSize,
+        dataCount: 0
+      };
+    },
+    getHouseData(value, initPage = true) {
+      // this.loading = true;
+      // Object.keys(value).forEach(item => {
+      //   if (value[item] instanceof Array) {
+      //     value[item] = value[item].join(",");
+      //   }
+      // });
+      if (initPage) this.InitPageJson();
+      let restuleParms = Object.assign({}, value, {
+        page: this.pageJson.currentPage,
+        limit: this.pageJson.pageSize
+      });
       return this.$api
-        .get({
-          url: "/mateHouse/queryConstant",
+        .post({
+          //  url: "/mateHouse/getMateHouse/soleAllHouse",
+          url: "/mateHouse/getMateHouse/soleAllHouseIndex",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            constant: constant
-          }
+          data: restuleParms
         })
         .then(e => {
-          if (e.data.code == 200) {
-            return e.data.data;
+          let data = e.data;
+          if (data.code == 200) {
+            this.renderList = data.data.data;
+            this.pageJson.total = data.data.pageSum;
+            this.pageJson.dataCount = data.data.dataCount;
           }
-        });
-    },
-    remoteInput() {
-      var that = this;
-      if (that.form.comId.length == 0) {
-        this.remoteMethod();
-      }
-    },
-    remoteMethod(query) {
-      var that = this;
-      if (query !== "") {
-        this.loading = true;
-
-        this.$api
-          .get({
-            url: "/community/houseList",
-            headers: { "Content-Type": "application/json;charset=UTF-8" },
-            token: false,
-            qs: true,
-            data: {
-              communityName: query
-            }
-          })
-          .then(e => {
-            console.log(e.data);
-            if (e.data.code == 200) {
-              that.loading = false;
-              that.options = e.data.data.list;
-            }
+          this.$nextTick(() => {
+            this.$emit("addListener");
+            this.addListener();
           });
-      } else {
-        this.options = [];
-      }
-    },
-    queryCBId(name) {
-      var that = this;
-      if (name == "") {
-        that.form.communityName = "";
-        that.form.cbNo = "";
-        that.form.roomNumber = "";
-      }
-
-      this.$api
-        .get({
-          url: "/mateHouse/queryComBuilding",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: that.form.comId,
-            limit: 1000
-          }
         })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.form.roomNo = "";
-            that.form.cbId = "";
-            that.cbIdList = e.data.data.list;
-            console.log(name);
-            if (name != "") {
-              let resultArr = that.options.find(item => {
-                return item.value === name;
-              });
-              that.form.communityName = resultArr.name;
-              that.form.cbNo = "";
-              that.form.roomNumber = "";
-              console.log(that.form.communityName);
-            }
-          }
-        });
-    },
-    queryRoomNo(name) {
-      var that = this;
-      this.$api
-        .get({
-          url: "/mateHouse/queryBuildIngHousesBySale",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: that.form.comId,
-            cbId: that.form.cbId,
-            limit: 1000
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.form.roomNo = "";
-            let resultArr = that.cbIdList.find(item => {
-              return item.value === name;
-            });
-            that.form.cbNo = resultArr.name;
-            that.form.roomNumber = "";
-            that.roomNoList = e.data.data.list;
-          }
-        });
-    },
-    queryRoomNumber(name) {
-      let that = this;
-      let resultArr = that.roomNoList.find(item => {
-        return item.value === name;
-      });
-      that.form.roomNumber = resultArr.name;
-    },
-    search() {
-      var that = this;
-      that.form.searchInfo = that.searchData;
-    },
-    mateHouse() {
-      var that = this;
-      console.log(that.form);
-      console.log(that.form.comId);
-      that.$router.push({
-        path: "/components/mateHouseList",
-        query: { params: JSON.stringify(that.form) }
-      });
+        .finally(() => {});
     }
   }
 };

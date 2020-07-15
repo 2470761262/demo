@@ -168,14 +168,13 @@ export default {
     return {
       moreSelectFlag: false,
       changeTabsValue: "0",
-      demandTabsValue: "demand",
-      demandValueData: this.demandValue
+      demandTabsValue: "demand"
     };
   },
   components: { demandMoreSelect },
   filters: {
     formatMoney(val) {
-      return division(val, 10000);
+      return val / 10000;
     },
     formatPayWay(val) {
       switch (val) {
@@ -191,6 +190,14 @@ export default {
     },
     formatSymbol(val) {
       return val.replace(/\$/g, ",");
+    }
+  },
+  created() {
+    // this.$set(this.$data, "demandValueData", this.demandValue);
+  },
+  computed: {
+    demandValueData() {
+      return this.demandValue;
     }
   },
   methods: {

@@ -90,7 +90,8 @@
         </div>
         <div class="input-assist-tips" v-if="addTel.length != 0">客户电话1</div>
         <el-input
-          v-model="formData.tels[0]"
+          v-model="formData.tels[0].phone"
+          :disabled="formData.tels[0].isDisabled"
           class="input-content"
           clearable
           placeholder="请输入客户的电话号码"
@@ -120,7 +121,8 @@
         </div>
         <div class="input-pack">
           <el-input
-            v-model="formData.tels[index + 1]"
+            v-model="formData.tels[index + 1].phone"
+            :disabled="formData.tels[index + 1].isDisabled"
             class="input-content"
             clearable
             placeholder="请输入客户的电话号码"
@@ -132,8 +134,8 @@
               phone: true,
               isSame: [
                 [
-                  formData.tels[0],
-                  ...addTel.map((tel, index) => formData.tels[index + 1])
+                  formData.tels[0].phone,
+                  ...addTel.map((tel, index) => formData.tels[index + 1].phone)
                 ],
                 '手机号'
               ]
@@ -238,6 +240,7 @@
             v-model="mock1"
             class="input-content"
             clearable
+            maxlength="5"
             placeholder="请输入客源印象"
             data-vv-name="impression"
             data-vv-as="客源印象"
@@ -342,8 +345,17 @@ const cascaderList = [
     ]
   }
 ];
-
-import { SEX, BUYINTENTION } from "@/util/constMap";
+const SEX = [
+  {
+    key: "男",
+    value: 0
+  },
+  {
+    key: "女",
+    value: 1
+  }
+];
+import { BUYINTENTION } from "@/util/constMap";
 import selectCascader from "./selectCascader";
 import demandMoreSelect from "./demandMoreSelect";
 import { mapState } from "vuex";
@@ -360,8 +372,8 @@ export default {
     return {
       formData: {
         Customers: "", //客户姓名
-        sex: 1, //性别
-        tels: [""], //客户号码
+        sex: 0, //性别
+        tels: [{ phone: "", isDisabled: false }], //客户号码
         desireIntensity: "", //购买意向
         nativePlace: "", //籍贯
         Source: 0, //客源来源
@@ -423,6 +435,8 @@ export default {
       if (this.addTel.length < 2) {
         for (let index = 0; index < defaultList.length; index++) {
           if (!this.addTel.includes(defaultList[index])) {
+            let phone = { phone: "", isDisabled: false };
+            this.formData.tels.push(phone);
             this.addTel.push(defaultList[index]);
             break;
           }
@@ -436,6 +450,7 @@ export default {
      */
     removeTelToList(index) {
       this.addTel.splice(index, 1);
+      this.formData.tels.splice(index, 1);
     },
     /**
      * @example: openPop

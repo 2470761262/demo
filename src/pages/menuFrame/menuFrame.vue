@@ -32,11 +32,15 @@
       background-color: rgb(84, 92, 100);
     }
     .children-page {
-      min-height: calc(100% - 26px);
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
     }
+  }
+}
+.is-map-nav {
+  .el-main {
+    padding: 0;
   }
 }
 .el-background {
@@ -63,13 +67,17 @@
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
     </el-container>
-    <el-container class="page-cell-main-menu" id="page-cell-main">
+    <el-container
+      :class="{ 'is-map-nav': !isPad }"
+      class="page-cell-main-menu "
+      id="page-cell-main"
+    >
       <el-aside class="el-background" v-if="asideNavFlag">
         <asideNav :menuNodeDatas="menuDatasInParent"></asideNav>
       </el-aside>
       <el-main>
-        <feedback ref="feedback" />
-        <div class="children-page">
+        <feedback ref="feedback" v-show="isMapNav" />
+        <div class="children-page" :style="isMapNavStyle">
           <!-- 二级页面 router-view -->
           <!-- <transition name="el">
             <keep-alive
@@ -112,6 +120,21 @@ export default {
       loginUserData: {},
       menuDatasInParent: []
     };
+  },
+  computed: {
+    isMapNav() {
+      return !this.$route.meta.isMapNav;
+    },
+    isPad() {
+      return !this.$route.meta.isPad;
+    },
+    isMapNavStyle() {
+      if (this.isMapNav) {
+        return { "min-height": "calc(100% - 26px)" };
+      } else {
+        return { "min-height": "100%" };
+      }
+    }
   },
   methods: {
     /**
