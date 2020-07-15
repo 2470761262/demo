@@ -78,7 +78,6 @@
         .cellMsgRow {
           padding: 12px 0;
           display: flex;
-          align-items: center;
           .cellMsgTil {
             white-space: nowrap;
             font-size: @font14;
@@ -146,12 +145,12 @@
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进内容：</div>
-
-              <VueAudio
-                v-if="item.FollowType == '电话跟进'"
-                :theUrl="item.Memo.slice(6)"
-                :theControlList="theControlList"
-              ></VueAudio>
+              <div class="cellMsgText" v-if="item.FollowType == '电话跟进'">
+                <VueAudio
+                  :theUrl="item.Memo.slice(6)"
+                  :theControlList="theControlList"
+                ></VueAudio>
+              </div>
               <div class="cellMsgText" v-else>
                 {{ item.Memo || "暂无" }}
               </div>

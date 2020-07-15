@@ -1214,7 +1214,7 @@ export default {
   data() {
     return {
       customersTypeList: cusTypeList,
-      customersType: 1,
+      customersType: 2,
       IntendList: IntendListModle,
       Intend: [4],
       ProgressList: ProgressListModle,
