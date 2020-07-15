@@ -27,6 +27,7 @@
 
     .SwitchItemOn {
       background: @backgroud;
+      cursor: pointer;
       > i,
       > span {
         color: #ffffff;
@@ -92,26 +93,13 @@
         height: 50px;
         background: @backgroud;
         text-align: center;
+        cursor: pointer;
         > i {
           line-height: 50px;
           color: #ffffff;
           font-size: @font24;
         }
       }
-    }
-    .NavigateItem {
-      margin-left: 20px;
-      padding: 0 14px;
-      height: 50px;
-      text-align: center;
-      line-height: 50px;
-      border: 1px solid @backgroud;
-      border-radius: 8px;
-      color: @backgroud;
-      font-size: @font16;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      overflow: hidden;
     }
   }
   /deep/.el-form-item__content {
@@ -126,6 +114,7 @@
       height: 50px;
       line-height: 50px;
       font-size: @font18;
+      cursor: pointer;
     }
     .tapSwitchItem {
       border-bottom: 2px solid #ffffff;
@@ -350,11 +339,11 @@
         class="SwitchItem"
         @click="navigateTo('/customers/privateCustomersList')"
       >
-        <i></i>
+        <i class="iconfont iconcube-kehu"></i>
         <span>私客库</span>
       </div>
       <div class="SwitchItemOn">
-        <i></i>
+        <i class="iconfont iconkehu"></i>
         <span>公客池</span>
       </div>
     </div>
@@ -370,12 +359,6 @@
           <div class="SubmitItem" @click="submit">
             <i class="el-icon-search"></i>
           </div>
-        </div>
-        <div
-          class="NavigateItem"
-          @click="navigateTo('/customers/addCustomers')"
-        >
-          <span>录入客源</span>
         </div>
       </el-form-item>
       <el-form-item

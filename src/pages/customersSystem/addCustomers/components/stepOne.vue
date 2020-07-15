@@ -342,8 +342,17 @@ const cascaderList = [
     ]
   }
 ];
-
-import { SEX, BUYINTENTION } from "@/util/constMap";
+const SEX = [
+  {
+    key: "男",
+    value: 0
+  },
+  {
+    key: "女",
+    value: 1
+  }
+];
+import { BUYINTENTION } from "@/util/constMap";
 import selectCascader from "./selectCascader";
 import demandMoreSelect from "./demandMoreSelect";
 import { mapState } from "vuex";
@@ -360,7 +369,7 @@ export default {
     return {
       formData: {
         Customers: "", //客户姓名
-        sex: 1, //性别
+        sex: 0, //性别
         tels: [""], //客户号码
         desireIntensity: "", //购买意向
         nativePlace: "", //籍贯

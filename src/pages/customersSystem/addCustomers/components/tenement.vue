@@ -16,9 +16,6 @@
               isGreater: [data.maxPrice]
             }"
           >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
           </el-input>
           <div
             :class="{
@@ -35,9 +32,6 @@
             data-vv-as="最大值"
             v-validate="'noZero1'"
           >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
           </el-input>
           <div
             :class="{
@@ -62,9 +56,6 @@
               isGreater: [data.maxUnitPrice]
             }"
           >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
           </el-input>
           <div
             :class="{
@@ -81,9 +72,6 @@
             data-vv-as="最大值"
             v-validate="'noZero1'"
           >
-            <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
-            </template>
           </el-input>
           <div
             :class="{
@@ -451,6 +439,9 @@ const rentWayList = [
 ];
 import { PURCHASEPURPOSE, DECORATION } from "@/util/constMap";
 export default {
+  $_veeValidate: {
+    validator: "new" // give me my own validator scope.
+  },
   data() {
     return {
       data: {

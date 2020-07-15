@@ -49,6 +49,7 @@
       header-cell-class-name="ResultListCell ResultListHeaderBack"
       cell-class-name="ResultListCell"
       @row-click="navigateTo"
+      v-loading="loading"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
         <el-table-column
@@ -133,6 +134,7 @@ export default {
       menuLoading: true, //自定义菜单
       tableColumn: [],
       tableData: [],
+      loading: false,
       limit: 15, //分页参数，每页条数
       page: 1, //分页参数，第几页
       pageSum: 0, //总页数
@@ -166,6 +168,7 @@ export default {
   methods: {
     apply() {
       var that = this;
+      this.loading = true;
       this.$api
         .post({
           url: "/saleCustomer/listPublicCustomers",
@@ -193,6 +196,7 @@ export default {
             alert(json.message);
             console.log("失败     " + json);
           }
+          this.loading = false;
         });
     },
     houserequire(i) {

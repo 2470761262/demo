@@ -2,7 +2,7 @@ function getData() {
   return {
     step1: {
       Customers: "", //客户姓名
-      sex: 1, //性别
+      sex: 0, //性别
       tels: [""], //客户号码
       desireIntensity: "", //购买意向
       nativePlace: "", //籍贯

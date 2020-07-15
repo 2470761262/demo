@@ -40,7 +40,8 @@ export default {
     return {
       customerId: this.customerId,
       FollowData: this.FollowData,
-      cusbaseData: this.cusbaseData
+      cusbaseData: this.cusbaseData,
+      ruleList: this.ruleList
     };
   },
   components: {
@@ -51,7 +52,13 @@ export default {
     return {
       customerId: 238935,
       FollowData: {},
-      cusbaseData: {}
+      cusbaseData: {},
+      ruleList: {
+        customerDetailForFollowAndTakeLook: false, //看跟进
+        addFollowLookButtonEable: false, //写跟进
+        dialButtonEnable: false, //一键拨号
+        customerDetailForTakeCus: false //认领客户
+      }
     };
   },
   created() {
@@ -82,6 +89,11 @@ export default {
               that.cusbaseData,
               "Customers",
               json.data.bsAgentCustomersTbl.Customers
+            );
+            this.$set(
+              that.cusbaseData,
+              "customerNo",
+              json.data.bsAgentCustomersTbl.customerNo
             );
             this.$set(
               that.cusbaseData,
@@ -119,6 +131,24 @@ export default {
               json.data.bsAgentCustomersTbl.ModTime
             );
             console.log(that.cusbaseData);
+            json.data.ruleList.forEach(element => {
+              if (element.rUrl == "addFollowLookButtonEable") {
+                this.$set(that.ruleList, "addFollowLookButtonEable", true);
+              }
+              if (element.rUrl == "dialButtonEnable") {
+                this.$set(that.ruleList, "dialButtonEnable", true);
+              }
+              if (element.rUrl == "customerDetailForFollowAndTakeLook") {
+                this.$set(
+                  that.ruleList,
+                  "customerDetailForFollowAndTakeLook",
+                  true
+                );
+              }
+              if (element.rUrl == "customerDetailForTakeCus") {
+                this.$set(that.ruleList, "customerDetailForTakeCus", true);
+              }
+            });
           } else if (json.code == 400) {
             alert(json.message);
             console.log("失败     " + json);

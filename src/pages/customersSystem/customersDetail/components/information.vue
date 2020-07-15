@@ -6,35 +6,39 @@
     </div>
     <div class="infor-row flex">
       <div class="infor-phone">{{ phoneData }}</div>
-      <el-popover placement="bottom" trigger="click" class="infor-check">
-        <div>
-          <p v-for="(item, idx) in phoneList" :key="idx">{{ item.phone }}</p>
-        </div>
-        <el-button
-          slot="reference"
-          @click="getPhone"
+      <div class="infor-bottom">
+        <el-popover
+          placement="bottom"
+          trigger="click"
+          class="infor-check"
           v-if="permissionList.customerDetailForTelephone.isDisable"
-          >查看号码</el-button
         >
-      </el-popover>
-      <el-popover placement="bottom" trigger="click" class="infor-dial">
-        <div class="phone-list">
-          <div
-            v-for="(item, idx) in phoneList"
-            :key="idx"
-            @click="callUp(item.phone)"
-            v-loading="callLoading"
-          >
-            {{ item.phone }}
+          <div>
+            <p v-for="(item, idx) in phoneList" :key="idx">{{ item.phone }}</p>
           </div>
-        </div>
-        <el-button
-          slot="reference"
-          @click="getPhone"
+          <el-button slot="reference" @click="getPhone">查看号码</el-button>
+        </el-popover>
+        <el-popover
+          placement="bottom"
+          trigger="click"
+          class="infor-dial"
           v-if="permissionList.dialButtonEnable.isDisable"
-          ><span>一键拨号</span></el-button
         >
-      </el-popover>
+          <div class="phone-list">
+            <div
+              v-for="(item, idx) in phoneList"
+              :key="idx"
+              @click="callUp(item.phone)"
+              v-loading="callLoading"
+            >
+              {{ item.phone }}
+            </div>
+          </div>
+          <el-button slot="reference" @click="getPhone"
+            ><span>一键拨号</span></el-button
+          >
+        </el-popover>
+      </div>
     </div>
     <div class="infor-row">
       <div
@@ -61,8 +65,8 @@
     <section class="message-row flex">
       <div class="message-title">委托来源：</div>
       <div class="message-txt">
-        {{ customer.data.Source | formatSource }} /
-        {{ customer.data.sourceType | formatSourceType }}
+        {{ customer.data.sourceType | formatSourceType }} /
+        {{ customer.data.Source | formatSource }}
       </div>
     </section>
     <section class="message-row flex">
@@ -341,6 +345,9 @@ export default {
       font-size: @font18;
       line-height: @line-height;
       font-weight: bold;
+    }
+    .infor-bottom {
+      margin-left: auto;
     }
     .infor-check {
       margin-left: auto;
