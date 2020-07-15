@@ -157,12 +157,16 @@ export default {
           return "一般";
         case 3:
           return "强烈";
+        default:
+          return "暂无";
       }
     },
     formatTime(value) {
       if (value) {
         let time = value.split(" ");
         return time[0];
+      } else {
+        return "暂无";
       }
     },
     formatSource(value) {

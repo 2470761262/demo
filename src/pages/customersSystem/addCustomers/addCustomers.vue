@@ -55,7 +55,13 @@ export default {
       stepName: "下一步",
       fullscreenLoading: false,
       customerId: this.$route.query.customerId,
-      step: this.$route.query.step
+      step: this.$route.query.step,
+      demandValue: {
+        //客户需求value
+        list0: [],
+        list1: [],
+        list2: []
+      }
     };
   },
   created() {
@@ -64,7 +70,7 @@ export default {
     this.getMiddleSchoolList();
     this.getBusinessList();
     if (this.customerId) {
-      // this.getData();
+      this.getData();
     }
     if (this.step == 2) {
       // this.componentName = "stepTwo";
@@ -92,9 +98,11 @@ export default {
       }
     },
     // 提交按钮
-    submit() {
+    async submit() {
       let newxFlag = true;
-      // newxFlag = await this.$refs.childreCom.validate();
+      if (this.componentName == "stepOne") {
+        newxFlag = await this.$refs.childreCom.validate();
+      }
       let that = this;
       let step2 = this.$store.state.addCustomers.formData.step2;
       let postData = {};
@@ -174,11 +182,15 @@ export default {
             }
           });
         }
+        let tels = [];
+        for (let i = 0; i < postData.tels.length; i++) {
+          tels.push(postData.tels[i].phone);
+        }
+        postData.tels = tels;
         postData.sourceType = postData.sourceList[0];
         postData.Source = postData.sourceList[1];
         postData.origin = "PC";
         that.fullscreenLoading = true;
-        console.log(postData);
         that.$api
           .post({
             url: "/saleCustomerOperation/addCustomer",
@@ -237,7 +249,7 @@ export default {
       };
       that.$api
         .post({
-          url: "/saleCustomerDetail/getACusEx",
+          url: "/saleCustomerDetail/getACusExBeforeUpdate",
           data: postData,
           qs: true,
           headers: {
@@ -248,18 +260,32 @@ export default {
           if (e.data.code == 200) {
             let data = e.data.data;
             fromData.Customers = data.bsAgentCustomersTbl.Customers;
+            fromData.desireIntensity = data.saleCusPropertyTbl.desireIntensity;
             fromData.sex = data.bsAgentCustomersTbl.sex;
             fromData.nativePlace = data.bsAgentCustomersTbl.nativePlace;
             fromData.Source = data.bsAgentCustomersTbl.Source;
             fromData.sourceType = data.bsAgentCustomersTbl.sourceType;
             fromData.sourceList.push(data.bsAgentCustomersTbl.sourceType);
             fromData.sourceList.push(data.bsAgentCustomersTbl.Source);
+            for (let i = 0; i < data.impressionList.length; i++) {
+              fromData.myImpression.push(data.impressionList[i].impression);
+            }
+            for (let i = 0; i < data.telList.length; i++) {
+              let phone = { phone: data.telList[i].phone, isDisabled: true };
+              fromData.tels.push(phone);
+            }
+            let rendList = [];
+            for (let i = 0; i < data.customerRequire.length; i++) {
+              let item = { title: data.customerRequire[i] };
+              rendList.push(item);
+            }
+            fromData.requirements = data.requireList;
             // this.$set(that.demand, "data", data.customerRequire);
             // this.$set(that.demandList, "data", data.requireList);
             // this.$set(that.customerDeal, "data", data.saleCusPropertyTbl);
             // this.$set(that.telList, "data", data.telList);
             // that.customer.data = data.bsAgentCustomersTbl;
-            that.demandList.data.forEach(item => {
+            fromData.requirements.forEach(item => {
               switch (item.requireType) {
                 case 1:
                 case 2:
@@ -278,6 +304,11 @@ export default {
                   break;
               }
             });
+            this.$store.commit("updateStep1", fromData);
+            this.$refs.childreCom.formData = fromData;
+            this.$refs.childreCom.demandValue = this.demandValue;
+            this.$refs.childreCom.demandData.rendList = rendList;
+            this.$store.commit("updateDemandValue", this.demandValue);
           }
         })
         .catch(e => {

@@ -54,12 +54,12 @@
           <el-input
             placeholder="最小值"
             class="input-content is-suffix"
-            v-model="data.maxFirstPrice"
+            v-model="data.minFirstPrice"
             data-vv-name="minFirstPrice"
             data-vv-as="最小值"
             v-validate="{
               noZero1: true,
-              isGreater: [data.maxPrice]
+              isGreater: [data.maxFirstPrice]
             }"
           >
             <template v-slot:suffix>
@@ -199,8 +199,8 @@
           <el-option
             v-for="item in communityList"
             :key="item.value"
-            :label="item.value"
-            :value="item.name"
+            :label="item.name"
+            :value="item.name + ',' + item.value"
           ></el-option>
         </el-select>
       </div>

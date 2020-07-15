@@ -250,7 +250,8 @@ export default {
   },
   components: {
     //写跟进弹出层
-    followUpDialog: () => import("../didlog/followUpDialog")
+    followUpDialog: () => import("../didlog/followUpDialog"),
+    VueAudio: () => import("../../publicCustomersDetail/components/vueAudio")
   },
   created() {
     this.getData();
