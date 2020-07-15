@@ -28,7 +28,7 @@
       text-overflow: ellipsis;
       overflow: hidden;
       // prettier-ignore
-      padding: 20PX 55PX;
+      padding: 12PX 55PX;
       &.active {
         color: @backgroud;
         border-left: 1px solid #f0f2f5;
