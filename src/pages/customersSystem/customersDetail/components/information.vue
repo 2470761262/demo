@@ -65,8 +65,8 @@
     <section class="message-row flex">
       <div class="message-title">委托来源：</div>
       <div class="message-txt">
-        {{ customer.data.Source | formatSource }} /
-        {{ customer.data.sourceType | formatSourceType }}
+        {{ customer.data.sourceType | formatSourceType }} /
+        {{ customer.data.Source | formatSource }}
       </div>
     </section>
     <section class="message-row flex">
