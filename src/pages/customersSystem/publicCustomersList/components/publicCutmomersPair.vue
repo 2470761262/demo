@@ -368,7 +368,7 @@
         class="ItemRow ChooseItemRow"
         prop="HouseType"
       >
-        <el-radio-group v-model="form.requireTypes" class="RadioItemBox">
+        <el-radio-group v-model="form.requirementType" class="RadioItemBox">
           <div
             class="RadioItem"
             v-for="(item, index) in customerNeedsList"
@@ -421,19 +421,19 @@
 const customerNeedsModle = [
   {
     name: "不限",
-    value: 1
+    value: null
   },
   {
     name: "买二手",
-    value: [1, 2, 4]
+    value: 1
   },
   {
     name: "租赁",
-    value: [8, 15, 32]
+    value: 2
   },
   {
     name: "买新房",
-    value: [64, 128, 256]
+    value: 3
   }
 ];
 const PublicTypeModle = [
