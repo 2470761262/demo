@@ -16,11 +16,11 @@
     display: flex;
     justify-content: flex-end;
     padding-right: 46px;
-    margin-bottom: 10px;
+    padding-bottom: 10px;
     position: sticky;
-    top: 0;
+    top: 0px;
     z-index: 10;
-    background: rgba(255, 255, 255, 0.7);
+    background: #fff;
     .filter-radio-item {
       display: flex;
       cursor: pointer;
@@ -90,6 +90,9 @@
         color: rgba(48, 49, 51, 1);
         line-height: 64px;
         text-align: center;
+        position: sticky;
+        top: 31px;
+        z-index: 10;
       }
       .tab-image-content {
         height: 128px;
@@ -171,6 +174,14 @@
   padding-bottom: 14px;
   display: flex;
   justify-content: flex-end;
+}
+/deep/.el-table__header-wrapper {
+  position: sticky;
+  top: 31px;
+  z-index: 10;
+}
+/deep/.el-table {
+  overflow: visible;
 }
 </style>
 <template>
