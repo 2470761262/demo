@@ -195,8 +195,7 @@ export default {
             maxPrice: that.form.maxPrice, //最高价
             minArea: that.form.minArea, //最小面积
             maxArea: that.form.maxArea, //最大面积
-            houseNumbers:
-              that.form.houseNumbers == "" ? [] : [that.form.houseNumbers], //房型 需要处理数据
+            houseNumbers: that.form.houseNumbers, //房型 需要处理数据
             minAddTime: that.form.minAddTime, //委托开始时间
             maxAddTime: that.form.maxAddTime, //委托结束时间
             minMainTainTime: that.form.minMainTainTime, //维护开始时间

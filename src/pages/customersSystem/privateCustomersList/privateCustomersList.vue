@@ -51,7 +51,7 @@ export default {
         maxPrice: "", //最高价
         minArea: "", //最小面积
         maxArea: "", //最大面积
-        houseNumbers: "", //房型 需要处理数据
+        houseNumbers: [], //房型 需要处理数据
         minAddTime: "", //委托开始时间
         maxAddTime: "", //委托结束时间
         minMainTainTime: "", //维护开始时间

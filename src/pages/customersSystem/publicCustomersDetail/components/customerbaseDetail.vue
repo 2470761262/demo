@@ -357,7 +357,7 @@ export default {
       this.$api
         .post({
           url: "/saleCustomerDetail/getTelPhone",
-          data: { customerId: that.customerId },
+          data: { customerId: that.customerId.id },
           qs: true,
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
@@ -378,7 +378,7 @@ export default {
       let that = this;
       console.log(phone);
       let postData = {
-        customerId: this.customerId,
+        customerId: this.customerId.id,
         remark: "给客户" + this.cusbaseData.Customers + "拨打电话",
         customerName: this.cusbaseData.Customers,
         contactPhone: phone,
@@ -417,7 +417,7 @@ export default {
           url: "/saleCustomerDetail/canTakeCus",
           qs: true,
           data: {
-            customerId: that.customerId
+            customerId: that.customerId.id
           }
         })
         .then(e => {
@@ -492,7 +492,7 @@ export default {
               //跳转至私客页面
               this.$router.push({
                 path: "/customers/customersDetail",
-                query: { customerId: this.customerId }
+                query: { customerId: this.customerId.id }
               });
             } else if (json.code == 400) {
               alert(json.message);

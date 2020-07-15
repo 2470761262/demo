@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-      customerId: 238935,
+      customerId: {},
       FollowData: {},
       cusbaseData: {},
       ruleList: {
@@ -62,10 +62,8 @@ export default {
     };
   },
   created() {
-    this.customerId = this.$router.app._route.query.customerId
-      ? this.$router.app._route.query.customerId
-      : 238935;
-    console.log(this.customerId);
+    this.$set(this.customerId, "id", this.$router.app._route.query.customerId);
+    console.log(this.customerId.id);
     this.applyFollow();
   },
   methods: {
@@ -76,7 +74,7 @@ export default {
           url: "saleCustomerDetail/getPubCusDetail",
           qs: true,
           data: {
-            customerId: that.customerId
+            customerId: that.customerId.id
           }
         })
         .then(e => {
