@@ -15,6 +15,27 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+  
+  .icondaohang_wodefangyuan1:before {
+    content: "\e650";
+  }
+  
+  .iconjichuguanli1:before {
+    content: "\e64f";
+  }
+  
+  .iconjichuguanli:before {
+    content: "\e646";
+  }
+  
+  .icondaohang_wodefangyuan:before {
+    content: "\e647";
+  }
+  
+  .iconluru:before {
+    content: "\e64e";
+  }
+  
   .iconcube-kehu:before {
     content: "\e651";
   }
