@@ -78,7 +78,7 @@ export default {
             .then(e => {
               if (e.data.code == 200) {
                 this.$message({
-                  type: "success",
+                  type: "xinjia",
                   message: "暂不关注客户成功"
                 });
                 that.close();

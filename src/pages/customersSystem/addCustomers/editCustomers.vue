@@ -68,6 +68,9 @@ export default {
     this.getPrimarySchoolList();
     this.getMiddleSchoolList();
     this.getBusinessList();
+    if (this.customerId) {
+      this.getData();
+    }
   },
   destroyed() {
     this.$store.commit("resetFormData");
@@ -190,7 +193,7 @@ export default {
         that.fullscreenLoading = true;
         that.$api
           .post({
-            url: "/saleCustomerOperation/addCustomer",
+            url: "/saleCustomerOperation/modifyCustomer",
             data: postData,
             headers: {
               "Content-Type": "application/json"
@@ -226,9 +229,144 @@ export default {
           });
       }
     },
-    // 返回
-    close() {
-      this.$router.go(-1);
+    // 获取用户信息
+    getData() {
+      let that = this;
+      let fromData = {
+        Customers: "", //客户姓名
+        sex: 1, //性别
+        tels: [], //客户号码
+        desireIntensity: "", //购买意向
+        nativePlace: "", //籍贯
+        Source: 0, //客源来源
+        sourceType: 0,
+        myImpression: [], //印象的结果数组
+        requirements: [], //客户需求（传后端用）
+        sourceList: [] //客源来源列表
+      };
+      let postData = {
+        customerId: this.customerId
+      };
+      that.$api
+        .post({
+          url: "/saleCustomerDetail/getACusExBeforeUpdate",
+          data: postData,
+          qs: true,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            let data = e.data.data;
+            fromData.Customers = data.bsAgentCustomersTbl.Customers;
+            fromData.desireIntensity = data.saleCusPropertyTbl.desireIntensity;
+            fromData.sex = data.bsAgentCustomersTbl.sex;
+            fromData.nativePlace = data.bsAgentCustomersTbl.nativePlace;
+            fromData.Source = data.bsAgentCustomersTbl.Source;
+            fromData.sourceType = data.bsAgentCustomersTbl.sourceType;
+            fromData.sourceList.push(data.bsAgentCustomersTbl.sourceType);
+            fromData.sourceList.push(data.bsAgentCustomersTbl.Source);
+            for (let i = 0; i < data.impressionList.length; i++) {
+              fromData.myImpression.push(data.impressionList[i].impression);
+            }
+            for (let i = 0; i < data.telList.length; i++) {
+              let phone = { phone: data.telList[i].phone, isDisabled: true };
+              fromData.tels.push(phone);
+            }
+            let rendList = [];
+            for (let i = 0; i < data.customerRequire.length; i++) {
+              let item = { title: data.customerRequire[i] };
+              rendList.push(item);
+            }
+            fromData.requirements = data.requireList;
+            this.$store.commit("updateStep2", fromData.requirements);
+            // this.$set(that.demand, "data", data.customerRequire);
+            // this.$set(that.demandList, "data", data.requireList);
+            // this.$set(that.customerDeal, "data", data.saleCusPropertyTbl);
+            // this.$set(that.telList, "data", data.telList);
+            // that.customer.data = data.bsAgentCustomersTbl;
+            fromData.requirements.forEach(item => {
+              switch (item.requireType) {
+                case 1:
+                case 2:
+                case 4:
+                  this.demandValue.list0.push(item.requireType);
+                  break;
+                case 8:
+                case 16:
+                case 32:
+                  this.demandValue.list1.push(item.requireType);
+                  break;
+                case 64:
+                case 128:
+                case 256:
+                  this.demandValue.list2.push(item.requireType);
+                  break;
+              }
+              if (item.businessCircle) {
+                item.businessCircleList = item.businessCircle.split("$");
+              }
+
+              if (item.middleSchool) {
+                item.middleSchoolList = item.middleSchool.split("$");
+              }
+
+              if (item.primarySchool) {
+                item.primarySchoolList = item.primarySchool.split("$");
+              }
+
+              if (item.rooms) {
+                item.roomsList = item.rooms.split("$");
+              }
+
+              if (item.decoration) {
+                item.decorationList = item.decoration.split("$");
+              }
+              if (
+                item.requireType != 64 &&
+                item.requireType != 128 &&
+                item.requireType != 256
+              ) {
+                item.maxFirstPrice = item.maxFirstPrice / 10000;
+                item.minFirstPrice = item.minFirstPrice / 10000;
+                item.maxPrice = item.maxPrice / 10000;
+                item.minPrice = item.minPrice / 10000;
+                item.maxUnitPrice = item.maxUnitPrice / 10000;
+                item.minUnitPrice = item.minUnitPrice / 10000;
+              }
+              item.community = [];
+              if (item.community1 != null) {
+                let community = item.community1 + "," + item.community1Id;
+                item.community.push(community);
+              }
+              if (item.community2 != null) {
+                let community = item.community2 + "," + item.community2Id;
+                item.community.push(community);
+              }
+              if (item.community3 != null) {
+                let community = item.community3 + "," + item.community3Id;
+                item.community.push(community);
+              }
+            });
+
+            this.$store.commit("updateStep1", fromData);
+            this.$refs.childreCom.formData = fromData;
+            this.$refs.childreCom.demandValue = this.demandValue;
+            this.$refs.childreCom.demandData.rendList = rendList;
+            this.$store.commit("updateDemandValue", this.demandValue);
+            if (this.step == 2) {
+              this.componentName = "stepTwo";
+              this.comNextIndex = 1;
+              this.stepName = "上一步";
+            }
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            that.$message(e.response.data.message);
+          }
+        });
     },
     // 获取楼盘列表
     getCommunityList() {
@@ -349,6 +487,10 @@ export default {
             that.$message(e.response.data.message);
           }
         });
+    },
+    // 返回
+    close() {
+      this.$router.go(-1);
     }
   }
 };

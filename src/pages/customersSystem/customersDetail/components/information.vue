@@ -270,7 +270,7 @@ export default {
           that.callLoading = false;
           if (e.data.code == 200) {
             this.$message({
-              type: "success",
+              type: "xinjia",
               message: "号码已发送至微信"
             });
           }
@@ -308,7 +308,7 @@ export default {
               if (e.data.code == 200) {
                 that.impressionList.data.splice(idx, 1);
                 this.$message({
-                  type: "success",
+                  type: "xinjia",
                   message: "删除成功!"
                 });
               }
@@ -436,6 +436,10 @@ export default {
       line-height: 16PX;
       color: #303133;
       text-align: right;
+      span {
+        //prettier-ignore
+        line-height: 24PX;
+      }
     }
   }
   .flex {
@@ -450,6 +454,23 @@ export default {
     &:last-child {
       border-bottom: none;
     }
+  }
+}
+</style>
+<style lang="less">
+.el-message--xinjia {
+  background-color: @opacityBackground;
+  border-color: @opacityBackground;
+  .el-message__icon {
+    &::before {
+      color: @backgroud;
+      font-size: @font16;
+      content: "\e79c";
+    }
+  }
+  .el-message__content {
+    color: @backgroud;
+    font-size: @font16;
   }
 }
 </style>

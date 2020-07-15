@@ -88,6 +88,14 @@
       :visible.sync="operationLogFlag"
       v-if="operationLogFlag"
     ></operationLogDialog>
+
+    <fixedPopup
+      :visible.sync="alertflag"
+      styleType="0"
+      :butJson="btnJson"
+      @confirmEmit="alertflag = false"
+      ><div class="alert-txt">该功能正在开发中，敬请期待</div></fixedPopup
+    >
   </div>
 </template>
 
@@ -99,7 +107,13 @@ export default {
       impressionFlag: false,
       uselessFlag: false,
       attentionFlag: false,
-      operationLogFlag: false
+      operationLogFlag: false,
+      alertflag: false,
+      btnJson: {
+        cancelBtnShow: false,
+        confirmBtnText: "确定",
+        confirmBtnShow: true
+      }
     };
   },
   components: {
@@ -130,7 +144,7 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             this.$message({
-              type: "success",
+              type: "xinjia",
               message: "已取消该客户的暂不关注"
             });
             that.getInformation();
@@ -146,10 +160,7 @@ export default {
      * @example: 研发提示弹窗
      */
     openDevelop() {
-      this.$alert("该功能正在开发中，敬请期待", "提示", {
-        confirmButtonText: "确定",
-        callback: () => {}
-      });
+      this.alertflag = true;
     },
     /**
      * @example: 弹出弹窗事件
@@ -160,7 +171,7 @@ export default {
     },
     demandConfirm() {
       this.$router.push({
-        path: "/customers/addCustomers",
+        path: "/customers/editCustomers",
         query: { customerId: this.customerId }
       });
     }
@@ -209,5 +220,9 @@ export default {
       }
     }
   }
+}
+.alert-txt {
+  padding-top: 24px;
+  font-size: @font16;
 }
 </style>

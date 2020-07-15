@@ -210,7 +210,7 @@ export default {
     demandConfirm() {
       this.$store.commit("updateDemandValue", this.demandValueData);
       this.$router.push({
-        path: "/customers/addCustomers",
+        path: "/customers/editCustomers",
         query: { customerId: this.customerId, step: 2 }
       });
     }
@@ -319,6 +319,9 @@ export default {
   }
   /deep/ .el-tabs--card > .el-tabs__header .el-tabs__nav {
     border: none;
+  }
+  /deep/ .el-tabs__item.is-active {
+    color: @backgroud;
   }
 }
 </style>

@@ -211,7 +211,7 @@ export default {
   margin-bottom: 36px;
   font-family: "Microsoft YaHei";
   .content-left {
-    width: 760px * @base;
+    width: 860px * @base;
     box-sizing: border-box;
     margin-right: 16px;
   }

@@ -253,7 +253,7 @@ export default {
         case 8:
         case 16:
         case 32:
-          moduleName = "old";
+          moduleName = "new";
           break;
         case 64:
         case 128:
