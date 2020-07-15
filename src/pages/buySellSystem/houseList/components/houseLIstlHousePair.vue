@@ -368,7 +368,7 @@ export default {
           label: "楼层",
           order: true,
           formart: item => {
-            return `${item.floor || "暂无"}/${item.floorNum || "暂无"}`;
+            return `${item.floor}/${item.floorNum}`;
           }
         },
         {
