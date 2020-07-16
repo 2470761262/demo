@@ -80,7 +80,7 @@ export default {
         minPrice: "",
         maxPrice: "",
         faceList: [],
-        sortColumn: "price",
+        sortColumn: "addTime",
         sortType: 1,
         keyWord: "", //keyword
         isOnly: "", //是否独家
