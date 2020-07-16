@@ -411,12 +411,6 @@ export default {
   },
   methods: {
     //解决索引只排序当前页的问题,增加函数自定义索引序号
-    indexMethod(index) {
-      console.log("index-->", index);
-      return (
-        (this.pageJson.currentPage - 1) * this.pageJson.pageSize + index + 1
-      );
-    },
     sortDevName(str1, str2) {
       let res = 0;
       for (let i = 0; ; i++) {
@@ -424,6 +418,7 @@ export default {
           res = str1.length - str2.length;
           break;
         }
+
         const char1 = str1[i];
         const char1Type = this.getChartType(char1);
         const char2 = str2[i];
@@ -448,7 +443,14 @@ export default {
           break;
         }
       }
-      return -1;
+
+      if (this.form.sortColumn == "floor") {
+        res = 1;
+      } else if (this.form.sortColumn == "addTime") {
+        res = -1;
+      }
+
+      return res;
     },
     getChartType(char) {
       // 数字可按照排序的要求进行自定义，我这边产品的要求是
