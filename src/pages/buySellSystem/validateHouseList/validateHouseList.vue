@@ -897,15 +897,7 @@ export default {
           console.log(e);
         });
     },
-    getVerifyImg(row) {
-      let trueId = row.id;
-      if (row.isMul != null && row.isMul !== 0) {
-        trueId = row.isMul;
-      }
-      console.log("trueId............" + trueId);
-      let params = { id: trueId };
-      let that = this;
-      that.loading = true;
+    getImg(params) {
       this.$api
         .post({
           url: "/verifyHouse/invitationToVerify/verifyList",
@@ -915,7 +907,7 @@ export default {
         .then(e => {
           console.log(e.data);
           let result = e.data;
-          that.loading = false;
+          this.loading = false;
           if (result.code == 200) {
             console.log(result.message);
             console.log(result.data);
@@ -928,16 +920,41 @@ export default {
                 dangerouslyUseHTMLString: true
               }
             );
-            that.loading = false;
+            this.loading = false;
           } else {
             console.log("查询结果：" + result.message);
             alert(result.message);
-            that.loading = false;
+            this.loading = false;
           }
         })
         .catch(e => {
           console.log("查询失败");
           console.log(e);
+          this.loading = false;
+        });
+    },
+    getVerifyImg(row) {
+      let trueId = row.id;
+      if (row.isMul != null && row.isMul !== 0) {
+        trueId = row.isMul;
+      }
+      console.log("trueId............" + trueId);
+      let params = { id: trueId };
+      let that = this;
+      that.loading = true;
+      this.$api
+        .get({
+          url: "/verifyHouse/check/" + row.id
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.getImg(params);
+          } else {
+            that.loading = false;
+            this.$message.error(e.date.message);
+          }
+        })
+        .catch(e => {
           that.loading = false;
         });
     },

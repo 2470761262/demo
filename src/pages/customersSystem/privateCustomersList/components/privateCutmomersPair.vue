@@ -820,17 +820,12 @@
             </el-checkbox>
           </div>
         </el-checkbox-group>
-        <div
-          :class="form.attentionStatus == true ? 'switchItemOn' : 'switchItem'"
-          @click="getAttention"
-        >
-          暂不关注
-        </div>
       </el-form-item>
       <el-form-item
         label="看房进度"
         class="ItemRow ChooseItemRow"
         prop="Progress"
+        v-show="!form.attentionStatus"
       >
         <el-checkbox-group
           v-model="Progress"
@@ -849,7 +844,12 @@
         </el-checkbox-group>
       </el-form-item>
 
-      <el-form-item label="意向价格" class="ItemRow ChooseItemRow" prop="Price">
+      <el-form-item
+        label="意向价格"
+        class="ItemRow ChooseItemRow"
+        prop="Price"
+        v-show="!form.attentionStatus"
+      >
         <el-radio-group
           v-model="Price"
           class="RadioItemBox"
@@ -1066,6 +1066,11 @@ const cusTypeList = [
     title: "已成交",
     type: 5,
     count: "0"
+  },
+  {
+    title: "暂不关注",
+    type: 6,
+    count: "0"
   }
 ];
 
@@ -1256,11 +1261,7 @@ export default {
             this.customersTypeList[2].count = json.data.buyNewHouse;
             this.customersTypeList[3].count = json.data.rentHouse;
             this.customersTypeList[4].count = json.data.hasDealedHouse;
-            this.customersTypeList[0].count =
-              this.customersTypeList[1].count +
-              this.customersTypeList[2].count +
-              this.customersTypeList[3].count +
-              this.customersTypeList[4].count;
+            this.customersTypeList[0].count = json.data.allRequireCustomer;
           } else if (json.code == 400) {
             alert(json.message);
             console.log("失败     " + json);
@@ -1270,6 +1271,7 @@ export default {
 
     setCustomersType(item, resetAll) {
       this.form.isBuy = 0;
+      this.form.attentionStatus = false;
       switch (item.type) {
         case 1:
           this.form.requirementType = "";
@@ -1287,14 +1289,21 @@ export default {
           this.form.requirementType = "";
           this.form.isBuy = 1;
           break;
+        case 6:
+          this.form.requirementType = "";
+          this.form.attentionStatus = true;
+          this.getAttention();
+          break;
         default:
           break;
       }
       this.customersType = item.type;
     },
     getAttention() {
-      console.log(this.form.attentionStatus);
-      this.form.attentionStatus = !this.form.attentionStatus;
+      this.Progress = [-1];
+      this.Price = 0;
+      this.getUnlimit("Progress", "pairNumbers", -1);
+      this.getLimit("PriceList", this.Price, "minPrice", "maxPrice");
     },
     getUnlimit(key1, key2, value) {
       let l = this[key1].length;
@@ -1313,10 +1322,12 @@ export default {
     },
 
     getLimit(list, id, key1, key2) {
-      this.form[key1] = this[list][id]["value"][0];
+      this.form[key1] =
+        this[list][id]["value"][0] == 0 ? "" : this[list][id]["value"][0];
       this.form[key2] = this[list][id]["value"][1]
         ? this[list][id]["value"][1]
         : "";
+      console.log(this.form[key1], this.form[key2]);
     },
 
     submitInput(key1, key2, keya, keyb) {
