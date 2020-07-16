@@ -265,7 +265,7 @@
         margin: 0 10px;
         height: 36px;
         line-height: 36px;
-
+        overflow: hidden;
         > span {
           color: #686a6e;
           font-size: @font14;
