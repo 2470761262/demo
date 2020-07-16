@@ -179,8 +179,10 @@ export default {
             page: that.page,
             isPrivate: false, //是否私客，true私客，false公客
             keyWord: that.form.KeyWord, //关键词-客户信息
-            requireTypes:
-              that.form.requireTypes == 1 ? [] : that.form.requireTypes,
+            requirementType:
+              that.form.requirementType == ""
+                ? null
+                : that.form.requirementType,
             plate: that.form.plate,
             plateChangeReason: that.form.plateChangeReason
           }

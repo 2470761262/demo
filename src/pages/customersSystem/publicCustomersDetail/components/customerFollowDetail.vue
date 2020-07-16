@@ -78,7 +78,6 @@
         .cellMsgRow {
           padding: 12px 0;
           display: flex;
-          align-items: center;
           .cellMsgTil {
             white-space: nowrap;
             font-size: @font14;
@@ -146,12 +145,12 @@
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进内容：</div>
-
-              <VueAudio
-                v-if="item.FollowType == '电话跟进'"
-                :theUrl="item.Memo.slice(6)"
-                :theControlList="theControlList"
-              ></VueAudio>
+              <div class="cellMsgText" v-if="item.FollowType == '电话跟进'">
+                <VueAudio
+                  :theUrl="item.Memo.slice(6)"
+                  :theControlList="theControlList"
+                ></VueAudio>
+              </div>
               <div class="cellMsgText" v-else>
                 {{ item.Memo || "暂无" }}
               </div>
@@ -325,6 +324,29 @@ export default {
   },
   mounted() {},
   methods: {
+    //更新跟进
+    apply() {
+      var that = this;
+      this.$api
+        .post({
+          url: "saleCustomerDetail/getPubCusDetail",
+          qs: true,
+          data: {
+            customerId: that.customerId.id
+          }
+        })
+        .then(e => {
+          console.log(e.data);
+          let json = e.data;
+          if (json.code == 200) {
+            console.log(json.data.followList);
+            this.$set(that.FollowData, "data", json.data.followList);
+          } else if (json.code == 400) {
+            alert(json.message);
+            console.log("失败     " + json);
+          }
+        });
+    },
     //添加跟进
     followUp() {
       var that = this;
@@ -333,7 +355,7 @@ export default {
           url: "/saleCustomerDetail/addSaleCusFlower",
           qs: true,
           data: {
-            EntructId: that.customerId,
+            EntructId: that.customerId.id,
             Memo: that.follow.Memo,
             FollowWay: that.follow.FollowWay,
             FollowType: that.follow.FollowType
@@ -343,8 +365,18 @@ export default {
           console.log(e.data);
           let json = e.data;
           if (json.code == 200) {
-            this.apply();
+            this.$message({
+              type: "success",
+              message: "添加跟进成功！"
+            });
             this.addFollowFlag = false;
+            (this.follow = {
+              FollowType: "",
+              FollowWay: "",
+              defaultext: "",
+              Memo: ""
+            }),
+              this.apply();
           } else if (json.code == 400) {
             alert(json.message);
             console.log("失败     " + json);

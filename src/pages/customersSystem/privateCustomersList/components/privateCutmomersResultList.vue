@@ -48,7 +48,7 @@
       :data="tableData"
       header-cell-class-name="ResultListCell ResultListHeaderBack"
       cell-class-name="ResultListCell"
-      @row-click="navigateTo"
+      @row-dblclick="navigateTo"
       v-loading="loading"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
@@ -108,7 +108,7 @@ export default {
           prop: "online",
           label: "渠道",
           width: "130",
-          formart: item => (item.online == 0 ? "线下" : "线上") || "暂无"
+          formart: item => (item.onLine == 0 ? "线下" : "线上") || "暂无"
         },
         {
           prop: "sex",
@@ -117,10 +117,10 @@ export default {
           formart: item => (item.sex == 0 ? "男" : "女") || "暂无"
         },
         {
-          prop: "sourceType",
+          prop: "source",
           label: "客户来源",
           width: "110px",
-          formart: item => this.housesource(item.sourceType) || "暂无"
+          formart: item => this.housesource(item.source)
         },
         {
           prop: "requireType",
@@ -185,8 +185,10 @@ export default {
             isPrivate: true, //是否私客，true私客，false公客
             keyWord: that.form.searchType === "1" ? that.form.keyWord : "", //关键词-客户信息
             myImpression: that.form.searchType === "2" ? that.form.keyWord : "", //关键词-客户印象
-            requireTypes:
-              that.form.requireTypes == "" ? [] : that.form.requireTypes, //需求类型参数
+            requirementType:
+              that.form.requirementType == ""
+                ? null
+                : that.form.requirementType, //需求类型参数
             desireIntensitys: that.form.desireIntensitys, //意愿
             pairNumbers: that.form.pairNumbers, //带看次数，多选，数字数组
             attentionStatus: that.form.attentionStatus ? 0 : "", //是否关注
@@ -195,8 +197,7 @@ export default {
             maxPrice: that.form.maxPrice, //最高价
             minArea: that.form.minArea, //最小面积
             maxArea: that.form.maxArea, //最大面积
-            houseNumbers:
-              that.form.houseNumbers == "" ? [] : [that.form.houseNumbers], //房型 需要处理数据
+            houseNumbers: that.form.houseNumbers, //房型 需要处理数据
             minAddTime: that.form.minAddTime, //委托开始时间
             maxAddTime: that.form.maxAddTime, //委托结束时间
             minMainTainTime: that.form.minMainTainTime, //维护开始时间
@@ -264,6 +265,7 @@ export default {
     },
     housesource(i) {
       let type;
+      console.log(i);
       switch (i) {
         case 11:
           type = "老客户";

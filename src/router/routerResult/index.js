@@ -1079,12 +1079,22 @@ export default [
     //客源系统 新整客户
     path: "/customers/addCustomers",
     meta: {
-      keepAlive: true,
       title: "新增客源"
     },
     component: () =>
       import(
         /* webpackChunkName: "addCustomers" */ "@/pages/customersSystem/addCustomers/addCustomers.vue"
+      )
+  },
+  {
+    //客源系统 新整客户
+    path: "/customers/editCustomers",
+    meta: {
+      title: "修改客户信息"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "editCustomers" */ "@/pages/customersSystem/addCustomers/editCustomers.vue"
       )
   },
   {

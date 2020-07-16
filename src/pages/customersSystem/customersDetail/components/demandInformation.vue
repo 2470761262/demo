@@ -168,14 +168,13 @@ export default {
     return {
       moreSelectFlag: false,
       changeTabsValue: "0",
-      demandTabsValue: "demand",
-      demandValueData: this.demandValue
+      demandTabsValue: "demand"
     };
   },
   components: { demandMoreSelect },
   filters: {
     formatMoney(val) {
-      return division(val, 10000);
+      return val / 10000;
     },
     formatPayWay(val) {
       switch (val) {
@@ -193,6 +192,14 @@ export default {
       return val.replace(/\$/g, ",");
     }
   },
+  created() {
+    // this.$set(this.$data, "demandValueData", this.demandValue);
+  },
+  computed: {
+    demandValueData() {
+      return this.demandValue;
+    }
+  },
   methods: {
     /**
      * @example: tabs点击事件
@@ -203,7 +210,7 @@ export default {
     demandConfirm() {
       this.$store.commit("updateDemandValue", this.demandValueData);
       this.$router.push({
-        path: "/customers/addCustomers",
+        path: "/customers/editCustomers",
         query: { customerId: this.customerId, step: 2 }
       });
     }
@@ -312,6 +319,9 @@ export default {
   }
   /deep/ .el-tabs--card > .el-tabs__header .el-tabs__nav {
     border: none;
+  }
+  /deep/ .el-tabs__item.is-active {
+    color: @backgroud;
   }
 }
 </style>

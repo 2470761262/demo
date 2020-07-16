@@ -41,7 +41,7 @@ export default {
       form: {
         submitSearch: false,
         searchType: "1", //搜索类别 1--客户信息 2--客户印象
-        requireTypes: [], //需求类型参数 (示例：买二手房[1,2,4]，买新房[8,16,32]，租赁[64，128，256]
+        requirementType: 1, //需求类型参数 (示例：买二手房1，买新房2，租赁4
         keyWord: "", //关键词
         desireIntensitys: [], //意愿 多选，0强烈，1较弱，2一般 4不限，需要处理数据
         pairNumbers: [], //带看次数，多选，数字数组
@@ -51,7 +51,7 @@ export default {
         maxPrice: "", //最高价
         minArea: "", //最小面积
         maxArea: "", //最大面积
-        houseNumbers: "", //房型 需要处理数据
+        houseNumbers: [], //房型 需要处理数据
         minAddTime: "", //委托开始时间
         maxAddTime: "", //委托结束时间
         minMainTainTime: "", //维护开始时间

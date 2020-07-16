@@ -151,7 +151,12 @@
                   </div>
                   <div class="car-row car-mar-no">
                     <div class="car-title">跟进内容：</div>
-                    <div class="car-right">{{ item.Memo }}</div>
+                    <VueAudio
+                      v-if="item.FollowType == '电话跟进'"
+                      :theUrl="item.Memo.slice(6)"
+                      theControlList="onlyOnePlaying"
+                    ></VueAudio>
+                    <div class="car-right" v-else>{{ item.Memo }}</div>
                   </div>
                 </section>
               </el-timeline-item>
@@ -233,6 +238,13 @@
       :visible.sync="followUpFlag"
       v-if="followUpFlag"
     ></followUpDialog>
+    <fixedPopup
+      :visible.sync="alertflag"
+      styleType="0"
+      :butJson="btnJson"
+      @confirmEmit="alertflag = false"
+      ><div class="alert-txt">该功能正在开发中，敬请期待</div></fixedPopup
+    >
   </div>
 </template>
 
@@ -245,12 +257,19 @@ export default {
       changeTabsValue: "all",
       allData: [],
       followData: [],
-      lookAtData: []
+      lookAtData: [],
+      alertflag: false,
+      btnJson: {
+        cancelBtnShow: false,
+        confirmBtnText: "确定",
+        confirmBtnShow: true
+      }
     };
   },
   components: {
     //写跟进弹出层
-    followUpDialog: () => import("../didlog/followUpDialog")
+    followUpDialog: () => import("../didlog/followUpDialog"),
+    VueAudio: () => import("../../publicCustomersDetail/components/vueAudio")
   },
   created() {
     this.getData();
@@ -348,10 +367,7 @@ export default {
      * @example: 研发提示弹窗
      */
     openDevelop() {
-      this.$alert("该功能正在开发中，敬请期待", "提示", {
-        confirmButtonText: "确定",
-        callback: () => {}
-      });
+      this.alertflag = true;
     },
     /**
      * @example: 弹出弹窗事件
@@ -462,7 +478,8 @@ export default {
         .list-car {
           // width: 516px;
           padding: 16px;
-          margin-right: 98px;
+          width: 700px;
+          // margin-right: 98px;
           background-color: #f8f8f8;
           border-radius: 4px;
           font-size: @font14;
@@ -487,6 +504,10 @@ export default {
       }
     }
   }
+}
+.alert-txt {
+  padding-top: 24px;
+  font-size: @font16;
 }
 /deep/ .el-tabs__item {
   font-size: @font18;

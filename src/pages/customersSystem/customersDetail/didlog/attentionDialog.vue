@@ -15,7 +15,7 @@
           v-model="periodTime"
           class="input-content"
           clearable
-          placeholder="请输入暂不关注时间"
+          placeholder="请输入暂不关注天数"
           data-vv-name="periodTime"
           data-vv-as="暂不关注时间"
           v-validate="'required|noZero|isGreater:30'"
@@ -78,7 +78,7 @@ export default {
             .then(e => {
               if (e.data.code == 200) {
                 this.$message({
-                  type: "success",
+                  type: "xinjia",
                   message: "暂不关注客户成功"
                 });
                 that.close();

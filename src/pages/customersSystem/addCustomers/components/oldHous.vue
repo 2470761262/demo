@@ -217,7 +217,7 @@
       <!-- 期望楼层 -->
       <div class="input-group" v-show="isResidence">
         <div class="input-head">期望楼层</div>
-        <el-checkbox-group v-model="data.floor">
+        <el-checkbox-group v-model="data.floors">
           <el-checkbox-button
             v-for="item in floorList"
             :label="item.value"
@@ -241,7 +241,7 @@
       <!-- 商铺类型 -->
       <div class="input-group" v-show="isShop">
         <div class="input-head">商铺类型</div>
-        <el-checkbox-group v-model="data.shopType">
+        <el-checkbox-group v-model="data.shopTypes">
           <el-checkbox-button
             v-for="item in shopTypeList"
             :label="item.key"
@@ -253,7 +253,7 @@
       <!-- 商铺用途 -->
       <div class="input-group" v-show="isShop">
         <div class="input-head">商铺用途</div>
-        <el-checkbox-group v-model="data.shopUse">
+        <el-checkbox-group v-model="data.shopUses">
           <el-checkbox-button
             v-for="item in shopUseList"
             :label="item.key"
@@ -265,7 +265,7 @@
       <!-- 附属设施 -->
       <div class="input-group" v-show="isShop">
         <div class="input-head">附属设施</div>
-        <el-checkbox-group v-model="data.facilities">
+        <el-checkbox-group v-model="data.facilitys">
           <el-checkbox-button
             v-for="item in facilitiesList"
             :label="item.key"
@@ -277,7 +277,7 @@
       <!-- 其他需求 -->
       <div class="input-group" v-show="isShop">
         <div class="input-head">其他需求</div>
-        <el-checkbox-group v-model="data.otherNeed">
+        <el-checkbox-group v-model="data.otherNeeds">
           <el-checkbox-button
             v-for="item in otherNeedList"
             :label="item.key"
@@ -289,7 +289,7 @@
       <!-- 楼栋需求 -->
       <div class="input-group" v-show="isOffice">
         <div class="input-head">楼栋需求</div>
-        <el-checkbox-group v-model="data.buildingNeed">
+        <el-checkbox-group v-model="data.buildingNeeds">
           <el-checkbox-button
             v-for="item in buildingNeedList"
             :label="item.key"
@@ -301,7 +301,7 @@
       <!-- 房间需求 -->
       <div class="input-group" v-show="isOffice">
         <div class="input-head">房间需求</div>
-        <el-checkbox-group v-model="data.roomNeed">
+        <el-checkbox-group v-model="data.roomNeeds">
           <el-checkbox-button
             v-for="item in roomNeedList"
             :label="item.key"
@@ -403,10 +403,10 @@ const decorationList = [
 ];
 // 商铺类型
 const shopTypeList = [
-  { value: "临街店面", key: "1" },
-  { value: "写字楼配套", key: "2" },
-  { value: "档口摊位", key: "4" },
-  { value: "其他", key: "8" }
+  { value: "临街店面", key: 1 },
+  { value: "写字楼配套", key: 2 },
+  { value: "档口摊位", key: 4 },
+  { value: "其他", key: 8 }
 ];
 // 商铺用途
 const shopUseList = [
@@ -456,10 +456,10 @@ const roomNeedList = [
 ];
 // 付款方式
 const payWayList = [
-  { value: "一次性", key: "1" },
-  { value: "商业贷款", key: "2" },
-  { value: "公积金贷款", key: "4" },
-  { value: "组合贷款", key: "8" }
+  { value: "一次性", key: 1 },
+  { value: "商业贷款", key: 2 },
+  { value: "公积金贷款", key: 4 },
+  { value: "组合贷款", key: 8 }
 ];
 // 购买房型
 const houseTypeList = [
@@ -487,16 +487,12 @@ const houseTypeList = [
 // 期望楼层
 const floorList = [
   {
-    key: "不限",
+    key: "低楼层",
     value: 1
   },
   {
-    key: "低楼层",
-    value: 2
-  },
-  {
     key: "中楼层",
-    value: 3
+    value: 2
   },
   {
     key: "高楼层",
@@ -504,11 +500,11 @@ const floorList = [
   },
   {
     key: "不要一楼",
-    value: 5
+    value: 8
   },
   {
     key: "不要顶楼",
-    value: 6
+    value: 16
   }
 ];
 import { PURCHASEPURPOSE, DECORATION } from "@/util/constMap";
@@ -520,14 +516,14 @@ export default {
     return {
       data: {
         requireType: this.requirement, //需求类型(位运算（多选）：1买二手住宅，2买二手商铺，4买二手写字楼， 8买新房住宅，16买新房商铺，32买新房写字楼，64租赁住宅，128租赁商铺，256租赁写字楼)
-        buildingNeed: [], //	楼栋需求-买或租写字楼（位运算（多选）：1知名物业，2带客梯、4带货梯、8其他）
+        buildingNeeds: [], //	楼栋需求-买或租写字楼（位运算（多选）：1知名物业，2带客梯、4带货梯、8其他）
         buyDestination: null, //购买用途,单选(刚需，投资，办公，改善，教育，其他)
         community1: "", //期望楼盘
         community1Id: null, //期望楼盘 CommunityTbl的ID
         decoration: "", //期望装修（毛胚，简单装修，精装修）
         decorationList: [], //期望装修列表
-        facilities: [], //附属设施（位运算（多选）：1可明火、2可外摆、4停车位、8天然气、16网络、32中央空调、64其他）
-        floor: [], //期望楼层（位运算（多选）:1低楼层,2中楼层，4高楼层，8不要一楼,16不要顶楼）
+        facilitys: [], //附属设施（位运算（多选）：1可明火、2可外摆、4停车位、8天然气、16网络、32中央空调、64其他）
+        floors: [], //期望楼层（位运算（多选）:1低楼层,2中楼层，4高楼层，8不要一楼,16不要顶楼）
         manageCompanyType: null, //物业类型-买新房（1普通住宅、2别墅、4商铺、8写字楼、16其他）
         maxArea: null, //期望最大面积
         minArea: null, //期望最小面积
@@ -542,15 +538,15 @@ export default {
         primarySchoolList: "", //期望小学列表
         middleSchoolList: "", //期望中学列表
         moveIntoTime: "", //入住日期-租赁住宅（年月日）
-        otherNeed: [], //其他需求-买或租商铺（位运算（多选）：1面积大、2层高大、4临街、5空铺、6其他）
+        otherNeeds: [], //其他需求-买或租商铺（位运算（多选）：1面积大、2层高大、4临街、5空铺、6其他）
         payMethod: null, //付款方式（1月付、2季付、3半年付、4年付、0不限）
         payWay: null, //付款方式，单选（1一次性,2商业贷款,4公积金贷款,8组合贷款）
         rentWay: null, //租赁方式（1合租、2整租、0不限）
-        roomNeed: [], //房间需求-买或租写字楼（位运算（多选）：1可注册公司、2有老板间、4有会议室、8带办公家具、16带停车位、32其他）
+        roomNeeds: [], //房间需求-买或租写字楼（位运算（多选）：1可注册公司、2有老板间、4有会议室、8带办公家具、16带停车位、32其他）
         rooms: [], //购买房型（多个以$隔开，如1房$2房$3房$4房及以上）
         roomsList: [], //购买房型列表
-        shopType: [], //商铺类型-买或租商铺（位运算（多选）：1临街店面、2写字楼配套、4写字楼配套、8档口摊位、16其他）
-        shopUse: [], //商铺用途-买或租商铺（位运算（多选）：1餐饮、2休闲娱乐、4生活服务、8零售、16批发、32酒店宾馆、64汽车服务、128美容美发、256其他）
+        shopTypes: [], //商铺类型-买或租商铺（位运算（多选）：1临街店面、2写字楼配套、4写字楼配套、8档口摊位、16其他）
+        shopUses: [], //商铺用途-买或租商铺（位运算（多选）：1餐饮、2休闲娱乐、4生活服务、8零售、16批发、32酒店宾馆、64汽车服务、128美容美发、256其他）
         tradeHouseType: null, //交房类型-买新房（0不限，1期房，2现房）
         community: "", //期望楼盘列表
         businessCircle: "", //期望商圈（多个以$隔开）

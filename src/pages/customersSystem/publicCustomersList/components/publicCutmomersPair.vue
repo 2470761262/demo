@@ -21,7 +21,7 @@
       > i,
       > span {
         line-height: 40px;
-        font-size: @font16;
+        font-size: 18px;
       }
     }
 
@@ -77,14 +77,17 @@
         }
       }
       .InputItem {
+      }
+      /deep/.el-input {
         width: 280px;
         height: 50px;
         overflow: hidden;
         padding-left: 20px;
-        > input {
+        .el-input__inner {
+          text-align: left !important;
           width: 100%;
           line-height: 50px;
-          border: 0;
+          border: none;
           font-size: 16px;
         }
       }
@@ -350,12 +353,11 @@
     <el-form>
       <el-form-item class="ItemRow SearchItemRow">
         <div class="SearchItem">
-          <div class="InputItem">
-            <input
-              placeholder="请输入客户姓名或联系方式"
-              v-model="form.KeyWord"
-            />
-          </div>
+          <el-input
+            class="InputItem"
+            placeholder="请输入客户姓名或联系方式"
+            v-model="form.KeyWord"
+          />
           <div class="SubmitItem" @click="submit">
             <i class="el-icon-search"></i>
           </div>
@@ -366,7 +368,7 @@
         class="ItemRow ChooseItemRow"
         prop="HouseType"
       >
-        <el-radio-group v-model="form.requireTypes" class="RadioItemBox">
+        <el-radio-group v-model="form.requirementType" class="RadioItemBox">
           <div
             class="RadioItem"
             v-for="(item, index) in customerNeedsList"
@@ -419,19 +421,19 @@
 const customerNeedsModle = [
   {
     name: "不限",
-    value: 1
+    value: ""
   },
   {
     name: "买二手",
-    value: [1, 2, 4]
+    value: 1
   },
   {
     name: "租赁",
-    value: [8, 15, 32]
+    value: 2
   },
   {
     name: "买新房",
-    value: [64, 128, 256]
+    value: 3
   }
 ];
 const PublicTypeModle = [

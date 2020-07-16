@@ -21,7 +21,7 @@
       > i,
       > span {
         line-height: 40px;
-        font-size: @font16;
+        font-size: 18px;
       }
     }
 
@@ -445,15 +445,18 @@
       }
     }
     .InputItem {
+    }
+    /deep/.el-input {
       width: 280px;
       height: 50px;
       overflow: hidden;
       padding-left: 20px;
-      > input {
+      .el-input__inner {
+        text-align: left !important;
         width: 100%;
         line-height: 50px;
-        border: 0;
-        font-size: @font16;
+        border: none;
+        font-size: 16px;
       }
     }
     .SubmitItem {
@@ -765,16 +768,17 @@
             <el-option label="客户信息" value="1"></el-option>
             <el-option label="客源印象" value="2"></el-option>
           </el-select>
-          <div class="InputItem">
-            <input
-              :placeholder="
-                form.searchType == '1'
-                  ? '请输入客户姓名或联系方式'
-                  : '请输入客源印象'
-              "
-              v-model="form.keyWord"
-            />
-          </div>
+
+          <el-input
+            class="InputItem"
+            :placeholder="
+              form.searchType == '1'
+                ? '请输入客户姓名或联系方式'
+                : '请输入客源印象'
+            "
+            v-model="form.keyWord"
+          />
+
           <div class="SubmitItem" @click="submit">
             <i class="el-icon-search"></i>
           </div>
@@ -934,19 +938,23 @@
         <el-form-item
           label="意向房型"
           class="ItemRow ChooseItemRow"
-          prop="HouseType"
+          prop="houseNumbers"
         >
-          <el-radio-group v-model="form.houseNumbers" class="RadioItemBox">
+          <el-checkbox-group
+            v-model="houseNumbers"
+            class="ChooseItemBox"
+            @change="getUnlimit('houseNumbers', 'houseNumbers', 0)"
+          >
             <div
-              class="RadioItem"
+              class="ChooseItem"
               v-for="(item, index) in HouseTypeList"
               :key="index"
             >
-              <el-radio :label="item.value" name="houseNumbers">{{
-                item.name
-              }}</el-radio>
+              <el-checkbox :label="item.value" name="houseNumbers">
+                {{ item.name }}
+              </el-checkbox>
             </div>
-          </el-radio-group>
+          </el-checkbox-group>
         </el-form-item>
         <el-form-item
           label="委托时间"
@@ -1178,7 +1186,7 @@ const AreaListModle = [
 const HouseTypeListModle = [
   {
     name: "不限",
-    value: ""
+    value: 0
   },
   {
     name: "一房",
@@ -1206,7 +1214,7 @@ export default {
   data() {
     return {
       customersTypeList: cusTypeList,
-      customersType: 1,
+      customersType: 2,
       IntendList: IntendListModle,
       Intend: [4],
       ProgressList: ProgressListModle,
@@ -1220,6 +1228,7 @@ export default {
       MinArea: "",
       MaxArea: "",
       HouseTypeList: HouseTypeListModle,
+      houseNumbers: [0],
       DelegateTime: "",
       MaintenanceTime: "",
       TakelookTime: "",
@@ -1247,11 +1256,7 @@ export default {
             this.customersTypeList[2].count = json.data.buyNewHouse;
             this.customersTypeList[3].count = json.data.rentHouse;
             this.customersTypeList[4].count = json.data.hasDealedHouse;
-            this.customersTypeList[0].count =
-              this.customersTypeList[1].count +
-              this.customersTypeList[2].count +
-              this.customersTypeList[3].count +
-              this.customersTypeList[4].count;
+            this.customersTypeList[0].count = json.data.allRequireCustomer;
           } else if (json.code == 400) {
             alert(json.message);
             console.log("失败     " + json);
@@ -1263,19 +1268,19 @@ export default {
       this.form.isBuy = 0;
       switch (item.type) {
         case 1:
-          this.form.requireTypes = [];
+          this.form.requirementType = "";
           break;
         case 2:
-          this.form.requireTypes = [1, 2, 4];
+          this.form.requirementType = 1;
           break;
         case 3:
-          this.form.requireTypes = [8, 16, 32];
+          this.form.requirementType = 2;
           break;
         case 4:
-          this.form.requireTypes = [64, 128, 256];
+          this.form.requirementType = 4;
           break;
         case 5:
-          this.form.requireTypes = [];
+          this.form.requirementType = "";
           this.form.isBuy = 1;
           break;
         default:
@@ -1300,13 +1305,16 @@ export default {
       } else {
         this.form[key2] = this[key1];
       }
+      console.log(this.form[key2]);
     },
 
     getLimit(list, id, key1, key2) {
-      this.form[key1] = this[list][id]["value"][0];
+      this.form[key1] =
+        this[list][id]["value"][0] == 0 ? "" : this[list][id]["value"][0];
       this.form[key2] = this[list][id]["value"][1]
         ? this[list][id]["value"][1]
         : "";
+      console.log(this.form[key1], this.form[key2]);
     },
 
     submitInput(key1, key2, keya, keyb) {
