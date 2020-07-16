@@ -34,7 +34,7 @@
               {{ item.phone }}
             </div>
           </div>
-          <el-button slot="reference" @click="getPhone"
+          <el-button slot="reference" @click="getPhone" :loading="callLoading"
             ><span>一键拨号</span></el-button
           >
         </el-popover>
@@ -116,10 +116,11 @@ export default {
   ],
   data() {
     return {
-      sex: "男",
       noData: "暂无",
       phoneList: [],
-      isPhone: false
+      isPhone: false,
+      isCall: true,
+      callLoading: false
     };
   },
   created() {},
@@ -249,37 +250,47 @@ export default {
     callUp(phone) {
       let that = this;
       that.isPhone = false;
-      let postData = {
-        customerId: this.customer.data.id,
-        remark: "给客户" + this.customer.data.Customers + "拨打电话",
-        customerName: this.customer.data.Customers,
-        contactPhone: phone,
-        customerNo: this.customer.data.CustomerNo,
-        customerPlate: 0
-      };
-      that.$api
-        .post({
-          url: "/saleCustomerDetail/DialPhoneToCustomer",
-          data: postData,
-          qs: true,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.$message({
-              type: "xinjia",
-              message: "号码已发送至微信"
-            });
-          }
-        })
-        .catch(e => {
-          that.callLoading = false;
-          if (e.response != undefined) {
-            that.$message(e.response.data.message);
-          }
-        });
+      if (this.isCall) {
+        let postData = {
+          customerId: this.customer.data.id,
+          remark: "给客户" + this.customer.data.Customers + "拨打电话",
+          customerName: this.customer.data.Customers,
+          contactPhone: phone,
+          customerNo: this.customer.data.CustomerNo,
+          customerPlate: 0
+        };
+        that.callLoading = true;
+        that.isCall = false;
+        that.$api
+          .post({
+            url: "/saleCustomerDetail/DialPhoneToCustomer",
+            data: postData,
+            qs: true,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          })
+          .then(e => {
+            if (e.data.code == 200) {
+              that.callLoading = false;
+              setTimeout(() => {
+                that.isCall = true;
+              }, 10000);
+              this.$message({
+                type: "xinjia",
+                message: "号码已发送至微信"
+              });
+            }
+          })
+          .catch(e => {
+            that.callLoading = false;
+            if (e.response != undefined) {
+              that.$message(e.response.data.message);
+            }
+          });
+      } else {
+        that.$message("十秒内不得重复点击");
+      }
     },
     /**
      * @example: 删除客源印象
