@@ -244,7 +244,7 @@
       </div>
       <el-table
         :data="renderList"
-        :default-sort="{ prop: 'price', order: 'descending' }"
+        :default-sort="{ prop: 'addTime', order: 'ascending' }"
         header-cell-class-name="header-tab-cell"
         :cell-class-name="tabDirection"
         default-expand-all
@@ -264,6 +264,7 @@
           :prop="item.prop"
           :label="item.label"
           :width="item.width"
+          :sort-method="sortDevName"
           :sortable="item.order"
           :formatter="item.formart"
           :sort-orders="['ascending', 'descending']"
@@ -410,6 +411,60 @@ export default {
     window.removeEventListener("resize", this.addListener);
   },
   methods: {
+    //解决索引只排序当前页的问题,增加函数自定义索引序号
+    indexMethod(index) {
+      console.log("index-->", index);
+      return (
+        (this.pageJson.currentPage - 1) * this.pageJson.pageSize + index + 1
+      );
+    },
+    sortDevName(str1, str2) {
+      let res = 0;
+      for (let i = 0; ; i++) {
+        if (!str1[i] || !str2[i]) {
+          res = str1.length - str2.length;
+          break;
+        }
+        const char1 = str1[i];
+        const char1Type = this.getChartType(char1);
+        const char2 = str2[i];
+        const char2Type = this.getChartType(char2);
+        // 类型相同的逐个比较字符
+        if (char1Type[0] === char2Type[0]) {
+          if (char1 === char2) {
+            continue;
+          } else {
+            if (char1Type[0] === "zh") {
+              res = char1.localeCompare(char2);
+            } else if (char1Type[0] === "en") {
+              res = char1.charCodeAt(0) - char2.charCodeAt(0);
+            } else {
+              res = char1 - char2;
+            }
+            break;
+          }
+        } else {
+          // 类型不同的，直接用返回的数字相减
+          res = char1Type[1] - char2Type[1];
+          break;
+        }
+      }
+      return res;
+    },
+    getChartType(char) {
+      // 数字可按照排序的要求进行自定义，我这边产品的要求是
+      // 数字（0->9）->大写字母（A->Z）->小写字母（a->z）->中文拼音（a->z）
+      if (/^[\u4e00-\u9fa5]$/.test(char)) {
+        return ["zh", 300];
+      }
+      if (/^[a-zA-Z]$/.test(char)) {
+        return ["en", 200];
+      }
+      if (/^[0-9]$/.test(char)) {
+        return ["number", 100];
+      }
+      return ["others", 999];
+    },
     /**
      * @example: 处理ErrorImage
      * @param {type}
@@ -520,6 +575,7 @@ export default {
           let data = e.data;
           if (data.code == 200) {
             this.renderList = data.data.data;
+            console.log("------>", this.renderList);
             this.pageJson.total = data.data.pageSum;
             this.pageJson.dataCount = data.data.dataCount;
           }
