@@ -73,9 +73,26 @@
         flex: 1;
         display: flex;
         font-size: @font14;
+        width: 0;
+        &.left8 {
+          flex: 0.8;
+        }
         .cell-item-title {
-          width: 90px;
+          // prettier-ignore
+          width: 90PX;
           color: #aaaaaa;
+          flex-shrink: 0;
+        }
+        .cell-item-data {
+          &.over-flex {
+            display: flex;
+            width: 0;
+            flex: 1;
+            .overText {
+              flex: 1;
+              width: 0;
+            }
+          }
         }
       }
     }
@@ -86,6 +103,7 @@
   cursor: pointer;
   font-weight: 600;
   margin-left: 5px;
+  flex-shrink: 0;
   i {
     font-size: @font16;
   }
@@ -131,7 +149,7 @@
     <div class="head-message-hurdle">
       <!-- 评估价 & 物业费 -->
       <div class="message-hurdle-cell">
-        <div class="hurdle-cell-item">
+        <div class="hurdle-cell-item left8">
           <div class="cell-item-title">
             评估价
           </div>
@@ -143,18 +161,18 @@
           <div class="cell-item-title">
             物业费
           </div>
-          <div class="cell-item-data">
+          <div class="cell-item-data overText">
             1.68元/月/㎡
           </div>
         </div>
       </div>
       <!-- 独家信息 & 钥匙信息 -->
       <div class="message-hurdle-cell">
-        <div class="hurdle-cell-item">
+        <div class="hurdle-cell-item left8">
           <div class="cell-item-title">
             独家信息
           </div>
-          <div class="cell-item-data">
+          <div class="cell-item-data overText">
             2020-12-11到期
           </div>
         </div>
@@ -162,8 +180,8 @@
           <div class="cell-item-title">
             钥匙信息
           </div>
-          <div class="cell-item-data">
-            有钥匙(国贸店)
+          <div class="cell-item-data over-flex">
+            <span class="overText">有钥匙(国贸店)</span>
             <span class="inline-btn">
               <i class="iconfont iconxiegenjin"></i> 修改</span
             >
@@ -172,11 +190,11 @@
       </div>
       <!-- 上次带看 & 30日被看-->
       <div class="message-hurdle-cell">
-        <div class="hurdle-cell-item">
+        <div class="hurdle-cell-item left8">
           <div class="cell-item-title">
             上次带看
           </div>
-          <div class="cell-item-data">
+          <div class="cell-item-data overText">
             2020-06-20
           </div>
         </div>
@@ -184,7 +202,7 @@
           <div class="cell-item-title">
             30日被看
           </div>
-          <div class="cell-item-data">
+          <div class="cell-item-data overText">
             3次
           </div>
         </div>
