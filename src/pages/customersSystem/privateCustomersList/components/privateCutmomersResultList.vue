@@ -108,7 +108,7 @@ export default {
           prop: "online",
           label: "渠道",
           width: "130",
-          formart: item => (item.online == 0 ? "线下" : "线上") || "暂无"
+          formart: item => (item.onLine == 0 ? "线下" : "线上") || "暂无"
         },
         {
           prop: "sex",
@@ -185,8 +185,10 @@ export default {
             isPrivate: true, //是否私客，true私客，false公客
             keyWord: that.form.searchType === "1" ? that.form.keyWord : "", //关键词-客户信息
             myImpression: that.form.searchType === "2" ? that.form.keyWord : "", //关键词-客户印象
-            requireTypes:
-              that.form.requireTypes == "" ? [] : that.form.requireTypes, //需求类型参数
+            requirementType:
+              that.form.requirementType == ""
+                ? null
+                : that.form.requirementType, //需求类型参数
             desireIntensitys: that.form.desireIntensitys, //意愿
             pairNumbers: that.form.pairNumbers, //带看次数，多选，数字数组
             attentionStatus: that.form.attentionStatus ? 0 : "", //是否关注

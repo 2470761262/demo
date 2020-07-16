@@ -13,17 +13,18 @@
       @timeupdate="onTimeupdate"
       @loadedmetadata="onLoadedmetadata"
     ></audio>
-    <div>
-      <el-button type="text" @click="startPlayOrPause">
-        {{ audio.playing | transPlayPause }}
+    <div class="PalyRow">
+      <div class="horn">
+        <i class="iconfont iconshengyi"></i>
+        <span>{{ audio.countdown | formatSecond }}</span>
+      </div>
+      <div class="Time"></div>
+      <el-button @click="startPlayOrPause" class="Pause">
+        <i
+          class="iconfont "
+          :class="audio.playing ? 'iconbofang1' : 'iconbofang'"
+        ></i>
       </el-button>
-
-      <el-slider
-        v-model="sliderTime"
-        :format-tooltip="formatProcessToolTip"
-        @change="changeCurrentTime"
-        class="slider"
-      ></el-slider>
     </div>
   </div>
 </template>
@@ -76,7 +77,8 @@ export default {
         muted: false,
         speed: 1,
         waiting: true,
-        preload: "auto"
+        preload: "auto",
+        countdown: 0
       },
 
       sliderTime: 0,
@@ -84,53 +86,14 @@ export default {
       speeds: this.theSpeeds,
 
       controlList: {
-        // 不显示下载
-        noDownload: false,
-        // 不显示静音
-        noMuted: false,
-        // 不显示音量条
-        noVolume: false,
-        // 不显示进度条
-        noProcess: false,
         // 只能播放一个
-        onlyOnePlaying: false,
+        onlyOnePlaying: true,
         // 不要快进按钮
         noSpeed: false
       }
     };
   },
   methods: {
-    setControlList() {
-      let controlList = this.theControlList.split(" ");
-      controlList.forEach(item => {
-        if (this.controlList[item] !== undefined) {
-          this.controlList[item] = true;
-        }
-      });
-    },
-    changeSpeed() {
-      let index = this.speeds.indexOf(this.audio.speed) + 1;
-      this.audio.speed = this.speeds[index % this.speeds.length];
-      this.$refs.audio.playbackRate = this.audio.speed;
-    },
-    startMutedOrNot() {
-      this.$refs.audio.muted = !this.$refs.audio.muted;
-      this.audio.muted = this.$refs.audio.muted;
-    },
-    // 音量条toolTip
-    formatVolumeToolTip(index) {
-      return "音量条: " + index;
-    },
-    // 进度条toolTip
-    formatProcessToolTip(index = 0) {
-      index = parseInt((this.audio.maxTime / 100) * index);
-      return "进度条: " + realFormatSecond(index);
-    },
-    // 音量改变
-    changeVolume(index = 0) {
-      this.$refs.audio.volume = index / 100;
-      this.volume = index;
-    },
     // 播放跳转
     changeCurrentTime(index) {
       this.$refs.audio.currentTime = parseInt(
@@ -185,6 +148,7 @@ export default {
       // console.log('timeupdate')
       // console.log(res)
       this.audio.currentTime = res.target.currentTime;
+      this.audio.countdown = this.audio.maxTime - this.audio.currentTime;
       this.sliderTime = parseInt(
         (this.audio.currentTime / this.audio.maxTime) * 100
       );
@@ -196,6 +160,7 @@ export default {
       console.log(res);
       this.audio.waiting = false;
       this.audio.maxTime = parseInt(res.target.duration);
+      this.audio.countdown = this.audio.maxTime;
     }
   },
   filters: {
@@ -204,6 +169,12 @@ export default {
     },
     transPlayPause(value) {
       return value ? "暂停" : "播放";
+    },
+    transMutedOrNot(value) {
+      return value ? "放音" : "静音";
+    },
+    transSpeed(value) {
+      return "快进: x" + value;
     }
   },
   created() {
@@ -211,22 +182,42 @@ export default {
   }
 };
 </script>
-
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
 .main-wrap {
   padding: 5px 10px 10px;
   min-width: 450px;
 }
+.PalyRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 30px;
+  background: #ffffff;
+  border-radius: 4px;
+  .horn {
+    > i,
+    > span {
+      line-height: 40px;
+      font-size: @font22;
+      color: #999999;
+    }
+    > span {
+      padding-left: 15px;
+    }
+  }
+}
 .Pause {
 }
-/* /deep/.el-button {
-  width: 30px;
-  height: 30px;
-  border: 2px solid #999999;
+/deep/.el-button {
+  width: 40px;
+  height: 40px;
+  border: 2px solid @backgroud;
   border-radius: 50%;
   text-align: center;
-} */
+  padding: 0;
+  color: @backgroud;
+  text-align: center;
+}
 .slider {
   display: inline-block;
   width: 80%;
