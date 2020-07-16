@@ -355,7 +355,20 @@ const SEX = [
     value: 1
   }
 ];
-import { BUYINTENTION } from "@/util/constMap";
+const BUYINTENTION = [
+  {
+    key: "一般",
+    value: 2
+  },
+  {
+    key: "较弱",
+    value: 1
+  },
+  {
+    key: "强烈",
+    value: 3
+  }
+];
 import selectCascader from "./selectCascader";
 import demandMoreSelect from "./demandMoreSelect";
 import { mapState } from "vuex";

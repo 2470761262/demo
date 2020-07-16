@@ -101,7 +101,7 @@ export default {
             .then(e => {
               if (e.data.code == 200) {
                 this.$message({
-                  type: "success",
+                  type: "xinjia",
                   message: "客户转无效成功"
                 });
                 that.close();

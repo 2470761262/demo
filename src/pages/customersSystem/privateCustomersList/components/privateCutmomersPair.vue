@@ -1256,11 +1256,7 @@ export default {
             this.customersTypeList[2].count = json.data.buyNewHouse;
             this.customersTypeList[3].count = json.data.rentHouse;
             this.customersTypeList[4].count = json.data.hasDealedHouse;
-            this.customersTypeList[0].count =
-              this.customersTypeList[1].count +
-              this.customersTypeList[2].count +
-              this.customersTypeList[3].count +
-              this.customersTypeList[4].count;
+            this.customersTypeList[0].count = json.data.allRequireCustomer;
           } else if (json.code == 400) {
             alert(json.message);
             console.log("失败     " + json);
