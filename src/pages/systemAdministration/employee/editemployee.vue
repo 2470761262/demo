@@ -33,6 +33,15 @@
   padding-left: 20px;
   box-sizing: border-box;
 }
+.pro-query {
+  display: flex;
+  margin-bottom: 20px;
+  .query-name {
+    flex: 1;
+    width: 0;
+    margin: 0 20px;
+  }
+}
 </style>
 <template>
   <div class="form-content">
@@ -380,13 +389,26 @@
         </el-form-item>
       </div>
       <div class="flex-row">
-        <el-form-item label="介绍人:" prop="jieShaoName">
+        <el-form-item label="介绍人:" prop="jieShaoNameId">
           <el-dialog
             title="请选择:"
             :visible.sync="dialogVisible1"
             width="50%"
             :before-close="handleClose"
           >
+            <div class="pro-query">
+              <div class="title">姓名搜索:</div>
+              <el-input
+                class="query-name"
+                type="text"
+                placeholder="请输入要搜索的姓名"
+                v-model="queryName"
+                show-word-limit
+              ></el-input>
+              <el-button size="mini" type="primary" @click="getPrincipal(1)"
+                >搜索</el-button
+              >
+            </div>
             <list-page
               :parentData="$data"
               highlight-current-row
@@ -410,6 +432,7 @@
             type="text"
             v-model="employeeEntity.jieShaoName"
             @focus="getDialogVisible1()"
+            @blur="clear('jieShaoNameId')"
           ></el-input>
         </el-form-item>
       </div>
@@ -462,6 +485,7 @@ export default {
       }
     };
     return {
+      queryName: "",
       rules: {
         perName: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         cardId: [{ validator: checkCardId, trigger: "blur" }],
@@ -481,7 +505,7 @@ export default {
           { required: true, message: "请选择是否菁英", trigger: "blur" }
         ],
         jieShaoNameId: [
-          { required: true, message: "请选择介绍人", trigger: "blur" }
+          { required: true, message: "请选择介绍人", trigger: "change" }
         ]
       },
       sidebarFlag: false,
@@ -569,6 +593,9 @@ export default {
   watch: {},
   computed: {},
   methods: {
+    clear(name) {
+      this.employeeEntity[name] = null;
+    },
     getDialogVisible1() {
       this.dialogVisible1 = true;
       this.getPrincipal(1);
@@ -585,6 +612,7 @@ export default {
       params.type = 0;
       params.del = 0;
       params.isLocked = this.employeeEntity.isLocked;
+      params.keyWord = this.queryName;
       this.$api
         .post({
           url: "/employee/selectPrincipal",
@@ -878,6 +906,7 @@ export default {
       console.log(row);
       this.employeeEntity.jieShaoName = row.perName;
       this.employeeEntity.jieShaoNameId = row.accountId;
+      this.dialogVisible1 = false;
     },
     iscardId() {
       console.log(this.employeeEntity.cardId);
