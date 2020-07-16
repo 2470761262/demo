@@ -19,7 +19,9 @@ export default [
     path: "/buySellSystem/houseDetails",
     name: "houseDetails",
     meta: {
-      title: "房源详情"
+      title: "房源详情",
+      // isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
     },
     component: () =>
       import(
