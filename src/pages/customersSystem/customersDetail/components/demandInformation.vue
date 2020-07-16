@@ -54,7 +54,7 @@
                 <div class="msg-row">
                   <span class="msg-row-title">期望面积：</span>
                   <div class="msg-row-txt">
-                    {{ item.minArea }} - {{ item.maxArea }}m²
+                    {{ item.minArea || 0 }} - {{ item.maxArea || 0 }}m²
                   </div>
                 </div>
                 <div
@@ -92,11 +92,11 @@
               <section class="msg-row-group">
                 <div class="msg-row">
                   <span class="msg-row-title">装修需求：</span>
-                  <div class="msg-row-txt">{{ item.decoration }}</div>
+                  <div class="msg-row-txt">{{ item.decoration || "暂无" }}</div>
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">期望小学：</span>
-                  <div class="msg-row-txt">
+                  <div class="msg-row-txt" v-if="item.primarySchool != ''">
                     <p
                       v-for="(primarySchool, idx) in item.primarySchool"
                       :key="idx"
@@ -104,10 +104,11 @@
                       {{ primarySchool }}
                     </p>
                   </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">期望中学：</span>
-                  <div class="msg-row-txt">
+                  <div class="msg-row-txt" v-if="item.primarySchool != ''">
                     <p
                       v-for="(middleSchool, idx) in item.middleSchool"
                       :key="idx"
@@ -115,10 +116,11 @@
                       {{ middleSchool }}
                     </p>
                   </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">看房经历：</span>
-                  <div class="msg-row-txt">{{ item.remark }}</div>
+                  <div class="msg-row-txt">{{ item.remark || "暂无" }}</div>
                 </div>
               </section>
             </div>
@@ -144,6 +146,7 @@
       title="选择需求信息(多选)"
       @demandConfirm="demandConfirm"
       v-model="demandValueData"
+      :isDisabled="true"
       data-vv-name="moreSelect"
       data-vv-as="需求信息"
       v-validate="'required|arrFlatLength:0'"
@@ -186,10 +189,16 @@ export default {
           return "公积金贷款";
         case 8:
           return "组合贷款";
+        default:
+          return "暂无";
       }
     },
     formatSymbol(val) {
-      return val.replace(/\$/g, ",");
+      if (val) {
+        return val.replace(/\$/g, ",");
+      } else {
+        return "暂无";
+      }
     }
   },
   created() {

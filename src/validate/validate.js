@@ -35,6 +35,13 @@ Validator.extend("noZero", {
   },
   validate: value => /^[1-9]\d*$/.test(value)
 });
+//正整数可以为0
+Validator.extend("zero1", {
+  messages: {
+    zh_CN: field => field + "需要是正整数"
+  },
+  validate: value => /^[0-9]\d*$/.test(value)
+});
 //正整数和小数点后两位
 Validator.extend("flota", {
   messages: {

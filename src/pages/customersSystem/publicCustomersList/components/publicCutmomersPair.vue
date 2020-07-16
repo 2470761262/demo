@@ -429,11 +429,11 @@ const customerNeedsModle = [
   },
   {
     name: "租赁",
-    value: 2
+    value: 4
   },
   {
     name: "买新房",
-    value: 3
+    value: 2
   }
 ];
 const PublicTypeModle = [

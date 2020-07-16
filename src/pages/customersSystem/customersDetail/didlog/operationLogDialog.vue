@@ -50,6 +50,7 @@
 
 <script>
 export default {
+  inject: ["customerId"],
   data() {
     return {
       total: 0,
@@ -80,6 +81,7 @@ export default {
     getData() {
       let that = this;
       let postData = {
+        customerId: this.customerId,
         limit: that.limit,
         page: that.page,
         types: []

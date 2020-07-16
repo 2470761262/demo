@@ -8,6 +8,13 @@
   .impression-box {
     padding-bottom: 36px;
   }
+  .mar-top {
+    margin-top: 28px !important;
+  }
+}
+/deep/ .suffix-tips {
+  cursor: pointer;
+  color: #247257;
 }
 </style>
 <template>
@@ -84,75 +91,58 @@
           <span
             class="inline-btn"
             @click="addTelToList"
-            v-show="addTel.length < 2"
+            v-show="formData.tels.length <= 2"
             >添加</span
           >
         </div>
-        <div class="input-assist-tips" v-if="addTel.length != 0">客户电话1</div>
-        <el-input
-          v-model="formData.tels[0].phone"
-          :disabled="formData.tels[0].isDisabled"
-          class="input-content"
-          clearable
-          placeholder="请输入客户的电话号码"
-          maxlength="11"
-          show-word-limit
-          data-vv-name="phone"
-          data-vv-as="客户号码"
-          v-validate="'required|phone'"
-        />
-        <div
-          :class="{
-            'after-error-tips':
-              formData.tels.length != 0 && errorBags.has('phone')
-          }"
-          :data-error="errorBags.first('phone')"
-        ></div>
-      </div>
-      <!-- 动态添加号码 -->
-      <div
-        class="input-group "
-        v-for="(item, index) in addTel"
-        :key="index"
-        :class="{ 'error-tips': errorBags.has('phone' + (index + 2)) }"
-      >
-        <div class="input-assist-tips" v-if="addTel.length != 0">
-          客户电话{{ index + 2 }}
-        </div>
-        <div class="input-pack">
-          <el-input
-            v-model="formData.tels[index + 1].phone"
-            :disabled="formData.tels[index + 1].isDisabled"
-            class="input-content"
-            clearable
-            placeholder="请输入客户的电话号码"
-            maxlength="11"
-            show-word-limit
-            :data-vv-name="'phone' + (index + 2)"
-            data-vv-as="客户号码"
-            v-validate="{
-              phone: true,
-              isSame: [
-                [
-                  formData.tels[0].phone,
-                  ...addTel.map((tel, index) => formData.tels[index + 1].phone)
-                ],
-                '手机号'
-              ]
+        <div v-for="(item, index) in formData.tels" :key="index">
+          <div class="input-assist-tips" v-if="formData.tels.length != 1">
+            {{ "客户电话" + (index + 1) }}
+          </div>
+          <div class="input-pack">
+            <el-input
+              v-model="item.phone"
+              :disabled="item.isDisabled"
+              class="input-content"
+              clearable
+              placeholder="请输入客户的电话号码"
+              maxlength="11"
+              :data-vv-name="'phone' + (index + 1)"
+              data-vv-as="客户号码"
+              v-validate="{
+                required: true,
+                phone: true,
+                isSame: [
+                  [...formData.tels.map((tels, index) => tels.phone)],
+                  '手机号'
+                ]
+              }"
+            >
+              <!-- <el-button slot="append">.com</el-button> -->
+              <template v-slot:suffix v-if="index != 0">
+                <i class="suffix-tips" @click="topPhone(index)">置顶</i>
+              </template>
+            </el-input>
+
+            <i
+              v-if="formData.tels.length != 1"
+              class="el-icon-remove inline-remove-btn"
+              @click="removeTelToList(index)"
+            ></i>
+          </div>
+
+          <div
+            :class="{
+              'after-error-tips':
+                formData.tels.length != 0 &&
+                errorBags.has('phone' + (index + 1))
             }"
-          />
-          <i
-            class="el-icon-remove inline-remove-btn"
-            @click="removeTelToList(index)"
-          ></i>
+            :data-error="errorBags.first('phone' + (index + 1))"
+          ></div>
         </div>
-        <div
-          :class="{
-            'after-error-tips':
-              formData.tels.length != 0 && errorBags.has('phone' + (index + 2))
-          }"
-          :data-error="errorBags.first('phone' + (index + 2))"
-        ></div>
+        <div class="mar-top alert-content warning ">
+          提示:客户手机号码一经提交不可修改，请认真填写
+        </div>
       </div>
       <!-- 购房意向 -->
       <div class="input-group">
@@ -445,15 +435,16 @@ export default {
     //添加电话号码12
     addTelToList() {
       let defaultList = [1, 2];
-      if (this.addTel.length < 2) {
-        for (let index = 0; index < defaultList.length; index++) {
-          if (!this.addTel.includes(defaultList[index])) {
-            let phone = { phone: "", isDisabled: false };
-            this.formData.tels.push(phone);
-            this.addTel.push(defaultList[index]);
-            break;
-          }
-        }
+      if (this.formData.tels.length <= 2) {
+        // for (let index = 0; index < defaultList.length; index++) {
+        //   if (!this.addTel.includes(defaultList[index])) {
+
+        //     this.addTel.push(defaultList[index]);
+        //     break;
+        //   }
+        // }
+        let phone = { phone: "", isDisabled: false };
+        this.formData.tels.push(phone);
       }
       this.addTel.sort();
     },
@@ -462,7 +453,6 @@ export default {
      * @param {Number} index 删除的下标
      */
     removeTelToList(index) {
-      this.addTel.splice(index, 1);
       this.formData.tels.splice(index, 1);
     },
     /**
@@ -503,6 +493,15 @@ export default {
      */
     validate() {
       return this.$validator.validateAll().then(e => e);
+    },
+    /**
+     * @example: 电话号码置顶
+     */
+    topPhone(index) {
+      let phone1 = this.formData.tels[0];
+      let phone2 = this.formData.tels[index];
+      this.formData.tels.splice(0, 1, phone2);
+      this.formData.tels.splice(index, 1, phone1);
     }
   }
 };
