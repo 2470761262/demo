@@ -273,11 +273,6 @@ export default {
             }
             fromData.requirements = data.requireList;
             this.$store.commit("updateStep2", fromData.requirements);
-            // this.$set(that.demand, "data", data.customerRequire);
-            // this.$set(that.demandList, "data", data.requireList);
-            // this.$set(that.customerDeal, "data", data.saleCusPropertyTbl);
-            // this.$set(that.telList, "data", data.telList);
-            // that.customer.data = data.bsAgentCustomersTbl;
             fromData.requirements.forEach(item => {
               switch (item.requireType) {
                 case 1:
@@ -337,16 +332,34 @@ export default {
                 item.maxUnitPrice = item.maxUnitPrice / 10000;
                 item.minUnitPrice = item.minUnitPrice / 10000;
               }
+              if (!item.maxFirstPrice) {
+                item.maxFirstPrice = null;
+              }
+              if (!item.minFirstPrice) {
+                item.minFirstPrice = null;
+              }
+              if (!item.maxPrice) {
+                item.maxPrice = null;
+              }
+              if (!item.minPrice) {
+                item.minPrice = null;
+              }
+              if (!item.maxUnitPrice) {
+                item.maxUnitPrice = null;
+              }
+              if (!item.minUnitPrice) {
+                item.minUnitPrice = null;
+              }
               item.community = [];
-              if (item.community1 != null) {
+              if (item.community1) {
                 let community = item.community1 + "," + item.community1Id;
                 item.community.push(community);
               }
-              if (item.community2 != null) {
+              if (item.community2) {
                 let community = item.community2 + "," + item.community2Id;
                 item.community.push(community);
               }
-              if (item.community3 != null) {
+              if (item.community3) {
                 let community = item.community3 + "," + item.community3Id;
                 item.community.push(community);
               }

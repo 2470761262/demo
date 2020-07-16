@@ -50,15 +50,19 @@
                   <section class="list-car">
                     <div class="car-row">
                       <div class="car-title">跟进人：</div>
-                      <div class="car-right">{{ item.perName }}</div>
+                      <div class="car-right">{{ item.perName || "暂无" }}</div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">跟进类型：</div>
-                      <div class="car-right">{{ item.FollowType }}</div>
+                      <div class="car-right">
+                        {{ item.FollowType || "暂无" }}
+                      </div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">跟进方式：</div>
-                      <div class="car-right">{{ item.FollowWay }}</div>
+                      <div class="car-right">
+                        {{ item.FollowWay || "暂无" }}
+                      </div>
                     </div>
                     <div class="car-row car-mar-no">
                       <div class="car-title">跟进内容：</div>
@@ -67,7 +71,9 @@
                         :theUrl="item.Memo.slice(6)"
                         theControlList="onlyOnePlaying"
                       ></VueAudio>
-                      <div class="car-right" v-else>{{ item.Memo }}</div>
+                      <div class="car-right" v-else>
+                        {{ item.Memo || "暂无" }}
+                      </div>
                     </div>
                   </section>
                 </div>
@@ -77,7 +83,9 @@
                   <section class="list-car">
                     <div class="car-row">
                       <div class="car-title">带看类型：</div>
-                      <div class="car-right">{{ item.salePairType[0] }}</div>
+                      <div class="car-right">
+                        {{ item.salePairType[0] || "暂无" }}
+                      </div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看经纪：</div>
@@ -88,11 +96,14 @@
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看日期：</div>
-                      <div class="car-right">{{ item.st }}</div>
+                      <div class="car-right">{{ item.st || "暂无" }}</div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看房源：</div>
-                      <div class="car-right">
+                      <div
+                        class="car-right"
+                        v-if="item.housingResource.length > 0"
+                      >
                         <p
                           v-for="(housingResource, idx) in item.housingResource"
                           :key="idx"
@@ -100,6 +111,7 @@
                           {{ housingResource }}
                         </p>
                       </div>
+                      <div class="car-right" v-else>无法找到对应房源</div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看反馈：</div>
@@ -109,7 +121,7 @@
                     </div>
                     <div class="car-row car-mar-no">
                       <div class="car-title">带看总结：</div>
-                      <div class="car-right">{{ item.Memo }}</div>
+                      <div class="car-right">{{ item.Memo || "暂无" }}</div>
                     </div>
                   </section>
                 </div>
@@ -139,15 +151,15 @@
                 <section class="list-car">
                   <div class="car-row">
                     <div class="car-title">跟进人：</div>
-                    <div class="car-right">{{ item.perName }}</div>
+                    <div class="car-right">{{ item.perName || "暂无" }}</div>
                   </div>
                   <div class="car-row">
                     <div class="car-title">跟进类型：</div>
-                    <div class="car-right">{{ item.FollowType }}</div>
+                    <div class="car-right">{{ item.FollowType || "暂无" }}</div>
                   </div>
                   <div class="car-row">
                     <div class="car-title">跟进方式：</div>
-                    <div class="car-right">{{ item.FollowWay }}</div>
+                    <div class="car-right">{{ item.FollowWay || "暂无" }}</div>
                   </div>
                   <div class="car-row car-mar-no">
                     <div class="car-title">跟进内容：</div>
@@ -156,7 +168,9 @@
                       :theUrl="item.Memo.slice(6)"
                       theControlList="onlyOnePlaying"
                     ></VueAudio>
-                    <div class="car-right" v-else>{{ item.Memo }}</div>
+                    <div class="car-right" v-else>
+                      {{ item.Memo || "暂无" }}
+                    </div>
                   </div>
                 </section>
               </el-timeline-item>
@@ -185,7 +199,9 @@
                 <section class="list-car">
                   <div class="car-row">
                     <div class="car-title">带看类型：</div>
-                    <div class="car-right">{{ item.salePairType[0] }}</div>
+                    <div class="car-right">
+                      {{ item.salePairType[0] || "暂无" }}
+                    </div>
                   </div>
                   <div class="car-row">
                     <div class="car-title">带看经纪：</div>
@@ -196,7 +212,7 @@
                   </div>
                   <div class="car-row">
                     <div class="car-title">带看日期：</div>
-                    <div class="car-right">{{ item.st }}</div>
+                    <div class="car-right">{{ item.st || "暂无" }}</div>
                   </div>
                   <div class="car-row">
                     <div class="car-title">带看房源：</div>
@@ -221,7 +237,7 @@
                   </div>
                   <div class="car-row car-mar-no">
                     <div class="car-title">带看总结：</div>
-                    <div class="car-right">{{ item.Memo }}</div>
+                    <div class="car-right">{{ item.Memo || "暂无" }}</div>
                   </div>
                 </section>
               </el-timeline-item>
@@ -283,6 +299,8 @@ export default {
           return "在考虑";
         case 2:
           return "不满意";
+        default:
+          return "暂无";
       }
     }
   },
@@ -316,7 +334,7 @@ export default {
         });
     },
     /**
-     * @example: 研发提示弹窗
+     * @example: 数据处理
      */
     processingData() {
       let that = this;
