@@ -253,7 +253,7 @@
       <!-- 期望楼层 -->
       <div class="input-group">
         <div class="input-head">期望楼层</div>
-        <el-checkbox-group v-model="data.floor">
+        <el-checkbox-group v-model="data.floors">
           <el-checkbox-button
             v-for="item in floorList"
             :label="item.value"
@@ -337,38 +337,34 @@ const payWayList = [
 const houseTypeList = [
   {
     key: "1房",
-    value: 1
+    value: "1房"
   },
   {
     key: "2房",
-    value: 2
+    value: "2房"
   },
   {
     key: "3房",
-    value: 3
+    value: "3房"
   },
   {
     key: "4房",
-    value: 4
+    value: "4房"
   },
   {
     key: "4房以上",
-    value: 5
+    value: "4房以上"
   }
 ];
 // 期望楼层
 const floorList = [
   {
-    key: "不限",
+    key: "低楼层",
     value: 1
   },
   {
-    key: "低楼层",
-    value: 2
-  },
-  {
     key: "中楼层",
-    value: 3
+    value: 2
   },
   {
     key: "高楼层",
@@ -376,11 +372,11 @@ const floorList = [
   },
   {
     key: "不要一楼",
-    value: 5
+    value: 8
   },
   {
     key: "不要顶楼",
-    value: 6
+    value: 16
   }
 ];
 // 交房类型
@@ -421,8 +417,8 @@ export default {
         community1Id: null, //期望楼盘 CommunityTbl的ID
         decoration: "", //期望装修（毛胚，简单装修，精装修）
         decorationList: [], //期望装修列表
-        facilities: [], //附属设施（位运算（多选）：1可明火、2可外摆、4停车位、8天然气、16网络、32中央空调、64其他）
-        floor: [], //期望楼层（位运算（多选）:1低楼层,2中楼层，4高楼层，8不要一楼,16不要顶楼）
+        facilitys: [], //附属设施（位运算（多选）：1可明火、2可外摆、4停车位、8天然气、16网络、32中央空调、64其他）
+        floors: [], //期望楼层（位运算（多选）:1低楼层,2中楼层，4高楼层，8不要一楼,16不要顶楼）
         manageCompanyType: null, //物业类型-买新房（1普通住宅、2别墅、4商铺、8写字楼、16其他）
         maxArea: null, //期望最大面积
         minArea: null, //期望最小面积
@@ -437,15 +433,15 @@ export default {
         primarySchoolList: "", //期望小学列表
         middleSchoolList: "", //期望中学列表
         moveIntoTime: "", //入住日期-租赁住宅（年月日）
-        otherNeed: [], //其他需求-买或租商铺（位运算（多选）：1面积大、2层高大、4临街、5空铺、6其他）
+        otherNeeds: [], //其他需求-买或租商铺（位运算（多选）：1面积大、2层高大、4临街、5空铺、6其他）
         payMethod: null, //付款方式（1月付、2季付、3半年付、4年付、0不限）
         payWay: null, //付款方式，单选（1一次性,2商业贷款,4公积金贷款,8组合贷款）
         rentWay: null, //租赁方式（1合租、2整租、0不限）
-        roomNeed: [], //房间需求-买或租写字楼（位运算（多选）：1可注册公司、2有老板间、4有会议室、8带办公家具、16带停车位、32其他）
+        roomNeeds: [], //房间需求-买或租写字楼（位运算（多选）：1可注册公司、2有老板间、4有会议室、8带办公家具、16带停车位、32其他）
         rooms: [], //购买房型（多个以$隔开，如1房$2房$3房$4房及以上）
         roomsList: [], //购买房型列表
-        shopType: [], //商铺类型-买或租商铺（位运算（多选）：1临街店面、2写字楼配套、4写字楼配套、8档口摊位、16其他）
-        shopUse: [], //商铺用途-买或租商铺（位运算（多选）：1餐饮、2休闲娱乐、4生活服务、8零售、16批发、32酒店宾馆、64汽车服务、128美容美发、256其他）
+        shopTypes: [], //商铺类型-买或租商铺（位运算（多选）：1临街店面、2写字楼配套、4写字楼配套、8档口摊位、16其他）
+        shopUses: [], //商铺用途-买或租商铺（位运算（多选）：1餐饮、2休闲娱乐、4生活服务、8零售、16批发、32酒店宾馆、64汽车服务、128美容美发、256其他）
         tradeHouseType: null, //交房类型-买新房（0不限，1期房，2现房）
         community: "", //期望楼盘列表
         businessCircle: "", //期望商圈（多个以$隔开）

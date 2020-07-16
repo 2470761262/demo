@@ -22,6 +22,7 @@
           placement="bottom"
           trigger="click"
           class="infor-dial"
+          v-model="isPhone"
           v-if="permissionList.dialButtonEnable.isDisable"
         >
           <div class="phone-list">
@@ -29,12 +30,11 @@
               v-for="(item, idx) in phoneList"
               :key="idx"
               @click="callUp(item.phone)"
-              v-loading="callLoading"
             >
               {{ item.phone }}
             </div>
           </div>
-          <el-button slot="reference" @click="getPhone"
+          <el-button slot="reference" @click="getPhone" :loading="callLoading"
             ><span>一键拨号</span></el-button
           >
         </el-popover>
@@ -116,10 +116,11 @@ export default {
   ],
   data() {
     return {
-      sex: "男",
-      callLoading: false,
       noData: "暂无",
-      phoneList: []
+      phoneList: [],
+      isPhone: false,
+      isCall: true,
+      callLoading: false
     };
   },
   created() {},
@@ -248,39 +249,48 @@ export default {
      */
     callUp(phone) {
       let that = this;
-      that.callLoading = true;
-      let postData = {
-        customerId: this.customer.data.id,
-        remark: "给客户" + this.customer.data.Customers + "拨打电话",
-        customerName: this.customer.data.Customers,
-        contactPhone: phone,
-        customerNo: this.customer.data.CustomerNo,
-        customerPlate: 0
-      };
-      that.$api
-        .post({
-          url: "/saleCustomerDetail/DialPhoneToCustomer",
-          data: postData,
-          qs: true,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
-        })
-        .then(e => {
-          that.callLoading = false;
-          if (e.data.code == 200) {
-            this.$message({
-              type: "success",
-              message: "号码已发送至微信"
-            });
-          }
-        })
-        .catch(e => {
-          that.callLoading = false;
-          if (e.response != undefined) {
-            that.$message(e.response.data.message);
-          }
-        });
+      that.isPhone = false;
+      if (this.isCall) {
+        let postData = {
+          customerId: this.customer.data.id,
+          remark: "给客户" + this.customer.data.Customers + "拨打电话",
+          customerName: this.customer.data.Customers,
+          contactPhone: phone,
+          customerNo: this.customer.data.CustomerNo,
+          customerPlate: 0
+        };
+        that.callLoading = true;
+        that.isCall = false;
+        that.$api
+          .post({
+            url: "/saleCustomerDetail/DialPhoneToCustomer",
+            data: postData,
+            qs: true,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          })
+          .then(e => {
+            if (e.data.code == 200) {
+              that.callLoading = false;
+              setTimeout(() => {
+                that.isCall = true;
+              }, 10000);
+              this.$message({
+                type: "xinjia",
+                message: "号码已发送至微信"
+              });
+            }
+          })
+          .catch(e => {
+            that.callLoading = false;
+            if (e.response != undefined) {
+              that.$message(e.response.data.message);
+            }
+          });
+      } else {
+        that.$message("十秒内不得重复点击");
+      }
     },
     /**
      * @example: 删除客源印象
@@ -308,7 +318,7 @@ export default {
               if (e.data.code == 200) {
                 that.impressionList.data.splice(idx, 1);
                 this.$message({
-                  type: "success",
+                  type: "xinjia",
                   message: "删除成功!"
                 });
               }
@@ -436,6 +446,10 @@ export default {
       line-height: 16PX;
       color: #303133;
       text-align: right;
+      span {
+        //prettier-ignore
+        line-height: 24PX;
+      }
     }
   }
   .flex {
@@ -450,6 +464,23 @@ export default {
     &:last-child {
       border-bottom: none;
     }
+  }
+}
+</style>
+<style lang="less">
+.el-message--xinjia {
+  background-color: @opacityBackground;
+  border-color: @opacityBackground;
+  .el-message__icon {
+    &::before {
+      color: @backgroud;
+      font-size: @font16;
+      content: "\e79c";
+    }
+  }
+  .el-message__content {
+    color: @backgroud;
+    font-size: @font16;
   }
 }
 </style>

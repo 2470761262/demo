@@ -162,7 +162,7 @@ export default {
             .then(e => {
               if (e.data.code == 200) {
                 this.$message({
-                  type: "success",
+                  type: "xinjia",
                   message: "跟进信息添加成功"
                 });
                 that.$emit("upData");
