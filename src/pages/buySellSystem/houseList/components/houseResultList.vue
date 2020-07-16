@@ -1171,6 +1171,8 @@ export default {
       this.primarySchoolRadio = "不限"; //小学校radio
       this.renovationRadio = "不限"; //装修radio不限
       this.faceRadio = "不限"; //朝向radio不限
+      this.temporaryPrimaryValue = "";
+      this.temporaryMiddleValue = "";
     },
     /**
      * @example: 顶部Tab点击
