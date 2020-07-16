@@ -1065,6 +1065,8 @@ export default {
   inject: ["form"],
   data() {
     return {
+      temporaryPrimaryValue: "", //临时记录小学select结果,用于删除筛选
+      temporaryMiddleValue: "", //临时记录中学select结果,用于删除筛选
       isFixedHeight: "0px",
       navToPage: NAVTOPAGE, //顶部跳转tab
       agentPerName: "", //跟单人姓名
@@ -1169,6 +1171,8 @@ export default {
       this.primarySchoolRadio = "不限"; //小学校radio
       this.renovationRadio = "不限"; //装修radio不限
       this.faceRadio = "不限"; //朝向radio不限
+      this.temporaryPrimaryValue = "";
+      this.temporaryMiddleValue = "";
     },
     /**
      * @example: 顶部Tab点击
@@ -1207,7 +1211,34 @@ export default {
      * @param {string} e
      */
     schoolChange(field, e) {
-      this.form[field].push(e);
+      if (e !== "") {
+        switch (field) {
+          case "primarySchoolList":
+            this.temporaryPrimaryValue = e;
+            break;
+          case "middleSchoolList":
+            this.temporaryMiddleValue = e;
+            break;
+        }
+        this.form[field].push(e);
+      } else {
+        let index = -1;
+        switch (field) {
+          case "primarySchoolList":
+            index = this.form[field].findIndex(
+              item => item == this.temporaryPrimaryValue
+            );
+            this.temporaryPrimaryValue = e;
+            break;
+          case "middleSchoolList":
+            index = this.form[field].findIndex(
+              item => item == this.temporaryMiddleValue
+            );
+            this.temporaryMiddleValue = e;
+            break;
+        }
+        this.form[field].splice(index, 1);
+      }
     },
     /**
      * @example: 修改nav类型激活Index
