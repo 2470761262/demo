@@ -1272,19 +1272,19 @@ export default {
       this.form.isBuy = 0;
       switch (item.type) {
         case 1:
-          this.form.requireTypes = [];
+          this.form.requirementType = "";
           break;
         case 2:
-          this.form.requireTypes = [1, 2, 4];
+          this.form.requirementType = 1;
           break;
         case 3:
-          this.form.requireTypes = [8, 16, 32];
+          this.form.requirementType = 2;
           break;
         case 4:
-          this.form.requireTypes = [64, 128, 256];
+          this.form.requirementType = 4;
           break;
         case 5:
-          this.form.requireTypes = [];
+          this.form.requirementType = "";
           this.form.isBuy = 1;
           break;
         default:
