@@ -22,6 +22,7 @@
           placement="bottom"
           trigger="click"
           class="infor-dial"
+          v-model="isPhone"
           v-if="permissionList.dialButtonEnable.isDisable"
         >
           <div class="phone-list">
@@ -29,7 +30,6 @@
               v-for="(item, idx) in phoneList"
               :key="idx"
               @click="callUp(item.phone)"
-              v-loading="callLoading"
             >
               {{ item.phone }}
             </div>
@@ -117,9 +117,9 @@ export default {
   data() {
     return {
       sex: "男",
-      callLoading: false,
       noData: "暂无",
-      phoneList: []
+      phoneList: [],
+      isPhone: false
     };
   },
   created() {},
@@ -248,7 +248,7 @@ export default {
      */
     callUp(phone) {
       let that = this;
-      that.callLoading = true;
+      that.isPhone = false;
       let postData = {
         customerId: this.customer.data.id,
         remark: "给客户" + this.customer.data.Customers + "拨打电话",
@@ -267,7 +267,6 @@ export default {
           }
         })
         .then(e => {
-          that.callLoading = false;
           if (e.data.code == 200) {
             this.$message({
               type: "xinjia",
