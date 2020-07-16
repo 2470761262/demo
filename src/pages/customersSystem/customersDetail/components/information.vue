@@ -5,7 +5,7 @@
       <span class="infor-sex">{{ customer.data.sex === 0 ? "男" : "女" }}</span>
     </div>
     <div class="infor-row flex">
-      <div class="infor-phone">{{ phoneData }}</div>
+      <div class="infor-phone">{{ phoneData || "暂无号码" }}</div>
       <div class="infor-bottom">
         <el-popover
           placement="bottom"
@@ -14,7 +14,9 @@
           v-if="permissionList.customerDetailForTelephone.isDisable"
         >
           <div>
-            <p v-for="(item, idx) in phoneList" :key="idx">{{ item.phone }}</p>
+            <p v-for="(item, idx) in phoneList" :key="idx">
+              {{ item.phone || "" }}
+            </p>
           </div>
           <el-button slot="reference" @click="getPhone">查看号码</el-button>
         </el-popover>
@@ -31,7 +33,7 @@
               :key="idx"
               @click="callUp(item.phone)"
             >
-              {{ item.phone }}
+              {{ item.phone || "" }}
             </div>
           </div>
           <el-button slot="reference" @click="getPhone" :loading="callLoading"
@@ -99,7 +101,7 @@
     </section>
     <section class="message-row flex">
       <div class="message-title">委托时间：</div>
-      <div class="message-txt">{{ customer.data.addTime | formatTime }}</div>
+      <div class="message-txt">{{ customer.data.AddTime | formatTime }}</div>
     </section>
   </div>
 </template>
@@ -112,7 +114,8 @@ export default {
     "customerDeal",
     "impressionList",
     "telList",
-    "permissionList"
+    "permissionList",
+    "phoneData"
   ],
   data() {
     return {
@@ -138,14 +141,14 @@ export default {
       } else {
         return {};
       }
-    },
-    phoneData() {
-      if (Object.keys(this.telList).length > 0) {
-        return this.telList.data[0].phone;
-      } else {
-        return {};
-      }
     }
+    // phoneData() {
+    //   if (Object.keys(this.telList).length != 0) {
+    //     return this.telList.data[0].phone;
+    //   } else {
+    //     return "";
+    //   }
+    // }
   },
   filters: {
     intentionName(value) {

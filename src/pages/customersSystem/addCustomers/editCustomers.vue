@@ -40,6 +40,7 @@
 <script>
 //异步组件工厂方法
 import componentsFactory from "@/util/componentsFactory";
+import util from "@/util/util";
 //记录步骤组件名字
 const ComList = ["stepOne", "stepTwo"];
 export default {
@@ -109,7 +110,7 @@ export default {
       let demandValue = this.$store.state.addCustomers.demandValue;
       if (newxFlag) {
         if (step2.length == 0) {
-          postData = this.$refs.childreCom.formData;
+          postData = util.deepCopy(this.$refs.childreCom.formData);
           if (demandValue.list0.length != 0) {
             for (let i = 0; i < demandValue.list0.length; i++) {
               let requireType = { requireType: demandValue.list0[i] };
@@ -129,8 +130,12 @@ export default {
             }
           }
         } else {
-          postData = this.$store.state.addCustomers.formData.step1;
-          postData.requirements = this.$store.state.addCustomers.formData.step2;
+          postData = util.deepCopy(
+            this.$store.state.addCustomers.formData.step1
+          );
+          postData.requirements = util.deepCopy(
+            this.$store.state.addCustomers.formData.step2
+          );
           postData.requirements.forEach((item, idx) => {
             if (item.businessCircleList.length != 0) {
               item.businessCircle = item.businessCircleList.join("$");
@@ -190,6 +195,7 @@ export default {
         postData.sourceType = postData.sourceList[0];
         postData.Source = postData.sourceList[1];
         postData.origin = "PC";
+        postData.id = this.customerId;
         that.fullscreenLoading = true;
         that.$api
           .post({
@@ -208,20 +214,6 @@ export default {
             }
           })
           .catch(e => {
-            postData.requirements.forEach((item, idx) => {
-              if (
-                item.requireType != 64 &&
-                item.requireType != 128 &&
-                item.requireType != 256
-              ) {
-                item.maxFirstPrice = item.maxFirstPrice / 10000;
-                item.minFirstPrice = item.maxFirstPrice / 10000;
-                item.maxPrice = item.maxFirstPrice / 10000;
-                item.minPrice = item.maxFirstPrice / 10000;
-                item.maxUnitPrice = item.maxFirstPrice / 10000;
-                item.minUnitPrice = item.maxFirstPrice / 10000;
-              }
-            });
             that.fullscreenLoading = false;
             if (e.response != undefined) {
               that.$message(e.response.data.message);
@@ -306,22 +298,32 @@ export default {
               }
               if (item.businessCircle) {
                 item.businessCircleList = item.businessCircle.split("$");
+              } else {
+                item.businessCircleList = [];
               }
 
               if (item.middleSchool) {
                 item.middleSchoolList = item.middleSchool.split("$");
+              } else {
+                item.middleSchoolList = [];
               }
 
               if (item.primarySchool) {
                 item.primarySchoolList = item.primarySchool.split("$");
+              } else {
+                item.primarySchoolList = [];
               }
 
               if (item.rooms) {
                 item.roomsList = item.rooms.split("$");
+              } else {
+                item.roomsList = [];
               }
 
               if (item.decoration) {
                 item.decorationList = item.decoration.split("$");
+              } else {
+                item.decorationList = [];
               }
               if (
                 item.requireType != 64 &&

@@ -115,6 +115,7 @@
               type="checkbox"
               v-model="dataJson['list' + renderLeftIndex]"
               :value="item.value"
+              :disabled="item.isDisabled"
               @change="checkChangeActive(item)"
             />
             <div>
@@ -146,15 +147,18 @@ const listData = [
     children: [
       {
         title: "住宅",
-        value: 1
+        value: 1,
+        isDisabled: false
       },
       {
         title: "商铺",
-        value: 2
+        value: 2,
+        isDisabled: false
       },
       {
         title: "写字楼",
-        value: 4
+        value: 4,
+        isDisabled: false
       }
     ]
   },
@@ -164,15 +168,18 @@ const listData = [
     children: [
       {
         title: "住宅",
-        value: 8
+        value: 8,
+        isDisabled: false
       },
       {
         title: "商铺",
-        value: 16
+        value: 16,
+        isDisabled: false
       },
       {
         title: "写字楼",
-        value: 32
+        value: 32,
+        isDisabled: false
       }
     ]
   },
@@ -182,15 +189,18 @@ const listData = [
     children: [
       {
         title: "住宅",
-        value: 64
+        value: 64,
+        isDisabled: false
       },
       {
         title: "商铺",
-        value: 128
+        value: 128,
+        isDisabled: false
       },
       {
         title: "写字楼",
-        value: 256
+        value: 256,
+        isDisabled: false
       }
     ]
   }
@@ -200,6 +210,11 @@ export default {
   props: {
     value: {
       type: Object
+    },
+    // 是否开启禁用已选选项
+    isDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -250,6 +265,11 @@ export default {
         this.orderDataJson[item].forEach((ordChildItem, ordChildIndex) => {
           this.renderLeftList[index].children.forEach(
             (childItem, childIndex) => {
+              if (this.isDisabled) {
+                if (ordChildItem == childItem.value) {
+                  childItem.isDisabled = true;
+                }
+              }
               if (childItem.value == ordChildItem) {
                 this.checkChangeActive(childItem, index);
               }

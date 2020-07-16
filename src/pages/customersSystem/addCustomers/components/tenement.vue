@@ -12,7 +12,7 @@
             data-vv-name="minPrice"
             data-vv-as="最小值"
             v-validate="{
-              noZero1: true,
+              zero1: true,
               isGreater: [data.maxPrice]
             }"
           >
@@ -30,7 +30,7 @@
             v-model="data.maxPrice"
             data-vv-name="maxPrice"
             data-vv-as="最大值"
-            v-validate="'noZero1'"
+            v-validate="'zero1'"
           >
           </el-input>
           <div
@@ -52,7 +52,7 @@
             data-vv-name="minUnitPrice"
             data-vv-as="最小值"
             v-validate="{
-              noZero1: true,
+              zero1: true,
               isGreater: [data.maxUnitPrice]
             }"
           >
@@ -70,7 +70,7 @@
             v-model="data.maxUnitPrice"
             data-vv-name="maxUnitPrice"
             data-vv-as="最大值"
-            v-validate="'noZero1'"
+            v-validate="'zero1'"
           >
           </el-input>
           <div
@@ -313,40 +313,40 @@ const decorationList = [
 ];
 // 商铺类型
 const shopTypeList = [
-  { value: "临街店面", key: "1" },
-  { value: "写字楼配套", key: "2" },
-  { value: "档口摊位", key: "4" },
-  { value: "其他", key: "8" }
+  { value: "临街店面", key: 1 },
+  { value: "写字楼配套", key: 2 },
+  { value: "档口摊位", key: 4 },
+  { value: "其他", key: 8 }
 ];
 // 商铺用途
 const shopUseList = [
-  { value: "餐饮", key: "1" },
-  { value: "休闲娱乐", key: "2" },
-  { value: "生活服务", key: "4" },
-  { value: "零售", key: "8" },
-  { value: "批发", key: "16" },
-  { value: "酒店宾馆", key: "32" },
-  { value: "汽车服务", key: "64" },
-  { value: "美容美发", key: "128" },
-  { value: "其他", key: "256" }
+  { value: "餐饮", key: 1 },
+  { value: "休闲娱乐", key: 2 },
+  { value: "生活服务", key: 4 },
+  { value: "零售", key: 8 },
+  { value: "批发", key: 16 },
+  { value: "酒店宾馆", key: 32 },
+  { value: "汽车服务", key: 64 },
+  { value: "美容美发", key: 128 },
+  { value: "其他", key: 256 }
 ];
 // 附属设施
 const facilitiesList = [
-  { value: "可明火", key: "1" },
-  { value: "可外摆", key: "2" },
-  { value: "停车位", key: "4" },
-  { value: "天然气", key: "8" },
-  { value: "网络", key: "16" },
-  { value: "中央空调", key: "32" },
-  { value: "其他", key: "64" }
+  { value: "可明火", key: 1 },
+  { value: "可外摆", key: 2 },
+  { value: "停车位", key: 4 },
+  { value: "天然气", key: 8 },
+  { value: "网络", key: 16 },
+  { value: "中央空调", key: 32 },
+  { value: "其他", key: 64 }
 ];
 // 其他需求
 const otherNeedList = [
-  { value: "面积大", key: "1" },
-  { value: "层高大", key: "2" },
-  { value: "临街", key: "4" },
-  { value: "空铺", key: "5" },
-  { value: "其他", key: "6" }
+  { value: "面积大", key: 1 },
+  { value: "层高大", key: 2 },
+  { value: "临街", key: 4 },
+  { value: "空铺", key: 8 },
+  { value: "其他", key: 16 }
 ];
 // 楼栋需求
 const buildingNeedList = [
