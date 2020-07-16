@@ -244,7 +244,6 @@
       </div>
       <el-table
         :data="renderList"
-        :default-sort="{ prop: 'addTime', order: 'ascending' }"
         header-cell-class-name="header-tab-cell"
         :cell-class-name="tabDirection"
         default-expand-all
@@ -449,7 +448,7 @@ export default {
           break;
         }
       }
-      return res;
+      return -1;
     },
     getChartType(char) {
       // 数字可按照排序的要求进行自定义，我这边产品的要求是
