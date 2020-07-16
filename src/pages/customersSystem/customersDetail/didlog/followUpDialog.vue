@@ -147,36 +147,38 @@ export default {
         FollowType: that.followType,
         Memo: that.memo
       };
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          that.isLoading = true;
-          that.$api
-            .post({
-              url: "	/saleCustomerDetail/addSaleCusFlower",
-              data: postData,
-              qs: true,
-              headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-              }
-            })
-            .then(e => {
-              if (e.data.code == 200) {
-                this.$message({
-                  type: "xinjia",
-                  message: "跟进信息添加成功"
-                });
-                that.$emit("upData");
-                that.colse();
-              }
-            })
-            .catch(e => {
-              that.isLoading = false;
-              if (e.response != undefined) {
-                that.$message(e.response.data.message);
-              }
-            });
-        }
-      });
+      if (!that.isLoading) {
+        this.$validator.validateAll().then(result => {
+          if (result) {
+            that.isLoading = true;
+            that.$api
+              .post({
+                url: "	/saleCustomerDetail/addSaleCusFlower",
+                data: postData,
+                qs: true,
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded"
+                }
+              })
+              .then(e => {
+                if (e.data.code == 200) {
+                  this.$message({
+                    type: "xinjia",
+                    message: "跟进信息添加成功"
+                  });
+                  that.$emit("upData");
+                  that.colse();
+                }
+              })
+              .catch(e => {
+                that.isLoading = false;
+                if (e.response != undefined) {
+                  that.$message(e.response.data.message);
+                }
+              });
+          }
+        });
+      }
     },
     colse() {
       this.$emit("update:visible", false);

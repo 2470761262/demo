@@ -249,6 +249,7 @@ export default {
   }
   .demand-tabs {
     margin-bottom: 9px;
+    width: 980px;
     /deep/ .el-tabs__item {
       margin-bottom: 15px;
       font-size: @font18;
