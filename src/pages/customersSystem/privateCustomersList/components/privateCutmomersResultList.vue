@@ -48,7 +48,7 @@
       :data="tableData"
       header-cell-class-name="ResultListCell ResultListHeaderBack"
       cell-class-name="ResultListCell"
-      @row-click="navigateTo"
+      @row-dblclick="navigateTo"
       v-loading="loading"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
@@ -117,10 +117,10 @@ export default {
           formart: item => (item.sex == 0 ? "男" : "女") || "暂无"
         },
         {
-          prop: "sourceType",
+          prop: "source",
           label: "客户来源",
           width: "110px",
-          formart: item => this.housesource(item.sourceType) || "暂无"
+          formart: item => this.housesource(item.source)
         },
         {
           prop: "requireType",
@@ -265,6 +265,7 @@ export default {
     },
     housesource(i) {
       let type;
+      console.log(i);
       switch (i) {
         case 11:
           type = "老客户";

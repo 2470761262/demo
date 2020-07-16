@@ -1313,10 +1313,12 @@ export default {
     },
 
     getLimit(list, id, key1, key2) {
-      this.form[key1] = this[list][id]["value"][0];
+      this.form[key1] =
+        this[list][id]["value"][0] == 0 ? "" : this[list][id]["value"][0];
       this.form[key2] = this[list][id]["value"][1]
         ? this[list][id]["value"][1]
         : "";
+      console.log(this.form[key1], this.form[key2]);
     },
 
     submitInput(key1, key2, keya, keyb) {

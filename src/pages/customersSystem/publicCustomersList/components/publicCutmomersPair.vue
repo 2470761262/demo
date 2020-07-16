@@ -421,7 +421,7 @@
 const customerNeedsModle = [
   {
     name: "不限",
-    value: null
+    value: ""
   },
   {
     name: "买二手",
