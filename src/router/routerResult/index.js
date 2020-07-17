@@ -16,7 +16,7 @@ export default [
   },
   {
     //买卖系统录入房源
-    path: "/buySellSystem/houseDetails",
+    path: "/buySellSystem/houseDetails/:houseId/:dept?",
     name: "houseDetails",
     meta: {
       title: "房源详情"
