@@ -61,7 +61,8 @@
     <section class="message-row flex">
       <div class="message-title">客户需求：</div>
       <div class="message-txt">
-        <span v-for="item in demand.data" :key="item.index">{{ item }}</span>
+        <!-- <span v-for="item in demand.data" :key="item.index">{{ item }}</span> -->
+        <span>{{ demand.data | formatDemand }}</span>
       </div>
     </section>
     <section class="message-row flex">
@@ -218,6 +219,9 @@ export default {
         default:
           return "暂无";
       }
+    },
+    formatDemand(value) {
+      return value.join("、");
     }
   },
   methods: {
