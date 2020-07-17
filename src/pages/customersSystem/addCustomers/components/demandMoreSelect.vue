@@ -36,7 +36,8 @@
         align-items: center;
         flex-direction: row-reverse;
         justify-content: space-between;
-        margin-top: 43px;
+        padding: 15px 8px;
+        margin-top: 13px;
         cursor: pointer;
         input[type="checkbox"] {
           position: relative;
@@ -61,12 +62,14 @@
         }
       }
       .cascader-left-item {
-        margin-top: 43px;
+        padding: 15px 8px;
+        margin-top: 13px;
         font-size: inherit;
         color: rgba(48, 49, 51, 1);
         cursor: pointer;
         &.active-item {
           color: @backgroud;
+          background: @opacityBackground;
         }
       }
       &:last-child {

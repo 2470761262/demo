@@ -524,3 +524,11 @@ export default {
   display: block !important;
 }
 </style>
+<style lang="less">
+.el-time-spinner__item {
+  //prettier-ignore
+  height: 32PX;
+  //prettier-ignore
+  line-height: 32PX;
+}
+</style>
