@@ -504,7 +504,7 @@ export default {
 }
 .el-message--xinjia-info {
   background-color: #edf2fc;
-  border-color: #edf2fc;
+  border-color: #ebeef5;
   .el-message__icon {
     &::before {
       color: #909399;
@@ -514,6 +514,21 @@ export default {
   }
   .el-message__content {
     color: #909399;
+    font-size: @font16;
+  }
+}
+.el-message--xinjia-error {
+  background-color: #fef0f0;
+  border-color: #fde2e2;
+  .el-message__icon {
+    &::before {
+      color: #f56c6c;
+      font-size: @font16;
+      content: "\e79d";
+    }
+  }
+  .el-message__content {
+    color: #f56c6c;
     font-size: @font16;
   }
 }
