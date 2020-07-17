@@ -5,7 +5,7 @@
       <span class="infor-sex">{{ customer.data.sex === 0 ? "男" : "女" }}</span>
     </div>
     <div class="infor-row flex">
-      <div class="infor-phone">{{ phoneData || "暂无号码" }}</div>
+      <div class="infor-phone">{{ phoneData.phone || "暂无号码" }}</div>
       <div class="infor-bottom">
         <el-popover
           placement="bottom"
@@ -115,8 +115,7 @@ export default {
     "customerDeal",
     "impressionList",
     "telList",
-    "permissionList",
-    "phoneData"
+    "permissionList"
   ],
   data() {
     return {
@@ -142,14 +141,18 @@ export default {
       } else {
         return {};
       }
+    },
+    phoneData() {
+      if (Object.keys(this.telList).length != 0) {
+        if (this.telList.data[0]) {
+          return this.telList.data[0];
+        } else {
+          return "";
+        }
+      } else {
+        return "";
+      }
     }
-    // phoneData() {
-    //   if (Object.keys(this.telList).length != 0) {
-    //     return this.telList.data[0].phone;
-    //   } else {
-    //     return "";
-    //   }
-    // }
   },
   filters: {
     intentionName(value) {
@@ -221,7 +224,11 @@ export default {
       }
     },
     formatDemand(value) {
-      return value.join("、");
+      if (value.length > 1) {
+        return value.join("、");
+      } else {
+        return value[0];
+      }
     }
   },
   methods: {
