@@ -128,6 +128,11 @@ export default {
               "ModTime",
               json.data.bsAgentCustomersTbl.ModTime
             );
+            this.$set(
+              that.cusbaseData,
+              "plate",
+              json.data.bsAgentCustomersTbl.plate
+            );
             console.log(that.cusbaseData);
             json.data.ruleList.forEach(element => {
               if (element.rUrl == "addFollowLookButtonEable") {

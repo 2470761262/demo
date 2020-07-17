@@ -232,6 +232,8 @@
               placeholder="请填写跟进内容"
               v-model="follow.Memo"
               class="textareaItem"
+              maxlength="30"
+              show-word-limit
             >
             </el-input>
           </div>
@@ -241,6 +243,7 @@
               class="floot-btn success-btn"
               type="info"
               @click="followUp"
+              :loading="addLoading"
               >提交</el-button
             >
           </div>
@@ -319,7 +322,8 @@ export default {
         defaultext: "",
         Memo: ""
       },
-      theControlList: "onlyOnePlaying"
+      theControlList: "onlyOnePlaying",
+      addLoading: false
     };
   },
   mounted() {},
@@ -349,7 +353,27 @@ export default {
     },
     //添加跟进
     followUp() {
+      let that = this;
+      if (that.follow.FollowType == "") {
+        this.$message({
+          message: "跟进类型不可为空"
+        });
+      } else if (that.follow.FollowWay == "") {
+        this.$message({
+          message: "跟进方式不可为空"
+        });
+      } else if (that.follow.Memo == "") {
+        this.$message({
+          message: "跟进内容不可为空"
+        });
+      } else {
+        that.addFollow();
+      }
+    },
+    addFollow() {
       var that = this;
+      that.addLoading = true;
+
       this.$api
         .post({
           url: "/saleCustomerDetail/addSaleCusFlower",
@@ -365,11 +389,12 @@ export default {
           console.log(e.data);
           let json = e.data;
           if (json.code == 200) {
+            this.addFollowFlag = false;
             this.$message({
               type: "success",
               message: "添加跟进成功！"
             });
-            this.addFollowFlag = false;
+
             (this.follow = {
               FollowType: "",
               FollowWay: "",
@@ -381,6 +406,7 @@ export default {
             alert(json.message);
             console.log("失败     " + json);
           }
+          that.addLoading = false;
         });
     },
     OpenAddFollow() {
