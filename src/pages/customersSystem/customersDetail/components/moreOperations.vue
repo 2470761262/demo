@@ -128,7 +128,7 @@ export default {
   },
   methods: {
     /**
-     * @example: 研发提示弹窗
+     * @example: 取消暂不关注
      */
     attention() {
       let that = this;
