@@ -389,7 +389,10 @@ export default {
         .post({
           url: "/saleCustomerDetail/DialPhoneToCustomer",
           data: postData,
-          qs: true
+          qs: true,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
         })
         .then(e => {
           if (e.data.code == 200) {
