@@ -472,15 +472,22 @@ export default {
       if (this.formData.myImpression.length < 5) {
         this.$validator.validate("impression").then(result => {
           if (result) {
-            this.formData.myImpression.push(this.mock1);
-            this.mock1 = "";
-            this.followUpFlag = false;
+            if (this.formData.myImpression.indexOf(this.mock1) == -1) {
+              this.formData.myImpression.push(this.mock1);
+              this.mock1 = "";
+              this.followUpFlag = false;
+            } else {
+              this.$message({
+                type: "xinjia-error",
+                message: "客源印象不能重复"
+              });
+            }
           }
         });
       } else {
         this.followUpFlag = false;
         this.$message({
-          type: "error",
+          type: "xinjia-error",
           message: "客源印象不能超过5个"
         });
       }
