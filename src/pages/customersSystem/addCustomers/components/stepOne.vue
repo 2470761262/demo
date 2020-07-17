@@ -125,7 +125,7 @@
             </el-input>
 
             <i
-              v-if="formData.tels.length != 1"
+              v-if="formData.tels.length != 1 && !item.isDisabled"
               class="el-icon-remove inline-remove-btn"
               @click="removeTelToList(index)"
             ></i>
