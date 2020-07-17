@@ -286,7 +286,7 @@
         @demandConfirm="demandConfirm"
         v-model="demandValue"
         data-vv-name="moreSelect"
-        data-vv-as="需求信息"
+        data-vv-as="需求类型"
         v-validate="'required|arrFlatLength:0'"
       >
       </demand-more-select>
@@ -401,6 +401,9 @@ export default {
       }
     };
   },
+  created() {
+    this.validateInit();
+  },
   methods: {
     /**
      * @example: 客户需求在当前删除
@@ -487,6 +490,26 @@ export default {
      */
     handleClose(index) {
       this.formData.myImpression.splice(index, 1);
+    },
+    validateInit() {
+      const dictionary = {
+        zh_CN: {
+          messages: {
+            required: field => field + "不能为空",
+            arrFlatLength: field => field + "不能为空"
+          },
+          attributes: {
+            Customers: "客户姓名",
+            sex: "客户性别",
+            phone1: "客户电话",
+            phone2: "客户电话",
+            phone3: "客户电话",
+            impression: "客源印象",
+            moreSelect: "需求类型"
+          }
+        }
+      };
+      this.$validator.updateDictionary(dictionary);
     },
     /**
      * @example: 验证当前页面表单
