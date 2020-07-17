@@ -30,6 +30,8 @@
           <house-message />
         </div>
         <sticky-content />
+        <maintainMessage />
+        <broker-peview />
       </div>
       <div class="”content-flex-right“"></div>
     </section>
@@ -46,13 +48,22 @@ import loopContent from "./newComponents/loopContent";
 import houseMessage from "./newComponents/hosueMessage";
 //粘连Tab栏
 import stickyContent from "./newComponents/stickyContent";
+//维护信息
+import maintainMessage from "./newComponents/maintainMessage";
+//经纪人点评
+import brokerPeview from "./newComponents/brokerPeview";
 export default {
+  created() {
+    console.log(this.$route);
+  },
   components: {
     navHeader,
     detailHander,
     loopContent,
     houseMessage,
-    stickyContent
+    stickyContent,
+    maintainMessage,
+    brokerPeview
   }
 };
 </script>

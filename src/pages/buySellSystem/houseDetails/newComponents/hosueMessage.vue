@@ -41,9 +41,9 @@
     border-top: 1px solid #d5d5d5;
     border-bottom: 1px solid #d5d5d5;
     box-sizing: border-box;
-    padding-left: 10px * @base;
+    padding-left: 30px * @base;
     // prettier-ignore
-    padding-right: 18PX;
+    padding-right: 50PX;
     .hurdle-content-item {
       display: flex;
       flex-direction: column;
