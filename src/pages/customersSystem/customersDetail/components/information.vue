@@ -267,7 +267,7 @@ export default {
           customerName: this.customer.data.Customers,
           contactPhone: phone,
           customerNo: this.customer.data.CustomerNo,
-          customerPlate: 0
+          customerPlate: this.customer.data.plate
         };
         that.callLoading = true;
         that.isCall = false;
@@ -275,10 +275,7 @@ export default {
           .post({
             url: "/saleCustomerDetail/DialPhoneToCustomer",
             data: postData,
-            qs: true,
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            }
+            qs: true
           })
           .then(e => {
             if (e.data.code == 200) {
