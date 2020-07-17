@@ -893,11 +893,12 @@ export default {
           console.log("11111111111111111", e.data);
           let json = e.data;
           if (json.code == 200) {
+            this.customersTypeList[0].count = json.data.allRequireCustomer;
             this.customersTypeList[1].count = json.data.buySecondHouse;
             this.customersTypeList[2].count = json.data.buyNewHouse;
             this.customersTypeList[3].count = json.data.rentHouse;
             this.customersTypeList[4].count = json.data.hasDealedHouse;
-            this.customersTypeList[0].count = json.data.allRequireCustomer;
+            this.customersTypeList[5].count = json.data.notAttention;
           } else if (json.code == 400) {
             alert(json.message);
             console.log("失败     " + json);

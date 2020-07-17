@@ -432,7 +432,6 @@
             type="text"
             v-model="employeeEntity.jieShaoName"
             @focus="getDialogVisible1()"
-            @blur="clear('jieShaoNameId')"
           ></el-input>
         </el-form-item>
       </div>

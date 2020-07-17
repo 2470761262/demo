@@ -40,7 +40,7 @@
           placeholder="请填写客户理由"
           data-vv-name="uselessReason"
           data-vv-as="客户理由"
-          v-validate="{ required: useless == 4 }"
+          v-validate="{ required: useless == 'OTHER_CAUSE' }"
         />
 
         <div

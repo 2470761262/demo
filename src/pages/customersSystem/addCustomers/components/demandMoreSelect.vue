@@ -36,7 +36,8 @@
         align-items: center;
         flex-direction: row-reverse;
         justify-content: space-between;
-        margin-top: 43px;
+        padding: 15px 8px;
+        margin-top: 13px;
         cursor: pointer;
         input[type="checkbox"] {
           position: relative;
@@ -61,12 +62,14 @@
         }
       }
       .cascader-left-item {
-        margin-top: 43px;
+        padding: 15px 8px;
+        margin-top: 13px;
         font-size: inherit;
         color: rgba(48, 49, 51, 1);
         cursor: pointer;
         &.active-item {
           color: @backgroud;
+          background: @opacityBackground;
         }
       }
       &:last-child {
@@ -86,6 +89,7 @@
       confirmBtnText: '保存'
     }"
     custom-flag
+    :loading="isLoading"
     @customBtn="customBtn"
     @confirmEmit="confirmEmit"
   >
@@ -228,7 +232,8 @@ export default {
       orderDataJson: {},
       showActiveList: [],
       renderLeftList: listData,
-      renderLeftIndex: 0
+      renderLeftIndex: 0,
+      isLoading: false
     };
   },
   watch: {
@@ -269,6 +274,8 @@ export default {
                 if (ordChildItem == childItem.value) {
                   childItem.isDisabled = true;
                 }
+              } else {
+                childItem.isDisabled = false;
               }
               if (childItem.value == ordChildItem) {
                 this.checkChangeActive(childItem, index);
@@ -278,13 +285,15 @@ export default {
         });
       });
     },
-    confirmEmit() {
+    async confirmEmit() {
       this.isChangeCommit = true;
-      this.$emit("input", JSON.parse(JSON.stringify(this.dataJson)));
-      this.$emit("demandConfirm", {
+      this.isLoading = true;
+      await this.$emit("input", JSON.parse(JSON.stringify(this.dataJson)));
+      await this.$emit("demandConfirm", {
         rendList: JSON.parse(JSON.stringify(this.showActiveList)),
         dataJson: JSON.parse(JSON.stringify(this.dataJson))
       });
+      this.isLoading = false;
     },
     /**
      * @example:  重置

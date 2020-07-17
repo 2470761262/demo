@@ -41,7 +41,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             fit="cover"
             :preview-src-list="fillterImgList('outdoorImgList')"
           >
@@ -100,7 +100,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('livingRoomImgList')"
             fit="cover"
           >
@@ -159,7 +159,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('bedroomImgList')"
             fit="cover"
           >
@@ -218,7 +218,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('kitchenImgList')"
             fit="cover"
           >
@@ -277,7 +277,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('toiletImgList')"
             fit="cover"
           >
@@ -336,7 +336,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('layoutImgList')"
             fit="cover"
           >
@@ -434,7 +434,7 @@
 <script>
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
-import { LOGINDATA } from "@/util/constMap";
+import { LOGINDATA, SMALLThumb } from "@/util/constMap";
 export default {
   //   $_veeValidate: {
   //     validator: 'new' // give me my own validator scope.
@@ -517,6 +517,7 @@ export default {
   },
   data() {
     return {
+      SMALLThumb: SMALLThumb, //小图
       imgdiaLog: false,
       loading: false,
       outdoorImgListLoading: false,
