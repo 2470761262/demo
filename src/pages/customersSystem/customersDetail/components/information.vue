@@ -246,7 +246,10 @@ export default {
         })
         .catch(e => {
           if (e.response != undefined) {
-            that.$message(e.response.data.message);
+            that.$message({
+              type: "xinjia-info",
+              message: e.response.data.message
+            });
           }
         });
     },
@@ -292,11 +295,17 @@ export default {
           .catch(e => {
             that.callLoading = false;
             if (e.response != undefined) {
-              that.$message(e.response.data.message);
+              that.$message({
+                type: "xinjia-info",
+                message: e.response.data.message
+              });
             }
           });
       } else {
-        that.$message("十秒内不得重复点击");
+        that.$message({
+          type: "xinjia-info",
+          message: "十秒内不能重复点击"
+        });
       }
     },
     /**
@@ -332,7 +341,10 @@ export default {
             })
             .catch(e => {
               if (e.response != undefined) {
-                that.$message(e.response.data.message);
+                that.$message({
+                  type: "xinjia-info",
+                  message: e.response.data.message
+                });
               }
             });
         })
@@ -487,6 +499,21 @@ export default {
   }
   .el-message__content {
     color: @backgroud;
+    font-size: @font16;
+  }
+}
+.el-message--xinjia-info {
+  background-color: #edf2fc;
+  border-color: #edf2fc;
+  .el-message__icon {
+    &::before {
+      color: #909399;
+      font-size: @font16;
+      content: "\e7a1";
+    }
+  }
+  .el-message__content {
+    color: #909399;
     font-size: @font16;
   }
 }

@@ -79,7 +79,11 @@
       :requirement="headerActive"
       ref="old"
     ></old-hous>
-    <new-hous v-show="isNewHous" ref="new"></new-hous>
+    <new-hous
+      v-show="isNewHous"
+      :requirement="headerActive"
+      ref="new"
+    ></new-hous>
     <tenement
       v-show="isTenement"
       :requirement="headerActive"
