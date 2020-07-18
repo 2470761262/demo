@@ -364,17 +364,17 @@ export default {
                 item.community.push(community);
               }
             });
-
+            if (this.step == 2) {
+              this.componentName = "stepTwo";
+              this.comNextIndex = 1;
+              this.stepName = "上一步";
+              this.demandValue = this.$store.state.addCustomers.demandValue;
+            }
             this.$store.commit("updateStep1", fromData);
             this.$refs.childreCom.formData = fromData;
             this.$refs.childreCom.demandValue = this.demandValue;
             this.$refs.childreCom.demandData.rendList = rendList;
             this.$store.commit("updateDemandValue", this.demandValue);
-            if (this.step == 2) {
-              this.componentName = "stepTwo";
-              this.comNextIndex = 1;
-              this.stepName = "上一步";
-            }
           }
         })
         .catch(e => {

@@ -184,7 +184,8 @@ export default {
     return {
       moreSelectFlag: false,
       changeTabsValue: "0",
-      demandTabsValue: "demand"
+      demandTabsValue: "demand",
+      demandValueList: this.demandValue
     };
   },
   components: { demandMoreSelect },
@@ -218,8 +219,13 @@ export default {
     // this.$set(this.$data, "demandValueData", this.demandValue);
   },
   computed: {
-    demandValueData() {
-      return this.demandValue;
+    demandValueData: {
+      get() {
+        return this.demandValueList;
+      },
+      set(val) {
+        this.demandValueList = val;
+      }
     }
   },
   methods: {
