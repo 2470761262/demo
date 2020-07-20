@@ -18,6 +18,7 @@
     box-sizing: border-box;
     font-weight: 500;
     cursor: pointer;
+    //   transition: background 0.2s ease-in;
     &.active {
       background: @backgroud;
       color: #fff;
@@ -41,9 +42,10 @@
   <div class="sticky-content">
     <div
       class="sticky-item"
-      :class="{ active: index == 0 }"
-      v-for="(item, index) in stickyList"
+      :class="{ active: activeClass === item.domName }"
+      v-for="item in stickyList"
       :key="item.title"
+      @click="setScrollMove(item)"
     >
       <div class="sticky-item-pad">
         {{ item.title }}
@@ -54,17 +56,60 @@
 
 <script>
 const STICKYLIST = [
-  { title: "维护信息", dom: "" },
-  { title: "经纪人点评", dom: "" },
-  { title: "实勘信息", dom: "" },
-  { title: "角色人申请", dom: "" },
-  { title: "历史轨迹", dom: "" }
+  { title: "维护信息", domName: ".maintain-content" },
+  { title: "经纪人点评", domName: ".broker-content" },
+  { title: "实勘信息", domName: ".peview-content" },
+  { title: "角色人申请", domName: ".role-content" },
+  { title: "历史轨迹", domName: ".trajectory-content" }
 ];
+//import util from "@/util/util";
 export default {
+  mounted() {
+    document
+      .querySelector(".el-main")
+      .addEventListener("scroll", this.computeDomTop);
+  },
   data() {
     return {
-      stickyList: STICKYLIST
+      stickyList: STICKYLIST,
+      activeClass: ".maintain-content"
     };
+  },
+  methods: {
+    /**
+     * @example: 滚动到指定元素
+     * @param {Object} item
+     */
+    setScrollMove(item) {
+      document.querySelector(item.domName).scrollIntoView({
+        block: "start",
+        behavior: "smooth"
+      });
+    },
+    /**
+     * @example: elMain 滚动计算当前可视区域元素高亮
+     */
+    computeDomTop() {
+      let stickyList = this.stickyList;
+      let doc = document;
+      let main = doc.querySelector(".el-main");
+      if (main.clientHeight + main.scrollTop >= main.scrollHeight) {
+        this.activeClass = this.stickyList[this.stickyList.length - 1].domName;
+        return;
+      }
+      for (let i = 0; i < stickyList.length; i++) {
+        let { domName, title } = stickyList[i];
+        let itemDom = doc.querySelector(domName);
+        let { top } = itemDom.getBoundingClientRect();
+        if (top > 0 && top < main.clientHeight / 2) {
+          if (itemDom.classList.contains(this.activeClass.replace(".", ""))) {
+            break;
+          } else {
+            this.activeClass = domName;
+          }
+        }
+      }
+    }
   }
 };
 </script>

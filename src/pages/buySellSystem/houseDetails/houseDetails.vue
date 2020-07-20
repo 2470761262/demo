@@ -15,6 +15,13 @@
     }
     .content-flex-right {
       flex: 1;
+      position: sticky;
+      top: 0;
+      display: flex;
+      z-index: 10;
+      .right-message {
+        flex: 1;
+      }
     }
   }
 }
@@ -32,8 +39,16 @@
         <sticky-content />
         <maintainMessage />
         <broker-peview />
+        <prospecting-message />
+        <roleApple />
+        <historyTrajectory />
       </div>
-      <div class="”content-flex-right“"></div>
+      <div class="content-flex-right">
+        <div class="right-message"></div>
+        <div class="right-btn-group">
+          <detailBtnGroup />
+        </div>
+      </div>
     </section>
   </div>
 </template>
@@ -52,10 +67,15 @@ import stickyContent from "./newComponents/stickyContent";
 import maintainMessage from "./newComponents/maintainMessage";
 //经纪人点评
 import brokerPeview from "./newComponents/brokerPeview";
+//实勘信息
+import prospectingMessage from "./newComponents/prospectingMessage";
+//角色人申请
+import roleApple from "./newComponents/roleApply";
+//历史轨迹
+import historyTrajectory from "./newComponents/historyTrajectory";
+//按钮组
+import detailBtnGroup from "./newComponents/detailBtnGroup";
 export default {
-  created() {
-    console.log(this.$route);
-  },
   components: {
     navHeader,
     detailHander,
@@ -63,7 +83,11 @@ export default {
     houseMessage,
     stickyContent,
     maintainMessage,
-    brokerPeview
+    brokerPeview,
+    prospectingMessage,
+    roleApple,
+    historyTrajectory,
+    detailBtnGroup
   }
 };
 </script>
