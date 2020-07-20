@@ -173,7 +173,10 @@ export default {
               .catch(e => {
                 that.isLoading = false;
                 if (e.response != undefined) {
-                  that.$message(e.response.data.message);
+                  that.$message({
+                    type: "xinjia-info",
+                    message: e.response.data.message
+                  });
                 }
               });
           }

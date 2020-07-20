@@ -79,7 +79,11 @@
       :requirement="headerActive"
       ref="old"
     ></old-hous>
-    <new-hous v-show="isNewHous" ref="new"></new-hous>
+    <new-hous
+      v-show="isNewHous"
+      :requirement="headerActive"
+      ref="new"
+    ></new-hous>
     <tenement
       v-show="isTenement"
       :requirement="headerActive"
@@ -199,7 +203,7 @@ export default {
       }
       this.changeStoreStep2();
       this.$nextTick(() => {
-        this.getStep2();
+        this.getStep2(this.headerActive);
       });
     },
     changeStoreStep2() {
@@ -262,18 +266,19 @@ export default {
       }
       for (let i = 0; i < formData.length; i++) {
         if (formData[i].requireType == this.headerActive) {
-          formData[i] = this.$refs[moduleName].data;
+          formData[i] = util.deepCopy(this.$refs[moduleName].data);
         }
       }
+      console.log(formData, "formData");
       this.$store.commit("updateStep2", formData);
     },
     // 反写step2的数据
-    getStep2() {
+    getStep2(item) {
       let formData = util.deepCopy(
         this.$store.state.addCustomers.formData.step2
       );
       let moduleName = "";
-      switch (this.headerActive) {
+      switch (item) {
         case 1:
         case 2:
         case 4:
@@ -282,7 +287,7 @@ export default {
         case 8:
         case 16:
         case 32:
-          moduleName = "old";
+          moduleName = "new";
           break;
         case 64:
         case 128:
@@ -290,7 +295,7 @@ export default {
           moduleName = "ten";
       }
       for (let i = 0; i < formData.length; i++) {
-        if (formData[i].requireType == this.headerActive) {
+        if (formData[i].requireType == item) {
           this.$refs[moduleName].data = formData[i];
         }
       }

@@ -131,9 +131,6 @@ export default {
             this.$set(that.demandList, "data", data.requireList);
             this.$set(that.customerDeal, "data", data.saleCusPropertyTbl);
             this.$set(that.telList, "data", data.telList);
-            if (data.telList.length > 0) {
-              this.$set(that.$data, "phoneData", data.telList[0]);
-            }
             that.customer.data = data.bsAgentCustomersTbl;
             that.customer.haveAgents = data.haveAgents;
             that.customer.lookHouses = data.lookHouses;

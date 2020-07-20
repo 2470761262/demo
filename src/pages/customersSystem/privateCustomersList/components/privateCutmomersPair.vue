@@ -107,7 +107,7 @@
       text-align: center;
       line-height: 50px;
       border: 1px solid @backgroud;
-      border-radius: 8px;
+      border-radius: 4px;
       color: @backgroud;
       font-size: @font16;
       text-overflow: ellipsis;
@@ -278,7 +278,10 @@
           i {
             line-height: inherit;
           }
+        }
+        /deep/.el-input--suffix {
           .el-input__inner {
+            padding-right: 0;
             border-color: #fff;
             line-height: inherit;
             height: inherit;
@@ -357,7 +360,7 @@
       width: 150px;
       text-align: center;
       font-size: @font16;
-      color: #247257;
+      color: @backgroud;
       white-space: nowrap;
       > i {
         margin-left: 10px;
@@ -366,378 +369,6 @@
       .ShowMore {
         transform: rotate(90deg) !important;
       }
-    }
-  }
-}
-.SwtichBox {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  right: 0;
-  display: flex;
-  width: 240px;
-  height: 50px;
-  border: 1px solid @backgroud;
-  border-radius: 8px;
-  .SwitchItemOn,
-  .SwitchItem {
-    margin: 5px;
-    width: 110px;
-    height: 40px;
-    text-align: center;
-    border-radius: 4px;
-    > i,
-    > span {
-      line-height: 40px;
-      font-size: @font16;
-    }
-  }
-
-  .SwitchItemOn {
-    background: @backgroud;
-    cursor: pointer;
-    > i,
-    > span {
-      color: #ffffff;
-    }
-  }
-  .SwitchItem {
-    background: #ffffff;
-    > i,
-    > span {
-      color: @backgroud;
-    }
-  }
-}
-.ItemRow {
-  margin: 24px 0;
-}
-.SearchItemRow {
-  .SearchItem {
-    display: flex;
-    justify-content: space-between;
-    min-width: 495px;
-    height: 50px;
-    border-radius: 4px;
-    border: 1px solid #cecece;
-    overflow: hidden;
-    .selectItem {
-      margin: 10px 0;
-      border-right: 1px solid #cecece;
-    }
-    /deep/.el-input {
-      width: 110px;
-      height: 30px;
-      line-height: 30px;
-      i {
-        line-height: inherit;
-      }
-      .el-input__inner {
-        line-height: inherit;
-        height: inherit;
-        text-align: center;
-        border: 0;
-        font-size: 16px;
-        color: #606266;
-      }
-      .el-input-suniff {
-        color: #606266;
-      }
-    }
-    .InputItem {
-    }
-    /deep/.el-input {
-      width: 280px;
-      height: 50px;
-      overflow: hidden;
-      padding-left: 20px;
-      .el-input__inner {
-        text-align: left !important;
-        width: 100%;
-        line-height: 50px;
-        border: none;
-        font-size: 16px;
-      }
-    }
-    .SubmitItem {
-      width: 80px;
-      height: 50px;
-      background: @backgroud;
-      text-align: center;
-      cursor: pointer;
-      > i {
-        line-height: 50px;
-        color: #ffffff;
-        font-size: @font24;
-      }
-    }
-  }
-  .NavigateItem {
-    margin-left: 20px;
-    padding: 0 14px;
-    height: 50px;
-    text-align: center;
-    line-height: 50px;
-    border: 1px solid @backgroud;
-    border-radius: 8px;
-    color: @backgroud;
-    font-size: @font16;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    cursor: pointer;
-  }
-}
-/deep/.el-form-item__content {
-  display: flex;
-}
-.tapSwitchRow {
-  display: flex;
-  border-bottom: 1px solid #f0f2f5;
-  .tapSwitchItem,
-  .tapSwitchItemOn {
-    margin-right: 35px;
-    height: 50px;
-    line-height: 50px;
-    font-size: @font18;
-    cursor: pointer;
-  }
-  .tapSwitchItem {
-    border-bottom: 2px solid #ffffff;
-  }
-  .tapSwitchItemOn {
-    border-bottom: 2px solid @backgroud;
-    color: @backgroud;
-    font-weight: bold;
-  }
-}
-.ChooseItemRow {
-  display: flex;
-  height: 30px;
-  .ChooseItemBox {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0 10px;
-    .ChooseItem {
-      /deep/.el-checkbox__input {
-        width: 0 !important;
-        height: 0 !important;
-        overflow: hidden;
-      }
-      /deep/.el-checkbox__label {
-        padding-left: 0 !important;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        vertical-align: middle;
-        font-size: @font14;
-        line-height: 32px;
-      }
-      .is-checked {
-        border: 1px solid @backgroud !important;
-        border-radius: 4px;
-        /deep/.el-checkbox__label {
-          color: @backgroud;
-        }
-      }
-      .el-checkbox {
-        //margin-right: 0 !important;
-        transition: all 0.2s ease-in;
-        margin-right: 20px;
-        padding: 0 15px;
-        border: 1px solid #fff;
-        border-radius: 4px;
-        height: 32px;
-        line-height: 32px;
-      }
-    }
-  }
-  .switchItem,
-  .switchItemOn {
-    margin-left: 20px;
-    padding: 0 15px;
-    border: 1px solid;
-    border-radius: 4px;
-    height: 32px;
-    line-height: 34px;
-    font-size: @font14;
-  }
-  .switchItem {
-    color: #606266;
-    border-color: #fff;
-  }
-  .switchItemOn {
-    color: @backgroud;
-    border-color: @backgroud;
-  }
-  .RadioItemBox {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 0 10px;
-    .RadioItem {
-      /deep/.el-radio__input {
-        width: 0 !important;
-        height: 0 !important;
-        overflow: hidden;
-      }
-      /deep/.el-radio__label {
-        padding-left: 0 !important;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 100%;
-        height: 100%;
-        text-align: center;
-        vertical-align: middle;
-        font-size: @font14;
-        line-height: 32px;
-      }
-      .is-checked {
-        border: 1px solid @backgroud !important;
-        border-radius: 4px;
-        /deep/.el-radio__label {
-          color: @backgroud;
-        }
-      }
-      .el-radio {
-        //margin-right: 0 !important;
-        transition: all 0.2s ease-in;
-        height: 32px;
-        margin-right: 20px;
-        line-height: 32px;
-        padding: 0 15px;
-        border: 1px solid #fff;
-        border-radius: 4px;
-      }
-    }
-  }
-  .InputItem {
-    display: flex;
-    align-self: center;
-    margin-top: 10px;
-    .split-line {
-      width: 20px;
-      position: relative;
-      &::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        height: 2px;
-        width: 20px;
-        transform: translate(-50%, -50%);
-        background: #686a6e;
-      }
-    }
-    .InputItemCell {
-      display: flex;
-      border: 1px solid #cecece;
-      border-radius: 4px;
-      padding: 0 10px;
-      margin: 0 10px;
-      height: 36px;
-      line-height: 36px;
-
-      > span {
-        color: #686a6e;
-        font-size: @font14;
-        white-space: nowrap;
-      }
-      /deep/.el-input {
-        width: 100px;
-        height: 36px;
-        line-height: 36px;
-        i {
-          line-height: inherit;
-        }
-        .el-input__inner {
-          border-color: #fff;
-          line-height: inherit;
-          height: inherit;
-          text-align: center;
-          font-size: @font14;
-        }
-      }
-    }
-    /deep/.el-button {
-      margin-left: 20px;
-      padding: 0;
-      width: 70px;
-      height: 40px;
-      line-height: 40px;
-      font-size: @font14;
-      background: @backgroud;
-      color: #ffffff;
-      text-align: center;
-    }
-  }
-  .timePickerItem {
-    position: relative;
-    /deep/.el-input__inner {
-      border-color: #ffffff;
-      width: 375px;
-      /deep/.el-range__icon {
-        display: none;
-      }
-      /deep/.el-range__close-icon {
-        margin-left: 5px;
-      }
-      /deep/.el-range-input {
-        width: 155px;
-        height: 36px;
-        line-height: 36px;
-        border: 1px solid #cecece;
-        border-radius: 4px;
-      }
-    }
-    .elIcon {
-      position: absolute;
-      top: 0;
-      left: -20px;
-      color: #cecece;
-      pointer-events: none;
-      > i {
-        margin-left: 160px;
-      }
-    }
-  }
-
-  /deep/.el-button {
-    margin-left: 20px;
-    padding: 0;
-    width: 70px;
-    height: 40px;
-    line-height: 40px;
-    font-size: @font14;
-    background: @backgroud;
-    color: #ffffff;
-    text-align: center;
-  }
-}
-/deep/.el-form-item__label {
-  width: 125px !important;
-  line-height: 40px;
-  font-size: @font14;
-  font-weight: bold;
-  text-align: left;
-  line-height: 32px;
-  margin-right: 15px;
-}
-.FoldRow {
-  .FoldItem {
-    margin: 0 auto;
-    width: 150px;
-    text-align: center;
-    font-size: @font16;
-    color: #247257;
-    white-space: nowrap;
-    > i {
-      margin-left: 10px;
-      transform: rotate(-90deg);
-    }
-    .ShowMore {
-      transform: rotate(90deg) !important;
     }
   }
 }
@@ -866,6 +497,7 @@
         <div class="InputItem">
           <div class="InputItemCell">
             <el-input
+              type="number"
               v-number
               placeholder="最小值"
               clearable
@@ -876,6 +508,7 @@
           <div class="split-line"></div>
           <div class="InputItemCell">
             <el-input
+              type="number"
               v-number
               placeholder="最大值"
               clearable
@@ -912,16 +545,19 @@
           <div class="InputItem">
             <div class="InputItemCell">
               <el-input
+                type="number"
                 v-number
                 placeholder="最小值"
                 clearable
                 v-model="MinArea"
+                @change="valiadNum('MinArea')"
               ></el-input>
               <span>㎡</span>
             </div>
             <div class="split-line"></div>
             <div class="InputItemCell">
               <el-input
+                type="number"
                 v-number
                 placeholder="最大值"
                 clearable
@@ -978,7 +614,7 @@
           </div>
         </el-form-item>
         <el-form-item
-          label="维护时间"
+          label="上次维护"
           class="ItemRow ChooseItemRow"
           prop="Radio"
         >
@@ -1031,7 +667,7 @@
     </el-form>
     <div class="FoldRow">
       <div class="FoldItem" @click="ShowMore">
-        <span>{{ FoldText }}</span>
+        <span>{{ ShowMorePair ? "收起" : "展开" }}</span>
         <i
           class="el-icon-d-arrow-left"
           :class="ShowMorePair == true ? 'ShowMore' : ''"
@@ -1330,15 +966,18 @@ export default {
         : "";
       console.log(this.form[key1], this.form[key2]);
     },
-
+    valiadNum(key) {
+      console.log(key, this[key]);
+    },
     submitInput(key1, key2, keya, keyb) {
-      let a = this[key1];
-      if (a > this[key2]) {
+      let a = parseInt(this[key1]);
+      if (a > parseInt(this[key2])) {
         this[key1] = this[key2];
         this[key2] = a;
       }
       this.form[keya] = this[key1];
       this.form[keyb] = this[key2];
+      console.log(keya, this.form[keya], keyb, this.form[keyb]);
     },
     getTime(key, key1, key2) {
       if (this[key] != null) {

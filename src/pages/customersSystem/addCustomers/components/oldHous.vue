@@ -11,10 +11,7 @@
             v-model="data.minPrice"
             data-vv-name="minPrice"
             data-vv-as="最小值"
-            v-validate="{
-              zero1: true,
-              isGreater: [data.maxPrice]
-            }"
+            v-validate="'zero1'"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">万元</i>
@@ -33,7 +30,10 @@
             v-model="data.maxPrice"
             data-vv-name="maxPrice"
             data-vv-as="最大值"
-            v-validate="'zero1'"
+            v-validate="{
+              zero1: true,
+              isLess: [data.minPrice]
+            }"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">万元</i>
@@ -57,10 +57,7 @@
             v-model="data.minFirstPrice"
             data-vv-name="minFirstPrice"
             data-vv-as="最小值"
-            v-validate="{
-              zero1: true,
-              isGreater: [data.maxFirstPrice]
-            }"
+            v-validate="'zero1'"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">万元</i>
@@ -79,7 +76,10 @@
             v-model="data.maxFirstPrice"
             data-vv-name="maxFirstPrice"
             data-vv-as="最大值"
-            v-validate="'zero1'"
+            v-validate="{
+              zero1: true,
+              isLess: [data.minFirstPrice]
+            }"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">万元</i>
@@ -103,10 +103,7 @@
             v-model="data.minUnitPrice"
             data-vv-name="minUnitPrice"
             data-vv-as="最小值"
-            v-validate="{
-              zero1: true,
-              isGreater: [data.maxUnitPrice]
-            }"
+            v-validate="'zero1'"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">万元</i>
@@ -125,7 +122,10 @@
             v-model="data.maxUnitPrice"
             data-vv-name="maxUnitPrice"
             data-vv-as="最大值"
-            v-validate="'zero1'"
+            v-validate="{
+              zero1: true,
+              isLess: [data.minUnitPrice]
+            }"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">万元</i>
@@ -149,10 +149,7 @@
             v-model="data.minArea"
             data-vv-name="minArea"
             data-vv-as="最小值"
-            v-validate="{
-              noZero1: true,
-              isGreater: [data.maxArea]
-            }"
+            v-validate="'noZero1'"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">㎡</i>
@@ -171,7 +168,10 @@
             v-model="data.maxArea"
             data-vv-name="maxArea"
             data-vv-as="最大值"
-            v-validate="'noZero1'"
+            v-validate="{
+              noZero1: true,
+              isLess: [data.minArea]
+            }"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">㎡</i>

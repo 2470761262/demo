@@ -86,6 +86,21 @@ Validator.extend("isGreater", {
     return Number(value) <= Number(compare[0] == "" ? 0 : compare[0]);
   }
 });
+Validator.extend("isLess", {
+  compare: ["compare", "title"],
+  messages: {
+    zh_CN: (field, args) => {
+      if (args[1]) {
+        return `${field}不能小于${args[1]}:${args[0] == "" ? 0 : args[0]}`;
+      } else {
+        return `${field}不能小于${args[0]}`;
+      }
+    }
+  },
+  validate: (value, compare) => {
+    return Number(value) >= Number(compare[0] == "" ? 0 : compare[0]);
+  }
+});
 //比较是否相同
 Validator.extend("isSame", {
   compare: ["List", "title"],

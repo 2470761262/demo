@@ -329,7 +329,10 @@ export default {
         })
         .catch(e => {
           if (e.response != undefined) {
-            that.$message(e.response.data.message);
+            that.$message({
+              type: "xinjia-info",
+              message: e.response.data.message
+            });
           }
         });
     },
@@ -346,7 +349,7 @@ export default {
       });
       for (let i = 0; i < that.lookAtData.length; i++) {
         that.lookAtData[i].housingResource = [];
-        if (that.lookAtData[i].currentLookId) {
+        if (that.lookAtData[i].currentLookId != null) {
           for (let j = 0; j < that.lookAtData.length; j++) {
             if (
               that.lookAtData[i].currentLookId ==
@@ -367,11 +370,22 @@ export default {
           that.lookAtData[i].housingResource.push(housingResource);
         }
       }
+      //currentLookId为空的不参与去重
+      let temporary = [];
+      for (let i = 0; i < that.lookAtData.length; i++) {
+        if (that.lookAtData[i].currentLookId == null) {
+          temporary.push(that.lookAtData[i]);
+        }
+      }
+      that.lookAtData = that.lookAtData.filter(function(item) {
+        return item.currentLookId != null;
+      });
       // 数组去重，相同currentLookId的带看只需要一条
       const res = new Map();
       that.lookAtData = that.lookAtData.filter(
         arr => !res.has(arr.currentLookId) && res.set(arr.currentLookId, 1)
       );
+      that.lookAtData = that.lookAtData.concat(temporary);
       //数组合并
       that.allData = that.followData.concat(that.lookAtData);
       //数组按日期排序

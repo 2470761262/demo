@@ -96,7 +96,7 @@ export default {
           prop: "mainTainTime",
           label: "上次维护时间",
           width: "180",
-          formart: item => item.mainTainTime || "暂无"
+          formart: item => item.maintainTime || "暂无"
         },
         {
           prop: "customers",
@@ -142,7 +142,18 @@ export default {
       dataCount: 0, //总条数
       sortDirection: "", //排序方式，DESC降序（默认），ASC升序
       sortColumn: "", //排序字段，默认id
-      customerIds: [] //客户id，数字数组
+      customerIds: [], //客户id，数字数组
+      requireTypeDefinition: {
+        1: "买二手住宅",
+        2: "买二手商铺",
+        4: "买二手写字楼",
+        8: "买新房住宅",
+        16: "买新房商铺",
+        32: "买新房写字楼",
+        64: "租赁住宅",
+        128: "租赁商铺",
+        256: "租赁写字楼"
+      }
     };
   },
   watch: {
@@ -229,37 +240,18 @@ export default {
       this.apply();
     },
     houserequire(i) {
-      let type;
-      switch (i) {
-        case 1:
-          type = "买二手住宅";
-          break;
-        case 2:
-          type = "买二手商铺";
-          break;
-        case 4:
-          type = "买二手写字楼";
-          break;
-        case 8:
-          type = "买新房住宅";
-          break;
-        case 16:
-          type = "买新房商铺";
-          break;
-        case 32:
-          type = "买新房写字楼";
-          break;
-        case 64:
-          type = "租赁住宅";
-          break;
-        case 128:
-          type = "租赁商铺";
-          break;
-        case 256:
-          type = "租赁写字楼";
-          break;
-        default:
-          break;
+      let type = "";
+      if (!i) {
+        return "暂无";
+      }
+      for (var key in this.requireTypeDefinition) {
+        //遍历键值对
+        if ((key & i) == key) {
+          type += this.requireTypeDefinition[key] + ",";
+        }
+      }
+      if (type) {
+        type = type.substr(0, type.length - 1);
       }
       return type;
     },

@@ -125,7 +125,7 @@
             </el-input>
 
             <i
-              v-if="formData.tels.length != 1"
+              v-if="formData.tels.length != 1 && !item.isDisabled"
               class="el-icon-remove inline-remove-btn"
               @click="removeTelToList(index)"
             ></i>
@@ -286,7 +286,7 @@
         @demandConfirm="demandConfirm"
         v-model="demandValue"
         data-vv-name="moreSelect"
-        data-vv-as="需求信息"
+        data-vv-as="需求类型"
         v-validate="'required|arrFlatLength:0'"
       >
       </demand-more-select>
@@ -401,6 +401,9 @@ export default {
       }
     };
   },
+  created() {
+    this.validateInit();
+  },
   methods: {
     /**
      * @example: 客户需求在当前删除
@@ -469,15 +472,22 @@ export default {
       if (this.formData.myImpression.length < 5) {
         this.$validator.validate("impression").then(result => {
           if (result) {
-            this.formData.myImpression.push(this.mock1);
-            this.mock1 = "";
-            this.followUpFlag = false;
+            if (this.formData.myImpression.indexOf(this.mock1) == -1) {
+              this.formData.myImpression.push(this.mock1);
+              this.mock1 = "";
+              this.followUpFlag = false;
+            } else {
+              this.$message({
+                type: "xinjia-error",
+                message: "客源印象不能重复"
+              });
+            }
           }
         });
       } else {
         this.followUpFlag = false;
         this.$message({
-          type: "error",
+          type: "xinjia-error",
           message: "客源印象不能超过5个"
         });
       }
@@ -487,6 +497,26 @@ export default {
      */
     handleClose(index) {
       this.formData.myImpression.splice(index, 1);
+    },
+    validateInit() {
+      const dictionary = {
+        zh_CN: {
+          messages: {
+            required: field => field + "不能为空",
+            arrFlatLength: field => field + "不能为空"
+          },
+          attributes: {
+            Customers: "客户姓名",
+            sex: "客户性别",
+            phone1: "客户电话",
+            phone2: "客户电话",
+            phone3: "客户电话",
+            impression: "客源印象",
+            moreSelect: "需求类型"
+          }
+        }
+      };
+      this.$validator.updateDictionary(dictionary);
     },
     /**
      * @example: 验证当前页面表单

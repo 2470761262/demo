@@ -46,16 +46,21 @@
               <section class="msg-row-group">
                 <div class="msg-row">
                   <span class="msg-row-title">期望首付：</span>
-                  <div class="msg-row-txt">
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minFirstPrice != 0 && item.maxFirstPrice != 0"
+                  >
                     {{ item.minFirstPrice | formatMoney }} -
                     {{ item.maxFirstPrice | formatMoney }}万
                   </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">期望面积：</span>
-                  <div class="msg-row-txt">
+                  <div class="msg-row-txt" v-if="item.minArea && item.maxArea">
                     {{ item.minArea || 0 }} - {{ item.maxArea || 0 }}m²
                   </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
                 </div>
                 <div
                   class="msg-row"
@@ -66,17 +71,25 @@
                   "
                 >
                   <span class="msg-row-title">期望租金：</span>
-                  <div class="msg-row-txt">
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minPrice != 0 && item.maxPrice != 0"
+                  >
                     {{ item.minPrice }} -
                     {{ item.maxPrice }}
                   </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
                 </div>
                 <div class="msg-row" v-else>
                   <span class="msg-row-title">期望总价：</span>
-                  <div class="msg-row-txt">
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minPrice != 0 && item.maxPrice != 0"
+                  >
                     {{ item.minPrice | formatMoney }} -
                     {{ item.maxPrice | formatMoney }}万
                   </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">付款方式：</span>
@@ -126,13 +139,13 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="推荐房源" name="recommend">
+        <el-tab-pane label="推荐房源" name="recommend" class="align">
           <img src="../../../../assets/images/inDevelopment.png" alt="" />
         </el-tab-pane>
-        <el-tab-pane label="客源解读" name="unscramble">
+        <el-tab-pane label="客源解读" name="unscramble" class="align">
           <img src="../../../../assets/images/inDevelopment.png" alt="" />
         </el-tab-pane>
-        <el-tab-pane label="合作信息" name="cooperation">
+        <el-tab-pane label="合作信息" name="cooperation" class="align">
           <img src="../../../../assets/images/inDevelopment.png" alt="" />
         </el-tab-pane>
       </el-tabs>
@@ -171,7 +184,8 @@ export default {
     return {
       moreSelectFlag: false,
       changeTabsValue: "0",
-      demandTabsValue: "demand"
+      demandTabsValue: "demand",
+      demandValueList: this.demandValue
     };
   },
   components: { demandMoreSelect },
@@ -205,8 +219,13 @@ export default {
     // this.$set(this.$data, "demandValueData", this.demandValue);
   },
   computed: {
-    demandValueData() {
-      return this.demandValue;
+    demandValueData: {
+      get() {
+        return this.demandValueList;
+      },
+      set(val) {
+        this.demandValueList = val;
+      }
     }
   },
   methods: {
@@ -333,5 +352,8 @@ export default {
   /deep/ .el-tabs__item.is-active {
     color: @backgroud;
   }
+}
+.align {
+  text-align: center;
 }
 </style>

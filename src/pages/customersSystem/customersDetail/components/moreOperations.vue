@@ -128,7 +128,7 @@ export default {
   },
   methods: {
     /**
-     * @example: 研发提示弹窗
+     * @example: 取消暂不关注
      */
     attention() {
       let that = this;
@@ -152,7 +152,10 @@ export default {
         })
         .catch(e => {
           if (e.response != undefined) {
-            that.$message(e.response.data.message);
+            that.$message({
+              type: "xinjia-info",
+              message: e.response.data.message
+            });
           }
         });
     },

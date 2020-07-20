@@ -5,7 +5,7 @@
       <span class="infor-sex">{{ customer.data.sex === 0 ? "男" : "女" }}</span>
     </div>
     <div class="infor-row flex">
-      <div class="infor-phone">{{ phoneData || "暂无号码" }}</div>
+      <div class="infor-phone">{{ phoneData.phone || "暂无号码" }}</div>
       <div class="infor-bottom">
         <el-popover
           placement="bottom"
@@ -61,7 +61,8 @@
     <section class="message-row flex">
       <div class="message-title">客户需求：</div>
       <div class="message-txt">
-        <span v-for="item in demand.data" :key="item.index">{{ item }}</span>
+        <!-- <span v-for="item in demand.data" :key="item.index">{{ item }}</span> -->
+        <span>{{ demand.data | formatDemand }}</span>
       </div>
     </section>
     <section class="message-row flex">
@@ -114,8 +115,7 @@ export default {
     "customerDeal",
     "impressionList",
     "telList",
-    "permissionList",
-    "phoneData"
+    "permissionList"
   ],
   data() {
     return {
@@ -141,14 +141,18 @@ export default {
       } else {
         return {};
       }
+    },
+    phoneData() {
+      if (Object.keys(this.telList).length != 0) {
+        if (this.telList.data[0]) {
+          return this.telList.data[0];
+        } else {
+          return "";
+        }
+      } else {
+        return "";
+      }
     }
-    // phoneData() {
-    //   if (Object.keys(this.telList).length != 0) {
-    //     return this.telList.data[0].phone;
-    //   } else {
-    //     return "";
-    //   }
-    // }
   },
   filters: {
     intentionName(value) {
@@ -218,6 +222,13 @@ export default {
         default:
           return "暂无";
       }
+    },
+    formatDemand(value) {
+      if (value.length > 1) {
+        return value.join("、");
+      } else {
+        return value[0];
+      }
     }
   },
   methods: {
@@ -242,7 +253,10 @@ export default {
         })
         .catch(e => {
           if (e.response != undefined) {
-            that.$message(e.response.data.message);
+            that.$message({
+              type: "xinjia-info",
+              message: e.response.data.message
+            });
           }
         });
     },
@@ -260,7 +274,7 @@ export default {
           customerName: this.customer.data.Customers,
           contactPhone: phone,
           customerNo: this.customer.data.CustomerNo,
-          customerPlate: 0
+          customerPlate: this.customer.data.plate
         };
         that.callLoading = true;
         that.isCall = false;
@@ -268,10 +282,7 @@ export default {
           .post({
             url: "/saleCustomerDetail/DialPhoneToCustomer",
             data: postData,
-            qs: true,
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            }
+            qs: true
           })
           .then(e => {
             if (e.data.code == 200) {
@@ -288,11 +299,17 @@ export default {
           .catch(e => {
             that.callLoading = false;
             if (e.response != undefined) {
-              that.$message(e.response.data.message);
+              that.$message({
+                type: "xinjia-info",
+                message: e.response.data.message
+              });
             }
           });
       } else {
-        that.$message("十秒内不得重复点击");
+        that.$message({
+          type: "xinjia-info",
+          message: "十秒内不能重复点击"
+        });
       }
     },
     /**
@@ -328,7 +345,10 @@ export default {
             })
             .catch(e => {
               if (e.response != undefined) {
-                that.$message(e.response.data.message);
+                that.$message({
+                  type: "xinjia-info",
+                  message: e.response.data.message
+                });
               }
             });
         })
@@ -483,6 +503,36 @@ export default {
   }
   .el-message__content {
     color: @backgroud;
+    font-size: @font16;
+  }
+}
+.el-message--xinjia-info {
+  background-color: #edf2fc;
+  border-color: #ebeef5;
+  .el-message__icon {
+    &::before {
+      color: #909399;
+      font-size: @font16;
+      content: "\e7a1";
+    }
+  }
+  .el-message__content {
+    color: #909399;
+    font-size: @font16;
+  }
+}
+.el-message--xinjia-error {
+  background-color: #fef0f0;
+  border-color: #fde2e2;
+  .el-message__icon {
+    &::before {
+      color: #f56c6c;
+      font-size: @font16;
+      content: "\e79d";
+    }
+  }
+  .el-message__content {
+    color: #f56c6c;
     font-size: @font16;
   }
 }
