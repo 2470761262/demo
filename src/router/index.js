@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Login from "@/pages/login/login";
 import menuFrame from "@/pages/menuFrame/menuFrame";
+import logOut from "@/pages/logOut/logOut";
 import routerResult from "@/router/routerResult/index";
 import util from "@/util/util";
 const caceDom = document;
@@ -32,6 +33,15 @@ export default new Router({
         title: "首页"
       },
       children: routerResult
+    },
+    {
+      //登陆过期
+      path: "/logOut",
+      name: "logOut",
+      component: logOut,
+      meta: {
+        jumpLogin: true
+      }
     }
   ],
   scrollBehavior(to, from, savedPosition) {
