@@ -11,10 +11,7 @@
             v-model="data.minPrice"
             data-vv-name="minPrice"
             data-vv-as="最小值"
-            v-validate="{
-              zero1: true,
-              isGreater: [data.maxPrice]
-            }"
+            v-validate="'zero1'"
           >
           </el-input>
           <div
@@ -30,7 +27,10 @@
             v-model="data.maxPrice"
             data-vv-name="maxPrice"
             data-vv-as="最大值"
-            v-validate="'zero1'"
+            v-validate="{
+              zero1: true,
+              isLess: [data.minPrice]
+            }"
           >
           </el-input>
           <div
@@ -51,10 +51,7 @@
             v-model="data.minUnitPrice"
             data-vv-name="minUnitPrice"
             data-vv-as="最小值"
-            v-validate="{
-              zero1: true,
-              isGreater: [data.maxUnitPrice]
-            }"
+            v-validate="'zero1'"
           >
           </el-input>
           <div
@@ -70,7 +67,10 @@
             v-model="data.maxUnitPrice"
             data-vv-name="maxUnitPrice"
             data-vv-as="最大值"
-            v-validate="'zero1'"
+            v-validate="{
+              zero1: true,
+              isLess: [data.minUnitPrice]
+            }"
           >
           </el-input>
           <div
@@ -91,10 +91,7 @@
             v-model="data.minArea"
             data-vv-name="minArea"
             data-vv-as="最小值"
-            v-validate="{
-              noZero1: true,
-              isGreater: [data.maxArea]
-            }"
+            v-validate="'noZero1'"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">㎡</i>
@@ -113,7 +110,10 @@
             v-model="data.maxArea"
             data-vv-name="maxArea"
             data-vv-as="最大值"
-            v-validate="'noZero1'"
+            v-validate="{
+              noZero1: true,
+              isLess: [data.minArea]
+            }"
           >
             <template v-slot:suffix>
               <i class="suffix-tips">㎡</i>
@@ -279,7 +279,7 @@
       <!-- 楼栋需求 -->
       <div class="input-group" v-show="isOffice">
         <div class="input-head">楼栋需求</div>
-        <el-checkbox-group v-model="data.buildingNeed">
+        <el-checkbox-group v-model="data.buildingNeeds">
           <el-checkbox-button
             v-for="item in buildingNeedList"
             :label="item.key"
@@ -288,6 +288,7 @@
           >
         </el-checkbox-group>
       </div>
+
       <!-- 房间需求 -->
       <div class="input-group" v-show="isOffice">
         <div class="input-head">房间需求</div>
@@ -350,10 +351,10 @@ const otherNeedList = [
 ];
 // 楼栋需求
 const buildingNeedList = [
-  { value: "知名物业", key: "1" },
-  { value: "带客梯", key: "2" },
-  { value: "带货梯", key: "4" },
-  { value: "其他", key: "8" }
+  { value: "知名物业", key: 1 },
+  { value: "带客梯", key: 2 },
+  { value: "带货梯", key: 4 },
+  { value: "其他", key: 8 }
 ];
 // 房间需求
 const roomNeedList = [
@@ -442,7 +443,7 @@ export default {
     return {
       data: {
         requireType: this.requirement, //需求类型(位运算（多选）：1买二手住宅，2买二手商铺，4买二手写字楼， 8买新房住宅，16买新房商铺，32买新房写字楼，64租赁住宅，128租赁商铺，256租赁写字楼)
-        buildingNeed: [], //	楼栋需求-买或租写字楼（位运算（多选）：1知名物业，2带客梯、4带货梯、8其他）
+        buildingNeeds: [], //	楼栋需求-买或租写字楼（位运算（多选）：1知名物业，2带客梯、4带货梯、8其他）
         buyDestination: null, //购买用途,单选(刚需，投资，办公，改善，教育，其他)
         community1: "", //期望楼盘
         community1Id: null, //期望楼盘 CommunityTbl的ID

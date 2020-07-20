@@ -383,14 +383,15 @@ export default {
         customerName: this.cusbaseData.Customers,
         contactPhone: phone,
         customerNo: this.cusbaseData.CustomerNo,
-        customerPlate: "公客"
+        customerPlate: this.cusbaseData.plate
       };
       that.$api
         .post({
           url: "/saleCustomerDetail/DialPhoneToCustomer",
           data: postData,
+          qs: true,
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/x-www-form-urlencoded"
           }
         })
         .then(e => {

@@ -29,7 +29,10 @@
         </el-select>
       </div>
 
-      <div class="input-group is-required">
+      <div
+        class="input-group is-required"
+        v-show="this.useless == 'OTHER_CAUSE'"
+      >
         <div class="input-head">无效客源理由</div>
         <el-input
           v-model="uselessReason"
@@ -40,7 +43,7 @@
           placeholder="请填写客户理由"
           data-vv-name="uselessReason"
           data-vv-as="客户理由"
-          v-validate="{ required: useless == 4 }"
+          v-validate="{ required: useless == 'OTHER_CAUSE' }"
         />
 
         <div
@@ -68,7 +71,7 @@ export default {
       useless: "",
       uselessReason: "",
       uselessList: [
-        { key: "本公司成交", value: "OUR_COMPANY_BARGAIN" },
+        // { key: "本公司成交", value: "OUR_COMPANY_BARGAIN" },
         { key: "外公司成交", value: "OTHER_COMPANY_BARGAIN" },
         { key: "暂不考虑", value: "LEAVE_OUT" },
         { key: "疑似同业", value: "SUSPECTED_COUNTERPARTS" },
