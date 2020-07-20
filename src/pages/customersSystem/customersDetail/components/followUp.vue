@@ -3,18 +3,30 @@
     <div class="content-top">
       <div class="title">跟进信息</div>
       <div class="btn-box">
-        <div class="btn font-g" @click="openDevelop()">预约带看</div>
+        <div
+          class="btn font-g"
+          @click="openDevelop()"
+          v-if="attentionStatus.flag == 1"
+        >
+          预约带看
+        </div>
         <div
           class="btn font-g"
           @click="toPage()"
-          v-if="permissionList.addLookButtonEable.isDisable"
+          v-if="
+            permissionList.addLookButtonEable.isDisable &&
+              attentionStatus.flag == 1
+          "
         >
           添加带看
         </div>
         <div
           class="btn back font-w"
           @click="openPopUp('followUpFlag')"
-          v-if="permissionList.addFollowLookButtonEable.isDisable"
+          v-if="
+            permissionList.addFollowLookButtonEable.isDisable &&
+              attentionStatus.flag == 1
+          "
         >
           写跟进
         </div>
@@ -266,7 +278,7 @@
 
 <script>
 export default {
-  inject: ["customerId", "permissionList"],
+  inject: ["customerId", "permissionList", "attentionStatus"],
   data() {
     return {
       followUpFlag: false, //跟进开关

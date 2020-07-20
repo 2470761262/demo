@@ -44,7 +44,7 @@
 
 <script>
 export default {
-  inject: ["customerId"],
+  inject: ["customerId", "getInformation"],
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
   },
