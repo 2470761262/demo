@@ -111,7 +111,12 @@
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">期望小学：</span>
-                  <div class="msg-row-txt" v-if="item.primarySchool != null">
+                  <div
+                    class="msg-row-txt"
+                    v-if="
+                      item.primarySchool != null && item.primarySchool != ''
+                    "
+                  >
                     <p
                       v-for="(primarySchool, idx) in item.primarySchool"
                       :key="idx"
@@ -123,7 +128,10 @@
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">期望中学：</span>
-                  <div class="msg-row-txt" v-if="item.primarySchool != null">
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.middleSchool != null && item.middleSchool != ''"
+                  >
                     <p
                       v-for="(middleSchool, idx) in item.middleSchool"
                       :key="idx"
