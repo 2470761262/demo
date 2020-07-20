@@ -191,6 +191,8 @@ export default {
         postData.tels = tels;
         postData.sourceType = postData.sourceList[0];
         postData.Source = postData.sourceList[1];
+        postData.nativePlace =
+          postData.provinceName + postData.cityName + postData.countyName;
         postData.origin = "PC";
         that.fullscreenLoading = true;
         that.$api

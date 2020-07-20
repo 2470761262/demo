@@ -18,6 +18,8 @@
     display: flex;
     // prettier-ignore
     font-size: 16PX;
+    height: 250px;
+    overflow: hidden;
     .ul-content-area {
       flex: 1;
       &:nth-child(1) {
@@ -79,6 +81,33 @@
     }
   }
 }
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes hide {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.show-enter-active {
+  animation: show 0.3s;
+}
+.show-leave-active {
+  animation: hide 0.3s;
+}
+.show-enter,
+.show-leave-to {
+  opacity: 0;
+}
 </style>
 <template>
   <fixed-popup
@@ -110,29 +139,31 @@
         </div>
         <div class="ul-content-area">
           <p class="area-title">物业分类</p>
-          <label
-            v-for="item in renderLeftList[renderLeftIndex].children"
-            :key="item.value"
-            class="check-content"
-          >
-            <input
-              type="checkbox"
-              v-model="dataJson['list' + renderLeftIndex]"
-              :value="item.value"
-              :disabled="item.isDisabled"
-              @change="checkChangeActive(item)"
-            />
-            <div>
-              {{ item.title }}
-            </div>
-          </label>
+          <transition-group name="show">
+            <label
+              v-for="item in renderLeftList[renderLeftIndex].children"
+              :key="item.value"
+              class="check-content"
+            >
+              <input
+                type="checkbox"
+                v-model="dataJson['list' + renderLeftIndex]"
+                :value="item.value"
+                :disabled="item.isDisabled"
+                @change="checkChangeActive(item)"
+              />
+              <div>
+                {{ item.title }}
+              </div>
+            </label>
+          </transition-group>
         </div>
       </div>
       <div class="tag-content">
         <el-tag
           v-for="(tag, index) in showActiveList"
           :key="index"
-          closable
+          :closable="!tag.isDisabled"
           type="info"
           @close="removeActive(tag, true)"
         >
@@ -358,7 +389,8 @@ export default {
           title: typeTitle + nowItem.title,
           sign: nowSign,
           value: nowItem.value,
-          parentIndex: this.renderLeftIndex
+          parentIndex: this.renderLeftIndex,
+          isDisabled: nowItem.isDisabled
         });
       }
     }

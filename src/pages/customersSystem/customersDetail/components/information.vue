@@ -31,7 +31,7 @@
             <div
               v-for="(item, idx) in phoneList"
               :key="idx"
-              @click="callUp(item.phone)"
+              @click="callUp(item.id)"
             >
               {{ item.phone || "" }}
             </div>
@@ -264,7 +264,7 @@ export default {
      * @example: 一键拨号
      * @param: {nmber} phone 客户电话
      */
-    callUp(phone) {
+    callUp(id) {
       let that = this;
       that.isPhone = false;
       if (this.isCall) {
@@ -272,7 +272,7 @@ export default {
           customerId: this.customer.data.id,
           remark: "给客户" + this.customer.data.Customers + "拨打电话",
           customerName: this.customer.data.Customers,
-          contactPhone: phone,
+          telId: id,
           customerNo: this.customer.data.CustomerNo,
           customerPlate: this.customer.data.plate
         };

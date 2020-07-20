@@ -11,10 +11,14 @@
   .mar-top {
     margin-top: 28px !important;
   }
+  .anchor-point {
+    width: 162px;
+    margin-right: 10px;
+  }
 }
 /deep/ .suffix-tips {
   cursor: pointer;
-  color: #247257;
+  color: @backgroud;
 }
 </style>
 <template>
@@ -72,7 +76,6 @@
         <div class="input-head">客户来源</div>
         <select-cascader
           :error-flag="errorBags.has('cascader')"
-          @submitResult="submitResult"
           data-vv-name="cascader"
           data-vv-as="客户来源"
           v-validate="'required|length:2'"
@@ -162,28 +165,53 @@
           ></el-option>
         </el-select>
       </div>
-      <!-- 客户籍贯 -->
-      <div
-        class="input-group"
-        :class="{ 'error-tips': errorBags.has('nativePlace') }"
-      >
+      <div class="input-group">
         <div class="input-head">客户籍贯</div>
-        <el-input
-          v-model="formData.nativePlace"
-          class="input-content"
-          clearable
-          maxlength="5"
-          placeholder="请输入客户的籍贯"
-          data-vv-name="nativePlace"
-          data-vv-as="客户籍贯"
-          v-validate="'isChinese'"
-        />
-        <div
-          :class="{
-            'after-error-tips': errorBags.has('nativePlace')
-          }"
-          :data-error="errorBags.first('nativePlace')"
-        ></div>
+        <el-select
+          class="anchor-point"
+          v-model="formData.provinceId"
+          @change="provinceChange"
+          placeholder="请选择省份"
+          filterable
+        >
+          <el-option
+            class="anchor-point"
+            v-for="item in provinceList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+        <el-select
+          class="anchor-point"
+          v-model="formData.cityId"
+          filterable
+          placeholder="请选择市区"
+          @change="cityChange"
+        >
+          <el-option
+            class="anchor-point"
+            v-for="item in cityList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+        <el-select
+          class="anchor-point"
+          v-model="formData.countyId"
+          filterable
+          @change="countyChange"
+          placeholder="请选择区"
+        >
+          <el-option
+            class="anchor-point"
+            v-for="item in countyList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
       </div>
       <!-- 客户印象 -->
       <div class="input-group">
@@ -290,7 +318,6 @@
         v-validate="'required|arrFlatLength:0'"
       >
       </demand-more-select>
-      <!--    -->
     </section>
   </section>
 </template>
@@ -383,7 +410,13 @@ export default {
         sourceType: 0,
         myImpression: [], //印象的结果数组
         requirements: [], //客户需求（传后端用）
-        sourceList: [] //客源来源列表
+        sourceList: [], //客源来源列表
+        provinceId: "", //省
+        cityId: "", //市
+        countyId: "", //区
+        provinceName: "", //省
+        cityName: "", //市
+        countyName: "" //区
       },
       mock1: "", //客源印象
       moreSelectFlag: false, //需求信息多选开关
@@ -398,11 +431,16 @@ export default {
         secondList: [], //二手需求数组
         newHouseList: [], //新房需求数组
         leaseList: [] //租赁需求数组
-      }
+      },
+      provinceList: [],
+      cityList: [],
+      countyList: []
     };
   },
   created() {
     this.validateInit();
+    this.getProvince();
+    this.getCity(110000);
   },
   methods: {
     /**
@@ -428,24 +466,10 @@ export default {
       //   this.demandData.leaseList = list2;
       this.moreSelectFlag = false;
     },
-    submitResult(value) {
-      // if (value) {
-      //   this.formData.Source = value[1];
-      // } else {
-      //   this.formData.Source = "";
-      // }
-    },
     //添加电话号码12
     addTelToList() {
       let defaultList = [1, 2];
       if (this.formData.tels.length <= 2) {
-        // for (let index = 0; index < defaultList.length; index++) {
-        //   if (!this.addTel.includes(defaultList[index])) {
-
-        //     this.addTel.push(defaultList[index]);
-        //     break;
-        //   }
-        // }
         let phone = { phone: "", isDisabled: false };
         this.formData.tels.push(phone);
       }
@@ -532,6 +556,120 @@ export default {
       let phone2 = this.formData.tels[index];
       this.formData.tels.splice(0, 1, phone2);
       this.formData.tels.splice(index, 1, phone1);
+    },
+    /**
+     * @example: 查询省
+     */
+    getProvince() {
+      let that = this;
+      let postData = {
+        levelType: 1,
+        limit: 1000,
+        page: 1
+      };
+      that.$api
+        .post({
+          url: "/common/regiontbl/regionList",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.provinceList = e.data.data.list;
+          }
+        })
+        .catch(e => {
+          that.$message({
+            message: e.response.data.message
+          });
+        });
+    },
+    /**
+     * @example: 查询市区
+     */
+    getCity(id) {
+      let that = this;
+      let postData = {
+        levelType: 2,
+        limit: 1000,
+        page: 1,
+        parentId: id
+      };
+      that.$api
+        .post({
+          url: "/common/regiontbl/regionList",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.cityList = e.data.data.list;
+            that.getCounty(e.data.data.list[0].id);
+          }
+        })
+        .catch(e => {
+          that.$message({
+            message: e.response.data.message
+          });
+        });
+    },
+    /**
+     * @example: 查询区
+     */
+    getCounty(id) {
+      let that = this;
+      let postData = {
+        levelType: 3,
+        limit: 1000,
+        page: 1,
+        parentId: id
+      };
+      that.$api
+        .post({
+          url: "/common/regiontbl/regionList",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.countyList = e.data.data.list;
+          }
+        })
+        .catch(e => {
+          that.$message({
+            message: e.response.data.message
+          });
+        });
+    },
+    provinceChange(val) {
+      this.getCity(val);
+      this.getCounty(this.cityList[0].id);
+      let obj = {};
+      obj = this.provinceList.find(item => {
+        return item.id === val;
+      });
+      this.formData.provinceName = obj.name;
+    },
+    cityChange(val) {
+      this.getCounty(val);
+      let obj = {};
+      obj = this.cityList.find(item => {
+        return item.id === val;
+      });
+      this.formData.cityName = obj.name;
+    },
+    countyChange(val) {
+      let obj = {};
+      obj = this.countyList.find(item => {
+        return item.id === val;
+      });
+      this.formData.countyName = obj.name;
     }
   }
 };
