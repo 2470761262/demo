@@ -195,8 +195,8 @@
             ? Number.parseInt(
                 ((resultData.tradePrice || resultData.Price) * 10000) /
                   resultData.InArea
-              ).toFixed(1) || emptyRead("元/㎡")
-            : "暂无"
+              ).toFixed(0)
+            : "无" | emptyRead("元/㎡")
         }}
       </div>
     </div>
@@ -672,8 +672,9 @@ export default {
     keyStorageFilter(value, keyOwnerName) {
       return keyOwnerName == null ? "暂无" : value;
     },
+    // 后台做处理了
     priceFilter(value) {
-      return value.toFixed(2);
+      return value;
     }
   },
   destroyed() {
