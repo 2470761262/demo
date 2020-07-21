@@ -162,8 +162,8 @@ if (isOpenLog) {
   log_socket.init();
   addLog_eventListener.click();
   addLog_eventListener.dblclick();
-  // addLog_eventListener.mouseover();
-  //addLog_eventListener.mouseleave();
+  addLog_eventListener.mouseover();
+  addLog_eventListener.mouseleave();
 }
 
 export default log_socket;
