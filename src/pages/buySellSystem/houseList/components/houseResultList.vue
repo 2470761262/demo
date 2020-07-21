@@ -1435,6 +1435,8 @@ export default {
             this.temporaryMiddleValue = e;
             break;
         }
+        if (index == -1)
+        this.form[field].push(e);
       }
 
       if (index == -1) return;
