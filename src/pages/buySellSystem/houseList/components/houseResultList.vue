@@ -489,6 +489,10 @@
           </button>
         </div>
       </div>
+    </div>
+    <!-- <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div> -->
+
+    <div class="search-content no-frist" v-show="panelChange">
       <!-- nav类型切换 -->
       <div class="tab-content">
         <div class="tab-content-nav">
@@ -602,10 +606,6 @@
           搜索
         </button>
       </div>
-    </div>
-    <!-- <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div> -->
-
-    <div class="search-content no-frist" v-show="panelChange">
       <!-- 范围 -->
       <div class="search-content-item">
         <div class="search-item-title">范围</div>
