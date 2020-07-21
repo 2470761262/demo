@@ -115,6 +115,7 @@
 <script>
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -197,7 +198,10 @@ export default {
       return ro + ha + to;
     },
     navPage(id) {
-      this.$router.push({ name: "houseDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: id }
+      });
     },
     handleSizeChange(e) {
       this.pageJson.pageSize = e;

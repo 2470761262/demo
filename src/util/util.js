@@ -228,5 +228,8 @@ export default {
       }
     }
     return null;
+  },
+  openPage(pageParams) {
+    window.open(this.$router.resolve(pageParams).href, "_blank");
   }
 };

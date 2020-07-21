@@ -130,7 +130,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import tableMenu from "@/util/getTableMenu";
 import definitionmenu from "@/components/definitionMenu";
-
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -334,7 +334,10 @@ export default {
     distributeEvent(e, id) {
       var that = this;
       console.log("hhhhhhhhhhhhhhhhhh", id);
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: id }
+      });
     },
     tabColumnChange(e, length = 0) {
       this.tableColumn = e;

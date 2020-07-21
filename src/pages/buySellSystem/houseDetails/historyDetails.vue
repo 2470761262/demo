@@ -257,6 +257,7 @@ export default {
               }
             }
             this.$set(this.houseDetails, "data", result.data);
+            document.title = this.houseDetails.data.CommunityName || "未知楼盘";
             if (result.data.isLocking) {
               //如果锁定房源的话就禁用
               this.buttonLocking.value = true;
