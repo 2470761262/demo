@@ -228,5 +228,29 @@ export default {
       }
     }
     return null;
+  },
+  openPage(pageParams) {
+    window.open(this.$router.resolve(pageParams).href, "_blank");
+  },
+  //获取指定class的父节点
+  getParents(element, className) {
+    var returnParentElement = null;
+    function getParentNode(element, className) {
+      if (
+        !element.tagName ||
+        element.tagName.toLowerCase() == "body" ||
+        element.tagName.toLowerCase() == "html"
+      ) {
+        return null;
+      }
+      if (element && element.classList.contains(className)) {
+        returnParentElement = element;
+      } else {
+        getParentNode(element.parentElement, className);
+      }
+    }
+    getParentNode(element, className);
+
+    return returnParentElement;
   }
 };

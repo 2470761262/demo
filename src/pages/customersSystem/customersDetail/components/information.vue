@@ -338,7 +338,7 @@ export default {
           that.$api
             .post({
               url: "/saleCustomerDetail/deleteImpression",
-              data: { customerId: id },
+              data: { impressionId: id },
               qs: true,
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded"

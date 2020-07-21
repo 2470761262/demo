@@ -1373,7 +1373,7 @@ export default {
       //在售店公共盘,在售无跟单, 进入BSAgentHouse房源详情
       if (row.houseType == 1 || row.houseType == 2 || row.houseType == 3) {
         console.log("进入bsagenthouse房源详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "houseDetails",
           params: { houseId: row.eid }
         });
@@ -1381,26 +1381,26 @@ export default {
         //无号码
         console.log("进入楼盘详情");
         console.log("/building/geBuildingDetail/" + row.id);
-        that.$router.push({
+        util.openPage.call(this, {
           name: "buildingHouseDetail",
           params: { houseId: row.id }
         });
       } else if (row.tradeDay != null && row.tradeDay >= 0) {
         //成交房源
         console.log("进入交易房源（tradeHouseTbl）详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "historyDetails",
           params: { houseId: row.eid, tradeType: 0 }
         });
       } else if (!(row.isSale == -1 || row.isSale == 0 || row.isSale == 2)) {
         //暂不售 历史
         console.log("进入历史房源（hisbsagenthouse）详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "historyDetails",
           params: { houseId: row.eid, tradeType: 1 }
         });
       } else {
-        that.$router.push({
+        util.openPage.call(this, {
           name: "buildingHouseDetail",
           params: { houseId: row.id }
         });
