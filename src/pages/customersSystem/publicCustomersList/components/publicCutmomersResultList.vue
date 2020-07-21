@@ -196,7 +196,7 @@ export default {
                 ? null
                 : that.form.requirementType,
             plate: that.form.plate,
-            plateChangeReason: that.form.plateChangeReason
+            plateChangeReasons: that.form.plateChangeReasons
           }
         })
         .then(e => {
