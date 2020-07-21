@@ -5,19 +5,24 @@
   position: relative;
 }
 .left-content,
-.right-content {
-  background: rgba(255, 255, 255, 1);
+.fixBox {
   padding: 30px;
   margin: 15px;
   border-radius: 8px;
 }
 .left-content {
-  width: 70%;
+  background: rgba(255, 255, 255, 1);
+  flex: 1;
 }
 .right-content {
-  width: 375px;
+  width: 500px;
+  height: 100vh;
+}
+.fixBox {
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 1);
+
   position: fixed;
-  right: 0;
 }
 </style>
 <template>
@@ -26,7 +31,9 @@
       <customerFollowDetail></customerFollowDetail>
     </div>
     <div class="right-content">
-      <privateCutmomersPair></privateCutmomersPair>
+      <div class="fixBox">
+        <privateCutmomersPair></privateCutmomersPair>
+      </div>
     </div>
   </div>
 </template>
@@ -106,7 +113,7 @@ export default {
             this.$set(
               that.cusbaseData,
               "customerRequire",
-              json.data.customerRequire[0]
+              json.data.customerRequire
             );
             this.$set(
               that.cusbaseData,
