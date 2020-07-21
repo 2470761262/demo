@@ -1018,13 +1018,12 @@
             </el-select>
           </div>
           <button
-            class="btn-primary-backanchor-point"
+            class="btn-primary-back anchor-point"
             :data-anchor="'首页选项 小学:确定{' + form.primarySchoolList + '}'"
             @click="pushSelectSchool('primarySchoolList', 'primarySchool')"
           >
             确定
           </button>
-          <button class="btn-primary-back ">确定</button>
         </div>
       </div>
       <!-- 中学 -->
