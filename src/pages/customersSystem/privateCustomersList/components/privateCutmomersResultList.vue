@@ -49,16 +49,29 @@
       header-cell-class-name="ResultListCell ResultListHeaderBack"
       cell-class-name="ResultListCell"
       @row-dblclick="navigateTo"
+      @sort-change="sortChange"
       v-loading="loading"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :min-width="item.width"
-          :key="item.prop"
-          :formatter="item.formart"
-        ></el-table-column>
+        <div v-if="item.prop == 'maintainTime'">
+          <el-table-column
+            sortable="custom"
+            :prop="item.prop"
+            :label="item.label"
+            :min-width="item.width"
+            :key="item.prop"
+            :formatter="item.formart"
+          ></el-table-column>
+        </div>
+        <div v-else>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :min-width="item.width"
+            :key="item.prop"
+            :formatter="item.formart"
+          ></el-table-column>
+        </div>
       </div>
     </el-table>
     <div class="paginationRow">
@@ -93,7 +106,7 @@ export default {
     return {
       tableDataColumn: [
         {
-          prop: "mainTainTime",
+          prop: "maintainTime",
           label: "上次维护时间",
           width: "180",
           formart: item => item.maintainTime || "暂无"
@@ -133,15 +146,14 @@ export default {
       menuLoading: true, //自定义菜单
       tableColumn: [],
       tableData: [],
+      sortColumn: "id",
+      sortDirection: "DESC",
       loading: false,
       isPrivate: "", //是否私客，true私客，false公客
-
       limit: 15, //分页参数，每页条数
       page: 1, //分页参数，第几页
       pageSum: 0, //总页数
       dataCount: 0, //总条数
-      sortDirection: "", //排序方式，DESC降序（默认），ASC升序
-      sortColumn: "", //排序字段，默认id
       customerIds: [], //客户id，数字数组
       requireTypeDefinition: {
         1: "买二手住宅",
@@ -181,16 +193,30 @@ export default {
     });
   },
   methods: {
+    sortChange(column) {
+      console.log(column, "排序咯");
+      if (column) {
+        if (column.prop == "maintainTime") {
+          this.page = 1;
+          this.pageSum = 0;
+          this.dataCount = 0;
+          this.sortColumn = column.prop;
+          this.sortDirection = column.order == "ascending" ? "ASC" : "DESC";
+          this.apply();
+        }
+      }
+    },
     apply() {
       var that = this;
       this.loading = true;
       this.$api
-
         .post({
           url: "/saleCustomer/listMyCustomers",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           data: {
+            sortColumn: this.sortColumn,
+            sortDirection: this.sortDirection,
             limit: that.limit,
             page: that.page,
             isPrivate: true, //是否私客，true私客，false公客
