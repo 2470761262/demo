@@ -455,11 +455,19 @@
             v-model="houseNoOrName"
             @keydown.enter="handleHouseNoOrName"
           />
-          <button class="inquire-content anchor-point" @click="handleHouseNoOrName" :data-anchor="'首页房源编号,楼盘名称搜索{' + houseNoOrName + '}'">
+          <button
+            class="inquire-content anchor-point"
+            @click="handleHouseNoOrName"
+            :data-anchor="'首页房源编号,楼盘名称搜索{' + houseNoOrName + '}'"
+          >
             <i class="el-icon-search"></i>
           </button>
         </div>
-        <button class="btn-primary-back btn-reset anchor-point" @click="resetData" data-anchor="首页搜索框重置">
+        <button
+          class="btn-primary-back btn-reset anchor-point"
+          @click="resetData"
+          data-anchor="首页搜索框重置"
+        >
           重置
         </button>
         <div class="head-fun-right">
@@ -602,7 +610,11 @@
           class="input-content input_102 anchor-point"
           :data-anchor="'首页搜索 跟单人姓名:' + agentPerName"
         />
-        <button class="btn-primary-back anchor-point" @click="handleAgentPerName" :data-anchor="'首页跟单人搜索{' + agentPerName + '}'">
+        <button
+          class="btn-primary-back anchor-point"
+          @click="handleAgentPerName"
+          :data-anchor="'首页跟单人搜索{' + agentPerName + '}'"
+        >
           搜索
         </button>
       </div>
@@ -611,10 +623,34 @@
         <div class="search-item-title">范围</div>
         <div class="search-item-right">
           <el-radio-group v-model="form.plate" size="small">
-            <el-radio class="anchor-point" data-anchor="首页选项 范围：不限" label="" border>不限</el-radio>
-            <el-radio class="anchor-point" data-anchor="首页选项 范围：跟单房源" label="0" border>跟单房源</el-radio>
-            <el-radio class="anchor-point" data-anchor="首页选项 范围：店公共盘" label="1" border>店公共盘</el-radio>
-            <el-radio class="anchor-point" data-anchor="首页选项 范围：公司公盘" label="4" border>公司公盘</el-radio>
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 范围：不限"
+              label=""
+              border
+              >不限</el-radio
+            >
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 范围：跟单房源"
+              label="0"
+              border
+              >跟单房源</el-radio
+            >
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 范围：店公共盘"
+              label="1"
+              border
+              >店公共盘</el-radio
+            >
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 范围：公司公盘"
+              label="4"
+              border
+              >公司公盘</el-radio
+            >
           </el-radio-group>
         </div>
       </div>
@@ -623,10 +659,34 @@
         <div class="search-item-title">类型</div>
         <div class="search-item-right">
           <el-radio-group v-model="form.type" size="small">
-            <el-radio class="anchor-point" data-anchor="首页选项 类型:不限" label="" border>不限</el-radio>
-            <el-radio class="anchor-point" data-anchor="首页选项 类型:我的相关" label="1" border>我的相关</el-radio>
-            <el-radio class="anchor-point" data-anchor="首页选项 类型:关注房源" label="2" border>关注房源</el-radio>
-            <el-radio class="anchor-point" data-anchor="首页选项 类型:3天新上房源" label="3" border>3天新上房源</el-radio>
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 类型:不限"
+              label=""
+              border
+              >不限</el-radio
+            >
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 类型:我的相关"
+              label="1"
+              border
+              >我的相关</el-radio
+            >
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 类型:关注房源"
+              label="2"
+              border
+              >关注房源</el-radio
+            >
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 类型:3天新上房源"
+              label="3"
+              border
+              >3天新上房源</el-radio
+            >
           </el-radio-group>
         </div>
       </div>
@@ -635,7 +695,13 @@
         <div class="search-item-title">商圈</div>
         <div class="search-item-right">
           <el-radio-group v-model="form.bussinessDistrict" size="small">
-            <el-radio class="anchor-point" data-anchor="首页选项 商圈:不限" label="" border>不限</el-radio>
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 商圈:不限"
+              label=""
+              border
+              >不限</el-radio
+            >
             <el-radio
               :label="item.value"
               class="anchor-point"
@@ -706,7 +772,13 @@
           </div>
           <button
             class="btn-primary-back anchor-point"
-            :data-anchor="'首页选项 价格:确定{' + (price.minPrice&&price.maxPrice ?  ( price.minPrice + '~' + price.maxPrice ) : price.radioCheck) + '}'"
+            :data-anchor="
+              '首页选项 价格:确定{' +
+                (price.minPrice && price.maxPrice
+                  ? price.minPrice + '~' + price.maxPrice
+                  : price.radioCheck) +
+                '}'
+            "
             @click="submitFormBtn('price', 'minPrice', 'maxPrice')"
           >
             确定
@@ -771,7 +843,13 @@
           </div>
           <button
             class="btn-primary-back anchor-point"
-            :data-anchor="'首页选项 面积:确定{' + (area.minInArea&&area.maxInArea ?  ( area.minInArea + '~' + area.maxInArea ) : area.radioCheck) + '}'"
+            :data-anchor="
+              '首页选项 面积:确定{' +
+                (area.minInArea && area.maxInArea
+                  ? area.minInArea + '~' + area.maxInArea
+                  : area.radioCheck) +
+                '}'
+            "
             @click="submitFormBtn('area', 'minInArea', 'maxInArea')"
           >
             确定
@@ -825,8 +903,19 @@
               </el-input>
             </div>
           </div>
-          <button class="btn-primary-back anchor-point"
-                  :data-anchor="'首页选项 房型:确定{' + (room.minRoom&&room.maxRoom ?  ( room.minRoom + '~' + room.maxRoom ) : room.value) + '}'" @click="roomSubmit">确定</button>
+          <button
+            class="btn-primary-back anchor-point"
+            :data-anchor="
+              '首页选项 房型:确定{' +
+                (room.minRoom && room.maxRoom
+                  ? room.minRoom + '~' + room.maxRoom
+                  : room.value) +
+                '}'
+            "
+            @click="roomSubmit"
+          >
+            确定
+          </button>
         </div>
       </div>
       <!-- 楼层 -->
@@ -875,8 +964,17 @@
               </el-input>
             </div>
           </div>
-          <button class="btn-primary-back anchor-point"
-                  :data-anchor="'首页选项 楼层:确定{' + (floor.minFloor&&floor.maxFloor ?  ( floor.minFloor + '~' + floor.maxFloor ) : floor.radioCheck) + '}'" @click="floorBtn">
+          <button
+            class="btn-primary-back anchor-point"
+            :data-anchor="
+              '首页选项 楼层:确定{' +
+                (floor.minFloor && floor.maxFloor
+                  ? floor.minFloor + '~' + floor.maxFloor
+                  : floor.radioCheck) +
+                '}'
+            "
+            @click="floorBtn"
+          >
             确定
           </button>
         </div>
@@ -1085,15 +1183,22 @@
               </el-option>
             </el-select>
           </div>
-          <button class="btn-primary-back anchor-point"
-                  :data-anchor="'首页选项 中学:确定{' + form.middleSchoolList + '}'"
-                  @click="pushSelectSchool('middleSchoolList', 'middleSchool')">确定</button>
+          <button
+            class="btn-primary-back anchor-point"
+            :data-anchor="'首页选项 中学:确定{' + form.middleSchoolList + '}'"
+            @click="pushSelectSchool('middleSchoolList', 'middleSchool')"
+          >
+            确定
+          </button>
         </div>
       </div>
     </div>
     <div class="change-content">
-      <span @click="panelChangeBtn" class="anchor-point"  data-anchor="首页展开选项/收起"
-      >展开选项/收起<i
+      <span
+        @click="panelChangeBtn"
+        class="anchor-point"
+        data-anchor="首页展开选项/收起"
+        >展开选项/收起<i
           class="iconfont iconxingzhuangjiehe1"
           :class="{ rotate: panelChange }"
         ></i
@@ -1291,8 +1396,14 @@ export default {
      * @param {string} selectFieldValue
      */
     pushSelectSchool(field, selectFieldValue) {
+      let index = -1;
       if (this[selectFieldValue] !== "") {
-        this.form[field].push(this[selectFieldValue]);
+        index = this.form[field].findIndex(
+          item => item == this[selectFieldValue]
+        );
+        if (index == -1) {
+          this.form[field].push(this[selectFieldValue]);
+        }
       }
     },
     /**
