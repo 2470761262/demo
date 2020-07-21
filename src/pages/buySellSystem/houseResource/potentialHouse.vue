@@ -234,6 +234,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 //import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
 import common from "../houseResource/common/common";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -392,7 +393,7 @@ export default {
         //楼盘情况
         console.log("进入楼盘详情");
         console.log("/building/getBuildingDetail/" + item.id);
-        that.$router.push({
+        util.openPage.call(this, {
           name: "potentialHouseDetail",
           params: { houseId: item.id, houseType: item.houseType }
         });
@@ -402,7 +403,7 @@ export default {
           that.$message.error("houseId都是空的，如何查看");
           return;
         }
-        that.$router.push({
+        util.openPage.call(this, {
           name: "tradeHouseDetail",
           params: { houseId: item.houseId, houseType: item.houseType }
         });

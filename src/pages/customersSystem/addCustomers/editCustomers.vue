@@ -195,6 +195,8 @@ export default {
         postData.sourceType = postData.sourceList[0];
         postData.Source = postData.sourceList[1];
         postData.origin = "PC";
+        postData.nativePlace =
+          postData.provinceName + postData.cityName + postData.countyName;
         postData.id = this.customerId;
         that.fullscreenLoading = true;
         that.$api
@@ -232,6 +234,9 @@ export default {
         nativePlace: "", //籍贯
         Source: 0, //客源来源
         sourceType: 0,
+        provinceId: null,
+        cityId: null,
+        countyId: null,
         myImpression: [], //印象的结果数组
         requirements: [], //客户需求（传后端用）
         sourceList: [] //客源来源列表
@@ -253,6 +258,9 @@ export default {
             let data = e.data.data;
             fromData.Customers = data.bsAgentCustomersTbl.Customers;
             fromData.desireIntensity = data.saleCusPropertyTbl.desireIntensity;
+            fromData.provinceId = data.saleCusPropertyTbl.provinceId;
+            fromData.cityId = data.saleCusPropertyTbl.cityId;
+            fromData.countyId = data.saleCusPropertyTbl.countyId;
             fromData.sex = data.bsAgentCustomersTbl.sex;
             fromData.nativePlace = data.bsAgentCustomersTbl.nativePlace;
             fromData.Source = data.bsAgentCustomersTbl.Source;
@@ -364,6 +372,7 @@ export default {
                 item.community.push(community);
               }
             });
+            this.$refs.childreCom.getCity(fromData.provinceId, 1);
             if (this.step == 2) {
               this.componentName = "stepTwo";
               this.comNextIndex = 1;

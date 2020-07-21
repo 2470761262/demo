@@ -84,7 +84,7 @@ export default {
                 "进入我的跟单房源详情 /buySellSystem/houseDetails/" +
                   item.HouseId
               );
-              that.$router.push({
+              util.openPage.call(this, {
                 name: "houseDetails",
                 params: {
                   houseId: item.HouseId,
@@ -98,8 +98,7 @@ export default {
                 "进入店公共盘房源详情 /buySellSystem/houseDetails/" +
                   item.HouseId
               );
-              that.$router.push({
-                // path: "/buySellSystem/houseDetails/" + new Date(),
+              util.openPage.call(this, {
                 name: "houseDetails",
                 params: {
                   houseId: item.HouseId,
@@ -113,7 +112,7 @@ export default {
                 "进入在售无跟单房源详情 /buySellSystem/houseDetails/" +
                   item.HouseId
               );
-              that.$router.push({
+              util.openPage.call(this, {
                 // path: "/buySellSystem/houseDetails/" + new Date(),
                 name: "houseDetails",
                 params: {
@@ -124,7 +123,7 @@ export default {
               });
             } else if (item.Type == 4) {
               console.log("进入暂不售房源详情");
-              that.$router.push({
+              util.openPage.call(this, {
                 // path: "/buySellSystem/historyDetails/" + new Date(),
                 name: "historyDetails",
                 params: {
@@ -136,7 +135,7 @@ export default {
               });
             } else if (item.Type == 5) {
               console.log("进入楼盘详情");
-              that.$router.push({
+              util.openPage.call(this, {
                 // path: "/buySellSystem/buildingHouseDetail/" + new Date(),
                 name: "buildingHouseDetail",
                 params: {
@@ -148,7 +147,7 @@ export default {
             } else if (item.Type == 6) {
               //楼盘情况
               console.log("进入楼盘详情");
-              that.$router.push({
+              util.openPage.call(this, {
                 // path: "/buySellSystem/potentialHouseDetail/" + new Date(),
                 name: "potentialHouseDetail",
                 params: {
@@ -160,7 +159,7 @@ export default {
               });
             } else if (item.Type == 7) {
               console.log("进入交易房源详情");
-              that.$router.push({
+              util.openPage.call(this, {
                 // path: "/buySellSystem/tradeHouseDetail/" + new Date(),
                 name: "tradeHouseDetail",
                 params: {

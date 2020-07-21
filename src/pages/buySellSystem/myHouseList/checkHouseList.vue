@@ -1158,12 +1158,12 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             if (e.data.data == 1) {
-              that.$router.push({
+              util.openPage.call(this, {
                 name: "houseDetails",
                 params: { houseId: row.eid }
               });
             } else {
-              that.$router.push({
+              util.openPage.call(this, {
                 name: "historyDetails",
                 params: { houseId: row.eid, tradeType: 0 }
               });

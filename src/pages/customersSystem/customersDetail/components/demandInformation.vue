@@ -147,10 +147,10 @@
                   </div>
                   <div class="msg-row-txt" v-else>暂无</div>
                 </div>
-                <div class="msg-row">
+                <!-- <div class="msg-row">
                   <span class="msg-row-title">看房经历：</span>
                   <div class="msg-row-txt">{{ item.remark || "暂无" }}</div>
-                </div>
+                </div> -->
               </section>
             </div>
           </div>

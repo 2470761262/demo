@@ -532,7 +532,7 @@ export default {
             display: flex;
             margin-bottom: 24px;
             .car-title {
-              width: 94px;
+              width: 105px;
             }
             .car-right {
               width: 70%;
