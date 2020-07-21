@@ -22,10 +22,10 @@ export default router => {
           } else {
             Notification({
               title: "提示",
-              message: "您没有进行登录,将跳转登录页面!",
+              message: "您没有进行登录!",
               type: "warning"
             });
-            next({ path: "/" });
+            next({ path: "/logOut" });
           }
         }
       }
