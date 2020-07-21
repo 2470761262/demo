@@ -402,17 +402,21 @@
         class="ItemRow ChooseItemRow"
         prop="Reason"
       >
-        <el-radio-group v-model="form.plateChangeReason" class="RadioItemBox">
+        <el-checkbox-group
+          v-model="plateChangeReasons"
+          class="ChooseItemBox"
+          @change="setPlateChangeReason()"
+        >
           <div
-            class="RadioItem"
+            class="ChooseItem"
             v-for="(item, index) in ReasonList"
             :key="index"
           >
-            <el-radio :label="item.value" name="plateChangeReason">{{
+            <el-checkbox :label="item.value" name="plateChangeReasons">{{
               item.name
-            }}</el-radio>
+            }}</el-checkbox>
           </div>
-        </el-radio-group>
+        </el-checkbox-group>
       </el-form-item>
     </el-form>
   </div>
@@ -457,7 +461,7 @@ const PublicTypeModle = [
 const ReasonModle = [
   {
     name: "不限",
-    value: ""
+    value: 0
   },
   {
     name: "无效转入",
@@ -486,7 +490,8 @@ export default {
     return {
       customerNeedsList: customerNeedsModle,
       PublicTypeList: PublicTypeModle,
-      ReasonList: ReasonModle
+      ReasonList: ReasonModle,
+      plateChangeReasons: [0]
     };
   },
   created() {
@@ -498,6 +503,24 @@ export default {
     },
     submit() {
       this.form.submitSearch = !this.form.submitSearch;
+    },
+    setPlateChangeReason() {
+      //this.form.plateChangeReasons = this.plateChangeReasons;
+      let l = this.plateChangeReasons.length;
+      let i = this.plateChangeReasons.indexOf(0);
+      if (i == l - 1) {
+        //最后一个选择了不限
+        //包含 不限
+        this.plateChangeReasons = [0];
+      } else if (i > -1) {
+        this.plateChangeReasons.splice(i, 1);
+      }
+      if (this.plateChangeReasons.indexOf(0) > -1) {
+        this.form.plateChangeReasons = []; //不限，就不传
+      } else {
+        this.form.plateChangeReasons = this.plateChangeReasons;
+      }
+      console.log(this.form.plateChangeReasons, "准备传递给后端的条件");
     }
   }
 };
