@@ -56,6 +56,7 @@
           :prop="item.prop"
           :label="item.label"
           :min-width="item.width"
+          show-overflow-tooltip
           :key="item.prop"
           :formatter="item.formart"
         ></el-table-column>
@@ -195,7 +196,7 @@ export default {
                 ? null
                 : that.form.requirementType,
             plate: that.form.plate,
-            plateChangeReason: that.form.plateChangeReason
+            plateChangeReasons: that.form.plateChangeReasons
           }
         })
         .then(e => {
