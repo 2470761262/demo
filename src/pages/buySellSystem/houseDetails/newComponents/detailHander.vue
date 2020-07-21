@@ -5,17 +5,20 @@
     display: flex;
     align-items: center;
     .content-header-left {
-      display: flex;
+      //display: flex;
+      font-size: 0;
       h3 {
         font-size: @font22;
         font-weight: normal;
         margin-right: 10px;
+        display: inline-block;
       }
       span,
       div {
         color: @backgroud;
-        align-self: flex-end;
         font-size: @font12;
+        display: inline-block;
+        vertical-align: text-bottom;
       }
       span {
         text-decoration: underline;
@@ -23,8 +26,9 @@
       }
       div {
         color: #525252;
-        margin-left: 17px;
-        width: 200px;
+        // prettier-ignore
+        margin: 0 17PX;
+        min-width: 200px;
       }
     }
     .content-header-right {
@@ -91,9 +95,9 @@
   <div class="hander-warp">
     <div class="content">
       <div class="content-header-left">
-        <h3>家和天下</h3>
+        <h3>{{ houseData.Title | emptyRead }}</h3>
         <span>楼栋号</span>
-        <div>房源编号:10515178</div>
+        <div>房源编号： {{ houseData.HouseNo | emptyRead }}</div>
       </div>
       <div class="content-header-right">
         <button>
@@ -111,12 +115,52 @@
       </div>
     </div>
     <div class="impression-tag">
-      <div class="impression-tag-item">高端小区</div>
-      <div class="impression-tag-item">满五唯一</div>
+      <div
+        class="impression-tag-item"
+        v-for="item in impressionList"
+        :key="item.id"
+      >
+        {{ item.impression }}
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { mapState } from "vuex";
+export default {
+  computed: {
+    ...mapState({
+      houseData: state => state.houseDateil.houseData,
+      houseId: state => state.houseDateil.id
+    })
+  },
+  data() {
+    return {
+      impressionList: []
+    };
+  },
+  created() {
+    this.getImpressionList();
+  },
+  methods: {
+    //获取印象数组
+    getImpressionList() {
+      this.$api
+        .get({
+          url: "/agentHouse/impression/getImpressionList",
+          data: {
+            houseId: this.houseId
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.impressionList = result.data;
+          }
+        });
+    }
+  }
+};
 </script>

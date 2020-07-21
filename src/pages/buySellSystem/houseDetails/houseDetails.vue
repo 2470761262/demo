@@ -39,11 +39,11 @@
 }
 </style>
 <template>
-  <div class="content">
+  <div class="content" v-loading="loading" element-loading-text="数据加载中...">
     <div class="nav-hander-content">
       <nav-header />
     </div>
-    <section class="content-flex">
+    <section class="content-flex" v-if="!loading">
       <div class="content-flex-left">
         <detail-hander />
         <div class="content-detail-flex">
@@ -96,6 +96,9 @@ import detailBtnGroup from "./newComponents/detailBtnGroup";
 import betHouse from "./newComponents/betHouse";
 //日志tab
 import logTabContent from "./newComponents/logTabContent";
+import util from "@/util/util";
+import { mapActions, mapMutations, mapState } from "vuex";
+import { REMARK } from "@/util/constMap";
 export default {
   components: {
     navHeader,
@@ -111,6 +114,147 @@ export default {
     detailBtnGroup,
     betHouse,
     logTabContent
+  },
+  computed: {
+    ...mapState({
+      houseId: state => state.houseDateil.id
+    })
+  },
+  created() {
+    this.setHouseID(158790);
+    //this.addBrowseHouseLog
+    this.getHouseDetail().then(this.addBrowseHouseLog);
+  },
+  data() {
+    return {
+      loading: true
+    };
+  },
+  methods: {
+    ...mapMutations(["setHouseID"]),
+    ...mapActions(["commitHouseData"]),
+    /**
+     * 获取房源详情
+     */
+    getHouseDetail() {
+      this.loading = true;
+      return this.$api
+        .post({
+          url: "/agent_house/getHouseDetail",
+          data: {
+            houseId: this.houseId
+          },
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            if (
+              result.data.remark != null &&
+              result.data.remark.indexOf("$") != -1
+            ) {
+              let Arry1 = result.data.remark.split("$");
+              for (let i = 0; i < Arry1.length; i++) {
+                let Arry2 = Arry1[i].split("@");
+                switch (Arry2[0]) {
+                  case "小区介绍":
+                    result.data.communityPresentation = Arry2[1];
+                    break;
+                  case "户型介绍":
+                    result.data.houseTypePresentation = Arry2[1];
+                    break;
+                  case "税费解析":
+                    result.data.taxParsing = Arry2[1];
+                    break;
+                  case "核心卖点":
+                    result.data.coreSellingPoint = Arry2[1];
+                    break;
+                }
+                if (result.data.applyAgentVo != null) {
+                  REMARK.forEach(element => {
+                    if (element.key == Arry2[0]) {
+                      let obj = element.value;
+                      result.data.applyAgentVo[obj] = Arry2[1];
+                    }
+                  });
+                }
+              }
+            }
+            document.title = result.data.CommunityName || "未知楼盘";
+            this.commitHouseData(result.data);
+            let type = 1;
+            if (result.data.plate == 1) {
+              type = 2;
+            }
+            if (result.data.plate == 4) {
+              type = 3;
+            }
+            let rooms,
+              hall,
+              toilet = 0;
+            if (result.data.houseType) {
+              rooms = result.data.houseType.split("室")[0];
+              hall = result.data.houseType.split("室")[1].split("厅")[0];
+              toilet = result.data.houseType.split("厅")[1].split("卫")[0];
+            }
+            return {
+              Type: type,
+              HouseId: this.houseId,
+              HouseNo: result.data.HouseNo,
+              Comid: result.data.Comid,
+              CBid: result.data.CBid,
+              BHID: result.data.BHID,
+              CommunityName: result.data.CommunityName,
+              BuildingName: result.data.BuildingName,
+              RoomNo: result.data.RoomNo,
+              Floor: result.data.Floor,
+              InArea: result.data.InArea,
+              Price: result.data.Price,
+              Decoration: result.data.Decoration,
+              Face: result.data.Face,
+              Title: result.data.Title,
+              Buildtype: result.data.buildtype,
+              Rooms: rooms,
+              Hall: hall,
+              Toilet: toilet
+            };
+          } else {
+            this.$message.error(result.message);
+          }
+          return 35356;
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            this.$message(e.response.data.message);
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    addBrowseHouseLog(param) {
+      let that = this;
+      let url = "/house/browse/add";
+      this.$api
+        .post({
+          url: url,
+          data: param,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            console.log("浏览记录添加成功");
+          } else {
+            console.log("浏览记录添加失败" + result.message);
+          }
+        })
+        .catch(e => {
+          if (e.response != undefined) {
+            console.log(e.response);
+          }
+        });
+    }
   }
 };
 </script>

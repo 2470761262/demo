@@ -116,8 +116,8 @@
   <div class="message-content">
     <div class="message-content-head">
       <div class="head-price">
-        <span>200</span>
-        <span>万元</span>
+        <span>{{ houseData.tradePrice || houseData.Price | priceFilter }}</span>
+        <span v-if="houseData.tradePrice || houseData.Price">万元</span>
       </div>
       <div class="head-avg-price">
         <span>单价:</span>
@@ -135,15 +135,15 @@
       </div>
       <div class="hurdle-content-item">
         <div class="item-title">面积</div>
-        <div class="item-msg">89.23平</div>
+        <div class="item-msg">{{ houseData.InArea | emptyRead("平") }}</div>
       </div>
       <div class="hurdle-content-item">
         <div class="item-title">朝向</div>
-        <div class="item-msg">南/北</div>
+        <div class="item-msg">{{ houseData.Face | emptyRead }}</div>
       </div>
       <div class="hurdle-content-item">
         <div class="item-title">楼层</div>
-        <div class="item-msg">30/49</div>
+        <div class="item-msg">{{ foolAll }}</div>
       </div>
     </div>
     <div class="head-message-hurdle">
@@ -154,7 +154,7 @@
             评估价
           </div>
           <div class="cell-item-data">
-            暂无数据
+            {{ houseData.valuation | emptyRead("元/平") }}
           </div>
         </div>
         <div class="hurdle-cell-item">
@@ -162,7 +162,7 @@
             物业费
           </div>
           <div class="cell-item-data overText">
-            1.68元/月/㎡
+            {{ houseData.PropertyFee | emptyReadZero("/月/㎡") }}
           </div>
         </div>
       </div>
@@ -207,7 +207,6 @@
           </div>
         </div>
       </div>
-
       <!-- 跟单人-->
       <div class="message-hurdle-cell">
         <div class="hurdle-cell-item">
@@ -227,5 +226,24 @@
 </template>
 
 <script>
-export default {};
+import { mapState } from "vuex";
+export default {
+  filters: {
+    priceFilter(value) {
+      return value.toFixed(2);
+    }
+  },
+  computed: {
+    ...mapState({
+      houseData: state => state.houseDateil.houseData
+    }),
+    //楼层
+    foolAll() {
+      let { emptyRead } = this.$options.filters;
+      return `${emptyRead(this.houseData.Floor)}/${emptyRead(
+        this.houseData.floorNum
+      )}`;
+    }
+  }
+};
 </script>
