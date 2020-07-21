@@ -110,6 +110,7 @@
               clearable
               placeholder="请输入客户的电话号码"
               maxlength="11"
+              @blur="checkRepeatPhone(item.phone)"
               :data-vv-name="'phone' + (index + 1)"
               data-vv-as="客户号码"
               v-validate="{
@@ -443,6 +444,35 @@ export default {
     this.getCity(110000);
   },
   methods: {
+    checkRepeatPhone(phone) {
+      if (!/^1[3456789]\d{9}$/.test(phone)) {
+        return;
+      }
+      console.log("准备校验号码重复" + phone);
+      let that = this;
+      that.$api
+        .post({
+          url: "/saleCustomerOperation/checkRepeatPhone",
+          data: [phone],
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            if (e.data.data) {
+              that.$message({
+                message: phone + "号码重复"
+              });
+            }
+          }
+        })
+        .catch(e => {
+          that.$message({
+            message: e.response.data.message
+          });
+        });
+    },
     /**
      * @example: 客户需求在当前删除
      */
