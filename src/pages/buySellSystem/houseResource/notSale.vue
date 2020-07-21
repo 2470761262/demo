@@ -253,6 +253,7 @@ import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
 import common from "../houseResource/common/common";
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -510,7 +511,7 @@ export default {
 
     toLook(id) {
       var that = this;
-      that.$router.push({
+      util.openPage.call(this, {
         name: "historyDetails",
         params: { houseId: id, housePageType: "notSale" }
       });

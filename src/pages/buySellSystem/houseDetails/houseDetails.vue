@@ -319,6 +319,7 @@ export default {
               this.buttonLocking.value = true;
             }
             this.$set(this.houseDetails, "data", result.data);
+            document.title = this.houseDetails.data.CommunityName || "未知楼盘";
             let rooms,
               hall,
               toilet = 0;
