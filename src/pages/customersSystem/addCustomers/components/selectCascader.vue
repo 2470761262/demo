@@ -31,7 +31,6 @@
           padding-left: 24px;
           // prettier-ignore
           font-size: 16PX;
-          text-shadow: 0px 10px 16px rgba(0, 0, 0, 0.24);
           color: rgba(48, 49, 51, 1);
           cursor: pointer;
           &.active {
@@ -45,7 +44,6 @@
       display: block;
       height: 1px;
       background: rgba(240, 242, 245, 1);
-      box-shadow: 0px 10px 16px 0px rgba(0, 0, 0, 0.24);
     }
     .cascder-ul-foot {
       display: flex;
@@ -56,12 +54,10 @@
         width: 130px;
         height: 48px;
         background: @backgroud;
-        box-shadow: 0px 10px 16px 0px rgba(0, 0, 0, 0.24);
         border-radius: 4px;
         // prettier-ignore
         font-size: 16PX;
         color: rgba(255, 255, 255, 1);
-        text-shadow: 0px 10px 16px rgba(0, 0, 0, 0.24);
       }
     }
   }

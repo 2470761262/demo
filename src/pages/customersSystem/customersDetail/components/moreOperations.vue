@@ -4,7 +4,10 @@
     <ul class="more-list">
       <li
         @click="demandConfirm"
-        v-if="permissionList.modifyCustomerButtonEable.isDisable"
+        v-if="
+          permissionList.modifyCustomerButtonEable.isDisable &&
+            attentionStatus.flag == 1
+        "
       >
         <span>修改基本信息</span>
         <i class="el-icon-arrow-right"></i>
@@ -12,7 +15,10 @@
 
       <li
         @click="openPopUp('impressionFlag')"
-        v-if="permissionList.customerDetailForAddImpression.isDisable"
+        v-if="
+          permissionList.customerDetailForAddImpression.isDisable &&
+            attentionStatus.flag == 1
+        "
       >
         <span>客源印象</span>
         <i class="el-icon-arrow-right"></i>
@@ -20,7 +26,10 @@
 
       <li
         @click="openPopUp('uselessFlag')"
-        v-if="permissionList.customerDetailForTurnInvalid.isDisable"
+        v-if="
+          permissionList.customerDetailForTurnInvalid.isDisable &&
+            attentionStatus.flag == 1
+        "
       >
         <span>无效客源</span>
         <i class="el-icon-arrow-right"></i>
@@ -33,7 +42,10 @@
 
       <li
         @click="openPopUp('attentionFlag')"
-        v-if="permissionList.customerDetailUnAttention.isDisable"
+        v-if="
+          permissionList.customerDetailUnAttention.isDisable &&
+            attentionStatus.flag == 1
+        "
       >
         <span>暂不关注</span>
         <i class="el-icon-arrow-right"></i>
@@ -41,18 +53,21 @@
 
       <li
         @click="attention()"
-        v-if="permissionList.customerDetailAttention.isDisable"
+        v-if="
+          permissionList.customerDetailAttention.isDisable &&
+            !attentionStatus.flag == 1
+        "
       >
         <span>取消暂不关注</span>
         <i class="el-icon-arrow-right"></i>
       </li>
 
-      <li @click="openDevelop()">
+      <li @click="openDevelop()" v-if="attentionStatus.flag == 1">
         <span>转为成交</span>
         <i class="el-icon-arrow-right"></i>
       </li>
 
-      <li @click="openDevelop()">
+      <li @click="openDevelop()" v-if="attentionStatus.flag == 1">
         <span>发起合作</span>
         <i class="el-icon-arrow-right"></i>
       </li>
@@ -101,7 +116,7 @@
 
 <script>
 export default {
-  inject: ["customerId", "permissionList"],
+  inject: ["customerId", "permissionList", "attentionStatus", "getInformation"],
   data() {
     return {
       impressionFlag: false,
@@ -121,7 +136,7 @@ export default {
     impressionDIalog: () => import("../didlog/impressionDialog"),
     // 转无效
     uselessDialog: () => import("../didlog/uselessDialog"),
-    // 转无效
+    // 暂不关注
     attentionDialog: () => import("../didlog/attentionDialog"),
     // 操作日志
     operationLogDialog: () => import("../didlog/operationLogDialog")

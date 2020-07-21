@@ -65,6 +65,11 @@
       margin-right: 15px;
     }
     .SubMsgText {
+      white-space: pre-wrap;
+
+      /*       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; */
     }
   }
 }
@@ -110,9 +115,12 @@
             <div
               v-for="(item, idx) in callList"
               :key="idx"
-              @click="callUp(item.phone)"
+              @click="callUp(item)"
             >
               {{ item.phone }}
+            </div>
+            <div v-if="callList.length <= 0">
+              暂无号码
             </div>
           </div>
           <el-button slot="reference" @click="getPhone"
@@ -132,7 +140,7 @@
       <div class="SubMsgRow">
         <div class="SubMsgTil">客户需求：</div>
         <div class="SubMsgText">
-          {{ cusbaseData.customerRequire || "暂无" }}
+          {{ cusbaseData.customerRequire | customerRequire }}
         </div>
       </div>
       <div class="SubMsgRow">
@@ -334,6 +342,8 @@ export default {
           return "小程序";
         case 43:
           return "APP";
+        default:
+          return "暂无";
       }
     },
     desireIntensity(value) {
@@ -346,7 +356,22 @@ export default {
           return "一般";
         case 3:
           return "强烈";
+        default:
+          return "暂无";
       }
+    },
+    customerRequire(list) {
+      let type = "";
+      if (list.length <= 0) {
+        return "暂无";
+      }
+      for (let i = 0; i < list.length; i++) {
+        type += list[i] + ",";
+      }
+      if (type) {
+        type = type.substr(0, type.length - 1);
+      }
+      return type;
     }
   },
   created() {},
@@ -374,16 +399,17 @@ export default {
           }
         });
     },
-    callUp(phone) {
+    callUp(i) {
       let that = this;
-      console.log(phone);
+      console.log(i);
       let postData = {
         customerId: this.customerId.id,
         remark: "给客户" + this.cusbaseData.Customers + "拨打电话",
         customerName: this.cusbaseData.Customers,
-        contactPhone: phone,
+        contactPhone: i.phone,
         customerNo: this.cusbaseData.CustomerNo,
         customerPlate: this.cusbaseData.plate
+        //   ,telId: i.id
       };
       that.$api
         .post({

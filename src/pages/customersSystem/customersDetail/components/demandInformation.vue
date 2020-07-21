@@ -3,7 +3,10 @@
     <div
       class="demand-btn"
       @click="moreSelectFlag = true"
-      v-if="permissionList.modifyCustomerButtonEable.isDisable"
+      v-if="
+        permissionList.modifyCustomerButtonEable.isDisable &&
+          attentionStatus.flag == 1
+      "
     >
       新增需求
     </div>
@@ -38,7 +41,10 @@
               <span
                 class="msg-update"
                 @click="demandConfirm"
-                v-if="permissionList.modifyCustomerButtonEable.isDisable"
+                v-if="
+                  permissionList.modifyCustomerButtonEable.isDisable &&
+                    attentionStatus.flag == 1
+                "
                 >修改</span
               >
             </div>
@@ -48,7 +54,7 @@
                   <span class="msg-row-title">期望首付：</span>
                   <div
                     class="msg-row-txt"
-                    v-if="item.minFirstPrice != 0 && item.maxFirstPrice != 0"
+                    v-if="item.minFirstPrice && item.maxFirstPrice"
                   >
                     {{ item.minFirstPrice | formatMoney }} -
                     {{ item.maxFirstPrice | formatMoney }}万
@@ -73,7 +79,7 @@
                   <span class="msg-row-title">期望租金：</span>
                   <div
                     class="msg-row-txt"
-                    v-if="item.minPrice != 0 && item.maxPrice != 0"
+                    v-if="item.minPrice && item.maxPrice"
                   >
                     {{ item.minPrice }} -
                     {{ item.maxPrice }}
@@ -84,7 +90,7 @@
                   <span class="msg-row-title">期望总价：</span>
                   <div
                     class="msg-row-txt"
-                    v-if="item.minPrice != 0 && item.maxPrice != 0"
+                    v-if="item.minPrice && item.maxPrice"
                   >
                     {{ item.minPrice | formatMoney }} -
                     {{ item.maxPrice | formatMoney }}万
@@ -105,11 +111,18 @@
               <section class="msg-row-group">
                 <div class="msg-row">
                   <span class="msg-row-title">装修需求：</span>
-                  <div class="msg-row-txt">{{ item.decoration || "暂无" }}</div>
+                  <div class="msg-row-txt">
+                    {{ item.decoration | formatSymbol }}
+                  </div>
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">期望小学：</span>
-                  <div class="msg-row-txt" v-if="item.primarySchool != ''">
+                  <div
+                    class="msg-row-txt"
+                    v-if="
+                      item.primarySchool != null && item.primarySchool != ''
+                    "
+                  >
                     <p
                       v-for="(primarySchool, idx) in item.primarySchool"
                       :key="idx"
@@ -121,7 +134,10 @@
                 </div>
                 <div class="msg-row">
                   <span class="msg-row-title">期望中学：</span>
-                  <div class="msg-row-txt" v-if="item.primarySchool != ''">
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.middleSchool != null && item.middleSchool != ''"
+                  >
                     <p
                       v-for="(middleSchool, idx) in item.middleSchool"
                       :key="idx"
@@ -178,7 +194,8 @@ export default {
     "customer",
     "permissionList",
     "demandValue",
-    "customerId"
+    "customerId",
+    "attentionStatus"
   ],
   data() {
     return {
