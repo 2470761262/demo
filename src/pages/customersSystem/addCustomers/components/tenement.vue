@@ -358,12 +358,12 @@ const buildingNeedList = [
 ];
 // 房间需求
 const roomNeedList = [
-  { value: "可注册公司", key: "1" },
-  { value: "有老板间", key: "2" },
-  { value: "有会议室", key: "4" },
-  { value: "带办公家具", key: "8" },
-  { value: "带停车位", key: "16" },
-  { value: "其他", key: "32" }
+  { value: "可注册公司", key: 1 },
+  { value: "有老板间", key: 2 },
+  { value: "有会议室", key: 4 },
+  { value: "带办公家具", key: 8 },
+  { value: "带停车位", key: 16 },
+  { value: "其他", key: 32 }
 ];
 // 付款方式
 const payWayList = [
