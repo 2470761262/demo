@@ -434,10 +434,11 @@
       <!-- 房屋类型 -->
       <div class="head-nav-type">
         <div
-          class="nav-type-item"
+          class="nav-type-item anchor-point"
           :class="{ active: index == 0 }"
           v-for="(item, index) in navToPage"
           :key="index"
+          :data-anchor="'首页类型:' + item.title"
           @click="navToPageBtn(item)"
         >
           {{ item.title }}
@@ -449,34 +450,38 @@
           <input
             type="text"
             placeholder="请输入房源编号,楼盘名称"
-            class="content-input"
+            data-anchor="首页房源编号,楼盘名称输入框"
+            class="content-input anchor-point"
             v-model="houseNoOrName"
             @keydown.enter="handleHouseNoOrName"
           />
-          <button class="inquire-content" @click="handleHouseNoOrName">
+          <button class="inquire-content anchor-point" @click="handleHouseNoOrName" :data-anchor="'首页房源编号,楼盘名称搜索{' + houseNoOrName + '}'">
             <i class="el-icon-search"></i>
           </button>
         </div>
-        <button class="btn-primary-back btn-reset" @click="resetData">
+        <button class="btn-primary-back btn-reset anchor-point" @click="resetData" data-anchor="首页搜索框重置">
           重置
         </button>
         <div class="head-fun-right">
           <button
-            class="btn-primary"
+            class="btn-primary anchor-point"
+            data-anchor="首页管理入口"
             @click="navToPath('/buySellSystem/concernCommunity')"
           >
             <i class=" iconjichuguanli1 iconfont"></i>
             管理入口
           </button>
           <button
-            class="btn-primary "
+            class="btn-primary anchor-point"
+            data-anchor="首页我的房源"
             @click="navToPath('/buySellSystem/myAgent')"
           >
             <i class="icondaohang_wodefangyuan1 iconfont"></i>
             我的房源
           </button>
           <button
-            class="btn-primary house-back"
+            class="btn-primary house-back anchor-point"
+            data-anchor="首页录入房源"
             @click="navToPath('/buySellSystem/addHouse')"
           >
             <i class=" iconluru iconfont"></i>
@@ -488,9 +493,10 @@
       <div class="tab-content">
         <div class="tab-content-nav">
           <div
-            class="tab-content-item "
+            class="tab-content-item anchor-point"
             :class="{ active: typeActiveIndex == index }"
             v-for="(item, index) in typeList"
+            :data-anchor="'首页找房:' + item.label"
             :key="index"
             @click="changeNavTypeIndex(index)"
           >
@@ -505,11 +511,13 @@
           <el-select
             v-model="buildOptData"
             placeholder="请输入楼盘名称"
-            class="input-content input_180"
+            class="input-content input_180 anchor-point"
             clearable
             filterable
             remote
-            popper-class="options-custom-item"
+            popper-class="options-custom-item anchor-point"
+            data-anchor="首页楼盘 => select"
+            @click.native="log_socket.sendUserActionData"
             @focus="remoteBuildInput"
             @change="remoteBuildChange"
             :remote-method="buildRemoteMethod"
@@ -518,6 +526,9 @@
           >
             <el-option
               v-for="item in buildForList"
+              class="anchor-point"
+              :data-anchor="'首页列表楼盘 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
               :label="item.name"
               :value="item"
@@ -530,8 +541,10 @@
             placeholder="请输入栋座"
             clearable
             filterable
-            class="input-content input_120"
-            popper-class="options-custom-item"
+            class="input-content input_120 anchor-point"
+            popper-class="options-custom-item anchor-point"
+            data-anchor="首页栋座 => select"
+            @click.native="log_socket.sendUserActionData"
             value-key="value"
             remote
             :remote-method="queryRoomNo"
@@ -540,6 +553,9 @@
           >
             <el-option
               v-for="item in towerForList"
+              class="anchor-point"
+              :data-anchor="'首页列表栋座 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
               :label="item.name"
               :value="item"
@@ -552,8 +568,10 @@
             placeholder="请输入房号"
             clearable
             filterable
-            popper-class="options-custom-item"
-            class="input-content input_120"
+            popper-class="options-custom-item anchor-point"
+            class="input-content input_120 anchor-point"
+            data-anchor="首页房号 => select"
+            @click.native="log_socket.sendUserActionData"
             remote
             :remote-method="queryRoomData"
             :loading="roomLoading"
@@ -562,6 +580,9 @@
           >
             <el-option
               v-for="item in roomForList"
+              class="anchor-point"
+              :data-anchor="'首页列表房号 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
               :label="item.name"
               :value="item"
@@ -574,9 +595,10 @@
           type="text"
           v-model="agentPerName"
           placeholder="跟单人姓名"
-          class="input-content input_102"
+          class="input-content input_102 anchor-point"
+          :data-anchor="'首页搜索 跟单人姓名:' + agentPerName"
         />
-        <button class="btn-primary-back" @click="handleAgentPerName">
+        <button class="btn-primary-back anchor-point" @click="handleAgentPerName" :data-anchor="'首页跟单人搜索{' + agentPerName + '}'">
           搜索
         </button>
       </div>
@@ -589,10 +611,10 @@
         <div class="search-item-title">范围</div>
         <div class="search-item-right">
           <el-radio-group v-model="form.plate" size="small">
-            <el-radio label="" border>不限</el-radio>
-            <el-radio label="0" border>跟单房源</el-radio>
-            <el-radio label="1" border>店公共盘</el-radio>
-            <el-radio label="4" border>公司公盘</el-radio>
+            <el-radio class="anchor-point" data-anchor="首页选项 范围：跟单房源" label="0" border>跟单房源</el-radio>
+            <el-radio class="anchor-point" data-anchor="首页选项 范围：店公共盘" label="1" border>店公共盘</el-radio>
+            <el-radio class="anchor-point" data-anchor="首页选项 范围：公司公盘" label="4" border>公司公盘</el-radio>
+            <el-radio class="anchor-point" data-anchor="首页选项 范围：不限" label="" border>不限</el-radio>
           </el-radio-group>
         </div>
       </div>
@@ -601,10 +623,10 @@
         <div class="search-item-title">类型</div>
         <div class="search-item-right">
           <el-radio-group v-model="form.type" size="small">
-            <el-radio label="" border>不限</el-radio>
-            <el-radio label="1" border>我的相关</el-radio>
-            <el-radio label="2" border>关注房源</el-radio>
-            <el-radio label="3" border>3天新上房源</el-radio>
+            <el-radio class="anchor-point" data-anchor="首页选项 类型:不限" label="" border>不限</el-radio>
+            <el-radio class="anchor-point" data-anchor="首页选项 类型:我的相关" label="1" border>我的相关</el-radio>
+            <el-radio class="anchor-point" data-anchor="首页选项 类型:关注房源" label="2" border>关注房源</el-radio>
+            <el-radio class="anchor-point" data-anchor="首页选项 类型:3天新上房源" label="3" border>3天新上房源</el-radio>
           </el-radio-group>
         </div>
       </div>
@@ -613,9 +635,11 @@
         <div class="search-item-title">商圈</div>
         <div class="search-item-right">
           <el-radio-group v-model="form.bussinessDistrict" size="small">
-            <el-radio label="" border>不限</el-radio>
+            <el-radio class="anchor-point" data-anchor="首页选项 商圈:不限" label="" border>不限</el-radio>
             <el-radio
               :label="item.value"
+              class="anchor-point"
+              :data-anchor="'首页选项 商圈:' + item.name"
               border
               v-for="item in RegionList"
               :key="item.value"
@@ -646,6 +670,8 @@
             >
               <el-radio
                 :label="item.name"
+                class="anchor-point"
+                :data-anchor="'首页选项 价格:' + item.name"
                 border
                 v-for="item in priceList"
                 :key="item.name"
@@ -657,7 +683,8 @@
             <div class="input-group-split">
               <el-input
                 placeholder="最小值"
-                class="input-content is-suffix"
+                :data-anchor="'首页选项 价格:' + price.minPrice"
+                class="input-content is-suffix anchor-point"
                 v-model="price.minPrice"
               >
                 <template v-slot:suffix>
@@ -667,7 +694,8 @@
               <i class="input-split"></i>
               <el-input
                 placeholder="最大值"
-                class="input-content is-suffix"
+                :data-anchor="'首页选项 价格:' + price.maxPrice"
+                class="input-content is-suffix anchor-point"
                 v-model="price.maxPrice"
               >
                 <template v-slot:suffix>
@@ -677,7 +705,8 @@
             </div>
           </div>
           <button
-            class="btn-primary-back"
+            class="btn-primary-back anchor-point"
+            :data-anchor="'首页选项 价格:确定{' + (price.minPrice&&price.maxPrice ?  ( price.minPrice + '~' + price.maxPrice ) : price.radioCheck) + '}'"
             @click="submitFormBtn('price', 'minPrice', 'maxPrice')"
           >
             确定
@@ -706,6 +735,8 @@
             >
               <el-radio
                 :label="item.name"
+                class="anchor-point"
+                :data-anchor="'首页选项 面积:' + item.name"
                 border
                 v-for="item in areaList"
                 :key="item.name"
@@ -717,7 +748,8 @@
             <div class="input-group-split">
               <el-input
                 placeholder="最小值"
-                class="input-content is-suffix"
+                class="input-content is-suffix anchor-point"
+                :data-anchor="'首页选项 面积:' + area.minInArea"
                 v-model="area.minInArea"
               >
                 <template v-slot:suffix>
@@ -727,7 +759,8 @@
               <i class="input-split"></i>
               <el-input
                 placeholder="最大值"
-                class="input-content is-suffix"
+                class="input-content is-suffix anchor-point"
+                :data-anchor="'首页选项 面积:' + area.maxInArea"
                 v-model="area.maxInArea"
               >
                 <template v-slot:suffix>
@@ -737,7 +770,8 @@
             </div>
           </div>
           <button
-            class="btn-primary-back"
+            class="btn-primary-back anchor-point"
+            :data-anchor="'首页选项 面积:确定{' + (area.minInArea&&area.maxInArea ?  ( area.minInArea + '~' + area.maxInArea ) : area.radioCheck) + '}'"
             @click="submitFormBtn('area', 'minInArea', 'maxInArea')"
           >
             确定
@@ -757,6 +791,8 @@
               <el-radio label="不限" border>不限</el-radio>
               <el-radio
                 :label="item.value"
+                class="anchor-point"
+                :data-anchor="'首页选项 房型:' + item.name"
                 border
                 v-for="(item, index) in RoomsList"
                 :key="index"
@@ -768,7 +804,8 @@
             <div class="input-group-split">
               <el-input
                 placeholder="最小值"
-                class="input-content is-suffix"
+                class="input-content is-suffix anchor-point"
+                :data-anchor="'首页选项 房型:' + room.minRoom"
                 v-model="room.minRoom"
               >
                 <template v-slot:suffix>
@@ -778,7 +815,8 @@
               <i class="input-split"></i>
               <el-input
                 placeholder="最大值"
-                class="input-content is-suffix"
+                class="input-content is-suffix anchor-point"
+                :data-anchor="'首页选项 房型:' + room.maxRoom"
                 v-model="room.maxRoom"
               >
                 <template v-slot:suffix>
@@ -787,7 +825,8 @@
               </el-input>
             </div>
           </div>
-          <button class="btn-primary-back" @click="roomSubmit">确定</button>
+          <button class="btn-primary-back anchor-point"
+                  :data-anchor="'首页选项 房型:确定{' + (room.minRoom&&room.maxRoom ?  ( room.minRoom + '~' + room.maxRoom ) : room.value) + '}'" @click="roomSubmit">确定</button>
         </div>
       </div>
       <!-- 楼层 -->
@@ -802,6 +841,8 @@
             >
               <el-radio
                 :label="item.title"
+                class="anchor-point"
+                :data-anchor="'首页选项 楼层:' + item.title"
                 border
                 v-for="item in floorlist"
                 :key="item.title"
@@ -813,7 +854,8 @@
             <div class="input-group-split">
               <el-input
                 placeholder="最小值"
-                class="input-content is-suffix"
+                class="input-content is-suffix anchor-point"
+                :data-anchor="'首页选项 楼层:' + floor.minFloor"
                 v-model="floor.minFloor"
               >
                 <template v-slot:suffix>
@@ -823,7 +865,8 @@
               <i class="input-split"></i>
               <el-input
                 placeholder="最大值"
-                class="input-content is-suffix"
+                class="input-content is-suffix anchor-point"
+                :data-anchor="'首页选项 楼层:' + floor.maxFloor"
                 v-model="floor.maxFloor"
               >
                 <template v-slot:suffix>
@@ -832,7 +875,8 @@
               </el-input>
             </div>
           </div>
-          <button class="btn-primary-back" @click="floorBtn">
+          <button class="btn-primary-back anchor-point"
+                  :data-anchor="'首页选项 楼层:确定{' + (floor.minFloor&&floor.maxFloor ?  ( floor.minFloor + '~' + floor.maxFloor ) : floor.radioCheck) + '}'" @click="floorBtn">
             确定
           </button>
         </div>
@@ -843,6 +887,8 @@
         <div class="search-item-right">
           <el-radio
             label="不限"
+            class="anchor-point"
+            data-anchor="首页选项 朝向:不限"
             border
             v-model="faceRadio"
             @change="radioChange('faceList')"
@@ -854,6 +900,8 @@
           >
             <el-checkbox
               :label="item.name"
+              class="anchor-point"
+              :data-anchor="'首页选项 朝向:' + item.name"
               v-for="item in faceList"
               :key="item.value"
             ></el-checkbox>
@@ -866,6 +914,8 @@
         <div class="search-item-right">
           <el-radio
             label="不限"
+            class="anchor-point"
+            data-anchor="首页选项 装修:不限"
             border
             v-model="renovationRadio"
             @change="radioChange('decorationList')"
@@ -877,6 +927,8 @@
           >
             <el-checkbox
               :label="item.name"
+              class="anchor-point"
+              :data-anchor="'首页选项 装修:' + item.name"
               v-for="item in RenovationList"
               :key="item.value"
             ></el-checkbox>
@@ -889,6 +941,8 @@
         <div class="search-item-right">
           <el-radio
             label="不限"
+            class="anchor-point"
+            data-anchor="首页选项 用途:不限"
             border
             v-model="purposeRadio"
             @change="radioChange('houseUseList')"
@@ -900,6 +954,8 @@
           >
             <el-checkbox
               :label="item.name"
+              class="anchor-point"
+              :data-anchor="'首页选项 用途:' + item.name"
               v-for="item in PurposeList"
               :key="item.value"
             ></el-checkbox>
@@ -918,6 +974,8 @@
           </el-radio-group> -->
           <el-radio
             label="不限"
+            class="anchor-point"
+            :data-anchor="'首页选项 小学:不限'"
             border
             v-model="primarySchoolRadio"
             @change="radioChange('primarySchoolList', true)"
@@ -929,6 +987,8 @@
           >
             <el-checkbox
               :label="item.name"
+              class="anchor-point"
+              :data-anchor="'首页选项 小学:' + item.name"
               v-for="item in mathPrimary"
               :key="item.value"
             ></el-checkbox>
@@ -937,15 +997,19 @@
             <el-select
               v-model="primarySchool"
               placeholder="请输入划片小学"
-              class="input-content"
+              class="input-content anchor-point"
+              :data-anchor="'首页选项 小学 => select'"
+              @click.native="log_socket.sendUserActionData"
               clearable
               filterable
               popper-class="options-custom-item"
               @change="schoolChange('primarySchoolList', $event)"
             >
               <el-option
-                class="options-item"
+                class="options-item anchor-point"
                 v-for="item in mathPrimaryAfter"
+                :data-anchor="'首页选项 小学 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -953,7 +1017,8 @@
               </el-option>
             </el-select>
           </div>
-          <button class="btn-primary-back">确定</button>
+          <button class="btn-primary-back anchor-point"
+                  :data-anchor="'首页选项 小学:确定{' + form.primarySchoolList + '}'">确定</button>
         </div>
       </div>
       <!-- 中学 -->
@@ -972,6 +1037,8 @@
           </el-radio-group> -->
           <el-radio
             label="不限"
+            class="anchor-point"
+            :data-anchor="'首页选项 中学:不限'"
             border
             v-model="middleSchoolRadio"
             @change="radioChange('middleSchoolList', true)"
@@ -983,6 +1050,8 @@
           >
             <el-checkbox
               :label="item.name"
+              class="anchor-point"
+              :data-anchor="'首页选项 中学:' + item.name"
               v-for="item in mathMiddle"
               :key="item.value"
             ></el-checkbox>
@@ -991,15 +1060,19 @@
             <el-select
               v-model="middleSchool"
               placeholder="请输入划片中学"
-              class="input-content"
+              class="input-content anchor-point"
+              :data-anchor="'首页选项 中学 => select'"
+              @click.native="log_socket.sendUserActionData"
               clearable
               filterable
               popper-class="options-custom-item"
               @change="schoolChange('middleSchoolList', $event)"
             >
               <el-option
-                class="options-item"
+                class="options-item anchor-point"
                 v-for="item in mathMiddleAfter"
+                :data-anchor="'首页选项 中学 => select => option:' + item.label"
+                @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -1007,13 +1080,14 @@
               </el-option>
             </el-select>
           </div>
-          <button class="btn-primary-back">确定</button>
+          <button class="btn-primary-back anchor-point"
+                  :data-anchor="'首页选项 中学:确定{' + form.middleSchoolList + '}'">确定</button>
         </div>
       </div>
     </div>
     <div class="change-content">
-      <span @click="panelChangeBtn"
-        >展开选项/收起<i
+      <span @click="panelChangeBtn" class="anchor-point"  data-anchor="首页展开选项/收起"
+      >展开选项/收起<i
           class="iconfont iconxingzhuangjiehe1"
           :class="{ rotate: panelChange }"
         ></i
@@ -1145,6 +1219,9 @@ export default {
     this.mapGetPanelData();
   },
   methods: {
+    testClick(){
+      console.log("options");
+    },
     /**
      * @example: 重置
      */
