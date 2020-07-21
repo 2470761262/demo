@@ -364,6 +364,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -977,7 +978,10 @@ export default {
 
     toLook(id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: id }
+      });
     },
     queryMyAgentParams() {
       this.queryMyAgent(1);

@@ -1017,8 +1017,14 @@
               </el-option>
             </el-select>
           </div>
-          <button class="btn-primary-back anchor-point"
-                  :data-anchor="'首页选项 小学:确定{' + form.primarySchoolList + '}'">确定</button>
+          <button
+            class="btn-primary-backanchor-point"
+            :data-anchor="'首页选项 小学:确定{' + form.primarySchoolList + '}'"
+            @click="pushSelectSchool('primarySchoolList', 'primarySchool')"
+          >
+            确定
+          </button>
+          <button class="btn-primary-back ">确定</button>
         </div>
       </div>
       <!-- 中学 -->
@@ -1081,7 +1087,8 @@
             </el-select>
           </div>
           <button class="btn-primary-back anchor-point"
-                  :data-anchor="'首页选项 中学:确定{' + form.middleSchoolList + '}'">确定</button>
+                  :data-anchor="'首页选项 中学:确定{' + form.middleSchoolList + '}'"
+                  @click="pushSelectSchool('middleSchoolList', 'middleSchool')">确定</button>
         </div>
       </div>
     </div>
@@ -1219,9 +1226,6 @@ export default {
     this.mapGetPanelData();
   },
   methods: {
-    testClick(){
-      console.log("options");
-    },
     /**
      * @example: 重置
      */
@@ -1283,11 +1287,35 @@ export default {
       this.form.keyWord = this.houseNoOrName;
     },
     /**
+     * @example: 添加select选中到筛选结果
+     * @param {string} field
+     * @param {string} selectFieldValue
+     */
+    pushSelectSchool(field, selectFieldValue) {
+      if (this[selectFieldValue] !== "") {
+        this.form[field].push(this[selectFieldValue]);
+      }
+    },
+    /**
      * @example: 学校selectChange选择
      * @param {string } field
      * @param {string} e
      */
     schoolChange(field, e) {
+      let index = -1;
+      switch (field) {
+        case "primarySchoolList":
+          index = this.form[field].findIndex(
+            item => item == this.temporaryPrimaryValue
+          );
+          break;
+        case "middleSchoolList":
+          index = this.form[field].findIndex(
+            item => item == this.temporaryMiddleValue
+          );
+          break;
+      }
+
       if (e !== "") {
         switch (field) {
           case "primarySchoolList":
@@ -1297,25 +1325,10 @@ export default {
             this.temporaryMiddleValue = e;
             break;
         }
-        this.form[field].push(e);
-      } else {
-        let index = -1;
-        switch (field) {
-          case "primarySchoolList":
-            index = this.form[field].findIndex(
-              item => item == this.temporaryPrimaryValue
-            );
-            this.temporaryPrimaryValue = e;
-            break;
-          case "middleSchoolList":
-            index = this.form[field].findIndex(
-              item => item == this.temporaryMiddleValue
-            );
-            this.temporaryMiddleValue = e;
-            break;
-        }
-        this.form[field].splice(index, 1);
       }
+
+      if (index == -1) return;
+      this.form[field].splice(index, 1);
     },
     /**
      * @example: 修改nav类型激活Index

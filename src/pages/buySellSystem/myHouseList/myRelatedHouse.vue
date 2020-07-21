@@ -259,6 +259,7 @@ import moreSelect from "@/components/moreSelect";
 import houseContrast from "@/minxi/houseContrast";
 import definitionmenu from "@/components/definitionMenu";
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -486,7 +487,10 @@ export default {
     distributeEvent(e, id) {
       var that = this;
       console.log("hhhhhhhhhhhhhhhhhh", id);
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: id }
+      });
     },
     tabColumnChange(e, length = 0) {
       this.tableColumn = e;
@@ -502,7 +506,10 @@ export default {
     // },
     toLook(id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: id }
+      });
     },
     querySaleNotTrackParams() {
       this.querySaleNotTrack(1);

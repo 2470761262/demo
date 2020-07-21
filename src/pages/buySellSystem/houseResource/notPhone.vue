@@ -221,6 +221,7 @@
 <script>
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -302,7 +303,7 @@ export default {
       //无号码
       console.log(row, "进入楼盘详情");
       console.log("/building/getBuildingDetail/" + row.id);
-      that.$router.push({
+      util.openPage.call(this, {
         name: "buildingHouseDetail",
         params: { houseId: row.id }
       });

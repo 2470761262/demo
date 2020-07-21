@@ -296,12 +296,9 @@ import {
   addResizeListener,
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
-//import gggg from "@/components/gggg.vue";
+import util from "@/util/util";
 export default {
   inject: ["form"],
-  components: {
-    // gggg
-  },
   data() {
     return {
       renderList: [],
@@ -486,16 +483,10 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      let navData = this.$router.resolve({
+      util.openPage.call(this, {
         name: "houseDetails",
         params: { houseId: item.id, dept: item.perDept }
-        // query: {
-        //   tk:
-        //     "eyJhbGciOiJIUzI1NiJ9.eyJMT0dJTl9VU0VSX0tFWSI6ImY4Mjk2ZjQyLTc4NjgtNGZlZS1iNmJiLWJiOTNiMDg3YWM2YiJ9.mZyPi7q9A_uuWVHC5DbeNNJ69wL628yY7Wr2Oaw2Y_8"
-        // }
       });
-
-      window.open(navData.href, "_blank");
     },
     /**
      * @example: 远程排序
