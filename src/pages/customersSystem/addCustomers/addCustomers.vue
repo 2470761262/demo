@@ -207,7 +207,8 @@ export default {
             if (e.data.code == 200) {
               that.fullscreenLoading = false;
               this.$router.push({
-                path: "/customers/privateCustomersList"
+                path: "/customers/customersDetail",
+                query: { customerId: e.data.data }
               });
             }
           })
