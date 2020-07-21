@@ -329,10 +329,10 @@ const roomNeedList = [
 ];
 // 付款方式
 const payWayList = [
-  { value: "一次性", key: "1" },
-  { value: "商业贷款", key: "2" },
-  { value: "公积金贷款", key: "4" },
-  { value: "组合贷款", key: "8" }
+  { value: "一次性", key: 1 },
+  { value: "商业贷款", key: 2 },
+  { value: "公积金贷款", key: 4 },
+  { value: "组合贷款", key: 8 }
 ];
 // 购买房型
 const houseTypeList = [
@@ -397,11 +397,11 @@ const tradeHouseTypeList = [
 ];
 // 物业类型
 const manageCompanyTypeList = [
-  { value: "普通住宅", key: "1" },
-  { value: "别墅", key: "2" },
-  { value: "商铺", key: "4" },
-  { value: "写字楼", key: "8" },
-  { value: "其他", key: "16" }
+  { value: "普通住宅", key: 1 },
+  { value: "别墅", key: 2 },
+  { value: "商铺", key: 4 },
+  { value: "写字楼", key: 8 },
+  { value: "其他", key: 16 }
 ];
 import { PURCHASEPURPOSE, DECORATION } from "@/util/constMap";
 export default {

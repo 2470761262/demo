@@ -34,7 +34,8 @@ export default {
       permissionList: this.permissionList,
       getInformation: this.getInformation,
       demandValue: this.demandValue,
-      phoneData: this.phoneData
+      phoneData: this.phoneData,
+      attentionStatus: this.attentionStatus
     };
   },
   components: {
@@ -58,6 +59,7 @@ export default {
       impressionList: {}, //客户印象
       telList: {},
       phoneData: "",
+      attentionStatus: {},
       permissionList: {
         dialButtonEnable: { isDisable: false, name: "dialButtonEnable" }, //一键拨号
         addLookButtonEable: { isDisable: false, name: "addLookButtonEable" }, //添加带看
@@ -132,6 +134,12 @@ export default {
             this.$set(that.customerDeal, "data", data.saleCusPropertyTbl);
             this.$set(that.telList, "data", data.telList);
             that.customer.data = data.bsAgentCustomersTbl;
+            this.$set(
+              that.attentionStatus,
+              "flag",
+              data.bsAgentCustomersTbl.attentionStatus
+            );
+            // that.attentionStatus = data.bsAgentCustomersTbl.attentionStatus;
             that.customer.haveAgents = data.haveAgents;
             that.customer.lookHouses = data.lookHouses;
             that.customer.myLookHouses = data.myLookHouses;

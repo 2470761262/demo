@@ -11,7 +11,10 @@
           placement="bottom"
           trigger="click"
           class="infor-check"
-          v-if="permissionList.customerDetailForTelephone.isDisable"
+          v-if="
+            permissionList.customerDetailForTelephone.isDisable &&
+              attentionStatus.flag == 1
+          "
         >
           <div>
             <p v-for="(item, idx) in phoneList" :key="idx">
@@ -25,13 +28,16 @@
           trigger="click"
           class="infor-dial"
           v-model="isPhone"
-          v-if="permissionList.dialButtonEnable.isDisable"
+          v-if="
+            permissionList.dialButtonEnable.isDisable &&
+              attentionStatus.flag == 1
+          "
         >
           <div class="phone-list">
             <div
               v-for="(item, idx) in phoneList"
               :key="idx"
-              @click="callUp(item.phone)"
+              @click="callUp(item.id)"
             >
               {{ item.phone || "" }}
             </div>
@@ -52,7 +58,10 @@
         <i
           data-anchor="客源详情印象删除 => click"
           class="el-icon-close"
-          v-if="permissionList.customerDetailForDeleteImpression.isDisable"
+          v-if="
+            permissionList.customerDetailForDeleteImpression.isDisable &&
+              attentionStatus.flag == 1
+          "
           @click="deleteImpression(item.id, index)"
         ></i>
       </div>
@@ -115,7 +124,8 @@ export default {
     "customerDeal",
     "impressionList",
     "telList",
-    "permissionList"
+    "permissionList",
+    "attentionStatus"
   ],
   data() {
     return {
@@ -264,7 +274,7 @@ export default {
      * @example: 一键拨号
      * @param: {nmber} phone 客户电话
      */
-    callUp(phone) {
+    callUp(id) {
       let that = this;
       that.isPhone = false;
       if (this.isCall) {
@@ -272,7 +282,7 @@ export default {
           customerId: this.customer.data.id,
           remark: "给客户" + this.customer.data.Customers + "拨打电话",
           customerName: this.customer.data.Customers,
-          contactPhone: phone,
+          telId: id,
           customerNo: this.customer.data.CustomerNo,
           customerPlate: this.customer.data.plate
         };
