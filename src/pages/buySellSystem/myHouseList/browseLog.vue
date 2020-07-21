@@ -195,6 +195,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import common from "../houseResource/common/common";
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -416,7 +417,7 @@ export default {
         console.log(
           "进入我的跟单房源详情 /buySellSystem/houseDetails/" + item.HouseId
         );
-        that.$router.push({
+        util.openPage.call(this, {
           name: "houseDetails",
           params: { houseId: item.HouseId, browse: browse }
         });
@@ -425,7 +426,7 @@ export default {
         console.log(
           "进入店公共盘房源详情 /buySellSystem/houseDetails/" + item.HouseId
         );
-        that.$router.push({
+        util.openPage.call(this, {
           name: "houseDetails",
           params: { houseId: item.HouseId, browse: browse }
         });
@@ -434,13 +435,13 @@ export default {
         console.log(
           "进入在售无跟单房源详情 /buySellSystem/houseDetails/" + item.HouseId
         );
-        that.$router.push({
+        util.openPage.call(this, {
           name: "houseDetails",
           params: { houseId: item.HouseId, browse: browse }
         });
       } else if (item.Type == 4) {
         console.log("进入暂不售房源详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "historyDetails",
           params: {
             houseId: item.HouseId,
@@ -450,14 +451,14 @@ export default {
         });
       } else if (item.Type == 5) {
         console.log("进入楼盘详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "buildingHouseDetail",
           params: { houseId: item.HouseId, browse: browse }
         });
       } else if (item.Type == 6) {
         //楼盘情况
         console.log("进入楼盘详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "potentialHouseDetail",
           params: {
             houseId: item.HouseId,
@@ -467,7 +468,7 @@ export default {
         });
       } else if (item.Type == 7) {
         console.log("进入交易房源详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "tradeHouseDetail",
           params: {
             houseId: item.HouseId,
