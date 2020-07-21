@@ -297,6 +297,7 @@
 <script>
 import listPage from "@/components/listPage";
 import moreSelect from "@/components/moreSelect";
+import util from "@/util/util";
 export default {
   components: {
     listPage,
@@ -427,12 +428,12 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             if (e.data.data == 1) {
-              that.$router.push({
+              util.openPage.call(this, {
                 name: "houseDetails",
                 params: { houseId: row.houseId }
               });
             } else {
-              that.$router.push({
+              util.openPage.call(this, {
                 name: "historyDetails",
                 params: { houseId: row.houseId }
               });

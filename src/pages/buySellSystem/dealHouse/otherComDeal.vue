@@ -256,6 +256,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import common from "../houseResource/common/common";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -434,7 +435,10 @@ export default {
     // },
     toLook(id) {
       var that = this;
-      that.$router.push({ name: "historyDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "historyDetails",
+        params: { houseId: id }
+      });
     },
     toHouseDetail(item) {
       let id = item.id;
@@ -444,7 +448,7 @@ export default {
       }
       console.log(id);
       var that = this;
-      this.$router.push({
+      util.openPage.call(this, {
         name: "historyDetails",
         params: { houseId: id, tradeType: 1 }
       });
