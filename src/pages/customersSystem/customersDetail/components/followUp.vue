@@ -42,7 +42,7 @@
         <!-- 全部记录 -->
         <el-tab-pane label="全部" name="all" class="point">
           <div class="list-content">
-            <el-timeline>
+            <el-timeline v-if="allData.length > 0">
               <el-timeline-item
                 v-for="(item, idx) in allData"
                 :key="idx"
@@ -111,6 +111,10 @@
                       <div class="car-right">{{ item.st || "暂无" }}</div>
                     </div>
                     <div class="car-row">
+                      <div class="car-title">带看时间：</div>
+                      <div class="car-right">{{ item.st || "暂无" }}</div>
+                    </div>
+                    <div class="car-row">
                       <div class="car-title">带看房源：</div>
                       <div
                         class="car-right"
@@ -139,12 +143,13 @@
                 </div>
               </el-timeline-item>
             </el-timeline>
+            <div v-else class="tip-style">暂无记录</div>
           </div>
         </el-tab-pane>
         <!-- 跟进记录 -->
         <el-tab-pane label="跟进" name="followUp" class="point">
           <div class="list-content">
-            <el-timeline>
+            <el-timeline v-if="followData.length > 0">
               <el-timeline-item
                 v-for="(item, idx) in followData"
                 :key="idx"
@@ -187,12 +192,13 @@
                 </section>
               </el-timeline-item>
             </el-timeline>
+            <div v-else class="tip-style">暂无跟进信息</div>
           </div>
         </el-tab-pane>
         <!-- 约看/带看记录 -->
         <el-tab-pane label="约看/带看" name="lookAt" class="point">
           <div class="list-content">
-            <el-timeline>
+            <el-timeline v-if="lookAtData.length > 0">
               <el-timeline-item
                 v-for="(item, idx) in lookAtData"
                 :key="idx"
@@ -254,6 +260,7 @@
                 </section>
               </el-timeline-item>
             </el-timeline>
+            <div v-else class="tip-style">暂无带看记录</div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -544,6 +551,9 @@ export default {
             line-height: 23PX;
             margin-bottom: 0;
           }
+        }
+        .tip-style {
+          font-size: @font16;
         }
       }
     }
