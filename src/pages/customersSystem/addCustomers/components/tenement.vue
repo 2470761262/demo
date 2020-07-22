@@ -9,6 +9,7 @@
             placeholder="最小值"
             class="input-content is-suffix"
             v-model="data.minPrice"
+            oninput="value=value.replace(/[^\d]/g,'')"
             data-vv-name="minPrice"
             data-vv-as="最小值"
             v-validate="'zero1'"
@@ -25,6 +26,7 @@
             placeholder="最大值"
             class="input-content is-suffix"
             v-model="data.maxPrice"
+            oninput="value=value.replace(/[^\d]/g,'')"
             data-vv-name="maxPrice"
             data-vv-as="最大值"
             v-validate="{
@@ -49,6 +51,7 @@
             placeholder="最小值"
             class="input-content is-suffix"
             v-model="data.minUnitPrice"
+            oninput="value=value.replace(/[^\d]/g,'')"
             data-vv-name="minUnitPrice"
             data-vv-as="最小值"
             v-validate="'zero1'"
@@ -65,6 +68,7 @@
             placeholder="最大值"
             class="input-content is-suffix"
             v-model="data.maxUnitPrice"
+            oninput="value=value.replace(/[^\d]/g,'')"
             data-vv-name="maxUnitPrice"
             data-vv-as="最大值"
             v-validate="{
@@ -89,6 +93,7 @@
             placeholder="最小值"
             class="input-content is-suffix"
             v-model="data.minArea"
+            oninput="value = value.match(/^\d*(\.?\d{0,2})/g)[0]"
             data-vv-name="minArea"
             data-vv-as="最小值"
             v-validate="'noZero1'"
@@ -108,6 +113,7 @@
             placeholder="最大值"
             class="input-content is-suffix"
             v-model="data.maxArea"
+            oninput="value = value.match(/^\d*(\.?\d{0,2})/g)[0]"
             data-vv-name="maxArea"
             data-vv-as="最大值"
             v-validate="{
