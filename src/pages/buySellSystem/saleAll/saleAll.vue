@@ -43,7 +43,8 @@
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
             class="anchor-point"
-            data-anchor="全部在售楼盘筛选"
+            data-anchor="全部在售楼盘筛选 => select"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
@@ -55,9 +56,10 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="全部在售楼盘筛选"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in options"
+              :data-anchor="'全部在售楼盘筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -66,16 +68,18 @@
           <el-select
             class="anchor-point"
             v-model="data.cbId"
+            @click.native="log_socket.sendUserActionData"
             filterable
             clearable
-            data-anchor="全部在售楼栋筛选"
+            data-anchor="全部在售楼栋筛选 => select"
             placeholder="楼栋"
             @change="buildChange"
           >
             <el-option
               class="anchor-point"
-              data-anchor="全部在售楼栋筛选"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
+              :data-anchor="'全部在售楼栋筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -84,7 +88,8 @@
           <el-select
             class="anchor-point"
             v-model="data.roomNo"
-            data-anchor="全部在售房间号筛选"
+            @click.native="log_socket.sendUserActionData"
+            data-anchor="全部在售房间号筛选 => select"
             filterable
             @change="querySoleAllParams"
             placeholder="房间号"
@@ -93,9 +98,10 @@
           >
             <el-option
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
               :key="item.value"
-              data-anchor="全部在售房间号筛选"
+              :data-anchor="'全部在售房间号筛选 => select => option:' + item.name"
               :label="item.name"
               :value="item.value"
             ></el-option>

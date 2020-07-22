@@ -17,6 +17,9 @@
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
+            data-anchor="锁定列表楼盘 => select"
+            @click.native="log_socket.sendUserActionData"
+            class="anchor-point"
             filterable
             remote
             clearable
@@ -26,7 +29,10 @@
           >
             <el-option
               v-for="item in options"
+              :data-anchor="'锁定列表楼盘 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
+              class="anchor-point"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -34,26 +40,38 @@
           <el-select
             v-model="data.cbId"
             filterable
+            data-anchor="锁定列表楼栋 => select"
+            @click.native="log_socket.sendUserActionData"
+            class="anchor-point"
             clearable
             placeholder="楼栋"
             @change="queryRoomNo"
           >
             <el-option
               v-for="item in cbIdList"
+              :data-anchor="'锁定列表楼栋 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
+              class="anchor-point"
               :label="item.name"
               :value="item.value"
             ></el-option>
           </el-select>
           <el-select
             v-model="data.bhId"
+            data-anchor="锁定列表房间号 => select"
+            @click.native="log_socket.sendUserActionData"
+            class="anchor-point"
             filterable
             @change="queryLockedAllParams"
             placeholder="房间号"
           >
             <el-option
               v-for="item in roomNoList"
+              :data-anchor="'锁定列表房间号 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
+              class="anchor-point"
               :label="item.name"
               :value="item.value"
             ></el-option>

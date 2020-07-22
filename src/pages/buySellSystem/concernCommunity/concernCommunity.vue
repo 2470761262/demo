@@ -208,6 +208,7 @@
             <h3 class="query-cell-title">楼盘</h3>
             <el-select
               data-anchor="核心盘楼盘 => select"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-model="comId"
               @focus="remoteInput"
@@ -219,9 +220,10 @@
               filterable
             >
               <el-option
-                data-anchor="核心盘楼盘 => select => option"
                 class="anchor-point"
                 v-for="item in comList"
+                :data-anchor="'核心盘楼盘 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -229,6 +231,7 @@
             </el-select>
             <el-select
               data-anchor="核心盘楼栋 => select"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-model="cbId"
               filterable
@@ -238,8 +241,9 @@
             >
               <el-option
                 class="anchor-point"
-                data-anchor="核心盘楼栋 => select => option"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in cbIdList"
+                :data-anchor="'核心盘楼栋 => select => option:' + item.name"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -247,6 +251,7 @@
             </el-select>
             <el-select
               data-anchor="核心盘房间号 => select"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-model="roomNo"
               filterable
@@ -256,9 +261,10 @@
               v-loadmore="loadMore"
             >
               <el-option
-                data-anchor="核心盘房间号 => select => option"
                 class="anchor-point"
                 v-for="item in roomNoList"
+                :data-anchor="'核心盘房间号 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"

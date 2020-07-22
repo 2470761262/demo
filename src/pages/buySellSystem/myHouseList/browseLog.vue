@@ -19,6 +19,7 @@
             data-anchor="浏览记录楼盘 => select"
             class="anchor-point"
             v-model="data.comId"
+            @click.native="log_socket.sendUserActionData"
             @focus="remoteInput"
             @change="queryCBId"
             filterable
@@ -29,9 +30,10 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="浏览记录楼盘 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in options"
+              :data-anchor="'浏览记录楼盘 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -40,6 +42,7 @@
           <el-select
             data-anchor="浏览记录楼栋 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.cbId"
             filterable
             clearable
@@ -47,9 +50,10 @@
             @change="buildChange"
           >
             <el-option
-              data-anchor="浏览记录楼栋 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
+              :data-anchor="'浏览记录楼栋 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -59,6 +63,7 @@
             data-anchor="浏览记录房间号 => select"
             class="anchor-point"
             v-model="data.roomNo"
+            @click.native="log_socket.sendUserActionData"
             filterable
             @change="querySoleAllParams"
             placeholder="房间号"
@@ -66,9 +71,10 @@
             v-loadmore="loadMore"
           >
             <el-option
-              data-anchor="浏览记录房间号 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
+              :data-anchor="'浏览记录房间号 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"

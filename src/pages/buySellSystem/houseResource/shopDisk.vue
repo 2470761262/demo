@@ -42,9 +42,10 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
-            data-anchor="店公盘楼盘筛选"
+            data-anchor="店公盘楼盘筛选 => select"
             class="anchor-point"
             v-model="data.comId"
+            @click.native="log_socket.sendUserActionData"
             @focus="remoteInput"
             @change="queryCBId"
             filterable
@@ -55,9 +56,10 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="店公盘楼盘筛选"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in options"
+              :data-anchor="'店公盘楼盘筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -66,16 +68,18 @@
           <el-select
             class="anchor-point"
             v-model="data.cbId"
+            @click.native="log_socket.sendUserActionData"
             filterable
             clearable
-            data-anchor="店公盘楼栋筛选"
+            data-anchor="店公盘楼栋筛选 => select"
             placeholder="楼栋"
             @change="buildChange"
           >
             <el-option
               class="anchor-point"
-              data-anchor="店公盘楼栋筛选"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
+              :data-anchor="'店公盘楼栋筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -84,8 +88,9 @@
           <el-select
             class="anchor-point"
             v-model="data.roomNo"
+            @click.native="log_socket.sendUserActionData"
             filterable
-            data-anchor="店公盘房间号筛选"
+            data-anchor="店公盘房间号筛选 => select"
             @change="querySaleNotTrackParams"
             placeholder="房间号"
             :loading="HouseNoLoading"
@@ -93,8 +98,9 @@
           >
             <el-option
               class="anchor-point"
-              data-anchor="店公盘房间号筛选"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
+              :data-anchor="'店公盘房间号筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"

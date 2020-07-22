@@ -18,6 +18,7 @@
             v-model="data.comId"
             data-anchor="暂不售楼盘筛选"
             @focus="remoteInput"
+            @click.native="log_socket.sendUserActionData"
             @change="queryCBId"
             filterable
             remote
@@ -27,9 +28,10 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="暂不售楼盘筛选"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in options"
+              :data-anchor="'暂不售楼盘筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -38,6 +40,7 @@
           <el-select
             data-anchor="暂不售楼栋筛选"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.cbId"
             filterable
             clearable
@@ -45,9 +48,10 @@
             @change="buildChange"
           >
             <el-option
-              data-anchor="暂不售楼栋筛选"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
+              :data-anchor="'暂不售楼栋筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -57,6 +61,7 @@
             class="anchor-point"
             v-model="data.roomNo"
             filterable
+            @click.native="log_socket.sendUserActionData"
             data-anchor="暂不售房间号筛选"
             @change="queryNotSaleParams"
             placeholder="房间号"
@@ -64,9 +69,10 @@
             v-loadmore="loadMore"
           >
             <el-option
-              data-anchor="暂不售房间号筛选"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
+              :data-anchor="'暂不售房间号筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"

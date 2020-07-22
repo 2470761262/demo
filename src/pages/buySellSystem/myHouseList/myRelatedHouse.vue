@@ -15,6 +15,7 @@
           <el-select
             data-anchor="我的相关楼盘 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
@@ -26,9 +27,10 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="我的相关楼盘 => select => option"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-for="item in options"
+              :data-anchor="'我的相关楼盘 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -37,6 +39,7 @@
           <el-select
             data-anchor="我的相关楼栋 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.cbId"
             filterable
             clearable
@@ -44,9 +47,10 @@
             @change="buildChange"
           >
             <el-option
-              data-anchor="我的相关楼栋 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
+              :data-anchor="'我的相关楼栋 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -55,6 +59,7 @@
           <el-select
             data-anchor="我的相关房间号 => select "
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.roomNo"
             filterable
             @change="querySaleNotTrackParams"
@@ -63,9 +68,10 @@
             v-loadmore="loadMore"
           >
             <el-option
-              data-anchor="我的相关房间号 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
+              :data-anchor="'我的相关房间号 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -163,15 +169,17 @@
           <el-select
             data-anchor="我的相关作业类型 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="workType"
             value-key="item.value"
             @change="querySaleNotTrackParams"
             placeholder="请选择类型"
           >
             <el-option
-              data-anchor="我的相关作业类型 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in option"
+              :data-anchor="'我的相关作业类型 => select => option:' + item.label"
               :key="item.value"
               :label="item.label"
               :value="item.value"

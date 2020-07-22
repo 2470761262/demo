@@ -103,22 +103,25 @@
               @change="queryCBId"
               filterable
               remote
+              @click.native="log_socket.sendUserActionData"
               clearable
               placeholder="楼盘名称"
               :remote-method="remoteMethod"
               :loading="loading"
             >
               <el-option
-                data-anchor="验真列表楼盘 => select => option"
                 class="anchor-point"
                 v-for="item in options"
                 :key="item.value"
+                :data-anchor="'验真列表楼盘 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
                 :label="item.name"
                 :value="item.value"
               ></el-option>
             </el-select>
             <el-select
               data-anchor="验真列表楼栋 => select"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-model="data.cbId"
               filterable
@@ -127,9 +130,10 @@
               @change="buildChange"
             >
               <el-option
-                data-anchor="验真列表楼栋 => select => option"
                 class="anchor-point"
                 v-for="item in cbIdList"
+                :data-anchor="'验真列表楼栋 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -138,6 +142,7 @@
             <el-select
               data-anchor="验真列表房间号 => select"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-model="data.roomNo"
               filterable
               @change="queryVerifyHouseByParams"
@@ -146,9 +151,10 @@
               v-loadmore="loadMore"
             >
               <el-option
-                data-anchor="验真列表房间号 => select => option"
                 class="anchor-point"
                 v-for="item in roomNoList"
+                :data-anchor="'验真列表房间号 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -248,6 +254,8 @@
             <div class="query-content-cell cell-interval75">
               <h3 class="query-cell-title">验证状态</h3>
               <el-select
+                data-anchor="验真列表验证状态 => select"
+                @click.native="log_socket.sendUserActionData"
                 v-model="data.checkStatusValue"
                 @change="queryVerifyHouseByParams"
                 clearable
@@ -258,6 +266,8 @@
                   class="anchor-point"
                   v-for="item in checkStatusList"
                   :key="item.value"
+                  :data-anchor="'验真列表验证状态 => select => option:' + item.label"
+                  @click.native="log_socket.sendUserActionData"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>
@@ -267,6 +277,8 @@
               <h3 class="query-cell-title">号码状态</h3>
               <el-select
                 v-model="data.phoneStatusValue"
+                data-anchor="验真列表号码状态 => select"
+                @click.native="log_socket.sendUserActionData"
                 @change="queryVerifyHouseByParams"
                 clearable
                 class="set-select100 anchor-point"
@@ -276,6 +288,8 @@
                   class="anchor-point"
                   v-for="item in phoneStatusList"
                   :key="item.value"
+                  :data-anchor="'验真列表号码状态 => select => option:' + item.label"
+                  @click.native="log_socket.sendUserActionData"
                   :label="item.label"
                   :value="item.value"
                 ></el-option>

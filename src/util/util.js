@@ -237,6 +237,7 @@ export default {
     var returnParentElement = null;
     function getParentNode(element, className) {
       if (
+        !element ||
         !element.tagName ||
         element.tagName.toLowerCase() == "body" ||
         element.tagName.toLowerCase() == "html"
