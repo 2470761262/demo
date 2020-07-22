@@ -84,8 +84,8 @@
                   加载中<span>...</span>
                 </div>
               </el-image>
-              <div style="margin-left:18px;line-height: 0;">微信扫码上传</div>
             </div>
+            <div style="margin-left:18px;line-height: 0;">微信扫码上传</div>
           </el-form-item>
         </el-form>
       </div>
