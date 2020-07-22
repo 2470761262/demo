@@ -302,6 +302,7 @@ export default {
       return times.getTime() > Date.now();
     };
     this.getCusRequired();
+    this.validateInit();
   },
   methods: {
     // 获取客户需求列表
@@ -506,6 +507,17 @@ export default {
             });
         }
       });
+    },
+    validateInit() {
+      const dictionary = {
+        zh_CN: {
+          messages: {
+            required: field => field + "不能为空",
+            arrFlatLength: field => field + "不能为空"
+          }
+        }
+      };
+      this.$validator.updateDictionary(dictionary);
     }
   }
 };
