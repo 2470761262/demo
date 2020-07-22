@@ -343,7 +343,7 @@
         @click="navigateTo('/customers/privateCustomersList')"
       >
         <i class="iconfont iconcube-kehu"></i>
-        <span>私客库</span>
+        <span>私客池</span>
       </div>
       <div class="SwitchItemOn">
         <i class="iconfont iconkehu"></i>
@@ -418,6 +418,41 @@
           </div>
         </el-checkbox-group>
       </el-form-item>
+      <!--       <el-form-item
+        label="回访时间"
+        class="ItemRow ChooseItemRow"
+        prop="HouseType"
+      >
+        <el-radio-group v-model="form.ReVisit" class="RadioItemBox">
+          <div
+            class="RadioItem"
+            v-for="(item, index) in ReVisitList"
+            :key="index"
+          >
+            <el-radio :label="item.value" name="ReVisit">{{
+              item.name
+            }}</el-radio>
+          </div>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item
+        label="我的回访"
+        class="ItemRow ChooseItemRow"
+        prop="HouseType"
+      >
+        <el-radio-group v-model="form.MyReVisit" class="RadioItemBox">
+          <div
+            class="RadioItem"
+            v-for="(item, index) in MyReVisitList"
+            :key="index"
+          >
+            <el-radio :label="item.value" name="MyReVisit">{{
+              item.name
+            }}</el-radio>
+          </div>
+        </el-radio-group>
+      </el-form-item> -->
     </el-form>
   </div>
 </template>
@@ -484,6 +519,42 @@ const ReasonModle = [
     value: 5
   }
 ];
+
+const ReVisitListModle = [
+  {
+    name: "不限",
+    value: ""
+  },
+  {
+    name: "今日有回访",
+    value: 1
+  },
+  {
+    name: "30天内有回访",
+    value: 2
+  },
+  {
+    name: "30天以上未回访",
+    value: 3
+  }
+];
+
+const MyReVisitListModle = [
+  {
+    name: "不限",
+    value: ""
+  },
+  {
+    name: "今日回访",
+    value: 1
+  },
+  {
+    name: "本月回访",
+    value: 2
+  }
+];
+import { formatDate } from "element-ui/src/utils/date-util";
+
 export default {
   inject: ["form"],
   data() {
@@ -491,11 +562,15 @@ export default {
       customerNeedsList: customerNeedsModle,
       PublicTypeList: PublicTypeModle,
       ReasonList: ReasonModle,
-      plateChangeReasons: [0]
+      ReVisitList: ReVisitListModle,
+      MyReVisitList: MyReVisitListModle,
+      plateChangeReasons: [0],
+      Today: ""
     };
   },
   created() {
-    console.log(this.form);
+    this.Today = formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+    console.log(this.Today);
   },
   methods: {
     navigateTo(path) {

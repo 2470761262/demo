@@ -98,6 +98,9 @@
       border-left: 2px solid #ffffff !important;
     }
   }
+  .Followtip {
+    font-size: @font16;
+  }
 }
 </style>
 <template>
@@ -160,7 +163,11 @@
           </div>
         </div>
       </div>
+      <div class="Followtip" v-if="FollowData.data.length <= 0">
+        暂无跟进信息
+      </div>
     </div>
+
     <fixedPopup
       :visible.sync="addFollowFlag"
       v-if="addFollowFlag"
