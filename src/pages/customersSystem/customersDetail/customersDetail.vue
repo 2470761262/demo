@@ -139,30 +139,32 @@ export default {
               "flag",
               data.bsAgentCustomersTbl.attentionStatus
             );
-            // that.attentionStatus = data.bsAgentCustomersTbl.attentionStatus;
             that.customer.haveAgents = data.haveAgents;
             that.customer.lookHouses = data.lookHouses;
             that.customer.myLookHouses = data.myLookHouses;
-            // that.tel = data.telList[0].phone;
             that.modificationPermission(data.ruleList);
             that.demandList.data.forEach(item => {
-              item.middleSchool = item.middleSchool.split("$");
-              item.primarySchool = item.primarySchool.split("$");
+              if (item.middleSchool) {
+                item.middleSchool = item.middleSchool.split("$");
+              }
+              if (item.primarySchool) {
+                item.primarySchool = item.primarySchool.split("$");
+              }
               switch (item.requireType) {
                 case 1:
                 case 2:
                 case 4:
-                  this.demandValue.list0.push(item.requireType);
+                  that.demandValue.list0.push(item.requireType);
                   break;
                 case 8:
                 case 16:
                 case 32:
-                  this.demandValue.list1.push(item.requireType);
+                  that.demandValue.list1.push(item.requireType);
                   break;
                 case 64:
                 case 128:
                 case 256:
-                  this.demandValue.list2.push(item.requireType);
+                  that.demandValue.list2.push(item.requireType);
                   break;
               }
             });

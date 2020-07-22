@@ -78,7 +78,7 @@
             :picker-options="{
               selectableRange: `${
                 timeStar ? timeStar + ':00' : nowTime + ':00'
-              } -${nowTime + ':00'}`
+              } -'23:59:00'`
             }"
             placeholder="结束时间"
             data-vv-as="结束时间"
@@ -406,7 +406,7 @@ export default {
       this.HouseNoLoading = true;
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHouses",
+          url: "/saleCustomerDetail/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           qs: true,

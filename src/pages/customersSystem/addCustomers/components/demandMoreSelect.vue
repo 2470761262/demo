@@ -20,6 +20,7 @@
     font-size: 16PX;
     height: 250px;
     overflow: hidden;
+    padding-bottom: 20px;
     .ul-content-area {
       flex: 1;
       &:nth-child(1) {
@@ -296,7 +297,9 @@ export default {
      */
 
     resetShowActiveList() {
+      console.log("this.orderDataJson", this.dataJson);
       this.showActiveList = [];
+      this.renderLeftList = JSON.parse(JSON.stringify(listData));
       Object.keys(this.orderDataJson).forEach((item, index) => {
         this.orderDataJson[item].forEach((ordChildItem, ordChildIndex) => {
           this.renderLeftList[index].children.forEach(
@@ -345,6 +348,7 @@ export default {
      * @param {Object} relevance 用于判断是tag点击删除 还是 checkout删除
      */
     removeActive(nowSign, relevance = false) {
+      console.log(this.showActiveList);
       let isIndex = this.showActiveList.findIndex(item => {
         return item.sign == (relevance ? nowSign.sign : nowSign);
       });
@@ -393,6 +397,14 @@ export default {
           isDisabled: nowItem.isDisabled
         });
       }
+    },
+    /**
+     * @example: 重新获取渲染数据
+     * @param {Obejct} data 等同于this.dataJson
+     */
+    rewriteData(data) {
+      this.orderDataJson = JSON.parse(JSON.stringify(data)); // util.deepCopy();
+      this.resetShowActiveList();
     }
   }
 };

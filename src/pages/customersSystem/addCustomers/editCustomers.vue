@@ -130,9 +130,13 @@ export default {
             }
           }
         } else {
-          postData = util.deepCopy(
-            this.$store.state.addCustomers.formData.step1
-          );
+          if (this.componentName == "stepOne") {
+            postData = util.deepCopy(this.$refs.childreCom.formData);
+          } else {
+            postData = util.deepCopy(
+              this.$store.state.addCustomers.formData.step1
+            );
+          }
           postData.requirements = util.deepCopy(
             this.$store.state.addCustomers.formData.step2
           );
@@ -374,6 +378,7 @@ export default {
               }
             });
             this.$refs.childreCom.getCity(fromData.provinceId, 1);
+            this.$refs.childreCom.getCounty(fromData.cityId, 1);
             if (this.step == 2) {
               this.componentName = "stepTwo";
               this.comNextIndex = 1;

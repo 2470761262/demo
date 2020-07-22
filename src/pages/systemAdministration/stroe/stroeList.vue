@@ -64,7 +64,7 @@
             :key="item.prop"
           ></el-table-column>
         </template>
-        <el-table-column label="操作" fixed="right">
+        <el-table-column label="操作" fixed="right" min-width="180">
           <template v-slot="scope">
             <div v-if="scope.row.operation != ''">
               <el-button
@@ -128,10 +128,10 @@ export default {
       this.tableDataColumn = [
         //{ prop: "id", label: "门店id", width: "70px" },
         { prop: "storeName", label: "店面", width: "165px" },
-        { prop: "flagSale", label: "职务", width: "150px" },
-        { prop: "shoreAddress", label: "地址" },
-        { prop: "shoreTel", label: "电话" },
-        { prop: "shoreType", label: "类型", width: "165px" },
+        { prop: "flagSale", label: "职务", width: "100px" },
+        { prop: "shoreAddress", label: "地址", width: "300px" },
+        { prop: "shoreTel", label: "电话", width: "150px" },
+        { prop: "shoreType", label: "类型", width: "100px" },
         { prop: "storeDesc", label: "描述" },
         { prop: "regDate", label: "开业时间" }
       ];

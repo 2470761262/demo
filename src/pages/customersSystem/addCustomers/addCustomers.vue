@@ -21,9 +21,7 @@
 </style>
 <template>
   <section class="content">
-    <keep-alive>
-      <component :is="componentName" ref="childreCom"></component>
-    </keep-alive>
+    <component :is="componentName" ref="childreCom"></component>
     <div class="floot-content">
       <el-button @click="close">返回</el-button>
       <el-button type="primary" @click="nextStep">{{ stepName }}</el-button>
@@ -90,6 +88,9 @@ export default {
           this.$refs.childreCom.updataStep2();
           this.componentName = ComList[--this.comNextIndex];
           this.stepName = "下一步";
+          this.$nextTick(() => {
+            this.$refs.childreCom.getData();
+          });
         }
       }
     },

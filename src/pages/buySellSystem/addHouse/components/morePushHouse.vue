@@ -304,35 +304,62 @@
         </div>
       </div>
     </transition>
-    <!-- 业主姓名 -->
-    <div
-      class="form-error-tips maging-top_60 margin-bot_20"
-      :class="{ 'after-tips': errorBags.has('customerName') }"
-      :data-tips="errorBags.first('customerName')"
-    >
-      <div class="page-cell-item select-nobor center-flex">
-        <el-input
-          data-anchor="添加房源多套录入业主姓名 => input"
-          class="anchor-point"
-          placeholder="请输入业主姓名"
-          data-vv-name="customerName"
-          data-vv-as="业主姓名"
-          v-validate="'required|isChinese'"
-          v-model="form.customerName"
-        >
-          <div slot="prepend" class="item-before" data-before="*">业主姓名</div>
-        </el-input>
-        <div class="input-after-checkbox">
-          <el-radio-group v-model="form.sex" size="mini">
-            <el-radio
-              data-anchor="添加房源多套录入业主性别 => radio"
-              class="anchor-point"
-              :label="item.label"
-              v-for="(item, index) in sexList"
-              :key="index"
-              >{{ item.title }}</el-radio
+    <div class="page-cell-item-flex">
+      <!-- 业主姓名 -->
+      <div
+        class="form-error-tips maging-top_60 margin-bot_20"
+        :class="{ 'after-tips': errorBags.has('customerName') }"
+        :data-tips="errorBags.first('customerName')"
+      >
+        <div class="page-cell-item select-nobor center-flex">
+          <el-input
+            data-anchor="添加房源多套录入业主姓名 => input"
+            class="anchor-point"
+            placeholder="请输入业主姓名"
+            data-vv-name="customerName"
+            data-vv-as="业主姓名"
+            v-validate="'required|isChinese'"
+            v-model="form.customerName"
+          >
+            <div slot="prepend" class="item-before" data-before="*">业主姓名</div>
+          </el-input>
+          <div class="input-after-checkbox radio-maging-top_13">
+            <el-radio-group v-model="form.sex" size="mini">
+              <el-radio
+                data-anchor="添加房源多套录入业主性别 => radio"
+                class="anchor-point"
+                :label="item.label"
+                v-for="(item, index) in sexList"
+                :key="index"
+                >{{ item.title }}</el-radio
+              >
+            </el-radio-group>
+          </div>
+        </div>
+      </div>
+      <div
+              class="form-error-tips  maging-top_60 margin-bot_20 margin-left_20"
+              :class="{ 'after-tips': errorBags.has('customerType') }"
+              :data-tips="errorBags.first('customerType')"
+      >
+        <div class="page-cell-item">
+          <div class="item-before" data-before="*">业主类型</div>
+          <div class="radio-maging-top_13">
+            <el-radio-group
+                    v-model="form.customerType"
+                    size="mini"
+                    class="anchor-point"
             >
-          </el-radio-group>
+              <el-radio
+                      data-anchor="添加房源业主类型 => radio"
+                      class="anchor-point"
+                      :label="item.label"
+                      v-for="(item, index) in customerTypeList"
+                      :key="index"
+              >{{ item.title }}</el-radio
+              >
+            </el-radio-group>
+          </div>
         </div>
       </div>
     </div>
@@ -491,6 +518,11 @@ let sex = [
   { title: "女士", label: 0 },
   { title: "先生", label: 1 }
 ];
+let customerType = [
+  { title: "产权人", label: 0 },
+  { title: "实际控制人", label: 1 },
+  { title: "投资客", label: 2 }
+];
 let certificateType = [
   { title: "不动产权证", label: 1 },
   { title: "购房合同", label: 2 },
@@ -510,6 +542,7 @@ export default {
     return {
       addHouseType: this.houseType,
       sexList: sex,
+      customerTypeList: customerType,
       addTel: [], //123电话号码数组
       tableForList: "", //共多少套
       tableAvgPirce: "", //总售价
@@ -518,6 +551,7 @@ export default {
       form: {
         customerName: "", //用户姓名
         sex: 0, //业主称谓
+        customerType: 0, //业主类型
         tel: "", //业主电话号码
         certificateType: "", //房屋证件
         // price: '',//售价
