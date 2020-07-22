@@ -355,11 +355,17 @@ export default {
           formart: item => item.seenNumRecent || "0"
         },
         {
-          prop: "saleReson",
-          label: "出售原因",
+          prop: "customerType",
+          label: "业主类型",
           order: false,
-          formart: item => item.saleReson || "暂无"
+          formart: item => this.formatCustomerType(item.customerType)
         },
+        // {
+        //   prop: "saleReson",
+        //   label: "出售原因",
+        //   order: false,
+        //   formart: item => item.saleReson || "暂无"
+        // },
         {
           prop: "floor",
           label: "楼层",
@@ -448,6 +454,18 @@ export default {
       }
 
       return res;
+    },
+    formatCustomerType(column) {
+      switch (column) {
+        case 0:
+          return "产权人";
+        case 1:
+          return "实际控制人";
+        case 2:
+          return "投资客";
+        default:
+          return "-";
+      }
     },
     getChartType(char) {
       // 数字可按照排序的要求进行自定义，我这边产品的要求是

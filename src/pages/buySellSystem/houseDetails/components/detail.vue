@@ -270,10 +270,18 @@
           {{ resultData.seenNum | emptyRead("次") }}
         </div>
       </div>
-      <div class="cell-tabs">
-        <div class="cell-tabs-title">未跟进天数</div>
-        <div class="cell-tabs-detail">
-          {{ resultData.outfollow | emptyRead("天") }}
+      <div class="flex-row">
+        <div class="cell-tabs">
+          <div class="cell-tabs-title">未跟进天数</div>
+          <div class="cell-tabs-detail">
+            {{ resultData.outfollow | emptyRead("天") }}
+          </div>
+        </div>
+        <div class="cell-tabs">
+          <div class="cell-tabs-title">业主类型</div>
+          <div class="cell-tabs-detail">
+            {{ formatCustomerType(resultData.customerType) }}
+          </div>
         </div>
       </div>
     </div>
@@ -515,6 +523,18 @@ export default {
   },
   mounted() {},
   methods: {
+    formatCustomerType(column) {
+      switch (column) {
+        case 0:
+          return "产权人";
+        case 1:
+          return "实际控制人";
+        case 2:
+          return "投资客";
+        default:
+          return "-";
+      }
+    },
     callTaskAgent() {
       but.$emit("callTaskAgent");
     },

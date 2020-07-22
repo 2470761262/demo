@@ -61,7 +61,7 @@
         :key="index"
         :name="item.active"
       >
-        <span slot="label"><i :class="item.icon"></i> {{ item.name }}</span>
+        <span slot="label" class="anchor-point" :data-anchor="item.name"><i :class="item.icon"></i> {{ item.name }}</span>
       </el-tab-pane>
     </el-tabs>
     <template v-for="(item, index) in renderTab">
@@ -78,6 +78,7 @@
           :name="items.active"
           :label="items.name"
         >
+          <span slot="label" class="anchor-point" :data-anchor="item.name + ':' + items.name">{{ items.name }}</span>
         </el-tab-pane>
       </el-tabs>
     </template>
