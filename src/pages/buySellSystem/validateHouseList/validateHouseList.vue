@@ -781,7 +781,7 @@ export default {
     toHouseDetail(row) {
       var that = this;
       console.log(row, "进入验真房源（sale_house_draft）详情");
-      that.$router.push({
+      util.openPage.call(this, {
         name: "validateHouseDetails",
         params: { houseId: row.id }
       });

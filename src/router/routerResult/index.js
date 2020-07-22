@@ -16,7 +16,8 @@ export default [
   },
   {
     //买卖系统录入房源
-    path: "/buySellSystem/houseDetails",
+    path:
+      "/buySellSystem/houseDetails/:houseId/:browse?/:key?/:dept?/:detailType?",
     name: "houseDetails",
     meta: {
       title: "房源详情"
@@ -28,7 +29,7 @@ export default [
   },
   {
     //买卖系统历史房源
-    path: "/buySellSystem/historyDetails",
+    path: "/buySellSystem/historyDetails/:houseId/:tradeType?/:browse?/:key?",
     name: "historyDetails",
     meta: {
       title: "历史详情"
@@ -40,7 +41,7 @@ export default [
   },
   {
     //买卖系统验证房源
-    path: "/buySellSystem/validateHouseDetails",
+    path: "/buySellSystem/validateHouseDetails/:houseId",
     name: "validateHouseDetails",
     meta: {
       title: "验真详情"
@@ -52,7 +53,7 @@ export default [
   },
   {
     //买卖系统楼盘详情
-    path: "/buySellSystem/buildingHouseDetail",
+    path: "/buySellSystem/buildingHouseDetail/:houseId/:browse?/:key?",
     name: "buildingHouseDetail",
     meta: {
       title: "楼盘详情"
@@ -64,7 +65,7 @@ export default [
   },
   {
     //买卖系统交易房源详情
-    path: "/buySellSystem/tradeHouseDetail",
+    path: "/buySellSystem/tradeHouseDetail/:houseId/:houseType?/:browse?/:key?",
     name: "tradeHouseDetail",
     meta: {
       title: "房源历史交易详情"
@@ -76,7 +77,8 @@ export default [
   },
   {
     //潜在出售房源详情
-    path: "/buySellSystem/potentialHouseDetail",
+    path:
+      "/buySellSystem/potentialHouseDetail/:houseId/:houseType?/:browse?/:key?",
     name: "potentialHouseDetail",
     meta: {
       title: "潜在出售房源详情",

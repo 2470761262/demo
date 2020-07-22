@@ -10,7 +10,13 @@ function getData() {
       sourceType: 0,
       myImpression: [], //印象的结果数组
       requirements: [], //客户需求（传后端用）
-      sourceList: [] //客源来源列表
+      sourceList: [], //客源来源列表
+      provinceId: "", //省
+      cityId: "", //市
+      countyId: "", //区
+      provinceName: "", //省
+      cityName: "", //市
+      countyName: "" //区
     },
     step2: [],
     //requirements内容

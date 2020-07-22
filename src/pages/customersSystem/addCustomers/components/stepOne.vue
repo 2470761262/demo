@@ -110,8 +110,10 @@
               clearable
               placeholder="请输入客户的电话号码"
               maxlength="11"
+              @blur="checkRepeatPhone(item.phone)"
               :data-vv-name="'phone' + (index + 1)"
               data-vv-as="客户号码"
+              data-vv-validate-on="blur"
               v-validate="{
                 required: true,
                 phone: true,
@@ -440,9 +442,38 @@ export default {
   created() {
     this.validateInit();
     this.getProvince();
-    this.getCity(110000);
+    // this.getCity(110000);
   },
   methods: {
+    checkRepeatPhone(phone) {
+      if (!/^1[3456789]\d{9}$/.test(phone)) {
+        return;
+      }
+      console.log("准备校验号码重复" + phone);
+      let that = this;
+      that.$api
+        .post({
+          url: "/saleCustomerOperation/checkRepeatPhone",
+          data: [phone],
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            if (e.data.data) {
+              that.$message({
+                message: phone + "号码重复"
+              });
+            }
+          }
+        })
+        .catch(e => {
+          that.$message({
+            message: e.response.data.message
+          });
+        });
+    },
     /**
      * @example: 客户需求在当前删除
      */
@@ -589,7 +620,7 @@ export default {
     /**
      * @example: 查询市区
      */
-    getCity(id) {
+    getCity(id, flag) {
       let that = this;
       let postData = {
         levelType: 2,
@@ -608,7 +639,11 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             that.cityList = e.data.data.list;
-            that.getCounty(e.data.data.list[0].id);
+            if (flag) {
+              that.getCounty(e.data.data.list[0].id, flag);
+            } else {
+              that.getCounty(e.data.data.list[0].id);
+            }
           }
         })
         .catch(e => {
@@ -620,7 +655,7 @@ export default {
     /**
      * @example: 查询区
      */
-    getCounty(id) {
+    getCounty(id, flag) {
       let that = this;
       let postData = {
         levelType: 3,
@@ -639,6 +674,9 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             that.countyList = e.data.data.list;
+            if (flag) {
+              this.getName();
+            }
           }
         })
         .catch(e => {
@@ -649,7 +687,6 @@ export default {
     },
     provinceChange(val) {
       this.getCity(val);
-      this.getCounty(this.cityList[0].id);
       let obj = {};
       obj = this.provinceList.find(item => {
         return item.id === val;
@@ -670,6 +707,23 @@ export default {
         return item.id === val;
       });
       this.formData.countyName = obj.name;
+    },
+    getName() {
+      let province = {};
+      province = this.provinceList.find(item => {
+        return item.id === this.formData.provinceId;
+      });
+      this.formData.provinceName = province.name;
+      let city = {};
+      city = this.cityList.find(item => {
+        return item.id === this.formData.cityId;
+      });
+      this.formData.cityName = city.name;
+      let county = {};
+      county = this.countyList.find(item => {
+        return item.id === this.formData.countyId;
+      });
+      this.formData.countyName = county.name;
     }
   }
 };

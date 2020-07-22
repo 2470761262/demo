@@ -48,18 +48,33 @@
       :data="tableData"
       header-cell-class-name="ResultListCell ResultListHeaderBack"
       cell-class-name="ResultListCell"
-      @row-dblclick="navigateTo"
-      v-loading="loading"
+      @row-click="navigateTo"
+      @sort-change="sortChange"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
-        <el-table-column
-          :prop="item.prop"
-          :label="item.label"
-          :min-width="item.width"
-          show-overflow-tooltip
-          :key="item.prop"
-          :formatter="item.formart"
-        ></el-table-column>
+        <div
+          v-if="item.prop == 'plateChangeTime' || item.prop == 'maintainTime'"
+        >
+          <el-table-column
+            :prop="item.prop"
+            sortable="custom"
+            :label="item.label"
+            :min-width="item.width"
+            show-overflow-tooltip
+            :key="item.prop"
+            :formatter="item.formart"
+          ></el-table-column>
+        </div>
+        <div v-else>
+          <el-table-column
+            :prop="item.prop"
+            :label="item.label"
+            :min-width="item.width"
+            show-overflow-tooltip
+            :key="item.prop"
+            :formatter="item.formart"
+          ></el-table-column>
+        </div>
       </div>
     </el-table>
     <div class="paginationRow">
@@ -94,7 +109,7 @@ export default {
     return {
       tableDataColumn: [
         {
-          prop: "mainTainTime",
+          prop: "maintainTime",
           label: "上次维护时间",
           width: "180",
           formart: item => item.maintainTime || "暂无"
@@ -140,8 +155,8 @@ export default {
       page: 1, //分页参数，第几页
       pageSum: 0, //总页数
       dataCount: 0, //总条数
-      sortDirection: "", //排序方式，DESC降序（默认），ASC升序
-      sortColumn: "", //排序字段，默认id
+      sortDirection: "DESC", //排序方式，DESC降序（默认），ASC升序
+      sortColumn: "plateChangeTime", //排序字段，默认id
       customerIds: [], //客户id，数字数组
       requireTypeDefinition: {
         1: "买二手住宅",
@@ -178,6 +193,19 @@ export default {
     });
   },
   methods: {
+    sortChange(column) {
+      console.log(column, "排序咯");
+      if (column) {
+        if (column.prop == "plateChangeTime" || column.prop == "maintainTime") {
+          this.page = 1;
+          this.pageSum = 0;
+          this.dataCount = 0;
+          this.sortColumn = column.prop;
+          this.sortDirection = column.order == "ascending" ? "ASC" : "DESC";
+          this.apply();
+        }
+      }
+    },
     apply() {
       var that = this;
       this.loading = true;
@@ -189,6 +217,8 @@ export default {
           data: {
             limit: that.limit,
             page: that.page,
+            sortColumn: this.sortColumn,
+            sortDirection: this.sortDirection,
             isPrivate: false, //是否私客，true私客，false公客
             keyWord: that.form.KeyWord, //关键词-客户信息
             requirementType:
@@ -196,7 +226,7 @@ export default {
                 ? null
                 : that.form.requirementType,
             plate: that.form.plate,
-            plateChangeReason: that.form.plateChangeReason
+            plateChangeReasons: that.form.plateChangeReasons
           }
         })
         .then(e => {
