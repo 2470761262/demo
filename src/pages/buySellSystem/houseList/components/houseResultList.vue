@@ -193,9 +193,17 @@
         // prettier-ignore
         width: 180PX;
       }
+      &.input_210 {
+        // prettier-ignore
+        width: 210PX;
+      }
       &.input_120 {
         // prettier-ignore
         width: 120PX;
+      }
+      &.input_175 {
+        // prettier-ignore
+        width: 175PX;
       }
       &.input_102 {
         // prettier-ignore
@@ -523,7 +531,7 @@
           <el-select
             v-model="buildOptData"
             placeholder="请输入楼盘名称"
-            class="input-content input_180 anchor-point"
+            class="input-content input_210 anchor-point"
             clearable
             filterable
             remote
@@ -553,7 +561,7 @@
             placeholder="请输入栋座"
             clearable
             filterable
-            class="input-content input_120 anchor-point"
+            class="input-content input_175 anchor-point"
             popper-class="options-custom-item anchor-point"
             data-anchor="首页栋座 => select"
             @click.native="log_socket.sendUserActionData"
@@ -1076,7 +1084,7 @@
             :data-anchor="'首页选项 小学:不限'"
             border
             v-model="primarySchoolRadio"
-            @change="radioChange('primarySchoolList', true)"
+            @change="radioChange('primarySchoolList', true, 'primarySchool')"
             >不限</el-radio
           >
           <el-checkbox-group
@@ -1144,7 +1152,7 @@
             :data-anchor="'首页选项 中学:不限'"
             border
             v-model="middleSchoolRadio"
-            @change="radioChange('middleSchoolList', true)"
+            @change="radioChange('middleSchoolList', true, 'middleSchool')"
             >不限</el-radio
           >
           <el-checkbox-group
@@ -1418,11 +1426,13 @@ export default {
           index = this.form[field].findIndex(
             item => item == this.temporaryPrimaryValue
           );
+          this["primarySchoolRadio"] = "";
           break;
         case "middleSchoolList":
           index = this.form[field].findIndex(
             item => item == this.temporaryMiddleValue
           );
+          this["middleSchoolRadio"] = "";
           break;
       }
 
@@ -1749,10 +1759,11 @@ export default {
      * @example: 朝向radio change 事件
      * @param {string } field
      */
-    radioChange(field, isClear) {
+    radioChange(field, isClear, field2) {
       this.form[field] = [];
       if (isClear) {
         this[field] = "";
+        this[field2] = "";
       }
     },
     /**

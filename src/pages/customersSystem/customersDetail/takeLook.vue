@@ -43,30 +43,57 @@
         </el-date-picker>
       </div>
       <!-- 带看时间 -->
-      <div class="input-group is-required">
+      <div class="input-group">
         <div class="input-head">带看时间</div>
-        <el-time-picker
-          is-range
-          v-model="timeValue"
-          range-separator="—"
-          class="input-content"
-          start-placeholder="开始时间"
-          end-placeholder="结束时间"
-          placeholder="选择时间范围"
-          format="HH:mm"
-          value-format="HH:mm"
-          data-vv-as="带看时间"
-          data-vv-name="timeValue"
-          v-validate="'required'"
-          @change="changTime"
-        >
-        </el-time-picker>
-        <div
-          :class="{
-            'after-error-tips': errorBags.has('timeValue')
-          }"
-          :data-error="errorBags.first('timeValue')"
-        ></div>
+        <div class="input-group-split relative">
+          <el-time-picker
+            class="input-content"
+            v-model="timeStar"
+            @change="changTime"
+            format="HH:mm"
+            value-format="HH:mm"
+            :picker-options="{
+              selectableRange: `00:00:00 -${nowTime + ':00'}`
+            }"
+            placeholder="开始时间"
+            data-vv-as="开始时间"
+            data-vv-name="timeStar"
+            v-validate="'required'"
+          >
+          </el-time-picker>
+          <div
+            class="tip-style"
+            :class="{
+              'after-error-tips': errorBags.has('timeStar')
+            }"
+            :data-error="errorBags.first('timeStar')"
+          ></div>
+          <i class="input-split"></i>
+          <el-time-picker
+            class="input-content"
+            v-model="timeEnd"
+            @change="changTime"
+            format="HH:mm"
+            value-format="HH:mm"
+            :picker-options="{
+              selectableRange: `${
+                timeStar ? timeStar + ':00' : nowTime + ':00'
+              } -${nowTime + ':00'}`
+            }"
+            placeholder="结束时间"
+            data-vv-as="结束时间"
+            data-vv-name="timeEnd"
+            v-validate="'required'"
+          >
+          </el-time-picker>
+          <div
+            class="tip-style left"
+            :class="{
+              'after-error-tips': errorBags.has('timeEnd')
+            }"
+            :data-error="errorBags.first('timeEnd')"
+          ></div>
+        </div>
       </div>
       <!-- 带看房源 -->
       <div class="input-group is-required">
@@ -225,7 +252,9 @@ export default {
     return {
       requireType: "",
       dateValue: "",
-      timeValue: "",
+      nowTime: "",
+      timeStar: "",
+      timeEnd: "",
       startDateDisabled: {},
       customerId: this.$route.query.customerId,
       startTime: "",
@@ -256,12 +285,24 @@ export default {
   },
   created() {
     let time = new Date();
+    let hours = "";
+    let minutes = "";
     this.dateValue = time;
+    hours = time.getHours();
+    minutes = time.getMinutes();
+    if (hours >= 0 && hours <= 9) {
+      hours = "0" + hours;
+    }
+    if (minutes >= 0 && minutes <= 9) {
+      minutes = "0" + minutes;
+    }
+    this.nowTime = hours + ":" + minutes;
     // 限制开始日期不能超过当前日期
     this.startDateDisabled.disabledDate = times => {
       return times.getTime() > Date.now();
     };
     this.getCusRequired();
+    this.validateInit();
   },
   methods: {
     // 获取客户需求列表
@@ -306,11 +347,9 @@ export default {
     },
     // 改变时间事件
     changTime() {
-      if (this.timeValue) {
-        let time = this.dateValue.toLocaleDateString();
-        this.startTime = time + " " + this.timeValue[0];
-        this.endTime = time + " " + this.timeValue[1];
-      }
+      let time = this.dateValue.toLocaleDateString();
+      this.startTime = time + " " + this.timeStar;
+      this.endTime = time + " " + this.timeEnd;
     },
     //楼盘、楼栋、房号三级联动
     remoteInput(comId) {
@@ -367,7 +406,7 @@ export default {
       this.HouseNoLoading = true;
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHouses",
+          url: "/saleCustomerDetail/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           qs: true,
@@ -468,6 +507,17 @@ export default {
             });
         }
       });
+    },
+    validateInit() {
+      const dictionary = {
+        zh_CN: {
+          messages: {
+            required: field => field + "不能为空",
+            arrFlatLength: field => field + "不能为空"
+          }
+        }
+      };
+      this.$validator.updateDictionary(dictionary);
     }
   }
 };
@@ -522,6 +572,17 @@ export default {
 }
 .block {
   display: block !important;
+}
+.relative {
+  position: relative;
+}
+.tip-style {
+  position: absolute;
+  width: 200px;
+  top: 48px;
+}
+.left {
+  left: 280px;
 }
 </style>
 <style lang="less">

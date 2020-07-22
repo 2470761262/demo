@@ -64,10 +64,10 @@
         :lastParams="{ id: forID.id, method: 'reset' }"
         :hisEdit="false"
       ></sidebarList>
-      <div class="browse-nav-content" v-scrollCenter="'page-contenr-com'">
+      <!-- <div class="browse-nav-content" v-scrollCenter="'page-contenr-com'">
         <el-button @click="navPage('/buySellSystem/houseList')">首页</el-button>
         <el-button @click="navPage()">返回</el-button>
-      </div>
+      </div> -->
       <browsebar :browse="browse" v-if="browse.addTime"></browsebar>
     </section>
     <!--按钮组 -->
