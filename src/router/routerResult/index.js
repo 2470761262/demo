@@ -1103,7 +1103,8 @@ export default [
     //客源系统 私客列表
     path: "/customers/privateCustomersList",
     meta: {
-      title: "私客列表"
+      title: "私客列表",
+      keepAlive: true
     },
     component: () =>
       import(
@@ -1114,7 +1115,8 @@ export default [
     //客源系统 公客列表
     path: "/customers/publicCustomersList",
     meta: {
-      title: "公客列表"
+      title: "公客列表",
+      keepAlive: true
     },
     component: () =>
       import(
