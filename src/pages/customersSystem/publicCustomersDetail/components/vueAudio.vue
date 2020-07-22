@@ -177,9 +177,7 @@ export default {
       return "快进: x" + value;
     }
   },
-  created() {
-    this.setControlList();
-  }
+  created() {}
 };
 </script>
 <!-- Add "scoped" attribute to limit CSS to this component only -->

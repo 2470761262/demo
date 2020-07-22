@@ -172,7 +172,7 @@
     <fixedPopup
       :visible.sync="ClaimFlag"
       v-if="ClaimFlag"
-      title="确认认领吗？"
+      title="每天只能认领3个客户，确定认领吗？"
       width="960px"
       typeClass="none"
       styleType="0"
@@ -361,17 +361,21 @@ export default {
       }
     },
     customerRequire(list) {
-      let type = "";
-      if (list.length <= 0) {
-        return "暂无";
+      if (list) {
+        let type = "";
+        let l = list.length;
+        console.log(l);
+        if (l <= 0) {
+          return "暂无";
+        }
+        for (let i = 0; i < l; i++) {
+          type += list[i] + ",";
+        }
+        if (type) {
+          type = type.substr(0, type.length - 1);
+        }
+        return type;
       }
-      for (let i = 0; i < list.length; i++) {
-        type += list[i] + ",";
-      }
-      if (type) {
-        type = type.substr(0, type.length - 1);
-      }
-      return type;
     }
   },
   created() {},

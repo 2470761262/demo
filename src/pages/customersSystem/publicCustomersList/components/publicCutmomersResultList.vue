@@ -50,7 +50,6 @@
       cell-class-name="ResultListCell"
       @row-click="navigateTo"
       @sort-change="sortChange"
-      v-loading="loading"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
         <div
