@@ -58,7 +58,7 @@
         border-right: 1px solid #cecece;
       }
       /deep/.el-input {
-        width: 110px;
+        width: 125px;
         height: 30px;
         line-height: 30px;
         i {

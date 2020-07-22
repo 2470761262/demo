@@ -2,27 +2,22 @@
 .content {
   width: 100%;
   display: flex;
+  flex: 1;
   position: relative;
 }
 .left-content,
-.fixBox {
+.right-content {
   padding: 30px;
-  margin: 15px;
   border-radius: 8px;
+  background: rgba(255, 255, 255, 1);
 }
 .left-content {
-  background: rgba(255, 255, 255, 1);
-  flex: 1;
+  width: 860px * @base;
+
+  margin-right: 16px;
 }
 .right-content {
-  width: 500px;
-  height: 100vh;
-}
-.fixBox {
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 1);
-
-  position: fixed;
+  flex: 1;
 }
 </style>
 <template>
@@ -31,9 +26,7 @@
       <customerFollowDetail></customerFollowDetail>
     </div>
     <div class="right-content">
-      <div class="fixBox">
-        <privateCutmomersPair></privateCutmomersPair>
-      </div>
+      <privateCutmomersPair></privateCutmomersPair>
     </div>
   </div>
 </template>

@@ -57,6 +57,7 @@
           :label="item.label"
           :min-width="item.width"
           :key="item.prop"
+          show-overflow-tooltip
           :formatter="item.formart"
         ></el-table-column>
       </div>

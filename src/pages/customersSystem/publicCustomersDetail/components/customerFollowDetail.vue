@@ -25,6 +25,8 @@
   }
 }
 .FollowCardZone {
+  max-height: 770px;
+  overflow-y: auto;
   padding: 24px 0;
   .FollowCell {
     .cellTilRow {
@@ -81,7 +83,7 @@
           .cellMsgTil {
             white-space: nowrap;
             font-size: @font14;
-            width: 75px;
+            min-width: 75px;
             margin-right: 15px;
             color: #606266;
           }

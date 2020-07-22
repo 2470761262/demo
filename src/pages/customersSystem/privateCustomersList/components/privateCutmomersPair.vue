@@ -57,7 +57,7 @@
         border-right: 1px solid #cecece;
       }
       /deep/.el-input {
-        width: 110px;
+        width: 125px;
         height: 30px;
         line-height: 30px;
         i {
@@ -378,7 +378,7 @@
     <div class="SwtichBox">
       <div class="SwitchItemOn">
         <i class="iconfont iconcube-kehu"></i>
-        <span>私客库</span>
+        <span>私客池</span>
       </div>
       <div
         class="SwitchItem"
@@ -637,7 +637,7 @@
           </div>
         </el-form-item>
         <el-form-item
-          label="上次带看"
+          label="带看时间"
           class="ItemRow ChooseItemRow"
           prop="Radio"
         >

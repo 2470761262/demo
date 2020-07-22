@@ -48,7 +48,7 @@
       :data="tableData"
       header-cell-class-name="ResultListCell ResultListHeaderBack"
       cell-class-name="ResultListCell"
-      @row-click="navigateTo"
+      @row-dblclick="navigateTo"
       v-loading="loading"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
