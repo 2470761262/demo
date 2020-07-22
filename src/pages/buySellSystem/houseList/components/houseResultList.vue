@@ -1123,13 +1123,13 @@
               </el-option>
             </el-select>
           </div>
-          <button
+          <!-- <button
             class="btn-primary-back anchor-point"
             :data-anchor="'首页选项 小学:确定{' + form.primarySchoolList + '}'"
             @click="pushSelectSchool('primarySchoolList', 'primarySchool')"
           >
             确定
-          </button>
+          </button> -->
         </div>
       </div>
       <!-- 中学 -->
@@ -1191,13 +1191,13 @@
               </el-option>
             </el-select>
           </div>
-          <button
+          <!-- <button
             class="btn-primary-back anchor-point"
             :data-anchor="'首页选项 中学:确定{' + form.middleSchoolList + '}'"
             @click="pushSelectSchool('middleSchoolList', 'middleSchool')"
           >
             确定
-          </button>
+          </button> -->
         </div>
       </div>
     </div>
