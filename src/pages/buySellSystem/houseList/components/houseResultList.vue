@@ -1076,7 +1076,7 @@
             :data-anchor="'首页选项 小学:不限'"
             border
             v-model="primarySchoolRadio"
-            @change="radioChange('primarySchoolList', true)"
+            @change="radioChange('primarySchoolList', true, 'primarySchool')"
             >不限</el-radio
           >
           <el-checkbox-group
@@ -1144,7 +1144,7 @@
             :data-anchor="'首页选项 中学:不限'"
             border
             v-model="middleSchoolRadio"
-            @change="radioChange('middleSchoolList', true)"
+            @change="radioChange('middleSchoolList', true, 'middleSchool')"
             >不限</el-radio
           >
           <el-checkbox-group
@@ -1418,25 +1418,33 @@ export default {
           index = this.form[field].findIndex(
             item => item == this.temporaryPrimaryValue
           );
+          this['primarySchoolRadio']='';
           break;
         case "middleSchoolList":
           index = this.form[field].findIndex(
             item => item == this.temporaryMiddleValue
           );
+          this['middleSchoolRadio']='';
           break;
       }
 
       if (e !== "") {
+        let index2 = -1;
         switch (field) {
           case "primarySchoolList":
             this.temporaryPrimaryValue = e;
+            index2 = this.form[field].findIndex(
+              item => item == this.temporaryPrimaryValue
+            );
             break;
           case "middleSchoolList":
             this.temporaryMiddleValue = e;
+            index2 = this.form[field].findIndex(
+              item => item == this.temporaryMiddleValue
+            );
             break;
         }
-        if (index == -1)
-        this.form[field].push(e);
+        if (index2 == -1) this.form[field].push(e);
       }
 
       if (index == -1) return;
@@ -1743,10 +1751,11 @@ export default {
      * @example: 朝向radio change 事件
      * @param {string } field
      */
-    radioChange(field, isClear) {
+    radioChange(field, isClear, field2) {
       this.form[field] = [];
       if (isClear) {
         this[field] = "";
+        this[field2] = "";
       }
     },
     /**
