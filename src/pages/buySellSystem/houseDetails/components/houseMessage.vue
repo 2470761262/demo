@@ -412,6 +412,9 @@
         <h5 class="message-row-title">上次交易金额</h5>
         <div class="message-row-right" v-if="updateHouse.lastPayment">
           {{ resultData.LastTransactionAmount | emptyRead }}
+          <span v-if="resultData.LastTransactionAmount" class="Division"
+            >万元</span
+          >
         </div>
         <el-input
           v-else

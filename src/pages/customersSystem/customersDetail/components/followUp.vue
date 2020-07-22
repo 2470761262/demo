@@ -112,7 +112,9 @@
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看时间：</div>
-                      <div class="car-right">{{ item.st || "暂无" }}</div>
+                      <div class="car-right">
+                        {{ item.timeQuantum || "暂无" }}
+                      </div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看房源：</div>
@@ -231,6 +233,12 @@
                   <div class="car-row">
                     <div class="car-title">带看日期：</div>
                     <div class="car-right">{{ item.st || "暂无" }}</div>
+                  </div>
+                  <div class="car-row">
+                    <div class="car-title">带看时间：</div>
+                    <div class="car-right">
+                      {{ item.timeQuantum || "暂无" }}
+                    </div>
                   </div>
                   <div class="car-row">
                     <div class="car-title">带看房源：</div>
@@ -365,6 +373,9 @@ export default {
       });
       that.lookAtData.forEach(item => {
         item.type = 1;
+        let sTime = item.stime.split(" ");
+        let eTime = item.etime.split(" ");
+        item.timeQuantum = sTime[1] + " - " + eTime[1];
       });
       for (let i = 0; i < that.lookAtData.length; i++) {
         that.lookAtData[i].housingResource = [];
@@ -462,7 +473,7 @@ export default {
     .btn-box {
       display: flex;
       .btn {
-        width: 96px;
+        width: 105px;
         font-size: @font16;
         text-align: center;
         line-height: @btn-lin;
@@ -573,7 +584,8 @@ export default {
 }
 /deep/.el-timeline-item__timestamp.is-top {
   position: absolute;
-  left: -100px;
+  //prettier-ignore
+  left: -100PX;
   top: -3px;
   font-size: @font16;
   font-weight: bold;
@@ -581,7 +593,7 @@ export default {
 }
 /deep/.el-timeline {
   //prettier-ignore
-  padding-left: 100px;
+  padding-left: 100PX;
 }
 /deep/ .el-timeline-item__tail {
   border-left-width: 1px;
