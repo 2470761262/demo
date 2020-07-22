@@ -1427,16 +1427,22 @@ export default {
       }
 
       if (e !== "") {
+        let index2 = -1;
         switch (field) {
           case "primarySchoolList":
             this.temporaryPrimaryValue = e;
+            index2 = this.form[field].findIndex(
+              item => item == this.temporaryPrimaryValue
+            );
             break;
           case "middleSchoolList":
             this.temporaryMiddleValue = e;
+            index2 = this.form[field].findIndex(
+              item => item == this.temporaryMiddleValue
+            );
             break;
         }
-        if (index == -1)
-        this.form[field].push(e);
+        if (index2 == -1) this.form[field].push(e);
       }
 
       if (index == -1) return;
