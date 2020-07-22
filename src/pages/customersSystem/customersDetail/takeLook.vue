@@ -78,7 +78,7 @@
             :picker-options="{
               selectableRange: `${
                 timeStar ? timeStar + ':00' : nowTime + ':00'
-              } -${nowTime + ':00'}`
+              } -'23:59:00'`
             }"
             placeholder="结束时间"
             data-vv-as="结束时间"

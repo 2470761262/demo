@@ -639,9 +639,7 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             that.cityList = e.data.data.list;
-            if (flag) {
-              that.getCounty(e.data.data.list[0].id, flag);
-            } else {
+            if (!flag) {
               that.getCounty(e.data.data.list[0].id);
             }
           }
@@ -724,6 +722,106 @@ export default {
         return item.id === this.formData.countyId;
       });
       this.formData.countyName = county.name;
+    },
+    getData() {
+      this.$set(
+        this.$data,
+        "formData",
+        JSON.parse(
+          JSON.stringify(this.$store.state.addCustomers.formData.step1)
+        )
+      );
+      this.$set(
+        this.$data,
+        "demandValue",
+        JSON.parse(JSON.stringify(this.$store.state.addCustomers.demandValue))
+      );
+      this.getCity(this.formData.provinceId);
+      this.getCounty(this.formData.cityId);
+      this.$nextTick(() => {
+        this.$refs.moreSelect.rewriteData(this.demandValue);
+      });
+      for (let i = 0; i < this.demandValue.list0.length; i++) {
+        let obj = {
+          isDisabled: false,
+          parentIndex: 0,
+          sign: "",
+          title: "",
+          value: 0
+        };
+        if (this.demandValue.list0[i] == 1) {
+          obj.sign = "0-1";
+          obj.title = "买二手住宅";
+          obj.value = 1;
+          this.demandData.rendList.push(obj);
+        }
+        if (this.demandValue.list0[i] == 2) {
+          obj.sign = "0-2";
+          obj.title = "买二手商铺";
+          obj.value = 2;
+          this.demandData.rendList.push(obj);
+        }
+        if (this.demandValue.list0[i] == 4) {
+          obj.sign = "0-4";
+          obj.title = "买二手写字楼";
+          obj.value = 4;
+          this.demandData.rendList.push(obj);
+        }
+      }
+      for (let i = 0; i < this.demandValue.list1.length; i++) {
+        let obj = {
+          isDisabled: false,
+          parentIndex: 0,
+          sign: "",
+          title: "",
+          value: 0
+        };
+        if (this.demandValue.list1[i] == 8) {
+          obj.sign = "1-8";
+          obj.title = "买新房住宅";
+          obj.value = 8;
+          this.demandData.rendList.push(obj);
+        }
+        if (this.demandValue.list1[i] == 16) {
+          obj.sign = "1-16";
+          obj.title = "买新房商铺";
+          obj.value = 16;
+          this.demandData.rendList.push(obj);
+        }
+        if (this.demandValue.list1[i] == 32) {
+          obj.sign = "1-32";
+          obj.title = "买新房写字楼";
+          obj.value = 32;
+          this.demandData.rendList.push(obj);
+        }
+      }
+      for (let i = 0; i < this.demandValue.list2.length; i++) {
+        let obj = {
+          isDisabled: false,
+          parentIndex: 0,
+          sign: "",
+          title: "",
+          value: 0
+        };
+        if (this.demandValue.list2[i] == 64) {
+          obj.sign = "2-64";
+          obj.title = "租赁住宅";
+          obj.value = 64;
+          this.demandData.rendList.push(obj);
+        }
+        if (this.demandValue.list2[i] == 128) {
+          obj.sign = "2-128";
+          obj.title = "租赁商铺";
+          obj.value = 128;
+          this.demandData.rendList.push(obj);
+        }
+        if (this.demandValue.list2[i] == 256) {
+          obj.sign = "2-256";
+          obj.title = "租赁写字楼";
+          obj.value = 256;
+          this.demandData.rendList.push(obj);
+        }
+      }
     }
   }
 };

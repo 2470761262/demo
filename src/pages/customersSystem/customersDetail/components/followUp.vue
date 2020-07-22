@@ -462,7 +462,7 @@ export default {
     .btn-box {
       display: flex;
       .btn {
-        width: 96px;
+        width: 105px;
         font-size: @font16;
         text-align: center;
         line-height: @btn-lin;
@@ -573,7 +573,8 @@ export default {
 }
 /deep/.el-timeline-item__timestamp.is-top {
   position: absolute;
-  left: -100px;
+  //prettier-ignore
+  left: -100PX;
   top: -3px;
   font-size: @font16;
   font-weight: bold;
@@ -581,7 +582,7 @@ export default {
 }
 /deep/.el-timeline {
   //prettier-ignore
-  padding-left: 100px;
+  padding-left: 100PX;
 }
 /deep/ .el-timeline-item__tail {
   border-left-width: 1px;
