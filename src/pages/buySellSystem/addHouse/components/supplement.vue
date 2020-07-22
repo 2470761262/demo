@@ -861,20 +861,30 @@
               </div>
             </div>
           </div>
-          <div class="upLoadFile-file-phone">
-            <el-image
-              class="anchor-point"
-              :src="audioQrCodeImage"
-              :preview-src-list="[audioQrCodeImage]"
-              fit="cover"
+          <div class="upLoadFile-file-phone" style="justify-content:normal">
+            <div>
+              <el-image
+                class="anchor-point"
+                :src="audioQrCodeImage"
+                :preview-src-list="[audioQrCodeImage]"
+                fit="cover"
+              >
+                <div slot="placeholder" class="image-slot">
+                  加载中
+                  <span>...</span>
+                </div>
+              </el-image>
+            </div>
+            <div
+              v-if="isFromHouseTask ? true : wxUploadFile"
+              style="text-overflow:ellipsis; white-space: nowrap;"
             >
-              <div slot="placeholder" class="image-slot">
-                加载中
-                <span>...</span>
-              </div>
-            </el-image>
-            <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
-            <div v-if="isFromHouseTask ? false : !wxUploadFile">
+              微信扫码上传
+            </div>
+            <div
+              v-if="isFromHouseTask ? false : !wxUploadFile"
+              style="text-overflow:ellipsis; white-space: nowrap;"
+            >
               暂无上传权限.
             </div>
           </div>
