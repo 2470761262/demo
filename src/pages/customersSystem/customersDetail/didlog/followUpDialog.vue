@@ -105,11 +105,7 @@ export default {
   data() {
     return {
       isLoading: false,
-      followUpTypeList: [
-        { key: "首次跟进" },
-        { key: "日常回访" },
-        { key: "带看后回访" }
-      ],
+      followUpTypeList: [{ key: "日常回访" }, { key: "带看后回访" }],
       wayList: [
         { key: "微信" },
         { key: "电话" },
