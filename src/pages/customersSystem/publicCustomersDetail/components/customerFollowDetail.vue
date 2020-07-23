@@ -265,10 +265,6 @@
 <script>
 const typeListModle = [
   {
-    name: "首次跟进",
-    value: "首次跟进"
-  },
-  {
     name: "日常回访",
     value: "日常回访"
   },

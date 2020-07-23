@@ -695,6 +695,13 @@
               border
               >3天新上房源</el-radio
             >
+            <el-radio
+              class="anchor-point"
+              data-anchor="首页选项 类型:投资房源"
+              label="4"
+              border
+              >投资房源</el-radio
+            >
           </el-radio-group>
         </div>
       </div>
