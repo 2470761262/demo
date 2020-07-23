@@ -130,47 +130,58 @@ export default {
             }
           }
         } else {
+          postData.requirements = util.deepCopy(
+            this.$store.state.addCustomers.formData.step2
+          );
           if (this.componentName == "stepOne") {
             postData = util.deepCopy(this.$refs.childreCom.formData);
+            for (let i = 0; i < Object.keys(demandValue).length; i++) {
+              demandValue["list" + i].forEach(item => {
+                let isIndex = postData.requirements.findIndex(postItem => {
+                  return item == postItem.requireType;
+                });
+                if (isIndex == -1) {
+                  let requireType = { requireType: item };
+                  postData.requirements.push(requireType);
+                }
+              });
+            }
           } else {
             postData = util.deepCopy(
               this.$store.state.addCustomers.formData.step1
             );
           }
-          postData.requirements = util.deepCopy(
-            this.$store.state.addCustomers.formData.step2
-          );
           postData.requirements.forEach((item, idx) => {
-            if (item.businessCircleList.length != 0) {
+            if (item.businessCircleList) {
               item.businessCircle = item.businessCircleList.join("$");
             } else {
               item.businessCircle = "";
             }
 
-            if (item.middleSchoolList.length != 0) {
+            if (item.middleSchoolList) {
               item.middleSchool = item.middleSchoolList.join("$");
             } else {
               item.middleSchool = "";
             }
 
-            if (item.primarySchoolList.length != 0) {
+            if (item.primarySchoolList) {
               item.primarySchool = item.primarySchoolList.join("$");
             } else {
               item.primarySchool = "";
             }
 
-            if (item.roomsList.length != 0) {
+            if (item.roomsList) {
               item.rooms = item.roomsList.join("$");
             } else {
               item.rooms = "";
             }
 
-            if (item.decorationList.length != 0) {
+            if (item.decorationList) {
               item.decoration = item.decorationList.join("$");
             } else {
               item.decoration = "";
             }
-            if (item.community.length != 0) {
+            if (item.community) {
               item.community.forEach((com, idx) => {
                 let items = com.split(",");
                 item["community" + (idx + 1)] = items[0];
@@ -270,13 +281,22 @@ export default {
             fromData.nativePlace = data.bsAgentCustomersTbl.nativePlace;
             fromData.Source = data.bsAgentCustomersTbl.Source;
             fromData.sourceType = data.bsAgentCustomersTbl.sourceType;
-            fromData.sourceList.push(data.bsAgentCustomersTbl.sourceType);
-            fromData.sourceList.push(data.bsAgentCustomersTbl.Source);
+            if (data.bsAgentCustomersTbl.sourceType) {
+              fromData.sourceList.push(data.bsAgentCustomersTbl.sourceType);
+            }
+            if (data.bsAgentCustomersTbl.Source) {
+              fromData.sourceList.push(data.bsAgentCustomersTbl.Source);
+            }
+
             for (let i = 0; i < data.impressionList.length; i++) {
               fromData.myImpression.push(data.impressionList[i].impression);
             }
             for (let i = 0; i < data.telList.length; i++) {
               let phone = { phone: data.telList[i].phone, isDisabled: true };
+              fromData.tels.push(phone);
+            }
+            if (fromData.tels.length == 0) {
+              let phone = { phone: "", isDisabled: false };
               fromData.tels.push(phone);
             }
             let rendList = [];

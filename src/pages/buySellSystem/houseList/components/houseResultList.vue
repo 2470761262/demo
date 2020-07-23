@@ -1367,6 +1367,8 @@ export default {
       this.houseNoOrName = ""; //房源编号,楼盘名称
       this.primarySchool = ""; //小学select
       this.middleSchool = ""; //中学Select
+      this.typeRadio = "不限"; //类型radio不限
+      this.bussinessDistrictRadio = "不限"; //商圈radio不限
       this.middleSchoolRadio = "不限"; //中学不限
       this.purposeRadio = "不限"; //房屋用途radio不限
       this.primarySchoolRadio = "不限"; //小学校radio

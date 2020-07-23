@@ -640,7 +640,7 @@ export default {
             formatDate(new Date().setDate(new Date().getDate()), "yyyy-MM") +
               "-01 00:00:00"
           );
-        } else if (i == 1) {
+        } else if (j == 0) {
           this.$set(
             this.form.MyDialTime,
             [j],

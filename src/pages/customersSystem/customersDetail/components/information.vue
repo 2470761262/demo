@@ -407,7 +407,7 @@ export default {
         background-color: @backgroud;
       }
       /deep/ .el-button {
-        width: 96px;
+        // width: 110px;
         font-size: @font16;
         color: #fff;
         text-align: center;
@@ -416,6 +416,7 @@ export default {
         background: @backgroud;
         border-radius: 4px;
         margin-left: 8px;
+        padding: 0 16px;
       }
     }
     .infor-tag {
