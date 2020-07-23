@@ -83,7 +83,12 @@
           v-model="formData.sourceList"
         />
       </div>
-
+      <div
+        :class="{
+          'after-error-tips': errorBags.has('cascader')
+        }"
+        :data-error="errorBags.first('cascader')"
+      ></div>
       <!-- 客户电话 -->
       <div
         class="input-group is-required "
@@ -696,6 +701,8 @@ export default {
       obj = this.provinceList.find(item => {
         return item.id === val;
       });
+      this.formData.cityId = "";
+      this.formData.countyId = "";
       this.formData.provinceName = obj.name;
     },
     /**
@@ -707,6 +714,7 @@ export default {
       obj = this.cityList.find(item => {
         return item.id === val;
       });
+      this.formData.countyId = "";
       this.formData.cityName = obj.name;
     },
     /**

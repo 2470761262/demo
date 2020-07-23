@@ -62,7 +62,10 @@
                   <section class="list-car">
                     <div class="car-row">
                       <div class="car-title">跟进人：</div>
-                      <div class="car-right">{{ item.perName || "暂无" }}</div>
+                      <div class="car-right">
+                        {{ item.perName || "暂无" }} -
+                        {{ item.deptName || "暂无" }}
+                      </div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">跟进类型：</div>
@@ -170,7 +173,10 @@
                 <section class="list-car">
                   <div class="car-row">
                     <div class="car-title">跟进人：</div>
-                    <div class="car-right">{{ item.perName || "暂无" }}</div>
+                    <div class="car-right">
+                      {{ item.perName || "暂无" }} -
+                      {{ item.deptName || "暂无" }}
+                    </div>
                   </div>
                   <div class="car-row">
                     <div class="car-title">跟进类型：</div>
@@ -550,7 +556,8 @@ export default {
             display: flex;
             margin-bottom: 24px;
             .car-title {
-              width: 105px;
+              //prettier-ignore
+              width: 105PX;
             }
             .car-right {
               width: 70%;
