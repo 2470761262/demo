@@ -75,14 +75,12 @@
     <div class="feedback-customer" ref="fixedChunk2">
       <img
         src="https://imgtest.0be.cn/FileUpload/timg.png"
-        alt="客户管理测试"
+        alt="体验官专享"
         style="width:35px;"
       />
       <div>
         <p>
-          <a href="http://smtcom.yongxinjia.com" target="_blank"
-            >客户管理测试</a
-          >
+          <a href="http://smtcom.yongxinjia.com" target="_blank">体验官专享</a>
         </p>
         <p>输入账号密码进入系统</p>
       </div>
