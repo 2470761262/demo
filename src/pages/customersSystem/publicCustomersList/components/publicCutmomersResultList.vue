@@ -286,6 +286,8 @@ export default {
       return type;
     },
     navigateTo(row) {
+      let dom = document.getElementsByClassName("el-tooltip__popper");
+      dom[0].style.display = "none";
       this.$router.push({
         path: "/customers/publicCustomersDetail",
         query: { customerId: row.id }
