@@ -633,28 +633,28 @@
           <el-radio-group v-model="form.plate" size="small">
             <el-radio
               class="anchor-point"
-              data-anchor="首页选项 范围：不限"
+              data-anchor="首页选项 范围:不限"
               label=""
               border
               >不限</el-radio
             >
             <el-radio
               class="anchor-point"
-              data-anchor="首页选项 范围：跟单房源"
+              data-anchor="首页选项 范围:跟单房源"
               label="0"
               border
               >跟单房源</el-radio
             >
             <el-radio
               class="anchor-point"
-              data-anchor="首页选项 范围：店公共盘"
+              data-anchor="首页选项 范围:店公共盘"
               label="1"
               border
               >店公共盘</el-radio
             >
             <el-radio
               class="anchor-point"
-              data-anchor="首页选项 范围：公司公盘"
+              data-anchor="首页选项 范围:公司公盘"
               label="4"
               border
               >公司公盘</el-radio

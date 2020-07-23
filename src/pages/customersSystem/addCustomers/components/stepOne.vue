@@ -445,11 +445,13 @@ export default {
     // this.getCity(110000);
   },
   methods: {
+    /**
+     * @example: 校验手机号码是否重复
+     */
     checkRepeatPhone(phone) {
       if (!/^1[3456789]\d{9}$/.test(phone)) {
         return;
       }
-      console.log("准备校验号码重复" + phone);
       let that = this;
       that.$api
         .post({
@@ -497,7 +499,9 @@ export default {
       //   this.demandData.leaseList = list2;
       this.moreSelectFlag = false;
     },
-    //添加电话号码12
+    /**
+     * @example: 添加客户手机号码
+     */
     addTelToList() {
       let defaultList = [1, 2];
       if (this.formData.tels.length <= 2) {
@@ -521,7 +525,7 @@ export default {
       this[popName] = true;
     },
     /**
-     * @example: 弹框组件确定点击事件
+     * @example: 客源印象添加事件
      */
     addImpressionConfirm() {
       if (this.formData.myImpression.length < 5) {
@@ -683,6 +687,9 @@ export default {
           });
         });
     },
+    /**
+     * @example: 省改变事件
+     */
     provinceChange(val) {
       this.getCity(val);
       let obj = {};
@@ -691,6 +698,9 @@ export default {
       });
       this.formData.provinceName = obj.name;
     },
+    /**
+     * @example: 市改变事件
+     */
     cityChange(val) {
       this.getCounty(val);
       let obj = {};
@@ -699,6 +709,9 @@ export default {
       });
       this.formData.cityName = obj.name;
     },
+    /**
+     * @example: 区改变事件
+     */
     countyChange(val) {
       let obj = {};
       obj = this.countyList.find(item => {
@@ -706,6 +719,9 @@ export default {
       });
       this.formData.countyName = obj.name;
     },
+    /**
+     * @example: 回显数据获取省市区名称
+     */
     getName() {
       let province = {};
       province = this.provinceList.find(item => {
@@ -723,6 +739,9 @@ export default {
       });
       this.formData.countyName = county.name;
     },
+    /**
+     * @example: 上一步数据回显
+     */
     getData() {
       this.$set(
         this.$data,
