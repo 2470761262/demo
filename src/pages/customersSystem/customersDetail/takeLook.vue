@@ -305,7 +305,9 @@ export default {
     this.validateInit();
   },
   methods: {
-    // 获取客户需求列表
+    /**
+     * @example: 获取客户需求列表
+     */
     getCusRequired() {
       let that = this;
       that.$api
@@ -328,7 +330,9 @@ export default {
           }
         });
     },
-    // 添加房源
+    /**
+     * @example: 添加房源
+     */
     addHouseToList() {
       let house = {
         comId: "",
@@ -341,17 +345,23 @@ export default {
       };
       this.addHouse.push(house);
     },
-    // 删除房源
+    /**
+     * @example: 删除房源
+     */
     removeHouseToList(idx) {
       this.addHouse.splice(idx, 1);
     },
-    // 改变时间事件
+    /**
+     * @example: 改变事件，传给后端拼接字符串
+     */
     changTime() {
       let time = this.dateValue.toLocaleDateString();
       this.startTime = time + " " + this.timeStar;
       this.endTime = time + " " + this.timeEnd;
     },
-    //楼盘、楼栋、房号三级联动
+    /**
+     * @example: 楼盘、楼栋、房号三级联动
+     */
     remoteInput(comId) {
       if (comId.length == 0) {
         this.remoteMethod();
@@ -458,7 +468,9 @@ export default {
     close() {
       this.$router.go(-1);
     },
-    // 完成
+    /**
+     * @example: 提交
+     */
     confirm() {
       let that = this;
       let postData = {
@@ -508,6 +520,9 @@ export default {
         }
       });
     },
+    /**
+     * @example: 初始化表的验证消息
+     */
     validateInit() {
       const dictionary = {
         zh_CN: {

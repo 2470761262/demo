@@ -62,9 +62,9 @@ export default {
       scrollTop: 0,
       form: {
         plate: "", //范围
-        type: "", //类型
+        typeList: [], //类型
         agentPerName: "", //跟单人姓名
-        bussinessDistrict: "",
+        bussinessDistrictList: [],
         roomTypeList: [],
         decorationList: [],
         houseUseList: [],

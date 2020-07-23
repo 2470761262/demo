@@ -72,6 +72,9 @@ export default {
     this.$store.commit("resetFormData");
   },
   methods: {
+    /**
+     * @example: step1组件和step2组件切换
+     */
     async nextStep() {
       let newxFlag = true;
       switch (this.componentName) {
@@ -94,7 +97,9 @@ export default {
         }
       }
     },
-    // 提交按钮
+    /**
+     * @example: 提交事件
+     */
     async submit() {
       let newxFlag = true;
       if (this.componentName == "stepOne") {
@@ -221,11 +226,15 @@ export default {
           });
       }
     },
-    // 返回
+    /**
+     * @example: 返回事件
+     */
     close() {
       this.$router.go(-1);
     },
-    // 获取楼盘列表
+    /**
+     * @example: 获取楼盘列表
+     */
     getCommunityList() {
       let that = this;
       let postData = {
@@ -255,7 +264,9 @@ export default {
           }
         });
     },
-    // 获取小学列表
+    /**
+     * @example: 获取小学列表
+     */
     getPrimarySchoolList() {
       let that = this;
       let postData = {
@@ -285,7 +296,9 @@ export default {
           }
         });
     },
-    // 获取中学列表
+    /**
+     * @example: 获取中学列表
+     */
     getMiddleSchoolList() {
       let that = this;
       let postData = {
@@ -315,7 +328,9 @@ export default {
           }
         });
     },
-    // 获取商圈列表
+    /**
+     * @example: 获取商圈列表
+     */
     getBusinessList() {
       let that = this;
       let postData = {

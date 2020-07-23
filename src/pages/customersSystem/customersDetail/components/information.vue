@@ -272,7 +272,7 @@ export default {
     },
     /**
      * @example: 一键拨号
-     * @param: {nmber} phone 客户电话
+     * @param: {id} 电话的Id
      */
     callUp(id) {
       let that = this;

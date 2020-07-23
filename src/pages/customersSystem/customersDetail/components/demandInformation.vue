@@ -48,7 +48,8 @@
                 >修改</span
               >
             </div>
-            <div class="msg-content">
+            <!-- 二手住宅 -->
+            <div class="msg-content" v-show="item.requireType == 1">
               <section class="msg-row-group">
                 <div class="msg-row">
                   <span class="msg-row-title">期望首付：</span>
@@ -68,25 +69,7 @@
                   </div>
                   <div class="msg-row-txt" v-else>暂无</div>
                 </div>
-                <div
-                  class="msg-row"
-                  v-if="
-                    item.requireType == 64 ||
-                      item.requireType == 128 ||
-                      item.requireType == 256
-                  "
-                >
-                  <span class="msg-row-title">期望租金：</span>
-                  <div
-                    class="msg-row-txt"
-                    v-if="item.minPrice && item.maxPrice"
-                  >
-                    {{ item.minPrice }} -
-                    {{ item.maxPrice }}
-                  </div>
-                  <div class="msg-row-txt" v-else>暂无</div>
-                </div>
-                <div class="msg-row" v-else>
+                <div class="msg-row">
                   <span class="msg-row-title">期望总价：</span>
                   <div
                     class="msg-row-txt"
@@ -110,9 +93,15 @@
               </section>
               <section class="msg-row-group">
                 <div class="msg-row">
-                  <span class="msg-row-title">装修需求：</span>
+                  <span class="msg-row-title">期望楼层：</span>
                   <div class="msg-row-txt">
-                    {{ item.decoration | formatSymbol }}
+                    {{ item.floors | formatFloor }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">购买用途：</span>
+                  <div class="msg-row-txt">
+                    {{ item.buyDestination }}
                   </div>
                 </div>
                 <div class="msg-row">
@@ -147,10 +136,441 @@
                   </div>
                   <div class="msg-row-txt" v-else>暂无</div>
                 </div>
-                <!-- <div class="msg-row">
-                  <span class="msg-row-title">看房经历：</span>
-                  <div class="msg-row-txt">{{ item.remark || "暂无" }}</div>
-                </div> -->
+              </section>
+            </div>
+            <!-- 二手商铺 -->
+            <div class="msg-content" v-show="item.requireType == 2">
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望首付：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minFirstPrice && item.maxFirstPrice"
+                  >
+                    {{ item.minFirstPrice | formatMoney }} -
+                    {{ item.maxFirstPrice | formatMoney }}万
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望面积：</span>
+                  <div class="msg-row-txt" v-if="item.minArea && item.maxArea">
+                    {{ item.minArea || 0 }} - {{ item.maxArea || 0 }}m²
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望总价：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minPrice && item.maxPrice"
+                  >
+                    {{ item.minPrice | formatMoney }} -
+                    {{ item.maxPrice | formatMoney }}万
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">商铺类型：</span>
+                  <div class="msg-row-txt">
+                    {{ item.shopTypes | formatShopType }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">付款方式：</span>
+                  <div class="msg-row-txt">
+                    {{ item.payWay | formatPayWay }}
+                  </div>
+                </div>
+              </section>
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望单价：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minUnitPrice && item.maxUnitPrice"
+                  >
+                    {{ item.minUnitPrice | formatMoney }} -
+                    {{ item.maxUnitPrice | formatMoney }}万
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望装修：</span>
+                  <div class="msg-row-txt">
+                    {{ item.decoration | formatSymbol }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">商铺用途：</span>
+                  <div class="msg-row-txt">
+                    {{ item.shopUses | formatShopUse }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">附属设施：</span>
+                  <div class="msg-row-txt">
+                    {{ item.facilitys | formatFacility }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">其他需求：</span>
+                  <div class="msg-row-txt">
+                    {{ item.otherNeeds | formatOtherNeed }}
+                  </div>
+                </div>
+              </section>
+            </div>
+            <!-- 二手写字楼 -->
+            <div class="msg-content" v-show="item.requireType == 4">
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望首付：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minFirstPrice && item.maxFirstPrice"
+                  >
+                    {{ item.minFirstPrice | formatMoney }} -
+                    {{ item.maxFirstPrice | formatMoney }}万
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望面积：</span>
+                  <div class="msg-row-txt" v-if="item.minArea && item.maxArea">
+                    {{ item.minArea || 0 }} - {{ item.maxArea || 0 }}m²
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望总价：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minPrice && item.maxPrice"
+                  >
+                    {{ item.minPrice | formatMoney }} -
+                    {{ item.maxPrice | formatMoney }}万
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">付款方式：</span>
+                  <div class="msg-row-txt">
+                    {{ item.payWay | formatPayWay }}
+                  </div>
+                </div>
+              </section>
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望单价：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minUnitPrice && item.maxUnitPrice"
+                  >
+                    {{ item.minUnitPrice | formatMoney }} -
+                    {{ item.maxUnitPrice | formatMoney }}万
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望装修：</span>
+                  <div class="msg-row-txt">
+                    {{ item.decoration | formatSymbol }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">楼栋需求：</span>
+                  <div class="msg-row-txt">
+                    {{ item.buildingNeeds | formatBuildingNeed }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">房间需求：</span>
+                  <div class="msg-row-txt">
+                    {{ item.roomNeeds | formatRoomNeed }}
+                  </div>
+                </div>
+              </section>
+            </div>
+            <!-- 买新房、商铺、写字楼 -->
+            <div
+              class="msg-content"
+              v-if="
+                item.requireType == 8 ||
+                  item.requireType == 16 ||
+                  item.requireType == 32
+              "
+            >
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望首付：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minFirstPrice && item.maxFirstPrice"
+                  >
+                    {{ item.minFirstPrice | formatMoney }} -
+                    {{ item.maxFirstPrice | formatMoney }}万
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望面积：</span>
+                  <div class="msg-row-txt" v-if="item.minArea && item.maxArea">
+                    {{ item.minArea || 0 }} - {{ item.maxArea || 0 }}m²
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望总价：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minPrice && item.maxPrice"
+                  >
+                    {{ item.minPrice | formatMoney }} -
+                    {{ item.maxPrice | formatMoney }}万
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">购买房型：</span>
+                  <div class="msg-row-txt">{{ item.rooms | formatSymbol }}</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望楼层：</span>
+                  <div class="msg-row-txt">
+                    {{ item.floors | formatFloor }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">付款方式：</span>
+                  <div class="msg-row-txt">
+                    {{ item.payWay | formatPayWay }}
+                  </div>
+                </div>
+              </section>
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">交房类型：</span>
+                  <div class="msg-row-txt">
+                    {{ item.tradeHouseType | formatHouseType }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">物业类型：</span>
+                  <div class="msg-row-txt">
+                    {{ item.manageCompanyType | formatCompanyType }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望楼盘：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.community1 || item.community2 || item.community3"
+                  >
+                    <p v-if="item.community1">
+                      {{ item.community1 }}
+                    </p>
+                    <p v-if="item.community2">
+                      {{ item.community2 }}
+                    </p>
+                    <p v-if="item.community3">
+                      {{ item.community3 }}
+                    </p>
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">购买用途：</span>
+                  <div class="msg-row-txt">
+                    {{ item.buyDestination }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望装修：</span>
+                  <div class="msg-row-txt">
+                    {{ item.decoration | formatSymbol }}
+                  </div>
+                </div>
+              </section>
+            </div>
+            <!-- 租赁住宅 -->
+            <div class="msg-content" v-show="item.requireType == 64">
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望租金：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minPrice && item.maxPrice"
+                  >
+                    {{ item.minPrice }} - {{ item.maxPrice }}元
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望面积：</span>
+                  <div class="msg-row-txt" v-if="item.minArea && item.maxArea">
+                    {{ item.minArea || 0 }} - {{ item.maxArea || 0 }}m²
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">租赁户型：</span>
+                  <div class="msg-row-txt">{{ item.rooms | formatSymbol }}</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">租赁方式：</span>
+                  <div class="msg-row-txt">
+                    {{ item.rentWay | formatRentWay }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">付款方式：</span>
+                  <div class="msg-row-txt">
+                    {{ item.payMethod | formatPayMethod }}
+                  </div>
+                </div>
+              </section>
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">入住日期：</span>
+                  <div class="msg-row-txt">
+                    {{ item.moveIntoTime | formatMoveIntoTime }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望装修：</span>
+                  <div class="msg-row-txt">
+                    {{ item.decoration | formatSymbol }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望楼层：</span>
+                  <div class="msg-row-txt">
+                    {{ item.floors | formatFloor }}
+                  </div>
+                </div>
+              </section>
+            </div>
+            <!-- 租赁商铺 -->
+            <div class="msg-content" v-show="item.requireType == 128">
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望租金：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minPrice && item.maxPrice"
+                  >
+                    {{ item.minPrice }} - {{ item.maxPrice }}元
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望面积：</span>
+                  <div class="msg-row-txt" v-if="item.minArea && item.maxArea">
+                    {{ item.minArea || 0 }} - {{ item.maxArea || 0 }}m²
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望单价：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minUnitPrice && item.maxUnitPrice"
+                  >
+                    {{ item.minUnitPrice }} - {{ item.maxUnitPrice }}元
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">附属设施：</span>
+                  <div class="msg-row-txt">
+                    {{ item.facilitys | formatFacility }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">其他需求：</span>
+                  <div class="msg-row-txt">
+                    {{ item.otherNeeds | formatOtherNeed }}
+                  </div>
+                </div>
+              </section>
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望装修：</span>
+                  <div class="msg-row-txt">
+                    {{ item.decoration | formatSymbol }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">商铺类型：</span>
+                  <div class="msg-row-txt">
+                    {{ item.shopTypes | formatShopType }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">商铺用途：</span>
+                  <div class="msg-row-txt">
+                    {{ item.shopUses | formatShopUse }}
+                  </div>
+                </div>
+              </section>
+            </div>
+            <!-- 租赁写字楼 -->
+            <div class="msg-content" v-show="item.requireType == 256">
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望租金：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minPrice && item.maxPrice"
+                  >
+                    {{ item.minPrice }} - {{ item.maxPrice }}元
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望面积：</span>
+                  <div class="msg-row-txt" v-if="item.minArea && item.maxArea">
+                    {{ item.minArea || 0 }} - {{ item.maxArea || 0 }}m²
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望单价：</span>
+                  <div
+                    class="msg-row-txt"
+                    v-if="item.minUnitPrice && item.maxUnitPrice"
+                  >
+                    {{ item.minUnitPrice }} - {{ item.maxUnitPrice }}元
+                  </div>
+                  <div class="msg-row-txt" v-else>暂无</div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">期望商圈：</span>
+                  <div class="msg-row-txt">
+                    {{ item.businessCircle | formatSymbol }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">楼栋需求：</span>
+                  <div class="msg-row-txt">
+                    {{ item.buildingNeeds | formatBuildingNeed }}
+                  </div>
+                </div>
+              </section>
+              <section class="msg-row-group">
+                <div class="msg-row">
+                  <span class="msg-row-title">期望装修：</span>
+                  <div class="msg-row-txt">
+                    {{ item.decoration | formatSymbol }}
+                  </div>
+                </div>
+                <div class="msg-row">
+                  <span class="msg-row-title">房间需求：</span>
+                  <div class="msg-row-txt">
+                    {{ item.roomNeeds | formatRoomNeed }}
+                  </div>
+                </div>
               </section>
             </div>
           </div>
@@ -207,9 +627,15 @@ export default {
   },
   components: { demandMoreSelect },
   filters: {
+    /**
+     * @example: 金额除以1万
+     */
     formatMoney(val) {
       return val / 10000;
     },
+    /**
+     * @example: 格式化付款方式
+     */
     formatPayWay(val) {
       switch (val) {
         case 1:
@@ -224,9 +650,316 @@ export default {
           return "暂无";
       }
     },
+    /**
+     * @example: 格式化$符号改成，
+     */
     formatSymbol(val) {
       if (val) {
         return val.replace(/\$/g, ",");
+      } else {
+        return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化期望楼层
+     */
+    formatFloor(val) {
+      if (val) {
+        let arr = [];
+        val.forEach(item => {
+          switch (item) {
+            case 1:
+              arr.push("低楼层");
+              break;
+            case 2:
+              arr.push("中楼层");
+              break;
+            case 4:
+              arr.push("高楼层");
+              break;
+            case 8:
+              arr.push("不要一楼");
+              break;
+            case 16:
+              arr.push("不要顶楼");
+              break;
+          }
+        });
+        return arr.toString();
+      } else {
+        return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化商铺类型
+     */
+    formatShopType(val) {
+      if (val) {
+        let arr = [];
+        val.forEach(item => {
+          switch (item) {
+            case 1:
+              arr.push("临街店面");
+              break;
+            case 2:
+              arr.push("写字楼配套");
+              break;
+            case 4:
+              arr.push("档口摊位");
+              break;
+            case 8:
+              arr.push("其他");
+              break;
+          }
+        });
+        return arr.toString();
+      } else {
+        return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化商铺用途
+     */
+    formatShopUse(val) {
+      if (val) {
+        let arr = [];
+        val.forEach(item => {
+          switch (item) {
+            case 1:
+              arr.push("餐饮");
+              break;
+            case 2:
+              arr.push("休闲娱乐");
+              break;
+            case 4:
+              arr.push("生活服务");
+              break;
+            case 8:
+              arr.push("零售");
+              break;
+            case 16:
+              arr.push("批发");
+              break;
+            case 32:
+              arr.push("酒店宾馆");
+              break;
+            case 64:
+              arr.push("汽车服务");
+              break;
+            case 128:
+              arr.push("美容美发");
+              break;
+            case 256:
+              arr.push("其他");
+              break;
+          }
+        });
+        return arr.toString();
+      } else {
+        return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化附属设施
+     */
+    formatFacility(val) {
+      if (val) {
+        let arr = [];
+        val.forEach(item => {
+          switch (item) {
+            case 1:
+              arr.push("可明火");
+              break;
+            case 2:
+              arr.push("可外摆");
+              break;
+            case 4:
+              arr.push("停车位");
+              break;
+            case 8:
+              arr.push("天然气");
+              break;
+            case 16:
+              arr.push("网络");
+              break;
+            case 32:
+              arr.push("中央空调");
+              break;
+            case 64:
+              arr.push("其他");
+              break;
+          }
+        });
+        return arr.toString();
+      } else {
+        return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化其他需求
+     */
+    formatOtherNeed(val) {
+      if (val) {
+        let arr = [];
+        val.forEach(item => {
+          switch (item) {
+            case 1:
+              arr.push("面积大");
+              break;
+            case 2:
+              arr.push("层高大");
+              break;
+            case 4:
+              arr.push("临街");
+              break;
+            case 8:
+              arr.push("空铺");
+              break;
+            case 16:
+              arr.push("其他");
+              break;
+          }
+        });
+        return arr.toString();
+      } else {
+        return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化楼栋
+     */
+    formatBuildingNeed(val) {
+      if (val) {
+        let arr = [];
+        val.forEach(item => {
+          switch (item) {
+            case 1:
+              arr.push("知名物业");
+              break;
+            case 2:
+              arr.push("带客梯");
+              break;
+            case 4:
+              arr.push("带货梯");
+              break;
+            case 8:
+              arr.push("其他");
+              break;
+          }
+        });
+        return arr.toString();
+      } else {
+        return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化房间
+     */
+    formatRoomNeed(val) {
+      if (val) {
+        let arr = [];
+        val.forEach(item => {
+          switch (item) {
+            case 1:
+              arr.push("可注册公司");
+              break;
+            case 2:
+              arr.push("有老板间");
+              break;
+            case 4:
+              arr.push("有会议室");
+              break;
+            case 8:
+              arr.push("带办公家具");
+              break;
+            case 16:
+              arr.push("带停车位");
+              break;
+            case 32:
+              arr.push("其他");
+              break;
+          }
+        });
+        return arr.toString();
+      } else {
+        return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化交房类型
+     */
+    formatHouseType(val) {
+      switch (val) {
+        case 0:
+          return "不限";
+        case 1:
+          return "期房";
+        case 2:
+          return "现房";
+        default:
+          return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化物业类型
+     */
+    formatCompanyType(val) {
+      switch (val) {
+        case 1:
+          return "普通住宅";
+        case 2:
+          return "别墅";
+        case 4:
+          return "商铺";
+        case 8:
+          return "写字楼";
+        case 16:
+          return "其他";
+        default:
+          return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化租赁方式
+     */
+    formatRentWay(val) {
+      switch (val) {
+        case 0:
+          return "不限";
+        case 1:
+          return "合租";
+        case 2:
+          return "整租";
+        default:
+          return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化租赁付款方式
+     */
+    formatPayMethod(val) {
+      switch (val) {
+        case 0:
+          return "不限";
+        case 1:
+          return "月付";
+        case 2:
+          return "季付";
+        case 3:
+          return "半年付";
+        case 4:
+          return "年付";
+        default:
+          return "暂无";
+      }
+    },
+    /**
+     * @example: 格式化租赁付款方式
+     */
+    formatMoveIntoTime(val) {
+      if (val) {
+        let time = val.split(" ");
+        return time[0];
       } else {
         return "暂无";
       }

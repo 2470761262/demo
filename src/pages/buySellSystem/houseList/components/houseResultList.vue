@@ -633,28 +633,28 @@
           <el-radio-group v-model="form.plate" size="small">
             <el-radio
               class="anchor-point"
-              data-anchor="首页选项 范围：不限"
+              data-anchor="首页选项 范围:不限"
               label=""
               border
               >不限</el-radio
             >
             <el-radio
               class="anchor-point"
-              data-anchor="首页选项 范围：跟单房源"
+              data-anchor="首页选项 范围:跟单房源"
               label="0"
               border
               >跟单房源</el-radio
             >
             <el-radio
               class="anchor-point"
-              data-anchor="首页选项 范围：店公共盘"
+              data-anchor="首页选项 范围:店公共盘"
               label="1"
               border
               >店公共盘</el-radio
             >
             <el-radio
               class="anchor-point"
-              data-anchor="首页选项 范围：公司公盘"
+              data-anchor="首页选项 范围:公司公盘"
               label="4"
               border
               >公司公盘</el-radio
@@ -666,60 +666,66 @@
       <div class="search-content-item">
         <div class="search-item-title">类型</div>
         <div class="search-item-right">
-          <el-radio-group v-model="form.type" size="small">
-            <el-radio
-              class="anchor-point"
-              data-anchor="首页选项 类型:不限"
-              label=""
-              border
-              >不限</el-radio
-            >
-            <el-radio
+          <el-radio
+            label="不限"
+            class="anchor-point"
+            data-anchor="首页选项 类型:不限"
+            border
+            v-model="typeRadio"
+            @change="radioChange('typeList')"
+            >不限</el-radio>
+          <el-checkbox-group
+            v-model="form.typeList"
+            @change="formCheckBoxChange('typeRadio')"
+          >
+            <el-checkbox
+              label="1"
               class="anchor-point"
               data-anchor="首页选项 类型:我的相关"
-              label="1"
-              border
-              >我的相关</el-radio
-            >
-            <el-radio
+            >我的相关</el-checkbox>
+           <el-checkbox
+              label="2"
               class="anchor-point"
               data-anchor="首页选项 类型:关注房源"
-              label="2"
-              border
-              >关注房源</el-radio
-            >
-            <el-radio
+            >关注房源</el-checkbox>
+           <el-checkbox
+              label="3"
               class="anchor-point"
               data-anchor="首页选项 类型:3天新上房源"
-              label="3"
-              border
-              >3天新上房源</el-radio
-            >
-          </el-radio-group>
+            >3天新上房源</el-checkbox>
+           <el-checkbox
+              label="4"
+              class="anchor-point"
+              data-anchor="首页选项 类型:投资房源"
+            >投资房源</el-checkbox>
+          </el-checkbox-group>
         </div>
       </div>
       <!-- 商圈 -->
       <div class="search-content-item" v-if="RegionList.length != 0">
         <div class="search-item-title">商圈</div>
         <div class="search-item-right">
-          <el-radio-group v-model="form.bussinessDistrict" size="small">
-            <el-radio
-              class="anchor-point"
-              data-anchor="首页选项 商圈:不限"
-              label=""
-              border
-              >不限</el-radio
-            >
-            <el-radio
-              :label="item.value"
+          <el-radio
+            label="不限"
+            class="anchor-point"
+            data-anchor="首页选项 商圈:不限"
+            border
+            v-model="bussinessDistrictRadio"
+            @change="radioChange('bussinessDistrictList')"
+            >不限</el-radio
+          >
+          <el-checkbox-group
+            v-model="form.bussinessDistrictList"
+            @change="formCheckBoxChange('bussinessDistrictRadio')"
+          >
+            <el-checkbox
+              :label="item.name"
               class="anchor-point"
               :data-anchor="'首页选项 商圈:' + item.name"
-              border
               v-for="item in RegionList"
               :key="item.value"
-              >{{ item.name }}</el-radio
-            >
-          </el-radio-group>
+            ></el-checkbox>
+          </el-checkbox-group>
         </div>
       </div>
       <!-- 价钱 -->
@@ -757,7 +763,7 @@
             <div class="input-group-split">
               <el-input
                 placeholder="最小值"
-                :data-anchor="'首页选项 价格:' + price.minPrice"
+                :data-anchor="'首页选项 价格最小值:' + price.minPrice"
                 class="input-content is-suffix anchor-point"
                 v-model="price.minPrice"
               >
@@ -768,7 +774,7 @@
               <i class="input-split"></i>
               <el-input
                 placeholder="最大值"
-                :data-anchor="'首页选项 价格:' + price.maxPrice"
+                :data-anchor="'首页选项 价格最大值:' + price.maxPrice"
                 class="input-content is-suffix anchor-point"
                 v-model="price.maxPrice"
               >
@@ -829,7 +835,7 @@
               <el-input
                 placeholder="最小值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 面积:' + area.minInArea"
+                :data-anchor="'首页选项 面积最小值:' + area.minInArea"
                 v-model="area.minInArea"
               >
                 <template v-slot:suffix>
@@ -840,7 +846,7 @@
               <el-input
                 placeholder="最大值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 面积:' + area.maxInArea"
+                :data-anchor="'首页选项 面积最大值:' + area.maxInArea"
                 v-model="area.maxInArea"
               >
                 <template v-slot:suffix>
@@ -891,7 +897,7 @@
               <el-input
                 placeholder="最小值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 房型:' + room.minRoom"
+                :data-anchor="'首页选项 房型最小值:' + room.minRoom"
                 v-model="room.minRoom"
               >
                 <template v-slot:suffix>
@@ -902,7 +908,7 @@
               <el-input
                 placeholder="最大值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 房型:' + room.maxRoom"
+                :data-anchor="'首页选项 房型最大值:' + room.maxRoom"
                 v-model="room.maxRoom"
               >
                 <template v-slot:suffix>
@@ -952,7 +958,7 @@
               <el-input
                 placeholder="最小值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 楼层:' + floor.minFloor"
+                :data-anchor="'首页选项 楼层最小值:' + floor.minFloor"
                 v-model="floor.minFloor"
               >
                 <template v-slot:suffix>
@@ -963,7 +969,7 @@
               <el-input
                 placeholder="最大值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 楼层:' + floor.maxFloor"
+                :data-anchor="'首页选项 楼层最大值:' + floor.maxFloor"
                 v-model="floor.maxFloor"
               >
                 <template v-slot:suffix>
@@ -1271,6 +1277,8 @@ export default {
       primarySchoolRadio: "不限", //小学校radio
       renovationRadio: "不限", //装修radio不限
       faceRadio: "不限", //朝向radio不限
+      typeRadio: "不限", //类型radio不限
+      bussinessDistrictRadio: "不限", //商圈radio不限
       price: {
         radioCheck: "不限", //单选
         minPrice: "", //最小价钱
