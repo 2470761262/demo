@@ -51,7 +51,7 @@
       :data="tableData"
       header-cell-class-name="ResultListCell ResultListHeaderBack"
       cell-class-name="ResultListCell"
-      @row-click="navigateTo"
+      @row-dblclick="navigateTo"
       @sort-change="sortChange"
     >
       <div v-for="(item, index) in tableDataColumn" :key="index">
@@ -230,6 +230,10 @@ export default {
                 : that.form.requirementType,
             plate: that.form.plate,
             plateChangeReasons: that.form.plateChangeReasons
+            /*            , minDialTime: that.form.DialTime[0],
+            maxDialTime: that.form.DialTime[1],
+            minMyDialTime: that.form.MyDialTime[0],
+            maxMyDialTime: that.form.MyDialTime[1] */
           }
         })
         .then(e => {

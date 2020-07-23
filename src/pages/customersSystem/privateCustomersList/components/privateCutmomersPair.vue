@@ -18,6 +18,7 @@
       height: 40px;
       text-align: center;
       border-radius: 4px;
+      cursor: pointer;
       > i,
       > span {
         line-height: 40px;

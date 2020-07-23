@@ -164,7 +164,7 @@
       <div class="SubMsgRow">
         <div class="SubMsgTil">进池时间：</div>
         <div class="SubMsgText">
-          {{ cusbaseData.ModTime || "暂无" }}
+          {{ cusbaseData.plateChangeTime || "暂无" }}
         </div>
       </div>
     </div>
@@ -385,7 +385,7 @@ export default {
       let that = this;
       this.$api
         .post({
-          url: "/saleCustomerDetail/getTelPhone",
+          url: "/saleCustomerDetail/getTelephoneForPublish",
           data: { customerId: that.customerId.id },
           qs: true,
           headers: {
@@ -410,10 +410,10 @@ export default {
         customerId: this.customerId.id,
         remark: "给客户" + this.cusbaseData.Customers + "拨打电话",
         customerName: this.cusbaseData.Customers,
-        contactPhone: i.phone,
+        //  contactPhone: i.phone,
         customerNo: this.cusbaseData.CustomerNo,
-        customerPlate: this.cusbaseData.plate
-        //   ,telId: i.id
+        customerPlate: this.cusbaseData.plate,
+        telId: i.id
       };
       that.$api
         .post({

@@ -125,8 +125,8 @@ export default {
             );
             this.$set(
               that.cusbaseData,
-              "ModTime",
-              json.data.bsAgentCustomersTbl.ModTime
+              "plateChangeTime",
+              json.data.bsAgentCustomersTbl.plateChangeTime
             );
             this.$set(
               that.cusbaseData,

@@ -321,9 +321,11 @@
             v-validate="'required|isChinese'"
             v-model="form.customerName"
           >
-            <div slot="prepend" class="item-before" data-before="*">业主姓名</div>
+            <div slot="prepend" class="item-before" data-before="*">
+              业主姓名
+            </div>
           </el-input>
-          <div class="input-after-checkbox radio-maging-top_13">
+          <div class="input-after-checkbox radio-flex-center">
             <el-radio-group v-model="form.sex" size="mini">
               <el-radio
                 data-anchor="添加房源多套录入业主性别 => radio"
@@ -337,29 +339,30 @@
           </div>
         </div>
       </div>
-      <div
-              class="form-error-tips  maging-top_60 margin-bot_20 margin-left_20"
-              :class="{ 'after-tips': errorBags.has('customerType') }"
-              :data-tips="errorBags.first('customerType')"
-      >
-        <div class="page-cell-item">
-          <div class="item-before" data-before="*">业主类型</div>
-          <div class="radio-maging-top_13">
-            <el-radio-group
-                    v-model="form.customerType"
-                    size="mini"
-                    class="anchor-point"
-            >
-              <el-radio
-                      data-anchor="添加房源业主类型 => radio"
-                      class="anchor-point"
-                      :label="item.label"
-                      v-for="(item, index) in customerTypeList"
-                      :key="index"
+    </div>
+    <!--  业主类型  -->
+    <div
+      class="form-error-tips margin-bot_20"
+      :class="{ 'after-tips': errorBags.has('customerType') }"
+      :data-tips="errorBags.first('customerType')"
+    >
+      <div class="page-cell-item">
+        <div class="item-before" data-before="*">业主类型</div>
+        <div class="radio-flex-center">
+          <el-radio-group
+            v-model="form.customerType"
+            size="mini"
+            class="anchor-point"
+          >
+            <el-radio
+              data-anchor="添加房源业主类型 => radio"
+              class="anchor-point"
+              :label="item.label"
+              v-for="(item, index) in customerTypeList"
+              :key="index"
               >{{ item.title }}</el-radio
-              >
-            </el-radio-group>
-          </div>
+            >
+          </el-radio-group>
         </div>
       </div>
     </div>

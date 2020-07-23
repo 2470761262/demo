@@ -18,6 +18,7 @@
       height: 40px;
       text-align: center;
       border-radius: 4px;
+      cursor: pointer;
       > i,
       > span {
         line-height: 40px;
@@ -27,7 +28,6 @@
 
     .SwitchItemOn {
       background: @backgroud;
-      cursor: pointer;
       > i,
       > span {
         color: #ffffff;
@@ -39,6 +39,7 @@
       > span {
         color: @backgroud;
       }
+      cursor: pointer;
     }
   }
   .ItemRow {
@@ -423,15 +424,17 @@
         class="ItemRow ChooseItemRow"
         prop="HouseType"
       >
-        <el-radio-group v-model="form.ReVisit" class="RadioItemBox">
+        <el-radio-group
+          v-model="ReVisit"
+          class="RadioItemBox"
+          @change="getDialTime(ReVisit)"
+        >
           <div
             class="RadioItem"
             v-for="(item, index) in ReVisitList"
             :key="index"
           >
-            <el-radio :label="item.value" name="ReVisit">{{
-              item.name
-            }}</el-radio>
+            <el-radio :label="item.id" name="ReVisit">{{ item.name }}</el-radio>
           </div>
         </el-radio-group>
       </el-form-item>
@@ -441,13 +444,17 @@
         class="ItemRow ChooseItemRow"
         prop="HouseType"
       >
-        <el-radio-group v-model="form.MyReVisit" class="RadioItemBox">
+        <el-radio-group
+          v-model="MyReVisit"
+          class="RadioItemBox"
+          @change="getMyDialTime(MyReVisit)"
+        >
           <div
             class="RadioItem"
             v-for="(item, index) in MyReVisitList"
             :key="index"
           >
-            <el-radio :label="item.value" name="MyReVisit">{{
+            <el-radio :label="item.id" name="MyReVisit">{{
               item.name
             }}</el-radio>
           </div>
@@ -522,36 +529,31 @@ const ReasonModle = [
 
 const ReVisitListModle = [
   {
+    id: 0,
     name: "不限",
-    value: ""
+    value: [0, 0]
   },
   {
+    id: 1,
     name: "今日有回访",
-    value: 1
+    value: [1, 1]
   },
   {
+    id: 2,
     name: "30天内有回访",
-    value: 2
+    value: [31, 1]
   },
   {
+    id: 3,
     name: "30天以上未回访",
-    value: 3
+    value: [0, 31]
   }
 ];
 
 const MyReVisitListModle = [
-  {
-    name: "不限",
-    value: ""
-  },
-  {
-    name: "今日回访",
-    value: 1
-  },
-  {
-    name: "本月回访",
-    value: 2
-  }
+  { id: 0, name: "不限", value: [0, 0] },
+  { id: 1, name: "今日回访", value: [1, 1] },
+  { id: 2, name: "本月回访", value: [2, 1] }
 ];
 import { formatDate } from "element-ui/src/utils/date-util";
 
@@ -563,7 +565,9 @@ export default {
       PublicTypeList: PublicTypeModle,
       ReasonList: ReasonModle,
       ReVisitList: ReVisitListModle,
+      ReVisit: 0, //回访时间
       MyReVisitList: MyReVisitListModle,
+      MyReVisit: 0, //我的回访
       plateChangeReasons: [0],
       Today: ""
     };
@@ -596,6 +600,51 @@ export default {
         this.form.plateChangeReasons = this.plateChangeReasons;
       }
       console.log(this.form.plateChangeReasons, "准备传递给后端的条件");
+    },
+    getDialTime(i) {
+      for (let j = 0; j < 2; j++) {
+        if (this.ReVisitList[i].value[j] == 0) {
+          this.$set(this.form.DialTime, [j], "");
+        } else {
+          this.$set(
+            this.form.DialTime,
+            [j],
+            formatDate(
+              new Date().setDate(
+                new Date().getDate() - this.ReVisitList[i].value[j] + 1
+              ),
+              "yyyy-MM-dd HH"
+            ) + ":00:00"
+          );
+        }
+      }
+      console.log(this.form.DialTime);
+    },
+    getMyDialTime(i) {
+      for (let j = 0; j < 2; j++) {
+        let n = this.MyReVisitList[i].value[j];
+        if (n == 0) {
+          this.$set(this.form.MyDialTime, [j], "");
+        } else if (n == 2) {
+          //取本月一号
+          this.$set(
+            this.form.MyDialTime,
+            [j],
+            formatDate(new Date().setDate(new Date().getDate()), "yyyy-MM") +
+              "-01 00:00:00"
+          );
+        } else {
+          this.$set(
+            this.form.MyDialTime,
+            [j],
+            formatDate(
+              new Date().setDate(new Date().getDate() - n + 1),
+              "yyyy-MM-dd HH"
+            ) + ":00:00"
+          );
+        }
+      }
+      console.log(this.form);
     }
   }
 };

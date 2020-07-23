@@ -666,67 +666,66 @@
       <div class="search-content-item">
         <div class="search-item-title">类型</div>
         <div class="search-item-right">
-          <el-radio-group v-model="form.type" size="small">
-            <el-radio
-              class="anchor-point"
-              data-anchor="首页选项 类型:不限"
-              label=""
-              border
-              >不限</el-radio
-            >
-            <el-radio
+          <el-radio
+            label="不限"
+            class="anchor-point"
+            data-anchor="首页选项 类型:不限"
+            border
+            v-model="typeRadio"
+            @change="radioChange('typeList')"
+            >不限</el-radio>
+          <el-checkbox-group
+            v-model="form.typeList"
+            @change="formCheckBoxChange('typeRadio')"
+          >
+            <el-checkbox
+              label="1"
               class="anchor-point"
               data-anchor="首页选项 类型:我的相关"
-              label="1"
-              border
-              >我的相关</el-radio
-            >
-            <el-radio
+            >我的相关</el-checkbox>
+           <el-checkbox
+              label="2"
               class="anchor-point"
               data-anchor="首页选项 类型:关注房源"
-              label="2"
-              border
-              >关注房源</el-radio
-            >
-            <el-radio
+            >关注房源</el-checkbox>
+           <el-checkbox
+              label="3"
               class="anchor-point"
               data-anchor="首页选项 类型:3天新上房源"
-              label="3"
-              border
-              >3天新上房源</el-radio
-            >
-            <el-radio
+            >3天新上房源</el-checkbox>
+           <el-checkbox
+              label="4"
               class="anchor-point"
               data-anchor="首页选项 类型:投资房源"
-              label="4"
-              border
-              >投资房源</el-radio
-            >
-          </el-radio-group>
+            >投资房源</el-checkbox>
+          </el-checkbox-group>
         </div>
       </div>
       <!-- 商圈 -->
       <div class="search-content-item" v-if="RegionList.length != 0">
         <div class="search-item-title">商圈</div>
         <div class="search-item-right">
-          <el-radio-group v-model="form.bussinessDistrict" size="small">
-            <el-radio
-              class="anchor-point"
-              data-anchor="首页选项 商圈:不限"
-              label=""
-              border
-              >不限</el-radio
-            >
-            <el-radio
-              :label="item.value"
+          <el-radio
+            label="不限"
+            class="anchor-point"
+            data-anchor="首页选项 商圈:不限"
+            border
+            v-model="bussinessDistrictRadio"
+            @change="radioChange('bussinessDistrictList')"
+            >不限</el-radio
+          >
+          <el-checkbox-group
+            v-model="form.bussinessDistrictList"
+            @change="formCheckBoxChange('bussinessDistrictRadio')"
+          >
+            <el-checkbox
+              :label="item.name"
               class="anchor-point"
               :data-anchor="'首页选项 商圈:' + item.name"
-              border
               v-for="item in RegionList"
               :key="item.value"
-              >{{ item.name }}</el-radio
-            >
-          </el-radio-group>
+            ></el-checkbox>
+          </el-checkbox-group>
         </div>
       </div>
       <!-- 价钱 -->
@@ -1278,6 +1277,8 @@ export default {
       primarySchoolRadio: "不限", //小学校radio
       renovationRadio: "不限", //装修radio不限
       faceRadio: "不限", //朝向radio不限
+      typeRadio: "不限", //类型radio不限
+      bussinessDistrictRadio: "不限", //商圈radio不限
       price: {
         radioCheck: "不限", //单选
         minPrice: "", //最小价钱
@@ -1366,6 +1367,8 @@ export default {
       this.houseNoOrName = ""; //房源编号,楼盘名称
       this.primarySchool = ""; //小学select
       this.middleSchool = ""; //中学Select
+      this.typeRadio = "不限"; //类型radio不限
+      this.bussinessDistrictRadio = "不限"; //商圈radio不限
       this.middleSchoolRadio = "不限"; //中学不限
       this.purposeRadio = "不限"; //房屋用途radio不限
       this.primarySchoolRadio = "不限"; //小学校radio
