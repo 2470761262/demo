@@ -154,6 +154,7 @@ export default {
       sortColumn: "id",
       sortDirection: "DESC",
       loading: false,
+      tooltip: true,
       isPrivate: "", //是否私客，true私客，false公客
       limit: 15, //分页参数，每页条数
       page: 1, //分页参数，第几页
@@ -335,6 +336,8 @@ export default {
       return type;
     },
     navigateTo(row) {
+      let dom = document.getElementsByClassName("el-tooltip__popper");
+      dom[0].style.display = "none";
       this.$router.push({
         path: "/customers/customersDetail",
         query: { customerId: row.id }
