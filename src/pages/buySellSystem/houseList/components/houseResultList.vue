@@ -764,7 +764,7 @@
             <div class="input-group-split">
               <el-input
                 placeholder="最小值"
-                :data-anchor="'首页选项 价格:' + price.minPrice"
+                :data-anchor="'首页选项 价格最小值:' + price.minPrice"
                 class="input-content is-suffix anchor-point"
                 v-model="price.minPrice"
               >
@@ -775,7 +775,7 @@
               <i class="input-split"></i>
               <el-input
                 placeholder="最大值"
-                :data-anchor="'首页选项 价格:' + price.maxPrice"
+                :data-anchor="'首页选项 价格最大值:' + price.maxPrice"
                 class="input-content is-suffix anchor-point"
                 v-model="price.maxPrice"
               >
@@ -836,7 +836,7 @@
               <el-input
                 placeholder="最小值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 面积:' + area.minInArea"
+                :data-anchor="'首页选项 面积最小值:' + area.minInArea"
                 v-model="area.minInArea"
               >
                 <template v-slot:suffix>
@@ -847,7 +847,7 @@
               <el-input
                 placeholder="最大值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 面积:' + area.maxInArea"
+                :data-anchor="'首页选项 面积最大值:' + area.maxInArea"
                 v-model="area.maxInArea"
               >
                 <template v-slot:suffix>
@@ -898,7 +898,7 @@
               <el-input
                 placeholder="最小值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 房型:' + room.minRoom"
+                :data-anchor="'首页选项 房型最小值:' + room.minRoom"
                 v-model="room.minRoom"
               >
                 <template v-slot:suffix>
@@ -909,7 +909,7 @@
               <el-input
                 placeholder="最大值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 房型:' + room.maxRoom"
+                :data-anchor="'首页选项 房型最大值:' + room.maxRoom"
                 v-model="room.maxRoom"
               >
                 <template v-slot:suffix>
@@ -959,7 +959,7 @@
               <el-input
                 placeholder="最小值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 楼层:' + floor.minFloor"
+                :data-anchor="'首页选项 楼层最小值:' + floor.minFloor"
                 v-model="floor.minFloor"
               >
                 <template v-slot:suffix>
@@ -970,7 +970,7 @@
               <el-input
                 placeholder="最大值"
                 class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 楼层:' + floor.maxFloor"
+                :data-anchor="'首页选项 楼层最大值:' + floor.maxFloor"
                 v-model="floor.maxFloor"
               >
                 <template v-slot:suffix>
