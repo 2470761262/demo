@@ -299,12 +299,6 @@ export default {
           this.$refs[moduleName].data = formData[i];
         }
       }
-    },
-    /**
-     * @example: 验证当前页面表单
-     */
-    validate() {
-      return this.$validator.validateAll().then(e => e);
     }
   }
 };
