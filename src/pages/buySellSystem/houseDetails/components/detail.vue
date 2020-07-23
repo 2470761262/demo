@@ -277,7 +277,7 @@
             {{ resultData.outfollow | emptyRead("天") }}
           </div>
         </div>
-        <div class="cell-tabs" v-if="resultData.customerType">
+        <div class="cell-tabs" v-if="resultData.customerType == null || resultData.customerType == undefined">
           <div class="cell-tabs-title">业主类型</div>
           <div class="cell-tabs-detail">
             {{ formatCustomerType(resultData.customerType) }}
