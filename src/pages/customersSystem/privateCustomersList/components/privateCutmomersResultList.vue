@@ -12,6 +12,9 @@
     padding-left: 45px;
     font-size: @font16;
     height: 64px;
+    /deep/.cell {
+      line-height: 1;
+    }
   }
 }
 .paginationRow {
