@@ -357,8 +357,7 @@ export default {
         {
           prop: "customerType",
           label: "业主类型",
-          order: false,
-          formart: item => this.formatCustomerType(item.customerType)
+          order: false
         },
         // {
         //   prop: "saleReson",
@@ -454,18 +453,6 @@ export default {
       }
 
       return res;
-    },
-    formatCustomerType(column) {
-      switch (column) {
-        case 0:
-          return "产权人";
-        case 1:
-          return "实际控制人";
-        case 2:
-          return "投资客";
-        default:
-          return "-";
-      }
     },
     getChartType(char) {
       // 数字可按照排序的要求进行自定义，我这边产品的要求是
