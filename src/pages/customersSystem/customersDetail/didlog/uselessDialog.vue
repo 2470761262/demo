@@ -109,7 +109,8 @@ export default {
                 });
                 that.close();
                 this.$router.push({
-                  path: "/customers/publicCustomersList"
+                  path: "/customers/publicCustomersDetail",
+                  query: { customerId: this.customerId }
                 });
               }
             })
