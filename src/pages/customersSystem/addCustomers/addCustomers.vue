@@ -212,7 +212,7 @@ export default {
           .then(e => {
             if (e.data.code == 200) {
               that.fullscreenLoading = false;
-              this.$router.push({
+              this.$router.replace({
                 path: "/customers/customersDetail",
                 query: { customerId: e.data.data }
               });

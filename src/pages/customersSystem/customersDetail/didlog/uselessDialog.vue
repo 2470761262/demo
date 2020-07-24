@@ -108,7 +108,7 @@ export default {
                   message: "客户转无效成功"
                 });
                 that.close();
-                this.$router.push({
+                this.$router.replace({
                   path: "/customers/publicCustomersDetail",
                   query: { customerId: this.customerId }
                 });
