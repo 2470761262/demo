@@ -39,7 +39,6 @@
       > span {
         color: @backgroud;
       }
-      cursor: pointer;
     }
   }
   .ItemRow {
@@ -419,7 +418,7 @@
           </div>
         </el-checkbox-group>
       </el-form-item>
-      <!--       <el-form-item
+      <el-form-item
         label="回访时间"
         class="ItemRow ChooseItemRow"
         prop="HouseType"
@@ -459,7 +458,7 @@
             }}</el-radio>
           </div>
         </el-radio-group>
-      </el-form-item> -->
+      </el-form-item>
     </el-form>
   </div>
 </template>
@@ -603,16 +602,24 @@ export default {
     },
     getDialTime(i) {
       for (let j = 0; j < 2; j++) {
-        if (this.ReVisitList[i].value[j] == 0) {
+        let n = this.ReVisitList[i].value[j];
+        if (n == 0) {
           this.$set(this.form.DialTime, [j], "");
+        } else if (j == 0) {
+          this.$set(
+            this.form.DialTime,
+            [j],
+            formatDate(
+              new Date().setDate(new Date().getDate() - n + 1),
+              "yyyy-MM-dd "
+            ) + "00:00:00"
+          );
         } else {
           this.$set(
             this.form.DialTime,
             [j],
             formatDate(
-              new Date().setDate(
-                new Date().getDate() - this.ReVisitList[i].value[j] + 1
-              ),
+              new Date().setDate(new Date().getDate() - n + 1),
               "yyyy-MM-dd HH"
             ) + ":00:00"
           );
@@ -632,6 +639,15 @@ export default {
             [j],
             formatDate(new Date().setDate(new Date().getDate()), "yyyy-MM") +
               "-01 00:00:00"
+          );
+        } else if (j == 0) {
+          this.$set(
+            this.form.MyDialTime,
+            [j],
+            formatDate(
+              new Date().setDate(new Date().getDate() - n + 1),
+              "yyyy-MM-dd "
+            ) + "00:00:00"
           );
         } else {
           this.$set(

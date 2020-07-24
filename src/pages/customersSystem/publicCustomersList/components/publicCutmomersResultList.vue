@@ -229,11 +229,11 @@ export default {
                 ? null
                 : that.form.requirementType,
             plate: that.form.plate,
-            plateChangeReasons: that.form.plateChangeReasons
-            /*            , minDialTime: that.form.DialTime[0],
+            plateChangeReasons: that.form.plateChangeReasons,
+            minDialTime: that.form.DialTime[0],
             maxDialTime: that.form.DialTime[1],
             minMyDialTime: that.form.MyDialTime[0],
-            maxMyDialTime: that.form.MyDialTime[1] */
+            maxMyDialTime: that.form.MyDialTime[1]
           }
         })
         .then(e => {

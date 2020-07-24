@@ -34,16 +34,66 @@
     user-select: none;
   }
 }
+.feedback-customer {
+  position: fixed;
+  z-index: 20;
+  right: 40px;
+  bottom: 80px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  background: #fff;
+  z-index: 2000;
+  transform: translateX(100%);
+  transition: all 0.3s ease-in;
+  &:hover {
+    transform: translateX(40px);
+  }
+  p {
+    cursor: pointer;
+    &:nth-child(1) {
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+    &:nth-child(2) {
+      color: #40a375;
+    }
+  }
+  img[alt="客源测试"] {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    user-select: none;
+  }
+}
 </style>
 <template>
-  <div class="feedback-suspension" ref="fixedChunk" @click="openFeed">
-    <img
-      src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/5/27/6a6b1cc898c74452ac219dcc85fc2e33.png"
-      alt="在线反馈"
-    />
-    <div>
-      <p>在线反馈</p>
-      <p>反馈可以赚鑫币哦</p>
+  <div>
+    <div class="feedback-customer" ref="fixedChunk2">
+      <img
+        src="https://imgtest.0be.cn/FileUpload/timg.png"
+        alt="体验官专享"
+        style="width:35px;"
+      />
+      <div>
+        <p>
+          <a href="http://smtcom.yongxinjia.com" target="_blank">体验官专享</a>
+        </p>
+        <p>输入账号密码进入系统</p>
+      </div>
+    </div>
+    <div class="feedback-suspension" ref="fixedChunk" @click="openFeed">
+      <img
+        src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/5/27/6a6b1cc898c74452ac219dcc85fc2e33.png"
+        alt="在线反馈"
+      />
+      <div>
+        <p>在线反馈</p>
+        <p>反馈可以赚鑫币哦</p>
+      </div>
     </div>
   </div>
 </template>
