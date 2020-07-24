@@ -99,7 +99,15 @@
     }
   }
   .Followtip {
-    font-size: @font16;
+    padding: 50px 0;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    > div {
+      width: 100%;
+      text-align: center;
+      font-size: @font16;
+    }
   }
 }
 </style>
@@ -164,7 +172,8 @@
         </div>
       </div>
       <div class="Followtip" v-if="FollowData.data.length <= 0">
-        暂无跟进信息
+        <img src="../../../../assets/images/zanwu.png" />
+        <div>暂无跟进信息</div>
       </div>
     </div>
 
