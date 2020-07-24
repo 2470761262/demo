@@ -42,11 +42,12 @@ export default {
         submitSearch: false,
         searchType: "1", //搜索类别 1--客户信息 2--客户印象
         requirementType: 1, //需求类型参数 (示例：买二手房1，买新房2，租赁4
-        keyWord: "", //关键词
-        desireIntensitys: [], //意愿 多选，0强烈，1较弱，2一般 4不限，需要处理数据
-        pairNumbers: [], //带看次数，多选，数字数组
         attentionStatus: false, //是否关注 1关注 其余暂不关注，需要处理数据
         isBuy: 0, //是否成交，0否，1是 需要处理数据
+        keyWord: "", //关键词
+
+        desireIntensitys: [], //意愿 多选，0强烈，1较弱，2一般 4不限，需要处理数据
+        pairNumbers: [], //带看次数，多选，数字数组
         minPrice: "", //最低价
         maxPrice: "", //最高价
         minArea: "", //最小面积

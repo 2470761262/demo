@@ -480,7 +480,7 @@
         label="意向价格"
         class="ItemRow ChooseItemRow"
         prop="Price"
-        v-show="!form.attentionStatus"
+        v-show="!form.attentionStatus && customersType != 4"
       >
         <el-radio-group
           v-model="Price"
@@ -523,7 +523,53 @@
           >
         </div>
       </el-form-item>
-
+      <el-form-item
+        label="意向租金"
+        class="ItemRow ChooseItemRow"
+        prop="Price"
+        v-show="!form.attentionStatus && customersType == 4"
+      >
+        <el-radio-group
+          v-model="Price"
+          class="RadioItemBox"
+          @change="getLimit('RentList', Price, 'minPrice', 'maxPrice')"
+        >
+          <div
+            class="RadioItem"
+            v-for="(item, index) in PriceList"
+            :key="index"
+          >
+            <el-radio :label="item.id" name="Price">{{ item.name }}</el-radio>
+          </div>
+        </el-radio-group>
+        <div class="InputItem">
+          <div class="InputItemCell">
+            <el-input
+              type="number"
+              v-number
+              placeholder="最小值"
+              clearable
+              v-model="MinPrice"
+            ></el-input>
+            <span>万</span>
+          </div>
+          <div class="split-line"></div>
+          <div class="InputItemCell">
+            <el-input
+              type="number"
+              v-number
+              placeholder="最大值"
+              clearable
+              v-model="MaxPrice"
+            ></el-input>
+            <span>万</span>
+          </div>
+          <el-button
+            @click="submitInput('MinPrice', 'MaxPrice', 'minPrice', 'maxPrice')"
+            >确定</el-button
+          >
+        </div>
+      </el-form-item>
       <div v-show="ShowMorePair">
         <el-form-item
           label="意向面积"
@@ -788,6 +834,38 @@ const PriceListModle = [
     value: [200]
   }
 ];
+const RentListModle = [
+  {
+    name: "不限",
+    id: 0,
+    value: [0]
+  },
+  {
+    name: "1000元以下",
+    id: 1,
+    value: [0, 1000]
+  },
+  {
+    name: "1000-1500元",
+    id: 2,
+    value: [1000, 1500]
+  },
+  {
+    name: "1500-2000元",
+    id: 3,
+    value: [1500, 2000]
+  },
+  {
+    name: "2000-3000元",
+    id: 4,
+    value: [2000, 3000]
+  },
+  {
+    name: "3000元以上",
+    id: 5,
+    value: [3000]
+  }
+];
 const AreaListModle = [
   {
     name: "不限",
@@ -862,6 +940,7 @@ export default {
       ProgressList: ProgressListModle,
       Progress: [-1],
       PriceList: PriceListModle,
+      RentList: RentListModle,
       Price: 0, //价格，需要处理数据
       MinPrice: "",
       MaxPrice: "",
@@ -910,6 +989,32 @@ export default {
     setCustomersType(item, resetAll) {
       this.form.isBuy = 0;
       this.form.attentionStatus = false;
+      this.form.desireIntensitys = [];
+      this.form.pairNumbers = [];
+      this.form.minPrice = "";
+      this.form.maxPrice = "";
+      this.form.minArea = "";
+      this.form.maxArea = "";
+      this.form.houseNumbers = [];
+      this.form.minAddTime = "";
+      this.form.maxAddTime = "";
+      this.form.minMainTainTime = "";
+      this.form.maxMainTainTime = "";
+      this.form.minLastPairFollowTime = "";
+      this.form.maxLastPairFollowTime = "";
+
+      this.Intend = [4];
+      this.Progress = [-1];
+      this.Price = 0;
+      this.MinPrice = "";
+      this.MaxPrice = "";
+      this.Area = 0;
+      this.MinArea = "";
+      this.MaxArea = "";
+      this.houseNumbers = [0];
+      this.DelegateTime = "";
+      this.MaintenanceTime = "";
+      this.TakelookTime = "";
       switch (item.type) {
         case 1:
           this.form.requirementType = "";
