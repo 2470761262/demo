@@ -1077,10 +1077,13 @@ export default {
             font-size: @font16;
             margin-bottom: 33px;
             .msg-row-title {
+              // width: 220px;
               display: inline-block;
               color: #606266;
             }
             .msg-row-txt {
+              width: 380px;
+              text-align: right;
               display: inline-block;
               margin-left: auto;
               color: #303133;
