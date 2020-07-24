@@ -209,6 +209,7 @@
 </template>
 <script>
 import sidebarList from "./sidebarList";
+import util from "@/util/util";
 export default {
   inheritAttrs: false,
   components: {
@@ -242,14 +243,14 @@ export default {
       if (!this.$attrs.dblclick) {
         if (row.communityName)
           if (row.houseId != undefined && row.houseId > row.id)
-            that.$router.push({
+            util.openPage.call(this, {
               name: `${
                 that.$attrs.pageName ? that.$attrs.pageName : "houseDetails"
               }`,
               params: { houseId: row.houseId }
             });
           else {
-            that.$router.push({
+            util.openPage.call(this, {
               name: `${
                 that.$attrs.pageName ? that.$attrs.pageName : "houseDetails"
               }`,

@@ -17,6 +17,9 @@
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
+            data-anchor="锁定列表楼盘 => select"
+            @click.native="log_socket.sendUserActionData"
+            class="anchor-point"
             filterable
             remote
             clearable
@@ -26,7 +29,10 @@
           >
             <el-option
               v-for="item in options"
+              :data-anchor="'锁定列表楼盘 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
+              class="anchor-point"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -34,26 +40,38 @@
           <el-select
             v-model="data.cbId"
             filterable
+            data-anchor="锁定列表楼栋 => select"
+            @click.native="log_socket.sendUserActionData"
+            class="anchor-point"
             clearable
             placeholder="楼栋"
             @change="queryRoomNo"
           >
             <el-option
               v-for="item in cbIdList"
+              :data-anchor="'锁定列表楼栋 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
+              class="anchor-point"
               :label="item.name"
               :value="item.value"
             ></el-option>
           </el-select>
           <el-select
             v-model="data.bhId"
+            data-anchor="锁定列表房间号 => select"
+            @click.native="log_socket.sendUserActionData"
+            class="anchor-point"
             filterable
             @change="queryLockedAllParams"
             placeholder="房间号"
           >
             <el-option
               v-for="item in roomNoList"
+              :data-anchor="'锁定列表房间号 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
+              class="anchor-point"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -142,6 +160,7 @@ import definitionmenu from "@/components/definitionMenu";
 import moreSelect from "@/components/moreSelect";
 import common from "../houseResource/common/common";
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -323,7 +342,10 @@ export default {
 
     toLook(id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: id }
+      });
     },
     queryLockedAllParams() {
       this.queryLockedHouseDatas(1);

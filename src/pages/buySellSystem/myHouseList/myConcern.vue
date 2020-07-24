@@ -83,6 +83,7 @@
           <el-select
             data-anchor="我的关注楼盘 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
@@ -94,9 +95,10 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="我的关注楼盘 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in optionsList"
+              :data-anchor="'我的关注楼盘 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -105,6 +107,7 @@
           <el-select
             data-anchor="我的关注楼栋 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.cbId"
             filterable
             clearable
@@ -112,9 +115,10 @@
             @change="buildChange"
           >
             <el-option
-              data-anchor="我的关注楼栋 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
+              :data-anchor="'我的关注楼栋 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -123,6 +127,7 @@
           <el-select
             data-anchor="我的关注房间号 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.roomNo"
             filterable
             clearable
@@ -132,9 +137,10 @@
             v-loadmore="loadMore"
           >
             <el-option
-              data-anchor="我的关注房间号 => select => option"
               class="anchor-point"
               v-for="item in roomNoList"
+              :data-anchor="'我的关注房间号 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -409,6 +415,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -795,7 +802,10 @@ export default {
     //跳转房源详情页面
     toHouseDetail(id) {
       let that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: id }
+      });
     },
     //清除
     show(msg) {

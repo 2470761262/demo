@@ -16,10 +16,11 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
-            data-anchor="无号码楼盘筛选"
+            data-anchor="无号码楼盘筛选 => select"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
+            @click.native="log_socket.sendUserActionData"
             @change="queryCBId"
             filterable
             remote
@@ -29,10 +30,11 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="无号码楼盘筛选"
               class="anchor-point"
               v-for="item in options"
               :key="item.value"
+              @click.native="log_socket.sendUserActionData"
+              :data-anchor="'无号码楼盘筛选 => select => option:' + item.name"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -42,15 +44,17 @@
             v-model="data.cbId"
             filterable
             clearable
-            data-anchor="无号码楼栋筛选"
+            @click.native="log_socket.sendUserActionData"
+            data-anchor="无号码楼栋筛选 => select"
             placeholder="楼栋"
             @change="buildChange"
           >
             <el-option
-              data-anchor="无号码楼栋筛选"
               class="anchor-point"
               v-for="item in cbIdList"
               :key="item.value"
+              @click.native="log_socket.sendUserActionData"
+              :data-anchor="'无号码楼栋筛选 => select => option:' + item.name"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -60,8 +64,9 @@
             v-model="data.roomNo"
             filterable
             @change="queryNotPhoneParams"
+            @click.native="log_socket.sendUserActionData"
             placeholder="房间号"
-            data-anchor="无号码房间号筛选"
+            data-anchor="无号码房间号筛选 => select"
             :loading="HouseNoLoading"
             v-loadmore="loadMore"
           >
@@ -69,7 +74,8 @@
               class="anchor-point"
               v-for="item in roomNoList"
               :key="item.value"
-              data-anchor="无号码房间号筛选"
+              @click.native="log_socket.sendUserActionData"
+              :data-anchor="'无号码房间号筛选 => select => option:' + item.name"
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -221,6 +227,7 @@
 <script>
 import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -302,7 +309,7 @@ export default {
       //无号码
       console.log(row, "进入楼盘详情");
       console.log("/building/getBuildingDetail/" + row.id);
-      that.$router.push({
+      util.openPage.call(this, {
         name: "buildingHouseDetail",
         params: { houseId: row.id }
       });

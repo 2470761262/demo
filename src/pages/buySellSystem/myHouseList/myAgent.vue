@@ -66,6 +66,7 @@
             <el-select
               data-anchor="我的跟单楼盘 => select"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-model="data.comId"
               @focus="remoteInput"
               @change="queryCBId"
@@ -77,9 +78,10 @@
               :loading="loading"
             >
               <el-option
-                data-anchor="我的跟单楼盘 => select => option"
                 class="anchor-point"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in options"
+                :data-anchor="'我的跟单楼盘 => select => option:' + item.name"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -88,6 +90,7 @@
             <el-select
               data-anchor="我的跟单楼栋 => select"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-model="data.cbId"
               filterable
               clearable
@@ -95,9 +98,10 @@
               @change="buildChange"
             >
               <el-option
-                data-anchor="我的跟单楼栋 => select => option"
                 class="anchor-point"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in cbIdList"
+                :data-anchor="'我的跟单楼栋 => select => option:' + item.name"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -106,6 +110,7 @@
             <el-select
               data-anchor="我的跟单房间号 => select"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-model="data.roomNo"
               filterable
               @change="querylistByParams"
@@ -114,9 +119,10 @@
               v-loadmore="loadMore"
             >
               <el-option
-                data-anchor="我的跟单房间号 => select => option"
                 class="anchor-point"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in roomNoList"
+                :data-anchor="'我的跟单房间号 => select => option:' + item.name"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -364,6 +370,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import definitionmenu from "@/components/definitionMenu";
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -977,7 +984,10 @@ export default {
 
     toLook(id) {
       var that = this;
-      that.$router.push({ name: "houseDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "houseDetails",
+        params: { houseId: id }
+      });
     },
     queryMyAgentParams() {
       this.queryMyAgent(1);

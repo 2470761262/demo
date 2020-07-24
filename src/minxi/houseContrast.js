@@ -1,6 +1,6 @@
 //import util from "@/util/util";
 //import { TREMEPACKERS, TREMEDEFTULTCOLOR } from "@/util/constMap";
-
+import util from "@/util/util";
 export default {
   methods: {
     distributeEvent(e, noticeId) {
@@ -54,7 +54,7 @@ export default {
       this.queryVerifyHouseDatas(this.pageJson.currentPage);
     },
     showNoticeDetail(noticeId) {
-      this.$router.push({
+      util.openPage.call(this, {
         name: "houseDetails",
         params: { houseId: noticeId }
       });

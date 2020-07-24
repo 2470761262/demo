@@ -143,7 +143,7 @@
             :key="item.prop"
           ></el-table-column>
         </template>
-        <el-table-column label="操作" fixed="right">
+        <el-table-column label="操作" fixed="right" min-width="180">
           <template v-slot="scope">
             <div class="no-center">
               <el-button

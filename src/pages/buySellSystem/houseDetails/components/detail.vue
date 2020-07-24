@@ -195,8 +195,8 @@
             ? Number.parseInt(
                 ((resultData.tradePrice || resultData.Price) * 10000) /
                   resultData.InArea
-              ).toFixed(1) || emptyRead("元/㎡")
-            : "暂无"
+              ).toFixed(0)
+            : "无" | emptyRead("元/㎡")
         }}
       </div>
     </div>
@@ -270,10 +270,18 @@
           {{ resultData.seenNum | emptyRead("次") }}
         </div>
       </div>
-      <div class="cell-tabs">
-        <div class="cell-tabs-title">未跟进天数</div>
-        <div class="cell-tabs-detail">
-          {{ resultData.outfollow | emptyRead("天") }}
+      <div class="flex-row">
+        <div class="cell-tabs">
+          <div class="cell-tabs-title">未跟进天数</div>
+          <div class="cell-tabs-detail">
+            {{ resultData.outfollow | emptyRead("天") }}
+          </div>
+        </div>
+        <div class="cell-tabs" v-if="!(resultData.customerType == null || resultData.customerType == undefined)">
+          <div class="cell-tabs-title">业主类型</div>
+          <div class="cell-tabs-detail">
+            {{ formatCustomerType(resultData.customerType) }}
+          </div>
         </div>
       </div>
     </div>
@@ -515,6 +523,18 @@ export default {
   },
   mounted() {},
   methods: {
+    formatCustomerType(column) {
+      switch (column) {
+        case 0:
+          return "产权人";
+        case 1:
+          return "实际控制人";
+        case 2:
+          return "投资客";
+        default:
+          return "-";
+      }
+    },
     callTaskAgent() {
       but.$emit("callTaskAgent");
     },
@@ -672,8 +692,9 @@ export default {
     keyStorageFilter(value, keyOwnerName) {
       return keyOwnerName == null ? "暂无" : value;
     },
+    // 后台做处理了
     priceFilter(value) {
-      return value.toFixed(2);
+      return value;
     }
   },
   destroyed() {

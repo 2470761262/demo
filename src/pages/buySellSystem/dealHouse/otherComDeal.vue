@@ -48,11 +48,12 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
-            data-anchor="他司成交楼盘筛选"
+            data-anchor="他司成交楼盘筛选 => select"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
             @change="queryCBId"
+            @click.native="log_socket.sendUserActionData"
             filterable
             remote
             clearable
@@ -61,27 +62,30 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="他司成交楼盘筛选"
               class="anchor-point"
               v-for="item in options"
+              @click.native="log_socket.sendUserActionData"
+              :data-anchor="'他司成交楼盘筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
             ></el-option>
           </el-select>
           <el-select
-            data-anchor="他司成交楼栋筛选"
+            data-anchor="他司成交楼栋筛选 => select"
             class="anchor-point"
             v-model="data.cbId"
+            @click.native="log_socket.sendUserActionData"
             filterable
             clearable
             placeholder="楼栋"
             @change="buildChange"
           >
             <el-option
-              data-anchor="他司成交楼栋筛选"
               class="anchor-point"
               v-for="item in cbIdList"
+              @click.native="log_socket.sendUserActionData"
+              :data-anchor="'他司成交楼栋筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -90,14 +94,18 @@
           <el-select
             v-model="data.bhId"
             filterable
+            data-anchor="他司成交房间号筛选 => select"
+            class="anchor-point"
             placeholder="房间号"
+            @click.native="log_socket.sendUserActionData"
             :loading="HouseNoLoading"
             v-loadmore="loadMore"
           >
             <el-option
-              data-anchor="他司成交房间号筛选"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
+              :data-anchor="'他司成交房间号筛选 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -256,6 +264,7 @@ import listPage from "@/components/listPage";
 import getMenuRid from "@/minxi/getMenuRid";
 import moreSelect from "@/components/moreSelect";
 import common from "../houseResource/common/common";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid],
   components: {
@@ -434,7 +443,10 @@ export default {
     // },
     toLook(id) {
       var that = this;
-      that.$router.push({ name: "historyDetails", params: { houseId: id } });
+      util.openPage.call(this, {
+        name: "historyDetails",
+        params: { houseId: id }
+      });
     },
     toHouseDetail(item) {
       let id = item.id;
@@ -444,7 +456,7 @@ export default {
       }
       console.log(id);
       var that = this;
-      this.$router.push({
+      util.openPage.call(this, {
         name: "historyDetails",
         params: { houseId: id, tradeType: 1 }
       });

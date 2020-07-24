@@ -45,8 +45,8 @@ http.interceptors.response.use(
         message: response.data.message,
         type: "error"
       });
-      vm.$router.push({
-        path: "/"
+      vm.$router.replace({
+        path: "/logOut"
       });
       return;
     } else if (response.data.code != 200) {

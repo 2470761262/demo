@@ -11,7 +11,7 @@ module.exports = {
   outputDir: "dist",
   assetsDir: "assets",
   productionSourceMap: false,
-  filenameHashing: false,
+  filenameHashing: true,
   css: {
     extract: false,
     sourceMap: false,

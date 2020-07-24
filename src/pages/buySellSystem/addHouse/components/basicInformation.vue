@@ -142,37 +142,67 @@
         </div>
       </div>
     </div>
-    <!-- 业主姓名 -->
+    <div class="page-cell-item-flex">
+      <!-- 业主姓名 -->
+      <div
+        class="form-error-tips maging-top_60 margin-bot_20"
+        :class="{ 'after-tips': errorBags.has('customerName') }"
+        :data-tips="errorBags.first('customerName')"
+      >
+        <div class="page-cell-item select-nobor center-flex">
+          <el-input
+            data-anchor="添加房源业主姓名 => input"
+            class="anchor-point"
+            placeholder="请输入业主姓名"
+            data-vv-name="customerName"
+            data-vv-as="业主姓名"
+            v-validate="'required|isChinese|chineseLen'"
+            v-model="formData.customerName"
+            maxlength="5"
+            minlength="2"
+          >
+            <div slot="prepend" class="item-before" data-before="*">
+              业主姓名
+            </div>
+          </el-input>
+          <div class="input-after-checkbox radio-flex-center">
+            <el-radio-group
+              v-model="formData.sex"
+              size="mini"
+              class="anchor-point"
+            >
+              <el-radio
+                data-anchor="添加房源业主性别 => radio"
+                class="anchor-point"
+                :label="item.label"
+                v-for="(item, index) in sexList"
+                :key="index"
+                >{{ item.title }}</el-radio
+              >
+            </el-radio-group>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--  业主类型  -->
     <div
-      class="form-error-tips maging-top_60 margin-bot_20"
-      :class="{ 'after-tips': errorBags.has('customerName') }"
-      :data-tips="errorBags.first('customerName')"
+      class="form-error-tips   margin-bot_20"
+      :class="{ 'after-tips': errorBags.has('customerType') }"
+      :data-tips="errorBags.first('customerType')"
     >
-      <div class="page-cell-item select-nobor center-flex">
-        <el-input
-          data-anchor="添加房源业主姓名 => input"
-          class="anchor-point"
-          placeholder="请输入业主姓名"
-          data-vv-name="customerName"
-          data-vv-as="业主姓名"
-          v-validate="'required|isChinese|chineseLen'"
-          v-model="formData.customerName"
-          maxlength="5"
-          minlength="2"
-        >
-          <div slot="prepend" class="item-before" data-before="*">业主姓名</div>
-        </el-input>
-        <div class="input-after-checkbox">
+      <div class="page-cell-item">
+        <div class="item-before" data-before="*">业主类型</div>
+        <div class="radio-flex-center">
           <el-radio-group
-            v-model="formData.sex"
+            v-model="formData.customerType"
             size="mini"
             class="anchor-point"
           >
             <el-radio
-              data-anchor="添加房源业主性别 => radio"
+              data-anchor="添加房源业主类型 => radio"
               class="anchor-point"
               :label="item.label"
-              v-for="(item, index) in sexList"
+              v-for="(item, index) in customerTypeList"
               :key="index"
               >{{ item.title }}</el-radio
             >
@@ -560,6 +590,11 @@ let sex = [
   { title: "女士", label: 0 },
   { title: "先生", label: 1 }
 ];
+let customerType = [
+  { title: "产权人", label: 0 },
+  { title: "实际控制人", label: 1 },
+  { title: "投资客", label: 2 }
+];
 let certificateType = [
   { title: "不动产权证", label: 1 },
   { title: "购房合同", label: 2 },
@@ -568,6 +603,7 @@ let certificateType = [
 let updateFileMap = new Map([
   ["customerName", "Customers"],
   ["sex", "Sex"],
+  ["customerType", "customerType"],
   ["tel", "Tel"],
   ["tel1", "Tel1"],
   ["tel2", "Tel2"],
@@ -1246,6 +1282,7 @@ export default {
       step: {},
       addTel: [],
       sexList: sex,
+      customerTypeList: customerType,
       changeBut: {
         area: false,
         roomType: false

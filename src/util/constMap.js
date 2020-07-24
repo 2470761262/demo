@@ -43,7 +43,7 @@ export const HOUSEUSE = [
 export const DECORATION = [
   {
     //装修 decoration
-    key: "毛胚",
+    key: "毛坯",
     value: 1
   },
   {

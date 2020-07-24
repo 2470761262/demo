@@ -318,7 +318,7 @@
             type="text"
             placeholder="请输入内容"
             v-model="employeeEntity.living"
-            maxlength="10"
+            maxlength="100"
             show-word-limit
           ></el-input>
         </el-form-item>

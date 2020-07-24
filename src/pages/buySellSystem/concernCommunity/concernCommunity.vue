@@ -208,6 +208,7 @@
             <h3 class="query-cell-title">楼盘</h3>
             <el-select
               data-anchor="核心盘楼盘 => select"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-model="comId"
               @focus="remoteInput"
@@ -219,9 +220,10 @@
               filterable
             >
               <el-option
-                data-anchor="核心盘楼盘 => select => option"
                 class="anchor-point"
                 v-for="item in comList"
+                :data-anchor="'核心盘楼盘 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -229,6 +231,7 @@
             </el-select>
             <el-select
               data-anchor="核心盘楼栋 => select"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-model="cbId"
               filterable
@@ -238,8 +241,9 @@
             >
               <el-option
                 class="anchor-point"
-                data-anchor="核心盘楼栋 => select => option"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in cbIdList"
+                :data-anchor="'核心盘楼栋 => select => option:' + item.name"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -247,6 +251,7 @@
             </el-select>
             <el-select
               data-anchor="核心盘房间号 => select"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-model="roomNo"
               filterable
@@ -256,9 +261,10 @@
               v-loadmore="loadMore"
             >
               <el-option
-                data-anchor="核心盘房间号 => select => option"
                 class="anchor-point"
                 v-for="item in roomNoList"
+                :data-anchor="'核心盘房间号 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -1373,7 +1379,7 @@ export default {
       //在售店公共盘,在售无跟单, 进入BSAgentHouse房源详情
       if (row.houseType == 1 || row.houseType == 2 || row.houseType == 3) {
         console.log("进入bsagenthouse房源详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "houseDetails",
           params: { houseId: row.eid }
         });
@@ -1381,26 +1387,26 @@ export default {
         //无号码
         console.log("进入楼盘详情");
         console.log("/building/geBuildingDetail/" + row.id);
-        that.$router.push({
+        util.openPage.call(this, {
           name: "buildingHouseDetail",
           params: { houseId: row.id }
         });
       } else if (row.tradeDay != null && row.tradeDay >= 0) {
         //成交房源
         console.log("进入交易房源（tradeHouseTbl）详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "historyDetails",
           params: { houseId: row.eid, tradeType: 0 }
         });
       } else if (!(row.isSale == -1 || row.isSale == 0 || row.isSale == 2)) {
         //暂不售 历史
         console.log("进入历史房源（hisbsagenthouse）详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "historyDetails",
           params: { houseId: row.eid, tradeType: 1 }
         });
       } else {
-        that.$router.push({
+        util.openPage.call(this, {
           name: "buildingHouseDetail",
           params: { houseId: row.id }
         });
