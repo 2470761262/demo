@@ -292,7 +292,9 @@ export default {
     navigateTo(row) {
       let dom = document.getElementsByClassName("el-tooltip__popper");
       if (dom.length > 0) {
-        dom[0].style.display = "none";
+        dom.forEach(item => {
+          item.style.display = "none";
+        });
       }
       this.$router.push({
         path: "/customers/publicCustomersDetail",
