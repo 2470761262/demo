@@ -11,6 +11,7 @@
             v-model="data.minPrice"
             oninput="value=value.replace(/[^\d]/g,'')"
             data-vv-name="minPrice"
+            maxlength="7"
             data-vv-as="最小值"
             v-validate="'zero1'"
           >
@@ -31,6 +32,7 @@
             v-model="data.maxPrice"
             oninput="value=value.replace(/[^\d]/g,'')"
             data-vv-name="maxPrice"
+            maxlength="7"
             data-vv-as="最大值"
             v-validate="{
               zero1: true,
@@ -59,6 +61,7 @@
             v-model="data.minFirstPrice"
             oninput="value=value.replace(/[^\d]/g,'')"
             data-vv-name="minFirstPrice"
+            maxlength="7"
             data-vv-as="最小值"
             v-validate="'zero1'"
           >
@@ -79,6 +82,7 @@
             v-model="data.maxFirstPrice"
             oninput="value=value.replace(/[^\d]/g,'')"
             data-vv-name="maxFirstPrice"
+            maxlength="7"
             data-vv-as="最大值"
             v-validate="{
               zero1: true,

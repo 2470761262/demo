@@ -36,20 +36,24 @@ export const multiplication = function(arg1, arg2) {
     调用：Calc.Mul(arg1,arg2)
     返回值：两数相乘的结果
     */
-  var r1 = arg1.toString(),
-    r2 = arg2.toString(),
-    m,
-    resultVal,
-    d = arguments[2];
-  m =
-    (r1.split(".")[1] ? r1.split(".")[1].length : 0) +
-    (r2.split(".")[1] ? r2.split(".")[1].length : 0);
-  resultVal =
-    (Number(r1.replace(".", "")) * Number(r2.replace(".", ""))) /
-    Math.pow(10, m);
-  return typeof d !== "number"
-    ? Number(resultVal)
-    : Number(resultVal.toFixed(parseInt(d)));
+  if (arg1) {
+    var r1 = arg1.toString(),
+      r2 = arg2.toString(),
+      m,
+      resultVal,
+      d = arguments[2];
+    m =
+      (r1.split(".")[1] ? r1.split(".")[1].length : 0) +
+      (r2.split(".")[1] ? r2.split(".")[1].length : 0);
+    resultVal =
+      (Number(r1.replace(".", "")) * Number(r2.replace(".", ""))) /
+      Math.pow(10, m);
+    return typeof d !== "number"
+      ? Number(resultVal)
+      : Number(resultVal.toFixed(parseInt(d)));
+  } else {
+    return "";
+  }
 };
 export const division = function(arg1, arg2) {
   /*
@@ -59,18 +63,22 @@ export const division = function(arg1, arg2) {
       调用：Calc.Div(arg1,arg2)
       返回值：arg1除于arg2的结果
       */
-  var r1 = arg1.toString(),
-    r2 = arg2.toString(),
-    m,
-    resultVal,
-    d = arguments[2];
-  m =
-    (r2.split(".")[1] ? r2.split(".")[1].length : 0) -
-    (r1.split(".")[1] ? r1.split(".")[1].length : 0);
-  resultVal =
-    (Number(r1.replace(".", "")) / Number(r2.replace(".", ""))) *
-    Math.pow(10, m);
-  return typeof d !== "number"
-    ? Number(resultVal)
-    : Number(resultVal.toFixed(parseInt(d)));
+  if (arg1) {
+    var r1 = arg1.toString(),
+      r2 = arg2.toString(),
+      m,
+      resultVal,
+      d = arguments[2];
+    m =
+      (r2.split(".")[1] ? r2.split(".")[1].length : 0) -
+      (r1.split(".")[1] ? r1.split(".")[1].length : 0);
+    resultVal =
+      (Number(r1.replace(".", "")) / Number(r2.replace(".", ""))) *
+      Math.pow(10, m);
+    return typeof d !== "number"
+      ? Number(resultVal)
+      : Number(resultVal.toFixed(parseInt(d)));
+  } else {
+    return "";
+  }
 };

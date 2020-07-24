@@ -39,6 +39,7 @@
 //异步组件工厂方法
 import componentsFactory from "@/util/componentsFactory";
 import util from "@/util/util";
+import { multiplication } from "@/util/accurateComputeUtil";
 //记录步骤组件名字
 const ComList = ["stepOne", "stepTwo"];
 export default {
@@ -181,12 +182,12 @@ export default {
               item.requireType != 128 &&
               item.requireType != 256
             ) {
-              item.maxFirstPrice = item.maxFirstPrice * 10000;
-              item.minFirstPrice = item.minFirstPrice * 10000;
-              item.maxPrice = item.maxPrice * 10000;
-              item.minPrice = item.minPrice * 10000;
-              item.maxUnitPrice = item.maxUnitPrice * 10000;
-              item.minUnitPrice = item.minUnitPrice * 10000;
+              item.maxFirstPrice = multiplication(item.maxFirstPrice, 10000);
+              item.minFirstPrice = multiplication(item.minFirstPrice, 10000);
+              item.maxPrice = multiplication(item.maxPrice, 10000);
+              item.minPrice = multiplication(item.minPrice, 10000);
+              item.maxUnitPrice = multiplication(item.maxUnitPrice, 10000);
+              item.minUnitPrice = multiplication(item.minUnitPrice, 10000);
             }
           });
         }

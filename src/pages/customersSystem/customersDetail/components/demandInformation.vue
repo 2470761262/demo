@@ -631,7 +631,7 @@ export default {
      * @example: 金额除以1万
      */
     formatMoney(val) {
-      return val / 10000;
+      return division(val, 10000);
     },
     /**
      * @example: 格式化付款方式
