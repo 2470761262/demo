@@ -45,7 +45,7 @@
           </el-date-picker>
         </div>
         <!-- 带看时间 -->
-        <div class="input-group">
+        <div class="input-group is-required">
           <div class="input-head">带看时间</div>
           <div class="input-group-split relative">
             <el-time-picker
