@@ -6,7 +6,7 @@
   .bet-tips {
     line-height: 35px;
     p {
-      font-size: 15px;
+      font-size: @font15;
     }
   }
   .bet-input {
@@ -17,7 +17,7 @@
       color: black;
     }
     .bet-input-content {
-      width: 110px;
+      // width: 110px;
       margin: 0 20px;
       /deep/.el-input {
         input {
@@ -32,7 +32,7 @@
 }
 .pop-but {
   /deep/span {
-    font-size: 12px !important;
+    font-size: @font12 !important;
   }
   .button-back {
     background: #108f51;
@@ -82,7 +82,7 @@
         >
         <el-button
           size="small"
-          :disabled="!showBetBtn"
+          :disabled="!reloData.betBtn"
           class="button-back anchor-point"
           :loading="loading"
           @click="result"
@@ -93,45 +93,30 @@
   </fixedPopup>
 </template>
 <script>
-import but from "@/evenBus/but.js";
+import { mapState } from "vuex";
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
   },
-  inject: ["houseId"],
+  computed: {
+    ...mapState({
+      houseId: state => state.houseDateil.id,
+      betConf: state => state.houseDateil.betConf,
+      reloData: state => state.houseDateil.reloData
+    })
+  },
   data() {
     return {
       butValue: "",
-      loading: false,
-      betConf: {
-        startHour: 0,
-        expireDay: 0,
-        odds: 0,
-        upper: 0,
-        lower: 0
-      },
-      showBetBtn: false
+      loading: false
     };
-  },
-  created() {
-    but.$on("betConf", value => {
-      this.betConf = value;
-    });
-    but.$on("betBtn", value => {
-      this.showBetBtn = value;
-    });
-  },
-  destroyed() {
-    but.$off("betConf");
-    but.$off("betBtn");
   },
   methods: {
     result() {
       this.$validator.validateAll().then(e => {
         if (e) {
           var that = this;
-          let params = { HouseId: that.houseId.id, Amount: that.butValue };
-          this.$emit("update:visible", false);
+          let params = { HouseId: that.houseId, Amount: that.butValue };
           this.$api
             .post({
               url: "/house/bet/add",
@@ -140,15 +125,17 @@ export default {
             })
             .then(e => {
               let data = e.data;
-              this.$message.error(data.message);
               if (data.code == 200) {
+                this.$emit("getBetInfo");
                 this.$alert("对赌已生效", "支付成功", {
                   confirmButtonText: "加油"
                 });
-                but.$emit("getBetInfo");
               }
             })
-            .catch(e => {});
+            .catch(e => {})
+            .finally(() => {
+              this.$emit("update:visible", false);
+            });
         }
       });
     },

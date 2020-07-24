@@ -82,6 +82,8 @@
       img {
         max-width: 100vw;
         max-height: 100vh;
+        min-width: 300px;
+        min-height: 300px;
       }
     }
   }

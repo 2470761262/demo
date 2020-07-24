@@ -38,6 +38,7 @@
         <el-button
           class="anchor-point"
           size="small"
+          v-if="isSubmit"
           :class="['button-back', sumitButClass]"
           @click="result"
           :loading="pop.loading"
@@ -49,12 +50,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
+
 export default {
   computed: {
     ...mapState({
-      houseId: state => state.houseDateil.id
-    })
+      houseId: state => state.houseDateil.id,
+      reloData: state => state.houseDateil.reloData
+    }),
+    isSubmit() {
+      return this.reloData.insertFollow;
+    }
   },
   props: {
     isCancel: {
@@ -81,6 +87,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setParam"]),
     //添加跟进
     result() {
       let params = {
@@ -102,13 +109,16 @@ export default {
         .post({
           url: "/agentHouse/follow/insertFollow",
           data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           this.$message(e.data.message);
           if (e.data.code == 200) {
             this.pop.textarea = "";
+            this.setParam({
+              paramName: "followUpdate",
+              value: Math.floor(Math.random() * 1000)
+            });
           }
         });
     },

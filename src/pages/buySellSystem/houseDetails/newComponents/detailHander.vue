@@ -152,13 +152,6 @@
       title="!举报"
     ></report>
     <!-- 关注 -->
-    <!-- <attention
-      :visible.sync="attentionFlag"
-      v-if="attentionFlag"
-      width="450px"
-      titleDirection="center"
-      title="关注房源变动通知"
-    ></attention> -->
   </div>
 </template>
 

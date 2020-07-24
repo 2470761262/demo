@@ -70,6 +70,11 @@ export default {
       .querySelector(".el-main")
       .addEventListener("scroll", this.computeDomTop);
   },
+  beforeDestroy() {
+    document
+      .querySelector(".el-main")
+      .removeEventListener("scroll", this.computeDomTop);
+  },
   data() {
     return {
       stickyList: STICKYLIST,

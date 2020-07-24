@@ -113,16 +113,16 @@
 
 <script>
 import "../less/didLogCss.less";
+import { mapState } from "vuex";
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
   },
-  inject: ["houseId"],
-  props: {
-    showSubmitBtn: {
-      type: Boolean,
-      default: false
-    }
+  computed: {
+    ...mapState({
+      houseId: state => state.houseDateil.id,
+      showSubmitBtn: state => state.houseDateil.reloData.changePopUp
+    })
   },
   methods: {
     radioChange(e) {
@@ -145,7 +145,7 @@ export default {
             item => item.value == this.pop.model
           );
           let params = {
-            Eid: that.houseId.id,
+            Eid: that.houseId,
             Type: 8,
             NewSaleTag: that.pop.model,
             followMemo: result[0].title

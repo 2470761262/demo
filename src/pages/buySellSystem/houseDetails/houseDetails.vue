@@ -27,7 +27,7 @@
       // prettier-ignore
       top: 46PX;
       display: flex;
-      z-index: 10;
+      z-index: 50;
       align-self: flex-start;
       .right-message {
         flex: 1;

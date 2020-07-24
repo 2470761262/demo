@@ -3,20 +3,16 @@
   display: flex;
   flex: 1;
   align-items: center;
-  height: 107px;
+  //height: 107px;
   .audio-contenr-but {
     cursor: pointer;
-    width: 50px;
-    height: 50px;
     border-radius: 50%;
-    background: #fea32e;
+    background: @backgroud;
     color: #fff;
     text-align: center;
-    line-height: 50px;
-    font-size: 50px;
-    text-shadow: 0px 0px 2px #fea32e, 0px 0px 8px #fea32e, 0px 0px 16px #fea32e,
-      0px 0px 22px #fea32e, 0px 0px 30px #fea32e;
-    margin: 0 20px;
+    font-size: 45px;
+    // prettier-ignore
+    margin-right: 20PX;
   }
   .el-slider {
     flex: 1;
@@ -28,12 +24,14 @@
   }
 }
 /deep/.el-slider__bar {
-  background: #fea32e;
+  background: @backgroud;
 }
 /deep/.el-slider__button {
-  border-color: #fea32e;
-  width: 20px;
-  height: 20px;
+  border-color: @backgroud;
+  // prettier-ignore
+  width: 18PX;
+  // prettier-ignore
+  height: 18PX;
 }
 .audio-contenr-fixed {
   position: absolute;

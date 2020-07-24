@@ -412,7 +412,7 @@
   <div class="page-result-content">
     <div class="page-posi-sticky filex-content">
       <!-- 房屋类型 -->
-      <div class="head-nav-type">
+      <!-- <div class="head-nav-type">
         <div
           class="nav-type-item anchor-point"
           :class="{ active: index == 0 }"
@@ -423,7 +423,8 @@
         >
           {{ item.title }}
         </div>
-      </div>
+      </div> -->
+      <navHeader></navHeader>
       <!-- 头部按钮, 搜索 -->
       <div class="page-result-head">
         <div class="head-content-input">
@@ -645,7 +646,8 @@
             border
             v-model="typeRadio"
             @change="radioChange('typeList')"
-            >不限</el-radio>
+            >不限</el-radio
+          >
           <el-checkbox-group
             v-model="form.typeList"
             @change="formCheckBoxChange('typeRadio')"
@@ -654,22 +656,26 @@
               label="1"
               class="anchor-point"
               data-anchor="首页选项 类型:我的相关"
-            >我的相关</el-checkbox>
-           <el-checkbox
+              >我的相关</el-checkbox
+            >
+            <el-checkbox
               label="2"
               class="anchor-point"
               data-anchor="首页选项 类型:关注房源"
-            >关注房源</el-checkbox>
-           <el-checkbox
+              >关注房源</el-checkbox
+            >
+            <el-checkbox
               label="3"
               class="anchor-point"
               data-anchor="首页选项 类型:3天新上房源"
-            >3天新上房源</el-checkbox>
-           <el-checkbox
+              >3天新上房源</el-checkbox
+            >
+            <el-checkbox
               label="4"
               class="anchor-point"
               data-anchor="首页选项 类型:投资房源"
-            >投资房源</el-checkbox>
+              >投资房源</el-checkbox
+            >
           </el-checkbox-group>
         </div>
       </div>

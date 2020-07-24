@@ -17,53 +17,336 @@
     border-bottom: 1px solid #d5d5d5;
     //transition: background 0.2s ease-in;
     cursor: pointer;
-    &.active {
+    &[disabled]:hover {
+      background: none;
+      color: #999;
+      cursor: no-drop;
+    }
+    &:hover {
       background: @backgroud;
       color: #fff;
     }
-    &:last-child {
-      border-bottom: none;
-    }
+    // &:last-child {
+    //   border-bottom: none;
+    // }
   }
 }
+</style>
+<style lang="less">
+// .popover-phone {
+//   // prettier-ignore
+//   height: 300PX;
+// }
 </style>
 <template>
   <div class="detail-btn-group">
     <button
       class="btn-item"
-      :class="{ active: activeItem == index }"
-      v-for="(item, index) in btnlist"
+      style="order:0"
+      @click="navRouter"
+      :disabled="editHouseDisabled"
+    >
+      编辑房源
+    </button>
+    <button
+      class="btn-item"
+      style="order:2"
+      @click="openPop('followUpFlag')"
+      :disabled="followUpDisabled"
+    >
+      添加跟进
+    </button>
+    <button
+      class="btn-item"
+      style="order:4"
+      :disabled="outBtnDisabled"
+      v-if="isOutBtn"
+      @click="certificateType"
+    >
+      发布外网
+    </button>
+    <button
+      class="btn-item"
+      style="order:4"
+      :disabled="cancelBtnDisabled"
+      v-if="isCancelBtn"
+      @click="cancelOutsideHouse"
+    >
+      取消发布
+    </button>
+    <button
+      class="btn-item"
+      style="order:6"
+      :disabled="!reloData.locking"
+      @click="houseLock"
+    >
+      锁定房源
+    </button>
+    <button
+      class="btn-item"
+      style="order:8"
+      :disabled="!reloData.cancelMethod"
+      @click="openPop('cancelTaskFlag')"
+    >
+      取消角色人
+    </button>
+    <button
+      :style="{ order: item.order }"
+      class="btn-item"
+      v-for="item in btnlist"
       :key="item.title"
-      :disabled="item.disabled"
-      @click="setBtnIndex(index)"
+      @click="setBtnIndex(item)"
     >
       {{ item.title }}
     </button>
+    <!-- 写跟进 -->
+    <follow-up :visible.sync="followUpFlag" v-if="followUpFlag"></follow-up>
+    <!-- 查看号码 -->
+    <phone-pop
+      title="业主联系方式"
+      width="500px"
+      :visible.sync="phonePopFlag"
+      v-if="phonePopFlag"
+    ></phone-pop>
+    <!-- 发布外网 -->
+    <release-pop
+      :visible.sync="releasePopFlag"
+      width="300px"
+      title
+      maskHideEvent
+      v-if="releasePopFlag"
+    ></release-pop>
+
+    <!-- 转房源状态 -->
+    <change-house-type
+      title
+      :visible.sync="typeFlag"
+      width="580px"
+      maskHideEvent
+      v-if="typeFlag"
+    ></change-house-type>
+
+    <!-- 取消作业方 -->
+    <cancelTask
+      title
+      :visible.sync="cancelTaskFlag"
+      width="680px"
+      maskHideEvent
+      v-if="cancelTaskFlag"
+    ></cancelTask>
   </div>
 </template>
 
 <script>
+import util from "@/util/util";
+import { mapState, mapActions } from "vuex";
+//发布外网
+import release from "../common/releaseHouse.js";
+//房源审核
+import houseCheck from "../common/houseCheck";
 const BTNLIST = [
-  { title: "编辑房源", fun: "", disabled: false },
-  { title: "查看电话", fun: "", disabled: false },
-  { title: "添加跟进", fun: "", disabled: false },
-  { title: "添加面访", fun: "", disabled: false },
-  { title: "发布外网", fun: "", disabled: false },
-  { title: "转换状态", fun: "", disabled: false },
-  { title: "锁定房源", fun: "", disabled: false },
-  { title: "关注小区", fun: "", disabled: false },
-  { title: "取消角色人", fun: "", disabled: false }
+  {
+    title: "查看号码",
+    fun: "openPop",
+    pop: "phonePopFlag",
+    order: 1
+  },
+  { title: "添加面访", fun: "", order: 3 },
+  {
+    title: "转换状态",
+    fun: "changePopUp",
+    order: 5,
+    pop: "typeFlag"
+  },
+  { title: "关注小区", fun: "", order: 7 }
+  //   { title: "取消角色人", fun: "", order: 8 }
 ];
 export default {
+  components: {
+    followUp: () => import("../newDidLog/followUp"),
+    phonePop: () => import("../newDidLog/phonePop"),
+    releasePop: () => import("../newDidLog/releasePop"),
+    changeHouseType: () => import("../newDidLog/changeHouseType"),
+    cancelTask: () => import("../newDidLog/cancelTask")
+  },
+  computed: {
+    ...mapState({
+      houseId: state => state.houseDateil.id,
+      houseData: state => state.houseDateil.houseData,
+      reloData: state => state.houseDateil.reloData
+    }),
+    //发布外网按钮是否禁用
+    outBtnDisabled() {
+      return (
+        !this.reloData.releaseOutsideHouse || this.houseData.isLocking == 1
+      );
+    },
+    //发布外网按钮是否显示
+    isOutBtn() {
+      return this.houseData.isReleaseOutside != 1 && this.houseData.plate == 0;
+    },
+    //取消发布外网
+    cancelBtnDisabled() {
+      return this.reloData.cancelOutsideHouse || this.houseData.isLocking == 1;
+    },
+    //取消发布外网按钮是否显示
+    isCancelBtn() {
+      return (
+        this.houseData.isReleaseOutside == 1 &&
+        this.houseData.AgentPer == this.perId &&
+        this.houseData.plate == 0
+      );
+    },
+    //跟进按钮是否禁用
+    followUpDisabled() {
+      if (this.houseData.plate > 6 || this.houseData.isLocking) {
+        return true;
+      }
+      return false;
+    },
+    editHouseDisabled() {
+      if (this.houseData.plate > 6 || this.houseData.isLocking) {
+        return true;
+      }
+      return false;
+    }
+  },
   data() {
     return {
+      perId: util.localStorageGet("logindata").accountId,
       btnlist: BTNLIST,
-      activeItem: -1
+      followUpFlag: false, //跟进弹框开关
+      phonePopFlag: false, //查看号码开关
+      releasePopFlag: false, //发布外网
+      typeFlag: false, // 转状态按钮
+      cancelTaskFlag: false //取消角色人开关
     };
   },
+  created() {},
   methods: {
-    setBtnIndex(index) {
-      this.activeItem = index;
+    ...mapActions(["commitHouseData"]),
+    //是否显示转状态弹窗
+    async changePopUp() {
+      let result = await houseCheck.isChecking(
+        8,
+        0,
+        this.houseId,
+        "当前正在审核"
+      );
+      if (!result) {
+        this.typeFlag = true;
+      }
+    },
+    //是否展示产权证号弹窗
+    async certificateType() {
+      if (parseInt(this.houseData.certificateType) != 1) {
+        this.releasePopFlag = true;
+      } else {
+        let params = {
+          houseId: this.houseId,
+          houseType: 0
+        };
+        const loading = this.$loading({
+          lock: true,
+          text: "发布外网中..."
+        });
+        let result = await release.releaseOutsideHouse(params);
+        loading.close();
+        if (result.data.code == 200) {
+          this.commitHouseData({
+            isReleaseOutside: 1
+          });
+          this.$message(result.data.message);
+        } else {
+          this.$message("操作失败");
+        }
+      }
+    },
+    /**
+     * @example: 按鈕組点击事件 事件分发
+     * @param {Ojbect} item  当前点击对象
+     */
+    setBtnIndex(item) {
+      if (item.fun && this[item.fun]) {
+        this[item.fun](item);
+      }
+    },
+    //取消发布外网
+    async cancelOutsideHouse() {
+      let params = {
+        HouseNo: this.houseData.HouseNo,
+        id: this.houseId
+      };
+      let result = await release.cancelOutsideHouse(params);
+      if (result) {
+        this.commitHouseData({
+          isReleaseOutside: 0
+        });
+        this.$message(result);
+      } else {
+        this.$message("操作失败");
+      }
+    },
+    openPop(item) {
+      if (typeof item == "object") {
+        this[item.pop] = true;
+      } else {
+        this[item] = true;
+      }
+    },
+    //锁定或解锁房源
+    houseLock() {
+      let isLocking = this.houseData.isLocking == 1 ? 0 : 1;
+      if (this.houseData.isLocking == undefined) {
+        this.$message("操作失败");
+        return;
+      }
+      const loading = this.$loading({
+        lock: true,
+        text: "操作房源锁定按钮中..."
+      });
+      this.$api
+        .post({
+          url: "/agentHouse/property/locking",
+          data: {
+            Eid: this.houseId,
+            Islocking: isLocking
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          this.$message(result.message);
+          if (result.code == 200) {
+            this.commitHouseData({
+              isLocking: isLocking
+            });
+          }
+        })
+        .catch(e => {})
+        .finally(e => {
+          loading.close();
+        });
+    },
+    /**
+     * @example: 编辑房源
+     */
+    navRouter() {
+      this.$router.push({
+        name: "addHouse",
+        params: {
+          id: this.houseId,
+          method: "edit",
+          paramsObj: {
+            getEditUrl: "/agent_house/getEditDetails/",
+            buttonText: "保存",
+            editUrl: "/agent_house/editAgentHouse",
+            getAudioUrl: "/agentHouse/audio/getAudioList/",
+            getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
+            getVideoUrl: "/agentHouse/video/getVideoList/"
+          }
+        }
+      });
     }
   }
 };

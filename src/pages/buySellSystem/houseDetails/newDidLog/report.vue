@@ -8,8 +8,17 @@
 </style>
 <script>
 import followUp from "./followUp.vue";
+import { mapState } from "vuex";
 export default {
   extends: followUp,
+  component: {
+    ...mapState({
+      reloData: state => state.houseDateil.reloData
+    }),
+    isSubmit() {
+      return this.reloData.insertReport;
+    }
+  },
   props: {
     insertFollow: {
       type: Boolean,

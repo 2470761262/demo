@@ -41,7 +41,7 @@
 </style>
 <template>
   <fixedPopup v-bind="$attrs" v-on="$listeners">
-    <template>
+    <div v-loading="loading" :element-loading-text="loadingMessage">
       <i class="el-icon-sunny icon"></i>
       <div class="radio-content">
         <span class="radio-content-title">不动产权证</span>
@@ -73,7 +73,7 @@
           >确定</el-button
         >
       </div>
-    </template>
+    </div>
   </fixedPopup>
 </template>
 
@@ -81,8 +81,10 @@
 import "../less/didLogCss.less";
 //发布外网
 import release from "../common/releaseHouse.js";
+import { mapState, mapActions } from "vuex";
 export default {
-  inject: ["houseDetails", "houseId", "load"],
+  // inject: ["houseDetails", "houseId", "load"],
+
   watch: {
     "pop.model"(newValue, oldValue) {
       if (newValue != 0) {
@@ -91,16 +93,16 @@ export default {
     }
   },
   computed: {
-    resultData() {
-      if (Object.keys(this.houseDetails).length > 0) {
-        return this.houseDetails.data;
-      } else {
-        return {};
-      }
-    }
+    ...mapState({
+      houseId: state => state.houseDateil.id,
+      houseData: state => state.houseDateil.houseData,
+      reloData: state => state.houseDateil.reloData
+    })
   },
   data() {
     return {
+      loading: false,
+      loadingMessage: "正在发布",
       pop: {
         inputValue: "",
         model: 1,
@@ -113,6 +115,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["commitHouseData"]),
     async result() {
       let that = this;
       if (that.pop.model == 0) {
@@ -120,7 +123,7 @@ export default {
         this.$emit("update:visible", false);
       } else {
         let params = {
-          houseId: this.houseId.id,
+          houseId: this.houseId,
           houseType: 0,
           certificateType: 1,
           certificateNo: this.pop.inputValue
@@ -130,16 +133,19 @@ export default {
           this.$message("产权证号未填");
           return;
         }
-        this.$emit("update:visible", false);
-        this.load.loadingMessage = "正在发布";
-        this.load.loading = true;
+        this.loading = true;
         result = await release.releaseOutsideHouse(params);
-        this.load.loading = false;
+        this.loading = false;
+
+        console.log(result, "result");
         console.log("212121", result.data.code);
         if (result.data.code == 200) {
-          this.resultData.isReleaseOutside = 1;
+          this.commitHouseData({
+            isReleaseOutside: 1
+          });
           this.$message("操作成功");
         }
+        this.$emit("update:visible", false);
       }
     },
     hidePop() {

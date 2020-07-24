@@ -3,7 +3,7 @@ function forSetStep(state, val, argName) {
     state[argName] = val;
   } else if (typeof val == "object") {
     for (let item in val) {
-      if (state[argName][item] != undefined) {
+      if (item in state[argName]) {
         state[argName][item] = val[item];
       }
     }
@@ -38,7 +38,16 @@ function getData() {
       changePopUp: false, // 转状态按钮
       dialPhone: false, //拨号
       shareQRCode: false //二维码
-    } //权限设置
+    },
+    betConf: {
+      //对赌配置
+      startHour: 0,
+      expireDay: 0,
+      odds: 0,
+      upper: 0,
+      lower: 0
+    },
+    followUpdate: null
   };
 }
 
@@ -54,6 +63,12 @@ export default {
     setRoleData(state, val) {
       state.reloData[val.roleName] = val.roleValue;
     },
+    setParam(state, val) {
+      state[val.paramName] = val.value;
+    },
+    setHouseBet(state, val) {
+      forSetStep(state, val, "betConf");
+    },
     setHouseData(state, val) {
       forSetStep(state, val, "houseData");
     },
@@ -62,6 +77,9 @@ export default {
     }
   },
   actions: {
+    commitHouseBet({ commit }, value) {
+      commit("setHouseBet", value);
+    },
     commitHouseData({ commit }, value) {
       commit("setHouseData", value);
     },

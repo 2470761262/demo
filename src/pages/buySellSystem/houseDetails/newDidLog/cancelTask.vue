@@ -1,7 +1,15 @@
 <script>
 import followUp from "./followUp.vue";
+import { mapState, mapActions } from "vuex";
 export default {
-  inject: ["houseId", "houseDetails"],
+  computed: {
+    ...mapState({
+      houseData: state => state.houseDateil.houseData
+    }),
+    isSubmit() {
+      return this.reloData.cancelMethod;
+    }
+  },
   extends: followUp,
   data() {
     return {
@@ -16,20 +24,12 @@ export default {
       }
     };
   },
-  computed: {
-    resultData() {
-      if (Object.keys(this.houseDetails).length > 0) {
-        return this.houseDetails.data;
-      } else {
-        return {};
-      }
-    }
-  },
   methods: {
+    ...mapActions(["commitHouseData"]),
     result() {
       let that = this;
       let params = {
-        Eid: this.houseId.id,
+        Eid: this.houseId,
         cancelType: this.pop.model,
         cancelMemo: this.pop.textarea
       };
@@ -42,8 +42,7 @@ export default {
         .post({
           url: "/agentHouse/property/cancelMethod",
           data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           let result = e.data;
@@ -51,13 +50,15 @@ export default {
           if (result.code == 200) {
             switch (that.pop.model) {
               case 0:
-                this.resultData.agentHouseMethod.onlyOwnerName = null;
+                this.commitHouseData({
+                  agentHouseMethod: null
+                });
                 break;
               case 1:
-                this.resultData.agentHouseMethod.keyOwnerName;
+                this.houseData.agentHouseMethod.keyOwnerName;
                 break;
               case 2:
-                this.resultData.agentHouseMethod.realOwnerName;
+                this.houseData.agentHouseMethod.realOwnerName;
                 break;
             }
           }
