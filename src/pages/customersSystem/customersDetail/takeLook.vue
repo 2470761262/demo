@@ -1,232 +1,239 @@
 <template>
   <div>
     <section class="look-content">
-      <h5 class="look-title">添加带看</h5>
-      <el-divider></el-divider>
-      <!-- 带看类型 -->
-      <div class="input-group is-required input-group-top">
-        <div class="input-head">带看类型</div>
-        <el-select
-          v-model="requireType"
-          popper-class="options-item"
-          class="input-content"
-          placeholder="请选择带看类型"
-          data-vv-as="带看类型"
-          data-vv-name="lookType"
-          v-validate="'required'"
-        >
-          <el-option
-            v-for="item in lookTypeList"
-            :key="item.key"
-            :label="item.value"
-            :value="item.key"
-          ></el-option>
-        </el-select>
-        <div
-          :class="{
-            'after-error-tips': errorBags.has('lookType')
-          }"
-          :data-error="errorBags.first('lookType')"
-        ></div>
-      </div>
-      <!-- 带看日期 -->
-      <div class="input-group is-required">
-        <div class="input-head">带看日期</div>
-        <el-date-picker
-          v-model="dateValue"
-          type="date"
-          class="input-content"
-          placeholder="选择日期"
-          @change="changTime"
-          :picker-options="startDateDisabled"
-        >
-        </el-date-picker>
-      </div>
-      <!-- 带看时间 -->
-      <div class="input-group">
-        <div class="input-head">带看时间</div>
-        <div class="input-group-split relative">
-          <el-time-picker
-            class="input-content"
-            v-model="timeStar"
-            @change="changTime"
-            format="HH:mm"
-            value-format="HH:mm"
-            :picker-options="{
-              selectableRange: `00:00:00 -${nowTime + ':00'}`
-            }"
-            placeholder="开始时间"
-            data-vv-as="开始时间"
-            data-vv-name="timeStar"
-            v-validate="'required'"
-          >
-          </el-time-picker>
-          <div
-            class="tip-style"
-            :class="{
-              'after-error-tips': errorBags.has('timeStar')
-            }"
-            :data-error="errorBags.first('timeStar')"
-          ></div>
-          <i class="input-split"></i>
-          <el-time-picker
-            class="input-content"
-            v-model="timeEnd"
-            @change="changTime"
-            format="HH:mm"
-            value-format="HH:mm"
-            :picker-options="{
-              selectableRange: `${
-                timeStar ? timeStar + ':00' : nowTime + ':00'
-              } -'23:59:00'`
-            }"
-            placeholder="结束时间"
-            data-vv-as="结束时间"
-            data-vv-name="timeEnd"
-            v-validate="'required'"
-          >
-          </el-time-picker>
-          <div
-            class="tip-style left"
-            :class="{
-              'after-error-tips': errorBags.has('timeEnd')
-            }"
-            :data-error="errorBags.first('timeEnd')"
-          ></div>
-        </div>
-      </div>
-      <!-- 带看房源 -->
-      <div class="input-group is-required">
-        <div class="input-head">
-          <span>带看房源</span>
-          <span class="inline-btn" @click="addHouseToList">添加</span>
-        </div>
-        <div
-          class="input-pack mar-btm-35 block"
-          v-for="(hous, idx) in addHouse"
-          :key="idx"
-        >
-          <!-- 楼盘 -->
+      <div class="look-box">
+        <h5 class="look-title">添加带看</h5>
+        <el-divider></el-divider>
+        <!-- 带看类型 -->
+        <div class="input-group is-required input-group-top">
+          <div class="input-head">带看类型</div>
           <el-select
-            v-model="hous.comId"
+            v-model="requireType"
             popper-class="options-item"
-            class="select-content"
-            placeholder="请选择楼盘"
-            remote
+            class="input-content"
+            placeholder="请选择带看类型"
+            data-vv-as="带看类型"
+            data-vv-name="lookType"
+            v-validate="'required'"
+          >
+            <el-option
+              v-for="item in lookTypeList"
+              :key="item.key"
+              :label="item.value"
+              :value="item.key"
+            ></el-option>
+          </el-select>
+          <div
+            :class="{
+              'after-error-tips': errorBags.has('lookType')
+            }"
+            :data-error="errorBags.first('lookType')"
+          ></div>
+        </div>
+        <!-- 带看日期 -->
+        <div class="input-group is-required">
+          <div class="input-head">带看日期</div>
+          <el-date-picker
+            v-model="dateValue"
+            type="date"
+            class="input-content"
+            placeholder="选择日期"
+            @change="changTime"
+            :picker-options="startDateDisabled"
+          >
+          </el-date-picker>
+        </div>
+        <!-- 带看时间 -->
+        <div class="input-group">
+          <div class="input-head">带看时间</div>
+          <div class="input-group-split relative">
+            <el-time-picker
+              class="input-content"
+              v-model="timeStar"
+              @change="changTime"
+              format="HH:mm"
+              value-format="HH:mm"
+              :picker-options="{
+                selectableRange: `00:00:00 -${nowTime + ':00'}`
+              }"
+              placeholder="开始时间"
+              data-vv-as="开始时间"
+              data-vv-name="timeStar"
+              v-validate="'required'"
+            >
+            </el-time-picker>
+            <div
+              class="tip-style"
+              :class="{
+                'after-error-tips': errorBags.has('timeStar')
+              }"
+              :data-error="errorBags.first('timeStar')"
+            ></div>
+            <i class="input-split"></i>
+            <el-time-picker
+              class="input-content"
+              v-model="timeEnd"
+              @change="changTime"
+              format="HH:mm"
+              value-format="HH:mm"
+              :picker-options="{
+                selectableRange: `${
+                  timeStar ? timeStar + ':00' : nowTime + ':00'
+                } -'23:59:00'`
+              }"
+              placeholder="结束时间"
+              data-vv-as="结束时间"
+              data-vv-name="timeEnd"
+              v-validate="'required'"
+            >
+            </el-time-picker>
+            <div
+              class="tip-style left"
+              :class="{
+                'after-error-tips': errorBags.has('timeEnd')
+              }"
+              :data-error="errorBags.first('timeEnd')"
+            ></div>
+          </div>
+        </div>
+      </div>
+      <div class="look-box">
+        <div class="conten-box" v-for="(hous, idx) in addHouse" :key="idx">
+          <!-- 带看房源 -->
+          <div class="input-group is-required">
+            <div class="input-head">
+              <span>带看房源</span>
+              <span class="inline-btn" @click="addHouseToList" v-if="idx == 0"
+                >添加</span
+              >
+            </div>
+            <div class="input-pack mar-btm-35 block">
+              <!-- 楼盘 -->
+              <el-select
+                v-model="hous.comId"
+                popper-class="options-item"
+                class="select-content"
+                placeholder="请选择楼盘"
+                remote
+                clearable
+                @focus="remoteInput(hous.comId)"
+                @change="queryCBId(hous)"
+                :remote-method="remoteMethod"
+                filterable
+              >
+                <el-option
+                  v-for="item in comList"
+                  :key="item.index"
+                  :label="item.name"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <!-- 楼栋 -->
+              <el-select
+                v-model="hous.cbId"
+                popper-class="options-item"
+                class="select-content"
+                placeholder="请选择楼栋"
+                @change="buildChange(hous)"
+              >
+                <el-option
+                  v-for="item in hous.cbIdList"
+                  :key="item.index"
+                  :label="item.name"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <!-- 房间号 -->
+              <el-select
+                v-model="hous.roomNo"
+                popper-class="options-item"
+                class="select-content"
+                placeholder="请选择房号"
+                data-vv-as="带看房源"
+                @change="roomChange(hous)"
+                :data-vv-name="'roomNo' + idx"
+                v-validate="{
+                  required:
+                    hous.cbId == '' || hous.comId == '' || hous.roomNo == '',
+                  isSame: [
+                    [...addHouse.map((housList, index) => housList.roomNo)],
+                    '房源'
+                  ]
+                }"
+              >
+                <el-option
+                  v-for="item in hous.roomNoList"
+                  :key="item.index"
+                  :label="item.name"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+              <i
+                v-show="addHouse.length > 1"
+                class="el-icon-remove inline-remove-btn"
+                @click="removeHouseToList(idx)"
+              ></i>
+              <div
+                :class="{
+                  'after-error-tips': errorBags.has('roomNo' + idx)
+                }"
+                :data-error="errorBags.first('roomNo' + idx)"
+              ></div>
+            </div>
+          </div>
+          <!-- 带看反馈 -->
+          <div class="input-group is-required">
+            <div class="input-head">带看反馈</div>
+            <label
+              class="radio-content"
+              v-for="item in feedbackList"
+              :key="item.value"
+            >
+              <input
+                type="radio"
+                :name="'way' + (idx + 1)"
+                :value="item.value"
+                v-model="hous.cusfeedback"
+                :data-vv-name="'way' + (idx + 1)"
+                data-vv-as="带看反馈"
+                v-validate="'required'"
+              />
+              <div class="radio-title">{{ item.key }}</div>
+            </label>
+            <div
+              :class="{
+                'after-error-tips': errorBags.has('way' + (idx + 1))
+              }"
+              :data-error="errorBags.first('way' + (idx + 1))"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="look-box">
+        <!-- 带看总结 -->
+        <div class="input-group is-required">
+          <div class="input-head">带看总结</div>
+          <el-input
+            v-model="memo"
             clearable
-            @focus="remoteInput(hous.comId)"
-            @change="queryCBId(hous)"
-            :remote-method="remoteMethod"
-            filterable
-          >
-            <el-option
-              v-for="item in comList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <!-- 楼栋 -->
-          <el-select
-            v-model="hous.cbId"
-            popper-class="options-item"
-            class="select-content"
-            placeholder="请选择楼栋"
-            @change="buildChange(hous)"
-          >
-            <el-option
-              v-for="item in hous.cbIdList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <!-- 房间号 -->
-          <el-select
-            v-model="hous.roomNo"
-            popper-class="options-item"
-            class="select-content"
-            placeholder="请选择房号"
-            data-vv-as="带看房源"
-            @change="roomChange(hous)"
-            :data-vv-name="'roomNo' + idx"
-            v-validate="{
-              required:
-                hous.cbId == '' || hous.comId == '' || hous.roomNo == '',
-              isSame: [
-                [...addHouse.map((housList, index) => housList.roomNo)],
-                '房源'
-              ]
-            }"
-          >
-            <el-option
-              v-for="item in hous.roomNoList"
-              :key="item.value"
-              :label="item.name"
-              :value="item.value"
-            ></el-option>
-          </el-select>
-          <i
-            v-show="addHouse.length > 1"
-            class="el-icon-remove inline-remove-btn"
-            @click="removeHouseToList(idx)"
-          ></i>
+            type="textarea"
+            rows="8"
+            class="textarea-content"
+            show-word-limit
+            maxlength="30"
+            placeholder="请填写本次带看总结"
+            data-vv-name="content"
+            data-vv-as="带看总结"
+            v-validate="'required|chineseLens'"
+          />
           <div
             :class="{
-              'after-error-tips': errorBags.has('roomNo' + idx)
+              'after-error-tips': errorBags.has('content')
             }"
-            :data-error="errorBags.first('roomNo' + idx)"
+            :data-error="errorBags.first('content')"
           ></div>
         </div>
-      </div>
-      <!-- 带看反馈 -->
-      <div class="input-group is-required">
-        <div class="input-head">带看反馈</div>
-        <label
-          class="radio-content"
-          v-for="item in feedbackList"
-          :key="item.value"
-        >
-          <input
-            type="radio"
-            name="feedback"
-            :value="item.value"
-            v-model="Cusfeedback"
-            data-vv-name="way"
-            data-vv-as="带看反馈"
-            v-validate="'required'"
-          />
-          <div class="radio-title">{{ item.key }}</div>
-        </label>
-        <div
-          :class="{
-            'after-error-tips': errorBags.has('way')
-          }"
-          :data-error="errorBags.first('way')"
-        ></div>
-      </div>
-      <!-- 带看总结 -->
-      <div class="input-group is-required">
-        <div class="input-head">带看总结</div>
-        <el-input
-          v-model="memo"
-          clearable
-          type="textarea"
-          rows="8"
-          class="textarea-content"
-          show-word-limit
-          maxlength="30"
-          placeholder="请填写本次带看总结"
-          data-vv-name="content"
-          data-vv-as="带看总结"
-          v-validate="'required|chineseLens'"
-        />
-        <div
-          :class="{
-            'after-error-tips': errorBags.has('content')
-          }"
-          :data-error="errorBags.first('content')"
-        ></div>
       </div>
     </section>
     <div class="footer">
@@ -269,6 +276,7 @@ export default {
           roomNo: "",
           agentPer: "",
           houseEid: "",
+          cusfeedback: "",
           cbIdList: [], //楼栋
           roomNoList: [] //房间号
         }
@@ -340,6 +348,7 @@ export default {
         roomNo: "",
         agentPer: "",
         houseEid: "",
+        Cusfeedback: "",
         cbIdList: [], //楼栋
         roomNoList: [] //房间号
       };
@@ -478,22 +487,29 @@ export default {
         startTime: that.startTime,
         endTime: that.endTime,
         cusEid: that.customerId,
-        cusfeedback: that.Cusfeedback,
         memo: that.memo,
+        houses: [],
         houseEids: [],
         houseAgentPers: []
       };
       that.addHouse.forEach(item => {
+        let house = {};
         if (item.houseEid) {
-          postData.houseEids.push(item.houseEid);
+          house.houseEid = item.houseEid;
         } else {
-          postData.houseEids.push("");
+          house.houseEid = "";
         }
         if (item.agentPer) {
-          postData.houseAgentPers.push(item.agentPer);
+          house.houseAgentPers = item.agentPer;
         } else {
-          postData.houseAgentPers.push("");
+          house.houseAgentPers = "";
         }
+        if (item.cusfeedback) {
+          house.cusfeedback = item.cusfeedback;
+        } else {
+          house.cusfeedback = "";
+        }
+        postData.houses.push(house);
       });
       this.$validator.validateAll().then(result => {
         if (result) {
@@ -541,24 +557,29 @@ export default {
 <style lang="less" scoped>
 @import url("../addCustomers/less/form");
 .look-content {
-  padding: 24px;
-  padding: 35px;
-  background: #fff;
-  border-radius: 8px;
-  .look-title {
-    font-size: @font24;
-  }
-  .step-content();
-  .input-group-top {
-    margin-top: 16px;
-  }
-  .textarea-content {
-    width: 506px;
-  }
-  .select-content {
-    width: 163px;
-    & + .select-content {
-      margin-left: 8px;
+  .look-box {
+    padding: 24px;
+    margin-bottom: 16px;
+    background: #fff;
+    border-radius: 8px;
+    .look-title {
+      font-size: @font24;
+    }
+    .step-content();
+    .input-group-top {
+      margin-top: 16px;
+    }
+    .textarea-content {
+      width: 506px;
+    }
+    .select-content {
+      width: 163px;
+      & + .select-content {
+        margin-left: 8px;
+      }
+    }
+    .conten-box {
+      margin-bottom: 30px;
     }
   }
 }
