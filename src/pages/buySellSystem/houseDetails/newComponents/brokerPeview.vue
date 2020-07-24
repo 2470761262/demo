@@ -44,30 +44,30 @@
     <div class="card-message-content">
       <div class="message-content-cell">
         <h3 class="message-cell-title">房源标题</h3>
-        <div class="message-cell-data">高层精装3房,业主急售</div>
+        <div class="message-cell-data">{{ houseData.Title | emptyRead }}</div>
       </div>
       <div class="message-content-cell">
         <h3 class="message-cell-title">小区介绍</h3>
         <div class="message-cell-data">
-          龙腾路高端社区,周边配套齐全,绿化率高
+          {{ houseData.communityPresentation | emptyRead }}
         </div>
       </div>
       <div class="message-content-cell">
         <h3 class="message-cell-title">户型介绍</h3>
         <div class="message-cell-data">
-          龙腾路高端社区,周边配套齐全,绿化率高
+          {{ houseData.houseTypePresentation | emptyRead }}
         </div>
       </div>
       <div class="message-content-cell">
         <h3 class="message-cell-title">税费解析</h3>
         <div class="message-cell-data">
-          龙腾路高端社区,周边配套齐全,绿化率高
+          {{ houseData.taxParsing | emptyRead }}
         </div>
       </div>
       <div class="message-content-cell">
         <h3 class="message-cell-title">核心卖点</h3>
         <div class="message-cell-data">
-          龙腾路高端社区,周边配套齐全,绿化率高
+          {{ houseData.coreSellingPoint | emptyRead }}
         </div>
       </div>
     </div>
@@ -75,5 +75,12 @@
 </template>
 
 <script>
-export default {};
+import { mapState } from "vuex";
+export default {
+  computed: {
+    ...mapState({
+      houseData: state => state.houseDateil.houseData
+    })
+  }
+};
 </script>

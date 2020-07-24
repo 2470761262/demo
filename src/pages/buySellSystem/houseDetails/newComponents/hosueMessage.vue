@@ -104,6 +104,12 @@
   font-weight: 600;
   margin-left: 5px;
   flex-shrink: 0;
+  border: none;
+  background: none;
+  &[disabled] {
+    color: #999;
+    cursor: no-drop;
+  }
   i {
     font-size: @font16;
   }
@@ -116,12 +122,12 @@
   <div class="message-content">
     <div class="message-content-head">
       <div class="head-price">
-        <span>{{ houseData.tradePrice || houseData.Price | priceFilter }}</span>
+        <span>{{ houseData.tradePrice || houseData.Price }}</span>
         <span v-if="houseData.tradePrice || houseData.Price">万元</span>
       </div>
       <div class="head-avg-price">
-        <span>单价:</span>
-        <span>10000元/平</span>
+        <span>单价：</span>
+        <span>{{ houseData.averagePrice | emptyRead("元/平") }}</span>
       </div>
       <div class="head-adjust">
         <span>调价记录</span>
@@ -131,7 +137,7 @@
     <div class="head-hurdle-content">
       <div class="hurdle-content-item">
         <div class="item-title">户型</div>
-        <div class="item-msg">3-2-1-1</div>
+        <div class="item-msg">{{ houseType }}</div>
       </div>
       <div class="hurdle-content-item">
         <div class="item-title">面积</div>
@@ -173,7 +179,7 @@
             独家信息
           </div>
           <div class="cell-item-data overText">
-            2020-12-11到期
+            {{ proxyMaxTime }}
           </div>
         </div>
         <div class="hurdle-cell-item">
@@ -181,10 +187,15 @@
             钥匙信息
           </div>
           <div class="cell-item-data over-flex">
-            <span class="overText">有钥匙(国贸店)</span>
-            <span class="inline-btn">
-              <i class="iconfont iconxiegenjin"></i> 修改</span
+            <span class="overText">{{ isKeyMessage }}</span>
+            <button
+              class="inline-btn"
+              :disabled="keyStorageDisabled"
+              @click="openPopUp('keyStorageFlag')"
+              v-if="isKeyStorage"
             >
+              <i class="iconfont iconxiegenjin"></i> 修改
+            </button>
           </div>
         </div>
       </div>
@@ -195,7 +206,7 @@
             上次带看
           </div>
           <div class="cell-item-data overText">
-            2020-06-20
+            {{ lastPairTime }}
           </div>
         </div>
         <div class="hurdle-cell-item">
@@ -203,7 +214,7 @@
             30日被看
           </div>
           <div class="cell-item-data overText">
-            3次
+            {{ houseData.seenNumRecent }}次
           </div>
         </div>
       </div>
@@ -214,7 +225,7 @@
             跟单人
           </div>
           <div class="cell-item-data">
-            张晓明(XXXXXXXXX)
+            {{ agentPerMessage }}
             <span class="inline-btn red">
               跟单职责<i class="el-icon-question"></i>
             </span>
@@ -222,20 +233,39 @@
         </div>
       </div>
     </div>
+    <!-- 修改存放门店 -->
+    <key-storage
+      title="修改存放门店"
+      :visible.sync="keyStorageFlag"
+      width="320px"
+      maskHideEvent
+      v-if="keyStorageFlag"
+    ></key-storage>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import util from "@/util/util";
 export default {
-  filters: {
-    priceFilter(value) {
-      return value.toFixed(2);
+  data() {
+    return {
+      keyStorageFlag: false,
+      perId: "" //登录人ID
+    };
+  },
+  components: {
+    keyStorage: () => import("../newDidLog/keyStorage")
+  },
+  created() {
+    if (util.localStorageGet("logindata")) {
+      this.perId = util.localStorageGet("logindata").accountId;
     }
   },
   computed: {
     ...mapState({
-      houseData: state => state.houseDateil.houseData
+      houseData: state => state.houseDateil.houseData,
+      reloData: state => state.houseDateil.reloData
     }),
     //楼层
     foolAll() {
@@ -243,6 +273,59 @@ export default {
       return `${emptyRead(this.houseData.Floor)}/${emptyRead(
         this.houseData.floorNum
       )}`;
+    },
+    houseType() {
+      let { Rooms, hall, toilet, balcony } = this.houseData;
+      return `${Rooms || 0}-${hall || 0}-${toilet || 0}-${balcony || 0}`;
+    },
+    //独家信息
+    proxyMaxTime() {
+      if (this.houseData.proxyMaxTime !== null) {
+        return `${util.format(this.houseData.proxyMaxTime, "yyyy-MM-dd")}到期`;
+      }
+      return "暂无";
+    },
+    //上次带看时间
+    lastPairTime() {
+      if (this.houseData.lastPairTime !== null) {
+        return `${util.format(this.houseData.lastPairTime, "yyyy-MM-dd")}`;
+      }
+      return "暂无";
+    },
+    //跟单人信息
+    agentPerMessage() {
+      if (this.houseData.agentPerName != null) {
+        return `${this.houseData.agentPerName}(${this.houseData.agentPerTel})`;
+      }
+      return "无跟人";
+    },
+    /**
+     * @example: 钥匙信息
+     */
+    isKeyMessage() {
+      if (this.houseData.keyStorageDeptName !== null) {
+        return `有钥匙(${this.houseData.keyStorageDeptName})`;
+      }
+      return "暂无";
+    },
+    /**
+     * @example: 修改钥匙存放门店Disabled
+     */
+    keyStorageDisabled() {
+      return (
+        !(this.houseData.keyOwner > 0) || !this.reloData.updateKeyStorageDept
+      );
+    },
+    /**
+     * @example: 修改钥匙存放门店按钮是否显示
+     */
+    isKeyStorage() {
+      return this.houseData.agentHouseMethod.keyOwner == this.perId;
+    }
+  },
+  methods: {
+    openPopUp(PopName) {
+      this[PopName] = true;
     }
   }
 };

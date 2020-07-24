@@ -23,6 +23,26 @@
     display: flex;
     background: #91918e;
     border-radius: 20px;
+    &::after {
+      content: "";
+      position: absolute;
+      width: 33.33%;
+      height: 100%;
+      border-radius: 20px;
+      background: #5a5a57;
+      top: 0;
+      transition: 0.3s ease-out;
+    }
+    &.loop-warp-abso3 {
+      &::after {
+        width: 33.33%;
+      }
+    }
+    &.loop-warp-abso2 {
+      &::after {
+        width: 50%;
+      }
+    }
     &.abso-move0 {
       &::after {
         transform: translateX(0);
@@ -47,16 +67,6 @@
       position: relative;
       z-index: 10;
       cursor: pointer;
-    }
-    &::after {
-      content: "";
-      position: absolute;
-      width: 33.33%;
-      height: 100%;
-      border-radius: 20px;
-      background: #5a5a57;
-      top: 0;
-      transition: 0.3s ease-out;
     }
   }
 }
@@ -109,6 +119,7 @@
         flex-shrink: 0;
         width: 70px * @base;
         height: 100%;
+        cursor: pointer;
       }
       :nth-child(2n) {
         margin: 0 7.5px * @base;
@@ -121,18 +132,29 @@
   <div>
     <section class="loop-warp">
       <div class="loop-warp-static">
+        <el-video
+          v-if="!loopActiveFlag"
+          :src="houseData.saleUploadVideoDtoList[0].videoUrl"
+        />
         <el-image
+          v-if="loopActiveFlag"
           class="is-now-image"
-          src="http://www.xmfczc.com/images/wx/index_banner.png"
+          :src="loopActiveShowData.picUrl"
         ></el-image>
       </div>
-      <div class="loop-warp-abso" :class="'abso-move' + loopTypeActive">
+      <div
+        class="loop-warp-abso"
+        :class="[
+          'abso-move' + loopTypeActive,
+          'loop-warp-abso' + loopType.length
+        ]"
+      >
         <span
           @click="handelLoopActive(index)"
           class="warp-abso-item"
           v-for="(item, index) in loopType"
-          :key="item"
-          >{{ item }}</span
+          :key="item.type"
+          >{{ item.title }}</span
         >
       </div>
     </section>
@@ -156,44 +178,11 @@
         </button>
         <div class="loop-scroll-move" :style="moveX">
           <el-image
+            @click.native="setActiveImg(index)"
+            v-for="(item, index) in mergeHouseImage"
+            :key="index"
             class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426/file_20190426090208760_35409.jpg?x-oss-process=style/thumb"
-          />
-          <el-image
-            class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426/file_20190426090210522_35409.jpg?x-oss-process=style/thumb"
-          />
-          <el-image
-            class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426/file_20190426090212132_35409.jpg?x-oss-process=style/thumb"
-          />
-          <el-image
-            class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426/file_20190426090213797_35409.jpg?x-oss-process=style/thumb"
-          />
-          <el-image
-            class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426/file_20190426090227707_35409.jpg?x-oss-process=style/thumb"
-          />
-          <el-image
-            class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426/file_20190426090210522_35409.jpg?x-oss-process=style/thumb"
-          />
-          <el-image
-            class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426_1/file_20190426095207029_35409.jpg?x-oss-process=style/thumb"
-          />
-          <el-image
-            class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426_1/file_20190426095209106_35409.jpg?x-oss-process=style/thumb"
-          />
-          <el-image
-            class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426_1/file_20190426095207029_35409.jpg?x-oss-process=style/thumb"
-          />
-          <el-image
-            class="scroll-move-item"
-            src="http://img.0be.cn/FileUpload/PicFile_Agent2019/PicFile_Agent201904/20190426_1/file_20190426095209106_35409.jpg?x-oss-process=style/thumb"
+            :src="item.smallPicUrl"
           />
         </div>
       </section>
@@ -206,11 +195,27 @@ import {
   addResizeListener,
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
-const LOOPTYPE = ["视频", "图片", "户型图"];
+import { mapState } from "vuex";
+import { SMALLThumb } from "@/util/constMap";
+
+function fittArrayList() {
+  let img =
+    "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png";
+  return Array.from({ length: 7 }).fill({
+    picUrl: img,
+    smallPicUrl: img + SMALLThumb
+  });
+}
+
 export default {
+  components: {
+    elVideo: () => import("@/components/elVideo")
+  },
   data() {
     return {
-      loopType: LOOPTYPE,
+      activeIndex: 0, //当前点击的激活下标
+      //activeData: {}, //当前用于显示的对象 , 视频 或者 图片
+      // loopType: LOOPTYPE,
       loopTypeActive: 0, //Type激活index
       translateX: 0,
       renderX: 0,
@@ -220,8 +225,68 @@ export default {
     };
   },
   computed: {
+    ...mapState({
+      houseId: state => state.houseDateil.id,
+      houseData: state => state.houseDateil.houseData
+    }),
     moveX() {
       return `transform: translateX(${this.renderX}px)`;
+    },
+    //图片添加缩略
+    ImageAddSMALLThumb() {
+      //如果没有图片使用默认填充
+      if (this.houseData.saleUploadPicDtoList.length == 0) {
+        return fittArrayList();
+      }
+      return this.houseData.saleUploadPicDtoList.map(item => {
+        return { ...item, smallPicUrl: item.picUrl + SMALLThumb };
+      });
+    },
+    //根据loopTypeActive显示对应的轮播图片数组
+    mergeHouseImage() {
+      let imageList = [];
+      if (this.houseData.saleUploadPicDtoList.length == 0) {
+        imageList = this.ImageAddSMALLThumb;
+      } else {
+        switch (this.loopTypeActive) {
+          case 2:
+            imageList = this.ImageAddSMALLThumb.filter(
+              item => item.PicClass == 1
+            );
+            if (imageList.length == 0) return fittArrayList();
+            break;
+          default:
+            imageList = this.ImageAddSMALLThumb;
+        }
+      }
+      this.$nextTick(() => {
+        this.initScroll();
+      });
+      return imageList;
+    },
+    //首屏显示类型判断
+    loopActiveFlag() {
+      return (
+        this.loopType[this.loopTypeActive].type == 1 ||
+        this.loopType[this.loopTypeActive].type == 2
+      );
+    },
+    //返回当前激活的图片对象数据
+    loopActiveShowData() {
+      return this.mergeHouseImage[this.activeIndex];
+    },
+    loopType() {
+      if (this.houseData.saleUploadVideoDtoList.length == 0) {
+        return [
+          { title: "图片", type: 1 },
+          { title: "户型图", type: 2 }
+        ];
+      }
+      return [
+        { title: "视频", type: 0 },
+        { title: "图片", type: 1 },
+        { title: "户型图", type: 2 }
+      ];
     }
   },
   mounted() {
@@ -232,10 +297,19 @@ export default {
   },
   methods: {
     /**
+     * @example: 设置
+     * @param {type}
+     */
+    setActiveImg(index) {
+      this.activeIndex = index;
+    },
+    /**
      * @example: 当前轮播图类型激活Index设置
      * @param {number} index
      */
     handelLoopActive(index) {
+      //切换类型的时候先把激活ID重置为0
+      this.setActiveImg(0);
       this.loopTypeActive = index;
     },
     /**
@@ -249,6 +323,21 @@ export default {
         } else {
           this.scrollBar = false;
         }
+    },
+    /**
+     * @example: 初始化Scroll
+     */
+    initScroll() {
+      let listFor = this.$refs.itemOver;
+      let scrollWidth = listFor.querySelector(".loop-scroll-move").scrollWidth;
+      this.leftBtnDisable = true;
+      this.translateX = 0;
+      this.renderX = 0;
+      if (this.translateX + listFor.clientWidth < scrollWidth) {
+        this.rightBtnDisable = false;
+      } else {
+        this.rightBtnDisable = true;
+      }
     },
     /**
      * @example: 切换方向

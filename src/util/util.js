@@ -65,7 +65,7 @@ export default {
   },
   countMapFilter(value, ListName = "ROOMTYPE", resultValue = null) {
     let result = constMap[ListName].filter(
-      item => item.value == parseInt(value)
+      item => parseInt(item.value) == parseInt(value)
     );
     return result.length > 0 ? result[0].key : resultValue;
   },

@@ -46,5 +46,42 @@
 </template>
 
 <script>
-export default {};
+import { mapState } from "vuex";
+export default {
+  computed: {
+    ...mapState({
+      houseId: state => state.houseDateil.id
+    })
+  },
+  data() {
+    return {
+      loading: true //加载对赌接口loading
+    };
+  },
+  created() {
+    this.getBetInfo();
+  },
+  methods: {
+    //获取对赌结束时间
+    getBetInfo() {
+      var that = this;
+      this.$api
+        .get({
+          url: "/house/bet/inBet/" + this.houseId
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.data != null) {
+            // if (
+            //   data.data.EndTime != null &&
+            //   Date.parse(data.data.EndTime) > new Date().getTime()
+            // ) {
+            // }
+          }
+        })
+        .catch(e => {})
+        .finally(() => {});
+    }
+  }
+};
 </script>

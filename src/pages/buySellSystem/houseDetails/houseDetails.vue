@@ -121,9 +121,14 @@ export default {
     })
   },
   created() {
-    this.setHouseID(158790);
-    //this.addBrowseHouseLog
-    this.getHouseDetail().then(this.addBrowseHouseLog);
+    this.setHouseID(this.$route.params.houseId);
+    Promise.all([this.getHouseDetail(), this.getAgentRules()])
+      .then(e => {
+        this.addBrowseHouseLog(e[0]);
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   },
   data() {
     return {
@@ -132,12 +137,11 @@ export default {
   },
   methods: {
     ...mapMutations(["setHouseID"]),
-    ...mapActions(["commitHouseData"]),
+    ...mapActions(["commitHouseData", "commitRoleData"]),
     /**
      * 获取房源详情
      */
     getHouseDetail() {
-      this.loading = true;
       return this.$api
         .post({
           url: "/agent_house/getHouseDetail",
@@ -221,15 +225,11 @@ export default {
           } else {
             this.$message.error(result.message);
           }
-          return 35356;
         })
         .catch(e => {
           if (e.response != undefined) {
             this.$message(e.response.data.message);
           }
-        })
-        .finally(() => {
-          this.loading = false;
         });
     },
     addBrowseHouseLog(param) {
@@ -254,6 +254,27 @@ export default {
             console.log(e.response);
           }
         });
+    },
+    /**
+     * @example: 获取按钮权限
+     */
+    getAgentRules() {
+      return this.$api
+        .get({
+          url: "/agent_house/detailsFunction"
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            let { data } = e.data;
+            data.functionRuleList.forEach((item, index) => {
+              this.commitRoleData({
+                roleName: item.rUrl,
+                roleValue: true
+              });
+            });
+          }
+        })
+        .catch(e => {});
     }
   }
 };
