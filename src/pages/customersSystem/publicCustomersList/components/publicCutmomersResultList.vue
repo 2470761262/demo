@@ -291,7 +291,9 @@ export default {
     },
     navigateTo(row) {
       let dom = document.getElementsByClassName("el-tooltip__popper");
-      dom[0].style.display = "none";
+      if (dom.length > 0) {
+        dom[0].style.display = "none";
+      }
       this.$router.push({
         path: "/customers/publicCustomersDetail",
         query: { customerId: row.id }
