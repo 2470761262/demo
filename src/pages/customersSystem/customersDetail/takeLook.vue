@@ -248,6 +248,16 @@
         >完成</el-button
       >
     </div>
+    <fixedPopup
+      :visible.sync="alertflag"
+      styleType="0"
+      customFlag="true"
+      @confirmEmit="confirmEmit"
+      @customBtn="customBtn"
+      ><div class="alert-txt">
+        改变带看类型会导致已录入的带看房源被清空。是否继续？
+      </div></fixedPopup
+    >
   </div>
 </template>
 
@@ -259,6 +269,8 @@ export default {
   data() {
     return {
       requireType: "",
+      requireTypeOld: "",
+      BeforeChangeType: "",
       dateValue: "",
       nowTime: "",
       timeStar: "",
@@ -289,7 +301,8 @@ export default {
         { key: "在考虑", value: 1 },
         { key: "不满意", value: 2 }
       ],
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      alertflag: false
     };
   },
   created() {
@@ -584,7 +597,44 @@ export default {
       this.$validator.updateDictionary(dictionary);
     },
     changeType(val) {
-      console.log(val);
+      if (this.requireTypeOld) {
+        if (
+          this.requireTypeOld == 64 ||
+          this.requireTypeOld == 128 ||
+          this.requireTypeOld == 256
+        ) {
+          if (val != 64 && val != 128 && val != 256) {
+            this.BeforeChangeType = this.requireTypeOld;
+            this.alertflag = true;
+          }
+        } else {
+          if (val == 64 || val == 128 || val == 256) {
+            this.BeforeChangeType = this.requireTypeOld;
+            this.alertflag = true;
+          }
+        }
+      }
+      this.requireTypeOld = val;
+    },
+    confirmEmit() {
+      this.addHouse = [
+        {
+          comId: "",
+          cbId: "",
+          roomNo: "",
+          agentPer: "",
+          houseEid: "",
+          cusfeedback: "",
+          cbIdList: [], //楼栋
+          roomNoList: [] //房间号
+        }
+      ];
+      this.alertflag = false;
+    },
+    customBtn() {
+      this.requireTypeOld = this.BeforeChangeType;
+      this.requireType = this.BeforeChangeType;
+      this.alertflag = false;
     }
   }
 };
@@ -655,6 +705,10 @@ export default {
 }
 .left {
   left: 280px;
+}
+.alert-txt {
+  padding-top: 24px;
+  font-size: @font16;
 }
 </style>
 <style lang="less">
