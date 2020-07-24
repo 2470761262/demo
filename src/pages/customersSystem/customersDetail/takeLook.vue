@@ -15,6 +15,7 @@
             data-vv-as="带看类型"
             data-vv-name="lookType"
             v-validate="'required'"
+            @change="changeType"
           >
             <el-option
               v-for="item in lookTypeList"
@@ -38,7 +39,7 @@
             type="date"
             class="input-content"
             placeholder="选择日期"
-            @change="changTime"
+            @change="changDate"
             :picker-options="startDateDisabled"
           >
           </el-date-picker>
@@ -50,7 +51,7 @@
             <el-time-picker
               class="input-content"
               v-model="timeStar"
-              @change="changTime"
+              @change="changStarTime"
               format="HH:mm"
               value-format="HH:mm"
               :picker-options="{
@@ -73,13 +74,13 @@
             <el-time-picker
               class="input-content"
               v-model="timeEnd"
-              @change="changTime"
+              @change="changEndTime"
               format="HH:mm"
               value-format="HH:mm"
               :picker-options="{
                 selectableRange: `${
                   timeStar ? timeStar + ':00' : nowTime + ':00'
-                } -'23:59:00'`
+                } -${nowTime + ':00'}`
               }"
               placeholder="结束时间"
               data-vv-as="结束时间"
@@ -247,6 +248,16 @@
         >完成</el-button
       >
     </div>
+    <fixedPopup
+      :visible.sync="alertflag"
+      styleType="0"
+      customFlag="true"
+      @confirmEmit="confirmEmit"
+      @customBtn="customBtn"
+      ><div class="alert-txt">
+        改变带看类型会导致已录入的带看房源被清空。是否继续？
+      </div></fixedPopup
+    >
   </div>
 </template>
 
@@ -258,6 +269,8 @@ export default {
   data() {
     return {
       requireType: "",
+      requireTypeOld: "",
+      BeforeChangeType: "",
       dateValue: "",
       nowTime: "",
       timeStar: "",
@@ -288,7 +301,8 @@ export default {
         { key: "在考虑", value: 1 },
         { key: "不满意", value: 2 }
       ],
-      fullscreenLoading: false
+      fullscreenLoading: false,
+      alertflag: false
     };
   },
   created() {
@@ -348,7 +362,7 @@ export default {
         roomNo: "",
         agentPer: "",
         houseEid: "",
-        Cusfeedback: "",
+        cusfeedback: "",
         cbIdList: [], //楼栋
         roomNoList: [] //房间号
       };
@@ -361,9 +375,39 @@ export default {
       this.addHouse.splice(idx, 1);
     },
     /**
+     * @example: 改变日期事件
+     */
+    changDate() {
+      this.timeStar = "";
+      this.timeEnd = "";
+      let nowtime = new Date();
+      let time = this.dateValue.toLocaleDateString();
+      if (nowtime.toLocaleDateString() != time) {
+        this.nowTime = "23:59";
+      } else {
+        let hours = "";
+        let minutes = "";
+        hours = nowtime.getHours();
+        minutes = nowtime.getMinutes();
+        if (hours >= 0 && hours <= 9) {
+          hours = "0" + hours;
+        }
+        if (minutes >= 0 && minutes <= 9) {
+          minutes = "0" + minutes;
+        }
+        this.nowTime = hours + ":" + minutes;
+      }
+    },
+    /**
+     * @example: 改变开始时间
+     */
+    changStarTime() {
+      this.timeEnd = "";
+    },
+    /**
      * @example: 改变事件，传给后端拼接字符串
      */
-    changTime() {
+    changEndTime() {
       let time = this.dateValue.toLocaleDateString();
       this.startTime = time + " " + this.timeStar;
       this.endTime = time + " " + this.timeEnd;
@@ -422,26 +466,31 @@ export default {
     buildChange(hous) {
       this.roomNoList = [];
       var that = this;
-      this.HouseNoLoading = true;
-      this.$api
-        .get({
-          url: "/saleCustomerDetail/queryBuildIngHouses",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            comId: hous.comId,
-            cbId: hous.cbId,
-            limit: 300
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            that.roomNo = "";
-            hous.roomNoList = [...this.roomNoList, ...e.data.data.list];
-          }
-        })
-        .finally(() => {});
+      if (this.requireType) {
+        this.HouseNoLoading = true;
+        this.$api
+          .get({
+            url: "/saleCustomerDetail/queryBuildIngHouses",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            token: false,
+            qs: true,
+            data: {
+              comId: hous.comId,
+              cbId: hous.cbId,
+              requireId: this.requireType,
+              limit: 300
+            }
+          })
+          .then(e => {
+            if (e.data.code == 200) {
+              that.roomNo = "";
+              hous.roomNoList = [...this.roomNoList, ...e.data.data.list];
+            }
+          })
+          .finally(() => {});
+      } else {
+        that.$message("请先选择带看类型");
+      }
     },
     roomChange(hous) {
       let that = this;
@@ -500,17 +549,14 @@ export default {
           house.houseEid = "";
         }
         if (item.agentPer) {
-          house.houseAgentPers = item.agentPer;
+          house.houseAgentPer = item.agentPer;
         } else {
-          house.houseAgentPers = "";
+          house.houseAgentPer = "";
         }
-        if (item.cusfeedback) {
-          house.cusfeedback = item.cusfeedback;
-        } else {
-          house.cusfeedback = "";
-        }
+        house.cusfeedback = item.cusfeedback;
         postData.houses.push(house);
       });
+      console.log(postData);
       this.$validator.validateAll().then(result => {
         if (result) {
           this.fullscreenLoading = true;
@@ -549,6 +595,46 @@ export default {
         }
       };
       this.$validator.updateDictionary(dictionary);
+    },
+    changeType(val) {
+      if (this.requireTypeOld) {
+        if (
+          this.requireTypeOld == 64 ||
+          this.requireTypeOld == 128 ||
+          this.requireTypeOld == 256
+        ) {
+          if (val != 64 && val != 128 && val != 256) {
+            this.BeforeChangeType = this.requireTypeOld;
+            this.alertflag = true;
+          }
+        } else {
+          if (val == 64 || val == 128 || val == 256) {
+            this.BeforeChangeType = this.requireTypeOld;
+            this.alertflag = true;
+          }
+        }
+      }
+      this.requireTypeOld = val;
+    },
+    confirmEmit() {
+      this.addHouse = [
+        {
+          comId: "",
+          cbId: "",
+          roomNo: "",
+          agentPer: "",
+          houseEid: "",
+          cusfeedback: "",
+          cbIdList: [], //楼栋
+          roomNoList: [] //房间号
+        }
+      ];
+      this.alertflag = false;
+    },
+    customBtn() {
+      this.requireTypeOld = this.BeforeChangeType;
+      this.requireType = this.BeforeChangeType;
+      this.alertflag = false;
     }
   }
 };
@@ -619,6 +705,10 @@ export default {
 }
 .left {
   left: 280px;
+}
+.alert-txt {
+  padding-top: 24px;
+  font-size: @font16;
 }
 </style>
 <style lang="less">

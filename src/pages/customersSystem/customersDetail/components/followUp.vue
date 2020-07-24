@@ -129,17 +129,19 @@
                           v-for="(housingResource, idx) in item.housingResource"
                           :key="idx"
                         >
-                          {{ housingResource }}
+                          {{ housingResource.address }} - (反馈：{{
+                            housingResource.cusfeedback | cusfeedbackName
+                          }})
                         </p>
                       </div>
                       <div class="car-right" v-else>无法找到对应房源</div>
                     </div>
-                    <div class="car-row">
+                    <!-- <div class="car-row">
                       <div class="car-title">带看反馈：</div>
                       <div class="car-right">
                         {{ item.Cusfeedback | cusfeedbackName }}
                       </div>
-                    </div>
+                    </div> -->
                     <div class="car-row car-mar-no">
                       <div class="car-title">带看总结：</div>
                       <div class="car-right">{{ item.Memo || "暂无" }}</div>
@@ -253,7 +255,9 @@
                         v-for="(housingResource, idx) in item.housingResource"
                         :key="idx"
                       >
-                        {{ housingResource }}
+                        {{ housingResource.address }} - (反馈：{{
+                          housingResource.cusfeedback | cusfeedbackName
+                        }})
                       </p>
                     </div>
                   </div>
@@ -261,12 +265,12 @@
                     <div class="car-title">带看户型：</div>
                     <div class="car-right">{{ item.FollowWay }}</div>
                   </div> -->
-                  <div class="car-row">
+                  <!-- <div class="car-row">
                     <div class="car-title">带看反馈：</div>
                     <div class="car-right">
                       {{ item.Cusfeedback | cusfeedbackName }}
                     </div>
-                  </div>
+                  </div> -->
                   <div class="car-row car-mar-no">
                     <div class="car-title">带看总结：</div>
                     <div class="car-right">{{ item.Memo || "暂无" }}</div>
@@ -391,18 +395,22 @@ export default {
               that.lookAtData[i].currentLookId ==
               that.lookAtData[j].currentLookId
             ) {
-              let housingResource =
+              let housingResource = { address: "", cusfeedback: "" };
+              housingResource.address =
                 that.lookAtData[j].communityName +
                 that.lookAtData[j].buildingName +
                 that.lookAtData[j].roomNo;
+              housingResource.cusfeedback = that.lookAtData[j].Cusfeedback;
               that.lookAtData[i].housingResource.push(housingResource);
             }
           }
         } else {
-          let housingResource =
+          let housingResource = { address: "", cusfeedback: "" };
+          housingResource.address =
             that.lookAtData[i].communityName +
             that.lookAtData[i].buildingName +
             that.lookAtData[i].roomNo;
+          housingResource.cusfeedback = that.lookAtData[i].Cusfeedback;
           that.lookAtData[i].housingResource.push(housingResource);
         }
       }
