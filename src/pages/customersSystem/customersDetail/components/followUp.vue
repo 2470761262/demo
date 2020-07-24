@@ -150,7 +150,10 @@
                 </div>
               </el-timeline-item>
             </el-timeline>
-            <div v-else class="tip-style">暂无记录</div>
+            <div v-else class="tip-style">
+              <img src="../../../../assets/images/zanwu.png" alt="暂无数据" />
+              <div>暂无信息</div>
+            </div>
           </div>
         </el-tab-pane>
         <!-- 跟进记录 -->
@@ -202,7 +205,10 @@
                 </section>
               </el-timeline-item>
             </el-timeline>
-            <div v-else class="tip-style">暂无跟进信息</div>
+            <div v-else class="tip-style">
+              <img src="../../../../assets/images/zanwu.png" alt="暂无数据" />
+              <div>暂无跟进信息</div>
+            </div>
           </div>
         </el-tab-pane>
         <!-- 约看/带看记录 -->
@@ -278,7 +284,10 @@
                 </section>
               </el-timeline-item>
             </el-timeline>
-            <div v-else class="tip-style">暂无带看记录</div>
+            <div v-else class="tip-style">
+              <img src="../../../../assets/images/zanwu.png" alt="暂无数据" />
+              <div>暂无带看信息</div>
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -579,7 +588,12 @@ export default {
           }
         }
         .tip-style {
-          font-size: @font16;
+          padding: 50px 0;
+          text-align: center;
+          div {
+            text-align: center;
+            font-size: @font16;
+          }
         }
       }
     }
