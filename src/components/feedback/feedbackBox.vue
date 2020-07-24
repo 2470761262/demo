@@ -87,8 +87,8 @@
                   加载中<span>...</span>
                 </div>
               </el-image>
-              <div style="margin-left:18px;line-height: 0;">微信扫码上传</div>
             </div>
+            <div style="margin-left:18px;line-height: 0;">微信扫码上传</div>
           </el-form-item>
         </el-form>
       </div>
@@ -115,7 +115,7 @@
         >
         <el-breadcrumb-item
           class="isBack anchor-point"
-          v-if="breadcrumbList.length > 1"
+          v-if="breadcrumbList.length > 1 && isShowReturn"
           @click.native="goBack"
           >返回</el-breadcrumb-item
         >
@@ -168,13 +168,24 @@ export default {
       dialogImageUrl: "",
       qrCodeImg: null,
       dialogVisible: false,
-      breadcrumbList: []
+      breadcrumbList: [],
+      isShowReturn: true
     };
   },
   created() {
     this.uploadUrl = this.$api.baseUrl() + "/noticeManage/common/picture";
     this.myHeader = { tk: util.localStorageGet(TOKEN) };
     this.breadcrumbSet(this.$route.matched);
+    var url = window.location.href; //获取url中"?"符后的字串
+    if (
+      url.indexOf("/houseDetails/") != -1 ||
+      url.indexOf("/potentialHouseDetail/") != -1 ||
+      url.indexOf("/buildingHouseDetail/") != -1 ||
+      url.indexOf("/historyDetails/") != -1 ||
+      url.indexOf("/validateHouseDetails/") != -1
+    ) {
+      this.isShowReturn = false;
+    }
   },
   methods: {
     breadcrumbSet(matched) {

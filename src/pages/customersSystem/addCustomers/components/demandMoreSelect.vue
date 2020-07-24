@@ -18,6 +18,9 @@
     display: flex;
     // prettier-ignore
     font-size: 16PX;
+    height: 250px;
+    overflow: hidden;
+    padding-bottom: 20px;
     .ul-content-area {
       flex: 1;
       &:nth-child(1) {
@@ -36,7 +39,8 @@
         align-items: center;
         flex-direction: row-reverse;
         justify-content: space-between;
-        margin-top: 43px;
+        padding: 15px 8px;
+        margin-top: 13px;
         cursor: pointer;
         input[type="checkbox"] {
           position: relative;
@@ -61,12 +65,14 @@
         }
       }
       .cascader-left-item {
-        margin-top: 43px;
+        padding: 15px 8px;
+        margin-top: 13px;
         font-size: inherit;
         color: rgba(48, 49, 51, 1);
         cursor: pointer;
         &.active-item {
           color: @backgroud;
+          background: @opacityBackground;
         }
       }
       &:last-child {
@@ -75,6 +81,33 @@
       }
     }
   }
+}
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes hide {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.show-enter-active {
+  animation: show 0.3s;
+}
+.show-leave-active {
+  animation: hide 0.3s;
+}
+.show-enter,
+.show-leave-to {
+  opacity: 0;
 }
 </style>
 <template>
@@ -86,6 +119,7 @@
       confirmBtnText: '保存'
     }"
     custom-flag
+    :loading="isLoading"
     @customBtn="customBtn"
     @confirmEmit="confirmEmit"
   >
@@ -106,28 +140,31 @@
         </div>
         <div class="ul-content-area">
           <p class="area-title">物业分类</p>
-          <label
-            v-for="item in renderLeftList[renderLeftIndex].children"
-            :key="item.value"
-            class="check-content"
-          >
-            <input
-              type="checkbox"
-              v-model="dataJson['list' + renderLeftIndex]"
-              :value="item.value"
-              @change="checkChangeActive(item)"
-            />
-            <div>
-              {{ item.title }}
-            </div>
-          </label>
+          <transition-group name="show">
+            <label
+              v-for="item in renderLeftList[renderLeftIndex].children"
+              :key="item.value"
+              class="check-content"
+            >
+              <input
+                type="checkbox"
+                v-model="dataJson['list' + renderLeftIndex]"
+                :value="item.value"
+                :disabled="item.isDisabled"
+                @change="checkChangeActive(item)"
+              />
+              <div>
+                {{ item.title }}
+              </div>
+            </label>
+          </transition-group>
         </div>
       </div>
       <div class="tag-content">
         <el-tag
           v-for="(tag, index) in showActiveList"
           :key="index"
-          closable
+          :closable="!tag.isDisabled"
           type="info"
           @close="removeActive(tag, true)"
         >
@@ -146,15 +183,18 @@ const listData = [
     children: [
       {
         title: "住宅",
-        value: 0
+        value: 1,
+        isDisabled: false
       },
       {
         title: "商铺",
-        value: 1
+        value: 2,
+        isDisabled: false
       },
       {
         title: "写字楼",
-        value: 2
+        value: 4,
+        isDisabled: false
       }
     ]
   },
@@ -164,15 +204,18 @@ const listData = [
     children: [
       {
         title: "住宅",
-        value: 0
+        value: 8,
+        isDisabled: false
       },
       {
         title: "商铺",
-        value: 1
+        value: 16,
+        isDisabled: false
       },
       {
         title: "写字楼",
-        value: 2
+        value: 32,
+        isDisabled: false
       }
     ]
   },
@@ -182,15 +225,18 @@ const listData = [
     children: [
       {
         title: "住宅",
-        value: 0
+        value: 64,
+        isDisabled: false
       },
       {
         title: "商铺",
-        value: 1
+        value: 128,
+        isDisabled: false
       },
       {
         title: "写字楼",
-        value: 2
+        value: 256,
+        isDisabled: false
       }
     ]
   }
@@ -200,6 +246,11 @@ export default {
   props: {
     value: {
       type: Object
+    },
+    // 是否开启禁用已选选项
+    isDisabled: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -213,15 +264,18 @@ export default {
       orderDataJson: {},
       showActiveList: [],
       renderLeftList: listData,
-      renderLeftIndex: 0
+      renderLeftIndex: 0,
+      isLoading: false
     };
   },
   watch: {
     value: {
+      deep: true,
       immediate: true,
       handler: function(val, oldVal) {
-        if (val.length != undefined)
+        if (Object.keys(val).length != 0) {
           this.dataJson = JSON.parse(JSON.stringify(val));
+        }
       }
     },
     "$attrs.visible"(value) {
@@ -234,6 +288,7 @@ export default {
           this.dataJson = this.orderDataJson;
         }
       }
+      console.log("attrs.visible", this.dataJson);
     }
   },
   methods: {
@@ -242,11 +297,20 @@ export default {
      */
 
     resetShowActiveList() {
+      console.log("this.orderDataJson", this.dataJson);
       this.showActiveList = [];
+      this.renderLeftList = JSON.parse(JSON.stringify(listData));
       Object.keys(this.orderDataJson).forEach((item, index) => {
         this.orderDataJson[item].forEach((ordChildItem, ordChildIndex) => {
           this.renderLeftList[index].children.forEach(
             (childItem, childIndex) => {
+              if (this.isDisabled) {
+                if (ordChildItem == childItem.value) {
+                  childItem.isDisabled = true;
+                }
+              } else {
+                childItem.isDisabled = false;
+              }
               if (childItem.value == ordChildItem) {
                 this.checkChangeActive(childItem, index);
               }
@@ -255,13 +319,15 @@ export default {
         });
       });
     },
-    confirmEmit() {
+    async confirmEmit() {
       this.isChangeCommit = true;
-      this.$emit("input", JSON.parse(JSON.stringify(this.dataJson)));
-      this.$emit("demandConfirm", {
+      this.isLoading = true;
+      await this.$emit("input", JSON.parse(JSON.stringify(this.dataJson)));
+      await this.$emit("demandConfirm", {
         rendList: JSON.parse(JSON.stringify(this.showActiveList)),
         dataJson: JSON.parse(JSON.stringify(this.dataJson))
       });
+      this.isLoading = false;
     },
     /**
      * @example:  重置
@@ -282,6 +348,7 @@ export default {
      * @param {Object} relevance 用于判断是tag点击删除 还是 checkout删除
      */
     removeActive(nowSign, relevance = false) {
+      console.log(this.showActiveList);
       let isIndex = this.showActiveList.findIndex(item => {
         return item.sign == (relevance ? nowSign.sign : nowSign);
       });
@@ -326,9 +393,18 @@ export default {
           title: typeTitle + nowItem.title,
           sign: nowSign,
           value: nowItem.value,
-          parentIndex: this.renderLeftIndex
+          parentIndex: this.renderLeftIndex,
+          isDisabled: nowItem.isDisabled
         });
       }
+    },
+    /**
+     * @example: 重新获取渲染数据
+     * @param {Obejct} data 等同于this.dataJson
+     */
+    rewriteData(data) {
+      this.orderDataJson = JSON.parse(JSON.stringify(data)); // util.deepCopy();
+      this.resetShowActiveList();
     }
   }
 };

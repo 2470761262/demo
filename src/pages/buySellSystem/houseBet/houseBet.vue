@@ -46,6 +46,7 @@
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
             data-anchor="我的对赌楼盘 => select"
+            @click.native="log_socket.sendUserActionData"
             class="anchor-point"
             v-model="data.comId"
             @change="queryCBId"
@@ -58,9 +59,10 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="我的对赌楼盘 => select => option"
+              @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-for="item in options"
+              :data-anchor="'我的对赌楼盘 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -76,9 +78,10 @@
             @change="buildChange"
           >
             <el-option
-              data-anchor="我的对赌楼栋 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
+              :data-anchor="'我的对赌楼栋 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -87,6 +90,7 @@
           <el-select
             data-anchor="我的对赌房间号 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.roomNo"
             filterable
             @change="queryHouseBetParams"
@@ -96,9 +100,10 @@
             v-loadmore="loadMore"
           >
             <el-option
-              data-anchor="我的对赌房间号 => select => option"
               class="anchor-point"
               v-for="item in roomNoList"
+              :data-anchor="'我的对赌房间号 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -184,6 +189,7 @@
           <h3 class="query-cell-title">对赌结果</h3>
           <el-select
             data-anchor="我的对赌对赌结果 => select"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.status"
             @change="queryHouseBetParams()"
             clearable
@@ -191,9 +197,10 @@
             placeholder="全部"
           >
             <el-option
-              data-anchor="我的对赌对赌结果 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in betStatusList"
+              :data-anchor="'我的对赌对赌结果 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -297,6 +304,7 @@
 <script>
 import listPage from "@/components/listPage";
 import moreSelect from "@/components/moreSelect";
+import util from "@/util/util";
 export default {
   components: {
     listPage,
@@ -427,12 +435,12 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             if (e.data.data == 1) {
-              that.$router.push({
+              util.openPage.call(this, {
                 name: "houseDetails",
                 params: { houseId: row.houseId }
               });
             } else {
-              that.$router.push({
+              util.openPage.call(this, {
                 name: "historyDetails",
                 params: { houseId: row.houseId }
               });

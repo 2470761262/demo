@@ -45,7 +45,7 @@
         <div class="query-content-cell">
           <h3 class="query-cell-title">楼盘</h3>
           <el-select
-            data-anchor="我司成交楼盘筛选"
+            data-anchor="我司成交楼盘筛选 => select"
             class="anchor-point"
             v-model="data.comId"
             @focus="remoteInput"
@@ -54,14 +54,16 @@
             remote
             clearable
             placeholder="楼盘名称"
+            @click.native="log_socket.sendUserActionData"
             :remote-method="remoteMethod"
             :loading="loading"
           >
             <el-option
               class="anchor-point"
-              data-anchor="我司成交楼盘筛选"
               v-for="item in options"
               :key="item.value"
+              :data-anchor="'我司成交楼盘筛选 => select => option:' + item.name"
+              @click.native="log_socket.sendUserActionData"
               :label="item.name"
               :value="item.value"
             ></el-option>

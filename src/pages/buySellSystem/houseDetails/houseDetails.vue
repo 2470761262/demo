@@ -189,6 +189,7 @@ export default {
             if (result.data.plate == 4) {
               type = 3;
             }
+            document.title = this.houseDetails.data.CommunityName || "未知楼盘";
             let rooms,
               hall,
               toilet = 0;

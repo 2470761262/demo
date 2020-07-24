@@ -68,6 +68,7 @@
             <el-select
               data-anchor="审核列表楼盘 => select"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-model="queryData.comId"
               @focus="remoteInput"
               @change="queryCBId"
@@ -79,9 +80,10 @@
               :loading="loading"
             >
               <el-option
-                data-anchor="审核列表楼盘 => select => option"
                 class="anchor-point"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in comList"
+                :data-anchor="'审核列表楼盘 => select => option:' + item.name"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -90,6 +92,7 @@
             <el-select
               data-anchor="审核列表楼栋 => select"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-model="queryData.cbId"
               filterable
               clearable
@@ -97,9 +100,10 @@
               @change="buildChange"
             >
               <el-option
-                data-anchor="审核列表楼栋 => select => option"
                 class="anchor-point"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in cbIdList"
+                :data-anchor="'审核列表楼栋 => select => option:' + item.name"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -108,6 +112,7 @@
             <el-select
               data-anchor="审核列表房间号 => select"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-model="queryData.roomId"
               filterable
               @change="querylistByParams"
@@ -116,9 +121,10 @@
               v-loadmore="loadMore"
             >
               <el-option
-                data-anchor="审核列表房间号 => select => option"
                 class="anchor-point"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in roomNoList"
+                :data-anchor="'审核列表房间号 => select => option:' + item.name"
                 :key="item.value"
                 :label="item.name"
                 :value="item.value"
@@ -163,6 +169,7 @@
             <el-select
               data-anchor="审核列表审核项目 => select"
               filterable
+              @click.native="log_socket.sendUserActionData"
               v-model="checkProject"
               clearable
               class="set-select120 anchor-point"
@@ -170,9 +177,10 @@
               placeholder="全部"
             >
               <el-option
-                data-anchor="审核列表审核项目 => select => option"
                 class="anchor-point"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in checkProjectList"
+                :data-anchor="'审核列表审核项目 => select => option:' + item.label"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -185,6 +193,7 @@
             <el-select
               data-anchor="审核列表审核类型 => select"
               filterable
+              @click.native="log_socket.sendUserActionData"
               v-model="type"
               clearable
               class="set-select120 anchor-point"
@@ -192,9 +201,10 @@
               placeholder="全部"
             >
               <el-option
-                data-anchor="审核列表审核类型 => select => option"
                 class="anchor-point"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in typeList"
+                :data-anchor="'审核列表审核类型 => select => option:' + item.label"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -207,6 +217,7 @@
             <el-select
               data-anchor="审核列表审核状态 => select"
               filterable
+              @click.native="log_socket.sendUserActionData"
               v-model="status"
               clearable
               class="set-select120 anchor-point"
@@ -214,9 +225,10 @@
               placeholder="全部"
             >
               <el-option
-                data-anchor="审核列表审核状态 => select => option"
                 class="anchor-point"
+                @click.native="log_socket.sendUserActionData"
                 v-for="item in stateList"
+                :data-anchor="'审核列表审核状态 => select => option:' + item.label"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -1158,12 +1170,12 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             if (e.data.data == 1) {
-              that.$router.push({
+              util.openPage.call(this, {
                 name: "houseDetails",
                 params: { houseId: row.eid }
               });
             } else {
-              that.$router.push({
+              util.openPage.call(this, {
                 name: "historyDetails",
                 params: { houseId: row.eid, tradeType: 0 }
               });

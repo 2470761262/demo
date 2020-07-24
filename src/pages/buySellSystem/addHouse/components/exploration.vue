@@ -6,6 +6,10 @@
 /deep/.el-loading-spinner {
   top: 30%;
 }
+.wechatUpuloadText {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 </style>
 <template>
   <div
@@ -41,7 +45,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             fit="cover"
             :preview-src-list="fillterImgList('outdoorImgList')"
           >
@@ -57,20 +61,32 @@
           ></div>
         </div>
       </div>
-      <div class="upLoadFile-file-phone">
-        <el-image
-          class="anchor-point"
-          :src="websockStatus ? qrCodeImg : ''"
-          :preview-src-list="[websockStatus ? qrCodeImg : '']"
-          fit="cover"
+      <div class="upLoadFile-file-phone" style="justify-content:normal">
+        <div>
+          <el-image
+            class="anchor-point"
+            :src="websockStatus ? qrCodeImg : ''"
+            :preview-src-list="[websockStatus ? qrCodeImg : '']"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
+            </div>
+          </el-image>
+        </div>
+        <div
+          v-if="isFromHouseTask ? true : wxUploadFile"
+          class="wechatUpuloadText"
         >
-          <div slot="placeholder" class="image-slot">
-            加载中
-            <span>...</span>
-          </div>
-        </el-image>
-        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
+          微信扫码上传
+        </div>
+        <div
+          v-if="isFromHouseTask ? false : !wxUploadFile"
+          class="wechatUpuloadText"
+        >
+          暂无上传权限.
+        </div>
       </div>
     </div>
     <!-- 客厅 -->
@@ -100,7 +116,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('livingRoomImgList')"
             fit="cover"
           >
@@ -116,20 +132,32 @@
           ></div>
         </div>
       </div>
-      <div class="upLoadFile-file-phone">
-        <el-image
-          class="anchor-point"
-          :src="websockStatus ? qrCodeImg : ''"
-          :preview-src-list="[websockStatus ? qrCodeImg : '']"
-          fit="cover"
+      <div class="upLoadFile-file-phone" style="justify-content:normal">
+        <div>
+          <el-image
+            class="anchor-point"
+            :src="websockStatus ? qrCodeImg : ''"
+            :preview-src-list="[websockStatus ? qrCodeImg : '']"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
+            </div>
+          </el-image>
+        </div>
+        <div
+          v-if="isFromHouseTask ? true : wxUploadFile"
+          class="wechatUpuloadText"
         >
-          <div slot="placeholder" class="image-slot">
-            加载中
-            <span>...</span>
-          </div>
-        </el-image>
-        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
+          微信扫码上传
+        </div>
+        <div
+          v-if="isFromHouseTask ? false : !wxUploadFile"
+          class="wechatUpuloadText"
+        >
+          暂无上传权限.
+        </div>
       </div>
     </div>
     <!-- 卧室 -->
@@ -159,7 +187,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('bedroomImgList')"
             fit="cover"
           >
@@ -175,20 +203,32 @@
           ></div>
         </div>
       </div>
-      <div class="upLoadFile-file-phone">
-        <el-image
-          class="anchor-point"
-          :src="websockStatus ? qrCodeImg : ''"
-          :preview-src-list="[websockStatus ? qrCodeImg : '']"
-          fit="cover"
+      <div class="upLoadFile-file-phone" style="justify-content:normal">
+        <div>
+          <el-image
+            class="anchor-point"
+            :src="websockStatus ? qrCodeImg : ''"
+            :preview-src-list="[websockStatus ? qrCodeImg : '']"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
+            </div>
+          </el-image>
+        </div>
+        <div
+          v-if="isFromHouseTask ? true : wxUploadFile"
+          class="wechatUpuloadText"
         >
-          <div slot="placeholder" class="image-slot">
-            加载中
-            <span>...</span>
-          </div>
-        </el-image>
-        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
+          微信扫码上传
+        </div>
+        <div
+          v-if="isFromHouseTask ? false : !wxUploadFile"
+          class="wechatUpuloadText"
+        >
+          暂无上传权限.
+        </div>
       </div>
     </div>
     <!-- 厨房 -->
@@ -218,7 +258,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('kitchenImgList')"
             fit="cover"
           >
@@ -234,20 +274,32 @@
           ></div>
         </div>
       </div>
-      <div class="upLoadFile-file-phone">
-        <el-image
-          class="anchor-point"
-          :src="websockStatus ? qrCodeImg : ''"
-          :preview-src-list="[websockStatus ? qrCodeImg : '']"
-          fit="cover"
+      <div class="upLoadFile-file-phone" style="justify-content:normal">
+        <div>
+          <el-image
+            class="anchor-point"
+            :src="websockStatus ? qrCodeImg : ''"
+            :preview-src-list="[websockStatus ? qrCodeImg : '']"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
+            </div>
+          </el-image>
+        </div>
+        <div
+          v-if="isFromHouseTask ? true : wxUploadFile"
+          class="wechatUpuloadText"
         >
-          <div slot="placeholder" class="image-slot">
-            加载中
-            <span>...</span>
-          </div>
-        </el-image>
-        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
+          微信扫码上传
+        </div>
+        <div
+          v-if="isFromHouseTask ? false : !wxUploadFile"
+          class="wechatUpuloadText"
+        >
+          暂无上传权限.
+        </div>
       </div>
     </div>
     <!-- 卫生间 -->
@@ -277,7 +329,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('toiletImgList')"
             fit="cover"
           >
@@ -293,20 +345,32 @@
           ></div>
         </div>
       </div>
-      <div class="upLoadFile-file-phone">
-        <el-image
-          class="anchor-point"
-          :src="websockStatus ? qrCodeImg : ''"
-          :preview-src-list="[websockStatus ? qrCodeImg : '']"
-          fit="cover"
+      <div class="upLoadFile-file-phone" style="justify-content:normal">
+        <div>
+          <el-image
+            class="anchor-point"
+            :src="websockStatus ? qrCodeImg : ''"
+            :preview-src-list="[websockStatus ? qrCodeImg : '']"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
+            </div>
+          </el-image>
+        </div>
+        <div
+          v-if="isFromHouseTask ? true : wxUploadFile"
+          class="wechatUpuloadText"
         >
-          <div slot="placeholder" class="image-slot">
-            加载中
-            <span>...</span>
-          </div>
-        </el-image>
-        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
+          微信扫码上传
+        </div>
+        <div
+          v-if="isFromHouseTask ? false : !wxUploadFile"
+          class="wechatUpuloadText"
+        >
+          暂无上传权限.
+        </div>
       </div>
     </div>
     <!-- 户型图 -->
@@ -336,7 +400,7 @@
         >
           <el-image
             class="anchor-point"
-            :src="item.url"
+            :src="item.url + SMALLThumb"
             :preview-src-list="fillterImgList('layoutImgList')"
             fit="cover"
           >
@@ -352,20 +416,32 @@
           ></div>
         </div>
       </div>
-      <div class="upLoadFile-file-phone">
-        <el-image
-          class="anchor-point"
-          :src="websockStatus ? qrCodeImg : ''"
-          :preview-src-list="[websockStatus ? qrCodeImg : '']"
-          fit="cover"
+      <div class="upLoadFile-file-phone" style="justify-content:normal">
+        <div>
+          <el-image
+            class="anchor-point"
+            :src="websockStatus ? qrCodeImg : ''"
+            :preview-src-list="[websockStatus ? qrCodeImg : '']"
+            fit="cover"
+          >
+            <div slot="placeholder" class="image-slot">
+              加载中
+              <span>...</span>
+            </div>
+          </el-image>
+        </div>
+        <div
+          v-if="isFromHouseTask ? true : wxUploadFile"
+          class="wechatUpuloadText"
         >
-          <div slot="placeholder" class="image-slot">
-            加载中
-            <span>...</span>
-          </div>
-        </el-image>
-        <div v-if="isFromHouseTask ? true : wxUploadFile">微信扫码上传</div>
-        <div v-if="isFromHouseTask ? false : !wxUploadFile">暂无上传权限.</div>
+          微信扫码上传
+        </div>
+        <div
+          v-if="isFromHouseTask ? false : !wxUploadFile"
+          class="wechatUpuloadText"
+        >
+          暂无上传权限.
+        </div>
       </div>
     </div>
     <!-- 房源视频 -->
@@ -399,22 +475,30 @@
               ></div>
             </div>
           </div>
-          <div class="upLoadFile-file-phone">
-            <el-image
-              class="anchor-point"
-              :src="websockStatus ? qrCodeImgVedio : ''"
-              :preview-src-list="[websockStatus ? qrCodeImgVedio : '']"
-              fit="cover"
+          <div class="upLoadFile-file-phone" style="justify-content:normal">
+            <div>
+              <el-image
+                class="anchor-point"
+                :src="websockStatus ? qrCodeImgVedio : ''"
+                :preview-src-list="[websockStatus ? qrCodeImgVedio : '']"
+                fit="cover"
+              >
+                <div slot="placeholder" class="image-slot">
+                  加载中
+                  <span>...</span>
+                </div>
+              </el-image>
+            </div>
+            <div
+              v-if="isFromHouseTask ? true : wxUploadFile"
+              class="wechatUpuloadText"
             >
-              <div slot="placeholder" class="image-slot">
-                加载中
-                <span>...</span>
-              </div>
-            </el-image>
-            <div v-if="isFromHouseTask ? true : wxUploadFile">
               微信扫码上传
             </div>
-            <div v-if="isFromHouseTask ? false : !wxUploadFile">
+            <div
+              v-if="isFromHouseTask ? false : !wxUploadFile"
+              class="wechatUpuloadText"
+            >
               暂无上传权限.
             </div>
           </div>
@@ -434,7 +518,7 @@
 <script>
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
-import { LOGINDATA } from "@/util/constMap";
+import { LOGINDATA, SMALLThumb } from "@/util/constMap";
 export default {
   //   $_veeValidate: {
   //     validator: 'new' // give me my own validator scope.
@@ -517,6 +601,7 @@ export default {
   },
   data() {
     return {
+      SMALLThumb: SMALLThumb, //小图
       imgdiaLog: false,
       loading: false,
       outdoorImgListLoading: false,

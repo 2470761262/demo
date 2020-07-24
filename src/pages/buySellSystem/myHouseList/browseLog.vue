@@ -19,6 +19,7 @@
             data-anchor="浏览记录楼盘 => select"
             class="anchor-point"
             v-model="data.comId"
+            @click.native="log_socket.sendUserActionData"
             @focus="remoteInput"
             @change="queryCBId"
             filterable
@@ -29,9 +30,10 @@
             :loading="loading"
           >
             <el-option
-              data-anchor="浏览记录楼盘 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in options"
+              :data-anchor="'浏览记录楼盘 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -40,6 +42,7 @@
           <el-select
             data-anchor="浏览记录楼栋 => select"
             class="anchor-point"
+            @click.native="log_socket.sendUserActionData"
             v-model="data.cbId"
             filterable
             clearable
@@ -47,9 +50,10 @@
             @change="buildChange"
           >
             <el-option
-              data-anchor="浏览记录楼栋 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
+              :data-anchor="'浏览记录楼栋 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -59,6 +63,7 @@
             data-anchor="浏览记录房间号 => select"
             class="anchor-point"
             v-model="data.roomNo"
+            @click.native="log_socket.sendUserActionData"
             filterable
             @change="querySoleAllParams"
             placeholder="房间号"
@@ -66,9 +71,10 @@
             v-loadmore="loadMore"
           >
             <el-option
-              data-anchor="浏览记录房间号 => select => option"
               class="anchor-point"
+              @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
+              :data-anchor="'浏览记录房间号 => select => option:' + item.name"
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -195,6 +201,7 @@ import getMenuRid from "@/minxi/getMenuRid";
 import houseContrast from "@/minxi/houseContrast";
 import common from "../houseResource/common/common";
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   mixins: [getMenuRid, houseContrast],
   components: {
@@ -416,7 +423,7 @@ export default {
         console.log(
           "进入我的跟单房源详情 /buySellSystem/houseDetails/" + item.HouseId
         );
-        that.$router.push({
+        util.openPage.call(this, {
           name: "houseDetails",
           params: { houseId: item.HouseId, browse: browse }
         });
@@ -425,7 +432,7 @@ export default {
         console.log(
           "进入店公共盘房源详情 /buySellSystem/houseDetails/" + item.HouseId
         );
-        that.$router.push({
+        util.openPage.call(this, {
           name: "houseDetails",
           params: { houseId: item.HouseId, browse: browse }
         });
@@ -434,13 +441,13 @@ export default {
         console.log(
           "进入在售无跟单房源详情 /buySellSystem/houseDetails/" + item.HouseId
         );
-        that.$router.push({
+        util.openPage.call(this, {
           name: "houseDetails",
           params: { houseId: item.HouseId, browse: browse }
         });
       } else if (item.Type == 4) {
         console.log("进入暂不售房源详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "historyDetails",
           params: {
             houseId: item.HouseId,
@@ -450,14 +457,14 @@ export default {
         });
       } else if (item.Type == 5) {
         console.log("进入楼盘详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "buildingHouseDetail",
           params: { houseId: item.HouseId, browse: browse }
         });
       } else if (item.Type == 6) {
         //楼盘情况
         console.log("进入楼盘详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "potentialHouseDetail",
           params: {
             houseId: item.HouseId,
@@ -467,7 +474,7 @@ export default {
         });
       } else if (item.Type == 7) {
         console.log("进入交易房源详情");
-        that.$router.push({
+        util.openPage.call(this, {
           name: "tradeHouseDetail",
           params: {
             houseId: item.HouseId,

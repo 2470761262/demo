@@ -41,7 +41,11 @@
         />
         <span class="item-title">首页</span>
       </div>
-      <div class="sldebar-content-item anchor-point" @click="goBack">
+      <div
+        class="sldebar-content-item anchor-point"
+        @click="goBack"
+        v-if="isShowReturn"
+      >
         <img
           class="nav-image"
           src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/cfca816db35642d483ad4dc5e889288a.png"
@@ -106,7 +110,8 @@ export default {
   },
   data() {
     return {
-      editAgentHouse: false
+      editAgentHouse: false,
+      isShowReturn: true
     };
   },
   mounted() {
@@ -122,6 +127,17 @@ export default {
         that.editAgentHouse = true;
       }
     });
+    var url = window.location.href; //获取url中"?"符后的字串
+    if (
+      url.indexOf("/houseDetails/") != -1 ||
+      url.indexOf("/potentialHouseDetail/") != -1 ||
+      url.indexOf("/buildingHouseDetail/") != -1 ||
+      url.indexOf("/historyDetails/") != -1 ||
+      url.indexOf("/validateHouseDetails/") != -1
+    ) {
+      that.isShowReturn = false;
+    }
+    // console.log("===================--url-->", url, that.isShowReturn);
   },
   destroyed() {
     but.$off("editAgentHouse");

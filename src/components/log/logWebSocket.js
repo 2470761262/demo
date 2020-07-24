@@ -81,6 +81,11 @@ let log_socket = {
       content = this.sendAnchorData(e, accountId);
     } else if (e.target.dataset && e.target.dataset.anchor) {
       content = this.sendAnchorData(e, accountId);
+    }else{
+      let parentNode = util.getParents(target,"anchor-point")
+      if(parentNode){
+        content = this.sendAnchorParentData(e, accountId,parentNode)
+      }
     }
     content = identify + "@$@" + content;
     console.log(content);
@@ -121,6 +126,27 @@ let log_socket = {
       placeholder: e.target.placeholder,
       identify: e.view.clientInformation.userAgent,
       anchorName: e.target.dataset.anchor
+    };
+    let content = "user_anchor@$:" + JSON.stringify(parent);
+    return content;
+  },
+  sendAnchorParentData(e, accountId,parentNode) {
+    let parent = {
+      version: "1.0.1",
+      accountId: accountId,
+      screenX: e.screenX,
+      screenY: e.screenY,
+      pageX: e.pageX,
+      pageY: e.pageY,
+      type: e.type,
+      baseURI: e.target.baseURI,
+      className: e.target.className,
+      id: e.target.id,
+      nodeName: e.target.nodeName,
+      innerHTML: e.target.innerHTML,
+      placeholder: e.target.placeholder,
+      identify: e.view.clientInformation.userAgent,
+      anchorName: parentNode.dataset.anchor
     };
     let content = "user_anchor@$:" + JSON.stringify(parent);
     return content;
