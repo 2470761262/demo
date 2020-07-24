@@ -101,7 +101,7 @@
                 <div class="msg-row">
                   <span class="msg-row-title">购买用途：</span>
                   <div class="msg-row-txt">
-                    {{ item.buyDestination }}
+                    {{ item.buyDestination || "暂无" }}
                   </div>
                 </div>
                 <div class="msg-row">
@@ -382,7 +382,7 @@
                 <div class="msg-row">
                   <span class="msg-row-title">购买用途：</span>
                   <div class="msg-row-txt">
-                    {{ item.buyDestination }}
+                    {{ item.buyDestination || "暂无" }}
                   </div>
                 </div>
                 <div class="msg-row">
@@ -664,7 +664,7 @@ export default {
      * @example: 格式化期望楼层
      */
     formatFloor(val) {
-      if (val) {
+      if (val.length > 0) {
         let arr = [];
         val.forEach(item => {
           switch (item) {
@@ -694,7 +694,7 @@ export default {
      * @example: 格式化商铺类型
      */
     formatShopType(val) {
-      if (val) {
+      if (val.length > 0) {
         let arr = [];
         val.forEach(item => {
           switch (item) {
@@ -721,7 +721,7 @@ export default {
      * @example: 格式化商铺用途
      */
     formatShopUse(val) {
-      if (val) {
+      if (val.length > 0) {
         let arr = [];
         val.forEach(item => {
           switch (item) {
@@ -763,7 +763,7 @@ export default {
      * @example: 格式化附属设施
      */
     formatFacility(val) {
-      if (val) {
+      if (val.length > 0) {
         let arr = [];
         val.forEach(item => {
           switch (item) {
@@ -799,7 +799,7 @@ export default {
      * @example: 格式化其他需求
      */
     formatOtherNeed(val) {
-      if (val) {
+      if (val.length > 0) {
         let arr = [];
         val.forEach(item => {
           switch (item) {
@@ -829,7 +829,7 @@ export default {
      * @example: 格式化楼栋
      */
     formatBuildingNeed(val) {
-      if (val) {
+      if (val.length > 0) {
         let arr = [];
         val.forEach(item => {
           switch (item) {
@@ -856,7 +856,7 @@ export default {
      * @example: 格式化房间
      */
     formatRoomNeed(val) {
-      if (val) {
+      if (val.length > 0) {
         let arr = [];
         val.forEach(item => {
           switch (item) {
@@ -954,7 +954,7 @@ export default {
       }
     },
     /**
-     * @example: 格式化租赁付款方式
+     * @example: 格式化租赁入住时间
      */
     formatMoveIntoTime(val) {
       if (val) {
