@@ -253,7 +253,6 @@ export default {
             imageList = this.ImageAddSMALLThumb.filter(
               item => item.PicClass == 6
             );
-            console.log(imageList, "imageList");
             if (imageList.length == 0) return fittArrayList();
             break;
           default:
