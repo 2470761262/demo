@@ -46,7 +46,12 @@
     v-loading="loading"
     element-loading-text="对赌加载中..."
   >
-    <button class="bet-btn" v-if="isBetCountShow" @click="showBetView">
+    <button
+      class="bet-btn"
+      v-if="isBetCountShow"
+      @click="showBetView"
+      v-loading="btnLoading"
+    >
       我要对赌
     </button>
     <conut-down :end-time="isBetTime" v-else />
@@ -90,7 +95,8 @@ export default {
       loading: true, //加载对赌接口loading
       isBet: true, //是否对赌
       isBetTime: null, //对赌时间
-      betPopFlag: false //对赌弹框开关
+      betPopFlag: false, //对赌弹框开关
+      btnLoading: false
     };
   },
   created() {
@@ -100,6 +106,7 @@ export default {
     ...mapActions(["commitHouseBet", "commitRoleData"]),
     //获取对赌配置参数
     showBetView() {
+      this.btnLoading = true;
       this.$api
         .get({
           url: "/house/bet/conf"
@@ -117,7 +124,10 @@ export default {
             this.$message.warning({ message: data.message, offset: 400 });
           }
         })
-        .catch(e => {});
+        .catch(e => {})
+        .finally(() => {
+          this.btnLoading = false;
+        });
     },
     //获取对赌结束时间
     getBetInfo() {

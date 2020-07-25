@@ -248,11 +248,12 @@ export default {
       if (this.houseData.saleUploadPicDtoList.length == 0) {
         imageList = this.ImageAddSMALLThumb;
       } else {
-        switch (this.loopTypeActive) {
+        switch (this.loopType[this.loopTypeActive].type) {
           case 2:
             imageList = this.ImageAddSMALLThumb.filter(
-              item => item.PicClass == 1
+              item => item.PicClass == 6
             );
+            console.log(imageList, "imageList");
             if (imageList.length == 0) return fittArrayList();
             break;
           default:

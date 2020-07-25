@@ -9,10 +9,10 @@
   }
   .page-cell-main-menu {
     // prettier-ignore
-    height: calc(100% - 80px);
+    height: calc(100% - 80PX);
     @media screen and(max-width: 1280px) {
       // prettier-ignore
-      height: calc(100% - 100px);
+      height: calc(100% - 100PX);
     }
 
     .el-aside,

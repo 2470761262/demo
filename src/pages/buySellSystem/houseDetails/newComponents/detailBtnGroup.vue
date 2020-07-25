@@ -100,14 +100,14 @@
       {{ item.title }}
     </button>
     <!-- 写跟进 -->
-    <follow-up :visible.sync="followUpFlag" v-if="followUpFlag"></follow-up>
+    <follow-up :visible.sync="followUpFlag" v-if="followUpFlag" />
     <!-- 查看号码 -->
     <phone-pop
       title="业主联系方式"
       width="500px"
       :visible.sync="phonePopFlag"
       v-if="phonePopFlag"
-    ></phone-pop>
+    />
     <!-- 发布外网 -->
     <release-pop
       :visible.sync="releasePopFlag"
@@ -115,7 +115,7 @@
       title
       maskHideEvent
       v-if="releasePopFlag"
-    ></release-pop>
+    />
 
     <!-- 转房源状态 -->
     <change-house-type
@@ -124,7 +124,7 @@
       width="580px"
       maskHideEvent
       v-if="typeFlag"
-    ></change-house-type>
+    />
 
     <!-- 取消作业方 -->
     <cancelTask
@@ -133,7 +133,15 @@
       width="680px"
       maskHideEvent
       v-if="cancelTaskFlag"
-    ></cancelTask>
+    />
+
+    <!-- 面访 -->
+    <interview-pop
+      :visible.sync="interviewFlag"
+      title="添加面访"
+      width="1000PX"
+      v-if="interviewFlag"
+    />
   </div>
 </template>
 
@@ -151,7 +159,7 @@ const BTNLIST = [
     pop: "phonePopFlag",
     order: 1
   },
-  { title: "添加面访", fun: "", order: 3 },
+  { title: "添加面访", fun: "openPop", order: 3, pop: "interviewFlag" },
   {
     title: "转换状态",
     fun: "changePopUp",
@@ -159,7 +167,6 @@ const BTNLIST = [
     pop: "typeFlag"
   },
   { title: "关注小区", fun: "", order: 7 }
-  //   { title: "取消角色人", fun: "", order: 8 }
 ];
 export default {
   components: {
@@ -167,7 +174,8 @@ export default {
     phonePop: () => import("../newDidLog/phonePop"),
     releasePop: () => import("../newDidLog/releasePop"),
     changeHouseType: () => import("../newDidLog/changeHouseType"),
-    cancelTask: () => import("../newDidLog/cancelTask")
+    cancelTask: () => import("../newDidLog/cancelTask"),
+    interviewPop: () => import("../newDidLog/interviewPop")
   },
   computed: {
     ...mapState({
@@ -204,6 +212,7 @@ export default {
       }
       return false;
     },
+    //编辑房源是否禁用
     editHouseDisabled() {
       if (this.houseData.plate > 6 || this.houseData.isLocking) {
         return true;
@@ -219,7 +228,8 @@ export default {
       phonePopFlag: false, //查看号码开关
       releasePopFlag: false, //发布外网
       typeFlag: false, // 转状态按钮
-      cancelTaskFlag: false //取消角色人开关
+      cancelTaskFlag: false, //取消角色人开关
+      interviewFlag: false //添加面访开关
     };
   },
   created() {},

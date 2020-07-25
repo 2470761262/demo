@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1995;
+  z-index: 2001;
   display: flex;
   justify-content: center;
   align-items: center;
