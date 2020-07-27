@@ -492,7 +492,7 @@ export default {
         for (let i = 0; i < this.nameList.length; i++) {
           list.push(this.nameList[i].id);
         }
-        list.splice(list.indexOf(this.mergeCus.Per), 1);
+        //  list.splice(list.indexOf(this.mergeCus.Per), 1);
         this.mergeCus.list = list;
         console.log(this.mergeCus);
         this.toClaim(true);
