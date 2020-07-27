@@ -457,8 +457,8 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
-            that.roomNo = "";
-            that.cbId = "";
+            hous.roomNo = "";
+            hous.cbId = "";
             hous.cbIdList = e.data.data.list;
           }
         });
@@ -483,7 +483,7 @@ export default {
           })
           .then(e => {
             if (e.data.code == 200) {
-              that.roomNo = "";
+              hous.roomNo = "";
               hous.roomNoList = [...this.roomNoList, ...e.data.data.list];
             }
           })
