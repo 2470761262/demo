@@ -497,11 +497,12 @@ export default {
       let postData = {
         communityId: hous.comId,
         communityBuildingId: hous.cbId,
-        buildingHouseId: hous.roomNo
+        buildingHouseId: hous.roomNo,
+        requireId: this.requireType
       };
       that.$api
         .post({
-          url: "saleCustomerDetailApplet/getAgentHouseByCommunity",
+          url: "saleCustomerDetail/getAgentHouseByCommunity",
           data: postData,
           qs: true,
           headers: {
