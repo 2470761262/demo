@@ -201,7 +201,65 @@
         v-show="activeIndex == 3"
       >
         <div class="scroll-bttom">
-          开发中...
+          <leftProgress v-for="item in interviews.list" :key="item.id">
+            <div class="item-title">{{ item.createTime }}</div>
+            <div class="item-tips">
+              <div class="item-tips-title">面访人:</div>
+              <div class="item-tips-message">
+                {{ item.creatorName | emptyRead }}({{
+                  item.creatorDeptName | emptyRead
+                }})
+              </div>
+            </div>
+            <div class="item-tips">
+              <div class="item-tips-title">陪同人:</div>
+              <div class="item-tips-message">
+                {{ item.followerName | emptyRead }}({{
+                  item.followerDeptName | emptyRead
+                }})
+              </div>
+            </div>
+            <div class="item-tips">
+              <div class="item-tips-title">面访时间:</div>
+              <div class="item-tips-message">
+                {{ item.endTime }}
+              </div>
+            </div>
+            <div class="item-tips">
+              <div class="item-tips-title">面访对象:</div>
+              <div class="item-tips-message">
+                {{ item.customerType }}
+              </div>
+            </div>
+            <div class="item-tips">
+              <div class="item-tips-title">面访地点:</div>
+              <div class="item-tips-message">
+                {{ item.place }}
+              </div>
+            </div>
+            <div class="item-tips">
+              <div class="item-tips-title">面访目的:</div>
+              <div class="item-tips-message">
+                {{ item.purpose }}
+              </div>
+            </div>
+            <div class="item-tips">
+              <div class="item-tips-title">面访结果:</div>
+              <div class="item-tips-message">
+                {{ item.result }}
+              </div>
+            </div>
+          </leftProgress>
+          <template v-if="interviews.loading">
+            <div class="scroll-bttom">
+              <i class="el-icon-loading"></i> 加载中...
+            </div>
+          </template>
+          <template v-else-if="interviews.loadPageEnd">
+            <div class="scroll-bttom">
+              暂无数据~
+            </div>
+          </template>
         </div>
       </div>
       <div
@@ -211,7 +269,7 @@
         v-show="activeIndex == 4"
       >
         <div class="scroll-bttom">
-          开发中...
+          开发中
         </div>
       </div>
     </div>
@@ -225,7 +283,7 @@ const LOGTAB = [
   { title: "跟进", methodsName: "getHouseFollow", storageData: "follow" },
   { title: "带看", methodsName: "getHousePairFollowList", storageData: "pair" },
   { title: "语音", methodsName: "getHouseVoice", storageData: "voice" },
-  { title: "面访" },
+  { title: "面访", methodsName: "getInterviews", storageData: "interviews" },
   { title: "日志" }
 ];
 export default {
@@ -268,6 +326,13 @@ export default {
         loading: false,
         loadPageEnd: false
       },
+      interviews: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+        loading: false,
+        loadPageEnd: false
+      },
       logTab: LOGTAB,
       activeIndex: 0
     };
@@ -284,27 +349,26 @@ export default {
      */
     setTabIndex(index) {
       this.activeIndex = index;
-
-      let activeData = this[this.logTab[this.activeIndex].storageData];
-      if (activeData.list.length == 0) {
-        this.getList();
+      try {
+        let activeData = this[this.logTab[this.activeIndex].storageData];
+        if (activeData.list.length == 0) {
+          this.getList();
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
     //获取列表数据
     getList() {
-      switch (this.activeIndex) {
-        case 0: //跟进
-          this.getHouseFollow();
-          break;
-        case 1: //带看
-          this.getHousePairFollowList();
-          break;
-        case 2: //语音
-          this.getHouseVoice();
-          break;
+      try {
+        this[this.logTab[this.activeIndex].methodsName]();
+      } catch (error) {
+        console.log(error);
       }
     },
-    //获取带看列表
+    /**
+     * @example: 获取带看列表
+     */
     getHousePairFollowList() {
       this.pair.loading = true;
       this.$api
@@ -333,7 +397,9 @@ export default {
           }
         });
     },
-    //获取语音列表
+    /**
+     * @example: 获取语音列表
+     */
     getHouseVoice() {
       this.voice.loading = true;
       this.$api
@@ -367,7 +433,9 @@ export default {
           }
         });
     },
-    //获取跟进列表
+    /**
+     * @example: 获取跟进列表
+     */
     getHouseFollow() {
       this.follow.loading = true;
       this.$api
@@ -393,6 +461,42 @@ export default {
           this.follow.loading = false;
           if (this.follow.totalPage == 1 || this.follow.list.length == 0) {
             this.follow.loadPageEnd = true;
+          }
+        });
+    },
+    /**
+     * @example: 获取面访
+     */
+    getInterviews() {
+      this.interviews.loading = true;
+      this.$api
+        .post({
+          url: "/saleHouseInterview/interviews",
+          data: {
+            page: this.interviews.page,
+            limit: 7,
+            houseId: this.houseId
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.interviews.list = [
+              ...this.interviews.list,
+              ...result.data.list
+            ];
+            this.interviews.totalPage = result.data.totalPage;
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.interviews.loading = false;
+          if (
+            this.interviews.totalPage == 1 ||
+            this.interviews.list.length == 0
+          ) {
+            this.interviews.loadPageEnd = true;
           }
         });
     },

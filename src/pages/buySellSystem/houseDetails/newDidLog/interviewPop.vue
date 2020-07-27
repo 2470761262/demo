@@ -14,6 +14,20 @@
     display: flex;
     // prettier-ignore
     margin-bottom: 30PX;
+    position: relative;
+    &.error-tips {
+      &::after {
+        content: attr(data-error);
+        position: absolute;
+        // prettier-ignore
+        bottom: -4PX;
+        // prettier-ignore
+        left: 100PX;
+        color: red;
+        font-size: @font13;
+        transform: translateY(100%);
+      }
+    }
     .view-item-left {
       font-size: @font16;
       flex-shrink: 0;
@@ -43,7 +57,7 @@
           // prettier-ignore
           left: -15PX;
           // prettier-ignore
-          top: 5PX;
+          top: 10PX;
         }
       }
       &.is-center {
@@ -111,22 +125,27 @@
     border-color: transparent;
   }
 }
-.re-radio {
-  /deep/.el-radio {
+
+/deep/.el-radio {
+  // prettier-ignore
+  margin-right: 20PX;
+  .el-radio__inner {
     // prettier-ignore
-    margin-right: 20PX;
-    .el-radio__inner {
+    width: 14PX;
+    // prettier-ignore
+    height: 14PX;
+    &::after {
       // prettier-ignore
-      width: 14PX;
+      width: 4PX;
       // prettier-ignore
-      height: 14PX;
+      height: 4PX;
     }
-    .el-radio__label {
-      // prettier-ignore
-      font-size: @font14;
-      // prettier-ignore
-      padding-left: 10PX;
-    }
+  }
+  .el-radio__label {
+    // prettier-ignore
+    font-size: @font14;
+    // prettier-ignore
+    padding-left: 10PX;
   }
 }
 .marg5 {
@@ -139,6 +158,7 @@
   text-align: center;
   outline: none;
   border: 1px solid #999;
+  border-radius: 4px;
   &:focus {
     border-color: @backgroud;
   }
@@ -157,6 +177,24 @@
     .inline-input {
       // prettier-ignore
       margin-left: 10PX;
+    }
+    /deep/.el-select {
+      // prettier-ignore
+      height: 32PX;
+      // prettier-ignore
+      width: 170PX;
+      .el-input__inner {
+        // prettier-ignore
+        height: 32PX;
+        // prettier-ignore
+        line-height: 32PX;
+      }
+      .el-input__suffix-inner {
+        i {
+          // prettier-ignore
+          line-height: 32PX;
+        }
+      }
     }
   }
 }
@@ -238,6 +276,11 @@
   margin: 0 auto 20PX;
   // prettier-ignore
   border-radius: 4PX;
+  &[disabled] {
+    background: #f2f2f2;
+    color: black;
+    cursor: no-drop;
+  }
 }
 .flex-warp {
   display: flex;
@@ -247,7 +290,11 @@
 <template>
   <fixedPopup v-bind="$attrs" v-on="$listeners">
     <template>
-      <div class="content">
+      <div
+        class="content"
+        v-loading="loading"
+        element-loading-text="添加面访中..."
+      >
         <!-- 房源信息 -->
         <div class="view-item">
           <div class="view-item-left">
@@ -283,13 +330,20 @@
           </div>
         </div>
         <!-- 面访对象 -->
-        <div class="view-item">
+        <div
+          class="view-item"
+          :class="{ 'error-tips': errorBags.has('interviewObject') }"
+          :data-error="errorBags.first('interviewObject')"
+        >
           <div class="view-item-left is-require is-center marg5">
             面访对象:
           </div>
           <div class="view-item-right">
             <label class="radio-item">
               <input
+                data-vv-name="interviewObject"
+                data-vv-as="面访对象"
+                v-validate="'required'"
                 type="radio"
                 value="业主本人"
                 v-model="form.interviewObject"
@@ -298,6 +352,9 @@
             </label>
             <label class="radio-item">
               <input
+                data-vv-name="interviewObject"
+                data-vv-as="面访对象"
+                v-validate="'required'"
                 type="radio"
                 value="业主家人"
                 v-model="form.interviewObject"
@@ -306,6 +363,9 @@
             </label>
             <label class="radio-item">
               <input
+                data-vv-name="interviewObject"
+                data-vv-as="面访对象"
+                v-validate="'required'"
                 type="radio"
                 value="业主委托人"
                 v-model="form.interviewObject"
@@ -313,22 +373,44 @@
               <span>业主委托人</span>
             </label>
             <label class="radio-item">
-              <input type="radio" value="租户" v-model="form.interviewObject" />
+              <input
+                data-vv-name="interviewObject"
+                data-vv-as="面访对象"
+                v-validate="'required'"
+                type="radio"
+                value="租户"
+                v-model="form.interviewObject"
+              />
               <span>租户</span>
             </label>
             <label class="radio-item">
-              <input type="radio" value="其他" v-model="form.interviewObject" />
+              <input
+                data-vv-name="interviewObject"
+                data-vv-as="面访对象"
+                v-validate="'required'"
+                type="radio"
+                value="其他"
+                v-model="form.interviewObject"
+              />
               <span>其他</span>
             </label>
           </div>
         </div>
         <!-- 面访日期 -->
-        <div class="view-item">
+        <div
+          class="view-item"
+          :class="{ 'error-tips': errorBags.has('interviewTime') }"
+          :data-error="errorBags.first('interviewTime')"
+        >
           <div class="view-item-left is-require is-center">
             面访日期:
           </div>
           <div class="view-item-right">
             <el-date-picker
+              :default-time="['00:00:00', '23:59:59']"
+              data-vv-name="interviewTime"
+              data-vv-as="面访日期"
+              v-validate="'required'"
               v-model="form.interviewTime"
               type="daterange"
               start-placeholder="开始日期"
@@ -339,30 +421,41 @@
           </div>
         </div>
         <!-- 面访地点 -->
-        <div class="view-item">
+        <div
+          class="view-item"
+          :class="{ 'error-tips': errorBags.has('interviewPlace') }"
+          :data-error="errorBags.first('interviewPlace')"
+        >
           <div class="view-item-left is-require is-center">
             面访地点:
           </div>
           <div class="view-item-right is-center per-flex">
-            <el-radio-group
-              v-model="form.interviewPlace"
-              class="re-radio"
-              @change="placeChange"
-            >
-              <el-radio label="业主出售房屋内"></el-radio>
-              <el-radio label="社区周边">社区周边</el-radio>
-              <el-radio label="业主其他住所">业主其他住所</el-radio>
-              <el-radio label="业主工作单位"></el-radio>
-              <el-radio label="门店"></el-radio>
-            </el-radio-group>
-            <el-radio
-              :label="true"
-              v-model="interviewPlaceOther"
-              @change="interviewPlaceOtherChange"
-              >其他</el-radio
-            >
+            <div class="flex-warp">
+              <el-radio-group
+                data-vv-name="interviewPlace"
+                data-vv-as="面访地点"
+                v-validate="{ required: !interviewPlaceOther }"
+                v-model="form.interviewPlace"
+                @change="placeChange"
+              >
+                <el-radio label="业主出售房屋内"></el-radio>
+                <el-radio label="社区周边">社区周边</el-radio>
+                <el-radio label="业主其他住所">业主其他住所</el-radio>
+                <el-radio label="业主工作单位"></el-radio>
+                <el-radio label="门店"></el-radio>
+              </el-radio-group>
+              <el-radio
+                :label="true"
+                v-model="interviewPlaceOther"
+                @change="interviewPlaceOtherChange"
+                >其他</el-radio
+              >
+            </div>
             <input
-              v-if="interviewPlaceOther"
+              data-vv-name="interviewPlace"
+              data-vv-as="面访地点"
+              v-validate="{ required: interviewPlaceOther }"
+              v-show="interviewPlaceOther"
               v-model="form.interviewPlace"
               type="text"
               placeholder="请补充"
@@ -377,28 +470,57 @@
           </div>
           <div class="view-item-right is-center per-flex">
             <div class="per-msg">
-              钟丽娟(万达一店)
+              {{ loginData.userName | emptyRead }}({{
+                loginData.deptName | emptyRead
+              }})
             </div>
             <div class="per-msg">
-              15280398053
+              {{ loginData.tel | emptyRead }}
             </div>
             <div class="input-content">
-              陪同人 :<input
-                type="text"
+              陪同人 :
+              <el-select
                 placeholder="请输入陪同人"
-                class="inline-input"
-              />
+                value-key="accountId"
+                filterable
+                clearable
+                remote
+                :remote-method="accompanyingPersonRemote"
+                @focus="accompanyingPersonFocus"
+                :loading="accompanyingPersonData.loading"
+                v-model="form.accompanyingPerson"
+              >
+                <el-option
+                  v-for="item in accompanyingPersonData.list"
+                  :key="item.accountId"
+                  :label="item.perName"
+                  :value="item"
+                ></el-option>
+              </el-select>
             </div>
           </div>
         </div>
         <!-- 面访目的 -->
-        <div class="view-item">
+        <div
+          class="view-item"
+          :class="{ 'error-tips': errorBags.has('interviewGoal') }"
+          :data-error="errorBags.first('interviewGoal')"
+        >
           <div class="view-item-left  is-center is-require">
             面访目的:
           </div>
           <div class="view-item-right is-center per-flex">
             <div class="flex-warp">
-              <el-checkbox-group v-model="form.interviewGoal">
+              <el-checkbox-group
+                v-model="form.interviewGoal"
+                data-vv-name="interviewGoal"
+                data-vv-as="面访目的"
+                v-validate="{
+                  required:
+                    interviewGoalOtherValue == '' ||
+                    form.interviewGoal.length != 0
+                }"
+              >
                 <el-checkbox label="新增房源首次面访"></el-checkbox>
                 <el-checkbox label="价格沟通"></el-checkbox>
                 <el-checkbox label="带看回访"></el-checkbox>
@@ -412,7 +534,12 @@
               >
             </div>
             <input
-              v-if="interviewGoalOther"
+              data-vv-name="interviewGoal"
+              data-vv-as="面访目的"
+              v-validate="{
+                required: interviewGoalOther && form.interviewGoal.length == 0
+              }"
+              v-show="interviewGoalOther"
               type="text"
               placeholder="请补充"
               class="inline-input"
@@ -421,14 +548,27 @@
           </div>
         </div>
         <!-- 面访结果 -->
-        <div class="view-item">
+        <div
+          class="view-item"
+          :class="{ 'error-tips': errorBags.has('interviewResult') }"
+          :data-error="errorBags.first('interviewResult')"
+        >
           <div class="view-item-left  is-center is-require">
             面访结果:
           </div>
           <div class="view-item-right is-center per-flex">
             <div class="flex-warp">
-              <el-checkbox-group v-model="checkList">
-                <el-checkbox label="业主调教"></el-checkbox>
+              <el-checkbox-group
+                v-model="form.interviewResult"
+                data-vv-name="interviewResult"
+                data-vv-as="面访结果"
+                v-validate="{
+                  required:
+                    interviewResultOhterValue == '' ||
+                    form.interviewResult.length != 0
+                }"
+              >
+                <el-checkbox label="业主调价"></el-checkbox>
                 <el-checkbox label="收取房源证件"></el-checkbox>
                 <el-checkbox label="签署委托协议"></el-checkbox>
                 <el-checkbox label="签署独家"></el-checkbox>
@@ -442,7 +582,13 @@
               ></el-checkbox>
             </div>
             <input
-              v-if="interviewResultOhter"
+              data-vv-name="interviewResult"
+              data-vv-as="面访结果"
+              v-validate="{
+                required:
+                  interviewResultOhter && form.interviewResult.length == 0
+              }"
+              v-show="interviewResultOhter"
               type="text"
               placeholder="请补充"
               class="inline-input"
@@ -451,16 +597,23 @@
           </div>
         </div>
         <!-- 面访总结 -->
-        <div class="view-item">
+        <div
+          class="view-item"
+          :class="{ 'error-tips': errorBags.has('interviewSummary') }"
+          :data-error="errorBags.first('interviewSummary')"
+        >
           <div class="view-item-left  is-require">
             面访总结:
           </div>
           <div class="view-item-right">
             <el-input
+              data-vv-name="interviewSummary"
+              data-vv-as="面访总结"
+              v-validate="'required'"
               class="re-textarea"
               type="textarea"
               placeholder="请输入内容"
-              v-model="textarea"
+              v-model="form.interviewSummary"
               resize="none"
               :autosize="{ minRows: 4, maxRows: 6 }"
             />
@@ -481,7 +634,9 @@
       </div>
     </template>
     <template v-slot:floot>
-      <button class="subMit-btn">提交</button>
+      <button class="subMit-btn" @click="submitInterview" :disabled="loading">
+        提交
+      </button>
     </template>
   </fixedPopup>
 </template>
@@ -489,8 +644,13 @@
 <script>
 import { mapState } from "vuex";
 import { SMALLThumb } from "@/util/constMap";
+import util from "@/util/util";
+import { LOGINDATA } from "@/util/constMap";
 
 export default {
+  $_veeValidate: {
+    validator: "new" // give me my own validator scope.
+  },
   computed: {
     ...mapState({
       houseId: state => state.houseDateil.id,
@@ -509,22 +669,27 @@ export default {
   },
   data() {
     return {
+      loading: false,
+      loginData: util.localStorageGet(LOGINDATA),
       form: {
         interviewObject: "", //面访对象
         interviewTime: [], //面访日期
         interviewPlace: "", //面访地点
         interviewGoal: [], //面访目的
-        interviewResult: [] //面访结果
+        interviewResult: [], //面访结果
+        accompanyingPerson: "", //陪同人
+        interviewSummary: "" //面访总结
       },
       interviewPlaceOther: false, //面访地点其他
       interviewGoalOther: false, //面访目的其他
       interviewGoalOtherValue: "", //面访目的其他Input
       interviewResultOhter: false, //面访结果其他
       interviewResultOhterValue: "", //面访结果其他Input
-      textarea: "",
-      radio: "",
-      checkList: [],
-      value2: [],
+      accompanyingPersonData: {
+        // 陪同人select
+        list: [],
+        loading: false
+      },
       pickerOptions: {
         shortcuts: [
           {
@@ -575,6 +740,107 @@ export default {
       if (!item) {
         this.interviewResultOhterValue = "";
       }
+    },
+    /**
+     * @example:陪同人获取焦点
+     */
+    accompanyingPersonFocus() {
+      if (this.accompanyingPersonData.list.length == 0) {
+        this.accompanyingPersonRemote();
+      }
+    },
+    /**
+     * @example: 陪同人远程获取数据
+     */
+    accompanyingPersonRemote(value) {
+      this.accompanyingPersonData.loading = true;
+      return this.$api
+        .post({
+          url: "/saleHouseInterview/followers",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            page: 1,
+            limit: 40,
+            keyWord: value?.trim()
+          }
+        })
+        .then(e => {
+          let { data } = e;
+          if (data.code == 200) {
+            this.accompanyingPersonData.list = data.data.list;
+          }
+        })
+        .finally(() => {
+          this.accompanyingPersonData.loading = false;
+        });
+    },
+    /**
+     * @example: 提交
+     */
+    submitInterview() {
+      this.$validator.validateAll().then(e => {
+        if (e) {
+          this.loading = true;
+          let params = {
+            houseId: this.houseId, //房源ID
+            customerType: this.form.interviewObject, // 面访对象
+            startTime: util.format(
+              this.form.interviewTime[0],
+              "yyyy-MM-dd hh:mm:ss"
+            ), // 添加面访时间
+            endTime: util.format(
+              this.form.interviewTime[1],
+              "yyyy-MM-dd hh:mm:ss"
+            ), //添加面访时间
+            place: this.form.interviewPlace, // 面访地点
+            purpose:
+              this.interviewGoalOther && this.interviewGoalOtherValue != ""
+                ? [
+                    ...this.form.interviewGoal,
+                    this.interviewGoalOtherValue
+                  ].join(",")
+                : this.form.interviewGoal.join(","), // 面访目的
+            result:
+              this.interviewResultOhter && this.interviewResultOhterValue != ""
+                ? [
+                    ...this.form.interviewResult,
+                    this.interviewResultOhterValue
+                  ].join(",")
+                : this.form.interviewResult.join(","),
+            summary: this.form.interviewSummary // 面访总结
+          };
+
+          if (this.form.accompanyingPerson != "") {
+            const {
+              perName,
+              perDept,
+              deptName,
+              accountId
+            } = this.form.accompanyingPerson;
+            params.follower = accountId; //陪同人
+            params.followerName = perName; //陪同人名称
+            params.followerDeptId = perDept; //陪同人部门id
+            params.followerDeptName = deptName; //陪同人部门id
+          }
+          return this.$api
+            .post({
+              url: "/saleHouseInterview",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              data: params
+            })
+            .then(e => {
+              let { data } = e;
+              if (data.code == 200) {
+                this.loading = false;
+                this.$emit("update:visible", false);
+                this.$message.success(data.message);
+              }
+            })
+            .finally(() => {
+              this.loading = false;
+            });
+        }
+      });
     }
   }
 };

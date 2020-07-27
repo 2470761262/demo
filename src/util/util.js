@@ -1,4 +1,9 @@
 import * as constMap from "./constMap";
+
+function go(a, b) {
+  return a + b;
+}
+
 export default {
   localStorageSet(key, value) {
     if (typeof value == "object") {

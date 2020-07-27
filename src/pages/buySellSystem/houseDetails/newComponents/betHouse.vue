@@ -29,12 +29,46 @@
     text-align: center;
     font-size: @font14;
     color: #d51e05;
+    width: 100%;
+    z-index: 10;
     .bet-tips-title {
-      display: flex;
-      align-items: center;
-
+      display: inline-block;
+      &:hover + .bet-posi-tips {
+        display: block;
+      }
       i {
         font-size: @font16;
+      }
+    }
+    .bet-posi-tips:hover {
+      display: block;
+    }
+    .bet-posi-tips {
+      display: none;
+      position: absolute;
+      width: 100%;
+      left: 0;
+      // prettier-ignore
+      bottom: 0PX;
+      background: #737373;
+      // prettier-ignore
+      padding: 10PX 20PX;
+      box-sizing: border-box;
+      transform: translateY(100%);
+      color: #fff;
+      // prettier-ignore
+      line-height: 30PX;
+      text-align: justify;
+      // prettier-ignore
+      box-shadow: 0 2PX 12PX 0 rgba(0, 0, 0, 0.3);
+      p {
+        font-size: @font14;
+        // prettier-ignore
+        margin-bottom: 10PX;
+        word-break: break-all;
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }
@@ -56,7 +90,17 @@
     </button>
     <conut-down :end-time="isBetTime" v-else />
     <div class="bet-tips">
-      <div class="bet-tips-title">对赌规则<i class="el-icon-question"></i></div>
+      <div class="bet-tips-title">
+        <div>对赌规则<i class="el-icon-question"></i></div>
+      </div>
+      <div class="bet-posi-tips">
+        <p>1、每日只能对赌一套名下跟单房源;</p>
+        <p>
+          2、对房源在设定的期限内被成交(签约合同提交前24小时内无效) ,
+          队伍人获得N倍对赌值 ;
+        </p>
+        <p>3、在对赌期限内,房源被划转状态或被调入店公盘的,则对赌失败 ;</p>
+      </div>
     </div>
 
     <bet-pop
