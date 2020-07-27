@@ -525,7 +525,7 @@
         </div>
       </div>
       <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
-      <div class="cascader-content">
+      <div class="cascader-content" v-show="searchPanelChange">
         <div class="cascader-content-build">
           <!-- 楼栋 -->
           <el-select
@@ -627,7 +627,7 @@
         </button>
       </div>
       <!-- 范围 -->
-      <div class="search-content-item">
+      <div class="search-content-item" v-show="searchPanelChange">
         <div class="search-item-title">范围</div>
         <div class="search-item-right">
           <el-radio-group v-model="form.plate" size="small">
@@ -663,7 +663,7 @@
         </div>
       </div>
       <!-- 类型 -->
-      <div class="search-content-item">
+      <div class="search-content-item" v-show="searchPanelChange">
         <div class="search-item-title">类型</div>
         <div class="search-item-right">
           <el-radio
@@ -729,7 +729,7 @@
         </div>
       </div>
       <!-- 价钱 -->
-      <div class="search-content-item">
+      <div class="search-content-item" v-show="searchPanelChange">
         <div class="search-item-title">价格</div>
         <div class="search-item-right ">
           <div class="data-content">
@@ -1021,7 +1021,7 @@
         </div>
       </div>
       <!-- 装修 -->
-      <div class="search-content-item" v-if="RenovationList.length != 0">
+      <div class="search-content-item" v-if="RenovationList.length != 0" v-show="searchPanelChange">
         <div class="search-item-title">装修</div>
         <div class="search-item-right">
           <el-radio
@@ -1222,6 +1222,7 @@
 </template>
 
 <script>
+import bus from '@/evenBus/but.js';
 //切换tab类型
 const TYPELIST = [
   {
@@ -1264,6 +1265,7 @@ export default {
   inject: ["form"],
   data() {
     return {
+      searchPanelChange: true, //搜索面板显隐
       temporaryPrimaryValue: "", //临时记录小学select结果,用于删除筛选
       temporaryMiddleValue: "", //临时记录中学select结果,用于删除筛选
       isFixedHeight: "0px",
@@ -1473,9 +1475,14 @@ export default {
      * @param {Number}  index
      */
     changeNavTypeIndex(index) {
-      if (index == 1 || index == 4 || index == 2) {
+      bus.$emit("modifyTableColumn", index);
+      if (index == 1 || index == 4) {
         this.navToPageBtn({ private: false });
         return;
+      } else if(index == 2){
+        this.searchPanelChange = false;
+      } else {
+        this.searchPanelChange = true;
       }
       this.resetData();
       if (index != this.typeActiveIndex) {

@@ -183,10 +183,13 @@
 /deep/.el-table {
   overflow: visible;
 }
+/deep/.table-head-self-top{
+  top: 0 !important;
+}
 </style>
 <template>
   <div class="tab-page">
-    <div class="tab-filter-radio">
+    <div class="tab-filter-radio" v-show="typeActiveIndex !== 2">
       <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
         <input
           type="checkbox"
@@ -262,7 +265,8 @@
           :key="index"
           :prop="item.prop"
           :label="item.label"
-          :width="item.width"
+          :width="item.width" 
+          :min-width="item.minWidth"
           :sort-method="sortDevName"
           :sortable="item.order"
           :formatter="item.formart"
@@ -297,12 +301,15 @@ import {
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
 import util from "@/util/util";
+import bus from '@/evenBus/but.js';
 export default {
   inject: ["form"],
   data() {
     return {
+      typeActiveIndex: 0, //nav类型激活Index
       renderList: [],
-      tableColumnField: [
+      tableColumnField: null,
+      allTableColumn: [
         {
           prop: "communityName",
           label: "楼盘名称",
@@ -384,6 +391,78 @@ export default {
           order: false
         }
       ],
+      dealHouseTableColumn: [
+        {
+          prop: "communityName",
+          label: "楼盘名称",
+          order: false,
+          width: "230",
+          formart: item => {
+            return (
+              <div class="tab-com-item">
+                <div class="tab-house-title">{item.communityName}</div>
+                <div class="tab-houseno">{item.houseNo}</div>
+              </div>
+            );
+          }
+        },
+        {
+          prop: "houseType",
+          label: "户型",
+          order: "custom",
+          formart: item =>
+            (item.rooms || 0) +
+            "室" +
+            (item.hall || 0) +
+            "厅" +
+            (item.toilet || 0) +
+            "卫"
+        },
+        {
+          prop: "floor",
+          label: "楼层",
+          order: true,
+          formart: item => {
+            return `${item.floor}/${item.floorNum}`;
+          }
+        },
+        {
+          prop: "inArea",
+          label: "面积",
+          order: "custom",
+          formart: item => item.inArea + "平"
+        },
+        {
+          prop: "price",
+          label: "成交价(万元)",
+          order: "custom",
+          formart: item => item.price + "万元"
+        },
+        {
+          prop: "unitPrice",
+          label: "单价",
+          order: "custom",
+          formart: item => {
+            if(item.unitPrice) return parseFloat(item.unitPrice).toFixed(2) + "元/平"
+          }
+        },
+        {
+          prop: "tradeTime",
+          label: "成交时间",
+          order: "custom",
+          minWidth: "100"
+        },
+        {
+          prop: "agentName",
+          label: "跟单人",
+          order: false
+        },
+        {
+          prop: "agentName",
+          label: "成交人",
+          order: false
+        }
+      ],
       pageJson: {
         total: 1,
         pageSize: 30,
@@ -404,12 +483,30 @@ export default {
       }
     }
   },
+  created() {
+    this.tableColumnField = this.allTableColumn;
+  },
   mounted() {
     window.addEventListener("resize", this.addListener);
     this.$once("addListener", this.addListener);
+    bus.$on("modifyTableColumn", (type) => {
+      this.typeActiveIndex = type;
+      switch (type) {
+        case 2:
+          document.querySelector(".tab-page-flex .tab-image-head").classList.add("table-head-self-top");
+          document.querySelector(".tab-page-flex .el-table__header-wrapper").classList.add("table-head-self-top");
+          this.tableColumnField = this.dealHouseTableColumn;
+          break;
+        default:
+          document.querySelector(".tab-page-flex .tab-image-head").classList.remove("table-head-self-top");
+          document.querySelector(".tab-page-flex .el-table__header-wrapper").classList.remove("table-head-self-top");
+          this.tableColumnField = this.allTableColumn;
+      }
+    })
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.addListener);
+    bus.$off("modifyTableColumn");
   },
   methods: {
     //解决索引只排序当前页的问题,增加函数自定义索引序号
@@ -488,6 +585,7 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
+      if (this.typeActiveIndex == 2) return;
       util.openPage.call(this, {
         name: "houseDetails",
         params: { houseId: item.id, dept: item.perDept }
@@ -567,13 +665,25 @@ export default {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
       });
+      let param;
+      switch (this.typeActiveIndex) {
+        case 2:
+          param = {
+            url: "/tradeHouse/getTradeHouse",
+            data: restuleParms,
+            qs: true
+          }
+          break;
+        default:
+          param = {
+            //  url: "/mateHouse/getMateHouse/soleAllHouse",
+            url: "/mateHouse/getMateHouse/soleAllHouseIndex",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: restuleParms
+          }
+      }
       return this.$api
-        .post({
-          //  url: "/mateHouse/getMateHouse/soleAllHouse",
-          url: "/mateHouse/getMateHouse/soleAllHouseIndex",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: restuleParms
-        })
+        .post(param)
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
