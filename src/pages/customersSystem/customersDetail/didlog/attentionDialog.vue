@@ -37,6 +37,12 @@
           rows="5"
           placeholder="请填写不关注理由"
         />
+        <div
+          style="color:red;font-size:0.17rem;margin-top:10px;padding-bottom:5px"
+        >
+          暂不关注后，客户将不会出现在私客列表 <br />
+          关注天数到期后，客户会重新出现在私客列表
+        </div>
       </div>
     </div>
   </fixedPopup>
