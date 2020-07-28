@@ -51,7 +51,7 @@ export default {
           that.isLoading = true;
           that.$api
             .post({
-              url: "/saleCustomerDetail/addImpression",
+              url: "/saleCustomerImpression/addImpression",
               data: postData,
               // qs: true,
               headers: {

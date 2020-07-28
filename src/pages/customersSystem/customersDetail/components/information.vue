@@ -337,7 +337,7 @@ export default {
         .then(() => {
           that.$api
             .post({
-              url: "/saleCustomerDetail/deleteImpression",
+              url: "/saleCustomerImpression/deleteImpression",
               data: { impressionId: id },
               qs: true,
               headers: {
