@@ -129,7 +129,7 @@
         </div>
       </div>
       <span class="conut-trans-tips">分</span>
-      <!-- <div class="conut-trans-data">
+      <div class="conut-trans-data">
         <div class="conut-trans-scroll" :class="['trans' + secondsTransAfter]">
           <span v-for="(item, index) in timeItemList" :key="index">{{
             item
@@ -143,7 +143,7 @@
           }}</span>
         </div>
       </div>
-      <span class="conut-trans-tips">秒</span> -->
+      <span class="conut-trans-tips">秒</span>
     </div>
   </div>
 </template>
@@ -187,9 +187,9 @@ export default {
         let minutes = Math.floor(
           time / 1000 / 60 - (days * 24 * 60 + hours * 60)
         );
-        // let second = Math.floor(
-        //   time / 1000 - (days * 24 * 60 * 60 + hours * 60 * 60) - minutes * 60
-        // );
+        let second = Math.floor(
+          time / 1000 - (days * 24 * 60 * 60 + hours * 60 * 60) - minutes * 60
+        );
         if (String(days).length == 1) {
           days = "0" + days;
         }
@@ -199,9 +199,9 @@ export default {
         if (String(minutes).length == 1) {
           minutes = "0" + minutes;
         }
-        // if (String(second).length == 1) {
-        //   second = "0" + second;
-        // }
+        if (String(second).length == 1) {
+          second = "0" + second;
+        }
         //Array.prototype.splice.call();
         this.daysTransAfter = Array.from(String(days))[0];
         this.daysTransBefore = Array.from(String(days))[1];
@@ -209,8 +209,8 @@ export default {
         this.hoursTransBefore = Array.from(String(hours))[1];
         this.minutesTransAfter = Array.from(String(minutes))[0];
         this.minutesTransBefore = Array.from(String(minutes))[1];
-        // this.secondsTransAfter = Array.from(String(second))[0];
-        // this.secondsTransBefore = Array.from(String(second))[1];
+        this.secondsTransAfter = Array.from(String(second))[0];
+        this.secondsTransBefore = Array.from(String(second))[1];
         this.timeID = setTimeout(this.getTime, 1000);
       }
     }

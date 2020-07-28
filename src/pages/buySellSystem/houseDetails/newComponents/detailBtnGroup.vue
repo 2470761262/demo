@@ -115,7 +115,7 @@
     >
       转换状态
     </button>
-    <button class="btn-item" style="order:7">
+    <button class="btn-item" style="order:7" @click="tips()">
       关注小区
     </button>
     <!-- <button
@@ -404,6 +404,11 @@ export default {
             getVideoUrl: "/agentHouse/video/getVideoList/"
           }
         }
+      });
+    },
+    tips() {
+      this.$alert("新功能开发中，敬请期待~", "提示信息", {
+        confirmButtonText: "确定"
       });
     }
   }
