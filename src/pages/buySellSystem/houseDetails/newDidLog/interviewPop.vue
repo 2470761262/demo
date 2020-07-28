@@ -987,7 +987,7 @@ export default {
             params.followerDeptName = deptName; //陪同人部门id
           }
           if (this.fileList.length > 0) {
-            this.params.files = this.fileList.map(item => item.id);
+            params.files = this.fileList.map(item => item.id);
           }
           return this.$api
             .post({
