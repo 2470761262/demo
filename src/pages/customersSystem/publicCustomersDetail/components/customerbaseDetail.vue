@@ -445,7 +445,7 @@ export default {
       var that = this;
       this.$api
         .post({
-          url: "/saleCustomerDetail/canTakeCus",
+          url: "/saleCustomer/canTakeCus",
           qs: true,
           data: {
             customerId: that.customerId.id
@@ -504,7 +504,7 @@ export default {
       if (flag) {
         this.$api
           .post({
-            url: "/saleCustomerDetail/takeCus",
+            url: "/saleCustomer/takeCus",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             data: {
