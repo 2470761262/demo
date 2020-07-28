@@ -39,6 +39,7 @@ function getData() {
       dialPhone: false, //拨号
       shareQRCode: false //二维码
     },
+    betData: {}, //接口返回的权限数据
     betConf: {
       //对赌配置
       startHour: 0,
@@ -46,8 +47,9 @@ function getData() {
       odds: 0,
       upper: 0,
       lower: 0
-    },
-    followUpdate: null
+    }, //权限开关设置
+    followUpdate: null,
+    interviewUpdate: null
   };
 }
 

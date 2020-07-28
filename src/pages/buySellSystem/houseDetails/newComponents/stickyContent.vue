@@ -7,7 +7,7 @@
   border-radius: 4px;
   position: sticky;
   // prettier-ignore
-  top: 46PX;
+  top: 0PX;
   z-index: 10;
   background: #fff;
   .sticky-item {

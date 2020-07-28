@@ -251,14 +251,32 @@
   box-sizing: border-box;
   display: block;
   display: flex;
+  // prettier-ignore
+  margin-right: 20PX;
   align-items: center;
   justify-content: center;
+  position: relative;
   cursor: pointer;
   i {
     font-size: @font20;
   }
   input {
     display: none;
+  }
+  &:hover {
+    .el-icon-error {
+      display: block;
+    }
+  }
+  .el-icon-error {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: red;
+    font-size: @font22;
+    transform: translate(50%, -50%);
+    cursor: pointer;
   }
 }
 .subMit-btn {
@@ -285,6 +303,34 @@
 .flex-warp {
   display: flex;
   flex-wrap: wrap;
+}
+.file-image {
+  // prettier-ignore
+  width: 70PX;
+  // prettier-ignore
+  height: 70PX;
+  // prettier-ignore
+  margin-right: 20PX;
+  position: relative;
+  /deep/.el-image {
+    width: 100%;
+    height: 100%;
+  }
+  &:hover {
+    .el-icon-error {
+      display: block;
+    }
+  }
+  .el-icon-error {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: red;
+    font-size: @font22;
+    transform: translate(50%, -50%);
+    cursor: pointer;
+  }
 }
 </style>
 <template>
@@ -406,18 +452,27 @@
             面访日期:
           </div>
           <div class="view-item-right">
-            <el-date-picker
-              :default-time="['00:00:00', '23:59:59']"
+            <el-radio
               data-vv-name="interviewTime"
               data-vv-as="面访日期"
               v-validate="'required'"
-              v-model="form.interviewTime"
-              type="daterange"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              :picker-options="pickerOptions"
+              v-model="pickerTimeValue"
+              :label="item.time"
+              v-for="item in pickerTime"
+              :key="item.title"
+              >{{ item.title }}</el-radio
             >
-            </el-date-picker>
+            <el-time-picker
+              is-range
+              :clearable="false"
+              v-model="rangTime"
+              format="HH:mm:ss"
+              value-format="HH:mm:ss"
+              range-separator="至"
+              start-placeholder="开始时间"
+              end-placeholder="结束时间"
+            >
+            </el-time-picker>
           </div>
         </div>
         <!-- 面访地点 -->
@@ -624,11 +679,47 @@
           <div class="view-item-left">
             上传附件:
           </div>
-          <div class="view-item-right">
-            <label class="file-btn">
+          <div class="view-item-right flex-warp ">
+            <label class="file-btn" v-loading="fileLoading">
               <i class="el-icon-folder-add"></i>
-              <input type="file" />
+              <input
+                type="file"
+                @change="getFile"
+                multiple="multiplt"
+                accept="image/*,.mp4,.avi,text/*,.doc*,.xls*"
+              />
             </label>
+            <div
+              class="file-image"
+              v-for="item in fileListType.img"
+              :key="item.id"
+            >
+              <el-image :src="item.url" :preview-src-list="srcList"></el-image>
+              <i class="el-icon-error" @click="deleteFile(item)"></i>
+            </div>
+            <!-- video -->
+            <a
+              title="视频"
+              class="file-btn"
+              v-for="item in fileListType.video"
+              target="_blank"
+              :href="item.url"
+              :key="item.id"
+            >
+              <i class="el-icon-error"></i>
+              <i class="el-icon-video-camera-solid"></i>
+            </a>
+            <a
+              title="文本"
+              class="file-btn"
+              v-for="item in fileListType.txt"
+              target="_blank"
+              :href="item.url"
+              :key="item.id"
+            >
+              <i class="el-icon-error"></i>
+              <i class="el-icon-s-order"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -642,7 +733,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 import { SMALLThumb } from "@/util/constMap";
 import util from "@/util/util";
 import { LOGINDATA } from "@/util/constMap";
@@ -665,15 +756,50 @@ export default {
         return this.$options.filters.defaultImg();
       }
       return this.houseData.saleUploadPicDtoList[0].picUrl + SMALLThumb;
+    },
+    fileListType() {
+      let typeList = {
+        img: [],
+        video: [],
+        txt: []
+      };
+      this.fileList.forEach((item, index) => {
+        if (".jpeg,.jpg,.png,.svg,.gif".includes(item.ext)) {
+          typeList.img.push(item);
+        } else if (".mp4,.avi".includes(item.ext)) {
+          typeList.video.push(item);
+        } else {
+          typeList.txt.push(item);
+        }
+      });
+      return typeList;
+    },
+    //预览大图
+    srcList() {
+      return this.fileListType.img.map(item => item.url);
     }
   },
   data() {
     return {
+      fileLoading: false,
       loading: false,
       loginData: util.localStorageGet(LOGINDATA),
+      pickerTimeValue: "",
+      pickerTime: [
+        { title: "今天", time: util.format(new Date(), "yyyy-MM-dd") },
+        {
+          title: "昨天",
+          time: util.format(
+            new Date().getTime() - 3600 * 1000 * 24,
+            "yyyy-MM-dd"
+          )
+        }
+      ],
+      fileList: [], //文件数组
+      rangTime: ["00:00:00", "23:59:59"],
       form: {
         interviewObject: "", //面访对象
-        interviewTime: [], //面访日期
+        // interviewTime: [], //面访日期
         interviewPlace: "", //面访地点
         interviewGoal: [], //面访目的
         interviewResult: [], //面访结果
@@ -689,30 +815,73 @@ export default {
         // 陪同人select
         list: [],
         loading: false
-      },
-      pickerOptions: {
-        shortcuts: [
-          {
-            text: "今天",
-            onClick(picker) {
-              picker.$emit("pick", [new Date(), new Date()]);
-            }
-          },
-          {
-            text: "昨天",
-            onClick(picker) {
-              const date = new Date();
-              picker.$emit("pick", [
-                date.getTime() - 3600 * 1000 * 24,
-                date.getTime() - 3600 * 1000 * 24
-              ]);
-            }
-          }
-        ]
       }
     };
   },
   methods: {
+    ...mapMutations(["setParam"]),
+    /**
+     * @example: 删除上传文件
+     * @param {object} item 删除文件对象
+     */
+    deleteFile(item) {
+      this.$api
+        .delete({
+          url: `saleHouseInterview/file/${item.id}`,
+          data: {
+            url: item.url
+          },
+          qs: true
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.fileList.splice(
+              this.fileList.findIndex(fitem => item.id == fitem.id),
+              1
+            );
+            this.$message.success(e.data.message);
+          } else {
+            this.$message.error(e.data.message);
+          }
+        });
+    },
+    /**
+     * @example: 获取上传文件
+     */
+    getFile(e) {
+      let file = event.target.files;
+      if (!(this.fileList.length + file.length <= 9)) {
+        this.$message.error("最多只能上传9个文件");
+        return;
+      }
+      this.fileLoading = true;
+      Promise.allSettled([...file].map(item => this.uploadFilte(item)))
+        .then(e => {
+          e.forEach(vItem => {
+            if (vItem.status == "fulfilled" && vItem.value) {
+              this.fileList.push(vItem.value);
+            }
+          });
+        })
+        .finally(() => {
+          this.fileLoading = false;
+        });
+    },
+    uploadFilte(file) {
+      let formData = new FormData();
+      formData.append("file", file);
+      return this.$api
+        .post({
+          data: formData,
+          url: "/saleHouseInterview/file",
+          headers: { "Content-Type": "multipart/form-data" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            return e.data.data;
+          }
+        });
+    },
     /**
      * @example: 面访地点RadioChange
      */
@@ -784,15 +953,10 @@ export default {
           let params = {
             houseId: this.houseId, //房源ID
             customerType: this.form.interviewObject, // 面访对象
-            startTime: util.format(
-              this.form.interviewTime[0],
-              "yyyy-MM-dd hh:mm:ss"
-            ), // 添加面访时间
-            endTime: util.format(
-              this.form.interviewTime[1],
-              "yyyy-MM-dd hh:mm:ss"
-            ), //添加面访时间
+            startTime: `${this.pickerTimeValue} ${this.rangTime[0]}`, // 添加面访时间
+            endTime: `${this.pickerTimeValue} ${this.rangTime[1]}`, //添加面访时间
             place: this.form.interviewPlace, // 面访地点
+            timeStr: `${this.pickerTimeValue} ${this.rangTime[0]}-${this.rangTime[1]}`,
             purpose:
               this.interviewGoalOther && this.interviewGoalOtherValue != ""
                 ? [
@@ -822,6 +986,9 @@ export default {
             params.followerDeptId = perDept; //陪同人部门id
             params.followerDeptName = deptName; //陪同人部门id
           }
+          if (this.fileList.length > 0) {
+            this.params.files = this.fileList.map(item => item.id);
+          }
           return this.$api
             .post({
               url: "/saleHouseInterview",
@@ -833,6 +1000,10 @@ export default {
               if (data.code == 200) {
                 this.loading = false;
                 this.$emit("update:visible", false);
+                this.setParam({
+                  paramName: "interviewUpdate",
+                  value: Math.floor(Math.random() * 1000)
+                });
                 this.$message.success(data.message);
               }
             })

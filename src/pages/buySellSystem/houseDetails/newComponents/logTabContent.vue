@@ -202,7 +202,7 @@
       >
         <div class="scroll-bttom">
           <leftProgress v-for="item in interviews.list" :key="item.id">
-            <div class="item-title">{{ item.createTime }}</div>
+            <div class="item-title">{{ item.timeStr }}</div>
             <div class="item-tips">
               <div class="item-tips-title">面访人:</div>
               <div class="item-tips-message">
@@ -290,13 +290,18 @@ export default {
   computed: {
     ...mapState({
       houseId: state => state.houseDateil.id,
-      followUpdate: state => state.houseDateil.followUpdate
+      followUpdate: state => state.houseDateil.followUpdate,
+      interviewUpdate: state => state.houseDateil.interviewUpdate
     })
   },
   watch: {
     followUpdate() {
       Object.assign(this.$data.follow, this.$options.data().follow);
       this.getHouseFollow();
+    },
+    interviewUpdate() {
+      Object.assign(this.$data.follow, this.$options.data().follow);
+      this.getInterviews();
     }
   },
   components: {

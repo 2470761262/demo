@@ -25,7 +25,7 @@
       // flex: 0 0 474px *  @base;
       position: sticky;
       // prettier-ignore
-      top: 46PX;
+      top: 0PX;
       display: flex;
       z-index: 50;
       align-self: flex-start;
@@ -40,9 +40,9 @@
 </style>
 <template>
   <div class="content" v-loading="loading" element-loading-text="数据加载中...">
-    <div class="nav-hander-content">
+    <!-- <div class="nav-hander-content">
       <nav-header />
-    </div>
+    </div> -->
     <section class="content-flex" v-if="!loading">
       <div class="content-flex-left">
         <detail-hander />
@@ -71,7 +71,7 @@
 </template>
 <script>
 //头部导航
-import navHeader from "@/components/navHeader";
+//import navHeader from "@/components/navHeader";
 //房源详情头部
 import detailHander from "./newComponents/detailHander";
 //轮播图
@@ -101,7 +101,7 @@ import { mapActions, mapMutations, mapState } from "vuex";
 import { REMARK } from "@/util/constMap";
 export default {
   components: {
-    navHeader,
+    //  navHeader,
     detailHander,
     loopContent,
     houseMessage,
@@ -136,7 +136,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["setHouseID"]),
+    ...mapMutations(["setHouseID", "setParam"]),
     ...mapActions(["commitHouseData", "commitRoleData"]),
     /**
      * 获取房源详情
@@ -239,7 +239,7 @@ export default {
       this.$api
         .post({
           url: url,
-          data: param,
+          //data: param,
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
@@ -267,6 +267,10 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             let { data } = e.data;
+            this.setParam({
+              paramName: "betData",
+              value: data.functionRuleList
+            });
             data.functionRuleList.forEach((item, index) => {
               this.commitRoleData({
                 roleName: item.rUrl,

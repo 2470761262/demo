@@ -43,8 +43,25 @@
     <button
       class="btn-item"
       style="order:0"
+      @click="openPop('phonePopFlag')"
+      :disabled="isLockBtn"
+    >
+      查看号码
+    </button>
+    <button
+      class="btn-item"
+      style="order:3"
+      @click="openPop('interviewFlag')"
+      :disabled="isInterviewDisabled || isLockBtn"
+    >
+      添加面访
+    </button>
+    <button
+      class="btn-item"
+      style="order:0"
+      v-if="isEditHouse"
       @click="navRouter"
-      :disabled="editHouseDisabled"
+      :disabled="isLockBtn"
     >
       编辑房源
     </button>
@@ -52,14 +69,14 @@
       class="btn-item"
       style="order:2"
       @click="openPop('followUpFlag')"
-      :disabled="followUpDisabled"
+      :disabled="isLockBtn"
     >
       添加跟进
     </button>
     <button
       class="btn-item"
       style="order:4"
-      :disabled="outBtnDisabled"
+      :disabled="outBtnDisabled || isLockBtn"
       v-if="isOutBtn"
       @click="certificateType"
     >
@@ -68,7 +85,7 @@
     <button
       class="btn-item"
       style="order:4"
-      :disabled="cancelBtnDisabled"
+      :disabled="cancelBtnDisabled || isLockBtn"
       v-if="isCancelBtn"
       @click="cancelOutsideHouse"
     >
@@ -80,17 +97,28 @@
       :disabled="!reloData.locking"
       @click="houseLock"
     >
-      锁定房源
+      {{ isLockBtn ? "解锁房源" : "锁定房源" }}
     </button>
     <button
       class="btn-item"
       style="order:8"
-      :disabled="!reloData.cancelMethod"
+      :disabled="!reloData.cancelMethod || isLockBtn"
       @click="openPop('cancelTaskFlag')"
     >
       取消角色人
     </button>
     <button
+      class="btn-item"
+      style="order:0"
+      @click="openPop('typeFlag')"
+      :disabled="isLockBtn"
+    >
+      转换状态
+    </button>
+    <button class="btn-item" style="order:7">
+      关注小区
+    </button>
+    <!-- <button
       :style="{ order: item.order }"
       class="btn-item"
       v-for="item in btnlist"
@@ -98,7 +126,7 @@
       @click="setBtnIndex(item)"
     >
       {{ item.title }}
-    </button>
+    </button> -->
     <!-- 写跟进 -->
     <follow-up :visible.sync="followUpFlag" v-if="followUpFlag" />
     <!-- 查看号码 -->
@@ -152,22 +180,6 @@ import { mapState, mapActions } from "vuex";
 import release from "../common/releaseHouse.js";
 //房源审核
 import houseCheck from "../common/houseCheck";
-const BTNLIST = [
-  {
-    title: "查看号码",
-    fun: "openPop",
-    pop: "phonePopFlag",
-    order: 1
-  },
-  { title: "添加面访", fun: "openPop", order: 3, pop: "interviewFlag" },
-  {
-    title: "转换状态",
-    fun: "changePopUp",
-    order: 5,
-    pop: "typeFlag"
-  },
-  { title: "关注小区", fun: "", order: 7 }
-];
 export default {
   components: {
     followUp: () => import("../newDidLog/followUp"),
@@ -181,7 +193,8 @@ export default {
     ...mapState({
       houseId: state => state.houseDateil.id,
       houseData: state => state.houseDateil.houseData,
-      reloData: state => state.houseDateil.reloData
+      reloData: state => state.houseDateil.reloData,
+      betData: state => state.houseDateil.betData
     }),
     //发布外网按钮是否禁用
     outBtnDisabled() {
@@ -205,8 +218,8 @@ export default {
         this.houseData.plate == 0
       );
     },
-    //跟进按钮是否禁用
-    followUpDisabled() {
+    //房源是否被锁定
+    isLockBtn() {
       if (this.houseData.plate > 6 || this.houseData.isLocking) {
         return true;
       }
@@ -218,12 +231,29 @@ export default {
         return true;
       }
       return false;
+    },
+    //是否显示编辑房源
+    isEditHouse() {
+      if (
+        this.houseData.plate == 0 &&
+        this.getEditAuthority(
+          this.betData.find(item => item.rUrl == "editAgentHouse")
+            ?.authorityUnderName,
+          this.houseData
+        )
+      ) {
+        return true;
+      }
+      return false;
+    },
+    //面访按钮禁用
+    isInterviewDisabled() {
+      return !(this.houseData.AgentPer == this.perId);
     }
   },
   data() {
     return {
       perId: util.localStorageGet("logindata").accountId,
-      btnlist: BTNLIST,
       followUpFlag: false, //跟进弹框开关
       phonePopFlag: false, //查看号码开关
       releasePopFlag: false, //发布外网
@@ -235,6 +265,24 @@ export default {
   created() {},
   methods: {
     ...mapActions(["commitHouseData"]),
+    getEditAuthority(authorityUnderName, houseDatails) {
+      console.log("getEditAuthority -> houseDatails", houseDatails);
+      console.log("getEditAuthority -> authorityUnderName", authorityUnderName);
+
+      if (!authorityUnderName) return;
+      return (
+        (authorityUnderName.coIdList &&
+          authorityUnderName.coIdList.includes(
+            houseDatails.agentPerCompanyId
+          )) ||
+        (authorityUnderName.deptList &&
+          authorityUnderName.deptList.includes(
+            houseDatails.agentPerDepartmentId
+          )) ||
+        (authorityUnderName.accountId &&
+          houseDatails.AgentPer == authorityUnderName.accountId)
+      );
+    },
     //是否显示转状态弹窗
     async changePopUp() {
       let result = await houseCheck.isChecking(

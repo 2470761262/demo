@@ -235,13 +235,13 @@ export default {
     },
     //删除印象
     deleteImpression(impressionId, index) {
-      let params = {
-        impressionId: impressionId
-      };
       this.$api
         .post({
           url: "/agentHouse/impression/deleteImpression",
-          data: params,
+          data: {
+            impressionId: impressionId,
+            houseId: this.houseId
+          },
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {

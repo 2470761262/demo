@@ -16,6 +16,11 @@
   height: 40PX;
   margin: 0 auto;
   cursor: pointer;
+  &[disabled] {
+    background: #f2f2f2;
+    color: #999;
+    cursor: no-drop;
+  }
 }
 </style>
 <template>
@@ -96,7 +101,7 @@ export default {
       let p = {
         contactPhone: phone
       };
-      this.dailPhone(0, p);
+      this.dailPhone(1, p);
     },
     dailPhone(contactPerType, phoneObj) {
       let that = this;
