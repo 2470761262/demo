@@ -220,6 +220,14 @@
       </div>
       <!-- 跟单人-->
       <div class="message-hurdle-cell">
+        <div class="hurdle-cell-item left8">
+          <div class="cell-item-title">
+            业主类型
+          </div>
+          <div class="cell-item-data">
+            {{ houseData.customerType }}
+          </div>
+        </div>
         <div class="hurdle-cell-item">
           <div class="cell-item-title">
             跟单人

@@ -356,7 +356,8 @@
                 <div class="house-message-cell">
                   <div class="house-cell-left">
                     {{
-                      houseData.tradePrice || houseData.Price | emptyRead("元")
+                      houseData.tradePrice ||
+                        houseData.Price | emptyRead("万元")
                     }}
                   </div>
                   <span class="split-line"></span>
