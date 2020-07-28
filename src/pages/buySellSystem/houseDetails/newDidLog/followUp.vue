@@ -100,6 +100,10 @@ export default {
         this.$message("跟进内容不能少于10个字,添加跟进失败!!!");
         return;
       }
+      if (this.pop.textarea.length > 30) {
+        this.$message("跟进内容不能超过30个字,添加跟进失败!!!");
+        return;
+      }
       if (this.isCancel) {
         this.$emit("update:visible", false);
       } else {

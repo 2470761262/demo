@@ -351,7 +351,7 @@
               <img class="house-image" :src="houseImage" alt="" />
               <div class="house-data-message">
                 <div class="house-message-title">
-                  {{ houseData.Title | emptyRead }}
+                  {{ houseData.CommunityName | emptyRead }}
                 </div>
                 <div class="house-message-cell">
                   <div class="house-cell-left">
