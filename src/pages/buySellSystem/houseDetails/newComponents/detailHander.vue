@@ -109,7 +109,7 @@
   <div class="hander-warp">
     <div class="content">
       <div class="content-header-left">
-        <h3>{{ houseData.Title | emptyRead }}</h3>
+        <h3>{{ houseData.CommunityName | emptyRead }}</h3>
         <span @click="getShowBuliding">{{ buildNum }}</span>
         <div>房源编号： {{ houseData.HouseNo | emptyRead }}</div>
       </div>
