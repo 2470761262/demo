@@ -186,7 +186,7 @@ export default {
       };
       that.$api
         .post({
-          url: "/saleCustomerDetail/getSaleCusImpressions",
+          url: "/saleCustomerImpression/getSaleCusImpressions",
           data: postData,
           qs: true,
           headers: { "Content-Type": "application/x-www-form-urlencoded" }
