@@ -30,19 +30,31 @@
         <span>业主姓名：</span>
         <span>{{ houseData.Customers | emptyRead }}</span>
       </div>
-      <div class="cur-cell" v-if="houseData.Tel != ''">
+      <div class="cur-cell" v-if="houseData.Tel != null && houseData.Tel != ''">
         <span>手机号：</span>
         <span>{{ houseData.Tel }}</span>
       </div>
-      <div class="cur-cell" v-if="houseData.Tel1 != ''">
+      <div
+        class="cur-cell"
+        v-if="houseData.Tel1 != null && houseData.Tel1 != ''"
+        @click="contactOwer('1')"
+      >
         <span>手机号：</span>
         <span>{{ houseData.Tel1 }}</span>
       </div>
-      <div class="cur-cell" v-if="houseData.Tel2 != ''">
+      <div
+        class="cur-cell"
+        v-if="houseData.Tel2 != null && houseData.Tel2 != ''"
+        @click="contactOwer('2')"
+      >
         <span>手机号：</span>
         <span>{{ houseData.Tel2 }}</span>
       </div>
-      <div class="cur-cell" v-if="houseData.Tel3 != ''">
+      <div
+        class="cur-cell"
+        v-if="houseData.Tel3 != null && houseData.Tel3 != ''"
+        @click="contactOwer('3')"
+      >
         <span>手机号：</span>
         <span>{{ houseData.Tel3 }}</span>
       </div>
