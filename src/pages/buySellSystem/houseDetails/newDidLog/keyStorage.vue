@@ -8,6 +8,7 @@
           v-model="pop.value"
           filterable
           remote
+          @focus="handleGetStroe"
           :remote-method="getStroeDepartment"
           placeholder="请选择"
           @change="change"
@@ -83,7 +84,10 @@ export default {
       console.log(e);
       this.pop.keyStroge = e;
     },
-    getStroeDepartment(value) {
+    handleGetStroe() {
+      if (this.pop.list.length == 0) this.getStroeDepartment();
+    },
+    getStroeDepartment(value = "") {
       console.log(value, "value");
       this.$api
         .get({

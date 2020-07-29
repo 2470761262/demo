@@ -508,6 +508,7 @@
               >
             </div>
             <input
+              maxlength="10"
               data-vv-name="interviewPlace"
               data-vv-as="面访地点"
               v-validate="{ required: interviewPlaceOther }"
@@ -590,6 +591,7 @@
               >
             </div>
             <input
+              maxlength="10"
               data-vv-name="interviewGoal"
               data-vv-as="面访目的"
               v-validate="{
@@ -638,6 +640,7 @@
               ></el-checkbox>
             </div>
             <input
+              maxlength="10"
               data-vv-name="interviewResult"
               data-vv-as="面访结果"
               v-validate="{
@@ -663,6 +666,8 @@
           </div>
           <div class="view-item-right">
             <el-input
+              maxlength="200"
+              show-word-limit
               data-vv-name="interviewSummary"
               data-vv-as="面访总结"
               v-validate="'required'"
@@ -699,28 +704,28 @@
               <i class="el-icon-error" @click="deleteFile(item)"></i>
             </div>
             <!-- video -->
-            <a
+            <div
+              class="file-btn"
               title="视频"
-              class="file-btn"
               v-for="item in fileListType.video"
-              target="_blank"
-              :href="item.url"
               :key="item.id"
             >
-              <i class="el-icon-error"></i>
-              <i class="el-icon-video-camera-solid"></i>
-            </a>
-            <a
-              title="文本"
+              <a :href="item.url" target="_blank">
+                <i class="el-icon-s-order"></i>
+              </a>
+              <i class="el-icon-error" @click.stop="deleteFile(item)"></i>
+            </div>
+            <div
               class="file-btn"
+              title="文本"
               v-for="item in fileListType.txt"
-              target="_blank"
-              :href="item.url"
               :key="item.id"
             >
-              <i class="el-icon-error"></i>
-              <i class="el-icon-s-order"></i>
-            </a>
+              <a :href="item.url" target="_blank">
+                <i class="el-icon-s-order"></i>
+              </a>
+              <i class="el-icon-error" @click.stop="deleteFile(item)"></i>
+            </div>
           </div>
         </div>
       </div>
@@ -851,18 +856,33 @@ export default {
      */
     getFile(e) {
       let file = event.target.files;
+      console.log(file);
       if (!(this.fileList.length + file.length <= 9)) {
         this.$message.error("最多只能上传9个文件");
         return;
       }
-      this.fileLoading = true;
-      Promise.allSettled([...file].map(item => this.uploadFilte(item)))
-        .then(e => {
-          e.forEach(vItem => {
-            if (vItem.status == "fulfilled" && vItem.value) {
-              this.fileList.push(vItem.value);
+
+      new Promise((r, s) => {
+        this.fileLoading = true;
+
+        const filterThen = [...file].map(item => this.uploadFilte(item));
+
+        let result = [],
+          pointer = 0;
+
+        filterThen.forEach(item => {
+          item.then(e => {
+            pointer++;
+            result.push(e);
+            if (pointer == filterThen.length) {
+              this.fileLoading = false;
+              r(result);
             }
           });
+        });
+      })
+        .then(e => {
+          this.fileList = [...this.fileList, ...e];
         })
         .finally(() => {
           this.fileLoading = false;
@@ -870,7 +890,9 @@ export default {
     },
     uploadFilte(file) {
       let formData = new FormData();
+      console.log(file, "file");
       formData.append("file", file);
+      formData.append("uploadName", file.name);
       return this.$api
         .post({
           data: formData,

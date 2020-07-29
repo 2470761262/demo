@@ -106,6 +106,7 @@
   flex-shrink: 0;
   border: none;
   background: none;
+  outline: none;
   &[disabled] {
     color: #999;
     cursor: no-drop;

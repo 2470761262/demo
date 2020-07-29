@@ -149,7 +149,9 @@
             门店:
             {{ houseData.agentHouseMethod.addPerDepartmentName | emptyRead }}
           </div>
-          <div class="role-phone overText">电话:15280398053</div>
+          <div class="role-phone overText">
+            电话:{{ houseData.agentHouseMethod.addPerTel | emptyRead }}
+          </div>
         </div>
         <div class="role-type">
           <div class="role-type-top">录入人</div>
@@ -167,7 +169,9 @@
           <div class="role-store overText">
             门店:{{ houseData.agentPerDepartmentName }}
           </div>
-          <div class="role-phone overText">电话:15280398053</div>
+          <div class="role-phone overText">
+            电话:{{ houseData.agentPerTel | emptyRead }}
+          </div>
         </div>
         <div class="role-type">
           <div class="role-type-top">跟单人</div>
@@ -185,7 +189,7 @@
       <div class="role-item" v-if="isOnlyOwner">
         <img
           class="role-img"
-          ::src="houseData.agentHouseMethod.onlyOwnerHeadImg | defaultImg"
+          :src="houseData.agentHouseMethod.onlyOwnerHeadImg | defaultImg"
           alt=""
         />
         <div class="role-middle">
@@ -195,7 +199,9 @@
           <div class="role-store overText">
             门店:{{ houseData.agentHouseMethod.onlyOwnerName }}
           </div>
-          <div class="role-phone overText">电话:15280398053</div>
+          <div class="role-phone overText">
+            电话:{{ houseData.agentHouseMethod.onlyOwnerTel | emptyRead }}
+          </div>
         </div>
         <div class="role-type">
           <div class="role-type-top">委托人</div>
@@ -237,7 +243,9 @@
           <div class="role-store overText">
             门店:{{ houseData.agentHouseMethod.keyOwnerDepartmentName }}
           </div>
-          <div class="role-phone overText">电话:15280398053</div>
+          <div class="role-phone overText">
+            电话:{{ houseData.agentHouseMethod.keyOwnerTel | emptyRead }}
+          </div>
         </div>
         <div class="role-type">
           <div class="role-type-top">钥匙人</div>
@@ -279,7 +287,9 @@
           <div class="role-store overText">
             门店: {{ houseData.agentHouseMethod.realOwnerDepartmentName }}
           </div>
-          <div class="role-phone overText">电话:15280398053</div>
+          <div class="role-phone overText">
+            电话:{{ houseData.agentHouseMethod.realOwnerTel | emptyRead }}
+          </div>
         </div>
         <div class="role-type">
           <div class="role-type-top">实勘人</div>
@@ -472,7 +482,7 @@ export default {
      * @example: 判断是否存在委托人
      */
     isOnlyOwner() {
-      return this.houseData.onlyOwnerName != null;
+      return this.houseData.agentHouseMethod.onlyOwnerName != null;
     },
     /**
      * @example: 判断是否存在钥匙人

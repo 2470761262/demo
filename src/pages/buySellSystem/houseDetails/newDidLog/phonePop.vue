@@ -34,27 +34,15 @@
         <span>手机号：</span>
         <span>{{ houseData.Tel }}</span>
       </div>
-      <div
-        class="cur-cell"
-        v-if="houseData.Tel1 != ''"
-        @click="contactOwer('1')"
-      >
+      <div class="cur-cell" v-if="houseData.Tel1 != ''">
         <span>手机号：</span>
         <span>{{ houseData.Tel1 }}</span>
       </div>
-      <div
-        class="cur-cell"
-        v-if="houseData.Tel2 != ''"
-        @click="contactOwer('2')"
-      >
+      <div class="cur-cell" v-if="houseData.Tel2 != ''">
         <span>手机号：</span>
         <span>{{ houseData.Tel2 }}</span>
       </div>
-      <div
-        class="cur-cell"
-        v-if="houseData.Tel3 != ''"
-        @click="contactOwer('3')"
-      >
+      <div class="cur-cell" v-if="houseData.Tel3 != ''">
         <span>手机号：</span>
         <span>{{ houseData.Tel3 }}</span>
       </div>
@@ -83,7 +71,7 @@ export default {
   methods: {
     contactOwer(cmd) {
       let p = {};
-      p["contactPhone" + cmd] = this.resultData["Tel" + cmd];
+      p["contactPhone" + cmd] = this.houseData["Tel" + cmd];
       p["isLookPhone"] = true;
       this.dailPhone(1, p);
     },
