@@ -15,6 +15,21 @@ export default [
       )
   },
   {
+    //买卖系统开发线索
+    path: "/buySellSystem/threadDevelop",
+    meta: {
+      keepAlive: true,
+      title: "开发线索",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "threadDevelop" */ "@/pages/buySellSystem/threadDevelop/threadDevelop.vue"
+      )
+  },
+  {
     //买卖系统录入房源
     path:
       "/buySellSystem/houseDetails/:houseId/:browse?/:key?/:dept?/:detailType?",

@@ -481,6 +481,14 @@
         <div class="head-fun-right">
           <button
             class="btn-primary anchor-point"
+            data-anchor="首页开发线索"
+            @click="navToPath('/buySellSystem/threadDevelop')"
+          >
+            <i class="iconjichuguanli1 iconfont"></i>
+            开发线索
+          </button>
+          <button
+            class="btn-primary anchor-point"
             data-anchor="首页管理入口"
             @click="navToPath('/buySellSystem/concernCommunity')"
           >
@@ -673,7 +681,8 @@
             border
             v-model="typeRadio"
             @change="radioChange('typeList')"
-            >不限</el-radio>
+            >不限</el-radio
+          >
           <el-checkbox-group
             v-model="form.typeList"
             @change="formCheckBoxChange('typeRadio')"
@@ -682,22 +691,26 @@
               label="1"
               class="anchor-point"
               data-anchor="首页选项 类型:我的相关"
-            >我的相关</el-checkbox>
-           <el-checkbox
+              >我的相关</el-checkbox
+            >
+            <el-checkbox
               label="2"
               class="anchor-point"
               data-anchor="首页选项 类型:关注房源"
-            >关注房源</el-checkbox>
-           <el-checkbox
+              >关注房源</el-checkbox
+            >
+            <el-checkbox
               label="3"
               class="anchor-point"
               data-anchor="首页选项 类型:3天新上房源"
-            >3天新上房源</el-checkbox>
-           <el-checkbox
+              >3天新上房源</el-checkbox
+            >
+            <el-checkbox
               label="4"
               class="anchor-point"
               data-anchor="首页选项 类型:投资房源"
-            >投资房源</el-checkbox>
+              >投资房源</el-checkbox
+            >
           </el-checkbox-group>
         </div>
       </div>
