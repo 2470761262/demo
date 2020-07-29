@@ -10,11 +10,9 @@
   .page-cell-main-menu {
     // prettier-ignore
     height: calc(100% - 80PX);
-    @media screen and(max-width: 1280px) {
-      // prettier-ignore
-      height: calc(100% - 100PX);
+    .is-nest {
+      height: 100% !important;
     }
-
     .el-aside,
     .el-main {
       height: 100%;
@@ -76,8 +74,8 @@
       </el-header>
     </el-container>
     <el-container
-      :class="isPad"
-      class="page-cell-main-menu "
+      :class="[isPad, { 'is-nest': isNest }]"
+      class="page-cell-main-menu"
       id="page-cell-main"
     >
       <el-aside class="el-background" v-if="asideNavFlag">
@@ -122,6 +120,9 @@ export default {
     };
   },
   computed: {
+    isNest() {
+      return !(window.self == window.parent);
+    },
     isMapNav() {
       return !this.$route.meta.isMapNav;
     },

@@ -87,10 +87,19 @@ export default {
      * @param {Object} item
      */
     setScrollMove(item) {
-      document.querySelector(item.domName).scrollIntoView({
-        block: "start",
-        behavior: "smooth"
-      });
+      //   document.querySelector(item.domName).scrollIntoView({
+      //     block: "start",
+      //     behavior: "smooth"
+      //   });
+
+      const doc = document;
+      const isNest = window.self == window.parent;
+      let scrollDomTop = doc.querySelector(item.domName).offsetTop;
+      let elMain = doc.querySelector(".el-main");
+      let stickyHeight = doc.querySelector(".sticky-content").offsetHeight;
+      let scrollPosi = scrollDomTop - (isNest ? 80 : 0) - stickyHeight;
+
+      elMain.scrollTop = scrollPosi;
     },
     /**
      * @example: elMain 滚动计算当前可视区域元素高亮

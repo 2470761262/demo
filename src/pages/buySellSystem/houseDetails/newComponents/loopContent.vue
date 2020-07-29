@@ -137,6 +137,7 @@
           :src="houseData.saleUploadVideoDtoList[0].videoUrl"
         />
         <el-image
+          @click.native="showPreview"
           v-if="loopActiveFlag"
           class="is-now-image"
           :src="loopActiveShowData.picUrl"
@@ -187,6 +188,14 @@
         </div>
       </section>
     </section>
+
+    <el-image-viewer
+      v-if="imageViewer"
+      :on-close="imageViewClose"
+      :url-list="previewHouseImage"
+      :initialIndex="activeIndex"
+    >
+    </el-image-viewer>
   </div>
 </template>
 
@@ -197,7 +206,6 @@ import {
 } from "element-ui/src/utils/resize-event";
 import { mapState } from "vuex";
 import { SMALLThumb } from "@/util/constMap";
-
 function fittArrayList() {
   let img =
     "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png";
@@ -209,10 +217,12 @@ function fittArrayList() {
 
 export default {
   components: {
+    ElImageViewer: () => import("element-ui/packages/image/src/image-viewer"),
     elVideo: () => import("@/components/elVideo")
   },
   data() {
     return {
+      imageViewer: false, // 预览大图
       activeIndex: 0, //当前点击的激活下标
       //activeData: {}, //当前用于显示的对象 , 视频 或者 图片
       // loopType: LOOPTYPE,
@@ -275,6 +285,10 @@ export default {
     loopActiveShowData() {
       return this.mergeHouseImage[this.activeIndex];
     },
+    //预览图片纯url数组
+    previewHouseImage() {
+      return this.mergeHouseImage.map(item => item.picUrl);
+    },
     loopType() {
       if (this.houseData.saleUploadVideoDtoList.length == 0) {
         return [
@@ -296,9 +310,18 @@ export default {
     removeResizeListener(this.$refs.itemOver, this.update);
   },
   methods: {
+    showPreview() {
+      this.imageViewer = true;
+    },
+    /**
+     * @example: 关闭预览大图
+     */
+    imageViewClose() {
+      this.imageViewer = false;
+    },
     /**
      * @example: 设置
-     * @param {type}
+     * @param {number} index
      */
     setActiveImg(index) {
       this.activeIndex = index;

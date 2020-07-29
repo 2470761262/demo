@@ -83,7 +83,7 @@ export default {
   methods: {
     contactOwer(cmd) {
       let p = {};
-      p["contactPhone" + cmd] = this.resultData["Tel" + cmd];
+      p["contactPhone" + cmd] = this.houseData["Tel" + cmd];
       p["isLookPhone"] = true;
       this.dailPhone(1, p);
     },

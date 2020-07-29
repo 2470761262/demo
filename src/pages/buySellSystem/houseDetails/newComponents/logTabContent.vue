@@ -70,6 +70,18 @@
           word-break: break-all;
           text-align: justify;
           flex: 1;
+          .item-file-content {
+            display: flex;
+            span {
+              flex: 1;
+              width: 0;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              // prettier-ignore
+              margin-right: 20PX;
+            }
+          }
         }
       }
     }
@@ -121,7 +133,7 @@
         </template>
         <template v-else-if="follow.loadPageEnd">
           <div class="scroll-bttom">
-            暂无数据~
+            已经到最底部了~
           </div>
         </template>
       </div>
@@ -158,7 +170,7 @@
         </template>
         <template v-else-if="pair.loadPageEnd">
           <div class="scroll-bttom">
-            暂无数据~
+            已经到最底部了~
           </div>
         </template>
       </div>
@@ -190,7 +202,7 @@
         </template>
         <template v-else-if="voice.loadPageEnd">
           <div class="scroll-bttom">
-            暂无数据~
+            已经到最底部了~
           </div>
         </template>
       </div>
@@ -200,67 +212,78 @@
         v-infinite-scroll="load"
         v-show="activeIndex == 3"
       >
-        <div class="scroll-bttom">
-          <leftProgress v-for="item in interviews.list" :key="item.id">
-            <div class="item-title">{{ item.timeStr }}</div>
-            <div class="item-tips">
-              <div class="item-tips-title">面访人:</div>
-              <div class="item-tips-message">
-                {{ item.creatorName | emptyRead }}({{
-                  item.creatorDeptName | emptyRead
-                }})
+        <leftProgress v-for="item in interviews.list" :key="item.id">
+          <div class="item-title">{{ item.timeStr }}</div>
+          <div class="item-tips">
+            <div class="item-tips-title">面访人:</div>
+            <div class="item-tips-message">
+              {{ item.creatorName | emptyRead }}({{
+                item.creatorDeptName | emptyRead
+              }})
+            </div>
+          </div>
+          <div class="item-tips">
+            <div class="item-tips-title">陪同人:</div>
+            <div class="item-tips-message">
+              {{ item.followerName | emptyRead }}({{
+                item.followerDeptName | emptyRead
+              }})
+            </div>
+          </div>
+          <div class="item-tips">
+            <div class="item-tips-title">面访时间:</div>
+            <div class="item-tips-message">
+              {{ item.endTime }}
+            </div>
+          </div>
+          <div class="item-tips">
+            <div class="item-tips-title">面访对象:</div>
+            <div class="item-tips-message">
+              {{ item.customerType }}
+            </div>
+          </div>
+          <div class="item-tips">
+            <div class="item-tips-title">面访地点:</div>
+            <div class="item-tips-message">
+              {{ item.place }}
+            </div>
+          </div>
+          <div class="item-tips">
+            <div class="item-tips-title">面访目的:</div>
+            <div class="item-tips-message">
+              {{ item.purpose }}
+            </div>
+          </div>
+          <div class="item-tips">
+            <div class="item-tips-title">面访结果:</div>
+            <div class="item-tips-message">
+              {{ item.result }}
+            </div>
+          </div>
+          <div class="item-tips" v-if="item.fileVos.length != 0">
+            <div class="item-tips-title">附件:</div>
+            <div class="item-tips-message">
+              <div
+                v-for="file in item.fileVos"
+                :key="file.id"
+                class="item-file-content"
+              >
+                <span>{{ file.uploadName }}</span>
+                <a :href="file.url" target="_blank">查看</a>
               </div>
             </div>
-            <div class="item-tips">
-              <div class="item-tips-title">陪同人:</div>
-              <div class="item-tips-message">
-                {{ item.followerName | emptyRead }}({{
-                  item.followerDeptName | emptyRead
-                }})
-              </div>
-            </div>
-            <div class="item-tips">
-              <div class="item-tips-title">面访时间:</div>
-              <div class="item-tips-message">
-                {{ item.endTime }}
-              </div>
-            </div>
-            <div class="item-tips">
-              <div class="item-tips-title">面访对象:</div>
-              <div class="item-tips-message">
-                {{ item.customerType }}
-              </div>
-            </div>
-            <div class="item-tips">
-              <div class="item-tips-title">面访地点:</div>
-              <div class="item-tips-message">
-                {{ item.place }}
-              </div>
-            </div>
-            <div class="item-tips">
-              <div class="item-tips-title">面访目的:</div>
-              <div class="item-tips-message">
-                {{ item.purpose }}
-              </div>
-            </div>
-            <div class="item-tips">
-              <div class="item-tips-title">面访结果:</div>
-              <div class="item-tips-message">
-                {{ item.result }}
-              </div>
-            </div>
-          </leftProgress>
-          <template v-if="interviews.loading">
-            <div class="scroll-bttom">
-              <i class="el-icon-loading"></i> 加载中...
-            </div>
-          </template>
-          <template v-else-if="interviews.loadPageEnd">
-            <div class="scroll-bttom">
-              暂无数据~
-            </div>
-          </template>
-        </div>
+          </div>
+        </leftProgress>
+        <template v-if="interviews.loading">
+          <div class="scroll-bttom">
+            <i class="el-icon-loading"></i> 加载中...
+          </div>
+        </template>
+        <template v-else-if="interviews.loadPageEnd">
+          <div class="scroll-bttom">
+            已经到最底部了~
+          </div>
+        </template>
       </div>
       <div
         class="log-tab-scroll"
@@ -268,9 +291,29 @@
         v-infinite-scroll="load"
         v-show="activeIndex == 4"
       >
-        <div class="scroll-bttom">
-          开发中
-        </div>
+        <leftProgress v-for="item in log.list" :key="item.userId">
+          <div class="item-title">{{ item.createTime }}</div>
+          <div class="item-tips">
+            <div class="item-tips-title">操作人:</div>
+            <div class="item-tips-message">
+              {{ item.userName }}({{ item.deptName }})
+            </div>
+          </div>
+          <div class="item-tips">
+            <div class="item-tips-title">操作明细:</div>
+            <div class="item-tips-message">{{ item.operation }}</div>
+          </div>
+        </leftProgress>
+        <template v-if="log.loading">
+          <div class="scroll-bttom">
+            <i class="el-icon-loading"></i> 加载中...
+          </div>
+        </template>
+        <template v-else-if="log.loadPageEnd">
+          <div class="scroll-bttom">
+            已经到最底部了~
+          </div>
+        </template>
       </div>
     </div>
   </div>
@@ -284,7 +327,7 @@ const LOGTAB = [
   { title: "带看", methodsName: "getHousePairFollowList", storageData: "pair" },
   { title: "语音", methodsName: "getHouseVoice", storageData: "voice" },
   { title: "面访", methodsName: "getInterviews", storageData: "interviews" },
-  { title: "日志" }
+  { title: "日志", methodsName: "getHouseLog", storageData: "log" }
 ];
 export default {
   computed: {
@@ -300,7 +343,7 @@ export default {
       this.getHouseFollow();
     },
     interviewUpdate() {
-      Object.assign(this.$data.follow, this.$options.data().follow);
+      Object.assign(this.$data.interviews, this.$options.data().interviews);
       this.getInterviews();
     }
   },
@@ -332,6 +375,13 @@ export default {
         loadPageEnd: false
       },
       interviews: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+        loading: false,
+        loadPageEnd: false
+      },
+      log: {
         list: [],
         totalPage: 0,
         page: 1,
@@ -370,6 +420,38 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    /**
+     * @example: 获取日志
+     */
+    getHouseLog() {
+      this.log.loading = true;
+      this.$api
+        .post({
+          url: "/operLog/userOperLogs",
+          data: {
+            page: this.log.page,
+            limit: 7,
+            businessId: this.houseId,
+            isSuccess: 1,
+            businessType: 0
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.log.list = [...this.log.list, ...result.data.list];
+            this.log.totalPage = result.data.totalPage;
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.log.loading = false;
+          if (this.log.totalPage == 1 || this.log.list.length == 0) {
+            this.log.loadPageEnd = true;
+          }
+        });
     },
     /**
      * @example: 获取带看列表
