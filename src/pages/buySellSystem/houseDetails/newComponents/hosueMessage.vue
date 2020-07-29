@@ -33,6 +33,10 @@
       margin-left: 30PX;
       color: #d51e05;
       font-weight: 600;
+      position: relative;
+      .el-icon-question:hover + .hover-posi-tips {
+        display: block;
+      }
     }
   }
   .head-hurdle-content {
@@ -117,6 +121,50 @@
   }
   &.red {
     color: #d51e05;
+    position: relative;
+    .el-icon-question:hover + .hover-posi-tips {
+      display: block;
+    }
+  }
+}
+.hover-posi-tips:hover {
+  display: block;
+}
+.hover-posi-tips {
+  z-index: 300;
+  display: none;
+  position: absolute;
+  // prettier-ignore
+  width: 500PX;
+  left: 50%;
+  // prettier-ignore
+  bottom: 0PX;
+  background: #737373;
+  // prettier-ignore
+  padding: 10PX 20PX;
+  box-sizing: border-box;
+  transform: translate(-50%, 100%);
+  color: #fff;
+  // prettier-ignore
+  line-height: 30PX;
+  text-align: justify;
+  // prettier-ignore
+  box-shadow: 0 2PX 12PX 0 rgba(0, 0, 0, 0.3);
+  div,
+  p {
+    font-size: @font14;
+    // prettier-ignore
+    margin-bottom: 10PX;
+    word-break: break-all;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  div {
+    p {
+      // prettier-ignore
+      padding-left: 20PX;
+    }
   }
 }
 </style>
@@ -131,9 +179,13 @@
         <span>单价：</span>
         <span>{{ houseData.averagePrice | emptyRead("元/平") }}</span>
       </div>
-      <div class="head-adjust" @click="openPopUp('openAdjustFlag')">
-        <span>调价记录</span>
+      <div class="head-adjust">
+        <span @click="openPopUp('openAdjustFlag')">调价记录</span>
         <span class="el-icon-question"></span>
+
+        <div class="hover-posi-tips">
+          <p>1、价格变动请及时修改，与成交价不一致，可能影响业绩分配比例！;</p>
+        </div>
       </div>
     </div>
     <div class="head-hurdle-content">
@@ -238,6 +290,21 @@
             {{ agentPerMessage }}
             <span class="inline-btn red">
               跟单职责<i class="el-icon-question"></i>
+
+              <div class="hover-posi-tips">
+                <p>
+                  1、房源验真通过后，请在3
+                  天内完善房源"选填信息"，否则将取消跟单权；
+                </p>
+                <div>
+                  2、请定期维护业主，否则将取消跟单权，维护业主的有效动作为：
+                  <p>①通过工作号回访业主通话30秒（含）以上；</p>
+                  <p>②填写有效文字跟进或面访记录； ③该房源被带看；</p>
+                  <p>
+                    ④上传作业项：添加钥匙委托、普通/独家委托、上传实勘信息；
+                  </p>
+                </div>
+              </div>
             </span>
           </div>
         </div>
