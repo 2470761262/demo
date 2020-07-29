@@ -197,7 +197,7 @@
             {{ houseData.agentHouseMethod.onlyOwnerName }}
           </div>
           <div class="role-store overText">
-            门店:{{ houseData.agentHouseMethod.onlyOwnerName }}
+            门店:{{ houseData.agentHouseMethod.onlyOwnerDepartmentName }}
           </div>
           <div class="role-phone overText">
             电话:{{ houseData.agentHouseMethod.onlyOwnerTel | emptyRead }}
