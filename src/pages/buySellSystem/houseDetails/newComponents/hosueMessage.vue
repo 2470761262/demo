@@ -26,6 +26,7 @@
     .head-adjust {
       display: inline-block;
       font-size: @font14;
+      cursor: pointer;
     }
     .head-adjust {
       // prettier-ignore
@@ -130,7 +131,7 @@
         <span>单价：</span>
         <span>{{ houseData.averagePrice | emptyRead("元/平") }}</span>
       </div>
-      <div class="head-adjust">
+      <div class="head-adjust" @click="openPopUp('openAdjustFlag')">
         <span>调价记录</span>
         <span class="el-icon-question"></span>
       </div>
@@ -250,6 +251,14 @@
       maskHideEvent
       v-if="keyStorageFlag"
     ></key-storage>
+
+    <price-adjustment
+      title="调价记录"
+      :visible.sync="openAdjustFlag"
+      width="980PX"
+      v-if="openAdjustFlag"
+    >
+    </price-adjustment>
   </div>
 </template>
 
@@ -260,11 +269,13 @@ export default {
   data() {
     return {
       keyStorageFlag: false,
-      perId: "" //登录人ID
+      perId: "", //登录人ID
+      openAdjustFlag: false
     };
   },
   components: {
-    keyStorage: () => import("../newDidLog/keyStorage")
+    keyStorage: () => import("../newDidLog/keyStorage"),
+    priceAdjustment: () => import("../newDidLog/priceAdjustment")
   },
   created() {
     if (util.localStorageGet("logindata")) {

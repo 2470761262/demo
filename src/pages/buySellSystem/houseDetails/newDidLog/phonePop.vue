@@ -3,6 +3,12 @@
   font-size: @font15;
   // prettier-ignore
   margin-bottom: 20PX;
+  .el-icon-view {
+    // prettier-ignore
+    margin-left: 20PX;
+    font-size: @font16;
+    cursor: pointer;
+  }
 }
 .btn-item {
   display: block;
@@ -30,33 +36,25 @@
         <span>业主姓名：</span>
         <span>{{ houseData.Customers | emptyRead }}</span>
       </div>
-      <div class="cur-cell" v-if="houseData.Tel != null && houseData.Tel != ''">
+      <div class="cur-cell" v-if="telData.Tel != null && telData.Tel != ''">
         <span>手机号：</span>
-        <span>{{ houseData.Tel }}</span>
+        <span>{{ telData.Tel }}</span>
+        <span class="el-icon-view" title="查看号码"></span>
       </div>
-      <div
-        class="cur-cell"
-        v-if="houseData.Tel1 != null && houseData.Tel1 != ''"
-        @click="contactOwer('1')"
-      >
+      <div class="cur-cell" v-if="telData.Tel1 != null && telData.Tel1 != ''">
         <span>手机号：</span>
-        <span>{{ houseData.Tel1 }}</span>
+        <span>{{ telData.Tel1 }}</span>
+        <span class="el-icon-view" title="查看号码"></span>
       </div>
-      <div
-        class="cur-cell"
-        v-if="houseData.Tel2 != null && houseData.Tel2 != ''"
-        @click="contactOwer('2')"
-      >
+      <div class="cur-cell" v-if="telData.Tel2 != null && telData.Tel2 != ''">
         <span>手机号：</span>
-        <span>{{ houseData.Tel2 }}</span>
+        <span>{{ telData.Tel2 }}</span>
+        <span class="el-icon-view" title="查看号码"></span>
       </div>
-      <div
-        class="cur-cell"
-        v-if="houseData.Tel3 != null && houseData.Tel3 != ''"
-        @click="contactOwer('3')"
-      >
+      <div class="cur-cell" v-if="telData.Tel3 != null && telData.Tel3 != ''">
         <span>手机号：</span>
-        <span>{{ houseData.Tel3 }}</span>
+        <span>{{ telData.Tel3 }}</span>
+        <span class="el-icon-view" title="查看号码"></span>
       </div>
 
       <button
@@ -79,6 +77,27 @@ export default {
       houseData: state => state.houseDateil.houseData,
       reloData: state => state.houseDateil.reloData
     })
+  },
+  watch: {
+    houseData: {
+      immediate: true,
+      handler: function(val, oldVal) {
+        this.telData = {
+          Tel: {
+            value: val.Tel
+          },
+          Tel1: val.Tel1,
+          Tel2: val.Tel2,
+          Tel3: val.Tel3
+        };
+        console.log(this.telData, "this.telData");
+      }
+    }
+  },
+  data() {
+    return {
+      telData: {}
+    };
   },
   methods: {
     contactOwer(cmd) {
