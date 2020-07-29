@@ -36,25 +36,57 @@
         <span>业主姓名：</span>
         <span>{{ houseData.Customers | emptyRead }}</span>
       </div>
-      <div class="cur-cell" v-if="telData.Tel != null && telData.Tel != ''">
+      <div
+        class="cur-cell"
+        v-if="telData.Tel.value != null && telData.Tel.value != ''"
+      >
         <span>手机号：</span>
-        <span>{{ telData.Tel }}</span>
-        <span class="el-icon-view" title="查看号码"></span>
+        <span>{{ telData.Tel.value }}</span>
+        <span
+          v-if="telData.Tel.flag"
+          class="el-icon-view"
+          title="查看号码"
+          @click="isLookPhone(telData.Tel)"
+        ></span>
       </div>
-      <div class="cur-cell" v-if="telData.Tel1 != null && telData.Tel1 != ''">
+      <div
+        class="cur-cell"
+        v-if="telData.Tel1.value != null && telData.Tel1.value != ''"
+      >
         <span>手机号：</span>
-        <span>{{ telData.Tel1 }}</span>
-        <span class="el-icon-view" title="查看号码"></span>
+        <span>{{ telData.Tel1.value }}</span>
+        <span
+          v-if="telData.Tel1.flag"
+          class="el-icon-view"
+          title="查看号码"
+          @click="isLookPhone(telData.Tel1)"
+        ></span>
       </div>
-      <div class="cur-cell" v-if="telData.Tel2 != null && telData.Tel2 != ''">
+      <div
+        class="cur-cell"
+        v-if="telData.Tel2.value != null && telData.Tel2.value != ''"
+      >
         <span>手机号：</span>
-        <span>{{ telData.Tel2 }}</span>
-        <span class="el-icon-view" title="查看号码"></span>
+        <span>{{ telData.Tel2.value }}</span>
+        <span
+          v-if="telData.Tel2.flag"
+          class="el-icon-view"
+          title="查看号码"
+          @click="isLookPhone(telData.Tel2)"
+        ></span>
       </div>
-      <div class="cur-cell" v-if="telData.Tel3 != null && telData.Tel3 != ''">
+      <div
+        class="cur-cell"
+        v-if="telData.Tel3.value != null && telData.Tel3.value != ''"
+      >
         <span>手机号：</span>
-        <span>{{ telData.Tel3 }}</span>
-        <span class="el-icon-view" title="查看号码"></span>
+        <span>{{ telData.Tel3.value }}</span>
+        <span
+          v-if="telData.Tel3.flag"
+          class="el-icon-view"
+          title="查看号码"
+          @click="isLookPhone(telData.Tel3)"
+        ></span>
       </div>
 
       <button
@@ -70,6 +102,16 @@
 
 <script>
 import { mapState } from "vuex";
+
+/**
+ * @example: 转化电话号码
+ */
+function phoneTransform(phone) {
+  if (!phone.includes("*") && phone.length == 11) {
+    return `${phone.substr(0, 3)}****${4}`;
+  }
+  return phone;
+}
 export default {
   computed: {
     ...mapState({
@@ -82,15 +124,17 @@ export default {
     houseData: {
       immediate: true,
       handler: function(val, oldVal) {
-        this.telData = {
-          Tel: {
-            value: val.Tel
-          },
-          Tel1: val.Tel1,
-          Tel2: val.Tel2,
-          Tel3: val.Tel3
-        };
-        console.log(this.telData, "this.telData");
+        let keyList = ["Tel", "Tel1", "Tel2", "Tel3"];
+        let keyMap = new Map();
+        keyList.forEach(item => {
+          keyMap.set(item, {
+            value: phoneTransform(val[item]),
+            isPermissions: val[item].includes("*"),
+            flag: true,
+            key: item
+          });
+        });
+        this.telData = Object.fromEntries(keyMap);
       }
     }
   },
@@ -100,6 +144,17 @@ export default {
     };
   },
   methods: {
+    /**
+     * @example: 查看电话号码
+     * @param {Object} afterPhone 修改之后的电话号码
+     */
+    isLookPhone(afterPhone) {
+      if (afterPhone.isPermissions) {
+        return this.$message.error("您暂无权限查看");
+      }
+      afterPhone.value = this.houseData[afterPhone.key];
+      afterPhone.flag = false;
+    },
     contactOwer(cmd) {
       let p = {};
       p["contactPhone" + cmd] = this.houseData["Tel" + cmd];
