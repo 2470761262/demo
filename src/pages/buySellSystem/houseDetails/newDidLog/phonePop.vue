@@ -107,6 +107,7 @@ import { mapState } from "vuex";
  * @example: 转化电话号码
  */
 function phoneTransform(phone) {
+  if (!phone) return phone;
   if (!phone.includes("*") && phone.length == 11) {
     return `${phone.substr(0, 3)}****${4}`;
   }
@@ -126,10 +127,11 @@ export default {
       handler: function(val, oldVal) {
         let keyList = ["Tel", "Tel1", "Tel2", "Tel3"];
         let keyMap = new Map();
+
         keyList.forEach(item => {
           keyMap.set(item, {
             value: phoneTransform(val[item]),
-            isPermissions: val[item].includes("*"),
+            isPermissions: val[item]?.includes("*"),
             flag: true,
             key: item
           });
