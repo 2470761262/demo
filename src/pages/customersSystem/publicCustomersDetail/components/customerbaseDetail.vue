@@ -385,7 +385,7 @@ export default {
       let that = this;
       this.$api
         .post({
-          url: "/saleCustomerDetail/getTelephoneForPublish",
+          url: "/saleCustomer/getTelephoneForPublish",
           data: { customerId: that.customerId.id },
           qs: true,
           headers: {

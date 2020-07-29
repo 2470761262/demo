@@ -249,7 +249,7 @@ export default {
       let that = this;
       this.$api
         .post({
-          url: "/saleCustomerDetail/getTelPhone",
+          url: "/saleCustomer/getTelPhoneForPrivate",
           data: { customerId: this.customer.data.id },
           qs: true,
           headers: {
@@ -290,7 +290,7 @@ export default {
         that.isCall = false;
         that.$api
           .post({
-            url: "/saleCustomerDetail/DialPhoneToCustomer",
+            url: "/saleCustomer/DialPhoneToCustomer",
             data: postData,
             qs: true
           })
