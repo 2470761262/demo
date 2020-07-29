@@ -526,12 +526,12 @@
           </div>
           <div class="view-item-right is-center per-flex">
             <div class="per-msg">
-              {{ loginData.userName | emptyRead }}({{
-                loginData.deptName | emptyRead
+              {{ houseData.agentPerName | emptyRead }}({{
+                houseData.agentPerDepartmentName | emptyRead
               }})
             </div>
             <div class="per-msg">
-              {{ loginData.tel | emptyRead }}
+              {{ houseData.agentPerTel | emptyRead }}
             </div>
             <div class="input-content">
               陪同人 :
