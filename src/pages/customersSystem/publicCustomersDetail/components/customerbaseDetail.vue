@@ -417,7 +417,7 @@ export default {
       };
       that.$api
         .post({
-          url: "/saleCustomerDetail/DialPhoneToCustomer",
+          url: "/saleCustomer/dialPhoneToCustomer",
           data: postData,
           qs: true,
           headers: {

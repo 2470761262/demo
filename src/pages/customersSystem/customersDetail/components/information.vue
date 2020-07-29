@@ -290,7 +290,7 @@ export default {
         that.isCall = false;
         that.$api
           .post({
-            url: "/saleCustomer/DialPhoneToCustomer",
+            url: "/saleCustomer/dialPhoneToCustomer",
             data: postData,
             qs: true
           })
