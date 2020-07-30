@@ -336,7 +336,9 @@
               class="anchor-point"
               @click.native="log_socket.sendUserActionData"
               v-for="item in deptParentList"
-              :data-anchor="'我的数据更多筛选区域 => select => option:' + item.depName"
+              :data-anchor="
+                '我的数据更多筛选区域 => select => option:' + item.depName
+              "
               :key="item.depId"
               :value="item.depId"
               :label="item.depName"
@@ -356,7 +358,9 @@
               @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-for="item in storeList"
-              :data-anchor="'我的数据更多筛选门店 => select => option:' + item.depName"
+              :data-anchor="
+                '我的数据更多筛选门店 => select => option:' + item.depName
+              "
               :key="item.depId"
               :value="item.depId"
               :label="item.depName"
@@ -375,7 +379,9 @@
               @click.native="log_socket.sendUserActionData"
               class="anchor-point"
               v-for="item in perList"
-              :data-anchor="'我的数据更多筛选个人 => select => option:' + item.perName"
+              :data-anchor="
+                '我的数据更多筛选个人 => select => option:' + item.perName
+              "
               :key="item.accountId"
               :value="item.accountId"
               :label="item.perName"
