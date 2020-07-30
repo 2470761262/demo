@@ -183,7 +183,7 @@
 
 <script>
 import util from "@/util/util";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 //发布外网
 import release from "../common/releaseHouse.js";
 //房源审核
@@ -277,6 +277,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setParam"]),
     ...mapActions(["commitHouseData"]),
     getEditAuthority(authorityUnderName, houseDatails) {
       if (!authorityUnderName) return;
@@ -394,6 +395,10 @@ export default {
           let result = e.data;
           this.$message(result.message);
           if (result.code == 200) {
+            this.setParam({
+              paramName: "followUpdate",
+              value: new Date().getTime()
+            });
             this.commitHouseData({
               isLocking: isLocking
             });
