@@ -15,34 +15,6 @@
     background: #fff;
     z-index: 100;
   }
-  .head-nav-type {
-    background: #f6f7fb;
-    display: flex;
-    border-bottom: 1px solid #f0f2f5;
-    .nav-type-item {
-      font-size: @font16;
-      font-weight: 600;
-      color: #606266;
-      cursor: pointer;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      overflow: hidden;
-      // prettier-ignore
-      padding: 12PX 55PX;
-      &.active {
-        color: @backgroud;
-        border-left: 1px solid #f0f2f5;
-        border-right: 1px solid #f0f2f5;
-        background: #fff;
-      }
-      &:first-child {
-        border-left: none;
-      }
-      &:last-child {
-        border-right: none;
-      }
-    }
-  }
   .page-result-head {
     display: flex;
     // justify-content: space-between;
@@ -440,7 +412,7 @@
   <div class="page-result-content">
     <div class="page-posi-sticky filex-content">
       <!-- 房屋类型 -->
-      <div class="head-nav-type">
+      <!-- <div class="head-nav-type">
         <div
           class="nav-type-item anchor-point"
           :class="{ active: index == 0 }"
@@ -451,7 +423,8 @@
         >
           {{ item.title }}
         </div>
-      </div>
+      </div> -->
+      <navHeader></navHeader>
       <!-- 头部按钮, 搜索 -->
       <div class="page-result-head">
         <div class="head-content-input">
@@ -1269,22 +1242,17 @@ const FLOORLIST = [
   { title: "一层", value: { minFloor: "1", maxFloor: "1" } },
   { title: "顶层", value: { isTopFloor: "1" } }
 ];
-//跳转tab
-const NAVTOPAGE = [
-  { title: "买卖", private: true, url: "" },
-  { title: "租赁", private: false, url: "" },
-  { title: "新房", private: false, url: "" },
-  { title: "商铺写字楼", private: false, url: "" },
-  { title: "小区", private: false, url: "" }
-];
+import navHeader from "@/components/navHeader";
 export default {
   inject: ["form"],
+  components: {
+    navHeader
+  },
   data() {
     return {
       temporaryPrimaryValue: "", //临时记录小学select结果,用于删除筛选
       temporaryMiddleValue: "", //临时记录中学select结果,用于删除筛选
       isFixedHeight: "0px",
-      navToPage: NAVTOPAGE, //顶部跳转tab
       agentPerName: "", //跟单人姓名
       houseNoOrName: "", //房源编号,楼盘名称
       primarySchool: "", //小学select
