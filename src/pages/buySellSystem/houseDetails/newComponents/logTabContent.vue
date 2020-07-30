@@ -113,7 +113,7 @@
         v-infinite-scroll="load"
         v-show="activeIndex == 0"
       >
-        <leftProgress v-for="(item, index) in follow.list" :key="index">
+        <leftProgress v-for="item in follow.list" :key="item.id">
           <div class="item-title">{{ item.FollowTime }}</div>
           <div class="item-tips">
             <div class="item-tips-title">跟进人 :</div>
@@ -136,11 +136,6 @@
             已经到最底部了~
           </div>
         </template>
-        <template v-else>
-          <div class="scroll-bttom">
-            暂无数据~
-          </div>
-        </template>
       </div>
       <!-- 带看 -->
       <div
@@ -149,7 +144,7 @@
         v-infinite-scroll="load"
         v-show="activeIndex == 1"
       >
-        <leftProgress v-for="(item, index) in pair.list" :key="index">
+        <leftProgress v-for="item in pair.list" :key="item.id">
           <div class="item-title">{{ item.FollowTime }}</div>
           <div class="item-tips">
             <div class="item-tips-title">带看人:</div>
@@ -178,11 +173,6 @@
             已经到最底部了~
           </div>
         </template>
-        <template v-else>
-          <div class="scroll-bttom">
-            暂无数据~
-          </div>
-        </template>
       </div>
       <!-- 语音 -->
       <div
@@ -191,7 +181,7 @@
         v-infinite-scroll="load"
         v-show="activeIndex == 2"
       >
-        <leftProgress v-for="(item, index) in voice.list" :key="index">
+        <leftProgress v-for="item in voice.list" :key="item.id">
           <div class="item-title">{{ item.FollowTime }}</div>
           <div class="item-tips">
             <div class="item-tips-message">
@@ -215,11 +205,6 @@
             已经到最底部了~
           </div>
         </template>
-        <template v-else>
-          <div class="scroll-bttom">
-            暂无数据~
-          </div>
-        </template>
       </div>
       <div
         class="log-tab-scroll"
@@ -227,8 +212,8 @@
         v-infinite-scroll="load"
         v-show="activeIndex == 3"
       >
-        <leftProgress v-for="(item, index) in interviews.list" :key="index">
-          <div class="item-title">{{ item.createTime }}</div>
+        <leftProgress v-for="item in interviews.list" :key="item.id">
+          <div class="item-title">{{ item.timeStr }}</div>
           <div class="item-tips">
             <div class="item-tips-title">面访人:</div>
             <div class="item-tips-message">
@@ -248,7 +233,7 @@
           <div class="item-tips">
             <div class="item-tips-title">面访时间:</div>
             <div class="item-tips-message">
-              {{ item.timeStr }}
+              {{ item.endTime }}
             </div>
           </div>
           <div class="item-tips">
@@ -299,11 +284,6 @@
             已经到最底部了~
           </div>
         </template>
-        <template v-else>
-          <div class="scroll-bttom">
-            暂无数据~
-          </div>
-        </template>
       </div>
       <div
         class="log-tab-scroll"
@@ -311,7 +291,7 @@
         v-infinite-scroll="load"
         v-show="activeIndex == 4"
       >
-        <leftProgress v-for="(item, index) in log.list" :key="index">
+        <leftProgress v-for="item in log.list" :key="item.userId">
           <div class="item-title">{{ item.createTime }}</div>
           <div class="item-tips">
             <div class="item-tips-title">操作人:</div>
@@ -334,11 +314,6 @@
             已经到最底部了~
           </div>
         </template>
-        <template v-else>
-          <div class="scroll-bttom">
-            暂无数据~
-          </div>
-        </template>
       </div>
     </div>
   </div>
@@ -355,6 +330,11 @@ const LOGTAB = [
   { title: "日志", methodsName: "getHouseLog", storageData: "log" }
 ];
 export default {
+  // filters: {
+  //   mapFilter(value, ListName, resultValue = null) {
+  //     return util.countMapFilter(value, ListName, resultValue);
+  //   }
+  // },
   computed: {
     ...mapState({
       houseId: state => state.houseDateil.id,
@@ -441,15 +421,7 @@ export default {
     //获取列表数据
     getList() {
       try {
-        const { methodsName, storageData } = this.logTab[this.activeIndex];
-        this[methodsName]().then(() => {
-          this[storageData].loading = false;
-          if (this[storageData].list.length > 0) {
-            this[storageData].loadPageEnd = true;
-          } else {
-            this[storageData].loadPageEnd = false;
-          }
-        });
+        this[this.logTab[this.activeIndex].methodsName]();
       } catch (error) {
         console.log(error);
       }
@@ -459,7 +431,7 @@ export default {
      */
     getHouseLog() {
       this.log.loading = true;
-      return this.$api
+      this.$api
         .post({
           url: "/operLog/userOperLogs",
           data: {
@@ -474,18 +446,36 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
+            console.log(
+              "============>",
+              result.data.list.map(item => {
+                if (item.operation.indexOf("编辑房源@") != -1) {
+                  return {
+                    ...item,
+                    value: "编辑房源"
+                  };
+                }
+                return item;
+              })
+            );
             this.log.list = [...this.log.list, ...result.data.list];
             this.log.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          this.log.loading = false;
+          if (this.log.totalPage == 1 || this.log.list.length == 0) {
+            this.log.loadPageEnd = true;
+          }
+        });
     },
     /**
      * @example: 获取带看列表
      */
     getHousePairFollowList() {
       this.pair.loading = true;
-      return this.$api
+      this.$api
         .get({
           url: "/agentHouse/pairFollow/getHousePairFollowList",
           data: {
@@ -503,14 +493,20 @@ export default {
             this.pair.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          this.pair.loading = false;
+          if (this.pair.totalPage == 1 || this.pair.list.length == 0) {
+            this.pair.loadPageEnd = true;
+          }
+        });
     },
     /**
      * @example: 获取语音列表
      */
     getHouseVoice() {
       this.voice.loading = true;
-      return this.$api
+      this.$api
         .get({
           url: "/agentHouse/follow/getHouseFollowList",
           data: {
@@ -533,14 +529,20 @@ export default {
             this.voice.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          this.voice.loading = false;
+          if (this.voice.totalPage == 1 || this.voice.list.length == 0) {
+            this.voice.loadPageEnd = true;
+          }
+        });
     },
     /**
      * @example: 获取跟进列表
      */
     getHouseFollow() {
       this.follow.loading = true;
-      return this.$api
+      this.$api
         .get({
           url: "/agentHouse/follow/getHouseFollowList",
           data: {
@@ -558,14 +560,20 @@ export default {
             this.follow.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          this.follow.loading = false;
+          if (this.follow.totalPage == 1 || this.follow.list.length == 0) {
+            this.follow.loadPageEnd = true;
+          }
+        });
     },
     /**
      * @example: 获取面访
      */
     getInterviews() {
       this.interviews.loading = true;
-      return this.$api
+      this.$api
         .post({
           url: "/saleHouseInterview/interviews",
           data: {
@@ -585,7 +593,16 @@ export default {
             this.interviews.totalPage = result.data.totalPage;
           }
         })
-        .catch(() => {});
+        .catch(() => {})
+        .finally(() => {
+          this.interviews.loading = false;
+          if (
+            this.interviews.totalPage == 1 ||
+            this.interviews.list.length == 0
+          ) {
+            this.interviews.loadPageEnd = true;
+          }
+        });
     },
     /**
      * @example: 滚动到底
