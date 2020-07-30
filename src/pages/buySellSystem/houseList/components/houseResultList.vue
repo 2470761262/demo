@@ -1520,6 +1520,14 @@ export default {
     /**
      * @example: 重置
      */
+    reset() {
+      this.searchPanelChange = true;
+      bus.$emit("modifyTableColumn", 0);
+      this.resetData();
+    },
+    /**
+     * @example: 重置查询条件数据
+     */
     resetData() {
       //Object.assign(this.$data, this.$options.data.call(this));
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
@@ -1644,6 +1652,9 @@ export default {
         this.typeActiveIndex = index;
       }
       switch (index) {
+        case 2:
+          this.form.sortColumn = "tradeTime";
+          break;
         case 3:
           this.form.isBet = "1";
           break;

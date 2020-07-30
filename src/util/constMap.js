@@ -209,7 +209,7 @@ export const HOUSINGSITUATION = [
     value: 1
   },
   {
-    key: "毛培空置",
+    key: "毛坯空置",
     value: 2
   },
   {
