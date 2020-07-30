@@ -248,7 +248,7 @@ export default {
         mortgageLoanBank, //银行
         subbranch, //支行
         balance, //余贷
-        MonthlyMortgage //月供
+        monthlyMortgage //月供
       } = this.houseData;
       //
       return mortgage == 0
@@ -272,11 +272,11 @@ export default {
               suffix: "万"
             },
             {
-              value: MonthlyMortgage,
+              value: monthlyMortgage,
               suffix: "万"
             }
           ]
-            //第一种 后面无逗号
+            // 第一种 后面无逗号
             // .map(item => {
             //   if (item.transform) {
             //     return {

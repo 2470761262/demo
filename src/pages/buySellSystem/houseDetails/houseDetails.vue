@@ -126,6 +126,9 @@ export default {
       .then(e => {
         this.addBrowseHouseLog(e[0]);
       })
+      .catch(() => {
+        this.$message.error("打开失败");
+      })
       .finally(() => {
         this.loading = false;
       });
@@ -184,8 +187,9 @@ export default {
                 }
               }
             }
-            document.title = result.data.CommunityName || "未知楼盘";
+
             this.commitHouseData(result.data);
+
             let type = 1;
             if (result.data.plate == 1) {
               type = 2;
@@ -193,15 +197,18 @@ export default {
             if (result.data.plate == 4) {
               type = 3;
             }
-            document.title = this.houseDetails.data.CommunityName || "未知楼盘";
+
+            document.title = result.data.CommunityName || "未知楼盘";
             let rooms,
               hall,
               toilet = 0;
+
             if (result.data.houseType) {
               rooms = result.data.houseType.split("室")[0];
               hall = result.data.houseType.split("室")[1].split("厅")[0];
               toilet = result.data.houseType.split("厅")[1].split("卫")[0];
             }
+
             return {
               Type: type,
               HouseId: this.houseId,
@@ -234,12 +241,10 @@ export default {
         });
     },
     addBrowseHouseLog(param) {
-      let that = this;
-      let url = "/house/browse/add";
       this.$api
         .post({
-          url: url,
-          //data: param,
+          url: "/house/browse/add",
+          data: param,
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {

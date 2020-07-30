@@ -101,7 +101,9 @@
               @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
               :key="item.value"
-              :data-anchor="'全部在售房间号筛选 => select => option:' + item.name"
+              :data-anchor="
+                '全部在售房间号筛选 => select => option:' + item.name
+              "
               :label="item.name"
               :value="item.value"
             ></el-option>
