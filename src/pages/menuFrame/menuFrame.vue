@@ -10,7 +10,7 @@
   .page-cell-main-menu {
     // prettier-ignore
     height: calc(100% - 80PX);
-    .is-nest {
+    &.is-nest {
       height: 100% !important;
     }
     .el-aside,
@@ -74,7 +74,7 @@
       </el-header>
     </el-container>
     <el-container
-      :class="[isPad, { 'is-nest': isNest }]"
+      :class="[isPad, { 'is-nest': isNest || isHander }]"
       class="page-cell-main-menu"
       id="page-cell-main"
     >
@@ -114,6 +114,7 @@ export default {
   },
   data() {
     return {
+      isHander: false,
       asideNavFlag: true,
       loginUserData: {},
       menuDatasInParent: []
@@ -154,6 +155,9 @@ export default {
   created() {
     this.$nextTick(() => {
       this.asideNavFlag = util.localStorageGet("nest");
+      this.isHander = document.querySelector(".page-cell-header")
+        ? false
+        : true;
     });
     this.loginUserData = util.localStorageGet(LOGINDATA);
     if (this.loginUserData && this.loginUserData.menuNodes) {

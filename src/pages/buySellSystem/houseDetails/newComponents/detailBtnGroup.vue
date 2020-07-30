@@ -208,7 +208,7 @@ export default {
     },
     //取消发布外网
     cancelBtnDisabled() {
-      return this.reloData.cancelOutsideHouse || this.houseData.isLocking == 1;
+      return !this.reloData.cancelOutsideHouse || this.houseData.isLocking == 1;
     },
     //取消发布外网按钮是否显示
     isCancelBtn() {

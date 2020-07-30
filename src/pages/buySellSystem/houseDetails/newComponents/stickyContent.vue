@@ -91,13 +91,14 @@ export default {
       //     block: "start",
       //     behavior: "smooth"
       //   });
-
+      const isHander = document.querySelector(".page-cell-header")
+        ? true
+        : false;
       const doc = document;
-      const isNest = window.self == window.parent;
       let scrollDomTop = doc.querySelector(item.domName).offsetTop;
       let elMain = doc.querySelector(".el-main");
       let stickyHeight = doc.querySelector(".sticky-content").offsetHeight;
-      let scrollPosi = scrollDomTop - (isNest ? 80 : 0) - stickyHeight;
+      let scrollPosi = scrollDomTop - (isHander ? 80 : 0) - stickyHeight;
 
       elMain.scrollTop = scrollPosi;
     },
