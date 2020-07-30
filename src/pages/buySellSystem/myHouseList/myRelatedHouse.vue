@@ -179,7 +179,9 @@
               class="anchor-point"
               @click.native="log_socket.sendUserActionData"
               v-for="item in option"
-              :data-anchor="'我的相关作业类型 => select => option:' + item.label"
+              :data-anchor="
+                '我的相关作业类型 => select => option:' + item.label
+              "
               :key="item.value"
               :label="item.label"
               :value="item.value"

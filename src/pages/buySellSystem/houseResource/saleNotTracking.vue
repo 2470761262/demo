@@ -59,7 +59,9 @@
               class="anchor-point"
               @click.native="log_socket.sendUserActionData"
               v-for="item in options"
-              :data-anchor="'在售无跟单楼盘筛选 => select => option:' + item.name"
+              :data-anchor="
+                '在售无跟单楼盘筛选 => select => option:' + item.name
+              "
               :key="item.value"
               :label="item.name"
               :value="item.value"
@@ -80,7 +82,9 @@
               @click.native="log_socket.sendUserActionData"
               v-for="item in cbIdList"
               :key="item.value"
-              :data-anchor="'在售无跟单楼栋筛选 => select => option:' + item.name"
+              :data-anchor="
+                '在售无跟单楼栋筛选 => select => option:' + item.name
+              "
               :label="item.name"
               :value="item.value"
             ></el-option>
@@ -100,7 +104,9 @@
               class="anchor-point"
               v-for="item in roomNoList"
               @click.native="log_socket.sendUserActionData"
-              :data-anchor="'在售无跟单房间号筛选 => select => option:' + item.name"
+              :data-anchor="
+                '在售无跟单房间号筛选 => select => option:' + item.name
+              "
               :key="item.value"
               :label="item.name"
               :value="item.value"

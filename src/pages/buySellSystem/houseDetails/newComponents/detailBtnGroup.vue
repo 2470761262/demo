@@ -51,8 +51,8 @@
     <button
       class="btn-item"
       style="order:3"
-      @click="openPop('interviewFlag')"
-      :disabled="isInterviewDisabled || isLockBtn"
+      @click="openPop('interviewFlag', isInterviewDisabled)"
+      :disabled="isLockBtn"
     >
       添加面访
     </button>
@@ -345,7 +345,15 @@ export default {
         this.$message("操作失败");
       }
     },
-    openPop(item) {
+    /**
+     * @example: 打开弹框
+     * @param {string} item 弹框的开关名字
+     * @param { boolean }isPermissions 是否需要提升没有权限
+     */
+    openPop(item, isPermissions) {
+      if (isPermissions != undefined && isPermissions) {
+        return this.$message.error("不是跟单人没有权限操作");
+      }
       if (typeof item == "object") {
         this[item.pop] = true;
       } else {

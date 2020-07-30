@@ -180,7 +180,9 @@
                 class="anchor-point"
                 @click.native="log_socket.sendUserActionData"
                 v-for="item in checkProjectList"
-                :data-anchor="'审核列表审核项目 => select => option:' + item.label"
+                :data-anchor="
+                  '审核列表审核项目 => select => option:' + item.label
+                "
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -204,7 +206,9 @@
                 class="anchor-point"
                 @click.native="log_socket.sendUserActionData"
                 v-for="item in typeList"
-                :data-anchor="'审核列表审核类型 => select => option:' + item.label"
+                :data-anchor="
+                  '审核列表审核类型 => select => option:' + item.label
+                "
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -228,7 +232,9 @@
                 class="anchor-point"
                 @click.native="log_socket.sendUserActionData"
                 v-for="item in stateList"
-                :data-anchor="'审核列表审核状态 => select => option:' + item.label"
+                :data-anchor="
+                  '审核列表审核状态 => select => option:' + item.label
+                "
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"

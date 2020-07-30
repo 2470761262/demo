@@ -74,7 +74,7 @@
       </el-header>
     </el-container>
     <el-container
-      :class="[isPad, { 'is-nest': isNest || isHander }]"
+      :class="[isPad, { 'is-nest': isHander }]"
       class="page-cell-main-menu"
       id="page-cell-main"
     >
@@ -121,9 +121,6 @@ export default {
     };
   },
   computed: {
-    isNest() {
-      return !(window.self == window.parent);
-    },
     isMapNav() {
       return !this.$route.meta.isMapNav;
     },
