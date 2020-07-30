@@ -54,7 +54,7 @@
       @click="openPop('phonePopFlag')"
       :disabled="isLockBtn"
     >
-      查看号码
+      一键拨号
     </button>
     <button
       class="btn-item"
@@ -258,7 +258,9 @@ export default {
     },
     //面访按钮禁用
     isInterviewDisabled() {
-      return !(this.houseData.AgentPer == this.perId);
+      //暂时不做控制
+      // return !(this.houseData.AgentPer == this.perId);
+      return false;
     },
     //是否能打开分享弹框
     isShare() {
