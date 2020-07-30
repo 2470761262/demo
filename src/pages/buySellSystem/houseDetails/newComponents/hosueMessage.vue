@@ -285,11 +285,8 @@
         <div class="hurdle-cell-item">
           <div class="cell-item-title">
             跟单人
-          </div>
-          <div class="cell-item-data">
-            {{ agentPerMessage }}
             <span class="inline-btn red">
-              跟单职责<i class="el-icon-question"></i>
+              <i class="el-icon-question"></i>
 
               <div class="hover-posi-tips">
                 <p>
@@ -306,6 +303,9 @@
                 </div>
               </div>
             </span>
+          </div>
+          <div class="cell-item-data">
+            {{ agentPerMessage }}
           </div>
         </div>
       </div>
