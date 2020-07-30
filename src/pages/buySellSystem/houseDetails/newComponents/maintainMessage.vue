@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <h3 class="card-message-title section-spilit">价格信息</h3>
+      <h3 class="card-message-title section-spilit">房屋信息</h3>
       <!-- 房屋用途 & 房屋现状 -->
       <div class="card-message-cell">
         <div class="card-message-item">
