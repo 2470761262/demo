@@ -394,7 +394,10 @@ export default {
     if (!id) {
       return;
     }
-    Promise.all([that.remoteTableName(), that.getDetail(id)]);
+    // Promise.all([that.remoteTableName(), that.getDetail(id)]);
+    that.remoteTableName().then(() => {
+      that.getDetail(id);
+    });
   },
   methods: {
     getDetail(id) {
