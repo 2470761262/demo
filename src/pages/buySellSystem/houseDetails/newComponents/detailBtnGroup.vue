@@ -43,6 +43,14 @@
     <button
       class="btn-item"
       style="order:0"
+      :disabled="isLockBtn"
+      @click="openPop('shareFlag', isShare, '当前房源不满足分享条件')"
+    >
+      分享房源
+    </button>
+    <button
+      class="btn-item"
+      style="order:0"
       @click="openPop('phonePopFlag')"
       :disabled="isLockBtn"
     >
@@ -118,14 +126,7 @@
     <button class="btn-item" style="order:7" @click="tips">
       关注小区
     </button>
-    <button
-      class="btn-item"
-      style="order:8"
-      :disabled="isLockBtn"
-      @click="openPop('shareFlag', isShare, '当前房源不满足分享条件')"
-    >
-      分享房源
-    </button>
+
     <!-- 写跟进 -->
     <follow-up :visible.sync="followUpFlag" v-if="followUpFlag" />
     <!-- 查看号码 -->
