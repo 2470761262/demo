@@ -434,10 +434,10 @@ export default {
           formart: item => item.inArea + "平"
         },
         {
-          prop: "price",
+          prop: "tradePrice",
           label: "成交价",
           order: "custom",
-          formart: item => item.price + "万"
+          formart: item => item.tradePrice + "万"
         },
         {
           prop: "unitPrice",
@@ -459,7 +459,7 @@ export default {
           order: false
         },
         {
-          prop: "agentName",
+          prop: "tradePerName",
           label: "成交人",
           order: false
         }
