@@ -14,7 +14,9 @@
   <section class="maintain-content">
     <div class="card-head">
       <h3 class="card-head-title">维护信息</h3>
-      <span class="card-head-tips">上次更新: 2020-06-28 21:22:23</span>
+      <span class="card-head-tips"
+        >上次更新: {{ houseData.UpdateTime | emptyRead }}</span
+      >
     </div>
     <div class="card-message-content">
       <h3 class="card-message-title">价格信息</h3>

@@ -39,7 +39,9 @@
   <div class="broker-content">
     <div class="card-head">
       <h3 class="card-head-title">经纪人点评</h3>
-      <span class="card-head-tips">上次更新: 2020-06-28 21:22:23</span>
+      <span class="card-head-tips"
+        >上次更新: {{ houseData.UpdateTime | emptyRead }}</span
+      >
     </div>
     <div class="card-message-content">
       <div class="message-content-cell">
