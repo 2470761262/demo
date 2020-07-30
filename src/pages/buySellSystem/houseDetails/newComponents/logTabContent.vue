@@ -321,6 +321,7 @@
 
 <script>
 import { mapState } from "vuex";
+import util from "@/util/util";
 import leftProgress from "../otherCom/leftProgress";
 const LOGTAB = [
   { title: "跟进", methodsName: "getHouseFollow", storageData: "follow" },
@@ -330,11 +331,6 @@ const LOGTAB = [
   { title: "日志", methodsName: "getHouseLog", storageData: "log" }
 ];
 export default {
-  // filters: {
-  //   mapFilter(value, ListName, resultValue = null) {
-  //     return util.countMapFilter(value, ListName, resultValue);
-  //   }
-  // },
   computed: {
     ...mapState({
       houseId: state => state.houseDateil.id,
@@ -450,10 +446,20 @@ export default {
               "============>",
               result.data.list.map(item => {
                 if (item.operation.indexOf("编辑房源@") != -1) {
-                  return {
-                    ...item,
-                    value: "编辑房源"
-                  };
+                  item.operation = item.operation.replace("编辑房源@", "");
+                  console.log("item.operation:", item.operation);
+                  var jsonObject = JSON.parse(item.operation);
+                  var text = "";
+                  for (var i in jsonObject) {
+                    text +=
+                      jsonObject[i].updateFiled +
+                      "由【" +
+                      jsonObject[i].oldValue +
+                      "】修改为【" +
+                      jsonObject[i].newValue +
+                      "】；";
+                  }
+                  item.operation = "编辑房源：" + text;
                 }
                 return item;
               })
