@@ -115,18 +115,16 @@
     >
       转换状态
     </button>
-    <button class="btn-item" style="order:7" @click="tips()">
+    <button class="btn-item" style="order:7" @click="tips">
       关注小区
     </button>
-    <!-- <button
-      :style="{ order: item.order }"
+    <button
       class="btn-item"
-      v-for="item in btnlist"
-      :key="item.title"
-      @click="setBtnIndex(item)"
+      style="order:8"
+      @click="openPop('shareFlag', isShare, '当前房源不满足分享条件')"
     >
-      {{ item.title }}
-    </button> -->
+      分享房源
+    </button>
     <!-- 写跟进 -->
     <follow-up :visible.sync="followUpFlag" v-if="followUpFlag" />
     <!-- 查看号码 -->
@@ -170,6 +168,15 @@
       width="1000PX"
       v-if="interviewFlag"
     />
+
+    <!-- 分享 -->
+    <share-pop
+      :visible.sync="shareFlag"
+      title="分享房源"
+      width="400PX"
+      v-if="shareFlag"
+    >
+    </share-pop>
   </div>
 </template>
 
@@ -187,7 +194,8 @@ export default {
     releasePop: () => import("../newDidLog/releasePop"),
     changeHouseType: () => import("../newDidLog/changeHouseType"),
     cancelTask: () => import("../newDidLog/cancelTask"),
-    interviewPop: () => import("../newDidLog/interviewPop")
+    interviewPop: () => import("../newDidLog/interviewPop"),
+    sharePop: () => import("../newDidLog/sharePop")
   },
   computed: {
     ...mapState({
@@ -249,6 +257,10 @@ export default {
     //面访按钮禁用
     isInterviewDisabled() {
       return !(this.houseData.AgentPer == this.perId);
+    },
+    //是否能打开分享弹框
+    isShare() {
+      return !this.houseData.shareQRCode;
     }
   },
   data() {
@@ -259,16 +271,13 @@ export default {
       releasePopFlag: false, //发布外网
       typeFlag: false, // 转状态按钮
       cancelTaskFlag: false, //取消角色人开关
-      interviewFlag: false //添加面访开关
+      interviewFlag: false, //添加面访开关
+      shareFlag: false //分享弹框
     };
   },
-  created() {},
   methods: {
     ...mapActions(["commitHouseData"]),
     getEditAuthority(authorityUnderName, houseDatails) {
-      console.log("getEditAuthority -> houseDatails", houseDatails);
-      console.log("getEditAuthority -> authorityUnderName", authorityUnderName);
-
       if (!authorityUnderName) return;
       return (
         (authorityUnderName.coIdList &&
@@ -350,9 +359,9 @@ export default {
      * @param {string} item 弹框的开关名字
      * @param { boolean }isPermissions 是否需要提升没有权限
      */
-    openPop(item, isPermissions) {
+    openPop(item, isPermissions, message = "不是跟单人没有权限操作") {
       if (isPermissions != undefined && isPermissions) {
-        return this.$message.error("不是跟单人没有权限操作");
+        return this.$message.error(message);
       }
       if (typeof item == "object") {
         this[item.pop] = true;

@@ -273,7 +273,7 @@ export default {
             },
             {
               value: monthlyMortgage,
-              suffix: "万"
+              suffix: "元"
             }
           ]
             // 第一种 后面无逗号
