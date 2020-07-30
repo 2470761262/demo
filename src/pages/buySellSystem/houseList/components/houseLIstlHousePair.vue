@@ -412,11 +412,12 @@ export default {
           order: "custom",
           formart: item =>
             (item.rooms || 0) +
-            "室" +
+            "-" +
             (item.hall || 0) +
-            "厅" +
+            "-" +
             (item.toilet || 0) +
-            "卫"
+            "-" +
+            (item.balcony || 0)
         },
         {
           prop: "floor",
@@ -434,9 +435,9 @@ export default {
         },
         {
           prop: "price",
-          label: "成交价(万元)",
+          label: "成交价",
           order: "custom",
-          formart: item => item.price + "万元"
+          formart: item => item.price + "万"
         },
         {
           prop: "unitPrice",
@@ -573,7 +574,6 @@ export default {
     houseImageErorHandle(item) {
       item.picUrl =
         "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png";
-      console.log("houseImageErorHandle -> item", item);
     },
     /**
      * @example: 设置Tab方向
@@ -669,14 +669,13 @@ export default {
       switch (this.typeActiveIndex) {
         case 2:
           param = {
-            url: "/tradeHouse/getTradeHouse",
-            data: restuleParms,
-            qs: true
+            url: "/mateHouse/getMateHouse/tradeHouseIndex",
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: restuleParms
           }
           break;
         default:
           param = {
-            //  url: "/mateHouse/getMateHouse/soleAllHouse",
             url: "/mateHouse/getMateHouse/soleAllHouseIndex",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             data: restuleParms
@@ -688,7 +687,6 @@ export default {
           let data = e.data;
           if (data.code == 200) {
             this.renderList = data.data.data;
-            console.log("------>", this.renderList);
             this.pageJson.total = data.data.pageSum;
             this.pageJson.dataCount = data.data.dataCount;
           }
