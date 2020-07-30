@@ -184,7 +184,7 @@
         <span class="el-icon-question"></span>
 
         <div class="hover-posi-tips">
-          <p>1、价格变动请及时修改，与成交价不一致，可能影响业绩分配比例！;</p>
+          <p>1、价格变动请及时修改，与成交价不一致，可能影响业绩分配比例！</p>
         </div>
       </div>
     </div>

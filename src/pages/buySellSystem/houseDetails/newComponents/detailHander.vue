@@ -111,7 +111,18 @@
       <div class="content-header-left">
         <h3>{{ houseData.CommunityName | emptyRead }}</h3>
         <span @click="getShowBuliding">{{ buildNum }}</span>
-        <div>房源编号： {{ houseData.HouseNo | emptyRead }}</div>
+        <div>
+          房源编号：
+          {{
+            ("..." +
+              houseData.HouseNo.substr(
+                houseData.HouseNo.length - 8,
+                houseData.HouseNo.length
+              ))
+              | emptyRead
+          }}
+          <span type="text" @click="handleCopy(houseData.HouseNo)">复制</span>
+        </div>
       </div>
       <div class="content-header-right">
         <button @click="nodePop">
@@ -195,6 +206,18 @@ export default {
     this.getisCollect();
   },
   methods: {
+    handleCopy(data) {
+      let oInput = document.createElement("input");
+      oInput.value = data;
+      document.body.appendChild(oInput);
+      oInput.select();
+      document.execCommand("Copy");
+      this.$message({
+        message: "复制成功",
+        type: "success"
+      });
+      oInput.remove();
+    },
     /**
      * @example: 显示楼栋号
      */
