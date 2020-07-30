@@ -109,7 +109,7 @@ import { mapState } from "vuex";
 function phoneTransform(phone) {
   if (!phone) return phone;
   if (!phone.includes("*") && phone.length == 11) {
-    return `${phone.substr(0, 3)}****${phone.substr(4)}`;
+    return `${phone.substr(0, 3)}****${phone.substr(7)}`;
   }
   return phone;
 }

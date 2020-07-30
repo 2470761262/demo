@@ -43,16 +43,24 @@
     <button
       class="btn-item"
       style="order:0"
+      :disabled="isLockBtn"
+      @click="openPop('shareFlag', isShare, '当前房源不满足分享条件')"
+    >
+      分享房源
+    </button>
+    <button
+      class="btn-item"
+      style="order:0"
       @click="openPop('phonePopFlag')"
       :disabled="isLockBtn"
     >
-      查看号码
+      一键拨号
     </button>
     <button
       class="btn-item"
       style="order:3"
-      @click="openPop('interviewFlag')"
-      :disabled="isInterviewDisabled || isLockBtn"
+      @click="openPop('interviewFlag', isInterviewDisabled)"
+      :disabled="isLockBtn"
     >
       添加面访
     </button>
@@ -115,18 +123,10 @@
     >
       转换状态
     </button>
-    <button class="btn-item" style="order:7" @click="tips()">
+    <button class="btn-item" style="order:7" @click="tips">
       关注小区
     </button>
-    <!-- <button
-      :style="{ order: item.order }"
-      class="btn-item"
-      v-for="item in btnlist"
-      :key="item.title"
-      @click="setBtnIndex(item)"
-    >
-      {{ item.title }}
-    </button> -->
+
     <!-- 写跟进 -->
     <follow-up :visible.sync="followUpFlag" v-if="followUpFlag" />
     <!-- 查看号码 -->
@@ -170,12 +170,21 @@
       width="1000PX"
       v-if="interviewFlag"
     />
+
+    <!-- 分享 -->
+    <share-pop
+      :visible.sync="shareFlag"
+      title="分享房源"
+      width="400PX"
+      v-if="shareFlag"
+    >
+    </share-pop>
   </div>
 </template>
 
 <script>
 import util from "@/util/util";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 //发布外网
 import release from "../common/releaseHouse.js";
 //房源审核
@@ -187,7 +196,8 @@ export default {
     releasePop: () => import("../newDidLog/releasePop"),
     changeHouseType: () => import("../newDidLog/changeHouseType"),
     cancelTask: () => import("../newDidLog/cancelTask"),
-    interviewPop: () => import("../newDidLog/interviewPop")
+    interviewPop: () => import("../newDidLog/interviewPop"),
+    sharePop: () => import("../newDidLog/sharePop")
   },
   computed: {
     ...mapState({
@@ -248,7 +258,13 @@ export default {
     },
     //面访按钮禁用
     isInterviewDisabled() {
-      return !(this.houseData.AgentPer == this.perId);
+      //暂时不做控制
+      // return !(this.houseData.AgentPer == this.perId);
+      return false;
+    },
+    //是否能打开分享弹框
+    isShare() {
+      return !this.houseData.shareQRCode;
     }
   },
   data() {
@@ -259,16 +275,14 @@ export default {
       releasePopFlag: false, //发布外网
       typeFlag: false, // 转状态按钮
       cancelTaskFlag: false, //取消角色人开关
-      interviewFlag: false //添加面访开关
+      interviewFlag: false, //添加面访开关
+      shareFlag: false //分享弹框
     };
   },
-  created() {},
   methods: {
+    ...mapMutations(["setParam"]),
     ...mapActions(["commitHouseData"]),
     getEditAuthority(authorityUnderName, houseDatails) {
-      console.log("getEditAuthority -> houseDatails", houseDatails);
-      console.log("getEditAuthority -> authorityUnderName", authorityUnderName);
-
       if (!authorityUnderName) return;
       return (
         (authorityUnderName.coIdList &&
@@ -345,7 +359,15 @@ export default {
         this.$message("操作失败");
       }
     },
-    openPop(item) {
+    /**
+     * @example: 打开弹框
+     * @param {string} item 弹框的开关名字
+     * @param { boolean }isPermissions 是否需要提升没有权限
+     */
+    openPop(item, isPermissions, message = "不是跟单人没有权限操作") {
+      if (isPermissions != undefined && isPermissions) {
+        return this.$message.error(message);
+      }
       if (typeof item == "object") {
         this[item.pop] = true;
       } else {
@@ -376,6 +398,10 @@ export default {
           let result = e.data;
           this.$message(result.message);
           if (result.code == 200) {
+            this.setParam({
+              paramName: "followUpdate",
+              value: new Date().getTime()
+            });
             this.commitHouseData({
               isLocking: isLocking
             });

@@ -145,13 +145,20 @@
   }
   // <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
   .cascader-content {
+    .btn-reset {
+      // prettier-ignore
+      height: 40PX;
+      // prettier-ignore
+      width: 65PX;
+      padding: 0 1px;
+    }
     display: flex;
     // prettier-ignore
-    padding: 15PX;
+    // padding: 15PX;
 
-    border-bottom: 1px solid #f0f2f5;
+    // border-bottom: 1px solid #f0f2f5;
     // prettier-ignore
-    @height35:35PX;
+    @height35:40PX;
     .input-content {
       @width: auto;
       // prettier-ignore
@@ -207,6 +214,14 @@
       height: @height35;
       padding: 0 35px;
     }
+    .btn-reset {
+      // prettier-ignore
+      height: 40PX;
+      // prettier-ignore
+      width: 65PX;
+      margin-left: 10px;
+      padding: 5px;
+    }
   }
   .search-content {
     &.no-frist {
@@ -214,6 +229,43 @@
         &:first-child {
           // prettier-ignore
           margin-top: 19PX;
+        }
+      }
+      .head-content-input {
+        border-bottom: 1px solid #f0f2f5;
+        padding: 18px 0 0 15px;
+        // prettier-ignore
+        width: 455PX;
+        // prettier-ignore
+        height: 40PX;
+        display: flex;
+        .content-input {
+          // prettier-ignore
+          width: 390PX;
+          border: 1px solid rgba(206, 206, 206, 1);
+          border-top-left-radius: 4px;
+          border-bottom-left-radius: 4px;
+          text-indent: 16px;
+          // line-height: 48px;
+          height: 100%;
+          box-sizing: border-box;
+          outline: none;
+          font-size: @font16;
+          &::placeholder {
+            font-size: @font16;
+            color: #a6aaaf;
+          }
+        }
+        .inquire-content {
+          flex: 1;
+          background: @backgroud;
+          outline: none;
+          border: 0;
+          border-top-right-radius: 4px;
+          border-bottom-right-radius: 4px;
+          font-size: @font24;
+          color: #fff;
+          cursor: pointer;
         }
       }
     }
@@ -253,7 +305,7 @@
 
             height: @height26;
             @media screen and (max-width: 1450px) {
-              width: 140px;
+              width: 170px;
             }
           }
           .input-split {
@@ -319,9 +371,13 @@
 
         .select-content {
           margin-bottom: 5px;
+          /deep/.el-select__tags {
+            flex-wrap: nowrap;
+            overflow: hidden;
+          }
           .input-content {
             // prettier-ignore
-            @width: 140PX;
+            @width: 170PX;
             // prettier-ignore
             margin-right: 24PX;
             // prettier-ignore
@@ -381,12 +437,12 @@
 }
 .btn-primary-back {
   .btn-primary-back();
-  &.btn-reset {
-    // prettier-ignore
-    height: 40PX;
-    // prettier-ignore
-    width: 65PX;
-  }
+  // &.btn-reset {
+  //   // prettier-ignore
+  //   height: 40PX;
+  //   // prettier-ignore
+  //   width: 65PX;
+  // }
 }
 .options-item {
   .options-item;
@@ -427,7 +483,116 @@
       <navHeader></navHeader>
       <!-- 头部按钮, 搜索 -->
       <div class="page-result-head">
-        <div class="head-content-input">
+        <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
+        <div class="cascader-content" v-show="searchPanelChange">
+          <div class="cascader-content-build">
+            <!-- 楼栋 -->
+            <el-select
+              v-model="buildOptData"
+              placeholder="请输入楼盘名称"
+              class="input-content input_210 anchor-point"
+              clearable
+              filterable
+              remote
+              popper-class="options-custom-item anchor-point"
+              data-anchor="首页楼盘 => select"
+              @click.native="log_socket.sendUserActionData"
+              @focus="remoteBuildInput"
+              @change="remoteBuildChange"
+              :remote-method="buildRemoteMethod"
+              :loading="buildLoading"
+              value-key="value"
+            >
+              <el-option
+                v-for="item in buildForList"
+                class="anchor-point"
+                :data-anchor="'首页列表楼盘 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
+                :key="item.value"
+                :label="item.name"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+            <!-- 栋座 -->
+            <el-select
+              v-model="towerOptData"
+              placeholder="请输入栋座"
+              clearable
+              filterable
+              class="input-content input_175 anchor-point"
+              popper-class="options-custom-item anchor-point"
+              data-anchor="首页栋座 => select"
+              @click.native="log_socket.sendUserActionData"
+              value-key="value"
+              remote
+              :remote-method="queryRoomNo"
+              @change="remoteRoomNoChange"
+              :loading="towerLoading"
+            >
+              <el-option
+                v-for="item in towerForList"
+                class="anchor-point"
+                :data-anchor="'首页列表栋座 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
+                :key="item.value"
+                :label="item.name"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+            <!-- 房间号 -->
+            <el-select
+              v-model="roomOptData"
+              placeholder="请输入房号"
+              clearable
+              filterable
+              popper-class="options-custom-item anchor-point"
+              class="input-content input_120 anchor-point"
+              data-anchor="首页房号 => select"
+              @click.native="log_socket.sendUserActionData"
+              remote
+              :remote-method="queryRoomData"
+              :loading="roomLoading"
+              value-key="value"
+              @change="queryRoomDataChange"
+            >
+              <el-option
+                v-for="item in roomForList"
+                class="anchor-point"
+                :data-anchor="'首页列表房号 => select => option:' + item.name"
+                @click.native="log_socket.sendUserActionData"
+                :key="item.value"
+                :label="item.name"
+                :value="item"
+              >
+              </el-option>
+            </el-select>
+          </div>
+
+          <el-input
+            type="text"
+            v-model="agentPerName"
+            placeholder="跟单人姓名"
+            class="input-content input_102 anchor-point"
+            :data-anchor="'首页搜索 跟单人姓名:' + agentPerName"
+          />
+          <button
+            class="btn-primary-back anchor-point"
+            @click="handleAgentPerName"
+            :data-anchor="'首页跟单人搜索{' + agentPerName + '}'"
+          >
+            搜索
+          </button>
+          <button
+            class="btn-primary-back btn-reset anchor-point"
+            @click="resetData"
+            data-anchor="首页搜索框重置"
+          >
+            重置
+          </button>
+        </div>
+        <!-- <div class="head-content-input">
           <input
             type="text"
             placeholder="请输入房源编号,楼盘名称"
@@ -443,14 +608,8 @@
           >
             <i class="el-icon-search"></i>
           </button>
-        </div>
-        <button
-          class="btn-primary-back btn-reset anchor-point"
-          @click="resetData"
-          data-anchor="首页搜索框重置"
-        >
-          重置
-        </button>
+        </div> -->
+
         <div class="head-fun-right">
           <button
             class="btn-primary anchor-point"
@@ -481,26 +640,43 @@
     </div>
     <!-- <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div> -->
 
-    <div class="search-content no-frist" v-show="panelChange">
-      <!-- nav类型切换 -->
-      <div class="tab-content">
-        <div class="tab-content-nav">
-          <div
-            class="tab-content-item anchor-point"
-            :class="{ active: typeActiveIndex == index }"
-            v-for="(item, index) in typeList"
-            :data-anchor="'首页找房:' + item.label"
-            :key="index"
-            @click="changeNavTypeIndex(index)"
-          >
-            {{ item.label }}
-          </div>
+    <!-- nav类型切换 -->
+    <div class="tab-content">
+      <div class="tab-content-nav">
+        <div
+          class="tab-content-item anchor-point"
+          :class="{ active: typeActiveIndex == index }"
+          v-for="(item, index) in typeList"
+          :data-anchor="'首页找房:' + item.label"
+          :key="index"
+          @click="changeNavTypeIndex(index)"
+        >
+          {{ item.label }}
         </div>
       </div>
+    </div>
+    <div class="search-content no-frist" v-show="panelChange">
+      <div class="head-content-input">
+        <input
+          type="text"
+          placeholder="请输入房源编号,楼盘名称"
+          data-anchor="首页房源编号,楼盘名称输入框"
+          class="content-input anchor-point"
+          v-model="houseNoOrName"
+          @keydown.enter="handleHouseNoOrName"
+        />
+        <button
+          class="inquire-content anchor-point"
+          @click="handleHouseNoOrName"
+          :data-anchor="'首页房源编号,楼盘名称搜索{' + houseNoOrName + '}'"
+        >
+          <i class="el-icon-search"></i>
+        </button>
+      </div>
       <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
-      <div class="cascader-content">
+      <!-- <div class="cascader-content" v-show="searchPanelChange">
         <div class="cascader-content-build">
-          <!-- 楼栋 -->
+          
           <el-select
             v-model="buildOptData"
             placeholder="请输入楼盘名称"
@@ -528,7 +704,7 @@
             >
             </el-option>
           </el-select>
-          <!-- 栋座 -->
+     
           <el-select
             v-model="towerOptData"
             placeholder="请输入栋座"
@@ -555,7 +731,7 @@
             >
             </el-option>
           </el-select>
-          <!-- 房间号 -->
+        
           <el-select
             v-model="roomOptData"
             placeholder="请输入房号"
@@ -598,9 +774,9 @@
         >
           搜索
         </button>
-      </div>
+      </div> -->
       <!-- 范围 -->
-      <div class="search-content-item">
+      <div class="search-content-item" v-show="searchPanelChange">
         <div class="search-item-title">范围</div>
         <div class="search-item-right">
           <el-radio-group v-model="form.plate" size="small">
@@ -636,7 +812,7 @@
         </div>
       </div>
       <!-- 类型 -->
-      <div class="search-content-item">
+      <div class="search-content-item" v-show="searchPanelChange">
         <div class="search-item-title">类型</div>
         <div class="search-item-right">
           <el-radio
@@ -719,7 +895,7 @@
         </div>
       </div>
       <!-- 价钱 -->
-      <div class="search-content-item">
+      <div class="search-content-item" v-show="searchPanelChange">
         <div class="search-item-title">价格</div>
         <div class="search-item-right ">
           <div class="data-content">
@@ -1011,7 +1187,11 @@
         </div>
       </div>
       <!-- 装修 -->
-      <div class="search-content-item" v-if="RenovationList.length != 0">
+      <div
+        class="search-content-item"
+        v-if="RenovationList.length != 0"
+        v-show="searchPanelChange"
+      >
         <div class="search-item-title">装修</div>
         <div class="search-item-right">
           <el-radio
@@ -1093,6 +1273,7 @@
               :data-anchor="'首页选项 小学:' + item.name"
               v-for="item in mathPrimary"
               :key="item.value"
+              @change="formCheckChange('primarySchool', item.name, $event)"
             ></el-checkbox>
           </el-checkbox-group>
           <div class="select-content">
@@ -1106,6 +1287,7 @@
               filterable
               popper-class="options-custom-item"
               @change="schoolChange('primarySchoolList', $event)"
+              multiple
             >
               <el-option
                 class="options-item anchor-point"
@@ -1161,6 +1343,7 @@
               :data-anchor="'首页选项 中学:' + item.name"
               v-for="item in mathMiddle"
               :key="item.value"
+              @change="formCheckChange('middleSchool', item.name, $event)"
             ></el-checkbox>
           </el-checkbox-group>
           <div class="select-content">
@@ -1174,6 +1357,7 @@
               filterable
               popper-class="options-custom-item"
               @change="schoolChange('middleSchoolList', $event)"
+              multiple
             >
               <el-option
                 class="options-item anchor-point"
@@ -1212,6 +1396,7 @@
 </template>
 
 <script>
+import bus from "@/evenBus/but.js";
 //切换tab类型
 const TYPELIST = [
   {
@@ -1250,6 +1435,7 @@ export default {
   },
   data() {
     return {
+      searchPanelChange: true, //搜索面板显隐
       temporaryPrimaryValue: "", //临时记录小学select结果,用于删除筛选
       temporaryMiddleValue: "", //临时记录中学select结果,用于删除筛选
       isFixedHeight: "0px",
@@ -1334,6 +1520,14 @@ export default {
     /**
      * @example: 重置
      */
+    reset() {
+      this.searchPanelChange = true;
+      bus.$emit("modifyTableColumn", 0);
+      this.resetData();
+    },
+    /**
+     * @example: 重置查询条件数据
+     */
     resetData() {
       //Object.assign(this.$data, this.$options.data.call(this));
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
@@ -1415,58 +1609,52 @@ export default {
      * @param {string} e
      */
     schoolChange(field, e) {
-      let index = -1;
+      let temporaryField;
       switch (field) {
         case "primarySchoolList":
-          index = this.form[field].findIndex(
-            item => item == this.temporaryPrimaryValue
-          );
+          temporaryField = "temporaryPrimaryList";
           this["primarySchoolRadio"] = "";
           break;
         case "middleSchoolList":
-          index = this.form[field].findIndex(
-            item => item == this.temporaryMiddleValue
-          );
+          temporaryField = "temporaryMiddleList";
           this["middleSchoolRadio"] = "";
           break;
       }
-
-      if (e !== "") {
-        let index2 = -1;
-        switch (field) {
-          case "primarySchoolList":
-            this.temporaryPrimaryValue = e;
-            index2 = this.form[field].findIndex(
-              item => item == this.temporaryPrimaryValue
-            );
-            break;
-          case "middleSchoolList":
-            this.temporaryMiddleValue = e;
-            index2 = this.form[field].findIndex(
-              item => item == this.temporaryMiddleValue
-            );
-            break;
-        }
-        if (index2 == -1) this.form[field].push(e);
+      if (!this[temporaryField]) this[temporaryField] = [];
+      if (e.length > this[temporaryField].length) {
+        this.form[field].push(e[e.length - 1]);
+      } else {
+        let oprateIndex = this[temporaryField].findIndex(
+          item => e.indexOf(item) == -1
+        );
+        let oprateField = this[temporaryField][oprateIndex];
+        let originIndex = this.form[field].indexOf(oprateField);
+        this.form[field].splice(originIndex, 1);
       }
-
-      if (index == -1) return;
-      this.form[field].splice(index, 1);
+      this[temporaryField] = e;
     },
     /**
      * @example: 修改nav类型激活Index
      * @param {Number}  index
      */
     changeNavTypeIndex(index) {
-      if (index == 1 || index == 4 || index == 2) {
+      bus.$emit("modifyTableColumn", index);
+      if (index == 1 || index == 4) {
         this.navToPageBtn({ private: false });
         return;
+      } else if (index == 2) {
+        this.searchPanelChange = false;
+      } else {
+        this.searchPanelChange = true;
       }
       this.resetData();
       if (index != this.typeActiveIndex) {
         this.typeActiveIndex = index;
       }
       switch (index) {
+        case 2:
+          this.form.sortColumn = "tradeTime";
+          break;
         case 3:
           this.form.isBet = "1";
           break;
@@ -1767,6 +1955,40 @@ export default {
      */
     formCheckBoxChange(field) {
       this[field] = "";
+    },
+    /**
+     * @example: 学校多选项值改变事件(判断下拉多选框是否存在相同自动，存在则数据联动)
+     * @param {string } type 学校类型
+     * @param {string } name 选项字段
+     * @param {string } val 值
+     */
+    formCheckChange(type, name, val) {
+      let temporaryCheckListFiled, temporaryAllListFiled, temporaryField;
+      switch (type) {
+        case "primarySchool":
+          temporaryCheckListFiled = "primarySchool";
+          temporaryAllListFiled = "mathPrimaryAfter";
+          temporaryField = "temporaryPrimaryList";
+          break;
+        case "middleSchool":
+          temporaryCheckListFiled = "middleSchool";
+          temporaryAllListFiled = "mathMiddleAfter";
+          temporaryField = "temporaryMiddleList";
+          break;
+      }
+      // 多选框勾选该值则多选框取消该勾选
+      if (!val && this[temporaryCheckListFiled].indexOf(name) != -1) {
+        this[temporaryCheckListFiled].splice(
+          this[temporaryCheckListFiled].indexOf(name),
+          1
+        );
+      } else if (
+        val &&
+        this[temporaryAllListFiled].findIndex(item => item.name == name) != -1
+      ) {
+        this[temporaryCheckListFiled].push(name);
+      }
+      this[temporaryField] = this[temporaryCheckListFiled];
     }
   }
 };

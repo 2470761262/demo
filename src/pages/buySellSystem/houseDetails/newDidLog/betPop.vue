@@ -45,49 +45,50 @@
 <template>
   <fixedPopup v-bind="$attrs" v-on="$listeners">
     <template>
-      <div class="bet-content">
-        <div class="bet-tips">
-          <p>1，对赌鑫币值封顶为{{ betConf.upper }}个</p>
-          <p>
-            2，{{ betConf.expireDay }}天内成交可获得{{ betConf.odds }}倍鑫币
-          </p>
-          <p>3，合同审核通过前{{ betConf.startHour }}小时提交为有效</p>
-        </div>
-        <div class="bet-input">
-          <div class="bet-input-text">对赌鑫币值</div>
-          <div class="bet-input-content">
-            <el-input
-              class="anchor-point"
-              v-model="butValue"
-              data-vv-name="butValue"
-              data-vv-as="鑫币值"
-              v-validate="{
-                min_value: betConf.lower,
-                max_value: betConf.upper
-              }"
-              v-number
-              placeholder="输入对赌鑫币值"
-            ></el-input>
-            <div v-if="errorBags.has('butValue')">
-              {{ errorBags.first("butValue") }}
-            </div>
-            <div v-else>(对赌鑫币{{ betConf.lower }}起投)</div>
+      <div v-loading="loading">
+        <div class="bet-content">
+          <div class="bet-tips">
+            <p>1，对赌鑫币值封顶为{{ betConf.upper }}个</p>
+            <p>
+              2，{{ betConf.expireDay }}天内成交可获得{{ betConf.odds }}倍鑫币
+            </p>
+            <p>3，合同审核通过前{{ betConf.startHour }}小时提交为有效</p>
           </div>
-          <div class="bet-input-text">个</div>
+          <div class="bet-input">
+            <div class="bet-input-text">对赌鑫币值</div>
+            <div class="bet-input-content">
+              <el-input
+                class="anchor-point"
+                v-model="butValue"
+                data-vv-name="butValue"
+                data-vv-as="鑫币值"
+                v-validate="{
+                  min_value: betConf.lower,
+                  max_value: betConf.upper
+                }"
+                v-number
+                placeholder="输入对赌鑫币值"
+              ></el-input>
+              <div v-if="errorBags.has('butValue')">
+                {{ errorBags.first("butValue") }}
+              </div>
+              <div v-else>(对赌鑫币{{ betConf.lower }}起投)</div>
+            </div>
+            <div class="bet-input-text">个</div>
+          </div>
         </div>
-      </div>
-      <div class="pop-but">
-        <el-button class="anchor-point" size="small" @click="hidePop"
-          >取消</el-button
-        >
-        <el-button
-          size="small"
-          :disabled="!reloData.betBtn"
-          class="button-back anchor-point"
-          :loading="loading"
-          @click="result"
-          >确定</el-button
-        >
+        <div class="pop-but">
+          <el-button class="anchor-point" size="small" @click="hidePop"
+            >取消</el-button
+          >
+          <el-button
+            size="small"
+            :disabled="!reloData.betBtn"
+            class="button-back anchor-point"
+            @click="result"
+            >确定</el-button
+          >
+        </div>
       </div>
     </template>
   </fixedPopup>
@@ -117,6 +118,7 @@ export default {
         if (e) {
           var that = this;
           let params = { HouseId: that.houseId, Amount: that.butValue };
+          this.loading = true;
           this.$api
             .post({
               url: "/house/bet/add",
@@ -134,6 +136,7 @@ export default {
             })
             .catch(e => {})
             .finally(() => {
+              this.loading = false;
               this.$emit("update:visible", false);
             });
         }

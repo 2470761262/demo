@@ -54,7 +54,7 @@
         </div>
       </div>
 
-      <h3 class="card-message-title section-spilit">价格信息</h3>
+      <h3 class="card-message-title section-spilit">房屋信息</h3>
       <!-- 房屋用途 & 房屋现状 -->
       <div class="card-message-cell">
         <div class="card-message-item">
@@ -191,7 +191,7 @@
         <div class="card-message-item">
           <div class="card-item-title">户型结构</div>
           <div class="card-item-data">
-            {{ houseData.FamilyStructure | emptyRead }}
+            {{ houseData.FamilyStructure | mapFilter("ROOMTYPE") | emptyRead }}
           </div>
         </div>
         <div class="card-message-item">
@@ -244,17 +244,70 @@ export default {
     //抵押情况
     pledgeMessage() {
       let {
-        mortgage,
-        mortgageLoanBank,
-        subbranch,
-        balance,
-        MonthlyMortgage
+        mortgage, //抵押
+        mortgageLoanBank, //银行
+        subbranch, //支行
+        balance, //余贷
+        monthlyMortgage //月供
       } = this.houseData;
+      //
       return mortgage == 0
         ? "未抵押"
-        : ["有抵押", mortgageLoanBank, subbranch, balance, MonthlyMortgage]
-            .filter(item => item != null)
-            .join(",");
+        : [
+            {
+              value: "有抵押",
+              suffix: ""
+            },
+            {
+              value: mortgageLoanBank,
+              suffix: "",
+              transform: "MORTGAGEBANK"
+            },
+            {
+              value: subbranch,
+              suffix: ""
+            },
+            {
+              value: balance,
+              suffix: "万"
+            },
+            {
+              value: monthlyMortgage,
+              suffix: "元"
+            }
+          ]
+            // 第一种 后面无逗号
+            // .map(item => {
+            //   if (item.transform) {
+            //     return {
+            //       ...item,
+            //       value: this.$options.filters.mapFilter(
+            //         item.value,
+            //         item.transform
+            //       )
+            //     };
+            //   }
+            //   return item;
+            // })
+            // .filter(item => item.value != null)
+            // .map(item => item.value + item.suffix)
+            // .join(",");
+            //第二种 后面有逗号
+            .map(item => {
+              if (item.transform) {
+                return this.$options.filters.mapFilter(
+                  item.value,
+                  item.transform
+                );
+              }
+              if (item.value == null) {
+                return item.suffix;
+              }
+              return item.value + item.suffix;
+            })
+            .join(",")
+            .replace(",万", ",")
+            .replace(",,", ",");
     }
   }
 };
