@@ -253,7 +253,7 @@
 
             height: @height26;
             @media screen and (max-width: 1450px) {
-              width: 140px;
+              width: 170px;
             }
           }
           .input-split {
@@ -319,9 +319,13 @@
 
         .select-content {
           margin-bottom: 5px;
+          /deep/.el-select__tags{
+            flex-wrap: nowrap;
+            overflow: hidden;
+          }
           .input-content {
             // prettier-ignore
-            @width: 140PX;
+            @width: 170PX;
             // prettier-ignore
             margin-right: 24PX;
             // prettier-ignore
@@ -1093,6 +1097,7 @@
               :data-anchor="'首页选项 小学:' + item.name"
               v-for="item in mathPrimary"
               :key="item.value"
+              @change="formCheckChange('primarySchool', item.name, $event)"
             ></el-checkbox>
           </el-checkbox-group>
           <div class="select-content">
@@ -1106,6 +1111,7 @@
               filterable
               popper-class="options-custom-item"
               @change="schoolChange('primarySchoolList', $event)"
+              multiple
             >
               <el-option
                 class="options-item anchor-point"
@@ -1161,6 +1167,7 @@
               :data-anchor="'首页选项 中学:' + item.name"
               v-for="item in mathMiddle"
               :key="item.value"
+              @change="formCheckChange('middleSchool', item.name, $event)"
             ></el-checkbox>
           </el-checkbox-group>
           <div class="select-content">
@@ -1174,6 +1181,7 @@
               filterable
               popper-class="options-custom-item"
               @change="schoolChange('middleSchoolList', $event)"
+              multiple
             >
               <el-option
                 class="options-item anchor-point"
@@ -1417,43 +1425,29 @@ export default {
      * @param {string} e
      */
     schoolChange(field, e) {
-      let index = -1;
+      let temporaryField;
       switch (field) {
         case "primarySchoolList":
-          index = this.form[field].findIndex(
-            item => item == this.temporaryPrimaryValue
-          );
+          temporaryField = "temporaryPrimaryList";
           this["primarySchoolRadio"] = "";
           break;
         case "middleSchoolList":
-          index = this.form[field].findIndex(
-            item => item == this.temporaryMiddleValue
-          );
+          temporaryField = "temporaryMiddleList";
           this["middleSchoolRadio"] = "";
           break;
       }
-
-      if (e !== "") {
-        let index2 = -1;
-        switch (field) {
-          case "primarySchoolList":
-            this.temporaryPrimaryValue = e;
-            index2 = this.form[field].findIndex(
-              item => item == this.temporaryPrimaryValue
-            );
-            break;
-          case "middleSchoolList":
-            this.temporaryMiddleValue = e;
-            index2 = this.form[field].findIndex(
-              item => item == this.temporaryMiddleValue
-            );
-            break;
-        }
-        if (index2 == -1) this.form[field].push(e);
+      if (!this[temporaryField]) this[temporaryField] = [];
+      if (e.length > this[temporaryField].length) {
+        this.form[field].push(e[e.length - 1]);
+      } else {
+        let oprateIndex = this[temporaryField].findIndex(
+          item => e.indexOf(item) == -1
+        );
+        let oprateField = this[temporaryField][oprateIndex];
+        let originIndex = this.form[field].indexOf(oprateField);
+        this.form[field].splice(originIndex, 1);
       }
-
-      if (index == -1) return;
-      this.form[field].splice(index, 1);
+      this[temporaryField] = e;
     },
     /**
      * @example: 修改nav类型激活Index
@@ -1774,6 +1768,34 @@ export default {
      */
     formCheckBoxChange(field) {
       this[field] = "";
+    },
+    /** 
+     * @example: 学校多选项值改变事件(判断下拉多选框是否存在相同自动，存在则数据联动)
+     * @param {string } type 学校类型
+     * @param {string } name 选项字段
+     * @param {string } val 值
+     */
+    formCheckChange(type, name, val) {
+      let temporaryCheckListFiled,temporaryAllListFiled,temporaryField;
+      switch (type) {
+        case "primarySchool":
+          temporaryCheckListFiled = "primarySchool";
+          temporaryAllListFiled = "mathPrimaryAfter";
+          temporaryField = "temporaryPrimaryList";
+          break;
+        case "middleSchool":
+          temporaryCheckListFiled = "middleSchool";
+          temporaryAllListFiled = "mathMiddleAfter";
+          temporaryField = "temporaryMiddleList";
+          break;
+      }
+      // 多选框勾选该值则多选框取消该勾选
+      if (!val && this[temporaryCheckListFiled].indexOf(name) != -1) {
+        this[temporaryCheckListFiled].splice(this[temporaryCheckListFiled].indexOf(name), 1);
+      } else if (val && this[temporaryAllListFiled].findIndex(item => item.name == name) != -1) {
+        this[temporaryCheckListFiled].push(name);
+      }
+      this[temporaryField] = this[temporaryCheckListFiled];
     }
   }
 };
