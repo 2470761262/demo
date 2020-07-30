@@ -237,7 +237,7 @@ export default {
      */
     BuildingTime() {
       if (this.houseData.BuildingTime !== null) {
-        return `${util.format(this.houseData.AddTime, "yyyy")}年`;
+        return `${util.format(this.houseData.BuildingTime, "yyyy")}年`;
       }
       return "暂无";
     },
