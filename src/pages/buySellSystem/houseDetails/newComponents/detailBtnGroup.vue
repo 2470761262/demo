@@ -121,6 +121,7 @@
     <button
       class="btn-item"
       style="order:8"
+      :disabled="isLockBtn"
       @click="openPop('shareFlag', isShare, '当前房源不满足分享条件')"
     >
       分享房源
