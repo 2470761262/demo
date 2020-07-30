@@ -547,7 +547,9 @@ export default {
           if (result.code == 200) {
             result.data.list.forEach((item, index) => {
               if (item.Memo != null) {
-                item.Memo = item.Memo.split("voice:")[1];
+                item.Memo = item.Memo.includes("voice:")
+                  ? item.Memo.split("voice:")[1]
+                  : item.Memo;
               }
             });
             this.voice.list = [...this.voice.list, ...result.data.list];
