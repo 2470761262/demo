@@ -203,6 +203,30 @@ export default [
       )
   },
   {
+    //报表统计
+    path: "/report/reportList",
+    meta: {
+      title: "数据看板"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportList" */ "@/pages/report/reportList.vue"
+      )
+  },
+
+  {
+    path: "/report/addReport",
+    name: "addReport",
+    meta: {
+      title: "添加看板"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "addReport" */ "@/pages/report/addReport/addReport.vue"
+      )
+  },
+
+  {
     //买卖系统三级路由
     path: "/buySellSystem/otherIframe",
     name: "otherIframe",

@@ -7,8 +7,8 @@ import { Message } from "element-ui";
 import store from "@/store/store";
 //let CancelToken = axios.CancelToken;
 //let requerList = [];
-let http = axios.create({
-  baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
+let httpReport = axios.create({
+  baseURL: process.env.VUE_APP_REPORT_API, // api 的 base_url
   headers: {
     "Content-Type": "application/x-www-form-urlencoded"
   },
@@ -17,7 +17,7 @@ let http = axios.create({
 });
 
 // 请求拦截器
-http.interceptors.request.use(
+httpReport.interceptors.request.use(
   function(config) {
     // config.cancelToken = new CancelToken(c => {
     //   requerList.push(c);
@@ -33,7 +33,7 @@ http.interceptors.request.use(
   }
 );
 // 响应拦截器
-http.interceptors.response.use(
+httpReport.interceptors.response.use(
   response => {
     if (response.data.code == 401) {
       //取消多个重复弹出框
@@ -81,7 +81,7 @@ http.interceptors.response.use(
   }
 );
 //请求对象
-let ApiReportData = {
+let ApiData = {
   post(arg) {
     if (!arg.method) {
       arg.method = "POST";
@@ -96,7 +96,7 @@ let ApiReportData = {
       // 格式化表单数据
       sendConfig.data = qs.stringify(sendConfig.data, { allowDots: true });
     return new Promise((resolve, reject) => {
-      http(sendConfig)
+      httpReport(sendConfig)
         .then(e => {
           resolve(e);
         })
@@ -126,5 +126,5 @@ let ApiReportData = {
   }
 };
 export default {
-  ...ApiReportData
+  ...ApiData
 };
