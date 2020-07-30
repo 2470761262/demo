@@ -346,6 +346,7 @@
 
 <script>
 import { mapState } from "vuex";
+import util from "@/util/util";
 import leftProgress from "../otherCom/leftProgress";
 const LOGTAB = [
   { title: "跟进", methodsName: "getHouseFollow", storageData: "follow" },
@@ -474,6 +475,26 @@ export default {
         .then(e => {
           let result = e.data;
           if (result.code == 200) {
+            result.data.list.map(item => {
+              if (item.operation.indexOf("编辑房源@") != -1) {
+                item.operation = item.operation.replace("编辑房源@", "");
+                console.log("item.operation:", item.operation);
+                var jsonObject = JSON.parse(item.operation);
+                var text = "";
+                for (var i in jsonObject) {
+                  text +=
+                    jsonObject[i].updateFiled +
+                    "由【" +
+                    jsonObject[i].oldValue +
+                    "】修改为【" +
+                    jsonObject[i].newValue +
+                    "】；";
+                }
+                item.operation = "编辑房源：" + text;
+              }
+              return item;
+            });
+
             this.log.list = [...this.log.list, ...result.data.list];
             this.log.totalPage = result.data.totalPage;
           }
