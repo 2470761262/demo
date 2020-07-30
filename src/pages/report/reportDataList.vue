@@ -43,16 +43,6 @@
     >
       <template v-slot:top>
         <div class="page-list-query-row">
-          <div class="query-content-cell">
-            <h3 class="query-cell-title">看板名称</h3>
-            <el-input
-              placeholder="看板名称"
-              v-model="queryData.dispalyname"
-              class="set-input120"
-              clearable
-            >
-            </el-input>
-          </div>
           <div class="query-content-cell cell-interval75">
             <el-button
               type="primary"
@@ -70,21 +60,10 @@
               :resetList="tableColumnField"
             ></definitionmenu>
           </div>
-
-          <div class="head-fun-right">
-            <button
-              class="btn-primary house-back anchor-point"
-              data-anchor="添加看板"
-              @click="navToPath('/report/addReport')"
-            >
-              <i class=" iconluru iconfont"></i>
-              添加看板
-            </button>
-          </div>
         </div>
       </template>
       <template #tableColumn>
-        <template v-for="item in tableColumn">
+        <template v-for="item in tableColumnField">
           <el-table-column
             :prop="item.prop"
             :label="item.label"
@@ -96,13 +75,6 @@
             :sortable="item.order"
           ></el-table-column>
         </template>
-        <el-table-column label="操作" fixed="right" min-width="150">
-          <template v-slot="scope">
-            <el-button type="primary" size="mini" @click="toEdit(scope.row.id)"
-              >编辑</el-button
-            >
-          </template>
-        </el-table-column>
       </template>
     </list-page>
   </div>
@@ -122,6 +94,7 @@ export default {
   data() {
     return {
       loading: true,
+      id: 0,
       queryData: {
         type: "",
         houseName: "",
@@ -134,49 +107,17 @@ export default {
         currentPage: 1, //当前页码
         total: 0, //总记录数
         size: 10, //每页条数
-        sizes: [10,15,20,50] //每页条数
+        sizes: [10, 15, 20, 50] //每页条数
       },
       tableColumnField: [
-        {
-          prop: "dispalycode",
-          label: "看板编码",
-          width: "170",
-          order: false,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "dispalyname",
-          label: "看板名称",
-          order: false,
-          width: "150",
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "tablename",
-          label: "表名",
-          width: "90",
-          order: false,
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "updatetime",
-          label: "更新时间",
-          width: "120",
-          order: true,
-          disabled: false,
-          default: true
-        },
-        {
-          prop: "updateuser",
-          label: "更新人",
-          width: "120",
-          order: true,
-          disabled: false,
-          default: true
-        }
+        // {
+        //   prop: "dispalycode",
+        //   label: "看板编码",
+        //   width: "170",
+        //   order: false,
+        //   disabled: false,
+        //   default: true
+        // }
       ],
       tableData: [],
       tableColumn: [],
@@ -187,6 +128,10 @@ export default {
     };
   },
   mounted() {
+    this.id = JSON.parse(this.$route.query.id);
+    if (!this) {
+      this.$message.error("缺少必要参数!");
+    }
     tableMenu.getTableMenu(this.tableColumnField, 11).then(e => {
       this.menuLoading = false;
       this.renderList = e;
@@ -194,18 +139,6 @@ export default {
     });
   },
   methods: {
-    formatCheck(isCheck) {
-      switch (isCheck) {
-        case 0:
-          return "待审核";
-        case 1:
-          return "审核成功";
-        case 2:
-          return "审核失败";
-        default:
-          return "其他";
-      }
-    },
     remove() {
       let tab = this.tableColumn;
       let renderList = this.renderList;
@@ -246,14 +179,15 @@ export default {
     },
     queryDisplayboardList(currentPage) {
       var that = this;
-      let params = { limit: that.pageJson.size, page: currentPage };
+      let params = { limit: that.pageJson.size + "", page: currentPage + "" };
       params.dispalyname = that.queryData.dispalyname;
+      params.id = that.id;
 
       console.log(params);
       this.$apiReport
-        .get({
-          url: "/xjwreport/displayboard/confList",
-          data: params,
+        .post({
+          url: "/xjwreport/displayboard/dataList",
+          data: JSON.stringify(params),
           token: false
         })
         .then(e => {
@@ -262,11 +196,26 @@ export default {
           if (data.code == 200) {
             that.pageJson.total = data.pagetotal;
             that.pageJson.currentPage = currentPage;
-            that.tableData = data.data;
+            let columns = data.data.columns;
+            that.tableColumnField = [];
+            for (var i = 0; i < columns.length; i++) {
+              let ColumnField = {
+                prop: columns[i].column,
+                label: columns[i].name,
+                width: "170",
+                order: false,
+                disabled: false,
+                default: true
+              };
+              that.tableColumnField.push(ColumnField);
+            }
+            that.tableData = data.data.list;
+            console.log(that.tableColumnField, " that.tableColumnField");
+            this.$forceUpdate();
           }
         })
         .catch(e => {
-          console.log("查询新增房源列表失败");
+          console.log("查询列表失败");
           console.log(e);
         })
         .finally(() => {
@@ -276,9 +225,39 @@ export default {
     toEdit(id) {
       var that = this;
       that.$router.push({
-        path: "/buySellSystem/checkFloorList",
+        path: "/report/addReport",
         query: { id: id }
       });
+    },
+    toDelete(id) {
+      var that = this;
+      this.$confirm("是否确定删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          this.$apiReport
+            .delete({
+              url: "/xjwreport/displayboard/conf",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
+              token: false,
+              // qs: true,
+              data: JSON.stringify({ id: id })
+            })
+            .then(e => {
+              if (e.data.code == 200) {
+                this.$message({
+                  type: "success",
+                  message: "操作成功!"
+                });
+                that.queryDisplayboardList(that.pageJson.currentPage);
+              } else {
+                this.$message.error("提交失败，请检查数据或联系管理员！");
+              }
+            });
+        })
+        .catch(() => {});
     },
     isForBut(type) {
       let array = [{ name: "查看", isType: "3", methosName: "" }];

@@ -336,7 +336,6 @@ export default {
     return {
       rules: {
         tableid: [{ required: true, message: "表不能为空", trigger: "change" }],
-        tableid: [{ required: true, message: "表不能为空", trigger: "change" }],
         dispalycode: [
           { required: true, message: "编码不能为空", trigger: "blur" }
         ],
@@ -386,35 +385,54 @@ export default {
       dialogImageUrl: "",
       dialogVisible: false,
       disabled: false,
-      buttonDisable: true
+      buttonDisable: false
     };
   },
   mounted() {
     let that = this;
-    this.$api
-      .get({
-        url: "/agent_house/nextSaveButton"
-      })
-      .then(e => {
-        e.data.data.functionRuleList.forEach(element => {
-          if (element.rUrl == "submitCommReplenish") {
-            that.buttonDisable = false;
-          }
-        });
-      })
-      .catch(e => {});
+    var id = JSON.parse(that.$route.query.id);
+    if (!id) {
+      return;
+    }
+    Promise.all([that.remoteTableName(), that.getDetail(id)]);
   },
   methods: {
+    getDetail(id) {
+      let that = this;
+      return this.$apiReport
+        .get({
+          url: "/xjwreport/displayboard/conf/" + id, //带权限
+          qs: true,
+          token: false
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            that.form.id = data.data.id;
+            that.form.dispalyname = data.data.dispalyname;
+            that.form.dispalycode = data.data.dispalycode;
+            that.form.tableid = data.data.tableid;
+            that.remoteTableNameChange(data.data.tableid);
+            that.columninfo = JSON.parse(data.data.columninfo);
+            that.ordercol = JSON.parse(data.data.ordercol);
+            that.authcol = JSON.parse(data.data.authcol);
+            //this.$forceUpdate();
+          }
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
     //查询表
     remoteTableName(e) {
       let that = this;
       that.selectPageTable.loading = true;
-      this.$apiReport
+      return this.$apiReport
         .get({
           url: "/xjwreport/table/nameList", //带权限
           data: {
             page: 1,
-            limit: 50,
+            limit: 1000,
             tablecname: e == undefined ? "" : e.trim()
           },
           qs: true,
@@ -522,8 +540,9 @@ export default {
             return item.column !== "";
           });
           if (!columninfo || columninfo.length == 0) {
-            this.$alert("", "展示字段不能为空，请重新提交", {
-              dangerouslyUseHTMLString: false
+            this.$message({
+              type: "warning",
+              message: "展示字段不能为空，请重新提交!"
             });
             return;
           }
@@ -531,18 +550,21 @@ export default {
             return item.column !== "";
           });
           if (!ordercol || ordercol.length == 0) {
-            this.$alert("", "排序字段不能为空，请重新提交", {
-              dangerouslyUseHTMLString: false
+            this.$message({
+              type: "warning",
+              message: "排序字段不能为空，请重新提交!"
             });
             return;
           }
           if (!that.authcol.column) {
-            this.$alert("", "授权字段不能为空，请重新提交", {
-              dangerouslyUseHTMLString: false
+            this.$message({
+              type: "warning",
+              message: "授权字段不能为空，请重新提交!"
             });
             return;
           }
           let data = {
+            id: that.form.id, //id
             dispalyname: that.form.dispalyname, //名称
             dispalycode: that.form.dispalycode, //编码
             tableid: parseInt(that.form.tableid), //表id
@@ -560,14 +582,13 @@ export default {
             })
             .then(e => {
               if (e.data.code == 200) {
-                this.$alert("", "提交成功", {
-                  dangerouslyUseHTMLString: false
+                this.$message({
+                  type: "success",
+                  message: "操作成功!"
                 });
-                this.$router.push({ path: "/report/reportList" });
+                this.$router.push({ path: "/report/reportConfList" });
               } else {
-                this.$alert("", "提交失败，请检查数据或联系管理员！", {
-                  dangerouslyUseHTMLString: false
-                });
+                this.$message.error("操作失败!");
               }
             });
         }

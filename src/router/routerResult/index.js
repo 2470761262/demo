@@ -201,17 +201,27 @@ export default [
       )
   },
   {
-    //报表统计
-    path: "/report/reportList",
+    //数据看板配置列表
+    path: "/report/reportConfList",
     meta: {
-      title: "数据看板"
+      title: "数据看板配置列表"
     },
     component: () =>
       import(
-        /* webpackChunkName: "reportList" */ "@/pages/report/reportList.vue"
+        /* webpackChunkName: "reportConfList" */ "@/pages/report/reportConfList.vue"
       )
   },
-
+  {
+    //数据看板
+    path: "/report/reportDataList",
+    meta: {
+      title: "看板数据"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportDataList" */ "@/pages/report/reportDataList.vue"
+      )
+  },
   {
     path: "/report/addReport",
     name: "addReport",
