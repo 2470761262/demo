@@ -9,12 +9,10 @@
   }
   .page-cell-main-menu {
     // prettier-ignore
-    height: calc(100% - 80px);
-    @media screen and(max-width: 1280px) {
-      // prettier-ignore
-      height: calc(100% - 100px);
+    height: calc(100% - 80PX);
+    .is-nest {
+      height: 100% !important;
     }
-
     .el-aside,
     .el-main {
       height: 100%;
@@ -43,6 +41,14 @@
     padding: 0;
   }
 }
+.is-map-nav-top {
+  .el-main {
+    padding: 0;
+    /deep/.nav-breadcrumb {
+      margin-top: 20px;
+    }
+  }
+}
 .el-background {
   background: #e2e2e2 !important;
   width: auto !important;
@@ -68,8 +74,8 @@
       </el-header>
     </el-container>
     <el-container
-      :class="{ 'is-map-nav': !isPad }"
-      class="page-cell-main-menu "
+      :class="[isPad, { 'is-nest': isNest }]"
+      class="page-cell-main-menu"
       id="page-cell-main"
     >
       <el-aside class="el-background" v-if="asideNavFlag">
@@ -79,14 +85,6 @@
         <feedback ref="feedback" v-show="isMapNav" />
         <div class="children-page" :style="isMapNavStyle">
           <!-- 二级页面 router-view -->
-          <!-- <transition name="el">
-            <keep-alive
-              :max="3"
-              include="houseList,otherIframe,customersIframe"
-            >
-              <router-view />
-            </keep-alive>
-          </transition> -->
           <keep-alive :max="3">
             <router-view v-if="$route.meta.keepAlive" />
           </keep-alive>
@@ -122,15 +120,24 @@ export default {
     };
   },
   computed: {
+    isNest() {
+      return !(window.self == window.parent);
+    },
     isMapNav() {
       return !this.$route.meta.isMapNav;
     },
     isPad() {
-      return !this.$route.meta.isPad;
+      if (!this.isMapNav) {
+        return "is-map-nav";
+      }
+      if (this.$route.meta.isPad) {
+        return "is-map-nav-top";
+      }
+      return "";
     },
     isMapNavStyle() {
       if (this.isMapNav) {
-        return { "min-height": "calc(100% - 26px)" };
+        return { "min-height": "calc(100% - .29rem)" };
       } else {
         return { "min-height": "100%" };
       }

@@ -53,6 +53,7 @@ module.exports = {
     }
   },
   devServer: {
+    disableHostCheck: true,
     open: true,
     host: "localhost",
     port: 8080, // 端口号

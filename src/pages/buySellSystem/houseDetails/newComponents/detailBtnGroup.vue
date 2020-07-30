@@ -1,0 +1,416 @@
+<style lang="less" scoped>
+.detail-btn-group {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #d5d5d5;
+  // prettier-ignore
+  margin: 0 8PX 0 13PX;
+  .btn-item {
+    // prettier-ignore
+    width: 100PX;
+    // prettier-ignore
+    height: 55PX;
+    font-size: @font16;
+    outline: none;
+    border: none;
+    background: #fff;
+    border-bottom: 1px solid #d5d5d5;
+    //transition: background 0.2s ease-in;
+    cursor: pointer;
+    &[disabled]:hover {
+      background: none;
+      color: #999;
+      cursor: no-drop;
+    }
+    &:hover {
+      background: @backgroud;
+      color: #fff;
+    }
+    // &:last-child {
+    //   border-bottom: none;
+    // }
+  }
+}
+</style>
+<style lang="less">
+// .popover-phone {
+//   // prettier-ignore
+//   height: 300PX;
+// }
+</style>
+<template>
+  <div class="detail-btn-group">
+    <button
+      class="btn-item"
+      style="order:0"
+      @click="openPop('phonePopFlag')"
+      :disabled="isLockBtn"
+    >
+      查看号码
+    </button>
+    <button
+      class="btn-item"
+      style="order:3"
+      @click="openPop('interviewFlag')"
+      :disabled="isInterviewDisabled || isLockBtn"
+    >
+      添加面访
+    </button>
+    <button
+      class="btn-item"
+      style="order:0"
+      v-if="isEditHouse"
+      @click="navRouter"
+      :disabled="isLockBtn"
+    >
+      编辑房源
+    </button>
+    <button
+      class="btn-item"
+      style="order:2"
+      @click="openPop('followUpFlag')"
+      :disabled="isLockBtn"
+    >
+      添加跟进
+    </button>
+    <button
+      class="btn-item"
+      style="order:4"
+      :disabled="outBtnDisabled || isLockBtn"
+      v-if="isOutBtn"
+      @click="certificateType"
+    >
+      发布外网
+    </button>
+    <button
+      class="btn-item"
+      style="order:4"
+      :disabled="cancelBtnDisabled || isLockBtn"
+      v-if="isCancelBtn"
+      @click="cancelOutsideHouse"
+    >
+      取消发布
+    </button>
+    <button
+      class="btn-item"
+      style="order:6"
+      :disabled="!reloData.locking"
+      @click="houseLock"
+    >
+      {{ isLockBtn ? "解锁房源" : "锁定房源" }}
+    </button>
+    <button
+      class="btn-item"
+      style="order:8"
+      :disabled="!reloData.cancelMethod || isLockBtn"
+      @click="openPop('cancelTaskFlag')"
+    >
+      取消角色人
+    </button>
+    <button
+      class="btn-item"
+      style="order:0"
+      @click="openPop('typeFlag')"
+      :disabled="isLockBtn"
+    >
+      转换状态
+    </button>
+    <button class="btn-item" style="order:7" @click="tips()">
+      关注小区
+    </button>
+    <!-- <button
+      :style="{ order: item.order }"
+      class="btn-item"
+      v-for="item in btnlist"
+      :key="item.title"
+      @click="setBtnIndex(item)"
+    >
+      {{ item.title }}
+    </button> -->
+    <!-- 写跟进 -->
+    <follow-up :visible.sync="followUpFlag" v-if="followUpFlag" />
+    <!-- 查看号码 -->
+    <phone-pop
+      title="业主联系方式"
+      width="500px"
+      :visible.sync="phonePopFlag"
+      v-if="phonePopFlag"
+    />
+    <!-- 发布外网 -->
+    <release-pop
+      :visible.sync="releasePopFlag"
+      width="300px"
+      title
+      maskHideEvent
+      v-if="releasePopFlag"
+    />
+
+    <!-- 转房源状态 -->
+    <change-house-type
+      title
+      :visible.sync="typeFlag"
+      width="580px"
+      maskHideEvent
+      v-if="typeFlag"
+    />
+
+    <!-- 取消作业方 -->
+    <cancelTask
+      title
+      :visible.sync="cancelTaskFlag"
+      width="680px"
+      maskHideEvent
+      v-if="cancelTaskFlag"
+    />
+
+    <!-- 面访 -->
+    <interview-pop
+      :visible.sync="interviewFlag"
+      title="添加面访"
+      width="1000PX"
+      v-if="interviewFlag"
+    />
+  </div>
+</template>
+
+<script>
+import util from "@/util/util";
+import { mapState, mapActions } from "vuex";
+//发布外网
+import release from "../common/releaseHouse.js";
+//房源审核
+import houseCheck from "../common/houseCheck";
+export default {
+  components: {
+    followUp: () => import("../newDidLog/followUp"),
+    phonePop: () => import("../newDidLog/phonePop"),
+    releasePop: () => import("../newDidLog/releasePop"),
+    changeHouseType: () => import("../newDidLog/changeHouseType"),
+    cancelTask: () => import("../newDidLog/cancelTask"),
+    interviewPop: () => import("../newDidLog/interviewPop")
+  },
+  computed: {
+    ...mapState({
+      houseId: state => state.houseDateil.id,
+      houseData: state => state.houseDateil.houseData,
+      reloData: state => state.houseDateil.reloData,
+      betData: state => state.houseDateil.betData
+    }),
+    //发布外网按钮是否禁用
+    outBtnDisabled() {
+      return (
+        !this.reloData.releaseOutsideHouse || this.houseData.isLocking == 1
+      );
+    },
+    //发布外网按钮是否显示
+    isOutBtn() {
+      return this.houseData.isReleaseOutside != 1 && this.houseData.plate == 0;
+    },
+    //取消发布外网
+    cancelBtnDisabled() {
+      return this.reloData.cancelOutsideHouse || this.houseData.isLocking == 1;
+    },
+    //取消发布外网按钮是否显示
+    isCancelBtn() {
+      return (
+        this.houseData.isReleaseOutside == 1 &&
+        this.houseData.AgentPer == this.perId &&
+        this.houseData.plate == 0
+      );
+    },
+    //房源是否被锁定
+    isLockBtn() {
+      if (this.houseData.plate > 6 || this.houseData.isLocking) {
+        return true;
+      }
+      return false;
+    },
+    //编辑房源是否禁用
+    editHouseDisabled() {
+      if (this.houseData.plate > 6 || this.houseData.isLocking) {
+        return true;
+      }
+      return false;
+    },
+    //是否显示编辑房源
+    isEditHouse() {
+      if (
+        this.houseData.plate == 0 &&
+        this.getEditAuthority(
+          this.betData.find(item => item.rUrl == "editAgentHouse")
+            ?.authorityUnderName,
+          this.houseData
+        )
+      ) {
+        return true;
+      }
+      return false;
+    },
+    //面访按钮禁用
+    isInterviewDisabled() {
+      return !(this.houseData.AgentPer == this.perId);
+    }
+  },
+  data() {
+    return {
+      perId: util.localStorageGet("logindata").accountId,
+      followUpFlag: false, //跟进弹框开关
+      phonePopFlag: false, //查看号码开关
+      releasePopFlag: false, //发布外网
+      typeFlag: false, // 转状态按钮
+      cancelTaskFlag: false, //取消角色人开关
+      interviewFlag: false //添加面访开关
+    };
+  },
+  created() {},
+  methods: {
+    ...mapActions(["commitHouseData"]),
+    getEditAuthority(authorityUnderName, houseDatails) {
+      console.log("getEditAuthority -> houseDatails", houseDatails);
+      console.log("getEditAuthority -> authorityUnderName", authorityUnderName);
+
+      if (!authorityUnderName) return;
+      return (
+        (authorityUnderName.coIdList &&
+          authorityUnderName.coIdList.includes(
+            houseDatails.agentPerCompanyId
+          )) ||
+        (authorityUnderName.deptList &&
+          authorityUnderName.deptList.includes(
+            houseDatails.agentPerDepartmentId
+          )) ||
+        (authorityUnderName.accountId &&
+          houseDatails.AgentPer == authorityUnderName.accountId)
+      );
+    },
+    //是否显示转状态弹窗
+    async changePopUp() {
+      let result = await houseCheck.isChecking(
+        8,
+        0,
+        this.houseId,
+        "当前正在审核"
+      );
+      if (!result) {
+        this.typeFlag = true;
+      }
+    },
+    //是否展示产权证号弹窗
+    async certificateType() {
+      if (parseInt(this.houseData.certificateType) != 1) {
+        this.releasePopFlag = true;
+      } else {
+        let params = {
+          houseId: this.houseId,
+          houseType: 0
+        };
+        const loading = this.$loading({
+          lock: true,
+          text: "发布外网中..."
+        });
+        let result = await release.releaseOutsideHouse(params);
+        loading.close();
+        if (result.data.code == 200) {
+          this.commitHouseData({
+            isReleaseOutside: 1
+          });
+          this.$message(result.data.message);
+        } else {
+          this.$message("操作失败");
+        }
+      }
+    },
+    /**
+     * @example: 按鈕組点击事件 事件分发
+     * @param {Ojbect} item  当前点击对象
+     */
+    setBtnIndex(item) {
+      if (item.fun && this[item.fun]) {
+        this[item.fun](item);
+      }
+    },
+    //取消发布外网
+    async cancelOutsideHouse() {
+      let params = {
+        HouseNo: this.houseData.HouseNo,
+        id: this.houseId
+      };
+      let result = await release.cancelOutsideHouse(params);
+      if (result) {
+        this.commitHouseData({
+          isReleaseOutside: 0
+        });
+        this.$message(result);
+      } else {
+        this.$message("操作失败");
+      }
+    },
+    openPop(item) {
+      if (typeof item == "object") {
+        this[item.pop] = true;
+      } else {
+        this[item] = true;
+      }
+    },
+    //锁定或解锁房源
+    houseLock() {
+      let isLocking = this.houseData.isLocking == 1 ? 0 : 1;
+      if (this.houseData.isLocking == undefined) {
+        this.$message("操作失败");
+        return;
+      }
+      const loading = this.$loading({
+        lock: true,
+        text: "操作房源锁定按钮中..."
+      });
+      this.$api
+        .post({
+          url: "/agentHouse/property/locking",
+          data: {
+            Eid: this.houseId,
+            Islocking: isLocking
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          this.$message(result.message);
+          if (result.code == 200) {
+            this.commitHouseData({
+              isLocking: isLocking
+            });
+          }
+        })
+        .catch(e => {})
+        .finally(e => {
+          loading.close();
+        });
+    },
+    /**
+     * @example: 编辑房源
+     */
+    navRouter() {
+      this.$router.push({
+        name: "addHouse",
+        params: {
+          id: this.houseId,
+          method: "edit",
+          paramsObj: {
+            getEditUrl: "/agent_house/getEditDetails/",
+            buttonText: "保存",
+            editUrl: "/agent_house/editAgentHouse",
+            getAudioUrl: "/agentHouse/audio/getAudioList/",
+            getPicturesUrl: "/agentHouse/pictures/getPicturesList/",
+            getVideoUrl: "/agentHouse/video/getVideoList/"
+          }
+        }
+      });
+    },
+    tips() {
+      this.$alert("新功能开发中，敬请期待~", "提示信息", {
+        confirmButtonText: "确定"
+      });
+    }
+  }
+};
+</script>
