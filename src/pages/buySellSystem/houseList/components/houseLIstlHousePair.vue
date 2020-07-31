@@ -443,9 +443,7 @@ export default {
           prop: "unitPrice",
           label: "单价",
           order: "custom",
-          formart: item => {
-            if(item.unitPrice) return parseFloat(item.unitPrice).toFixed(2) + "元/平"
-          }
+          formart: item => item.unitPrice + "元/平"
         },
         {
           prop: "tradeTime",
