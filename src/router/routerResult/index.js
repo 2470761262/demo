@@ -496,18 +496,18 @@ export default [
             /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/validateHouseList/validateHouseList.vue"
           )
       },
-      {
-        //我司成交
-        path: "/buySellSystem/ourComDeal",
-        meta: {
-          title: "我司成交",
-          keepAlive: true
-        },
-        component: () =>
-          import(
-            /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/ourComDeal.vue"
-          )
-      },
+      // {
+      //   //我司成交
+      //   path: "/buySellSystem/ourComDeal",
+      //   meta: {
+      //     title: "我司成交",
+      //     keepAlive: true
+      //   },
+      //   component: () =>
+      //     import(
+      //       /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/ourComDeal.vue"
+      //     )
+      // },
       {
         //他司成交
         path: "/buySellSystem/otherComDeal",
