@@ -102,6 +102,10 @@
 /deep/.el-table {
   overflow: visible;
 }
+
+.el-textarea-content{
+  padding: 30px 0 10px;
+}
 </style>
 <template>
   <div class="tab-page">
@@ -144,7 +148,7 @@
                   class="anchor-point"
                   type="primary"
                   data-anchor="开发线索转为在售 => click"
-                  @click="dialNumber(scope.row)"
+                  @click="houseOperate(scope.row)"
                   size="mini"
                   icon="el-icon-refresh"
                   >转为在售</el-button
@@ -155,7 +159,7 @@
                   class="anchor-point"
                   type="primary"
                   data-anchor="开发线索写跟进 => click"
-                  @click="dialNumber(scope.row)"
+                  @click="writeRecord(scope.row)"
                   size="mini"
                   icon="el-icon-edit"
                   >写跟进</el-button
@@ -164,7 +168,7 @@
                   class="anchor-point"
                   type="primary"
                   data-anchor="开发线索查记录 => click"
-                  @click="dialNumber(scope.row)"
+                  @click="findRecord(scope.row)"
                   size="mini"
                   icon="el-icon-time"
                   > 查记录</el-button
@@ -192,6 +196,25 @@
       >
       </el-pagination>
     </div>
+    <fixedPopup
+      :visible.sync="alertflag"
+      styleType="0"
+      @confirmEmit="writeRecordConfirm"
+      title="写跟进"
+    >
+      <div class="el-textarea-content">
+        <el-input
+          class="anchor-point"
+          type="textarea"
+          placeholder="输入跟进内容"
+          v-model="record"
+          resize="none"
+          show-word-limit
+        >
+        </el-input>
+      </div>
+    </fixedPopup
+    >
   </div>
 </template>
 <script>
@@ -205,6 +228,8 @@ export default {
   inject: ["form"],
   data() {
     return {
+      alertflag: false,
+      record: "",
       renderList: [],
       tableColumnField: [
         {
@@ -450,8 +475,99 @@ export default {
         })
         .finally(() => {});
     },
+    /**
+     * 一键拨号
+     */
     dialNumber(row) {
       console.log(row, "========");
+      this.$message.warning("当日此业主号码已达到拨打上限~");
+    },
+    /**
+     * 转为在售
+     */
+    houseOperate(row) {
+      console.log(row, "转为在售");
+      this.toSale(
+        row.eid,
+        row.comId,
+        row.cbId,
+        row.bhId,
+        row.communityName,
+        row.buildingName,
+        row.customers,
+        row.roomNo,
+        row.tel
+      );
+    },
+    /**
+     * 写跟进
+     */
+    writeRecord(row) {
+      console.log(row, "写跟进");
+      this.alertflag = true;
+      this.record = "";
+    },
+    /**
+     * 查记录
+     */
+    findRecord(row) {
+      console.log(row, "查记录");
+    },
+    toSale(
+      id,
+      comId,
+      cbId,
+      bhId,
+      communityName,
+      buildingName,
+      customers,
+      roomNo,
+      tel
+    ) {
+      var that = this;
+      console.log(bhId);
+      this.$api
+        .post({
+          url: "/agent_house/getTels/" + id,
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          let tel1 = "",
+            tel2 = "",
+            tel3 = "";
+          if (result.code == 200) {
+            tel = result.data.Tel;
+            tel1 = result.data.Tel1;
+            tel2 = result.data.Tel2;
+            tel3 = result.data.Tel3;
+          }
+          that.$router.push({
+            path: "/buySellSystem/addHouse",
+            disabledStatus: false,
+            query: {
+              comId: comId,
+              cbId: cbId,
+              bhId: bhId,
+              communityName: communityName,
+              buildingName: buildingName,
+              roomNo: roomNo,
+              flag: "potentia",
+              customerName: customers,
+              method: "tosale",
+              tel: tel,
+              tel1: tel1,
+              tel2: tel2,
+              tel3: tel3
+            }
+          });
+        });
+    },
+    /** 
+     * 写跟进内容确定事件
+     */
+    writeRecordConfirm() {
+      this.alertflag = false;
     }
   }
 };

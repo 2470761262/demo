@@ -720,6 +720,7 @@
                 :data-anchor="'开发线索选项 小学:' + item.name"
                 v-for="item in mathPrimary"
                 :key="item.value"
+                @change="formCheckChange('primarySchool', item.name, $event)"
               ></el-checkbox>
             </el-checkbox-group>
             <div class="select-content">
@@ -790,6 +791,7 @@
                 :data-anchor="'开发线索选项 中学:' + item.name"
                 v-for="item in mathMiddle"
                 :key="item.value"
+                @change="formCheckChange('middleSchool', item.name, $event)"
               ></el-checkbox>
             </el-checkbox-group>
             <div class="select-content">
@@ -907,8 +909,8 @@ export default {
       roomLoading: false, //房间号select loading
       towerOptData: {}, //栋座选中数据
       towerForList: [], //栋座select数据
-      primarySchool: "", //小学select
-      middleSchool: "", //中学Select
+      primarySchool: [], //小学select
+      middleSchool: [], //中学Select
       primarySchoolRadio: "不限", //小学校radio
       middleSchoolRadio: "不限", //中学不限
       RegionList: [], //商圈
@@ -1308,9 +1310,11 @@ export default {
       switch (field) {
         case "primarySchoolList":
           temporaryField = "temporaryPrimaryList";
+          this["primarySchoolRadio"] = "";
           break;
         case "middleSchoolList":
           temporaryField = "temporaryMiddleList";
+          this["middleSchoolRadio"] = "";
           break;
       }
       if (!this[temporaryField]) this[temporaryField] = [];
@@ -1328,6 +1332,33 @@ export default {
     },
     ListeningScroll(e) {
       this.scrollTop = e ? e.target.scrollTop : 0;
+    },
+    /** 
+     * @example: 学校多选项值改变事件(判断下拉多选框是否存在相同选项，存在则数据联动)
+     * @param {string } type 学校类型
+     * @param {string } name 选项字段
+     * @param {string } val 值
+     */
+    formCheckChange(type, name, val) {
+      let temporaryCheckListFiled,temporaryAllListFiled,temporaryField;
+      switch (type) {
+        case "primarySchool":
+          temporaryCheckListFiled = "primarySchool";
+          temporaryAllListFiled = "mathPrimaryAfter";
+          temporaryField = "temporaryPrimaryList";
+          break;
+        case "middleSchool":
+          temporaryCheckListFiled = "middleSchool";
+          temporaryAllListFiled = "mathMiddleAfter";
+          temporaryField = "temporaryMiddleList";
+          break;
+      }
+      if (!val && this[temporaryCheckListFiled].indexOf(name) != -1) {
+        this[temporaryCheckListFiled].splice(this[temporaryCheckListFiled].indexOf(name), 1);
+      } else if (val && this[temporaryAllListFiled].findIndex(item => item.name == name) != -1) {
+        this[temporaryCheckListFiled].push(name);
+      }
+      this[temporaryField] = this[temporaryCheckListFiled];
     }
   }
 };
