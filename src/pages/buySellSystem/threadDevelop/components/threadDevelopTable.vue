@@ -102,10 +102,17 @@
 /deep/.el-table {
   overflow: visible;
 }
-
-.el-textarea-content{
-  padding: 30px 0 10px;
+/*********** 查记录弹窗 ***********/
+.record-dialog-column{
+  font-size: 20px;
+  color: #999;
+  .title{
+    display: inline-block;
+    width: 110px;
+  }
 }
+
+
 </style>
 <template>
   <div class="tab-page">
@@ -198,23 +205,57 @@
     </div>
     <fixedPopup
       :visible.sync="alertflag"
-      styleType="0"
-      @confirmEmit="writeRecordConfirm"
-      title="写跟进"
-    >
-      <div class="el-textarea-content">
-        <el-input
-          class="anchor-point"
-          type="textarea"
-          placeholder="输入跟进内容"
-          v-model="record"
-          resize="none"
-          show-word-limit
-        >
-        </el-input>
-      </div>
-    </fixedPopup
-    >
+      styleType="1"
+      :customFlag="true"
+      @customBtn="customBtn"
+      >
+      <template>
+        <el-tabs v-model="recordActiveName" @tab-click="recordNavClick">
+          <el-tab-pane label="跟进" name="first">
+            <el-timeline>
+              <el-timeline-item
+                v-for="(activity, index) in activities"
+                :key="index"
+                :icon="activity.icon"
+                :type="activity.type"
+                :color="activity.color"
+                :size="activity.size"
+                :timestamp="activity.timestamp"
+                placement="top"
+              >
+                <div class="record-dialog-column">
+                  <span class="title">跟进人：</span>
+                  <span>{{activity.content}}</span>
+                </div>
+                <div class="record-dialog-column">
+                  <span class="title">跟进内容：</span>
+                  <span>{{activity.content}}</span>
+                </div>
+              </el-timeline-item>
+            </el-timeline>
+          </el-tab-pane>
+          <el-tab-pane label="语音" name="second">
+            <el-timeline>
+              <el-timeline-item
+                v-for="(activity, index) in voiceList"
+                :key="index"
+                :icon="activity.icon"
+                :type="activity.type"
+                :color="activity.color"
+                :size="activity.size"
+                :timestamp="activity.timestamp"
+                placement="top"
+              >
+                <el-card>
+                  <h4>更新 Github 模板</h4>
+                  <p>王小虎 提交于 {{activity.content}}</p>
+                </el-card>
+              </el-timeline-item>
+            </el-timeline>
+          </el-tab-pane>
+        </el-tabs>
+      </template>
+    </fixedPopup>
   </div>
 </template>
 <script>
@@ -228,8 +269,43 @@ export default {
   inject: ["form"],
   data() {
     return {
-      alertflag: false,
-      record: "",
+      recordActiveName: 'first',
+      activities: [{
+        content: '支持使用图标',
+        timestamp: '2018-04-12 20:46',
+        color: '#0bbd87'
+      }, {
+        content: '支持自定义颜色',
+        timestamp: '2018-04-03 20:46',
+        color: '#0bbd87'
+      }, {
+        content: '支持自定义尺寸',
+        timestamp: '2018-04-03 20:46',
+        size: 'large'
+      }, {
+        content: '默认样式的节点',
+        timestamp: '2018-04-03 20:46'
+      }],
+      voiceList: [{
+        content: '支持使用图标',
+        timestamp: '2018-04-12 20:46',
+        size: 'large',
+        type: 'primary',
+        icon: 'el-icon-more'
+      }, {
+        content: '支持自定义颜色',
+        timestamp: '2018-04-03 20:46',
+        color: '#0bbd87'
+      }, {
+        content: '支持自定义尺寸',
+        timestamp: '2018-04-03 20:46',
+        size: 'large'
+      }, {
+        content: '默认样式的节点',
+        timestamp: '2018-04-03 20:46'
+      }],
+      alertflag: true,
+      followUpContent: "",
       renderList: [],
       tableColumnField: [
         {
@@ -504,14 +580,14 @@ export default {
      */
     writeRecord(row) {
       console.log(row, "写跟进");
-      this.alertflag = true;
-      this.record = "";
+      this.openFollowUpDialog();
     },
     /**
      * 查记录
      */
     findRecord(row) {
       console.log(row, "查记录");
+      this.alertflag = true;
     },
     toSale(
       id,
@@ -563,11 +639,83 @@ export default {
           });
         });
     },
-    /** 
-     * 写跟进内容确定事件
+    /**
+     * 打开写跟进弹窗
      */
-    writeRecordConfirm() {
+    openFollowUpDialog() {
+      const h = this.$createElement;
+      this.$msgbox({
+        title: '写跟进',
+        message: h('div', {
+          attrs: {
+            class: 'el-textarea',
+          },
+        }, [
+          h('textarea', {
+            attrs: {
+              class: 'el-textarea__inner',
+              autocomplete: 'off',
+              rows: 4,
+              id:'commentContent'
+            },
+            value: this.followUpContent,
+            on: { input: this.onCommentInputChange }
+          }),
+          h('div', {
+            attrs: {
+              class: 'el-textarea-total',
+            },
+            style: 'textAlign: right;color: #bdbdbd;fontSize: 12px'
+          }, "不少于10字")
+        ]),
+        showCancelButton: true,
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm') {
+            instance.confirmButtonLoading = true;
+            instance.confirmButtonText = '执行中...';
+            if (this.followUpContent.length < 10) {
+              instance.confirmButtonLoading = false;
+              this.$message.warning("跟进内容不能少于10个字。");
+              instance.confirmButtonText = '确定';
+              return;
+            }
+            setTimeout(() => {
+              done();
+              setTimeout(() => {
+                instance.confirmButtonLoading = false;
+              }, 300);
+            }, 1000);
+          } else {
+            document.getElementById("commentContent").value = "";
+            done();
+          }
+        }
+      }).then(action => {
+        this.$message({
+          type: 'info',
+          message: 'action: ' + action
+        });
+      }).catch((e) => {});
+    },
+    /**
+     * 监听跟进输入内容
+     */
+    onCommentInputChange() {
+      let content = document.getElementById("commentContent").value;
+      if (content.length > 30)
+        document.getElementById("commentContent").value = content.substring(0, 30);
+      this.followUpContent = document.getElementById("commentContent").value;
+    },
+    customBtn() {
+      console.log("==================");
+      this.requireTypeOld = this.BeforeChangeType;
+      this.requireType = this.BeforeChangeType;
       this.alertflag = false;
+    },
+    recordNavClick(tab, event) {
+      console.log(tab, event);
     }
   }
 };
