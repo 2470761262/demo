@@ -600,6 +600,13 @@ let certificateType = [
   { title: "购房合同", label: 2 },
   { title: "拆迁安置协议书", label: 3 }
 ];
+let valueKey;
+(function(valueKey) {
+  valueKey[(valueKey["产权人"] = 0)] = "产权人";
+  valueKey[(valueKey["实际控制人"] = 1)] = "实际控制人";
+  valueKey[(valueKey["投资客"] = 2)] = "投资客";
+})(valueKey || (valueKey = {}));
+
 let updateFileMap = new Map([
   ["customerName", "业主姓名", "Customers"],
   ["sex", "性别", "Sex"],
@@ -1216,8 +1223,9 @@ export default {
             data.saleHouseUpdateRecordList.push({
               houseId: that.$store.state.addHouse.formData.id,
               updateFiled: updateFileMap.get(item),
-              oldValue: this.$store.state.addHouse.formData.step1[item],
-              newValue: this.deffData[item]
+              oldValue:
+                valueKey[this.$store.state.addHouse.formData.step1[item]],
+              newValue: valueKey[this.deffData[item]]
             });
           }
         });
