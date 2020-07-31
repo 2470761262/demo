@@ -1280,8 +1280,8 @@ export default {
       navToPage: NAVTOPAGE, //顶部跳转tab
       agentPerName: "", //跟单人姓名
       houseNoOrName: "", //房源编号,楼盘名称
-      primarySchool: "", //小学select
-      middleSchool: "", //中学Select
+      primarySchool: [], //小学select
+      middleSchool: [], //中学Select
       middleSchoolRadio: "不限", //中学不限
       purposeRadio: "不限", //房屋用途radio不限
       primarySchoolRadio: "不限", //小学校radio
@@ -1796,7 +1796,7 @@ export default {
       this[field] = "";
     },
     /** 
-     * @example: 学校多选项值改变事件(判断下拉多选框是否存在相同自动，存在则数据联动)
+     * @example: 学校多选项值改变事件(判断下拉多选框是否存在相同选项，存在则数据联动)
      * @param {string } type 学校类型
      * @param {string } name 选项字段
      * @param {string } val 值
@@ -1815,7 +1815,6 @@ export default {
           temporaryField = "temporaryMiddleList";
           break;
       }
-      // 多选框勾选该值则多选框取消该勾选
       if (!val && this[temporaryCheckListFiled].indexOf(name) != -1) {
         this[temporaryCheckListFiled].splice(this[temporaryCheckListFiled].indexOf(name), 1);
       } else if (val && this[temporaryAllListFiled].findIndex(item => item.name == name) != -1) {
