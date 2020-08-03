@@ -484,7 +484,7 @@
             data-anchor="首页开发线索"
             @click="navToPath('/buySellSystem/threadDevelop')"
           >
-            <i class="iconjichuguanli1 iconfont"></i>
+            <i class="iconxiansuo iconfont"></i>
             开发线索
           </button>
           <button

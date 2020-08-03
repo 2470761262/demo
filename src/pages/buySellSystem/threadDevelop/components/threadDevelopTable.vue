@@ -1,119 +1,3 @@
-<style lang="less" scoped>
-.tab-page {
-  /deep/.header-tab-cell {
-    height: 64px;
-    font-size: @font16;
-    background: rgba(240, 242, 245, 1);
-    color: rgba(48, 49, 51, 1);
-    font-weight: normal;
-    .cell {
-      justify-content: center;
-      display: flex;
-      align-items: center;
-    }
-  }
-  /deep/.tab-cell-item {
-    height: 64px;
-    font-size: @font16;
-    text-align: left;
-    .cell {
-      white-space: nowrap;
-    }
-  }
-  /deep/.tab-cell-left {
-    text-align: left;
-    white-space: nowrap;
-    // padding-left: 32px;
-    padding-left: 5px;
-    padding-right: 60px;
-    cell {
-      white-space: nowrap;
-    }
-  }
-  .tab-page-flex {
-    display: flex;
-  }
-  .table-btn-panel{
-    display: inline-flex;
-    flex-direction: column;
-    padding: 0 15px;
-    .table-btn-row{
-      margin-bottom: 10px;
-    }
-    .anchor-point{
-      min-width: 98px;
-      text-align: left;
-    }
-  }
-}
-/deep/.el-table__body-wrapper,
-/deep/.el-table__fixed-body-wrapper {
-  .el-table__expanded-cell {
-    padding: 0 0 10px 42px;
-  }
-  .el-table__expand-column {
-    //   display: none;
-    overflow: hidden;
-  }
-  tbody {
-    tr:last-child {
-      td {
-        border-bottom: none;
-      }
-    }
-  }
-}
-.tab-com-item {
-  margin-top: 10px;
-  .tab-house-title {
-    font-size: @font16;
-    font-weight: 600;
-    color: black;
-  }
-  .tab-house-tip {
-    font-size: @font14;
-    color: #b1b1b1;
-  }
-  .tab-houseno {
-    margin-top: 10px;
-    font-size: @font12;
-  }
-}
-/deep/.caret-wrapper {
-  height: auto;
-  .sort-caret {
-    position: static;
-    &:first-child {
-      margin-bottom: 3px;
-    }
-  }
-}
-.tab-page-floot {
-  padding-top: 16px;
-  padding-bottom: 14px;
-  display: flex;
-  justify-content: flex-end;
-}
-/deep/.el-table__header-wrapper {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-/deep/.el-table {
-  overflow: visible;
-}
-/*********** 查记录弹窗 ***********/
-.record-dialog-column{
-  font-size: 20px;
-  color: #999;
-  .title{
-    display: inline-block;
-    width: 110px;
-  }
-}
-
-
-</style>
 <template>
   <div class="tab-page">
     <div class="tab-page-flex">
@@ -208,6 +92,8 @@
       styleType="1"
       :customFlag="true"
       @customBtn="customBtn"
+      title="查记录"
+      width="420px"
       >
       <template>
         <el-tabs v-model="recordActiveName" @tab-click="recordNavClick">
@@ -246,10 +132,17 @@
                 :timestamp="activity.timestamp"
                 placement="top"
               >
-                <el-card>
-                  <h4>更新 Github 模板</h4>
-                  <p>王小虎 提交于 {{activity.content}}</p>
-                </el-card>
+                <div>
+                  <div>
+                    <span class="audio-title">钟丽娟（{{activity.content}}店）</span>
+                    <el-audio
+                      :fixed="false"
+                      url="http://devtest.qiniudn.com/secret base~.mp3"
+                    >
+                      经纪人讲房
+                    </el-audio>
+                  </div>
+                </div>
               </el-timeline-item>
             </el-timeline>
           </el-tab-pane>
@@ -265,8 +158,12 @@ import {
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
 import util from "@/util/util";
+import elAudio from "@/components/audio";
 export default {
   inject: ["form"],
+  components: {
+    elAudio
+  },
   data() {
     return {
       recordActiveName: 'first',
@@ -289,13 +186,13 @@ export default {
       voiceList: [{
         content: '支持使用图标',
         timestamp: '2018-04-12 20:46',
-        size: 'large',
-        type: 'primary',
-        icon: 'el-icon-more'
+        color: '#0bbd87',
+        size: 'large'
       }, {
         content: '支持自定义颜色',
         timestamp: '2018-04-03 20:46',
-        color: '#0bbd87'
+        color: '#0bbd87',
+        size: 'large'
       }, {
         content: '支持自定义尺寸',
         timestamp: '2018-04-03 20:46',
@@ -304,7 +201,7 @@ export default {
         content: '默认样式的节点',
         timestamp: '2018-04-03 20:46'
       }],
-      alertflag: true,
+      alertflag: false,
       followUpContent: "",
       renderList: [],
       tableColumnField: [
@@ -720,3 +617,136 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+.tab-page {
+  /deep/.header-tab-cell {
+    height: 64px;
+    font-size: @font16;
+    background: rgba(240, 242, 245, 1);
+    color: rgba(48, 49, 51, 1);
+    font-weight: normal;
+    .cell {
+      justify-content: center;
+      display: flex;
+      align-items: center;
+    }
+  }
+  /deep/.tab-cell-item {
+    height: 64px;
+    font-size: @font16;
+    text-align: left;
+    .cell {
+      white-space: nowrap;
+    }
+  }
+  /deep/.tab-cell-left {
+    text-align: left;
+    white-space: nowrap;
+    // padding-left: 32px;
+    padding-left: 5px;
+    padding-right: 60px;
+    cell {
+      white-space: nowrap;
+    }
+  }
+  .tab-page-flex {
+    display: flex;
+  }
+  .table-btn-panel{
+    display: inline-flex;
+    flex-direction: column;
+    padding: 0 15px;
+    .table-btn-row{
+      margin-bottom: 10px;
+    }
+    .anchor-point{
+      min-width: 98px;
+      text-align: left;
+    }
+  }
+}
+/deep/.el-table__body-wrapper,
+/deep/.el-table__fixed-body-wrapper {
+  .el-table__expanded-cell {
+    padding: 0 0 10px 42px;
+  }
+  .el-table__expand-column {
+    //   display: none;
+    overflow: hidden;
+  }
+  tbody {
+    tr:last-child {
+      td {
+        border-bottom: none;
+      }
+    }
+  }
+}
+.tab-com-item {
+  margin-top: 10px;
+  .tab-house-title {
+    font-size: @font16;
+    font-weight: 600;
+    color: black;
+  }
+  .tab-house-tip {
+    font-size: @font14;
+    color: #b1b1b1;
+  }
+  .tab-houseno {
+    margin-top: 10px;
+    font-size: @font12;
+  }
+}
+/deep/.caret-wrapper {
+  height: auto;
+  .sort-caret {
+    position: static;
+    &:first-child {
+      margin-bottom: 3px;
+    }
+  }
+}
+.tab-page-floot {
+  padding-top: 16px;
+  padding-bottom: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+/deep/.el-table__header-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+/deep/.el-table {
+  overflow: visible;
+}
+/*********** 查记录弹窗 ***********/
+/deep/.didLog-content-body{
+  .el-tab-pane{
+    padding-left: 5px;
+  }
+  .record-dialog-column{
+    font-size: 16px;
+    color: #999;
+    .title{
+      display: inline-block;
+      width: 110px;
+    }
+  }
+  .audio-contenr {
+    height: 60px;
+    .audio-contenr-but{
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      font-size: 30px;
+    }
+  }
+  .audio-title{
+    font-size: 16px;
+    color: #999;
+  }
+}
+</style>
