@@ -234,10 +234,14 @@ export default {
       }
     },
     formatDemand(value) {
-      if (value.length > 1) {
-        return value.join("、");
-      } else {
-        return value[0];
+      if(value){
+          if (value.length > 1) {
+            return value.join("、");
+          } else {
+            return value[0];
+          }
+      }else{
+          return "暂无";
       }
     }
   },

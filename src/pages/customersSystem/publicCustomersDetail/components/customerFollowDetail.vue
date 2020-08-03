@@ -390,7 +390,7 @@ export default {
 
       this.$api
         .post({
-          url: "/saleCustomerDetail/addSaleCusFlower",
+          url: "/saleCustomer/addSaleCusFlower",
           qs: true,
           data: {
             EntructId: that.customerId.id,
