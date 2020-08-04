@@ -511,6 +511,12 @@ export default {
     //解决索引只排序当前页的问题,增加函数自定义索引序号
     sortDevName(str1, str2) {
       let res = 0;
+      if (this.form.sortColumn == "floor") {
+        res = str1.floor > str2.floor ? 1 : -1;
+        return res;
+      } else if (this.form.sortColumn == "addTime") {
+        return -1;
+      }
       for (let i = 0; ; i++) {
         if (!str1[i] || !str2[i]) {
           res = str1.length - str2.length;
@@ -541,13 +547,6 @@ export default {
           break;
         }
       }
-
-      if (this.form.sortColumn == "floor") {
-        res = 1;
-      } else if (this.form.sortColumn == "addTime") {
-        res = -1;
-      }
-
       return res;
     },
     getChartType(char) {

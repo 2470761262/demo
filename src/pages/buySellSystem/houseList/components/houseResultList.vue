@@ -1522,6 +1522,8 @@ export default {
      */
     reset() {
       this.searchPanelChange = true;
+      this.temporaryPrimaryList = [];
+      this.temporaryMiddleList = [];
       bus.$emit("modifyTableColumn", 0);
       this.resetData();
     },
@@ -1544,8 +1546,8 @@ export default {
       this.buildForList = [];
       this.agentPerName = ""; //跟单人姓名
       this.houseNoOrName = ""; //房源编号,楼盘名称
-      this.primarySchool = ""; //小学select
-      this.middleSchool = ""; //中学Select
+      this.primarySchool = []; //小学select
+      this.middleSchool = []; //中学Select
       this.typeRadio = "不限"; //类型radio不限
       this.bussinessDistrictRadio = "不限"; //商圈radio不限
       this.middleSchoolRadio = "不限"; //中学不限
@@ -1609,6 +1611,7 @@ export default {
      * @param {string} e
      */
     schoolChange(field, e) {
+      console.log(e, "999999999999999");
       let temporaryField;
       switch (field) {
         case "primarySchoolList":
