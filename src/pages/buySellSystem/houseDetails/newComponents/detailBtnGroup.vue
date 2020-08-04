@@ -44,7 +44,9 @@
       class="btn-item"
       style="order:0"
       :disabled="isLockBtn"
-      @click="openPop('shareFlag', isShare, '当前房源不满足分享条件')"
+      @click="
+        openPop('shareFlag', isShare, '请先完善信息后，才可以扫码分享房源')
+      "
     >
       分享房源
     </button>
@@ -174,6 +176,7 @@
     <!-- 分享 -->
     <share-pop
       :visible.sync="shareFlag"
+      :shareUrl="appletQRCode"
       title="分享房源"
       width="400PX"
       v-if="shareFlag"
@@ -276,7 +279,8 @@ export default {
       typeFlag: false, // 转状态按钮
       cancelTaskFlag: false, //取消角色人开关
       interviewFlag: false, //添加面访开关
-      shareFlag: false //分享弹框
+      shareFlag: false, //分享弹框
+      appletQRCode: "" //小程序分享二维码
     };
   },
   methods: {
@@ -373,6 +377,25 @@ export default {
       } else {
         this[item] = true;
       }
+      console.log("==item===>", item);
+      if (item == "shareFlag") {
+        this.getAppletQRCode();
+      }
+    },
+    getAppletQRCode() {
+      let that = this;
+      const json = this.$api
+        .get({
+          url: "outsideHouse/getAppletQRCode",
+          data: {
+            houseId: this.houseId
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            that.appletQRCode = e.data.data;
+          }
+        });
     },
     //锁定或解锁房源
     houseLock() {
