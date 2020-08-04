@@ -586,7 +586,7 @@
           </button>
           <button
             class="btn-primary-back btn-reset anchor-point"
-            @click="resetData"
+            @click="reset"
             data-anchor="首页搜索框重置"
           >
             重置
