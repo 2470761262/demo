@@ -44,10 +44,20 @@
       <template v-slot:top>
         <div class="page-list-query-row">
           <div class="query-content-cell">
-            <h3 class="query-cell-title">看板名称</h3>
+            <h3 class="query-cell-title">表名</h3>
             <el-input
-              placeholder="看板名称"
-              v-model="queryData.dispalyname"
+              placeholder="请输入表名"
+              v-model="queryData.tablename"
+              class="set-input120"
+              clearable
+            >
+            </el-input>
+          </div>
+          <div class="query-content-cell">
+            <h3 class="query-cell-title">表中文名</h3>
+            <el-input
+              placeholder="请输入表中文名"
+              v-model="queryData.tablecname"
               class="set-input120"
               clearable
             >
@@ -74,19 +84,11 @@
           <div class="head-fun-right">
             <button
               class="btn-primary house-back anchor-point"
-              data-anchor="数据看板-统计表管理"
-              @click="navToPath('/report/reportTableList')"
-            >
-              <i class=" iconluru iconfont"></i>
-              统计表管理
-            </button>
-            <button
-              class="btn-primary house-back anchor-point"
-              data-anchor="数据看板-添加看板"
+              data-anchor="添加表"
               @click="navToPath('/report/addReport')"
             >
               <i class=" iconluru iconfont"></i>
-              添加看板
+              添加表
             </button>
           </div>
         </div>
@@ -152,26 +154,18 @@ export default {
       },
       tableColumnField: [
         {
-          prop: "dispalycode",
-          label: "看板编码",
+          prop: "tablename",
+          label: "表名",
           width: "170",
           order: false,
           disabled: false,
           default: true
         },
         {
-          prop: "dispalyname",
-          label: "看板名称",
+          prop: "tablecname",
+          label: "表中文名",
           order: false,
           width: "150",
-          disabled: true,
-          default: true
-        },
-        {
-          prop: "tablename",
-          label: "表名",
-          width: "90",
-          order: false,
           disabled: true,
           default: true
         },
@@ -254,7 +248,7 @@ export default {
       console.log(params);
       this.$apiReport
         .get({
-          url: "/xjwreport/displayboard/confList",
+          url: "/xjwreport/table/confList",
           data: params,
           token: false
         })
