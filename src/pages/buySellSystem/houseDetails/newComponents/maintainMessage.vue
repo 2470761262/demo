@@ -30,7 +30,9 @@
         </div>
         <div class="card-message-item">
           <div class="card-item-title">付款要求</div>
-          <div class="card-item-data">一次性付款</div>
+          <div class="card-item-data">
+            {{ houseData.paymentMethod==="0"?"均可":(houseData.paymentMethod==="1"?"一次性付款":"不可用公积金") }}
+          </div>
         </div>
       </div>
       <!-- 上次交易金额 & 是否唯一住房 -->
@@ -43,7 +45,9 @@
         </div>
         <div class="card-message-item">
           <div class="card-item-title">是否唯一住房</div>
-          <div class="card-item-data">不唯一</div>
+          <div class="card-item-data">
+            {{ houseData.OnlyHouse?"唯一":"不唯一" }}
+          </div>
         </div>
       </div>
       <!-- 抵押情况 -->
