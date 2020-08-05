@@ -203,6 +203,39 @@ export default [
       )
   },
   {
+    //数据看板配置列表
+    path: "/report/reportTableList",
+    meta: {
+      title: "数据看板表管理"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportConfList" */ "@/pages/report/table/reportTableList.vue"
+      )
+  },
+  {
+    //数据看板配置列表
+    path: "/report/reportConfList",
+    meta: {
+      title: "数据看板配置列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportConfList" */ "@/pages/report/reportConfList.vue"
+      )
+  },
+  {
+    //数据看板
+    path: "/report/reportDataList",
+    meta: {
+      title: "看板数据"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportDataList" */ "@/pages/report/reportDataList.vue"
+      )
+  },
+  {
     path: "/buySellSystem/resourceManage",
     redirect: "/buySellSystem/resourceManageList",
     component: () =>
@@ -235,6 +268,17 @@ export default [
           )
       }
     ]
+  },
+  {
+    path: "/report/addReport",
+    name: "addReport",
+    meta: {
+      title: "添加看板"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "addReport" */ "@/pages/report/addReport/addReport.vue"
+      )
   },
   {
     //买卖系统三级路由
