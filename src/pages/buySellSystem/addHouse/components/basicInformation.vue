@@ -948,7 +948,6 @@ export default {
       this.$api.get({ url: `/draft-house/community/${id}` }).then(e => {
         let data = e.data.data;
         if (e.data.code == 200) {
-          this.formData.buildingTime = data.finishYear;
           this.formData.property = data.ownerProperty;
           this.formData.primarySchool = data.primarySchool;
           this.formData.middleSchool = data.middleSchool;
@@ -1031,6 +1030,7 @@ export default {
           ) {
             this.formData.middleSchool = data.middleSchool;
           }
+          this.formData.buildingTime = data.buildYear;
           this.formData.isElevator = data.elevatorNum;
           this.formData.houseUse = data.buildType;
           this.formData.houseStruct = data.buildingStructure;

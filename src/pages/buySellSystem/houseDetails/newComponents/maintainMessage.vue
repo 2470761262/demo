@@ -191,7 +191,7 @@
         <div class="card-message-item">
           <div class="card-item-title">户型结构</div>
           <div class="card-item-data">
-            {{ houseData.FamilyStructure | mapFilter("ROOMTYPE") | emptyRead }}
+            {{ houseData.FamilyStructure | emptyRead }}
           </div>
         </div>
         <div class="card-message-item">
