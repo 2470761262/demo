@@ -116,7 +116,7 @@
         </template>
         <el-table-column label="操作" fixed="right" min-width="150">
           <template v-slot="scope">
-            <el-button type="primary" size="mini" @click="toCheck(scope.row.id)"
+            <el-button type="primary" :disabled="scope.row.isCheck" size="mini" @click="toCheck(scope.row.id)"
               >审核</el-button
             >
           </template>
