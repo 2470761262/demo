@@ -149,7 +149,7 @@ export default {
             that.isLoading = true;
             that.$api
               .post({
-                url: "	/saleCustomerDetail/addSaleCusFlower",
+                url: "/saleCustomer/addSaleCusFlower",
                 data: postData,
                 qs: true,
                 headers: {

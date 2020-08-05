@@ -305,6 +305,7 @@ export default {
       ClaimFlag: false,
       ClaimCheckFlag: false,
       MergeFlag: false,
+      isCall: true,
       mergeCus: {
         Per: "",
         Name: "",
@@ -385,7 +386,7 @@ export default {
       let that = this;
       this.$api
         .post({
-          url: "/saleCustomerDetail/getTelephoneForPublish",
+          url: "/saleCustomer/getTelephoneForPublish",
           data: { customerId: that.customerId.id },
           qs: true,
           headers: {
@@ -404,20 +405,23 @@ export default {
         });
     },
     callUp(i) {
+      debugger;
       let that = this;
-      console.log(i);
-      let postData = {
-        customerId: this.customerId.id,
-        remark: "给客户" + this.cusbaseData.Customers + "拨打电话",
-        customerName: this.cusbaseData.Customers,
-        //  contactPhone: i.phone,
-        customerNo: this.cusbaseData.CustomerNo,
-        customerPlate: this.cusbaseData.plate,
-        telId: i.id
-      };
-      that.$api
+      if (this.isCall) {
+        console.log(i);
+        let postData = {
+            customerId: this.customerId.id,
+            remark: "给客户" + this.cusbaseData.Customers + "拨打电话",
+            customerName: this.cusbaseData.Customers,
+            //  contactPhone: i.phone,
+            customerNo: this.cusbaseData.CustomerNo,
+            customerPlate: this.cusbaseData.plate,
+            telId: i.id
+        };
+        that.isCall = false;
+        that.$api
         .post({
-          url: "/saleCustomerDetail/DialPhoneToCustomer",
+          url: "/saleCustomer/dialPhoneToCustomer",
           data: postData,
           qs: true,
           headers: {
@@ -426,6 +430,9 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            setTimeout(() => {
+              that.isCall = true;
+            }, 10000);
             this.$message({
               type: "success",
               message: "号码已发送至微信"
@@ -437,6 +444,13 @@ export default {
             that.$message(e.response.data.message);
           }
         });
+      }else {
+           that.$message({
+             type: "xinjia-info",
+             message: "十秒内不能重复点击"
+           });
+       }
+
     },
     openOrcloseFix(key, val) {
       this[key] = val;
@@ -445,7 +459,7 @@ export default {
       var that = this;
       this.$api
         .post({
-          url: "/saleCustomerDetail/canTakeCus",
+          url: "/saleCustomer/canTakeCus",
           qs: true,
           data: {
             customerId: that.customerId.id
@@ -504,7 +518,7 @@ export default {
       if (flag) {
         this.$api
           .post({
-            url: "/saleCustomerDetail/takeCus",
+            url: "/saleCustomer/takeCus",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             token: false,
             data: {

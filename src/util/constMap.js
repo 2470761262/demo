@@ -198,6 +198,25 @@ export const HOUSESOURCE = [
     value: 7
   }
 ];
+export const HOUSINGSITUATION = [
+  //房屋现状 HOUSINGSITUATION
+  {
+    key: "自住",
+    value: 0
+  },
+  {
+    key: "出租",
+    value: 1
+  },
+  {
+    key: "毛坯空置",
+    value: 2
+  },
+  {
+    key: "已租空置",
+    value: 3
+  }
+];
 export const HOUSENOW = [
   //房屋现状 houseNow
   {

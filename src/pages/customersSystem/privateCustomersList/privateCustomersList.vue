@@ -42,7 +42,7 @@ export default {
         submitSearch: false,
         searchType: "1", //搜索类别 1--客户信息 2--客户印象
         requirementType: 1, //需求类型参数 (示例：买二手房1，买新房2，租赁4
-        attentionStatus: false, //是否关注 1关注 其余暂不关注，需要处理数据
+        attentionStatus: 1, //是否关注 1关注 其余暂不关注，需要处理数据
         isBuy: 0, //是否成交，0否，1是 需要处理数据
         keyWord: "", //关键词
 

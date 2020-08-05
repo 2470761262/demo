@@ -5,16 +5,21 @@
         资源库管理
       </div>
     </div>
-    <router-view></router-view>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 <script>
 export default {
-
+  data() {
+    return {}
+  }
 }
 </script>
-<style lang="less">
-.page-content{
+<style lang="less" scoped>
+.page-content {
   flex: 1;
   background: #fff;
   display: flex;
@@ -48,5 +53,4 @@ export default {
     }
   }
 }
-
 </style>

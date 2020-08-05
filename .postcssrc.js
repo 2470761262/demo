@@ -4,10 +4,10 @@ module.exports = {
   plugins: {
     "postcss-plugin-px2rem": {
       remUnit: 100,
-      selectorBlackList: [/^html$/, ".page-cell-main-menu"],
+      selectorBlackList: [/^html$/],
       unitPrecision: 5,
       minPixelValue: 2,
-      propBlackList: ["border", "border-radius"]
+      propBlackList: ["border"]
     },
     "postcss-lsx-zr": {}
   }

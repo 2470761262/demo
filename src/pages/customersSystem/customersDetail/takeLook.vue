@@ -563,7 +563,7 @@ export default {
           this.fullscreenLoading = true;
           that.$api
             .post({
-              url: "/saleCustomerDetail/addPairRecord",
+              url: "/saleCustomer/addPairRecord",
               data: postData,
               headers: {
                 "Content-Type": "application/json"

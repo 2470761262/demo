@@ -221,6 +221,9 @@ export default {
       immediate: true,
       handler: function(val) {
         Object.assign(this.$data, val.parentData);
+        if(val.hasOwnProperty("sidebarFlag")){
+          this.sidebarFlag = val.sidebarFlag;
+        }
       }
     }
   },

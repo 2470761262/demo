@@ -72,7 +72,7 @@
 </style>
 <template>
   <div>
-    <div class="feedback-customer" ref="fixedChunk2">
+    <!-- <div class="feedback-customer" ref="fixedChunk2">
       <img
         src="https://imgtest.0be.cn/FileUpload/timg.png"
         alt="体验官专享"
@@ -84,7 +84,7 @@
         </p>
         <p>输入账号密码进入系统</p>
       </div>
-    </div>
+    </div> -->
     <div class="feedback-suspension" ref="fixedChunk" @click="openFeed">
       <img
         src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/5/27/6a6b1cc898c74452ac219dcc85fc2e33.png"

@@ -81,14 +81,14 @@ let log_socket = {
       content = this.sendAnchorData(e, accountId);
     } else if (e.target.dataset && e.target.dataset.anchor) {
       content = this.sendAnchorData(e, accountId);
-    }else{
-      let parentNode = util.getParents(target,"anchor-point")
-      if(parentNode){
-        content = this.sendAnchorParentData(e, accountId,parentNode)
+    } else {
+      let parentNode = util.getParents(target, "anchor-point");
+      if (parentNode) {
+        content = this.sendAnchorParentData(e, accountId, parentNode);
       }
     }
     content = identify + "@$@" + content;
-    console.log(content);
+    // console.log(content);
     this.socket.send(content);
   },
   sendAction(e, accountId) {
@@ -130,7 +130,7 @@ let log_socket = {
     let content = "user_anchor@$:" + JSON.stringify(parent);
     return content;
   },
-  sendAnchorParentData(e, accountId,parentNode) {
+  sendAnchorParentData(e, accountId, parentNode) {
     let parent = {
       version: "1.0.1",
       accountId: accountId,

@@ -266,7 +266,9 @@
                   class="anchor-point"
                   v-for="item in checkStatusList"
                   :key="item.value"
-                  :data-anchor="'验真列表验证状态 => select => option:' + item.label"
+                  :data-anchor="
+                    '验真列表验证状态 => select => option:' + item.label
+                  "
                   @click.native="log_socket.sendUserActionData"
                   :label="item.label"
                   :value="item.value"
@@ -288,7 +290,9 @@
                   class="anchor-point"
                   v-for="item in phoneStatusList"
                   :key="item.value"
-                  :data-anchor="'验真列表号码状态 => select => option:' + item.label"
+                  :data-anchor="
+                    '验真列表号码状态 => select => option:' + item.label
+                  "
                   @click.native="log_socket.sendUserActionData"
                   :label="item.label"
                   :value="item.value"

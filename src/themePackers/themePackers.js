@@ -50,7 +50,9 @@ let themeData = {
       "--font--21",
       "--font--22",
       "--font--23",
-      "--font--24"
+      "--font--24",
+      "--font--25",
+      "--font--26"
     ];
     if (!fontSize) {
       if (fontsizebasename) {

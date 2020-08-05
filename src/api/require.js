@@ -81,7 +81,7 @@ http.interceptors.response.use(
   }
 );
 //请求对象
-let ApiData = {
+let ApiReportData = {
   post(arg) {
     if (!arg.method) {
       arg.method = "POST";
@@ -126,5 +126,5 @@ let ApiData = {
   }
 };
 export default {
-  ...ApiData
+  ...ApiReportData
 };

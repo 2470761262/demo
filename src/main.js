@@ -7,6 +7,7 @@ import store from "@/store/store";
 import VueCookies from "vue-cookies"; //cookies
 import "./validate/validate"; //表单验证
 import Api from "@/api/require"; //请求api
+import Report from "@/api/report"; //请求api
 import guard from "@/router/guard"; // 路由拦截器
 import logWebSocket from "./components/log/logWebSocket";
 import * as socketApi from "./util/webSocket";
@@ -18,6 +19,7 @@ import * as md5Util from "./util/md5";
 Vue.prototype.socketApi = socketApi;
 Vue.prototype.md5Util = md5Util;
 Vue.prototype.$api = Api;
+Vue.prototype.$apiReport = Report;
 Vue.config.productionTip = false;
 Vue.prototype.log_socket = logWebSocket;
 Vue.use(ElementUI);
