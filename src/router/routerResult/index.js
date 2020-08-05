@@ -204,6 +204,17 @@ export default [
   },
   {
     //数据看板配置列表
+    path: "/report/reportTableList",
+    meta: {
+      title: "数据看板表管理"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportConfList" */ "@/pages/report/table/reportTableList.vue"
+      )
+  },
+  {
+    //数据看板配置列表
     path: "/report/reportConfList",
     meta: {
       title: "数据看板配置列表"
