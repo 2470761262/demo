@@ -183,6 +183,12 @@ export default {
               item.decoration = "";
             }
             if (item.community) {
+              item.community1=null;
+              item.community1Id=null;
+              item.community2=null;
+              item.community2Id=null;
+              item.community3=null;
+              item.community3Id=null;
               item.community.forEach((com, idx) => {
                 let items = com.split(",");
                 item["community" + (idx + 1)] = items[0];
