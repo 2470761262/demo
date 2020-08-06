@@ -541,6 +541,10 @@
     }
   }
 }
+/*** 即将更新标记 ****/
+/deep/.el-badge__content.is-fixed{
+  right: 40px;
+}
 </style>
 <template>
   <div class="page-result-content">
@@ -689,6 +693,15 @@
                 </div> -->
 
         <div class="head-fun-right">
+          <el-badge value="即将更新">
+            <button
+              class="btn-primary anchor-point"
+              data-anchor="首页开发线索"
+            >
+              <i class="iconxiansuo iconfont"></i>
+              开发线索
+            </button>
+          </el-badge>
           <button
             class="btn-primary anchor-point"
             data-anchor="首页管理入口"
@@ -697,14 +710,16 @@
             <i class=" iconjichuguanli1 iconfont"></i>
             管理入口
           </button>
-          <button
-            class="btn-primary anchor-point"
-            data-anchor="首页我的房源"
-            @click="navToPath('/buySellSystem/myAgent')"
-          >
-            <i class="icondaohang_wodefangyuan1 iconfont"></i>
-            我的房源
-          </button>
+          <el-badge value="即将改版">
+            <button
+              class="btn-primary anchor-point"
+              data-anchor="首页我的房源"
+              @click="navToPath('/buySellSystem/myAgent')"
+            >
+              <i class="icondaohang_wodefangyuan1 iconfont"></i>
+              我的房源
+            </button>
+          </el-badge>
           <button
             class="btn-primary house-back anchor-point"
             data-anchor="首页录入房源"
