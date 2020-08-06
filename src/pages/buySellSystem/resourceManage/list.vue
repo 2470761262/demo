@@ -22,11 +22,12 @@
     </div>
     <div class="page-list-panel">
       <div class="table">
-        <div class="column" v-for="item in renderList" :key="item.id" @click="navigateToDetail(item.id)">
-          <div>{{item.communityName}}</div>
-          <div>总户数：{{item.houseTotal}}</div>
-          <div>无号码：{{item.houseNoNumber}}</div>
-          <div>渗透率：{{item | rateCompute}}</div>
+        <div class="column" v-for="item in renderList" :key="item.id" @click="navigateToDetail(item.comId)">
+          <div :title="item.communityName">{{item.communityName}}</div>
+          <div>总户数：{{item.rooms}}</div>
+          <div>无号码：10</div>
+          <div>渗透率：85%</div>
+          <!-- <div>渗透率：{{item | rateCompute}}</div> -->
         </div>
       </div>
       <el-pagination
@@ -61,63 +62,34 @@ export default {
           communityName: "上品至尊",
           houseTotal: 100,
           houseNoNumber: 10
-        },{
-          id: 3,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        },{
-          id: 4,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        },{
-          id: 5,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        },{
-          id: 6,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        },{
-          id: 7,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        },{
-          id: 8,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        },{
-          id: 9,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        },{
-          id: 10,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        },{
-          id: 11,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
         }
       ],
       pageJson: {
         total: 1,
-        pageSize: 30,
+        pageSize: 15,
         currentPage: 1,
         dataCount: 0
       },
       form: {
         keyWord: ""
-      }
+      },
+      loading: true,
+      data: {
+        comId: "",
+        cbId: "",
+        roomNo: "",
+        timeSelect: "",
+        customName: "",
+        tel: "",
+        minInArea: "",
+        maxInArea: ""
+      },
+      sortColumn: "id", //排序字段
+      sortType: "descending", //排序类型
     }
+  },
+  created() {
+    this.queryNotPhone(1);
   },
   methods: {
     /**
@@ -125,7 +97,6 @@ export default {
      */
     handleHouseName() {
       this.form.keyWord = this.houseName;
-      // this.getHouseData();
     },
     InitPageJson() {
       this.pageJson = {
@@ -135,47 +106,75 @@ export default {
         dataCount: 0
       };
     },
-    getHouseData(value, initPage = true) {
-      if (initPage) this.InitPageJson();
-      let restuleParms = Object.assign({}, value, {
-        page: this.pageJson.currentPage,
-        limit: this.pageJson.pageSize
-      });
-      return this.$api
+    /**
+     * 资源库管理数据请求
+     */
+    queryNotPhone(currentPage) {
+      var that = this;
+      that.loading = true;
+      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+
+      params.comId = that.data.comId;
+      params.cbId = that.data.cbId;
+      params.roomNo = that.data.roomNo;
+      params.beginTime = that.data.timeSelect[0];
+      params.endTime = that.data.timeSelect[1];
+      params.customName = that.data.customName;
+      params.tel = that.data.tel;
+      params.minInArea = that.data.minInArea;
+      params.maxInArea = that.data.maxInArea;
+
+      params.sortColumn = this.sortColumn;
+      params.sortType = this.sortType;
+      console.log(params);
+      this.$api
         .post({
-          url: "/mateHouse/getMateHouse/soleAllHouseIndex",
+          url: "/houseResource/getNotPhone",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: restuleParms
+          data: params
         })
         .then(e => {
-          let data = e.data;
-          if (data.code == 200) {
-            this.renderList = data.data.data;
-            console.log("------>", this.renderList);
-            this.pageJson.total = data.data.pageSum;
-            this.pageJson.dataCount = data.data.dataCount;
+          that.loading = false;
+          if (e.data.code == 200) {
+            that.pageJson.total = e.data.data.dataCount;
+            that.renderList = e.data.data.data;
+            let btnList = e.data.data.btnList;
+            console.log(e.data, "result=========================")
+
+          } else {
+            //console.log("查询无号码列表结果：" + result.message);
           }
         })
-        .finally(() => {});
+        .catch(e => {
+          console.log("查询无号码列表失败");
+          console.log(e);
+        });
     },
     /**
      * 修改每条页数
      */
     handleSizeChange(size) {
       console.log(size, "=======");
+      this.pageJson.pageSize = size;
+      this.queryNotPhone(1);
     },
     /**
      * 修改当前页
      */
     handleCurrentChange(page) {
       console.log(page, "=======");
+      this.queryNotPhone(page);
     },
     /**
      * 跳转到详情页
      */
     navigateToDetail(id) {
-      console.log(id, "=========");
-      this.$router.push("/buySellSystem/resourceManageDetail");
+      this.$router.push({
+        name: "resourceManageDetail",
+        params: {
+          id: id
+        }
+      });
     }
   },
   filters: {
@@ -188,6 +187,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .page-list-content{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 0;
   .page-result-head {
     display: flex;
     // justify-content: space-between;
@@ -232,6 +235,7 @@ export default {
   .page-list-panel {
     flex: 1;
     padding: 30px 40px;
+    overflow: auto;
     .table {
       display: flex;
       justify-content: flex-start;
@@ -240,8 +244,8 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 250px;
-        padding: 15px 0;
+        width: 230px;
+        padding: 15px 10px;
         margin: 0 40px 50px;
         border: 1px solid #eee;
         border-radius: 2px;
@@ -253,8 +257,11 @@ export default {
           transform: translateY(-10px);
         }
         div:first-child {
+          height: 26px;
+          line-height: 26px;
           font-weight: 900;
           font-size: @font16;
+          overflow: hidden;
         }
       }
     }

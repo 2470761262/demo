@@ -256,7 +256,8 @@ export default [
             /* webpackChunkName: "resourceManageLList" */ "@/pages/buySellSystem/resourceManage/list.vue"
           )
       },{
-        path: "/buySellSystem/resourceManageDetail",
+        path: "/buySellSystem/resourceManageDetail/:id",
+        name: "resourceManageDetail",
         meta: {
           title: "资源库管理",
           isMapNav: true, //不需要导航

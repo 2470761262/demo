@@ -1,13 +1,20 @@
 <template>
   <div class="head-fun-right">
-    <button
-      class="btn-primary anchor-point"
-      data-anchor="资源库管理一键导入"
-      @click="templateImport"
-    >
-      <i class="iconTemplateImport iconfont"></i>
-      一键导入
-    </button>
+    <el-upload
+      action="https://jsonplaceholder.typicode.com/posts/"
+      :show-file-list="false"
+      :before-upload="beforeAvatarUpload"
+      :on-success="importSuccess"
+      list-type="picture">
+      <button
+        class="btn-primary anchor-point"
+        data-anchor="资源库管理一键导入"
+      >
+        <i class="iconTemplateImport iconfont"></i>
+        一键导入
+      </button>
+      <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
+    </el-upload>
     <button
       class="btn-primary anchor-point"
       data-anchor="资源库管理模板下载"
@@ -22,16 +29,24 @@
 export default {
   methods: {
     /**
-     * 一键导入
-     */
-    templateImport() {
-
-    },
-    /**
      * 模板下载
      */
     templateDownload() {
-
+      console.log("11111111")
+    },
+    importSuccess(response, file, fileLis) {
+      console.log(response, file, fileLis, "================")
+    },
+    beforeAvatarUpload(file) {
+      const isExcel = file.type === "application/vnd.ms-excel" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      const isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isExcel) {
+        this.$message.error('上传文件只能是 excel 格式!');
+      }
+      if (!isLt2M) {
+        this.$message.error('上传文件大小不能超过 2MB!');
+      }
+      return isExcel && isLt2M;
     }
   }
 }

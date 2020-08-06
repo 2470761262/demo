@@ -232,22 +232,28 @@ export default {
         currentPage: 1,
         dataCount: 0
       },
-      form: {
+      conditions: {
         comId: "", // 楼盘
         cbId: "", // 栋楼
-        bhId: "" // 房间号
+        roomNo: "", // 房间号
       },
-      proprietorNumber: ""
+      sortColumn: "id", //排序字段
+      sortType: "descending", //排序类型
+      proprietorNumber: "",
     }
   },
   watch: {
-    form: {
+    conditions: {
       deep: true,
-      immediate: true,
+      // immediate: true,
       handler(value, ordvalue) {
-        this.getHouseData(JSON.parse(JSON.stringify(value)));
+        this.queryNotPhone(JSON.parse(JSON.stringify(value)));
       }
     }
+  },
+  created() {
+    console.log(this,this.$route.params, "params==========");
+    this.conditions.comId = this.$route.params.id;
   },
   methods: {
     InitPageJson() {
@@ -258,28 +264,39 @@ export default {
         dataCount: 0
       };
     },
-    getHouseData(value, initPage = true) {
-      if (initPage) this.InitPageJson();
-      let restuleParms = Object.assign({}, value, {
-        page: this.pageJson.currentPage,
-        limit: this.pageJson.pageSize
-      });
-      return this.$api
+    /**
+     * 资源库管理数据请求
+     */
+    queryNotPhone(currentPage) {
+      var that = this;
+      that.loading = true;
+      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
+
+      params.comId = that.conditions.comId;
+      params.cbId = that.conditions.cbId;
+      params.roomNo = that.conditions.roomNo;
+
+      params.sortColumn = this.sortColumn;
+      params.sortType = this.sortType;
+      console.log(params);
+      this.$api
         .post({
-          url: "/mateHouse/getMateHouse/soleAllHouseIndex",
+          url: "/houseResource/getNotPhone",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: restuleParms
+          data: params
         })
         .then(e => {
-          let data = e.data;
-          if (data.code == 200) {
-            this.renderList = data.data.data;
-            console.log("------>", this.renderList);
-            this.pageJson.total = data.data.pageSum;
-            this.pageJson.dataCount = data.data.dataCount;
+          that.loading = false;
+          if (e.data.code == 200) {
+            that.pageJson.total = e.data.data.dataCount;
+            that.renderList = e.data.data.data;
+            console.log(e.data, "detail=========================")
           }
         })
-        .finally(() => {});
+        .catch(e => {
+          console.log("查询无号码列表失败");
+          console.log(e);
+        });
     },
     handleSizeChange(pageSize) {
       this.pageJson.pageSize = pageSize;
