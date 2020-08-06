@@ -10,6 +10,7 @@
     "build:uat": "vue-cli-service build --mode uat",
     "build:testcustomer": "vue-cli-service build --mode testcustomer",
     "build:release-customer": "vue-cli-service build --mode release-customer",
+    "build:release": "vue-cli-service build --mode release",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
