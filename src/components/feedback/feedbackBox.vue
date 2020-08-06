@@ -30,6 +30,9 @@
   color: #666;
   margin-bottom: 20px;
 }
+.is-nav-pad {
+  padding: 0 10px;
+}
 </style>
 <template>
   <div class="nav-breadcrumb">
@@ -102,7 +105,7 @@
         >
       </div>
     </el-dialog>
-    <div class="nav-flex">
+    <div class="nav-flex" :class="isPad">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item
           v-for="(item, index) in breadcrumbList"
@@ -138,6 +141,14 @@ export default {
     homeUrl: {
       type: String,
       default: "/buySellSystem/houseList"
+    }
+  },
+  computed: {
+    isPad() {
+      if (this.$route.meta.isPad) {
+        return "is-nav-pad";
+      }
+      return "";
     }
   },
   watch: {

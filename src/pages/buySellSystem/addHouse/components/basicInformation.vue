@@ -601,22 +601,22 @@ let certificateType = [
   { title: "拆迁安置协议书", label: 3 }
 ];
 let updateFileMap = new Map([
-  ["customerName", "Customers"],
-  ["sex", "Sex"],
-  ["customerType", "customerType"],
-  ["tel", "Tel"],
-  ["tel1", "Tel1"],
-  ["tel2", "Tel2"],
-  ["tel3", "Tel3"],
-  ["certificateType", "certificate_type"],
-  ["certificateNo", "certificate_no"],
-  ["price", "Price"],
-  ["bottomPrice", "FloorPrice"],
-  ["area", "InArea"],
-  ["room", "Rooms"],
-  ["hall", "hall"],
-  ["toilet", "toilet"],
-  ["balcony", "balcony"]
+  ["customerName", "业主姓名", "Customers"],
+  ["sex", "性别", "Sex"],
+  ["customerType", "业主类型", "customerType"],
+  ["tel", "手机号", "Tel"],
+  ["tel1", "手机号1", "Tel1"],
+  ["tel2", "手机号2", "Tel2"],
+  ["tel3", "手机号3", "Tel3"],
+  ["certificateType", "房屋证件", "certificate_type"],
+  ["certificateNo", "房屋证件号", "certificate_no"],
+  ["price", "售价", "Price"],
+  ["bottomPrice", "底价", "FloorPrice"],
+  ["area", "面积", "InArea"],
+  ["room", "室", "Rooms"],
+  ["hall", "厅", "hall"],
+  ["toilet", "卫", "toilet"],
+  ["balcony", "阳台", "balcony"]
 ]);
 //import { mapState } from "vuex";
 import util from "@/util/util";
@@ -948,7 +948,6 @@ export default {
       this.$api.get({ url: `/draft-house/community/${id}` }).then(e => {
         let data = e.data.data;
         if (e.data.code == 200) {
-          this.formData.buildingTime = data.finishYear;
           this.formData.property = data.ownerProperty;
           this.formData.primarySchool = data.primarySchool;
           this.formData.middleSchool = data.middleSchool;
@@ -1031,6 +1030,7 @@ export default {
           ) {
             this.formData.middleSchool = data.middleSchool;
           }
+          this.formData.buildingTime = data.buildYear;
           this.formData.isElevator = data.elevatorNum;
           this.formData.houseUse = data.buildType;
           this.formData.houseStruct = data.buildingStructure;

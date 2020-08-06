@@ -234,10 +234,14 @@ export default {
       }
     },
     formatDemand(value) {
-      if (value.length > 1) {
-        return value.join("、");
-      } else {
-        return value[0];
+      if(value){
+          if (value.length > 1) {
+            return value.join("、");
+          } else {
+            return value[0];
+          }
+      }else{
+          return "暂无";
       }
     }
   },
@@ -249,7 +253,7 @@ export default {
       let that = this;
       this.$api
         .post({
-          url: "/saleCustomerDetail/getTelPhone",
+          url: "/saleCustomer/getTelPhoneForPrivate",
           data: { customerId: this.customer.data.id },
           qs: true,
           headers: {
@@ -290,7 +294,7 @@ export default {
         that.isCall = false;
         that.$api
           .post({
-            url: "/saleCustomerDetail/DialPhoneToCustomer",
+            url: "/saleCustomer/dialPhoneToCustomer",
             data: postData,
             qs: true
           })
@@ -337,7 +341,7 @@ export default {
         .then(() => {
           that.$api
             .post({
-              url: "/saleCustomerDetail/deleteImpression",
+              url: "/saleCustomerImpression/deleteImpression",
               data: { impressionId: id },
               qs: true,
               headers: {

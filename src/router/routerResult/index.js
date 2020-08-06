@@ -35,7 +35,9 @@ export default [
       "/buySellSystem/houseDetails/:houseId/:browse?/:key?/:dept?/:detailType?",
     name: "houseDetails",
     meta: {
-      title: "房源详情"
+      title: "房源详情",
+      // isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
     },
     component: () =>
       import(
@@ -215,6 +217,51 @@ export default [
         /* webpackChunkName: "addFloorList" */ "@/pages/buySellSystem/addFloorList/addFloorList.vue"
       )
   },
+  {
+    //数据看板配置列表
+    path: "/report/reportTableList",
+    meta: {
+      title: "数据看板表管理"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportConfList" */ "@/pages/report/table/reportTableList.vue"
+      )
+  },
+  {
+    //数据看板配置列表
+    path: "/report/reportConfList",
+    meta: {
+      title: "数据看板配置列表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportConfList" */ "@/pages/report/reportConfList.vue"
+      )
+  },
+  {
+    //数据看板
+    path: "/report/reportDataList",
+    meta: {
+      title: "看板数据"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "reportDataList" */ "@/pages/report/reportDataList.vue"
+      )
+  },
+  {
+    path: "/report/addReport",
+    name: "addReport",
+    meta: {
+      title: "添加看板"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "addReport" */ "@/pages/report/addReport/addReport.vue"
+      )
+  },
+
   {
     //买卖系统三级路由
     path: "/buySellSystem/otherIframe",
@@ -475,18 +522,18 @@ export default [
             /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/validateHouseList/validateHouseList.vue"
           )
       },
-      {
-        //我司成交
-        path: "/buySellSystem/ourComDeal",
-        meta: {
-          title: "我司成交",
-          keepAlive: true
-        },
-        component: () =>
-          import(
-            /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/ourComDeal.vue"
-          )
-      },
+      // {
+      //   //我司成交
+      //   path: "/buySellSystem/ourComDeal",
+      //   meta: {
+      //     title: "我司成交",
+      //     keepAlive: true
+      //   },
+      //   component: () =>
+      //     import(
+      //       /* webpackChunkName: "validateHouseList" */ "@/pages/buySellSystem/dealHouse/ourComDeal.vue"
+      //     )
+      // },
       {
         //他司成交
         path: "/buySellSystem/otherComDeal",

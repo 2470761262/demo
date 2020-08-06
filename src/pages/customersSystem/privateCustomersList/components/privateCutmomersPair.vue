@@ -457,7 +457,7 @@
         label="看房进度"
         class="ItemRow ChooseItemRow"
         prop="Progress"
-        v-show="!form.attentionStatus"
+        v-show="form.attentionStatus == 1 || form.attentionStatus == null"
       >
         <el-checkbox-group
           v-model="Progress"
@@ -480,7 +480,10 @@
         label="意向价格"
         class="ItemRow ChooseItemRow"
         prop="Price"
-        v-show="!form.attentionStatus && customersType != 4"
+        v-show="
+          (form.attentionStatus == 1 || form.attentionStatus == null) &&
+            customersType != 4
+        "
       >
         <el-radio-group
           v-model="Price"
@@ -527,7 +530,10 @@
         label="意向租金"
         class="ItemRow ChooseItemRow"
         prop="Price"
-        v-show="!form.attentionStatus && customersType == 4"
+        v-show="
+          (form.attentionStatus == 1 || form.attentionStatus == null) &&
+            customersType == 4
+        "
       >
         <el-radio-group
           v-model="Price"
@@ -988,7 +994,6 @@ export default {
 
     setCustomersType(item, resetAll) {
       this.form.isBuy = 0;
-      this.form.attentionStatus = false;
       this.form.desireIntensitys = [];
       this.form.pairNumbers = [];
       this.form.minPrice = "";
@@ -1018,23 +1023,28 @@ export default {
       switch (item.type) {
         case 1:
           this.form.requirementType = "";
+          this.form.attentionStatus = null;
           break;
         case 2:
           this.form.requirementType = 1;
+          this.form.attentionStatus = 1;
           break;
         case 3:
           this.form.requirementType = 2;
+          this.form.attentionStatus = 1;
           break;
         case 4:
           this.form.requirementType = 4;
+          this.form.attentionStatus = 1;
           break;
         case 5:
           this.form.requirementType = "";
+          this.form.attentionStatus = 1;
           this.form.isBuy = 1;
           break;
         case 6:
           this.form.requirementType = "";
-          this.form.attentionStatus = true;
+          this.form.attentionStatus = 0;
           this.getAttention();
           break;
         default:

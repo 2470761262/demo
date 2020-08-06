@@ -39,7 +39,7 @@ export default [
     icon: "iconzaishouwugendan iconfont",
     active: "4",
     children: [
-      { name: "我司成交", active: "/buySellSystem/ourComDeal" },
+      // { name: "我司成交", active: "/buySellSystem/ourComDeal" },
       { name: "他司成交", active: "/buySellSystem/otherComDeal" },
       { name: "业主自售", active: "/buySellSystem/selfDeal" }
     ]

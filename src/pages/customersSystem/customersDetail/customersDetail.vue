@@ -128,6 +128,14 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            //判断如果是私客则跳转到私客详情页
+            if(e.data.data.bsAgentCustomersTbl.plate > 0){
+                this.$router.replace({
+                    path: "/customers/publicCustomersDetail",
+                    query: { customerId: that.customerId }
+                });
+            }
+
             let data = e.data.data;
             this.$set(that.demand, "data", data.customerRequire);
             this.$set(that.demandList, "data", data.requireList);
@@ -186,7 +194,7 @@ export default {
       };
       that.$api
         .post({
-          url: "/saleCustomerDetail/getSaleCusImpressions",
+          url: "/saleCustomerImpression/getSaleCusImpressions",
           data: postData,
           qs: true,
           headers: { "Content-Type": "application/x-www-form-urlencoded" }

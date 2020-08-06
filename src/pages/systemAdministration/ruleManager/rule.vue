@@ -175,10 +175,10 @@
             </el-select>
           </div>
           <div class="formItem">
-            是否超级:
-            <el-select v-model="ruleObj.isSuper" placeholder="范围">
+            是否含数据权限:
+            <el-select v-model="ruleObj.isData" placeholder="范围">
               <el-option
-                v-for="item in isSuperList"
+                v-for="item in isDataList"
                 :key="item.id"
                 :label="item.name"
                 :value="item.type"
@@ -313,7 +313,7 @@ export default {
           type: 2
         }
       ],
-      isSuperList: [
+      isDataList: [
         {
           id: 0,
           name: "否",
@@ -331,7 +331,7 @@ export default {
         rType: "左菜单",
         rulesType: 0,
         del: 1,
-        isSuper: 0,
+        isData: 0,
         area: 0
       },
       type: 0,

@@ -81,6 +81,13 @@ export default {
           console.log(e.data);
           let json = e.data;
           if (json.code == 200) {
+            //判断如果是私客则跳转到私客详情页
+            if(json.data.bsAgentCustomersTbl.plate == 0){
+                this.$router.replace({
+                    path: "/customers/customersDetail",
+                    query: { customerId: json.data.bsAgentCustomersTbl.id }
+                });
+            }
             console.log(json.data.followList);
             this.$set(that.FollowData, "data", json.data.followList);
             this.$set(

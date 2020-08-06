@@ -74,7 +74,9 @@
               class="anchor-point"
               @click.native="log_socket.sendUserActionData"
               v-for="item in roomNoList"
-              :data-anchor="'潜在出售房间号筛选 => select => option:' + item.name"
+              :data-anchor="
+                '潜在出售房间号筛选 => select => option:' + item.name
+              "
               :key="item.value"
               :label="item.name"
               :value="item.value"

@@ -20,6 +20,9 @@
           data-vv-as="暂不关注时间"
           v-validate="'required|noZero|isGreater:30'"
         />
+        <div style="color:red;font-size:0.17rem;margin-top:10px;padding-bottom:5px">
+          只允许输入1-30天
+        </div>
         <div
           :class="{
             'after-error-tips': errorBags.has('periodTime')
@@ -37,6 +40,12 @@
           rows="5"
           placeholder="请填写不关注理由"
         />
+        <div
+          style="color:red;font-size:0.17rem;margin-top:10px;padding-bottom:5px"
+        >
+          暂不关注后，客户将不会出现在私客列表 <br />
+          关注天数到期后，客户会重新出现在私客列表
+        </div>
       </div>
     </div>
   </fixedPopup>
@@ -68,7 +77,7 @@ export default {
           that.isLoading = true;
           that.$api
             .post({
-              url: "/saleCustomerDetail/not/attention",
+              url: "/saleCustomer/not/attention",
               data: postData,
               qs: true,
               headers: {

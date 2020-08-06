@@ -146,7 +146,7 @@
           <div class="cellMsg">
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进人：</div>
-              <div class="cellMsgText">{{ item.perName || "暂无" }}</div>
+              <div class="cellMsgText">{{ item.perName || "暂无" }}-{{ item.deptName || "暂无" }}</div>
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进类型：</div>
@@ -390,7 +390,7 @@ export default {
 
       this.$api
         .post({
-          url: "/saleCustomerDetail/addSaleCusFlower",
+          url: "/saleCustomer/addSaleCusFlower",
           qs: true,
           data: {
             EntructId: that.customerId.id,

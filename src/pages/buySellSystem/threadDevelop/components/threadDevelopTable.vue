@@ -33,8 +33,7 @@
                   data-anchor="开发线索一键拨号 => click"
                   @click="dialNumber(scope.row)"
                   icon="el-icon-phone-outline"
-                  >一键拨号</el-button
-                >
+                >一键拨号</el-button>
                 <el-button
                   class="anchor-point"
                   type="primary"
@@ -42,8 +41,7 @@
                   @click="houseOperate(scope.row)"
                   size="mini"
                   icon="el-icon-refresh"
-                  >转为在售</el-button
-                >
+                >转为在售</el-button>
               </div>
               <div>
                 <el-button
@@ -53,8 +51,7 @@
                   @click="writeRecord(scope.row)"
                   size="mini"
                   icon="el-icon-edit"
-                  >写跟进</el-button
-                >
+                >写跟进</el-button>
                 <el-button
                   class="anchor-point"
                   type="primary"
@@ -62,8 +59,7 @@
                   @click="findRecord(scope.row)"
                   size="mini"
                   icon="el-icon-time"
-                  > 查记录</el-button
-                >
+                >查记录</el-button>
               </div>
             </div>
           </template>
@@ -75,7 +71,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage4"
-     -->
+      -->
       <el-pagination
         @current-change="currentchange"
         @size-change="handleSizeChange"
@@ -84,8 +80,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageJson.dataCount"
         :current-page="pageJson.currentPage"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
     <fixedPopup
       :visible.sync="alertflag"
@@ -94,7 +89,7 @@
       @customBtn="customBtn"
       title="查记录"
       width="420px"
-      >
+    >
       <template>
         <el-tabs v-model="recordActiveName" @tab-click="recordNavClick">
           <el-tab-pane label="跟进" name="first">
@@ -135,12 +130,7 @@
                 <div>
                   <div>
                     <span class="audio-title">钟丽娟（{{activity.content}}店）</span>
-                    <el-audio
-                      :fixed="false"
-                      url="http://devtest.qiniudn.com/secret base~.mp3"
-                    >
-                      经纪人讲房
-                    </el-audio>
+                    <el-audio :fixed="false" url="http://devtest.qiniudn.com/secret base~.mp3">经纪人讲房</el-audio>
                   </div>
                 </div>
               </el-timeline-item>
@@ -149,6 +139,8 @@
         </el-tabs>
       </template>
     </fixedPopup>
+    <!-- 写跟进 -->
+    <follow-up :visible.sync="followUpFlag" :rowId="rowId" v-if="followUpFlag" />
   </div>
 </template>
 <script>
@@ -158,51 +150,64 @@ import {
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
 import util from "@/util/util";
+import followUp from "./followUp.vue";
 import elAudio from "@/components/audio";
 export default {
   inject: ["form"],
   components: {
-    elAudio
+    elAudio,
+    followUp
   },
   data() {
     return {
-      recordActiveName: 'first',
-      activities: [{
-        content: '支持使用图标',
-        timestamp: '2018-04-12 20:46',
-        color: '#0bbd87'
-      }, {
-        content: '支持自定义颜色',
-        timestamp: '2018-04-03 20:46',
-        color: '#0bbd87'
-      }, {
-        content: '支持自定义尺寸',
-        timestamp: '2018-04-03 20:46',
-        size: 'large'
-      }, {
-        content: '默认样式的节点',
-        timestamp: '2018-04-03 20:46'
-      }],
-      voiceList: [{
-        content: '支持使用图标',
-        timestamp: '2018-04-12 20:46',
-        color: '#0bbd87',
-        size: 'large'
-      }, {
-        content: '支持自定义颜色',
-        timestamp: '2018-04-03 20:46',
-        color: '#0bbd87',
-        size: 'large'
-      }, {
-        content: '支持自定义尺寸',
-        timestamp: '2018-04-03 20:46',
-        size: 'large'
-      }, {
-        content: '默认样式的节点',
-        timestamp: '2018-04-03 20:46'
-      }],
+      followUpFlag: false, //跟进弹框开关
+      rowId: "", // 写跟进时行id
+      recordActiveName: "first",
+      activities: [
+        {
+          content: "支持使用图标",
+          timestamp: "2018-04-12 20:46",
+          color: "#0bbd87"
+        },
+        {
+          content: "支持自定义颜色",
+          timestamp: "2018-04-03 20:46",
+          color: "#0bbd87"
+        },
+        {
+          content: "支持自定义尺寸",
+          timestamp: "2018-04-03 20:46",
+          size: "large"
+        },
+        {
+          content: "默认样式的节点",
+          timestamp: "2018-04-03 20:46"
+        }
+      ],
+      voiceList: [
+        {
+          content: "支持使用图标",
+          timestamp: "2018-04-12 20:46",
+          color: "#0bbd87",
+          size: "large"
+        },
+        {
+          content: "支持自定义颜色",
+          timestamp: "2018-04-03 20:46",
+          color: "#0bbd87",
+          size: "large"
+        },
+        {
+          content: "支持自定义尺寸",
+          timestamp: "2018-04-03 20:46",
+          size: "large"
+        },
+        {
+          content: "默认样式的节点",
+          timestamp: "2018-04-03 20:46"
+        }
+      ],
       alertflag: false,
-      followUpContent: "",
       renderList: [],
       tableColumnField: [
         {
@@ -218,8 +223,12 @@ export default {
               // </div>
               <div class="tab-com-item">
                 <div class="tab-house-title">{item.communityName}</div>
-                <div class="tab-houseno">100平&nbsp;/&nbsp;朝南&nbsp;/&nbsp;3-2-1-1</div>
-                <div class="tab-houseno">2009年竣工&nbsp;/&nbsp;商品房&nbsp;/&nbsp;框架</div>
+                <div class="tab-houseno">
+                  100平&nbsp;/&nbsp;朝南&nbsp;/&nbsp;3-2-1-1
+                </div>
+                <div class="tab-houseno">
+                  2009年竣工&nbsp;/&nbsp;商品房&nbsp;/&nbsp;框架
+                </div>
               </div>
             );
           }
@@ -477,7 +486,8 @@ export default {
      */
     writeRecord(row) {
       console.log(row, "写跟进");
-      this.openFollowUpDialog();
+      this.rowId = row.id;
+      this.followUpFlag = true;
     },
     /**
      * 查记录
@@ -536,75 +546,6 @@ export default {
           });
         });
     },
-    /**
-     * 打开写跟进弹窗
-     */
-    openFollowUpDialog() {
-      const h = this.$createElement;
-      this.$msgbox({
-        title: '写跟进',
-        message: h('div', {
-          attrs: {
-            class: 'el-textarea',
-          },
-        }, [
-          h('textarea', {
-            attrs: {
-              class: 'el-textarea__inner',
-              autocomplete: 'off',
-              rows: 4,
-              id:'commentContent'
-            },
-            value: this.followUpContent,
-            on: { input: this.onCommentInputChange }
-          }),
-          h('div', {
-            attrs: {
-              class: 'el-textarea-total',
-            },
-            style: 'textAlign: right;color: #bdbdbd;fontSize: 12px'
-          }, "不少于10字")
-        ]),
-        showCancelButton: true,
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true;
-            instance.confirmButtonText = '执行中...';
-            if (this.followUpContent.length < 10) {
-              instance.confirmButtonLoading = false;
-              this.$message.warning("跟进内容不能少于10个字。");
-              instance.confirmButtonText = '确定';
-              return;
-            }
-            setTimeout(() => {
-              done();
-              setTimeout(() => {
-                instance.confirmButtonLoading = false;
-              }, 300);
-            }, 1000);
-          } else {
-            document.getElementById("commentContent").value = "";
-            done();
-          }
-        }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        });
-      }).catch((e) => {});
-    },
-    /**
-     * 监听跟进输入内容
-     */
-    onCommentInputChange() {
-      let content = document.getElementById("commentContent").value;
-      if (content.length > 30)
-        document.getElementById("commentContent").value = content.substring(0, 30);
-      this.followUpContent = document.getElementById("commentContent").value;
-    },
     customBtn() {
       console.log("==================");
       this.requireTypeOld = this.BeforeChangeType;
@@ -653,14 +594,14 @@ export default {
   .tab-page-flex {
     display: flex;
   }
-  .table-btn-panel{
+  .table-btn-panel {
     display: inline-flex;
     flex-direction: column;
     padding: 0 15px;
-    .table-btn-row{
+    .table-btn-row {
       margin-bottom: 10px;
     }
-    .anchor-point{
+    .anchor-point {
       min-width: 98px;
       text-align: left;
     }
@@ -723,28 +664,28 @@ export default {
   overflow: visible;
 }
 /*********** 查记录弹窗 ***********/
-/deep/.didLog-content-body{
-  .el-tab-pane{
+/deep/.didLog-content-body {
+  .el-tab-pane {
     padding-left: 5px;
   }
-  .record-dialog-column{
+  .record-dialog-column {
     font-size: 16px;
     color: #999;
-    .title{
+    .title {
       display: inline-block;
       width: 110px;
     }
   }
   .audio-contenr {
     height: 60px;
-    .audio-contenr-but{
+    .audio-contenr-but {
       width: 30px;
       height: 30px;
       line-height: 30px;
       font-size: 30px;
     }
   }
-  .audio-title{
+  .audio-title {
     font-size: 16px;
     color: #999;
   }
