@@ -186,7 +186,7 @@
           <span class="query-cell-suffix">㎡</span>
         </div>
         <div class="query-content-cell cell-interval75">
-          <h3 class="query-cell-title">对赌结果</h3>
+          <h3 class="query-cell-title">对赌状态</h3>
           <el-select
             data-anchor="我的对赌对赌结果 => select"
             @click.native="log_socket.sendUserActionData"
@@ -281,8 +281,13 @@
       </el-table-column>
       <el-table-column
         prop="status"
-        label="对赌结果"
+        label="对赌状态"
         :formatter="formatHouseBetStatus"
+      ></el-table-column>
+      <el-table-column
+        prop="status"
+        label="对赌结果"
+        :formatter="formatHouseBetResult"
       ></el-table-column>
       <el-table-column prop="brokerName" label="对赌人"></el-table-column>
       <el-table-column prop="endTime" label="到期时间"></el-table-column>
@@ -348,11 +353,9 @@ export default {
       cbIdList: [],
       roomNoList: [],
       betStatusList: [
-        { value: 0, name: "努力中" },
-        { value: 1, name: "成功" },
-        { value: 2, name: "失败" },
-        { value: 3, name: "过期" },
-        { value: 4, name: "注销" }
+        { value: "0", name: "努力中" },
+        { value: "1", name: "成功" },
+        { value: "2,3,4,5,6", name: "失败" }
       ],
       pageJson: {
         currentPage: 1, //当前页码
@@ -509,20 +512,34 @@ export default {
         return Math.round((row.price * 1000) / row.inArea);
       }
     },
-    formatHouseBetStatus(row, column) {
+    formatHouseBetStatus(row) {
       switch (row.status) {
         case 0:
-          return "努力中";
+          return <span style="color:red">努力中</span>;
         case 1:
           return "成功";
-        case 2:
+        default:
           return "失败";
+      }
+    },
+    formatHouseBetResult(row) {
+      switch (row.status) {
+        case 0:
+          return <span style="color:red">加油!</span>;
+        case 1:
+          return row.reward + "鑫币";
+        case 2:
+          return "转状态";
         case 3:
-          return "过期";
+          return "对赌过期";
         case 4:
           return "注销";
+        case 5:
+          return "房源掉公盘";
+        case 6:
+          return "未达对赌条件";
         default:
-          return "";
+          return "-";
       }
     },
     // customFieldColumn (h, params) {
