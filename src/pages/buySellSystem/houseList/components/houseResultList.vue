@@ -542,7 +542,7 @@
   }
 }
 /*** 即将更新标记 ****/
-/deep/.el-badge__content.is-fixed{
+/deep/.el-badge__content.is-fixed {
   right: 40px;
 }
 </style>
@@ -693,11 +693,8 @@
                 </div> -->
 
         <div class="head-fun-right">
-          <el-badge value="即将更新">
-            <button
-              class="btn-primary anchor-point"
-              data-anchor="首页开发线索"
-            >
+          <el-badge value="即将上线">
+            <button class="btn-primary anchor-point" data-anchor="首页开发线索">
               <i class="iconxiansuo iconfont"></i>
               开发线索
             </button>
