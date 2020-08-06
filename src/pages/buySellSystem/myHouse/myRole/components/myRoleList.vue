@@ -14,55 +14,7 @@
       white-space: nowrap;
     }
   }
-  .tab-filter-radio {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 46px;
-    padding-bottom: 10px;
-    position: sticky;
-    top: 0px;
-    z-index: 10;
-    background: #fff;
-    .filter-radio-item {
-      display: flex;
-      cursor: pointer;
-      // prettier-ignore
-      margin-left: 30PX;
-      align-items: center;
-      input {
-        display: none;
-      }
-      input[type="checkbox"]:checked + span {
-        &::before {
-          content: "\2713";
-          color: black;
-          font-size: @font16;
-        }
-      }
-      &:first-child {
-        margin-left: 0;
-      }
-      span {
-        font-size: @font16;
-        color: black;
-        display: flex;
-        align-items: center;
-        font-weight: 600;
-        &::before {
-          content: "";
-          // prettier-ignore
-          width: 16PX;
-          // prettier-ignore
-          height: 16PX;
-          // prettier-ignore
-          line-height: 16PX;
-          margin-right: 8px;
-          text-align: center;
-          border: 1px solid black;
-        }
-      }
-    }
-  }
+
   /deep/.tab-cell-item {
     // prettier-ignore
     height: 64PX;
@@ -96,7 +48,7 @@
         line-height: 64PX;
         text-align: center;
         position: sticky;
-        top: 31px;
+        top: 0px;
         z-index: 10;
       }
       .tab-image-content {
@@ -182,7 +134,7 @@
 }
 /deep/.el-table__header-wrapper {
   position: sticky;
-  top: 31px;
+  top: 0px;
   z-index: 10;
 }
 /deep/.el-table {
@@ -194,45 +146,7 @@
 }
 </style>
 <template>
-  <div class="tab-page">
-    <div class="tab-filter-radio">
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isKey"
-        />
-        <span>钥匙</span>
-      </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 独家">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isOnly"
-        />
-        <span>独家</span>
-      </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isReal"
-        />
-        <span>实勘</span>
-      </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isElevator"
-        />
-        <span>电梯</span>
-      </label>
-    </div>
+  <div class="tab-page" v-loading="loading">
     <div class="tab-page-flex">
       <div class="tab-image">
         <div class="tab-image-head">房源图</div>
@@ -259,13 +173,7 @@
         @sort-change="sortMethod"
         @row-dblclick="navDetailt"
       >
-        <el-table-column type="expand" width="1px">
-          <template v-slot:default="{ row }">
-            <span class="tag-item" v-for="item in row.tags" :key="item">{{
-              item
-            }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column type="expand" width="1px"> </el-table-column>
         <el-table-column
           v-for="(item, index) in tableColumnField"
           :key="index"
@@ -281,11 +189,6 @@
       </el-table>
     </div>
     <div class="tab-page-floot">
-      <!-- 
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage4"
-     -->
       <el-pagination
         @current-change="currentchange"
         @size-change="handleSizeChange"
@@ -310,6 +213,7 @@ export default {
   inject: ["form"],
   data() {
     return {
+      loading: true,
       renderList: [],
       tableColumnField: [
         {
@@ -363,17 +267,17 @@ export default {
           order: "custom",
           formart: item => item.seenNumRecent || "0"
         },
-        {
-          prop: "customerType",
-          label: "业主类型",
-          order: false
-        },
         // {
-        //   prop: "saleReson",
-        //   label: "出售原因",
-        //   order: false,
-        //   formart: item => item.saleReson || "暂无"
+        //   prop: "customerType",
+        //   label: "业主类型",
+        //   order: false
         // },
+        {
+          prop: "saleReson",
+          label: "出售原因",
+          order: false,
+          formart: item => item.saleReson || "暂无"
+        },
         {
           prop: "floor",
           label: "楼层",
@@ -565,12 +469,7 @@ export default {
       };
     },
     getHouseData(value, initPage = true) {
-      // this.loading = true;
-      // Object.keys(value).forEach(item => {
-      //   if (value[item] instanceof Array) {
-      //     value[item] = value[item].join(",");
-      //   }
-      // });
+      this.loading = true;
       if (initPage) this.InitPageJson();
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
@@ -578,8 +477,7 @@ export default {
       });
       return this.$api
         .post({
-          //  url: "/mateHouse/getMateHouse/soleAllHouse",
-          url: "/mateHouse/getMateHouse/soleAllHouseIndex",
+          url: "/myHouse/getMyRelated",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: restuleParms
         })
@@ -596,7 +494,9 @@ export default {
             this.addListener();
           });
         })
-        .finally(() => {});
+        .finally(() => {
+          this.loading = false;
+        });
     }
   }
 };
