@@ -1220,13 +1220,24 @@ export default {
         data.saleHouseUpdateRecordList = [];
         Object.keys(this.deffData).forEach(item => {
           if (item != "id") {
-            data.saleHouseUpdateRecordList.push({
-              houseId: that.$store.state.addHouse.formData.id,
-              updateFiled: updateFileMap.get(item),
-              oldValue:
-                valueKey[this.$store.state.addHouse.formData.step1[item]],
-              newValue: valueKey[this.deffData[item]]
-            });
+            if (item.indexOf("tel") != -1) {
+              //日志隐藏手机号不显示真实号码
+              data.saleHouseUpdateRecordList.push({
+                houseId: that.$store.state.addHouse.formData.id,
+                updateFiled: updateFileMap.get(item),
+                oldValue: "***********",
+                newValue: "***********"
+              });
+            } else {
+              data.saleHouseUpdateRecordList.push({
+                houseId: that.$store.state.addHouse.formData.id,
+                updateFiled: updateFileMap.get(item),
+                oldValue:
+                  valueKey[this.$store.state.addHouse.formData.step1[item]] ||
+                  this.$store.state.addHouse.formData.step1[item],
+                newValue: valueKey[this.deffData[item]] || this.deffData[item]
+              });
+            }
           }
         });
       }
