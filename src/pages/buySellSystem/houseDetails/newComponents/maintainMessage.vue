@@ -142,7 +142,6 @@
           <div class="card-item-data">
             {{
               houseData.certificateType
-                | mapFilter("CERTIFICATETYPE")
                 | emptyRead
             }}
           </div>

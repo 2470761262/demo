@@ -16,7 +16,9 @@
 <template>
   <fixedPopup v-bind="$attrs" v-on="$listeners">
     <template>
-      <div id="shareQrCode"><img :src="shareUrl" /></div>
+      <div id="shareQrCode">
+        <img :src="shareUrl" />
+      </div>
       <div id="shareTxt">微信扫一扫,立即分享房源</div>
     </template>
   </fixedPopup>
@@ -52,6 +54,7 @@ export default {
         });
       }
     }
-  }
+  },
+  methods: {}
 };
 </script>

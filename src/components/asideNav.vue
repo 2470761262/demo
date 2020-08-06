@@ -20,7 +20,7 @@
       </template>
       <el-menu-item index="/buySellSystem/houseList">房源管理</el-menu-item>
       <el-menu-item index="/buySellSystem/addFloorList">补充楼盘审核</el-menu-item>
-      <el-menu-item index="/report/reportConfList">报表统计</el-menu-item>
+      <el-menu-item index="/report/reportConfList">数据看板</el-menu-item>
     </el-submenu>
     <el-submenu index="2">
       <template slot="title">
