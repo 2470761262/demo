@@ -19,9 +19,8 @@
         <span>新买卖系统</span>
       </template>
       <el-menu-item index="/buySellSystem/houseList">房源管理</el-menu-item>
-      <el-menu-item index="/buySellSystem/addFloorList"
-        >补充楼盘审核</el-menu-item
-      >
+      <el-menu-item index="/buySellSystem/addFloorList">补充楼盘审核</el-menu-item>
+      <el-menu-item index="/report/reportConfList">报表统计</el-menu-item>
       <el-menu-item index="/buySellSystem/resourceManageList">资源库管理</el-menu-item>
     </el-submenu>
     <el-submenu index="2">

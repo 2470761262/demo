@@ -433,7 +433,18 @@ export default {
      * 转为在售
      */
     houseOperate(row) {
-      console.log(row, "========");
+      console.log(row, "转为在售");
+      this.toSale(
+        row.eid,
+        row.comId,
+        row.cbId,
+        row.bhId,
+        row.communityName,
+        row.buildingName,
+        row.customers,
+        row.roomNo,
+        row.tel
+      );
     },
     /**
      * 打开添加号码弹窗
@@ -498,6 +509,56 @@ export default {
       if (content.length > 30)
         document.getElementById("commentContent").value = content.substring(0, 30);
       this.proprietorNumber = document.getElementById("commentContent").value;
+    },
+    toSale(
+      id,
+      comId,
+      cbId,
+      bhId,
+      communityName,
+      buildingName,
+      customers,
+      roomNo,
+      tel
+    ) {
+      var that = this;
+      console.log(bhId);
+      this.$api
+        .post({
+          url: "/agent_house/getTels/" + id,
+          qs: true
+        })
+        .then(e => {
+          let result = e.data;
+          let tel1 = "",
+            tel2 = "",
+            tel3 = "";
+          if (result.code == 200) {
+            tel = result.data.Tel;
+            tel1 = result.data.Tel1;
+            tel2 = result.data.Tel2;
+            tel3 = result.data.Tel3;
+          }
+          that.$router.push({
+            path: "/buySellSystem/addHouse",
+            disabledStatus: false,
+            query: {
+              comId: comId,
+              cbId: cbId,
+              bhId: bhId,
+              communityName: communityName,
+              buildingName: buildingName,
+              roomNo: roomNo,
+              flag: "potentia",
+              customerName: customers,
+              method: "tosale",
+              tel: tel,
+              tel1: tel1,
+              tel2: tel2,
+              tel3: tel3
+            }
+          });
+        });
     }
   }
 }
