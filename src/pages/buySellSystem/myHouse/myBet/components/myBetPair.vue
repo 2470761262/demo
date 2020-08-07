@@ -126,6 +126,7 @@
       <div class="search-item-title ">业主姓名</div>
       <div class="search-item-body">
         <el-input
+          @blur="handleInputBlur('cusName', 'customerName')"
           clearable
           v-model="houseNo"
           class="input-text "
@@ -138,6 +139,7 @@
       <div class="search-item-title ">业主电话</div>
       <div class="search-item-body">
         <el-input
+          @blur="handleInputBlur('cusTel', 'tel')"
           clearable
           v-model="houseNo"
           class="input-text "
@@ -150,6 +152,7 @@
       <div class="search-item-title ">房源编号</div>
       <div class="search-item-body">
         <el-input
+          @blur="handleInputBlur('houseNo', 'houseNo')"
           clearable
           v-model="houseNo"
           class="input-text "
@@ -215,6 +218,14 @@ export default {
     };
   },
   methods: {
+    /**
+     * @example: 失去焦点
+     * @param {string} formField 失去交单的属性名称
+     * @param {string} toFileld  需要赋值给form的属性名称
+     */
+    handleInputBlur(formField, toFileld) {
+      this.form[toFileld] = this[formField];
+    },
     resetLoad() {
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
       Object.assign(this.$data, this.$options.data.call(this.$parent));

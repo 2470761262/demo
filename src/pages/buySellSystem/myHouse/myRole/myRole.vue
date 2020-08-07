@@ -35,28 +35,28 @@ export default {
     myRoleList,
     myRolePair
   },
-  activated() {
-    this.$nextTick(() => {
-      this.$refs.scrollTab.addEventListener("scroll", this.ListeningScroll);
-    });
-    this.$refs.scrollTab.scrollTop = this.scrollTop;
-  },
-  deactivated() {
-    if (document.querySelector(".el-main")) {
-      this.$refs.scrollTab.removeEventListener("scroll", this.ListeningScroll);
-    }
-  },
-  beforeDestroy() {
-    this.$refs.scrollTab.removeEventListener("scroll", this.ListeningScroll);
-  },
-  methods: {
-    ListeningScroll(e) {
-      this.scrollTop = e ? e.target.scrollTop : 0;
-    }
-  },
+  //   activated() {
+  //     this.$nextTick(() => {
+  //       this.$refs.scrollTab.addEventListener("scroll", this.ListeningScroll);
+  //     });
+  //     this.$refs.scrollTab.scrollTop = this.scrollTop;
+  //   },
+  //   deactivated() {
+  //     if (document.querySelector(".el-main")) {
+  //       this.$refs.scrollTab.removeEventListener("scroll", this.ListeningScroll);
+  //     }
+  //   },
+  //   beforeDestroy() {
+  //     this.$refs.scrollTab.removeEventListener("scroll", this.ListeningScroll);
+  //   },
+  //   methods: {
+  //     ListeningScroll(e) {
+  //       this.scrollTop = e ? e.target.scrollTop : 0;
+  //     }
+  //   },
   data() {
     return {
-      scrollTop: 0,
+      // scrollTop: 0,
       form: {
         comId: "",
         cbId: "",
@@ -68,6 +68,7 @@ export default {
         minPrice: "",
         maxPrice: "",
         tel: "",
+        time: [],
         sortColumn: "addTime",
         sortType: 1,
         workType: "1"

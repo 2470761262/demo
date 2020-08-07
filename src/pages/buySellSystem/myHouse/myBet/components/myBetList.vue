@@ -217,9 +217,27 @@ export default {
           }
         },
         {
-          // prop: "createTime",
-          lable: "对赌结果"
-          // order: "custom"
+          label: "对赌结果",
+          formart: item => {
+            switch (item.status) {
+              case 0:
+                return <span style="color:red">加油</span>;
+              case 1:
+                return item.reward + "鑫币";
+              case 2:
+                return "转状态";
+              case 3:
+                return "对赌过期";
+              case 4:
+                return "注销";
+              case 5:
+                return "房源掉公盘";
+              case 6:
+                return "未达对赌条件";
+              default:
+                return "-";
+            }
+          }
         }
       ],
       pageJson: {

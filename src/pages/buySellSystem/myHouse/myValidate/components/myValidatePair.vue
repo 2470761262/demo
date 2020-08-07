@@ -131,6 +131,7 @@
           v-model="cusName"
           class="input-text "
           placeholder="业主姓名"
+          @blur="handleInputBlur('cusName', 'customName')"
         ></el-input>
       </div>
     </div>
@@ -143,6 +144,7 @@
           v-model="cusPhone"
           class="input-text"
           placeholder="业主电话"
+          @blur="handleInputBlur('cusPhone', 'tel')"
         ></el-input>
       </div>
     </div>
@@ -216,6 +218,14 @@ export default {
     };
   },
   methods: {
+    /**
+     * @example: 失去焦点
+     * @param {string} formField 失去交单的属性名称
+     * @param {string} toFileld  需要赋值给form的属性名称
+     */
+    handleInputBlur(formField, toFileld) {
+      this.form[toFileld] = this[formField];
+    },
     resetLoad() {
       Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
       Object.assign(this.$data, this.$options.data.call(this.$parent));

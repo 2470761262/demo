@@ -312,7 +312,7 @@ export default {
       handler: function(value, ordvalue) {
         this.getHouseData(JSON.parse(JSON.stringify(value))).then(() => {
           dom.querySelector(".scroll-tab").scrollTop = 0;
-          this.$parent.ListeningScroll();
+          //  this.$parent.ListeningScroll();
         });
       }
     }
@@ -441,7 +441,7 @@ export default {
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), false).then(
         () => {
           dom.querySelector(".scroll-tab").scrollTop = 0;
-          this.$parent.ListeningScroll();
+          //this.$parent.ListeningScroll();
         }
       );
     },
@@ -475,6 +475,11 @@ export default {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
       });
+      if (restuleParms.time && restuleParms.time.length == 2) {
+        restuleParms.beginTime = restuleParms.time[0];
+        restuleParms.endTime = restuleParms.time[1];
+      }
+      delete restuleParms.time;
       return this.$api
         .post({
           url: "/myHouse/getMyRelated",
