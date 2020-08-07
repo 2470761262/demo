@@ -22,7 +22,12 @@
     </div>
     <div class="page-list-panel">
       <div class="table">
-        <div class="column" v-for="item in renderList" :key="item.id" @click="navigateToDetail(item.comId)">
+        <div
+          class="column"
+          v-for="item in renderList"
+          :key="item.id"
+          @click="navigateToDetail(item.comId)"
+        >
           <div :title="item.communityName">{{item.communityName}}</div>
           <div>总户数：{{item.rooms}}</div>
           <div>无号码：10</div>
@@ -37,13 +42,13 @@
         :page-sizes="[30, 50, 70]"
         :page-size="pageJson.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="pageJson.total">
-      </el-pagination>
+        :total="pageJson.total"
+      ></el-pagination>
     </div>
   </div>
 </template>
 <script>
-import resourceButtons from './components/resourceButtons.vue'
+import resourceButtons from "./components/resourceButtons.vue";
 export default {
   components: {
     resourceButtons
@@ -57,7 +62,8 @@ export default {
           communityName: "上品至尊",
           houseTotal: 100,
           houseNoNumber: 10
-        },{
+        },
+        {
           id: 2,
           communityName: "上品至尊",
           houseTotal: 100,
@@ -85,8 +91,8 @@ export default {
         maxInArea: ""
       },
       sortColumn: "id", //排序字段
-      sortType: "descending", //排序类型
-    }
+      sortType: "descending" //排序类型
+    };
   },
   created() {
     this.queryNotPhone(1);
@@ -139,8 +145,7 @@ export default {
             that.pageJson.total = e.data.data.dataCount;
             that.renderList = e.data.data.data;
             let btnList = e.data.data.btnList;
-            console.log(e.data, "result=========================")
-
+            console.log(e.data, "result=========================");
           } else {
             //console.log("查询无号码列表结果：" + result.message);
           }
@@ -179,14 +184,16 @@ export default {
   },
   filters: {
     rateCompute(item) {
-      let rate = ((item.houseTotal - item.houseNoNumber)/item.houseTotal).toFixed(2)*100;
+      let rate =
+        ((item.houseTotal - item.houseNoNumber) / item.houseTotal).toFixed(2) *
+        100;
       return rate + "%";
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
-.page-list-content{
+.page-list-content {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -195,7 +202,7 @@ export default {
     display: flex;
     // justify-content: space-between;
     padding: 20px 15px;
-    border-bottom: 10px solid #EAEBED;
+    border-bottom: 10px solid #eaebed;
     .head-content-input {
       // prettier-ignore
       width: 455PX;
@@ -252,7 +259,7 @@ export default {
         line-height: 32px;
         box-shadow: 0 0 20px #f7f7f7;
         cursor: pointer;
-        transition-duration: .2s;
+        transition-duration: 0.2s;
         &:hover {
           transform: translateY(-10px);
         }

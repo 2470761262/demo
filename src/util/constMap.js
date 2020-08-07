@@ -16,7 +16,7 @@ export const HOUSEBELONGLIST = [
     value: 2
   },
   {
-    key: "无",
+    key: "其他",
     value: 3
   }
 ];

@@ -114,7 +114,7 @@
                 type="primary"
                 size="mini"
                 data-anchor="资源库管理添加号码 => click"
-                @click="addNumber(scope.row)"
+                @click="addPhone(scope.row.bhId, scope.row.id)"
                 icon="el-icon-circle-plus"
                 >添加号码</el-button
               >
@@ -122,7 +122,14 @@
                 class="anchor-point"
                 type="primary"
                 data-anchor="资源库管理转为在售 => click"
-                @click="houseOperate(scope.row)"
+                @click="toSale(
+                  scope.row.comId,
+                  scope.row.cbId,
+                  scope.row.bhId,
+                  scope.row.communityName,
+                  scope.row.buildingName,
+                  scope.row.roomNo
+                )"
                 size="mini"
                 icon="el-icon-refresh"
                 >转为在售</el-button
@@ -157,12 +164,19 @@ export default {
       buildOptData: {}, //当前楼盘选择数据
       buildForList: [], //楼盘select数据
       buildLoading: false, //楼盘select loading
-      roomOptData: {}, //房间号选中数据
-      roomForList: [], //房间号select数据
-      roomLoading: false, //房间号select loading
       towerOptData: {}, //栋座选中数据
       towerForList: [], //栋座select数据
       towerLoading: false, //栋座select loading
+      roomOptData: {}, //房间号选中数据
+      roomForList: [], //房间号select数据
+      roomLoading: false, //房间号select loading
+      roomNoList: [], //房间号select数据
+      houseNoPage: {
+        // 房间分页数据
+        currentPage: 1,
+        totalPage: 1,
+        limit: 30
+      },
       renderList: [],
       tableColumnField: [
         {
@@ -239,7 +253,6 @@ export default {
       },
       sortColumn: "id", //排序字段
       sortType: "descending", //排序类型
-      proprietorNumber: "",
     }
   },
   watch: {
@@ -247,7 +260,7 @@ export default {
       deep: true,
       // immediate: true,
       handler(value, ordvalue) {
-        this.queryNotPhone(JSON.parse(JSON.stringify(value)));
+        this.queryNotPhone();
       }
     }
   },
@@ -268,6 +281,7 @@ export default {
      * 资源库管理数据请求
      */
     queryNotPhone(currentPage) {
+      console.log(currentPage,"--------")
       var that = this;
       that.loading = true;
       let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
@@ -278,7 +292,6 @@ export default {
 
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
-      console.log(params);
       this.$api
         .post({
           url: "/houseResource/getNotPhone",
@@ -288,9 +301,8 @@ export default {
         .then(e => {
           that.loading = false;
           if (e.data.code == 200) {
-            that.pageJson.total = e.data.data.dataCount;
+            that.pageJson.dataCount = e.data.data.dataCount;
             that.renderList = e.data.data.data;
-            console.log(e.data, "detail=========================")
           }
         })
         .catch(e => {
@@ -321,13 +333,17 @@ export default {
      */
     buildRemoteMethod(query) {
       var that = this;
-      this.buildLoading = true;
-      this.$api
+      that.buildLoading = true;
+      that.$api
         .get({
-          url: "/community/houseList",
+          url: "/community/notPhone",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
           data: {
-            communityName: query
+            communityName: query,
+            page: 1,
+            limit: 50
           }
         })
         .then(e => {
@@ -342,39 +358,37 @@ export default {
      * @param {Obejct} item 当前选中对象
      */
     remoteBuildChange(item) {
-      console.log(this.buildOptData,item, "=============11")
       const { name = undefined, value = undefined } = item;
-
-      //如果删除或者手动删除传入空字符串将会把楼栋数据清理为空字符串
-      this.form.comId = value ? value : "";
-
+      console.log(value,"========111");
+      this.conditions.comId = value;
       //清理楼栋数据
-      this.towerForList = [];
-      this.form.cbId = "";
+      this.conditions.cbId = "";
       this.towerOptData = {};
-
+      this.towerForList = [];
       //清理房间号数据
-      this.form.bhId = "";
+      this.conditions.roomNo = "";
       this.roomOptData = {};
       this.roomForList = [];
-
-      //获取楼栋select
+      this.queryNotPhone();
       this.queryRoomNo();
-    },
+    },   
     /**
      * @example: 获取栋座远程数据
      * @param {String} name 栋座名称
      */
     queryRoomNo(name) {
-      this.towerLoading = true;
+      this.towerLoading = true;   
       this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
           data: {
-            comId: this.form.comId,
+            comId: this.conditions.comId,
             comBuildingName: name == undefined ? "" : name.trim(),
-            limit: 20
+            page: 1,
+            limit: 9999
           }
         })
         .then(e => {
@@ -391,18 +405,14 @@ export default {
      * @param {Obejct} item 当前选中对象
      */
     remoteRoomNoChange(item) {
-      console.log(this.towerOptData,item, "=============11")
       const { name = undefined, value = undefined } = item;
-
-      //如果删除或者手动删除传入空字符串将会把楼栋数据清理为空字符串
-      this.form.cbId = value ? value : "";
-
-      //清理房间号数据
-      this.form.bhId = "";
+      // 如果删除或者手动删除传入空字符串将会把楼栋数据清理为空字符串
+      this.conditions.cbId = value ? value : "";
+      // 清理房间号数据
+      this.conditions.roomNo = "";
       this.roomOptData = {};
       this.roomForList = [];
-
-      //获取房间号数据
+      // 获取房间号数据
       this.queryRoomData();
     },
     /**
@@ -410,15 +420,18 @@ export default {
      * @param {String} e 输入搜索的文本
      */
     queryRoomData(e) {
+      this.roomLoading = true;
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHousesBySale",
+          url: "/mateHouse/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
           data: {
-            comId: this.form.comId,
-            cbId: this.form.cbId,
-            limit: 20,
-            roomNo: e == undefined ? "" : e.trim()
+            comId: this.conditions.comId,
+            cbId: this.conditions.cbId,
+            roomNo: e == undefined ? "" : e.trim(),
+            limit: 99
           }
         })
         .then(e => {
@@ -435,147 +448,69 @@ export default {
      * @param {Ojbect} item 选中时选中的数据
      */
     queryRoomDataChange(item) {
-      const { name = undefined, value = undefined } = item;
-
-      this.form.bhId = value ? value : "";
+      let { value } = item;
+      this.conditions.roomNo = value ? value : "";
     },
     /**
      * 添加号码
      */
-    addNumber(row) {
-      console.log(row, "========");
-      this.openFollowUpDialog();
+    addPhone(id, esId) {
+      console.log(id, esId, "===========");
+      this.$prompt("请输业主手机号码", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputPattern: /^\d{11}$/,
+        inputErrorMessage: "手机号码格式不正确",
+        showConfirmButton: this.showAddPhone
+      })
+        .then(({ value }) => {
+          this.$api
+            .post({
+              url: "/houseResource/updatePhone/notPhone",
+              qs: true,
+              data: {
+                id: id,
+                tel: value,
+                esId: esId
+              }
+            })
+            .then(e => {
+              console.log(e.data.code);
+              if (e.data.code == 200) {
+                this.$message(e.data.message);
+                this.queryNotPhone(1);
+              } else {
+                this.$message(e.data.message);
+              }
+            });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消输入"
+          });
+        });
     },
     /**
      * 转为在售
      */
-    houseOperate(row) {
-      console.log(row, "转为在售");
-      this.toSale(
-        row.eid,
-        row.comId,
-        row.cbId,
-        row.bhId,
-        row.communityName,
-        row.buildingName,
-        row.customers,
-        row.roomNo,
-        row.tel
-      );
-    },
-    /**
-     * 打开添加号码弹窗
-     */
-    openFollowUpDialog() {
-      const h = this.$createElement;
-      this.$msgbox({
-        title: '添加号码',
-        message: h('div', {
-          attrs: {
-            class: 'el-textarea',
-          },
-        }, [
-          h('input', {
-            attrs: {
-              class: 'el-textarea__inner',
-              placeholder: "输入业主号码",
-              autocomplete: 'off',
-              rows: 4,
-              id:'commentContent'
-            },
-            value: this.proprietorNumber,
-            on: { input: this.onProprietorNumberChange }
-          })
-        ]),
-        showCancelButton: true,
-        confirmButtonText: '提交',
-        cancelButtonText: '取消',
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm') {
-            instance.confirmButtonLoading = true;
-            instance.confirmButtonText = '执行中...';
-            if (this.proprietorNumber.length < 6) {
-              instance.confirmButtonLoading = false;
-              this.$message.warning("输入的业主号码格式不对");
-              instance.confirmButtonText = '提交';
-              return;
-            }
-            setTimeout(() => {
-              done();
-              setTimeout(() => {
-                instance.confirmButtonLoading = false;
-              }, 300);
-            }, 1000);
-          } else {
-            document.getElementById("commentContent").value = "";
-            done();
-          }
+    toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
+      console.log(comId, cbId, bhId, communityName, buildingName, roomNo, "转为在售=====")
+      this.$router.push({
+        path: "/buySellSystem/addHouse",
+        query: {
+          method: "tosale",
+          comId: comId,
+          cbId: cbId,
+          bhId: bhId,
+          communityName: communityName,
+          buildingName: buildingName,
+          roomNo: roomNo,
+          flag: "potentia",
+          customerName: null,
+          tel: null
         }
-      }).then(action => {
-        this.$message({
-          type: 'info',
-          message: 'action: ' + action
-        });
-      }).catch((e) => {});
-    },
-    /**
-     * 监听跟进输入内容
-     */
-    onProprietorNumberChange() {
-      let content = document.getElementById("commentContent").value;
-      if (content.length > 30)
-        document.getElementById("commentContent").value = content.substring(0, 30);
-      this.proprietorNumber = document.getElementById("commentContent").value;
-    },
-    toSale(
-      id,
-      comId,
-      cbId,
-      bhId,
-      communityName,
-      buildingName,
-      customers,
-      roomNo,
-      tel
-    ) {
-      var that = this;
-      console.log(bhId);
-      this.$api
-        .post({
-          url: "/agent_house/getTels/" + id,
-          qs: true
-        })
-        .then(e => {
-          let result = e.data;
-          let tel1 = "",
-            tel2 = "",
-            tel3 = "";
-          if (result.code == 200) {
-            tel = result.data.Tel;
-            tel1 = result.data.Tel1;
-            tel2 = result.data.Tel2;
-            tel3 = result.data.Tel3;
-          }
-          that.$router.push({
-            path: "/buySellSystem/addHouse",
-            disabledStatus: false,
-            query: {
-              comId: comId,
-              cbId: cbId,
-              bhId: bhId,
-              communityName: communityName,
-              buildingName: buildingName,
-              roomNo: roomNo,
-              flag: "potentia",
-              customerName: customers,
-              method: "tosale",
-              tel: tel,
-              tel1: tel1,
-              tel2: tel2,
-              tel3: tel3
-            }
-          });
-        });
+      });
     }
   }
 }
@@ -683,6 +618,27 @@ export default {
       padding-bottom: 14px;
       display: flex;
       justify-content: flex-end;
+    }
+  }
+}
+/*** 下拉选框 ***/
+.options-item {
+  .options-item;
+}
+.options-custom-item {
+  .options-item;
+  .el-select-dropdown__item {
+    display: flex;
+    // prettier-ignore
+    height: 40PX;
+
+    /deep/ span {
+      flex: 1;
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: @font14;
     }
   }
 }

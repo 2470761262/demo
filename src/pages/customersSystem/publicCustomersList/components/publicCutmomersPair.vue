@@ -620,8 +620,8 @@ export default {
             [j],
             formatDate(
               new Date().setDate(new Date().getDate() - n + 1),
-              "yyyy-MM-dd HH"
-            ) + ":00:00"
+              "yyyy-MM-dd "
+            ) + "23:59:59"
           );
         }
       }
@@ -655,8 +655,8 @@ export default {
             [j],
             formatDate(
               new Date().setDate(new Date().getDate() - n + 1),
-              "yyyy-MM-dd HH"
-            ) + ":00:00"
+              "yyyy-MM-dd "
+            ) + "23:59:59"
           );
         }
       }
