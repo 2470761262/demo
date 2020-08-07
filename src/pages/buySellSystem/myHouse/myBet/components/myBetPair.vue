@@ -128,7 +128,7 @@
         <el-input
           @blur="handleInputBlur('cusName', 'customerName')"
           clearable
-          v-model="houseNo"
+          v-model="cusName"
           class="input-text "
           placeholder="业主姓名"
         ></el-input>
@@ -141,7 +141,7 @@
         <el-input
           @blur="handleInputBlur('cusTel', 'tel')"
           clearable
-          v-model="houseNo"
+          v-model="cusTel"
           class="input-text "
           placeholder="业主电话"
         ></el-input>

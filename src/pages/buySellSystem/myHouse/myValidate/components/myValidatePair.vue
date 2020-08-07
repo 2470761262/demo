@@ -131,7 +131,7 @@
           v-model="cusName"
           class="input-text "
           placeholder="业主姓名"
-          @blur="handleInputBlur('cusName', 'customName')"
+          @blur="handleInputBlur('cusName', 'customrName')"
         ></el-input>
       </div>
     </div>
