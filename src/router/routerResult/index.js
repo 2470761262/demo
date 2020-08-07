@@ -214,6 +214,17 @@ export default [
       )
   },
   {
+    path: "/report/addTable",
+    name: "addTable",
+    meta: {
+      title: "添加表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "addReport" */ "@/pages/report/table/addTable.vue"
+      )
+  },
+  {
     //数据看板配置列表
     path: "/report/reportConfList",
     meta: {
@@ -243,7 +254,7 @@ export default [
     },
     component: () =>
       import(
-        /* webpackChunkName: "addReport" */ "@/pages/report/addReport/addReport.vue"
+        /* webpackChunkName: "addReport" */ "@/pages/report/addReport.vue"
       )
   },
 
