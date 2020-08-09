@@ -359,7 +359,6 @@ export default {
      */
     remoteBuildChange(item) {
       const { name = undefined, value = undefined } = item;
-      console.log(value,"========111");
       this.conditions.comId = value;
       //清理楼栋数据
       this.conditions.cbId = "";
@@ -369,8 +368,8 @@ export default {
       this.conditions.roomNo = "";
       this.roomOptData = {};
       this.roomForList = [];
-      this.queryNotPhone();
-      this.queryRoomNo();
+      // 清除楼盘名称
+      if (value) this.queryRoomNo();
     },   
     /**
      * @example: 获取栋座远程数据
@@ -388,7 +387,7 @@ export default {
             comId: this.conditions.comId,
             comBuildingName: name == undefined ? "" : name.trim(),
             page: 1,
-            limit: 9999
+            limit: 999
           }
         })
         .then(e => {
