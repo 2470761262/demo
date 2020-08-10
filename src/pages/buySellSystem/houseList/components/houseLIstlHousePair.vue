@@ -521,8 +521,8 @@ export default {
     sortDevName(str1, str2) {
       let res = 0;
       if (this.form.sortColumn == "floor") {
-        res = str1.floor > str2.floor ? 1 : -1;
-        return res;
+        // res = str1.floor > str2.floor ? 1 : -1;
+        // return res;
       } else if (this.form.sortColumn == "addTime") {
         return -1;
       }
