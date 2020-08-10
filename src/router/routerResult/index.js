@@ -137,6 +137,82 @@ export default [
       )
   },
   {
+    //我的房源
+    path: "/buySellSystem/myHouse",
+    redirect: "/myHouse/myRole",
+    meta: {
+      title: "我的房源",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "myHouse" */ "@/pages/buySellSystem/myHouse/myHouse.vue"
+      ),
+    children: [
+      {
+        //我的角色
+        path: "/myHouse/myRole",
+        name: "myRole",
+        meta: {
+          title: "我的角色",
+          keepAlive: true,
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myRole" */ "@/pages/buySellSystem/myHouse/myRole/myRole.vue"
+          )
+      },
+      {
+        //我的验真
+        path: "/myHouse/myValidate",
+        name: "myValidate",
+        meta: {
+          title: "我的验真",
+          keepAlive: true,
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myValidate" */ "@/pages/buySellSystem/myHouse/myValidate/myValidate.vue"
+          )
+      },
+      {
+        //我的审核
+        path: "/myHouse/myExamine",
+        name: "myExamine",
+        meta: {
+          title: "我的审核",
+          keepAlive: true,
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myExamine" */ "@/pages/buySellSystem/myHouse/myExamine/myExamine.vue"
+          )
+      },
+      {
+        //我的对赌
+        path: "/myHouse/myBet",
+        name: "myBet",
+        meta: {
+          title: "我的对赌",
+          keepAlive: true,
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myBet" */ "@/pages/buySellSystem/myHouse/myBet/myBet.vue"
+          )
+      }
+    ]
+  },
+  {
     //资源库-无号码-录入号码
     path: "/buySellSystem/updatePhone",
     meta: {
