@@ -482,7 +482,7 @@ export default {
       delete restuleParms.time;
       return this.$api
         .post({
-          url: "/myHouse/getMyRelated",
+          url: "/myHouse/getMyAgent",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: restuleParms
         })
