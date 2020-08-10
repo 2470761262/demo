@@ -707,7 +707,7 @@
             <i class=" iconjichuguanli1 iconfont"></i>
             管理入口
           </button>
-          <el-badge value="即将改版">
+          <el-badge value="新">
             <button
               class="btn-primary anchor-point"
               data-anchor="首页我的房源"
