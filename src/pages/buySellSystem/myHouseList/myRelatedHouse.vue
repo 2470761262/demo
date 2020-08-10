@@ -402,7 +402,7 @@ export default {
           default: true
         },
         {
-          prop: "agentPerName",
+          prop: "agentName",
           label: "跟单人",
           width: "120",
           order: false,

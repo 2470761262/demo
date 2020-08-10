@@ -206,6 +206,12 @@
               :value="item.value"
             ></el-option>
           </el-select>
+          <span
+                  data-anchor="我的对赌清除 => click"
+                  class="query-cell-suffix handlebut anchor-point"
+                  @click="Remove"
+          >清除</span
+          >
         </div>
         <div class="query-content-cell cell-interval75">
           <el-button
@@ -468,7 +474,7 @@ export default {
     Remove() {
       let tab = this.tableColumn;
       Object.assign(this.$data, this.$options.data.call(this));
-      this.tabColumnChange(tab);
+      // this.tabColumnChange(tab);
       this.queryHouseBet(1);
     },
     handleCheckChange(data, checked, node) {
