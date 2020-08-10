@@ -367,7 +367,7 @@ export default {
     },
     //独家信息
     proxyMaxTime() {
-      if (this.houseData.proxyMaxTime !== null) {
+      if (this.houseData.isOnly !== 0 && this.houseData.proxyMaxTime !== null) {
         return `${util.format(this.houseData.proxyMaxTime, "yyyy-MM-dd")}到期`;
       }
       return "暂无";
