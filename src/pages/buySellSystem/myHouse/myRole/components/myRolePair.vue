@@ -42,7 +42,7 @@
           <el-select
             v-model="buildOptData"
             placeholder="楼盘名称"
-            class="input-content  anchor-point"
+            class="input-content anchor-point"
             clearable
             filterable
             remote
@@ -268,7 +268,7 @@
 import cascadeHouse from "@/minxi/cascadeHouse";
 
 const SEARCHTABLIST = [
-  { title: "我的房源", value: "1" },
+  { title: "我的跟单", value: "1" },
   { title: "我的录入", value: "3" },
   { title: "我的实勘", value: "6" },
   { title: "我的钥匙", value: "4" },
