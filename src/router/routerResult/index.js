@@ -141,8 +141,8 @@ export default [
     path: "/buySellSystem/myHouse",
     redirect: "/myHouse/myRole",
     meta: {
-      title: "我的房源"
-      //  isPad: true //不需要el-main padding
+      title: "我的房源",
+      isPad: true //不需要el-main padding
     },
     component: () =>
       import(
