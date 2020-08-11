@@ -49,8 +49,8 @@ export default {
         houseNo: "",
         limit: 10,
         page: 1,
-        sortColumn: "createTime",
-        sortType: 1,
+        sortColumn: "status",
+        sortType: 0,
         status: "",
         tel: ""
       }

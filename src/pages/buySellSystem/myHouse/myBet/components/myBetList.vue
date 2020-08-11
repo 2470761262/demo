@@ -109,6 +109,7 @@
         cell-class-name="tab-cell-item"
         @sort-change="sortMethod"
         @row-dblclick="navDetailt"
+        :default-sort="{ prop: 'status', order: 'ascending' }"
       >
         <el-table-column
           :fixed="item.fixed"
@@ -197,6 +198,7 @@ export default {
           label: "对赌时间"
         },
         {
+          prop: "status",
           label: "对赌状态",
           order: "custom",
           formart: item => {
@@ -296,7 +298,7 @@ export default {
       }
 
       if (this.form.sortColumn == "floor") {
-        res = 1;
+        res = str1.floor > str2.floor ? 1 : -1;
       } else if (this.form.sortColumn == "addTime") {
         res = -1;
       }

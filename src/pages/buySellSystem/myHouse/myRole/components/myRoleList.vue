@@ -173,6 +173,7 @@
         default-expand-all
         @sort-change="sortMethod"
         @row-dblclick="navDetailt"
+        :default-sort="{ prop: 'addTime', order: 'ascending' }"
       >
         <el-table-column type="expand" width="1px"> </el-table-column>
         <el-table-column
@@ -254,13 +255,13 @@ export default {
           prop: "price",
           label: "总价",
           order: "custom",
-          formart: item => item.price + "万"
+          formart: item => Math.round(item.price) + "万"
         },
         {
           prop: "unitPrice",
           label: "单价",
           order: "custom",
-          formart: item => item.unitPrice + "元/平"
+          formart: item => this.unitPrice(item) + "元/平"
         },
         {
           prop: "seenNumRecent",
@@ -274,8 +275,8 @@ export default {
         //   order: false
         // },
         {
-          prop: "saleReson",
-          label: "出售原因",
+          prop: "customerType",
+          label: "业主类型",
           order: false,
           formart: item => item.saleReson || "暂无"
         },
@@ -288,9 +289,10 @@ export default {
           }
         },
         {
-          prop: "addTime",
+          prop: "addTimeFormat",
           label: "挂牌",
-          order: true
+          order: true,
+          formart: item => item.addTimeFormat
         },
         {
           prop: "agentName",
@@ -334,7 +336,6 @@ export default {
           res = str1.length - str2.length;
           break;
         }
-
         const char1 = str1[i];
         const char1Type = this.getChartType(char1);
         const char2 = str2[i];
@@ -361,9 +362,9 @@ export default {
       }
 
       if (this.form.sortColumn == "floor") {
-        res = 1;
+        res = str1.floor > str2.floor ? 1 : -1;
       } else if (this.form.sortColumn == "addTime") {
-        res = -1;
+        res = str1.addTime > str2.addTime ? 1 : -1;
       }
 
       return res;
@@ -416,16 +417,19 @@ export default {
       if (item.column.property == "houseType") {
         order.prop = "rooms";
       }
+      if (item.column.property == "addTimeFormat") {
+        order.prop = "addTime";
+      }
       this.InitPageJson();
       //this.pageJson.currentPage = 1;
       switch (order.order) {
         case "ascending":
           this.form.sortColumn = order.prop;
-          this.form.sortType = "descending";
+          this.form.sortType = "ascending";
           break;
         case "descending":
           this.form.sortColumn = order.prop;
-          this.form.sortType = "ascending";
+          this.form.sortType = "descending";
       }
     },
     handleSizeChange(pageSize) {
@@ -461,6 +465,13 @@ export default {
         }
       }
     },
+    unitPrice(row, column) {
+      if (row.inArea > 0) {
+        return Math.round((row.price * 1000) / row.inArea);
+      } else {
+        return "-";
+      }
+    },
     InitPageJson() {
       this.pageJson = {
         total: 1,
@@ -472,10 +483,14 @@ export default {
     getHouseData(value, initPage = true) {
       this.loading = true;
       if (initPage) this.InitPageJson();
+      let url = "/myHouse/getMyAgent";
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
       });
+      if (restuleParms.workType != "1") {
+        url = "/myHouse/getMyRelated";
+      }
       if (restuleParms.time && restuleParms.time.length == 2) {
         restuleParms.beginTime = restuleParms.time[0];
         restuleParms.endTime = restuleParms.time[1];
@@ -483,7 +498,7 @@ export default {
       delete restuleParms.time;
       return this.$api
         .post({
-          url: "/myHouse/getMyAgent",
+          url,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: restuleParms
         })

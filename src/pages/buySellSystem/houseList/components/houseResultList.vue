@@ -699,14 +699,16 @@
               开发线索
             </button>
           </el-badge>
-          <button
-            class="btn-primary anchor-point"
-            data-anchor="首页管理入口"
-            @click="navToPath('/buySellSystem/concernCommunity')"
-          >
-            <i class=" iconjichuguanli1 iconfont"></i>
-            管理入口
-          </button>
+          <el-badge value="即将下线">
+            <button
+              class="btn-primary anchor-point"
+              data-anchor="首页管理入口"
+              @click="navToPath('/buySellSystem/concernCommunity')"
+            >
+              <i class=" iconjichuguanli1 iconfont"></i>
+              管理入口
+            </button>
+          </el-badge>
           <el-badge value="新">
             <button
               class="btn-primary anchor-point"
@@ -733,16 +735,20 @@
     <!-- nav类型切换 -->
     <div class="tab-content">
       <div class="tab-content-nav">
-        <div
-          class="tab-content-item anchor-point"
-          :class="{ active: typeActiveIndex == index }"
+        <el-badge
+          :value="item.value === 2 ? '新' : ''"
           v-for="(item, index) in typeList"
-          :data-anchor="'首页找房:' + item.label"
           :key="index"
-          @click="changeNavTypeIndex(index)"
         >
-          {{ item.label }}
-        </div>
+          <div
+            class="tab-content-item anchor-point"
+            :class="{ active: typeActiveIndex == index }"
+            :data-anchor="'首页找房:' + item.label"
+            @click="changeNavTypeIndex(index)"
+          >
+            {{ item.label }}
+          </div>
+        </el-badge>
       </div>
     </div>
     <div class="search-content no-frist" v-show="panelChange">
@@ -1700,7 +1706,11 @@ export default {
     },
     //跳转页面
     navToPath(path) {
-      this.$router.push({ path: path });
+      if (path == "/buySellSystem/myHouse") {
+        window.open(this.$router.resolve(path).href, "_blank");
+      } else {
+        this.$router.push({ path: path });
+      }
     },
     /**
      * @example: 处理房源编号，楼盘名称点击查询
