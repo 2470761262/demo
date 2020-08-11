@@ -70,7 +70,7 @@ export default {
         tel: "",
         time: [],
         sortColumn: "addTime",
-        sortType: 1,
+        sortType: 0,
         workType: "1"
       }
     };
