@@ -130,6 +130,7 @@
           @blur="handleInputBlur('cusName', 'customerName')"
           clearable
           v-model="cusName"
+          oninput="value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, '')"
           class="input-text "
           placeholder="业主姓名"
         ></el-input>
