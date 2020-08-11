@@ -466,10 +466,10 @@ export default {
       }
     },
     unitPrice(row, column) {
-      if (row.inArea > 0) {
-        return Math.round((row.price * 1000) / row.inArea);
+      if (row.inArea > 0 && row.unitPrice) {
+        return Math.round(row.unitPrice);
       } else {
-        return "-";
+        return 0;
       }
     },
     InitPageJson() {
