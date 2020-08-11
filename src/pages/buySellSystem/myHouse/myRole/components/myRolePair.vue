@@ -173,7 +173,8 @@
         <div class="search-item-title ">价格</div>
         <div class="search-item-body">
           <div class="input-group">
-            <el-input placeholder="最小值" v-model="priceMin">
+            <el-input placeholder="最小值"
+                      oninput="value = value.replace(/[^\d]/g, '')" v-model="priceMin">
               <i slot="suffix"></i>
               <template v-slot:suffix>万</template>
             </el-input>
@@ -183,6 +184,7 @@
               placeholder="最大值"
               data-vv-name="priceMax"
               v-model="priceMax"
+              oninput="value = value.replace(/[^\d]/g, '')"
               data-vv-as="价格最大值"
               v-validate="{
                 flota: true,

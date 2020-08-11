@@ -167,7 +167,7 @@
       <div class="search-item-body">
         <el-select
           clearable
-          v-model="form.checkProject"
+          v-model="form.status"
           popper-class="options-myhouse-custom-item anchor-point"
         >
           <el-option
@@ -198,11 +198,11 @@
 import cascadeHouse from "@/minxi/cascadeHouse";
 
 const BETTYPE = [
-  { value: 0, title: "努力中" },
-  { value: 1, title: "成功" },
-  { value: 2, title: "失败" },
-  { value: 3, title: "过期" },
-  { value: 4, title: "注销" }
+  { value: "0", title: "努力中" },
+  { value: "1", title: "成功" },
+  { value: "2,3,4,5,6", title: "失败" }
+  // { value: "3", title: "过期" },
+  // { value: "4", title: "注销" }
 ];
 
 export default {
