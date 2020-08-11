@@ -324,7 +324,7 @@ export default {
           this.form.maxPrice = this.priceMax;
           this.form.customName = this.cusName;
           this.form.houseNo = this.houseNo;
-          this.form.tel = this.tel;
+          this.form.tel = this.cusPhone;
         }
       });
     }

@@ -420,11 +420,11 @@ export default {
       switch (order.order) {
         case "ascending":
           this.form.sortColumn = order.prop;
-          this.form.sortType = 0;
+          this.form.sortType = "descending";
           break;
         case "descending":
           this.form.sortColumn = order.prop;
-          this.form.sortType = 1;
+          this.form.sortType = "ascending";
       }
     },
     handleSizeChange(pageSize) {
