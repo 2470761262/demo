@@ -557,7 +557,7 @@ export default {
     navDetailt(item) {
       util.openPage.call(this, {
         name: "houseDetails",
-        params: { houseId: item.id, dept: item.perDept }
+        params: { houseId: item.eid, dept: item.perDept }
       });
     },
     /**

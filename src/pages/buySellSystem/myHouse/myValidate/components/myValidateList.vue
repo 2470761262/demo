@@ -422,7 +422,7 @@ export default {
           methodName: "edit"
         },
         {
-          name: "查看",
+          name: "验真详情",
           isType: "待业主验真,待店长验真,已过期,验真失败,验真成功",
           methodName: "getResult"
         }
