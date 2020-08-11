@@ -2,7 +2,7 @@
 .tab-page {
   /deep/.header-tab-cell {
     // prettier-ignore
-    height: 64PX;
+    height: 50PX;
     font-size: @font16;
     background: rgba(240, 242, 245, 1);
     color: rgba(48, 49, 51, 1);
@@ -17,7 +17,7 @@
 
   /deep/.tab-cell-item {
     // prettier-ignore
-    height: 64PX;
+    height: 50PX;
     font-size: @font16;
     text-align: center;
     .cell {
@@ -41,12 +41,12 @@
       flex-shrink: 0;
       .tab-image-head {
         // prettier-ignore
-        height: 64PX;
+        height: 50PX;
         font-size: @font16;
         background: rgba(240, 242, 245, 1);
         color: rgba(48, 49, 51, 1);
         // prettier-ignore
-        line-height: 64PX;
+        line-height: 50PX;
         text-align: center;
         position: sticky;
         top: 0px;

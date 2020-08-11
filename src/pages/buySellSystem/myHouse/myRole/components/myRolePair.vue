@@ -133,6 +133,7 @@
             v-model="houseNo"
             class="input-text"
             placeholder="房源编号"
+            @blur="handleInputBlur('houseNo', 'houseNo')"
           ></el-input>
         </div>
       </div>
@@ -142,6 +143,7 @@
         <div class="search-item-body">
           <el-input
             clearable
+            maxlength="5"
             v-model="cusName"
             class="input-text"
             placeholder="业主姓名"
@@ -155,6 +157,8 @@
         <div class="search-item-body">
           <el-input
             clearable
+            v-number
+            maxlength="11"
             v-model="cusPhone"
             class="input-text"
             placeholder="业主电话"
@@ -173,12 +177,13 @@
         <div class="search-item-title ">价格</div>
         <div class="search-item-body">
           <div class="input-group">
-            <el-input placeholder="最小值" v-model="priceMin">
+            <el-input placeholder="最小值" v-model="priceMin" v-number.floot>
               <i slot="suffix"></i>
               <template v-slot:suffix>万</template>
             </el-input>
             <span>至</span>
             <el-input
+              v-number.floot
               data-vv-validate-on="blur"
               placeholder="最大值"
               data-vv-name="priceMax"
@@ -205,12 +210,13 @@
         <div class="search-item-title ">面积</div>
         <div class="search-item-body">
           <div class="input-group">
-            <el-input placeholder="最小值" v-model="areaMin">
+            <el-input placeholder="最小值" v-model="areaMin" v-number.floot>
               <i slot="suffix"></i>
               <template v-slot:suffix>㎡</template>
             </el-input>
             <span>至</span>
             <el-input
+              v-number.floot
               placeholder="最大值"
               v-model="areaMax"
               data-vv-name="areaMax"
