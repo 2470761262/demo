@@ -209,12 +209,12 @@ export default {
                 return "成功";
               case 2:
                 return "失败";
-              case 3:
-                return "过期";
-              case 4:
-                return "注销";
+              // case 3:
+              //   return "过期";
+              // case 4:
+              //   return "注销";
               default:
-                return "";
+                return "失败";
             }
           }
         },

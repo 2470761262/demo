@@ -310,7 +310,8 @@ export default {
       priceMax: "", //价格最大
       areaMin: "", //最小面积
       areaMax: "", //最大面积
-      time: [] //挂牌时间
+      time: [], //挂牌时间
+      tel: ""
     };
   },
   methods: {
