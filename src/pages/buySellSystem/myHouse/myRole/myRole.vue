@@ -35,6 +35,9 @@ export default {
     myRoleList,
     myRolePair
   },
+  mounted() {
+    document.title = "鑫伽系统-我的房源";
+  },
   //   activated() {
   //     this.$nextTick(() => {
   //       this.$refs.scrollTab.addEventListener("scroll", this.ListeningScroll);
