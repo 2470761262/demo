@@ -126,6 +126,7 @@
       <div class="search-item-title ">业主姓名</div>
       <div class="search-item-body">
         <el-input
+          maxlength="5"
           @blur="handleInputBlur('cusName', 'customerName')"
           clearable
           v-model="cusName"
@@ -139,6 +140,8 @@
       <div class="search-item-title ">业主电话</div>
       <div class="search-item-body">
         <el-input
+          v-number
+          maxlength="11"
           @blur="handleInputBlur('cusTel', 'tel')"
           clearable
           v-model="cusTel"

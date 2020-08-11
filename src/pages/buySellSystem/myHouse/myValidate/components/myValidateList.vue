@@ -2,7 +2,7 @@
 .tab-page {
   /deep/.header-tab-cell {
     // prettier-ignore
-    height: 64PX;
+    height: 50PX;
     font-size: @font16;
     background: rgba(240, 242, 245, 1);
     color: rgba(48, 49, 51, 1);
@@ -17,7 +17,7 @@
 
   /deep/.tab-cell-item {
     // prettier-ignore
-    height: 64PX;
+    height: 50PX;
     font-size: @font16;
     text-align: center;
     .cell {
@@ -132,11 +132,11 @@
       >
       </el-pagination>
     </div>
-    <el-dialog
+    <fixed-popup
       title="验真详情"
+      v-if="showVeryfyDetail"
       :visible.sync="showVeryfyDetail"
       width="30%"
-      :before-close="() => (showVeryfyDetail = false)"
     >
       <el-card class="box-card">
         <div slot="header" class="clearfix">
@@ -268,7 +268,7 @@
           </div>
         </div>
       </el-card>
-    </el-dialog>
+    </fixed-popup>
     <tel-pop
       title=""
       :visible.sync="telPopFlag"

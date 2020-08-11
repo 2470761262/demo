@@ -129,6 +129,7 @@
         <el-input
           clearable
           v-model="cusName"
+          maxlength="5"
           class="input-text "
           placeholder="业主姓名"
           @blur="handleInputBlur('cusName', 'customrName')"
@@ -140,7 +141,9 @@
       <div class="search-item-title ">业主电话</div>
       <div class="search-item-body">
         <el-input
+          v-number
           clearable
+          maxlength="11"
           v-model="cusPhone"
           class="input-text"
           placeholder="业主电话"
