@@ -24,7 +24,7 @@
     // prettier-ignore
     padding: 0 15PX;
     .tab-content-item {
-      font-size: @font18;
+      font-size: @font16;
       // prettier-ignore
       margin-right: 32PX;
       position: relative;
