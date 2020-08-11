@@ -255,13 +255,13 @@ export default {
           prop: "price",
           label: "总价",
           order: "custom",
-          formart: item => item.price + "万"
+          formart: item => Math.round(item.price) + "万"
         },
         {
           prop: "unitPrice",
           label: "单价",
           order: "custom",
-          formart: item => item.unitPrice + "元/平"
+          formart: item => this.unitPrice(item) + "元/平"
         },
         {
           prop: "seenNumRecent",
@@ -335,7 +335,6 @@ export default {
           res = str1.length - str2.length;
           break;
         }
-
         const char1 = str1[i];
         const char1Type = this.getChartType(char1);
         const char2 = str2[i];
@@ -362,7 +361,7 @@ export default {
       }
 
       if (this.form.sortColumn == "floor") {
-        res = 1;
+        res = str1.floor > str2.floor ? 1 : -1;
       } else if (this.form.sortColumn == "addTime") {
         res = -1;
       }
@@ -422,11 +421,11 @@ export default {
       switch (order.order) {
         case "ascending":
           this.form.sortColumn = order.prop;
-          this.form.sortType = "descending";
+          this.form.sortType = "ascending";
           break;
         case "descending":
           this.form.sortColumn = order.prop;
-          this.form.sortType = "ascending";
+          this.form.sortType = "descending";
       }
     },
     handleSizeChange(pageSize) {
@@ -460,6 +459,13 @@ export default {
             parseFloat(prevTr) + parseFloat(nextTr) + "px";
           index++;
         }
+      }
+    },
+    unitPrice(row, column) {
+      if (row.inArea > 0) {
+        return Math.round((row.price * 1000) / row.inArea);
+      }else {
+        return '-'
       }
     },
     InitPageJson() {
