@@ -289,7 +289,7 @@ export default {
           }
         },
         {
-          prop: "addTime",
+          prop: "addTimeFormat",
           label: "挂牌",
           order: true
         },
@@ -416,6 +416,9 @@ export default {
       //户型修改为prop为rooms
       if (item.column.property == "houseType") {
         order.prop = "rooms";
+      }
+      if (item.column.property == "addTimeFormat") {
+        order.prop = "addTime";
       }
       this.InitPageJson();
       //this.pageJson.currentPage = 1;
