@@ -275,8 +275,8 @@ export default {
         //   order: false
         // },
         {
-          prop: "saleReson",
-          label: "出售原因",
+          prop: "customerType",
+          label: "业主类型",
           order: false,
           formart: item => item.saleReson || "暂无"
         },
