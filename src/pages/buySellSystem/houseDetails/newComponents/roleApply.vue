@@ -364,7 +364,6 @@
               class="role-btn"
               v-if="reloData.submitApplyRealOwner"
               :loading="houseUploadLoading"
-              :disabled="agentApply"
               @click="submitUpload"
             >
               {{ houseUploadLoading ? "加载中" : "提交" }}
