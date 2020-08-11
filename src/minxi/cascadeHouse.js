@@ -139,6 +139,7 @@ export default {
       const { name = undefined, value = undefined } = item;
 
       this.form.bhId = value ? value : "";
+      this.form.roomNo = value ? value : "";
     }
   }
 };

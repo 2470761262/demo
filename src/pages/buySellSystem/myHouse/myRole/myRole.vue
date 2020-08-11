@@ -61,6 +61,7 @@ export default {
         comId: "",
         cbId: "",
         bhId: "",
+        roomNo: "",
         houseNo: "",
         customName: "",
         minInArea: "",

@@ -693,7 +693,7 @@ export default {
      */
     navDetailt(item) {
       util.openPage.call(this, {
-        name: "houseDetails",
+        name: "validateHouseDetails",
         params: { houseId: item.id, dept: item.perDept }
       });
     },
