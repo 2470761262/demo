@@ -182,7 +182,8 @@ export default {
       url.indexOf("/potentialHouseDetail/") != -1 ||
       url.indexOf("/buildingHouseDetail/") != -1 ||
       url.indexOf("/historyDetails/") != -1 ||
-      url.indexOf("/validateHouseDetails/") != -1
+      url.indexOf("/validateHouseDetails/") != -1 ||
+      url.indexOf("/myHouse/myRole") != -1
     ) {
       this.isShowReturn = false;
     }

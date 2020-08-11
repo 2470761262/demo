@@ -1706,7 +1706,11 @@ export default {
     },
     //跳转页面
     navToPath(path) {
-      this.$router.push({ path: path });
+      if (path == "/buySellSystem/myHouse") {
+        window.open(this.$router.resolve(path).href, "_blank");
+      } else {
+        this.$router.push({ path: path });
+      }
     },
     /**
      * @example: 处理房源编号，楼盘名称点击查询

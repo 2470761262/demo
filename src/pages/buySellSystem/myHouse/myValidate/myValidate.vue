@@ -46,7 +46,7 @@ export default {
         customrName: "",
         limit: 10,
         page: 1,
-        sortColumn: "checkStatus",
+        sortColumn: "addTime",
         sortType: 1,
         tel: "",
         time: []
