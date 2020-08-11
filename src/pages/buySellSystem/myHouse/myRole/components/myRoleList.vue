@@ -38,6 +38,7 @@
       display: flex;
       flex-direction: column;
       width: 150px;
+      flex-shrink: 0;
       .tab-image-head {
         // prettier-ignore
         height: 64PX;
