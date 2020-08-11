@@ -269,17 +269,17 @@ export default {
           order: "custom",
           formart: item => item.seenNumRecent || "0"
         },
-        // {
-        //   prop: "customerType",
-        //   label: "业主类型",
-        //   order: false
-        // },
         {
           prop: "customerType",
           label: "业主类型",
-          order: false,
-          formart: item => item.saleReson || "暂无"
+          order: false
         },
+        // {
+        //   prop: "saleReson",
+        //   label: "卖房原因",
+        //   order: false,
+        //   formart: item => item.saleReson || "暂无"
+        // },
         {
           prop: "floor",
           label: "楼层",
