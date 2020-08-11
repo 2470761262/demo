@@ -71,7 +71,7 @@ export default {
         tel: "",
         time: [],
         sortColumn: "addTime",
-        sortType: 0,
+        sortType: 1,
         workType: "1"
       }
     };
