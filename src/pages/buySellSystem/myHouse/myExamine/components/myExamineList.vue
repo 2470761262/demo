@@ -265,12 +265,14 @@ export default {
         {
           label: "附件",
           formart: row => {
-            return (
-              <i
-                class="el-icon-picture"
-                onClick={this.getAccessory.bind(this, row)}
-              ></i>
-            );
+            if (row.accessory == 1) {
+              return (
+                <i
+                  class="el-icon-picture"
+                  onClick={this.getAccessory.bind(this, row)}
+                ></i>
+              );
+            }
           }
         },
         {
