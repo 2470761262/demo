@@ -733,16 +733,16 @@
     <!-- nav类型切换 -->
     <div class="tab-content">
       <div class="tab-content-nav">
-        <div
-          class="tab-content-item anchor-point"
-          :class="{ active: typeActiveIndex == index }"
-          v-for="(item, index) in typeList"
-          :data-anchor="'首页找房:' + item.label"
-          :key="index"
-          @click="changeNavTypeIndex(index)"
-        >
-          {{ item.label }}
-        </div>
+        <el-badge :value="item.value===2?'新':''" v-for="(item, index) in typeList" :key="index">
+          <div
+            class="tab-content-item anchor-point"
+            :class="{ active: typeActiveIndex == index }"
+            :data-anchor="'首页找房:' + item.label"
+            @click="changeNavTypeIndex(index)"
+          >
+            {{ item.label }}
+          </div>
+        </el-badge>
       </div>
     </div>
     <div class="search-content no-frist" v-show="panelChange">
