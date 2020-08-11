@@ -442,7 +442,7 @@ export default {
     agentApply() {
       let loginDeptId = util.localStorageGet("logindata").deptId;
       if (
-        this.houseData.plate == 1 &&
+        this.houseData.plate === 1 &&
         this.houseData.agentPerDepartmentId != loginDeptId
       ) {
         return true;
@@ -476,7 +476,7 @@ export default {
      * @param {type}
      */
     isAgentPerApply() {
-      return this.reloData.applyAgent && this.houseData.plate < 6;
+      return this.reloData.applyAgent && this.houseData.plate < 6 && !this.agentApply ;
     },
     /**
      * @example: 判断是否存在委托人

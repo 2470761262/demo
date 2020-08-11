@@ -47,7 +47,7 @@ export default {
         houseNo: "",
         limit: 10,
         page: 1,
-        sortColumn: "tag",
+        sortColumn: "addTime",
         status: "",
         time: []
       }

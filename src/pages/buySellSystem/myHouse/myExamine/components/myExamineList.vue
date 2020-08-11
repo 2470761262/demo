@@ -109,6 +109,7 @@
         cell-class-name="tab-cell-item"
         @sort-change="sortMethod"
         @row-dblclick="navDetailt"
+        :default-sort="{ prop: 'addTime', order: 'descending' }"
       >
         <el-table-column
           :fixed="item.fixed"
