@@ -699,14 +699,16 @@
               开发线索
             </button>
           </el-badge>
-          <button
-            class="btn-primary anchor-point"
-            data-anchor="首页管理入口"
-            @click="navToPath('/buySellSystem/concernCommunity')"
-          >
-            <i class=" iconjichuguanli1 iconfont"></i>
-            管理入口
-          </button>
+          <el-badge value="即将下线">
+            <button
+              class="btn-primary anchor-point"
+              data-anchor="首页管理入口"
+              @click="navToPath('/buySellSystem/concernCommunity')"
+            >
+              <i class=" iconjichuguanli1 iconfont"></i>
+              管理入口
+            </button>
+          </el-badge>
           <el-badge value="新">
             <button
               class="btn-primary anchor-point"
@@ -733,7 +735,11 @@
     <!-- nav类型切换 -->
     <div class="tab-content">
       <div class="tab-content-nav">
-        <el-badge :value="item.value===2?'新':''" v-for="(item, index) in typeList" :key="index">
+        <el-badge
+          :value="item.value === 2 ? '新' : ''"
+          v-for="(item, index) in typeList"
+          :key="index"
+        >
           <div
             class="tab-content-item anchor-point"
             :class="{ active: typeActiveIndex == index }"
