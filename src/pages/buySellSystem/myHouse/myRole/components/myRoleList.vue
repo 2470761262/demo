@@ -291,7 +291,8 @@ export default {
         {
           prop: "addTime",
           label: "挂牌",
-          order: true
+          order: true,
+          formart: item => item.addTimeFormat
         },
         {
           prop: "agentName",
