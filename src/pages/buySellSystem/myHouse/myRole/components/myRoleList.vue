@@ -283,7 +283,7 @@ export default {
           label: "楼层",
           order: true,
           formart: item => {
-            return `${item.floor}/${item.floorNum}`;
+            return `${item.floor}/${item.floorNum || "暂无"}`;
           }
         },
         {
@@ -292,7 +292,7 @@ export default {
           order: true
         },
         {
-          prop: "brokerName",
+          prop: "agentName",
           label: "跟单人",
           order: false
         }
