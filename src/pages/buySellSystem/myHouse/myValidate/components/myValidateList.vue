@@ -132,11 +132,11 @@
       >
       </el-pagination>
     </div>
-    <el-dialog
+    <fixed-popup
       title="验真详情"
+      v-if="showVeryfyDetail"
       :visible.sync="showVeryfyDetail"
       width="30%"
-      :before-close="() => (showVeryfyDetail = false)"
     >
       <el-card class="box-card">
         <div slot="header" class="clearfix">
@@ -268,7 +268,7 @@
           </div>
         </div>
       </el-card>
-    </el-dialog>
+    </fixed-popup>
     <tel-pop
       title=""
       :visible.sync="telPopFlag"
