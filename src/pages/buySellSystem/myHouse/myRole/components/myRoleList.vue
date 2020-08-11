@@ -468,8 +468,8 @@ export default {
     unitPrice(row, column) {
       if (row.inArea > 0) {
         return Math.round((row.price * 1000) / row.inArea);
-      }else {
-        return '-'
+      } else {
+        return "-";
       }
     },
     InitPageJson() {
