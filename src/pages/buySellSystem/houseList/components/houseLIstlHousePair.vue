@@ -524,7 +524,7 @@ export default {
         res = str1.floor > str2.floor ? 1 : -1;
         return res;
       } else if (this.form.sortColumn == "addTime") {
-        return str1.addTime > str2.addTime ? 1 : -1;
+        return -1;
       }
       for (let i = 0; ; i++) {
         if (!str1[i] || !str2[i]) {
