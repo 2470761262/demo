@@ -173,6 +173,7 @@
         default-expand-all
         @sort-change="sortMethod"
         @row-dblclick="navDetailt"
+        :default-sort="{ prop: 'addTime', order: 'descending' }"
       >
         <el-table-column type="expand" width="1px"> </el-table-column>
         <el-table-column
