@@ -184,7 +184,7 @@ export default {
         });
     },
     navto() {
-      this.$router.replace({ path: "/buySellSystem/validateHouseList" });
+      this.$router.replace({ path: "/myHouse/myValidate" });
     },
     validateAll() {
       let that = this;
