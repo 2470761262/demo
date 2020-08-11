@@ -289,7 +289,7 @@ export default {
           }
         },
         {
-          prop: "addTime",
+          prop: "addTimeFormat",
           label: "挂牌",
           order: true,
           formart: item => item.addTimeFormat
@@ -417,6 +417,9 @@ export default {
       if (item.column.property == "houseType") {
         order.prop = "rooms";
       }
+      if (item.column.property == "addTimeFormat") {
+        order.prop = "addTime";
+      }
       this.InitPageJson();
       //this.pageJson.currentPage = 1;
       switch (order.order) {
@@ -465,8 +468,8 @@ export default {
     unitPrice(row, column) {
       if (row.inArea > 0) {
         return Math.round((row.price * 1000) / row.inArea);
-      }else {
-        return '-'
+      } else {
+        return "-";
       }
     },
     InitPageJson() {
