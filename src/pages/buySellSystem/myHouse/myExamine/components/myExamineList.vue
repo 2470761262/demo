@@ -530,9 +530,9 @@ export default {
       }
 
       if (this.form.sortColumn == "floor") {
-        res = 1;
+        res = str1.floor > str2.floor ? 1 : -1;
       } else if (this.form.sortColumn == "addTime") {
-        res = -1;
+        res = str1.addTime > str2.addTime ? 1 : -1;
       }
 
       return res;
