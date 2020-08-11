@@ -473,10 +473,14 @@ export default {
     getHouseData(value, initPage = true) {
       this.loading = true;
       if (initPage) this.InitPageJson();
+      let url = "/myHouse/getMyAgent";
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
       });
+      if (restuleParms.workType != "1") {
+        url = "/myHouse/getMyRelated";
+      }
       if (restuleParms.time && restuleParms.time.length == 2) {
         restuleParms.beginTime = restuleParms.time[0];
         restuleParms.endTime = restuleParms.time[1];
@@ -484,7 +488,7 @@ export default {
       delete restuleParms.time;
       return this.$api
         .post({
-          url: "/myHouse/getMyAgent",
+          url,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: restuleParms
         })
