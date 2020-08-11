@@ -28,6 +28,10 @@
       margin-right: 0;
     }
   }
+  .tips {
+    color: red;
+    padding-top: 10px;
+  }
 }
 </style>
 <template>
@@ -271,6 +275,9 @@
       >
         {{ item.title }}
       </div>
+      <span class="tips">
+        友情提示：管理人员"我的跟单"列表显示的数据为管理范围内的房源;其余类型显示为个人名下房源
+      </span>
     </div>
   </div>
 </template>
