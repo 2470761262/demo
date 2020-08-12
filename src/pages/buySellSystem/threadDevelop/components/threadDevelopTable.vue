@@ -86,55 +86,79 @@
       :visible.sync="alertflag"
       styleType="1"
       :customFlag="true"
-      @customBtn="customBtn"
       title="查记录"
       width="420px"
+      class="record-dialog"
     >
       <template>
         <el-tabs v-model="recordActiveName" @tab-click="recordNavClick">
-          <el-tab-pane label="跟进" name="first">
-            <el-timeline>
-              <el-timeline-item
-                v-for="(activity, index) in activities"
-                :key="index"
-                :icon="activity.icon"
-                :type="activity.type"
-                :color="activity.color"
-                :size="activity.size"
-                :timestamp="activity.timestamp"
-                placement="top"
-              >
-                <div class="record-dialog-column">
-                  <span class="title">跟进人：</span>
-                  <span>{{activity.content}}</span>
-                </div>
-                <div class="record-dialog-column">
-                  <span class="title">跟进内容：</span>
-                  <span>{{activity.content}}</span>
-                </div>
-              </el-timeline-item>
-            </el-timeline>
-          </el-tab-pane>
-          <el-tab-pane label="语音" name="second">
-            <el-timeline>
-              <el-timeline-item
-                v-for="(activity, index) in voiceList"
-                :key="index"
-                :icon="activity.icon"
-                :type="activity.type"
-                :color="activity.color"
-                :size="activity.size"
-                :timestamp="activity.timestamp"
-                placement="top"
-              >
-                <div>
-                  <div>
-                    <span class="audio-title">钟丽娟（{{activity.content}}店）</span>
-                    <el-audio :fixed="false" url="http://devtest.qiniudn.com/secret base~.mp3">经纪人讲房</el-audio>
+          <el-tab-pane label="跟进" name="follow">
+            <div
+              class="list-content"
+              infinite-scroll-immediate="false"
+              v-infinite-scroll="load"
+            >
+              <el-timeline>
+                <el-timeline-item
+                  v-for="(activity, index) in activities"
+                  :key="index"
+                  :icon="activity.icon"
+                  :type="activity.type"
+                  :color="activity.color"
+                  :size="activity.size"
+                  :timestamp="activity.createTime"
+                  placement="top"
+                >
+                  <div class="record-dialog-column">
+                    <span class="title">跟进人：</span>
+                    <span>{{activity.followName}}</span>
                   </div>
-                </div>
-              </el-timeline-item>
-            </el-timeline>
+                  <div class="record-dialog-column">
+                    <span class="title">跟进内容：</span>
+                    <span>{{activity.content}}</span>
+                  </div>
+                </el-timeline-item>
+              </el-timeline>
+              <template v-if="follow.loading">
+                <i class="el-icon-loading"></i> 加载中...
+              </template>
+              <template v-if="activities.length == 0">
+                <div class="no-data">暂无数据~</div>
+              </template>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="语音" name="voice">
+            <div
+              class="list-content"
+              infinite-scroll-immediate="false"
+              v-infinite-scroll="load"
+            >
+              <el-timeline>
+                <el-timeline-item
+                  v-for="(activity, index) in voiceList"
+                  :key="index"
+                  :icon="activity.icon"
+                  :type="activity.type"
+                  :color="activity.color"
+                  :size="activity.size"
+                  :timestamp="activity.createTime"
+                  placement="top"
+                >
+                  <div>
+                    <div>
+                      <span class="audio-title">{{activity.followName}}</span>
+                      <el-audio :fixed="false" :url="activity.content">经纪人讲房</el-audio>
+                    </div>
+                  </div>
+                </el-timeline-item>
+              </el-timeline>
+              <template v-if="voice.loading">
+                <i class="el-icon-loading"></i> 加载中...
+              </template>
+              <template v-if="voiceList.length == 0">
+                  <div class="no-data">暂无数据</div>
+              </template>
+            </div>
           </el-tab-pane>
         </el-tabs>
       </template>
@@ -162,51 +186,23 @@ export default {
     return {
       followUpFlag: false, //跟进弹框开关
       rowId: "", // 写跟进时行id
-      recordActiveName: "first",
-      activities: [
-        {
-          content: "支持使用图标",
-          timestamp: "2018-04-12 20:46",
-          color: "#0bbd87"
-        },
-        {
-          content: "支持自定义颜色",
-          timestamp: "2018-04-03 20:46",
-          color: "#0bbd87"
-        },
-        {
-          content: "支持自定义尺寸",
-          timestamp: "2018-04-03 20:46",
-          size: "large"
-        },
-        {
-          content: "默认样式的节点",
-          timestamp: "2018-04-03 20:46"
-        }
-      ],
-      voiceList: [
-        {
-          content: "支持使用图标",
-          timestamp: "2018-04-12 20:46",
-          color: "#0bbd87",
-          size: "large"
-        },
-        {
-          content: "支持自定义颜色",
-          timestamp: "2018-04-03 20:46",
-          color: "#0bbd87",
-          size: "large"
-        },
-        {
-          content: "支持自定义尺寸",
-          timestamp: "2018-04-03 20:46",
-          size: "large"
-        },
-        {
-          content: "默认样式的节点",
-          timestamp: "2018-04-03 20:46"
-        }
-      ],
+      recordActiveName: "follow",
+      activities: [],
+      voiceList: [],
+      follow: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+        loading: false,
+        loadPageEnd: false
+      },
+      voice: {
+        list: [],
+        totalPage: 0,
+        page: 1,
+        loading: false,
+        loadPageEnd: false
+      },
       alertflag: false,
       renderList: [],
       tableColumnField: [
@@ -453,7 +449,7 @@ export default {
         roomId: row.id, 		// 列表id
         area: row.area,		// 面积
         communityName: row.communityName, // 楼盘名称
-        contactPerName: "陈先生"	// 业主姓名
+        contactPerName: row.owner	// 业主姓名
       };
       this.$api
         .post({
@@ -477,11 +473,11 @@ export default {
     houseOperate(row) {
       console.log(row, "转为在售");
       this.toSale(
-        row.comId,
-        row.cbId,
-        row.bhId,
+        row.communityId,
+        row.buildingId,
+        row.id,
         row.communityName,
-        row.buildingName,
+        row.comBuildingName,
         row.roomNo
       );
     },
@@ -498,7 +494,16 @@ export default {
      */
     findRecord(row) {
       console.log(row, "查记录");
+      this.currentRowId = row.id;
+      this.recordActiveName = "follow";
+      this.follow.page = 1;
+      this.voice.page = 1;
+      this.follow.loadPageEnd = false;
+      this.voice.loadPageEnd = false;
+      this.activities = [];
+      this.voiceList = [];
       this.alertflag = true;
+      this.getHouseFollow();
     },
     toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
       this.$router.push({
@@ -517,14 +522,87 @@ export default {
         }
       });
     },
-    customBtn() {
-      console.log("==================");
-      this.requireTypeOld = this.BeforeChangeType;
-      this.requireType = this.BeforeChangeType;
-      this.alertflag = false;
-    },
     recordNavClick(tab, event) {
       console.log(tab, event);
+    },
+    //滚动分页
+    load() {
+      console.log("==========");
+      if (
+        this[this.recordActiveName].page < this[this.recordActiveName].totalPage
+      ) {
+        ++this[this.recordActiveName].page;
+        this.getList();
+      } else {
+        this[[this.recordActiveName]].loadPageEnd = true;
+      }
+    },
+    //获取列表数据
+    getList() {
+      switch (this.recordActiveName) {
+        case "follow":
+          this.getHouseFollow();
+          break;
+        case "voice":
+          this.getHouseVoiceList();
+          break;
+      }
+    },
+    //获取跟进列表
+    getHouseFollow() {
+      let that = this;
+      let params = {
+        page: that.follow.page,
+        limit: 7,
+        roomId: that.currentRowId,
+        followType: 1
+      }
+      this.follow.loading = true;
+      this.$api
+        .post({
+          url: "/roomFollow/follows",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params
+        })
+        .then(e => {
+          console.log(e.data, "==============111111111")
+          if (e.data.code === 200) {
+            that.activities = [...that.activities, ...e.data.data.list];
+            that.follow.totalPage = e.data.data.totalPage;
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.follow.loading = false;
+        });
+    },
+    //获取跟进列表
+    getHouseVoiceList() {
+      let that = this;
+      let params = {
+        page: that.voice.page,
+        limit: 7,
+        roomId: that.currentRowId,
+        followType: 2
+      }
+      this.voice.loading = true;
+      this.$api
+        .post({
+          url: "/roomFollow/follows",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: Object.assign({}, params, {followType: 2})
+        })
+        .then(e => {
+          console.log(e.data, "==============2222222")
+          if (e.data.code === 200) {
+            that.voiceList = [...that.voiceList, ...e.data.data.list];
+            that.voice.totalPage = e.data.data.totalPage;
+          }
+        })
+        .catch(() => {})
+        .finally(() => {
+          this.voice.loading = false;
+        });
     }
   }
 };
@@ -635,16 +713,57 @@ export default {
   overflow: visible;
 }
 /*********** 查记录弹窗 ***********/
+.list-content {
+  max-height: 600px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  &::-webkit-scrollbar-button,
+  &::-webkit-scrollbar-track,
+  &::-webkit-scrollbar-track-piece {
+    display: none;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #c9c9c9;
+    border-radius: 50px;
+  }
+}
+/deep/.record-dialog {
+  .didLog-content-sroll {
+    display: flex;
+    .el-tabs--top {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      .el-tabs__content {
+        flex: 1;
+        height: 0;
+        overflow: auto;
+      }
+    }
+  }
+}
 /deep/.didLog-content-body {
   .el-tab-pane {
     padding-left: 5px;
+    .no-data {
+      font-size: 16px;
+      color: #999;
+    }
   }
   .record-dialog-column {
+    display: flex;
     font-size: 16px;
     color: #999;
     .title {
       display: inline-block;
-      width: 110px;
+      width: 90px;
+    }
+    span:nth-child(2) {
+      flex: 1;
     }
   }
   .audio-contenr {
