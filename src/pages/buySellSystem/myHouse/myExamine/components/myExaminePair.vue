@@ -285,6 +285,7 @@ export default {
     },
     validateFrom() {
       this.form.houseNo = this.houseNo;
+      this.form.random = new Date().getTime();
     }
   }
 };

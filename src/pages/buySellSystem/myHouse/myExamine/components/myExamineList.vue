@@ -616,6 +616,7 @@ export default {
         params.beginTime = params.time[0];
         params.endTime = params.time[1];
       }
+      delete params.random;
       delete params.time;
       return this.$api
         .post({

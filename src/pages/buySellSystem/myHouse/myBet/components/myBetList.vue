@@ -379,7 +379,7 @@ export default {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
       });
-
+      delete params.random;
       return this.$api
         .post({
           url: "/myHouse/myBetList",

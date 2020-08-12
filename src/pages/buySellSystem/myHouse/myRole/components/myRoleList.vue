@@ -488,6 +488,7 @@ export default {
         restuleParms.beginTime = restuleParms.time[0];
         restuleParms.endTime = restuleParms.time[1];
       }
+      delete restuleParms.random;
       delete restuleParms.time;
       return this.$api
         .post({
