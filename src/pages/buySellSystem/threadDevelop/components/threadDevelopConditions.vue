@@ -15,7 +15,7 @@
     </div>
     <!-- 面包屑 -->
     <div class="nav-flex">
-      <span class="title"><i class="iconhome iconfont"></i>&nbsp;当前位置：</span>
+      <span class="title"><i class="iconhome iconfont"></i>当前位置：</span>
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item
           v-for="(item, index) in breadcrumbList"
@@ -131,34 +131,20 @@
       <div class="search-content-item">
         <div class="search-item-title">类型</div>
         <div class="search-item-right">
-          <el-radio-group v-model="form.type" size="small">
+          <el-radio-group v-model="typeList" size="small" @change="typeListChange">
             <el-radio
               class="anchor-point"
               data-anchor="开发线索选项 类型:不限"
-              label=""
+              label="不限"
               border
               >不限</el-radio
             >
-            <el-radio
+            <el-radio v-for="(item, index) in typeArr" :key="index"
               class="anchor-point"
-              data-anchor="开发线索选项 时间:成交120天转入"
-              label="0"
+              :data-anchor="'开发线索选项 时间:'+item.name"
+              :label="item.value"
               border
-              >成交120天转入</el-radio
-            >
-            <el-radio
-              class="anchor-point"
-              data-anchor="开发线索选项 时间:暂不售转入"
-              label="1"
-              border
-              >暂不售转入</el-radio
-            >
-            <el-radio
-              class="anchor-point"
-              data-anchor="开发线索选项 时间:30天内导入号码"
-              label="4"
-              border
-              >30天内导入号码</el-radio
+              >{{item.name}}</el-radio
             >
           </el-radio-group>
         </div>
@@ -167,7 +153,7 @@
       <div class="search-content-item">
         <div class="search-item-title">时间</div>
         <div class="search-item-right">
-          <el-radio-group v-model="form.time" size="small">
+          <el-radio-group v-model="form.lastCallType" size="small">
             <el-radio
               class="anchor-point"
               data-anchor="首页选项 时间:不限"
@@ -178,21 +164,21 @@
             <el-radio
               class="anchor-point"
               data-anchor="首页选项 时间:30日以上来回访"
-              label="0"
+              label="1"
               border
               >30日以上来回访</el-radio
             >
             <el-radio
               class="anchor-point"
               data-anchor="首页选项 时间:30日内有回访"
-              label="1"
+              label="2"
               border
               >30日内有回访</el-radio
             >
             <el-radio
               class="anchor-point"
               data-anchor="首页选项 时间:今日有回访"
-              label="4"
+              label="3"
               border
               >今日有回访</el-radio
             >
@@ -561,7 +547,20 @@ export default {
         maxRoom: "" //最高房型
       },
       PrimarySchoolList: [], //小学
-      MiddleSchoolList: [] //中学
+      MiddleSchoolList: [], //中学
+      typeList: "不限",
+      typeArr: [
+        {
+          name: "成交120天转入",
+          value: "1"
+        }, {
+          name: "暂不售转入",
+          value: "2"
+        }, {
+          name: "30天内导入号码",
+          value: "3"
+        }
+      ]
     };
   },
   computed: {
@@ -958,6 +957,12 @@ export default {
         this[temporaryCheckListFiled].push(name);
       }
       this[temporaryField] = this[temporaryCheckListFiled];
+    },
+    /**
+     * @example: 类型的选择的change事件
+     */
+    typeListChange(value) {
+      this.form.typeList = value === "不限" ? [] : [value];
     }
   }
 };
@@ -1009,9 +1014,16 @@ export default {
   /************ 面包屑 ************/
   .nav-flex {
     display: flex;
+    align-items: center;
     padding: 20px 20px 0;
+    i {
+      margin-right: 3px;
+    }
     .title {
+      display: flex;
+      align-items: center;
       line-height: 1;
+      font-size: 14px;
       font-weight: 700;
       color: var(--color--primary);
     }

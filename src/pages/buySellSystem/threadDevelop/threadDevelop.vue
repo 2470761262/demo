@@ -47,29 +47,19 @@ export default {
       scrollTop: 0,
       form: {
         listSwitchRadio: "开发线索",
-        type: "", //类型
-        time: "", //时间
+        typeList: [], // 房源类型
+        lastCallType: "", //时间
         bussinessDistrictList: [], //商圈
-        roomTypeList: [],
-        decorationList: [],
-        houseUseList: [],
-        primarySchoolList: [],
-        middleSchoolList: [],
-        comId: "",
-        cbId: "",
-        bhId: "",
-        minFloor: "",
-        maxFloor: "",
-        minInArea: "",
-        maxInArea: "",
-        minPrice: "",
-        maxPrice: "",
-        faceList: [],
-        sortColumn: "addTime",
-        sortType: 1,
-        keyWord: "", //keyword
-        isTopFloor: "", //是否是顶层
-        isBet: "" //对赌
+        roomTypeList: [], // 房型
+        primarySchoolList: [], // 小学列表
+        middleSchoolList: [], // 中学列表
+        comId: "", // 楼盘
+        cbId: "", // 楼栋
+        bhId: "", // 房间
+        minInArea: "", // 最小面积
+        maxInArea: "", // 最大面积
+        sortColumn: "",
+        sortType: 1
       }
     };
   },

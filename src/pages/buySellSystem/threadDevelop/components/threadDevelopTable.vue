@@ -217,17 +217,13 @@ export default {
           width: "300",
           formart: item => {
             return (
-              // <div class="tab-com-item">
-              //   <div class="tab-house-title">{item.communityName}</div>
-              //   <div class="tab-houseno">{item.houseNo}</div>
-              // </div>
               <div class="tab-com-item">
                 <div class="tab-house-title">{item.communityName}</div>
                 <div class="tab-houseno">
-                  100平&nbsp;/&nbsp;朝南&nbsp;/&nbsp;3-2-1-1
+                  {item.area?item.area+'平':'暂无'}&nbsp;/&nbsp;{item.face?item.face:'暂无'}&nbsp;/&nbsp;{item.rooms}-{item.hall}-{item.toilet}-{item.balcony}
                 </div>
                 <div class="tab-houseno">
-                  2009年竣工&nbsp;/&nbsp;商品房&nbsp;/&nbsp;框架
+                  {item.buildYear?item.buildYear+'年竣工':'暂无'}&nbsp;/&nbsp;{item.buildType?item.buildType:'暂无'}&nbsp;/&nbsp;{item.buildingStructure?item.buildingStructure:'暂无'}
                 </div>
               </div>
             );
@@ -241,7 +237,7 @@ export default {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">学校划片：</div>
-                <div class="tab-houseno">实验小学&nbsp;实验中学</div>
+                <div class="tab-houseno">{item.primarySchool?item.primarySchool:'暂无'}&nbsp;{item.middleSchool?item.middleSchool:'暂无'}</div>
               </div>
             );
           }
@@ -254,7 +250,7 @@ export default {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">历史跟单人：</div>
-                <div class="tab-houseno">张晓明&nbsp;周杰伦&nbsp;王一博</div>
+                <div class="tab-houseno">{item.lastFollwers.length>0?item.lastFollwers.join(" "):'暂无'}</div>
               </div>
             );
           }
@@ -266,9 +262,9 @@ export default {
           formart: item => {
             return (
               <div class="tab-com-item">
-                <div class="tab-houseno">2020-07-15</div>
+                <div class="tab-houseno">{item.saleStatusChangeTime}</div>
                 <div class="tab-houseno">
-                  由<u>周杰伦</u>在售转<u>暂不售</u>
+                  {item.saleReamrk?item.saleReamrk:'暂无'}
                 </div>
               </div>
             );
@@ -282,7 +278,7 @@ export default {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">上次回访：</div>
-                <div class="tab-houseno">2020-03-07 09:21:22</div>
+                <div class="tab-houseno">{item.lastCallTime?item.lastCallTime:'暂无'}</div>
               </div>
             );
           }
@@ -428,12 +424,6 @@ export default {
       };
     },
     getHouseData(value, initPage = true) {
-      // this.loading = true;
-      // Object.keys(value).forEach(item => {
-      //   if (value[item] instanceof Array) {
-      //     value[item] = value[item].join(",");
-      //   }
-      // });
       if (initPage) this.InitPageJson();
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
@@ -441,8 +431,7 @@ export default {
       });
       return this.$api
         .post({
-          //  url: "/mateHouse/getMateHouse/soleAllHouse",
-          url: "/mateHouse/getMateHouse/soleAllHouseIndex",
+          url: "/mateHouse/getMateHouse/devClueIndex",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: restuleParms
         })
@@ -450,7 +439,6 @@ export default {
           let data = e.data;
           if (data.code == 200) {
             this.renderList = data.data.data;
-            console.log("------>", this.renderList);
             this.pageJson.total = data.data.pageSum;
             this.pageJson.dataCount = data.data.dataCount;
           }
@@ -461,8 +449,27 @@ export default {
      * 一键拨号
      */
     dialNumber(row) {
-      console.log(row, "========");
-      this.$message.warning("当日此业主号码已达到拨打上限~");
+      let params = {
+        roomId: row.id, 		// 列表id
+        area: row.area,		// 面积
+        communityName: row.communityName, // 楼盘名称
+        contactPerName: "陈先生"	// 业主姓名
+      };
+      this.$api
+        .post({
+          url: "/noticeManage/common/OneTouchDialPhoneByRoom",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params
+        })
+        .then(e => {
+          let data = e.data;
+          if (data.code == 200) {
+            this.$message({type: 'success', message: data.message});
+          } else {
+            this.$message.error(data.message);
+          }
+        })
+        .finally(() => {});
     },
     /**
      * 转为在售
@@ -470,15 +477,12 @@ export default {
     houseOperate(row) {
       console.log(row, "转为在售");
       this.toSale(
-        row.eid,
         row.comId,
         row.cbId,
         row.bhId,
         row.communityName,
         row.buildingName,
-        row.customers,
-        row.roomNo,
-        row.tel
+        row.roomNo
       );
     },
     /**
@@ -496,55 +500,22 @@ export default {
       console.log(row, "查记录");
       this.alertflag = true;
     },
-    toSale(
-      id,
-      comId,
-      cbId,
-      bhId,
-      communityName,
-      buildingName,
-      customers,
-      roomNo,
-      tel
-    ) {
-      var that = this;
-      console.log(bhId);
-      this.$api
-        .post({
-          url: "/agent_house/getTels/" + id,
-          qs: true
-        })
-        .then(e => {
-          let result = e.data;
-          let tel1 = "",
-            tel2 = "",
-            tel3 = "";
-          if (result.code == 200) {
-            tel = result.data.Tel;
-            tel1 = result.data.Tel1;
-            tel2 = result.data.Tel2;
-            tel3 = result.data.Tel3;
-          }
-          that.$router.push({
-            path: "/buySellSystem/addHouse",
-            disabledStatus: false,
-            query: {
-              comId: comId,
-              cbId: cbId,
-              bhId: bhId,
-              communityName: communityName,
-              buildingName: buildingName,
-              roomNo: roomNo,
-              flag: "potentia",
-              customerName: customers,
-              method: "tosale",
-              tel: tel,
-              tel1: tel1,
-              tel2: tel2,
-              tel3: tel3
-            }
-          });
-        });
+    toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
+      this.$router.push({
+        path: "/buySellSystem/addHouse",
+        query: {
+          method: "tosale",
+          comId: comId,
+          cbId: cbId,
+          bhId: bhId,
+          communityName: communityName,
+          buildingName: buildingName,
+          roomNo: roomNo,
+          flag: "potentia",
+          customerName: null,
+          tel: null
+        }
+      });
     },
     customBtn() {
       console.log("==================");
@@ -597,7 +568,7 @@ export default {
   .table-btn-panel {
     display: inline-flex;
     flex-direction: column;
-    padding: 0 15px;
+    padding: 0 12px;
     .table-btn-row {
       margin-bottom: 10px;
     }
