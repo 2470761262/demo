@@ -666,6 +666,9 @@ export default {
       //     value[item] = value[item].join(",");
       //   }
       // });
+      this.renderList = [];
+      this.pageJson.total = 0;
+      this.pageJson.dataCount = 0;
       if (initPage) this.InitPageJson();
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
@@ -701,6 +704,7 @@ export default {
             this.addListener();
           });
         })
+        .catch(() => {})
         .finally(() => {});
     }
   }
