@@ -6,8 +6,6 @@
         header-cell-class-name="header-tab-cell"
         :cell-class-name="tabDirection"
         default-expand-all
-        @sort-change="sortMethod"
-        @row-dblclick="navDetailt"
         :show-header="false"
       >
         <el-table-column
@@ -16,7 +14,6 @@
           :prop="item.prop"
           :label="item.label"
           :width="item.width"
-          :sort-method="sortDevName"
           :sortable="item.order"
           :formatter="item.formart"
           :sort-orders="['ascending', 'descending']"
@@ -91,13 +88,9 @@
       class="record-dialog"
     >
       <template>
-        <el-tabs v-model="recordActiveName" @tab-click="recordNavClick">
+        <el-tabs v-model="recordActiveName">
           <el-tab-pane label="跟进" name="follow">
-            <div
-              class="list-content"
-              infinite-scroll-immediate="false"
-              v-infinite-scroll="load"
-            >
+            <div class="list-content" infinite-scroll-immediate="false" v-infinite-scroll="load">
               <el-timeline>
                 <el-timeline-item
                   v-for="(activity, index) in activities"
@@ -111,28 +104,27 @@
                 >
                   <div class="record-dialog-column">
                     <span class="title">跟进人：</span>
-                    <span>{{activity.followName}}</span>
+                    <span>{{ activity.followName }}</span>
                   </div>
                   <div class="record-dialog-column">
                     <span class="title">跟进内容：</span>
-                    <span>{{activity.content}}</span>
+                    <span>{{ activity.content }}</span>
                   </div>
                 </el-timeline-item>
               </el-timeline>
-              <template v-if="follow.loading">
+              <div class="bottom-tip" v-if="follow.loading">
                 <i class="el-icon-loading"></i> 加载中...
-              </template>
-              <template v-if="activities.length == 0">
-                <div class="no-data">暂无数据~</div>
-              </template>
+              </div>
+              <div class="bottom-tip" v-else-if="follow.loadPageEnd">
+                已经到最底部了~
+              </div>
+              <div class="bottom-tip" v-if="!follow.loading && activities.length === 0">
+                暂无数据~
+              </div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="语音" name="voice">
-            <div
-              class="list-content"
-              infinite-scroll-immediate="false"
-              v-infinite-scroll="load"
-            >
+            <div class="list-content" infinite-scroll-immediate="false" v-infinite-scroll="load">
               <el-timeline>
                 <el-timeline-item
                   v-for="(activity, index) in voiceList"
@@ -146,18 +138,23 @@
                 >
                   <div>
                     <div>
-                      <span class="audio-title">{{activity.followName}}</span>
-                      <el-audio :fixed="false" :url="activity.content">经纪人讲房</el-audio>
+                      <span class="audio-title">{{ activity.followName }}</span>
+                      <el-audio :fixed="false" :url="activity.content">
+                        经纪人讲房
+                      </el-audio>
                     </div>
                   </div>
                 </el-timeline-item>
               </el-timeline>
-              <template v-if="voice.loading">
+              <div class="bottom-tip" v-if="voice.loading">
                 <i class="el-icon-loading"></i> 加载中...
-              </template>
-              <template v-if="voiceList.length == 0">
-                  <div class="no-data">暂无数据</div>
-              </template>
+              </div>
+              <div class="bottom-tip" v-else-if="voice.loadPageEnd">
+                已经到最底部了~
+              </div>
+              <div class="bottom-tip" v-if="voiceList.length == 0">
+                暂无数据
+              </div>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -193,7 +190,7 @@ export default {
         list: [],
         totalPage: 0,
         page: 1,
-        loading: false,
+        loading: true,
         loadPageEnd: false
       },
       voice: {
@@ -207,7 +204,6 @@ export default {
       renderList: [],
       tableColumnField: [
         {
-          prop: "communityName",
           label: "楼盘名称",
           order: false,
           width: "300",
@@ -216,65 +212,75 @@ export default {
               <div class="tab-com-item">
                 <div class="tab-house-title">{item.communityName}</div>
                 <div class="tab-houseno">
-                  {item.area?item.area+'平':'暂无'}&nbsp;/&nbsp;{item.face?item.face:'暂无'}&nbsp;/&nbsp;{item.rooms}-{item.hall}-{item.toilet}-{item.balcony}
+                  {item.area ? item.area + "平" : "暂无"}&nbsp;/&nbsp;
+                  {item.face ? item.face : "暂无"}&nbsp;/&nbsp;{item.rooms || 0}
+                  -{item.hall || 0}-{item.toilet || 0}-{item.balcony || 0}
                 </div>
                 <div class="tab-houseno">
-                  {item.buildYear?item.buildYear+'年竣工':'暂无'}&nbsp;/&nbsp;{item.buildType?item.buildType:'暂无'}&nbsp;/&nbsp;{item.buildingStructure?item.buildingStructure:'暂无'}
+                  {item.buildYear ? item.buildYear + "年竣工" : "暂无"}
+                  &nbsp;/&nbsp;{item.buildType ? item.buildType : "暂无"}
+                  &nbsp;/&nbsp;
+                  {item.buildingStructure ? item.buildingStructure : "暂无"}
                 </div>
               </div>
             );
           }
         },
         {
-          prop: "houseType",
-          label: "户型",
+          label: "学校划片",
           order: "custom",
           formart: item => {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">学校划片：</div>
-                <div class="tab-houseno">{item.primarySchool?item.primarySchool:'暂无'}&nbsp;{item.middleSchool?item.middleSchool:'暂无'}</div>
+                <div class="tab-houseno">
+                  {item.primarySchool ? item.primarySchool : "暂无"}&nbsp;
+                  {item.middleSchool ? item.middleSchool : "暂无"}
+                </div>
               </div>
             );
           }
         },
         {
-          prop: "inArea",
-          label: "面积",
+          label: "历史跟单人",
           order: "custom",
           formart: item => {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">历史跟单人：</div>
-                <div class="tab-houseno">{item.lastFollwers.length>0?item.lastFollwers.join(" "):'暂无'}</div>
+                <div class="tab-houseno">
+                  {item.lastFollwers.length > 0
+                    ? item.lastFollwers.join(" ")
+                    : "暂无"}
+                </div>
               </div>
             );
           }
         },
         {
-          prop: "price",
-          label: "总价",
+          label: "进开发线索说明",
           order: "custom",
           formart: item => {
             return (
               <div class="tab-com-item">
                 <div class="tab-houseno">{item.saleStatusChangeTime}</div>
                 <div class="tab-houseno">
-                  {item.saleReamrk?item.saleReamrk:'暂无'}
+                  {item.saleReamrk ? item.saleReamrk : "暂无"}
                 </div>
               </div>
             );
           }
         },
         {
-          prop: "unitPrice",
-          label: "单价",
+          label: "上次回访",
           order: "custom",
           formart: item => {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">上次回访：</div>
-                <div class="tab-houseno">{item.lastCallTime?item.lastCallTime:'暂无'}</div>
+                <div class="tab-houseno">
+                  {item.lastCallTime ? item.lastCallTime : "暂无"}
+                </div>
               </div>
             );
           }
@@ -301,62 +307,6 @@ export default {
     }
   },
   methods: {
-    //解决索引只排序当前页的问题,增加函数自定义索引序号
-    sortDevName(str1, str2) {
-      let res = 0;
-      for (let i = 0; ; i++) {
-        if (!str1[i] || !str2[i]) {
-          res = str1.length - str2.length;
-          break;
-        }
-
-        const char1 = str1[i];
-        const char1Type = this.getChartType(char1);
-        const char2 = str2[i];
-        const char2Type = this.getChartType(char2);
-        // 类型相同的逐个比较字符
-        if (char1Type[0] === char2Type[0]) {
-          if (char1 === char2) {
-            continue;
-          } else {
-            if (char1Type[0] === "zh") {
-              res = char1.localeCompare(char2);
-            } else if (char1Type[0] === "en") {
-              res = char1.charCodeAt(0) - char2.charCodeAt(0);
-            } else {
-              res = char1 - char2;
-            }
-            break;
-          }
-        } else {
-          // 类型不同的，直接用返回的数字相减
-          res = char1Type[1] - char2Type[1];
-          break;
-        }
-      }
-
-      if (this.form.sortColumn == "floor") {
-        res = 1;
-      } else if (this.form.sortColumn == "addTime") {
-        res = -1;
-      }
-
-      return res;
-    },
-    getChartType(char) {
-      // 数字可按照排序的要求进行自定义，我这边产品的要求是
-      // 数字（0->9）->大写字母（A->Z）->小写字母（a->z）->中文拼音（a->z）
-      if (/^[\u4e00-\u9fa5]$/.test(char)) {
-        return ["zh", 300];
-      }
-      if (/^[a-zA-Z]$/.test(char)) {
-        return ["en", 200];
-      }
-      if (/^[0-9]$/.test(char)) {
-        return ["number", 100];
-      }
-      return ["others", 999];
-    },
     /**
      * @example: 设置Tab方向
      */
@@ -364,35 +314,9 @@ export default {
       return column.label == "楼盘名称" ? "tab-cell-left" : "tab-cell-item";
     },
     /**
-     * @example: 双击前往详情
+     * @example: 分页组件页面每页请求条数改变触发事件
+     * @param {number} pageSize
      */
-    navDetailt(item) {
-      util.openPage.call(this, {
-        name: "houseDetails",
-        params: { houseId: item.id, dept: item.perDept }
-      });
-    },
-    /**
-     * @example: 远程排序
-     */
-    sortMethod(item) {
-      let order = JSON.parse(JSON.stringify(item));
-      //户型修改为prop为rooms
-      if (item.column.property == "houseType") {
-        order.prop = "rooms";
-      }
-      this.InitPageJson();
-      //this.pageJson.currentPage = 1;
-      switch (order.order) {
-        case "ascending":
-          this.form.sortColumn = order.prop;
-          this.form.sortType = 0;
-          break;
-        case "descending":
-          this.form.sortColumn = order.prop;
-          this.form.sortType = 1;
-      }
-    },
     handleSizeChange(pageSize) {
       this.pageJson.pageSize = pageSize;
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), true);
@@ -401,7 +325,6 @@ export default {
      * @example: 分页组件页面改变时触发
      * @param {number} pageIndex
      */
-
     currentchange(pageIndex) {
       this.pageJson.currentPage = pageIndex;
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), false).then(
@@ -419,6 +342,9 @@ export default {
         dataCount: 0
       };
     },
+    /**
+     * 获取开发线索列表
+     */
     getHouseData(value, initPage = true) {
       if (initPage) this.InitPageJson();
       let restuleParms = Object.assign({}, value, {
@@ -446,10 +372,10 @@ export default {
      */
     dialNumber(row) {
       let params = {
-        roomId: row.id, 		// 列表id
-        area: row.area,		// 面积
+        roomId: row.id, // 列表id
+        area: row.area, // 面积
         communityName: row.communityName, // 楼盘名称
-        contactPerName: row.owner	// 业主姓名
+        contactPerName: row.owner // 业主姓名
       };
       this.$api
         .post({
@@ -460,7 +386,7 @@ export default {
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
-            this.$message({type: 'success', message: data.message});
+            this.$message({ type: "success", message: data.message });
           } else {
             this.$message.error(data.message);
           }
@@ -471,7 +397,6 @@ export default {
      * 转为在售
      */
     houseOperate(row) {
-      console.log(row, "转为在售");
       this.toSale(
         row.communityId,
         row.buildingId,
@@ -485,7 +410,6 @@ export default {
      * 写跟进
      */
     writeRecord(row) {
-      console.log(row, "写跟进");
       this.rowId = row.id;
       this.followUpFlag = true;
     },
@@ -493,9 +417,10 @@ export default {
      * 查记录
      */
     findRecord(row) {
-      console.log(row, "查记录");
       this.currentRowId = row.id;
       this.recordActiveName = "follow";
+      this.follow.totalPage = 0;
+      this.voice.totalPage = 0;
       this.follow.page = 1;
       this.voice.page = 1;
       this.follow.loadPageEnd = false;
@@ -504,7 +429,11 @@ export default {
       this.voiceList = [];
       this.alertflag = true;
       this.getHouseFollow();
+      this.getHouseVoiceList();
     },
+    /**
+     * 转在售跳转
+     */
     toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
       this.$router.push({
         path: "/buySellSystem/addHouse",
@@ -522,12 +451,10 @@ export default {
         }
       });
     },
-    recordNavClick(tab, event) {
-      console.log(tab, event);
-    },
-    //滚动分页
+    /**
+     * 查记录下拉滚动分页
+     */
     load() {
-      console.log("==========");
       if (
         this[this.recordActiveName].page < this[this.recordActiveName].totalPage
       ) {
@@ -537,7 +464,9 @@ export default {
         this[[this.recordActiveName]].loadPageEnd = true;
       }
     },
-    //获取列表数据
+    /**
+     * 根据不同类型获取（跟进/语音）记录数据
+     */
     getList() {
       switch (this.recordActiveName) {
         case "follow":
@@ -548,15 +477,16 @@ export default {
           break;
       }
     },
-    //获取跟进列表
+    /**
+     * 获取跟进记录列表
+     */
     getHouseFollow() {
-      let that = this;
       let params = {
-        page: that.follow.page,
+        page: this.follow.page,
         limit: 7,
-        roomId: that.currentRowId,
+        roomId: this.currentRowId,
         followType: 1
-      }
+      };
       this.follow.loading = true;
       this.$api
         .post({
@@ -565,10 +495,9 @@ export default {
           data: params
         })
         .then(e => {
-          console.log(e.data, "==============111111111")
           if (e.data.code === 200) {
-            that.activities = [...that.activities, ...e.data.data.list];
-            that.follow.totalPage = e.data.data.totalPage;
+            this.activities = [...this.activities, ...e.data.data.list];
+            this.follow.totalPage = e.data.data.totalPage;
           }
         })
         .catch(() => {})
@@ -576,27 +505,27 @@ export default {
           this.follow.loading = false;
         });
     },
-    //获取跟进列表
+    /**
+     * 获取语音记录列表
+     */
     getHouseVoiceList() {
-      let that = this;
       let params = {
-        page: that.voice.page,
+        page: this.voice.page,
         limit: 7,
-        roomId: that.currentRowId,
+        roomId: this.currentRowId,
         followType: 2
-      }
+      };
       this.voice.loading = true;
       this.$api
         .post({
           url: "/roomFollow/follows",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: Object.assign({}, params, {followType: 2})
+          data: Object.assign({}, params, { followType: 2 })
         })
         .then(e => {
-          console.log(e.data, "==============2222222")
           if (e.data.code === 200) {
-            that.voiceList = [...that.voiceList, ...e.data.data.list];
-            that.voice.totalPage = e.data.data.totalPage;
+            this.voiceList = [...this.voiceList, ...e.data.data.list];
+            this.voice.totalPage = e.data.data.totalPage;
           }
         })
         .catch(() => {})
@@ -676,17 +605,17 @@ export default {
 .tab-com-item {
   margin-top: 10px;
   .tab-house-title {
-    font-size: @font16;
+    font-size: @font18;
     font-weight: 600;
     color: black;
   }
   .tab-house-tip {
-    font-size: @font14;
+    font-size: @font16;
     color: #b1b1b1;
   }
   .tab-houseno {
     margin-top: 10px;
-    font-size: @font12;
+    font-size: @font16;
   }
 }
 /deep/.caret-wrapper {
@@ -714,7 +643,8 @@ export default {
 }
 /*********** 查记录弹窗 ***********/
 .list-content {
-  max-height: 600px;
+  padding-top: 10px;
+  max-height: 500px;
   overflow-x: hidden;
   overflow-y: auto;
   &::-webkit-scrollbar {
@@ -749,34 +679,44 @@ export default {
 /deep/.didLog-content-body {
   .el-tab-pane {
     padding-left: 5px;
-    .no-data {
-      font-size: 16px;
+    .bottom-tip {
+      padding: 0 10px 20px;
+      font-size: @font14;
       color: #999;
     }
   }
   .record-dialog-column {
     display: flex;
-    font-size: 16px;
+    font-size: @font14;
     color: #999;
     .title {
       display: inline-block;
-      width: 90px;
+      // prettier-ignore
+      width: 80PX;
     }
     span:nth-child(2) {
       flex: 1;
     }
   }
   .audio-contenr {
-    height: 60px;
+    // prettier-ignore
+    height: 45PX;
     .audio-contenr-but {
-      width: 30px;
-      height: 30px;
-      line-height: 30px;
-      font-size: 30px;
+      // prettier-ignore
+      width: 22PX;
+      // prettier-ignore
+      height: 22PX;
+      // prettier-ignore
+      line-height: 22PX;
+      // prettier-ignore
+      font-size: 22PX;
+    }
+    .autio-time {
+      font-size: @font16;
     }
   }
   .audio-title {
-    font-size: 16px;
+    font-size: @font14;
     color: #999;
   }
 }
