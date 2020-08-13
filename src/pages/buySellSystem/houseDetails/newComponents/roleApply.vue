@@ -204,7 +204,7 @@
           </div>
         </div>
         <div class="role-type">
-          <div class="role-type-top">委托人</div>
+          <div class="role-type-top">{{ houseData.isOnly==2?'普通':'独家' }} 委托人</div>
           <div
             class="role-type-bottom"
             @click="openPop('entrustPopFlag', 4, 'entrustType', 2)"
