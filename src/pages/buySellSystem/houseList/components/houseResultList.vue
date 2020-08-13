@@ -218,6 +218,22 @@
         width: 102PX;
       }
 
+      
+      @media screen and (max-width: 1545px) {
+        &.input_210 {
+          // prettier-ignore
+          width: 135PX;
+        }
+        &.input_175 {
+          // prettier-ignore
+          width: 110PX;
+        }
+        &.input_120 {
+          // prettier-ignore
+          width: 110PX;
+        }
+      }
+
       /deep/ .el-input__inner {
         text-align: center;
         background: #f0f7fc;
@@ -255,6 +271,23 @@
       width: 65PX;
       margin-left: 10px;
       padding: 5px;
+    }
+    @media screen and (max-width: 1350px) {
+      .input-content {
+        // prettier-ignore
+        margin-right: 10PX;
+      }
+      .cascader-content-build {
+        // prettier-ignore
+        margin-right: 10PX;
+      }
+      .btn-primary-back {
+        padding: 0 20px;
+      }
+      .btn-reset {
+        width: auto;
+        padding: 0 20px;
+      }
     }
   }
 
@@ -533,7 +566,7 @@
 
     /deep/ span {
       flex: 1;
-      width: 0;
+      // width: 0;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -1700,7 +1733,6 @@ export default {
     /**
      * @example: 搜索跟单人姓名
      */
-
     handleAgentPerName() {
       this.form.agentPerName = this.agentPerName;
     },
