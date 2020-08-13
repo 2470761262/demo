@@ -113,11 +113,6 @@
             ></el-option>
           </el-select>
         </div>
-        <button
-          class="btn-primary-back anchor-point"
-          @click="handleAgentPerName"
-          data-anchor="搜索"
-        >搜索</button>
       </div>
       <div>
         <el-radio-group v-model="form.listSwitchRadio" size="small">
@@ -648,10 +643,13 @@ export default {
       this.buildLoading = true;
       this.$api
         .get({
-          url: "/community/houseList",
+          url: "/community/myConcern",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
           data: {
-            communityName: query
+            communityName: query,
+            page: 1,
+            limit: 50
           }
         })
         .then(e => {
@@ -694,10 +692,12 @@ export default {
         .get({
           url: "/mateHouse/queryComBuilding",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
           data: {
             comId: this.form.comId,
             comBuildingName: name == undefined ? "" : name.trim(),
-            limit: 20
+            limit: 50
           }
         })
         .then(e => {
@@ -734,12 +734,15 @@ export default {
     queryRoomData(e) {
       this.$api
         .get({
-          url: "/mateHouse/queryBuildIngHousesBySale",
+          url: "/mateHouse/queryBuildIngHouses",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
           data: {
             comId: this.form.comId,
             cbId: this.form.cbId,
-            limit: 20,
+            page: 1,
+            limit: 50,
             roomNo: e == undefined ? "" : e.trim()
           }
         })
@@ -761,10 +764,6 @@ export default {
 
       this.form.bhId = value ? value : "";
     },
-    /**
-     * @example: 搜索
-     */
-    handleAgentPerName() {},
     /**
      * @example: 获取筛选列表
      * @param {String}  constant 列表名称
@@ -1292,6 +1291,26 @@ export default {
           transform: rotateZ(0deg) !important;
         }
       }
+    }
+  }
+}
+/******** 楼盘、楼栋、房间下拉面板 ********/
+.options-item {
+  .options-item;
+}
+.options-custom-item {
+  .options-item;
+  .el-select-dropdown__item {
+    display: flex;
+    // prettier-ignore
+    height: 40PX;
+    /deep/ span {
+      flex: 1;
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      font-size: @font14;
     }
   }
 }

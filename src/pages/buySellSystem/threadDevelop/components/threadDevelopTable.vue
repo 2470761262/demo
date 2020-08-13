@@ -265,7 +265,7 @@ export default {
               <div class="tab-com-item">
                 <div class="tab-houseno">{item.saleStatusChangeTime}</div>
                 <div class="tab-houseno">
-                  {item.saleReamrk ? item.saleReamrk : "暂无"}
+                  {item.saleRemark ? item.saleRemark : "暂无"}
                 </div>
               </div>
             );
