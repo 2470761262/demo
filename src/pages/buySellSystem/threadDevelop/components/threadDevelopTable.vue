@@ -263,7 +263,7 @@ export default {
           formart: item => {
             return (
               <div class="tab-com-item">
-                <div class="tab-houseno">{item.saleStatusChangeTime}</div>
+                <div class="tab-houseno-tip">{item.saleStatusChangeTime}</div>
                 <div class="tab-houseno">
                   {item.saleRemark ? item.saleRemark : "暂无"}
                 </div>
@@ -387,6 +387,7 @@ export default {
           let data = e.data;
           if (data.code == 200) {
             this.$message({ type: "success", message: data.message });
+            this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
           } else {
             this.$message.error(data.message);
           }
@@ -576,11 +577,14 @@ export default {
     display: inline-flex;
     flex-direction: column;
     padding: 0 12px;
-    .table-btn-row {
-      margin-bottom: 10px;
+    .table-btn-row:not(:last-child) {
+      margin-bottom: 15px;
     }
     .anchor-point {
-      min-width: 98px;
+      // prettier-ignore
+      height: 28PX;
+      // prettier-ignore
+      min-width: 88PX;
       text-align: left;
     }
   }
@@ -603,19 +607,28 @@ export default {
   }
 }
 .tab-com-item {
+  padding: 4px 0;
   margin-top: 10px;
   .tab-house-title {
-    font-size: @font18;
+    margin-bottom: 15px;
+    font-size: @font16;
     font-weight: 600;
     color: black;
   }
   .tab-house-tip {
-    font-size: @font16;
-    color: #b1b1b1;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: @font14;
+    color: #bfbfbf;
+  }
+  .tab-houseno-tip {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: @font14;
   }
   .tab-houseno {
-    margin-top: 10px;
-    font-size: @font16;
+    margin-bottom: 10px;
+    font-size: @font14;
   }
 }
 /deep/.caret-wrapper {

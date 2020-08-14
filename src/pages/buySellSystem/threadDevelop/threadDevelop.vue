@@ -46,7 +46,7 @@ export default {
     return {
       scrollTop: 0,
       form: {
-        listSwitchRadio: "开发线索",
+        isMyRecord: 0, // 0开发线索/1我的记录
         typeList: [], // 房源类型
         lastCallType: "", //时间
         bussinessDistrictList: [], //商圈

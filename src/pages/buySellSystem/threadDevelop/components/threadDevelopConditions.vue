@@ -115,9 +115,9 @@
         </div>
       </div>
       <div>
-        <el-radio-group v-model="form.listSwitchRadio" size="small">
-          <el-radio-button label="开发线索"></el-radio-button>
-          <el-radio-button label="我的记录"></el-radio-button>
+        <el-radio-group v-model="listSwitchRadio" size="small" @change="isMyRecordChange">
+          <el-radio-button :label="0">开发线索</el-radio-button>
+          <el-radio-button :label="1">我的记录</el-radio-button>
         </el-radio-group>
       </div>
     </div>
@@ -510,6 +510,7 @@ export default {
   },
   data() {
     return {
+      listSwitchRadio: 0,
       navToPage: NAVTOPAGE, //顶部跳转tab
       breadcrumbList: [],
       isShowReturn: true,
@@ -962,6 +963,12 @@ export default {
      */
     typeListChange(value) {
       this.form.typeList = value === "不限" ? [] : [value];
+    },
+    /**
+     * @example: 开发线索/我的记录类型切换
+     */
+    isMyRecordChange(value) {
+      this.form.isMyRecord = value;
     }
   }
 };
