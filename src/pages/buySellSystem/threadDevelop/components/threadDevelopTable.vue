@@ -28,7 +28,8 @@
                   type="primary"
                   size="mini"
                   data-anchor="开发线索一键拨号 => click"
-                  @click="dialNumber(scope.row)"
+                  @click.once="dialNumber(scope.row, scope.$index)"
+                  :loading="renderList[scope.$index].loading"
                   icon="el-icon-phone-outline"
                 >一键拨号</el-button>
                 <el-button
@@ -370,7 +371,8 @@ export default {
     /**
      * 一键拨号
      */
-    dialNumber(row) {
+    dialNumber(row, index) {
+      this.$set(this.renderList[index],"loading",true);
       let params = {
         roomId: row.id, // 列表id
         area: row.area, // 面积
@@ -390,9 +392,12 @@ export default {
             this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
           } else {
             this.$message.error(data.message);
+            this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
           }
         })
-        .finally(() => {});
+        .finally(() => {
+          this.$set(this.renderList[index],"loading",false);
+        });
     },
     /**
      * 转为在售
