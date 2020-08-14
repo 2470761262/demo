@@ -28,7 +28,7 @@
                   type="primary"
                   size="mini"
                   data-anchor="开发线索一键拨号 => click"
-                  @click.once="dialNumber(scope.row, scope.$index)"
+                  @click="dialNumber(scope.row, scope.$index)"
                   :loading="renderList[scope.$index].loading"
                   icon="el-icon-phone-outline"
                 >一键拨号</el-button>
@@ -394,6 +394,9 @@ export default {
             this.$message.error(data.message);
             this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
           }
+        })
+        .catch(() => {
+          this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
         })
         .finally(() => {
           this.$set(this.renderList[index],"loading",false);
