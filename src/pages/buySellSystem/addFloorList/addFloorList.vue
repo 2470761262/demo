@@ -116,7 +116,7 @@
         </template>
         <el-table-column label="操作" fixed="right" min-width="150">
           <template v-slot="scope">
-            <el-button type="primary" :disabled="scope.row.isCheck" size="mini" @click="toCheck(scope.row.id)"
+            <el-button type="primary" :disabled="scope.row.isCheck>0" size="mini" @click="toCheck(scope.row.id)"
               >审核</el-button
             >
           </template>
@@ -281,7 +281,7 @@ export default {
       tableData: [],
       tableColumn: [],
       menuLoading: true, //自定义菜单
-      sortColumn: "id", //排序字段
+      sortColumn: "", //排序字段
       sortType: "descending", //排序类型
       renderList: []
     };
@@ -352,7 +352,7 @@ export default {
       console.log();
       this.sortColumn = e.prop;
       this.sortType = e.order;
-      this.querySaleNotTrack(1);
+      this.queryAddFloorList(1);
     },
     // queryTabData() {
     //   console.log(this, "111");
@@ -370,6 +370,8 @@ export default {
       params.endTime = that.queryData.timeSelect[1];
       params.isCheck = that.queryData.isCheck;
       params.type = that.queryData.type;
+      params.sortColumn = that.sortColumn;
+      params.sortType = that.sortType;
 
       console.log(params);
       this.$api
