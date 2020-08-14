@@ -485,7 +485,7 @@ export default {
                   text +=
                     jsonObject[i].updateFiled +
                     "由【" +
-                    jsonObject[i].oldValue +
+                    (jsonObject[i].oldValue || "暂无") +
                     "】修改为【" +
                     jsonObject[i].newValue +
                     "】；";

@@ -103,11 +103,11 @@ const TYPELIST = [
     value: 1,
     name: "myValidate"
   },
-  {
-    label: "我的审核",
-    value: 2,
-    name: "myExamine"
-  },
+  // {
+  //   label: "我的审核",
+  //   value: 2,
+  //   name: "myExamine"
+  // },
   {
     label: "我的对赌",
     value: 3,
