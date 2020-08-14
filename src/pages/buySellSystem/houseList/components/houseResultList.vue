@@ -218,7 +218,6 @@
         width: 102PX;
       }
 
-      
       @media screen and (max-width: 1545px) {
         &.input_210 {
           // prettier-ignore
@@ -727,7 +726,11 @@
 
         <div class="head-fun-right">
           <el-badge value="即将上线">
-            <button class="btn-primary anchor-point" data-anchor="首页开发线索">
+            <button
+              class="btn-primary anchor-point"
+              data-anchor="首页开发线索"
+              @click="navToPath('/buySellSystem/threadDevelop')"
+            >
               <i class="iconxiansuo iconfont"></i>
               开发线索
             </button>
@@ -1773,7 +1776,6 @@ export default {
      * @param {string} e
      */
     schoolChange(field, e, temporaryField, radio) {
-      console.log(e, "999999999999999");
       this.form[field] = Array.from(new Set([...e, ...this[temporaryField]]));
       if (this.form[field].length) {
         this[radio] = "";
