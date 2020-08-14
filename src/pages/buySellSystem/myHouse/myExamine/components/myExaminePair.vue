@@ -206,6 +206,9 @@
         </el-select>
       </div>
     </div>
+    <span class="tips" style="color:red;padding-top:30px;"
+      >友情提示：房源转状态审核通过后无法进入详情</span
+    >
     <!-- 按钮 -->
     <div class="search-item span-flex">
       <div class="search-item-body">
