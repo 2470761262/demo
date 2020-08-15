@@ -725,7 +725,7 @@
                 </div> -->
 
         <div class="head-fun-right">
-          <el-badge value="即将上线">
+          <el-badge value="新">
             <button
               class="btn-primary anchor-point"
               data-anchor="首页开发线索"
@@ -745,16 +745,14 @@
               管理入口
             </button>
           </el-badge>
-          <el-badge value="新">
-            <button
-              class="btn-primary anchor-point"
-              data-anchor="首页我的房源"
-              @click="navToPath('/buySellSystem/myHouse')"
-            >
-              <i class="icondaohang_wodefangyuan1 iconfont"></i>
-              我的房源
-            </button>
-          </el-badge>
+          <button
+            class="btn-primary anchor-point"
+            data-anchor="首页我的房源"
+            @click="navToPath('/buySellSystem/myHouse')"
+          >
+            <i class="icondaohang_wodefangyuan1 iconfont"></i>
+            我的房源
+          </button>
           <button
             class="btn-primary house-back anchor-point"
             data-anchor="首页录入房源"
