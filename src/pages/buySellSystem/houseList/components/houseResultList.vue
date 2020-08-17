@@ -1739,7 +1739,10 @@ export default {
     },
     //跳转页面
     navToPath(path) {
-      if (path == "/buySellSystem/myHouse") {
+      if (
+        path == "/buySellSystem/myHouse" ||
+        path == "/buySellSystem/threadDevelop"
+      ) {
         window.open(this.$router.resolve(path).href, "_blank");
       } else {
         this.$router.push({ path: path });

@@ -36,22 +36,22 @@
                 <el-button
                   class="anchor-point"
                   type="primary"
-                  data-anchor="开发线索转为在售 => click"
-                  @click="houseOperate(scope.row)"
+                  data-anchor="开发线索写跟进 => click"
+                  @click="writeRecord(scope.row)"
                   size="mini"
-                  icon="el-icon-refresh"
-                  >转为在售</el-button
+                  icon="el-icon-edit"
+                  >写跟进</el-button
                 >
               </div>
               <div>
                 <el-button
                   class="anchor-point"
                   type="primary"
-                  data-anchor="开发线索写跟进 => click"
-                  @click="writeRecord(scope.row)"
+                  data-anchor="开发线索转为在售 => click"
+                  @click="houseOperate(scope.row)"
                   size="mini"
-                  icon="el-icon-edit"
-                  >写跟进</el-button
+                  icon="el-icon-refresh"
+                  >转为在售</el-button
                 >
                 <el-button
                   class="anchor-point"
@@ -285,7 +285,9 @@ export default {
           formart: item => {
             return (
               <div class="tab-com-item">
-                <div class="tab-houseno-tip">{item.saleStatusChangeTime}</div>
+                <div class="tab-houseno-tip">
+                  {util.format(item.saleStatusChangeTime, "yyyy-MM-dd")}
+                </div>
                 <div class="tab-houseno">
                   {item.saleRemark ? item.saleRemark : "暂无"}
                 </div>

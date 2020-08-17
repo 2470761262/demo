@@ -1,5 +1,20 @@
 <style lang="less" scoped>
 @import url(~@/assets/publicLess/addHouse.less);
+.input-group {
+  position: relative;
+  .multiple-input {
+    font-size: 1px;
+    position: absolute;
+    top: -18px;
+    right: -40px;
+    background-color: #f56c6c;
+    padding: 0 4px;
+    border-radius: 10px;
+    border: 1px solid #fff;
+    color: #fff;
+    white-space: nowrap;
+  }
+}
 </style>
 <template>
   <div
@@ -12,7 +27,7 @@
       <div class="page-cell-item">
         <div class="item-before" data-before="*"></div>
         <el-radio-group
-          class="anchor-point"
+          class="input-group anchor-point"
           v-model="addHouseType"
           @change="houseTypeChange"
           size="mini"
@@ -31,6 +46,7 @@
             :disabled="disabled"
             >多套录入</el-radio
           >
+          <span class="multiple-input">即将下线</span>
         </el-radio-group>
         <span class="addhouse-tips">(多套录入仅支持同一小区同一业主)</span>
       </div>
