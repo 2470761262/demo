@@ -21,18 +21,17 @@
       <resource-buttons></resource-buttons>
     </div>
     <div class="page-list-panel">
-      <div class="table">
+      <div class="table" v-loading="loading">
         <div
           class="column"
           v-for="item in renderList"
           :key="item.id"
-          @click="navigateToDetail(item.comId)"
+          @click="navigateToDetail(item.communityId)"
         >
           <div :title="item.communityName">{{item.communityName}}</div>
-          <div>总户数：{{item.rooms}}</div>
-          <div>无号码：10</div>
-          <div>渗透率：85%</div>
-          <!-- <div>渗透率：{{item | rateCompute}}</div> -->
+          <div>总户数：{{item.countRoom}}</div>
+          <div>无号码：{{item.noTelNum}}</div>
+          <div>渗透率：{{item.permeability}}</div>
         </div>
       </div>
       <el-pagination
@@ -56,53 +55,27 @@ export default {
   data() {
     return {
       houseName: "",
-      renderList: [
-        {
-          id: 1,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        },
-        {
-          id: 2,
-          communityName: "上品至尊",
-          houseTotal: 100,
-          houseNoNumber: 10
-        }
-      ],
+      renderList: [],
       pageJson: {
         total: 1,
         pageSize: 15,
         currentPage: 1,
         dataCount: 0
       },
-      form: {
-        keyWord: ""
-      },
-      loading: true,
-      data: {
-        comId: "",
-        cbId: "",
-        roomNo: "",
-        timeSelect: "",
-        customName: "",
-        tel: "",
-        minInArea: "",
-        maxInArea: ""
-      },
-      sortColumn: "id", //排序字段
-      sortType: "descending" //排序类型
+      loading: true
     };
   },
   created() {
-    this.queryNotPhone(1);
+    this.pageJson.currentPage = 1;
+    this.requestList();
   },
   methods: {
     /**
      * @example: 处理楼盘名称点击查询
      */
     handleHouseName() {
-      this.form.keyWord = this.houseName;
+      this.pageJson.currentPage = 1;
+      this.requestList();
     },
     InitPageJson() {
       this.pageJson = {
@@ -115,27 +88,17 @@ export default {
     /**
      * 资源库管理数据请求
      */
-    queryNotPhone(currentPage) {
+    requestList() {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
-
-      params.comId = that.data.comId;
-      params.cbId = that.data.cbId;
-      params.roomNo = that.data.roomNo;
-      params.beginTime = that.data.timeSelect[0];
-      params.endTime = that.data.timeSelect[1];
-      params.customName = that.data.customName;
-      params.tel = that.data.tel;
-      params.minInArea = that.data.minInArea;
-      params.maxInArea = that.data.maxInArea;
-
-      params.sortColumn = this.sortColumn;
-      params.sortType = this.sortType;
-      console.log(params);
+      let params = {
+          communityName: this.houseName,
+          page: that.pageJson.currentPage,
+          limit: that.pageJson.pageSize
+      }
       this.$api
         .post({
-          url: "/houseResource/getNotPhone",
+          url: "/houseResource/communityPermeability",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params
         })
@@ -144,14 +107,9 @@ export default {
           if (e.data.code == 200) {
             that.pageJson.total = e.data.data.dataCount;
             that.renderList = e.data.data.data;
-            let btnList = e.data.data.btnList;
-            console.log(e.data, "result=========================");
-          } else {
-            //console.log("查询无号码列表结果：" + result.message);
           }
         })
         .catch(e => {
-          console.log("查询无号码列表失败");
           console.log(e);
         });
     },
@@ -159,16 +117,16 @@ export default {
      * 修改每条页数
      */
     handleSizeChange(size) {
-      console.log(size, "=======");
       this.pageJson.pageSize = size;
-      this.queryNotPhone(1);
+      this.pageJson.currentPage = 1;
+      this.requestList();
     },
     /**
      * 修改当前页
      */
     handleCurrentChange(page) {
-      console.log(page, "=======");
-      this.queryNotPhone(page);
+      this.pageJson.currentPage = page;
+      this.requestList();
     },
     /**
      * 跳转到详情页
@@ -180,14 +138,6 @@ export default {
           id: id
         }
       });
-    }
-  },
-  filters: {
-    rateCompute(item) {
-      let rate =
-        ((item.houseTotal - item.houseNoNumber) / item.houseTotal).toFixed(2) *
-        100;
-      return rate + "%";
     }
   }
 };
@@ -251,7 +201,7 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 230px;
+        width: 224px;
         padding: 15px 10px;
         margin: 0 40px 50px;
         border: 1px solid #eee;

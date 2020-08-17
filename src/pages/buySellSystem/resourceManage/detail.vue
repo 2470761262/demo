@@ -95,6 +95,7 @@
           header-cell-class-name="header-tab-cell"
           default-expand-all
           :show-header="false"
+          v-loading="loading"
         >
           <el-table-column
             v-for="(item, index) in tableColumnField"
@@ -114,7 +115,7 @@
                 type="primary"
                 size="mini"
                 data-anchor="资源库管理添加号码 => click"
-                @click="addPhone(scope.row.bhId, scope.row.id)"
+                @click="addPhone(scope.row.id)"
                 icon="el-icon-circle-plus"
                 >添加号码</el-button
               >
@@ -123,11 +124,11 @@
                 type="primary"
                 data-anchor="资源库管理转为在售 => click"
                 @click="toSale(
-                  scope.row.comId,
-                  scope.row.cbId,
-                  scope.row.bhId,
+                  scope.row.communityId,
+                  scope.row.buildingId,
+                  scope.row.id,
                   scope.row.communityName,
-                  scope.row.buildingName,
+                  scope.row.comBuildingName,
                   scope.row.roomNo
                 )"
                 size="mini"
@@ -177,63 +178,56 @@ export default {
         totalPage: 1,
         limit: 30
       },
+      loading: false,
       renderList: [],
       tableColumnField: [
         {
-          prop: "communityName",
           label: "楼盘名称",
           order: false,
           width: "300",
           formart: item => {
             return (
-              // <div class="tab-com-item">
-              //   <div class="tab-house-title">{item.communityName}</div>
-              //   <div class="tab-houseno">{item.houseNo}</div>
-              // </div>
               <div class="tab-com-item">
                 <div class="tab-house-title">{item.communityName}</div>
-                <div class="tab-houseno">100平&nbsp;/&nbsp;朝南&nbsp;/&nbsp;3-2-1-1</div>
-                <div class="tab-houseno">2009年竣工&nbsp;/&nbsp;商品房&nbsp;/&nbsp;框架</div>
+                <div class="tab-houseno">{item.area?item.area:'暂无'}平&nbsp;/&nbsp;{item.face?item.face:'暂无'}&nbsp;/&nbsp;{item.rooms?item.rooms:0}-{item.hall?item.hall:0}-{item.toilet?item.toilet:0}-{item.balcony?item.balcony:0}</div>
+                <div class="tab-houseno">{item.buildYear?item.buildYear+'年竣工':'暂无'}&nbsp;/&nbsp;{item.buildType?item.buildType:'暂无'}&nbsp;/&nbsp;{item.buildingStructure?item.buildingStructure:'暂无'}</div>
               </div>
             );
           }
         },
         {
-          prop: "houseType",
           label: "户型",
           order: "custom",
           formart: item => {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">学校划片：</div>
-                <div class="tab-houseno">实验小学&nbsp;实验中学</div>
+                <div class="tab-houseno">{item.promarySchool?item.promarySchool:'暂无'}&nbsp;{item.middleSchool?item.middleSchool:'暂无'}</div>
               </div>
             );
           }
         },
         {
-          prop: "inArea",
           label: "面积",
           order: "custom",
           formart: item => {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">历史跟单人：</div>
-                <div class="tab-houseno">张晓明&nbsp;周杰伦&nbsp;王一博</div>
+                <div class="tab-houseno">{item.lastFollwers.length>0?item.lastFollwers.join(" "):'暂无'}</div>
               </div>
             );
           }
         },
         {
-          prop: "price",
           label: "总价",
           order: "custom",
           formart: item => {
             return (
               <div class="tab-com-item">
-                <div class="tab-houseno">2020-07-15</div>
+                <div class="tab-houseno-tip">{item.saleStatusChangeTime?item.saleStatusChangeTime:'暂无'}</div>
                 <div class="tab-houseno">
-                  由<u>周杰伦</u>在售转<u>暂不售</u>
+                  {item.saleReamrk?item.saleReamrk:'暂无'}
                 </div>
               </div>
             );
@@ -249,10 +243,8 @@ export default {
       conditions: {
         comId: "", // 楼盘
         cbId: "", // 栋楼
-        roomNo: "", // 房间号
-      },
-      sortColumn: "id", //排序字段
-      sortType: "descending", //排序类型
+        bhId: "", // 房间号
+      }
     }
   },
   watch: {
@@ -260,12 +252,12 @@ export default {
       deep: true,
       // immediate: true,
       handler(value, ordvalue) {
-        this.queryNotPhone();
+        this.pageJson.currentPage = 1;
+        this.queryDetailList();
       }
     }
   },
   created() {
-    console.log(this,this.$route.params, "params==========");
     this.conditions.comId = this.$route.params.id;
   },
   methods: {
@@ -280,21 +272,20 @@ export default {
     /**
      * 资源库管理数据请求
      */
-    queryNotPhone(currentPage) {
-      console.log(currentPage,"--------")
+    queryDetailList() {
       var that = this;
       that.loading = true;
-      let params = { limit: that.pageJson.pageSize, page: currentPage - 1 };
-
+      let params = {
+        limit: that.pageJson.pageSize,
+        page: this.pageJson.currentPage
+      };
       params.comId = that.conditions.comId;
       params.cbId = that.conditions.cbId;
-      params.roomNo = that.conditions.roomNo;
+      params.bhId = that.conditions.bhId;
 
-      params.sortColumn = this.sortColumn;
-      params.sortType = this.sortType;
       this.$api
         .post({
-          url: "/houseResource/getNotPhone",
+          url: "/houseResource/devClueIndex",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params
         })
@@ -306,13 +297,13 @@ export default {
           }
         })
         .catch(e => {
-          console.log("查询无号码列表失败");
           console.log(e);
         });
     },
     handleSizeChange(pageSize) {
       this.pageJson.pageSize = pageSize;
-      this.getHouseData(JSON.parse(JSON.stringify(this.form)), true);
+      this.pageJson.currentPage = 1;
+      this.queryDetailList();
     },
     /**
      * @example: 分页组件页面改变时触发
@@ -320,7 +311,7 @@ export default {
      */
     currentchange(pageIndex) {
       this.pageJson.currentPage = pageIndex;
-      this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
+      this.queryDetailList();
     },
     /**
      * @example: 楼盘激活第一时获取数据
@@ -359,18 +350,18 @@ export default {
      */
     remoteBuildChange(item) {
       const { name = undefined, value = undefined } = item;
-      console.log(value,"========111");
       this.conditions.comId = value;
       //清理楼栋数据
       this.conditions.cbId = "";
       this.towerOptData = {};
       this.towerForList = [];
       //清理房间号数据
-      this.conditions.roomNo = "";
+      this.conditions.bhId = "";
       this.roomOptData = {};
       this.roomForList = [];
-      this.queryNotPhone();
-      this.queryRoomNo();
+      this.pageJson.currentPage = 1
+      this.queryDetailList();
+      if (value) this.queryRoomNo();
     },   
     /**
      * @example: 获取栋座远程数据
@@ -409,7 +400,7 @@ export default {
       // 如果删除或者手动删除传入空字符串将会把楼栋数据清理为空字符串
       this.conditions.cbId = value ? value : "";
       // 清理房间号数据
-      this.conditions.roomNo = "";
+      this.conditions.bhId = "";
       this.roomOptData = {};
       this.roomForList = [];
       // 获取房间号数据
@@ -449,13 +440,12 @@ export default {
      */
     queryRoomDataChange(item) {
       let { value } = item;
-      this.conditions.roomNo = value ? value : "";
+      this.conditions.bhId = value ? value : "";
     },
     /**
      * 添加号码
      */
-    addPhone(id, esId) {
-      console.log(id, esId, "===========");
+    addPhone(id) {
       this.$prompt("请输业主手机号码", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
@@ -466,21 +456,22 @@ export default {
         .then(({ value }) => {
           this.$api
             .post({
-              url: "/houseResource/updatePhone/notPhone",
-              qs: true,
+              url: "/houseResource/addPhone",
+              headers: { "Content-Type": "application/json;charset=UTF-8" },
               data: {
                 id: id,
-                tel: value,
-                esId: esId
+                tel: value
               }
             })
             .then(e => {
-              console.log(e.data.code);
               if (e.data.code == 200) {
-                this.$message(e.data.message);
-                this.queryNotPhone(1);
+                this.$message({
+                  message: e.data.message,
+                  type: 'success'
+                });
+                this.queryDetailList();
               } else {
-                this.$message(e.data.message);
+                this.$message.error(e.data.message);
               }
             });
         })
@@ -495,7 +486,6 @@ export default {
      * 转为在售
      */
     toSale(comId, cbId, bhId, communityName, buildingName, roomNo) {
-      console.log(comId, cbId, bhId, communityName, buildingName, roomNo, "转为在售=====")
       this.$router.push({
         path: "/buySellSystem/addHouse",
         query: {
@@ -598,20 +588,29 @@ export default {
       }
     }
     .tab-com-item {
+      padding: 4px 0;
       margin-top: 10px;
       .tab-house-title {
+        margin-bottom: 15px;
         font-size: @font16;
         font-weight: 600;
         color: black;
       }
-      .tab-house-tip {
-        font-size: @font14;
-        color: #b1b1b1;
-      }
-      .tab-houseno {
-        margin-top: 10px;
-        font-size: @font12;
-      }
+        .tab-house-tip {
+          margin-top: 30px;
+          margin-bottom: 10px;
+          font-size: @font14;
+          color: #bfbfbf;
+        }
+        .tab-houseno-tip {
+          margin-top: 30px;
+          margin-bottom: 10px;
+          font-size: @font14;
+        }
+        .tab-houseno {
+          margin-bottom: 10px;
+          font-size: @font14;
+        }
     }
     .tab-page-floot{
       padding-top: 16px;
@@ -619,6 +618,10 @@ export default {
       display: flex;
       justify-content: flex-end;
     }
+  }
+  .anchor-point {
+    // prettier-ignore
+    height: 28PX;
   }
 }
 /*** 下拉选框 ***/
