@@ -2,7 +2,7 @@
 .tab-page {
   /deep/.header-tab-cell {
     // prettier-ignore
-    height: 64PX;
+    height: 50PX;
     font-size: @font16;
     background: rgba(240, 242, 245, 1);
     color: rgba(48, 49, 51, 1);
@@ -14,58 +14,10 @@
       white-space: nowrap;
     }
   }
-  .tab-filter-radio {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 46px;
-    padding-bottom: 10px;
-    position: sticky;
-    top: 0px;
-    z-index: 10;
-    background: #fff;
-    .filter-radio-item {
-      display: flex;
-      cursor: pointer;
-      // prettier-ignore
-      margin-left: 30PX;
-      align-items: center;
-      input {
-        display: none;
-      }
-      input[type="checkbox"]:checked + span {
-        &::before {
-          content: "\2713";
-          color: black;
-          font-size: @font16;
-        }
-      }
-      &:first-child {
-        margin-left: 0;
-      }
-      span {
-        font-size: @font16;
-        color: black;
-        display: flex;
-        align-items: center;
-        font-weight: 600;
-        &::before {
-          content: "";
-          // prettier-ignore
-          width: 16PX;
-          // prettier-ignore
-          height: 16PX;
-          // prettier-ignore
-          line-height: 16PX;
-          margin-right: 8px;
-          text-align: center;
-          border: 1px solid black;
-        }
-      }
-    }
-  }
+
   /deep/.tab-cell-item {
     // prettier-ignore
-    height: 64PX;
+    height: 50PX;
     font-size: @font16;
     text-align: center;
     .cell {
@@ -86,17 +38,18 @@
       display: flex;
       flex-direction: column;
       width: 150px;
+      flex-shrink: 0;
       .tab-image-head {
         // prettier-ignore
-        height: 64PX;
+        height: 50PX;
         font-size: @font16;
         background: rgba(240, 242, 245, 1);
         color: rgba(48, 49, 51, 1);
         // prettier-ignore
-        line-height: 64PX;
+        line-height: 50PX;
         text-align: center;
         position: sticky;
-        top: 31px;
+        top: 0px;
         z-index: 10;
       }
       .tab-image-content {
@@ -182,7 +135,7 @@
 }
 /deep/.el-table__header-wrapper {
   position: sticky;
-  top: 31px;
+  top: 0px;
   z-index: 10;
 }
 /deep/.el-table {
@@ -192,50 +145,9 @@
     line-height: 23PX;
   }
 }
-/deep/.table-head-self-top{
-  top: 0 !important;
-}
 </style>
 <template>
-  <div class="tab-page">
-    <div class="tab-filter-radio" v-show="typeActiveIndex !== 2">
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isKey"
-        />
-        <span>钥匙</span>
-      </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 独家">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isOnly"
-        />
-        <span>独家</span>
-      </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isReal"
-        />
-        <span>实勘</span>
-      </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isElevator"
-        />
-        <span>电梯</span>
-      </label>
-    </div>
+  <div class="tab-page" v-loading="loading">
     <div class="tab-page-flex">
       <div class="tab-image">
         <div class="tab-image-head">房源图</div>
@@ -261,21 +173,15 @@
         default-expand-all
         @sort-change="sortMethod"
         @row-dblclick="navDetailt"
+        :default-sort="{ prop: 'addTime', order: 'ascending' }"
       >
-        <el-table-column type="expand" width="1px">
-          <template v-slot:default="{ row }">
-            <span class="tag-item" v-for="item in row.tags" :key="item">{{
-              item
-            }}</span>
-          </template>
-        </el-table-column>
+        <el-table-column type="expand" width="1px"> </el-table-column>
         <el-table-column
           v-for="(item, index) in tableColumnField"
           :key="index"
           :prop="item.prop"
           :label="item.label"
-          :width="item.width" 
-          :min-width="item.minWidth"
+          :width="item.width"
           :sort-method="sortDevName"
           :sortable="item.order"
           :formatter="item.formart"
@@ -285,11 +191,6 @@
       </el-table>
     </div>
     <div class="tab-page-floot">
-      <!-- 
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage4"
-     -->
       <el-pagination
         @current-change="currentchange"
         @size-change="handleSizeChange"
@@ -310,15 +211,13 @@ import {
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
 import util from "@/util/util";
-import bus from '@/evenBus/but.js';
 export default {
   inject: ["form"],
   data() {
     return {
-      typeActiveIndex: 0, //nav类型激活Index
+      loading: true,
       renderList: [],
-      tableColumnField: null,
-      allTableColumn: [
+      tableColumnField: [
         {
           prop: "communityName",
           label: "楼盘名称",
@@ -356,13 +255,13 @@ export default {
           prop: "price",
           label: "总价",
           order: "custom",
-          formart: item => item.price + "万"
+          formart: item => Math.round(item.price) + "万"
         },
         {
           prop: "unitPrice",
           label: "单价",
           order: "custom",
-          formart: item => item.unitPrice + "元/平"
+          formart: item => this.unitPrice(item) + "元/平"
         },
         {
           prop: "seenNumRecent",
@@ -377,7 +276,7 @@ export default {
         },
         // {
         //   prop: "saleReson",
-        //   label: "出售原因",
+        //   label: "卖房原因",
         //   order: false,
         //   formart: item => item.saleReson || "暂无"
         // },
@@ -386,88 +285,18 @@ export default {
           label: "楼层",
           order: true,
           formart: item => {
-            return `${item.floor}/${item.floorNum}`;
+            return `${item.floor}/${item.floorNum || "暂无"}`;
           }
         },
         {
-          prop: "addTime",
+          prop: "addTimeFormat",
           label: "挂牌",
-          order: true
-        },
-        {
-          prop: "brokerName",
-          label: "跟单人",
-          order: false
-        }
-      ],
-      dealHouseTableColumn: [
-        {
-          prop: "communityName",
-          label: "楼盘名称",
-          order: false,
-          width: "230",
-          formart: item => {
-            return (
-              <div class="tab-com-item">
-                <div class="tab-house-title">{item.communityName}</div>
-                <div class="tab-houseno">{item.houseNo}</div>
-              </div>
-            );
-          }
-        },
-        {
-          prop: "houseType",
-          label: "户型",
-          order: "custom",
-          formart: item =>
-            (item.rooms || 0) +
-            "-" +
-            (item.hall || 0) +
-            "-" +
-            (item.toilet || 0) +
-            "-" +
-            (item.balcony || 0)
-        },
-        {
-          prop: "floor",
-          label: "楼层",
           order: true,
-          formart: item => {
-            return `${item.floor}/${item.floorNum}`;
-          }
-        },
-        {
-          prop: "inArea",
-          label: "面积",
-          order: "custom",
-          formart: item => item.inArea + "平"
-        },
-        {
-          prop: "tradePrice",
-          label: "成交价",
-          order: "custom",
-          formart: item => item.tradePrice + "万"
-        },
-        {
-          prop: "unitPrice",
-          label: "单价",
-          order: "custom",
-          formart: item => item.unitPrice + "元/平"
-        },
-        {
-          prop: "tradeTime",
-          label: "成交时间",
-          order: "custom",
-          minWidth: "100"
+          formart: item => item.addTimeFormat
         },
         {
           prop: "agentName",
           label: "跟单人",
-          order: false
-        },
-        {
-          prop: "tradePerName",
-          label: "成交人",
           order: false
         }
       ],
@@ -486,52 +315,27 @@ export default {
       handler: function(value, ordvalue) {
         this.getHouseData(JSON.parse(JSON.stringify(value))).then(() => {
           dom.querySelector(".scroll-tab").scrollTop = 0;
-          this.$parent.ListeningScroll();
+          //  this.$parent.ListeningScroll();
         });
       }
     }
   },
-  created() {
-    this.tableColumnField = this.allTableColumn;
-  },
   mounted() {
     window.addEventListener("resize", this.addListener);
     this.$once("addListener", this.addListener);
-    bus.$on("modifyTableColumn", (type) => {
-      this.typeActiveIndex = type;
-      switch (type) {
-        case 2:
-          document.querySelector(".tab-page-flex .tab-image-head").classList.add("table-head-self-top");
-          document.querySelector(".tab-page-flex .el-table__header-wrapper").classList.add("table-head-self-top");
-          this.tableColumnField = this.dealHouseTableColumn;
-          break;
-        default:
-          document.querySelector(".tab-page-flex .tab-image-head").classList.remove("table-head-self-top");
-          document.querySelector(".tab-page-flex .el-table__header-wrapper").classList.remove("table-head-self-top");
-          this.tableColumnField = this.allTableColumn;
-      }
-    })
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.addListener);
-    bus.$off("modifyTableColumn");
   },
   methods: {
     //解决索引只排序当前页的问题,增加函数自定义索引序号
     sortDevName(str1, str2) {
       let res = 0;
-      if (this.form.sortColumn == "floor") {
-        res = str1.floor > str2.floor ? 1 : -1;
-        return res;
-      } else if (this.form.sortColumn == "addTime") {
-        return -1;
-      }
       for (let i = 0; ; i++) {
         if (!str1[i] || !str2[i]) {
           res = str1.length - str2.length;
           break;
         }
-
         const char1 = str1[i];
         const char1Type = this.getChartType(char1);
         const char2 = str2[i];
@@ -556,6 +360,13 @@ export default {
           break;
         }
       }
+
+      if (this.form.sortColumn == "floor") {
+        res = str1.floor > str2.floor ? 1 : -1;
+      } else if (this.form.sortColumn == "addTime") {
+        res = str1.addTime > str2.addTime ? 1 : -1;
+      }
+
       return res;
     },
     getChartType(char) {
@@ -580,6 +391,7 @@ export default {
     houseImageErorHandle(item) {
       item.picUrl =
         "https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/3/26/9b122fa0df5946058c5a254fae9b3bfc.png";
+      console.log("houseImageErorHandle -> item", item);
     },
     /**
      * @example: 设置Tab方向
@@ -591,7 +403,6 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      if (this.typeActiveIndex == 2) return;
       util.openPage.call(this, {
         name: "houseDetails",
         params: { houseId: item.id, dept: item.perDept }
@@ -606,16 +417,19 @@ export default {
       if (item.column.property == "houseType") {
         order.prop = "rooms";
       }
+      if (item.column.property == "addTimeFormat") {
+        order.prop = "addTime";
+      }
       this.InitPageJson();
       //this.pageJson.currentPage = 1;
       switch (order.order) {
         case "ascending":
           this.form.sortColumn = order.prop;
-          this.form.sortType = 0;
+          this.form.sortType = "ascending";
           break;
         case "descending":
           this.form.sortColumn = order.prop;
-          this.form.sortType = 1;
+          this.form.sortType = "descending";
       }
     },
     handleSizeChange(pageSize) {
@@ -632,7 +446,7 @@ export default {
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), false).then(
         () => {
           dom.querySelector(".scroll-tab").scrollTop = 0;
-          this.$parent.ListeningScroll();
+          //this.$parent.ListeningScroll();
         }
       );
     },
@@ -651,6 +465,13 @@ export default {
         }
       }
     },
+    unitPrice(row, column) {
+      if (row.inArea > 0 && row.unitPrice) {
+        return Math.round(row.unitPrice);
+      } else {
+        return 0;
+      }
+    },
     InitPageJson() {
       this.pageJson = {
         total: 1,
@@ -660,42 +481,33 @@ export default {
       };
     },
     getHouseData(value, initPage = true) {
-      // this.loading = true;
-      // Object.keys(value).forEach(item => {
-      //   if (value[item] instanceof Array) {
-      //     value[item] = value[item].join(",");
-      //   }
-      // });
-      this.renderList = [];
-      this.pageJson.total = 0;
-      this.pageJson.dataCount = 0;
+      this.loading = true;
       if (initPage) this.InitPageJson();
+      let url = "/myHouse/getMyAgent";
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
       });
-      let param;
-      switch (this.typeActiveIndex) {
-        case 2:
-          param = {
-            url: "/mateHouse/getMateHouse/tradeHouseIndex",
-            headers: { "Content-Type": "application/json;charset=UTF-8" },
-            data: restuleParms
-          }
-          break;
-        default:
-          param = {
-            url: "/mateHouse/getMateHouse/soleAllHouseIndex",
-            headers: { "Content-Type": "application/json;charset=UTF-8" },
-            data: restuleParms
-          }
+      if (restuleParms.workType != "1") {
+        url = "/myHouse/getMyRelated";
       }
+      if (restuleParms.time && restuleParms.time.length == 2) {
+        restuleParms.beginTime = restuleParms.time[0];
+        restuleParms.endTime = restuleParms.time[1];
+      }
+      delete restuleParms.random;
+      delete restuleParms.time;
       return this.$api
-        .post(param)
+        .post({
+          url,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: restuleParms
+        })
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
             this.renderList = data.data.data;
+            console.log("------>", this.renderList);
             this.pageJson.total = data.data.pageSum;
             this.pageJson.dataCount = data.data.dataCount;
           }
@@ -704,8 +516,9 @@ export default {
             this.addListener();
           });
         })
-        .catch(() => {})
-        .finally(() => {});
+        .finally(() => {
+          this.loading = false;
+        });
     }
   }
 };

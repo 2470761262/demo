@@ -15,6 +15,21 @@ export default [
       )
   },
   {
+    //买卖系统开发线索
+    path: "/buySellSystem/threadDevelop",
+    meta: {
+      keepAlive: true,
+      title: "开发线索",
+      // isScrollTop: true, //是否需要记录坐标
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "threadDevelop" */ "@/pages/buySellSystem/threadDevelop/threadDevelop.vue"
+      )
+  },
+  {
     //买卖系统录入房源
     path:
       "/buySellSystem/houseDetails/:houseId/:browse?/:key?/:dept?/:detailType?",
@@ -137,6 +152,77 @@ export default [
       )
   },
   {
+    //我的房源
+    path: "/buySellSystem/myHouse",
+    redirect: "/myHouse/myRole",
+    meta: {
+      title: "我的房源",
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "myHouse" */ "@/pages/buySellSystem/myHouse/myHouse.vue"
+      ),
+    children: [
+      {
+        //我的角色
+        path: "/myHouse/myRole",
+        name: "myRole",
+        meta: {
+          title: "我的角色",
+          keepAlive: true,
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myRole" */ "@/pages/buySellSystem/myHouse/myRole/myRole.vue"
+          )
+      },
+      {
+        //我的验真
+        path: "/myHouse/myValidate",
+        name: "myValidate",
+        meta: {
+          title: "我的验真",
+          keepAlive: true,
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myValidate" */ "@/pages/buySellSystem/myHouse/myValidate/myValidate.vue"
+          )
+      },
+      {
+        //我的审核
+        path: "/myHouse/myExamine",
+        name: "myExamine",
+        meta: {
+          title: "我的审核",
+          keepAlive: true,
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myExamine" */ "@/pages/buySellSystem/myHouse/myExamine/myExamine.vue"
+          )
+      },
+      {
+        //我的对赌
+        path: "/myHouse/myBet",
+        name: "myBet",
+        meta: {
+          title: "我的对赌",
+          keepAlive: true,
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "myBet" */ "@/pages/buySellSystem/myHouse/myBet/myBet.vue"
+          )
+      }
+    ]
+  },
+  {
     //资源库-无号码-录入号码
     path: "/buySellSystem/updatePhone",
     meta: {
@@ -214,6 +300,17 @@ export default [
       )
   },
   {
+    path: "/report/addTable",
+    name: "addTable",
+    meta: {
+      title: "添加表"
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "addReport" */ "@/pages/report/table/addTable.vue"
+      )
+  },
+  {
     //数据看板配置列表
     path: "/report/reportConfList",
     meta: {
@@ -278,7 +375,7 @@ export default [
     },
     component: () =>
       import(
-        /* webpackChunkName: "addReport" */ "@/pages/report/addReport/addReport.vue"
+        /* webpackChunkName: "addReport" */ "@/pages/report/addReport.vue"
       )
   },
   {

@@ -85,7 +85,7 @@
             <button
               class="btn-primary house-back anchor-point"
               data-anchor="添加表"
-              @click="navToPath('/report/addReport')"
+              @click="navToPath('/report/addTable')"
             >
               <i class=" iconluru iconfont"></i>
               添加表
@@ -108,13 +108,20 @@
         </template>
         <el-table-column label="操作" fixed="right" min-width="150">
           <template v-slot="scope">
-            <el-button type="primary" size="mini" @click="handleDbclick(scope.row)"
+            <el-button
+              type="primary"
+              size="mini"
+              @click="handleDbclick(scope.row)"
               >查看</el-button
             >
             <el-button type="primary" size="mini" @click="toEdit(scope.row.id)"
               >编辑</el-button
             >
-            <el-button type="danger" size="mini" @click="toDelete(scope.row.id)"
+            <el-button
+              disabled
+              type="danger"
+              size="mini"
+              @click="toDelete(scope.row.id)"
               >删除</el-button
             >
           </template>
@@ -243,12 +250,13 @@ export default {
     queryDisplayboardList(currentPage) {
       var that = this;
       let params = { limit: that.pageJson.size, page: currentPage };
-      params.dispalyname = that.queryData.dispalyname;
+      params.tablename = that.queryData.tablename;
+      params.tablecname = that.queryData.tablecname;
 
       console.log(params);
       this.$apiReport
         .get({
-          url: "/xjwreport/table/confList",
+          url: "/xjwreport/table/infoList",
           data: params,
           token: false
         })
@@ -272,7 +280,7 @@ export default {
     toEdit(id) {
       var that = this;
       that.$router.push({
-        path: "/report/addReport",
+        path: "/report/addTable",
         query: { id: id }
       });
     },
@@ -286,7 +294,7 @@ export default {
         .then(() => {
           this.$apiReport
             .delete({
-              url: "/xjwreport/displayboard/conf",
+              url: "/xjwreport/table/delete",
               headers: { "Content-Type": "application/json;charset=UTF-8" },
               token: false,
               // qs: true,

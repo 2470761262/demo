@@ -182,4 +182,8 @@
   .iconTemplateDownload:before {
     content: "\e74d";
   }
+
+  .iconhome:before {
+    content: "\e607";
+  }
   

@@ -83,6 +83,10 @@ Validator.extend("isGreater", {
     }
   },
   validate: (value, compare) => {
+    if (compare[2] && compare[0] == "") {
+      //传递第3个参数true则会第一次不匹配
+      return true;
+    }
     return Number(value) <= Number(compare[0] == "" ? 0 : compare[0]);
   }
 });
@@ -98,6 +102,10 @@ Validator.extend("isLess", {
     }
   },
   validate: (value, compare) => {
+    if (compare[2] && compare[0] == "") {
+      //传递第3个参数true则会第一次不匹配
+      return true;
+    }
     return Number(value) >= Number(compare[0] == "" ? 0 : compare[0]);
   }
 });

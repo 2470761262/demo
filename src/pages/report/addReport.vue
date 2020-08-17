@@ -165,9 +165,9 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="字段名称">
+          <el-form-item label="字段注释">
             <el-input
-              placeholder="请输入字段名称"
+              placeholder="请输入字段注释"
               v-model="columnitem.name"
             ></el-input>
           </el-form-item>
@@ -210,7 +210,7 @@
         <div
           class="page-form-inline "
           v-for="(columnitem, index) in ordercol"
-          :key="'展示字段' + index"
+          :key="'排序字段' + index"
         >
           <el-form-item :label="'排序字段' + (index + 1)" prop="column">
             <el-select

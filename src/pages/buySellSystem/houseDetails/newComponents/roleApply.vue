@@ -77,6 +77,19 @@
           padding: 4px 6px;
           color: #fff;
         }
+        .role-type-center {
+          font-size: @font12;
+          border-radius: 50%;
+          display: flex;
+          background: @backgroud;
+          width: 29PX;
+          height: 29PX;
+          line-height: 29PX;
+          margin-left: 25px;
+          text-align: center;
+          justify-content: center;
+          color: #fff;
+        }
         .role-type-bottom {
           font-size: @font12;
 
@@ -205,6 +218,7 @@
         </div>
         <div class="role-type">
           <div class="role-type-top">委托人</div>
+          <div class="role-type-center">{{ houseData.isOnly==2?'普通':'独家' }}</div>
           <div
             class="role-type-bottom"
             @click="openPop('entrustPopFlag', 4, 'entrustType', 2)"
@@ -364,7 +378,6 @@
               class="role-btn"
               v-if="reloData.submitApplyRealOwner"
               :loading="houseUploadLoading"
-              :disabled="agentApply"
               @click="submitUpload"
             >
               {{ houseUploadLoading ? "加载中" : "提交" }}
@@ -442,7 +455,7 @@ export default {
     agentApply() {
       let loginDeptId = util.localStorageGet("logindata").deptId;
       if (
-        this.houseData.plate == 1 &&
+        this.houseData.plate === 1 &&
         this.houseData.agentPerDepartmentId != loginDeptId
       ) {
         return true;
@@ -476,7 +489,7 @@ export default {
      * @param {type}
      */
     isAgentPerApply() {
-      return this.reloData.applyAgent && this.houseData.plate < 6;
+      return this.reloData.applyAgent && this.houseData.plate < 6 && !this.agentApply ;
     },
     /**
      * @example: 判断是否存在委托人

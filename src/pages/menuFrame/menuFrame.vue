@@ -9,7 +9,8 @@
   }
   .page-cell-main-menu {
     // prettier-ignore
-    height: calc(100% - 80PX);
+    //height: calc(100% - 80PX);
+    height: 100%;
     &.is-nest {
       height: 100% !important;
     }
@@ -68,11 +69,11 @@
 </style>
 <template>
   <section class="page-cell-conter">
-    <el-container>
+    <!-- <el-container>
       <el-header v-if="asideNavFlag" height="80px">
         <header-content :userInfoData="loginUserData"></header-content>
       </el-header>
-    </el-container>
+    </el-container> -->
     <el-container
       :class="[isPad, { 'is-nest': isHander }]"
       class="page-cell-main-menu"
@@ -98,7 +99,7 @@
 <script>
 //左侧菜单
 import asideNav from "@/components/asideNav";
-import headerContent from "@/components/headerContent";
+//import headerContent from "@/components/headerContent";
 import util from "@/util/util";
 import { LOGINDATA } from "@/util/constMap";
 import but from "@/evenBus/but";
@@ -109,7 +110,7 @@ export default {
   name: "menuFrame",
   components: {
     asideNav,
-    headerContent,
+    // headerContent,
     rightFixedChunk
   },
   data() {
@@ -152,9 +153,10 @@ export default {
   created() {
     this.$nextTick(() => {
       this.asideNavFlag = util.localStorageGet("nest");
-      this.isHander = document.querySelector(".page-cell-header")
-        ? false
-        : true;
+      //   console.log(document.querySelector(".page-cell-header"), "11");
+      //   this.isHander = document.querySelector(".page-cell-header")
+      //     ? false
+      //     : true;
     });
     this.loginUserData = util.localStorageGet(LOGINDATA);
     if (this.loginUserData && this.loginUserData.menuNodes) {

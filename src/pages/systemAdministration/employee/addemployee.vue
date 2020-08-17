@@ -211,6 +211,8 @@
             v-model="employeeEntity.birthday"
             type="date"
             :picker-options="pickerOptions"
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
             placeholder="选择日期"
           ></el-date-picker>
         </el-form-item>
@@ -255,6 +257,8 @@
             v-model="employeeEntity.regTime"
             type="date"
             placeholder="选择日期"
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="备注:">
@@ -406,6 +410,8 @@
             v-model="employeeEntity.graduation"
             type="date"
             placeholder="选择日期"
+            value-format="yyyy-MM-dd"
+            format="yyyy-MM-dd"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="岗位津贴:">
