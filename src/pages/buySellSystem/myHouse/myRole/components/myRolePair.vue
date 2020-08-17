@@ -346,6 +346,7 @@ export default {
           this.form.customName = this.cusName;
           this.form.houseNo = this.houseNo;
           this.form.tel = this.cusPhone;
+          this.form.random = new Date().getTime();
         }
       });
     }

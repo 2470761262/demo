@@ -218,7 +218,6 @@
         width: 102PX;
       }
 
-      
       @media screen and (max-width: 1545px) {
         &.input_210 {
           // prettier-ignore
@@ -726,8 +725,12 @@
                 </div> -->
 
         <div class="head-fun-right">
-          <el-badge value="即将上线">
-            <button class="btn-primary anchor-point" data-anchor="首页开发线索">
+          <el-badge value="新">
+            <button
+              class="btn-primary anchor-point"
+              data-anchor="首页开发线索"
+              @click="navToPath('/buySellSystem/threadDevelop')"
+            >
               <i class="iconxiansuo iconfont"></i>
               开发线索
             </button>
@@ -742,16 +745,14 @@
               管理入口
             </button>
           </el-badge>
-          <el-badge value="新">
-            <button
-              class="btn-primary anchor-point"
-              data-anchor="首页我的房源"
-              @click="navToPath('/buySellSystem/myHouse')"
-            >
-              <i class="icondaohang_wodefangyuan1 iconfont"></i>
-              我的房源
-            </button>
-          </el-badge>
+          <button
+            class="btn-primary anchor-point"
+            data-anchor="首页我的房源"
+            @click="navToPath('/buySellSystem/myHouse')"
+          >
+            <i class="icondaohang_wodefangyuan1 iconfont"></i>
+            我的房源
+          </button>
           <button
             class="btn-primary house-back anchor-point"
             data-anchor="首页录入房源"
@@ -1773,7 +1774,6 @@ export default {
      * @param {string} e
      */
     schoolChange(field, e, temporaryField, radio) {
-      console.log(e, "999999999999999");
       this.form[field] = Array.from(new Set([...e, ...this[temporaryField]]));
       if (this.form[field].length) {
         this[radio] = "";

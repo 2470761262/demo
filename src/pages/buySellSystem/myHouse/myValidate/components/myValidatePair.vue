@@ -246,6 +246,7 @@ export default {
     validateFrom() {
       this.form.customrName = this.cusName;
       this.form.tel = this.cusPhone;
+      this.form.random = new Date().getTime();
     }
   }
 };

@@ -108,6 +108,12 @@
         </template>
         <el-table-column label="操作" fixed="right" min-width="150">
           <template v-slot="scope">
+            <el-button
+              type="primary"
+              size="mini"
+              @click="handleDbclick(scope.row)"
+              >查看</el-button
+            >
             <el-button type="primary" size="mini" @click="toEdit(scope.row.id)"
               >编辑</el-button
             >
@@ -116,7 +122,8 @@
               type="danger"
               size="mini"
               @click="toDelete(scope.row.id)"
-              >删除</el-button>
+              >删除</el-button
+            >
           </template>
         </el-table-column>
       </template>
