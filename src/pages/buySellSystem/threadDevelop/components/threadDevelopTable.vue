@@ -31,7 +31,8 @@
                   @click="dialNumber(scope.row, scope.$index)"
                   :loading="renderList[scope.$index].loading"
                   icon="el-icon-phone-outline"
-                >一键拨号</el-button>
+                  >一键拨号</el-button
+                >
                 <el-button
                   class="anchor-point"
                   type="primary"
@@ -39,7 +40,8 @@
                   @click="houseOperate(scope.row)"
                   size="mini"
                   icon="el-icon-refresh"
-                >转为在售</el-button>
+                  >转为在售</el-button
+                >
               </div>
               <div>
                 <el-button
@@ -49,7 +51,8 @@
                   @click="writeRecord(scope.row)"
                   size="mini"
                   icon="el-icon-edit"
-                >写跟进</el-button>
+                  >写跟进</el-button
+                >
                 <el-button
                   class="anchor-point"
                   type="primary"
@@ -57,7 +60,8 @@
                   @click="findRecord(scope.row)"
                   size="mini"
                   icon="el-icon-time"
-                >查记录</el-button>
+                  >查记录</el-button
+                >
               </div>
             </div>
           </template>
@@ -91,7 +95,11 @@
       <template>
         <el-tabs v-model="recordActiveName">
           <el-tab-pane label="跟进" name="follow">
-            <div class="list-content" infinite-scroll-immediate="false" v-infinite-scroll="load">
+            <div
+              class="list-content"
+              infinite-scroll-immediate="false"
+              v-infinite-scroll="load"
+            >
               <el-timeline>
                 <el-timeline-item
                   v-for="(activity, index) in activities"
@@ -119,13 +127,20 @@
               <div class="bottom-tip" v-else-if="follow.loadPageEnd">
                 已经到最底部了~
               </div>
-              <div class="bottom-tip" v-if="!follow.loading && activities.length === 0">
+              <div
+                class="bottom-tip"
+                v-if="!follow.loading && activities.length === 0"
+              >
                 暂无数据~
               </div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="语音" name="voice">
-            <div class="list-content" infinite-scroll-immediate="false" v-infinite-scroll="load">
+            <div
+              class="list-content"
+              infinite-scroll-immediate="false"
+              v-infinite-scroll="load"
+            >
               <el-timeline>
                 <el-timeline-item
                   v-for="(activity, index) in voiceList"
@@ -162,7 +177,11 @@
       </template>
     </fixedPopup>
     <!-- 写跟进 -->
-    <follow-up :visible.sync="followUpFlag" :rowId="rowId" v-if="followUpFlag" />
+    <follow-up
+      :visible.sync="followUpFlag"
+      :rowId="rowId"
+      v-if="followUpFlag"
+    />
   </div>
 </template>
 <script>
@@ -211,7 +230,9 @@ export default {
           formart: item => {
             return (
               <div class="tab-com-item">
-                <div class="tab-house-title">{item.communityName}</div>
+                <div class="tab-house-title">
+                  {item.communityName} {item.comBuildingName} {item.roomNo}
+                </div>
                 <div class="tab-houseno">
                   {item.area ? item.area + "平" : "暂无"}&nbsp;/&nbsp;
                   {item.face ? item.face : "暂无"}&nbsp;/&nbsp;{item.rooms || 0}
@@ -372,7 +393,7 @@ export default {
      * 一键拨号
      */
     dialNumber(row, index) {
-      this.$set(this.renderList[index],"loading",true);
+      this.$set(this.renderList[index], "loading", true);
       let params = {
         roomId: row.id, // 列表id
         area: row.area, // 面积
@@ -399,7 +420,7 @@ export default {
           this.getHouseData(JSON.parse(JSON.stringify(this.form)), false);
         })
         .finally(() => {
-          this.$set(this.renderList[index],"loading",false);
+          this.$set(this.renderList[index], "loading", false);
         });
     },
     /**

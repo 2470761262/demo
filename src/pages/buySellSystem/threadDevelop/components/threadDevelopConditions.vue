@@ -10,7 +10,9 @@
           :key="index"
           :data-anchor="'首页类型:' + item.title"
           @click="navToPageBtn(item)"
-        >{{ item.title }}</div>
+        >
+          {{ item.title }}
+        </div>
       </div>
     </div>
     <!-- 面包屑 -->
@@ -21,12 +23,14 @@
           v-for="(item, index) in breadcrumbList"
           :key="index"
           :to="{ path: item.url }"
-        >{{ item.title }}</el-breadcrumb-item>
+          >{{ item.title }}</el-breadcrumb-item
+        >
         <el-breadcrumb-item
           class="isBack anchor-point"
           v-if="breadcrumbList.length > 1 && isShowReturn"
           @click.native="goBack"
-        >返回</el-breadcrumb-item>
+          >返回</el-breadcrumb-item
+        >
       </el-breadcrumb>
     </div>
     <div class="nav-row-panel">
@@ -115,7 +119,11 @@
         </div>
       </div>
       <div>
-        <el-radio-group v-model="listSwitchRadio" size="small" @change="isMyRecordChange">
+        <el-radio-group
+          v-model="listSwitchRadio"
+          size="small"
+          @change="isMyRecordChange"
+        >
           <el-radio-button :label="0">开发线索</el-radio-button>
           <el-radio-button :label="1">我的记录</el-radio-button>
         </el-radio-group>
@@ -126,7 +134,11 @@
       <div class="search-content-item">
         <div class="search-item-title">类型</div>
         <div class="search-item-right">
-          <el-radio-group v-model="typeList" size="small" @change="typeListChange">
+          <el-radio-group
+            v-model="typeList"
+            size="small"
+            @change="typeListChange"
+          >
             <el-radio
               class="anchor-point"
               data-anchor="开发线索选项 类型:不限"
@@ -134,12 +146,14 @@
               border
               >不限</el-radio
             >
-            <el-radio v-for="(item, index) in typeArr" :key="index"
+            <el-radio
+              v-for="(item, index) in typeArr"
+              :key="index"
               class="anchor-point"
-              :data-anchor="'开发线索选项 时间:'+item.name"
+              :data-anchor="'开发线索选项 时间:' + item.name"
               :label="item.value"
               border
-              >{{item.name}}</el-radio
+              >{{ item.name }}</el-radio
             >
           </el-radio-group>
         </div>
@@ -158,10 +172,10 @@
             >
             <el-radio
               class="anchor-point"
-              data-anchor="首页选项 时间:30日以上来回访"
+              data-anchor="首页选项 时间:30日以上未回访"
               label="1"
               border
-              >30日以上来回访</el-radio
+              >30日以上未回访</el-radio
             >
             <el-radio
               class="anchor-point"
@@ -389,7 +403,9 @@
               <el-option
                 class="options-item anchor-point"
                 v-for="item in mathPrimaryAfter"
-                :data-anchor="'开发线索选项 小学 => select => option:' + item.name"
+                :data-anchor="
+                  '开发线索选项 小学 => select => option:' + item.name
+                "
                 @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.name"
@@ -460,7 +476,9 @@
               <el-option
                 class="options-item anchor-point"
                 v-for="item in mathMiddleAfter"
-                :data-anchor="'开发线索选项 中学 => select => option:' + item.name"
+                :data-anchor="
+                  '开发线索选项 中学 => select => option:' + item.name
+                "
                 @click.native="log_socket.sendUserActionData"
                 :key="item.value"
                 :label="item.name"
@@ -502,7 +520,7 @@ const NAVTOPAGE = [
   { title: "小区", private: false, url: "" }
 ];
 export default {
-  inject: ['form'],
+  inject: ["form"],
   watch: {
     $route(newValue) {
       this.breadcrumbSet(newValue.matched);
@@ -549,10 +567,12 @@ export default {
         {
           name: "成交120天转入",
           value: "1"
-        }, {
+        },
+        {
           name: "暂不售转入",
           value: "2"
-        }, {
+        },
+        {
           name: "30天内导入号码",
           value: "3"
         }
@@ -931,7 +951,7 @@ export default {
       }
       this[temporaryField] = e;
     },
-    /** 
+    /**
      * @example: 学校多选项值改变事件(判断下拉多选框是否存在相同选项，存在则数据联动)
      * @param {string } type 学校类型
      * @param {string } name 选项字段
@@ -952,8 +972,14 @@ export default {
           break;
       }
       if (!val && this[temporaryCheckListFiled].indexOf(name) != -1) {
-        this[temporaryCheckListFiled].splice(this[temporaryCheckListFiled].indexOf(name), 1);
-      } else if (val && this[temporaryAllListFiled].findIndex(item => item.name == name) != -1) {
+        this[temporaryCheckListFiled].splice(
+          this[temporaryCheckListFiled].indexOf(name),
+          1
+        );
+      } else if (
+        val &&
+        this[temporaryAllListFiled].findIndex(item => item.name == name) != -1
+      ) {
         this[temporaryCheckListFiled].push(name);
       }
       this[temporaryField] = this[temporaryCheckListFiled];
@@ -1049,7 +1075,7 @@ export default {
       }
     }
   }
-  .nav-row-panel{
+  .nav-row-panel {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1239,7 +1265,7 @@ export default {
 
         .select-content {
           margin-bottom: 5px;
-          /deep/.el-select__tags{
+          /deep/.el-select__tags {
             flex-wrap: nowrap;
             overflow: hidden;
           }
