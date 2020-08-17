@@ -39,6 +39,7 @@ export default {
     return {
       //scrollTop: 0,
       form: {
+        random: "",
         bhId: "",
         cbId: "",
         checkProject: "",

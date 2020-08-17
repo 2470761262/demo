@@ -61,6 +61,7 @@ export default {
     return {
       // scrollTop: 0,
       form: {
+        random: "",
         comId: "",
         cbId: "",
         bhId: "",
