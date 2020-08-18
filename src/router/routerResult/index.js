@@ -333,6 +333,41 @@ export default [
       )
   },
   {
+    path: "/buySellSystem/resourceManage",
+    redirect: "/buySellSystem/resourceManageList",
+    component: () =>
+      import(
+        /* webpackChunkName: "resourceManage" */ "@/pages/buySellSystem/resourceManage/index.vue"
+      ),
+    children: [
+      {
+        path: "/buySellSystem/resourceManageList",
+        meta: {
+          title: "资源库管理",
+          isMapNav: true, //不需要导航
+          isPad: true, //不需要el-main padding
+          keepAlive: true
+        },
+        component: () => 
+          import(
+            /* webpackChunkName: "resourceManageLList" */ "@/pages/buySellSystem/resourceManage/list.vue"
+          )
+      },{
+        path: "/buySellSystem/resourceManageDetail/:id",
+        name: "resourceManageDetail",
+        meta: {
+          title: "资源库管理",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "resourceManageDetail" */ "@/pages/buySellSystem/resourceManage/detail.vue"
+          )
+      }
+    ]
+  },
+  {
     path: "/report/addReport",
     name: "addReport",
     meta: {
@@ -343,7 +378,6 @@ export default [
         /* webpackChunkName: "addReport" */ "@/pages/report/addReport.vue"
       )
   },
-
   {
     //买卖系统三级路由
     path: "/buySellSystem/otherIframe",
