@@ -131,8 +131,8 @@
           size="small"
           @change="isMyRecordChange"
         >
-          <el-radio-button :label="0">开发线索</el-radio-button>
-          <el-radio-button :label="1">我的记录</el-radio-button>
+          <el-radio-button class="self-btn" :label="0">开发线索</el-radio-button>
+          <el-radio-button class="self-btn" :label="1">我的记录</el-radio-button>
         </el-radio-group>
       </div>
     </div>
@@ -906,14 +906,15 @@ export default {
     submitFormBtn(field, min, max) {
       if (
         !(
-          /^0\.\d+$|^[1-9]+(\.\d+|\d)?$/.test(this[field][min]) &&
-          /^0\.\d+$|^[1-9]+(\.\d+|\d)?$/.test(this[field][max])
+          /^0\.\d+$|^[1-9]+(\.\d+|\d+)?$/.test(this[field][min]) &&
+          /^0\.\d+$|^[1-9]+(\.\d+|\d+)?$/.test(this[field][max])
         )
       ) {
         this.$message.warning("请输入正数");
         return;
       }
-      if (this[field][min] >= this[field][max]) {
+      console.log(parseFloat(this[field][min]) >= parseFloat(this[field][max]),"============")
+      if (parseFloat(this[field][min]) >= parseFloat(this[field][max])) {
         this.$message.warning("面积最大值应该大于最小值");
         return;
       }
@@ -1176,6 +1177,16 @@ export default {
         margin-left: 0;
         height: @height35;
         // padding: 0 35px;
+      }
+    }
+    /deep/.self-btn {
+      .el-radio-button__inner{
+        // prettier-ignore
+        height: 28PX;
+        padding: 0 15px;
+        // prettier-ignore
+        line-height: 26PX;
+        font-size: @font14;
       }
     }
   }

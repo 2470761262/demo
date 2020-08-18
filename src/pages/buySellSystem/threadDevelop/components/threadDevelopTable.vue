@@ -617,6 +617,7 @@ export default {
       // prettier-ignore
       min-width: 88PX;
       text-align: left;
+      font-size: @font14;
     }
   }
 }

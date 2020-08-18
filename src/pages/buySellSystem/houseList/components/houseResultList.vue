@@ -1871,8 +1871,8 @@ export default {
       if (
         (field == "area" || field == "price") &&
         !(
-          /^0\.\d+$|^[1-9]+(\.\d+|\d)?$/.test(this[field][min]) &&
-          /^0\.\d+$|^[1-9]+(\.\d+|\d)?$/.test(this[field][max])
+          /^0\.\d+$|^[1-9]+(\.\d+|\d+)?$/.test(this[field][min]) &&
+          /^0\.\d+$|^[1-9]+(\.\d+|\d+)?$/.test(this[field][max])
         )
       ) {
         this.$message.warning("请输入正数");
