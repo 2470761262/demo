@@ -233,7 +233,7 @@ export default {
     },
     //房源是否被锁定
     isLockBtn() {
-      if (this.houseData.plate > 6 || this.houseData.isLocking) {
+      if (this.houseData.isLocking) {
         return true;
       }
       return false;
