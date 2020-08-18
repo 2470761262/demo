@@ -92,7 +92,7 @@ export default {
     flex: 1;
     height: 0;
     overflow: auto;
-    min-height: 400px;
+    min-height: 500px;
   }
 }
 </style>
