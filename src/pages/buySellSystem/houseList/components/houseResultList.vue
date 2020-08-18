@@ -574,12 +574,63 @@
     }
   }
 }
+/*** 钥匙独家实勘电梯 ****/
+.tab-filter-radio {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 46px;
+  padding-bottom: 10px;
+  position: sticky;
+  top: 0px;
+  z-index: 10;
+  background: #fff;
+  .filter-radio-item {
+    display: flex;
+    cursor: pointer;
+    // prettier-ignore
+    margin-left: 30PX;
+    align-items: center;
+    input {
+      display: none;
+    }
+    input[type="checkbox"]:checked + span {
+      &::before {
+        content: "\2713";
+        color: black;
+        font-size: @font16;
+      }
+    }
+    &:first-child {
+      margin-left: 0;
+    }
+    span {
+      font-size: @font16;
+      color: black;
+      display: flex;
+      align-items: center;
+      font-weight: 600;
+      &::before {
+        content: "";
+        // prettier-ignore
+        width: 16PX;
+        // prettier-ignore
+        height: 16PX;
+        // prettier-ignore
+        line-height: 16PX;
+        margin-right: 8px;
+        text-align: center;
+        border: 1px solid black;
+      }
+    }
+  }
+}
 /*** 即将更新标记 ****/
 /deep/.el-badge__content.is-fixed {
   right: 40px;
 }
 </style>
 <template>
+<div>
   <div class="page-result-content">
     <div class="page-posi-sticky filex-content">
       <!-- 房屋类型 -->
@@ -1560,6 +1611,45 @@
       ></span>
     </div>
   </div>
+  <div class="tab-filter-radio" v-show="typeActiveIndex !== 2">
+    <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
+      <input
+        type="checkbox"
+        true-value="1"
+        false-value=""
+        v-model="form.isKey"
+      />
+      <span>钥匙</span>
+    </label>
+    <label class="filter-radio-item anchor-point" data-anchor="首页选项 独家">
+      <input
+        type="checkbox"
+        true-value="1"
+        false-value=""
+        v-model="form.isOnly"
+      />
+      <span>独家</span>
+    </label>
+    <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
+      <input
+        type="checkbox"
+        true-value="1"
+        false-value=""
+        v-model="form.isReal"
+      />
+      <span>实勘</span>
+    </label>
+    <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
+      <input
+        type="checkbox"
+        true-value="1"
+        false-value=""
+        v-model="form.isElevator"
+      />
+      <span>电梯</span>
+    </label>
+  </div>
+</div>
 </template>
 
 <script>
@@ -1604,6 +1694,7 @@ export default {
   },
   data() {
     return {
+      typeActiveIndex: 0, //nav类型激活Index
       searchPanelChange: true, //搜索面板显隐
       temporaryPrimaryValue: "", //临时记录小学select结果,用于删除筛选
       temporaryMiddleValue: "", //临时记录中学select结果,用于删除筛选
@@ -1685,6 +1776,7 @@ export default {
       this.searchPanelChange = true;
       this.temporaryPrimaryList = [];
       this.temporaryMiddleList = [];
+      this.typeActiveIndex = 0;
       bus.$emit("modifyTableColumn", 0);
       this.resetData();
     },
@@ -1790,6 +1882,7 @@ export default {
      * @param {Number}  index
      */
     changeNavTypeIndex(index) {
+      this.typeActiveIndex = index;
       bus.$emit("modifyTableColumn", index);
       if (index == 1 || index == 4) {
         this.navToPageBtn({ private: false });

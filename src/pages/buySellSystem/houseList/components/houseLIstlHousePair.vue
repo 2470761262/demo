@@ -14,55 +14,6 @@
       white-space: nowrap;
     }
   }
-  .tab-filter-radio {
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 46px;
-    padding-bottom: 10px;
-    position: sticky;
-    top: 0px;
-    z-index: 10;
-    background: #fff;
-    .filter-radio-item {
-      display: flex;
-      cursor: pointer;
-      // prettier-ignore
-      margin-left: 30PX;
-      align-items: center;
-      input {
-        display: none;
-      }
-      input[type="checkbox"]:checked + span {
-        &::before {
-          content: "\2713";
-          color: black;
-          font-size: @font16;
-        }
-      }
-      &:first-child {
-        margin-left: 0;
-      }
-      span {
-        font-size: @font16;
-        color: black;
-        display: flex;
-        align-items: center;
-        font-weight: 600;
-        &::before {
-          content: "";
-          // prettier-ignore
-          width: 16PX;
-          // prettier-ignore
-          height: 16PX;
-          // prettier-ignore
-          line-height: 16PX;
-          margin-right: 8px;
-          text-align: center;
-          border: 1px solid black;
-        }
-      }
-    }
-  }
   /deep/.tab-cell-item {
     // prettier-ignore
     height: 64PX;
@@ -96,7 +47,7 @@
         line-height: 64PX;
         text-align: center;
         position: sticky;
-        top: 31px;
+        top: 0;
         z-index: 10;
       }
       .tab-image-content {
@@ -182,7 +133,7 @@
 }
 /deep/.el-table__header-wrapper {
   position: sticky;
-  top: 31px;
+  top: 0;
   z-index: 10;
 }
 /deep/.el-table {
@@ -192,50 +143,10 @@
     line-height: 23PX;
   }
 }
-/deep/.table-head-self-top{
-  top: 0 !important;
-}
 </style>
 <template>
   <div class="tab-page">
-    <div class="tab-filter-radio" v-show="typeActiveIndex !== 2">
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isKey"
-        />
-        <span>钥匙</span>
-      </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 独家">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isOnly"
-        />
-        <span>独家</span>
-      </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isReal"
-        />
-        <span>实勘</span>
-      </label>
-      <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
-        <input
-          type="checkbox"
-          true-value="1"
-          false-value=""
-          v-model="form.isElevator"
-        />
-        <span>电梯</span>
-      </label>
-    </div>
+
     <div class="tab-page-flex">
       <div class="tab-image">
         <div class="tab-image-head">房源图</div>
@@ -501,13 +412,9 @@ export default {
       this.typeActiveIndex = type;
       switch (type) {
         case 2:
-          document.querySelector(".tab-page-flex .tab-image-head").classList.add("table-head-self-top");
-          document.querySelector(".tab-page-flex .el-table__header-wrapper").classList.add("table-head-self-top");
           this.tableColumnField = this.dealHouseTableColumn;
           break;
         default:
-          document.querySelector(".tab-page-flex .tab-image-head").classList.remove("table-head-self-top");
-          document.querySelector(".tab-page-flex .el-table__header-wrapper").classList.remove("table-head-self-top");
           this.tableColumnField = this.allTableColumn;
       }
     })
