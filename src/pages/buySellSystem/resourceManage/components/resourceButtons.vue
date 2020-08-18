@@ -6,11 +6,9 @@
       :before-upload="beforeAvatarUpload"
       :on-success="importSuccess"
       :headers="uploadHeader"
-      list-type="picture">
-      <button
-        class="btn-primary anchor-point"
-        data-anchor="资源库管理一键导入"
-      >
+      list-type="picture"
+    >
+      <button class="btn-primary anchor-point" data-anchor="资源库管理一键导入">
         <i class="iconTemplateImport iconfont"></i>
         一键导入
       </button>
@@ -35,33 +33,39 @@ export default {
       uploadHeader: {
         tk: util.localStorageGet(TOKEN)
       },
-      downloadHref:"http://bweb.yongxinjia.com/houseResource/template?tk="+util.localStorageGet(TOKEN)
-    }
+      downloadHref:
+        this.$api.baseUrl() +
+        "houseResource/template?tk=" +
+        util.localStorageGet(TOKEN)
+    };
   },
   methods: {
     importSuccess(response, file, fileLis) {
       if (response.code == 200) {
         this.$message({
           message: response.message,
-          type: 'success'
+          type: "success"
         });
       } else {
         this.$message.error(response.message);
       }
     },
     beforeAvatarUpload(file) {
-      const isExcel = file.type === "application/vnd.ms-excel" || file.type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      const isExcel =
+        file.type === "application/vnd.ms-excel" ||
+        file.type ===
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
       const isLt2M = file.size / 1024 / 1024 < 5;
       if (!isExcel) {
-        this.$message.error('上传文件只能是 excel 格式!');
+        this.$message.error("上传文件只能是 excel 格式!");
       }
       if (!isLt2M) {
-        this.$message.error('上传文件大小不能超过 5MB!');
+        this.$message.error("上传文件大小不能超过 5MB!");
       }
       return isExcel && isLt2M;
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 @import "~@/pages/customersSystem/addCustomers/less/form.less";
