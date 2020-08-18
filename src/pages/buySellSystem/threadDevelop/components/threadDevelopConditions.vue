@@ -117,6 +117,13 @@
             ></el-option>
           </el-select>
         </div>
+        <button
+          class="btn-primary-back btn-reset anchor-point"
+          @click="reset"
+          data-anchor="开发线索搜索框重置"
+        >
+          重置
+        </button>
       </div>
       <div>
         <el-radio-group
@@ -612,6 +619,24 @@ export default {
     this.mapGetPanelData();
   },
   methods: {
+    /**
+     * @example: 重置
+     */
+    reset() {
+      Object.assign(this.$parent.$data.form, this.$parent.$options.data().form);
+      Object.assign(this.$data.area, this.$options.data().area);
+      Object.assign(this.$data.room, this.$options.data().room);
+      this.buildOptData = {}; //当前楼盘选择数据
+      this.buildForList = []; //楼盘select数据
+      this.roomOptData = {}; //房间号选中数据
+      this.roomForList = []; //房间号select数据
+      this.towerOptData = {}; //栋座选中数据
+      this.towerForList = []; //栋座select数据
+      this.primarySchoolRadio = "不限"; //小学校radio
+      this.middleSchoolRadio = "不限"; //中学不限
+      this.bussinessDistrictRadio = "不限"; //商圈radio不限
+      this.typeList = "不限";
+    },
     /**
      * @example: 顶部Tab点击
      * @param {Object} item
@@ -1150,7 +1175,7 @@ export default {
       .btn-primary-back {
         margin-left: 0;
         height: @height35;
-        padding: 0 35px;
+        // padding: 0 35px;
       }
     }
   }

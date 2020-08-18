@@ -88,7 +88,7 @@ let log_socket = {
       }
     }
     content = identify + "@$@" + content;
-    console.log(content);
+    // console.log(content);
     this.socket.send(content);
   },
   sendAction(e, accountId) {

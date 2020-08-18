@@ -19,6 +19,9 @@ export default {
     threadDevelopConditions,
     threadDevelopTable
   },
+  mounted() {
+    document.title = "鑫伽系统-开发线索";
+  },
   activated() {
     this.$nextTick(() => {
       this.$refs.scrollTab.addEventListener("scroll", this.ListeningScroll);
