@@ -617,6 +617,7 @@ export default {
       // prettier-ignore
       min-width: 88PX;
       text-align: left;
+      font-size: @font14;
     }
   }
 }
@@ -714,7 +715,6 @@ export default {
       width: 100%;
       .el-tabs__content {
         flex: 1;
-        height: 0;
         overflow: auto;
       }
     }
