@@ -25,7 +25,9 @@
             <el-option
               v-for="item in buildForList"
               class="anchor-point"
-              :data-anchor="'资源库管理详情楼盘 => select => option:' + item.name"
+              :data-anchor="
+                '资源库管理详情楼盘 => select => option:' + item.name
+              "
               @click.native="log_socket.sendUserActionData"
               :key="item.value"
               :label="item.name"
@@ -51,7 +53,9 @@
             <el-option
               v-for="item in towerForList"
               class="anchor-point"
-              :data-anchor="'资源库管理详情栋座 => select => option:' + item.name"
+              :data-anchor="
+                '资源库管理详情栋座 => select => option:' + item.name
+              "
               @click.native="log_socket.sendUserActionData"
               :key="item.value"
               :label="item.name"
@@ -77,7 +81,9 @@
             <el-option
               v-for="item in roomForList"
               class="anchor-point"
-              :data-anchor="'资源库管理详情房号 => select => option:' + item.name"
+              :data-anchor="
+                '资源库管理详情房号 => select => option:' + item.name
+              "
               @click.native="log_socket.sendUserActionData"
               :key="item.value"
               :label="item.name"
@@ -123,14 +129,16 @@
                 class="anchor-point"
                 type="primary"
                 data-anchor="资源库管理转为在售 => click"
-                @click="toSale(
-                  scope.row.communityId,
-                  scope.row.buildingId,
-                  scope.row.id,
-                  scope.row.communityName,
-                  scope.row.comBuildingName,
-                  scope.row.roomNo
-                )"
+                @click="
+                  toSale(
+                    scope.row.communityId,
+                    scope.row.buildingId,
+                    scope.row.id,
+                    scope.row.communityName,
+                    scope.row.comBuildingName,
+                    scope.row.roomNo
+                  )
+                "
                 size="mini"
                 icon="el-icon-refresh"
                 >转为在售</el-button
@@ -155,7 +163,7 @@
   </div>
 </template>
 <script>
-import resourceButtons from './components/resourceButtons.vue'
+import resourceButtons from "./components/resourceButtons.vue";
 export default {
   components: {
     resourceButtons
@@ -188,9 +196,22 @@ export default {
           formart: item => {
             return (
               <div class="tab-com-item">
-                <div class="tab-house-title">{item.communityName}</div>
-                <div class="tab-houseno">{item.area?item.area:'暂无'}平&nbsp;/&nbsp;{item.face?item.face:'暂无'}&nbsp;/&nbsp;{item.rooms?item.rooms:0}-{item.hall?item.hall:0}-{item.toilet?item.toilet:0}-{item.balcony?item.balcony:0}</div>
-                <div class="tab-houseno">{item.buildYear?item.buildYear+'年竣工':'暂无'}&nbsp;/&nbsp;{item.buildType?item.buildType:'暂无'}&nbsp;/&nbsp;{item.buildingStructure?item.buildingStructure:'暂无'}</div>
+                <div class="tab-house-title">
+                  {item.communityName} {item.comBuildingName} {item.roomNo}
+                </div>
+                <div class="tab-houseno">
+                  {item.area ? item.area : "暂无"}平&nbsp;/&nbsp;
+                  {item.face ? item.face : "暂无"}&nbsp;/&nbsp;
+                  {item.rooms ? item.rooms : 0}-{item.hall ? item.hall : 0}-
+                  {item.toilet ? item.toilet : 0}-
+                  {item.balcony ? item.balcony : 0}
+                </div>
+                <div class="tab-houseno">
+                  {item.buildYear ? item.buildYear + "年竣工" : "暂无"}
+                  &nbsp;/&nbsp;{item.buildType ? item.buildType : "暂无"}
+                  &nbsp;/&nbsp;
+                  {item.buildingStructure ? item.buildingStructure : "暂无"}
+                </div>
               </div>
             );
           }
@@ -202,7 +223,10 @@ export default {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">学校划片：</div>
-                <div class="tab-houseno">{item.promarySchool?item.promarySchool:'暂无'}&nbsp;{item.middleSchool?item.middleSchool:'暂无'}</div>
+                <div class="tab-houseno">
+                  {item.promarySchool ? item.promarySchool : "暂无"}&nbsp;
+                  {item.middleSchool ? item.middleSchool : "暂无"}
+                </div>
               </div>
             );
           }
@@ -214,7 +238,11 @@ export default {
             return (
               <div class="tab-com-item">
                 <div class="tab-house-tip">历史跟单人：</div>
-                <div class="tab-houseno">{item.lastFollwers.length>0?item.lastFollwers.join(" "):'暂无'}</div>
+                <div class="tab-houseno">
+                  {item.lastFollwers.length > 0
+                    ? item.lastFollwers.join(" ")
+                    : "暂无"}
+                </div>
               </div>
             );
           }
@@ -225,9 +253,13 @@ export default {
           formart: item => {
             return (
               <div class="tab-com-item">
-                <div class="tab-houseno-tip">{item.saleStatusChangeTime?item.saleStatusChangeTime:'暂无'}</div>
+                <div class="tab-houseno-tip">
+                  {item.saleStatusChangeTime
+                    ? item.saleStatusChangeTime
+                    : "暂无"}
+                </div>
                 <div class="tab-houseno">
-                  {item.saleReamrk?item.saleReamrk:'暂无'}
+                  {item.saleRemark ? item.saleRemark : "暂无"}
                 </div>
               </div>
             );
@@ -243,9 +275,9 @@ export default {
       conditions: {
         comId: "", // 楼盘
         cbId: "", // 栋楼
-        bhId: "", // 房间号
+        bhId: "" // 房间号
       }
-    }
+    };
   },
   watch: {
     conditions: {
@@ -359,16 +391,16 @@ export default {
       this.conditions.bhId = "";
       this.roomOptData = {};
       this.roomForList = [];
-      this.pageJson.currentPage = 1
+      this.pageJson.currentPage = 1;
       this.queryDetailList();
       if (value) this.queryRoomNo();
-    },   
+    },
     /**
      * @example: 获取栋座远程数据
      * @param {String} name 栋座名称
      */
     queryRoomNo(name) {
-      this.towerLoading = true;   
+      this.towerLoading = true;
       this.$api
         .get({
           url: "/mateHouse/queryComBuilding",
@@ -467,7 +499,7 @@ export default {
               if (e.data.code == 200) {
                 this.$message({
                   message: e.data.message,
-                  type: 'success'
+                  type: "success"
                 });
                 this.queryDetailList();
               } else {
@@ -503,11 +535,11 @@ export default {
       });
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 @import "~@/pages/customersSystem/addCustomers/less/form.less";
-.page-detail-content{
+.page-detail-content {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -516,7 +548,7 @@ export default {
     display: flex;
     // justify-content: space-between;
     padding: 20px 15px;
-    border-bottom: 10px solid #EAEBED;
+    border-bottom: 10px solid #eaebed;
     /************ 选择楼盘 & 栋座 & 房号 ************/
     .cascader-content {
       display: inline-flex;
@@ -578,7 +610,7 @@ export default {
   .page-detail-panel {
     flex: 1;
     overflow: auto;
-    /deep/.el-table__body{
+    /deep/.el-table__body {
       tbody {
         td:first-child {
           .cell {
@@ -596,23 +628,23 @@ export default {
         font-weight: 600;
         color: black;
       }
-        .tab-house-tip {
-          margin-top: 30px;
-          margin-bottom: 10px;
-          font-size: @font14;
-          color: #bfbfbf;
-        }
-        .tab-houseno-tip {
-          margin-top: 30px;
-          margin-bottom: 10px;
-          font-size: @font14;
-        }
-        .tab-houseno {
-          margin-bottom: 10px;
-          font-size: @font14;
-        }
+      .tab-house-tip {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-size: @font14;
+        color: #bfbfbf;
+      }
+      .tab-houseno-tip {
+        margin-top: 30px;
+        margin-bottom: 10px;
+        font-size: @font14;
+      }
+      .tab-houseno {
+        margin-bottom: 10px;
+        font-size: @font14;
+      }
     }
-    .tab-page-floot{
+    .tab-page-floot {
       padding-top: 16px;
       padding-bottom: 14px;
       display: flex;

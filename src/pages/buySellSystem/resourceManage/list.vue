@@ -18,6 +18,7 @@
           <i class="el-icon-search"></i>
         </button>
       </div>
+      <span class="tips">说明：架构调整中，总户数数据显示有误，请悉知</span>
       <resource-buttons></resource-buttons>
     </div>
     <div class="page-list-panel">
@@ -28,10 +29,10 @@
           :key="item.id"
           @click="navigateToDetail(item.communityId)"
         >
-          <div :title="item.communityName">{{item.communityName}}</div>
-          <div>总户数：{{item.countRoom}}</div>
-          <div>无号码：{{item.noTelNum}}</div>
-          <div>渗透率：{{item.permeability}}</div>
+          <div :title="item.communityName">{{ item.communityName }}</div>
+          <div>总户数：{{ item.countRoom }}</div>
+          <div>无号码：{{ item.noTelNum }}</div>
+          <div>渗透率：{{ item.permeability }}</div>
         </div>
       </div>
       <el-pagination
@@ -92,10 +93,10 @@ export default {
       var that = this;
       that.loading = true;
       let params = {
-          communityName: this.houseName,
-          page: that.pageJson.currentPage,
-          limit: that.pageJson.pageSize
-      }
+        communityName: this.houseName,
+        page: that.pageJson.currentPage,
+        limit: that.pageJson.pageSize
+      };
       this.$api
         .post({
           url: "/houseResource/communityPermeability",
@@ -225,6 +226,11 @@ export default {
     .el-pagination {
       text-align: center;
     }
+  }
+  .tips {
+    color: red;
+    padding-top: 20px;
+    margin-left: 50px;
   }
 }
 </style>
