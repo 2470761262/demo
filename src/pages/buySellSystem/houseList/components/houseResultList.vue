@@ -344,8 +344,8 @@
     .search-content-item {
       display: flex;
       // prettier-ignore
-      margin-top: 20PX;
-      align-items: center;
+      margin-top: 15PX;
+      align-items: flex-start;
       padding: 0 15px;
 
       &:first-child {
@@ -363,7 +363,7 @@
       .search-item-right {
         display: flex;
         align-items: center;
-
+        flex-wrap: wrap;
         /deep/ .el-radio-group {
           white-space: nowrap;
         }
@@ -414,7 +414,8 @@
         }
 
         /deep/ .el-radio {
-          margin-bottom: 5px;
+          // prettier-ignore
+          margin-bottom: 10PX;
 
           &:first-child {
             margin-right: 25px;
@@ -1861,12 +1862,36 @@ export default {
       }
     },
     /**
-     * @example: 价钱范围,面积范围,面积范围,统一提交输入框的数据到form
+     * @example: 价钱范围,面积范围,楼层范围,统一提交输入框的数据到form
      * @param { string } field  等于当前组件存放数据的父级对象名称
      * @param { string } min  等于form注入里的min名称 form 与 field min 对应
      * @param { string } max  等于form注入里的max名称 form 与 field max 对应
      */
     submitFormBtn(field, min, max) {
+      if (
+        (field == "area" || field == "price") &&
+        !(
+          /^0\.\d+$|^[1-9]+(\.\d+|\d)?$/.test(this[field][min]) &&
+          /^0\.\d+$|^[1-9]+(\.\d+|\d)?$/.test(this[field][max])
+        )
+      ) {
+        this.$message.warning("请输入正数");
+        return;
+      }
+      if(
+        field == "floor" &&
+        !(
+          /^(-)?[1-9]?[0-9]*$/.test(this[field][min]) &&
+          /^(-)?[1-9]?[0-9]*$/.test(this[field][max])
+        )
+      ) {
+        this.$message.warning("请输入整数");
+        return;
+      }
+      if (parseFloat(this[field][min]) >= parseFloat(this[field][max])) {
+        this.$message.warning("最大值应该大于最小值");
+        return;
+      }
       if (this[field][min] === "" && this[field][max] === "") return;
 
       this[field].radioCheck = ""; //
@@ -1940,15 +1965,15 @@ export default {
     roomSubmit() {
       if (
         !(
-          /^(-)?[1-9][0-9]*$/.test(this.room.minRoom) ||
-          /^(-)?[1-9][0-9]*$/.test(this.room.maxRoom)
+          /^[1-9][0-9]*$/.test(this.room.minRoom) &&
+          /^[1-9][0-9]*$/.test(this.room.maxRoom)
         )
       ) {
-        this.$message.warning("请输入正负整数");
+        this.$message.warning("请输入正整数");
         return;
       }
-      if (parseInt(this.room.minRoom) > parseInt(this.room.maxRoom)) {
-        this.$message.warning("楼层最小值应该小于楼层最大值");
+      if (parseInt(this.room.minRoom) >= parseInt(this.room.maxRoom)) {
+        this.$message.warning("房型最大值应该大于房型最小值");
         return;
       }
       let result = [];

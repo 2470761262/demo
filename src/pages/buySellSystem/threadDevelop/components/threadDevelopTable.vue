@@ -714,7 +714,6 @@ export default {
       width: 100%;
       .el-tabs__content {
         flex: 1;
-        height: 0;
         overflow: auto;
       }
     }
