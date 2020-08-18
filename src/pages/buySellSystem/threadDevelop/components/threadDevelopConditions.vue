@@ -131,8 +131,12 @@
           size="small"
           @change="isMyRecordChange"
         >
-          <el-radio-button class="self-btn" :label="0">开发线索</el-radio-button>
-          <el-radio-button class="self-btn" :label="1">我的记录</el-radio-button>
+          <el-radio-button class="self-btn" :label="0"
+            >开发线索</el-radio-button
+          >
+          <el-radio-button class="self-btn" :label="1"
+            >我的记录</el-radio-button
+          >
         </el-radio-group>
       </div>
     </div>
@@ -636,6 +640,8 @@ export default {
       this.middleSchoolRadio = "不限"; //中学不限
       this.bussinessDistrictRadio = "不限"; //商圈radio不限
       this.typeList = "不限";
+      this.primarySchool = []; //小学select
+      this.middleSchool = []; //中学Select
     },
     /**
      * @example: 顶部Tab点击
@@ -913,7 +919,10 @@ export default {
         this.$message.warning("请输入正数");
         return;
       }
-      console.log(parseFloat(this[field][min]) >= parseFloat(this[field][max]),"============")
+      console.log(
+        parseFloat(this[field][min]) >= parseFloat(this[field][max]),
+        "============"
+      );
       if (parseFloat(this[field][min]) >= parseFloat(this[field][max])) {
         this.$message.warning("面积最大值应该大于最小值");
         return;
@@ -1180,7 +1189,7 @@ export default {
       }
     }
     /deep/.self-btn {
-      .el-radio-button__inner{
+      .el-radio-button__inner {
         // prettier-ignore
         height: 28PX;
         padding: 0 15px;

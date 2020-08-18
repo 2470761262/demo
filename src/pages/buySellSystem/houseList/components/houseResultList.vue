@@ -630,11 +630,11 @@
 }
 </style>
 <template>
-<div>
-  <div class="page-result-content">
-    <div class="page-posi-sticky filex-content">
-      <!-- 房屋类型 -->
-      <!-- <div class="head-nav-type">
+  <div>
+    <div class="page-result-content">
+      <div class="page-posi-sticky filex-content">
+        <!-- 房屋类型 -->
+        <!-- <div class="head-nav-type">
               <div
                 class="nav-type-item anchor-point"
                 :class="{ active: index == 0 }"
@@ -646,119 +646,119 @@
                 {{ item.title }}
               </div>
             </div> -->
-      <navHeader></navHeader>
-      <!-- 头部按钮, 搜索 -->
-      <div class="page-result-head">
-        <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
-        <div class="cascader-content" v-show="searchPanelChange">
-          <div class="cascader-content-build">
-            <!-- 楼栋 -->
-            <el-select
-              v-model="buildOptData"
-              placeholder="请输入楼盘名称"
-              class="input-content input_210 anchor-point"
-              clearable
-              filterable
-              remote
-              popper-class="options-custom-item anchor-point"
-              data-anchor="首页楼盘 => select"
-              @click.native="log_socket.sendUserActionData"
-              @focus="remoteBuildInput"
-              @change="remoteBuildChange"
-              :remote-method="buildRemoteMethod"
-              :loading="buildLoading"
-              value-key="value"
-            >
-              <el-option
-                v-for="item in buildForList"
-                class="anchor-point"
-                :data-anchor="'首页列表楼盘 => select => option:' + item.name"
+        <navHeader></navHeader>
+        <!-- 头部按钮, 搜索 -->
+        <div class="page-result-head">
+          <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
+          <div class="cascader-content" v-show="searchPanelChange">
+            <div class="cascader-content-build">
+              <!-- 楼栋 -->
+              <el-select
+                v-model="buildOptData"
+                placeholder="请输入楼盘名称"
+                class="input-content input_210 anchor-point"
+                clearable
+                filterable
+                remote
+                popper-class="options-custom-item anchor-point"
+                data-anchor="首页楼盘 => select"
                 @click.native="log_socket.sendUserActionData"
-                :key="item.value"
-                :label="item.name"
-                :value="item"
+                @focus="remoteBuildInput"
+                @change="remoteBuildChange"
+                :remote-method="buildRemoteMethod"
+                :loading="buildLoading"
+                value-key="value"
               >
-              </el-option>
-            </el-select>
-            <!-- 栋座 -->
-            <el-select
-              v-model="towerOptData"
-              placeholder="请输入栋座"
-              clearable
-              filterable
-              class="input-content input_175 anchor-point"
-              popper-class="options-custom-item anchor-point"
-              data-anchor="首页栋座 => select"
-              @click.native="log_socket.sendUserActionData"
-              value-key="value"
-              remote
-              :remote-method="queryRoomNo"
-              @change="remoteRoomNoChange"
-              :loading="towerLoading"
-            >
-              <el-option
-                v-for="item in towerForList"
-                class="anchor-point"
-                :data-anchor="'首页列表栋座 => select => option:' + item.name"
+                <el-option
+                  v-for="item in buildForList"
+                  class="anchor-point"
+                  :data-anchor="'首页列表楼盘 => select => option:' + item.name"
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+              <!-- 栋座 -->
+              <el-select
+                v-model="towerOptData"
+                placeholder="请输入栋座"
+                clearable
+                filterable
+                class="input-content input_175 anchor-point"
+                popper-class="options-custom-item anchor-point"
+                data-anchor="首页栋座 => select"
                 @click.native="log_socket.sendUserActionData"
-                :key="item.value"
-                :label="item.name"
-                :value="item"
+                value-key="value"
+                remote
+                :remote-method="queryRoomNo"
+                @change="remoteRoomNoChange"
+                :loading="towerLoading"
               >
-              </el-option>
-            </el-select>
-            <!-- 房间号 -->
-            <el-select
-              v-model="roomOptData"
-              placeholder="请输入房号"
-              clearable
-              filterable
-              popper-class="options-custom-item anchor-point"
-              class="input-content input_120 anchor-point"
-              data-anchor="首页房号 => select"
-              @click.native="log_socket.sendUserActionData"
-              remote
-              :remote-method="queryRoomData"
-              :loading="roomLoading"
-              value-key="value"
-              @change="queryRoomDataChange"
-            >
-              <el-option
-                v-for="item in roomForList"
-                class="anchor-point"
-                :data-anchor="'首页列表房号 => select => option:' + item.name"
+                <el-option
+                  v-for="item in towerForList"
+                  class="anchor-point"
+                  :data-anchor="'首页列表栋座 => select => option:' + item.name"
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+              <!-- 房间号 -->
+              <el-select
+                v-model="roomOptData"
+                placeholder="请输入房号"
+                clearable
+                filterable
+                popper-class="options-custom-item anchor-point"
+                class="input-content input_120 anchor-point"
+                data-anchor="首页房号 => select"
                 @click.native="log_socket.sendUserActionData"
-                :key="item.value"
-                :label="item.name"
-                :value="item"
+                remote
+                :remote-method="queryRoomData"
+                :loading="roomLoading"
+                value-key="value"
+                @change="queryRoomDataChange"
               >
-              </el-option>
-            </el-select>
-          </div>
+                <el-option
+                  v-for="item in roomForList"
+                  class="anchor-point"
+                  :data-anchor="'首页列表房号 => select => option:' + item.name"
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item"
+                >
+                </el-option>
+              </el-select>
+            </div>
 
-          <el-input
-            type="text"
-            v-model="agentPerName"
-            placeholder="跟单人姓名"
-            class="input-content input_102 anchor-point"
-            :data-anchor="'首页搜索 跟单人姓名:' + agentPerName"
-          />
-          <button
-            class="btn-primary-back anchor-point"
-            @click="handleAgentPerName"
-            :data-anchor="'首页跟单人搜索{' + agentPerName + '}'"
-          >
-            搜索
-          </button>
-          <button
-            class="btn-primary-back btn-reset anchor-point"
-            @click="reset"
-            data-anchor="首页搜索框重置"
-          >
-            重置
-          </button>
-        </div>
-        <!-- <div class="head-content-input">
+            <el-input
+              type="text"
+              v-model="agentPerName"
+              placeholder="跟单人姓名"
+              class="input-content input_102 anchor-point"
+              :data-anchor="'首页搜索 跟单人姓名:' + agentPerName"
+            />
+            <button
+              class="btn-primary-back anchor-point"
+              @click="handleAgentPerName"
+              :data-anchor="'首页跟单人搜索{' + agentPerName + '}'"
+            >
+              搜索
+            </button>
+            <button
+              class="btn-primary-back btn-reset anchor-point"
+              @click="reset"
+              data-anchor="首页搜索框重置"
+            >
+              重置
+            </button>
+          </div>
+          <!-- <div class="head-content-input">
                   <input
                     type="text"
                     placeholder="请输入房源编号,楼盘名称"
@@ -776,87 +776,87 @@
                   </button>
                 </div> -->
 
-        <div class="head-fun-right">
-          <el-badge value="新">
+          <div class="head-fun-right">
+            <el-badge value="新">
+              <button
+                class="btn-primary anchor-point"
+                data-anchor="首页开发线索"
+                @click="navToPath('/buySellSystem/threadDevelop')"
+              >
+                <i class="iconxiansuo iconfont"></i>
+                开发线索
+              </button>
+            </el-badge>
+            <el-badge value="即将下线">
+              <button
+                class="btn-primary anchor-point"
+                data-anchor="首页管理入口"
+                @click="navToPath('/buySellSystem/concernCommunity')"
+              >
+                <i class=" iconjichuguanli1 iconfont"></i>
+                管理入口
+              </button>
+            </el-badge>
             <button
               class="btn-primary anchor-point"
-              data-anchor="首页开发线索"
-              @click="navToPath('/buySellSystem/threadDevelop')"
+              data-anchor="首页我的房源"
+              @click="navToPath('/buySellSystem/myHouse')"
             >
-              <i class="iconxiansuo iconfont"></i>
-              开发线索
+              <i class="icondaohang_wodefangyuan1 iconfont"></i>
+              我的房源
             </button>
-          </el-badge>
-          <el-badge value="即将下线">
             <button
-              class="btn-primary anchor-point"
-              data-anchor="首页管理入口"
-              @click="navToPath('/buySellSystem/concernCommunity')"
+              class="btn-primary house-back anchor-point"
+              data-anchor="首页录入房源"
+              @click="navToPath('/buySellSystem/addHouse')"
             >
-              <i class=" iconjichuguanli1 iconfont"></i>
-              管理入口
+              <i class=" iconluru iconfont"></i>
+              录入房源
             </button>
-          </el-badge>
-          <button
-            class="btn-primary anchor-point"
-            data-anchor="首页我的房源"
-            @click="navToPath('/buySellSystem/myHouse')"
-          >
-            <i class="icondaohang_wodefangyuan1 iconfont"></i>
-            我的房源
-          </button>
-          <button
-            class="btn-primary house-back anchor-point"
-            data-anchor="首页录入房源"
-            @click="navToPath('/buySellSystem/addHouse')"
-          >
-            <i class=" iconluru iconfont"></i>
-            录入房源
-          </button>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div> -->
+      <!-- <div class="placeholder-filex" :style="{ height: isFixedHeight }"></div> -->
 
-    <!-- nav类型切换 -->
-    <div class="tab-content">
-      <div class="tab-content-nav">
-        <el-badge
-          :value="item.value === 2 ? '新' : ''"
-          v-for="(item, index) in typeList"
-          :key="index"
-        >
-          <div
-            class="tab-content-item anchor-point"
-            :class="{ active: typeActiveIndex == index }"
-            :data-anchor="'首页找房:' + item.label"
-            @click="changeNavTypeIndex(index)"
+      <!-- nav类型切换 -->
+      <div class="tab-content">
+        <div class="tab-content-nav">
+          <el-badge
+            :value="item.value === 2 ? '新' : ''"
+            v-for="(item, index) in typeList"
+            :key="index"
           >
-            {{ item.label }}
-          </div>
-        </el-badge>
+            <div
+              class="tab-content-item anchor-point"
+              :class="{ active: typeActiveIndex == index }"
+              :data-anchor="'首页找房:' + item.label"
+              @click="changeNavTypeIndex(index)"
+            >
+              {{ item.label }}
+            </div>
+          </el-badge>
+        </div>
       </div>
-    </div>
-    <div class="search-content no-frist" v-show="panelChange">
-      <div class="head-content-input">
-        <input
-          type="text"
-          placeholder="请输入房源编号,楼盘名称"
-          data-anchor="首页房源编号,楼盘名称输入框"
-          class="content-input anchor-point"
-          v-model="houseNoOrName"
-          @keydown.enter="handleHouseNoOrName"
-        />
-        <button
-          class="inquire-content anchor-point"
-          @click="handleHouseNoOrName"
-          :data-anchor="'首页房源编号,楼盘名称搜索{' + houseNoOrName + '}'"
-        >
-          <i class="el-icon-search"></i>
-        </button>
-      </div>
-      <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
-      <!-- <div class="cascader-content" v-show="searchPanelChange">
+      <div class="search-content no-frist" v-show="panelChange">
+        <div class="head-content-input">
+          <input
+            type="text"
+            placeholder="请输入房源编号,楼盘名称"
+            data-anchor="首页房源编号,楼盘名称输入框"
+            class="content-input anchor-point"
+            v-model="houseNoOrName"
+            @keydown.enter="handleHouseNoOrName"
+          />
+          <button
+            class="inquire-content anchor-point"
+            @click="handleHouseNoOrName"
+            :data-anchor="'首页房源编号,楼盘名称搜索{' + houseNoOrName + '}'"
+          >
+            <i class="el-icon-search"></i>
+          </button>
+        </div>
+        <!-- 选择楼盘 & 楼栋 & 房间号 & 跟单人姓名 -->
+        <!-- <div class="cascader-content" v-show="searchPanelChange">
               <div class="cascader-content-build">
 
                 <el-select
@@ -957,564 +957,566 @@
                 搜索
               </button>
             </div> -->
-      <!-- 范围 -->
-      <div class="search-content-item" v-show="searchPanelChange">
-        <div class="search-item-title">范围</div>
-        <div class="search-item-right">
-          <el-radio-group v-model="form.plate" size="small">
+        <!-- 范围 -->
+        <div class="search-content-item" v-show="searchPanelChange">
+          <div class="search-item-title">范围</div>
+          <div class="search-item-right">
+            <el-radio-group v-model="form.plate" size="small">
+              <el-radio
+                class="anchor-point"
+                data-anchor="首页选项 范围:不限"
+                label=""
+                border
+                >不限
+              </el-radio>
+              <el-radio
+                class="anchor-point"
+                data-anchor="首页选项 范围:跟单房源"
+                label="0"
+                border
+                >跟单房源
+              </el-radio>
+              <el-radio
+                class="anchor-point"
+                data-anchor="首页选项 范围:店公共盘"
+                label="1"
+                border
+                >店公共盘
+              </el-radio>
+              <el-radio
+                class="anchor-point"
+                data-anchor="首页选项 范围:公司公盘"
+                label="4"
+                border
+                >公司公盘
+              </el-radio>
+            </el-radio-group>
+          </div>
+        </div>
+        <!-- 类型 -->
+        <div class="search-content-item" v-show="searchPanelChange">
+          <div class="search-item-title">类型</div>
+          <div class="search-item-right">
             <el-radio
+              label="不限"
               class="anchor-point"
-              data-anchor="首页选项 范围:不限"
-              label=""
+              data-anchor="首页选项 类型:不限"
               border
+              v-model="typeRadio"
+              @change="radioChange('typeList')"
               >不限
             </el-radio>
-            <el-radio
-              class="anchor-point"
-              data-anchor="首页选项 范围:跟单房源"
-              label="0"
-              border
-              >跟单房源
-            </el-radio>
-            <el-radio
-              class="anchor-point"
-              data-anchor="首页选项 范围:店公共盘"
-              label="1"
-              border
-              >店公共盘
-            </el-radio>
-            <el-radio
-              class="anchor-point"
-              data-anchor="首页选项 范围:公司公盘"
-              label="4"
-              border
-              >公司公盘
-            </el-radio>
-          </el-radio-group>
-        </div>
-      </div>
-      <!-- 类型 -->
-      <div class="search-content-item" v-show="searchPanelChange">
-        <div class="search-item-title">类型</div>
-        <div class="search-item-right">
-          <el-radio
-            label="不限"
-            class="anchor-point"
-            data-anchor="首页选项 类型:不限"
-            border
-            v-model="typeRadio"
-            @change="radioChange('typeList')"
-            >不限
-          </el-radio>
-          <el-checkbox-group
-            v-model="form.typeList"
-            @change="formCheckBoxChange('typeRadio')"
-          >
-            <el-checkbox
-              label="1"
-              class="anchor-point"
-              data-anchor="首页选项 类型:我的相关"
-              >我的相关
-            </el-checkbox>
-            <el-checkbox
-              label="2"
-              class="anchor-point"
-              data-anchor="首页选项 类型:关注房源"
-              >关注房源
-            </el-checkbox>
-            <el-checkbox
-              label="3"
-              class="anchor-point"
-              data-anchor="首页选项 类型:3天新上房源"
-              >3天新上房源
-            </el-checkbox>
-            <el-checkbox
-              label="4"
-              class="anchor-point"
-              data-anchor="首页选项 类型:产权人"
-              >产权人
-            </el-checkbox>
-            <el-checkbox
-              label="5"
-              class="anchor-point"
-              data-anchor="首页选项 类型:实际控制人"
-              >实际控制人
-            </el-checkbox>
-            <el-checkbox
-              label="6"
-              class="anchor-point"
-              data-anchor="首页选项 类型:投资房源"
-              >投资房源
-            </el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </div>
-      <!-- 商圈 -->
-      <div class="search-content-item" v-if="RegionList.length != 0">
-        <div class="search-item-title">商圈</div>
-        <div class="search-item-right">
-          <el-radio
-            label="不限"
-            class="anchor-point"
-            data-anchor="首页选项 商圈:不限"
-            border
-            v-model="bussinessDistrictRadio"
-            @change="radioChange('bussinessDistrictList')"
-            >不限
-          </el-radio>
-          <el-checkbox-group
-            v-model="form.bussinessDistrictList"
-            @change="formCheckBoxChange('bussinessDistrictRadio')"
-          >
-            <el-checkbox
-              :label="item.name"
-              class="anchor-point"
-              :data-anchor="'首页选项 商圈:' + item.name"
-              v-for="item in RegionList"
-              :key="item.value"
-            ></el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </div>
-      <!-- 价钱 -->
-      <div class="search-content-item" v-show="searchPanelChange">
-        <div class="search-item-title">价格</div>
-        <div class="search-item-right ">
-          <div class="data-content">
-            <el-radio-group
-              v-model="price.radioCheck"
-              size="small"
-              @change="
-                packCheckChange(
-                  'priceList',
-                  'minPrice',
-                  'maxPrice',
-                  'price',
-                  $event,
-                  true,
-                  'name'
-                )
-              "
+            <el-checkbox-group
+              v-model="form.typeList"
+              @change="formCheckBoxChange('typeRadio')"
             >
-              <el-radio
+              <el-checkbox
+                label="1"
+                class="anchor-point"
+                data-anchor="首页选项 类型:我的相关"
+                >我的相关
+              </el-checkbox>
+              <el-checkbox
+                label="2"
+                class="anchor-point"
+                data-anchor="首页选项 类型:关注房源"
+                >关注房源
+              </el-checkbox>
+              <el-checkbox
+                label="3"
+                class="anchor-point"
+                data-anchor="首页选项 类型:3天新上房源"
+                >3天新上房源
+              </el-checkbox>
+              <el-checkbox
+                label="4"
+                class="anchor-point"
+                data-anchor="首页选项 类型:产权人"
+                >产权人
+              </el-checkbox>
+              <el-checkbox
+                label="5"
+                class="anchor-point"
+                data-anchor="首页选项 类型:实际控制人"
+                >实际控制人
+              </el-checkbox>
+              <el-checkbox
+                label="6"
+                class="anchor-point"
+                data-anchor="首页选项 类型:投资房源"
+                >投资房源
+              </el-checkbox>
+            </el-checkbox-group>
+          </div>
+        </div>
+        <!-- 商圈 -->
+        <div class="search-content-item" v-if="RegionList.length != 0">
+          <div class="search-item-title">商圈</div>
+          <div class="search-item-right">
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              data-anchor="首页选项 商圈:不限"
+              border
+              v-model="bussinessDistrictRadio"
+              @change="radioChange('bussinessDistrictList')"
+              >不限
+            </el-radio>
+            <el-checkbox-group
+              v-model="form.bussinessDistrictList"
+              @change="formCheckBoxChange('bussinessDistrictRadio')"
+            >
+              <el-checkbox
                 :label="item.name"
                 class="anchor-point"
-                :data-anchor="'首页选项 价格:' + item.name"
-                border
-                v-for="item in priceList"
-                :key="item.name"
-                >{{ item.name }}
-              </el-radio>
-            </el-radio-group>
+                :data-anchor="'首页选项 商圈:' + item.name"
+                v-for="item in RegionList"
+                :key="item.value"
+              ></el-checkbox>
+            </el-checkbox-group>
           </div>
-          <div class="input-group">
-            <div class="input-group-split">
-              <el-input
-                placeholder="最小值"
-                :data-anchor="'首页选项 价格最小值:' + price.minPrice"
-                class="input-content is-suffix anchor-point"
-                v-model="price.minPrice"
-              >
-                <template v-slot:suffix>
-                  <i class="suffix-tips">万元</i>
-                </template>
-              </el-input>
-              <i class="input-split"></i>
-              <el-input
-                placeholder="最大值"
-                :data-anchor="'首页选项 价格最大值:' + price.maxPrice"
-                class="input-content is-suffix anchor-point"
-                v-model="price.maxPrice"
-              >
-                <template v-slot:suffix>
-                  <i class="suffix-tips">万元</i>
-                </template>
-              </el-input>
-            </div>
-          </div>
-          <button
-            class="btn-primary-back anchor-point"
-            :data-anchor="
-              '首页选项 价格:确定{' +
-                (price.minPrice && price.maxPrice
-                  ? price.minPrice + '~' + price.maxPrice
-                  : price.radioCheck) +
-                '}'
-            "
-            @click="submitFormBtn('price', 'minPrice', 'maxPrice')"
-          >
-            确定
-          </button>
         </div>
-      </div>
-      <!-- 面积 -->
-      <div class="search-content-item">
-        <div class="search-item-title">面积</div>
-        <div class="search-item-right ">
-          <div class="data-content">
-            <el-radio-group
-              v-model="area.radioCheck"
-              size="small"
-              @change="
-                packCheckChange(
-                  'areaList',
-                  'minInArea',
-                  'maxInArea',
-                  'area',
-                  $event,
-                  true,
-                  'name'
-                )
+        <!-- 价钱 -->
+        <div class="search-content-item" v-show="searchPanelChange">
+          <div class="search-item-title">价格</div>
+          <div class="search-item-right ">
+            <div class="data-content">
+              <el-radio-group
+                v-model="price.radioCheck"
+                size="small"
+                @change="
+                  packCheckChange(
+                    'priceList',
+                    'minPrice',
+                    'maxPrice',
+                    'price',
+                    $event,
+                    true,
+                    'name'
+                  )
+                "
+              >
+                <el-radio
+                  :label="item.name"
+                  class="anchor-point"
+                  :data-anchor="'首页选项 价格:' + item.name"
+                  border
+                  v-for="item in priceList"
+                  :key="item.name"
+                  >{{ item.name }}
+                </el-radio>
+              </el-radio-group>
+            </div>
+            <div class="input-group">
+              <div class="input-group-split">
+                <el-input
+                  placeholder="最小值"
+                  :data-anchor="'首页选项 价格最小值:' + price.minPrice"
+                  class="input-content is-suffix anchor-point"
+                  v-model="price.minPrice"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">万元</i>
+                  </template>
+                </el-input>
+                <i class="input-split"></i>
+                <el-input
+                  placeholder="最大值"
+                  :data-anchor="'首页选项 价格最大值:' + price.maxPrice"
+                  class="input-content is-suffix anchor-point"
+                  v-model="price.maxPrice"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">万元</i>
+                  </template>
+                </el-input>
+              </div>
+            </div>
+            <button
+              class="btn-primary-back anchor-point"
+              :data-anchor="
+                '首页选项 价格:确定{' +
+                  (price.minPrice && price.maxPrice
+                    ? price.minPrice + '~' + price.maxPrice
+                    : price.radioCheck) +
+                  '}'
               "
+              @click="submitFormBtn('price', 'minPrice', 'maxPrice')"
             >
-              <el-radio
+              确定
+            </button>
+          </div>
+        </div>
+        <!-- 面积 -->
+        <div class="search-content-item">
+          <div class="search-item-title">面积</div>
+          <div class="search-item-right ">
+            <div class="data-content">
+              <el-radio-group
+                v-model="area.radioCheck"
+                size="small"
+                @change="
+                  packCheckChange(
+                    'areaList',
+                    'minInArea',
+                    'maxInArea',
+                    'area',
+                    $event,
+                    true,
+                    'name'
+                  )
+                "
+              >
+                <el-radio
+                  :label="item.name"
+                  class="anchor-point"
+                  :data-anchor="'首页选项 面积:' + item.name"
+                  border
+                  v-for="item in areaList"
+                  :key="item.name"
+                  >{{ item.name }}
+                </el-radio>
+              </el-radio-group>
+            </div>
+            <div class="input-group">
+              <div class="input-group-split">
+                <el-input
+                  placeholder="最小值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 面积最小值:' + area.minInArea"
+                  v-model="area.minInArea"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">㎡</i>
+                  </template>
+                </el-input>
+                <i class="input-split"></i>
+                <el-input
+                  placeholder="最大值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 面积最大值:' + area.maxInArea"
+                  v-model="area.maxInArea"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">㎡</i>
+                  </template>
+                </el-input>
+              </div>
+            </div>
+            <button
+              class="btn-primary-back anchor-point"
+              :data-anchor="
+                '首页选项 面积:确定{' +
+                  (area.minInArea && area.maxInArea
+                    ? area.minInArea + '~' + area.maxInArea
+                    : area.radioCheck) +
+                  '}'
+              "
+              @click="submitFormBtn('area', 'minInArea', 'maxInArea')"
+            >
+              确定
+            </button>
+          </div>
+        </div>
+        <!-- 房型 -->
+        <div class="search-content-item" v-if="RoomsList.length != 0">
+          <div class="search-item-title">房型</div>
+          <div class="search-item-right ">
+            <div class="data-content">
+              <el-radio-group
+                v-model="room.value"
+                size="small"
+                @change="roomChange"
+              >
+                <el-radio label="不限" border>不限</el-radio>
+                <el-radio
+                  :label="item.value"
+                  class="anchor-point"
+                  :data-anchor="'首页选项 房型:' + item.name"
+                  border
+                  v-for="(item, index) in RoomsList"
+                  :key="index"
+                  >{{ item.name }}
+                </el-radio>
+              </el-radio-group>
+            </div>
+            <div class="input-group">
+              <div class="input-group-split">
+                <el-input
+                  placeholder="最小值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 房型最小值:' + room.minRoom"
+                  v-model="room.minRoom"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">房</i>
+                  </template>
+                </el-input>
+                <i class="input-split"></i>
+                <el-input
+                  placeholder="最大值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 房型最大值:' + room.maxRoom"
+                  v-model="room.maxRoom"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">房</i>
+                  </template>
+                </el-input>
+              </div>
+            </div>
+            <button
+              class="btn-primary-back anchor-point"
+              :data-anchor="
+                '首页选项 房型:确定{' +
+                  (room.minRoom && room.maxRoom
+                    ? room.minRoom + '~' + room.maxRoom
+                    : room.value) +
+                  '}'
+              "
+              @click="roomSubmit"
+            >
+              确定
+            </button>
+          </div>
+        </div>
+        <!-- 楼层 -->
+        <div class="search-content-item">
+          <div class="search-item-title">楼层</div>
+          <div class="search-item-right ">
+            <div class="data-content">
+              <el-radio-group
+                v-model="floor.radioCheck"
+                size="small"
+                @change="floorChange"
+              >
+                <el-radio
+                  :label="item.title"
+                  class="anchor-point"
+                  :data-anchor="'首页选项 楼层:' + item.title"
+                  border
+                  v-for="item in floorlist"
+                  :key="item.title"
+                  >{{ item.title }}
+                </el-radio>
+              </el-radio-group>
+            </div>
+            <div class="input-group">
+              <div class="input-group-split">
+                <el-input
+                  placeholder="最小值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 楼层最小值:' + floor.minFloor"
+                  v-model="floor.minFloor"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">层</i>
+                  </template>
+                </el-input>
+                <i class="input-split"></i>
+                <el-input
+                  placeholder="最大值"
+                  class="input-content is-suffix anchor-point"
+                  :data-anchor="'首页选项 楼层最大值:' + floor.maxFloor"
+                  v-model="floor.maxFloor"
+                >
+                  <template v-slot:suffix>
+                    <i class="suffix-tips">层</i>
+                  </template>
+                </el-input>
+              </div>
+            </div>
+            <button
+              class="btn-primary-back anchor-point"
+              :data-anchor="
+                '首页选项 楼层:确定{' +
+                  (floor.minFloor && floor.maxFloor
+                    ? floor.minFloor + '~' + floor.maxFloor
+                    : floor.radioCheck) +
+                  '}'
+              "
+              @click="floorBtn"
+            >
+              确定
+            </button>
+          </div>
+        </div>
+        <!-- 朝向 -->
+        <div class="search-content-item" v-if="faceList.length != 0">
+          <div class="search-item-title">朝向</div>
+          <div class="search-item-right">
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              data-anchor="首页选项 朝向:不限"
+              border
+              v-model="faceRadio"
+              @change="radioChange('faceList')"
+              >不限
+            </el-radio>
+            <el-checkbox-group
+              v-model="form.faceList"
+              @change="formCheckBoxChange('faceRadio')"
+            >
+              <el-checkbox
                 :label="item.name"
                 class="anchor-point"
-                :data-anchor="'首页选项 面积:' + item.name"
-                border
-                v-for="item in areaList"
-                :key="item.name"
-                >{{ item.name }}
-              </el-radio>
-            </el-radio-group>
+                :data-anchor="'首页选项 朝向:' + item.name"
+                v-for="item in faceList"
+                :key="item.value"
+              ></el-checkbox>
+            </el-checkbox-group>
           </div>
-          <div class="input-group">
-            <div class="input-group-split">
-              <el-input
-                placeholder="最小值"
-                class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 面积最小值:' + area.minInArea"
-                v-model="area.minInArea"
-              >
-                <template v-slot:suffix>
-                  <i class="suffix-tips">㎡</i>
-                </template>
-              </el-input>
-              <i class="input-split"></i>
-              <el-input
-                placeholder="最大值"
-                class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 面积最大值:' + area.maxInArea"
-                v-model="area.maxInArea"
-              >
-                <template v-slot:suffix>
-                  <i class="suffix-tips">㎡</i>
-                </template>
-              </el-input>
-            </div>
-          </div>
-          <button
-            class="btn-primary-back anchor-point"
-            :data-anchor="
-              '首页选项 面积:确定{' +
-                (area.minInArea && area.maxInArea
-                  ? area.minInArea + '~' + area.maxInArea
-                  : area.radioCheck) +
-                '}'
-            "
-            @click="submitFormBtn('area', 'minInArea', 'maxInArea')"
-          >
-            确定
-          </button>
         </div>
-      </div>
-      <!-- 房型 -->
-      <div class="search-content-item" v-if="RoomsList.length != 0">
-        <div class="search-item-title">房型</div>
-        <div class="search-item-right ">
-          <div class="data-content">
-            <el-radio-group
-              v-model="room.value"
-              size="small"
-              @change="roomChange"
+        <!-- 装修 -->
+        <div
+          class="search-content-item"
+          v-if="RenovationList.length != 0"
+          v-show="searchPanelChange"
+        >
+          <div class="search-item-title">装修</div>
+          <div class="search-item-right">
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              data-anchor="首页选项 装修:不限"
+              border
+              v-model="renovationRadio"
+              @change="radioChange('decorationList')"
+              >不限
+            </el-radio>
+            <el-checkbox-group
+              v-model="form.decorationList"
+              @change="formCheckBoxChange('renovationRadio')"
             >
-              <el-radio label="不限" border>不限</el-radio>
-              <el-radio
-                :label="item.value"
+              <el-checkbox
+                :label="item.name"
                 class="anchor-point"
-                :data-anchor="'首页选项 房型:' + item.name"
-                border
-                v-for="(item, index) in RoomsList"
-                :key="index"
-                >{{ item.name }}
-              </el-radio>
-            </el-radio-group>
+                :data-anchor="'首页选项 装修:' + item.name"
+                v-for="item in RenovationList"
+                :key="item.value"
+              ></el-checkbox>
+            </el-checkbox-group>
           </div>
-          <div class="input-group">
-            <div class="input-group-split">
-              <el-input
-                placeholder="最小值"
-                class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 房型最小值:' + room.minRoom"
-                v-model="room.minRoom"
-              >
-                <template v-slot:suffix>
-                  <i class="suffix-tips">房</i>
-                </template>
-              </el-input>
-              <i class="input-split"></i>
-              <el-input
-                placeholder="最大值"
-                class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 房型最大值:' + room.maxRoom"
-                v-model="room.maxRoom"
-              >
-                <template v-slot:suffix>
-                  <i class="suffix-tips">房</i>
-                </template>
-              </el-input>
-            </div>
-          </div>
-          <button
-            class="btn-primary-back anchor-point"
-            :data-anchor="
-              '首页选项 房型:确定{' +
-                (room.minRoom && room.maxRoom
-                  ? room.minRoom + '~' + room.maxRoom
-                  : room.value) +
-                '}'
-            "
-            @click="roomSubmit"
-          >
-            确定
-          </button>
         </div>
-      </div>
-      <!-- 楼层 -->
-      <div class="search-content-item">
-        <div class="search-item-title">楼层</div>
-        <div class="search-item-right ">
-          <div class="data-content">
-            <el-radio-group
-              v-model="floor.radioCheck"
-              size="small"
-              @change="floorChange"
+        <!-- 用途 -->
+        <div class="search-content-item" v-if="PurposeList.length != 0">
+          <div class="search-item-title">用途</div>
+          <div class="search-item-right">
+            <el-radio
+              label="不限"
+              class="anchor-point"
+              data-anchor="首页选项 用途:不限"
+              border
+              v-model="purposeRadio"
+              @change="radioChange('houseUseList')"
+              >不限
+            </el-radio>
+            <el-checkbox-group
+              v-model="form.houseUseList"
+              @change="formCheckBoxChange('purposeRadio')"
             >
-              <el-radio
-                :label="item.title"
+              <el-checkbox
+                :label="item.name"
                 class="anchor-point"
-                :data-anchor="'首页选项 楼层:' + item.title"
-                border
-                v-for="item in floorlist"
-                :key="item.title"
-                >{{ item.title }}
-              </el-radio>
-            </el-radio-group>
+                :data-anchor="'首页选项 用途:' + item.name"
+                v-for="item in PurposeList"
+                :key="item.value"
+              ></el-checkbox>
+            </el-checkbox-group>
           </div>
-          <div class="input-group">
-            <div class="input-group-split">
-              <el-input
-                placeholder="最小值"
-                class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 楼层最小值:' + floor.minFloor"
-                v-model="floor.minFloor"
-              >
-                <template v-slot:suffix>
-                  <i class="suffix-tips">层</i>
-                </template>
-              </el-input>
-              <i class="input-split"></i>
-              <el-input
-                placeholder="最大值"
-                class="input-content is-suffix anchor-point"
-                :data-anchor="'首页选项 楼层最大值:' + floor.maxFloor"
-                v-model="floor.maxFloor"
-              >
-                <template v-slot:suffix>
-                  <i class="suffix-tips">层</i>
-                </template>
-              </el-input>
-            </div>
-          </div>
-          <button
-            class="btn-primary-back anchor-point"
-            :data-anchor="
-              '首页选项 楼层:确定{' +
-                (floor.minFloor && floor.maxFloor
-                  ? floor.minFloor + '~' + floor.maxFloor
-                  : floor.radioCheck) +
-                '}'
-            "
-            @click="floorBtn"
-          >
-            确定
-          </button>
         </div>
-      </div>
-      <!-- 朝向 -->
-      <div class="search-content-item" v-if="faceList.length != 0">
-        <div class="search-item-title">朝向</div>
-        <div class="search-item-right">
-          <el-radio
-            label="不限"
-            class="anchor-point"
-            data-anchor="首页选项 朝向:不限"
-            border
-            v-model="faceRadio"
-            @change="radioChange('faceList')"
-            >不限
-          </el-radio>
-          <el-checkbox-group
-            v-model="form.faceList"
-            @change="formCheckBoxChange('faceRadio')"
-          >
-            <el-checkbox
-              :label="item.name"
-              class="anchor-point"
-              :data-anchor="'首页选项 朝向:' + item.name"
-              v-for="item in faceList"
-              :key="item.value"
-            ></el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </div>
-      <!-- 装修 -->
-      <div
-        class="search-content-item"
-        v-if="RenovationList.length != 0"
-        v-show="searchPanelChange"
-      >
-        <div class="search-item-title">装修</div>
-        <div class="search-item-right">
-          <el-radio
-            label="不限"
-            class="anchor-point"
-            data-anchor="首页选项 装修:不限"
-            border
-            v-model="renovationRadio"
-            @change="radioChange('decorationList')"
-            >不限
-          </el-radio>
-          <el-checkbox-group
-            v-model="form.decorationList"
-            @change="formCheckBoxChange('renovationRadio')"
-          >
-            <el-checkbox
-              :label="item.name"
-              class="anchor-point"
-              :data-anchor="'首页选项 装修:' + item.name"
-              v-for="item in RenovationList"
-              :key="item.value"
-            ></el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </div>
-      <!-- 用途 -->
-      <div class="search-content-item" v-if="PurposeList.length != 0">
-        <div class="search-item-title">用途</div>
-        <div class="search-item-right">
-          <el-radio
-            label="不限"
-            class="anchor-point"
-            data-anchor="首页选项 用途:不限"
-            border
-            v-model="purposeRadio"
-            @change="radioChange('houseUseList')"
-            >不限
-          </el-radio>
-          <el-checkbox-group
-            v-model="form.houseUseList"
-            @change="formCheckBoxChange('purposeRadio')"
-          >
-            <el-checkbox
-              :label="item.name"
-              class="anchor-point"
-              :data-anchor="'首页选项 用途:' + item.name"
-              v-for="item in PurposeList"
-              :key="item.value"
-            ></el-checkbox>
-          </el-checkbox-group>
-        </div>
-      </div>
-      <!-- 小学 -->
-      <div class="search-content-item" v-if="PrimarySchoolList.length != 0">
-        <div class="search-item-title">小学</div>
-        <div class="search-item-right">
-          <!-- <el-radio-group v-model="form.primarySchool" size="small">
+        <!-- 小学 -->
+        <div class="search-content-item" v-if="PrimarySchoolList.length != 0">
+          <div class="search-item-title">小学</div>
+          <div class="search-item-right">
+            <!-- <el-radio-group v-model="form.primarySchool" size="small">
                       <el-radio label="" border>不限</el-radio>
                       <el-radio border v-for="item in mathPrimary" :key="item.value">{{
                         item.name
                       }}</el-radio>
                     </el-radio-group> -->
-          <el-radio
-            label="不限"
-            class="anchor-point"
-            :data-anchor="'首页选项 小学:不限'"
-            border
-            v-model="primarySchoolRadio"
-            @change="
-              radioChange(
-                'primarySchoolList',
-                true,
-                'primarySchool',
-                'temporaryPrimaryList'
-              )
-            "
-            >不限
-          </el-radio>
-          <el-checkbox-group v-model="temporaryPrimaryList">
-            <el-checkbox
-              :label="item.name"
+            <el-radio
+              label="不限"
               class="anchor-point"
-              :data-anchor="'首页选项 小学:' + item.name"
-              v-for="item in mathPrimary"
-              :key="item.value"
+              :data-anchor="'首页选项 小学:不限'"
+              border
+              v-model="primarySchoolRadio"
               @change="
-                formCheckChange(
-                  'temporaryPrimaryList',
+                radioChange(
+                  'primarySchoolList',
+                  true,
                   'primarySchool',
-                  'primarySchoolList',
-                  'primarySchoolRadio'
+                  'temporaryPrimaryList'
                 )
               "
-            ></el-checkbox>
-          </el-checkbox-group>
-          <div class="select-content">
-            <el-select
-              v-model="primarySchool"
-              placeholder="请输入划片小学"
-              class="input-content anchor-point"
-              :data-anchor="'首页选项 小学 => select'"
-              @click.native="log_socket.sendUserActionData"
-              clearable
-              filterable
-              popper-class="options-custom-item"
-              @change="
-                schoolChange(
-                  'primarySchoolList',
-                  $event,
-                  'temporaryPrimaryList',
-                  'primarySchoolRadio'
-                )
-              "
-              multiple
-            >
-              <el-option
-                class="options-item anchor-point"
-                v-for="item in mathPrimaryAfter"
-                :data-anchor="'首页选项 小学 => select => option:' + item.name"
-                @click.native="log_socket.sendUserActionData"
-                :key="item.value"
+              >不限
+            </el-radio>
+            <el-checkbox-group v-model="temporaryPrimaryList">
+              <el-checkbox
                 :label="item.name"
-                :value="item.value"
+                class="anchor-point"
+                :data-anchor="'首页选项 小学:' + item.name"
+                v-for="item in mathPrimary"
+                :key="item.value"
+                @change="
+                  formCheckChange(
+                    'temporaryPrimaryList',
+                    'primarySchool',
+                    'primarySchoolList',
+                    'primarySchoolRadio'
+                  )
+                "
+              ></el-checkbox>
+            </el-checkbox-group>
+            <div class="select-content">
+              <el-select
+                v-model="primarySchool"
+                placeholder="请输入划片小学"
+                class="input-content anchor-point"
+                :data-anchor="'首页选项 小学 => select'"
+                @click.native="log_socket.sendUserActionData"
+                clearable
+                filterable
+                popper-class="options-custom-item"
+                @change="
+                  schoolChange(
+                    'primarySchoolList',
+                    $event,
+                    'temporaryPrimaryList',
+                    'primarySchoolRadio'
+                  )
+                "
+                multiple
               >
-              </el-option>
-            </el-select>
-          </div>
-          <!-- <button
+                <el-option
+                  class="options-item anchor-point"
+                  v-for="item in mathPrimaryAfter"
+                  :data-anchor="
+                    '首页选项 小学 => select => option:' + item.name
+                  "
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.name"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <!-- <button
                       class="btn-primary-back anchor-point"
                       :data-anchor="'首页选项 小学:确定{' + form.primarySchoolList + '}'"
                       @click="pushSelectSchool('primarySchoolList', 'primarySchool')"
                     >
                       确定
                     </button> -->
+          </div>
         </div>
-      </div>
-      <!-- 中学 -->
-      <div class="search-content-item" v-if="MiddleSchoolList.length != 0">
-        <div class="search-item-title">中学</div>
-        <div class="search-item-right">
-          <!-- <el-radio-group v-model="form.middleSchool" size="small">
+        <!-- 中学 -->
+        <div class="search-content-item" v-if="MiddleSchoolList.length != 0">
+          <div class="search-item-title">中学</div>
+          <div class="search-item-right">
+            <!-- <el-radio-group v-model="form.middleSchool" size="small">
                       <el-radio label="" border>不限</el-radio>
                       <el-radio
                         :label="item.value"
@@ -1524,132 +1526,134 @@
                         >{{ item.name }}</el-radio
                       >
                     </el-radio-group> -->
-          <el-radio
-            label="不限"
-            class="anchor-point"
-            :data-anchor="'首页选项 中学:不限'"
-            border
-            v-model="middleSchoolRadio"
-            @change="
-              radioChange(
-                'middleSchoolList',
-                true,
-                'middleSchool',
-                'temporaryMiddleList'
-              )
-            "
-            >不限
-          </el-radio>
-          <el-checkbox-group v-model="temporaryMiddleList">
-            <el-checkbox
-              :label="item.name"
+            <el-radio
+              label="不限"
               class="anchor-point"
-              :data-anchor="'首页选项 中学:' + item.name"
-              v-for="item in mathMiddle"
-              :key="item.value"
+              :data-anchor="'首页选项 中学:不限'"
+              border
+              v-model="middleSchoolRadio"
               @change="
-                formCheckChange(
-                  'temporaryMiddleList',
+                radioChange(
+                  'middleSchoolList',
+                  true,
                   'middleSchool',
-                  'middleSchoolList',
-                  'middleSchoolRadio'
+                  'temporaryMiddleList'
                 )
               "
-            ></el-checkbox>
-          </el-checkbox-group>
-          <div class="select-content">
-            <el-select
-              v-model="middleSchool"
-              placeholder="请输入划片中学"
-              class="input-content anchor-point"
-              :data-anchor="'首页选项 中学 => select'"
-              @click.native="log_socket.sendUserActionData"
-              clearable
-              filterable
-              popper-class="options-custom-item"
-              @change="
-                schoolChange(
-                  'middleSchoolList',
-                  $event,
-                  'temporaryMiddleList',
-                  'middleSchoolRadio'
-                )
-              "
-              multiple
-            >
-              <el-option
-                class="options-item anchor-point"
-                v-for="item in mathMiddleAfter"
-                :data-anchor="'首页选项 中学 => select => option:' + item.label"
-                @click.native="log_socket.sendUserActionData"
+              >不限
+            </el-radio>
+            <el-checkbox-group v-model="temporaryMiddleList">
+              <el-checkbox
+                :label="item.name"
+                class="anchor-point"
+                :data-anchor="'首页选项 中学:' + item.name"
+                v-for="item in mathMiddle"
                 :key="item.value"
-                :label="item.label"
-                :value="item.value"
+                @change="
+                  formCheckChange(
+                    'temporaryMiddleList',
+                    'middleSchool',
+                    'middleSchoolList',
+                    'middleSchoolRadio'
+                  )
+                "
+              ></el-checkbox>
+            </el-checkbox-group>
+            <div class="select-content">
+              <el-select
+                v-model="middleSchool"
+                placeholder="请输入划片中学"
+                class="input-content anchor-point"
+                :data-anchor="'首页选项 中学 => select'"
+                @click.native="log_socket.sendUserActionData"
+                clearable
+                filterable
+                popper-class="options-custom-item"
+                @change="
+                  schoolChange(
+                    'middleSchoolList',
+                    $event,
+                    'temporaryMiddleList',
+                    'middleSchoolRadio'
+                  )
+                "
+                multiple
               >
-              </el-option>
-            </el-select>
-          </div>
-          <!-- <button
+                <el-option
+                  class="options-item anchor-point"
+                  v-for="item in mathMiddleAfter"
+                  :data-anchor="
+                    '首页选项 中学 => select => option:' + item.label
+                  "
+                  @click.native="log_socket.sendUserActionData"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                >
+                </el-option>
+              </el-select>
+            </div>
+            <!-- <button
                       class="btn-primary-back anchor-point"
                       :data-anchor="'首页选项 中学:确定{' + form.middleSchoolList + '}'"
                       @click="pushSelectSchool('middleSchoolList', 'middleSchool')"
                     >
                       确定
                     </button> -->
+          </div>
         </div>
       </div>
+      <div class="change-content">
+        <span
+          @click="panelChangeBtn"
+          class="anchor-point"
+          data-anchor="首页展开选项/收起"
+          >展开选项/收起<i
+            class="iconfont iconxingzhuangjiehe1"
+            :class="{ rotate: panelChange }"
+          ></i
+        ></span>
+      </div>
     </div>
-    <div class="change-content">
-      <span
-        @click="panelChangeBtn"
-        class="anchor-point"
-        data-anchor="首页展开选项/收起"
-        >展开选项/收起<i
-          class="iconfont iconxingzhuangjiehe1"
-          :class="{ rotate: panelChange }"
-        ></i
-      ></span>
+    <div class="tab-filter-radio" v-show="typeActiveIndex !== 2">
+      <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isKey"
+        />
+        <span>钥匙</span>
+      </label>
+      <label class="filter-radio-item anchor-point" data-anchor="首页选项 独家">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isOnly"
+        />
+        <span>独家</span>
+      </label>
+      <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isReal"
+        />
+        <span>实勘</span>
+      </label>
+      <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
+        <input
+          type="checkbox"
+          true-value="1"
+          false-value=""
+          v-model="form.isElevator"
+        />
+        <span>电梯</span>
+      </label>
     </div>
   </div>
-  <div class="tab-filter-radio" v-show="typeActiveIndex !== 2">
-    <label class="filter-radio-item anchor-point" data-anchor="首页选项 钥匙">
-      <input
-        type="checkbox"
-        true-value="1"
-        false-value=""
-        v-model="form.isKey"
-      />
-      <span>钥匙</span>
-    </label>
-    <label class="filter-radio-item anchor-point" data-anchor="首页选项 独家">
-      <input
-        type="checkbox"
-        true-value="1"
-        false-value=""
-        v-model="form.isOnly"
-      />
-      <span>独家</span>
-    </label>
-    <label class="filter-radio-item anchor-point" data-anchor="首页选项 实勘">
-      <input
-        type="checkbox"
-        true-value="1"
-        false-value=""
-        v-model="form.isReal"
-      />
-      <span>实勘</span>
-    </label>
-    <label class="filter-radio-item anchor-point" data-anchor="首页选项 电梯">
-      <input
-        type="checkbox"
-        true-value="1"
-        false-value=""
-        v-model="form.isElevator"
-      />
-      <span>电梯</span>
-    </label>
-  </div>
-</div>
 </template>
 
 <script>
@@ -1734,7 +1738,6 @@ export default {
       },
       typeList: TYPELIST,
       floorlist: FLOORLIST, //楼层
-      typeActiveIndex: 0, //nav类型激活Index
       panelChange: false, //折叠面板
       RegionList: [], //商圈
       faceList: [], //朝向
@@ -1971,7 +1974,7 @@ export default {
         this.$message.warning("请输入正数");
         return;
       }
-      if(
+      if (
         field == "floor" &&
         !(
           /^(-)?[1-9]?[0-9]*$/.test(this[field][min]) &&

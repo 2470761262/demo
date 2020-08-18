@@ -1,7 +1,7 @@
 <template>
   <div class="head-fun-right">
     <el-upload
-      action="http://bweb.yongxinjia.com/houseResource/importTel"
+      :action="importTelUrl"
       :show-file-list="false"
       :before-upload="beforeAvatarUpload"
       :on-success="importSuccess"
@@ -30,6 +30,7 @@ import util from "@/util/util";
 export default {
   data() {
     return {
+      importTelUrl: this.$api.baseUrl() + "houseResource/importTel",
       uploadHeader: {
         tk: util.localStorageGet(TOKEN)
       },

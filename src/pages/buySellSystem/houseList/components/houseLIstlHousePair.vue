@@ -146,7 +146,6 @@
 </style>
 <template>
   <div class="tab-page">
-
     <div class="tab-page-flex">
       <div class="tab-image">
         <div class="tab-image-head">房源图</div>
@@ -185,7 +184,7 @@
           :key="index"
           :prop="item.prop"
           :label="item.label"
-          :width="item.width" 
+          :width="item.width"
           :min-width="item.minWidth"
           :sort-method="sortDevName"
           :sortable="item.order"
@@ -221,7 +220,7 @@ import {
   removeResizeListener
 } from "element-ui/src/utils/resize-event";
 import util from "@/util/util";
-import bus from '@/evenBus/but.js';
+import bus from "@/evenBus/but.js";
 export default {
   inject: ["form"],
   data() {
@@ -408,7 +407,7 @@ export default {
   mounted() {
     window.addEventListener("resize", this.addListener);
     this.$once("addListener", this.addListener);
-    bus.$on("modifyTableColumn", (type) => {
+    bus.$on("modifyTableColumn", type => {
       this.typeActiveIndex = type;
       switch (type) {
         case 2:
@@ -417,7 +416,7 @@ export default {
         default:
           this.tableColumnField = this.allTableColumn;
       }
-    })
+    });
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.addListener);
@@ -588,14 +587,14 @@ export default {
             url: "/mateHouse/getMateHouse/tradeHouseIndex",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             data: restuleParms
-          }
+          };
           break;
         default:
           param = {
             url: "/mateHouse/getMateHouse/soleAllHouseIndex",
             headers: { "Content-Type": "application/json;charset=UTF-8" },
             data: restuleParms
-          }
+          };
       }
       return this.$api
         .post(param)
