@@ -731,6 +731,7 @@ export default {
      * @example: 回显数据获取省市区名称
      */
     getName() {
+      console.log("回显籍贯");
       let province = {};
       province = this.provinceList.find(item => {
         return item.id === this.formData.provinceId;
