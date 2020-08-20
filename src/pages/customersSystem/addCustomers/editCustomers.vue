@@ -135,9 +135,9 @@ export default {
             this.$store.state.addCustomers.formData.step2
           );
           if (this.componentName == "stepOne") {
-            console.log(this.$refs.childreCom.formData,"保存时候的数据");
+            console.log(this.$refs.childreCom.formData, "保存时候的数据");
             postData = util.deepCopy(this.$refs.childreCom.formData);
-            console.log(postData,"拷贝后的的数据");
+            console.log(postData, "拷贝后的的数据");
             for (let i = 0; i < Object.keys(demandValue).length; i++) {
               demandValue["list" + i].forEach(item => {
                 let isIndex = postData.requirements.findIndex(postItem => {
@@ -185,12 +185,12 @@ export default {
               item.decoration = "";
             }
             if (item.community) {
-              item.community1=null;
-              item.community1Id=null;
-              item.community2=null;
-              item.community2Id=null;
-              item.community3=null;
-              item.community3Id=null;
+              item.community1 = null;
+              item.community1Id = null;
+              item.community2 = null;
+              item.community2Id = null;
+              item.community3 = null;
+              item.community3Id = null;
               item.community.forEach((com, idx) => {
                 let items = com.split(",");
                 item["community" + (idx + 1)] = items[0];
@@ -219,10 +219,12 @@ export default {
         postData.sourceType = postData.sourceList[0];
         postData.Source = postData.sourceList[1];
         postData.origin = "PC";
-        console.log(postData,"执行到此了");
+        console.log(postData, "执行到此了");
         postData.nativePlace =
-          (postData.provinceName||'') + (postData.cityName||'') + (postData.countyName||'');
-        console.log(postData.nativePlace,"执行到此了2");
+          (postData.provinceName || "") +
+          (postData.cityName || "") +
+          (postData.countyName || "");
+        console.log(postData.nativePlace, "执行到此了2");
         postData.id = this.customerId;
         that.fullscreenLoading = true;
         that.$api
@@ -286,9 +288,9 @@ export default {
             let data = e.data.data;
             fromData.Customers = data.bsAgentCustomersTbl.Customers;
             fromData.desireIntensity = data.saleCusPropertyTbl.desireIntensity;
-            fromData.provinceId = data.saleCusPropertyTbl.provinceId||null;
-            fromData.cityId = data.saleCusPropertyTbl.cityId||null;
-            fromData.countyId = data.saleCusPropertyTbl.countyId||null;
+            fromData.provinceId = data.saleCusPropertyTbl.provinceId || null;
+            fromData.cityId = data.saleCusPropertyTbl.cityId || null;
+            fromData.countyId = data.saleCusPropertyTbl.countyId || null;
             fromData.sex = data.bsAgentCustomersTbl.sex;
             fromData.nativePlace = data.bsAgentCustomersTbl.nativePlace;
             fromData.Source = data.bsAgentCustomersTbl.Source;
@@ -365,18 +367,6 @@ export default {
               } else {
                 item.decorationList = [];
               }
-              if (
-                item.requireType != 64 &&
-                item.requireType != 128 &&
-                item.requireType != 256
-              ) {
-                item.maxFirstPrice = item.maxFirstPrice / 10000;
-                item.minFirstPrice = item.minFirstPrice / 10000;
-                item.maxPrice = item.maxPrice / 10000;
-                item.minPrice = item.minPrice / 10000;
-                item.maxUnitPrice = item.maxUnitPrice / 10000;
-                item.minUnitPrice = item.minUnitPrice / 10000;
-              }
               if (!item.maxFirstPrice) {
                 item.maxFirstPrice = null;
               }
@@ -423,10 +413,8 @@ export default {
             this.$refs.childreCom.demandData.rendList = rendList;
             this.$store.commit("updateDemandValue", this.demandValue);
             that.fullscreenLoading = false;
-            
           }
-        }
-        )
+        })
         .catch(e => {
           that.fullscreenLoading = false;
           if (e.response != undefined) {
