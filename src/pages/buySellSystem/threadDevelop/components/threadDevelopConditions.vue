@@ -409,7 +409,6 @@
               popper-class="options-custom-item"
               @change="schoolChange('primarySchoolList', $event)"
               multiple
-              collapse-tags
             >
               <el-option
                 class="options-item anchor-point"
@@ -482,7 +481,6 @@
               popper-class="options-custom-item"
               @change="schoolChange('middleSchoolList', $event)"
               multiple
-              collapse-tags
             >
               <el-option
                 class="options-item anchor-point"
