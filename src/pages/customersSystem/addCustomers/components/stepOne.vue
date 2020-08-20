@@ -696,25 +696,26 @@ export default {
      * @example: 省改变事件
      */
     provinceChange(val) {
+      this.formData.cityId = "";
+      this.formData.countyId = "";
       this.getCity(val);
       let obj = {};
       obj = this.provinceList.find(item => {
         return item.id === val;
-      });
-      this.formData.cityId = "";
-      this.formData.countyId = "";
+      });      
       this.formData.provinceName = obj.name;
     },
     /**
      * @example: 市改变事件
      */
     cityChange(val) {
+      this.formData.countyId = "";
       this.getCounty(val);
       let obj = {};
       obj = this.cityList.find(item => {
         return item.id === val;
       });
-      this.formData.countyId = "";
+     
       this.formData.cityName = obj.name;
     },
     /**
@@ -764,24 +765,29 @@ export default {
       let province = {};
       province = this.provinceList.find(item => {
         return item.id === this.formData.provinceId;
-      });      
-      this.formData.provinceName = province.name;      
+      });
+      let error=false;
+      if(province){
+        this.formData.provinceName = province.name;      
+      }else{
+        this.formData.provinceId=null;
+        error=true;
+      } 
       let city = {};
       city = this.cityList.find(item => {
         return item.id === this.formData.cityId;
       });
-      let cityError=false;
-      if(city){
+      if(city&&!error){
         this.formData.cityName = city.name;
       }else{//没找到说明后台存的地市是错的，不是所选省份的城市，那么置空掉
         this.formData.cityId=null;
-        cityError=true;
+        error=true;
       }
       let county = {};
       county = this.countyList.find(item => {
         return item.id === this.formData.countyId;
       });
-      if(county&&!cityError){
+      if(county&&!error){
         this.formData.countyName = county.name;
       }else{//城市数据是错的，或者没找到。说明后台存的县区是错的，不是所选城市的县区，那么置空掉
         this.formData.countyId=null;
