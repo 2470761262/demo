@@ -10,10 +10,12 @@
     "build:uat": "vue-cli-service build --mode uat",
     "build:testcustomer": "vue-cli-service build --mode testcustomer",
     "build:release-customer": "vue-cli-service build --mode release-customer",
+    "build:building-sjw": "vue-cli-service build --mode building-sjw",
+    "build:building-xjw": "vue-cli-service build --mode building-xjw",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "core-js": "^3.4.4", 
+    "core-js": "^3.4.4",
     "echarts": "^4.7.0",
     "element-ui": "^2.13.0",
     "i": "^0.3.6",
