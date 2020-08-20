@@ -207,7 +207,7 @@
         :page-size="pageJson.pageSize"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageJson.dataCount"
-        :current-page="pageJson.currentPage"
+        :current-page.sync="pageJson.currentPage"
       >
       </el-pagination>
     </div>
@@ -575,6 +575,7 @@ export default {
       this.renderList = [];
       this.pageJson.total = 0;
       this.pageJson.dataCount = 0;
+      let currentPage = this.pageJson.currentPage;
       if (initPage) this.InitPageJson();
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
@@ -604,6 +605,7 @@ export default {
             this.renderList = data.data.data;
             this.pageJson.total = data.data.pageSum;
             this.pageJson.dataCount = data.data.dataCount;
+            this.pageJson.currentPage = currentPage;
           }
           this.$nextTick(() => {
             this.$emit("addListener");
