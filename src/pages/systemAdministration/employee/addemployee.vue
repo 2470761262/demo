@@ -927,7 +927,7 @@ export default {
       if (e.type == 1) {
         this.employeeEntity.perDept = e.businessId;
         this.employeeEntity.deptName = e.labelName;
-        this.employeeEntity.coId = e.companyId;
+        this.employeeEntity.coId = e.companyId || 1;
         this.dialogVisible = false;
       } else {
         this.$alert("", "请选择一个部门节点!!!", {
