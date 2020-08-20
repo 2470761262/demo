@@ -367,7 +367,12 @@ export default {
     },
     //独家信息
     proxyMaxTime() {
-      if (this.houseData.onlyOwner && this.houseData.isOnly !== 0 && this.houseData.isOnly !== 2 && this.houseData.proxyMaxTime !== null) {
+      if (
+        this.houseData.onlyOwner &&
+        this.houseData.isOnly !== 0 &&
+        this.houseData.isOnly !== 2 &&
+        this.houseData.proxyMaxTime !== null
+      ) {
         return `${util.format(this.houseData.proxyMaxTime, "yyyy-MM-dd")}到期`;
       }
       return "暂无";
@@ -390,7 +395,10 @@ export default {
      * @example: 钥匙信息
      */
     isKeyMessage() {
-      if (this.houseData.keyStorageDeptName !== null) {
+      if (
+        this.houseData.keyOwner > 0 &&
+        this.houseData.keyStorageDeptName !== null
+      ) {
         return `有钥匙(${this.houseData.keyStorageDeptName})`;
       }
       return "暂无";

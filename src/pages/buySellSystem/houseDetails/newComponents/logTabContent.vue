@@ -275,6 +275,12 @@
               {{ item.result }}
             </div>
           </div>
+          <div class="item-tips">
+            <div class="item-tips-title">面访总结:</div>
+            <div class="item-tips-message">
+              {{ item.summary }}
+            </div>
+          </div>
           <div class="item-tips" v-if="item.fileVos.length != 0">
             <div class="item-tips-title">附件:</div>
             <div class="item-tips-message">
