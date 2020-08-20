@@ -15,7 +15,7 @@ export default {
     return {
       cancelFlag: true,
       pop: {
-        model: 1,
+        model: 0,
         textarea: "",
         loading: false,
         checkList: [
