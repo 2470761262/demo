@@ -258,7 +258,7 @@
           </div>
           <div class="ChooseTil">
             <div></div>
-            手机号(多选)
+            手机号
           </div>
           <div class="ChooseItemRow">
             <div class="ChooseItemBox">
