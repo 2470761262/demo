@@ -727,6 +727,35 @@ export default {
       });
       this.formData.countyName = obj.name;
     },
+    findRegion(id,callBack){
+      let that = this;
+      let postData = {
+        limit: 1,
+        page: 1,
+        id: id
+      };
+      that.$api
+        .post({
+          url: "/common/regiontbl/regionList",
+          data: postData,
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            let list = e.data.data.list;
+            if (list&&list.length>0&&callBack) {
+              callBack(list);
+            }
+          }
+        })
+        .catch(e => {
+          that.$message({
+            message: e.response.data.message
+          });
+        });
+    },
     /**
      * @example: 回显数据获取省市区名称
      */
@@ -735,18 +764,28 @@ export default {
       let province = {};
       province = this.provinceList.find(item => {
         return item.id === this.formData.provinceId;
-      });
-      this.formData.provinceName = province.name;
+      });      
+      this.formData.provinceName = province.name;      
       let city = {};
       city = this.cityList.find(item => {
         return item.id === this.formData.cityId;
       });
-      this.formData.cityName = city.name;
+      let cityError=false;
+      if(city){
+        this.formData.cityName = city.name;
+      }else{//没找到说明后台存的地市是错的，不是所选省份的城市，那么置空掉
+        this.formData.cityId=null;
+        cityError=true;
+      }
       let county = {};
       county = this.countyList.find(item => {
         return item.id === this.formData.countyId;
       });
-      this.formData.countyName = county.name;
+      if(county&&!cityError){
+        this.formData.countyName = county.name;
+      }else{//城市数据是错的，或者没找到。说明后台存的县区是错的，不是所选城市的县区，那么置空掉
+        this.formData.countyId=null;
+      }
     },
     /**
      * @example: 上一步数据回显

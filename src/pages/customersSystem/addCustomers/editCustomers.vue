@@ -423,7 +423,7 @@ export default {
             this.$refs.childreCom.demandData.rendList = rendList;
             this.$store.commit("updateDemandValue", this.demandValue);
             that.fullscreenLoading = false;
-            this.$refs.childreCom.getName();
+            
           }
         }
         )
