@@ -719,4 +719,11 @@ export default {
   //prettier-ignore
   line-height: 32PX;
 }
+.el-time-panel__content::after,
+.el-time-panel__content::before {
+  //prettier-ignore
+  height: 32PX;
+  //prettier-ignore
+  line-height: 32PX;
+}
 </style>

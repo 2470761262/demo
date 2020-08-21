@@ -1,5 +1,13 @@
 <template>
-  <fixedPopup v-bind="$attrs" v-on="$listeners">
+  <fixedPopup
+    v-bind="$attrs"
+    v-on="$listeners"
+    :butJson="{
+      cancelBtnText: '取消',
+      cancelBtnShow: true,
+      confirmBtnShow: false
+    }"
+  >
     <div class="operation-content">
       <el-table
         :data="tableData"
