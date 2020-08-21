@@ -392,13 +392,16 @@ export default {
     clearPage: {
       deep: true,
       handler: function(value, ordvalue) {
-        console.log("xxxxxxxxxxxxxxx");
-        this.getHouseData(JSON.parse(JSON.stringify(value)), true).then(() => {
-          dom.querySelector(".scroll-tab").scrollTop = 0;
-          this.$parent.ListeningScroll();
-          console.log("xxxxxxxxxxxxxxx", this.pageJson);
-          this.$forceUpdate();
-        });
+        //console.log("xxxxxxxxxxxxxxx");
+        //debugger;
+        this.getHouseData(JSON.parse(JSON.stringify(this.form)), true).then(
+          () => {
+            dom.querySelector(".scroll-tab").scrollTop = 0;
+            this.$parent.ListeningScroll();
+            console.log("xxxxxxxxxxxxxxx", this.pageJson);
+            //  this.$forceUpdate();
+          }
+        );
       }
     },
     form: {
@@ -580,6 +583,7 @@ export default {
       };
     },
     getHouseData(value, initPage = true) {
+      //  debugger;
       // this.loading = true;
       // Object.keys(value).forEach(item => {
       //   if (value[item] instanceof Array) {
@@ -589,8 +593,8 @@ export default {
       this.renderList = [];
       this.pageJson.total = 0;
       this.pageJson.dataCount = 0;
-      let currentPage = this.pageJson.currentPage;
       if (initPage) this.InitPageJson();
+      let currentPage = this.pageJson.currentPage;
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
