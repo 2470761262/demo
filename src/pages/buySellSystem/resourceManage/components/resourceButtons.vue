@@ -30,13 +30,13 @@ import util from "@/util/util";
 export default {
   data() {
     return {
-      importTelUrl: this.$api.baseUrl() + "houseResource/importTel",
+      importTelUrl: this.$api.baseUrl() + "/houseResource/importTel",
       uploadHeader: {
         tk: util.localStorageGet(TOKEN)
       },
       downloadHref:
         this.$api.baseUrl() +
-        "houseResource/template?tk=" +
+        "/houseResource/template?tk=" +
         util.localStorageGet(TOKEN)
     };
   },

@@ -16,18 +16,18 @@ export default [
       { name: "浏览记录", active: "/buySellSystem/browseLog" }
     ]
   },
-  // {
-  //   name: "资源库",
-  //   icon: "iconzaishouwugendan iconfont",
-  //   active: "2",
-  //   children: [
-  //     { name: "店公共盘", active: "/buySellSystem/shopDisk" },
-  //     { name: "在售无跟单", active: "/buySellSystem/saleNotTracking" },
-  //     { name: "暂不售", active: "/buySellSystem/notSale" },
-  //     { name: "无号码", active: "/buySellSystem/notPhone" },
-  //     { name: "潜在出售", active: "/buySellSystem/potentialHouse" }
-  //   ]
-  // },
+  {
+    name: "资源库",
+    icon: "iconzaishouwugendan iconfont",
+    active: "2",
+    children: [
+      { name: "店公共盘", active: "/buySellSystem/shopDisk" },
+      { name: "在售无跟单", active: "/buySellSystem/saleNotTracking" }
+      // { name: "暂不售", active: "/buySellSystem/notSale" },
+      // { name: "无号码", active: "/buySellSystem/notPhone" },
+      // { name: "潜在出售", active: "/buySellSystem/potentialHouse" }
+    ]
+  },
   // {
   //   name: "全部在售",
   //   icon: "iconzaishouwugendan iconfont",

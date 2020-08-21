@@ -160,8 +160,7 @@
             :src="item.picUrl + '?x-oss-process=style/thumb'"
             @error="houseImageErorHandle(item)"
             scroll-container=".scroll-tab"
-          >
-          </el-image>
+          ></el-image>
         </div>
       </div>
       <el-table
@@ -199,8 +198,9 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage4"
-     -->
+      -->
       <el-pagination
+        ref="pagination"
         @current-change="currentchange"
         @size-change="handleSizeChange"
         :page-sizes="[30, 50, 70]"
@@ -208,8 +208,7 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageJson.dataCount"
         :current-page.sync="pageJson.currentPage"
-      >
-      </el-pagination>
+      ></el-pagination>
     </div>
   </div>
 </template>
@@ -222,7 +221,7 @@ import {
 import util from "@/util/util";
 import bus from "@/evenBus/but.js";
 export default {
-  inject: ["form"],
+  inject: ["form", "clearPage"],
   data() {
     return {
       typeActiveIndex: 0, //nav类型激活Index
@@ -390,6 +389,21 @@ export default {
     };
   },
   watch: {
+    clearPage: {
+      deep: true,
+      handler: function(value, ordvalue) {
+        //console.log("xxxxxxxxxxxxxxx");
+        //debugger;
+        this.getHouseData(JSON.parse(JSON.stringify(this.form)), true).then(
+          () => {
+            dom.querySelector(".scroll-tab").scrollTop = 0;
+            this.$parent.ListeningScroll();
+            console.log("xxxxxxxxxxxxxxx", this.pageJson);
+            //  this.$forceUpdate();
+          }
+        );
+      }
+    },
     form: {
       deep: true,
       immediate: true,
@@ -535,10 +549,13 @@ export default {
 
     currentchange(pageIndex) {
       this.pageJson.currentPage = pageIndex;
+
       this.getHouseData(JSON.parse(JSON.stringify(this.form)), false).then(
         () => {
           dom.querySelector(".scroll-tab").scrollTop = 0;
           this.$parent.ListeningScroll();
+
+          console.log(this.pageJson.currentPage, this.pageJson);
         }
       );
     },
@@ -566,6 +583,7 @@ export default {
       };
     },
     getHouseData(value, initPage = true) {
+      //  debugger;
       // this.loading = true;
       // Object.keys(value).forEach(item => {
       //   if (value[item] instanceof Array) {
@@ -575,8 +593,8 @@ export default {
       this.renderList = [];
       this.pageJson.total = 0;
       this.pageJson.dataCount = 0;
-      let currentPage = this.pageJson.currentPage;
       if (initPage) this.InitPageJson();
+      let currentPage = this.pageJson.currentPage;
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
