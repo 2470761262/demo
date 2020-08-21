@@ -2,13 +2,7 @@
   <div class="more-box">
     <div class="more-title">更多操作</div>
     <ul class="more-list">
-      <li
-        @click="demandConfirm"
-        v-if="
-          permissionList.modifyCustomerButtonEable.isDisable &&
-            attentionStatus.flag == 1
-        "
-      >
+      <li @click="demandConfirm" v-if="plate == 0 && attentionStatus.flag == 1">
         <span>修改基本信息</span>
         <i class="el-icon-arrow-right"></i>
       </li>
@@ -116,7 +110,13 @@
 
 <script>
 export default {
-  inject: ["customerId", "permissionList", "attentionStatus", "getInformation"],
+  inject: [
+    "customerId",
+    "permissionList",
+    "attentionStatus",
+    "getInformation",
+    "plate"
+  ],
   data() {
     return {
       impressionFlag: false,

@@ -3,10 +3,7 @@
     <div
       class="demand-btn"
       @click="moreSelectFlag = true"
-      v-if="
-        permissionList.modifyCustomerButtonEable.isDisable &&
-          attentionStatus.flag == 1
-      "
+      v-if="plate == 0 && attentionStatus.flag == 1"
     >
       新增需求
     </div>
@@ -41,10 +38,7 @@
               <span
                 class="msg-update"
                 @click="demandConfirm"
-                v-if="
-                  permissionList.modifyCustomerButtonEable.isDisable &&
-                    attentionStatus.flag == 1
-                "
+                v-if="plate == 0 && attentionStatus.flag == 1"
                 >修改</span
               >
             </div>
@@ -615,7 +609,8 @@ export default {
     "permissionList",
     "demandValue",
     "customerId",
-    "attentionStatus"
+    "attentionStatus",
+    "plate"
   ],
   data() {
     return {

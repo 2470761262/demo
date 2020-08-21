@@ -35,7 +35,8 @@ export default {
       getInformation: this.getInformation,
       demandValue: this.demandValue,
       phoneData: this.phoneData,
-      attentionStatus: this.attentionStatus
+      attentionStatus: this.attentionStatus,
+      plate: this.plate
     };
   },
   components: {
@@ -96,6 +97,7 @@ export default {
           name: "customerDetail-Attention"
         } //取消关注
       }, //权限列表
+      plate: 0,
       demandValue: {
         //客户需求value
         list0: [],
@@ -129,11 +131,11 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             //判断如果是私客则跳转到私客详情页
-            if(e.data.data.bsAgentCustomersTbl.plate > 0){
-                this.$router.replace({
-                    path: "/customers/publicCustomersDetail",
-                    query: { customerId: that.customerId }
-                });
+            if (e.data.data.bsAgentCustomersTbl.plate > 0) {
+              this.$router.replace({
+                path: "/customers/publicCustomersDetail",
+                query: { customerId: that.customerId }
+              });
             }
 
             let data = e.data.data;
@@ -151,6 +153,7 @@ export default {
             that.customer.lookHouses = data.lookHouses;
             that.customer.myLookHouses = data.myLookHouses;
             that.modificationPermission(data.ruleList);
+            this.$set(this.$data, "plate", data.bsAgentCustomersTbl.plate);
             that.demandList.data.forEach(item => {
               if (item.middleSchool) {
                 item.middleSchool = item.middleSchool.split("$");
