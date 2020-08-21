@@ -392,22 +392,26 @@ export default {
     clearPage: {
       deep: true,
       handler: function(value, ordvalue) {
+        this.renderList = [];
+        this.pageJson.total = 0;
+        this.pageJson.dataCount = 0;
         //console.log("xxxxxxxxxxxxxxx");
         //debugger;
-        this.getHouseData(JSON.parse(JSON.stringify(this.form)), true).then(
-          () => {
-            dom.querySelector(".scroll-tab").scrollTop = 0;
-            this.$parent.ListeningScroll();
-            console.log("xxxxxxxxxxxxxxx", this.pageJson);
-            //  this.$forceUpdate();
-          }
-        );
+        // this.getHouseData(JSON.parse(JSON.stringify(this.form)), true).then(
+        //   () => {
+        //     dom.querySelector(".scroll-tab").scrollTop = 0;
+        //     this.$parent.ListeningScroll();
+        //     console.log("xxxxxxxxxxxxxxx", this.pageJson);
+        //     //  this.$forceUpdate();
+        //   }
+        // );
       }
     },
     form: {
       deep: true,
       immediate: true,
       handler: function(value, ordvalue) {
+        console.log("11111111111111")
         this.getHouseData(JSON.parse(JSON.stringify(value))).then(() => {
           dom.querySelector(".scroll-tab").scrollTop = 0;
           this.$parent.ListeningScroll();
