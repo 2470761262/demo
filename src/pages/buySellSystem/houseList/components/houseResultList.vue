@@ -1692,9 +1692,14 @@ import navHeader from "@/components/navHeader";
 import cascadeHouse from "@/minxi/cascadeHouse";
 export default {
   mixins: [cascadeHouse],
-  inject: ["form"],
+  inject: ["form", "clearPage"],
   components: {
     navHeader
+  },
+  watch: {
+    typeActiveIndex() {
+      this.clearPage.time = new Date().getTime();
+    }
   },
   data() {
     return {

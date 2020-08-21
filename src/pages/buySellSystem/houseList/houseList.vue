@@ -27,7 +27,8 @@ import houseListHousePair from "./components/houseLIstlHousePair";
 export default {
   provide() {
     return {
-      form: this.form
+      form: this.form,
+      clearPage: this.clearPage
     };
   },
   components: {
@@ -60,6 +61,9 @@ export default {
   data() {
     return {
       scrollTop: 0,
+      clearPage: {
+        time: 0
+      },
       form: {
         plate: "", //范围
         typeList: [], //类型
@@ -89,7 +93,8 @@ export default {
         isReal: "", //是否实勘
         isElevator: "", //是否电梯
         isTopFloor: "", //是否是顶层
-        isBet: "" //对赌
+        isBet: "", //对赌
+        isClearPage: 0 // 重置页码开关
       }
     };
   },
