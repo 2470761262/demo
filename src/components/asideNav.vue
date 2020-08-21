@@ -23,6 +23,7 @@
       <el-menu-item index="/report/reportConfList">报表统计</el-menu-item>
       <el-menu-item index="/buySellSystem/resourceManageList">资源库管理</el-menu-item>
       <el-menu-item index="/report/reportConfList">数据看板</el-menu-item>
+      <el-menu-item index="/buySellSystem/managementEntrance">管理入口</el-menu-item>
     </el-submenu>
     <el-submenu index="2">
       <template slot="title">

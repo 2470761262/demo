@@ -52,10 +52,10 @@ export default {
       }
     },
     beforeAvatarUpload(file) {
-      const isExcel =
-        file.type === "application/vnd.ms-excel" ||
-        file.type ===
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+      let acceptType = ["xls", "xlsx"];
+      let selectedFile = file.name;
+      let fileType = selectedFile.substring(selectedFile.lastIndexOf('.') + 1, selectedFile.length);
+      const isExcel = acceptType.indexOf(fileType) != -1;
       const isLt2M = file.size / 1024 / 1024 < 5;
       if (!isExcel) {
         this.$message.error("上传文件只能是 excel 格式!");

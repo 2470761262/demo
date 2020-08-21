@@ -350,7 +350,7 @@ export default [
         },
         component: () => 
           import(
-            /* webpackChunkName: "resourceManageLList" */ "@/pages/buySellSystem/resourceManage/list.vue"
+            /* webpackChunkName: "resourceManageList" */ "@/pages/buySellSystem/resourceManage/list.vue"
           )
       },{
         path: "/buySellSystem/resourceManageDetail/:id",
@@ -363,6 +363,29 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "resourceManageDetail" */ "@/pages/buySellSystem/resourceManage/detail.vue"
+          )
+      }
+    ]
+  },
+  {
+    // 房源系统-管理入口
+    path: "/buySellSystem/managementEntrance",
+    redirect: "/managementEntrance/business",
+    component: () => 
+      import(
+        /* webpackChunkName: "managementEntrance" */ "@/pages/buySellSystem/managementEntrance/index.vue"
+      ),
+    children: [
+      {
+        path: "/managementEntrance/business",
+        meta: {
+          title: "业务管理",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () => 
+          import(
+           /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/business.vue"
           )
       }
     ]
