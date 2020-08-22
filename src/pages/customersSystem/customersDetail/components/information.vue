@@ -93,15 +93,15 @@
     </section>
     <section class="message-row flex">
       <div class="message-title">拥有人数：</div>
-      <div class="message-txt">{{ customer.haveAgents == -1 ? '加载中' : customer.haveAgents+'人' }}</div>
+      <div class="message-txt">{{ customer.haveAgents == -1 ? '加载中..' : customer.haveAgents+'人' }}</div>
     </section>
     <section class="message-row flex">
       <div class="message-title">公司看房套数：</div>
-      <div class="message-txt">{{ customer.lookHouses == -1 ? '加载中' : customer.lookHouses+'套' }}</div>
+      <div class="message-txt">{{ customer.lookHouses == -1 ? '加载中..' : customer.lookHouses+'套' }}</div>
     </section>
     <section class="message-row flex">
       <div class="message-title">我的带看套数：</div>
-      <div class="message-txt">{{ customer.myLookHouses == -1 ? '加载中' : customer.myLookHouses+'套'}}</div>
+      <div class="message-txt">{{ customer.myLookHouses == -1 ? '加载中..' : customer.myLookHouses+'套'}}</div>
     </section>
     <section class="message-row flex">
       <div class="message-title">上次带看时间：</div>
