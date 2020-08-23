@@ -5,12 +5,10 @@
   </div>
 </template>
 <script>
-export default {
-
-}
+export default { }
 </script>
 <style lang="less">
 .container {
- min-height: 100%;
+  min-height: 100%;
 }
 </style>
