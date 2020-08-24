@@ -42,9 +42,9 @@
               {{ item.phone || "" }}
             </div>
           </div> -->
-          <el-button slot="reference" @click="callUp" :loading="callLoading"
-            ><span>一键拨号</span></el-button
-          >
+          <el-button slot="reference" @click="callUp" :loading="callLoading">
+            <span>一键拨号</span>
+          </el-button>
         </el-popover>
       </div>
     </div>
