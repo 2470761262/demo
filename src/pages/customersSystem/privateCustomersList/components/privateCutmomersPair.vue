@@ -542,7 +542,7 @@
         >
           <div
             class="RadioItem"
-            v-for="(item, index) in PriceList"
+            v-for="(item, index) in RentList"
             :key="index"
           >
             <el-radio :label="item.id" name="Price">{{ item.name }}</el-radio>
