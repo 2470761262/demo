@@ -111,7 +111,7 @@
           class="Green"
           v-if="ruleList.dialButtonEnable"
         >
-          <div class="phone-list">
+          <!-- <div class="phone-list">
             <div
               v-for="(item, idx) in callList"
               :key="idx"
@@ -122,8 +122,8 @@
             <div v-if="callList.length <= 0">
               暂无号码
             </div>
-          </div>
-          <el-button slot="reference" @click="getPhone"
+          </div> -->
+          <el-button slot="reference" @click="callUp"
             ><span>一键拨号</span></el-button
           >
         </el-popover>
@@ -404,19 +404,17 @@ export default {
           }
         });
     },
-    callUp(i) {
+    callUp() {
       debugger;
       let that = this;
       if (this.isCall) {
-        console.log(i);
         let postData = {
             customerId: this.customerId.id,
             remark: "给客户" + this.cusbaseData.Customers + "拨打电话",
             customerName: this.cusbaseData.Customers,
             //  contactPhone: i.phone,
             customerNo: this.cusbaseData.CustomerNo,
-            customerPlate: this.cusbaseData.plate,
-            telId: i.id
+            customerPlate: this.cusbaseData.plate
         };
         that.isCall = false;
         that.$api
