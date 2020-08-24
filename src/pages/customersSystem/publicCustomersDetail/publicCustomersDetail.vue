@@ -54,7 +54,6 @@ export default {
       FollowData: {},
       cusbaseData: {},
       ruleList: {
-        customerDetailForFollowAndTakeLook: false, //看跟进
         addFollowLookButtonEable: false, //写跟进
         dialButtonEnable: false, //一键拨号
         customerDetailForTakeCus: false //认领客户
@@ -82,14 +81,14 @@ export default {
           let json = e.data;
           if (json.code == 200) {
             //判断如果是私客则跳转到私客详情页
-            if(json.data.bsAgentCustomersTbl.plate == 0){
-                this.$router.replace({
-                    path: "/customers/customersDetail",
-                    query: { customerId: json.data.bsAgentCustomersTbl.id }
-                });
+            if (json.data.bsAgentCustomersTbl.plate == 0) {
+              this.$router.replace({
+                path: "/customers/customersDetail",
+                query: { customerId: json.data.bsAgentCustomersTbl.id }
+              });
             }
-            console.log(json.data.followList);
             this.$set(that.FollowData, "data", json.data.followList);
+            console.log(that.FollowData, "that.FollowData");
             this.$set(
               that.cusbaseData,
               "Customers",
@@ -147,13 +146,6 @@ export default {
               }
               if (element.rUrl == "dialButtonEnable") {
                 this.$set(that.ruleList, "dialButtonEnable", true);
-              }
-              if (element.rUrl == "customerDetailForFollowAndTakeLook") {
-                this.$set(
-                  that.ruleList,
-                  "customerDetailForFollowAndTakeLook",
-                  true
-                );
               }
               if (element.rUrl == "customerDetailForTakeCus") {
                 this.$set(that.ruleList, "customerDetailForTakeCus", true);

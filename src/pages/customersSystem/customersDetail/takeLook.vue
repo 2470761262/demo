@@ -136,6 +136,7 @@
                 class="select-content"
                 placeholder="请选择楼栋"
                 @change="buildChange(hous)"
+                v-if="isNewHous"
               >
                 <el-option
                   v-for="item in hous.cbIdList"
@@ -152,6 +153,7 @@
                 placeholder="请选择房号"
                 data-vv-as="带看房源"
                 @change="roomChange(hous)"
+                v-if="isNewHous"
                 :data-vv-name="'roomNo' + idx"
                 v-validate="{
                   required:
@@ -302,7 +304,8 @@ export default {
         { key: "不满意", value: 2 }
       ],
       fullscreenLoading: false,
-      alertflag: false
+      alertflag: false,
+      isNewHous: true
     };
   },
   created() {
@@ -614,6 +617,21 @@ export default {
             this.alertflag = true;
           }
         }
+        if (
+          this.requireTypeOld == 8 ||
+          this.requireTypeOld == 16 ||
+          this.requireTypeOld == 32
+        ) {
+          if (val != 8 && val != 16 && val != 32) {
+            this.BeforeChangeType = this.requireTypeOld;
+            this.alertflag = true;
+          }
+        } else {
+          if (val == 8 || val == 16 || val == 32) {
+            this.BeforeChangeType = this.requireTypeOld;
+            this.alertflag = true;
+          }
+        }
       }
       this.requireTypeOld = val;
     },
@@ -631,11 +649,29 @@ export default {
         }
       ];
       this.alertflag = false;
+      if (
+        this.requireTypeOld == 8 ||
+        this.requireTypeOld == 16 ||
+        this.requireTypeOld == 32
+      ) {
+        this.isNewHous = false;
+      } else {
+        this.isNewHous = true;
+      }
     },
     customBtn() {
       this.requireTypeOld = this.BeforeChangeType;
       this.requireType = this.BeforeChangeType;
       this.alertflag = false;
+      if (
+        this.requireTypeOld == 8 ||
+        this.requireTypeOld == 16 ||
+        this.requireTypeOld == 32
+      ) {
+        this.isNewHous = false;
+      } else {
+        this.isNewHous = true;
+      }
     }
   }
 };
