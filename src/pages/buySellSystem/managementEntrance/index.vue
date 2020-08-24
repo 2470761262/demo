@@ -7,7 +7,7 @@
 <script>
 export default { }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .container {
   min-height: 100%;
 }
