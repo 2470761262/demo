@@ -136,7 +136,6 @@
                 class="select-content"
                 placeholder="请选择楼栋"
                 @change="buildChange(hous)"
-                v-if="isNewHous"
               >
                 <el-option
                   v-for="item in hous.cbIdList"
@@ -153,7 +152,6 @@
                 placeholder="请选择房号"
                 data-vv-as="带看房源"
                 @change="roomChange(hous)"
-                v-if="isNewHous"
                 :data-vv-name="'roomNo' + idx"
                 v-validate="{
                   required:
@@ -304,8 +302,7 @@ export default {
         { key: "不满意", value: 2 }
       ],
       fullscreenLoading: false,
-      alertflag: false,
-      isNewHous: true
+      alertflag: false
     };
   },
   created() {
@@ -346,6 +343,16 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            for (let i = 0; i < e.data.data.length; i++) {
+              if (
+                e.data.data[i].key == 8 ||
+                e.data.data[i].key == 16 ||
+                e.data.data[i].key == 32
+              ) {
+                e.data.data.splice(i, 1);
+                i--;
+              }
+            }
             that.lookTypeList = e.data.data;
           }
         })
@@ -617,21 +624,6 @@ export default {
             this.alertflag = true;
           }
         }
-        if (
-          this.requireTypeOld == 8 ||
-          this.requireTypeOld == 16 ||
-          this.requireTypeOld == 32
-        ) {
-          if (val != 8 && val != 16 && val != 32) {
-            this.BeforeChangeType = this.requireTypeOld;
-            this.alertflag = true;
-          }
-        } else {
-          if (val == 8 || val == 16 || val == 32) {
-            this.BeforeChangeType = this.requireTypeOld;
-            this.alertflag = true;
-          }
-        }
       }
       this.requireTypeOld = val;
     },
@@ -649,29 +641,11 @@ export default {
         }
       ];
       this.alertflag = false;
-      if (
-        this.requireTypeOld == 8 ||
-        this.requireTypeOld == 16 ||
-        this.requireTypeOld == 32
-      ) {
-        this.isNewHous = false;
-      } else {
-        this.isNewHous = true;
-      }
     },
     customBtn() {
       this.requireTypeOld = this.BeforeChangeType;
       this.requireType = this.BeforeChangeType;
       this.alertflag = false;
-      if (
-        this.requireTypeOld == 8 ||
-        this.requireTypeOld == 16 ||
-        this.requireTypeOld == 32
-      ) {
-        this.isNewHous = false;
-      } else {
-        this.isNewHous = true;
-      }
     }
   }
 };
