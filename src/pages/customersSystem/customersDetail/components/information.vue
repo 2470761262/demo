@@ -33,7 +33,7 @@
               attentionStatus.flag == 1
           "
         >
-          <div class="phone-list">
+          <!-- <div class="phone-list">
             <div
               v-for="(item, idx) in phoneList"
               :key="idx"
@@ -41,8 +41,8 @@
             >
               {{ item.phone || "" }}
             </div>
-          </div>
-          <el-button slot="reference" @click="getPhone" :loading="callLoading"
+          </div> -->
+          <el-button slot="reference" @click="callUp" :loading="callLoading"
             ><span>一键拨号</span></el-button
           >
         </el-popover>
@@ -276,9 +276,8 @@ export default {
     },
     /**
      * @example: 一键拨号
-     * @param: {id} 电话的Id
      */
-    callUp(id) {
+    callUp() {
       let that = this;
       that.isPhone = false;
       if (this.isCall) {
@@ -286,7 +285,6 @@ export default {
           customerId: this.customer.data.id,
           remark: "给客户" + this.customer.data.Customers + "拨打电话",
           customerName: this.customer.data.Customers,
-          telId: id,
           customerNo: this.customer.data.CustomerNo,
           customerPlate: this.customer.data.plate
         };
