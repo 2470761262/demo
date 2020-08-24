@@ -667,7 +667,7 @@
           </div>
         </el-form-item>
         <el-form-item
-          label="上次维护"
+          label="维护时间"
           class="ItemRow ChooseItemRow"
           prop="Radio"
         >
