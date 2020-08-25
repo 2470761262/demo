@@ -800,12 +800,16 @@ const ProgressListModle = [
     value: 2
   },
   {
-    name: "三看及以上",
-    value: 3
+    name: "3日首看",
+    value: -3
   },
   {
-    name: "签约",
-    value: 6
+    name: "7日首看",
+    value: -7
+  },
+   {
+    name: "一带多看",
+    value: 102
   }
 ];
 const PriceListModle = [
