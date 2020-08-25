@@ -240,7 +240,9 @@
             :on-success="handleImageSuccess"
             :file-list="fileList"
             :on-error="uploadError"
+            :limit="3"
           >
+         
             <!-- 十字图标 -->
             <i slot="default" class="el-icon-plus"></i>
             <!-- 文件 -->
@@ -269,6 +271,7 @@
               </span>
               <span class="uploadName">{{file.name}}</span>
             </div>
+            <div slot="tip" class="el-upload__tip">支持添加图片、视频、文件，最多3份，单份大小限制5M以内</div>
           </el-upload>
         </div>
       </div>
