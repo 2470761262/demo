@@ -1080,6 +1080,14 @@ export default {
       this.form[key2] = this[list][id]["value"][1]
         ? this[list][id]["value"][1]
         : "";
+      if(list=='RentList'||list=="PriceList"){
+        this.MinPrice=null;
+        this.MaxPrice=null;
+      }
+      if(list=="AreaList"){
+        this.MinArea=null;
+        this.MaxArea=null;
+      }
       console.log(this.form[key1], this.form[key2]);
     },
     valiadNum(key) {
