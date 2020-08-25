@@ -790,11 +790,7 @@ const ProgressListModle = [
   {
     name: "未带看",
     value: 0
-  },
-  {
-    name: "首看",
-    value: 1
-  },
+  }, 
   {
     name: "复看",
     value: 2
