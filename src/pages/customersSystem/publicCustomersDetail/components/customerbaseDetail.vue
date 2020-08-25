@@ -105,12 +105,12 @@
         >
           认领客户
         </div>
-        <el-popover
+        <!-- <el-popover
           placement="bottom"
           trigger="click"
           class="Green"
           v-if="ruleList.dialButtonEnable"
-        >
+        > -->
           <!-- <div class="phone-list">
             <div
               v-for="(item, idx) in callList"
@@ -123,11 +123,14 @@
               暂无号码
             </div>
           </div> -->
-          <el-button slot="reference" @click="callUp"
-            ><span>一键拨号</span></el-button
-          >
-        </el-popover>
+          <!-- <el-button slot="reference" @click="callUp">
+            <span>一键拨号</span>
+          </el-button>
+        </el-popover> -->
         <!-- <div class="Green">一键拨号</div> -->
+        <div class="White" @click="callUp">
+          一键拨号
+        </div>
       </div>
     </div>
     <div class="SubMsgZone">
