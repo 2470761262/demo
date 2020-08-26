@@ -705,6 +705,7 @@ export default {
             .post({
               url: "/saleCustomer/addPairRecord",
               data: postData,
+              timeout:50000,
               headers: {
                 "Content-Type": "application/json"
               }
