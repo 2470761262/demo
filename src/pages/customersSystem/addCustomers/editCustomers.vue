@@ -206,8 +206,6 @@ export default {
               item.minFirstPrice = multiplication(item.minFirstPrice, 10000);
               item.maxPrice = multiplication(item.maxPrice, 10000);
               item.minPrice = multiplication(item.minPrice, 10000);
-              item.maxUnitPrice = multiplication(item.maxUnitPrice, 10000);
-              item.minUnitPrice = multiplication(item.minUnitPrice, 10000);
             }
           });
         }
@@ -412,6 +410,13 @@ export default {
             this.$refs.childreCom.demandValue = this.demandValue;
             this.$refs.childreCom.demandData.rendList = rendList;
             this.$store.commit("updateDemandValue", this.demandValue);
+            this.$nextTick(() => {
+              console.log(this.demandValue, "this.demandValuesxsxs");
+              this.$refs.childreCom.$refs.moreSelect.rewriteData(
+                this.demandValue
+              );
+              this.$refs.childreCom.$refs.moreSelect.confirmEmit();
+            });
             that.fullscreenLoading = false;
           }
         })

@@ -407,7 +407,9 @@ export default {
               let housingResource = { address: "", cusfeedback: "" };
               housingResource.address =
                 that.lookAtData[j].communityName +
+                "-" +
                 that.lookAtData[j].buildingName +
+                "-" +
                 that.lookAtData[j].roomNo;
               housingResource.cusfeedback = that.lookAtData[j].Cusfeedback;
               that.lookAtData[i].housingResource.push(housingResource);

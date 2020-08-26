@@ -125,8 +125,9 @@ export default {
       moreSelectFlag: false,
       demandValue: this.$store.state.addCustomers.demandValue,
       headerList: [],
-      headerActive: 0,
-      requirements: []
+      headerActive: this.$route.query.require,
+      requirements: [],
+      editRequireType: this.$route.query.require
     };
   },
   computed: {

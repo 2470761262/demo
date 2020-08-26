@@ -133,6 +133,7 @@
                 popper-class="options-item"
                 class="select-content"
                 placeholder="请选择楼栋"
+                filterable
                 @change="buildChange(hous)"
               >
                 <el-option
@@ -149,6 +150,7 @@
                 class="select-content"
                 placeholder="请选择房号"
                 data-vv-as="带看房源"
+                filterable
                 @change="roomChange(hous)"
                 :data-vv-name="'roomNo' + idx"
                 v-validate="{
@@ -239,7 +241,7 @@
         <div class="look-box">
           <!-- action上传地址 -->
           <el-upload
-            action="http://localhost:8086/saleCustomerOperation/addMedia"
+            :action="uploadUrl"
             list-type="picture-card"
             :headers="headers"
             name="file"
@@ -364,7 +366,8 @@ export default {
       ],
       fullscreenLoading: false,
       alertflag: false,
-      loading: null //加载中
+      loading: null, //加载中
+      uploadUrl:this.$api.baseUrl()+'/saleCustomerOperation/addMedia'
     };
   },
   created() {
@@ -668,6 +671,7 @@ export default {
      * @example: 提交
      */
     confirm() {
+      this.fullscreenLoading = true;
       let that = this;
       let postData = {
         requireType: that.requireType,
@@ -695,14 +699,13 @@ export default {
         house.cusfeedback = item.cusfeedback;
         postData.houses.push(house);
       });
-      console.log(postData);
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.fullscreenLoading = true;
           that.$api
             .post({
               url: "/saleCustomer/addPairRecord",
               data: postData,
+              timeout:50000,
               headers: {
                 "Content-Type": "application/json"
               }
@@ -718,6 +721,8 @@ export default {
                 that.$message(e.response.data.message);
               }
             });
+        } else {
+          this.fullscreenLoading = false;
         }
       });
     },
