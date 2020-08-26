@@ -206,8 +206,6 @@ export default {
               item.minFirstPrice = multiplication(item.minFirstPrice, 10000);
               item.maxPrice = multiplication(item.maxPrice, 10000);
               item.minPrice = multiplication(item.minPrice, 10000);
-              item.maxUnitPrice = multiplication(item.maxUnitPrice, 10000);
-              item.minUnitPrice = multiplication(item.minUnitPrice, 10000);
             }
           });
         }
