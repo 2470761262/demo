@@ -69,6 +69,11 @@
       &.is-center {
         align-self: center;
       }
+      .view-item-right-remark {
+        font-size: @font15;
+        color: red;
+        margin-top: 15px;
+      }
     }
   }
 }
@@ -685,46 +690,54 @@
           <div class="view-item-left">
             上传附件:
           </div>
-          <div class="view-item-right flex-warp ">
-            <label class="file-btn" v-loading="fileLoading">
-              <i class="el-icon-folder-add"></i>
-              <input
-                type="file"
-                @change="getFile"
-                multiple="multiplt"
-                accept="image/*,.mp4,.avi,text/*,.doc*,.xls*"
-              />
-            </label>
-            <div
-              class="file-image"
-              v-for="item in fileListType.img"
-              :key="item.id"
-            >
-              <el-image :src="item.url" :preview-src-list="srcList"></el-image>
-              <i class="el-icon-error" @click="deleteFile(item)"></i>
+          <div class="view-item-right  ">
+            <div class="flex-warp">
+              <label class="file-btn" v-loading="fileLoading">
+                <i class="el-icon-folder-add"></i>
+                <input
+                  type="file"
+                  @change="getFile"
+                  multiple="multiplt"
+                  accept="image/*,.mp4,.avi,text/*,.doc*,.xls*"
+                />
+              </label>
+              <div
+                class="file-image"
+                v-for="item in fileListType.img"
+                :key="item.id"
+              >
+                <el-image
+                  :src="item.url"
+                  :preview-src-list="srcList"
+                ></el-image>
+                <i class="el-icon-error" @click="deleteFile(item)"></i>
+              </div>
+              <!-- video -->
+              <div
+                class="file-btn"
+                title="视频"
+                v-for="item in fileListType.video"
+                :key="item.id"
+              >
+                <a :href="item.url" target="_blank">
+                  <i class="el-icon-s-order"></i>
+                </a>
+                <i class="el-icon-error" @click.stop="deleteFile(item)"></i>
+              </div>
+              <div
+                class="file-btn"
+                title="文本"
+                v-for="item in fileListType.txt"
+                :key="item.id"
+              >
+                <a :href="item.url" target="_blank">
+                  <i class="el-icon-s-order"></i>
+                </a>
+                <i class="el-icon-error" @click.stop="deleteFile(item)"></i>
+              </div>
             </div>
-            <!-- video -->
-            <div
-              class="file-btn"
-              title="视频"
-              v-for="item in fileListType.video"
-              :key="item.id"
-            >
-              <a :href="item.url" target="_blank">
-                <i class="el-icon-s-order"></i>
-              </a>
-              <i class="el-icon-error" @click.stop="deleteFile(item)"></i>
-            </div>
-            <div
-              class="file-btn"
-              title="文本"
-              v-for="item in fileListType.txt"
-              :key="item.id"
-            >
-              <a :href="item.url" target="_blank">
-                <i class="el-icon-s-order"></i>
-              </a>
-              <i class="el-icon-error" @click.stop="deleteFile(item)"></i>
+            <div class="view-item-right-remark">
+              注: 上传面访凭证（与业主合照等），可加鑫币
             </div>
           </div>
         </div>
