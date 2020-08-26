@@ -116,7 +116,7 @@
             v-validate="'zero1'"
           >
             <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
+              <i class="suffix-tips">元</i>
             </template>
           </el-input>
           <div
@@ -140,7 +140,7 @@
             }"
           >
             <template v-slot:suffix>
-              <i class="suffix-tips">万元</i>
+              <i class="suffix-tips">元</i>
             </template>
           </el-input>
           <div
