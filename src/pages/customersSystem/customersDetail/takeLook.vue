@@ -133,6 +133,7 @@
                 popper-class="options-item"
                 class="select-content"
                 placeholder="请选择楼栋"
+                filterable
                 @change="buildChange(hous)"
               >
                 <el-option
@@ -149,6 +150,7 @@
                 class="select-content"
                 placeholder="请选择房号"
                 data-vv-as="带看房源"
+                filterable
                 @change="roomChange(hous)"
                 :data-vv-name="'roomNo' + idx"
                 v-validate="{
