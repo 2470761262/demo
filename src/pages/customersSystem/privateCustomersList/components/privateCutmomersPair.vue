@@ -834,27 +834,27 @@ const PriceListModle = [
   {
     name: "50万以下",
     id: 1,
-    value: [0, 50]
+    value: [0, 500000]
   },
   {
     name: "50-100万",
     id: 2,
-    value: [50, 100]
+    value: [500000, 1000000]
   },
   {
     name: "100-150万",
     id: 3,
-    value: [100, 150]
+    value: [1000000, 1500000]
   },
   {
     name: "150-200万",
     id: 4,
-    value: [150, 200]
+    value: [1500000, 2000000]
   },
   {
     name: "200万以上",
     id: 5,
-    value: [200]
+    value: [2000000]
   }
 ];
 const RentListModle = [
