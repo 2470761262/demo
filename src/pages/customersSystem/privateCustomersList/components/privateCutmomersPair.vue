@@ -372,6 +372,15 @@
       }
     }
   }
+  .tooltip-box {
+    .question-icon {
+      color: @backgroud;
+    }
+  }
+  .tooltip-content {
+    font-size: 14px;
+    line-height: 26px;
+  }
 }
 </style>
 <template>
@@ -454,11 +463,23 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item
-        label="看房进度"
         class="ItemRow ChooseItemRow"
         prop="Progress"
         v-show="form.attentionStatus == 1 || form.attentionStatus == null"
       >
+        <div slot="label" class="tooltip-box">
+          看房进度
+          <el-tooltip placement="bottom-start">
+            <div slot="content" style="font-size: 0.14rem;line-height: 0.26rem">
+              未带看： 未产生带看的客户<br />
+              3日首看：客户自录入时间起,3日内首次带看的客户<br />
+              7日首看：客户自录入时间起, 7日内首次带看的客户<br />
+              1带多看：添加带看记录，添加两套房源以上的客户<br />
+              复看：首看后，有产生第二次带看的客户
+            </div>
+            <i class="el-icon-question question-icon"></i>
+          </el-tooltip>
+        </div>
         <el-checkbox-group
           v-model="Progress"
           class="ChooseItemBox"
@@ -540,11 +561,7 @@
           class="RadioItemBox"
           @change="getLimit('RentList', Price, 'minPrice', 'maxPrice')"
         >
-          <div
-            class="RadioItem"
-            v-for="(item, index) in RentList"
-            :key="index"
-          >
+          <div class="RadioItem" v-for="(item, index) in RentList" :key="index">
             <el-radio :label="item.id" name="Price">{{ item.name }}</el-radio>
           </div>
         </el-radio-group>
@@ -790,7 +807,7 @@ const ProgressListModle = [
   {
     name: "未带看",
     value: 0
-  }, 
+  },
   {
     name: "复看",
     value: 2
@@ -803,7 +820,7 @@ const ProgressListModle = [
     name: "7日首看",
     value: -7
   },
-   {
+  {
     name: "一带多看",
     value: 102
   }
@@ -1080,13 +1097,13 @@ export default {
       this.form[key2] = this[list][id]["value"][1]
         ? this[list][id]["value"][1]
         : "";
-      if(list=='RentList'||list=="PriceList"){
-        this.MinPrice=null;
-        this.MaxPrice=null;
+      if (list == "RentList" || list == "PriceList") {
+        this.MinPrice = null;
+        this.MaxPrice = null;
       }
-      if(list=="AreaList"){
-        this.MinArea=null;
-        this.MaxArea=null;
+      if (list == "AreaList") {
+        this.MinArea = null;
+        this.MaxArea = null;
       }
       console.log(this.form[key1], this.form[key2]);
     },
