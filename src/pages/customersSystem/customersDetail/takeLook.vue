@@ -241,7 +241,7 @@
         <div class="look-box">
           <!-- action上传地址 -->
           <el-upload
-            action="http://localhost:8086/saleCustomerOperation/addMedia"
+            :action="uploadUrl"
             list-type="picture-card"
             :headers="headers"
             name="file"
@@ -366,7 +366,8 @@ export default {
       ],
       fullscreenLoading: false,
       alertflag: false,
-      loading: null //加载中
+      loading: null, //加载中
+      uploadUrl:this.$api.baseUrl()+'/saleCustomerOperation/addMedia'
     };
   },
   created() {
