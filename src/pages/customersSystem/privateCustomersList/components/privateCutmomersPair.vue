@@ -459,21 +459,21 @@
         prop="Progress"
         v-show="form.attentionStatus == 1 || form.attentionStatus == null"
       >
-        <el-checkbox-group
+        <el-radio-group
           v-model="Progress"
-          class="ChooseItemBox"
-          @change="getUnlimit('Progress', 'pairNumbers', -1)"
+          class="RadioItemBox"
+          @change="getPairNumbers"
         >
           <div
-            class="ChooseItem"
+            class="RadioItem"
             v-for="(item, index) in ProgressList"
             :key="index"
           >
-            <el-checkbox :label="item.value" name="Progress">
+            <el-radio :label="item.value" name="Progress">
               {{ item.name }}
-            </el-checkbox>
+            </el-radio>
           </div>
-        </el-checkbox-group>
+        </el-radio-group>
       </el-form-item>
 
       <el-form-item
@@ -790,11 +790,7 @@ const ProgressListModle = [
   {
     name: "未带看",
     value: 0
-  }, 
-  {
-    name: "复看",
-    value: 2
-  },
+  },  
   {
     name: "3日首看",
     value: -3
@@ -806,6 +802,10 @@ const ProgressListModle = [
    {
     name: "一带多看",
     value: 102
+  },
+  {
+    name: "复看",
+    value: 2
   }
 ];
 const PriceListModle = [
@@ -967,6 +967,10 @@ export default {
     this.apply();
   },
   methods: {
+    getPairNumbers(e){
+      console.log(e,"看房进度查询");
+      this.form["pairNumbers"]=[e];
+    },
     apply() {
       var that = this;
       this.$api
