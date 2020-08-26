@@ -467,7 +467,7 @@
         prop="Progress"
         v-show="form.attentionStatus == 1 || form.attentionStatus == null"
       >
-          <div slot="label" class="tooltip-box">
+        <div slot="label" class="tooltip-box">
           看房进度
           <el-tooltip placement="bottom-start">
             <div slot="content" style="font-size: 0.14rem;line-height: 0.26rem">
@@ -807,7 +807,7 @@ const ProgressListModle = [
   {
     name: "未带看",
     value: 0
-  },  
+  },
   {
     name: "3日首看",
     value: -3
@@ -961,7 +961,7 @@ export default {
       IntendList: IntendListModle,
       Intend: [4],
       ProgressList: ProgressListModle,
-      Progress: [-1],
+      Progress: -1,
       PriceList: PriceListModle,
       RentList: RentListModle,
       Price: 0, //价格，需要处理数据
@@ -984,12 +984,12 @@ export default {
     this.apply();
   },
   methods: {
-    getPairNumbers(e){
-      console.log(e,"看房进度查询");
-      if(e==-1){
-        this.form["pairNumbers"]=[];//不限
-      }else{
-        this.form["pairNumbers"]=[e];
+    getPairNumbers(e) {
+      console.log(e, "看房进度查询");
+      if (e == -1) {
+        this.form["pairNumbers"] = []; //不限
+      } else {
+        this.form["pairNumbers"] = [e];
       }
     },
     apply() {

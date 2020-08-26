@@ -199,7 +199,7 @@ export default {
       if (this.demandValue.list2.length != 0) {
         this.headerList.push(...this.demandValue.list2);
       }
-      if (this.headerActive == 0) {
+      if (!this.headerActive) {
         this.headerActive = this.headerList[0];
       }
       this.changeStoreStep2();
