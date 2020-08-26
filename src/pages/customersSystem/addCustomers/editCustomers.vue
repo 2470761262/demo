@@ -410,6 +410,11 @@ export default {
             this.$refs.childreCom.demandValue = this.demandValue;
             this.$refs.childreCom.demandData.rendList = rendList;
             this.$store.commit("updateDemandValue", this.demandValue);
+            this.$nextTick(() => {
+              this.$refs.childreCom.$refs.moreSelect.rewriteData(
+                this.demandValue
+              );
+            });
             that.fullscreenLoading = false;
           }
         })
