@@ -367,7 +367,7 @@ export default {
       fullscreenLoading: false,
       alertflag: false,
       loading: null, //加载中
-      uploadUrl:this.$api.baseUrl()+'/saleCustomerOperation/addMedia'
+      uploadUrl:this.$api.baseUrl()+'saleCustomerOperation/addMedia'
     };
   },
   created() {
