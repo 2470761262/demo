@@ -107,16 +107,16 @@ export default {
     };
   },
   created() {
+    document.title = "鑫伽系统-私客详情";
     this.getInformation();
     this.getImpressions();
-    this.getStatistics(
-      function (e,data){
-        console.log(e,data,"xxxxxxxxxxxxxxxxxxxxxx");
-        //this.$set(that.impressionList, "data", data);
-        e.customer.haveAgents = data.possessNumber;
-        e.customer.lookHouses = data.allTakeNumber;
-        e.customer.myLookHouses = data.myTakeNumber;
-      });
+    this.getStatistics(function(e, data) {
+      console.log(e, data, "xxxxxxxxxxxxxxxxxxxxxx");
+      //this.$set(that.impressionList, "data", data);
+      e.customer.haveAgents = data.possessNumber;
+      e.customer.lookHouses = data.allTakeNumber;
+      e.customer.myLookHouses = data.myTakeNumber;
+    });
   },
   methods: {
     /**
@@ -238,10 +238,10 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             let data = e.data.data;
-            console.log("hahahahahahahhahahahahah ",data);
-            if(executeStatistics){
+            console.log("hahahahahahahhahahahahah ", data);
+            if (executeStatistics) {
               //回调执行
-              executeStatistics(that,e.data.data);
+              executeStatistics(that, e.data.data);
             }
             //this.$set(that.impressionList, "data", data);
           }

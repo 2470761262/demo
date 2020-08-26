@@ -184,7 +184,9 @@ export default {
       url.indexOf("/historyDetails/") != -1 ||
       url.indexOf("/validateHouseDetails/") != -1 ||
       url.indexOf("/myHouse/myRole") != -1 ||
-      url.indexOf("/threadDevelop") != -1
+      url.indexOf("/threadDevelop") != -1 ||
+      url.indexOf("/customersDetail") != -1 ||
+      url.indexOf("/publicCustomersDetail") != -1
     ) {
       this.isShowReturn = false;
     }
