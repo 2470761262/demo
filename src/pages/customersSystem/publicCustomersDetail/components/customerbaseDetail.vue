@@ -538,7 +538,7 @@ export default {
               //跳转至私客页面
               this.$router.push({
                 path: "/customers/customersDetail",
-                query: { customerId: this.customerId.id }
+                query: { customerId: json.data }
               });
             } else if (json.code == 400) {
               alert(json.message);
