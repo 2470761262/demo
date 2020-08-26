@@ -986,7 +986,11 @@ export default {
   methods: {
     getPairNumbers(e){
       console.log(e,"看房进度查询");
-      this.form["pairNumbers"]=[e];
+      if(e==-1){
+        this.form["pairNumbers"]=[];//不限
+      }else{
+        this.form["pairNumbers"]=[e];
+      }
     },
     apply() {
       var that = this;
