@@ -41,6 +41,7 @@
             placeholder="选择日期"
             @change="changDate"
             :picker-options="startDateDisabled"
+            disabled
           ></el-date-picker>
         </div>
         <!-- 带看时间 -->
@@ -101,7 +102,9 @@
           <div class="input-group is-required">
             <div class="input-head">
               <span>带看房源</span>
-              <span class="inline-btn" @click="addHouseToList" v-if="idx == 0">添加</span>
+              <span class="inline-btn" @click="addHouseToList" v-if="idx == 0"
+                >添加</span
+              >
             </div>
             <div class="input-pack mar-btm-35 block">
               <!-- 楼盘 -->
@@ -180,7 +183,11 @@
           <!-- 带看反馈 -->
           <div class="input-group is-required">
             <div class="input-head">带看反馈</div>
-            <label class="radio-content" v-for="item in feedbackList" :key="item.value">
+            <label
+              class="radio-content"
+              v-for="item in feedbackList"
+              :key="item.value"
+            >
               <input
                 type="radio"
                 :name="'way' + (idx + 1)"
@@ -242,19 +249,18 @@
             :on-error="uploadError"
             :limit="3"
           >
-         
             <!-- 十字图标 -->
             <i slot="default" class="el-icon-plus"></i>
             <!-- 文件 -->
-            <div slot="file" slot-scope="{file}">
+            <div slot="file" slot-scope="{ file }">
               <video
-                v-if="file.raw.type.split('video').length>=2"
+                v-if="file.raw.type.split('video').length >= 2"
                 style="width:100%"
                 v-bind:src="file.url"
               ></video>
               <img
                 class="el-upload-list__item-thumbnail"
-                v-else-if="file.raw.type.split('image').length>=2"
+                v-else-if="file.raw.type.split('image').length >= 2"
                 :src="file.url"
                 alt
               />
@@ -265,24 +271,32 @@
                 alt
               />
               <span class="el-upload-list__item-actions">
-                <span class="el-upload-list__item-delete" @click="handleRemove(file)">
+                <span
+                  class="el-upload-list__item-delete"
+                  @click="handleRemove(file)"
+                >
                   <i class="el-icon-delete"></i>
                 </span>
               </span>
-              <span class="uploadName">{{file.name}}</span>
+              <span class="uploadName">{{ file.name }}</span>
             </div>
-            <div slot="tip" class="el-upload__tip">支持添加图片、视频、文件，最多3份，单份大小限制5M以内</div>
+            <div slot="tip" class="el-upload__tip">
+              支持添加图片、视频、文件，最多3份，单份大小限制5M以内
+            </div>
           </el-upload>
         </div>
       </div>
     </section>
     <div class="footer">
-      <el-button class="floot-btn close-btn" type="info" @click="close">返回</el-button>
+      <el-button class="floot-btn close-btn" type="info" @click="close"
+        >返回</el-button
+      >
       <el-button
         class="floot-btn success-btn"
         @click="confirm"
         v-loading.fullscreen.lock="fullscreenLoading"
-      >完成</el-button>
+        >完成</el-button
+      >
     </div>
     <fixedPopup
       :visible.sync="alertflag"
@@ -291,7 +305,9 @@
       @confirmEmit="confirmEmit"
       @customBtn="customBtn"
     >
-      <div class="alert-txt">改变带看类型会导致已录入的带看房源被清空。是否继续？</div>
+      <div class="alert-txt">
+        改变带看类型会导致已录入的带看房源被清空。是否继续？
+      </div>
     </fixedPopup>
   </div>
 </template>
@@ -308,8 +324,8 @@ export default {
   },
   data() {
     return {
-      fileList: [],//上传文件列表（用于展示）
-      mediaList:[],//上传文件列表（用于提交到接口保存）
+      fileList: [], //上传文件列表（用于展示）
+      mediaList: [], //上传文件列表（用于提交到接口保存）
       headers: {
         tk: token
       },
@@ -376,15 +392,15 @@ export default {
     /**
      * 上传失败
      */
-    uploadError(){
-    this.loading.close();
+    uploadError() {
+      this.loading.close();
     },
     /**
      * 上传图片前的操作
      */
     beforeImageUpload(file) {
       let that = this;
-      const isLt5M = file.size / 1024 / 1024 <=5;
+      const isLt5M = file.size / 1024 / 1024 <= 5;
       if (!isLt5M) {
         that.$notify({
           title: "上传错误",
@@ -415,7 +431,7 @@ export default {
           message: file.name + "上传成功",
           type: "success"
         });
-        this.mediaList.push(res.data)
+        this.mediaList.push(res.data);
       } else {
         this.$notify({
           title: "上传错误",
@@ -431,11 +447,10 @@ export default {
      * 删除上传文件
      */
     handleRemove(file) {
-      
-      for(let i =0;i<this.fileList.length;i++){
-        if(this.fileList[i].uid==file.uid){
-          this.fileList.splice(i,1);
-          this.mediaList.splice(i,1);
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].uid == file.uid) {
+          this.fileList.splice(i, 1);
+          this.mediaList.splice(i, 1);
         }
       }
     },
@@ -663,7 +678,7 @@ export default {
         houses: [],
         houseEids: [],
         houseAgentPers: [],
-        mediaList:that.mediaList
+        mediaList: that.mediaList
       };
       that.addHouse.forEach(item => {
         let house = {};
