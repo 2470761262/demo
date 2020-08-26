@@ -670,6 +670,7 @@ export default {
      * @example: 提交
      */
     confirm() {
+      this.fullscreenLoading = true;
       let that = this;
       let postData = {
         requireType: that.requireType,
@@ -697,10 +698,8 @@ export default {
         house.cusfeedback = item.cusfeedback;
         postData.houses.push(house);
       });
-      console.log(postData);
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.fullscreenLoading = true;
           that.$api
             .post({
               url: "/saleCustomer/addPairRecord",
@@ -720,6 +719,8 @@ export default {
                 that.$message(e.response.data.message);
               }
             });
+        } else {
+          this.fullscreenLoading = false;
         }
       });
     },
