@@ -1128,7 +1128,7 @@ export default {
       if (this[key] != null) {
         console.log(this[key]);
         this.form[key1] = this[key][0] + " 00:00:00";
-        this.form[key2] = this[key][1] + " 00:00:00";
+        this.form[key2] = this[key][1] + " 23:59:59";
       } else {
         this.form[key1] = "";
         this.form[key2] = "";
