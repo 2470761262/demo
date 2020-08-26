@@ -105,6 +105,7 @@
 
 <script>
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   inject: ["form"],
   components: {},
