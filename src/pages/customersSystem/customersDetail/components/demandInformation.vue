@@ -617,7 +617,8 @@ export default {
       moreSelectFlag: false,
       changeTabsValue: "0",
       demandTabsValue: "demand",
-      demandValueList: this.demandValue
+      demandValueList: this.demandValue,
+      requireType: null
     };
   },
   components: { demandMoreSelect },
@@ -979,12 +980,21 @@ export default {
      */
     handleClick(e) {
       this.demandTabsValue = "demand";
+      this.requireType = this.demandList.data[e.index].requireType;
+      console.log(this.requireType);
     },
     demandConfirm() {
       this.$store.commit("updateDemandValue", this.demandValueData);
+      let query = {
+        customerId: this.customerId,
+        step: 2
+      };
+      if (this.requireType) {
+        query.require = this.requireType;
+      }
       this.$router.push({
         path: "/customers/editCustomers",
-        query: { customerId: this.customerId, step: 2 }
+        query: query
       });
     }
   }

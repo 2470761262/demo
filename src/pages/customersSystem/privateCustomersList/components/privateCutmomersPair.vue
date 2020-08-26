@@ -467,7 +467,7 @@
         prop="Progress"
         v-show="form.attentionStatus == 1 || form.attentionStatus == null"
       >
-        <div slot="label" class="tooltip-box">
+          <div slot="label" class="tooltip-box">
           看房进度
           <el-tooltip placement="bottom-start">
             <div slot="content" style="font-size: 0.14rem;line-height: 0.26rem">
@@ -480,21 +480,21 @@
             <i class="el-icon-question question-icon"></i>
           </el-tooltip>
         </div>
-        <el-checkbox-group
+        <el-radio-group
           v-model="Progress"
-          class="ChooseItemBox"
-          @change="getUnlimit('Progress', 'pairNumbers', -1)"
+          class="RadioItemBox"
+          @change="getPairNumbers"
         >
           <div
-            class="ChooseItem"
+            class="RadioItem"
             v-for="(item, index) in ProgressList"
             :key="index"
           >
-            <el-checkbox :label="item.value" name="Progress">
+            <el-radio :label="item.value" name="Progress">
               {{ item.name }}
-            </el-checkbox>
+            </el-radio>
           </div>
-        </el-checkbox-group>
+        </el-radio-group>
       </el-form-item>
 
       <el-form-item
@@ -807,11 +807,7 @@ const ProgressListModle = [
   {
     name: "未带看",
     value: 0
-  },
-  {
-    name: "复看",
-    value: 2
-  },
+  },  
   {
     name: "3日首看",
     value: -3
@@ -823,6 +819,10 @@ const ProgressListModle = [
   {
     name: "一带多看",
     value: 102
+  },
+  {
+    name: "复看",
+    value: 2
   }
 ];
 const PriceListModle = [
@@ -984,6 +984,14 @@ export default {
     this.apply();
   },
   methods: {
+    getPairNumbers(e){
+      console.log(e,"看房进度查询");
+      if(e==-1){
+        this.form["pairNumbers"]=[];//不限
+      }else{
+        this.form["pairNumbers"]=[e];
+      }
+    },
     apply() {
       var that = this;
       this.$api
@@ -1124,7 +1132,7 @@ export default {
       if (this[key] != null) {
         console.log(this[key]);
         this.form[key1] = this[key][0] + " 00:00:00";
-        this.form[key2] = this[key][1] + " 00:00:00";
+        this.form[key2] = this[key][1] + " 23:59:59";
       } else {
         this.form[key1] = "";
         this.form[key2] = "";
