@@ -61,6 +61,7 @@ export default {
     };
   },
   created() {
+    document.title = "鑫伽系统-公客详情";
     this.$set(this.customerId, "id", this.$router.app._route.query.customerId);
     console.log(this.customerId.id);
     this.applyFollow();
