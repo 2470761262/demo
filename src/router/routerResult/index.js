@@ -348,11 +348,12 @@ export default [
           isPad: true, //不需要el-main padding
           keepAlive: true
         },
-        component: () => 
+        component: () =>
           import(
             /* webpackChunkName: "resourceManageList" */ "@/pages/buySellSystem/resourceManage/list.vue"
           )
-      },{
+      },
+      {
         path: "/buySellSystem/resourceManageDetail/:id",
         name: "resourceManageDetail",
         meta: {
@@ -371,7 +372,7 @@ export default [
     // 房源系统-管理入口
     path: "/buySellSystem/managementEntrance",
     redirect: "/managementEntrance/business",
-    component: () => 
+    component: () =>
       import(
         /* webpackChunkName: "managementEntrance" */ "@/pages/buySellSystem/managementEntrance/index.vue"
       ),
@@ -383,9 +384,21 @@ export default [
           isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
-        component: () => 
+        component: () =>
           import(
-           /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/business.vue"
+            /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/business.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/houseDeploy",
+        meta: {
+          title: "房源调配",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseDeploy" */ "@/pages/buySellSystem/managementEntrance/houseDeploy/houseDeploy.vue"
           )
       }
     ]
@@ -397,9 +410,7 @@ export default [
       title: "添加看板"
     },
     component: () =>
-      import(
-        /* webpackChunkName: "addReport" */ "@/pages/report/addReport.vue"
-      )
+      import(/* webpackChunkName: "addReport" */ "@/pages/report/addReport.vue")
   },
   {
     //买卖系统三级路由
