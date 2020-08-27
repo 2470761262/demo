@@ -400,6 +400,17 @@ export default [
           import(
             /* webpackChunkName: "houseDeploy" */ "@/pages/buySellSystem/managementEntrance/houseDeploy/houseDeploy.vue"
           )
+      }, {
+        path: "/managementEntrance/buySellHouse",
+        meta: {
+          title: "买卖房源",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () => 
+          import(
+           /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/buySellHouse.vue"
+          )
       }
     ]
   },

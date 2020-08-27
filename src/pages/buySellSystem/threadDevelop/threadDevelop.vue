@@ -61,8 +61,8 @@ export default {
         bhId: "", // 房间
         minInArea: "", // 最小面积
         maxInArea: "", // 最大面积
-        sortColumn: "",
-        sortType: 1
+        sortColumn: "updateTime",
+        sortType: 0
       }
     };
   },

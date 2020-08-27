@@ -123,10 +123,7 @@
         写跟进
       </button>
     </div>
-    <div
-      class="FollowCardZone"
-      v-if="ruleList.customerDetailForFollowAndTakeLook"
-    >
+    <div class="FollowCardZone">
       <div
         class="FollowCell"
         v-for="(item, index) in FollowData.data"
@@ -146,7 +143,9 @@
           <div class="cellMsg">
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进人：</div>
-              <div class="cellMsgText">{{ item.perName || "暂无" }}-{{ item.deptName || "暂无" }}</div>
+              <div class="cellMsgText">
+                {{ item.perName || "暂无" }}-{{ item.deptName || "暂无" }}
+              </div>
             </div>
             <div class="cellMsgRow">
               <div class="cellMsgTil">跟进类型：</div>
@@ -340,7 +339,9 @@ export default {
       addLoading: false
     };
   },
-  mounted() {},
+  mounted() {
+    console.log(this.FollowData, "FollowData");
+  },
   methods: {
     //更新跟进
     apply() {

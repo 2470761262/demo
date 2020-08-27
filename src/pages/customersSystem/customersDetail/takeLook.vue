@@ -41,8 +41,8 @@
             placeholder="选择日期"
             @change="changDate"
             :picker-options="startDateDisabled"
-          >
-          </el-date-picker>
+            disabled
+          ></el-date-picker>
         </div>
         <!-- 带看时间 -->
         <div class="input-group is-required">
@@ -61,8 +61,7 @@
               data-vv-as="开始时间"
               data-vv-name="timeStar"
               v-validate="'required'"
-            >
-            </el-time-picker>
+            ></el-time-picker>
             <div
               class="tip-style"
               :class="{
@@ -86,8 +85,7 @@
               data-vv-as="结束时间"
               data-vv-name="timeEnd"
               v-validate="'required'"
-            >
-            </el-time-picker>
+            ></el-time-picker>
             <div
               class="tip-style left"
               :class="{
@@ -135,6 +133,7 @@
                 popper-class="options-item"
                 class="select-content"
                 placeholder="请选择楼栋"
+                filterable
                 @change="buildChange(hous)"
               >
                 <el-option
@@ -151,6 +150,7 @@
                 class="select-content"
                 placeholder="请选择房号"
                 data-vv-as="带看房源"
+                filterable
                 @change="roomChange(hous)"
                 :data-vv-name="'roomNo' + idx"
                 v-validate="{
@@ -236,6 +236,58 @@
           ></div>
         </div>
       </div>
+
+      <div>
+        <div class="look-box">
+          <!-- action上传地址 -->
+          <el-upload
+            :action="uploadUrl"
+            list-type="picture-card"
+            :headers="headers"
+            name="file"
+            :before-upload="beforeImageUpload"
+            :on-success="handleImageSuccess"
+            :file-list="fileList"
+            :on-error="uploadError"
+            :limit="3"
+          >
+            <!-- 十字图标 -->
+            <i slot="default" class="el-icon-plus"></i>
+            <!-- 文件 -->
+            <div slot="file" slot-scope="{ file }">
+              <video
+                v-if="file.raw.type.split('video').length >= 2"
+                style="width:100%"
+                v-bind:src="file.url"
+              ></video>
+              <img
+                class="el-upload-list__item-thumbnail"
+                v-else-if="file.raw.type.split('image').length >= 2"
+                :src="file.url"
+                alt
+              />
+              <img
+                class="el-upload-list__item-thumbnail"
+                v-else
+                src="../../../assets/images/file.png"
+                alt
+              />
+              <span class="el-upload-list__item-actions">
+                <span
+                  class="el-upload-list__item-delete"
+                  @click="handleRemove(file)"
+                >
+                  <i class="el-icon-delete"></i>
+                </span>
+              </span>
+              <span class="uploadName">{{ file.name }}</span>
+            </div>
+            <div slot="tip" class="el-upload__tip">
+              支持添加图片、视频、文件，最多3份，单份大小限制5M以内
+            </div>
+          </el-upload>
+        </div>
+      </div>
     </section>
     <div class="footer">
       <el-button class="floot-btn close-btn" type="info" @click="close"
@@ -254,20 +306,31 @@
       customFlag="true"
       @confirmEmit="confirmEmit"
       @customBtn="customBtn"
-      ><div class="alert-txt">
-        改变带看类型会导致已录入的带看房源被清空。是否继续？
-      </div></fixedPopup
     >
+      <div class="alert-txt">
+        改变带看类型会导致已录入的带看房源被清空。是否继续？
+      </div>
+    </fixedPopup>
   </div>
 </template>
 
 <script>
+import util from "@/util/util";
+import { TOKEN } from "@/util/constMap";
+
+let token = util.localStorageGet(TOKEN);
+
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
   },
   data() {
     return {
+      fileList: [], //上传文件列表（用于展示）
+      mediaList: [], //上传文件列表（用于提交到接口保存）
+      headers: {
+        tk: token
+      },
       requireType: "",
       requireTypeOld: "",
       BeforeChangeType: "",
@@ -302,7 +365,9 @@ export default {
         { key: "不满意", value: 2 }
       ],
       fullscreenLoading: false,
-      alertflag: false
+      alertflag: false,
+      loading: null, //加载中
+      uploadUrl:this.$api.baseUrl()+'/saleCustomerOperation/addMedia'
     };
   },
   created() {
@@ -328,6 +393,71 @@ export default {
   },
   methods: {
     /**
+     * 上传失败
+     */
+    uploadError() {
+      this.loading.close();
+    },
+    /**
+     * 上传图片前的操作
+     */
+    beforeImageUpload(file) {
+      let that = this;
+      const isLt5M = file.size / 1024 / 1024 <= 5;
+      if (!isLt5M) {
+        that.$notify({
+          title: "上传错误",
+          message: file.name + "大小超过5M！，无法上传",
+          type: "warning",
+          duration: 3000
+        });
+      } else {
+        that.loading = that.$loading({
+          lock: true,
+          text: file.name + "上传中",
+          spinner: "el-icon-loading",
+          background: "rgba(0, 0, 0, 0.7)"
+        });
+      }
+      return isLt5M;
+    },
+    /**
+     * 上传成功
+     */
+    handleImageSuccess(res, file, fileList) {
+      // 上传成功
+      this.fileList = fileList;
+      this.loading.close();
+      if (res.code == 200) {
+        this.$notify({
+          title: "上传成功",
+          message: file.name + "上传成功",
+          type: "success"
+        });
+        this.mediaList.push(res.data);
+      } else {
+        this.$notify({
+          title: "上传错误",
+          message: file.name + "大小超过5M，无法上传",
+          type: "warning",
+          duration: 3000
+        });
+        this.fileList.splice(this.fileList.length - 1, 1);
+      }
+      console.log("上传成功", res, file);
+    },
+    /**
+     * 删除上传文件
+     */
+    handleRemove(file) {
+      for (let i = 0; i < this.fileList.length; i++) {
+        if (this.fileList[i].uid == file.uid) {
+          this.fileList.splice(i, 1);
+          this.mediaList.splice(i, 1);
+        }
+      }
+    },
+    /**
      * @example: 获取客户需求列表
      */
     getCusRequired() {
@@ -343,6 +473,16 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            for (let i = 0; i < e.data.data.length; i++) {
+              if (
+                e.data.data[i].key == 8 ||
+                e.data.data[i].key == 16 ||
+                e.data.data[i].key == 32
+              ) {
+                e.data.data.splice(i, 1);
+                i--;
+              }
+            }
             that.lookTypeList = e.data.data;
           }
         })
@@ -531,6 +671,7 @@ export default {
      * @example: 提交
      */
     confirm() {
+      this.fullscreenLoading = true;
       let that = this;
       let postData = {
         requireType: that.requireType,
@@ -540,7 +681,8 @@ export default {
         memo: that.memo,
         houses: [],
         houseEids: [],
-        houseAgentPers: []
+        houseAgentPers: [],
+        mediaList: that.mediaList
       };
       that.addHouse.forEach(item => {
         let house = {};
@@ -557,14 +699,13 @@ export default {
         house.cusfeedback = item.cusfeedback;
         postData.houses.push(house);
       });
-      console.log(postData);
       this.$validator.validateAll().then(result => {
         if (result) {
-          this.fullscreenLoading = true;
           that.$api
             .post({
               url: "/saleCustomer/addPairRecord",
               data: postData,
+              timeout:500000,
               headers: {
                 "Content-Type": "application/json"
               }
@@ -580,6 +721,8 @@ export default {
                 that.$message(e.response.data.message);
               }
             });
+        } else {
+          this.fullscreenLoading = false;
         }
       });
     },
@@ -649,6 +792,18 @@ export default {
     margin-bottom: 16px;
     background: #fff;
     border-radius: 8px;
+
+    .uploadName {
+      background-color: rgba(144, 147, 153, 0.7);
+      color: white;
+      display: inline-block;
+      width: 100%;
+      text-align: center;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
+
     .look-title {
       font-size: @font24;
     }
@@ -725,5 +880,66 @@ export default {
   height: 32PX;
   //prettier-ignore
   line-height: 32PX;
+}
+.view-item {
+  display: flex;
+  // prettier-ignore
+  margin-bottom: 30PX;
+  position: relative;
+  &.error-tips {
+    &::after {
+      content: attr(data-error);
+      position: absolute;
+      // prettier-ignore
+      bottom: -4PX;
+      // prettier-ignore
+      left: 100PX;
+      color: red;
+      font-size: @font13;
+      transform: translateY(100%);
+    }
+  }
+  .view-item-left {
+    font-size: @font16;
+    flex-shrink: 0;
+
+    // margin-right: 20PX;
+    // prettier-ignore
+    width: 80PX;
+    position: relative;
+    text-align: justify;
+    // prettier-ignore
+    height: 32PX;
+    // prettier-ignore
+    margin-right: 20PX;
+    // prettier-ignore
+    line-height: 32PX;
+    &::after {
+      display: inline-block;
+      width: 100%;
+      content: "";
+    }
+    &.is-require {
+      &::before {
+        content: "*";
+        color: red;
+        position: absolute;
+        line-height: 1;
+        // prettier-ignore
+        left: -15PX;
+        // prettier-ignore
+        top: 10PX;
+      }
+    }
+    &.is-center {
+      align-self: center;
+    }
+  }
+  .view-item-right {
+    flex: 1;
+    &.is-center {
+      align-self: center;
+    }
+  }
 }
 </style>

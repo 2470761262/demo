@@ -105,13 +105,13 @@
         >
           认领客户
         </div>
-        <el-popover
+        <!-- <el-popover
           placement="bottom"
           trigger="click"
           class="Green"
           v-if="ruleList.dialButtonEnable"
-        >
-          <div class="phone-list">
+        > -->
+          <!-- <div class="phone-list">
             <div
               v-for="(item, idx) in callList"
               :key="idx"
@@ -122,12 +122,15 @@
             <div v-if="callList.length <= 0">
               暂无号码
             </div>
-          </div>
-          <el-button slot="reference" @click="getPhone"
-            ><span>一键拨号</span></el-button
-          >
-        </el-popover>
+          </div> -->
+          <!-- <el-button slot="reference" @click="callUp">
+            <span>一键拨号</span>
+          </el-button>
+        </el-popover> -->
         <!-- <div class="Green">一键拨号</div> -->
+        <div class="White" @click="callUp">
+          一键拨号
+        </div>
       </div>
     </div>
     <div class="SubMsgZone">
@@ -404,19 +407,17 @@ export default {
           }
         });
     },
-    callUp(i) {
+    callUp() {
       debugger;
       let that = this;
       if (this.isCall) {
-        console.log(i);
         let postData = {
             customerId: this.customerId.id,
             remark: "给客户" + this.cusbaseData.Customers + "拨打电话",
             customerName: this.cusbaseData.Customers,
             //  contactPhone: i.phone,
             customerNo: this.cusbaseData.CustomerNo,
-            customerPlate: this.cusbaseData.plate,
-            telId: i.id
+            customerPlate: this.cusbaseData.plate
         };
         that.isCall = false;
         that.$api
@@ -537,7 +538,7 @@ export default {
               //跳转至私客页面
               this.$router.push({
                 path: "/customers/customersDetail",
-                query: { customerId: this.customerId.id }
+                query: { customerId: json.data }
               });
             } else if (json.code == 400) {
               alert(json.message);

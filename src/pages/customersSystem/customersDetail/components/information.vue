@@ -23,29 +23,17 @@
           </div>
           <el-button slot="reference" @click="getPhone">查看号码</el-button>
         </el-popover>
-        <el-popover
-          placement="bottom"
-          trigger="click"
+        <div
           class="infor-dial"
-          v-model="isPhone"
           v-if="
             permissionList.dialButtonEnable.isDisable &&
               attentionStatus.flag == 1
           "
         >
-          <div class="phone-list">
-            <div
-              v-for="(item, idx) in phoneList"
-              :key="idx"
-              @click="callUp(item.id)"
-            >
-              {{ item.phone || "" }}
-            </div>
-          </div>
-          <el-button slot="reference" @click="getPhone" :loading="callLoading"
-            ><span>一键拨号</span></el-button
-          >
-        </el-popover>
+          <el-button slot="reference" @click="callUp" :loading="callLoading">
+            <span>一键拨号</span>
+          </el-button>
+        </div>
       </div>
     </div>
     <div class="infor-row">
@@ -93,15 +81,29 @@
     </section>
     <section class="message-row flex">
       <div class="message-title">拥有人数：</div>
-      <div class="message-txt">{{ customer.haveAgents }}人</div>
+      <div class="message-txt">
+        {{
+          customer.haveAgents == -1 ? "加载中.." : customer.haveAgents + "人"
+        }}
+      </div>
     </section>
     <section class="message-row flex">
       <div class="message-title">公司看房套数：</div>
-      <div class="message-txt">{{ customer.lookHouses }}套</div>
+      <div class="message-txt">
+        {{
+          customer.lookHouses == -1 ? "加载中.." : customer.lookHouses + "套"
+        }}
+      </div>
     </section>
     <section class="message-row flex">
       <div class="message-title">我的带看套数：</div>
-      <div class="message-txt">{{ customer.myLookHouses }}套</div>
+      <div class="message-txt">
+        {{
+          customer.myLookHouses == -1
+            ? "加载中.."
+            : customer.myLookHouses + "套"
+        }}
+      </div>
     </section>
     <section class="message-row flex">
       <div class="message-title">上次带看时间：</div>
@@ -234,14 +236,14 @@ export default {
       }
     },
     formatDemand(value) {
-      if(value){
-          if (value.length > 1) {
-            return value.join("、");
-          } else {
-            return value[0];
-          }
-      }else{
-          return "暂无";
+      if (value) {
+        if (value.length > 1) {
+          return value.join("、");
+        } else {
+          return value[0];
+        }
+      } else {
+        return "暂无";
       }
     }
   },
@@ -276,9 +278,8 @@ export default {
     },
     /**
      * @example: 一键拨号
-     * @param: {id} 电话的Id
      */
-    callUp(id) {
+    callUp() {
       let that = this;
       that.isPhone = false;
       if (this.isCall) {
@@ -286,7 +287,6 @@ export default {
           customerId: this.customer.data.id,
           remark: "给客户" + this.customer.data.Customers + "拨打电话",
           customerName: this.customer.data.Customers,
-          telId: id,
           customerNo: this.customer.data.CustomerNo,
           customerPlate: this.customer.data.plate
         };

@@ -51,9 +51,9 @@ export default {
       demandList: {}, //客户需求内容
       customer: {
         data: {},
-        haveAgents: 0, //拥有人数
-        lookHouses: 0, //公司看房套数
-        myLookHouses: 0 //我的带看套数
+        haveAgents: -1, //拥有人数
+        lookHouses: -1, //公司看房套数
+        myLookHouses: -1 //我的带看套数
       }, //客户信息
       customerDeal: {}, //客户买卖信息
       customerId: this.$route.query.customerId,
@@ -107,8 +107,16 @@ export default {
     };
   },
   created() {
+    document.title = "鑫伽系统-私客详情";
     this.getInformation();
     this.getImpressions();
+    this.getStatistics(function(e, data) {
+      console.log(e, data, "xxxxxxxxxxxxxxxxxxxxxx");
+      //this.$set(that.impressionList, "data", data);
+      e.customer.haveAgents = data.possessNumber;
+      e.customer.lookHouses = data.allTakeNumber;
+      e.customer.myLookHouses = data.myTakeNumber;
+    });
   },
   methods: {
     /**
@@ -119,6 +127,7 @@ export default {
       let postData = {
         customerId: this.customerId
       };
+      console.log("enter...");
       that.$api
         .post({
           url: "/saleCustomerDetail/getACusEx",
@@ -129,6 +138,7 @@ export default {
           }
         })
         .then(e => {
+          console.log("finished.............");
           if (e.data.code == 200) {
             //判断如果是私客则跳转到私客详情页
             if (e.data.data.bsAgentCustomersTbl.plate > 0) {
@@ -149,9 +159,9 @@ export default {
               "flag",
               data.bsAgentCustomersTbl.attentionStatus
             );
-            that.customer.haveAgents = data.haveAgents;
-            that.customer.lookHouses = data.lookHouses;
-            that.customer.myLookHouses = data.myLookHouses;
+            //that.customer.haveAgents = data.haveAgents;
+            //that.customer.lookHouses = data.lookHouses;
+            //that.customer.myLookHouses = data.myLookHouses;
             that.modificationPermission(data.ruleList);
             this.$set(this.$data, "plate", data.bsAgentCustomersTbl.plate);
             that.demandList.data.forEach(item => {
@@ -206,6 +216,34 @@ export default {
           if (e.data.code == 200) {
             let data = e.data.data;
             this.$set(that.impressionList, "data", data);
+          }
+        })
+        .catch();
+    },
+    /**
+     * @example: 获取详情统计值
+     */
+    getStatistics(executeStatistics = false) {
+      let that = this;
+      let postData = {
+        customerId: this.customerId
+      };
+      that.$api
+        .post({
+          url: "/saleCustomerDetail/statistics",
+          data: postData,
+          qs: true,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            let data = e.data.data;
+            console.log("hahahahahahahhahahahahah ", data);
+            if (executeStatistics) {
+              //回调执行
+              executeStatistics(that, e.data.data);
+            }
+            //this.$set(that.impressionList, "data", data);
           }
         })
         .catch();

@@ -348,7 +348,7 @@ export default {
      * @param {Object} relevance 用于判断是tag点击删除 还是 checkout删除
      */
     removeActive(nowSign, relevance = false) {
-      console.log(this.showActiveList);
+      console.log(nowSign, this.showActiveList, "hhhhh");
       let isIndex = this.showActiveList.findIndex(item => {
         return item.sign == (relevance ? nowSign.sign : nowSign);
       });
@@ -376,7 +376,7 @@ export default {
       const nowSign = `${
         parentIndex != undefined ? parentIndex : this.renderLeftIndex
       }-${nowItem.value}`;
-      console.log(nowSign, parentIndex);
+      console.log(nowSign, parentIndex, "parentIndex");
       if (this.removeActive(nowSign).length == 0) {
         switch (parentIndex != undefined ? parentIndex : this.renderLeftIndex) {
           case 0:
@@ -393,9 +393,11 @@ export default {
           title: typeTitle + nowItem.title,
           sign: nowSign,
           value: nowItem.value,
-          parentIndex: this.renderLeftIndex,
+          parentIndex:
+            parentIndex != undefined ? parentIndex : this.renderLeftIndex,
           isDisabled: nowItem.isDisabled
         });
+        console.log(this.showActiveList, "this.showActiveList");
       }
     },
     /**
