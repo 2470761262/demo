@@ -3,13 +3,7 @@
     <div class="content-top">
       <div class="title">跟进信息</div>
       <div class="btn-box">
-        <div
-          class="btn font-g"
-          @click="openDevelop()"
-          v-if="attentionStatus.flag == 1"
-        >
-          预约带看
-        </div>
+        <div class="btn font-g" @click="openDevelop()" v-if="attentionStatus.flag == 1">预约带看</div>
         <div
           class="btn font-g"
           @click="toPage()"
@@ -17,9 +11,7 @@
             permissionList.addLookButtonEable.isDisable &&
               attentionStatus.flag == 1
           "
-        >
-          添加带看
-        </div>
+        >添加带看</div>
         <div
           class="btn back font-w"
           @click="openPopUp('followUpFlag')"
@@ -27,18 +19,12 @@
             permissionList.addFollowLookButtonEable.isDisable &&
               attentionStatus.flag == 1
           "
-        >
-          写跟进
-        </div>
+        >写跟进</div>
       </div>
     </div>
 
     <div class="content-tabs">
-      <el-tabs
-        class="tabs-box"
-        v-model="changeTabsValue"
-        @tab-click="handleClick"
-      >
+      <el-tabs class="tabs-box" v-model="changeTabsValue" @tab-click="handleClick">
         <!-- 全部记录 -->
         <el-tab-pane label="全部" name="all" class="point">
           <div class="list-content">
@@ -49,14 +35,9 @@
                 :timestamp="item.type ? '带看信息' : '跟进信息'"
                 placement="top"
               >
-                <i
-                  :class="idx == 0 ? 'car-icon-green' : 'car-icon-grey'"
-                  class="car-icon"
-                  ><i
-                    :class="idx == 0 ? 'car-icon-s-green' : 'car-icon-s-grey'"
-                    class="car-icon-s"
-                  ></i
-                ></i>
+                <i :class="idx == 0 ? 'car-icon-green' : 'car-icon-grey'" class="car-icon">
+                  <i :class="idx == 0 ? 'car-icon-s-green' : 'car-icon-s-grey'" class="car-icon-s"></i>
+                </i>
                 <div v-if="!item.type">
                   <p class="time-txt">{{ item.FollowTime }}</p>
                   <section class="list-car">
@@ -69,15 +50,11 @@
                     </div>
                     <div class="car-row">
                       <div class="car-title">跟进类型：</div>
-                      <div class="car-right">
-                        {{ item.FollowType || "暂无" }}
-                      </div>
+                      <div class="car-right">{{ item.FollowType || "暂无" }}</div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">跟进方式：</div>
-                      <div class="car-right">
-                        {{ item.FollowWay || "暂无" }}
-                      </div>
+                      <div class="car-right">{{ item.FollowWay || "暂无" }}</div>
                     </div>
                     <div class="car-row car-mar-no">
                       <div class="car-title">跟进内容：</div>
@@ -86,9 +63,7 @@
                         :theUrl="item.Memo.slice(6)"
                         theControlList="onlyOnePlaying"
                       ></VueAudio>
-                      <div class="car-right" v-else>
-                        {{ item.Memo || "暂无" }}
-                      </div>
+                      <div class="car-right" v-else>{{ item.Memo || "暂无" }}</div>
                     </div>
                   </section>
                 </div>
@@ -98,9 +73,7 @@
                   <section class="list-car">
                     <div class="car-row">
                       <div class="car-title">带看类型：</div>
-                      <div class="car-right">
-                        {{ item.salePairType[0] || "暂无" }}
-                      </div>
+                      <div class="car-right">{{ item.salePairType[0] || "暂无" }}</div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看经纪：</div>
@@ -115,22 +88,14 @@
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看时间：</div>
-                      <div class="car-right">
-                        {{ item.timeQuantum || "暂无" }}
-                      </div>
+                      <div class="car-right">{{ item.timeQuantum || "暂无" }}</div>
                     </div>
                     <div class="car-row">
                       <div class="car-title">带看房源：</div>
-                      <div
-                        class="car-right"
-                        v-if="item.housingResource.length > 0"
-                      >
-                        <p
-                          v-for="(housingResource, idx) in item.housingResource"
-                          :key="idx"
-                        >
+                      <div class="car-right" v-if="item.housingResource.length > 0">
+                        <p v-for="(housingResource, idx) in item.housingResource" :key="idx">
                           {{ housingResource.address }} - (反馈：{{
-                            housingResource.cusfeedback | cusfeedbackName
+                          housingResource.cusfeedback | cusfeedbackName
                           }})
                         </p>
                       </div>
@@ -141,7 +106,7 @@
                       <div class="car-right">
                         {{ item.Cusfeedback | cusfeedbackName }}
                       </div>
-                    </div> -->
+                    </div>-->
                     <div class="car-row car-mar-no">
                       <div class="car-title">带看总结：</div>
                       <div class="car-right">{{ item.Memo || "暂无" }}</div>
@@ -166,14 +131,9 @@
                 timestamp="跟进信息"
                 placement="top"
               >
-                <i
-                  :class="idx == 0 ? 'car-icon-green' : 'car-icon-grey'"
-                  class="car-icon"
-                  ><i
-                    :class="idx == 0 ? 'car-icon-s-green' : 'car-icon-s-grey'"
-                    class="car-icon-s"
-                  ></i
-                ></i>
+                <i :class="idx == 0 ? 'car-icon-green' : 'car-icon-grey'" class="car-icon">
+                  <i :class="idx == 0 ? 'car-icon-s-green' : 'car-icon-s-grey'" class="car-icon-s"></i>
+                </i>
                 <p class="time-txt">{{ item.FollowTime }}</p>
                 <section class="list-car">
                   <div class="car-row">
@@ -198,9 +158,7 @@
                       :theUrl="item.Memo.slice(6)"
                       theControlList="onlyOnePlaying"
                     ></VueAudio>
-                    <div class="car-right" v-else>
-                      {{ item.Memo || "暂无" }}
-                    </div>
+                    <div class="car-right" v-else>{{ item.Memo || "暂无" }}</div>
                   </div>
                 </section>
               </el-timeline-item>
@@ -221,21 +179,14 @@
                 timestamp="带看信息"
                 placement="top"
               >
-                <i
-                  :class="idx == 0 ? 'car-icon-green' : 'car-icon-grey'"
-                  class="car-icon"
-                  ><i
-                    :class="idx == 0 ? 'car-icon-s-green' : 'car-icon-s-grey'"
-                    class="car-icon-s"
-                  ></i
-                ></i>
+                <i :class="idx == 0 ? 'car-icon-green' : 'car-icon-grey'" class="car-icon">
+                  <i :class="idx == 0 ? 'car-icon-s-green' : 'car-icon-s-grey'" class="car-icon-s"></i>
+                </i>
                 <p class="time-txt">{{ item.AddTime }}</p>
                 <section class="list-car">
                   <div class="car-row">
                     <div class="car-title">带看类型：</div>
-                    <div class="car-right">
-                      {{ item.salePairType[0] || "暂无" }}
-                    </div>
+                    <div class="car-right">{{ item.salePairType[0] || "暂无" }}</div>
                   </div>
                   <div class="car-row">
                     <div class="car-title">带看经纪：</div>
@@ -250,19 +201,14 @@
                   </div>
                   <div class="car-row">
                     <div class="car-title">带看时间：</div>
-                    <div class="car-right">
-                      {{ item.timeQuantum || "暂无" }}
-                    </div>
+                    <div class="car-right">{{ item.timeQuantum || "暂无" }}</div>
                   </div>
                   <div class="car-row">
                     <div class="car-title">带看房源：</div>
                     <div class="car-right">
-                      <p
-                        v-for="(housingResource, idx) in item.housingResource"
-                        :key="idx"
-                      >
+                      <p v-for="(housingResource, idx) in item.housingResource" :key="idx">
                         {{ housingResource.address }} - (反馈：{{
-                          housingResource.cusfeedback | cusfeedbackName
+                        housingResource.cusfeedback | cusfeedbackName
                         }})
                       </p>
                     </div>
@@ -270,13 +216,13 @@
                   <!-- <div class="car-row">
                     <div class="car-title">带看户型：</div>
                     <div class="car-right">{{ item.FollowWay }}</div>
-                  </div> -->
+                  </div>-->
                   <!-- <div class="car-row">
                     <div class="car-title">带看反馈：</div>
                     <div class="car-right">
                       {{ item.Cusfeedback | cusfeedbackName }}
                     </div>
-                  </div> -->
+                  </div>-->
                   <div class="car-row car-mar-no">
                     <div class="car-title">带看总结：</div>
                     <div class="car-right">{{ item.Memo || "暂无" }}</div>
@@ -305,8 +251,9 @@
       styleType="0"
       :butJson="btnJson"
       @confirmEmit="alertflag = false"
-      ><div class="alert-txt">该功能正在开发中，敬请期待</div></fixedPopup
     >
+      <div class="alert-txt">该功能正在开发中，敬请期待</div>
+    </fixedPopup>
   </div>
 </template>
 
@@ -411,8 +358,9 @@ export default {
                 that.lookAtData[j].buildingName +
                 "-" +
                 that.lookAtData[j].roomNo;
-              if (housingResource.address == 0)
+              if (that.lookAtData[i].communityName == null) {
                 housingResource.address = "房源已下架";
+              }
               housingResource.cusfeedback = that.lookAtData[j].Cusfeedback;
               that.lookAtData[i].housingResource.push(housingResource);
             }
@@ -423,8 +371,9 @@ export default {
             that.lookAtData[i].communityName +
             that.lookAtData[i].buildingName +
             that.lookAtData[i].roomNo;
-          if (housingResource.address == 0)
+          if (that.lookAtData[i].communityName == null) {
             housingResource.address = "房源已下架";
+          }
 
           housingResource.cusfeedback = that.lookAtData[i].Cusfeedback;
           that.lookAtData[i].housingResource.push(housingResource);
