@@ -106,20 +106,23 @@
       </div>
     </el-dialog>
     <div class="nav-flex" :class="isPad">
-      <el-breadcrumb separator="/">
-        <el-breadcrumb-item
-          v-for="(item, index) in breadcrumbList"
-          :key="index"
-          :to="{ path: item.url }"
-          >{{ item.title }}</el-breadcrumb-item
-        >
-        <el-breadcrumb-item
-          class="isBack anchor-point"
-          v-if="breadcrumbList.length > 1 && isShowReturn"
-          @click.native="goBack"
-          >返回</el-breadcrumb-item
-        >
-      </el-breadcrumb>
+      <div v-if="!isCustomers">
+        <el-breadcrumb separator="/">
+          <el-breadcrumb-item
+            v-for="(item, index) in breadcrumbList"
+            :key="index"
+            :to="{ path: item.url }"
+            >{{ item.title }}</el-breadcrumb-item
+          >
+          <el-breadcrumb-item
+            class="isBack anchor-point"
+            v-if="breadcrumbList.length > 1 && isShowReturn"
+            @click.native="goBack"
+            >返回</el-breadcrumb-item
+          >
+        </el-breadcrumb>
+      </div>
+
       <el-link
         slot="reference"
         @click="hitOuterVisible()"
@@ -141,6 +144,10 @@ export default {
     homeUrl: {
       type: String,
       default: "/buySellSystem/houseList"
+    },
+    isCustomers: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {

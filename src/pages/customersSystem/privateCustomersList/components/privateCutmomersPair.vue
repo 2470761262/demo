@@ -490,9 +490,9 @@
             v-for="(item, index) in ProgressList"
             :key="index"
           >
-            <el-radio :label="item.value" name="Progress">
-              {{ item.name }}
-            </el-radio>
+            <el-radio :label="item.value" name="Progress">{{
+              item.name
+            }}</el-radio>
           </div>
         </el-radio-group>
       </el-form-item>
@@ -1034,7 +1034,7 @@ export default {
       this.form.maxLastPairFollowTime = "";
 
       this.Intend = [4];
-      this.Progress = [-1];
+      this.Progress = -1;
       this.Price = 0;
       this.MinPrice = "";
       this.MaxPrice = "";
