@@ -343,7 +343,7 @@ export default {
       timeStar: "",
       timeEnd: "",
       startDateDisabled: {},
-      customerId: this.$route.query.customerId,
+      customerId: atob(this.$route.query.customerId),
       startTime: "",
       endTime: "",
       Cusfeedback: "", //带看反馈

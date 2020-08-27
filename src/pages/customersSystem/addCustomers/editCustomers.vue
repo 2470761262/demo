@@ -60,7 +60,7 @@ export default {
       comNextIndex: 0,
       stepName: "下一步",
       fullscreenLoading: false,
-      customerId: this.$route.query.customerId,
+      customerId: atob(this.$route.query.customerId),
       step: this.$route.query.step,
       demandValue: {
         //客户需求value
