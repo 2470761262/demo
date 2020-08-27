@@ -387,6 +387,17 @@ export default [
           import(
            /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/business.vue"
           )
+      }, {
+        path: "/managementEntrance/buySellHouse",
+        meta: {
+          title: "买卖房源",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () => 
+          import(
+           /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/buySellHouse.vue"
+          )
       }
     ]
   },
