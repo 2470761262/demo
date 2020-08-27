@@ -763,10 +763,16 @@ export default {
 </script>
 <style lang="less" scoped>
 .container {
-  min-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
   // prettier-ignore
   padding: 12PX 16PX 51PX;
   background: #F0F7F7;
+  overflow: auto;
   .position {
     line-height: 1;
     font-size: @font12;
