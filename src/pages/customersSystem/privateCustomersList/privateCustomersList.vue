@@ -1,6 +1,8 @@
 <style lang="less" scoped>
 .content {
   width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 .half-content {
   background: rgba(255, 255, 255, 1);
@@ -12,6 +14,7 @@
 </style>
 <template>
   <div class="content">
+    <!-- <customers-nav breadcrumbName="私客列表"></customers-nav> -->
     <div class="half-content">
       <privateCutmomersPair></privateCutmomersPair>
     </div>
@@ -26,6 +29,7 @@ import privateCutmomersPair from "@/pages/customersSystem/privateCustomersList/c
 import privateCutmomersResultList from "@/pages/customersSystem/privateCustomersList/components/privateCutmomersResultList";
 import { TOKEN } from "@/util/constMap";
 import util from "@/util/util";
+import customersNav from "@/components/breadcrumb";
 export default {
   provide() {
     return {
@@ -34,7 +38,8 @@ export default {
   },
   components: {
     privateCutmomersPair,
-    privateCutmomersResultList
+    privateCutmomersResultList,
+    customersNav
   },
   data() {
     return {

@@ -1,5 +1,7 @@
 <style lang="less" scoped>
 .content {
+  padding: 20px;
+  box-sizing: border-box;
   //background: rgba(255, 255, 255, 1);
   border-radius: 8px;
   flex: 1;
@@ -21,6 +23,7 @@
 </style>
 <template>
   <section class="content">
+    <customers-nav breadcrumbName="新增客源"></customers-nav>
     <component :is="componentName" ref="childreCom"></component>
     <div class="floot-content">
       <el-button @click="close">返回</el-button>
@@ -40,12 +43,14 @@
 import componentsFactory from "@/util/componentsFactory";
 import util from "@/util/util";
 import { multiplication } from "@/util/accurateComputeUtil";
+import customersNav from "@/components/breadcrumb";
 //记录步骤组件名字
 const ComList = ["stepOne", "stepTwo"];
 export default {
   components: {
     stepOne: () => componentsFactory(import("./components/stepOne")),
-    stepTwo: () => componentsFactory(import("./components/stepTwo"))
+    stepTwo: () => componentsFactory(import("./components/stepTwo")),
+    customersNav
   },
   data() {
     return {

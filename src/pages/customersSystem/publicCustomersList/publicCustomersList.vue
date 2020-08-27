@@ -1,6 +1,8 @@
 <style lang="less" scoped>
 .content {
+  padding: 20px;
   width: 100%;
+  box-sizing: border-box;
 }
 .half-content {
   background: rgba(255, 255, 255, 1);
