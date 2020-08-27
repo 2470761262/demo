@@ -92,6 +92,12 @@ export default {
       }
       if (newxFlag) {
         if (this.comNextIndex == 0) {
+          if (!this.$refs.childreCom.isPhone) {
+            this.$message({
+              message: "号码重复,请修改后在提交"
+            });
+            return;
+          }
           this.$store.commit("updateStep1", this.$refs.childreCom.formData);
           this.componentName = ComList[++this.comNextIndex];
           this.stepName = "上一步";
@@ -105,6 +111,12 @@ export default {
     // 提交按钮
     async submit() {
       let newxFlag = true;
+      if (!this.$refs.childreCom.isPhone) {
+        this.$message({
+          message: "号码重复,请修改后在提交"
+        });
+        return;
+      }
       if (this.componentName == "stepOne") {
         newxFlag = await this.$refs.childreCom.validate();
       } else {
@@ -140,9 +152,27 @@ export default {
             this.$store.state.addCustomers.formData.step2
           );
           if (this.componentName == "stepOne") {
-            console.log(this.$refs.childreCom.formData, "保存时候的数据");
             postData = util.deepCopy(this.$refs.childreCom.formData);
-            console.log(postData, "拷贝后的的数据");
+            let oneDemandValue = this.$refs.childreCom.demandValue;
+            let oneRequireType = [];
+            if (oneDemandValue.list0.length != 0) {
+              for (let i = 0; i < oneDemandValue.list0.length; i++) {
+                let requireType = { requireType: demandValue.list0[i] };
+                oneRequireType.push(requireType);
+              }
+            }
+            if (oneDemandValue.list1.length != 0) {
+              for (let i = 0; i < oneDemandValue.list1.length; i++) {
+                let requireType = { requireType: demandValue.list1[i] };
+                oneRequireType.push(requireType);
+              }
+            }
+            if (oneDemandValue.list2.length != 0) {
+              for (let i = 0; i < oneDemandValue.list2.length; i++) {
+                let requireType = { requireType: demandValue.list2[i] };
+                oneRequireType.push(requireType);
+              }
+            }
             for (let i = 0; i < Object.keys(demandValue).length; i++) {
               demandValue["list" + i].forEach(item => {
                 let isIndex = postData.requirements.findIndex(postItem => {
@@ -153,6 +183,16 @@ export default {
                   postData.requirements.push(requireType);
                 }
               });
+            }
+            for (let i = 0; i < postData.requirements.length; i++) {
+              let item = postData.requirements[i];
+              let isIndex = oneRequireType.findIndex(postItem => {
+                return item.requireType == postItem.requireType;
+              });
+              if (isIndex == -1) {
+                postData.requirements.splice(i, 1);
+                i--;
+              }
             }
           } else {
             postData = util.deepCopy(

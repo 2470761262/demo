@@ -441,7 +441,8 @@ export default {
       },
       provinceList: [],
       cityList: [],
-      countyList: []
+      countyList: [],
+      isPhone: true
     };
   },
   created() {
@@ -472,6 +473,7 @@ export default {
               that.$message({
                 message: phone + "号码重复"
               });
+              this.isPhone = false;
             }
           }
         })
