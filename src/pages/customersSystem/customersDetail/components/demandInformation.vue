@@ -185,7 +185,7 @@
                     v-if="item.minUnitPrice && item.maxUnitPrice"
                   >
                     {{ item.minUnitPrice | formatMoney }} -
-                    {{ item.maxUnitPrice | formatMoney }}万
+                    {{ item.maxUnitPrice | formatMoney }}元
                   </div>
                   <div class="msg-row-txt" v-else>暂无</div>
                 </div>
@@ -262,7 +262,7 @@
                     v-if="item.minUnitPrice && item.maxUnitPrice"
                   >
                     {{ item.minUnitPrice | formatMoney }} -
-                    {{ item.maxUnitPrice | formatMoney }}万
+                    {{ item.maxUnitPrice | formatMoney }}元
                   </div>
                   <div class="msg-row-txt" v-else>暂无</div>
                 </div>
