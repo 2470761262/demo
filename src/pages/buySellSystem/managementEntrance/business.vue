@@ -23,7 +23,7 @@
           </button>
         </div>
         <div class="right">
-          <el-radio-group v-model="searchType" @change="changeSearchType">
+          <el-radio-group v-model="searchType" @change="fuzzySearch">
             <el-radio-button
              class="btn"
              :label="item.value"
@@ -69,7 +69,7 @@
             :min-width="item.minWidth"
             :align="item.align"
             :sortable="item.sortable"
-            :sort-method="sortDevName"
+            :sort-orders="['ascending', 'descending']"
             >
           </el-table-column>
         </el-table>
@@ -160,7 +160,8 @@
               :width="list.width"
               :min-width="list.minWidth"
               :align="list.align"
-              :sortable="list.sortable">
+              :sortable="list.sortable"
+              :sort-orders="['ascending', 'descending']">
             </el-table-column>
           </el-table-column>
         </el-table>
@@ -245,6 +246,7 @@
             :min-width="item.minWidth"
             :align="item.align"
             :sortable="item.sortable"
+            :sort-orders="['ascending', 'descending']"
             >
           </el-table-column>
         </el-table>
@@ -268,6 +270,7 @@ export default {
       navActiveIndex: 0,
       navList: ["业务管理", "买卖房源", "租赁房源", "客源", "人员管理"],
       businessKeyword: "",
+      perName: "",
       searchTypes: [
         {
           name: "经纪人",
@@ -296,7 +299,7 @@ export default {
         {
           prop: "perName",
           label: "姓名/门店/区域",
-          minWidth: "150",
+          minWidth: "120",
           align: "left"
         }, {
           prop: "agentNum",
@@ -481,7 +484,7 @@ export default {
         {
           prop: "perName",
           label: "姓名/门店/区域",
-          minWidth: "150",
+          minWidth: "120",
           align: "left"
         },
         // {
@@ -494,7 +497,7 @@ export default {
         {
           prop: "lastDayAddScore",
           label: "新增鑫币",
-          minWidth: "150",
+          minWidth: "100",
           align: "right",
           sortable: true
         }, {
@@ -550,7 +553,7 @@ export default {
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
         dateFlag: "",//日
-        perName: this.businessKeyword,
+        perName: this.perName,
         page: this.workPaginate.page,
         limit: this.workPaginate.limit,
         sortColumn: this.workSortColumn,
@@ -563,7 +566,6 @@ export default {
           data: params
         })
         .then(e => {
-          console.log(e.data,"=========workData");
           if (e.data.code == 200) {
             this.workData = e.data.data.data;
             this.workPaginate.pageSum = e.data.data.pageSum;
@@ -580,7 +582,7 @@ export default {
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
         dateFlag: "",//日
-        perName: this.businessKeyword,
+        perName: this.perName,
         page: this.developPaginate.page,
         limit: this.developPaginate.limit,
         sortColumn: this.developSortColumn,
@@ -593,7 +595,6 @@ export default {
           data: params
         })
         .then(e => {
-          console.log(e.data,"=========developData");
           if (e.data.code == 200) {
             this.developData = e.data.data.data;
             this.developPaginate.pageSum = e.data.data.pageSum;
@@ -610,7 +611,7 @@ export default {
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
         dateFlag: this.currencyMonth,//日
-        perName: this.businessKeyword,
+        perName: this.perName,
         page: this.currencyPaginate.page,
         limit: this.currencyPaginate.limit,
         sortColumn: this.currencySortColumn,
@@ -623,7 +624,6 @@ export default {
           data: params
         })
         .then(e => {
-          console.log(e.data,"=========currencyData");
           if (e.data.code == 200) {
             this.currencyData = e.data.data.data;
             this.currencyPaginate.pageSum = e.data.data.pageSum;
@@ -634,22 +634,10 @@ export default {
         .finally(() => {});
     },
     /**
-     * @example: 姓名/门店/区域模糊搜索
+     * @example: 姓名/门店/区域模糊搜索 (经纪人/门店/区域切换)
      */
     fuzzySearch() {
-      console.log(this.businessKeyword, this.searchType, "模糊搜索-------");
-      Object.assign(this.workPaginate, this.$options.data().workPaginate);
-      Object.assign(this.developPaginate, this.$options.data().developPaginate);
-      Object.assign(this.currencyPaginate, this.$options.data().currencyPaginate);
-      this.getWorkData();
-      this.getDevelopData();
-      this.getCurrencyData();
-    },
-    /**
-     * @example: 经纪人/门店/区域切换
-     */
-    changeSearchType() {
-      console.log(this.businessKeyword, this.searchType, "模糊搜索-------");
+      this.perName = this.businessKeyword;
       Object.assign(this.workPaginate, this.$options.data().workPaginate);
       Object.assign(this.developPaginate, this.$options.data().developPaginate);
       Object.assign(this.currencyPaginate, this.$options.data().currencyPaginate);
@@ -663,7 +651,6 @@ export default {
      * @param {type} 分页类型
      */
     handleSizeChange(val, type) {
-      console.log(`每页 ${val} 条`,type);
       this[type].limit = val;
       switch(type) {
         case "workPaginate":
@@ -683,7 +670,6 @@ export default {
      * @param {type} 分页类型
      */
     handleCurrentChange(val, type) {
-      console.log(`当前页: ${val}`,type);
       this[type].page = val;
       switch(type) {
         case "workPaginate":
@@ -710,7 +696,6 @@ export default {
           showCancelButton: false
         }).then(() => {
           this.currencyTypeIndex = 0;
-          console.log("=====")
         }).catch(() => {
           this.currencyTypeIndex = 0;
         });
@@ -746,26 +731,32 @@ export default {
     queryCurrencyData() {
       this.getCurrencyData();
     },
-    changeWorkSort(column, prop, order) {
+    /**
+     * @example: 作业数据排序变化触发事件
+     */
+    changeWorkSort({column, prop, order}) {
       this.workSortColumn = prop;
       this.workSortType = order=="ascending" ? 0 : 1;
-      console.log(column, prop, order, "=============changeWorkSort");
+      Object.assign(this.workPaginate, this.$options.data().workPaginate);
       this.getWorkData();
     },
-    changeDevelopSort(column, prop, order) {
+    /**
+     * @example: 开发数据排序变化触发事件
+     */
+    changeDevelopSort({column, prop, order}) {
       this.developSortColumn = prop;
       this.developSortType = order=="ascending" ? 0 : 1;
-      console.log(column, prop, order, "=============changeDevelopSort");
+      Object.assign(this.developPaginate, this.$options.data().developPaginate);
       this.getDevelopData();
     },
-    changeCurrencySort(column, prop, order) {
+    /**
+     * @example: 鑫币数据排序变化触发事件
+     */
+    changeCurrencySort({column, prop, order}) {
       this.currencySortColumn = prop;
       this.currencySortType = order=="ascending" ? 0 : 1;
-      console.log(column, prop, order, "=============changeCurrencySort");
+      Object.assign(this.currencyPaginate, this.$options.data().currencyPaginate);
       this.getCurrencyData();
-    },
-    sortDevName(a, b) {
-      console.log(a, b, "2222222222")
     }
   }
 }
@@ -1021,7 +1012,7 @@ export default {
         display: flex;
         align-items: flex-end;
         // prettier-ignore
-        margin: 24PX 0 29PX;
+        margin: 24PX 0 5PX;
         // prettier-ignore
         height: 26PX;
         font-size: @font18;
@@ -1050,7 +1041,7 @@ export default {
       }
       .tip {
         // prettier-ignore
-        margin-left: 26PX;
+        margin: 24PX 0 0 26PX;
         font-size: @font14;
         color: #909399;
       }
@@ -1058,25 +1049,70 @@ export default {
     /deep/.content {
       // prettier-ignore
       margin-top: 24PX;
-      .sort-caret.ascending {
-        top: 0.01rem;
-      }
-      .sort-caret.descending {
-        bottom: 0.03rem;
-      }
-      .el-table__header-wrapper {
-        background: #F0F5F4;
-      }
-      .el-table th {
+      .caret-wrapper {
         // prettier-ignore
-        height: 48PX;
-        padding: 0;
+        width: 15PX;
+        // prettier-ignore
+        height: 14PX;
+        .sort-caret.ascending {
+          // prettier-ignore
+          top: -5PX;
+        }
+        .sort-caret.descending {
+          // prettier-ignore
+          bottom: -3PX;
+        }
+      }
+      .has-gutter:not(.is-group) {
         background: #F0F5F4;
-        font-weight: normal;
-        font-size: @font16;
-        color: #303133;
-        .cell {
-          line-height: 1;
+        tr:nth-child(1) {
+          th:nth-child(1) {
+            .cell {
+              // prettier-ignore
+              padding-left: 16PX;
+            }
+          }
+          th:nth-last-child(2) {
+            .cell {
+              // prettier-ignore
+              padding-right: 16PX;
+            }
+          }
+        }
+      }
+      .el-table__body-wrapper {
+        tr {
+          td:nth-child(1) {
+            .cell {
+              // prettier-ignore
+              padding-left: 16PX;
+            }
+          }
+          .cell:last-child {
+            // prettier-ignore
+            padding-right: 16PX;
+          }
+        }
+      }
+      .el-table {
+        td {
+          .cell {
+            line-height: 1;
+            font-size: @font16;
+            color: #606266;
+          }
+        }
+        th {
+          // prettier-ignore
+          height: 48PX;
+          padding: 0;
+          background: #F0F5F4;
+          font-weight: normal;
+          font-size: @font16;
+          color: #303133;
+          .cell {
+            line-height: 1;
+          }
         }
       }
       .el-table__body td {
@@ -1086,7 +1122,43 @@ export default {
       .el-pagination {
         // perttier-ignore
         padding: 24PX 5PX 8PX;
-        text-align: right;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        .el-pager li,
+        .btn-next .el-icon,
+        .btn-prev .el-icon,
+        button,
+        span:not([class*=suffix]) {
+          height: auto;
+          line-height: 1;
+          font-size: @font16;
+          font-weight: normal;
+        }
+        .el-select .el-input {
+          // perttier-ignore
+          width: 80PX;
+        }
+        .el-pagination__sizes .el-input .el-input__inner {
+          // perttier-ignore
+          height: 22PX;
+          // perttier-ignore
+          line-height: 20PX;
+          font-size: @font14;
+        }
+        .el-pager .more::before {
+          line-height: 1;
+        }
+        .el-pagination__editor {
+          height: auto;
+          .el-input__inner {
+            // perttier-ignore
+            height: 22PX;
+          }
+        }
+        .el-input--mini .el-input__icon {
+          line-height: 1;
+        }
       }
       .el-table--border td {
         border-right: none;
