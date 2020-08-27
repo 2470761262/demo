@@ -190,7 +190,7 @@ export default {
     demandConfirm() {
       this.$router.push({
         path: "/customers/editCustomers",
-        query: { customerId: this.customerId }
+        query: { customerId: btoa(this.customerId) }
       });
     }
   }

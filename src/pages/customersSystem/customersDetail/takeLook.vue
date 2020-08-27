@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="content-box">
+    <customers-nav breadcrumbName="添加带看" :isBack="true"></customers-nav>
     <section class="look-content">
       <div class="look-box">
         <h5 class="look-title">添加带看</h5>
@@ -317,12 +318,15 @@
 <script>
 import util from "@/util/util";
 import { TOKEN } from "@/util/constMap";
-
+import customersNav from "@/components/breadcrumb";
 let token = util.localStorageGet(TOKEN);
 
 export default {
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
+  },
+  components: {
+    customersNav
   },
   data() {
     return {
@@ -339,7 +343,7 @@ export default {
       timeStar: "",
       timeEnd: "",
       startDateDisabled: {},
-      customerId: this.$route.query.customerId,
+      customerId: atob(this.$route.query.customerId),
       startTime: "",
       endTime: "",
       Cusfeedback: "", //带看反馈
@@ -367,7 +371,7 @@ export default {
       fullscreenLoading: false,
       alertflag: false,
       loading: null, //加载中
-      uploadUrl:this.$api.baseUrl()+'/saleCustomerOperation/addMedia'
+      uploadUrl: this.$api.baseUrl() + "/saleCustomerOperation/addMedia"
     };
   },
   created() {
@@ -705,7 +709,7 @@ export default {
             .post({
               url: "/saleCustomer/addPairRecord",
               data: postData,
-              timeout:50000,
+              timeout: 500000,
               headers: {
                 "Content-Type": "application/json"
               }
@@ -786,6 +790,10 @@ export default {
 
 <style lang="less" scoped>
 @import url("../addCustomers/less/form");
+.content-box {
+  padding: 20px 20px 0 20px;
+  box-sizing: border-box;
+}
 .look-content {
   .look-box {
     padding: 24px;

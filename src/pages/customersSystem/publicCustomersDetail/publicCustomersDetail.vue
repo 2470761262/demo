@@ -1,4 +1,8 @@
 <style lang="less" scoped>
+.content-box {
+  padding: 20px;
+  box-sizing: border-box;
+}
 .content {
   width: 100%;
   display: flex;
@@ -21,12 +25,15 @@
 }
 </style>
 <template>
-  <div class="content">
-    <div class="left-content">
-      <customerFollowDetail></customerFollowDetail>
-    </div>
-    <div class="right-content">
-      <privateCutmomersPair></privateCutmomersPair>
+  <div class="content-box">
+    <customers-nav breadcrumbName="公客详情"></customers-nav>
+    <div class="content">
+      <div class="left-content">
+        <customerFollowDetail></customerFollowDetail>
+      </div>
+      <div class="right-content">
+        <privateCutmomersPair></privateCutmomersPair>
+      </div>
     </div>
   </div>
 </template>
@@ -34,7 +41,7 @@
 <script>
 import privateCutmomersPair from "@/pages/customersSystem/publicCustomersDetail/components/customerbaseDetail";
 import customerFollowDetail from "@/pages/customersSystem/publicCustomersDetail/components/customerFollowDetail.vue";
-
+import customersNav from "@/components/breadcrumb";
 export default {
   provide() {
     return {
@@ -46,7 +53,8 @@ export default {
   },
   components: {
     privateCutmomersPair,
-    customerFollowDetail
+    customerFollowDetail,
+    customersNav
   },
   data() {
     return {
@@ -85,7 +93,7 @@ export default {
             if (json.data.bsAgentCustomersTbl.plate == 0) {
               this.$router.replace({
                 path: "/customers/customersDetail",
-                query: { customerId: json.data.bsAgentCustomersTbl.id }
+                query: { customerId: btoa(json.data.bsAgentCustomersTbl.id) }
               });
             }
             this.$set(that.FollowData, "data", json.data.followList);

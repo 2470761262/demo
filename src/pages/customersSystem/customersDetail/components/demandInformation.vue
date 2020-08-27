@@ -986,7 +986,7 @@ export default {
     demandConfirm() {
       this.$store.commit("updateDemandValue", this.demandValueData);
       let query = {
-        customerId: this.customerId,
+        customerId: btoa(this.customerId),
         step: 2
       };
       if (this.requireType) {

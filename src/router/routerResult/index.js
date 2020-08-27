@@ -348,11 +348,12 @@ export default [
           isPad: true, //不需要el-main padding
           keepAlive: true
         },
-        component: () => 
+        component: () =>
           import(
             /* webpackChunkName: "resourceManageLList" */ "@/pages/buySellSystem/resourceManage/list.vue"
           )
-      },{
+      },
+      {
         path: "/buySellSystem/resourceManageDetail/:id",
         name: "resourceManageDetail",
         meta: {
@@ -374,9 +375,7 @@ export default [
       title: "添加看板"
     },
     component: () =>
-      import(
-        /* webpackChunkName: "addReport" */ "@/pages/report/addReport.vue"
-      )
+      import(/* webpackChunkName: "addReport" */ "@/pages/report/addReport.vue")
   },
   {
     //买卖系统三级路由
@@ -1259,7 +1258,8 @@ export default [
     //客源系统 新整客户
     path: "/customers/addCustomers",
     meta: {
-      title: "新增客源"
+      title: "新增客源",
+      isMapNav: true //不需要导航
     },
     component: () =>
       import(
@@ -1270,7 +1270,8 @@ export default [
     //客源系统 新整客户
     path: "/customers/editCustomers",
     meta: {
-      title: "修改客户信息"
+      title: "修改客户信息",
+      isMapNav: true //不需要导航
     },
     component: () =>
       import(
@@ -1282,7 +1283,8 @@ export default [
     path: "/customers/privateCustomersList",
     meta: {
       title: "私客列表",
-      keepAlive: true
+      keepAlive: true,
+      isMapNav: true //不需要导航
     },
     component: () =>
       import(
@@ -1294,7 +1296,8 @@ export default [
     path: "/customers/publicCustomersList",
     meta: {
       title: "公客列表",
-      keepAlive: true
+      keepAlive: true,
+      isMapNav: true //不需要导航
     },
     component: () =>
       import(
@@ -1305,7 +1308,8 @@ export default [
     //客源系统 公客详情
     path: "/customers/publicCustomersDetail",
     meta: {
-      title: "公客详情"
+      title: "公客详情",
+      isMapNav: true //不需要导航
     },
     component: () =>
       import(
@@ -1317,7 +1321,8 @@ export default [
     //客源系统 私客详情
     path: "/customers/customersDetail",
     meta: {
-      title: "私客详情"
+      title: "私客详情",
+      isMapNav: true //不需要导航
     },
     component: () =>
       import(
@@ -1328,7 +1333,8 @@ export default [
     //客源系统 添加带看
     path: "/customers/takeLook",
     meta: {
-      title: "添加带看"
+      title: "添加带看",
+      isMapNav: true //不需要导航
     },
     component: () =>
       import(

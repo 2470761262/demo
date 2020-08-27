@@ -1,12 +1,15 @@
 <template>
-  <div class="content">
-    <div class="content-left">
-      <follow-up></follow-up>
-      <demandInformation></demandInformation>
-    </div>
-    <div class="content-right">
-      <information></information>
-      <moreOperations></moreOperations>
+  <div class="content-box">
+    <customers-nav breadcrumbName="私客详情"></customers-nav>
+    <div class="content">
+      <div class="content-left">
+        <follow-up></follow-up>
+        <demandInformation></demandInformation>
+      </div>
+      <div class="content-right">
+        <information></information>
+        <moreOperations></moreOperations>
+      </div>
     </div>
   </div>
 </template>
@@ -20,10 +23,12 @@ import demandInformation from "@/pages/customersSystem/customersDetail/component
 import information from "@/pages/customersSystem/customersDetail/components/information";
 //更多操作组件
 import moreOperations from "@/pages/customersSystem/customersDetail/components/moreOperations";
+//导航组件
+import customersNav from "@/components/breadcrumb";
 export default {
   provide() {
     return {
-      customerId: this.customerId,
+      customerId:this.customerId,
       demand: this.demand,
       demandList: this.demandList,
       customer: this.customer,
@@ -43,7 +48,8 @@ export default {
     followUp,
     information,
     moreOperations,
-    demandInformation
+    demandInformation,
+    customersNav
   },
   data() {
     return {
@@ -56,7 +62,7 @@ export default {
         myLookHouses: -1 //我的带看套数
       }, //客户信息
       customerDeal: {}, //客户买卖信息
-      customerId: this.$route.query.customerId,
+      customerId: atob(this.$route.query.customerId),
       impressionList: {}, //客户印象
       telList: {},
       phoneData: "",
@@ -266,6 +272,10 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.content-box {
+  padding: 20px;
+  box-sizing: border-box;
+}
 .content {
   display: flex;
   flex: 1;
