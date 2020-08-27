@@ -489,7 +489,7 @@ export default {
         //   sortable: true
         // }, 
         {
-          prop: "lastDayAddScore",
+          prop: "curMonthAddScore",
           label: "新增鑫币",
           minWidth: "100",
           align: "right",
@@ -526,6 +526,10 @@ export default {
       developEndDate: "",
       currencyBeginDate: "",
       currencyEndDate: "",
+      developBeginDateFlag: "",
+      developEndDateFlag: "",
+      currencyBeginDateFlag: "",
+      currencyEndDateFlag: "",
       workSortColumn: "",
       workSortType: 1,
       developSortColumn: "",
@@ -575,7 +579,8 @@ export default {
     getDevelopData() {
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        dateFlag: "",//日
+        beginDateFlag: this.developBeginDateFlag,
+        endDateFlag: this.developEndDateFlag,
         perName: this.perName,
         page: this.developPaginate.page,
         limit: this.developPaginate.limit,
@@ -604,7 +609,8 @@ export default {
     getCurrencyData() {
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        dateFlag: this.currencyMonth,//日
+        beginDateFlag: this.currencyBeginDateFlag,
+        endDateFlag: this.currencyEndDateFlag,
         perName: this.perName,
         page: this.currencyPaginate.page,
         limit: this.currencyPaginate.limit,
@@ -696,11 +702,13 @@ export default {
       }
     },
     /**
-     * @example: 重置开发数据查询月份
+     * @example: 重置开发数据查询日期
      */
     resetDevelopDate() {
       this.developBeginDate = "";
       this.developEndDate = "";
+      this.developBeginDateFlag = "";
+      this.developEndDateFlag = "";
       Object.assign(this.developPaginate, this.$options.data().developPaginate);
       this.getDevelopData();
     },
@@ -708,14 +716,18 @@ export default {
      * @example: 根据日期查询开发数据
      */
     queryDevelopData() {
+      this.developBeginDateFlag = this.developBeginDate;
+      this.developEndDateFlag = this.developEndDate;
       this.getDevelopData();
     },
     /**
-     * @example: 重置鑫币数据查询月份
+     * @example: 重置鑫币数据查询日期
      */
     resetCurrencyDate() {
       this.currencyBeginDate = "";
       this.currencyEndDate = "";
+      this.currencyBeginDateFlag = "";
+      this.currencyEndDateFlag = "";
       Object.assign(this.currencyPaginate, this.$options.data().currencyPaginate);
       this.getCurrencyData();
     },
@@ -723,6 +735,8 @@ export default {
      * @example: 根据月份查询鑫币数据
      */
     queryCurrencyData() {
+      this.currencyBeginDateFlag = this.currencyBeginDate;
+      this.currencyEndDateFlag = this.currencyEndDate;
       this.getCurrencyData();
     },
     /**
@@ -1126,6 +1140,12 @@ export default {
           line-height: 1;
         }
       }
+      .el-table--border, .el-table--group {
+        border: none;
+      }
+      .el-table--border::after, .el-table--group::after, .el-table::before {
+        background-color: transparent;
+      }
       .el-table--border td {
         border-right: none;
       }
@@ -1133,10 +1153,12 @@ export default {
         tr:first-child {
           th:nth-child(2),
           th:nth-child(3),
-          th:nth-child(4),
-          th:nth-child(5) {
+          th:nth-child(4) {
             border-bottom: 1px solid #C3DFD9;
             border-right: 1px solid #c3dfd9;
+          }
+          th:nth-child(5) {
+            border-bottom: 1px solid #C3DFD9;
           }
         }
         tr:nth-child(2) {
