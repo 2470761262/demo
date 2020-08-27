@@ -23,7 +23,7 @@ import moreOperations from "@/pages/customersSystem/customersDetail/components/m
 export default {
   provide() {
     return {
-      customerId: this.customerId,
+      customerId:this.customerId,
       demand: this.demand,
       demandList: this.demandList,
       customer: this.customer,
@@ -56,7 +56,7 @@ export default {
         myLookHouses: -1 //我的带看套数
       }, //客户信息
       customerDeal: {}, //客户买卖信息
-      customerId: this.$route.query.customerId,
+      customerId: atob(this.$route.query.customerId),
       impressionList: {}, //客户印象
       telList: {},
       phoneData: "",

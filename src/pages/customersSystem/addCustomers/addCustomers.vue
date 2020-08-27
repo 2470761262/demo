@@ -213,7 +213,7 @@ export default {
               that.fullscreenLoading = false;
               this.$router.replace({
                 path: "/customers/customersDetail",
-                query: { customerId: e.data.data }
+                query: { customerId: btoa(e.data.data) }
               });
             }
           })

@@ -345,8 +345,9 @@ export default {
       }
       let routeUrl = this.$router.resolve({
         path: "/customers/customersDetail",
-        query: { customerId: row.id }
+        query: { customerId: btoa(row.id) }
       });
+      console.log(btoa(row.id),"加密");
       window.open(routeUrl.href, "_blank");
       // this.$router.push({
       //   path: "/customers/customersDetail",
