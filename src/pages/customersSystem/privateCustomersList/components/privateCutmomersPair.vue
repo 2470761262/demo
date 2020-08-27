@@ -116,6 +116,12 @@
       overflow: hidden;
       cursor: pointer;
     }
+    .tip-text {
+      font-size: 24px;
+      line-height: 52px;
+      color: red;
+      margin-left: 50px;
+    }
   }
   /deep/.el-form-item__content {
     display: flex;
@@ -430,6 +436,7 @@
         >
           <span>录入客源</span>
         </div>
+        <div class="tip-text">私客池为个人客户管理，仅显示个人录入的客源</div>
       </el-form-item>
 
       <div class="ItemRow tapSwitchRow">
