@@ -104,6 +104,7 @@
 
 <script>
 import tableMenu from "@/util/getTableMenu";
+import util from "@/util/util";
 export default {
   inject: ["form"],
   components: {},
@@ -342,11 +343,15 @@ export default {
           item.style.display = "none";
         });
       }
-
-      this.$router.push({
+      let routeUrl = this.$router.resolve({
         path: "/customers/customersDetail",
         query: { customerId: row.id }
       });
+      window.open(routeUrl.href, "_blank");
+      // this.$router.push({
+      //   path: "/customers/customersDetail",
+      //   query: { customerId: row.id }
+      // });
     }
   }
 };

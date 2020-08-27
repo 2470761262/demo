@@ -372,6 +372,15 @@
       }
     }
   }
+  .tooltip-box {
+    .question-icon {
+      color: @backgroud;
+    }
+  }
+  .tooltip-content {
+    font-size: 14px;
+    line-height: 26px;
+  }
 }
 </style>
 <template>
@@ -454,26 +463,38 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item
-        label="看房进度"
         class="ItemRow ChooseItemRow"
         prop="Progress"
         v-show="form.attentionStatus == 1 || form.attentionStatus == null"
       >
-        <el-checkbox-group
+        <div slot="label" class="tooltip-box">
+          看房进度
+          <el-tooltip placement="bottom-start">
+            <div slot="content" style="font-size: 0.14rem;line-height: 0.26rem">
+              未带看： 未产生带看的客户<br />
+              3日首看：客户自录入时间起,3日内首次带看的客户<br />
+              7日首看：客户自录入时间起, 7日内首次带看的客户<br />
+              1带多看：添加带看记录，添加两套房源以上的客户<br />
+              复看：首看后，有产生第二次带看的客户
+            </div>
+            <i class="el-icon-question question-icon"></i>
+          </el-tooltip>
+        </div>
+        <el-radio-group
           v-model="Progress"
-          class="ChooseItemBox"
-          @change="getUnlimit('Progress', 'pairNumbers', -1)"
+          class="RadioItemBox"
+          @change="getPairNumbers"
         >
           <div
-            class="ChooseItem"
+            class="RadioItem"
             v-for="(item, index) in ProgressList"
             :key="index"
           >
-            <el-checkbox :label="item.value" name="Progress">
-              {{ item.name }}
-            </el-checkbox>
+            <el-radio :label="item.value" name="Progress">{{
+              item.name
+            }}</el-radio>
           </div>
-        </el-checkbox-group>
+        </el-radio-group>
       </el-form-item>
 
       <el-form-item
@@ -540,11 +561,7 @@
           class="RadioItemBox"
           @change="getLimit('RentList', Price, 'minPrice', 'maxPrice')"
         >
-          <div
-            class="RadioItem"
-            v-for="(item, index) in PriceList"
-            :key="index"
-          >
+          <div class="RadioItem" v-for="(item, index) in RentList" :key="index">
             <el-radio :label="item.id" name="Price">{{ item.name }}</el-radio>
           </div>
         </el-radio-group>
@@ -667,7 +684,7 @@
           </div>
         </el-form-item>
         <el-form-item
-          label="上次维护"
+          label="维护时间"
           class="ItemRow ChooseItemRow"
           prop="Radio"
         >
@@ -792,20 +809,20 @@ const ProgressListModle = [
     value: 0
   },
   {
-    name: "首看",
-    value: 1
+    name: "3日首看",
+    value: -3
+  },
+  {
+    name: "7日首看",
+    value: -7
+  },
+  {
+    name: "一带多看",
+    value: 102
   },
   {
     name: "复看",
     value: 2
-  },
-  {
-    name: "三看及以上",
-    value: 3
-  },
-  {
-    name: "签约",
-    value: 6
   }
 ];
 const PriceListModle = [
@@ -817,27 +834,27 @@ const PriceListModle = [
   {
     name: "50万以下",
     id: 1,
-    value: [0, 50]
+    value: [0, 500000]
   },
   {
     name: "50-100万",
     id: 2,
-    value: [50, 100]
+    value: [500000, 1000000]
   },
   {
     name: "100-150万",
     id: 3,
-    value: [100, 150]
+    value: [1000000, 1500000]
   },
   {
     name: "150-200万",
     id: 4,
-    value: [150, 200]
+    value: [1500000, 2000000]
   },
   {
     name: "200万以上",
     id: 5,
-    value: [200]
+    value: [2000000]
   }
 ];
 const RentListModle = [
@@ -944,7 +961,7 @@ export default {
       IntendList: IntendListModle,
       Intend: [4],
       ProgressList: ProgressListModle,
-      Progress: [-1],
+      Progress: -1,
       PriceList: PriceListModle,
       RentList: RentListModle,
       Price: 0, //价格，需要处理数据
@@ -967,6 +984,14 @@ export default {
     this.apply();
   },
   methods: {
+    getPairNumbers(e) {
+      console.log(e, "看房进度查询");
+      if (e == -1) {
+        this.form["pairNumbers"] = []; //不限
+      } else {
+        this.form["pairNumbers"] = [e];
+      }
+    },
     apply() {
       var that = this;
       this.$api
@@ -1009,7 +1034,7 @@ export default {
       this.form.maxLastPairFollowTime = "";
 
       this.Intend = [4];
-      this.Progress = [-1];
+      this.Progress = -1;
       this.Price = 0;
       this.MinPrice = "";
       this.MaxPrice = "";
@@ -1080,6 +1105,14 @@ export default {
       this.form[key2] = this[list][id]["value"][1]
         ? this[list][id]["value"][1]
         : "";
+      if (list == "RentList" || list == "PriceList") {
+        this.MinPrice = null;
+        this.MaxPrice = null;
+      }
+      if (list == "AreaList") {
+        this.MinArea = null;
+        this.MaxArea = null;
+      }
       console.log(this.form[key1], this.form[key2]);
     },
     valiadNum(key) {
@@ -1099,7 +1132,7 @@ export default {
       if (this[key] != null) {
         console.log(this[key]);
         this.form[key1] = this[key][0] + " 00:00:00";
-        this.form[key2] = this[key][1] + " 00:00:00";
+        this.form[key2] = this[key][1] + " 23:59:59";
       } else {
         this.form[key1] = "";
         this.form[key2] = "";

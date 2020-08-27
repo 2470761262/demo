@@ -125,8 +125,9 @@ export default {
       moreSelectFlag: false,
       demandValue: this.$store.state.addCustomers.demandValue,
       headerList: [],
-      headerActive: 0,
-      requirements: []
+      headerActive: this.$route.query.require,
+      requirements: [],
+      editRequireType: this.$route.query.require
     };
   },
   computed: {
@@ -198,7 +199,7 @@ export default {
       if (this.demandValue.list2.length != 0) {
         this.headerList.push(...this.demandValue.list2);
       }
-      if (this.headerActive == 0) {
+      if (!this.headerActive) {
         this.headerActive = this.headerList[0];
       }
       this.changeStoreStep2();

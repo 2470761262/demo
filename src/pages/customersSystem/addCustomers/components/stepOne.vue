@@ -485,6 +485,7 @@ export default {
      * @example: 客户需求在当前删除
      */
     moreHandleClose(tag) {
+      console.log(tag, this.demandData.rendList, "demandData.rendList");
       this.$refs.moreSelect.removeActive(tag, true);
       this.$refs.moreSelect.confirmEmit();
     },
@@ -496,6 +497,7 @@ export default {
      * @param {list2} Array 提交后台已经拆分的数据
      */
     demandConfirm({ rendList, dataJson: { list0, list1, list2 } }) {
+      console.log("hgdfdfdfdf111111111111");
       this.demandData.rendList = rendList;
       this.$store.commit("updateDemandValue", this.demandValue);
       // this.$store.commit("updateDemandData", this.demandData);
@@ -702,7 +704,7 @@ export default {
       let obj = {};
       obj = this.provinceList.find(item => {
         return item.id === val;
-      });      
+      });
       this.formData.provinceName = obj.name;
     },
     /**
@@ -715,7 +717,7 @@ export default {
       obj = this.cityList.find(item => {
         return item.id === val;
       });
-     
+
       this.formData.cityName = obj.name;
     },
     /**
@@ -728,7 +730,7 @@ export default {
       });
       this.formData.countyName = obj.name;
     },
-    findRegion(id,callBack){
+    findRegion(id, callBack) {
       let that = this;
       let postData = {
         limit: 1,
@@ -746,7 +748,7 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             let list = e.data.data.list;
-            if (list&&list.length>0&&callBack) {
+            if (list && list.length > 0 && callBack) {
               callBack(list);
             }
           }
@@ -766,31 +768,33 @@ export default {
       province = this.provinceList.find(item => {
         return item.id === this.formData.provinceId;
       });
-      let error=false;
-      if(province){
-        this.formData.provinceName = province.name;      
-      }else{
-        this.formData.provinceId=null;
-        error=true;
-      } 
+      let error = false;
+      if (province) {
+        this.formData.provinceName = province.name;
+      } else {
+        this.formData.provinceId = null;
+        error = true;
+      }
       let city = {};
       city = this.cityList.find(item => {
         return item.id === this.formData.cityId;
       });
-      if(city&&!error){
+      if (city && !error) {
         this.formData.cityName = city.name;
-      }else{//没找到说明后台存的地市是错的，不是所选省份的城市，那么置空掉
-        this.formData.cityId=null;
-        error=true;
+      } else {
+        //没找到说明后台存的地市是错的，不是所选省份的城市，那么置空掉
+        this.formData.cityId = null;
+        error = true;
       }
       let county = {};
       county = this.countyList.find(item => {
         return item.id === this.formData.countyId;
       });
-      if(county&&!error){
+      if (county && !error) {
         this.formData.countyName = county.name;
-      }else{//城市数据是错的，或者没找到。说明后台存的县区是错的，不是所选城市的县区，那么置空掉
-        this.formData.countyId=null;
+      } else {
+        //城市数据是错的，或者没找到。说明后台存的县区是错的，不是所选城市的县区，那么置空掉
+        this.formData.countyId = null;
       }
     },
     /**
