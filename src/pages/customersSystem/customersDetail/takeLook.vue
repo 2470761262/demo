@@ -1,6 +1,6 @@
 <template>
   <div class="content-box">
-    <customers-nav breadcrumbName="添加带看"></customers-nav>
+    <customers-nav breadcrumbName="添加带看" :isBack="true"></customers-nav>
     <section class="look-content">
       <div class="look-box">
         <h5 class="look-title">添加带看</h5>

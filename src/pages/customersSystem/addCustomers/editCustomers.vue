@@ -23,7 +23,7 @@
 </style>
 <template>
   <section class="content">
-    <customers-nav breadcrumbName="修改客户信息"></customers-nav>
+    <customers-nav breadcrumbName="修改客户信息" :isBack="true"></customers-nav>
     <keep-alive>
       <component :is="componentName" ref="childreCom"></component>
     </keep-alive>

@@ -5,7 +5,7 @@
         >首页</el-breadcrumb-item
       >
       <el-breadcrumb-item>{{ breadcrumbName }}</el-breadcrumb-item>
-      <div class="back" @click="back">返回</div>
+      <div class="back" @click="back" v-if="isBack">返回</div>
     </el-breadcrumb>
     <feedback :isCustomers="true" class="feedback"></feedback>
   </div>
@@ -16,6 +16,10 @@ export default {
   props: {
     breadcrumbName: {
       type: String
+    },
+    isBack: {
+      type: Boolean,
+      default: false
     }
   },
   data() {

@@ -23,7 +23,7 @@
 </style>
 <template>
   <section class="content">
-    <customers-nav breadcrumbName="新增客源"></customers-nav>
+    <customers-nav breadcrumbName="新增客源" :isBack="true"></customers-nav>
     <component :is="componentName" ref="childreCom"></component>
     <div class="floot-content">
       <el-button @click="close">返回</el-button>
