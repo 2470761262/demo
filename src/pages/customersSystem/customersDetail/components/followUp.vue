@@ -411,6 +411,7 @@ export default {
                 that.lookAtData[j].buildingName +
                 "-" +
                 that.lookAtData[j].roomNo;
+                if(housingResource.address==0)housingResource.address="房源已下架";
               housingResource.cusfeedback = that.lookAtData[j].Cusfeedback;
               that.lookAtData[i].housingResource.push(housingResource);
             }
@@ -421,6 +422,8 @@ export default {
             that.lookAtData[i].communityName +
             that.lookAtData[i].buildingName +
             that.lookAtData[i].roomNo;
+            if(housingResource.address==0)housingResource.address="房源已下架";
+            
           housingResource.cusfeedback = that.lookAtData[i].Cusfeedback;
           that.lookAtData[i].housingResource.push(housingResource);
         }
