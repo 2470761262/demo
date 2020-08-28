@@ -411,6 +411,17 @@ export default [
           import(
            /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/buySellHouse.vue"
           )
+      }, {
+        path: "/managementEntrance/examineHouse",
+        meta: {
+          title: "审核列表",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "examineHouse" */ "@/pages/buySellSystem/managementEntrance/examineHouse.vue"
+          )
       }
     ]
   },

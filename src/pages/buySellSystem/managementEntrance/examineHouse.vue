@@ -1,7 +1,17 @@
 <template>
   <div>
-    <!-- 买卖房源-锁定列表 -->
+    <!-- 买卖房源-审核列表 -->
     <div class="main">
+      <div class="right">
+        <el-tree
+          :data="data"
+          show-checkbox
+          node-key="id"
+          :default-expanded-keys="[2, 3]"
+          :default-checked-keys="[5]"
+          :props="defaultProps">
+        </el-tree>
+      </div>
       <div class="content">
         <el-table
           :data="workData"
@@ -25,8 +35,8 @@
             label="操作"
             width="100">
             <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">解锁</el-button>
-              <el-button type="text" size="small">查看</el-button>
+              <el-button @click="handleClick(scope.row)" type="text" size="small">审核</el-button>
+              <el-button type="text" size="small">查看附件</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -51,48 +61,36 @@ export default {
       workColumn: [
         {
           prop: "",
-          label: "房源编号",
+          label: "楼盘名称",
           minWidth: "120",
           align: "left"
         }, {
           prop: "",
-          label: "小区名称",
+          label: "审核项目",
           minWidth: "150",
           align: "right",
           sortable: true
         }, {
           prop: "",
-          label: "楼栋名称",
+          label: "审核类型",
           minWidth: "150",
           align: "right",
           sortable: true
         }, {
           prop: "",
-          label: "房间号",
+          label: "附件",
           minWidth: "150",
           align: "right",
           sortable: true
         }, {
           prop: "",
-          label: "状态",
+          label: "提交人",
           minWidth: "150",
           align: "right",
           sortable: true
         }, {
           prop: "",
-          label: "跟单人",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "",
-          label: "锁定人",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "",
-          label: "锁定时间",
+          label: "提交时间",
           minWidth: "150",
           align: "right",
           sortable: true
@@ -103,6 +101,45 @@ export default {
         limit: 5,
         total: 0,
         pageSum: 0
+      },
+      data: [{
+        id: 1,
+        label: '一级 1',
+        children: [{
+          id: 4,
+          label: '二级 1-1',
+          children: [{
+            id: 9,
+            label: '三级 1-1-1'
+          }, {
+            id: 10,
+            label: '三级 1-1-2'
+          }]
+        }]
+      }, {
+        id: 2,
+        label: '一级 2',
+        children: [{
+          id: 5,
+          label: '二级 2-1'
+        }, {
+          id: 6,
+          label: '二级 2-2'
+        }]
+      }, {
+        id: 3,
+        label: '一级 3',
+        children: [{
+          id: 7,
+          label: '二级 3-1'
+        }, {
+          id: 8,
+          label: '二级 3-2'
+        }]
+      }],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
       }
     }
   },
@@ -162,13 +199,25 @@ export default {
 </script>
 <style lang="less" scoped>
   .main {
+    display: flex;
     // prettier-ignore
     margin-top: 16PX;
     // prettier-ignore
     padding: 16PX;
     background: #fff;
     border-radius: 8px;
+    .right {
+      // prettier-ignore
+      width: 224PX;
+      // prettier-ignore
+      height: 750PX;
+      // prettier-ignore
+      margin-right: 16PX;
+      border: 1px solid #ddd;
+    }
     /deep/.content {
+      flex: 1;
+      overflow: hidden;
       .caret-wrapper {
         // prettier-ignore
         width: 15PX;

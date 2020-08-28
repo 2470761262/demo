@@ -17,7 +17,7 @@
   </div>
 </template>
 <script>
-export default { 
+export default {
   data() {
     return {
       navActiveIndex: 0,
@@ -33,6 +33,9 @@ export default {
           break;
         case 1:
           this.$router.push("/managementEntrance/buySellHouse");
+          break;
+        case 2:
+          this.$router.push("/managementEntrance/examineHouse");
           break;
       }
     }
