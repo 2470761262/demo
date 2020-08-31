@@ -32,10 +32,10 @@ export default {
           this.$router.push("/managementEntrance/business");
           break;
         case 1:
-          this.$router.push("/managementEntrance/buySellHouse");
+          this.$router.push("/managementEntrance/houseLockingList");
           break;
         case 2:
-          this.$router.push("/managementEntrance/examineHouse");
+          this.$router.push("/managementEntrance/houseExamineHouse");
           break;
       }
     }
@@ -49,10 +49,14 @@ export default {
 </style>
 <style lang="less" scoped>
 .entrance-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   // prettier-ignore
-  padding: 12PX 16PX 51PX;
+  padding: 12PX 16PX 32PX;
   background: #F0F7F7;
   overflow: auto;
+  box-sizing: border-box;
   .position {
     line-height: 1;
     font-size: @font12;
@@ -64,8 +68,10 @@ export default {
     // prettier-ignore
     padding: 24PX 24PX 0 24PX;
     background: #fff;
-    border-top-right-radius: 8px;
-    border-top-left-radius: 8px;
+    // prettier-ignore
+    border-top-right-radius: 8PX;
+    // prettier-ignore
+    border-top-left-radius: 8PX;
     .nav {
       display: flex;
       justify-content: flex-start;

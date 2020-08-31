@@ -775,8 +775,10 @@ export default {
     // prettier-ignore
     padding: 0 24PX 20PX 24PX;
     background: #fff;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    // prettier-ignore
+    border-bottom-left-radius: 8PX;
+    // prettier-ignore
+    border-bottom-right-radius: 8PX;
     .header-bottom {
       display: flex;
       justify-content: space-between;
@@ -861,7 +863,8 @@ export default {
     // prettier-ignore
     padding: 24PX 16PX 18PX;
     background: #fff;
-    border-radius: 8px;
+    // prettier-ignore
+    border-radius: 8PX;
     .head {
       display: flex;
       justify-content: space-between;

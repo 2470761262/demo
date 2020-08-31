@@ -401,18 +401,18 @@ export default [
             /* webpackChunkName: "houseDeploy" */ "@/pages/buySellSystem/managementEntrance/houseDeploy/houseDeploy.vue"
           )
       }, {
-        path: "/managementEntrance/buySellHouse",
+        path: "/managementEntrance/houseLockingList",
         meta: {
-          title: "买卖房源",
+          title: "锁定列表",
           isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
         component: () => 
           import(
-           /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/buySellHouse.vue"
+           /* webpackChunkName: "houseLockingList" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/lockingList.vue"
           )
       }, {
-        path: "/managementEntrance/examineHouse",
+        path: "/managementEntrance/houseExamineHouse",
         meta: {
           title: "审核列表",
           isMapNav: true,
@@ -420,7 +420,7 @@ export default [
         },
         component: () =>
           import(
-            /* webpackChunkName: "examineHouse" */ "@/pages/buySellSystem/managementEntrance/examineHouse.vue"
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/examineList.vue"
           )
       }
     ]
