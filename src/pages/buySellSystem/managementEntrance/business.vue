@@ -55,6 +55,7 @@
           :data="workData"
           height="368"
           @sort-change="changeWorkSort"
+          v-loading="workLoading"
         >
           <el-table-column
             v-for="(item, index) in workColumn"
@@ -138,7 +139,8 @@
         <el-table
          :data="developData"
           height="417"
-          @sort-change="changeDevelopSort">
+          @sort-change="changeDevelopSort"
+          v-loading="developLoading">
           <el-table-column
             v-for="(item, index) in developColumn"
             :key="index"
@@ -232,7 +234,8 @@
         <el-table
          :data="currencyData"
           height="368"
-          @sort-change="changeCurrencySort">
+          @sort-change="changeCurrencySort"
+          v-loading="currencyLoading">
           <el-table-column
             v-for="(item, index) in currencyColumn"
             :key="index"
@@ -263,6 +266,9 @@
 export default {
   data() {
     return {
+      workLoading: false,
+      developLoading: false,
+      currencyLoading: false,
       businessKeyword: "",
       perName: "",
       searchTypes: [
@@ -548,6 +554,7 @@ export default {
      * @example: 获取作业数据
      */
     getWorkData() {
+      this.workLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
         dateFlag: "",//日
@@ -571,12 +578,15 @@ export default {
           }
         })
         .catch(() => {})
-        .finally(() => {});
+        .finally(() => {
+          this.workLoading = false;
+        });
     },
     /**
      * @example: 获取开发数据
      */
     getDevelopData() {
+      this.developLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
         beginDateFlag: this.developBeginDateFlag,
@@ -601,12 +611,15 @@ export default {
           }
         })
         .catch(() => {})
-        .finally(() => {});
+        .finally(() => {
+          this.developLoading = false;
+        });
     },
     /**
      * @example: 获取鑫币统计数据
      */
     getCurrencyData() {
+      this.currencyLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
         beginDateFlag: this.currencyBeginDateFlag,
@@ -631,7 +644,9 @@ export default {
           }
         })
         .catch(() => {})
-        .finally(() => {});
+        .finally(() => {
+          this.currencyLoading = false;
+        });
     },
     /**
      * @example: 姓名/门店/区域模糊搜索 (经纪人/门店/区域切换)

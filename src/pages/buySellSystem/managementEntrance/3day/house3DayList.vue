@@ -369,6 +369,9 @@ export default {
     this.computeTabHeight();
     window.addEventListener("resize", this.computeTabHeight);
   },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.computeTabHeight);
+  },
   methods: {
     handleSizeChange(pageSize) {
       this.pageJson.pageSize = pageSize;
