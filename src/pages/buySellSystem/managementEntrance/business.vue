@@ -1071,9 +1071,11 @@ export default {
               padding-left: 16PX;
             }
           }
-          .cell:last-child {
-            // prettier-ignore
-            padding-right: 16PX;
+          td:last-child {
+            .cell {
+              // prettier-ignore
+              padding-right: 16PX;
+            }
           }
         }
       }
