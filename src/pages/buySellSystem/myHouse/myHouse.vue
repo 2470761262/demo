@@ -88,7 +88,6 @@
     <router-view />
   </div>
 </template>
-
 <script>
 import navHandle from "@/components/navHeader";
 //切换tab类型

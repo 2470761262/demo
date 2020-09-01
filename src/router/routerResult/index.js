@@ -350,7 +350,7 @@ export default [
         },
         component: () =>
           import(
-            /* webpackChunkName: "resourceManageLList" */ "@/pages/buySellSystem/resourceManage/list.vue"
+            /* webpackChunkName: "resourceManageList" */ "@/pages/buySellSystem/resourceManage/list.vue"
           )
       },
       {
@@ -364,6 +364,63 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "resourceManageDetail" */ "@/pages/buySellSystem/resourceManage/detail.vue"
+          )
+      }
+    ]
+  },
+  {
+    // 房源系统-管理入口
+    path: "/buySellSystem/managementEntrance",
+    redirect: "/managementEntrance/business",
+    component: () =>
+      import(
+        /* webpackChunkName: "managementEntrance" */ "@/pages/buySellSystem/managementEntrance/index.vue"
+      ),
+    children: [
+      {
+        path: "/managementEntrance/business",
+        meta: {
+          title: "业务管理",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/business.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/houseDeploy",
+        meta: {
+          title: "房源调配",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseDeploy" */ "@/pages/buySellSystem/managementEntrance/houseDeploy/houseDeploy.vue"
+          )
+      }, {
+        path: "/managementEntrance/houseLockingList",
+        meta: {
+          title: "锁定列表",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () => 
+          import(
+           /* webpackChunkName: "houseLockingList" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/lockingList.vue"
+          )
+      }, {
+        path: "/managementEntrance/houseExamineHouse",
+        meta: {
+          title: "审核列表",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/examineList.vue"
           )
       }
     ]
