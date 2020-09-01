@@ -448,6 +448,42 @@ export default [
           import(
             /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/examineList.vue"
           )
+      },
+      {
+        path: "/managementEntrance/customers",
+        meta: {
+          title: "客源",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/customers/customersList.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/rentHouse",
+        meta: {
+          title: "租赁房源",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/rentHouse/rentHouse.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/personnel",
+        meta: {
+          title: "人员管理",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/personnel/personnel.vue"
+          )
       }
     ]
   },

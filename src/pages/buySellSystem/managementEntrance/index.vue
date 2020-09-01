@@ -37,7 +37,23 @@ export default {
           this.$router.push("/managementEntrance/houseLockingList");
           break;
         case 2:
-          this.$router.push("/managementEntrance/houseExamineHouse");
+          this.$router.push("/managementEntrance/rentHouse");
+          this.$msgbox({
+            title: "温馨提示",
+            message: <div>功能正在开发中，敬请期待</div>,
+            showCancelButton: false
+          });
+          break;
+        case 3:
+          this.$router.push("/managementEntrance/customers");
+          break;
+        case 4:
+          this.$router.push("/managementEntrance/personnel");
+          this.$msgbox({
+            title: "温馨提示",
+            message: <div>功能正在开发中，敬请期待</div>,
+            showCancelButton: false
+          });
           break;
       }
     }
