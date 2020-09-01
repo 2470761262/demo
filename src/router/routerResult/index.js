@@ -400,18 +400,44 @@ export default [
           import(
             /* webpackChunkName: "houseDeploy" */ "@/pages/buySellSystem/managementEntrance/houseDeploy/houseDeploy.vue"
           )
-      }, {
+      },
+      {
+        path: "/managementEntrance/3day",
+        meta: {
+          title: "3天新增",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "house3Day" */ "@/pages/buySellSystem/managementEntrance/3day/house3Day.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/7day",
+        meta: {
+          title: "7天被看房源",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "house7Day" */ "@/pages/buySellSystem/managementEntrance/7day/house7Day.vue"
+          )
+      },
+      {
         path: "/managementEntrance/houseLockingList",
         meta: {
           title: "锁定列表",
           isMapNav: true, //不需要导航
           isPad: true //不需要el-main padding
         },
-        component: () => 
+        component: () =>
           import(
-           /* webpackChunkName: "houseLockingList" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/lockingList.vue"
+            /* webpackChunkName: "houseLockingList" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/lockingList.vue"
           )
-      }, {
+      },
+      {
         path: "/managementEntrance/houseExamineHouse",
         meta: {
           title: "审核列表",

@@ -59,10 +59,10 @@
       <div class="implant-nav">
         <div
           class="implant-nav-item"
-          :class="{ active: index == 0 }"
+          :class="{ active: index == 1 }"
           v-for="(item, index) in implantList"
           :key="index"
-          @click="goPage(index, 0)"
+          @click="goPage(index, 1)"
         >
           {{ item.title }}
         </div>

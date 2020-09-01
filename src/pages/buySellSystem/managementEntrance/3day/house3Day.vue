@@ -9,14 +9,14 @@
 </style>
 <template>
   <div class="content">
-    <house-deploy-pair />
-    <house-deploy-list />
+    <house3-day-pair />
+    <house3-day-list />
   </div>
 </template>
 
 <script>
-import houseDeployPair from "./houseDeployPair";
-import houseDeployList from "./houseDeployList";
+import house3DayPair from "./house3DayPair";
+import house3DayList from "./house3DayList";
 export default {
   provide() {
     return {
@@ -24,8 +24,8 @@ export default {
     };
   },
   components: {
-    houseDeployPair,
-    houseDeployList
+    house3DayPair,
+    house3DayList
   },
   data() {
     return {
@@ -44,7 +44,8 @@ export default {
         tel: "",
         time: [],
         sortColumn: "addTime",
-        sortType: "0"
+        sortType: "0",
+        typeList: ["3"]
       }
     };
   }
