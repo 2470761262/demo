@@ -329,6 +329,90 @@
       </div>
     </div>
     <el-dialog
+      :title="title"
+      :visible.sync="showPopUp"
+      width="30%"
+      :close-on-click-modal="false"
+      :center="true"
+    >
+      <div>
+        <div>
+          <span>审核状态:</span>
+          <el-radio-group v-model="checkStatus">
+            <el-radio :label="1" data-anchor="审核列表通过 => radio"
+              >通过</el-radio
+            >
+            <el-radio :label="2" data-anchor="审核列表不通过 => radio"
+              >不通过</el-radio
+            >
+          </el-radio-group>
+        </div>
+        <div v-if="row.checkProject == 1 || row.replaceType == 2">
+          <span>委托截止时间:</span>
+          <span>{{ row.proxyMaxTime }}</span>
+        </div>
+        <div
+          v-if="row.checkProject == 0 || row.replaceType == 3"
+          style="display:flex"
+        >
+          <span>钥匙类型:</span>
+          <span v-if="row.keyType == 0">钥匙</span>
+          <span v-if="row.keyType == 1">指纹锁</span>
+          <span v-if="row.keyType == 2">密码锁</span>
+          <div v-if="row.keyType == 2" style="margin-left:20px;">
+            <span>密码:</span>
+            <span>{{ row.keyCode }}</span>
+          </div>
+        </div>
+        <div v-if="row.checkProject == 8">
+          <div v-if="row.newSaleTag == 4" style="display:flex">
+            <span>成交公司:</span>
+            <span>{{ row.dealCompany }}</span>
+            <div v-if="row.dealPrice != null && row.dealPrice != ''">
+              <span>成交价:</span>
+              <span>{{ row.dealPrice }}</span>
+            </div>
+          </div>
+          <div v-if="row.newSaleTag == 6">
+            <span>子类型:</span>
+            <span v-if="row.subStatus == 0">疑似跳单</span>
+            <span v-if="row.subStatus == 1">亲朋好友</span>
+          </div>
+          <div v-if="row.NewSaleTag == 3">
+            <span>子类型:</span>
+            <span v-if="row.subStatus == 2">号码错误</span>
+            <span v-if="row.subStatus == 3">空号</span>
+            <span v-if="row.subStatus == 4">房源不存在</span>
+          </div>
+        </div>
+        <div>
+          <el-input
+            data-anchor="审核列表审核说明 => input"
+            class="anchor-point"
+            type="textarea"
+            placeholder="请输入审核说明"
+            v-model="checkMemo"
+          >
+          </el-input>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          data-anchor="审核列表取消 => click"
+          @click="showPopUp = false"
+          class="anchor-point"
+          >取 消</el-button
+        >
+        <el-button
+          data-anchor="审核列表确 定 => click"
+          type="primary"
+          @click="checkHouse()"
+          class="anchor-point"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
+    <el-dialog
       :visible.sync="showAccessory"
       width="60%"
       :modal-append-to-body="false"
@@ -693,7 +777,39 @@ export default {
       resetAccessory: {}, //重置附件
       accessoryTable: false, //是否展示tab切换
       bigAccessoryFileKey: "", //大图展示的key值
-      showImgIndex: 0 //展示大的数组索引
+      showImgIndex: 0, //展示大的数组索引
+      titleList: [
+        {
+          key: 0,
+          value: "钥匙人申请审核"
+        },
+        {
+          key: 1,
+          value: "委托申请审核"
+        },
+        {
+          key: 4,
+          value: "取代申请审核"
+        },
+        {
+          key: 8,
+          value: "房源转状态审核"
+        },
+        {
+          key: 11,
+          value: "举报审核"
+        },
+        {
+          key: 12,
+          value: "实勘人申请审核"
+        }
+      ],
+      title: "",
+      checkId: 0,
+      row: {},
+      showPopUp: false,
+      checkStatus: 1,
+      checkMemo: ""
     }
   },
   computed: {
@@ -1148,6 +1264,84 @@ export default {
       this.bigAccessoryFile.forEach(item => {
         item.data = this.accessoryFile[key][item.key];
       });
+    },
+    /**
+     * 审核
+     */
+    getTitle(row) {
+      this.titleList.forEach(element => {
+        if (element.key == row.Type) {
+          this.title = element.value;
+        }
+      });
+      this.checkId = row.id;
+      this.row = row;
+      this.showPopUp = true;
+    },
+    checkHouse() {
+      let that = this;
+      let params = {
+        id: this.checkId,
+        CheckMemo: this.checkMemo,
+        Tag: this.checkStatus
+      };
+      if (params.Tag == 2) {
+        if (!util.isNotNull(this.checkMemo)) {
+          this.$alert("", "请填写审核失败理由!!!", {
+            dangerouslyUseHTMLString: false
+          });
+          return true;
+        }
+      }
+
+      this.showPopUp = false;
+      this.loading = true;
+      this.$api
+        .post({
+          url: `/agentHouse/propertyCheck/${
+            this.row.checkProject == "房源转状态" ? "checkStatus" : "checkHouse"
+          }`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: params,
+          token: false
+        })
+        .then(e => {
+          let result = e.data;
+          that.loading = false;
+          that.$message(result.message);
+          if (result.code == 200) {
+            that.querylistByParams();
+            that.CheckMemo = "";
+          }
+        })
+        .catch(e => {
+          that.$message("操作失败");
+          that.loading = false;
+        });
+    },
+    //跳转房源详情页面
+    toHouseDetail(row) {
+      var that = this;
+      this.$api
+        .get({
+          url: "/agent_house/valid/" + row.eid,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            if (e.data.data == 1) {
+              util.openPage.call(this, {
+                name: "houseDetails",
+                params: { houseId: row.eid }
+              });
+            } else {
+              util.openPage.call(this, {
+                name: "historyDetails",
+                params: { houseId: row.eid, tradeType: 0 }
+              });
+            }
+          }
+        });
     },
   }
 }
