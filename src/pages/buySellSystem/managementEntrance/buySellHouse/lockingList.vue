@@ -523,7 +523,7 @@ export default {
       .el-range-input {
         text-align: left;
         // prettier-ignore
-        text-indent: 10PX;
+        text-indent: 5PX;
         font-size: @font14;
       }
       .prefix-icon {
