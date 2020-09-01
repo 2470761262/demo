@@ -18,8 +18,8 @@
 <script>
 const IMPLANTLIST = [
   { title: "房源调配", url: "/managementEntrance/houseDeploy" },
-  { title: "3天新增", url: "" },
-  { title: "7天内被看房源", url: "" },
+  { title: "3天新增", url: "/managementEntrance/3day" },
+  { title: "7天内被看房源", url: "/managementEntrance/7day" },
   { title: "锁定房源", url: "/managementEntrance/houseLockingList" },
   { title: "审核列表", url: "/managementEntrance/houseExamineHouse" }
 ];
