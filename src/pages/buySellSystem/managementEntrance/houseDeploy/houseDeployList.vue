@@ -513,6 +513,9 @@ export default {
     this.computeTabHeight();
     window.addEventListener("resize", this.computeTabHeight);
   },
+  beforeDestroy() {
+    window.removeEventListener("resize", this.computeTabHeight);
+  },
   methods: {
     toHouseData(id, CommunityName, agentName, agentper) {
       var that = this;
