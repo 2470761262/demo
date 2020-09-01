@@ -200,28 +200,6 @@
             height="100%"
             v-loading="loading"
           >
-            <!-- <el-table-column
-              v-for="(item, index) in workColumn"
-              :key="index"
-              :prop="item.prop"
-              :label="item.label"
-              :width="item.width"
-              :min-width="item.minWidth"
-              :align="item.align"
-              :sortable="item.sortable"
-              :sort-orders="['ascending', 'descending']"
-              >
-            </el-table-column>
-            <el-table-column
-              fixed="right"
-              label="操作"
-              width="100">
-              <template slot-scope="scope">
-                <el-button @click="handleClick(scope.row)" type="text" size="small">审核</el-button>
-                <el-button type="text" size="small">查看附件</el-button>
-              </template>
-            </el-table-column> -->
-
             <el-table-column
               fixed="left"
               prop="communityName"
@@ -247,13 +225,14 @@
               align="right"
             >
               <template v-slot="scope">
-                <el-image
+                <!-- <el-image
                   v-if="scope.row.accessory == 1"
                   :src="accessoryUrl"
                   data-anchor="审核列表附件 => table => image"
                   @click="getAccessory(scope.row)"
                 >
-                </el-image>
+                </el-image> -->
+                <span>{{scope.row.accessory==1?"有":"无"}}</span>
               </template>
             </el-table-column>
             <el-table-column
@@ -270,28 +249,24 @@
               :sortable="true"
               :sort-orders="['ascending', 'descending']">
             </el-table-column>
-            <el-table-column label="操作" fixed="right" width="190">
+            <el-table-column label="操作" fixed="right" width="180">
               <template v-slot="scope">
                 <el-button
                   class="anchor-point"
-                  type="primary"
+                  type="text"
                   size="mini"
                   data-anchor="审核列表审核 => click"
-                  v-if="
-                    scope.row.tag == 0 && scope.row.checkProject == '房源转状态'
-                  "
+                  v-if="scope.row.tag == 0 && scope.row.checkProject == '房源转状态'"
                   @click="getTitle(scope.row)"
                   :disabled="btnDisabled.checkStatus"
                   >审核</el-button
                 >
                 <el-button
                   class="anchor-point"
-                  type="primary"
+                  type="text"
                   size="mini"
                   data-anchor="审核列表审核 => click"
-                  v-if="
-                    scope.row.tag == 0 && scope.row.checkProject != '房源转状态'
-                  "
+                  v-if="scope.row.tag == 0 && scope.row.checkProject != '房源转状态'"
                   @click="getTitle(scope.row)"
                   :disabled="btnDisabled.checkHouse"
                   >审核</el-button
@@ -299,19 +274,27 @@
                 <el-button
                   data-anchor="审核列表已审核 => click"
                   size="mini"
-                  type="warning"
+                  type="text"
                   v-if="scope.row.tag != 0"
-                  class="anchor-point"
+                  class="examine anchor-point"
                   >已审核</el-button
                 >
                 <el-button
                   data-anchor="审核列表查看详情 => click"
                   class="anchor-point"
-                  type="primary"
-                  v-if="!(scope.row.checkProject == 13)"
-                  @click="toHouseDetail(scope.row)"
+                  type="text"
+                  v-if="scope.row.accessory == 1"
+                  @click="getAccessory(scope.row)"
                   size="mini"
-                  >查看</el-button
+                  >查看附件</el-button
+                >
+                <el-button
+                  data-anchor="审核列表查看详情 => click"
+                  class="examine anchor-point"
+                  type="text"
+                  v-else
+                  size="mini"
+                  >查看附件</el-button
                 >
               </template>
             </el-table-column>
@@ -830,7 +813,6 @@ export default {
           result.unshift(data); //往前添加元素
         }
       }
-      console.log(result, "ffff");
       return result;
     }
   },
@@ -886,7 +868,6 @@ export default {
           }
         })
         .then(e => {
-          console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
             this.treeData = result.data;
@@ -1086,7 +1067,6 @@ export default {
       params.treeAccount = this.treeCondition[2].join(",");
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
-      console.log(params,"------------")
       this.$api
         .post({
           url: "/myHouse/myCheckList",
@@ -1096,7 +1076,6 @@ export default {
         })
         .then(e => {
           let data = e.data;
-          console.log(data,"---------------data");
           if (data.code == 200) {
             this.pageJson.total = data.data.checkList.totalCount;
             this.tableData = data.data.checkList.list;
@@ -1179,7 +1158,6 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          console.log(result, "----------");
           if (result.code == 200) {
             if (row.Type == 13) {
               result.data.push({ CheckID: checkId, url: row.picUrl });
@@ -1318,31 +1296,7 @@ export default {
           that.$message("操作失败");
           that.loading = false;
         });
-    },
-    //跳转房源详情页面
-    toHouseDetail(row) {
-      var that = this;
-      this.$api
-        .get({
-          url: "/agent_house/valid/" + row.eid,
-          headers: { "Content-Type": "application/json;charset=UTF-8" }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            if (e.data.data == 1) {
-              util.openPage.call(this, {
-                name: "houseDetails",
-                params: { houseId: row.eid }
-              });
-            } else {
-              util.openPage.call(this, {
-                name: "historyDetails",
-                params: { houseId: row.eid, tradeType: 0 }
-              });
-            }
-          }
-        });
-    },
+    }
   }
 }
 </script>
@@ -1611,6 +1565,18 @@ export default {
         .el-table__body td {
           // perttier-ignore
           height: 64PX;
+        }
+        .el-button--mini, .el-button--small {
+          // prettier-ignore
+          min-width: 60PX;
+          // prettier-ignore
+          margin-left: 16PX;
+          padding: 0;
+          text-align: left;
+          font-size: @font16;
+          &.examine {
+            color: #a7a7a7;
+          }
         }
       }
       .el-pagination {
