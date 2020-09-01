@@ -535,6 +535,8 @@ export default {
       roomLoading: false, //房间号select loading
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
+      sortColumn: "id",
+      sortType: 1,
       tableData: [],
       workColumn: [
         {
@@ -733,8 +735,8 @@ export default {
      * @example: 作业数据排序变化触发事件
      */
     changeWorkSort({column, prop, order}) {
-      this.workSortColumn = prop;
-      this.workSortType = order=="ascending" ? 0 : 1;
+      this.sortColumn = prop;
+      this.sortType = order=="ascending" ? 0 : 1;
       Object.assign(this.pageJson, this.$options.data().pageJson);
       this.query();
     },
@@ -966,8 +968,8 @@ export default {
       params.treeCompany = this.treeCondition[0].join(",");
       params.treeDepartment = this.treeCondition[1].join(",");
       params.treeAccount = this.treeCondition[2].join(",");
-      params.sortColumn = "id";
-      // params.sortType = this.sortType;
+      params.sortColumn = this.sortColumn;
+      params.sortType = this.sortType;
       console.log(params,"------------")
       this.$api
         .post({
@@ -1003,12 +1005,12 @@ export default {
      */
     reset() {
       Object.assign(this.$data.conditions, this.$options.data().conditions);
-      Object.assign(this.$data.buildOptData, this.$options.data().buildOptData);
-      Object.assign(this.$data.towerOptData, this.$options.data().towerOptData);
-      Object.assign(this.$data.roomOptData, this.$options.data().roomOptData);
-      // Object.assign(this.$data.checkProject, this.$options.data().checkProject);
-      // Object.assign(this.$data.querylistByParams, this.$options.data().querylistByParams);
-      // Object.assign(this.$data.status, this.$options.data().status);
+      this.buildOptData = {};
+      this.towerOptData = {};
+      this.roomOptData = {};
+      this.checkProject = "";
+      this.type = "";
+      this.status = "";
       this.query();
     },
     /**
