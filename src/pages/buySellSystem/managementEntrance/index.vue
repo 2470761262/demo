@@ -34,7 +34,7 @@ export default {
           this.$router.push("/managementEntrance/business");
           break;
         case 1:
-          this.$router.push("/managementEntrance/houseLockingList");
+          this.$router.push("/managementEntrance/houseDeploy");
           break;
         case 2:
           this.$router.push("/managementEntrance/rentHouse");
