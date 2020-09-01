@@ -410,12 +410,14 @@ export default {
       return column.label == "楼盘名称" ? "tab-cell-left" : "tab-cell-item";
     },
     getTree() {
+      this.treeLoading = true;
       //读取树数据
       this.$api
         .post({
           url: "/sys/tree/bet"
         })
         .then(e => {
+          this.treeLoading = false;
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
@@ -439,6 +441,7 @@ export default {
         //   }
         // })
         .catch(e => {
+          this.treeLoading = false;
           console.log("读取失败");
           console.log(e);
         });
