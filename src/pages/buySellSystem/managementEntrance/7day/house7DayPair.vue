@@ -306,8 +306,8 @@ const IMPLANTLIST = [
   { title: "房源调配", url: "/managementEntrance/houseDeploy" },
   { title: "3天新增", url: "/managementEntrance/3day" },
   { title: "7天内被看房源", url: "/managementEntrance/7day" },
-  { title: "锁定房源", url: "" },
-  { title: "审核列表", url: "" }
+  { title: "锁定房源", url: "/managementEntrance/houseLockingList" },
+  { title: "审核列表", url: "/managementEntrance/houseExamineHouse" }
 ];
 //楼盘 楼栋 房间号 级联 mixins
 import cascadeHouse from "@/minxi/cascadeHouse";
