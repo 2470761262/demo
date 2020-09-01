@@ -350,7 +350,7 @@ export default [
         },
         component: () =>
           import(
-            /* webpackChunkName: "resourceManageLList" */ "@/pages/buySellSystem/resourceManage/list.vue"
+            /* webpackChunkName: "resourceManageList" */ "@/pages/buySellSystem/resourceManage/list.vue"
           )
       },
       {
@@ -364,6 +364,125 @@ export default [
         component: () =>
           import(
             /* webpackChunkName: "resourceManageDetail" */ "@/pages/buySellSystem/resourceManage/detail.vue"
+          )
+      }
+    ]
+  },
+  {
+    // 房源系统-管理入口
+    path: "/buySellSystem/managementEntrance",
+    redirect: "/managementEntrance/business",
+    component: () =>
+      import(
+        /* webpackChunkName: "managementEntrance" */ "@/pages/buySellSystem/managementEntrance/index.vue"
+      ),
+    children: [
+      {
+        path: "/managementEntrance/business",
+        meta: {
+          title: "业务管理",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "managementEntranceOfBusiness" */ "@/pages/buySellSystem/managementEntrance/business.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/houseDeploy",
+        meta: {
+          title: "房源调配",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseDeploy" */ "@/pages/buySellSystem/managementEntrance/houseDeploy/houseDeploy.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/3day",
+        meta: {
+          title: "3天新增",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "house3Day" */ "@/pages/buySellSystem/managementEntrance/3day/house3Day.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/7day",
+        meta: {
+          title: "7天被看房源",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "house7Day" */ "@/pages/buySellSystem/managementEntrance/7day/house7Day.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/houseLockingList",
+        meta: {
+          title: "锁定列表",
+          isMapNav: true, //不需要导航
+          isPad: true //不需要el-main padding
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseLockingList" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/lockingList.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/houseExamineHouse",
+        meta: {
+          title: "审核列表",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/examineList.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/customers",
+        meta: {
+          title: "客源",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/customers/customersList.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/rentHouse",
+        meta: {
+          title: "租赁房源",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/rentHouse/rentHouse.vue"
+          )
+      },
+      {
+        path: "/managementEntrance/personnel",
+        meta: {
+          title: "人员管理",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/personnel/personnel.vue"
           )
       }
     ]

@@ -648,8 +648,8 @@ export default {
     navToPageBtn(item) {
       if (!item.private) {
         this.$msgbox({
-          title: "开发中",
-          message: <div>开发中。。。</div>,
+          title: "温馨提示",
+          message: <div>功能正在开发中，敬请期待</div>,
           showCancelButton: false
         });
       }
