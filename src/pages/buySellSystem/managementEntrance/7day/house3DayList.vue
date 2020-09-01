@@ -330,6 +330,11 @@ export default {
           prop: "addTime",
           label: "挂牌",
           order: true
+        },
+        {
+          prop: "brokerName",
+          label: "跟单人",
+          order: false
         }
       ],
       treeCondition: {
@@ -365,9 +370,6 @@ export default {
 
     this.computeTabHeight();
     window.addEventListener("resize", this.computeTabHeight);
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.computeTabHeight);
   },
   methods: {
     handleSizeChange(pageSize) {
