@@ -15,6 +15,7 @@ import { getColor } from "@/themePackers/getSkin";
 import componentsIndex from "@/components/index";
 import directives from "@/directives/directive";
 import * as md5Util from "./util/md5";
+import "./console";
 //import "babel-polyfill";
 Vue.prototype.socketApi = socketApi;
 Vue.prototype.md5Util = md5Util;
