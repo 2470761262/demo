@@ -11,6 +11,10 @@
                 <el-form-item label="楼盘">
                   <el-col :span="8">
                     <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="审核列表楼盘 => select"
+                      @click.native="log_socket.sendUserActionData"
                       v-model="buildOptData"
                       placeholder="楼盘"
                       clearable
@@ -23,6 +27,9 @@
                       value-key="value"
                     >
                       <el-option
+                        class="anchor-point"
+                        :data-anchor="'审核列表楼盘 => select => option:' + item.name"
+                        @click.native="log_socket.sendUserActionData"
                         v-for="item in buildForList"
                         :key="item.value"
                         :label="item.name"
@@ -32,6 +39,10 @@
                   </el-col>
                   <el-col :span="8">
                     <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="审核列表栋座 => select"
+                      @click.native="log_socket.sendUserActionData"
                       v-model="towerOptData"
                       placeholder="栋座"
                       clearable
@@ -43,6 +54,9 @@
                       value-key="value"
                     >
                       <el-option
+                        class="anchor-point"
+                        :data-anchor="'审核列表栋座 => select => option:' + item.name"
+                        @click.native="log_socket.sendUserActionData"
                         v-for="item in towerForList"
                         :key="item.value"
                         :label="item.name"
@@ -52,6 +66,10 @@
                   </el-col>
                   <el-col :span="8">
                     <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="审核列表房号 => select"
+                      @click.native="log_socket.sendUserActionData"
                       v-model="roomOptData"
                       placeholder="请输入房号"
                       clearable
@@ -63,6 +81,9 @@
                       value-key="value"
                     >
                       <el-option
+                        class="anchor-point"
+                        :data-anchor="'审核列表房号 => select => option:' + item.name"
+                        @click.native="log_socket.sendUserActionData"
                         v-for="item in roomForList"
                         :key="item.value"
                         :label="item.name"
@@ -85,19 +106,30 @@
                   value-format="yyyy-MM-dd"
                   @change="query(1)"
                   :default-time="['00:00:00', '23:59:59']"
+                  class="anchor-point"
+                  :data-anchor="'审核列表搜索 提交时间:' + conditions.timeSelect"
                 >
                 </el-date-picker>
               </el-form-item>
             </el-col>
             <el-col :span="6">
               <el-form-item label="房源编号">
-                <el-input v-model="conditions.houseNo" placeholder="请输入房源编号" @change="query(1)"></el-input>
+                <el-input
+                  v-model="conditions.houseNo"
+                  placeholder="请输入房源编号"
+                  @change="query(1)"
+                  class="anchor-point"
+                  :data-anchor="'审核列表搜索 房源编号:' + conditions.houseNo"
+                  ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="审核项目">
                 <el-select
-                  class="width100"
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="审核列表审核项目 => select"
+                  @click.native="log_socket.sendUserActionData"
                   filterable
                   v-model="checkProject"
                   clearable
@@ -105,6 +137,9 @@
                   placeholder="请选择"
                 >
                   <el-option
+                    class="anchor-point"
+                    :data-anchor="'审核列表审核项目 => select => option:' + item.label"
+                    @click.native="log_socket.sendUserActionData"
                     v-for="item in checkProjectList"
                     :key="item.value"
                     :label="item.label"
@@ -117,7 +152,10 @@
             <el-col :span="8">
               <el-form-item label="审核类型">
                 <el-select
-                  class="width100"
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="审核列表审核类型 => select"
+                  @click.native="log_socket.sendUserActionData"
                   filterable
                   v-model="type"
                   clearable
@@ -126,6 +164,8 @@
                 >
                   <el-option
                     class="anchor-point"
+                    :data-anchor="'审核列表审核类型 => select => option:' + item.label"
+                    @click.native="log_socket.sendUserActionData"
                     v-for="item in typeList"
                     :key="item.value"
                     :label="item.label"
@@ -138,7 +178,10 @@
             <el-col :span="8">
               <el-form-item label="审核状态">
                 <el-select
-                  class="width100"
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="审核列表审核状态 => select"
+                  @click.native="log_socket.sendUserActionData"
                   filterable
                   v-model="status"
                   clearable
@@ -146,6 +189,9 @@
                   placeholder="请选择"
                 >
                   <el-option
+                    class="anchor-point"
+                    :data-anchor="'审核列表审核状态 => select => option:' + item.label"
+                    @click.native="log_socket.sendUserActionData"
                     v-for="item in stateList"
                     :key="item.value"
                     :label="item.label"
@@ -159,8 +205,16 @@
         </el-row>
       </div>
       <div class="conditions-btn">
-        <button class="btn" @click="reset">重置</button>
-        <button class="btn active" @click="query(1)">搜索</button>
+        <button
+          class="btn anchor-pointn"
+          @click="reset"
+          data-anchor="审核列表重置"
+          >重置</button>
+        <button
+          class="btn active anchor-pointn"
+          @click="query(1)"
+          data-anchor="审核列表搜索"
+        >搜索</button>
       </div>
     </div>
     <div class="main">
@@ -204,8 +258,9 @@
               fixed="left"
               prop="communityName"
               label="楼盘名称"
-              min-width="120"
-              align="left">
+              width="166"
+              align="left"
+              show-overflow-tooltip>
             </el-table-column>
             <el-table-column
               prop="checkProject"
@@ -225,13 +280,6 @@
               align="right"
             >
               <template v-slot="scope">
-                <!-- <el-image
-                  v-if="scope.row.accessory == 1"
-                  :src="accessoryUrl"
-                  data-anchor="审核列表附件 => table => image"
-                  @click="getAccessory(scope.row)"
-                >
-                </el-image> -->
                 <span>{{scope.row.accessory==1?"有":"无"}}</span>
               </template>
             </el-table-column>
@@ -543,7 +591,6 @@ export default {
         label: "labelName"
       },
       loading: false,
-      accessoryUrl: require("../../../../assets/images/accessory.png"),
       accessoryAllList: [],
       bigAccessoryFile: [],
       checkProject: "",
@@ -605,44 +652,6 @@ export default {
       sortColumn: "id",
       sortType: 1,
       tableData: [],
-      workColumn: [
-        {
-          prop: "communityName",
-          label: "楼盘名称",
-          minWidth: "120",
-          align: "left"
-        }, {
-          prop: "checkProject",
-          label: "审核项目",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "checkType",
-          label: "审核类型",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "",
-          label: "附件",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "",
-          label: "提交人",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "",
-          label: "提交时间",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }
-      ],
       pageJson: {
         page: 1,
         limit: 10,

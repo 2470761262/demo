@@ -9,7 +9,7 @@
     background: #f0f2f5;
   }
   .ResultListCell {
-    padding-left: 45px;
+    // padding-left: 45px;
     font-size: @font16;
     height: 64px;
     /deep/.cell {
@@ -133,6 +133,19 @@
     width: 0;
   }
 }
+.row-line {
+  display: flex;
+  align-items: center;
+  // prettier-ignore
+  margin-bottom: 17PX;
+  h3 {
+    // prettier-ignore
+    margin-right: 10PX;
+    font-size: @font14;
+    color: #303133;
+    font-weight: normal;
+  }
+}
 </style>
 <template>
   <div class="ResultWarp">
@@ -167,6 +180,20 @@
         </div>
       </div>
       <div class="ResultRight">
+        <div class="row-line" v-show="form.isTypeChange == 2">
+          <h3>带看时间</h3>
+          <el-date-picker
+            v-model="timeValue"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            @change="apply"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            :default-time="['00:00:00', '23:59:59']"
+          >
+          </el-date-picker>
+        </div>
         <el-table
           :data="tableData"
           header-cell-class-name="ResultListCell ResultListHeaderBack"
@@ -185,6 +212,7 @@
                 :key="item.prop"
                 show-overflow-tooltip
                 :formatter="item.formart"
+                :fixed="item.fixed"
               ></el-table-column>
             </div>
             <div v-else>
@@ -195,6 +223,7 @@
                 :key="item.prop"
                 show-overflow-tooltip
                 :formatter="item.formart"
+                :fixed="item.fixed"
               ></el-table-column>
             </div>
           </div>
@@ -232,6 +261,7 @@ export default {
   components: {},
   data() {
     return {
+      timeValue: "",
       filterText: "",
       treeData: [], //结构树
       treeLoading: false,
@@ -239,44 +269,7 @@ export default {
         children: "childrenNodes",
         label: "labelName"
       },
-      tableDataColumn: [
-        {
-          prop: "maintainTime",
-          label: "上次维护时间",
-          width: "180",
-          formart: item => item.maintainTime || "暂无"
-        },
-        {
-          prop: "customers",
-          label: "姓名",
-          width: "180",
-          formart: item => item.customers || "暂无"
-        },
-        {
-          prop: "online",
-          label: "渠道",
-          width: "130",
-          formart: item => (item.onLine == 0 ? "线下" : "线上") || "暂无"
-        },
-        {
-          prop: "sex",
-          label: "性别",
-          width: "120px",
-          formart: item => (item.sex == 0 ? "男" : "女") || "暂无"
-        },
-        {
-          prop: "source",
-          label: "客户来源",
-          width: "110px",
-          formart: item => this.housesource(item.source)
-        },
-        {
-          prop: "requireType",
-          label: "购房需求",
-          width: "130px",
-          formart: item => this.houserequire(item.requireType) || "暂无"
-        }
-      ],
+      tableDataColumn: [],
       treeCondition: {
         0: [], //公司数组
         1: [], //部门数组
@@ -311,11 +304,15 @@ export default {
     };
   },
   watch: {
+    "form.isTypeChange"(val) {
+      this.$refs.treeForm.setCheckedKeys([]);
+      this.timeValue = "";
+      this.initTab(val);
+    },
     form: {
       deep: true,
       // immediate: true,
       handler: function(value, ordvalue) {
-        console.log(value);
         this.page = 1;
         this.pageSum = 0;
         this.dataCount = 0;
@@ -328,7 +325,7 @@ export default {
   },
   mounted() {
     //console.log(111111111);
-
+    this.initTab(1);
     this.apply();
 
     tableMenu.getTableMenu(this.tableDataColumn, 1).then(e => {
@@ -337,6 +334,89 @@ export default {
     });
   },
   methods: {
+    initTab(val) {
+      if (val == 1) {
+        this.tableDataColumn = [
+          {
+            prop: "customers",
+            label: "姓名",
+            fixed: "left",
+            formart: item => item.customers || "暂无"
+          },
+          {
+            prop: "online",
+            label: "渠道",
+            formart: item => (item.onLine == 0 ? "线下" : "线上") || "暂无"
+          },
+          {
+            prop: "sex",
+            label: "性别",
+            formart: item => (item.sex == 0 ? "男" : "女") || "暂无"
+          },
+          {
+            prop: "source",
+            label: "客户来源",
+            formart: item => this.housesource(item.source)
+          },
+          {
+            prop: "addPerName",
+            label: "录入人"
+          },
+          {
+            prop: "requireType",
+            label: "购房需求",
+            formart: item => this.houserequire(item.requireType) || "暂无"
+          },
+          {
+            prop: "maintainTime",
+            label: "上次维护时间",
+            formart: item => item.maintainTime || "暂无"
+          }
+        ];
+      } else if (val == 2) {
+        this.tableDataColumn = [
+          {
+            prop: "customers",
+            label: "姓名",
+            fixed: "left",
+            formart: item => item.customers || "暂无"
+          },
+          {
+            prop: "online",
+            label: "渠道",
+            formart: item => (item.onLine == 0 ? "线下" : "线上") || "暂无"
+          },
+          {
+            prop: "sex",
+            label: "性别",
+            formart: item => (item.sex == 0 ? "男" : "女") || "暂无"
+          },
+          {
+            prop: "source",
+            label: "客户来源",
+            formart: item => this.housesource(item.source)
+          },
+          {
+            prop: "addPerName",
+            label: "录入人"
+          },
+          {
+            prop: "requireType",
+            label: "购房需求",
+            formart: item => this.houserequire(item.requireType) || "暂无"
+          },
+          {
+            prop: "communityName",
+            label: "带看楼盘"
+          },
+          {
+            prop: "memo",
+            label: "带看总结",
+            width: "150"
+          }
+        ];
+      }
+    },
     getTree() {
       //读取树数据
       this.$api
@@ -372,6 +452,7 @@ export default {
         });
     },
     handleCheckChange(data, checked, node) {
+      console.log("sxsxsxs");
       let key = data.type;
       this.chooseTree = []; //清空数组
       this.chooseTree.push(data.businessId);
@@ -420,9 +501,21 @@ export default {
     apply() {
       var that = this;
       this.loading = true;
+      let url = "/saleCustomer/listIn7DaysCustomers";
+      if (
+        this.form.requirementType == "" &&
+        this.form.attentionStatus == null
+      ) {
+        url = "/saleCustomer/listIn7DaysCustomers";
+      } else if (
+        this.form.requirementType == 1 &&
+        this.form.attentionStatus == 1
+      ) {
+        url = "/saleCustomer/listFollowCustomer";
+      }
       this.$api
         .post({
-          url: "/saleCustomer/listIn7DaysCustomers",
+          url: url,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           data: {
@@ -454,7 +547,9 @@ export default {
             maxLastPairFollowTime: that.form.maxLastPairFollowTime, //带看结束时间
             treeCompany: this.treeCondition[0].join(","),
             treeDepartment: this.treeCondition[1].join(","),
-            treeAccount: this.treeCondition[2].join(",")
+            treeAccount: this.treeCondition[2].join(","),
+            beginTime: this.timeValue != "" ? this.timeValue[0] : "",
+            endTime: this.timeValue != "" ? this.timeValue[1] : ""
           }
         })
         .then(e => {
