@@ -8,11 +8,13 @@
             type="text"
             placeholder="请输入姓名、门店、区域"
             class="content-input anchor-point"
+            :data-anchor="'业务管理搜索（姓名/门店/区域）:' + businessKeyword"
             v-model="businessKeyword"
             @keydown.enter="fuzzySearch"
           />
           <button
             class="inquire-content anchor-point"
+            :data-anchor="'业务管理搜索{' + businessKeyword + '}'"
             @click="fuzzySearch"
           >
             <i class="el-icon-search"></i>
@@ -21,7 +23,8 @@
         <div class="right">
           <el-radio-group v-model="searchType" @change="fuzzySearch">
             <el-radio-button
-             class="btn"
+             class="btn anchor-point"
+             :data-anchor="'业务管理搜索类型：'+item.name"
              :label="item.value"
              v-for="(item, index) in searchTypes"
              :key="index"
@@ -99,8 +102,16 @@
             >
             </el-date-picker>
           </div>
-          <button class="search-btn" @click="resetDevelopDate">重置</button>
-          <button class="search-btn active" @click="queryDevelopData">搜索</button>
+          <button
+            class="search-btn anchor-point"
+            @click="resetDevelopDate"
+            data-anchor="业务管理开发数据查询时间重置"
+          >重置</button>
+          <button
+            class="search-btn active anchor-point"
+            @click="queryDevelopData"
+            :data-anchor="'业务管理开发数据查询时间搜索{' + developDateSelect + '}'"
+          >搜索</button>
         </div>
         <el-tooltip placement="right">
           <div slot="content">
@@ -186,8 +197,16 @@
             >
             </el-date-picker>
           </div>
-          <button class="search-btn" @click="resetCurrencyDate">重置</button>
-          <button class="search-btn active" @click="queryCurrencyData">搜索</button>
+          <button
+            class="search-btn anchor-point"
+            @click="resetCurrencyDate"
+            data-anchor="业务管理鑫币数据查询时间重置"
+            >重置</button>
+          <button
+            class="search-btn active anchor-point"
+            @click="queryCurrencyData"
+            :data-anchor="'业务管理鑫币数据查询时间搜索{' + currencyDateSelect + '}'"
+            >搜索</button>
         </div>
         <el-tooltip placement="right">
           <div slot="content">
@@ -203,7 +222,8 @@
         </el-tooltip>
       </div>
       <div class="nav-box">
-        <div class="item"
+        <div class="item anchor-point"
+         :data-anchor="'鑫币数据类型:' + item.name"
          v-for="(item, index) in currencyTypes"
          :key="index"
          :class="{'active': currencyTypeIndex===index}"
@@ -555,14 +575,14 @@ export default {
           this.developDateSelectFlag = [prevDate, currentDate];
           break;
         case 2:
-          this.currencyDateSelect = [prevDate, currentDate];
-          this.currencyDateSelectFlag = [prevDate, currentDate];
+          this.currencyDateSelect = [currentDate, currentDate];
+          this.currencyDateSelectFlag = [currentDate, currentDate];
           break;
         default: 
           this.developDateSelect = [prevDate, currentDate];
           this.developDateSelectFlag = [prevDate, currentDate];
-          this.currencyDateSelect = [prevDate, currentDate];
-          this.currencyDateSelectFlag = [prevDate, currentDate];
+          this.currencyDateSelect = [currentDate, currentDate];
+          this.currencyDateSelectFlag = [currentDate, currentDate];
       }
     },
     /**

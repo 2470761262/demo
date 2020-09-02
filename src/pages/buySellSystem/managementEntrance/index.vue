@@ -5,7 +5,8 @@
     <div class="header">
       <div class="nav">
         <div
-          class="item"
+          class="item anchor-point"
+          :data-anchor="'房源系统类型:' + item"
           v-for="(item, index) in navList"
           :key="index"
           :class="{ active: navActiveIndex === index }"

@@ -204,8 +204,9 @@
               fixed="left"
               prop="communityName"
               label="楼盘名称"
-              min-width="120"
-              align="left">
+              width="166"
+              align="left"
+              show-overflow-tooltip>
             </el-table-column>
             <el-table-column
               prop="checkProject"
@@ -225,13 +226,6 @@
               align="right"
             >
               <template v-slot="scope">
-                <!-- <el-image
-                  v-if="scope.row.accessory == 1"
-                  :src="accessoryUrl"
-                  data-anchor="审核列表附件 => table => image"
-                  @click="getAccessory(scope.row)"
-                >
-                </el-image> -->
                 <span>{{scope.row.accessory==1?"有":"无"}}</span>
               </template>
             </el-table-column>
@@ -543,7 +537,6 @@ export default {
         label: "labelName"
       },
       loading: false,
-      accessoryUrl: require("../../../../assets/images/accessory.png"),
       accessoryAllList: [],
       bigAccessoryFile: [],
       checkProject: "",
@@ -605,44 +598,6 @@ export default {
       sortColumn: "id",
       sortType: 1,
       tableData: [],
-      workColumn: [
-        {
-          prop: "communityName",
-          label: "楼盘名称",
-          minWidth: "120",
-          align: "left"
-        }, {
-          prop: "checkProject",
-          label: "审核项目",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "checkType",
-          label: "审核类型",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "",
-          label: "附件",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "",
-          label: "提交人",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }, {
-          prop: "",
-          label: "提交时间",
-          minWidth: "150",
-          align: "right",
-          sortable: true
-        }
-      ],
       pageJson: {
         page: 1,
         limit: 10,
