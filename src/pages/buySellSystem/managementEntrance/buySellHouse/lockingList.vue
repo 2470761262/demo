@@ -11,6 +11,10 @@
                 <el-form-item label="楼盘">
                   <el-col :span="8">
                     <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="锁定房源楼盘 => select"
+                      @click.native="log_socket.sendUserActionData"
                       v-model="buildOptData"
                       placeholder="楼盘"
                       clearable
@@ -23,6 +27,9 @@
                       value-key="value"
                     >
                       <el-option
+                        class="anchor-point"
+                        :data-anchor="'锁定房源楼盘 => select => option:' + item.name"
+                        @click.native="log_socket.sendUserActionData"
                         v-for="item in buildForList"
                         :key="item.value"
                         :label="item.name"
@@ -32,6 +39,10 @@
                   </el-col>
                   <el-col :span="8">
                     <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="锁定房源栋座 => select"
+                      @click.native="log_socket.sendUserActionData"
                       v-model="towerOptData"
                       placeholder="栋座"
                       clearable
@@ -43,6 +54,9 @@
                       value-key="value"
                     >
                       <el-option
+                        class="anchor-point"
+                        :data-anchor="'锁定房源栋座 => select => option:' + item.name"
+                        @click.native="log_socket.sendUserActionData"
                         v-for="item in towerForList"
                         :key="item.value"
                         :label="item.name"
@@ -52,6 +66,10 @@
                   </el-col>
                   <el-col :span="8">
                     <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="锁定房源房号 => select"
+                      @click.native="log_socket.sendUserActionData"
                       v-model="roomOptData"
                       placeholder="请输入房号"
                       clearable
@@ -63,6 +81,9 @@
                       value-key="value"
                     >
                       <el-option
+                        class="anchor-point"
+                        :data-anchor="'锁定房源房号 => select => option:' + item.name"
+                        @click.native="log_socket.sendUserActionData"
                         v-for="item in roomForList"
                         :key="item.value"
                         :label="item.name"
@@ -80,6 +101,8 @@
                   placeholder="请输入房源编号"
                   @change="query(1)"
                   clearable
+                  class="anchor-point"
+                  :data-anchor="'锁定房源搜索 房源编号:' + conditions.houseNo"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -95,6 +118,8 @@
                   value-format="yyyy-MM-dd"
                   @change="query(1)"
                   :default-time="['00:00:00', '23:59:59']"
+                  class="anchor-point"
+                  :data-anchor="'锁定房源搜索 锁定时间:' + conditions.timeSelect"
                 >
                 </el-date-picker>
               </el-form-item>
@@ -103,8 +128,16 @@
         </el-row>
       </div>
       <div class="conditions-btn">
-        <button class="btn" @click="reset">重置</button>
-        <button class="btn active" @click="query(1)">搜索</button>
+        <button
+          class="btn anchor-pointn"
+          @click="reset"
+          data-anchor="锁定房源重置"
+          >重置</button>
+        <button
+          class="btn active anchor-pointn"
+          @click="query(1)"
+          data-anchor="锁定房源搜索"
+          >搜索</button>
       </div>
     </div>
     <div class="main">
