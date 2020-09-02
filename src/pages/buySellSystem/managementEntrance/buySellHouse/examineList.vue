@@ -253,6 +253,7 @@
             @sort-change="changeWorkSort"
             height="100%"
             v-loading="loading"
+            ref="tableList"
           >
             <el-table-column
               fixed="left"
@@ -352,7 +353,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pageJson.page"
-        :page-sizes="[5, 10, 15]"
+        :page-sizes="[5, 10, 15, 20]"
         :page-size="pageJson.limit"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageJson.total">
@@ -1086,6 +1087,7 @@ export default {
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
+            this.$refs.tableList.bodyWrapper.scrollTop = 0;
             this.pageJson.total = data.data.checkList.totalCount;
             this.tableData = data.data.checkList.list;
             // let btnList = data.data.btnList;
@@ -1256,6 +1258,7 @@ export default {
      * 审核
      */
     getTitle(row) {
+      console.log(row, "-----------")
       this.titleList.forEach(element => {
         if (element.key == row.Type) {
           this.title = element.value;

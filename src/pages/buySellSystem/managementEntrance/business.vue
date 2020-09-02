@@ -59,6 +59,7 @@
           height="368"
           @sort-change="changeWorkSort"
           v-loading="workLoading"
+          ref="workTable"
         >
           <el-table-column
             v-for="(item, index) in workColumn"
@@ -118,7 +119,7 @@
             1、房源开发<br/>
             电开次数：在“开发线索”列表累计回访房源的次数；<br/>
             新增验真：新增录入房源累计验真通过的房源数量；<br/>
-            库存验真：店公共盘、公司公盘申请跟单人，累计验真通过的房源数量；<br/>
+            公盘获取：店公共盘、公司公盘申请跟单人，累计验真通过的房源数量；<br/>
             2、房源维护<br/>
             被看次数：名下跟单房源累计被带看的次数<br/>
             电话回访：跟单人回访名下跟单房源累计回访的次数<br/>
@@ -142,10 +143,12 @@
       </div>
       <div class="content">
         <el-table
-         :data="developData"
+          :data="developData"
           height="417"
           @sort-change="changeDevelopSort"
-          v-loading="developLoading">
+          v-loading="developLoading"
+          ref="developTable"
+        >
           <el-table-column
             v-for="(item, index) in developColumn"
             :key="index"
@@ -233,10 +236,12 @@
       </div>
       <div class="content">
         <el-table
-         :data="currencyData"
+          :data="currencyData"
           height="368"
           @sort-change="changeCurrencySort"
-          v-loading="currencyLoading">
+          v-loading="currencyLoading"
+          ref="currencyTable"
+        >
           <el-table-column
             v-for="(item, index) in currencyColumn"
             :key="index"
@@ -373,7 +378,7 @@ export default {
               sortable: true
             }, {
               prop: "stockVerifyNum",
-              label: "库存验真",
+              label: "公盘获取",
               minWidth: "100",
               align: "center",
               sortable: true
@@ -614,6 +619,7 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            this.$refs.workTable.bodyWrapper.scrollTop = 0;
             this.workData = e.data.data.data;
             this.workPaginate.pageSum = e.data.data.pageSum;
             this.workPaginate.total = e.data.data.dataCount;
@@ -647,6 +653,7 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            this.$refs.developTable.bodyWrapper.scrollTop = 0;
             this.developData = e.data.data.data;
             this.developPaginate.pageSum = e.data.data.pageSum;
             this.developPaginate.total = e.data.data.dataCount;
@@ -680,6 +687,7 @@ export default {
         })
         .then(e => {
           if (e.data.code == 200) {
+            this.$refs.currencyTable.bodyWrapper.scrollTop = 0;
             this.currencyData = e.data.data.data;
             this.currencyPaginate.pageSum = e.data.data.pageSum;
             this.currencyPaginate.total = e.data.data.dataCount;
