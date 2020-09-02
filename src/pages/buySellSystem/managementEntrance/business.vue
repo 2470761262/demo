@@ -93,18 +93,7 @@
               start-placeholder="起始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
-              prefix-icon="none"
-              placeholder="起始日期"
-            >
-            </el-date-picker>
-            <span class="pre">至</span>
-            <el-date-picker
-              class="date-picker"
-              v-model="developEndDate"
-              type="date"
-              value-format="yyyy-MM-dd"
-              prefix-icon="none"
-              placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']"
             >
             </el-date-picker>
           </div>
@@ -197,18 +186,7 @@
               start-placeholder="起始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
-              prefix-icon="none"
-              placeholder="起始日期"
-            >
-            </el-date-picker>
-            <span class="pre">至</span>
-            <el-date-picker
-              class="date-picker"
-              v-model="currencyEndDate"
-              type="date"
-              value-format="yyyy-MM-dd"
-              prefix-icon="none"
-              placeholder="结束日期"
+              :default-time="['00:00:00', '23:59:59']"
             >
             </el-date-picker>
           </div>
@@ -524,6 +502,13 @@ export default {
           minWidth: "120",
           align: "left"
         },
+        // {
+        //   prop: "curMonthAddScore",
+        //   label: "本月新增",
+        //   minWidth: "150",
+        //   align: "right",
+        //   sortable: true
+        // },
         {
           prop: "curMonthAddScore",
           label: "新增鑫币",
@@ -560,10 +545,15 @@ export default {
         total: 0,
         pageSum: 0
       },
-      developDateSelect: "",
-      developDateSelectFlag: "",
-      currencyDateSelect: "",
-      currencyDateSelectFlag: "",
+      currencyMonth: "",
+      developBeginDate: "",
+      developEndDate: "",
+      currencyBeginDate: "",
+      currencyEndDate: "",
+      developBeginDateFlag: "",
+      developEndDateFlag: "",
+      currencyBeginDateFlag: "",
+      currencyEndDateFlag: "",
       workSortColumn: "",
       workSortType: 1,
       developSortColumn: "",
@@ -663,12 +653,8 @@ export default {
       this.developLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        beginDateFlag: this.developDateSelectFlag
-          ? this.developDateSelectFlag[0]
-          : "",
-        endDateFlag: this.developDateSelectFlag
-          ? this.developDateSelectFlag[1]
-          : "",
+        beginDateFlag: this.developBeginDateFlag,
+        endDateFlag: this.developEndDateFlag,
         perName: this.perName,
         page: this.developPaginate.page,
         limit: this.developPaginate.limit,
@@ -700,12 +686,8 @@ export default {
       this.currencyLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        beginDateFlag: this.currencyDateSelectFlag
-          ? this.currencyDateSelectFlag[0]
-          : "",
-        endDateFlag: this.currencyDateSelectFlag
-          ? this.currencyDateSelectFlag[1]
-          : "",
+        beginDateFlag: this.currencyBeginDateFlag,
+        endDateFlag: this.currencyEndDateFlag,
         perName: this.perName,
         page: this.currencyPaginate.page,
         limit: this.currencyPaginate.limit,
@@ -815,17 +797,15 @@ export default {
      * @example: 根据日期查询开发数据
      */
     queryDevelopData() {
-      this.developDateSelectFlag = this.developDateSelect;
+      this.developBeginDateFlag = this.developBeginDate;
+      this.developEndDateFlag = this.developEndDate;
       this.getDevelopData();
     },
     /**
      * @example: 重置鑫币数据查询日期
      */
     resetCurrencyDate() {
-      this.currencyBeginDate = "";
-      this.currencyEndDate = "";
-      this.currencyBeginDateFlag = "";
-      this.currencyEndDateFlag = "";
+      this.getDefaultDate(2);
       Object.assign(
         this.currencyPaginate,
         this.$options.data().currencyPaginate
@@ -836,7 +816,8 @@ export default {
      * @example: 根据月份查询鑫币数据
      */
     queryCurrencyData() {
-      this.currencyDateSelectFlag = this.currencyDateSelect;
+      this.currencyBeginDateFlag = this.currencyBeginDate;
+      this.currencyEndDateFlag = this.currencyEndDate;
       this.getCurrencyData();
     },
     /**
@@ -1004,33 +985,25 @@ export default {
           font-weight: bold;
           color: #303133;
         }
-        /deep/.time-box {
+        .time-box {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
           // prettier-ignore
           width: 308PX;
-          margin-right: 16px;
+          // prettier-ignore
+          height: 36PX;
+          padding: 0 10px;
+          // prettier-ignore
+          margin-right: 16PX;
           border: 1px solid #cecece;
           border-radius: 4px;
           box-sizing: border-box;
           .pre {
             // prettier-ignore
-            text-indent: 10PX;
-            font-size: @font14;
-          }
-          .prefix-icon {
-            width: 0;
-          }
-          .el-date-editor {
-            width: 100%;
-            .el-range-separator {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              width: auto;
-              padding: 0;
-              line-height: 1;
-              text-indent: 0;
-              font-size: @font14;
-            }
+            margin: 0 10PX;
+            font-size: @font12;
+            color: #303133;
           }
         }
         .search-btn {
