@@ -58,7 +58,8 @@ export default {
         minMainTainTime: "", //维护开始时间
         maxMainTainTime: "", //维护结束时间
         minLastPairFollowTime: "", //带看开始时间
-        maxLastPairFollowTime: "" //带看结束时间
+        maxLastPairFollowTime: "", //带看结束时间
+        isTypeChange: 1
       }
     };
   },
