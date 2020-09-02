@@ -93,7 +93,6 @@
               start-placeholder="起始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
-<<<<<<< HEAD
               prefix-icon="none"
               placeholder="起始日期"
             >
@@ -106,9 +105,6 @@
               value-format="yyyy-MM-dd"
               prefix-icon="none"
               placeholder="结束日期"
-=======
-              :default-time="['00:00:00', '23:59:59']"
->>>>>>> origin/managementEntrance
             >
             </el-date-picker>
           </div>
@@ -201,7 +197,6 @@
               start-placeholder="起始日期"
               end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
-<<<<<<< HEAD
               prefix-icon="none"
               placeholder="起始日期"
             >
@@ -214,9 +209,6 @@
               value-format="yyyy-MM-dd"
               prefix-icon="none"
               placeholder="结束日期"
-=======
-              :default-time="['00:00:00', '23:59:59']"
->>>>>>> origin/managementEntrance
             >
             </el-date-picker>
           </div>
@@ -616,7 +608,7 @@ export default {
         }
         prevDate = prevYear + seperator1 + preMonth + seperator1 + "01";
       }
-      switch(type) {
+      switch (type) {
         case 1:
           this.developDateSelect = [prevDate, currentDate];
           this.developDateSelectFlag = [prevDate, currentDate];
@@ -625,7 +617,7 @@ export default {
           this.currencyDateSelect = [prevDate, currentDate];
           this.currencyDateSelectFlag = [prevDate, currentDate];
           break;
-        default: 
+        default:
           this.developDateSelect = [prevDate, currentDate];
           this.developDateSelectFlag = [prevDate, currentDate];
           this.currencyDateSelect = [prevDate, currentDate];
@@ -671,8 +663,12 @@ export default {
       this.developLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        beginDateFlag: this.developDateSelectFlag?this.developDateSelectFlag[0]:"",
-        endDateFlag: this.developDateSelectFlag?this.developDateSelectFlag[1]:"",
+        beginDateFlag: this.developDateSelectFlag
+          ? this.developDateSelectFlag[0]
+          : "",
+        endDateFlag: this.developDateSelectFlag
+          ? this.developDateSelectFlag[1]
+          : "",
         perName: this.perName,
         page: this.developPaginate.page,
         limit: this.developPaginate.limit,
@@ -704,8 +700,12 @@ export default {
       this.currencyLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        beginDateFlag: this.currencyDateSelectFlag?this.currencyDateSelectFlag[0]:"",
-        endDateFlag: this.currencyDateSelectFlag?this.currencyDateSelectFlag[1]:"",
+        beginDateFlag: this.currencyDateSelectFlag
+          ? this.currencyDateSelectFlag[0]
+          : "",
+        endDateFlag: this.currencyDateSelectFlag
+          ? this.currencyDateSelectFlag[1]
+          : "",
         perName: this.perName,
         page: this.currencyPaginate.page,
         limit: this.currencyPaginate.limit,
@@ -822,7 +822,6 @@ export default {
      * @example: 重置鑫币数据查询日期
      */
     resetCurrencyDate() {
-<<<<<<< HEAD
       this.currencyBeginDate = "";
       this.currencyEndDate = "";
       this.currencyBeginDateFlag = "";
@@ -831,10 +830,6 @@ export default {
         this.currencyPaginate,
         this.$options.data().currencyPaginate
       );
-=======
-      this.getDefaultDate(2);
-      Object.assign(this.currencyPaginate, this.$options.data().currencyPaginate);
->>>>>>> origin/managementEntrance
       this.getCurrencyData();
     },
     /**
@@ -1012,25 +1007,11 @@ export default {
         /deep/.time-box {
           // prettier-ignore
           width: 308PX;
-          margin-right: 16PX;
-<<<<<<< HEAD
+          margin-right: 16px;
           border: 1px solid #cecece;
           border-radius: 4px;
           box-sizing: border-box;
           .pre {
-=======
-          .el-input__inner {
-            // prettier-ignore
-            height: 36PX;
-            font-size: @font14;
-          }
-          .el-form-item {
-            // prettier-ignore
-            margin-bottom: 24PX;
-          }
-          .el-range-input {
-            text-align: left;
->>>>>>> origin/managementEntrance
             // prettier-ignore
             text-indent: 10PX;
             font-size: @font14;
@@ -1073,7 +1054,6 @@ export default {
             color: #fff;
           }
         }
-<<<<<<< HEAD
         /deep/.month-picker {
           // prettier-ignore
           margin-right: 16PX;
@@ -1115,27 +1095,6 @@ export default {
             }
           }
         }
-=======
-        // /deep/.date-picker {
-        //   // prettier-ignore
-        //   width: 125PX;
-        //   .el-input__inner {
-        //     // prettier-ignore
-        //     height: 34PX;
-        //     padding-left: 0;
-        //     border: none;
-        //   }
-        //   .el-input__suffix{
-        //     .el-input__icon {
-        //       // prettier-ignore
-        //       width: 25PX;
-        //       // prettier-ignore
-        //       line-height: 34PX;
-        //       font-size: @font16;
-        //     }
-        //   }
-        // }
->>>>>>> origin/managementEntrance
       }
     }
     .nav-box {
