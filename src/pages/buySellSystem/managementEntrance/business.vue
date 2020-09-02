@@ -544,45 +544,52 @@ export default {
      * @example: 获取默认查询日期
      */
     getDefaultDate(type) {
-      let date = new Date();
-      let seperator1 = "-";
-      let year = date.getFullYear();
-      let month = date.getMonth() + 1;
-      let strDate = date.getDate();
-      if (month >= 1 && month <= 9) {
-        month = "0" + month;
-      }
-      if (strDate >= 0 && strDate <= 9) {
-        strDate = "0" + strDate;
-      }
-      let currentDate = year + seperator1 + month + seperator1 + strDate;
-      let prevDate = year + seperator1 + month + seperator1 + "01";
-      if (strDate == "01") {
-        let prevYear = date.getFullYear();
-        let preMonth = date.getMonth();
-        if (preMonth == "0") {
-          preMonth = "12";
-          prevYear--;
+      function getDate(time) {
+        let d = time?new Date(time):new Date();
+        let seperator1 = "-";
+        let year = d.getFullYear();
+        let month = d.getMonth() + 1;
+        let strDate = d.getDate();
+        if (month >= 1 && month <= 9) {
+          month = "0" + month;
         }
-        if (preMonth >= 1 && preMonth <= 9) {
-          preMonth = "0" + preMonth;
+        if (strDate >= 0 && strDate <= 9) {
+          strDate = "0" + strDate;
         }
-        prevDate = prevYear + seperator1 + preMonth + seperator1 + "01";
+        let result = year + seperator1 + month + seperator1 + strDate;
+        let result2 = year + seperator1 + month + seperator1 + "01";
+        if (strDate == "01") {
+          let prevYear = d.getFullYear();
+          let preMonth = d.getMonth();
+          if (preMonth == "0") {
+            preMonth = "12";
+            prevYear--;
+          }
+          if (preMonth >= 1 && preMonth <= 9) {
+            preMonth = "0" + preMonth;
+          }
+          result2 = prevYear + seperator1 + preMonth + seperator1 + "01";
+        }
+        return [result, result2];
       }
+      let currentDate = getDate()[0];
+      let prevDate = getDate()[1];
+      let prevDaytime = (new Date).getTime()-24*60*60*1000;
+      let prevDayDate = getDate(prevDaytime)[0];
       switch(type) {
         case 1:
           this.developDateSelect = [prevDate, currentDate];
           this.developDateSelectFlag = [prevDate, currentDate];
           break;
         case 2:
-          this.currencyDateSelect = [currentDate, currentDate];
-          this.currencyDateSelectFlag = [currentDate, currentDate];
+          this.currencyDateSelect = [prevDayDate, prevDayDate];
+          this.currencyDateSelectFlag = [prevDayDate, prevDayDate];
           break;
         default: 
           this.developDateSelect = [prevDate, currentDate];
           this.developDateSelectFlag = [prevDate, currentDate];
-          this.currencyDateSelect = [currentDate, currentDate];
-          this.currencyDateSelectFlag = [currentDate, currentDate];
+          this.currencyDateSelect = [prevDayDate, prevDayDate];
+          this.currencyDateSelectFlag = [prevDayDate, prevDayDate];
       }
     },
     /**

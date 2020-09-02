@@ -243,7 +243,7 @@
 </style>
 <template>
   <div class="content-child">
-    <div class="col-height">
+    <div class="col-height" v-if="curreTypeIndex != 5">
       <div class="list-left">
         <el-input
           data-anchor="我的对赌树 => input"
@@ -862,6 +862,14 @@ export default {
     },
     getHouseData(value, initPage = true) {
       this.loading = true;
+      if (this.curreTypeIndex == 5) {
+        //  this.$refs.treeForm.setCheckedKeys([]);
+        this.treeCondition = {
+          0: [], //公司数组
+          1: [], //部门数组
+          2: [] //人员数组
+        };
+      }
       if (initPage) this.InitPageJson();
       let url = this.checked
         ? "/static/soleHouseDeploy"
