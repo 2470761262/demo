@@ -797,8 +797,7 @@ export default {
      * @example: 根据日期查询开发数据
      */
     queryDevelopData() {
-      this.developBeginDateFlag = this.developBeginDate;
-      this.developEndDateFlag = this.developEndDate;
+      this.developDateSelectFlag = this.developDateSelect;
       this.getDevelopData();
     },
     /**
@@ -816,8 +815,7 @@ export default {
      * @example: 根据月份查询鑫币数据
      */
     queryCurrencyData() {
-      this.currencyBeginDateFlag = this.currencyBeginDate;
-      this.currencyEndDateFlag = this.currencyEndDate;
+      this.currencyDateSelectFlag = this.currencyDateSelect;
       this.getCurrencyData();
     },
     /**
