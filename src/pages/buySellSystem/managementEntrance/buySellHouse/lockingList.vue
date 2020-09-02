@@ -147,6 +147,7 @@
             :data="tableData"
             height="100%"
             v-loading="loading"
+            ref="tableList"
           >
             <el-table-column
               v-for="(item, index) in workColumn"
@@ -183,7 +184,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="pageJson.page"
-        :page-sizes="[5, 10, 15]"
+        :page-sizes="[5, 10, 15, 20]"
         :page-size="pageJson.limit"
         layout="total, sizes, prev, pager, next, jumper"
         :total="pageJson.total">
@@ -462,6 +463,7 @@ export default {
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
+            this.$refs.tableList.bodyWrapper.scrollTop = 0;
             this.pageJson.total = data.data.data.totalCount;
             this.tableData = data.data.data.list;
             // let btnList = data.data.btnList;
