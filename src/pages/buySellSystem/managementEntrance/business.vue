@@ -985,25 +985,40 @@ export default {
           font-weight: bold;
           color: #303133;
         }
-        .time-box {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+        /deep/.time-box {
           // prettier-ignore
           width: 308PX;
-          // prettier-ignore
-          height: 36PX;
-          padding: 0 10px;
-          // prettier-ignore
-          margin-right: 16PX;
-          border: 1px solid #cecece;
-          border-radius: 4px;
-          box-sizing: border-box;
-          .pre {
+          margin-right: 16px;
+          .el-input__inner {
             // prettier-ignore
-            margin: 0 10PX;
-            font-size: @font12;
-            color: #303133;
+            height: 36PX;
+            font-size: @font14;
+          }
+          .el-form-item {
+            // prettier-ignore
+            margin-bottom: 24PX;
+          }
+          .el-range-input {
+            text-align: left;
+            // prettier-ignore
+            text-indent: 10PX;
+            font-size: @font14;
+          }
+          .prefix-icon {
+            width: 0;
+          }
+          .el-date-editor {
+            width: 100%;
+            .el-range-separator {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: auto;
+              padding: 0;
+              line-height: 1;
+              text-indent: 0;
+              font-size: @font14;
+            }
           }
         }
         .search-btn {
@@ -1025,47 +1040,6 @@ export default {
             margin-left: 9PX;
             background: @backgroud;
             color: #fff;
-          }
-        }
-        /deep/.month-picker {
-          // prettier-ignore
-          margin-right: 16PX;
-          .el-input__inner {
-            // prettier-ignore
-            height: 36PX;
-            // prettier-ignore
-            padding-left: 28PX;
-          }
-          .el-input__icon {
-            // prettier-ignore
-            width: 25PX;
-            // prettier-ignore
-            line-height: 34PX;
-            font-size: @font18;
-          }
-          .el-input__suffix {
-            .el-input__icon {
-              font-size: @font16;
-            }
-          }
-        }
-        /deep/.date-picker {
-          // prettier-ignore
-          width: 125PX;
-          .el-input__inner {
-            // prettier-ignore
-            height: 34PX;
-            padding-left: 0;
-            border: none;
-          }
-          .el-input__suffix {
-            .el-input__icon {
-              // prettier-ignore
-              width: 25PX;
-              // prettier-ignore
-              line-height: 34PX;
-              font-size: @font16;
-            }
           }
         }
       }
