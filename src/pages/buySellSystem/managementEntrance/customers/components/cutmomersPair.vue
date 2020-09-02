@@ -413,12 +413,6 @@
             <i class="el-icon-search"></i>
           </div>
         </div>
-        <div
-          class="NavigateItem"
-          @click="navigateTo('/customers/addCustomers')"
-        >
-          <span>录入客源</span>
-        </div>
       </el-form-item>
 
       <div class="ItemRow tapSwitchRow">
