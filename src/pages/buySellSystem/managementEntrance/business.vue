@@ -269,6 +269,7 @@
   </div>
 </template>
 <script>
+import bus from "@/evenBus/but.js";
 export default {
   data() {
     return {
@@ -539,6 +540,8 @@ export default {
     }
   },
   created() {
+    // 切换管理入口nav
+    bus.$emit("switchEntranceNav", 0);
     this.getDefaultDate();
     this.getWorkData();
     this.getDevelopData();
