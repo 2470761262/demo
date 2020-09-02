@@ -1,3 +1,40 @@
+
+首页
+工单管理
+合并请求
+探索
+通知
+ 创建…
+ 个人信息和配置
+ zr / newXin
+取消关注
+2
+ 
+点赞
+1
+ 
+派生
+0
+代码
+工单
+0
+合并请求
+0
+版本发布
+38
+百科
+动态
+暂无描述
+ 2922 提交
+ 10 分支
+
+ 分支: managementEntrance 
+newXin/src/pages/buySellSystem/managementEntrance/business.vue
+business.vue 35KB
+永久链接
+文件历史
+原始文件
+  
 <template>
   <!-- 房源系统-业务管理 -->
   <div class="container">
@@ -8,21 +45,27 @@
             type="text"
             placeholder="请输入姓名、门店、区域"
             class="content-input anchor-point"
+            :data-anchor="'业务管理搜索（姓名/门店/区域）:' + businessKeyword"
             v-model="businessKeyword"
             @keydown.enter="fuzzySearch"
           />
-          <button class="inquire-content anchor-point" @click="fuzzySearch">
+          <button
+            class="inquire-content anchor-point"
+            :data-anchor="'业务管理搜索{' + businessKeyword + '}'"
+            @click="fuzzySearch"
+          >
             <i class="el-icon-search"></i>
           </button>
         </div>
         <div class="right">
           <el-radio-group v-model="searchType" @change="fuzzySearch">
             <el-radio-button
-              class="btn"
-              :label="item.value"
-              v-for="(item, index) in searchTypes"
-              :key="index"
-              >{{ item.name }}
+             class="btn anchor-point"
+             :data-anchor="'业务管理搜索类型：'+item.name"
+             :label="item.value"
+             v-for="(item, index) in searchTypes"
+             :key="index"
+            >{{item.name}}
             </el-radio-button>
           </el-radio-group>
         </div>
@@ -34,11 +77,11 @@
         <div class="topic">资源统计</div>
         <el-tooltip placement="right">
           <div slot="content">
-            1、房源跟单量：名下作为房源跟单人的在售房源总数量；<br />
-            2、独家委托量：名下作为独家委托人的在售房源总数量；<br />
-            3、普通委托量：名下作为普通委托人的在售房源总数量；<br />
-            4、钥匙委托量：名下作为钥匙委托人的在售房源总数量；<br />
-            5、房源录入量：名下作为房源录入人的在售房源总数量；<br />
+            1、房源跟单量：名下作为房源跟单人的在售房源总数量；<br/>
+            2、独家委托量：名下作为独家委托人的在售房源总数量；<br/>
+            3、普通委托量：名下作为普通委托人的在售房源总数量；<br/>
+            4、钥匙委托量：名下作为钥匙委托人的在售房源总数量；<br/>
+            5、房源录入量：名下作为房源录入人的在售房源总数量；<br/>
             6、客户量：名下录入客户需求类型为买二手的私客数量。
           </div>
           <div class="tip-box">
@@ -64,18 +107,17 @@
             :align="item.align"
             :sortable="item.sortable"
             :sort-orders="['ascending', 'descending']"
-          >
+            >
           </el-table-column>
         </el-table>
         <el-pagination
-          @size-change="handleSizeChange($event, 'workPaginate')"
-          @current-change="handleCurrentChange($event, 'workPaginate')"
-          :current-page="workPaginate.page"
-          :page-sizes="[5, 10, 15]"
-          :page-size="workPaginate.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="workPaginate.total"
-        >
+        @size-change="handleSizeChange($event, 'workPaginate')"
+        @current-change="handleCurrentChange($event, 'workPaginate')"
+        :current-page="workPaginate.page"
+        :page-sizes="[5, 10, 15]"
+        :page-size="workPaginate.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="workPaginate.total">
         </el-pagination>
       </div>
     </div>
@@ -97,31 +139,37 @@
             >
             </el-date-picker>
           </div>
-          <button class="search-btn" @click="resetDevelopDate">重置</button>
-          <button class="search-btn active" @click="queryDevelopData">
-            搜索
-          </button>
+          <button
+            class="search-btn anchor-point"
+            @click="resetDevelopDate"
+            data-anchor="业务管理开发数据查询时间重置"
+          >重置</button>
+          <button
+            class="search-btn active anchor-point"
+            @click="queryDevelopData"
+            :data-anchor="'业务管理开发数据查询时间搜索{' + developDateSelect + '}'"
+          >搜索</button>
         </div>
         <el-tooltip placement="right">
           <div slot="content">
-            1、房源开发<br />
-            电开次数：在“开发线索”列表累计回访房源的次数；<br />
-            新增验真：新增录入房源累计验真通过的房源数量；<br />
-            库存验真：店公共盘、公司公盘申请跟单人，累计验真通过的房源数量；<br />
-            2、房源维护<br />
-            被看次数：名下跟单房源累计被带看的次数<br />
-            电话回访：跟单人回访名下跟单房源累计回访的次数<br />
-            写面访：跟单房源累计添加面访的数量<br />
-            3、客源开发<br />
-            电开次数：在“公客池”列表累计回访客源的次数<br />
-            新增客户：累计新增录入私客的数量<br />
-            认领客户：公客池累计认领客户的数量<br />
-            4、客源维护<br />
-            带看客户数：累计带看的客户数量（去重）<br />
-            1带多看：添加带看记录，添加两套房源以上的客户数量<br />
-            3日内首看：客户自录入时间起, 3日内有过首次带看的客户数量<br />
-            7日内首看：客户自录入时间起, 7日内有过首次带看的客户数量<br />
-            复看：首看后，有产生第二次带看的客户数量<br />
+            1、房源开发<br/>
+            电开次数：在“开发线索”列表累计回访房源的次数；<br/>
+            新增验真：新增录入房源累计验真通过的房源数量；<br/>
+            库存验真：店公共盘、公司公盘申请跟单人，累计验真通过的房源数量；<br/>
+            2、房源维护<br/>
+            被看次数：名下跟单房源累计被带看的次数<br/>
+            电话回访：跟单人回访名下跟单房源累计回访的次数<br/>
+            写面访：跟单房源累计添加面访的数量<br/>
+            3、客源开发<br/>
+            电开次数：在“公客池”列表累计回访客源的次数<br/>
+            新增客户：累计新增录入私客的数量<br/>
+            认领客户：公客池累计认领客户的数量<br/>
+            4、客源维护<br/>
+            带看客户数：累计带看的客户数量（去重）<br/>
+            1带多看：添加带看记录，添加两套房源以上的客户数量<br/>
+            3日内首看：客户自录入时间起, 3日内有过首次带看的客户数量<br/>
+            7日内首看：客户自录入时间起, 7日内有过首次带看的客户数量<br/>
+            复看：首看后，有产生第二次带看的客户数量<br/>
           </div>
           <div class="tip-box">
             <div class="text">数据说明</div>
@@ -131,11 +179,10 @@
       </div>
       <div class="content">
         <el-table
-          :data="developData"
+         :data="developData"
           height="417"
           @sort-change="changeDevelopSort"
-          v-loading="developLoading"
-        >
+          v-loading="developLoading">
           <el-table-column
             v-for="(item, index) in developColumn"
             :key="index"
@@ -144,8 +191,7 @@
             :width="item.width"
             :min-width="item.minWidth"
             :align="item.align"
-            :fixed="item.fixed"
-          >
+            :fixed="item.fixed">
             <el-table-column
               v-for="(list, i) in item.children"
               :key="i"
@@ -155,20 +201,18 @@
               :min-width="list.minWidth"
               :align="list.align"
               :sortable="list.sortable"
-              :sort-orders="['ascending', 'descending']"
-            >
+              :sort-orders="['ascending', 'descending']">
             </el-table-column>
           </el-table-column>
         </el-table>
         <el-pagination
-          @size-change="handleSizeChange($event, 'developPaginate')"
-          @current-change="handleCurrentChange($event, 'developPaginate')"
-          :current-page="developPaginate.page"
-          :page-sizes="[5, 10, 15]"
-          :page-size="developPaginate.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="developPaginate.total"
-        >
+        @size-change="handleSizeChange($event, 'developPaginate')"
+        @current-change="handleCurrentChange($event, 'developPaginate')"
+        :current-page="developPaginate.page"
+        :page-sizes="[5, 10, 15]"
+        :page-size="developPaginate.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="developPaginate.total">
         </el-pagination>
       </div>
     </div>
@@ -190,16 +234,22 @@
             >
             </el-date-picker>
           </div>
-          <button class="search-btn" @click="resetCurrencyDate">重置</button>
-          <button class="search-btn active" @click="queryCurrencyData">
-            搜索
-          </button>
+          <button
+            class="search-btn anchor-point"
+            @click="resetCurrencyDate"
+            data-anchor="业务管理鑫币数据查询时间重置"
+            >重置</button>
+          <button
+            class="search-btn active anchor-point"
+            @click="queryCurrencyData"
+            :data-anchor="'业务管理鑫币数据查询时间搜索{' + currencyDateSelect + '}'"
+            >搜索</button>
         </div>
         <el-tooltip placement="right">
           <div slot="content">
-            1、新增鑫币：昨日新增的鑫币值；<br />
-            2、兑换（品牌分）：本月兑换成品牌分的鑫币值；<br />
-            3、兑换（物品）：本月兑换成物品的鑫币值；<br />
+            1、新增鑫币：昨日新增的鑫币值；<br/>
+            2、兑换（品牌分）：本月兑换成品牌分的鑫币值；<br/>
+            3、兑换（物品）：本月兑换成物品的鑫币值；<br/>
             4、剩余鑫币：当前剩余的鑫币值。
           </div>
           <div class="tip-box">
@@ -209,24 +259,21 @@
         </el-tooltip>
       </div>
       <div class="nav-box">
-        <div
-          class="item"
-          v-for="(item, index) in currencyTypes"
-          :key="index"
-          :class="{ active: currencyTypeIndex === index }"
-          @click="changeCurrencyType(index)"
-        >
-          {{ item.name }}
-        </div>
+        <div class="item anchor-point"
+         :data-anchor="'鑫币数据类型:' + item.name"
+         v-for="(item, index) in currencyTypes"
+         :key="index"
+         :class="{'active': currencyTypeIndex===index}"
+         @click="changeCurrencyType(index)"
+        >{{item.name}}</div>
         <p class="tip">注：取值数据截止到昨天24点整</p>
       </div>
       <div class="content">
         <el-table
-          :data="currencyData"
+         :data="currencyData"
           height="368"
           @sort-change="changeCurrencySort"
-          v-loading="currencyLoading"
-        >
+          v-loading="currencyLoading">
           <el-table-column
             v-for="(item, index) in currencyColumn"
             :key="index"
@@ -237,18 +284,17 @@
             :align="item.align"
             :sortable="item.sortable"
             :sort-orders="['ascending', 'descending']"
-          >
+            >
           </el-table-column>
         </el-table>
         <el-pagination
-          @size-change="handleSizeChange($event, 'currencyPaginate')"
-          @current-change="handleCurrentChange($event, 'currencyPaginate')"
-          :current-page="currencyPaginate.page"
-          :page-sizes="[5, 10, 15]"
-          :page-size="currencyPaginate.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="currencyPaginate.total"
-        >
+        @size-change="handleSizeChange($event, 'currencyPaginate')"
+        @current-change="handleCurrentChange($event, 'currencyPaginate')"
+        :current-page="currencyPaginate.page"
+        :page-sizes="[5, 10, 15]"
+        :page-size="currencyPaginate.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="currencyPaginate.total">
         </el-pagination>
       </div>
     </div>
@@ -265,14 +311,12 @@ export default {
       perName: "",
       searchTypes: [
         {
-          name: "个人",
+          name: "经纪人",
           value: 0
-        },
-        {
+        }, {
           name: "门店",
           value: 1
-        },
-        {
+        }, {
           name: "区域",
           value: 2
         }
@@ -284,8 +328,7 @@ export default {
         {
           name: "鑫币统计",
           value: 0
-        },
-        {
+        }, {
           name: "业绩统计",
           value: 1
         }
@@ -296,43 +339,37 @@ export default {
           label: "姓名/门店/区域",
           minWidth: "120",
           align: "left"
-        },
-        {
+        }, {
           prop: "agentNum",
           label: "跟单房源量",
           minWidth: "150",
           align: "right",
           sortable: true
-        },
-        {
+        }, {
           prop: "onlyNum",
           label: "独家委托量",
           minWidth: "150",
           align: "right",
           sortable: true
-        },
-        {
+        }, {
           prop: "normalOnlyNum",
           label: "普通委托量",
           minWidth: "150",
           align: "right",
           sortable: true
-        },
-        {
+        }, {
           prop: "keyNum",
           label: "钥匙委托量",
           minWidth: "150",
           align: "right",
           sortable: true
-        },
-        {
+        }, {
           prop: "addNum",
           label: "房源录入量",
           minWidth: "150",
           align: "right",
           sortable: true
-        },
-        {
+        }, {
           prop: "custNum",
           label: "客户量",
           minWidth: "150",
@@ -354,8 +391,7 @@ export default {
           minWidth: "150",
           align: "left",
           fixed: "left"
-        },
-        {
+        }, {
           label: "房源开发",
           minWidth: "300",
           align: "center",
@@ -366,15 +402,13 @@ export default {
               minWidth: "100",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "newVerifyNum",
               label: "新增验真",
               minWidth: "100",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "stockVerifyNum",
               label: "库存验真",
               minWidth: "100",
@@ -382,8 +416,7 @@ export default {
               sortable: true
             }
           ]
-        },
-        {
+        }, {
           label: "房源维护",
           minWidth: "400",
           align: "center",
@@ -394,15 +427,13 @@ export default {
               minWidth: "100",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "callBackNum",
               label: "电话回访",
               minWidth: "100",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "intervierNum",
               label: "写面访",
               minWidth: "100",
@@ -417,8 +448,7 @@ export default {
             //  sortable: true
             // }
           ]
-        },
-        {
+        }, {
           label: "客源开发",
           width: "300",
           align: "center",
@@ -429,15 +459,13 @@ export default {
               minWidth: "100",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "newCustNum",
               label: "新增客户",
               minWidth: "100",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "claimCustNum",
               label: "认领客户",
               minWidth: "100",
@@ -445,8 +473,7 @@ export default {
               sortable: true
             }
           ]
-        },
-        {
+        }, {
           label: "客源维护",
           align: "center",
           children: [
@@ -456,29 +483,25 @@ export default {
               minWidth: "120",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "manyViewOnePairNum",
               label: "1带多看",
               minWidth: "100",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "firstView3DaysNum",
               label: "3日内首看",
               minWidth: "120",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "firstView7DaysNum",
               label: "7日内首看",
               minWidth: "120",
               align: "center",
               sortable: true
-            },
-            {
+            }, {
               prop: "reViewNum",
               label: "复看",
               minWidth: "100",
@@ -502,35 +525,25 @@ export default {
           minWidth: "120",
           align: "left"
         },
-        // {
-        //   prop: "curMonthAddScore",
-        //   label: "本月新增",
-        //   minWidth: "150",
-        //   align: "right",
-        //   sortable: true
-        // },
         {
           prop: "curMonthAddScore",
           label: "新增鑫币",
           minWidth: "100",
           align: "right",
           sortable: true
-        },
-        {
+        }, {
           prop: "curMonthExXinScore",
           label: "兑换（品牌分）",
           minWidth: "150",
           align: "right",
           sortable: true
-        },
-        {
+        }, {
           prop: "curMonthExGoodScore",
           label: "兑换（物品）",
           minWidth: "150",
           align: "right",
           sortable: true
-        },
-        {
+        }, {
           prop: "scoreBal",
           label: "剩余鑫币",
           minWidth: "150",
@@ -545,22 +558,17 @@ export default {
         total: 0,
         pageSum: 0
       },
-      currencyMonth: "",
-      developBeginDate: "",
-      developEndDate: "",
-      currencyBeginDate: "",
-      currencyEndDate: "",
-      developBeginDateFlag: "",
-      developEndDateFlag: "",
-      currencyBeginDateFlag: "",
-      currencyEndDateFlag: "",
+      developDateSelect: "",
+      developDateSelectFlag: "",
+      currencyDateSelect: "",
+      currencyDateSelectFlag: "",
       workSortColumn: "",
       workSortType: 1,
       developSortColumn: "",
       developSortType: 1,
       currencySortColumn: "",
       currencySortType: 1
-    };
+    }
   },
   created() {
     this.getDefaultDate();
@@ -598,20 +606,20 @@ export default {
         }
         prevDate = prevYear + seperator1 + preMonth + seperator1 + "01";
       }
-      switch (type) {
+      switch(type) {
         case 1:
           this.developDateSelect = [prevDate, currentDate];
           this.developDateSelectFlag = [prevDate, currentDate];
           break;
         case 2:
-          this.currencyDateSelect = [prevDate, currentDate];
-          this.currencyDateSelectFlag = [prevDate, currentDate];
+          this.currencyDateSelect = [currentDate, currentDate];
+          this.currencyDateSelectFlag = [currentDate, currentDate];
           break;
-        default:
+        default: 
           this.developDateSelect = [prevDate, currentDate];
           this.developDateSelectFlag = [prevDate, currentDate];
-          this.currencyDateSelect = [prevDate, currentDate];
-          this.currencyDateSelectFlag = [prevDate, currentDate];
+          this.currencyDateSelect = [currentDate, currentDate];
+          this.currencyDateSelectFlag = [currentDate, currentDate];
       }
     },
     /**
@@ -621,7 +629,7 @@ export default {
       this.workLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        dateFlag: "", //日
+        dateFlag: "",//日
         perName: this.perName,
         page: this.workPaginate.page,
         limit: this.workPaginate.limit,
@@ -653,8 +661,8 @@ export default {
       this.developLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        beginDateFlag: this.developBeginDateFlag,
-        endDateFlag: this.developEndDateFlag,
+        beginDateFlag: this.developDateSelectFlag?this.developDateSelectFlag[0]:"",
+        endDateFlag: this.developDateSelectFlag?this.developDateSelectFlag[1]:"",
         perName: this.perName,
         page: this.developPaginate.page,
         limit: this.developPaginate.limit,
@@ -686,8 +694,8 @@ export default {
       this.currencyLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        beginDateFlag: this.currencyBeginDateFlag,
-        endDateFlag: this.currencyEndDateFlag,
+        beginDateFlag: this.currencyDateSelectFlag?this.currencyDateSelectFlag[0]:"",
+        endDateFlag: this.currencyDateSelectFlag?this.currencyDateSelectFlag[1]:"",
         perName: this.perName,
         page: this.currencyPaginate.page,
         limit: this.currencyPaginate.limit,
@@ -719,10 +727,7 @@ export default {
       this.perName = this.businessKeyword;
       Object.assign(this.workPaginate, this.$options.data().workPaginate);
       Object.assign(this.developPaginate, this.$options.data().developPaginate);
-      Object.assign(
-        this.currencyPaginate,
-        this.$options.data().currencyPaginate
-      );
+      Object.assign(this.currencyPaginate, this.$options.data().currencyPaginate);
       this.getWorkData();
       this.getDevelopData();
       this.getCurrencyData();
@@ -734,7 +739,7 @@ export default {
      */
     handleSizeChange(val, type) {
       this[type].limit = val;
-      switch (type) {
+      switch(type) {
         case "workPaginate":
           this.getWorkData();
           break;
@@ -753,7 +758,7 @@ export default {
      */
     handleCurrentChange(val, type) {
       this[type].page = val;
-      switch (type) {
+      switch(type) {
         case "workPaginate":
           this.getWorkData();
           break;
@@ -771,18 +776,16 @@ export default {
      */
     changeCurrencyType(index) {
       this.currencyTypeIndex = index;
-      if (index === 1) {
+      if (index===1) {
         this.$msgbox({
           title: "提示",
           message: <div>功能升级中，敬请期待...</div>,
           showCancelButton: false
-        })
-          .then(() => {
-            this.currencyTypeIndex = 0;
-          })
-          .catch(() => {
-            this.currencyTypeIndex = 0;
-          });
+        }).then(() => {
+          this.currencyTypeIndex = 0;
+        }).catch(() => {
+          this.currencyTypeIndex = 0;
+        });
       }
     },
     /**
@@ -805,10 +808,7 @@ export default {
      */
     resetCurrencyDate() {
       this.getDefaultDate(2);
-      Object.assign(
-        this.currencyPaginate,
-        this.$options.data().currencyPaginate
-      );
+      Object.assign(this.currencyPaginate, this.$options.data().currencyPaginate);
       this.getCurrencyData();
     },
     /**
@@ -821,39 +821,36 @@ export default {
     /**
      * @example: 作业数据排序变化触发事件
      */
-    changeWorkSort({ column, prop, order }) {
+    changeWorkSort({column, prop, order}) {
       this.workSortColumn = prop;
-      this.workSortType = order == "ascending" ? 0 : 1;
+      this.workSortType = order=="ascending" ? 0 : 1;
       Object.assign(this.workPaginate, this.$options.data().workPaginate);
       this.getWorkData();
     },
     /**
      * @example: 开发数据排序变化触发事件
      */
-    changeDevelopSort({ column, prop, order }) {
+    changeDevelopSort({column, prop, order}) {
       this.developSortColumn = prop;
-      this.developSortType = order == "ascending" ? 0 : 1;
+      this.developSortType = order=="ascending" ? 0 : 1;
       Object.assign(this.developPaginate, this.$options.data().developPaginate);
       this.getDevelopData();
     },
     /**
      * @example: 鑫币数据排序变化触发事件
      */
-    changeCurrencySort({ column, prop, order }) {
+    changeCurrencySort({column, prop, order}) {
       this.currencySortColumn = prop;
-      this.currencySortType = order == "ascending" ? 0 : 1;
-      Object.assign(
-        this.currencyPaginate,
-        this.$options.data().currencyPaginate
-      );
+      this.currencySortType = order=="ascending" ? 0 : 1;
+      Object.assign(this.currencyPaginate, this.$options.data().currencyPaginate);
       this.getCurrencyData();
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .container {
-  .conditions-box {
+  .conditions-box{
     // prettier-ignore
     padding: 0 24PX 20PX 24PX;
     background: #fff;
@@ -972,7 +969,7 @@ export default {
           color: #247257;
         }
       }
-      .search-box {
+      .search-box{
         display: flex;
         justify-content: flex-start;
         align-items: center;
@@ -986,7 +983,7 @@ export default {
         /deep/.time-box {
           // prettier-ignore
           width: 308PX;
-          margin-right: 16px;
+          margin-right: 16PX;
           .el-input__inner {
             // prettier-ignore
             height: 36PX;
@@ -1040,6 +1037,25 @@ export default {
             color: #fff;
           }
         }
+        // /deep/.date-picker {
+        //   // prettier-ignore
+        //   width: 125PX;
+        //   .el-input__inner {
+        //     // prettier-ignore
+        //     height: 34PX;
+        //     padding-left: 0;
+        //     border: none;
+        //   }
+        //   .el-input__suffix{
+        //     .el-input__icon {
+        //       // prettier-ignore
+        //       width: 25PX;
+        //       // prettier-ignore
+        //       line-height: 34PX;
+        //       font-size: @font16;
+        //     }
+        //   }
+        // }
       }
     }
     .nav-box {
@@ -1103,7 +1119,7 @@ export default {
         }
       }
       .has-gutter:not(.is-group) {
-        background: #f0f5f4;
+        background: #F0F5F4;
         tr:nth-child(1) {
           th:nth-child(1) {
             .cell {
@@ -1147,7 +1163,7 @@ export default {
           // prettier-ignore
           height: 48PX;
           padding: 0;
-          background: #f0f5f4;
+          background: #F0F5F4;
           font-weight: normal;
           font-size: @font16;
           color: #303133;
@@ -1158,11 +1174,11 @@ export default {
       }
       .el-table__body td {
         // perttier-ignore
-        height: 64px;
+        height: 64PX;
       }
       .el-pagination {
         // perttier-ignore
-        padding: 24px 5px 8px;
+        padding: 24PX 5PX 8PX;
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -1170,7 +1186,7 @@ export default {
         .btn-next .el-icon,
         .btn-prev .el-icon,
         button,
-        span:not([class*="suffix"]) {
+        span:not([class*=suffix]) {
           height: auto;
           line-height: 1;
           font-size: @font16;
@@ -1178,13 +1194,13 @@ export default {
         }
         .el-select .el-input {
           // perttier-ignore
-          width: 80px;
+          width: 80PX;
         }
         .el-pagination__sizes .el-input .el-input__inner {
           // perttier-ignore
-          height: 22px;
+          height: 22PX;
           // perttier-ignore
-          line-height: 20px;
+          line-height: 20PX;
           font-size: @font14;
         }
         .el-pager .more::before {
@@ -1194,20 +1210,17 @@ export default {
           height: auto;
           .el-input__inner {
             // perttier-ignore
-            height: 22px;
+            height: 22PX;
           }
         }
         .el-input--mini .el-input__icon {
           line-height: 1;
         }
       }
-      .el-table--border,
-      .el-table--group {
+      .el-table--border, .el-table--group {
         border: none;
       }
-      .el-table--border::after,
-      .el-table--group::after,
-      .el-table::before {
+      .el-table--border::after, .el-table--group::after, .el-table::before {
         background-color: transparent;
       }
       .el-table--border td {
@@ -1218,11 +1231,11 @@ export default {
           th:nth-child(2),
           th:nth-child(3),
           th:nth-child(4) {
-            border-bottom: 1px solid #c3dfd9;
+            border-bottom: 1px solid #C3DFD9;
             border-right: 1px solid #c3dfd9;
           }
           th:nth-child(5) {
-            border-bottom: 1px solid #c3dfd9;
+            border-bottom: 1px solid #C3DFD9;
           }
         }
         tr:nth-child(2) {
@@ -1239,7 +1252,7 @@ export default {
 .el-tooltip__popper {
   div {
     // perttier-ignore
-    line-height: 22px;
+    line-height: 22PX;
   }
 }
 </style>
