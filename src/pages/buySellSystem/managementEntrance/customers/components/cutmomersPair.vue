@@ -434,7 +434,11 @@
         </el-button>
       </div>
 
-      <el-form-item label="意愿等级" class="ItemRow ChooseItemRow">
+      <el-form-item
+        label="意愿等级"
+        class="ItemRow ChooseItemRow"
+        v-if="form.isTypeChange == 1"
+      >
         <el-checkbox-group
           v-model="Intend"
           class="ChooseItemBox"
@@ -455,6 +459,7 @@
         class="ItemRow ChooseItemRow"
         prop="Progress"
         v-show="form.attentionStatus == 1 || form.attentionStatus == null"
+        v-if="form.isTypeChange == 1"
       >
         <div slot="label" class="tooltip-box">
           看房进度
@@ -492,7 +497,8 @@
         prop="Price"
         v-show="
           (form.attentionStatus == 1 || form.attentionStatus == null) &&
-            customersType != 4
+            customersType != 4 &&
+            form.isTypeChange == 1
         "
       >
         <el-radio-group
@@ -542,7 +548,8 @@
         prop="Price"
         v-show="
           (form.attentionStatus == 1 || form.attentionStatus == null) &&
-            customersType == 4
+            customersType == 4 &&
+            form.isTypeChange == 1
         "
       >
         <el-radio-group
@@ -582,7 +589,7 @@
           >
         </div>
       </el-form-item>
-      <div v-show="ShowMorePair">
+      <div v-show="ShowMorePair && form.isTypeChange == 1">
         <el-form-item
           label="意向面积"
           class="ItemRow ChooseItemRow"
@@ -724,7 +731,7 @@
         </el-form-item>
       </div>
     </el-form>
-    <div class="FoldRow">
+    <div class="FoldRow" v-show="form.isTypeChange == 1">
       <div class="FoldItem" @click="ShowMore">
         <span>{{ ShowMorePair ? "收起" : "展开" }}</span>
         <i
@@ -925,6 +932,7 @@ export default {
   inject: ["form"],
   data() {
     return {
+      checkType: 1,
       customersTypeList: cusTypeList,
       customersType: 1,
       IntendList: IntendListModle,
@@ -987,6 +995,7 @@ export default {
     },
 
     setCustomersType(item, resetAll) {
+      console.log(item, "item");
       this.form.isBuy = 0;
       this.form.desireIntensitys = [];
       this.form.pairNumbers = [];
@@ -1014,6 +1023,7 @@ export default {
       this.DelegateTime = "";
       this.MaintenanceTime = "";
       this.TakelookTime = "";
+      this.form.isTypeChange = item.type;
       switch (item.type) {
         case 1:
           this.form.requirementType = "";
