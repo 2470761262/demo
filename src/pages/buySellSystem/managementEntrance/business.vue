@@ -86,10 +86,14 @@
           <div class="title">查询时间</div>
           <div class="time-box">
             <el-date-picker
-              class="date-picker"
-              v-model="developBeginDate"
-              type="date"
+              prefix-icon="prefix-icon"
+              v-model="developDateSelect"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="起始日期"
+              end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
+<<<<<<< HEAD
               prefix-icon="none"
               placeholder="起始日期"
             >
@@ -102,6 +106,9 @@
               value-format="yyyy-MM-dd"
               prefix-icon="none"
               placeholder="结束日期"
+=======
+              :default-time="['00:00:00', '23:59:59']"
+>>>>>>> origin/managementEntrance
             >
             </el-date-picker>
           </div>
@@ -185,19 +192,16 @@
       <div class="head">
         <div class="search-box">
           <div class="title">查询时间</div>
-          <!-- <el-date-picker
-            class="month-picker"
-            v-model="currencyMonth"
-            type="month"
-            value-format="yyyy-MM"
-            placeholder="选择月份">
-          </el-date-picker> -->
           <div class="time-box">
             <el-date-picker
-              class="date-picker"
-              v-model="currencyBeginDate"
-              type="date"
+              prefix-icon="prefix-icon"
+              v-model="currencyDateSelect"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="起始日期"
+              end-placeholder="结束日期"
               value-format="yyyy-MM-dd"
+<<<<<<< HEAD
               prefix-icon="none"
               placeholder="起始日期"
             >
@@ -210,6 +214,9 @@
               value-format="yyyy-MM-dd"
               prefix-icon="none"
               placeholder="结束日期"
+=======
+              :default-time="['00:00:00', '23:59:59']"
+>>>>>>> origin/managementEntrance
             >
             </el-date-picker>
           </div>
@@ -525,13 +532,6 @@ export default {
           minWidth: "120",
           align: "left"
         },
-        // {
-        //   prop: "curMonthAddScore",
-        //   label: "本月新增",
-        //   minWidth: "150",
-        //   align: "right",
-        //   sortable: true
-        // },
         {
           prop: "curMonthAddScore",
           label: "新增鑫币",
@@ -568,15 +568,10 @@ export default {
         total: 0,
         pageSum: 0
       },
-      currencyMonth: "",
-      developBeginDate: "",
-      developEndDate: "",
-      currencyBeginDate: "",
-      currencyEndDate: "",
-      developBeginDateFlag: "",
-      developEndDateFlag: "",
-      currencyBeginDateFlag: "",
-      currencyEndDateFlag: "",
+      developDateSelect: "",
+      developDateSelectFlag: "",
+      currencyDateSelect: "",
+      currencyDateSelectFlag: "",
       workSortColumn: "",
       workSortType: 1,
       developSortColumn: "",
@@ -586,11 +581,57 @@ export default {
     };
   },
   created() {
+    this.getDefaultDate();
     this.getWorkData();
     this.getDevelopData();
     this.getCurrencyData();
   },
   methods: {
+    /**
+     * @example: 获取默认查询日期
+     */
+    getDefaultDate(type) {
+      let date = new Date();
+      let seperator1 = "-";
+      let year = date.getFullYear();
+      let month = date.getMonth() + 1;
+      let strDate = date.getDate();
+      if (month >= 1 && month <= 9) {
+        month = "0" + month;
+      }
+      if (strDate >= 0 && strDate <= 9) {
+        strDate = "0" + strDate;
+      }
+      let currentDate = year + seperator1 + month + seperator1 + strDate;
+      let prevDate = year + seperator1 + month + seperator1 + "01";
+      if (strDate == "01") {
+        let prevYear = date.getFullYear();
+        let preMonth = date.getMonth();
+        if (preMonth == "0") {
+          preMonth = "12";
+          prevYear--;
+        }
+        if (preMonth >= 1 && preMonth <= 9) {
+          preMonth = "0" + preMonth;
+        }
+        prevDate = prevYear + seperator1 + preMonth + seperator1 + "01";
+      }
+      switch(type) {
+        case 1:
+          this.developDateSelect = [prevDate, currentDate];
+          this.developDateSelectFlag = [prevDate, currentDate];
+          break;
+        case 2:
+          this.currencyDateSelect = [prevDate, currentDate];
+          this.currencyDateSelectFlag = [prevDate, currentDate];
+          break;
+        default: 
+          this.developDateSelect = [prevDate, currentDate];
+          this.developDateSelectFlag = [prevDate, currentDate];
+          this.currencyDateSelect = [prevDate, currentDate];
+          this.currencyDateSelectFlag = [prevDate, currentDate];
+      }
+    },
     /**
      * @example: 获取作业数据
      */
@@ -630,8 +671,8 @@ export default {
       this.developLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        beginDateFlag: this.developBeginDateFlag,
-        endDateFlag: this.developEndDateFlag,
+        beginDateFlag: this.developDateSelectFlag?this.developDateSelectFlag[0]:"",
+        endDateFlag: this.developDateSelectFlag?this.developDateSelectFlag[1]:"",
         perName: this.perName,
         page: this.developPaginate.page,
         limit: this.developPaginate.limit,
@@ -663,8 +704,8 @@ export default {
       this.currencyLoading = true;
       let params = {
         staLev: this.searchType, //0经纪人,1门店,2区域
-        beginDateFlag: this.currencyBeginDateFlag,
-        endDateFlag: this.currencyEndDateFlag,
+        beginDateFlag: this.currencyDateSelectFlag?this.currencyDateSelectFlag[0]:"",
+        endDateFlag: this.currencyDateSelectFlag?this.currencyDateSelectFlag[1]:"",
         perName: this.perName,
         page: this.currencyPaginate.page,
         limit: this.currencyPaginate.limit,
@@ -766,10 +807,7 @@ export default {
      * @example: 重置开发数据查询日期
      */
     resetDevelopDate() {
-      this.developBeginDate = "";
-      this.developEndDate = "";
-      this.developBeginDateFlag = "";
-      this.developEndDateFlag = "";
+      this.getDefaultDate(1);
       Object.assign(this.developPaginate, this.$options.data().developPaginate);
       this.getDevelopData();
     },
@@ -777,14 +815,14 @@ export default {
      * @example: 根据日期查询开发数据
      */
     queryDevelopData() {
-      this.developBeginDateFlag = this.developBeginDate;
-      this.developEndDateFlag = this.developEndDate;
+      this.developDateSelectFlag = this.developDateSelect;
       this.getDevelopData();
     },
     /**
      * @example: 重置鑫币数据查询日期
      */
     resetCurrencyDate() {
+<<<<<<< HEAD
       this.currencyBeginDate = "";
       this.currencyEndDate = "";
       this.currencyBeginDateFlag = "";
@@ -793,14 +831,17 @@ export default {
         this.currencyPaginate,
         this.$options.data().currencyPaginate
       );
+=======
+      this.getDefaultDate(2);
+      Object.assign(this.currencyPaginate, this.$options.data().currencyPaginate);
+>>>>>>> origin/managementEntrance
       this.getCurrencyData();
     },
     /**
      * @example: 根据月份查询鑫币数据
      */
     queryCurrencyData() {
-      this.currencyBeginDateFlag = this.currencyBeginDate;
-      this.currencyEndDateFlag = this.currencyEndDate;
+      this.currencyDateSelectFlag = this.currencyDateSelect;
       this.getCurrencyData();
     },
     /**
@@ -968,25 +1009,47 @@ export default {
           font-weight: bold;
           color: #303133;
         }
-        .time-box {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+        /deep/.time-box {
           // prettier-ignore
           width: 308PX;
-          // prettier-ignore
-          height: 36PX;
-          padding: 0 10px;
-          // prettier-ignore
           margin-right: 16PX;
+<<<<<<< HEAD
           border: 1px solid #cecece;
           border-radius: 4px;
           box-sizing: border-box;
           .pre {
+=======
+          .el-input__inner {
             // prettier-ignore
-            margin: 0 10PX;
-            font-size: @font12;
-            color: #303133;
+            height: 36PX;
+            font-size: @font14;
+          }
+          .el-form-item {
+            // prettier-ignore
+            margin-bottom: 24PX;
+          }
+          .el-range-input {
+            text-align: left;
+>>>>>>> origin/managementEntrance
+            // prettier-ignore
+            text-indent: 10PX;
+            font-size: @font14;
+          }
+          .prefix-icon {
+            width: 0;
+          }
+          .el-date-editor {
+            width: 100%;
+            .el-range-separator {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: auto;
+              padding: 0;
+              line-height: 1;
+              text-indent: 0;
+              font-size: @font14;
+            }
           }
         }
         .search-btn {
@@ -1010,6 +1073,7 @@ export default {
             color: #fff;
           }
         }
+<<<<<<< HEAD
         /deep/.month-picker {
           // prettier-ignore
           margin-right: 16PX;
@@ -1051,6 +1115,27 @@ export default {
             }
           }
         }
+=======
+        // /deep/.date-picker {
+        //   // prettier-ignore
+        //   width: 125PX;
+        //   .el-input__inner {
+        //     // prettier-ignore
+        //     height: 34PX;
+        //     padding-left: 0;
+        //     border: none;
+        //   }
+        //   .el-input__suffix{
+        //     .el-input__icon {
+        //       // prettier-ignore
+        //       width: 25PX;
+        //       // prettier-ignore
+        //       line-height: 34PX;
+        //       font-size: @font16;
+        //     }
+        //   }
+        // }
+>>>>>>> origin/managementEntrance
       }
     }
     .nav-box {

@@ -42,62 +42,184 @@
     }
   }
 }
+.ResultBody {
+  display: flex;
+  .ResultLeft {
+    // prettier-ignore
+    flex: 0 0 224PX;
+    flex-shrink: 0;
+    background: #f0f7f7;
+    .list-left {
+      // prettier-ignore
+      padding: 10PX 0;
+      // prettier-ignore
+      margin-bottom: 7PX;
+      display: flex;
+      flex-direction: column;
+      .treeSearch {
+        // prettier-ignore
+        height: 36PX;
+        // prettier-ignore
+        padding:0 10PX;
+        box-sizing: border-box;
+        /deep/.el-input__inner {
+          height: 100%;
+          // prettier-ignore
+          line-height: 36PX;
+          // prettier-ignore
+          padding-left: 30PX;
+          border: none;
+          background: #fff;
+        }
+        /deep/.el-input__prefix {
+          // prettier-ignore
+          width: 30PX;
+          // prettier-ignore
+          left: 10PX;
+          /deep/.el-input__icon {
+            font-size: @font14;
+          }
+        }
+      }
+      .scroll-tree {
+        flex: 1;
+        overflow: auto;
+      }
+      /deep/.el-tree {
+        background: inherit;
+        .el-tree-node__content {
+          // prettier-ignore
+          height: 40PX;
+          .el-icon-caret-right {
+            font-size: @font14;
+            color: #8ebebe;
+          }
+          .is-leaf {
+            color: transparent !important;
+          }
+          .el-tree-node__label {
+            font-size: @font14;
+          }
+          .el-checkbox {
+            .el-checkbox__inner {
+              // prettier-ignore
+              width: 16PX;
+              // prettier-ignore
+              height: 16PX;
+              font-size: @font14;
+              &::after {
+                // prettier-ignore
+                height: 10PX;
+                // prettier-ignore
+                left:5PX;
+                // prettier-ignore
+                width: 3PX;
+              }
+            }
+          }
+        }
+      }
+      /deep/.is-focusable {
+        .el-tree-node__children {
+          background: #d5f0f0;
+        }
+      }
+    }
+  }
+  .ResultRight {
+    // prettier-ignore
+    margin-left: 10PX;
+    flex: 1;
+    width: 0;
+  }
+}
 </style>
 <template>
   <div class="ResultWarp">
     <div class="ResultTil">客源列表</div>
-
-    <el-table
-      :data="tableData"
-      header-cell-class-name="ResultListCell ResultListHeaderBack"
-      cell-class-name="ResultListCell"
-      @row-dblclick="navigateTo"
-      @sort-change="sortChange"
-      v-loading="loading"
-    >
-      <div v-for="(item, index) in tableDataColumn" :key="index">
-        <div v-if="item.prop == 'maintainTime'">
-          <el-table-column
-            sortable="custom"
-            :prop="item.prop"
-            :label="item.label"
-            :min-width="item.width"
-            :key="item.prop"
-            show-overflow-tooltip
-            :formatter="item.formart"
-          ></el-table-column>
-        </div>
-        <div v-else>
-          <el-table-column
-            :prop="item.prop"
-            :label="item.label"
-            :min-width="item.width"
-            :key="item.prop"
-            show-overflow-tooltip
-            :formatter="item.formart"
-          ></el-table-column>
+    <div class="ResultBody">
+      <div class="ResultLeft">
+        <div class="list-left">
+          <el-input
+            data-anchor="我的对赌树 => input"
+            placeholder="输入关键字进行过滤"
+            v-model="filterText"
+            class="treeSearch"
+            prefix-icon="el-icon-search"
+          ></el-input>
+          <div class="scroll-tree">
+            <el-tree
+              ref="treeForm"
+              :data="treeData"
+              node-key="nodeId"
+              show-checkbox
+              :props="defaultProps"
+              @check-change="handleCheckChange"
+              :highlight-current="true"
+              :filter-node-method="filterNode"
+              check-strictly
+              :action="''"
+              empty-text="暂无数据，请检查权限"
+              auto-expand-parent
+              v-loading="treeLoading"
+            ></el-tree>
+          </div>
         </div>
       </div>
-    </el-table>
-    <div class="paginationRow">
-      <div class="Pagemsg">
-        <span>总共{{ dataCount }}条</span>
-        <span
-          >显示{{ dataCount == 0 ? 0 : limit * page - limit + 1 }}-{{
-            dataCount > limit * page ? limit * page : dataCount
-          }}条</span
+      <div class="ResultRight">
+        <el-table
+          :data="tableData"
+          header-cell-class-name="ResultListCell ResultListHeaderBack"
+          cell-class-name="ResultListCell"
+          @row-dblclick="navigateTo"
+          @sort-change="sortChange"
+          v-loading="loading"
         >
+          <div v-for="(item, index) in tableDataColumn" :key="index">
+            <div v-if="item.prop == 'maintainTime'">
+              <el-table-column
+                sortable="custom"
+                :prop="item.prop"
+                :label="item.label"
+                :min-width="item.width"
+                :key="item.prop"
+                show-overflow-tooltip
+                :formatter="item.formart"
+              ></el-table-column>
+            </div>
+            <div v-else>
+              <el-table-column
+                :prop="item.prop"
+                :label="item.label"
+                :min-width="item.width"
+                :key="item.prop"
+                show-overflow-tooltip
+                :formatter="item.formart"
+              ></el-table-column>
+            </div>
+          </div>
+        </el-table>
+        <div class="paginationRow">
+          <div class="Pagemsg">
+            <span>总共{{ dataCount }}条</span>
+            <span
+              >显示{{ dataCount == 0 ? 0 : limit * page - limit + 1 }}-{{
+                dataCount > limit * page ? limit * page : dataCount
+              }}条</span
+            >
+          </div>
+          <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="page"
+            :page-sizes="[15, 25, 35]"
+            :page-size="limit"
+            layout=" prev, pager, next, sizes,jumper"
+            :total="dataCount"
+          >
+          </el-pagination>
+        </div>
       </div>
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="page"
-        :page-sizes="[15, 25, 35]"
-        :page-size="limit"
-        layout=" prev, pager, next, sizes,jumper"
-        :total="dataCount"
-      >
-      </el-pagination>
     </div>
   </div>
 </template>
@@ -110,6 +232,13 @@ export default {
   components: {},
   data() {
     return {
+      filterText: "",
+      treeData: [], //结构树
+      treeLoading: false,
+      defaultProps: {
+        children: "childrenNodes",
+        label: "labelName"
+      },
       tableDataColumn: [
         {
           prop: "maintainTime",
@@ -148,6 +277,12 @@ export default {
           formart: item => this.houserequire(item.requireType) || "暂无"
         }
       ],
+      treeCondition: {
+        0: [], //公司数组
+        1: [], //部门数组
+        2: [] //人员数组
+      },
+      chooseTree: [], //选中的树节点
       renderList: [],
       menuLoading: true, //自定义菜单
       tableColumn: [],
@@ -188,7 +323,9 @@ export default {
       }
     }
   },
-  created() {},
+  created() {
+    this.getTree();
+  },
   mounted() {
     //console.log(111111111);
 
@@ -200,6 +337,73 @@ export default {
     });
   },
   methods: {
+    getTree() {
+      //读取树数据
+      this.$api
+        .post({
+          url: "/sys/tree/bet"
+        })
+        .then(e => {
+          console.log(e.data);
+          let result = e.data;
+          if (result.code == 200) {
+            console.log(result.message);
+            console.log(result.data);
+            this.treeData = result.data;
+          } else {
+            console.log("载入结果" + +result.message);
+            alert(result.message);
+          }
+        })
+        // .then(() => {
+        //   if (this.$route.query.cur != null) {
+        //     this.curNodeId = [this.$route.query.cur];
+        //     this.$nextTick(() => {
+        //       this.handleCheckChange(
+        //         this.$refs.treeForm.getNode(...this.curNodeId).data,
+        //         true
+        //       );
+        //     });
+        //   }
+        // })
+        .catch(e => {
+          console.log("读取失败");
+          console.log(e);
+        });
+    },
+    handleCheckChange(data, checked, node) {
+      let key = data.type;
+      this.chooseTree = []; //清空数组
+      this.chooseTree.push(data.businessId);
+      if (key == 1) {
+        this.getUnderDepartment(data.childrenNodes);
+      }
+      if (checked) {
+        let set = new Set([...this.treeCondition[key], ...this.chooseTree]);
+        this.treeCondition[key] = [...set];
+      } else {
+        this.treeCondition[key] = this.treeCondition[key].filter(item => {
+          return !this.chooseTree.includes(item);
+        });
+      }
+      this.apply();
+    },
+    getUnderDepartment(list) {
+      list.forEach(item => {
+        if (item.type == 1) {
+          this.chooseTree.push(item.businessId);
+          if (item.childrenNodes != null && item.childrenNodes.length > 0) {
+            this.getUnderDepartment(item.childrenNodes);
+          }
+        }
+      });
+    },
+    filterNode(value, data) {
+      if (!value) return true;
+      if (data.labelName != null) {
+        return data.labelName.indexOf(value) !== -1;
+      }
+    },
     sortChange(column) {
       console.log(column, "排序咯");
       if (column) {
@@ -247,7 +451,10 @@ export default {
             minMainTainTime: that.form.minMainTainTime, //维护开始时间
             maxMainTainTime: that.form.maxMainTainTime, //维护结束时间
             minLastPairFollowTime: that.form.minLastPairFollowTime, //带看开始时间
-            maxLastPairFollowTime: that.form.maxLastPairFollowTime //带看结束时间
+            maxLastPairFollowTime: that.form.maxLastPairFollowTime, //带看结束时间
+            treeCompany: this.treeCondition[0].join(","),
+            treeDepartment: this.treeCondition[1].join(","),
+            treeAccount: this.treeCondition[2].join(",")
           }
         })
         .then(e => {
