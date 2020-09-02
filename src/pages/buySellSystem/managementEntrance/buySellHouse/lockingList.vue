@@ -196,6 +196,7 @@
 <script>
 import tabs from "./components/tabs.vue";
 import util from "@/util/util";
+import bus from "@/evenBus/but.js";
 export default {
   components: { tabs },
   data() {
@@ -270,6 +271,8 @@ export default {
     }
   },
   created() {
+    // 切换管理入口nav
+    bus.$emit("switchEntranceNav", 1);
     this.query();
   },
   methods: {
@@ -361,6 +364,7 @@ export default {
           token: false,
           qs: true,
           data: {
+            comBuildingName: name == undefined ? "" : name.trim(),
             comId: this.conditions.comId,
             page: 1,
             limit: 100
@@ -691,7 +695,7 @@ export default {
           }
         }
         .el-table__body td {
-          // perttier-ignore
+          // prettier-ignore
           height: 64PX;
         }
         .el-button--mini, .el-button--small {
@@ -701,7 +705,7 @@ export default {
         }
       }
       .el-pagination {
-        // perttier-ignore
+        // prettier-ignore
         padding: 24PX 5PX 8PX;
         display: flex;
         justify-content: flex-end;
@@ -717,13 +721,13 @@ export default {
           font-weight: normal;
         }
         .el-select .el-input {
-          // perttier-ignore
+          // prettier-ignore
           width: 80PX;
         }
         .el-pagination__sizes .el-input .el-input__inner {
-          // perttier-ignore
+          // prettier-ignore
           height: 22PX;
-          // perttier-ignore
+          // prettier-ignore
           line-height: 20PX;
           font-size: @font14;
         }
@@ -733,7 +737,7 @@ export default {
         .el-pagination__editor {
           height: auto;
           .el-input__inner {
-            // perttier-ignore
+            // prettier-ignore
             height: 22PX;
           }
         }

@@ -17,6 +17,7 @@
 <script>
 import houseDeployPair from "./houseDeployPair";
 import houseDeployList from "./houseDeployList";
+import bus from "@/evenBus/but.js";
 export default {
   provide() {
     return {
@@ -47,6 +48,10 @@ export default {
         sortType: "0"
       }
     };
+  },
+  created() {
+    // 切换管理入口nav
+    bus.$emit("switchEntranceNav", 1);
   }
 };
 </script>

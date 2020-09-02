@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import bus from "@/evenBus/but.js";
 export default {
   provide() {
     return {};
@@ -33,6 +34,10 @@ export default {
   components: {},
   data() {
     return {};
+  },
+  created() {
+    // 切换管理入口nav
+    bus.$emit("switchEntranceNav", 4);
   }
 };
 </script>
