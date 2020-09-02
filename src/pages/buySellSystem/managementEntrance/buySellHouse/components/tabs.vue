@@ -66,7 +66,7 @@ export default {
         color: #fff;
         background: @backgroud;
         // prettier-ignore
-        border-radius: 4PX ;
+        border-radius: 4PX;
       }
     }
   }

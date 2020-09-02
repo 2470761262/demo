@@ -17,6 +17,7 @@
 <script>
 import house3DayPair from "./house3DayPair";
 import house3DayList from "./house3DayList";
+import bus from "@/evenBus/but.js";
 export default {
   provide() {
     return {
@@ -48,6 +49,10 @@ export default {
         typeList: ["3"]
       }
     };
+  },
+  created() {
+    // 切换管理入口nav
+    bus.$emit("switchEntranceNav", 1);
   }
 };
 </script>

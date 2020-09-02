@@ -20,12 +20,21 @@
   </div>
 </template>
 <script>
+import bus from "@/evenBus/but.js";
 export default {
   data() {
     return {
       navActiveIndex: 0,
       navList: ["业务管理", "买卖房源", "租赁房源", "客源", "人员管理"]
     };
+  },
+  created() {
+    bus.$on("switchEntranceNav", index => {
+      this.navActiveIndex = index;
+    });
+  },
+  beforeDestroy() {
+    bus.$off("switchEntranceNav");
   },
   methods: {
     changeNav(index) {

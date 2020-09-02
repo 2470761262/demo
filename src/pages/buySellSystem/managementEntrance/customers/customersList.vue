@@ -26,6 +26,7 @@ import privateCutmomersPair from "./components/cutmomersPair";
 import privateCutmomersResultList from "./components/cutmomersResultList";
 import { TOKEN } from "@/util/constMap";
 import util from "@/util/util";
+import bus from "@/evenBus/but.js";
 export default {
   provide() {
     return {
@@ -63,7 +64,10 @@ export default {
       }
     };
   },
-  created() {},
+  created() {
+    // 切换管理入口nav
+    bus.$emit("switchEntranceNav", 3);
+  },
   mounted() {},
   methods: {}
 };
