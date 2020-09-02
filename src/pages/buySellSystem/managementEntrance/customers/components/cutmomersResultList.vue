@@ -418,12 +418,14 @@ export default {
       }
     },
     getTree() {
+      this.treeLoading = true;
       //读取树数据
       this.$api
         .post({
           url: "/sys/tree/bet"
         })
         .then(e => {
+          this.treeLoading = false;
           console.log(e.data);
           let result = e.data;
           if (result.code == 200) {
@@ -447,6 +449,7 @@ export default {
         //   }
         // })
         .catch(e => {
+          this.treeLoading = false;
           console.log("读取失败");
           console.log(e);
         });
@@ -645,11 +648,15 @@ export default {
           item.style.display = "none";
         });
       }
+      let id = row.id;
+      if (row.cusId != null) id = row.cusId;
       let routeUrl = this.$router.resolve({
         path: "/customers/customersDetail",
-        query: { customerId: row.id }
+        query: { customerId: btoa(id) }
       });
+
       window.open(routeUrl.href, "_blank");
+      console.log("=======>", atob(row.cusId));
       // this.$router.push({
       //   path: "/customers/customersDetail",
       //   query: { customerId: row.id }

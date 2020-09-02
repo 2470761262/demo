@@ -424,7 +424,7 @@
           "
           @click="setCustomersType(item)"
         >
-          {{ item.title }}({{ item.count }})
+          {{ item.title }}
         </el-button>
       </div>
 
@@ -951,9 +951,7 @@ export default {
       FoldText: "展开选项/收起"
     };
   },
-  created() {
-    this.apply();
-  },
+  created() {},
   methods: {
     getPairNumbers(e) {
       console.log(e, "看房进度查询");
@@ -962,30 +960,6 @@ export default {
       } else {
         this.form["pairNumbers"] = [e];
       }
-    },
-    apply() {
-      var that = this;
-      this.$api
-        .post({
-          url: "/saleCustomer/staticsMyCustomersCount",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false
-        })
-        .then(e => {
-          console.log("11111111111111111", e.data);
-          let json = e.data;
-          if (json.code == 200) {
-            this.customersTypeList[0].count = json.data.allRequireCustomer;
-            this.customersTypeList[1].count = json.data.buySecondHouse;
-            this.customersTypeList[2].count = json.data.buyNewHouse;
-            this.customersTypeList[3].count = json.data.rentHouse;
-            this.customersTypeList[4].count = json.data.hasDealedHouse;
-            this.customersTypeList[5].count = json.data.notAttention;
-          } else if (json.code == 400) {
-            alert(json.message);
-            console.log("失败     " + json);
-          }
-        });
     },
 
     setCustomersType(item, resetAll) {
