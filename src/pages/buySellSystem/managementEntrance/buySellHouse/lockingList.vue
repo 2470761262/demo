@@ -28,7 +28,9 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="'锁定房源楼盘 => select => option:' + item.name"
+                        :data-anchor="
+                          '锁定房源楼盘 => select => option:' + item.name
+                        "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in buildForList"
                         :key="item.value"
@@ -55,7 +57,9 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="'锁定房源栋座 => select => option:' + item.name"
+                        :data-anchor="
+                          '锁定房源栋座 => select => option:' + item.name
+                        "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in towerForList"
                         :key="item.value"
@@ -82,7 +86,9 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="'锁定房源房号 => select => option:' + item.name"
+                        :data-anchor="
+                          '锁定房源房号 => select => option:' + item.name
+                        "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in roomForList"
                         :key="item.value"
@@ -119,7 +125,9 @@
                   @change="query(1)"
                   :default-time="['00:00:00', '23:59:59']"
                   class="anchor-point"
-                  :data-anchor="'锁定房源搜索 锁定时间:' + conditions.timeSelect"
+                  :data-anchor="
+                    '锁定房源搜索 锁定时间:' + conditions.timeSelect
+                  "
                 >
                 </el-date-picker>
               </el-form-item>
@@ -132,12 +140,16 @@
           class="btn anchor-pointn"
           @click="reset"
           data-anchor="锁定房源重置"
-          >重置</button>
+        >
+          重置
+        </button>
         <button
           class="btn active anchor-pointn"
           @click="query(1)"
           data-anchor="锁定房源搜索"
-          >搜索</button>
+        >
+          搜索
+        </button>
       </div>
     </div>
     <div class="main">
@@ -165,15 +177,13 @@
             <el-table-column label="操作" fixed="right" width="160">
               <template v-slot="scope">
                 <el-button
+                  v-if="showUnlockBtn"
                   type="text"
                   size="mini"
                   @click="unLock(scope.row.id)"
                   >解锁</el-button
                 >
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="toLook(scope.row.id)"
+                <el-button type="text" size="mini" @click="toLook(scope.row.id)"
                   >查看</el-button
                 >
               </template>
@@ -181,13 +191,14 @@
           </el-table>
         </div>
         <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageJson.page"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="pageJson.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pageJson.total">
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageJson.page"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="pageJson.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pageJson.total"
+        >
         </el-pagination>
       </div>
     </div>
@@ -201,6 +212,7 @@ export default {
   components: { tabs },
   data() {
     return {
+      showUnlockBtn: false,
       loading: false,
       conditions: {
         comId: "",
@@ -224,37 +236,45 @@ export default {
           prop: "houseNo",
           label: "房源编号",
           align: "left"
-        }, {
+        },
+        {
           prop: "communityName",
           label: "楼盘名称",
           width: "166",
           align: "right"
-        }, {
+        },
+        {
           prop: "buildingName",
           label: "楼栋号",
           align: "right"
-        }, {
+        },
+        {
           prop: "roomNo",
           label: "房间号",
           align: "right"
-        }, {
+        },
+        {
           prop: "plate",
           label: "状态",
           align: "right"
-        }, {
+        },
+        {
           prop: "agentName",
           label: "跟单人",
           align: "right"
-        }, {
+        },
+        {
           prop: "lockName",
           label: "锁定人",
           align: "right"
-        }, {
+        },
+        {
           prop: "lockTime",
           label: "锁定时间",
           width: "220",
           align: "right"
-        }, {
+        },
+        {
           prop: "lockRecord",
           label: "锁定原因",
           align: "right"
@@ -267,8 +287,8 @@ export default {
         pageSum: 0
       },
       sortColumn: "id", //排序字段
-      sortType: "descending", //排序类型
-    }
+      sortType: "descending" //排序类型
+    };
   },
   created() {
     // 切换管理入口nav
@@ -307,25 +327,25 @@ export default {
     buildRemoteMethod(query) {
       this.buildLoading = true;
       this.$api
-      .get({
-        url: "/community/saleAll",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          communityName: query,
-          page: 1,
-          limit: 50
-        }
-      })
-      .then(e => {
-        if (e.data.code == 200) {
-          this.buildForList = e.data.data.list;
-        }
-      })
-      .finally(() => {
-        this.buildLoading = false;
-      });
+        .get({
+          url: "/community/saleAll",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.buildForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
     },
     /**
      * @example: 楼盘选择更改触发事件
@@ -446,7 +466,8 @@ export default {
     /**
      * @example: 搜索
      */
-    query(currentPage=1) {
+    query(currentPage = 1) {
+      let that = this;
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
@@ -470,7 +491,17 @@ export default {
             this.$refs.tableList.bodyWrapper.scrollTop = 0;
             this.pageJson.total = data.data.data.totalCount;
             this.tableData = data.data.data.list;
-            // let btnList = data.data.btnList;
+            let btnList = data.data.btnList;
+            if (btnList && btnList.length > 0) {
+              btnList.forEach(btn => {
+                if (btn.rName == "解锁") {
+                  that.showUnlockBtn = true;
+                }
+                if (btn.rName == "查看") {
+                  that.showDetailBtn = true;
+                }
+              });
+            }
           }
         })
         .catch(e => {
@@ -519,7 +550,7 @@ export default {
       });
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 .el-select-dropdown__item {
@@ -641,7 +672,7 @@ export default {
           }
         }
         .has-gutter:not(.is-group) {
-          background: #F0F5F4;
+          background: #f0f5f4;
           tr:nth-child(1) {
             th:nth-child(1) {
               .cell {
@@ -685,7 +716,7 @@ export default {
             // prettier-ignore
             height: 48PX;
             padding: 0;
-            background: #F0F5F4;
+            background: #f0f5f4;
             font-weight: normal;
             font-size: @font16;
             color: #303133;
@@ -698,7 +729,8 @@ export default {
           // prettier-ignore
           height: 64PX;
         }
-        .el-button--mini, .el-button--small {
+        .el-button--mini,
+        .el-button--small {
           // prettier-ignore
           padding: 0 10PX;
           font-size: @font16;
@@ -714,7 +746,7 @@ export default {
         .btn-next .el-icon,
         .btn-prev .el-icon,
         button,
-        span:not([class*=suffix]) {
+        span:not([class*="suffix"]) {
           height: auto;
           line-height: 1;
           font-size: @font16;
@@ -745,10 +777,13 @@ export default {
           line-height: 1;
         }
       }
-      .el-table--border, .el-table--group {
+      .el-table--border,
+      .el-table--group {
         border: none;
       }
-      .el-table--border::after, .el-table--group::after, .el-table::before {
+      .el-table--border::after,
+      .el-table--group::after,
+      .el-table::before {
         background-color: transparent;
       }
       .el-table--border td {
@@ -759,11 +794,11 @@ export default {
           th:nth-child(2),
           th:nth-child(3),
           th:nth-child(4) {
-            border-bottom: 1px solid #C3DFD9;
+            border-bottom: 1px solid #c3dfd9;
             border-right: 1px solid #c3dfd9;
           }
           th:nth-child(5) {
-            border-bottom: 1px solid #C3DFD9;
+            border-bottom: 1px solid #c3dfd9;
           }
         }
         tr:nth-child(2) {
