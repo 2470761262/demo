@@ -45,6 +45,7 @@
     margin: 18px 0;
   }
   .SearchItemRow {
+    margin-top: 0;
     .SearchItem {
       display: flex;
       justify-content: space-between;
