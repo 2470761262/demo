@@ -495,19 +495,19 @@ export default {
           align: "left"
         },
         {
-          prop: "curMonthAddScore",
+          prop: "curDayAddScore",
           label: "新增鑫币",
           minWidth: "100",
           align: "right",
           sortable: true
         }, {
-          prop: "curMonthExXinScore",
+          prop: "curDayExXinScore",
           label: "兑换（品牌分）",
           minWidth: "150",
           align: "right",
           sortable: true
         }, {
-          prop: "curMonthExGoodScore",
+          prop: "curDayExGoodScore",
           label: "兑换（物品）",
           minWidth: "150",
           align: "right",
