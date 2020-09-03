@@ -152,6 +152,19 @@ export default [
       )
   },
   {
+    path: "/buySellSystem/validateHome",
+    name: "validateHome",
+    meta: {
+      title: "验真首页",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "validateHome" */ "@/pages/buySellSystem/newvalidate/validateHome.vue"
+      )
+  },
+  {
     //我的房源
     path: "/buySellSystem/myHouse",
     redirect: "/myHouse/myRole",
