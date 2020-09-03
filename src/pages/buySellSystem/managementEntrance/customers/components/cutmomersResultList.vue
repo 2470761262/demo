@@ -359,7 +359,7 @@ export default {
             formart: item => this.housesource(item.source)
           },
           {
-            prop: "addPerName",
+            prop: "agentName",
             label: "录入人"
           },
           {
@@ -502,17 +502,13 @@ export default {
       var that = this;
       this.loading = true;
       let url = "/saleCustomer/listIn7DaysCustomers";
-      if (
-        this.form.requirementType == "" &&
-        this.form.attentionStatus == null
-      ) {
+
+      if (this.form.isTypeChange == 1) {
         url = "/saleCustomer/listIn7DaysCustomers";
-      } else if (
-        this.form.requirementType == 1 &&
-        this.form.attentionStatus == 1
-      ) {
+      } else if (this.form.isTypeChange == 2) {
         url = "/saleCustomer/listFollowCustomer";
       }
+
       this.$api
         .post({
           url: url,
