@@ -425,7 +425,7 @@ export default {
         .post({
           url:
             this.form.isTypeChange == 1
-              ? "/saleCustomer/listIn7DaysCustomers"
+              ? "/saleCustomer/listPrivateCustomers"
               : "/saleCustomer/listFollowCustomer",
           data: {
             tree: "1"
@@ -512,10 +512,10 @@ export default {
     apply() {
       var that = this;
       this.loading = true;
-      let url = "/saleCustomer/listIn7DaysCustomers";
+      let url = "/saleCustomer/listPrivateCustomers";
 
       if (this.form.isTypeChange == 1) {
-        url = "/saleCustomer/listIn7DaysCustomers";
+        url = "/saleCustomer/listPrivateCustomers";
       } else if (this.form.isTypeChange == 2) {
         url = "/saleCustomer/listFollowCustomer";
       }
