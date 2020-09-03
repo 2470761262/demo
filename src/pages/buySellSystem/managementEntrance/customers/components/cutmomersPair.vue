@@ -516,7 +516,7 @@
         <div class="InputItem">
           <div class="InputItemCell">
             <el-input
-              type="number"
+              type="text"
               v-number
               placeholder="最小值"
               clearable
@@ -527,7 +527,7 @@
           <div class="split-line"></div>
           <div class="InputItemCell">
             <el-input
-              type="number"
+              type="text"
               v-number
               placeholder="最大值"
               clearable
@@ -536,7 +536,15 @@
             <span>万</span>
           </div>
           <el-button
-            @click="submitInput('MinPrice', 'MaxPrice', 'minPrice', 'maxPrice')"
+            @click="
+              submitInput(
+                'MinPrice',
+                'MaxPrice',
+                'minPrice',
+                'maxPrice',
+                'Price'
+              )
+            "
             >确定</el-button
           >
         </div>
@@ -563,7 +571,7 @@
         <div class="InputItem">
           <div class="InputItemCell">
             <el-input
-              type="number"
+              type="text"
               v-number
               placeholder="最小值"
               clearable
@@ -574,7 +582,7 @@
           <div class="split-line"></div>
           <div class="InputItemCell">
             <el-input
-              type="number"
+              type="text"
               v-number
               placeholder="最大值"
               clearable
@@ -583,7 +591,15 @@
             <span>万</span>
           </div>
           <el-button
-            @click="submitInput('MinPrice', 'MaxPrice', 'minPrice', 'maxPrice')"
+            @click="
+              submitInput(
+                'MinPrice',
+                'MaxPrice',
+                'minPrice',
+                'maxPrice',
+                'Price'
+              )
+            "
             >确定</el-button
           >
         </div>
@@ -610,7 +626,7 @@
           <div class="InputItem">
             <div class="InputItemCell">
               <el-input
-                type="number"
+                type="text"
                 v-number
                 placeholder="最小值"
                 clearable
@@ -622,7 +638,7 @@
             <div class="split-line"></div>
             <div class="InputItemCell">
               <el-input
-                type="number"
+                type="text"
                 v-number
                 placeholder="最大值"
                 clearable
@@ -631,7 +647,9 @@
               <span>㎡</span>
             </div>
             <el-button
-              @click="submitInput('MinArea', 'MaxArea', 'minArea', 'maxArea')"
+              @click="
+                submitInput('MinArea', 'MaxArea', 'minArea', 'maxArea', 'Area')
+              "
               >确定</el-button
             >
           </div>
@@ -744,7 +762,7 @@
 <script>
 const cusTypeList = [
   {
-    title: "七日内新增客户",
+    title: "私客列表",
     type: 1,
     count: "0"
   },
@@ -1070,7 +1088,7 @@ export default {
     valiadNum(key) {
       console.log(key, this[key]);
     },
-    submitInput(key1, key2, keya, keyb) {
+    submitInput(key1, key2, keya, keyb, modelKey) {
       let a = parseInt(this[key1]);
       if (a > parseInt(this[key2])) {
         this[key1] = this[key2];
@@ -1078,6 +1096,7 @@ export default {
       }
       this.form[keya] = this[key1];
       this.form[keyb] = this[key2];
+      this[modelKey] = "";
       console.log(keya, this.form[keya], keyb, this.form[keyb]);
     },
     getTime(key, key1, key2) {

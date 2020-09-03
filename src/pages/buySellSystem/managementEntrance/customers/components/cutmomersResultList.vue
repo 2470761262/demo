@@ -359,7 +359,7 @@ export default {
             formart: item => this.housesource(item.source)
           },
           {
-            prop: "addPerName",
+            prop: "agentName",
             label: "录入人"
           },
           {
@@ -420,9 +420,17 @@ export default {
     getTree() {
       this.treeLoading = true;
       //读取树数据
+
       this.$api
         .post({
-          url: "/sys/tree/bet"
+          url:
+            this.form.isTypeChange == 1
+              ? "/saleCustomer/listPrivateCustomers"
+              : "/saleCustomer/listFollowCustomer",
+          data: {
+            tree: "1"
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           this.treeLoading = false;
@@ -504,18 +512,14 @@ export default {
     apply() {
       var that = this;
       this.loading = true;
-      let url = "/saleCustomer/listIn7DaysCustomers";
-      if (
-        this.form.requirementType == "" &&
-        this.form.attentionStatus == null
-      ) {
-        url = "/saleCustomer/listIn7DaysCustomers";
-      } else if (
-        this.form.requirementType == 1 &&
-        this.form.attentionStatus == 1
-      ) {
+      let url = "/saleCustomer/listPrivateCustomers";
+
+      if (this.form.isTypeChange == 1) {
+        url = "/saleCustomer/listPrivateCustomers";
+      } else if (this.form.isTypeChange == 2) {
         url = "/saleCustomer/listFollowCustomer";
       }
+
       this.$api
         .post({
           url: url,

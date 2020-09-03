@@ -284,7 +284,7 @@
             <div>{{ item.title }}</div>
           </div>
         </div>
-        <div class="list-head-check">
+        <div class="list-head-check" v-if="curreTypeIndex != 5">
           <el-checkbox v-model="checked" @change="deployCheck"
             >可调配</el-checkbox
           >
@@ -494,6 +494,12 @@ export default {
     };
   },
   watch: {
+    curreTypeIndex(val) {
+      if (val == 5) {
+        this.checked = false;
+        this.deployCheck();
+      }
+    },
     filterText(val) {
       this.$refs.treeForm.filter(val);
     },
@@ -631,7 +637,7 @@ export default {
           console.log("修改失败");
         });
       that.dialogVisible = false;
-      this.deployCheck();
+      // this.deployCheck();
     },
     deployCheck() {
       if (this.checked) {
@@ -710,7 +716,13 @@ export default {
       //读取树数据
       this.$api
         .post({
-          url: "/sys/tree/bet"
+          url: this.checked
+            ? "/static/soleHouseDeploy"
+            : "/static/soleAllHouseIndex",
+          data: {
+            tree: "1"
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           this.treeLoading = false;
@@ -873,7 +885,7 @@ export default {
       if (initPage) this.InitPageJson();
       let url = this.checked
         ? "/static/soleHouseDeploy"
-        : "/mateHouse/getMateHouse/soleAllHouseIndex";
+        : "/static/soleAllHouseIndex";
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
