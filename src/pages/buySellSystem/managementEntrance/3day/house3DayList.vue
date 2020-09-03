@@ -414,7 +414,11 @@ export default {
       //读取树数据
       this.$api
         .post({
-          url: "/sys/tree/bet"
+          url: "/static/soleAllHouseIndex",
+          data: {
+            tree: "1"
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           this.treeLoading = false;
@@ -567,7 +571,7 @@ export default {
     getHouseData(value, initPage = true) {
       this.loading = true;
       if (initPage) this.InitPageJson();
-      let url = "/mateHouse/getMateHouse/soleAllHouseIndex";
+      let url = "/static/soleAllHouseIndex";
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
