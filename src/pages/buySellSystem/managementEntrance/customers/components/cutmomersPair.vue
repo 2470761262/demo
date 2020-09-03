@@ -516,7 +516,7 @@
         <div class="InputItem">
           <div class="InputItemCell">
             <el-input
-              type="number"
+              type="text"
               v-number
               placeholder="最小值"
               clearable
@@ -527,7 +527,7 @@
           <div class="split-line"></div>
           <div class="InputItemCell">
             <el-input
-              type="number"
+              type="text"
               v-number
               placeholder="最大值"
               clearable
@@ -571,7 +571,7 @@
         <div class="InputItem">
           <div class="InputItemCell">
             <el-input
-              type="number"
+              type="text"
               v-number
               placeholder="最小值"
               clearable
@@ -582,7 +582,7 @@
           <div class="split-line"></div>
           <div class="InputItemCell">
             <el-input
-              type="number"
+              type="text"
               v-number
               placeholder="最大值"
               clearable
@@ -626,7 +626,7 @@
           <div class="InputItem">
             <div class="InputItemCell">
               <el-input
-                type="number"
+                type="text"
                 v-number
                 placeholder="最小值"
                 clearable
@@ -638,7 +638,7 @@
             <div class="split-line"></div>
             <div class="InputItemCell">
               <el-input
-                type="number"
+                type="text"
                 v-number
                 placeholder="最大值"
                 clearable
