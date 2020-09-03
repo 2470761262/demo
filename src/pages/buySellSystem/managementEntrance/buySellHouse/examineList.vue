@@ -1325,7 +1325,7 @@ export default {
     },
     //跳转房源详情页面
     toHouseDetail(row) {
-      if (row.tag != 0) return;
+      if (row.tag === 1) return;
       var that = this;
       this.$api
         .get({
