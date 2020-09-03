@@ -110,11 +110,7 @@
     <div class="main">
       <div class="content">
         <div class="table">
-          <el-table
-            :data="tableData"
-            height="100%"
-            v-loading="loading"
-          >
+          <el-table :data="tableData" height="100%" v-loading="loading">
             <el-table-column
               v-for="(item, index) in workColumn"
               :key="index"
@@ -125,20 +121,14 @@
               :align="item.align"
               :sortable="item.sortable"
               :sort-orders="['ascending', 'descending']"
-              >
+            >
             </el-table-column>
             <el-table-column label="操作" fixed="right" min-width="150">
               <template v-slot="scope">
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="unLock(scope.row.id)"
+                <el-button type="text" size="mini" @click="unLock(scope.row.id)"
                   >解锁</el-button
                 >
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="toLook(scope.row.id)"
+                <el-button type="text" size="mini" @click="toLook(scope.row.id)"
                   >查看</el-button
                 >
               </template>
@@ -146,13 +136,14 @@
           </el-table>
         </div>
         <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageJson.page"
-        :page-sizes="[5, 10, 15]"
-        :page-size="pageJson.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pageJson.total">
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageJson.page"
+          :page-sizes="[5, 10, 15]"
+          :page-size="pageJson.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pageJson.total"
+        >
         </el-pagination>
       </div>
     </div>
@@ -189,37 +180,44 @@ export default {
           label: "房源编号",
           minWidth: "270",
           align: "left"
-        }, {
+        },
+        {
           prop: "communityName",
           label: "小区名称",
           minWidth: "150",
           align: "right"
-        }, {
+        },
+        {
           prop: "buildingName",
           label: "楼栋名称",
           minWidth: "100",
           align: "right"
-        }, {
+        },
+        {
           prop: "roomNo",
           label: "房间号",
           minWidth: "100",
           align: "right"
-        }, {
+        },
+        {
           prop: "plate",
           label: "状态",
           minWidth: "150",
           align: "right"
-        }, {
+        },
+        {
           prop: "agentName",
           label: "跟单人",
           minWidth: "120",
           align: "right"
-        }, {
+        },
+        {
           prop: "lockName",
           label: "锁定人",
           minWidth: "120",
           align: "right"
-        }, {
+        },
+        {
           prop: "lockTime",
           label: "锁定时间",
           minWidth: "200",
@@ -233,8 +231,8 @@ export default {
         pageSum: 0
       },
       sortColumn: "id", //排序字段
-      sortType: "descending", //排序类型
-    }
+      sortType: "descending" //排序类型
+    };
   },
   created() {
     this.query();
@@ -271,25 +269,25 @@ export default {
     buildRemoteMethod(query) {
       this.buildLoading = true;
       this.$api
-      .get({
-        url: "/community/saleAll",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
-        data: {
-          communityName: query,
-          page: 1,
-          limit: 50
-        }
-      })
-      .then(e => {
-        if (e.data.code == 200) {
-          this.buildForList = e.data.data.list;
-        }
-      })
-      .finally(() => {
-        this.buildLoading = false;
-      });
+        .get({
+          url: "/community/saleAll",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          token: false,
+          qs: true,
+          data: {
+            communityName: query,
+            page: 1,
+            limit: 50
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.buildForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
     },
     /**
      * @example: 楼盘选择更改触发事件
@@ -409,7 +407,7 @@ export default {
     /**
      * @example: 搜索
      */
-    query(currentPage=1) {
+    query(currentPage = 1) {
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
@@ -481,7 +479,7 @@ export default {
       });
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
 .el-select-dropdown__item {
@@ -603,7 +601,7 @@ export default {
           }
         }
         .has-gutter:not(.is-group) {
-          background: #F0F5F4;
+          background: #f0f5f4;
           tr:nth-child(1) {
             th:nth-child(1) {
               .cell {
@@ -647,7 +645,7 @@ export default {
             // prettier-ignore
             height: 48PX;
             padding: 0;
-            background: #F0F5F4;
+            background: #f0f5f4;
             font-weight: normal;
             font-size: @font16;
             color: #303133;
@@ -658,9 +656,10 @@ export default {
         }
         .el-table__body td {
           // perttier-ignore
-          height: 64PX;
+          height: 64px;
         }
-        .el-button--mini, .el-button--small {
+        .el-button--mini,
+        .el-button--small {
           // prettier-ignore
           padding: 0 10PX;
           font-size: @font16;
@@ -668,7 +667,7 @@ export default {
       }
       .el-pagination {
         // perttier-ignore
-        padding: 24PX 5PX 8PX;
+        padding: 24px 5px 8px;
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -676,7 +675,7 @@ export default {
         .btn-next .el-icon,
         .btn-prev .el-icon,
         button,
-        span:not([class*=suffix]) {
+        span:not([class*="suffix"]) {
           height: auto;
           line-height: 1;
           font-size: @font16;
@@ -684,13 +683,13 @@ export default {
         }
         .el-select .el-input {
           // perttier-ignore
-          width: 80PX;
+          width: 80px;
         }
         .el-pagination__sizes .el-input .el-input__inner {
           // perttier-ignore
-          height: 22PX;
+          height: 22px;
           // perttier-ignore
-          line-height: 20PX;
+          line-height: 20px;
           font-size: @font14;
         }
         .el-pager .more::before {
@@ -700,17 +699,20 @@ export default {
           height: auto;
           .el-input__inner {
             // perttier-ignore
-            height: 22PX;
+            height: 22px;
           }
         }
         .el-input--mini .el-input__icon {
           line-height: 1;
         }
       }
-      .el-table--border, .el-table--group {
+      .el-table--border,
+      .el-table--group {
         border: none;
       }
-      .el-table--border::after, .el-table--group::after, .el-table::before {
+      .el-table--border::after,
+      .el-table--group::after,
+      .el-table::before {
         background-color: transparent;
       }
       .el-table--border td {
@@ -721,11 +723,11 @@ export default {
           th:nth-child(2),
           th:nth-child(3),
           th:nth-child(4) {
-            border-bottom: 1px solid #C3DFD9;
+            border-bottom: 1px solid #c3dfd9;
             border-right: 1px solid #c3dfd9;
           }
           th:nth-child(5) {
-            border-bottom: 1px solid #C3DFD9;
+            border-bottom: 1px solid #c3dfd9;
           }
         }
         tr:nth-child(2) {

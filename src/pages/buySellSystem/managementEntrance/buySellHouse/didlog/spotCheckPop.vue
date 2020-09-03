@@ -92,12 +92,15 @@ export default {
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
+          let type = "error";
           if (e.data.code == 200) {
+            type = "success";
             this.$emit("update:showFlag", false);
             this.$emit("spotCheckSubmit");
           }
-          this.$messages({
-            messages: e.data.messages
+          this.$message({
+            message: e.data.message,
+            type: type
           });
         })
         .finally(e => {
