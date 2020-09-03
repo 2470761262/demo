@@ -762,7 +762,7 @@
 <script>
 const cusTypeList = [
   {
-    title: "七日内新增客户",
+    title: "私客列表",
     type: 1,
     count: "0"
   },
