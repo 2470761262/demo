@@ -330,7 +330,7 @@
       </div>
     </div>
     <el-dialog
-      title="跟单人将调配至本公司人员"
+      :title="curreType[curreTypeIndex].title + '人将调配至本公司人员'"
       :visible.sync="dialogVisible"
       width="20%"
     >
@@ -541,6 +541,12 @@ export default {
       this.$api
         .get({
           url: "/employee/deployment/per",
+          data: {
+            workType:
+              this.curreType[this.curreTypeIndex].title != "店公共盘"
+                ? this.curreType[this.curreTypeIndex].value
+                : null
+          },
           token: false
         })
         .then(e => {
