@@ -42,7 +42,7 @@
     }
   }
   .ItemRow {
-    margin: 24px 0;
+    margin: 18px 0;
   }
   .SearchItemRow {
     .SearchItem {
@@ -118,10 +118,13 @@
     }
   }
   /deep/.el-form-item__content {
+    flex: 1;
     display: flex;
+    flex-wrap: wrap;
   }
   .tapSwitchRow {
     display: flex;
+    margin-bottom: 24px;
     .tapSwitchItem,
     .tapSwitchItemOn {
       margin-right: 35px;
@@ -143,7 +146,7 @@
   }
   .ChooseItemRow {
     display: flex;
-    height: 30px;
+    // height: 30px;
     .ChooseItemBox {
       display: flex;
       flex-wrap: wrap;
@@ -206,6 +209,7 @@
       display: flex;
       flex-wrap: wrap;
       padding: 0 10px;
+      line-height: 40px;
       .RadioItem {
         /deep/.el-radio__input {
           width: 0 !important;
@@ -245,7 +249,7 @@
     .InputItem {
       display: flex;
       align-self: center;
-      margin-top: 10px;
+      // margin-top: 10px;
       .split-line {
         width: 20px;
         position: relative;
