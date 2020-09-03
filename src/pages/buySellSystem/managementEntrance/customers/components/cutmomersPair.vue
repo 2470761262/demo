@@ -50,16 +50,17 @@
       display: flex;
       justify-content: space-between;
       min-width: 495px;
-      height: 50px;
+      height: 48px;
       border-radius: 4px;
       border: 1px solid #cecece;
       overflow: hidden;
+      box-sizing: border-box;
       .selectItem {
         margin: 10px 0;
         border-right: 1px solid #cecece;
       }
       /deep/.el-input {
-        width: 125px;
+        width: 112px;
         height: 30px;
         line-height: 30px;
         i {
@@ -68,7 +69,7 @@
         .el-input__inner {
           line-height: inherit;
           height: inherit;
-          text-align: center;
+          text-align: left;
           border: 0;
           font-size: 16px;
           color: #606266;
@@ -79,9 +80,8 @@
       }
       .InputItem {
         width: 280px;
-        height: 50px;
+        height: 48px;
         overflow: hidden;
-        padding-left: 20px;
         > input {
           width: 100%;
           line-height: 50px;
@@ -91,7 +91,7 @@
       }
       .SubmitItem {
         width: 80px;
-        height: 50px;
+        height: 48px;
         background: @backgroud;
         text-align: center;
         cursor: pointer;
@@ -212,6 +212,8 @@
       padding: 0 10px;
       line-height: 40px;
       .RadioItem {
+        display: flex;
+        align-self: center;
         /deep/.el-radio__input {
           width: 0 !important;
           height: 0 !important;
@@ -224,7 +226,6 @@
           width: 100%;
           height: 100%;
           text-align: center;
-          vertical-align: middle;
           font-size: @font14;
           line-height: 32px;
         }
@@ -238,12 +239,15 @@
         .el-radio {
           //margin-right: 0 !important;
           transition: all 0.2s ease-in;
-          height: 32px;
-          margin-right: 20px;
-          line-height: 32px;
+          height: 30px;
+          margin-right: 8px;
+          line-height: 30px;
           padding: 0 15px;
           border: 1px solid #fff;
           border-radius: 4px;
+          &:last-child {
+            margin-right: 0;
+          }
         }
       }
     }
@@ -252,15 +256,16 @@
       align-self: center;
       // margin-top: 10px;
       .split-line {
-        width: 20px;
+        width: 8px;
+        margin: 0 8px;
         position: relative;
         &::after {
           content: "";
           position: absolute;
           top: 50%;
           left: 50%;
-          height: 2px;
-          width: 20px;
+          height: 1px;
+          width: 8px;
           transform: translate(-50%, -50%);
           background: #686a6e;
         }
@@ -269,10 +274,9 @@
         display: flex;
         border: 1px solid #cecece;
         border-radius: 4px;
-        padding: 0 10px;
-        margin: 0 10px;
-        height: 36px;
-        line-height: 36px;
+        padding: 0 8px;
+        height: 34px;
+        line-height: 34px;
         overflow: hidden;
         > span {
           color: #686a6e;
@@ -280,7 +284,7 @@
           white-space: nowrap;
         }
         /deep/.el-input {
-          width: 100px;
+          width: 80px;
           height: 36px;
           line-height: 36px;
           i {
@@ -289,21 +293,22 @@
         }
         /deep/.el-input--suffix {
           .el-input__inner {
+            padding-left: 0;
             padding-right: 0;
             border-color: #fff;
             line-height: inherit;
             height: inherit;
-            text-align: center;
+            text-align: left;
             font-size: 16px;
           }
         }
       }
       /deep/.el-button {
-        margin-left: 20px;
+        margin-left: 16px;
         padding: 0;
-        width: 70px;
-        height: 40px;
-        line-height: 40px;
+        width: 60px;
+        height: 36px;
+        line-height: 36px;
         font-size: @font14;
         background: @backgroud;
         color: #ffffff;
@@ -354,13 +359,11 @@
     }
   }
   /deep/.el-form-item__label {
-    width: 125px !important;
-    line-height: 40px;
+    width: 100px !important;
+    line-height: 36px;
     font-size: @font14;
     font-weight: bold;
     text-align: left;
-    line-height: 32px;
-    margin-right: 15px;
   }
   .FoldRow {
     .FoldItem {
@@ -762,7 +765,7 @@
 <script>
 const cusTypeList = [
   {
-    title: "私客列表",
+    title: "买二手客户",
     type: 1,
     count: "0"
   },
