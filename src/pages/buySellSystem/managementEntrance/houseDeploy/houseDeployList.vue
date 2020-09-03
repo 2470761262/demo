@@ -709,7 +709,13 @@ export default {
       //读取树数据
       this.$api
         .post({
-          url: "/sys/tree/bet"
+          url: this.checked
+            ? "/static/soleHouseDeploy"
+            : "/static/soleAllHouseIndex",
+          data: {
+            tree: "1"
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           console.log(e.data);
@@ -870,7 +876,7 @@ export default {
       if (initPage) this.InitPageJson();
       let url = this.checked
         ? "/static/soleHouseDeploy"
-        : "/mateHouse/getMateHouse/soleAllHouseIndex";
+        : "/static/soleAllHouseIndex";
       let restuleParms = Object.assign({}, value, {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize

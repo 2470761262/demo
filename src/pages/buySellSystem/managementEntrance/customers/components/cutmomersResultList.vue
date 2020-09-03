@@ -419,9 +419,17 @@ export default {
     },
     getTree() {
       //读取树数据
+
       this.$api
         .post({
-          url: "/sys/tree/bet"
+          url:
+            this.form.isTypeChange == 1
+              ? "/saleCustomer/listIn7DaysCustomers"
+              : "/saleCustomer/listFollowCustomer",
+          data: {
+            tree: "1"
+          },
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
           console.log(e.data);
