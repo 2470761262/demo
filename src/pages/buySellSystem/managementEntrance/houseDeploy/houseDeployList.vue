@@ -540,7 +540,7 @@ export default {
       that.agentLoading = true;
       this.$api
         .get({
-          url: "/employee/deployment/per",
+          url: "/static/deployment/per",
           data: {
             workType:
               this.curreType[this.curreTypeIndex].title != "店公共盘"
