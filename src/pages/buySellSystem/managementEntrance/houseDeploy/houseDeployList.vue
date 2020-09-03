@@ -617,6 +617,7 @@ export default {
         return false;
       }
       let params = {
+        workType: this.curreType[this.curreTypeIndex].value,
         houseId: parseInt(that.toHouseId) + "",
         newAgentPer: parseInt(JSON.stringify(that.AgentPerId.accountID)),
         oldAgentPer: parseInt(that.agentper != null ? that.agentper : ""),
