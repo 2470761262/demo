@@ -38,6 +38,24 @@
   }
   .content-body {
     display: flex;
+    position: relative;
+    z-index: 1;
+    // prettier-ignore
+    margin-top: 27PX;
+    .content-left {
+      flex: 1;
+      // prettier-ignore
+      margin-right: 16PX;
+      background: #fff;
+      // prettier-ignore
+      padding: 24PX;
+      // prettier-ignore
+      border-radius: 8PX;
+    }
+    .content-right {
+      // prettier-ignore
+      width: 375PX;
+    }
   }
 }
 </style>
