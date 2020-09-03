@@ -367,6 +367,15 @@ const cascaderList = [
       { title: "小程序", value: 42 },
       { title: "APP", value: 43 }
     ]
+  },
+  {
+    title: "线下开发",
+    value: 5,
+    children: [
+      { title: "门店接待", value: 51 },
+      { title: "社区开发", value: 52 },
+      { title: "摆排", value: 53 }
+    ]
   }
 ];
 const SEX = [
