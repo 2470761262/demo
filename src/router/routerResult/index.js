@@ -422,6 +422,18 @@ export default [
           import(
             /* webpackChunkName: "houseExamineHouse" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/examineList.vue"
           )
+      },
+      {
+        //抽检列表
+        path: "/managementEntrance/spotCheckList",
+        meta: {
+          title: "抽检列表",
+          isMapNav: true //不需要导航
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "spotCheckList" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/spotCheckList.vue"
+          )
       }
     ]
   },
