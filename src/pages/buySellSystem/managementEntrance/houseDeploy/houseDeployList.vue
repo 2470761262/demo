@@ -284,7 +284,7 @@
             <div>{{ item.title }}</div>
           </div>
         </div>
-        <div class="list-head-check">
+        <div class="list-head-check" v-if="curreTypeIndex != 5">
           <el-checkbox v-model="checked" @change="deployCheck"
             >可调配</el-checkbox
           >
@@ -494,6 +494,12 @@ export default {
     };
   },
   watch: {
+    curreTypeIndex(val) {
+      if (val == 5) {
+        this.checked = false;
+        this.deployCheck();
+      }
+    },
     filterText(val) {
       this.$refs.treeForm.filter(val);
     },
@@ -631,7 +637,7 @@ export default {
           console.log("修改失败");
         });
       that.dialogVisible = false;
-      this.deployCheck();
+      // this.deployCheck();
     },
     deployCheck() {
       if (this.checked) {

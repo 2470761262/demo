@@ -331,6 +331,15 @@ export default {
         case 43:
           type = "APP";
           break;
+        case 51:
+          type = "门店接待";
+          break;
+        case 52:
+          type = "社区开发";
+          break;
+        case 53:
+          type = "摆排";
+          break;
         default:
           break;
       }
@@ -347,7 +356,7 @@ export default {
         path: "/customers/customersDetail",
         query: { customerId: btoa(row.id) }
       });
-      console.log(btoa(row.id),"加密");
+      console.log(btoa(row.id), "加密");
       window.open(routeUrl.href, "_blank");
       // this.$router.push({
       //   path: "/customers/customersDetail",
