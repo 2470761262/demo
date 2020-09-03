@@ -37,7 +37,7 @@
     <!-- 作业数据 -->
     <div class="work">
       <div class="head">
-        <div class="topic">资源统计</div>
+        <div class="topic">资源统计<p class="tip">注：取值数据截止到昨天24点整</p></div>
         <el-tooltip placement="right">
           <div slot="content">
             1、房源跟单量：名下作为房源跟单人的在售房源总数量；<br />
@@ -114,12 +114,9 @@
           <button
             class="search-btn active anchor-point"
             @click="queryDevelopData"
-            :data-anchor="
-              '业务管理开发数据查询时间搜索{' + developDateSelect + '}'
-            "
-          >
-            搜索
-          </button>
+            :data-anchor="'业务管理开发数据查询时间搜索{' + developDateSelect + '}'"
+          >搜索</button>
+          <p class="tip">注：取值数据截止到昨天24点整</p>
         </div>
         <el-tooltip placement="right">
           <div slot="content">
@@ -632,16 +629,16 @@ export default {
       let prevDayDate = getDate(prevDaytime)[0];
       switch (type) {
         case 1:
-          this.developDateSelect = [prevDate, currentDate];
-          this.developDateSelectFlag = [prevDate, currentDate];
+          this.developDateSelect = [prevDate, prevDayDate];
+          this.developDateSelectFlag = [prevDate, prevDayDate];
           break;
         case 2:
           this.currencyDateSelect = [prevDayDate, prevDayDate];
           this.currencyDateSelectFlag = [prevDayDate, prevDayDate];
           break;
-        default:
-          this.developDateSelect = [prevDate, currentDate];
-          this.developDateSelectFlag = [prevDate, currentDate];
+        default: 
+          this.developDateSelect = [prevDate, prevDayDate];
+          this.developDateSelectFlag = [prevDate, prevDayDate];
           this.currencyDateSelect = [prevDayDate, prevDayDate];
           this.currencyDateSelectFlag = [prevDayDate, prevDayDate];
       }
@@ -998,6 +995,14 @@ export default {
         font-size: @font24;
         font-weight: bold;
         color: #303133;
+        .tip {
+          display: inline-block;
+          // prettier-ignore
+          margin-left: 26PX;
+          font-size: @font14;
+          color: #909399;
+          font-weight: normal;
+        }
       }
       .tip-box {
         display: flex;
@@ -1028,8 +1033,8 @@ export default {
         }
         /deep/.time-box {
           // prettier-ignore
-          width: 308PX;
-          margin-right: 16px;
+          width: 288PX;
+          margin-right: 16PX;
           .el-input__inner {
             // prettier-ignore
             height: 36PX;
@@ -1083,25 +1088,13 @@ export default {
             color: #fff;
           }
         }
-        // /deep/.date-picker {
-        //   // prettier-ignore
-        //   width: 125PX;
-        //   .el-input__inner {
-        //     // prettier-ignore
-        //     height: 34PX;
-        //     padding-left: 0;
-        //     border: none;
-        //   }
-        //   .el-input__suffix{
-        //     .el-input__icon {
-        //       // prettier-ignore
-        //       width: 25PX;
-        //       // prettier-ignore
-        //       line-height: 34PX;
-        //       font-size: @font16;
-        //     }
-        //   }
-        // }
+        .tip {
+          // prettier-ignore
+          margin-left: 26PX;
+          font-size: @font14;
+          color: #909399;
+          font-weight: normal;
+        }
       }
     }
     .nav-box {

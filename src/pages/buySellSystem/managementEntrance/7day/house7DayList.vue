@@ -329,7 +329,7 @@ export default {
         {
           prop: "addTime",
           label: "挂牌",
-          order: true
+          order: "custom"
         }
       ],
       treeCondition: {
