@@ -895,7 +895,6 @@ export default {
         })
     },
     handleCheckChange(data, checked, node) {
-      console.log(data, checked, node, "===========")
       let key = data.type;
       this.chooseTree = []; //清空数组
       this.chooseTree.push(data.businessId);
@@ -1273,7 +1272,6 @@ export default {
      * 审核
      */
     getTitle(row) {
-      console.log(row, "-----------")
       this.titleList.forEach(element => {
         if (element.key == row.Type) {
           this.title = element.value;
