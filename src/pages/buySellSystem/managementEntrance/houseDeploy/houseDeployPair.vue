@@ -282,6 +282,7 @@
             v-model="form.time"
             type="daterange"
             range-separator="至"
+            value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           >
