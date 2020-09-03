@@ -77,8 +77,6 @@
             clearable
             type="textarea"
             rows="8"
-            show-word-limit
-            maxlength="30"
             placeholder="请输入跟进内容"
             data-vv-name="memo"
             data-vv-as="跟进内容"
