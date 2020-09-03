@@ -624,7 +624,7 @@ export default {
       };
       this.$api
         .post({
-          url: "/agent_house/updateAgentPer",
+          url: "/static/updateWorkPer",
           data: params,
           qs: true
         })
