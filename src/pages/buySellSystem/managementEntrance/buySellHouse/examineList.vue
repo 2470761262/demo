@@ -767,6 +767,7 @@ export default {
           name: "seventh"
         }
       },
+      chooseTree: [], //选中的树节点
       activeName: "first",
       resetAccessory: {}, //重置附件
       accessoryTable: false, //是否展示tab切换
@@ -909,7 +910,16 @@ export default {
         });
       }
       this.query();
-
+    },
+    getUnderDepartment(list) {
+      list.forEach(item => {
+        if (item.type == 1) {
+          this.chooseTree.push(item.businessId);
+          if (item.childrenNodes != null && item.childrenNodes.length > 0) {
+            this.getUnderDepartment(item.childrenNodes);
+          }
+        }
+      });
     },
     filterNode(value, data) {
       if (!value) return true;
@@ -1262,7 +1272,6 @@ export default {
      * 审核
      */
     getTitle(row) {
-      console.log(row, "-----------")
       this.titleList.forEach(element => {
         if (element.key == row.Type) {
           this.title = element.value;

@@ -4,10 +4,19 @@
 }
 .half-content {
   background: rgba(255, 255, 255, 1);
-  padding: 30px;
-  margin: 15px 0;
+  // prettier-ignore
+  padding: 16PX 24PX;
+  // prettier-ignore
+  margin-bottom: 16PX;
   flex: 1;
-  border-radius: 8px;
+  // prettier-ignore
+  border-bottom-left-radius: 8PX;
+  // prettier-ignore
+  border-bottom-right-radius: 8PX;
+  &:nth-child(2) {
+    // prettier-ignore
+    border-radius: 8PX;
+  }
 }
 </style>
 <template>
