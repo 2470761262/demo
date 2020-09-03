@@ -254,6 +254,7 @@
             height="100%"
             v-loading="loading"
             ref="tableList"
+            @cell-dblclick="toHouseDetail"
           >
             <el-table-column
               fixed="left"
@@ -1321,7 +1322,32 @@ export default {
           that.$message("操作失败");
           that.loading = false;
         });
-    }
+    },
+    //跳转房源详情页面
+    toHouseDetail(row) {
+      if (row.tag != 0) return;
+      var that = this;
+      this.$api
+        .get({
+          url: "/agent_house/valid/" + row.eid,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            if (e.data.data == 1) {
+              util.openPage.call(this, {
+                name: "houseDetails",
+                params: { houseId: row.eid }
+              });
+            } else {
+              util.openPage.call(this, {
+                name: "historyDetails",
+                params: { houseId: row.eid, tradeType: 0 }
+              });
+            }
+          }
+        });
+    },
   }
 }
 </script>

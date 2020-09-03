@@ -372,6 +372,10 @@ export default [
     // 房源系统-管理入口
     path: "/buySellSystem/managementEntrance",
     redirect: "/managementEntrance/business",
+    meta: {
+      title: "管理入口",
+      isPad: true //不需要el-main padding
+    },
     component: () =>
       import(
         /* webpackChunkName: "managementEntrance" */ "@/pages/buySellSystem/managementEntrance/index.vue"
