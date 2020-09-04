@@ -59,10 +59,10 @@
       <div class="implant-nav">
         <div
           class="implant-nav-item"
-          :class="{ active: index == 0 }"
+          :class="{ active: index == 2 }"
           v-for="(item, index) in implantList"
           :key="index"
-          @click="goPage(index, 0)"
+          @click="goPage(index, 2)"
         >
           {{ item.title }}
         </div>
@@ -282,7 +282,6 @@
             v-model="form.time"
             type="daterange"
             range-separator="至"
-            value-format="yyyy-MM-dd"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
           >

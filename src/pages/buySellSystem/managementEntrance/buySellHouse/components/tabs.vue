@@ -18,8 +18,8 @@
 <script>
 const IMPLANTLIST = [
   { title: "房源调配", url: "/managementEntrance/houseDeploy" },
-  { title: "3天新增", url: "" },
-  { title: "7天内被看房源", url: "" },
+  { title: "3天新增", url: "/managementEntrance/3day" },
+  { title: "7天内被看房源", url: "/managementEntrance/7day" },
   { title: "锁定房源", url: "/managementEntrance/houseLockingList" },
   { title: "审核列表", url: "/managementEntrance/houseExamineHouse" },
   { title: "抽检列表", url: "/managementEntrance/spotCheckList" }
@@ -57,7 +57,8 @@ export default {
       height: 30PX;
       // prettier-ignore
       padding: 0 16PX;
-      line-height: 30px;
+      // prettier-ignore
+      line-height: 30PX;
       color: #606266;
       cursor: pointer;
       // prettier-ignore
@@ -67,7 +68,7 @@ export default {
         color: #fff;
         background: @backgroud;
         // prettier-ignore
-        border-radius: 4PX ;
+        border-radius: 4PX;
       }
     }
   }

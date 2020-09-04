@@ -9,14 +9,14 @@
 </style>
 <template>
   <div class="content">
-    <house-deploy-pair />
-    <house-deploy-list />
+    <house7-day-pair />
+    <house7-day-list />
   </div>
 </template>
 
 <script>
-import houseDeployPair from "./houseDeployPair";
-import houseDeployList from "./houseDeployList";
+import house7DayPair from "./house7DayPair";
+import house7DayList from "./house7DayList";
 import bus from "@/evenBus/but.js";
 export default {
   provide() {
@@ -25,8 +25,8 @@ export default {
     };
   },
   components: {
-    houseDeployPair,
-    houseDeployList
+    house7DayPair,
+    house7DayList
   },
   data() {
     return {
@@ -45,7 +45,8 @@ export default {
         tel: "",
         time: [],
         sortColumn: "addTime",
-        sortType: "0"
+        sortType: "0",
+        typeList: ["7"]
       }
     };
   },

@@ -249,8 +249,6 @@
               placeholder="请填写跟进内容"
               v-model="follow.Memo"
               class="textareaItem"
-              maxlength="30"
-              show-word-limit
             >
             </el-input>
           </div>

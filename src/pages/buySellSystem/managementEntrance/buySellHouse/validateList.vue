@@ -11,10 +11,6 @@
                 <el-form-item label="楼盘">
                   <el-col :span="8">
                     <el-select
-                      class="anchor-point"
-                      popper-class="anchor-point"
-                      data-anchor="锁定房源楼盘 => select"
-                      @click.native="log_socket.sendUserActionData"
                       v-model="buildOptData"
                       placeholder="楼盘"
                       clearable
@@ -27,11 +23,6 @@
                       value-key="value"
                     >
                       <el-option
-                        class="anchor-point"
-                        :data-anchor="
-                          '锁定房源楼盘 => select => option:' + item.name
-                        "
-                        @click.native="log_socket.sendUserActionData"
                         v-for="item in buildForList"
                         :key="item.value"
                         :label="item.name"
@@ -41,10 +32,6 @@
                   </el-col>
                   <el-col :span="8">
                     <el-select
-                      class="anchor-point"
-                      popper-class="anchor-point"
-                      data-anchor="锁定房源栋座 => select"
-                      @click.native="log_socket.sendUserActionData"
                       v-model="towerOptData"
                       placeholder="栋座"
                       clearable
@@ -56,11 +43,6 @@
                       value-key="value"
                     >
                       <el-option
-                        class="anchor-point"
-                        :data-anchor="
-                          '锁定房源栋座 => select => option:' + item.name
-                        "
-                        @click.native="log_socket.sendUserActionData"
                         v-for="item in towerForList"
                         :key="item.value"
                         :label="item.name"
@@ -70,10 +52,6 @@
                   </el-col>
                   <el-col :span="8">
                     <el-select
-                      class="anchor-point"
-                      popper-class="anchor-point"
-                      data-anchor="锁定房源房号 => select"
-                      @click.native="log_socket.sendUserActionData"
                       v-model="roomOptData"
                       placeholder="请输入房号"
                       clearable
@@ -85,11 +63,6 @@
                       value-key="value"
                     >
                       <el-option
-                        class="anchor-point"
-                        :data-anchor="
-                          '锁定房源房号 => select => option:' + item.name
-                        "
-                        @click.native="log_socket.sendUserActionData"
                         v-for="item in roomForList"
                         :key="item.value"
                         :label="item.name"
@@ -107,8 +80,6 @@
                   placeholder="请输入房源编号"
                   @change="query(1)"
                   clearable
-                  class="anchor-point"
-                  :data-anchor="'锁定房源搜索 房源编号:' + conditions.houseNo"
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -124,10 +95,6 @@
                   value-format="yyyy-MM-dd"
                   @change="query(1)"
                   :default-time="['00:00:00', '23:59:59']"
-                  class="anchor-point"
-                  :data-anchor="
-                    '锁定房源搜索 锁定时间:' + conditions.timeSelect
-                  "
                 >
                 </el-date-picker>
               </el-form-item>
@@ -136,31 +103,14 @@
         </el-row>
       </div>
       <div class="conditions-btn">
-        <button
-          class="btn anchor-pointn"
-          @click="reset"
-          data-anchor="锁定房源重置"
-        >
-          重置
-        </button>
-        <button
-          class="btn active anchor-pointn"
-          @click="query(1)"
-          data-anchor="锁定房源搜索"
-        >
-          搜索
-        </button>
+        <button class="btn" @click="reset">重置</button>
+        <button class="btn active" @click="query(1)">搜索</button>
       </div>
     </div>
     <div class="main">
       <div class="content">
         <div class="table">
-          <el-table
-            :data="tableData"
-            height="100%"
-            v-loading="loading"
-            ref="tableList"
-          >
+          <el-table :data="tableData" height="100%" v-loading="loading">
             <el-table-column
               v-for="(item, index) in workColumn"
               :key="index"
@@ -171,16 +121,11 @@
               :align="item.align"
               :sortable="item.sortable"
               :sort-orders="['ascending', 'descending']"
-              show-overflow-tooltip
             >
             </el-table-column>
-            <el-table-column label="操作" fixed="right" width="160">
+            <el-table-column label="操作" fixed="right" min-width="150">
               <template v-slot="scope">
-                <el-button
-                  v-if="showUnlockBtn"
-                  type="text"
-                  size="mini"
-                  @click="unLock(scope.row.id)"
+                <el-button type="text" size="mini" @click="unLock(scope.row.id)"
                   >解锁</el-button
                 >
                 <el-button type="text" size="mini" @click="toLook(scope.row.id)"
@@ -194,7 +139,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pageJson.page"
-          :page-sizes="[5, 10, 15, 20]"
+          :page-sizes="[5, 10, 15]"
           :page-size="pageJson.limit"
           layout="total, sizes, prev, pager, next, jumper"
           :total="pageJson.total"
@@ -207,12 +152,10 @@
 <script>
 import tabs from "./components/tabs.vue";
 import util from "@/util/util";
-import bus from "@/evenBus/but.js";
 export default {
   components: { tabs },
   data() {
     return {
-      showUnlockBtn: false,
       loading: false,
       conditions: {
         comId: "",
@@ -235,48 +178,49 @@ export default {
         {
           prop: "houseNo",
           label: "房源编号",
+          minWidth: "270",
           align: "left"
         },
         {
           prop: "communityName",
-          label: "楼盘名称",
-          width: "166",
+          label: "小区名称",
+          minWidth: "150",
           align: "right"
         },
         {
           prop: "buildingName",
-          label: "楼栋号",
+          label: "楼栋名称",
+          minWidth: "100",
           align: "right"
         },
         {
           prop: "roomNo",
           label: "房间号",
+          minWidth: "100",
           align: "right"
         },
         {
           prop: "plate",
           label: "状态",
+          minWidth: "150",
           align: "right"
         },
         {
           prop: "agentName",
           label: "跟单人",
+          minWidth: "120",
           align: "right"
         },
         {
           prop: "lockName",
           label: "锁定人",
+          minWidth: "120",
           align: "right"
         },
         {
           prop: "lockTime",
           label: "锁定时间",
-          width: "220",
-          align: "right"
-        },
-        {
-          prop: "lockRecord",
-          label: "锁定原因",
+          minWidth: "200",
           align: "right"
         }
       ],
@@ -291,8 +235,6 @@ export default {
     };
   },
   created() {
-    // 切换管理入口nav
-    bus.$emit("switchEntranceNav", 1);
     this.query();
   },
   methods: {
@@ -384,7 +326,6 @@ export default {
           token: false,
           qs: true,
           data: {
-            comBuildingName: name == undefined ? "" : name.trim(),
             comId: this.conditions.comId,
             page: 1,
             limit: 100
@@ -467,7 +408,6 @@ export default {
      * @example: 搜索
      */
     query(currentPage = 1) {
-      let that = this;
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
@@ -488,20 +428,9 @@ export default {
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
-            this.$refs.tableList.bodyWrapper.scrollTop = 0;
             this.pageJson.total = data.data.data.totalCount;
             this.tableData = data.data.data.list;
-            let btnList = data.data.btnList;
-            if (btnList && btnList.length > 0) {
-              btnList.forEach(btn => {
-                if (btn.rName == "解锁") {
-                  that.showUnlockBtn = true;
-                }
-                if (btn.rName == "查看") {
-                  that.showDetailBtn = true;
-                }
-              });
-            }
+            // let btnList = data.data.btnList;
           }
         })
         .catch(e => {
@@ -592,7 +521,7 @@ export default {
       .el-range-input {
         text-align: left;
         // prettier-ignore
-        text-indent: 5PX;
+        text-indent: 10PX;
         font-size: @font14;
       }
       .prefix-icon {
@@ -726,8 +655,8 @@ export default {
           }
         }
         .el-table__body td {
-          // prettier-ignore
-          height: 64PX;
+          // perttier-ignore
+          height: 64px;
         }
         .el-button--mini,
         .el-button--small {
@@ -737,8 +666,8 @@ export default {
         }
       }
       .el-pagination {
-        // prettier-ignore
-        padding: 24PX 5PX 8PX;
+        // perttier-ignore
+        padding: 24px 5px 8px;
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -753,14 +682,14 @@ export default {
           font-weight: normal;
         }
         .el-select .el-input {
-          // prettier-ignore
-          width: 80PX;
+          // perttier-ignore
+          width: 80px;
         }
         .el-pagination__sizes .el-input .el-input__inner {
-          // prettier-ignore
-          height: 22PX;
-          // prettier-ignore
-          line-height: 20PX;
+          // perttier-ignore
+          height: 22px;
+          // perttier-ignore
+          line-height: 20px;
           font-size: @font14;
         }
         .el-pager .more::before {
@@ -769,8 +698,8 @@ export default {
         .el-pagination__editor {
           height: auto;
           .el-input__inner {
-            // prettier-ignore
-            height: 22PX;
+            // perttier-ignore
+            height: 22px;
           }
         }
         .el-input--mini .el-input__icon {
