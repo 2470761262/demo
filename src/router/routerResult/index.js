@@ -479,6 +479,18 @@ export default [
           )
       },
       {
+        path: "/managementEntrance/spotCheckRecord",
+        meta: {
+          title: "抽检记录",
+          isMapNav: true,
+          isPad: true
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: "spotCheckRecord" */ "@/pages/buySellSystem/managementEntrance/buySellHouse/spotCheckRecord.vue"
+          )
+      },
+      {
         path: "/managementEntrance/customers",
         meta: {
           title: "客源",
@@ -515,6 +527,19 @@ export default [
           )
       }
     ]
+  },
+  {
+    // 信息员验真列表
+    path: "/buySellSystem/employeeValidateList",
+    meta: {
+      title: "信息员验真列表",
+      isMapNav: true,
+      isPad: true
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "employeeValidateList" */ "@/pages/buySellSystem/employeeValidateList/index.vue"
+      )
   },
   {
     path: "/report/addReport",

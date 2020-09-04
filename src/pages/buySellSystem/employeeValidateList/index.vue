@@ -1,18 +1,34 @@
 <template>
-  <!-- 买卖房源-锁定房源 -->
-  <div class="locking-container">
-    <tabs :navActiveIndex="3"></tabs>
+  <!-- 信息员验真列表 -->
+  <div class="container">
+    <breadcrumb></breadcrumb>
     <div class="conditions">
       <div class="conditions-box">
         <el-row :gutter="32">
           <el-form label-position="right" label-width="80px">
+            <el-col :span="6">
+              <el-form-item label="房源编号">
+                <el-input
+                  v-model="conditions.houseNo"
+                  placeholder="请输入合同编号"
+                  @change="query(1)"
+                  clearable
+                  class="anchor-point"
+                  :data-anchor="'信息员验真列表搜索 房源编号:' + conditions.houseNo"
+                ></el-input>
+              </el-form-item>
+            </el-col>
             <el-col :span="12">
               <el-row :gutter="10">
-                <el-form-item label="楼盘">
+                <el-form-item label="房屋坐落">
                   <el-col :span="8">
                     <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="我的验真楼盘 => select"
+                      @click.native="log_socket.sendUserActionData"
                       v-model="buildOptData"
-                      placeholder="楼盘"
+                      placeholder="楼盘名称"
                       clearable
                       filterable
                       remote
@@ -23,6 +39,11 @@
                       value-key="value"
                     >
                       <el-option
+                        class="anchor-point"
+                        :data-anchor="
+                          '我的验真楼盘 => select => option:' + item.name
+                        "
+                        @click.native="log_socket.sendUserActionData"
                         v-for="item in buildForList"
                         :key="item.value"
                         :label="item.name"
@@ -32,8 +53,12 @@
                   </el-col>
                   <el-col :span="8">
                     <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="我的验真栋座 => select"
+                      @click.native="log_socket.sendUserActionData"
                       v-model="towerOptData"
-                      placeholder="栋座"
+                      placeholder="栋座号"
                       clearable
                       filterable
                       remote
@@ -43,6 +68,11 @@
                       value-key="value"
                     >
                       <el-option
+                        class="anchor-point"
+                        :data-anchor="
+                          '我的验真栋座 => select => option:' + item.name
+                        "
+                        @click.native="log_socket.sendUserActionData"
                         v-for="item in towerForList"
                         :key="item.value"
                         :label="item.name"
@@ -52,8 +82,12 @@
                   </el-col>
                   <el-col :span="8">
                     <el-select
+                      class="anchor-point"
+                      popper-class="anchor-point"
+                      data-anchor="我的验真房号 => select"
+                      @click.native="log_socket.sendUserActionData"
                       v-model="roomOptData"
-                      placeholder="请输入房号"
+                      placeholder="房号"
                       clearable
                       filterable
                       remote
@@ -63,6 +97,11 @@
                       value-key="value"
                     >
                       <el-option
+                        class="anchor-point"
+                        :data-anchor="
+                          '我的验真房号 => select => option:' + item.name
+                        "
+                        @click.native="log_socket.sendUserActionData"
                         v-for="item in roomForList"
                         :key="item.value"
                         :label="item.name"
@@ -74,43 +113,106 @@
               </el-row>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="房源编号">
+              <el-form-item label="录入人">
                 <el-input
-                  v-model="conditions.houseNo"
-                  placeholder="请输入房源编号"
+                  v-model="conditions.addPerName"
+                  placeholder="请输入经纪人姓名"
                   @change="query(1)"
                   clearable
+                  class="anchor-point"
+                  :data-anchor="'信息员验真列表搜索 录入人:' + conditions.addPerName"
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="锁定时间">
+            <el-col :span="8">
+              <el-form-item label="所属门店">
+                <el-input
+                  v-model="conditions.department"
+                  placeholder="请输入门店名称"
+                  @change="query(1)"
+                  clearable
+                  class="anchor-point"
+                  :data-anchor="'信息员验真列表搜索 所属门店:' + conditions.department"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="验真状态">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="信息员验真列表状态 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  filterable
+                  v-model="validateStatus"
+                  clearable
+                  @change="changeValidateStatus"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="'信息员验真列表验真状态 => select => option:' + item.label"
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in validateStatusList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="录入时间">
                 <el-date-picker
                   prefix-icon="prefix-icon"
                   v-model="conditions.timeSelect"
                   type="daterange"
                   range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
+                  start-placeholder="起始时间"
+                  end-placeholder="结束时间"
                   value-format="yyyy-MM-dd"
                   @change="query(1)"
                   :default-time="['00:00:00', '23:59:59']"
+                  class="anchor-point"
+                  :data-anchor="
+                    '信息员验真列表 录入时间:' + conditions.timeSelect
+                  "
                 >
                 </el-date-picker>
               </el-form-item>
             </el-col>
+            <el-col :span="8" class="fr">
+              <div class="conditions-btn">
+                <button
+                  class="btn anchor-pointn"
+                  @click="reset"
+                  data-anchor="信息员验真列表重置"
+                >
+                  重置
+                </button>
+                <button
+                  class="btn active anchor-pointn"
+                  @click="query(1)"
+                  data-anchor="信息员验真列表搜索"
+                >
+                  搜索
+                </button>
+              </div>
+            </el-col>
           </el-form>
         </el-row>
-      </div>
-      <div class="conditions-btn">
-        <button class="btn" @click="reset">重置</button>
-        <button class="btn active" @click="query(1)">搜索</button>
       </div>
     </div>
     <div class="main">
       <div class="content">
         <div class="table">
-          <el-table :data="tableData" height="100%" v-loading="loading">
+          <el-table
+            :data="tableData"
+            height="100%"
+            v-loading="loading"
+            ref="tableList"
+          >
             <el-table-column
               v-for="(item, index) in workColumn"
               :key="index"
@@ -119,18 +221,24 @@
               :width="item.width"
               :min-width="item.minWidth"
               :align="item.align"
+              :fixed="item.fixed"
               :sortable="item.sortable"
               :sort-orders="['ascending', 'descending']"
+              show-overflow-tooltip
             >
             </el-table-column>
-            <el-table-column label="操作" fixed="right" min-width="150">
+            <el-table-column label="操作" fixed="right" align="right" width="300">
               <template v-slot="scope">
-                <el-button type="text" size="mini" @click="unLock(scope.row.id)"
-                  >解锁</el-button
+                <el-button
+                  v-if="scope.row.tag"
+                  type="text"
+                  size="mini"
+                  >邀请验真</el-button
                 >
-                <el-button type="text" size="mini" @click="toLook(scope.row.id)"
-                  >查看</el-button
-                >
+                <el-button type="text" size="mini"
+                  >重新验真</el-button>
+                <el-button type="text" size="mini"
+                  >验真详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -139,7 +247,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pageJson.page"
-          :page-sizes="[5, 10, 15]"
+          :page-sizes="[5, 10, 15, 20]"
           :page-size="pageJson.limit"
           layout="total, sizes, prev, pager, next, jumper"
           :total="pageJson.total"
@@ -150,10 +258,13 @@
   </div>
 </template>
 <script>
-import tabs from "./components/tabs.vue";
+import breadcrumb from './components/breadcrumb.vue'
 import util from "@/util/util";
+import bus from "@/evenBus/but.js";
 export default {
-  components: { tabs },
+  components: {
+    breadcrumb
+  },
   data() {
     return {
       loading: false,
@@ -161,7 +272,9 @@ export default {
         comId: "",
         cbId: "",
         bhId: "",
-        houseNo: "",
+        houseNo: "", // 房源编号
+        addPerName: "", // 录入人
+        department: "", // 所属门店
         timeSelect: ""
       },
       buildLoading: false, //楼盘select loading
@@ -173,54 +286,40 @@ export default {
       roomLoading: false, //房间号select loading
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
+      validateStatus: "", // 验真状态
+      validateStatusList: [],
       tableData: [],
       workColumn: [
         {
-          prop: "houseNo",
-          label: "房源编号",
-          minWidth: "270",
-          align: "left"
-        },
-        {
           prop: "communityName",
-          label: "小区名称",
-          minWidth: "150",
-          align: "right"
+          label: "楼盘名称",
+          width: "250",
+          align: "left",
+          fixed: "left"
         },
         {
           prop: "buildingName",
-          label: "楼栋名称",
-          minWidth: "100",
+          label: "验真类型",
           align: "right"
         },
         {
           prop: "roomNo",
-          label: "房间号",
-          minWidth: "100",
+          label: "验真状态",
           align: "right"
         },
         {
           prop: "plate",
-          label: "状态",
-          minWidth: "150",
+          label: "业主姓名",
           align: "right"
         },
         {
           prop: "agentName",
-          label: "跟单人",
-          minWidth: "120",
+          label: "验真方式",
           align: "right"
         },
         {
           prop: "lockName",
-          label: "锁定人",
-          minWidth: "120",
-          align: "right"
-        },
-        {
-          prop: "lockTime",
-          label: "锁定时间",
-          minWidth: "200",
+          label: "录入人",
           align: "right"
         }
       ],
@@ -235,9 +334,17 @@ export default {
     };
   },
   created() {
+    // 切换管理入口nav
+    bus.$emit("switchEntranceNav", 1);
     this.query();
   },
   methods: {
+    /**
+     * 验真状态change
+     */
+    changeValidateStatus() {
+
+    },
     /**
      * @example: 改变每页请求数据数量
      * @param {val} 请求数
@@ -326,6 +433,7 @@ export default {
           token: false,
           qs: true,
           data: {
+            comBuildingName: name == undefined ? "" : name.trim(),
             comId: this.conditions.comId,
             page: 1,
             limit: 100
@@ -408,6 +516,8 @@ export default {
      * @example: 搜索
      */
     query(currentPage = 1) {
+      console.log("---------------")
+      let that = this;
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
@@ -416,7 +526,7 @@ export default {
       params.bhId = this.conditions.bhId;
       params.beginTime = this.conditions.timeSelect[0];
       params.endTime = this.conditions.timeSelect[1];
-      params.houseNo = this.conditions.houseNo;
+      // params.houseNo = this.conditions.houseNo;
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
       this.$api
@@ -428,9 +538,9 @@ export default {
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
+            this.$refs.tableList.bodyWrapper.scrollTop = 0;
             this.pageJson.total = data.data.data.totalCount;
             this.tableData = data.data.data.list;
-            // let btnList = data.data.btnList;
           }
         })
         .catch(e => {
@@ -440,47 +550,15 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    },
-    /**
-     * @example: 解锁
-     */
-    unLock(id) {
-      let that = this;
-      let params = {
-        Eid: id,
-        Islocking: 0
-      };
-      that.loading = true;
-      this.$api
-        .post({
-          url: "/agentHouse/property/locking",
-          data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false
-        })
-        .then(e => {
-          let result = e.data;
-          that.$message(result.message);
-          if (result.code == 200) {
-            this.query(1);
-          }
-          that.loading = false;
-        })
-        .catch(e => {});
-    },
-    /**
-     * @example: 查看
-     */
-    toLook(id) {
-      var that = this;
-      util.openPage.call(this, {
-        name: "houseDetails",
-        params: { houseId: id }
-      });
     }
   }
 };
 </script>
+<style lang="less">
+.children-page {
+  height: 100%;
+}
+</style>
 <style lang="less" scoped>
 .el-select-dropdown__item {
   // prettier-ignore
@@ -489,19 +567,27 @@ export default {
   line-height: 40PX;
   font-size: @font14;
 }
-.locking-container {
+.container {
   display: flex;
   flex-direction: column;
   flex: 1;
+  // prettier-ignore
+  padding: 12PX 16PX 34PX;
+  background: #f0f7f7;
+  overflow: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
   .conditions {
     // prettier-ignore
-    padding: 0 24PX 20PX 24PX;
+    padding: 24PX 24PX 20PX 24PX;
     background: #fff;
     // prettier-ignore
-    border-bottom-left-radius: 8PX;
-    // prettier-ignore
-    border-bottom-right-radius: 8PX;
+    border-radius: 8PX;
     /deep/.conditions-box {
+      .fr {
+        float: right;
+      }
       .el-form-item__label {
         // prettier-ignore
         line-height: 36PX;
@@ -516,12 +602,12 @@ export default {
       }
       .el-form-item {
         // prettier-ignore
-        margin-bottom: 24PX;
+        margin-bottom: 16PX;
       }
       .el-range-input {
         text-align: left;
         // prettier-ignore
-        text-indent: 10PX;
+        text-indent: 5PX;
         font-size: @font14;
       }
       .prefix-icon {
@@ -539,6 +625,9 @@ export default {
           text-indent: 0;
           font-size: @font14;
         }
+      }
+      .width100 {
+        width: 100%;
       }
     }
     .conditions-btn {
@@ -654,9 +743,17 @@ export default {
             }
           }
         }
+        .el-table__fixed-right {
+          tr {
+            th:last-child {
+              // prettier-ignore
+              padding-right: 16PX;
+            }
+          }
+        }
         .el-table__body td {
-          // perttier-ignore
-          height: 64px;
+          // prettier-ignore
+          height: 64PX;
         }
         .el-button--mini,
         .el-button--small {
@@ -666,8 +763,8 @@ export default {
         }
       }
       .el-pagination {
-        // perttier-ignore
-        padding: 24px 5px 8px;
+        // prettier-ignore
+        padding: 24PX 5PX 8PX;
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -682,14 +779,14 @@ export default {
           font-weight: normal;
         }
         .el-select .el-input {
-          // perttier-ignore
-          width: 80px;
+          // prettier-ignore
+          width: 80PX;
         }
         .el-pagination__sizes .el-input .el-input__inner {
-          // perttier-ignore
-          height: 22px;
-          // perttier-ignore
-          line-height: 20px;
+          // prettier-ignore
+          height: 22PX;
+          // prettier-ignore
+          line-height: 20PX;
           font-size: @font14;
         }
         .el-pager .more::before {
@@ -698,8 +795,8 @@ export default {
         .el-pagination__editor {
           height: auto;
           .el-input__inner {
-            // perttier-ignore
-            height: 22px;
+            // prettier-ignore
+            height: 22PX;
           }
         }
         .el-input--mini .el-input__icon {

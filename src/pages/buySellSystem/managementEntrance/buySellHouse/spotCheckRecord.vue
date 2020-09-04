@@ -1,22 +1,33 @@
 <template>
-  <!-- 买卖房源-锁定房源 -->
-  <div class="locking-container">
-    <tabs :navActiveIndex="3"></tabs>
+  <!-- 买卖房源-抽检记录 -->
+  <div class="examine-container">
+    <tabs :navActiveIndex="6"></tabs>
     <div class="conditions">
       <div class="conditions-box">
         <el-row :gutter="32">
           <el-form label-position="right" label-width="80px">
+            <el-col :span="6">
+              <el-form-item label="房源编号">
+                <el-input
+                  v-model="conditions.houseNo"
+                  placeholder="请输入房源编号"
+                  @change="query(1)"
+                  class="anchor-point"
+                  :data-anchor="'抽检记录搜索 房源编号:' + conditions.houseNo"
+                  ></el-input>
+              </el-form-item>
+            </el-col>
             <el-col :span="12">
               <el-row :gutter="10">
-                <el-form-item label="楼盘">
+                <el-form-item label="房屋坐落">
                   <el-col :span="8">
                     <el-select
                       class="anchor-point"
                       popper-class="anchor-point"
-                      data-anchor="锁定房源楼盘 => select"
+                      data-anchor="抽检记录楼盘 => select"
                       @click.native="log_socket.sendUserActionData"
                       v-model="buildOptData"
-                      placeholder="楼盘"
+                      placeholder="楼盘名称"
                       clearable
                       filterable
                       remote
@@ -28,9 +39,7 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="
-                          '锁定房源楼盘 => select => option:' + item.name
-                        "
+                        :data-anchor="'抽检记录楼盘 => select => option:' + item.name"
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in buildForList"
                         :key="item.value"
@@ -43,10 +52,10 @@
                     <el-select
                       class="anchor-point"
                       popper-class="anchor-point"
-                      data-anchor="锁定房源栋座 => select"
+                      data-anchor="抽检记录栋座 => select"
                       @click.native="log_socket.sendUserActionData"
                       v-model="towerOptData"
-                      placeholder="栋座"
+                      placeholder="栋座号"
                       clearable
                       filterable
                       remote
@@ -57,9 +66,7 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="
-                          '锁定房源栋座 => select => option:' + item.name
-                        "
+                        :data-anchor="'抽检记录栋座 => select => option:' + item.name"
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in towerForList"
                         :key="item.value"
@@ -72,10 +79,10 @@
                     <el-select
                       class="anchor-point"
                       popper-class="anchor-point"
-                      data-anchor="锁定房源房号 => select"
+                      data-anchor="抽检记录房号 => select"
                       @click.native="log_socket.sendUserActionData"
                       v-model="roomOptData"
-                      placeholder="请输入房号"
+                      placeholder="房号"
                       clearable
                       filterable
                       remote
@@ -86,9 +93,7 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="
-                          '锁定房源房号 => select => option:' + item.name
-                        "
+                        :data-anchor="'抽检记录房号 => select => option:' + item.name"
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in roomForList"
                         :key="item.value"
@@ -101,35 +106,78 @@
               </el-row>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="房源编号">
+              <el-form-item label="跟单人">
                 <el-input
-                  v-model="conditions.houseNo"
-                  placeholder="请输入房源编号"
+                  v-model="conditions.agentName"
+                  placeholder="请输入经纪人姓名"
+                  @change="query(1)"
+                  class="anchor-point"
+                  :data-anchor="'抽检记录搜索 房源编号:' + conditions.agentName"
+                  ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="所属门店">
+                <el-input
+                  v-model="conditions.department"
+                  placeholder="请输入门店名称"
                   @change="query(1)"
                   clearable
                   class="anchor-point"
-                  :data-anchor="'锁定房源搜索 房源编号:' + conditions.houseNo"
+                  :data-anchor="'抽检记录搜索 所属门店:' + conditions.department"
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
-              <el-form-item label="锁定时间">
-                <el-date-picker
-                  prefix-icon="prefix-icon"
-                  v-model="conditions.timeSelect"
-                  type="daterange"
-                  range-separator="至"
-                  start-placeholder="开始日期"
-                  end-placeholder="结束日期"
-                  value-format="yyyy-MM-dd"
-                  @change="query(1)"
-                  :default-time="['00:00:00', '23:59:59']"
-                  class="anchor-point"
-                  :data-anchor="
-                    '锁定房源搜索 锁定时间:' + conditions.timeSelect
-                  "
+            <el-col :span="8">
+              <el-form-item label="当前状态">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="抽检记录当前状态 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  filterable
+                  v-model="currentStatus"
+                  clearable
+                  @change="changeCurrentStatus"
+                  placeholder="请选择"
                 >
-                </el-date-picker>
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="'抽检记录当前状态 => select => option:' + item.label"
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in currentStatusList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="抽检结果">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="抽检记录抽检结果 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  filterable
+                  v-model="spotCheckResult"
+                  clearable
+                  @change="querylistByParams"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="'抽检记录抽检结果 => select => option:' + item.label"
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in spotCheckResultList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  >
+                  </el-option>
+                </el-select>
               </el-form-item>
             </el-col>
           </el-form>
@@ -139,17 +187,13 @@
         <button
           class="btn anchor-pointn"
           @click="reset"
-          data-anchor="锁定房源重置"
-        >
-          重置
-        </button>
+          data-anchor="审核列表重置"
+          >重置</button>
         <button
           class="btn active anchor-pointn"
           @click="query(1)"
-          data-anchor="锁定房源搜索"
-        >
-          搜索
-        </button>
+          data-anchor="审核列表搜索"
+        >搜索</button>
       </div>
     </div>
     <div class="main">
@@ -157,69 +201,133 @@
         <div class="table">
           <el-table
             :data="tableData"
+            @sort-change="changeWorkSort"
             height="100%"
             v-loading="loading"
             ref="tableList"
+            @cell-dblclick="toHouseDetail"
           >
             <el-table-column
-              v-for="(item, index) in workColumn"
+              v-for="(item, index) in tableColumns"
               :key="index"
               :prop="item.prop"
+              :fixed="item.fixed"
               :label="item.label"
               :width="item.width"
               :min-width="item.minWidth"
               :align="item.align"
               :sortable="item.sortable"
               :sort-orders="['ascending', 'descending']"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column label="操作" fixed="right" width="160">
-              <template v-slot="scope">
-                <el-button
-                  v-if="showUnlockBtn"
-                  type="text"
-                  size="mini"
-                  @click="unLock(scope.row.id)"
-                  >解锁</el-button
-                >
-                <el-button type="text" size="mini" @click="toLook(scope.row.id)"
-                  >查看</el-button
-                >
-              </template>
+              show-overflow-tooltip>
             </el-table-column>
           </el-table>
         </div>
         <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pageJson.page"
-          :page-sizes="[5, 10, 15, 20]"
-          :page-size="pageJson.limit"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pageJson.total"
-        >
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pageJson.page"
+        :page-sizes="[5, 10, 15, 20]"
+        :page-size="pageJson.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="pageJson.total">
         </el-pagination>
       </div>
     </div>
   </div>
 </template>
 <script>
-import tabs from "./components/tabs.vue";
+/**
+ * 作业人申请
+ */
+const taskProCheck = [
+  { label: "钥匙申请", value: 0 },
+  { label: "实勘申请", value: 12 },
+  { label: "普通委托申请", value: "2,1" },
+  { label: "独家委托申请", value: "1,1" },
+  { label: "限时委托申请", value: "3,1" }
+];
+/**
+ * 取代申请
+ */
+const replaceCheck = [
+  { label: "钥匙取代", value: 3 },
+  { label: "实勘取代", value: 13 },
+  { label: "普通委托取代", value: "2,44" },
+  { label: "独家委托取代", value: "1,44" },
+  { label: "限时委托取代", value: "3,44" }
+];
+/**
+ * 房源转状态
+ */
+const houseTypeCheck = [
+  { label: "他司售", value: 4 },
+  { label: "业主自售", value: 6 },
+  { label: "暂不售", value: 5 },
+  { label: "无效", value: 3 }
+];
+/**
+ * 举报类型
+ */
+const reportCheck = [
+  { value: "5", label: "虚假实勘" },
+  { value: "6", label: "虚假委托" },
+  { value: "7", label: "虚假钥匙" },
+  { value: "8", label: "虚假跟进" },
+  { value: "9", label: "房屋已售" },
+  { value: "10", label: "虚假业主号码" },
+  { value: "11", label: "其他" }
+];
+/**
+ * 默认类型
+ */
+const defaultCheck = [
+  { value: "0", label: "钥匙人" },
+  { value: "1", label: "独家委托审核" },
+  { value: "4", label: "他司售" },
+  { value: "2", label: "虚假实勘" }
+];
+import tabs from './components/tabs.vue';
 import util from "@/util/util";
 import bus from "@/evenBus/but.js";
 export default {
-  components: { tabs },
+  components: {
+    tabs
+  },
   data() {
     return {
-      showUnlockBtn: false,
       loading: false,
+      currentStatus: "",
+      currentStatusList: [
+        {
+          value: "1",
+          label: "作业人申请"
+        },
+        {
+          value: "4",
+          label: "取代申请"
+        },
+        {
+          value: "8",
+          label: "房源转状态"
+        },
+        {
+          value: "11",
+          label: "举报"
+        },
+        {
+          value: "10",
+          label: "录入修改"
+        }
+      ],
+      spotCheckResult: "", // 抽检结果
+      spotCheckResultList: [],
       conditions: {
         comId: "",
         cbId: "",
         bhId: "",
         houseNo: "",
-        timeSelect: ""
+        agentName: "", // 跟单人
+        department: "" // 所属门店
       },
       buildLoading: false, //楼盘select loading
       buildOptData: {}, //当前楼盘选择数据
@@ -230,65 +338,67 @@ export default {
       roomLoading: false, //房间号select loading
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
+      sortColumn: "id",
+      sortType: 1,
       tableData: [],
-      workColumn: [
-        {
-          prop: "houseNo",
-          label: "房源编号",
-          align: "left"
-        },
-        {
-          prop: "communityName",
-          label: "楼盘名称",
-          width: "166",
-          align: "right"
-        },
-        {
-          prop: "buildingName",
-          label: "楼栋号",
-          align: "right"
-        },
-        {
-          prop: "roomNo",
-          label: "房间号",
-          align: "right"
-        },
-        {
-          prop: "plate",
-          label: "状态",
-          align: "right"
-        },
-        {
-          prop: "agentName",
-          label: "跟单人",
-          align: "right"
-        },
-        {
-          prop: "lockName",
-          label: "锁定人",
-          align: "right"
-        },
-        {
-          prop: "lockTime",
-          label: "锁定时间",
-          width: "220",
-          align: "right"
-        },
-        {
-          prop: "lockRecord",
-          label: "锁定原因",
-          align: "right"
-        }
-      ],
       pageJson: {
         page: 1,
         limit: 10,
         total: 0,
         pageSum: 0
       },
-      sortColumn: "id", //排序字段
-      sortType: "descending" //排序类型
-    };
+      tableColumns: [
+        {
+          prop: "communityName",
+          label: "房屋信息",
+          width: "166",
+          align: "left",
+          fixed: "left"
+        }, {
+          prop: "checkProject",
+          label: "售价",
+          align: "left"
+        }, {
+          prop: "checkType",
+          label: "面积",
+          align: "left"
+        }, {
+          prop: "checkAddPerName",
+          label: "户型",
+          align: "left"
+        }, {
+          prop: "",
+          label: "跟单人",
+          align: "right",
+          order: true
+        }, {
+          prop: "",
+          label: "挂牌时间",
+          align: "right",
+          order: true
+        }, {
+          prop: "",
+          label: "30天带看",
+          align: "right",
+          order: true
+        }, {
+          prop: "",
+          label: "30天电话回访",
+          align: "right",
+          order: true
+        }, {
+          prop: "",
+          label: "当前状态",
+          align: "right",
+          order: true
+        }, {
+          prop: "",
+          label: "抽检结果",
+          align: "right",
+          order: true
+        }
+      ]
+    }
   },
   created() {
     // 切换管理入口nav
@@ -296,6 +406,18 @@ export default {
     this.query();
   },
   methods: {
+    changeCurrentStatus() {
+
+    },
+    /**
+     * @example: 作业数据排序变化触发事件
+     */
+    changeWorkSort({column, prop, order}) {
+      this.sortColumn = prop;
+      this.sortType = order=="ascending" ? 0 : 1;
+      Object.assign(this.pageJson, this.$options.data().pageJson);
+      this.query();
+    },
     /**
      * @example: 改变每页请求数据数量
      * @param {val} 请求数
@@ -327,25 +449,25 @@ export default {
     buildRemoteMethod(query) {
       this.buildLoading = true;
       this.$api
-        .get({
-          url: "/community/saleAll",
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false,
-          qs: true,
-          data: {
-            communityName: query,
-            page: 1,
-            limit: 50
-          }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            this.buildForList = e.data.data.list;
-          }
-        })
-        .finally(() => {
-          this.buildLoading = false;
-        });
+      .get({
+        url: "/community/check",
+        headers: { "Content-Type": "application/json;charset=UTF-8" },
+        token: false,
+        qs: true,
+        data: {
+          communityName: query,
+          page: 1,
+          limit: 50
+        }
+      })
+      .then(e => {
+        if (e.data.code == 200) {
+          this.buildForList = e.data.data.list;
+        }
+      })
+      .finally(() => {
+        this.buildLoading = false;
+      });
     },
     /**
      * @example: 楼盘选择更改触发事件
@@ -457,55 +579,38 @@ export default {
       this.query();
     },
     /**
-     * @example: 查询条件重置
-     */
-    reset() {
-      Object.assign(this.$data, this.$options.data());
-      this.query();
-    },
-    /**
      * @example: 搜索
      */
-    query(currentPage = 1) {
-      let that = this;
+    query(currentPage=1) {
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
       params.comId = this.conditions.comId;
       params.cbId = this.conditions.cbId;
       params.bhId = this.conditions.bhId;
-      params.beginTime = this.conditions.timeSelect[0];
-      params.endTime = this.conditions.timeSelect[1];
       params.houseNo = this.conditions.houseNo;
+
+      params.status = this.status;
+      params.checkTypeStr = this.type;
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
       this.$api
         .post({
+          url: "/myHouse/myCheckList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          url: "/lockingHouse/lockedList",
-          data: params
+          data: params,
+          token: false
         })
         .then(e => {
           let data = e.data;
           if (data.code == 200) {
             this.$refs.tableList.bodyWrapper.scrollTop = 0;
-            this.pageJson.total = data.data.data.totalCount;
-            this.tableData = data.data.data.list;
-            let btnList = data.data.btnList;
-            if (btnList && btnList.length > 0) {
-              btnList.forEach(btn => {
-                if (btn.rName == "解锁") {
-                  that.showUnlockBtn = true;
-                }
-                if (btn.rName == "查看") {
-                  that.showDetailBtn = true;
-                }
-              });
-            }
+            this.pageJson.total = data.data.checkList.totalCount;
+            this.tableData = data.data.checkList.list;
           }
         })
         .catch(e => {
-          console.log("查询锁定房源列表失败");
+          console.log("查询审核列表失败");
           console.log(e);
         })
         .finally(() => {
@@ -513,44 +618,71 @@ export default {
         });
     },
     /**
-     * @example: 解锁
+     * 重置查询条件
      */
-    unLock(id) {
-      let that = this;
-      let params = {
-        Eid: id,
-        Islocking: 0
-      };
-      that.loading = true;
-      this.$api
-        .post({
-          url: "/agentHouse/property/locking",
-          data: params,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          token: false
-        })
-        .then(e => {
-          let result = e.data;
-          that.$message(result.message);
-          if (result.code == 200) {
-            this.query(1);
-          }
-          that.loading = false;
-        })
-        .catch(e => {});
+    reset() {
+      Object.assign(this.$data.conditions, this.$options.data().conditions);
+      this.buildOptData = {};
+      this.towerOptData = {};
+      this.roomOptData = {};
+      this.type = "";
+      this.status = "";
+      this.query();
     },
     /**
-     * @example: 查看
+     * 审核项目change
      */
-    toLook(id) {
+    reviewProject(value) {
+      switch (String(value)) {
+        case "1":
+          this.typeList = taskProCheck;
+          break;
+        case "4":
+          this.typeList = replaceCheck;
+          break;
+        case "8":
+          this.typeList = houseTypeCheck;
+          break;
+        case "11":
+          this.typeList = reportCheck;
+          break;
+        default:
+          this.typeList = defaultCheck;
+          break;
+      }
+      this.type = "";
+      this.querylistByParams();
+    },
+    querylistByParams() {
+      this.query();
+    },
+    //跳转房源详情页面
+    toHouseDetail(row) {
+      if (row.tag === 1) return;
       var that = this;
-      util.openPage.call(this, {
-        name: "houseDetails",
-        params: { houseId: id }
-      });
+      this.$api
+        .get({
+          url: "/agent_house/valid/" + row.eid,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            if (e.data.data == 1) {
+              util.openPage.call(this, {
+                name: "houseDetails",
+                params: { houseId: row.eid }
+              });
+            } else {
+              util.openPage.call(this, {
+                name: "historyDetails",
+                params: { houseId: row.eid, tradeType: 0 }
+              });
+            }
+          }
+        });
     }
   }
-};
+}
 </script>
 <style lang="less" scoped>
 .el-select-dropdown__item {
@@ -560,7 +692,7 @@ export default {
   line-height: 40PX;
   font-size: @font14;
 }
-.locking-container {
+.examine-container {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -611,6 +743,9 @@ export default {
           font-size: @font14;
         }
       }
+      .width100 {
+        width: 100%;
+      }
     }
     .conditions-btn {
       display: flex;
@@ -641,22 +776,22 @@ export default {
   .main {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    // prettier-ignore
+    min-height: 300PX;
     // prettier-ignore
     margin-top: 16PX;
     // prettier-ignore
     padding: 16PX;
     background: #fff;
     border-radius: 8px;
-    box-sizing: border-box;
     /deep/.content {
       flex: 1;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
       .table {
         flex: 1;
-        // prettier-ignore
-        min-height: 150PX;
         .caret-wrapper {
           // prettier-ignore
           width: 15PX;
@@ -672,7 +807,7 @@ export default {
           }
         }
         .has-gutter:not(.is-group) {
-          background: #f0f5f4;
+          background: #F0F5F4;
           tr:nth-child(1) {
             th:nth-child(1) {
               .cell {
@@ -716,7 +851,7 @@ export default {
             // prettier-ignore
             height: 48PX;
             padding: 0;
-            background: #f0f5f4;
+            background: #F0F5F4;
             font-weight: normal;
             font-size: @font16;
             color: #303133;
@@ -729,11 +864,17 @@ export default {
           // prettier-ignore
           height: 64PX;
         }
-        .el-button--mini,
-        .el-button--small {
+        .el-button--mini, .el-button--small {
           // prettier-ignore
-          padding: 0 10PX;
+          min-width: 60PX;
+          // prettier-ignore
+          margin-left: 16PX;
+          padding: 0;
+          text-align: left;
           font-size: @font16;
+          &.examine {
+            color: #a7a7a7;
+          }
         }
       }
       .el-pagination {
@@ -746,7 +887,7 @@ export default {
         .btn-next .el-icon,
         .btn-prev .el-icon,
         button,
-        span:not([class*="suffix"]) {
+        span:not([class*=suffix]) {
           height: auto;
           line-height: 1;
           font-size: @font16;
@@ -777,13 +918,10 @@ export default {
           line-height: 1;
         }
       }
-      .el-table--border,
-      .el-table--group {
+      .el-table--border, .el-table--group {
         border: none;
       }
-      .el-table--border::after,
-      .el-table--group::after,
-      .el-table::before {
+      .el-table--border::after, .el-table--group::after, .el-table::before {
         background-color: transparent;
       }
       .el-table--border td {
@@ -794,11 +932,11 @@ export default {
           th:nth-child(2),
           th:nth-child(3),
           th:nth-child(4) {
-            border-bottom: 1px solid #c3dfd9;
+            border-bottom: 1px solid #C3DFD9;
             border-right: 1px solid #c3dfd9;
           }
           th:nth-child(5) {
-            border-bottom: 1px solid #c3dfd9;
+            border-bottom: 1px solid #C3DFD9;
           }
         }
         tr:nth-child(2) {
