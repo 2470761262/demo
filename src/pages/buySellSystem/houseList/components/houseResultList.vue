@@ -791,7 +791,7 @@
               <button
                 class="btn-primary anchor-point"
                 data-anchor="首页管理入口"
-                @click="navToPath('/buySellSystem/concernCommunity')"
+                @click="navToPath('/buySellSystem/shopDisk')"
               >
                 <i class=" iconjichuguanli1 iconfont"></i>
                 管理入口
