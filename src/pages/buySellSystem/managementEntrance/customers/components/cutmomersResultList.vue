@@ -318,6 +318,9 @@ export default {
         this.dataCount = 0;
         this.apply();
       }
+    },
+    filterText(val) {
+      this.$refs.treeForm.filter(val);
     }
   },
   created() {
