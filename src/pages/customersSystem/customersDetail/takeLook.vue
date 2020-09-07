@@ -222,8 +222,6 @@
             type="textarea"
             rows="8"
             class="textarea-content"
-            show-word-limit
-            maxlength="30"
             placeholder="请填写本次带看总结"
             data-vv-name="content"
             data-vv-as="带看总结"
