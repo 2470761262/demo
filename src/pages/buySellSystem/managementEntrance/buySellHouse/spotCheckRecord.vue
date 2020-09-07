@@ -13,6 +13,7 @@
                   placeholder="请输入房源编号"
                   @change="query(1)"
                   class="anchor-point"
+                  clearable
                   :data-anchor="'抽检记录搜索 房源编号:' + conditions.houseNo"
                   ></el-input>
               </el-form-item>
@@ -106,26 +107,58 @@
               </el-row>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="跟单人">
-                <el-input
-                  v-model="conditions.agentName"
-                  placeholder="请输入经纪人姓名"
-                  @change="query(1)"
-                  class="anchor-point"
-                  :data-anchor="'抽检记录搜索 房源编号:' + conditions.agentName"
-                  ></el-input>
+              <el-form-item label="所属门店">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="抽检记录所属门店 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  v-model="department.value"
+                  placeholder="请输入门店名称"
+                  clearable
+                  filterable
+                  @focus="departmentFocus"
+                  @change="departmentChange"
+                  :loading="department.loading"
+                  value-key="value"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="'抽检记录所属门店 => select => option:' + item.depName"
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in department.list"
+                    :key="item.depId"
+                    :label="item.depName"
+                    :value="item.depId"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
-              <el-form-item label="所属门店">
-                <el-input
-                  v-model="conditions.department"
-                  placeholder="请输入门店名称"
-                  @change="query(1)"
+              <el-form-item label="跟单人">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="抽检记录跟单人 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  v-model="agent.value"
+                  placeholder="请输入经纪人姓名"
                   clearable
-                  class="anchor-point"
-                  :data-anchor="'抽检记录搜索 所属门店:' + conditions.department"
-                ></el-input>
+                  filterable
+                  @change="agentChange"
+                  :loading="agent.loading"
+                  value-key="value"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="'抽检记录跟单人 => select => option:' + item.perName"
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in agent.list"
+                    :key="item.accountId"
+                    :label="item.perName"
+                    :value="item.accountId"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -138,7 +171,7 @@
                   filterable
                   v-model="currentStatus"
                   clearable
-                  @change="changeCurrentStatus"
+                  @change="query(1)"
                   placeholder="请选择"
                 >
                   <el-option
@@ -164,7 +197,7 @@
                   filterable
                   v-model="spotCheckResult"
                   clearable
-                  @change="querylistByParams"
+                  @change="query(1)"
                   placeholder="请选择"
                 >
                   <el-option
@@ -205,9 +238,121 @@
             height="100%"
             v-loading="loading"
             ref="tableList"
-            @cell-dblclick="toHouseDetail"
           >
             <el-table-column
+              fixed="left"
+              label="房屋信息"
+              width="230"
+              align="left"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <div class="tab-house-box">
+                  <div class="tab-house-title">{{scope.row.communityName}}{{scope.row.buildingName?"-"+scope.row.buildingName:""}}{{scope.row.roomNo?"-"+scope.row.roomNo:""}}</div>
+                  <div class="tab-house-no">{{scope.row.houseNo}}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="售价"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <span>{{scope.row.price}}万</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="面积"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <span>{{scope.row.inArea}}㎡</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="户型"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <span>{{scope.row.rooms || 0}}-{{scope.row.hall || 0}}-{{scope.row.toilet || 0}}-{{scope.row.balcony || 0}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="addPerName"
+              label="跟单人"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <div class="tab-house-box">
+                  <div class="tab-house-title">{{scope.row.addPerName}}</div>
+                  <div class="tab-house-no">{{scope.row.deptName}}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              min-width="100"
+              prop="listingStr"
+              label="挂牌时间"
+              align="right"
+              sortable="custom"
+              :sort-orders="['ascending', 'descending']"
+              show-overflow-tooltip>
+            </el-table-column>
+            <el-table-column
+              min-width="100"
+              prop="lookNumber"
+              label="30天带看"
+              align="right"
+              :sortable="true"
+              :sort-orders="['ascending', 'descending']"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                {{scope.row.lookNumber || 0}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              min-width="130"
+              prop="callNumber"
+              label="30天电话回访"
+              align="right"
+              :sortable="true"
+              :sort-orders="['ascending', 'descending']"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                {{scope.row.callNumber || 0}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              min-width="130"
+              prop="spotCheckStatus"
+              label="当前状态"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <span v-if="scope.row.spotCheckStatus=='任务已完结'" class="span_success">{{scope.row.spotCheckStatus}}</span>
+                <span v-if="scope.row.spotCheckStatus=='任务未完成'" class="span_danger">{{scope.row.spotCheckStatus}}</span>
+                <span v-if="scope.row.spotCheckStatus=='任务进行中'" class="span_warning">{{scope.row.spotCheckStatus}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              min-width="140"
+              prop="spotCheckResult"
+              label="抽检结果"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <span v-if="scope.row.spotCheckResult=='业主验真通过'" class="span_success">{{scope.row.spotCheckResult}}</span>
+                <span v-if="scope.row.spotCheckResult=='业主验真过期'||scope.row.spotCheckResult=='在售转为暂不售'" class="span_danger">{{scope.row.spotCheckResult}}</span>
+                <span v-if="scope.row.spotCheckResult=='暂无结果'" class="span_warning">{{scope.row.spotCheckResult}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              min-width="200"
+              prop="spotCheckTime"
+              label="抽检结束时间"
+              align="right"
+              show-overflow-tooltip>
+            </el-table-column>
+            <!-- <el-table-column
               v-for="(item, index) in tableColumns"
               :key="index"
               :prop="item.prop"
@@ -216,76 +361,27 @@
               :width="item.width"
               :min-width="item.minWidth"
               :align="item.align"
-              :sortable="item.sortable"
+              :sortable="item.order"
+              :formatter="item.formart"
               :sort-orders="['ascending', 'descending']"
               show-overflow-tooltip>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
         </div>
         <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="pageJson.page"
-        :page-sizes="[5, 10, 15, 20]"
-        :page-size="pageJson.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="pageJson.total">
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageJson.page"
+          :page-sizes="[5, 10, 15, 20]"
+          :page-size="pageJson.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pageJson.total">
         </el-pagination>
       </div>
     </div>
   </div>
 </template>
 <script>
-/**
- * 作业人申请
- */
-const taskProCheck = [
-  { label: "钥匙申请", value: 0 },
-  { label: "实勘申请", value: 12 },
-  { label: "普通委托申请", value: "2,1" },
-  { label: "独家委托申请", value: "1,1" },
-  { label: "限时委托申请", value: "3,1" }
-];
-/**
- * 取代申请
- */
-const replaceCheck = [
-  { label: "钥匙取代", value: 3 },
-  { label: "实勘取代", value: 13 },
-  { label: "普通委托取代", value: "2,44" },
-  { label: "独家委托取代", value: "1,44" },
-  { label: "限时委托取代", value: "3,44" }
-];
-/**
- * 房源转状态
- */
-const houseTypeCheck = [
-  { label: "他司售", value: 4 },
-  { label: "业主自售", value: 6 },
-  { label: "暂不售", value: 5 },
-  { label: "无效", value: 3 }
-];
-/**
- * 举报类型
- */
-const reportCheck = [
-  { value: "5", label: "虚假实勘" },
-  { value: "6", label: "虚假委托" },
-  { value: "7", label: "虚假钥匙" },
-  { value: "8", label: "虚假跟进" },
-  { value: "9", label: "房屋已售" },
-  { value: "10", label: "虚假业主号码" },
-  { value: "11", label: "其他" }
-];
-/**
- * 默认类型
- */
-const defaultCheck = [
-  { value: "0", label: "钥匙人" },
-  { value: "1", label: "独家委托审核" },
-  { value: "4", label: "他司售" },
-  { value: "2", label: "虚假实勘" }
-];
 import tabs from './components/tabs.vue';
 import util from "@/util/util";
 import bus from "@/evenBus/but.js";
@@ -299,36 +395,51 @@ export default {
       currentStatus: "",
       currentStatusList: [
         {
-          value: "1",
-          label: "作业人申请"
-        },
-        {
-          value: "4",
-          label: "取代申请"
-        },
-        {
-          value: "8",
-          label: "房源转状态"
-        },
-        {
-          value: "11",
-          label: "举报"
-        },
-        {
-          value: "10",
-          label: "录入修改"
+          value: 0,
+          label: "任务进行中"
+        }, {
+          value: 1,
+          label: "任务已完结"
+        }, {
+          value: 2,
+          label: "任务未完成"
         }
       ],
       spotCheckResult: "", // 抽检结果
-      spotCheckResultList: [],
+      spotCheckResultList: [
+        {
+          value: 0,
+          label: "暂无结果"
+        }, {
+          value: 1,
+          label: "业主验真通过"
+        }, {
+          value: 2,
+          label: "房源已售转入资源库"
+        }, {
+          value: 3,
+          label: "房源在售转为暂不售"
+        }, {
+          value: 4,
+          label: "业主验真过期"
+        }
+      ],
       conditions: {
         comId: "",
         cbId: "",
         bhId: "",
-        houseNo: "",
-        agentName: "", // 跟单人
-        department: "" // 所属门店
+        houseNo: ""
       },
+      department: {
+        loading: false,
+        list: [],
+        value: ""
+      }, // 所属门店
+      agent: {
+        loading: false,
+        list: [],
+        value: ""
+      }, // 跟单人
       buildLoading: false, //楼盘select loading
       buildOptData: {}, //当前楼盘选择数据
       buildForList: [], //楼盘select数据
@@ -351,51 +462,117 @@ export default {
         {
           prop: "communityName",
           label: "房屋信息",
-          width: "166",
+          width: "230",
           align: "left",
-          fixed: "left"
+          fixed: "left",
+          formart: item => {
+            return (
+              <div class="tab-house-box">
+                <div class="tab-house-title">{item.communityName}</div>
+                <div class="tab-house-no">{item.houseNo}</div>
+              </div>
+            );
+          }
         }, {
-          prop: "checkProject",
+          prop: "price",
           label: "售价",
-          align: "left"
+          align: "left",
+          formart: item => {
+            return (
+              <span>{item.price}万</span>
+            );
+          }
         }, {
-          prop: "checkType",
+          prop: "inArea",
           label: "面积",
-          align: "left"
+          align: "left",
+          formart: item => {
+            return (
+              <span>{item.inArea}㎡</span>
+            );
+          }
         }, {
           prop: "checkAddPerName",
           label: "户型",
-          align: "left"
+          align: "left",
+          formart: item => {
+            return (
+              <span>{item.rooms || 0}-{item.hall || 0}-{item.toilet || 0}-{item.balcony || 0}</span>
+            );
+          }
         }, {
-          prop: "",
+          prop: "addPerName",
           label: "跟单人",
           align: "right",
           order: true
         }, {
-          prop: "",
+          prop: "listingStr",
+          minWidth: "100",
           label: "挂牌时间",
           align: "right",
           order: true
         }, {
-          prop: "",
+          prop: "lookNumber",
+          minWidth: "100",
           label: "30天带看",
           align: "right",
-          order: true
+          order: true,
+          formart: item => {
+            return (
+              <span>{item.lookNumber}次</span>
+            );
+          }
         }, {
-          prop: "",
+          prop: "callNumber",
+          minWidth: "130",
           label: "30天电话回访",
           align: "right",
-          order: true
+          order: true,
+          formart: item => {
+            return (
+              <span>{item.callNumber}次</span>
+            );
+          }
         }, {
-          prop: "",
+          prop: "spotCheckStatus",
+          minWidth: "120",
           label: "当前状态",
           align: "right",
-          order: true
+          order: true,
+          formart: item => {
+            let className = "";
+            switch(item.spotCheckStatus) {
+              case "任务已完结":
+                return (<span class="span_success">{item.spotCheckStatus}</span>);
+                break;
+              case "任务未完成":
+                return (<span class="span_danger">{item.spotCheckStatus}</span>);
+                break;
+              case "任务进行中":
+                return (<span class="span_warning">{item.spotCheckStatus}</span>);
+                break;
+            }
+          }
         }, {
-          prop: "",
+          prop: "spotCheckResult",
+          minWidth: "140",
           label: "抽检结果",
           align: "right",
-          order: true
+          order: true,
+          formart: item => {
+            switch(item.spotCheckResult) {
+              case "业主验真通过":
+                return (<span class="span_success">{item.spotCheckResult}</span>);
+                break;
+              case "业主验真过期":
+              case "在售转为暂不售":
+                return (<span class="span_danger">{item.spotCheckResult}</span>);
+                break;
+              case "暂无结果":
+                return (<span class="span_warning">{item.spotCheckResult}</span>);
+                break;
+            }
+          }
         }
       ]
     }
@@ -406,8 +583,75 @@ export default {
     this.query();
   },
   methods: {
-    changeCurrentStatus() {
-
+    /**
+     * @example: 请求所属门店数据
+     */
+    getDepartmentList() {
+      this.department.loading = true;
+      this.$api
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_SHOP"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.department.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.department.loading = false;
+        });
+    },
+    /**
+     * @example: 所属门店获取焦点事件
+     */
+    departmentFocus() {
+      this.getDepartmentList();
+    },
+    /**
+     * @example: 所属门店选择事件
+     */
+    departmentChange(value) {
+      this.agent.list = [];
+      this.agent.value = "";
+      this.department.value = value;
+      this.query();
+      if (value != "") {
+        this.getAgentList();
+      }
+    },
+    /**
+     * @example: 获取跟单人列表数据
+     */
+    getAgentList() {
+      this.agent.loading = true;
+      this.$api
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_PER",
+            selectDepartment: this.department.value
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.agent.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.agent.loading = false;
+        });
+    },
+    /**
+     * @example: 跟单人选择事件
+     */
+    agentChange(value) {
+      this.agent.value = value;
+      this.query();
     },
     /**
      * @example: 作业数据排序变化触发事件
@@ -415,13 +659,14 @@ export default {
     changeWorkSort({column, prop, order}) {
       this.sortColumn = prop;
       this.sortType = order=="ascending" ? 0 : 1;
+      console.log(column, prop, "==================");
+      this.sortColumn = prop == "listingStr"?"listingTime":prop;
       Object.assign(this.pageJson, this.$options.data().pageJson);
       this.query();
     },
     /**
      * @example: 改变每页请求数据数量
      * @param {val} 请求数
-     * @param {type} 分页类型
      */
     handleSizeChange(val) {
       this.pageJson.limit = val;
@@ -430,7 +675,6 @@ export default {
     /**
      * @example: 改变分页当前页码
      * @param {val} 页码
-     * @param {type} 分页类型
      */
     handleCurrentChange(val) {
       this.pageJson.page = val;
@@ -449,13 +693,12 @@ export default {
     buildRemoteMethod(query) {
       this.buildLoading = true;
       this.$api
-      .get({
-        url: "/community/check",
+      .post({
+        url: "/spotCheck/spotCheckRecordList",
         headers: { "Content-Type": "application/json;charset=UTF-8" },
-        token: false,
-        qs: true,
         data: {
-          communityName: query,
+          communityType: "community",
+          communityName: query == undefined ? "" : query.trim(),
           page: 1,
           limit: 50
         }
@@ -589,14 +832,15 @@ export default {
       params.cbId = this.conditions.cbId;
       params.bhId = this.conditions.bhId;
       params.houseNo = this.conditions.houseNo;
-
-      params.status = this.status;
-      params.checkTypeStr = this.type;
+      params.store = this.department.value;
+      params.personnel = this.agent.value;
+      params.currentStatus = this.currentStatus;
+      params.currentResult = this.spotCheckResult;
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
       this.$api
         .post({
-          url: "/myHouse/myCheckList",
+          url: "/spotCheck/spotCheckRecordList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: params,
           token: false
@@ -605,12 +849,12 @@ export default {
           let data = e.data;
           if (data.code == 200) {
             this.$refs.tableList.bodyWrapper.scrollTop = 0;
-            this.pageJson.total = data.data.checkList.totalCount;
-            this.tableData = data.data.checkList.list;
+            this.pageJson.total = data.data.totalCount;
+            this.tableData = data.data.list;
           }
         })
         .catch(e => {
-          console.log("查询审核列表失败");
+          console.log("查询抽检记录列表失败");
           console.log(e);
         })
         .finally(() => {
@@ -621,65 +865,11 @@ export default {
      * 重置查询条件
      */
     reset() {
-      Object.assign(this.$data.conditions, this.$options.data().conditions);
+      Object.assign(this.$data, this.$options.data());
       this.buildOptData = {};
       this.towerOptData = {};
       this.roomOptData = {};
-      this.type = "";
-      this.status = "";
       this.query();
-    },
-    /**
-     * 审核项目change
-     */
-    reviewProject(value) {
-      switch (String(value)) {
-        case "1":
-          this.typeList = taskProCheck;
-          break;
-        case "4":
-          this.typeList = replaceCheck;
-          break;
-        case "8":
-          this.typeList = houseTypeCheck;
-          break;
-        case "11":
-          this.typeList = reportCheck;
-          break;
-        default:
-          this.typeList = defaultCheck;
-          break;
-      }
-      this.type = "";
-      this.querylistByParams();
-    },
-    querylistByParams() {
-      this.query();
-    },
-    //跳转房源详情页面
-    toHouseDetail(row) {
-      if (row.tag === 1) return;
-      var that = this;
-      this.$api
-        .get({
-          url: "/agent_house/valid/" + row.eid,
-          headers: { "Content-Type": "application/json;charset=UTF-8" }
-        })
-        .then(e => {
-          if (e.data.code == 200) {
-            if (e.data.data == 1) {
-              util.openPage.call(this, {
-                name: "houseDetails",
-                params: { houseId: row.eid }
-              });
-            } else {
-              util.openPage.call(this, {
-                name: "historyDetails",
-                params: { houseId: row.eid, tradeType: 0 }
-              });
-            }
-          }
-        });
     }
   }
 }
@@ -862,7 +1052,7 @@ export default {
         }
         .el-table__body td {
           // prettier-ignore
-          height: 64PX;
+          height: 86PX;
         }
         .el-button--mini, .el-button--small {
           // prettier-ignore
@@ -875,6 +1065,42 @@ export default {
           &.examine {
             color: #a7a7a7;
           }
+        }
+        .tab-house-box {
+          .tab-house-title {
+            // prettier-ignore
+            margin-bottom: 8PX;
+            font-size: @font16;
+            color: #606266;
+          }
+          .tab-house-no {
+            font-size: @font14;
+            color: #909399;
+          }
+        }
+        .span_success,
+        .span_danger,
+        .span_warning{
+          display: inline-block;
+          padding: 6PX 13PX;
+          border-radius: 2px;
+          line-height: 1;
+          text-align: center;
+          font-size: @font14;
+        }
+        .span_success {
+          background: #0DA88B19;
+          color: #0DA88B;
+        }
+        .span_danger {
+          background: #EF565619;
+          font-size: @font14;
+          color: #EF5656;
+        }
+        .span_warning {
+          background: #F6A42019;
+          font-size: @font14;
+          color: #F6A420;
         }
       }
       .el-pagination {

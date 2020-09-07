@@ -114,26 +114,57 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="录入人">
-                <el-input
-                  v-model="conditions.addPerName"
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="信息员验真列表录入人 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  v-model="agent.value"
                   placeholder="请输入经纪人姓名"
-                  @change="query(1)"
                   clearable
-                  class="anchor-point"
-                  :data-anchor="'信息员验真列表搜索 录入人:' + conditions.addPerName"
-                ></el-input>
+                  filterable
+                  @change="agentChange"
+                  :loading="agent.loading"
+                  value-key="value"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="'信息员验真列表录入人 => select => option:' + item.perName"
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in agent.list"
+                    :key="item.accountId"
+                    :label="item.perName"
+                    :value="item.accountId"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item label="所属门店">
-                <el-input
-                  v-model="conditions.department"
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="信息员验真列表所属门店 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  v-model="department.value"
                   placeholder="请输入门店名称"
-                  @change="query(1)"
                   clearable
-                  class="anchor-point"
-                  :data-anchor="'信息员验真列表搜索 所属门店:' + conditions.department"
-                ></el-input>
+                  filterable
+                  @focus="departmentFocus"
+                  @change="departmentChange"
+                  :loading="department.loading"
+                  value-key="value"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="'信息员验真列表所属门店 => select => option:' + item.depName"
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in department.list"
+                    :key="item.depId"
+                    :label="item.depName"
+                    :value="item.depId"
+                  ></el-option>
+                </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="8">
@@ -214,31 +245,85 @@
             ref="tableList"
           >
             <el-table-column
-              v-for="(item, index) in workColumn"
-              :key="index"
-              :prop="item.prop"
-              :label="item.label"
-              :width="item.width"
-              :min-width="item.minWidth"
-              :align="item.align"
-              :fixed="item.fixed"
-              :sortable="item.sortable"
-              :sort-orders="['ascending', 'descending']"
-              show-overflow-tooltip
-            >
-            </el-table-column>
-            <el-table-column label="操作" fixed="right" align="right" width="300">
+              fixed="left"
+              label="房屋信息"
+              width="230"
+              align="left"
+              show-overflow-tooltip>
               <template v-slot="scope">
-                <el-button
-                  v-if="scope.row.tag"
-                  type="text"
-                  size="mini"
-                  >邀请验真</el-button
-                >
-                <el-button type="text" size="mini"
-                  >重新验真</el-button>
-                <el-button type="text" size="mini"
-                  >验真详情</el-button>
+                <div class="tab-house-box">
+                  <div class="tab-house-title">{{scope.row.communityName}}{{scope.row.buildingName?"-"+scope.row.buildingName:""}}{{scope.row.roomNo?"-"+scope.row.roomNo:""}}</div>
+                  <div class="tab-house-no">{{scope.row.houseNo}}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              min-width="130"
+              prop="checkStatus"
+              label="验真状态"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <span v-if="scope.row.checkStatus==1" class="span_success">待验真</span>
+                <span v-if="scope.row.spotCheckStatus==2" class="span_danger">验真成功</span>
+                <span v-if="scope.row.spotCheckStatus==3" class="span_warning">验真失败</span>
+                <span v-if="scope.row.spotCheckStatus==4" class="span_info">无效</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="售价"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <span>{{scope.row.price}}万</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="面积"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <span>{{scope.row.inArea}}㎡</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="户型"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <span>{{scope.row.rooms || 0}}-{{scope.row.hall || 0}}-{{scope.row.toilet || 0}}-{{scope.row.balcony || 0}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="addPerName"
+              label="录入人"
+              align="right"
+              show-overflow-tooltip>
+              <template v-slot="scope">
+                <div class="tab-house-box">
+                  <div class="tab-house-title">{{scope.row.addPerName}}</div>
+                  <div class="tab-house-no">{{scope.row.deptName}}</div>
+                </div>
+              </template>
+            </el-table-column>
+            <el-table-column
+              min-width="200"
+              prop="addTime"
+              label="提交时间"
+              align="right"
+              show-overflow-tooltip>
+            </el-table-column>
+
+
+            <el-table-column
+              fixed="right"
+              label="操作"
+              align="right"
+              width="300">
+              <template v-slot="scope">
+                <el-button @click="handleCallClick(scope.row)" type="text" size="small">一键拨号</el-button>
+                <el-button @click="handleTestClick(scope.row)" type="text" size="small">房源验真</el-button>
+                <el-button @click="handleRecordClick(scope.row)" type="text" size="small">验真记录</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -255,6 +340,51 @@
         </el-pagination>
       </div>
     </div>
+    <!-- 房源验真弹窗 -->
+    <el-dialog title="房源验真" class="test-dialog" :visible.sync="testDialogVisible" width="554px">
+      <div class="content">
+        <div class="title">房源状态</div>
+        <el-radio-group class="radio-box" v-model="houseStatus">
+          <el-radio-button :label="0">确认出售</el-radio-button>
+          <el-radio-button :label="1">暂不考虑</el-radio-button>
+          <el-radio-button :label="2">已经出售</el-radio-button>
+        </el-radio-group>
+        <p class="tip">注：若选择“暂不考虑”或“已经出售”，则默认视为验真不通过</p>
+        <div class="title">详细说明</div>
+        <el-input
+          class="explain"
+          type="textarea"
+          :rows="2"
+          placeholder="请输入内容"
+          resize="none"
+          v-model="testExplain">
+        </el-input>
+      </div>
+      <div slot="footer">
+        <el-button class="test-btn cancel" @click="testCancel">取消</el-button>
+        <el-button class="test-btn submit" :loading="testSubmitLoading" @click="testSubmit">验真结果提交</el-button>
+      </div>
+    </el-dialog>
+    <!-- 房源记录弹窗 -->
+    <el-dialog title="房源记录" class="test-dialog record-content" :visible.sync="recordDialogVisible">
+      <div class="status-box">
+        <span class="title">房源状态：</span>
+        <span class="text">确认出售</span>
+      </div>
+      <div class="detail-box">
+        <span class="title">详细说明：</span>
+        <div class="detail">
+          <p class="text">这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明</p>
+          <div class="audio-box">
+            <div class="audio-fl">
+              <img class="sound" src="@/assets/images/employeeValidate_sound.png" alt="">
+              <span class="duration">08:20</span>
+            </div>
+            <img class="play" :src="true?require('@/assets/images/employeeValidate_play.png'):require('@/assets/images/employeeValidate_pause.svg')" alt="">
+          </div>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -273,10 +403,18 @@ export default {
         cbId: "",
         bhId: "",
         houseNo: "", // 房源编号
-        addPerName: "", // 录入人
-        department: "", // 所属门店
         timeSelect: ""
       },
+      department: {
+        loading: false,
+        list: [],
+        value: ""
+      }, // 所属门店
+      agent: {
+        loading: false,
+        list: [],
+        value: ""
+      }, // 录入人
       buildLoading: false, //楼盘select loading
       buildOptData: {}, //当前楼盘选择数据
       buildForList: [], //楼盘select数据
@@ -287,42 +425,22 @@ export default {
       roomOptData: {}, //房间号选中数据
       roomForList: [], //房间号select数据
       validateStatus: "", // 验真状态
-      validateStatusList: [],
-      tableData: [],
-      workColumn: [
+      validateStatusList: [
         {
-          prop: "communityName",
-          label: "楼盘名称",
-          width: "250",
-          align: "left",
-          fixed: "left"
-        },
-        {
-          prop: "buildingName",
-          label: "验真类型",
-          align: "right"
-        },
-        {
-          prop: "roomNo",
-          label: "验真状态",
-          align: "right"
-        },
-        {
-          prop: "plate",
-          label: "业主姓名",
-          align: "right"
-        },
-        {
-          prop: "agentName",
-          label: "验真方式",
-          align: "right"
-        },
-        {
-          prop: "lockName",
-          label: "录入人",
-          align: "right"
+          value: 1,
+          label: "待验真"
+        }, {
+          value: 2,
+          label: "验真成功"
+        }, {
+          value: 3,
+          label: "验真失败"
+        }, {
+          value: 4,
+          label: "无效"
         }
       ],
+      tableData: [],
       pageJson: {
         page: 1,
         limit: 10,
@@ -330,7 +448,12 @@ export default {
         pageSum: 0
       },
       sortColumn: "id", //排序字段
-      sortType: "descending" //排序类型
+      sortType: 1, //排序类型
+      testDialogVisible: false,
+      recordDialogVisible: false,
+      testSubmitLoading: false,
+      houseStatus: 0, // 房源状态
+      testExplain: "" // 房源验真说明
     };
   },
   created() {
@@ -339,6 +462,114 @@ export default {
     this.query();
   },
   methods: {
+        /**
+     * @example: 请求所属门店数据
+     */
+    getDepartmentList() {
+      this.department.loading = true;
+      this.$api
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_SHOP"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.department.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.department.loading = false;
+        });
+    },
+    /**
+     * @example: 所属门店获取焦点事件
+     */
+    departmentFocus() {
+      this.getDepartmentList();
+    },
+    /**
+     * @example: 所属门店选择事件
+     */
+    departmentChange(value) {
+      this.agent.list = [];
+      this.agent.value = "";
+      this.department.value = value;
+      this.query();
+      if (value != "") {
+        this.getAgentList();
+      }
+    },
+    /**
+     * @example: 获取跟单人列表数据
+     */
+    getAgentList() {
+      this.agent.loading = true;
+      this.$api
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_PER",
+            selectDepartment: this.department.value
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.agent.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.agent.loading = false;
+        });
+    },
+    /**
+     * @example: 跟单人选择事件
+     */
+    agentChange(value) {
+      this.agent.value = value;
+      this.query();
+    },
+    /**
+     * @example: 验真结果提交
+     */
+    testSubmit() {
+      this.testSubmitLoading = true;
+      console.log(this.houseStatus, this.testExplain, "验真结果提交-------------");
+      setTimeout(() => {
+        this.testSubmitLoading = false;
+      }, 1000)
+    },
+    /**
+     * @example: 取消房源验证
+     */
+    testCancel() {
+      console.log(this.houseStatus, this.testExplain, "取消房源验证-------------");
+      this.testDialogVisible = false;
+      this.houseStatus = 0;
+      this.testExplain = "";
+    },
+    /**
+     * @example: 一键拨号
+     */
+    handleCallClick(row) {
+
+    },
+    /**
+     * @example: 房源验真
+     */
+    handleTestClick(row) {
+      console.log(row, '-------------')
+      this.testDialogVisible = true;
+    },
+    /**
+     * @example: 验真记录
+     */
+    handleRecordClick(row) {
+      this.recordDialogVisible = true;
+    },
     /**
      * 验真状态change
      */
@@ -517,30 +748,33 @@ export default {
      */
     query(currentPage = 1) {
       console.log("---------------")
-      let that = this;
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
       params.comId = this.conditions.comId;
       params.cbId = this.conditions.cbId;
       params.bhId = this.conditions.bhId;
+      params.storeId = this.department.value;
+      params.verifyPer = this.agent.value;
+
       params.beginTime = this.conditions.timeSelect[0];
       params.endTime = this.conditions.timeSelect[1];
-      // params.houseNo = this.conditions.houseNo;
+      params.houseNo = this.conditions.houseNo;
       params.sortColumn = this.sortColumn;
       params.sortType = this.sortType;
       this.$api
         .post({
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          url: "/lockingHouse/lockedList",
+          url: "/informator/verify/list",
           data: params
         })
         .then(e => {
           let data = e.data;
+          console.log(data, "-----------=============");
           if (data.code == 200) {
             this.$refs.tableList.bodyWrapper.scrollTop = 0;
-            this.pageJson.total = data.data.data.totalCount;
-            this.tableData = data.data.data.list;
+            this.pageJson.total = data.data.totalCount;
+            this.tableData = data.data.list;
           }
         })
         .catch(e => {
@@ -761,6 +995,48 @@ export default {
           padding: 0 10PX;
           font-size: @font16;
         }
+        
+        .tab-house-box {
+          .tab-house-title {
+            // prettier-ignore
+            margin-bottom: 8PX;
+            font-size: @font16;
+            color: #606266;
+          }
+          .tab-house-no {
+            font-size: @font14;
+            color: #909399;
+          }
+        }
+        .span_success,
+        .span_danger,
+        .span_warning{
+          display: inline-block;
+          padding: 6PX 13PX;
+          border-radius: 2px;
+          line-height: 1;
+          text-align: center;
+          font-size: @font14;
+        }
+        .span_success {
+          background: #0DA88B19;
+          color: #0DA88B;
+        }
+        .span_danger {
+          background: #EF565619;
+          font-size: @font14;
+          color: #EF5656;
+        }
+        .span_warning {
+          background: #F6A42019;
+          font-size: @font14;
+          color: #F6A420;
+        }
+        .span_info {
+          background: #CACACA;
+          font-size: @font14;
+          color: #909399;
+        }
       }
       .el-pagination {
         // prettier-ignore
@@ -832,6 +1108,193 @@ export default {
           th:nth-child(6),
           th:nth-child(9) {
             border-right: 1px solid #c3dfd9;
+          }
+        }
+      }
+    }
+  }
+}
+/deep/.test-dialog {
+  .el-dialog {
+    // prettier-ignore
+    border-radius: 10PX;
+    .el-dialog__header {
+      // prettier-ignore
+      padding: 32PX 24PX 0;
+      .el-dialog__title {
+        font-size: @font24;
+        color: #303133;
+      }
+      .el-dialog__close {
+        font-size: @font24;
+        color: #606266;
+      }
+      .el-dialog__headerbtn {
+        // prettier-ignore
+        top: 30PX;
+        // prettier-ignore
+        right: 30PX;
+      }
+    }
+    .el-dialog__body {
+      // prettier-ignore
+      padding: 24PX;
+    }
+    .el-dialog__footer {
+      // prettier-ignore
+      padding: 0 24PX 29PX;
+    }
+  }
+  .content{
+    .title {
+      position: relative;
+      // prettier-ignore
+      margin-bottom: 16PX;
+      // prettier-ignore
+      padding-left: 14PX;
+      // prettier-ignore
+      line-height: 21PX;
+      font-size: @font16;
+      font-weight: bold;
+      color: #303133;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 0;
+        // prettier-ignore
+        margin-top: -3PX;
+        // prettier-ignore
+        width: 6PX;
+        // prettier-ignore
+        height: 6PX;
+        border-radius: 100%;
+        background: #F62F2F;
+        font-size: @font16;
+        color: #909399;
+      }
+    }
+    .radio-box {
+      .el-radio-button {
+        // prettier-ignore
+        margin-right: 32PX;
+        &.is-active {
+          .el-radio-button__inner {
+            background: @backgroud;
+            color: #fff;
+          }
+        }
+        .el-radio-button__inner {
+          // prettier-ignore
+          width: 103PX;
+          // prettier-ignore
+          height: 48PX;
+          padding: 0;
+          background: #F0F2F5;
+          border: none;
+          // prettier-ignore
+          border-radius: 4PX;
+          line-height: 48PX;
+          font-size: @font16;
+          color: #909399;
+        }
+      }
+    }
+    .tip {
+      // prettier-ignore
+      margin: 16PX 0 24PX;
+      line-height: 1;
+      font-size: @font16;
+      color: #F33A3A;
+    }
+    .explain {
+      // prettier-ignore
+      height: 147PX;
+      .el-textarea__inner {
+        height: 100%;
+        font-size: @font16;
+      }
+    }
+  }
+  .test-btn{
+    // prettier-ignore
+    width: 136PX;
+    // prettier-ignore
+    height: 48PX;
+    box-sizing: border-box;
+    font-size: @font16;
+    &.cancel {
+      border: 1px solid #CECECE;
+      color: #909399;
+    }
+    &.submit {
+      background: @backgroud;
+      color: #fff;
+    }
+  }
+  &.record-content {
+    .status-box {
+      // prettier-ignore
+      margin-bottom: 24PX;
+      line-height: 1;
+      font-size: @font16;
+      .title {
+        color: #909399;
+      }
+      .text {
+        color: #303133;
+      }
+    }
+    .detail-box {
+      .title {
+        font-size: @font16;
+        color: #909399;
+      }
+      .detail {
+        // prettier-ignore
+        margin-top: 16PX;
+        // prettier-ignore
+        padding: 10PX 14PX 21PX;
+        background: #F8F8F8;
+        // prettier-ignore
+        border-radius: 4PX;
+        .text {
+          line-height: 1.5;
+          font-size: @font16;
+          color: #606166;
+        }
+        .audio-box {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          // prettier-ignore
+          width: 227PX;
+          // prettier-ignore
+          height: 36PX;
+          // prettier-ignore
+          margin-top: 22PX;
+          // prettier-ignore
+          padding: 0 10PX;
+          // prettier-ignore
+          border-radius: 4PX;
+          background: #fff;
+          box-sizing: border-box;
+          .audio-fl {
+            .sound {
+              // prettier-ignore
+              width: 12PX;
+              // prettier-ignore
+              margin-right: 6PX;
+            }
+            .duration {
+              font-size: @font12;
+              color: #303133;
+            }
+          }
+          .play {
+            // prettier-ignore
+            width: 16PX;
+
           }
         }
       }
