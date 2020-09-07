@@ -37,7 +37,10 @@
     <!-- 作业数据 -->
     <div class="work">
       <div class="head">
-        <div class="topic">资源统计<p class="tip">注：取值数据截止到昨天24点整</p></div>
+        <div class="topic">
+          资源统计
+          <p class="tip">注：数据取值截止到昨天24点整</p>
+        </div>
         <el-tooltip placement="right">
           <div slot="content">
             1、房源跟单量：名下作为房源跟单人的在售房源总数量；<br />
@@ -114,9 +117,15 @@
           <button
             class="search-btn active anchor-point"
             @click="queryDevelopData"
-            :data-anchor="'业务管理开发数据查询时间搜索{' + developDateSelect + '}'"
-          >搜索</button>
-          <p class="tip">注：取值数据截止到昨天24点整</p>
+            :data-anchor="
+              '业务管理开发数据查询时间搜索{' + developDateSelect + '}'
+            "
+          >
+            搜索
+          </button>
+          <p class="tip">
+            注：数据从2020-05-01日开始统计，数据取值截止到昨天24点整
+          </p>
         </div>
         <el-tooltip placement="right">
           <div slot="content">
@@ -248,7 +257,9 @@
         >
           {{ item.name }}
         </div>
-        <p class="tip">注：取值数据截止到昨天24点整</p>
+        <p class="tip">
+          注：数据从2020-05-01日开始统计，数据取值截止到昨天24点整
+        </p>
       </div>
       <div class="content">
         <el-table
@@ -375,7 +386,7 @@ export default {
       workData: [], // 作业数据,
       workPaginate: {
         page: 1,
-        limit: 5,
+        limit: 15,
         total: 0,
         pageSum: 0
       },
@@ -523,7 +534,7 @@ export default {
       developData: [], // 开发数据
       developPaginate: {
         page: 1,
-        limit: 5,
+        limit: 15,
         total: 0,
         pageSum: 0
       },
@@ -566,7 +577,7 @@ export default {
       currencyData: [], // 鑫币数据
       currencyPaginate: {
         page: 1,
-        limit: 5,
+        limit: 15,
         total: 0,
         pageSum: 0
       },
@@ -636,7 +647,7 @@ export default {
           this.currencyDateSelect = [prevDayDate, prevDayDate];
           this.currencyDateSelectFlag = [prevDayDate, prevDayDate];
           break;
-        default: 
+        default:
           this.developDateSelect = [prevDate, prevDayDate];
           this.developDateSelectFlag = [prevDate, prevDayDate];
           this.currencyDateSelect = [prevDayDate, prevDayDate];
@@ -1000,7 +1011,7 @@ export default {
           // prettier-ignore
           margin-left: 26PX;
           font-size: @font14;
-          color: #909399;
+          color: #f56c6c;
           font-weight: normal;
         }
       }
@@ -1034,7 +1045,7 @@ export default {
         /deep/.time-box {
           // prettier-ignore
           width: 288PX;
-          margin-right: 16PX;
+          margin-right: 16px;
           .el-input__inner {
             // prettier-ignore
             height: 36PX;
@@ -1092,7 +1103,7 @@ export default {
           // prettier-ignore
           margin-left: 26PX;
           font-size: @font14;
-          color: #909399;
+          color: #f56c6c;
           font-weight: normal;
         }
       }
@@ -1137,7 +1148,7 @@ export default {
         // prettier-ignore
         margin: 24PX 0 0 26PX;
         font-size: @font14;
-        color: #909399;
+        color: #f56c6c;
       }
     }
     /deep/.content {
@@ -1233,7 +1244,7 @@ export default {
         }
         .el-select .el-input {
           // prettier-ignore
-          width: 80PX;
+          width: 85PX;
         }
         .el-pagination__sizes .el-input .el-input__inner {
           // prettier-ignore
