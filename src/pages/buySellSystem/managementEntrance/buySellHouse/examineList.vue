@@ -285,6 +285,11 @@
                 <span>{{scope.row.accessory==1?"有":"无"}}</span>
               </template>
             </el-table-column>
+            <el-table-column label="举报原因" v-if="checkProject == '11'">
+              <template v-slot="scope">
+                {{ scope.row.ownerMemo }}
+              </template>
+            </el-table-column>
             <el-table-column
               prop="checkAddPerName"
               label="提交人"
