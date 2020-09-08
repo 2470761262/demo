@@ -246,10 +246,11 @@ export default {
           let result = e.data;
           console.log(result,"sssssssssssssssssss")
           if (result.code == 200) {
-            that.url = result.data;
+            //that.url = result.data;
+            this.$router.push({ path: "/buySellSystem/validateHome" });
           } else {
             console.log("查询结果：" + result.message);
-            alert(result.message);
+            // alert(result.message);
           }
         })
         .catch(e => {

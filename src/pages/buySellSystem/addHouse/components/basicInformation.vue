@@ -1298,32 +1298,36 @@ export default {
       //console.log(this.formData, "this.formData", this.deffData);
       // 数据只保存到本地
       that.$store.commit("updateStep1", that.deffData);
-      return true;
-      // return this.$api[method]({
-      //   url: url,
-      //   data: data,
-      //   headers: { "Content-Type": "application/json;charset=UTF-8" }
-      // })
-      //   .then(e => {
-      //     if (e.data.code == 200) {
-      //       if (this.paramsObj.editUrl) {
-      //         //更新成功,同步更新外网
-      //         data.houseNo = this.$store.state.addHouse.formData.houseNo;
-      //         releaseHouse.updateOutsideHouse(data);
-      //       }
-      //       //存入Vuex;
-      //       if (e.data.data != null) {
-      //         that.$store.commit("updateId", e.data.data);
-      //       }
-      //       that.$store.commit("updateStep1", that.deffData);
-      //       return true;
-      //     } else {
-      //       return false;
-      //     }
-      //   })
-      //   .catch(e => {
-      //     return false;
-      //   });
+      
+      if (this.paramsObj.editUrl) {
+        return this.$api[method]({
+          url: url,
+          data: data,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+          .then(e => {
+            if (e.data.code == 200) {
+              if (this.paramsObj.editUrl) {
+                //更新成功,同步更新外网
+                data.houseNo = this.$store.state.addHouse.formData.houseNo;
+                releaseHouse.updateOutsideHouse(data);
+              }
+              //存入Vuex;
+              if (e.data.data != null) {
+                that.$store.commit("updateId", e.data.data);
+              }
+              that.$store.commit("updateStep1", that.deffData);
+              return true;
+            } else {
+              return false;
+            }
+          })
+          .catch(e => {
+            return false;
+          });
+      } else {
+        return true;
+      }
     }
     // getNextSaveButton() {
     //   let that = this;

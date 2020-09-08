@@ -1484,6 +1484,7 @@ export default {
     },
     //修改数据到接口
     setDataToUpdate() {
+      console.log("----------------------")
       let that = this;
       let sendData = {
         id: that.$store.state.addHouse.formData.id,
