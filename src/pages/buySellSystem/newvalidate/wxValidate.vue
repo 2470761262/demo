@@ -3,6 +3,101 @@
   // prettier-ignore
   padding: 0 16PX;
   position: relative;
+  .content-top {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    align-items: center;
+    .content-head-left {
+      flex: 1;
+      .tips {
+        // prettier-ignore
+        font-size: 36PX;
+        color: #fff;
+        position: relative;
+        z-index: 1;
+        display: block;
+        // prettier-ignore
+        padding: 34PX 0 24PX 16PX;
+        font-weight: bold;
+        // prettier-ignore
+        line-height: 36PX;
+        font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+        display: flex;
+        align-items: center;
+        .tips-text {
+          // prettier-ignore
+          padding: 0 19PX;
+          // prettier-ignore
+          height: 26PX;
+          font-size: @font14;
+          background: #fef5e8;
+          color: #f6a420;
+          // prettier-ignore
+          line-height: 26PX;
+          border-radius: 2px;
+          // prettier-ignore
+          margin-left: 8PX;
+          // prettier-ignore
+          margin-top: 4PX;
+        }
+      }
+      .small-tips {
+        position: relative;
+        z-index: 1;
+        color: #fff;
+        // prettier-ignore
+        padding-left: 16PX;
+        // prettier-ignore
+        font-size: 18PX;
+        opacity: 0.76;
+        line-height: 1;
+      }
+    }
+    .content-head-right {
+      // prettier-ignore
+      margin-top: 16PX;
+      display: flex;
+      img {
+        // prettier-ignore
+        width: 172PX;
+        height: 100%;
+      }
+      .head-right-item {
+        &:last-child {
+          margin-right: 0;
+        }
+        // prettier-ignore
+        margin-right: 16PX;
+        // prettier-ignore
+        width: 172PX;
+        background: #ffffff;
+        border-radius: 4px;
+        // prettier-ignore
+        height: 111PX;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .num {
+          font-size: 0;
+          i,
+          span {
+            font-weight: bold;
+            font-family: Arial-BoldMT, Arial;
+            display: inline-block;
+            color: @backgroud;
+            // prettier-ignore
+            font-size: 46PX;
+          }
+        }
+        .num-tips {
+          color: @backgroud;
+          font-size: @font16;
+        }
+      }
+    }
+  }
   .tips-back {
     position: absolute;
     top: 0;
@@ -13,42 +108,20 @@
     height: 223PX;
     background: linear-gradient(360deg, #2f837b 0%, #0a6458 100%);
   }
-  .tips {
-    // prettier-ignore
-    font-size: 36PX;
-    color: #fff;
-    position: relative;
-    z-index: 1;
-    display: block;
-    // prettier-ignore
-    padding: 34PX 0 24PX 16PX;
-    font-weight: bold;
-    line-height: 1;
-    font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
-  }
-  .small-tips {
-    position: relative;
-    z-index: 1;
-    color: #fff;
-    // prettier-ignore
-    padding-left: 16PX;
-    // prettier-ignore
-    font-size: 18PX;
-    opacity: 0.76;
-    line-height: 1;
-  }
   .content-body {
     display: flex;
     position: relative;
     z-index: 1;
     // prettier-ignore
-    margin-top: 27PX;
-    // prettier-ignore
     padding-bottom: 47PX;
+    // prettier-ignore
+    margin-top: 12PX;
     .content-left {
       flex: 1;
       // prettier-ignore
       margin-right: 16PX;
+      display: flex;
+      flex-direction: column;
       .head-content {
         display: flex;
         align-items: center;
@@ -108,108 +181,96 @@
   &:first-child {
     margin-top: 0;
   }
-  .left-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-}
-.border-foot {
-  display: flex;
-  // prettier-ignore
-  margin-top: 32PX;
-  .border-foot-left {
-    img {
-      width: 100%;
-      height: 100%;
+  .border-title {
+    display: flex;
+    align-items: center;
+    color: #606266;
+    &::before {
+      content: attr(data-order);
+      // prettier-ignore
+      width: 22PX;
+      // prettier-ignore
+      height: 22PX;
+      background: @backgroud;
+      text-align: center;
+      // prettier-ignore
+      line-height: 22PX;
+      color: #fff;
+      border-radius: 50%;
+      // prettier-ignore
+      margin-right: 8PX;
     }
   }
-  .border-foot-left,
-  .border-foot-right {
-    // prettier-ignore
-    width: 172PX;
-    // prettier-ignore
-    height: 172PX;
-  }
-  .border-foot-minddel {
-    flex: 1;
-    // prettier-ignore
-    margin: 0 16PX;
+  .qr-img-content {
     display: flex;
-    // prettier-ignore
-    padding-left: 24PX;
-    flex-direction: column;
-    justify-content: center;
-    box-sizing: border-box;
-  }
-  .border-foot-minddel,
-  .border-foot-right {
-    border-radius: 4px;
-    background: #f8f8f8;
-  }
-  .border-foot-right {
-    display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    .num-tips {
-      color: @backgroud;
+    // prettier-ignore
+    padding-top: 61PX;
+    // prettier-ignore
+    padding-bottom: 67PX;
+    .wx-qr {
       // prettier-ignore
-      font-size: 16PX;
+      width: 172PX;
+      // prettier-ignore
+      height: 172PX;
+      img {
+        width: 100%;
+        height: 100%;
+      }
     }
-    .num {
-      font-size: 0;
-      i,
-      span {
-        color: @backgroud;
-        font-family: Arial-BoldMT, Arial;
-        font-weight: bold;
-        display: inline-block;
+    .middle-tips {
+      &.is-bottom {
         // prettier-ignore
-        font-size: 46PX;
+        margin: 0 14PX 0 12PX ;
+        .arrows-right {
+          // prettier-ignore
+          width: 117PX;
+        }
       }
-    }
-    &.subtract {
-      .num-tips {
-        color: #ef5656;
+      // prettier-ignore
+      margin: 0 34PX 0 33PX;
+      text-align: center;
+      span {
+        font-size: @font16;
+        color: #303133;
       }
-      .num {
-        i,
-        span {
-          color: #ef5656;
+      div {
+        // prettier-ignore
+        width: 185PX;
+        // prettier-ignore
+        height: 2PX;
+        background: #979797;
+        // prettier-ignore
+        margin-top: 12PX;
+        position: relative;
+        &::after {
+          content: "";
+          position: absolute;
+          // prettier-ignore
+          right: -14PX;
+          top: 50%;
+          // prettier-ignore
+          margin-top: -7PX;
+          display: block;
+          width: 0;
+          height: 0;
+          border: 7px solid transparent;
+          // prettier-ignore
+          border-left-width: 14PX;
+          border-left-color: #979797;
         }
       }
     }
+    .screenshots {
+      // prettier-ignore
+      width: 170PX;
+      // prettier-ignore
+      height: 302PX;
+    }
   }
 }
-.minddel-order {
-  font-size: @font14;
-  color: #606266;
-  display: flex;
-  align-items: center;
-  // prettier-ignore
-  margin-top: 24PX;
-  &:first-child {
-    margin-top: 0;
-  }
-  &::before {
-    content: attr(data-order);
-    // prettier-ignore
-    width: 22PX;
-    // prettier-ignore
-    height: 22PX;
-    border-radius: 50%;
-    background: @backgroud;
-    color: #fff;
-    // prettier-ignore
-    margin-right: 8PX;
-    font-size: @font14;
-    text-align: center;
-    // prettier-ignore
-    line-height: 22PX;
-    flex-shrink: 0;
-  }
-}
+
 .foot-content {
   display: flex;
   // prettier-ignore
@@ -332,6 +393,46 @@
     }
   }
 }
+.validate-type {
+  // prettier-ignore
+  height: 97PX;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  // prettier-ignore
+  margin-top: 16PX;
+  &.success {
+    background: #e6f6f3; //@opacityBackground;
+    .validate-type-title {
+      color: #0da88b; //@backgroud;
+    }
+    .validate-type-tips {
+      color: #0da88b; // @backgroud;
+    }
+  }
+  &.error {
+    background: #fdeeee; //@opacityBackground;
+    .validate-type-title {
+      color: #ef5656; //@backgroud;
+    }
+    .validate-type-tips {
+      color: #ef5656; // @backgroud;
+    }
+  }
+  .validate-type-title {
+    font-size: @font24;
+    font-weight: bold;
+    line-height: 1;
+  }
+  .validate-type-tips {
+    font-size: @font14;
+    // prettier-ignore
+    line-height: 19PX;
+    // prettier-ignore
+    margin-top: 9PX;
+  }
+}
 .house-content {
   // prettier-ignore
   margin-top: 16PX;
@@ -376,171 +477,88 @@
     }
   }
 }
-.validate-type {
-  // prettier-ignore
-  height: 97PX;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  // prettier-ignore
-  margin-top: 16PX;
-  &.success {
-    background: #e6f6f3; //@opacityBackground;
-    .validate-type-title {
-      color: #0da88b; //@backgroud;
-    }
-    .validate-type-tips {
-      color: #0da88b; // @backgroud;
-    }
-  }
-  &.error {
-    background: #fdeeee; //@opacityBackground;
-    .validate-type-title {
-      color: #ef5656; //@backgroud;
-    }
-    .validate-type-tips {
-      color: #ef5656; // @backgroud;
-    }
-  }
-  .validate-type-title {
-    font-size: @font24;
-    font-weight: bold;
-    line-height: 1;
-  }
-  .validate-type-tips {
-    font-size: @font14;
-    // prettier-ignore
-    line-height: 19PX;
-    // prettier-ignore
-    margin-top: 9PX;
-  }
-}
 </style>
 <template>
   <div class="content">
     <div class="tips-back"></div>
-    <strong class="tips">请在下方,选择一种方案对房源进行验真</strong>
-    <small class="small-tips"
-      >新增房源、申请跟单人都需要对房源进行验真，业主核验通过才能上架、申请跟单成功</small
-    >
+    <div class="content-top">
+      <div class="content-head-left">
+        <strong class="tips">
+          短信验真
+          <span class="tips-text">待验真</span>
+        </strong>
+        <small class="small-tips"
+          >系统已自动发送，短信给验真的验真号码，请尽快联系业主获取验证码</small
+        >
+      </div>
+      <div class="content-head-right">
+        <div class="head-right-item">
+          <div class="num">
+            <i>+</i>
+            <span>50</span>
+          </div>
+          <div class="num-tips">通过奖励鑫币</div>
+        </div>
+        <div class="head-right-item">
+          <img src="https://img.0be.cn/minipro/bz9_4.svg" alt="" />
+        </div>
+      </div>
+    </div>
     <section class="content-body">
       <div class="content-left">
-        <!-- 微信验真 -->
+        <!-- 请输入6位验证码，进行验真 -->
         <div class="border-content">
-          <img
-            class="left-img"
-            src="https://img.0be.cn/minipro/recomand.svg"
-            alt=""
-          />
-          <div class="head-content">
-            <div class="iconfont iconbianzu"></div>
-            <div class="head-minddle">
-              <div class="head-minddle-title">微信验真</div>
-              <div class="head-minddle-tips">
-                使用经纪人小程序，房源验真功能，转发给业主进行验真
-              </div>
-            </div>
-            <button class="btn" @click="openPage('wxValidate')">
-              选我验真
-            </button>
+          <div class="border-title" data-order="1">
+            打开微信，扫描下方二维码，打开验真房源详情页
           </div>
-          <div class="border-foot">
-            <div class="border-foot-left">
-              <img src="https://img.0be.cn/minipro/bz9.svg" alt="" />
+          <div class="qr-img-content">
+            <div
+              class="wx-qr"
+              v-loading="wxImg.loading"
+              element-loading-text="二维码加载中..."
+            >
+              <img :src="wxImg.url" alt="微信小程序二维码" />
             </div>
-            <div class="border-foot-minddel">
-              <div class="minddel-order" data-order="1">
-                微信扫码,打开小程序-验真详情页
-              </div>
-              <div class="minddel-order" data-order="2">
-                小程序详情页中，使用“邀请验真功能”转发业主
-              </div>
-              <div class="minddel-order" data-order="3">
-                联系业主，提醒业主对房源进行验真，以便上架展示
-              </div>
+            <div class="middle-tips">
+              <span>查看验真房源详情页</span>
+              <div class="arrows-right"></div>
             </div>
-            <div class="border-foot-right">
-              <div class="num">
-                <i>+</i>
-                <span>50</span>
-              </div>
-              <div class="num-tips">通过奖励鑫币</div>
-            </div>
+            <img
+              class="screenshots"
+              src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2034740944,4251903193&fm=26&gp=0.jpg"
+              alt=""
+            />
           </div>
         </div>
-        <!-- 短信验真 -->
+        <!-- 请输入6位验证码，进行验真 -->
         <div class="border-content">
-          <div class="head-content">
-            <div class="iconfont iconbianzu11"></div>
-            <div class="head-minddle">
-              <div class="head-minddle-title">短信验真</div>
-              <div class="head-minddle-tips">
-                电话联系业主获取短信验证码，输入验证码进行验真
-              </div>
-            </div>
-            <button class="btn" @click="openPage('pMsgValidate')">
-              选我验真
-            </button>
+          <div class="border-title" data-order="2">
+            在验真房源详情页中，点击“邀请验真”，转发给业主进行验真
           </div>
-          <div class="foot-content">
-            <div class="foot-content-item">
-              <h3>经纪人输入验证码-验真</h3>
-              <div class="foot-item-warp">
-                <div class="minddel-order" data-order="1">
-                  电话联系，业主；沟通验真事宜
-                </div>
-                <div class="minddel-order" data-order="2">
-                  从业主处获取房源验真通过的验证码，输入验真
-                </div>
-              </div>
+          <div class="qr-img-content">
+            <img
+              class="screenshots"
+              src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2034740944,4251903193&fm=26&gp=0.jpg"
+              alt=""
+            />
+            <div class="middle-tips is-bottom">
+              <span>点击“邀请验真”</span>
+              <div class="arrows-right"></div>
             </div>
-            <div class="foot-content-item">
-              <h3>业主回复验证码-验真</h3>
-              <div class="foot-item-warp">
-                <div class="minddel-order" data-order="1">
-                  电话联系，业主；沟通验真事宜
-                </div>
-                <div class="minddel-order" data-order="2">
-                  等待业主回复验证码，确认验真
-                </div>
-              </div>
+            <img
+              class="screenshots"
+              src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2034740944,4251903193&fm=26&gp=0.jpg"
+              alt=""
+            />
+            <div class="middle-tips is-bottom">
+              <span>选择业主转发</span>
+              <div class="arrows-right"></div>
             </div>
-          </div>
-        </div>
-        <!-- 信息员验真 -->
-        <div class="border-content">
-          <div class="head-content">
-            <div class="iconfont iconbianzu1"></div>
-            <div class="head-minddle">
-              <div class="head-minddle-title">信息员验真</div>
-              <div class="head-minddle-tips">
-                支付50鑫币酬劳，验真的事交给信息员来办
-              </div>
-            </div>
-            <button class="btn" @click="openPage('messageValidate')">
-              选我验真
-            </button>
-          </div>
-          <div class="border-foot">
-            <div class="border-foot-left">
-              <img src="https://img.0be.cn/minipro/bz9_2.svg" alt="" />
-            </div>
-            <div class="border-foot-minddel">
-              <div class="minddel-order" data-order="1">
-                选择信息员验真方案，支付鑫币酬劳
-              </div>
-              <div class="minddel-order" data-order="2">
-                信息员联系业主，并填写沟通结果
-              </div>
-            </div>
-            <div class="border-foot-right subtract">
-              <div class="num">
-                <i>-</i>
-                <span>50</span>
-              </div>
-              <div class="num-tips">支付鑫币酬劳</div>
-            </div>
+            <img
+              class="screenshots"
+              src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2034740944,4251903193&fm=26&gp=0.jpg"
+              alt=""
+            />
           </div>
         </div>
       </div>
@@ -645,6 +663,7 @@
 /**
  * @example: 转化电话号码
  */
+import util from "@/util/util";
 function phoneTransform(phone) {
   if (!phone) return phone;
   if (!phone.includes("*") && phone.length == 11) {
@@ -652,7 +671,6 @@ function phoneTransform(phone) {
   }
   return phone;
 }
-import util from "@/util/util";
 export default {
   filters: {
     mapFilter(value, ListName, resultValue = null) {
@@ -660,11 +678,17 @@ export default {
     }
   },
   created() {
+    this.id = this.$route.query.id;
+    this.getWXImg();
     this.getDetail();
   },
   data() {
     return {
-      id: 1,
+      id: null,
+      wxImg: {
+        url: "",
+        loading: true
+      },
       detail: {},
       detailLoading: true,
       hoursTrans: "00",
@@ -676,30 +700,19 @@ export default {
     };
   },
   methods: {
-    openPage(pageName) {
-      this.$router.push({
-        name: pageName,
-        query: {
-          id: this.id
-        }
-      });
-      if (pageName == "pMsgValidate")
-        this.$api
-          .post({
-            url: `/verifyHouse/mode/mns`,
-            qs: true,
-            data: {
-              id: this.id
-            }
-          })
-          .then(({ data }) => {
-            if (data.code == 200) {
-              this.$message.success("短信下发成功");
-            } else {
-              this.$message.warning("短信下发成功");
-            }
-          })
-          .finally(() => {});
+    getWXImg() {
+      return this.$api
+        .post({
+          url: `/verifyHouse/mode/wechat?id=${this.id}`
+        })
+        .then(({ data }) => {
+          if (data.code == 200) {
+            this.wxImg.url = data.data;
+          }
+        })
+        .finally(() => {
+          this.wxImg.loading = false;
+        });
     },
     getDetail() {
       return this.$api

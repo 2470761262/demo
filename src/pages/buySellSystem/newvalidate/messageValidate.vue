@@ -3,6 +3,101 @@
   // prettier-ignore
   padding: 0 16PX;
   position: relative;
+  .content-top {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    align-items: center;
+    .content-head-left {
+      flex: 1;
+      .tips {
+        // prettier-ignore
+        font-size: 36PX;
+        color: #fff;
+        position: relative;
+        z-index: 1;
+        display: block;
+        // prettier-ignore
+        padding: 34PX 0 24PX 16PX;
+        font-weight: bold;
+        // prettier-ignore
+        line-height: 36PX;
+        font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+        display: flex;
+        align-items: center;
+        .tips-text {
+          // prettier-ignore
+          padding: 0 19PX;
+          // prettier-ignore
+          height: 26PX;
+          font-size: @font14;
+          background: #fef5e8;
+          color: #f6a420;
+          // prettier-ignore
+          line-height: 26PX;
+          border-radius: 2px;
+          // prettier-ignore
+          margin-left: 8PX;
+          // prettier-ignore
+          margin-top: 4PX;
+        }
+      }
+      .small-tips {
+        position: relative;
+        z-index: 1;
+        color: #fff;
+        // prettier-ignore
+        padding-left: 16PX;
+        // prettier-ignore
+        font-size: 18PX;
+        opacity: 0.76;
+        line-height: 1;
+      }
+    }
+    .content-head-right {
+      // prettier-ignore
+      margin-top: 16PX;
+      display: flex;
+      img {
+        // prettier-ignore
+        width: 172PX;
+        height: 100%;
+      }
+      .head-right-item {
+        &:last-child {
+          margin-right: 0;
+        }
+        // prettier-ignore
+        margin-right: 16PX;
+        // prettier-ignore
+        width: 172PX;
+        background: #ffffff;
+        border-radius: 4px;
+        // prettier-ignore
+        height: 111PX;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        .num {
+          font-size: 0;
+          i,
+          span {
+            font-weight: bold;
+            font-family: Arial-BoldMT, Arial;
+            display: inline-block;
+            color: #ef5656;
+            // prettier-ignore
+            font-size: 46PX;
+          }
+        }
+        .num-tips {
+          color: #ef5656;
+          font-size: @font16;
+        }
+      }
+    }
+  }
   .tips-back {
     position: absolute;
     top: 0;
@@ -13,39 +108,25 @@
     height: 223PX;
     background: linear-gradient(360deg, #2f837b 0%, #0a6458 100%);
   }
-  .tips {
-    // prettier-ignore
-    font-size: 36PX;
-    color: #fff;
-    position: relative;
-    z-index: 1;
-    display: block;
-    // prettier-ignore
-    padding: 34PX 0 24PX 16PX;
-    font-weight: bold;
-    line-height: 1;
-    font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
-  }
-  .small-tips {
-    position: relative;
-    z-index: 1;
-    color: #fff;
-    // prettier-ignore
-    padding-left: 16PX;
-    // prettier-ignore
-    font-size: 18PX;
-    opacity: 0.76;
-    line-height: 1;
-  }
   .content-body {
     display: flex;
     position: relative;
     z-index: 1;
     // prettier-ignore
-    margin-top: 27PX;
-    // prettier-ignore
     padding-bottom: 47PX;
+    // prettier-ignore
+    margin-top: 12PX;
     .content-left {
+      .tips-wait {
+        display: block;
+        // prettier-ignore
+        font-size: 36PX;
+        line-height: 1;
+        // prettier-ignore
+        padding-top: 24PX;
+        // prettier-ignore
+        padding-bottom: 21PX;
+      }
       flex: 1;
       // prettier-ignore
       margin-right: 16PX;
@@ -108,10 +189,13 @@
   &:first-child {
     margin-top: 0;
   }
-  .left-img {
-    position: absolute;
-    top: 0;
-    left: 0;
+  .border-content-title {
+    font-size: @font24;
+    color: #303133;
+    line-height: 1;
+    font-weight: bold;
+    // prettier-ignore
+    padding-bottom: 24PX;
   }
 }
 .border-foot {
@@ -420,19 +504,46 @@
 <template>
   <div class="content">
     <div class="tips-back"></div>
-    <strong class="tips">请在下方,选择一种方案对房源进行验真</strong>
-    <small class="small-tips"
-      >新增房源、申请跟单人都需要对房源进行验真，业主核验通过才能上架、申请跟单成功</small
-    >
+    <div class="content-top">
+      <div class="content-head-left">
+        <strong class="tips">
+          信息员验真
+          <span class="tips-text">待验真</span>
+        </strong>
+        <small class="small-tips"
+          >若信息员开始进行验真操作（拨打业主电话）即扣除鑫币酬劳</small
+        >
+      </div>
+      <div class="content-head-right">
+        <div class="head-right-item">
+          <div class="num">
+            <i>-</i>
+            <span>50</span>
+          </div>
+          <div class="num-tips">通过奖励鑫币</div>
+        </div>
+        <div class="head-right-item">
+          <img src="https://img.0be.cn/minipro/bz9_3.svg" alt="" />
+        </div>
+      </div>
+    </div>
     <section class="content-body">
       <div class="content-left">
+        <!-- 温馨提示 -->
+        <div class="border-content">
+          <h3 class="border-content-title">温馨提示</h3>
+          <div class="border-foot-minddel">
+            <div class="minddel-order" data-order="1">
+              信息员开始验真验真，无论验真是否通过，支付的鑫币不予退还。
+            </div>
+            <div class="minddel-order" data-order="2">
+              信息员仅在工作时间内进行验真，所以导致验真的进度较慢，可能会导致验真过期，请您谨慎使用。
+            </div>
+          </div>
+        </div>
+        <strong class="tips-wait">等不及了？不如换下面两种方式验真</strong>
         <!-- 微信验真 -->
         <div class="border-content">
-          <img
-            class="left-img"
-            src="https://img.0be.cn/minipro/recomand.svg"
-            alt=""
-          />
           <div class="head-content">
             <div class="iconfont iconbianzu"></div>
             <div class="head-minddle">
@@ -505,41 +616,6 @@
                   等待业主回复验证码，确认验真
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <!-- 信息员验真 -->
-        <div class="border-content">
-          <div class="head-content">
-            <div class="iconfont iconbianzu1"></div>
-            <div class="head-minddle">
-              <div class="head-minddle-title">信息员验真</div>
-              <div class="head-minddle-tips">
-                支付50鑫币酬劳，验真的事交给信息员来办
-              </div>
-            </div>
-            <button class="btn" @click="openPage('messageValidate')">
-              选我验真
-            </button>
-          </div>
-          <div class="border-foot">
-            <div class="border-foot-left">
-              <img src="https://img.0be.cn/minipro/bz9_2.svg" alt="" />
-            </div>
-            <div class="border-foot-minddel">
-              <div class="minddel-order" data-order="1">
-                选择信息员验真方案，支付鑫币酬劳
-              </div>
-              <div class="minddel-order" data-order="2">
-                信息员联系业主，并填写沟通结果
-              </div>
-            </div>
-            <div class="border-foot-right subtract">
-              <div class="num">
-                <i>-</i>
-                <span>50</span>
-              </div>
-              <div class="num-tips">支付鑫币酬劳</div>
             </div>
           </div>
         </div>
@@ -645,6 +721,7 @@
 /**
  * @example: 转化电话号码
  */
+import util from "@/util/util";
 function phoneTransform(phone) {
   if (!phone) return phone;
   if (!phone.includes("*") && phone.length == 11) {
@@ -652,7 +729,6 @@ function phoneTransform(phone) {
   }
   return phone;
 }
-import util from "@/util/util";
 export default {
   filters: {
     mapFilter(value, ListName, resultValue = null) {
@@ -660,11 +736,13 @@ export default {
     }
   },
   created() {
+    this.id = this.$route.query.id;
+    this.getEmployee();
     this.getDetail();
   },
   data() {
     return {
-      id: 1,
+      id: null,
       detail: {},
       detailLoading: true,
       hoursTrans: "00",
@@ -683,23 +761,20 @@ export default {
           id: this.id
         }
       });
-      if (pageName == "pMsgValidate")
-        this.$api
-          .post({
-            url: `/verifyHouse/mode/mns`,
-            qs: true,
-            data: {
-              id: this.id
-            }
-          })
-          .then(({ data }) => {
-            if (data.code == 200) {
-              this.$message.success("短信下发成功");
-            } else {
-              this.$message.warning("短信下发成功");
-            }
-          })
-          .finally(() => {});
+    },
+    getEmployee() {
+      return this.$api
+        .post({
+          url: `/verifyHouse/mode/employee`,
+          qs: true,
+          data: {
+            id: this.id
+          }
+        })
+        .then(({ data }) => {
+          console.log(data, "data");
+        })
+        .finally(() => {});
     },
     getDetail() {
       return this.$api

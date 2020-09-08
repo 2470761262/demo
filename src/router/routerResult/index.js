@@ -165,6 +165,45 @@ export default [
       )
   },
   {
+    path: "/buySellSystem/messageValidate",
+    name: "messageValidate",
+    meta: {
+      title: "信息员验真",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "messageValidate" */ "@/pages/buySellSystem/newvalidate/messageValidate.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/pMsgValidate",
+    name: "pMsgValidate",
+    meta: {
+      title: "短信验真",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "pMsgValidate" */ "@/pages/buySellSystem/newvalidate/pMsgValidate.vue"
+      )
+  },
+  {
+    path: "/buySellSystem/wxValidate",
+    name: "wxValidate",
+    meta: {
+      title: "微信验真",
+      isMapNav: true, //不需要导航
+      isPad: true //不需要el-main padding
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "wxValidate" */ "@/pages/buySellSystem/newvalidate/wxValidate.vue"
+      )
+  },
+  {
     //我的房源
     path: "/buySellSystem/myHouse",
     redirect: "/myHouse/myRole",
