@@ -462,8 +462,7 @@
             </div>
             <div class="border-foot-right">
               <div class="num">
-                <i>+</i>
-                <span>50</span>
+                <span v-if="configXin[0]">+{{ configXin[0].score }}</span>
               </div>
               <div class="num-tips">通过奖励鑫币</div>
             </div>
@@ -536,8 +535,7 @@
             </div>
             <div class="border-foot-right subtract">
               <div class="num">
-                <i>-</i>
-                <span>50</span>
+                <span v-if="configXin[1]">{{ configXin[1].score }}</span>
               </div>
               <div class="num-tips">支付鑫币酬劳</div>
             </div>
@@ -661,6 +659,7 @@ export default {
   },
   created() {
     this.getDetail();
+    this.getXinConfig();
   },
   data() {
     return {
@@ -672,10 +671,22 @@ export default {
       secondsTrans: "00",
       isCheckSign: -1,
       isCallLoading: false,
-      timeID: null
+      timeID: null,
+      configXin: []
     };
   },
   methods: {
+    getXinConfig() {
+      this.$api
+        .get({
+          url: `/validate/agent_house/xin/config`
+        })
+        .then(({ data }) => {
+          if (data.code == 200) {
+            this.configXin = data.data;
+          }
+        });
+    },
     openPage(pageName) {
       this.$router.push({
         name: pageName,

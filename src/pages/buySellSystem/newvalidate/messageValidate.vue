@@ -517,8 +517,7 @@
       <div class="content-head-right">
         <div class="head-right-item">
           <div class="num">
-            <i>-</i>
-            <span>50</span>
+            <span v-if="configXin[1]">{{ configXin[1].score }}</span>
           </div>
           <div class="num-tips">通过奖励鑫币</div>
         </div>
@@ -573,8 +572,7 @@
             </div>
             <div class="border-foot-right">
               <div class="num">
-                <i>+</i>
-                <span>50</span>
+                <span v-if="configXin[0]">+{{ configXin[0].score }}</span>
               </div>
               <div class="num-tips">通过奖励鑫币</div>
             </div>
@@ -738,6 +736,7 @@ export default {
   created() {
     this.id = this.$route.query.id;
     this.getEmployee();
+    this.getXinConfig();
     this.getDetail();
   },
   data() {
@@ -750,10 +749,22 @@ export default {
       secondsTrans: "00",
       isCheckSign: -1,
       isCallLoading: false,
-      timeID: null
+      timeID: null,
+      configXin: []
     };
   },
   methods: {
+    getXinConfig() {
+      this.$api
+        .get({
+          url: `/validate/agent_house/xin/config`
+        })
+        .then(({ data }) => {
+          if (data.code == 200) {
+            this.configXin = data.data;
+          }
+        });
+    },
     openPage(pageName) {
       this.$router.push({
         name: pageName,
