@@ -3,6 +3,58 @@
   // prettier-ignore
   padding: 0 16PX;
   position: relative;
+  .content-top {
+    display: flex;
+    position: relative;
+    z-index: 1;
+    align-items: center;
+    .content-head-left {
+      flex: 1;
+      .tips {
+        // prettier-ignore
+        font-size: 36PX;
+        color: #fff;
+        position: relative;
+        z-index: 1;
+        display: block;
+        // prettier-ignore
+        padding: 34PX 0 24PX 16PX;
+        font-weight: bold;
+        // prettier-ignore
+        line-height: 36PX;
+        font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
+        display: flex;
+        align-items: center;
+        .tips-text {
+          // prettier-ignore
+          padding: 0 19PX;
+          // prettier-ignore
+          height: 26PX;
+          font-size: @font14;
+          background: #fef5e8;
+          color: #f6a420;
+          // prettier-ignore
+          line-height: 26PX;
+          border-radius: 2px;
+          // prettier-ignore
+          margin-left: 8PX;
+          // prettier-ignore
+          margin-top: 4PX;
+        }
+      }
+      .small-tips {
+        position: relative;
+        z-index: 1;
+        color: #fff;
+        // prettier-ignore
+        padding-left: 16PX;
+        // prettier-ignore
+        font-size: 18PX;
+        opacity: 0.76;
+        line-height: 1;
+      }
+    }
+  }
   .tips-back {
     position: absolute;
     top: 0;
@@ -13,42 +65,20 @@
     height: 223PX;
     background: linear-gradient(360deg, #2f837b 0%, #0a6458 100%);
   }
-  .tips {
-    // prettier-ignore
-    font-size: 36PX;
-    color: #fff;
-    position: relative;
-    z-index: 1;
-    display: block;
-    // prettier-ignore
-    padding: 34PX 0 24PX 16PX;
-    font-weight: bold;
-    line-height: 1;
-    font-family: MicrosoftYaHei-Bold, MicrosoftYaHei;
-  }
-  .small-tips {
-    position: relative;
-    z-index: 1;
-    color: #fff;
-    // prettier-ignore
-    padding-left: 16PX;
-    // prettier-ignore
-    font-size: 18PX;
-    opacity: 0.76;
-    line-height: 1;
-  }
   .content-body {
     display: flex;
     position: relative;
     z-index: 1;
     // prettier-ignore
-    margin-top: 27PX;
-    // prettier-ignore
     padding-bottom: 47PX;
+    // prettier-ignore
+    margin-top: 12PX;
     .content-left {
       flex: 1;
       // prettier-ignore
       margin-right: 16PX;
+      display: flex;
+      flex-direction: column;
       .head-content {
         display: flex;
         align-items: center;
@@ -108,108 +138,22 @@
   &:first-child {
     margin-top: 0;
   }
-  .left-img {
-    position: absolute;
-    top: 0;
-    left: 0;
+  .validate-tips {
+    // prettier-ignore
+    margin-top: 24PX;
+    color: #f33a3a;
+    font-size: @font16;
+  }
+  .border-content-title {
+    font-size: @font24;
+    color: #303133;
+    line-height: 1;
+    font-weight: bold;
+    // prettier-ignore
+    padding-bottom: 24PX;
   }
 }
-.border-foot {
-  display: flex;
-  // prettier-ignore
-  margin-top: 32PX;
-  .border-foot-left {
-    img {
-      width: 100%;
-      height: 100%;
-    }
-  }
-  .border-foot-left,
-  .border-foot-right {
-    // prettier-ignore
-    width: 172PX;
-    // prettier-ignore
-    height: 172PX;
-  }
-  .border-foot-minddel {
-    flex: 1;
-    // prettier-ignore
-    margin: 0 16PX;
-    display: flex;
-    // prettier-ignore
-    padding-left: 24PX;
-    flex-direction: column;
-    justify-content: center;
-    box-sizing: border-box;
-  }
-  .border-foot-minddel,
-  .border-foot-right {
-    border-radius: 4px;
-    background: #f8f8f8;
-  }
-  .border-foot-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    .num-tips {
-      color: @backgroud;
-      // prettier-ignore
-      font-size: 16PX;
-    }
-    .num {
-      font-size: 0;
-      i,
-      span {
-        color: @backgroud;
-        font-family: Arial-BoldMT, Arial;
-        font-weight: bold;
-        display: inline-block;
-        // prettier-ignore
-        font-size: 46PX;
-      }
-    }
-    &.subtract {
-      .num-tips {
-        color: #ef5656;
-      }
-      .num {
-        i,
-        span {
-          color: #ef5656;
-        }
-      }
-    }
-  }
-}
-.minddel-order {
-  font-size: @font14;
-  color: #606266;
-  display: flex;
-  align-items: center;
-  // prettier-ignore
-  margin-top: 24PX;
-  &:first-child {
-    margin-top: 0;
-  }
-  &::before {
-    content: attr(data-order);
-    // prettier-ignore
-    width: 22PX;
-    // prettier-ignore
-    height: 22PX;
-    border-radius: 50%;
-    background: @backgroud;
-    color: #fff;
-    // prettier-ignore
-    margin-right: 8PX;
-    font-size: @font14;
-    text-align: center;
-    // prettier-ignore
-    line-height: 22PX;
-    flex-shrink: 0;
-  }
-}
+
 .foot-content {
   display: flex;
   // prettier-ignore
@@ -376,6 +320,60 @@
     }
   }
 }
+.flex-min {
+  display: flex;
+
+  @media screen and(max-width:1150px) {
+    flex-wrap: wrap;
+    button {
+      // prettier-ignore
+      margin-top: 16PX;
+    }
+  }
+
+  .input-content {
+    display: flex;
+    /deep/.el-input__inner {
+      // prettier-ignore
+      font-size: 36PX;
+      text-align: center;
+      // prettier-ignore
+      width: 74PX;
+      // prettier-ignore
+      height: 74PX;
+      outline: none;
+      border: 1px solid #cecece;
+      // prettier-ignore
+      margin-right: 16PX;
+      &:focus {
+        border: 1px solid @backgroud;
+      }
+    }
+  }
+  button {
+    color: @backgroud;
+    font-size: @font16;
+    background: none;
+    border: none;
+    align-self: flex-end;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+  }
+}
+.is-bottom {
+  flex: 1;
+  padding: 0;
+  // prettier-ignore
+  padding-top: 61PX;
+  text-align: center;
+
+  img {
+    width: 95%;
+    // prettier-ignore
+    max-width: 721PX;
+  }
+}
 .validate-type {
   // prettier-ignore
   height: 97PX;
@@ -420,126 +418,46 @@
 <template>
   <div class="content">
     <div class="tips-back"></div>
-    <strong class="tips">请在下方,选择一种方案对房源进行验真</strong>
-    <small class="small-tips"
-      >新增房源、申请跟单人都需要对房源进行验真，业主核验通过才能上架、申请跟单成功</small
-    >
+    <div class="content-top">
+      <div class="content-head-left">
+        <strong class="tips">
+          短信验真
+          <span class="tips-text">待验真</span>
+        </strong>
+        <small class="small-tips"
+          >系统已自动发送，短信给验真的验真号码，请尽快联系业主获取验证码</small
+        >
+      </div>
+    </div>
     <section class="content-body">
       <div class="content-left">
-        <!-- 微信验真 -->
+        <!-- 请输入6位验证码，进行验真 -->
         <div class="border-content">
+          <h3 class="border-content-title">请输入6位验证码，进行验真</h3>
+          <div class="flex-min">
+            <div class="input-content">
+              <el-input
+                ref="validateCall"
+                @input="isNumChange(index, $event)"
+                v-for="(item, index) in validateCall"
+                :key="index"
+                type="text"
+                maxlength="1"
+                v-model="validateCall[index]"
+              />
+            </div>
+            <button @click="getMns">重新发送验证码</button>
+          </div>
+
+          <div class="validate-tips">
+            注：当且仅当验证码有效且准确无误，才可验真成功
+          </div>
+        </div>
+        <div class="border-content is-bottom">
           <img
-            class="left-img"
-            src="https://img.0be.cn/minipro/recomand.svg"
+            src="https://imgtest.0be.cn/FileUpload/PicFile_AHouseF2020/9/7/7c557a8b96e5468380b54ba403350754.png"
             alt=""
           />
-          <div class="head-content">
-            <div class="iconfont iconbianzu"></div>
-            <div class="head-minddle">
-              <div class="head-minddle-title">微信验真</div>
-              <div class="head-minddle-tips">
-                使用经纪人小程序，房源验真功能，转发给业主进行验真
-              </div>
-            </div>
-            <button class="btn" @click="openPage('wxValidate')">
-              选我验真
-            </button>
-          </div>
-          <div class="border-foot">
-            <div class="border-foot-left">
-              <img src="https://img.0be.cn/minipro/bz9.svg" alt="" />
-            </div>
-            <div class="border-foot-minddel">
-              <div class="minddel-order" data-order="1">
-                微信扫码,打开小程序-验真详情页
-              </div>
-              <div class="minddel-order" data-order="2">
-                小程序详情页中，使用“邀请验真功能”转发业主
-              </div>
-              <div class="minddel-order" data-order="3">
-                联系业主，提醒业主对房源进行验真，以便上架展示
-              </div>
-            </div>
-            <div class="border-foot-right">
-              <div class="num">
-                <span v-if="configXin[0]">+{{ configXin[0].score }}</span>
-              </div>
-              <div class="num-tips">通过奖励鑫币</div>
-            </div>
-          </div>
-        </div>
-        <!-- 短信验真 -->
-        <div class="border-content">
-          <div class="head-content">
-            <div class="iconfont iconbianzu11"></div>
-            <div class="head-minddle">
-              <div class="head-minddle-title">短信验真</div>
-              <div class="head-minddle-tips">
-                电话联系业主获取短信验证码，输入验证码进行验真
-              </div>
-            </div>
-            <button class="btn" @click="openPage('pMsgValidate')">
-              选我验真
-            </button>
-          </div>
-          <div class="foot-content">
-            <div class="foot-content-item">
-              <h3>经纪人输入验证码-验真</h3>
-              <div class="foot-item-warp">
-                <div class="minddel-order" data-order="1">
-                  电话联系，业主；沟通验真事宜
-                </div>
-                <div class="minddel-order" data-order="2">
-                  从业主处获取房源验真通过的验证码，输入验真
-                </div>
-              </div>
-            </div>
-            <div class="foot-content-item">
-              <h3>业主回复验证码-验真</h3>
-              <div class="foot-item-warp">
-                <div class="minddel-order" data-order="1">
-                  电话联系，业主；沟通验真事宜
-                </div>
-                <div class="minddel-order" data-order="2">
-                  等待业主回复验证码，确认验真
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 信息员验真 -->
-        <div class="border-content">
-          <div class="head-content">
-            <div class="iconfont iconbianzu1"></div>
-            <div class="head-minddle">
-              <div class="head-minddle-title">信息员验真</div>
-              <div class="head-minddle-tips">
-                支付50鑫币酬劳，验真的事交给信息员来办
-              </div>
-            </div>
-            <button class="btn" @click="openPage('messageValidate')">
-              选我验真
-            </button>
-          </div>
-          <div class="border-foot">
-            <div class="border-foot-left">
-              <img src="https://img.0be.cn/minipro/bz9_2.svg" alt="" />
-            </div>
-            <div class="border-foot-minddel">
-              <div class="minddel-order" data-order="1">
-                选择信息员验真方案，支付鑫币酬劳
-              </div>
-              <div class="minddel-order" data-order="2">
-                信息员联系业主，并填写沟通结果
-              </div>
-            </div>
-            <div class="border-foot-right subtract">
-              <div class="num">
-                <span v-if="configXin[1]">{{ configXin[1].score }}</span>
-              </div>
-              <div class="num-tips">支付鑫币酬劳</div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="content-right" v-loading="detailLoading">
@@ -643,6 +561,7 @@
 /**
  * @example: 转化电话号码
  */
+import util from "@/util/util";
 function phoneTransform(phone) {
   if (!phone) return phone;
   if (!phone.includes("*") && phone.length == 11) {
@@ -650,7 +569,6 @@ function phoneTransform(phone) {
   }
   return phone;
 }
-import util from "@/util/util";
 export default {
   filters: {
     mapFilter(value, ListName, resultValue = null) {
@@ -658,12 +576,13 @@ export default {
     }
   },
   created() {
+    this.id = this.$route.query.id;
     this.getDetail();
-    this.getXinConfig();
   },
   data() {
     return {
-      id: 1,
+      id: null,
+      validateCall: ["", "", "", "", "", ""],
       detail: {},
       detailLoading: true,
       hoursTrans: "00",
@@ -671,46 +590,80 @@ export default {
       secondsTrans: "00",
       isCheckSign: -1,
       isCallLoading: false,
-      timeID: null,
-      configXin: []
+      timeID: null
     };
   },
   methods: {
-    getXinConfig() {
+    getMns() {
+      this.validateCall = ["", "", "", "", "", ""];
       this.$api
-        .get({
-          url: `/validate/agent_house/xin/config`
+        .post({
+          url: `/verifyHouse/mode/mns`,
+          qs: true,
+          data: {
+            id: this.id
+          }
         })
         .then(({ data }) => {
           if (data.code == 200) {
-            this.configXin = data.data;
+            this.$message.success("短信下发成功");
+          } else {
+            this.$message.warning("短信下发成功");
+          }
+        })
+        .finally(() => {});
+    },
+    isNumChange(index, value) {
+      if (value != "") {
+        let isEnd = false;
+        if (/[^0-9]/g.test(value)) {
+          this.validateCall[index] = this.validateCall[index].replace(
+            /[^0-9]/g,
+            ""
+          );
+          return;
+        }
+        this.$refs.validateCall.forEach((item, eindex) => {
+          if (index != this.$refs.validateCall.length - 1) {
+            if (eindex != parseInt(index) + 1) {
+              item.$el.querySelector(".el-input__inner").blur();
+            } else {
+              item.$el.querySelector(".el-input__inner").focus();
+            }
+          } else {
+            isEnd = true;
           }
         });
-    },
-    openPage(pageName) {
-      this.$router.push({
-        name: pageName,
-        query: {
-          id: this.id
+        if (isEnd) {
+          this.isValidateMns();
         }
-      });
-      if (pageName == "pMsgValidate")
-        this.$api
-          .post({
-            url: `/verifyHouse/mode/mns`,
-            qs: true,
-            data: {
-              id: this.id
-            }
-          })
-          .then(({ data }) => {
-            if (data.code == 200) {
-              this.$message.success("短信下发成功");
+      }
+    },
+    isValidateMns() {
+      this.$api
+        .post({
+          url: "/verifyHouse/verify/mns",
+          data: {
+            id: this.id,
+            msnCode: this.validateCall.join("")
+          },
+          qs: true
+        })
+        .then(({ data }) => {
+          if (data.code != 200) {
+            return Promise.reject();
+          } else {
+            if (data.message == "验证码错误，验真失败！") {
+              this.$message.error(data.message);
+              return Promise.reject();
             } else {
-              this.$message.warning("短信下发成功");
+              this.$message.success(data.message);
             }
-          })
-          .finally(() => {});
+          }
+        })
+        .catch(() => {
+          this.validateCall = ["", "", "", "", "", ""];
+        });
     },
     getDetail() {
       return this.$api
