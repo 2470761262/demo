@@ -305,6 +305,7 @@ export default {
     //下一步
     async nextPage(parmse) {
       let comName = this.$refs.com.$options.name;
+      console.log(parmse,comName,"-----------------")
       let flag = false;
       this.butLoading = true;
       switch (comName) {
