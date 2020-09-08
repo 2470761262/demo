@@ -106,14 +106,14 @@ export default {
     // 提交按钮
     async submit() {
       let newxFlag = true;
-      if (!this.$refs.childreCom.isPhone) {
-        this.$message({
-          message: "号码重复,请修改后在提交"
-        });
-        return;
-      }
       if (this.componentName == "stepOne") {
         newxFlag = await this.$refs.childreCom.validate();
+        if (!this.$refs.childreCom.isPhone) {
+          this.$message({
+            message: "号码重复,请修改后在提交"
+          });
+          return;
+        }
       } else {
         this.$refs.childreCom.updataStep2();
       }
