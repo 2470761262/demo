@@ -244,10 +244,14 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          console.log(result,"sssssssssssssssssss")
           if (result.code == 200) {
             //that.url = result.data;
-            this.$router.push({ path: "/buySellSystem/validateHome" });
+            this.$router.push({
+              path: "/buySellSystem/validateHome",
+              query: {
+                id: result.data,
+              }
+            });
           } else {
             console.log("查询结果：" + result.message);
             // alert(result.message);
