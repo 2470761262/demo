@@ -42,7 +42,10 @@ export default {
         random: "",
         bhId: "",
         cbId: "",
-        checkStatusValue: "",
+        checkStatusValue: "", // 验真状态
+        validateType: "", // 验真类型
+        validateWay: "", // 验真方式
+        department: "", // 所属门店
         comId: "",
         customrName: "",
         limit: 10,

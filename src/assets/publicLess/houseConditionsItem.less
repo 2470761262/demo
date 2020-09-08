@@ -1,0 +1,73 @@
+/********** 审核列表、抽检记录等房源条件选项公用样式css **********/
+/deep/.conditions-box {
+  .fr {
+    float: right;
+  }
+  .el-form-item__label {
+    // prettier-ignore
+    line-height: 36PX;
+    font-weight: bold;
+    font-size: @font14;
+    color: #303133;
+  }
+  .el-input__inner {
+    // prettier-ignore
+    height: 36PX;
+    font-size: @font14;
+  }
+  .el-form-item {
+    // prettier-ignore
+    margin-bottom: 16PX;
+  }
+  .el-range-input {
+    text-align: left;
+    // prettier-ignore
+    text-indent: 5PX;
+    font-size: @font14;
+  }
+  .prefix-icon {
+    width: 0;
+  }
+  .el-date-editor {
+    width: 100%;
+    .el-range-separator {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: auto;
+      padding: 0;
+      line-height: 1;
+      text-indent: 0;
+      font-size: @font14;
+    }
+  }
+  .width100 {
+    width: 100%;
+  }
+  .conditions-btn {
+    display: flex;
+    justify-content: flex-end;
+    .btn {
+      // prettier-ignore
+      width: 90PX;
+      // prettier-ignore
+      height: 36PX;
+      border: none;
+      border-radius: 4px;
+      background: #fff;
+      outline: none;
+      // prettier-ignore
+      line-height: 36PX;
+      text-align: center;
+      font-size: @font14;
+      color: @backgroud;
+      cursor: pointer;
+      &.active {
+        // prettier-ignore
+        margin-left: 9PX;
+        background: @backgroud;
+        color: #fff;
+      }
+    }
+  }
+}

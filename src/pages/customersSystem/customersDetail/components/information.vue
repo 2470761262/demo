@@ -217,6 +217,12 @@ export default {
           return "小程序";
         case 43:
           return "APP";
+        case 51:
+          return "门店接待";
+        case 52:
+          return "社区开发";
+        case 53:
+          return "摆排";
         default:
           return "暂无";
       }
@@ -231,6 +237,8 @@ export default {
           return "网络端口";
         case 4:
           return "鑫家网";
+        case 5:
+          return "线下开发";
         default:
           return "暂无";
       }

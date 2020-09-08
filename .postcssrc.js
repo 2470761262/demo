@@ -3,6 +3,7 @@
 module.exports = {
   plugins: {
     "postcss-plugin-px2rem": {
+      exclude: /cutmomersPair.vue|cutmomersResultList.vue/,
       remUnit: 100,
       selectorBlackList: [/^html$/],
       unitPrecision: 5,
