@@ -6,7 +6,7 @@
       <div class="conditions-box">
         <el-row :gutter="32">
           <el-form label-position="right" label-width="80px">
-            <el-col :span="6">
+            <el-col :span="colChunks[0]">
               <el-form-item label="房源编号">
                 <el-input
                   v-model="conditions.houseNo"
@@ -18,7 +18,7 @@
                   ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="colChunks[1]">
               <el-row :gutter="10">
                 <el-form-item label="房屋坐落">
                   <el-col :span="8">
@@ -106,7 +106,7 @@
                 </el-form-item>
               </el-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="colChunks[2]">
               <el-form-item label="所属门店">
                 <el-select
                   class="width100 anchor-point"
@@ -134,7 +134,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="colChunks[3]">
               <el-form-item label="跟单人">
                 <el-select
                   class="width100 anchor-point"
@@ -161,14 +161,13 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="colChunks[4]">
               <el-form-item label="当前状态">
                 <el-select
                   class="width100 anchor-point"
                   popper-class="anchor-point"
                   data-anchor="抽检记录当前状态 => select"
                   @click.native="log_socket.sendUserActionData"
-                  filterable
                   v-model="currentStatus"
                   clearable
                   @change="query(1)"
@@ -187,14 +186,13 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="colChunks[5]">
               <el-form-item label="抽检结果">
                 <el-select
                   class="width100 anchor-point"
                   popper-class="anchor-point"
                   data-anchor="抽检记录抽检结果 => select"
                   @click.native="log_socket.sendUserActionData"
-                  filterable
                   v-model="spotCheckResult"
                   clearable
                   @change="query(1)"
@@ -213,20 +211,22 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="colChunks[6]" class="fr">
+              <div class="conditions-btn">
+                <div
+                  class="btn anchor-pointn"
+                  @click="reset"
+                  data-anchor="审核列表重置"
+                  >重置</div>
+                <div
+                  class="btn active anchor-pointn"
+                  @click="query(1)"
+                  data-anchor="审核列表搜索"
+                >搜索</div>
+              </div>
+            </el-col>
           </el-form>
         </el-row>
-      </div>
-      <div class="conditions-btn">
-        <button
-          class="btn anchor-pointn"
-          @click="reset"
-          data-anchor="审核列表重置"
-          >重置</button>
-        <button
-          class="btn active anchor-pointn"
-          @click="query(1)"
-          data-anchor="审核列表搜索"
-        >搜索</button>
       </div>
     </div>
     <div class="main">
@@ -391,6 +391,7 @@ export default {
   },
   data() {
     return {
+      colChunks: [5, 9, 5, 5, 6, 6, 6], // 条件选项栅格布局
       loading: false,
       currentStatus: "",
       currentStatusList: [
@@ -581,8 +582,23 @@ export default {
     // 切换管理入口nav
     bus.$emit("switchEntranceNav", 1);
     this.query();
+    this.setConditionCol();
+    window.addEventListener('resize', this.setConditionCol);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.setConditionCol);
   },
   methods: {
+    /**
+     * @example: 根据当前屏幕窗口宽度设置条件选项栅格布局
+     */
+    setConditionCol() {
+      if (document.body.offsetWidth >= 1440) {
+        this.colChunks = [5, 9, 5, 5, 6, 6, 5];
+      } else {
+        this.colChunks = [7, 10, 7, 8, 8, 8, 8];
+      }
+    },
     /**
      * @example: 请求所属门店数据
      */
@@ -617,7 +633,6 @@ export default {
     departmentChange(value) {
       this.agent.list = [];
       this.agent.value = "";
-      this.department.value = value;
       this.query();
       if (value != "") {
         this.getAgentList();
@@ -659,7 +674,6 @@ export default {
     changeWorkSort({column, prop, order}) {
       this.sortColumn = prop;
       this.sortType = order=="ascending" ? 0 : 1;
-      console.log(column, prop, "==================");
       this.sortColumn = prop == "listingStr"?"listingTime":prop;
       Object.assign(this.pageJson, this.$options.data().pageJson);
       this.query();
@@ -854,8 +868,7 @@ export default {
           }
         })
         .catch(e => {
-          console.log("查询抽检记录列表失败");
-          console.log(e);
+          console.log(e, "查询抽检记录列表失败");
         })
         .finally(() => {
           this.loading = false;
@@ -865,7 +878,11 @@ export default {
      * 重置查询条件
      */
     reset() {
-      Object.assign(this.$data, this.$options.data());
+      this.currentStatus = "";
+      this.spotCheckResult = "";
+      Object.assign(this.$data.conditions, this.$options.data().conditions);
+      Object.assign(this.$data.department, this.$options.data().department);
+      Object.assign(this.$data.agent, this.$options.data().agent);
       this.buildOptData = {};
       this.towerOptData = {};
       this.roomOptData = {};
@@ -875,6 +892,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+@import url('~@/assets/publicLess/houseConditionsItem.less');
 .el-select-dropdown__item {
   // prettier-ignore
   height: 40PX;
@@ -894,74 +912,7 @@ export default {
     border-bottom-left-radius: 8PX;
     // prettier-ignore
     border-bottom-right-radius: 8PX;
-    /deep/.conditions-box {
-      .el-form-item__label {
-        // prettier-ignore
-        line-height: 36PX;
-        font-weight: bold;
-        font-size: @font14;
-        color: #303133;
-      }
-      .el-input__inner {
-        // prettier-ignore
-        height: 36PX;
-        font-size: @font14;
-      }
-      .el-form-item {
-        // prettier-ignore
-        margin-bottom: 16PX;
-      }
-      .el-range-input {
-        text-align: left;
-        // prettier-ignore
-        text-indent: 5PX;
-        font-size: @font14;
-      }
-      .prefix-icon {
-        width: 0;
-      }
-      .el-date-editor {
-        width: 100%;
-        .el-range-separator {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: auto;
-          padding: 0;
-          line-height: 1;
-          text-indent: 0;
-          font-size: @font14;
-        }
-      }
-      .width100 {
-        width: 100%;
-      }
-    }
-    .conditions-btn {
-      display: flex;
-      justify-content: flex-end;
-      .btn {
-        // prettier-ignore
-        width: 90PX;
-        // prettier-ignore
-        height: 36PX;
-        border: none;
-        border-radius: 4px;
-        background: #fff;
-        outline: none;
-        line-height: 1;
-        text-align: center;
-        font-size: @font12;
-        color: @backgroud;
-        cursor: pointer;
-        &.active {
-          // prettier-ignore
-          margin-left: 9PX;
-          background: @backgroud;
-          color: #fff;
-        }
-      }
-    }
+
   }
   .main {
     flex: 1;

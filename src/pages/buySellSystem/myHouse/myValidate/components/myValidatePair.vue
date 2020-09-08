@@ -152,19 +152,33 @@
         ></el-input>
       </div>
     </div>
-
-    <!-- 录入时间 -->
+    <!-- 所属门店 -->
     <div class="search-item">
-      <div class="search-item-title ">录入时间</div>
+      <div class="search-item-title ">所属门店</div>
       <div class="search-item-body">
-        <el-date-picker
-          v-model="form.time"
-          type="daterange"
-          range-separator="至"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
+        <el-select
+          class="anchor-point"
+          popper-class="anchor-point"
+          data-anchor="我的验真所属门店 => select"
+          @click.native="log_socket.sendUserActionData"
+          v-model="form.department"
+          placeholder="请输入门店名称"
+          clearable
+          filterable
+          @focus="departmentFocus"
+          :loading="department.loading"
+          value-key="value"
         >
-        </el-date-picker>
+          <el-option
+            class="anchor-point"
+            :data-anchor="'我的验真所属门店 => select => option:' + item.depName"
+            @click.native="log_socket.sendUserActionData"
+            v-for="item in department.list"
+            :key="item.depId"
+            :label="item.depName"
+            :value="item.depId"
+          ></el-option>
+        </el-select>
       </div>
     </div>
     <!-- 验真状态 -->
@@ -186,6 +200,59 @@
         </el-select>
       </div>
     </div>
+    <!-- 验真类型 -->
+    <div class="search-item">
+      <div class="search-item-title ">验真类型</div>
+      <div class="search-item-body">
+        <el-select
+          clearable
+          v-model="form.validateType"
+          popper-class="options-myhouse-custom-item anchor-point"
+        >
+          <el-option
+            class="anchor-point"
+            v-for="item in validateTypeList"
+            :key="item.title"
+            :label="item.title"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </div>
+    </div>
+    <!-- 验真方式 -->
+    <div class="search-item">
+      <div class="search-item-title ">验真方式</div>
+      <div class="search-item-body">
+        <el-select
+          clearable
+          v-model="form.validateWay"
+          popper-class="options-myhouse-custom-item anchor-point"
+        >
+          <el-option
+            class="anchor-point"
+            v-for="item in validateWayList"
+            :key="item.title"
+            :label="item.title"
+            :value="item.value"
+          ></el-option>
+        </el-select>
+      </div>
+    </div>
+
+    <!-- 录入时间 -->
+    <div class="search-item">
+      <div class="search-item-title ">录入时间</div>
+      <div class="search-item-body">
+        <el-date-picker
+          v-model="form.time"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        >
+        </el-date-picker>
+      </div>
+    </div>
     <!-- 按钮 -->
     <div class="search-item span-flex">
       <div class="search-item-body">
@@ -202,6 +269,7 @@
 //楼盘 楼栋 房间号 级联 mixins
 import cascadeHouse from "@/minxi/cascadeHouse";
 
+// 验真状态
 const SEARCHTABLIST = [
   { title: "全部", value: "" },
   { title: "草稿", value: "0" },
@@ -210,18 +278,64 @@ const SEARCHTABLIST = [
   { title: "验真失败", value: "3" },
   { title: "已过期", value: "4" } //checkSubStatus:1
 ];
+// 验真类型
+const VALIDATETYPELIST = [
+  { title: "全部", value: "" },
+  { title: "类型1", value: "0" },
+  { title: "类型2", value: "1" }
+]
+// 验真方式
+const VALIDATEWAYLIST = [
+  { title: "全部", value: "" },
+  { title: "方式1", value: "0" },
+  { title: "方式2", value: "1" }
+]
 export default {
   inject: ["form"],
   mixins: [cascadeHouse],
   data() {
     return {
+      validateWayList: VALIDATEWAYLIST,
+      validateTypeList: VALIDATETYPELIST,
       searchTabList: SEARCHTABLIST,
       checkStatusValue: this.form.checkStatusValue, //验真状态
       cusName: "", //业主姓名
-      cusPhone: "" //业主号码
+      cusPhone: "", //业主号码
+      department: {
+        loading: false,
+        list: []
+      }, // 所属门店
     };
   },
   methods: {
+    /**
+     * @example: 请求所属门店数据
+     */
+    getDepartmentList() {
+      this.department.loading = true;
+      this.$api
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            selectType: "MORE_SELECT_SHOP"
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.department.list = e.data.data;
+          }
+        })
+        .finally(() => {
+          this.department.loading = false;
+        });
+    },
+    /**
+     * @example: 所属门店获取焦点事件
+     */
+    departmentFocus() {
+      this.getDepartmentList();
+    },
     /**
      * @example: 失去焦点
      * @param {string} formField 失去交单的属性名称

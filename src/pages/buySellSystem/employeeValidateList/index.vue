@@ -6,7 +6,7 @@
       <div class="conditions-box">
         <el-row :gutter="32">
           <el-form label-position="right" label-width="80px">
-            <el-col :span="6">
+            <el-col :span="colChunks[0]">
               <el-form-item label="房源编号">
                 <el-input
                   v-model="conditions.houseNo"
@@ -18,7 +18,7 @@
                 ></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="colChunks[1]">
               <el-row :gutter="10">
                 <el-form-item label="房屋坐落">
                   <el-col :span="8">
@@ -112,7 +112,7 @@
                 </el-form-item>
               </el-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="colChunks[2]">
               <el-form-item label="录入人">
                 <el-select
                   class="width100 anchor-point"
@@ -139,7 +139,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="colChunks[3]">
               <el-form-item label="所属门店">
                 <el-select
                   class="width100 anchor-point"
@@ -167,7 +167,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="colChunks[4]">
               <el-form-item label="验真状态">
                 <el-select
                   class="width100 anchor-point"
@@ -193,7 +193,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="colChunks[5]">
               <el-form-item label="录入时间">
                 <el-date-picker
                   prefix-icon="prefix-icon"
@@ -213,22 +213,22 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col :span="8" class="fr">
+            <el-col :span="colChunks[6]" class="fr">
               <div class="conditions-btn">
-                <button
+                <div
                   class="btn anchor-pointn"
                   @click="reset"
                   data-anchor="信息员验真列表重置"
                 >
                   重置
-                </button>
-                <button
+                </div>
+                <div
                   class="btn active anchor-pointn"
                   @click="query(1)"
                   data-anchor="信息员验真列表搜索"
                 >
                   搜索
-                </button>
+                </div>
               </div>
             </el-col>
           </el-form>
@@ -314,7 +314,6 @@
               show-overflow-tooltip>
             </el-table-column>
 
-
             <el-table-column
               fixed="right"
               label="操作"
@@ -345,9 +344,9 @@
       <div class="content">
         <div class="title">房源状态</div>
         <el-radio-group class="radio-box" v-model="houseStatus">
-          <el-radio-button :label="0">确认出售</el-radio-button>
-          <el-radio-button :label="1">暂不考虑</el-radio-button>
-          <el-radio-button :label="2">已经出售</el-radio-button>
+          <el-radio-button :label="5">确认出售</el-radio-button>
+          <el-radio-button :label="3">暂不考虑</el-radio-button>
+          <el-radio-button :label="4">已经出售</el-radio-button>
         </el-radio-group>
         <p class="tip">注：若选择“暂不考虑”或“已经出售”，则默认视为验真不通过</p>
         <div class="title">详细说明</div>
@@ -369,13 +368,14 @@
     <el-dialog title="房源记录" class="test-dialog record-content" :visible.sync="recordDialogVisible">
       <div class="status-box">
         <span class="title">房源状态：</span>
-        <span class="text">确认出售</span>
+        <span class="text">{{recordStatus}}</span>
       </div>
       <div class="detail-box">
         <span class="title">详细说明：</span>
         <div class="detail">
-          <p class="text">这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明这里是说明</p>
+          <p class="text">{{recordIntroduction||'暂无'}}</p>
           <div class="audio-box">
+            <audio src="https://www.runoob.com/try/demo_source/horse.mp3"></audio>
             <div class="audio-fl">
               <img class="sound" src="@/assets/images/employeeValidate_sound.png" alt="">
               <span class="duration">08:20</span>
@@ -397,6 +397,7 @@ export default {
   },
   data() {
     return {
+      colChunks: [5, 9, 5, 5, 6, 6, 6], // 条件选项栅格布局
       loading: false,
       conditions: {
         comId: "",
@@ -452,17 +453,34 @@ export default {
       testDialogVisible: false,
       recordDialogVisible: false,
       testSubmitLoading: false,
-      houseStatus: 0, // 房源状态
-      testExplain: "" // 房源验真说明
+      houseStatus: 5, // 房源状态
+      testExplain: "", // 房源验真说明
+      recordStatus: "", // 房源记录房源状态
+      recordIntroduction: "" // 房源记录详细说明
     };
   },
   created() {
     // 切换管理入口nav
     bus.$emit("switchEntranceNav", 1);
     this.query();
+    this.setConditionCol();
+    window.addEventListener('resize', this.setConditionCol);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.setConditionCol);
   },
   methods: {
-        /**
+    /**
+     * @example: 根据当前屏幕窗口宽度设置条件选项栅格布局
+     */
+    setConditionCol() {
+      if (document.body.offsetWidth >= 1440) {
+        this.colChunks = [5, 9, 5, 5, 6, 6, 5];
+      } else {
+        this.colChunks = [7, 10, 7, 8, 8, 8, 8];
+      }
+    },
+    /**
      * @example: 请求所属门店数据
      */
     getDepartmentList() {
@@ -496,7 +514,6 @@ export default {
     departmentChange(value) {
       this.agent.list = [];
       this.agent.value = "";
-      this.department.value = value;
       this.query();
       if (value != "") {
         this.getAgentList();
@@ -538,9 +555,26 @@ export default {
     testSubmit() {
       this.testSubmitLoading = true;
       console.log(this.houseStatus, this.testExplain, "验真结果提交-------------");
-      setTimeout(() => {
-        this.testSubmitLoading = false;
-      }, 1000)
+      let url = "/verifyHouse/verify/employee?id="+this.testRowId+"&Remark="+this.testExplain+"&checkTag="+this.houseStatus;
+      this.$api
+        .post({
+          url: url,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          console.log(e.data,"======------")
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: 'success'
+            });
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {
+          this.testSubmitLoading = false;
+        });
     },
     /**
      * @example: 取消房源验证
@@ -548,27 +582,68 @@ export default {
     testCancel() {
       console.log(this.houseStatus, this.testExplain, "取消房源验证-------------");
       this.testDialogVisible = false;
-      this.houseStatus = 0;
-      this.testExplain = "";
     },
     /**
      * @example: 一键拨号
      */
     handleCallClick(row) {
-
+      console.log(row, "-----------------");
+      this.$api
+        .post({
+          url: "/noticeManage/common/verifyOneTouchDialPhone",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            draftId: row.id
+          }
+        })
+        .then(e => {
+          console.log(e, "-------=")
+          if (e.data.code == 200) {
+            this.$message({
+              message: e.data.message,
+              type: 'success'
+            });
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {});
     },
     /**
      * @example: 房源验真
      */
     handleTestClick(row) {
       console.log(row, '-------------')
+      this.testRowId = row.id;
       this.testDialogVisible = true;
+      this.houseStatus = 5;
+      this.testExplain = "";
     },
     /**
      * @example: 验真记录
      */
     handleRecordClick(row) {
       this.recordDialogVisible = true;
+      this.$api
+        .post({
+          url: "/informator/verify/result",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            id: row.id
+          }
+        })
+        .then(e => {
+          console.log(e.data,"======------")
+          if (e.data.code == 200) {
+            this.recordStatus = e.data.data.houseState;
+            this.recordIntroduction = e.data.data.remark;
+          } else {
+            this.$message.error(e.data.message);
+          }
+        })
+        .finally(() => {
+          
+        });
     },
     /**
      * 验真状态change
@@ -740,7 +815,14 @@ export default {
      * @example: 查询条件重置
      */
     reset() {
-      Object.assign(this.$data, this.$options.data());
+      //Object.assign(this.$data, this.$options.data());
+      Object.assign(this.$data.conditions, this.$options.data().conditions);
+      Object.assign(this.$data.department, this.$options.data().department);
+      Object.assign(this.$data.agent, this.$options.data().agent);
+      this.buildOptData = {};
+      this.towerOptData = {};
+      this.roomOptData = {};
+      this.validateStatus = "";
       this.query();
     },
     /**
@@ -788,12 +870,13 @@ export default {
   }
 };
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .children-page {
   height: 100%;
 }
 </style>
 <style lang="less" scoped>
+@import url('~@/assets/publicLess/houseConditionsItem.less');
 .el-select-dropdown__item {
   // prettier-ignore
   height: 40PX;
@@ -818,77 +901,6 @@ export default {
     background: #fff;
     // prettier-ignore
     border-radius: 8PX;
-    /deep/.conditions-box {
-      .fr {
-        float: right;
-      }
-      .el-form-item__label {
-        // prettier-ignore
-        line-height: 36PX;
-        font-weight: bold;
-        font-size: @font14;
-        color: #303133;
-      }
-      .el-input__inner {
-        // prettier-ignore
-        height: 36PX;
-        font-size: @font14;
-      }
-      .el-form-item {
-        // prettier-ignore
-        margin-bottom: 16PX;
-      }
-      .el-range-input {
-        text-align: left;
-        // prettier-ignore
-        text-indent: 5PX;
-        font-size: @font14;
-      }
-      .prefix-icon {
-        width: 0;
-      }
-      .el-date-editor {
-        width: 100%;
-        .el-range-separator {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: auto;
-          padding: 0;
-          line-height: 1;
-          text-indent: 0;
-          font-size: @font14;
-        }
-      }
-      .width100 {
-        width: 100%;
-      }
-    }
-    .conditions-btn {
-      display: flex;
-      justify-content: flex-end;
-      .btn {
-        // prettier-ignore
-        width: 90PX;
-        // prettier-ignore
-        height: 36PX;
-        border: none;
-        border-radius: 4px;
-        background: #fff;
-        outline: none;
-        line-height: 1;
-        text-align: center;
-        font-size: @font12;
-        color: @backgroud;
-        cursor: pointer;
-        &.active {
-          // prettier-ignore
-          margin-left: 9PX;
-          background: @backgroud;
-          color: #fff;
-        }
-      }
-    }
   }
   .main {
     flex: 1;
@@ -908,7 +920,7 @@ export default {
       .table {
         flex: 1;
         // prettier-ignore
-        min-height: 150PX;
+        height: 150PX;
         .caret-wrapper {
           // prettier-ignore
           width: 15PX;
