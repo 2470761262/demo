@@ -67,10 +67,18 @@ function getData() {
       taxDesc: "", //税费解析
       saleDesc: "", //核心卖点
       followWay: "", //跟进的类型
-      followMemo: "" //跟进的内容
+      followMemo: "", //跟进的内容
+      audioFile: {} // 音频集合
     },
     step3: {
       //saleReson: "", //卖房原因
+      outdoorImgList: [], //外景图
+      livingRoomImgList: [], //客厅
+      bedroomImgList: [], //卧室
+      kitchenImgList: [], //厨房
+      toiletImgList: [], //卫生间
+      layoutImgList: [], //户型图
+      houseVideo: {} //房源视频
     }
   };
 }

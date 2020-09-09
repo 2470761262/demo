@@ -658,6 +658,7 @@ export default {
     }
   },
   created() {
+    this.id = this.$route.query.id;
     this.getDetail();
     this.getXinConfig();
   },

@@ -15,6 +15,26 @@
     white-space: nowrap;
   }
 }
+.phone-tip {
+  display: inline-block;
+  margin-top: 8px;
+  margin-left: 70px;
+  padding: 10px;
+  background: #EA9D42;
+  // prettier-ignore
+  border-radius: 4PX;
+  line-height: 1;
+  color: #fff;
+  font-size: 18px;
+  i {
+    margin-right: 0.05rem;
+    vertical-align: top;
+    font-size: 22px;
+  }
+  span {
+    vertical-align: middle;
+  }
+}
 </style>
 <template>
   <div
@@ -39,16 +59,16 @@
             :disabled="disabled"
             >单套录入</el-radio
           >
-          <el-radio
+          <!-- <el-radio
             data-anchor="添加房源多套录入 => radio"
             class="anchor-point"
             label="morePushHouse"
             :disabled="disabled"
             >多套录入</el-radio
           >
-          <span class="multiple-input">即将下线</span>
+          <span class="multiple-input">即将下线</span> -->
         </el-radio-group>
-        <span class="addhouse-tips">(多套录入仅支持同一小区同一业主)</span>
+        <!-- <span class="addhouse-tips">(多套录入仅支持同一小区同一业主)</span> -->
       </div>
     </div>
     <!-- 楼盘名称 -->
@@ -152,8 +172,7 @@
               :key="item.value"
               :label="item.name"
               :value="item.value"
-              :disabled="item.disabled"
-            ></el-option>
+            ></el-option><!-- :disabled="item.disabled" -->
           </el-select>
         </div>
       </div>
@@ -253,6 +272,10 @@
             <div>新增</div>
           </div>
         </el-input>
+        <div class="phone-tip">
+          <i class="el-icon-warning-outline"></i>
+          <span>请填写正确的业主号码，并确认该号码可以正常接收短信且号码与微信同号</span>
+        </div>
       </div>
     </div>
     <!-- 电话号码 for -->
@@ -733,6 +756,7 @@ export default {
         }
         //把修改的过的值给与deffData用于传送后台，如果在一次进入也可以顺便把这个值清空
         this.deffData = deffData;
+        console.log("添加更改属性---------", this.deffData)
       }
     }
   },
@@ -968,7 +992,7 @@ export default {
     },
     //获取楼盘当前选中楼栋信息
     getCommunityData(id) {
-      this.$api.get({ url: `/draft-house/community/${id}` }).then(e => {
+      this.$api.get({ url: `/verifyHouse/community/${id}` }).then(e => {
         let data = e.data.data;
         if (e.data.code == 200) {
           this.formData.property = data.ownerProperty;
@@ -1038,7 +1062,7 @@ export default {
     },
     //获取楼栋当前选中楼栋信息
     getBuildingData(id) {
-      this.$api.get({ url: `/draft-house/building/${id}` }).then(e => {
+      this.$api.get({ url: `/verifyHouse/building/${id}` }).then(e => {
         let data = e.data.data;
         if (e.data.code == 200) {
           if (
@@ -1084,6 +1108,7 @@ export default {
                 token: false
               })
               .then(e => {
+                console.log(e.data, "fffffffffffffffffffff")
                 let data = e.data;
                 if (data.code == 200) {
                   that.selectPageRoomNo.list = data.data.list;
@@ -1112,7 +1137,10 @@ export default {
     },
     //获取房间号数据
     getRoomData(id) {
-      this.$api.get({ url: `/draft-house/room/${id}` }).then(e => {
+      console.log(id,"-----------")
+      // `/draft-house/room/${id}`
+      this.$api.get({ url: `/verifyHouse/room/${id}` }).then(e => {
+        console.log(e, '============')
         let data = e.data.data;
         if (e.data.code == 200) {
           this.formData.valuation = data.valuation;
@@ -1123,8 +1151,14 @@ export default {
           this.formData.toilet = data.toilet || 0;
           this.formData.balcony = data.balcony || 0;
           this.formData.roomType = data.roomType;
+        } else {
+          //this.formData.roomId = "";
+          this.$message.error(e.data.message);
         }
-      });
+      }).finally(e => {
+        //this.formData.roomId = "";
+        console.log(e,"------------aaaaaaaa")
+      })
     },
     removeTelToList(index, item) {
       this.addTel.splice(index, 1);
@@ -1145,6 +1179,7 @@ export default {
     },
     //验证
     validateAll() {
+      console.log("-=======aaaaaaaaaa")
       let that = this;
       return this.$validator
         .validateAll()
@@ -1165,7 +1200,7 @@ export default {
     //获取
     getLoadData() {
       this.loading = true;
-      let url = `/draft-house/${this.$store.state.addHouse.formData.id}`;
+      let url = `/verifyHouse/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getEditUrl) {
         url =
           this.paramsObj.getEditUrl + this.$store.state.addHouse.formData.id;
@@ -1260,32 +1295,39 @@ export default {
 
       data.price = this.formData.price;
       data.area = this.formData.area;
-      console.log(this.formData, "this.formData", this.deffData);
-      return this.$api[method]({
-        url: url,
-        data: data,
-        headers: { "Content-Type": "application/json;charset=UTF-8" }
-      })
-        .then(e => {
-          if (e.data.code == 200) {
-            if (this.paramsObj.editUrl) {
-              //更新成功,同步更新外网
-              data.houseNo = this.$store.state.addHouse.formData.houseNo;
-              releaseHouse.updateOutsideHouse(data);
-            }
-            //存入Vuex;
-            if (e.data.data != null) {
-              that.$store.commit("updateId", e.data.data);
-            }
-            that.$store.commit("updateStep1", that.deffData);
-            return true;
-          } else {
-            return false;
-          }
+      //console.log(this.formData, "this.formData", this.deffData);
+      // 数据只保存到本地
+      that.$store.commit("updateStep1", that.deffData);
+      
+      if (this.paramsObj.editUrl) {
+        return this.$api[method]({
+          url: url,
+          data: data,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
-        .catch(e => {
-          return false;
-        });
+          .then(e => {
+            if (e.data.code == 200) {
+              if (this.paramsObj.editUrl) {
+                //更新成功,同步更新外网
+                data.houseNo = this.$store.state.addHouse.formData.houseNo;
+                releaseHouse.updateOutsideHouse(data);
+              }
+              //存入Vuex;
+              if (e.data.data != null) {
+                that.$store.commit("updateId", e.data.data);
+              }
+              that.$store.commit("updateStep1", that.deffData);
+              return true;
+            } else {
+              return false;
+            }
+          })
+          .catch(e => {
+            return false;
+          });
+      } else {
+        return true;
+      }
     }
     // getNextSaveButton() {
     //   let that = this;

@@ -14,7 +14,9 @@
                   @change="query(1)"
                   clearable
                   class="anchor-point"
-                  :data-anchor="'信息员验真列表搜索 房源编号:' + conditions.houseNo"
+                  :data-anchor="
+                    '信息员验真列表搜索 房源编号:' + conditions.houseNo
+                  "
                 ></el-input>
               </el-form-item>
             </el-col>
@@ -129,7 +131,9 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'信息员验真列表录入人 => select => option:' + item.perName"
+                    :data-anchor="
+                      '信息员验真列表录入人 => select => option:' + item.perName
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in agent.list"
                     :key="item.accountId"
@@ -157,7 +161,10 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'信息员验真列表所属门店 => select => option:' + item.depName"
+                    :data-anchor="
+                      '信息员验真列表所属门店 => select => option:' +
+                        item.depName
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in department.list"
                     :key="item.depId"
@@ -182,7 +189,9 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'信息员验真列表验真状态 => select => option:' + item.label"
+                    :data-anchor="
+                      '信息员验真列表验真状态 => select => option:' + item.label
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in validateStatusList"
                     :key="item.value"
@@ -249,11 +258,19 @@
               label="房屋信息"
               width="230"
               align="left"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
               <template v-slot="scope">
                 <div class="tab-house-box">
-                  <div class="tab-house-title">{{scope.row.communityName}}{{scope.row.buildingName?"-"+scope.row.buildingName:""}}{{scope.row.roomNo?"-"+scope.row.roomNo:""}}</div>
-                  <div class="tab-house-no">{{scope.row.houseNo}}</div>
+                  <div class="tab-house-title">
+                    {{ scope.row.communityName
+                    }}{{
+                      scope.row.buildingName
+                        ? "-" + scope.row.buildingName
+                        : ""
+                    }}{{ scope.row.roomNo ? "-" + scope.row.roomNo : "" }}
+                  </div>
+                  <div class="tab-house-no">{{ scope.row.houseNo }}</div>
                 </div>
               </template>
             </el-table-column>
@@ -262,47 +279,52 @@
               prop="checkStatus"
               label="验真状态"
               align="right"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
               <template v-slot="scope">
-                <span v-if="scope.row.checkStatus==1" class="span_success">待验真</span>
-                <span v-if="scope.row.spotCheckStatus==2" class="span_danger">验真成功</span>
-                <span v-if="scope.row.spotCheckStatus==3" class="span_warning">验真失败</span>
-                <span v-if="scope.row.spotCheckStatus==4" class="span_info">无效</span>
+                <span v-if="scope.row.checkStatus == 1" class="span_success"
+                  >待验真</span
+                >
+                <span v-if="scope.row.checkStatus == 2" class="span_danger"
+                  >验真成功</span
+                >
+                <span v-if="scope.row.checkStatus == 3" class="span_warning"
+                  >验真失败</span
+                >
+                <span v-if="scope.row.checkStatus == 4" class="span_info"
+                  >无效</span
+                >
               </template>
             </el-table-column>
-            <el-table-column
-              label="售价"
-              align="right"
-              show-overflow-tooltip>
+            <el-table-column label="售价" align="right" show-overflow-tooltip>
               <template v-slot="scope">
-                <span>{{scope.row.price}}万</span>
+                <span>{{ scope.row.price }}万</span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="面积"
-              align="right"
-              show-overflow-tooltip>
+            <el-table-column label="面积" align="right" show-overflow-tooltip>
               <template v-slot="scope">
-                <span>{{scope.row.inArea}}㎡</span>
+                <span>{{ scope.row.inArea }}㎡</span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="户型"
-              align="right"
-              show-overflow-tooltip>
+            <el-table-column label="户型" align="right" show-overflow-tooltip>
               <template v-slot="scope">
-                <span>{{scope.row.rooms || 0}}-{{scope.row.hall || 0}}-{{scope.row.toilet || 0}}-{{scope.row.balcony || 0}}</span>
+                <span
+                  >{{ scope.row.rooms || 0 }}-{{ scope.row.hall || 0 }}-{{
+                    scope.row.toilet || 0
+                  }}-{{ scope.row.balcony || 0 }}</span
+                >
               </template>
             </el-table-column>
             <el-table-column
               prop="addPerName"
               label="录入人"
               align="right"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
               <template v-slot="scope">
                 <div class="tab-house-box">
-                  <div class="tab-house-title">{{scope.row.addPerName}}</div>
-                  <div class="tab-house-no">{{scope.row.deptName}}</div>
+                  <div class="tab-house-title">{{ scope.row.addPerName }}</div>
+                  <div class="tab-house-no">{{ scope.row.deptName }}</div>
                 </div>
               </template>
             </el-table-column>
@@ -311,18 +333,37 @@
               prop="addTime"
               label="提交时间"
               align="right"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
             </el-table-column>
 
             <el-table-column
               fixed="right"
               label="操作"
               align="right"
-              width="300">
+              width="300"
+            >
               <template v-slot="scope">
-                <el-button @click="handleCallClick(scope.row)" type="text" size="small">一键拨号</el-button>
-                <el-button @click="handleTestClick(scope.row)" type="text" size="small">房源验真</el-button>
-                <el-button @click="handleRecordClick(scope.row)" type="text" size="small">验真记录</el-button>
+                <el-button
+                  @click="handleCallClick(scope.row)"
+                  type="text"
+                  size="small"
+                  :disabled="scope.row.checkStatus != 1"
+                  >一键拨号</el-button
+                >
+                <el-button
+                  @click="handleTestClick(scope.row)"
+                  type="text"
+                  size="small"
+                  :disabled="scope.row.checkStatus != 1"
+                  >房源验真</el-button
+                >
+                <el-button
+                  @click="handleRecordClick(scope.row)"
+                  type="text"
+                  size="small"
+                  >验真记录</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
@@ -340,7 +381,12 @@
       </div>
     </div>
     <!-- 房源验真弹窗 -->
-    <el-dialog title="房源验真" class="test-dialog" :visible.sync="testDialogVisible" width="554px">
+    <el-dialog
+      title="房源验真"
+      class="test-dialog"
+      :visible.sync="testDialogVisible"
+      width="554px"
+    >
       <div class="content">
         <div class="title">房源状态</div>
         <el-radio-group class="radio-box" v-model="houseStatus">
@@ -348,7 +394,9 @@
           <el-radio-button :label="3">暂不考虑</el-radio-button>
           <el-radio-button :label="4">已经出售</el-radio-button>
         </el-radio-group>
-        <p class="tip">注：若选择“暂不考虑”或“已经出售”，则默认视为验真不通过</p>
+        <p class="tip">
+          注：若选择“暂不考虑”或“已经出售”，则默认视为验真不通过
+        </p>
         <div class="title">详细说明</div>
         <el-input
           class="explain"
@@ -356,31 +404,55 @@
           :rows="2"
           placeholder="请输入内容"
           resize="none"
-          v-model="testExplain">
+          v-model="testExplain"
+        >
         </el-input>
       </div>
       <div slot="footer">
         <el-button class="test-btn cancel" @click="testCancel">取消</el-button>
-        <el-button class="test-btn submit" :loading="testSubmitLoading" @click="testSubmit">验真结果提交</el-button>
+        <el-button
+          class="test-btn submit"
+          :loading="testSubmitLoading"
+          @click="testSubmit"
+          >验真结果提交</el-button
+        >
       </div>
     </el-dialog>
     <!-- 房源记录弹窗 -->
-    <el-dialog title="房源记录" class="test-dialog record-content" :visible.sync="recordDialogVisible">
+    <el-dialog
+      title="房源记录"
+      class="test-dialog record-content"
+      :visible.sync="recordDialogVisible"
+    >
       <div class="status-box">
         <span class="title">房源状态：</span>
-        <span class="text">{{recordStatus}}</span>
+        <span class="text">{{ recordStatus }}</span>
       </div>
       <div class="detail-box">
         <span class="title">详细说明：</span>
         <div class="detail">
-          <p class="text">{{recordIntroduction||'暂无'}}</p>
+          <p class="text">{{ recordIntroduction || "暂无" }}</p>
           <div class="audio-box">
-            <audio src="https://www.runoob.com/try/demo_source/horse.mp3"></audio>
+            <audio
+              src="https://www.runoob.com/try/demo_source/horse.mp3"
+            ></audio>
             <div class="audio-fl">
-              <img class="sound" src="@/assets/images/employeeValidate_sound.png" alt="">
+              <img
+                class="sound"
+                src="@/assets/images/employeeValidate_sound.png"
+                alt=""
+              />
               <span class="duration">08:20</span>
             </div>
-            <img class="play" :src="true?require('@/assets/images/employeeValidate_play.png'):require('@/assets/images/employeeValidate_pause.svg')" alt="">
+            <img
+              class="play"
+              :src="
+                true
+                  ? require('@/assets/images/employeeValidate_play.png')
+                  : require('@/assets/images/employeeValidate_pause.svg')
+              "
+              alt=""
+            />
           </div>
         </div>
       </div>
@@ -388,7 +460,7 @@
   </div>
 </template>
 <script>
-import breadcrumb from './components/breadcrumb.vue'
+import breadcrumb from "./components/breadcrumb.vue";
 import util from "@/util/util";
 import bus from "@/evenBus/but.js";
 export default {
@@ -430,13 +502,16 @@ export default {
         {
           value: 1,
           label: "待验真"
-        }, {
+        },
+        {
           value: 2,
           label: "验真成功"
-        }, {
+        },
+        {
           value: 3,
           label: "验真失败"
-        }, {
+        },
+        {
           value: 4,
           label: "无效"
         }
@@ -464,10 +539,10 @@ export default {
     bus.$emit("switchEntranceNav", 1);
     this.query();
     this.setConditionCol();
-    window.addEventListener('resize', this.setConditionCol);
+    window.addEventListener("resize", this.setConditionCol);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.setConditionCol);
+    window.removeEventListener("resize", this.setConditionCol);
   },
   methods: {
     /**
@@ -554,19 +629,29 @@ export default {
      */
     testSubmit() {
       this.testSubmitLoading = true;
-      console.log(this.houseStatus, this.testExplain, "验真结果提交-------------");
-      let url = "/verifyHouse/verify/employee?id="+this.testRowId+"&Remark="+this.testExplain+"&checkTag="+this.houseStatus;
+      console.log(
+        this.houseStatus,
+        this.testExplain,
+        "验真结果提交-------------"
+      );
+      let url =
+        "/verifyHouse/verify/employee?id=" +
+        this.testRowId +
+        "&Remark=" +
+        this.testExplain +
+        "&checkTag=" +
+        this.houseStatus;
       this.$api
         .post({
           url: url,
           headers: { "Content-Type": "application/json;charset=UTF-8" }
         })
         .then(e => {
-          console.log(e.data,"======------")
+          console.log(e.data, "======------");
           if (e.data.code == 200) {
             this.$message({
               message: e.data.message,
-              type: 'success'
+              type: "success"
             });
           } else {
             this.$message.error(e.data.message);
@@ -580,7 +665,11 @@ export default {
      * @example: 取消房源验证
      */
     testCancel() {
-      console.log(this.houseStatus, this.testExplain, "取消房源验证-------------");
+      console.log(
+        this.houseStatus,
+        this.testExplain,
+        "取消房源验证-------------"
+      );
       this.testDialogVisible = false;
     },
     /**
@@ -597,11 +686,11 @@ export default {
           }
         })
         .then(e => {
-          console.log(e, "-------=")
+          console.log(e, "-------=");
           if (e.data.code == 200) {
             this.$message({
               message: e.data.message,
-              type: 'success'
+              type: "success"
             });
           } else {
             this.$message.error(e.data.message);
@@ -613,7 +702,7 @@ export default {
      * @example: 房源验真
      */
     handleTestClick(row) {
-      console.log(row, '-------------')
+      console.log(row, "-------------");
       this.testRowId = row.id;
       this.testDialogVisible = true;
       this.houseStatus = 5;
@@ -633,7 +722,7 @@ export default {
           }
         })
         .then(e => {
-          console.log(e.data,"======------")
+          console.log(e.data, "======------");
           if (e.data.code == 200) {
             this.recordStatus = e.data.data.houseState;
             this.recordIntroduction = e.data.data.remark;
@@ -641,16 +730,12 @@ export default {
             this.$message.error(e.data.message);
           }
         })
-        .finally(() => {
-          
-        });
+        .finally(() => {});
     },
     /**
      * 验真状态change
      */
-    changeValidateStatus() {
-
-    },
+    changeValidateStatus() {},
     /**
      * @example: 改变每页请求数据数量
      * @param {val} 请求数
@@ -829,7 +914,7 @@ export default {
      * @example: 搜索
      */
     query(currentPage = 1) {
-      console.log("---------------")
+      console.log("---------------");
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
@@ -876,7 +961,7 @@ export default {
 }
 </style>
 <style lang="less" scoped>
-@import url('~@/assets/publicLess/houseConditionsItem.less');
+@import url("~@/assets/publicLess/houseConditionsItem.less");
 .el-select-dropdown__item {
   // prettier-ignore
   height: 40PX;
@@ -1007,7 +1092,7 @@ export default {
           padding: 0 10PX;
           font-size: @font16;
         }
-        
+
         .tab-house-box {
           .tab-house-title {
             // prettier-ignore
@@ -1022,30 +1107,30 @@ export default {
         }
         .span_success,
         .span_danger,
-        .span_warning{
+        .span_warning {
           display: inline-block;
-          padding: 6PX 13PX;
+          padding: 6px 13px;
           border-radius: 2px;
           line-height: 1;
           text-align: center;
           font-size: @font14;
         }
         .span_success {
-          background: #0DA88B19;
-          color: #0DA88B;
+          background: #0da88b19;
+          color: #0da88b;
         }
         .span_danger {
-          background: #EF565619;
+          background: #ef565619;
           font-size: @font14;
-          color: #EF5656;
+          color: #ef5656;
         }
         .span_warning {
-          background: #F6A42019;
+          background: #f6a42019;
           font-size: @font14;
-          color: #F6A420;
+          color: #f6a420;
         }
         .span_info {
-          background: #CACACA;
+          background: #cacaca;
           font-size: @font14;
           color: #909399;
         }
@@ -1157,7 +1242,7 @@ export default {
       padding: 0 24PX 29PX;
     }
   }
-  .content{
+  .content {
     .title {
       position: relative;
       // prettier-ignore
@@ -1181,7 +1266,7 @@ export default {
         // prettier-ignore
         height: 6PX;
         border-radius: 100%;
-        background: #F62F2F;
+        background: #f62f2f;
         font-size: @font16;
         color: #909399;
       }
@@ -1202,11 +1287,11 @@ export default {
           // prettier-ignore
           height: 48PX;
           padding: 0;
-          background: #F0F2F5;
+          background: #f0f2f5;
           border: none;
           // prettier-ignore
           border-radius: 4PX;
-          line-height: 48PX;
+          line-height: 48px;
           font-size: @font16;
           color: #909399;
         }
@@ -1217,7 +1302,7 @@ export default {
       margin: 16PX 0 24PX;
       line-height: 1;
       font-size: @font16;
-      color: #F33A3A;
+      color: #f33a3a;
     }
     .explain {
       // prettier-ignore
@@ -1228,7 +1313,7 @@ export default {
       }
     }
   }
-  .test-btn{
+  .test-btn {
     // prettier-ignore
     width: 136PX;
     // prettier-ignore
@@ -1236,7 +1321,7 @@ export default {
     box-sizing: border-box;
     font-size: @font16;
     &.cancel {
-      border: 1px solid #CECECE;
+      border: 1px solid #cecece;
       color: #909399;
     }
     &.submit {
@@ -1267,7 +1352,7 @@ export default {
         margin-top: 16PX;
         // prettier-ignore
         padding: 10PX 14PX 21PX;
-        background: #F8F8F8;
+        background: #f8f8f8;
         // prettier-ignore
         border-radius: 4PX;
         .text {
@@ -1306,7 +1391,6 @@ export default {
           .play {
             // prettier-ignore
             width: 16PX;
-
           }
         }
       }

@@ -761,7 +761,7 @@ export default {
         });
     },
     getLoadDataVideo() {
-      let url = `/draft-house/videos/${this.$store.state.addHouse.formData.id}`;
+      let url = `/verifyHouse/videos/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getVideoUrl) {
         url =
           this.paramsObj.getVideoUrl + this.$store.state.addHouse.formData.id;
@@ -793,7 +793,7 @@ export default {
     },
     //获取上传的图片
     getLoadDataImg() {
-      let url = `/draft-house/pictures/${this.$store.state.addHouse.formData.id}`;
+      let url = `/verifyHouse/pictures/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getPicturesUrl) {
         url =
           this.paramsObj.getPicturesUrl +
@@ -872,7 +872,7 @@ export default {
     deleteImg(id, url, index, listName) {
       this.$api
         .delete({
-          url: `/draft-house/picture/${id}`,
+          url: `/verifyHouse/picture/${id}`,
           data: {
             url: url
           },
@@ -892,15 +892,19 @@ export default {
       }
       this.$api
         .delete({
-          url: `/draft-house/video/${item.id}`,
+          url: `/verifyHouse/video/${item.id}`,
           data: {
             url: item.url
           },
           qs: true
         })
         .then(e => {
+          console.log("del视频","------------========")
           if (e.data.code == 200) {
             this.houseVideo = {};
+            this.$store.commit("updateStep3", {
+              houseVideo: this.houseVideo
+            });
             this.$refs.houseVideoList.value = null;
           }
         });
@@ -920,7 +924,7 @@ export default {
       }
       this.$api
         .post({
-          url: `/draft-house/${
+          url: `/verifyHouse/${
             picClass != undefined ? "pictureDraft" : "videoDraft"
           }`,
           headers: { "Content-Type": "application/json;charset=UTF-8" },
@@ -962,7 +966,7 @@ export default {
       formData.append("file", uploader);
       this.$api
         .post({
-          url: `/draft-house/${picClass != undefined ? "picture" : "video"}`,
+          url: `/verifyHouse/${picClass != undefined ? "picture" : "video"}`,
           headers: { "Content-Type": "multipart/form-data" },
           data: formData
           // onUploadProgress: (progressEvent) => { //原生获取上传进度的事件
@@ -973,12 +977,18 @@ export default {
           // }
         })
         .then(json => {
+          console.log(fileListName,"video上传成功------------------------");
           if (json.data.code == 200) {
             if (picClass != undefined) {
               this[fileListName].push(json.data.data);
             } else {
               this[fileListName] = json.data.data;
             }
+
+            this.$store.commit("updateStep3", {
+              [fileListName]: this[fileListName]
+            });
+            console.log(this.$store.state.addHouse.formData, "--------------============success!!!")
           }
         })
         .catch(e => {

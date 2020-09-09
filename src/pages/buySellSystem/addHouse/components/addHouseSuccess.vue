@@ -121,6 +121,7 @@
 <script>
 import util from "@/util/util";
 import but from "@/evenBus/but.js";
+import {mapState} from "vuex";
 export default {
   name: "addHouseSuccess",
   data() {
@@ -136,6 +137,9 @@ export default {
       edit: false,
       btnSubmitVerify: true
     };
+  },
+  computed: {
+    ...mapState(["formData"])
   },
   created() {},
   mounted() {
@@ -153,35 +157,112 @@ export default {
   },
   methods: {
     getQr() {
+      console.log(this.formData,"11111111111111111");
       let that = this;
       if (!that.btnSubmitVerify) {
         return;
       }
+      // this.$api
+      //   .post({
+      //     url: "/verifyHouse/invitationToVerify/addHouse",
+      //     data: {
+      //       id: that.$store.state.addHouse.formData.id
+      //     },
+      //     qs: true
+      //   })
+      //   .then(e => {
+      //     let result = e.data;
+      //     that.loading = false;
+      //     if (result.code == 200) {
+      //       that.loading = false;
+      //       that.url = result.data;
+      //     } else {
+      //       console.log("查询结果：" + result.message);
+      //       alert(result.message);
+      //       that.loading = false;
+      //     }
+      //   })
+      //   .catch(e => {
+      //     console.log("查询失败");
+      //     console.log(e);
+      //     that.loading = false;
+      //   });
+      let audioList = [];
+      console.log(this.$store.state.addHouse.formData, "--------------============success!!!")
+      if (this.$store.state.addHouse.formData.step2.audioFile.id) {
+        audioList.push(this.$store.state.addHouse.formData.step2.audioFile.id);
+      }
+      let videoList = [];
+      if (this.$store.state.addHouse.formData.step3.houseVideo.id) {
+        videoList.push(this.$store.state.addHouse.formData.step3.houseVideo.id);
+      }
+      let imageList = [];
+      for (let item of this.$store.state.addHouse.formData.step3.outdoorImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.$store.state.addHouse.formData.step3.livingRoomImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.$store.state.addHouse.formData.step3.bedroomImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.$store.state.addHouse.formData.step3.kitchenImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.$store.state.addHouse.formData.step3.toiletImgList) {
+        imageList.push(item.id);
+      }
+      for (let item of this.$store.state.addHouse.formData.step3.layoutImgList) {
+        imageList.push(item.id);
+      }
       this.$api
         .post({
-          url: "/verifyHouse/invitationToVerify/addHouse",
+          url: "/verifyHouse",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
-            id: that.$store.state.addHouse.formData.id
-          },
-          qs: true
+            communityId: this.$store.state.addHouse.formData.step1.communityId,
+            communityName: this.$store.state.addHouse.formData.step1.communityName,
+            buildingId: this.$store.state.addHouse.formData.step1.buildingId,
+            buildingNo: this.$store.state.addHouse.formData.step1.buildingNo,
+            roomId: this.$store.state.addHouse.formData.step1.roomId,
+            roomNo: this.$store.state.addHouse.formData.step1.roomNo,
+            customerName: this.$store.state.addHouse.formData.step1.customerName,
+            sex: this.$store.state.addHouse.formData.step1.sex,
+            customerType: this.$store.state.addHouse.formData.step1.customerType,
+            tel: this.$store.state.addHouse.formData.step1.tel,
+            tel1: this.$store.state.addHouse.formData.step1.tel1,
+            tel2: this.$store.state.addHouse.formData.step1.tel2,
+            tel3: this.$store.state.addHouse.formData.step1.tel3,
+            price: this.$store.state.addHouse.formData.step1.price,
+            bottomPrice: this.$store.state.addHouse.formData.step1.bottomPrice,
+            certificateType: this.$store.state.addHouse.formData.step1.certificateType,
+            certificateNo: this.$store.state.addHouse.formData.step1.certificateNo,
+            imageList: imageList,
+            audioList: audioList,
+            videoList: videoList
+          }
         })
         .then(e => {
           let result = e.data;
-          that.loading = false;
           if (result.code == 200) {
-            that.loading = false;
-            that.url = result.data;
+            //that.url = result.data;
+            this.$router.push({
+              path: "/buySellSystem/validateHome",
+              query: {
+                id: result.data,
+              }
+            });
           } else {
             console.log("查询结果：" + result.message);
-            alert(result.message);
-            that.loading = false;
+            // alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询失败");
-          console.log(e);
+          console.log(e,"查询失败");
+        })
+        .finally(e => {
           that.loading = false;
-        });
+        })
     },
     navto() {
       this.$router.replace({ path: "/myHouse/myValidate" });

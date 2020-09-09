@@ -1147,7 +1147,7 @@ export default {
     removeAudio(id, url) {
       this.$api
         .delete({
-          url: `/draft-house/audio/${id}`,
+          url: `/verifyHouse/audio/${id}`,
           data: {
             url: url
           },
@@ -1224,7 +1224,7 @@ export default {
       formData.IpStr = url;
       this.$api
         .post({
-          url: `/draft-house/audioDraft`,
+          url: `/verifyHouse/audioDraft`,
           headers: { "Content-Type": "application/json" },
           data: formData
         })
@@ -1247,7 +1247,7 @@ export default {
     },
     //根据ID获取已经上传的音频
     getAudio() {
-      let url = `/draft-house/audios/${this.$store.state.addHouse.formData.id}`;
+      let url = `/verifyHouse/audios/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getAudioUrl) {
         url =
           this.paramsObj.getAudioUrl + this.$store.state.addHouse.formData.id;
@@ -1276,6 +1276,7 @@ export default {
         this.$message.error("上传的音频只能是MP3格式!");
         return;
       }
+      console.log(this.$store.state.addHouse.formData, "=cccccccccccccccccccccccccccc")
       if (Object.keys(this.audioFile).length != 0) {
         this.$message.error("只能上传一个音频");
         return;
@@ -1319,13 +1320,17 @@ export default {
       formData.append("file", uploader);
       this.$api
         .post({
-          url: `/draft-house/audio`,
+          url: `/verifyHouse/audio`,
           headers: { "Content-Type": "multipart/form-data" },
           data: formData
         })
         .then(json => {
           if (json.data.code == 200) {
             this.audioFile = json.data.data;
+            this.$store.commit("updateStep2", {
+              audioFile: this.audioFile
+            });
+            console.log(this.$store.state.addHouse.formData, "--------------============success!")
           }
         })
         .catch(e => {
@@ -1340,7 +1345,7 @@ export default {
     },
     getLoadData() {
       this.loading = true;
-      let url = `/draft-house/${this.$store.state.addHouse.formData.id}`;
+      let url = `/verifyHouse/${this.$store.state.addHouse.formData.id}`;
       if (this.paramsObj.getEditUrl) {
         url =
           this.paramsObj.getEditUrl + this.$store.state.addHouse.formData.id;
@@ -1479,12 +1484,13 @@ export default {
     },
     //修改数据到接口
     setDataToUpdate() {
+      console.log("----------------------")
       let that = this;
       let sendData = {
         id: that.$store.state.addHouse.formData.id,
         ...that.deffData
       };
-      let url = "/draft-house";
+      let url = "/verifyHouse";
       if (Object.keys(this.deffData).length == 0 || !this.nextSaveButton) {
         //没有做出修改  或者 没有下一步保存的按钮权限
         console.log("跳过保存，当前权限：", this.nextSaveButton);
