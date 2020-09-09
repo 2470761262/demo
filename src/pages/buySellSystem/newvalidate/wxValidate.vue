@@ -484,11 +484,11 @@
     <div class="content-top">
       <div class="content-head-left">
         <strong class="tips">
-          短信验真
+          微信验真
           <span class="tips-text">待验真</span>
         </strong>
         <small class="small-tips"
-          >系统已自动发送，短信给验真的验真号码，请尽快联系业主获取验证码</small
+          >请尽快，按照下房方的操作提示，将房源转发给业主进行验真</small
         >
       </div>
       <div class="content-head-right">
@@ -759,6 +759,8 @@ export default {
           this.isCheckSign = 3;
         }
         return;
+      } else {
+        this.isCheckSign = 1;
       }
 
       let time = endTime - nowTime;

@@ -820,6 +820,8 @@ export default {
           this.isCheckSign = 3;
         }
         return;
+      } else {
+        this.isCheckSign = 1;
       }
 
       let time = endTime - nowTime;
