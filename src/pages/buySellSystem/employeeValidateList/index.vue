@@ -562,7 +562,7 @@ export default {
       this.department.loading = true;
       this.$api
         .post({
-          url: "/spotCheck/spotCheckRecordList",
+          url: "/informator/verify/spotCheckRecordList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             selectType: "MORE_SELECT_SHOP"
