@@ -653,6 +653,7 @@ export default {
               message: e.data.message,
               type: "success"
             });
+            this.testCancel();
           } else {
             this.$message.error(e.data.message);
           }
