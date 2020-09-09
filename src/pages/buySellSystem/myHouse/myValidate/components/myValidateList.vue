@@ -315,6 +315,11 @@ let checkStatusStrMap = new Map([
   ["验真成功", "span_success"],
   ["验真失败", "span_danger"]
 ]);
+let pageNameMap = new Map([
+  [1, "wxValidate"],
+  [2, "pMsgValidate"],
+  [3, "messageValidate"]
+]);
 export default {
   inject: ["form"],
   components: {
@@ -610,22 +615,33 @@ export default {
     },
     getVerifyImg(row) {
       let trueId = row.id;
-      if (row.isMul != null && row.isMul !== 0) {
-        trueId = row.isMul;
-      }
-      console.log("trueId............" + trueId);
-      let params = { id: trueId };
       let that = this;
       that.loading = true;
       this.$api
         .get({
-          url: "/verifyHouse/check/" + row.id
+          url: "/verifyHouse/inviteVerify/" + row.id
         })
         .then(e => {
+          that.loading = false;
           if (e.data.code == 200) {
-            that.getImg(params);
+            let data = e.data.data;
+
+            if (data.mode) {
+              this.$router.push({
+                name: pageNameMap.get(parseInt(data.mode)),
+                query: {
+                  id: row.id
+                }
+              });
+            } else {
+              this.$router.push({
+                path: "/buySellSystem/validateHome",
+                query: {
+                  id: row.id
+                }
+              });
+            }
           } else {
-            that.loading = false;
             this.$message.error(e.date.message);
           }
         })
