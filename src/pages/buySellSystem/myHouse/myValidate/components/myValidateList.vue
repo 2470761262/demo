@@ -94,6 +94,30 @@
 .cus-box {
   display: flex;
 }
+.span_success,
+.span_danger,
+.span_warning {
+  display: inline-block;
+  padding: 6px 13px;
+  border-radius: 2px;
+  line-height: 1;
+  text-align: center;
+  font-size: @font14;
+}
+.span_success {
+  background: #0da88b19;
+  color: #0da88b;
+}
+.span_danger {
+  background: #ef565619;
+  font-size: @font14;
+  color: #ef5656;
+}
+.span_warning {
+  background: #f6a42019;
+  font-size: @font14;
+  color: #f6a420;
+}
 </style>
 <template>
   <div class="tab-page" v-loading="loading">
@@ -286,6 +310,11 @@ const dom = document;
 import util from "@/util/util";
 //验真电话弹框
 import telPop from "./telPop";
+let checkStatusStrMap = new Map([
+  ["待验真", "span_warning"],
+  ["验真成功", "span_success"],
+  ["验真失败", "span_danger"]
+]);
 export default {
   inject: ["form"],
   components: {
@@ -322,50 +351,42 @@ export default {
       tableColumnField: [
         {
           prop: "communityName",
-          label: "楼盘名称"
+          label: "楼盘名称",
+          formart: item => {
+            return `${item.communityName}-${item.buildingName}-${item.roomNo}`;
+          }
         },
         {
-          prop: "phoneStatus",
-          label: "电话检索"
+          prop: "sourceStr",
+          label: "验真类型"
         },
         {
-          prop: "checkStatus",
-          label: "验真状态"
+          prop: "checkStatusStr",
+          label: "验真状态",
+          formart: item => {
+            let str = checkStatusStrMap.get(item.checkStatusStr);
+            return (
+              <span class={str}>{str ? item.checkStatusStr : "暂无"}</span>
+            );
+          }
         },
         {
           prop: "customerName",
           label: "业主姓名"
         },
         {
-          prop: "checkTelStatus",
-          label: "验真电话",
-          formart: row => {
-            return (
-              <div class="checkTel-type">
-                {row.checkTelStatus == "正常" ? (
-                  <span class="checkTel-type-success">
-                    {row.checkTelStatus}
-                  </span>
-                ) : (
-                  <span class="checkTel-type-error">{row.checkTelStatus}</span>
-                )}
-                <span
-                  class="el-icon-s-order icon"
-                  onClick={this.openCheckTelPop.bind(this, row)}
-                ></span>
-              </div>
-            );
-          }
+          prop: "modeStr",
+          label: "验真方式"
         },
         {
           prop: "addPerName",
           label: "录入人"
         },
-        {
-          prop: "addTime",
-          label: "录入时间",
-          order: "custom"
-        },
+        // {
+        //   prop: "addTime",
+        //   label: "录入时间",
+        //   order: "custom"
+        // },
         {
           label: "操作",
           formart: row => this.operation(row),
@@ -416,11 +437,11 @@ export default {
           isType: "验真失败",
           methodName: "reVerify"
         },
-        {
-          name: "编辑",
-          isType: "待业主验真,待店长验真,已过期,验真失败,草稿",
-          methodName: "edit"
-        },
+        // {
+        //   name: "编辑",
+        //   isType: "待业主验真,待店长验真,已过期,验真失败,草稿",
+        //   methodName: "edit"
+        // },
         {
           name: "验真详情",
           isType: "待业主验真,待店长验真,已过期,验真失败,验真成功",
@@ -748,12 +769,6 @@ export default {
         page: this.pageJson.currentPage,
         limit: this.pageJson.pageSize
       });
-      if (params.checkStatusValue == "1") {
-        params.checkSubStatus = "0";
-      } else if (params.checkStatusValue == "4") {
-        params.checkStatusValue = "1";
-        params.checkSubStatus = "1";
-      }
       if (params.time && params.time.length == 2) {
         params.beginTime = params.time[0];
         params.endTime = params.time[1];

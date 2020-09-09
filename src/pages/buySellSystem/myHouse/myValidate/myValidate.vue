@@ -42,12 +42,12 @@ export default {
         random: "",
         bhId: "",
         cbId: "",
-        checkStatusValue: "", // 验真状态
-        validateType: "", // 验真类型
-        validateWay: "", // 验真方式
-        department: "", // 所属门店
+        checkStatus: "", // 验真状态
+        source: "", // 验真类型
+        mode: "", // 验真方式
+        storeId: "", // 所属门店
         comId: "",
-        customrName: "",
+        customerName: "",
         limit: 10,
         page: 1,
         sortColumn: "addTime",

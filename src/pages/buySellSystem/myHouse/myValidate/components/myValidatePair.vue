@@ -133,7 +133,7 @@
           class="input-text "
           placeholder="业主姓名"
           oninput="value = value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5]/g, '')"
-          @blur="handleInputBlur('cusName', 'customrName')"
+          @blur="handleInputBlur('cusName', 'customerName')"
         ></el-input>
       </div>
     </div>
@@ -161,7 +161,7 @@
           popper-class="anchor-point"
           data-anchor="我的验真所属门店 => select"
           @click.native="log_socket.sendUserActionData"
-          v-model="form.department"
+          v-model="form.storeId"
           placeholder="请输入门店名称"
           clearable
           filterable
@@ -171,7 +171,9 @@
         >
           <el-option
             class="anchor-point"
-            :data-anchor="'我的验真所属门店 => select => option:' + item.depName"
+            :data-anchor="
+              '我的验真所属门店 => select => option:' + item.depName
+            "
             @click.native="log_socket.sendUserActionData"
             v-for="item in department.list"
             :key="item.depId"
@@ -187,7 +189,7 @@
       <div class="search-item-body">
         <el-select
           clearable
-          v-model="form.checkStatusValue"
+          v-model="form.checkStatus"
           popper-class="options-myhouse-custom-item anchor-point"
         >
           <el-option
@@ -206,7 +208,7 @@
       <div class="search-item-body">
         <el-select
           clearable
-          v-model="form.validateType"
+          v-model="form.source"
           popper-class="options-myhouse-custom-item anchor-point"
         >
           <el-option
@@ -225,7 +227,7 @@
       <div class="search-item-body">
         <el-select
           clearable
-          v-model="form.validateWay"
+          v-model="form.mode"
           popper-class="options-myhouse-custom-item anchor-point"
         >
           <el-option
@@ -249,6 +251,7 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          :default-time="['00:00:00', '23:59:59']"
         >
         </el-date-picker>
       </div>
@@ -272,24 +275,26 @@ import cascadeHouse from "@/minxi/cascadeHouse";
 // 验真状态
 const SEARCHTABLIST = [
   { title: "全部", value: "" },
-  { title: "草稿", value: "0" },
   { title: "待验真", value: "1" }, //checkSubStatus:0
   { title: "验真成功", value: "2" },
-  { title: "验真失败", value: "3" },
-  { title: "已过期", value: "4" } //checkSubStatus:1
+  { title: "验真失败", value: "3" }
+  // { title: "已过期", value: "4" } //checkSubStatus:1
 ];
 // 验真类型
 const VALIDATETYPELIST = [
   { title: "全部", value: "" },
-  { title: "类型1", value: "0" },
-  { title: "类型2", value: "1" }
-]
+  { title: "录入验真", value: "1" },
+  { title: "抽检验真", value: "2" },
+  { title: "修改号码验真", value: "3" },
+  { title: "库存验真", value: "4" }
+];
 // 验真方式
 const VALIDATEWAYLIST = [
   { title: "全部", value: "" },
-  { title: "方式1", value: "0" },
-  { title: "方式2", value: "1" }
-]
+  { title: "微信验真", value: "1" },
+  { title: "短信验真", value: "2" },
+  { title: "信息员验真", value: "3" }
+];
 export default {
   inject: ["form"],
   mixins: [cascadeHouse],
@@ -304,10 +309,35 @@ export default {
       department: {
         loading: false,
         list: []
-      }, // 所属门店
+      } // 所属门店
     };
   },
   methods: {
+    /**
+     * @example: 远程获取房间号信息
+     * @param {String} e 输入搜索的文本
+     */
+    queryRoomData(e) {
+      this.$api
+        .get({
+          url: "/mateHouse/queryBuildIngHouses",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            comId: this.form.comId,
+            cbId: this.form.cbId,
+            limit: 20,
+            roomNo: e == undefined ? "" : e.trim()
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.roomForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.roomLoading = false;
+        });
+    },
     /**
      * @example: 请求所属门店数据
      */
@@ -315,7 +345,7 @@ export default {
       this.department.loading = true;
       this.$api
         .post({
-          url: "/spotCheck/spotCheckRecordList",
+          url: "/myHouse/myVerifyList",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           data: {
             selectType: "MORE_SELECT_SHOP"
@@ -334,7 +364,9 @@ export default {
      * @example: 所属门店获取焦点事件
      */
     departmentFocus() {
-      this.getDepartmentList();
+      if (this.department.list.length == 0) {
+        this.getDepartmentList();
+      }
     },
     /**
      * @example: 失去焦点
@@ -358,7 +390,7 @@ export default {
       this.$message.error(message);
     },
     validateFrom() {
-      this.form.customrName = this.cusName;
+      this.form.customerName = this.cusName;
       this.form.tel = this.cusPhone;
       this.form.random = new Date().getTime();
     }
