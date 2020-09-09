@@ -769,7 +769,7 @@ export default {
       this.buildLoading = true;
       this.$api
         .get({
-          url: "/community/saleAll",
+          url: "/community/information/verify",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
           token: false,
           qs: true,
