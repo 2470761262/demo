@@ -1349,8 +1349,6 @@ export default {
     },
     setAfreshData() {
       let afreshData = this.$store.state.addHouse.updateDate;
-      // let afreshData = this.$store.state.addHouse.formData.step2;
-      
       if (afreshData.middleSchoolUse === 0) {
         this.middleRadio = 0;
       } else if (afreshData.middleSchoolUse >= 1) {
@@ -1365,9 +1363,7 @@ export default {
       } else {
         this.primaryRadio = 0;
       }
-      console.log(afreshData,"加载几次111111111111111111111111111111111111111");
-      this.audioFile = afreshData.saleUploadAudios[0];
-      //this.audioFile = afreshData.audioFile[0];
+      this.audioFile = afreshData.saleUploadAudios.length>0?afreshData.saleUploadAudios[0]:{};
     },
     getLoadData() {
       this.loading = true;

@@ -1452,6 +1452,20 @@ export default {
       .then(e => {
         console.log(e.data, "========------")
         if (e.data.code == 200) {
+          // 测试房间号是否能录入
+          this.$api.get({ url: `/verifyHouse/room/${e.data.data.roomId}` }).then(e => {
+            let data = e.data.data;
+            if (e.data.code != 200) {
+              this.$router.go(-1);
+              this.$message.error(e.data.message);
+            }
+          })
+          .catch(e => {
+            this.$router.go(-1);
+            this.formData.roomId = "";
+          })
+          .finally(e => {})
+
           this.$store.commit("setUndateDateMutation", e.data.data);
           let afreshData = this.$store.state.addHouse.updateDate;
           console.log("updateDate---", afreshData,this.$store.state.addHouse.isAfresh);

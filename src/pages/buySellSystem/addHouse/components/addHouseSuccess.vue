@@ -187,11 +187,11 @@ export default {
       //     that.loading = false;
       //   });
       let audioList = [];
-      if (this.$store.state.addHouse.formData.file.audioFile.id) {
+      if (this.$store.state.addHouse.formData.file.audioFile&&this.$store.state.addHouse.formData.file.audioFile.id) {
         audioList.push(this.$store.state.addHouse.formData.file.audioFile.id);
       }
       let videoList = [];
-      if (this.$store.state.addHouse.formData.file.houseVideo.id) {
+      if (this.$store.state.addHouse.formData.file.houseVideo&&this.$store.state.addHouse.formData.file.houseVideo.id) {
         videoList.push(this.$store.state.addHouse.formData.file.houseVideo.id);
       }
       let imageList = [];
