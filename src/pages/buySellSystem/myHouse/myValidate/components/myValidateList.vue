@@ -328,7 +328,6 @@ export default {
       showVeryfyDetail: false,
       steps: [
         { title: "业主验真", description: "" },
-        { title: "店长验真", description: "" },
         { title: "完成验真", description: "" }
       ],
       stepStatus: "",
@@ -429,7 +428,7 @@ export default {
       let array = [
         {
           name: "邀请验真",
-          isType: "待业主验真,待店长验真,草稿",
+          isType: "待验真",
           methodName: "getVerifyImg"
         },
         {
@@ -444,18 +443,21 @@ export default {
         // },
         {
           name: "验真详情",
-          isType: "待业主验真,待店长验真,已过期,验真失败,验真成功",
+          isType: "待验真,验真失败,验真成功",
           methodName: "getResult"
         }
       ];
       return array
         .map(item => {
-          if (item.isType.includes(row.checkStatus)) {
+          if (item.isType.includes(row.checkStatusStr)) {
             item.disabled = false;
           } else {
             item.disabled = true;
           }
           if (!this.showValidityBtn && item.name == "邀请验真") {
+            item.disabled = true;
+          }
+          if (item.name == "重新验真" && parseInt(row.source) != 1) {
             item.disabled = true;
           }
           return item;
@@ -496,40 +498,18 @@ export default {
       that.employeeDiff.show = false;
       //步骤设置
       that.stepsListNow = that.steps;
-      switch (row.checkStatus) {
-        case "待业主验真":
-          break;
-        case "待店长验真":
+      switch (row.checkStatusStr) {
+        case "待验真":
           that.stepNow = 1;
-          that.stepsListNow[0].description = "业主未验真";
-          break;
-        case "已过期":
-          that.stepNow = 2;
-          that.stepStatus = "wait";
-          that.stepsListNow[0].description = "业主未验真";
-          that.stepsListNow[1].description = "店长未验真";
+          //that.stepsListNow[0].description = "待业主验真";
           break;
         case "验真失败":
           that.stepNow = 2;
           that.stepStatus = "error";
-          if (row.checkEmployee) {
-            that.stepsListNow[1].description = "店长验真不通过";
-            that.getVerifyDiff(row.id, 0);
-          }
-          if (row.checkCustomer) {
-            that.stepsListNow[0].description = "业主验真不通过";
-            that.getVerifyDiff(row.id, 2);
-          }
           break;
         case "验真成功":
           that.stepNow = 2;
           that.stepStatus = "success";
-          if (row.checkEmployee) {
-            that.stepsListNow[1].description = "店长验真通过";
-          }
-          if (row.checkCustomer) {
-            that.stepsListNow[0].description = "业主验真通过";
-          }
           break;
       }
     },
@@ -578,13 +558,13 @@ export default {
     },
     reVerify(val) {
       this.$api
-        .get({
-          url: "/verifyHouse/check/" + val.id
+        .post({
+          url: "/verifyHouse/afreshVerify/" + val.id
         })
         .then(e => {
           if (e.data.code == 200) {
             this.$router.push({
-              path: "/buySellSystem/addHouse?method=edit&id=" + val.id
+              path: "/buySellSystem/addHouse?method=afresh&id=" + val.id
             });
           } else {
             this.$message.error(e.date.message);
