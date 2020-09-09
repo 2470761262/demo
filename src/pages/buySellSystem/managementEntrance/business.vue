@@ -1185,6 +1185,11 @@ export default {
           }
         }
       }
+
+      .el-table__body-wrapper::-webkit-scrollbar {
+        display: none;
+      }
+
       .el-table__body-wrapper {
         tr {
           td:nth-child(1) {

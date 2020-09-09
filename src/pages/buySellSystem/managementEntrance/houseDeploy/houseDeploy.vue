@@ -5,6 +5,9 @@
   display: flex;
   flex-direction: column;
   height: 0;
+  /deep/.el-table__body-wrapper::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>
 <template>

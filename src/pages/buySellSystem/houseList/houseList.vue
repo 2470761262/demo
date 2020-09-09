@@ -11,6 +11,9 @@
     overflow: auto;
     min-height: 400px;
   }
+  .scroll-tab::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>
 <template>

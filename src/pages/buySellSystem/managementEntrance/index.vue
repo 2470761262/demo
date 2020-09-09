@@ -129,6 +129,10 @@ export default {
 }
 </style>
 <style lang="less" scoped>
+.entrance-container::-webkit-scrollbar {
+  /*width: 0;宽度为0隐藏*/
+  display: none;
+}
 .entrance-container {
   display: flex;
   flex-direction: column;
@@ -160,7 +164,7 @@ export default {
       font-weight: 700;
       color: var(--color--primary);
     }
-    .el-breadcrumb{
+    .el-breadcrumb {
       line-height: inherit;
     }
     /deep/.el-breadcrumb__item {
