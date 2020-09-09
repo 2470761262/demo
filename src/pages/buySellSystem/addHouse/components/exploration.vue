@@ -548,6 +548,10 @@ export default {
     if (that.getData) {
       that.promiseAllViodeoAndImg();
     }
+    // 重新验真情况设置数据
+    if (this.$store.state.addHouse.isAfresh) {
+      this.setAfreshData();
+    }
     that.currentIndex = 0;
     that.qrCodeImg = "";
 
@@ -750,6 +754,20 @@ export default {
         });
     },
     openVideo() {},
+    /**
+     * 重新验真情况设置数据
+     */
+    setAfreshData() {
+      // let afreshData = this.$store.state.addHouse.updateDate;
+      let afreshData = this.$store.state.addHouse.formData.step3;
+      this.houseVideo = afreshData.houseVideo;
+      this.outdoorImgList = afreshData.outdoorImgList;
+      this.livingRoomImgList = afreshData.livingRoomImgList;
+      this.bedroomImgList = afreshData.bedroomImgList;
+      this.kitchenImgList = afreshData.kitchenImgList;
+      this.toiletImgList = afreshData.toiletImgList;
+      this.layoutImgList = afreshData.layoutImgList;
+    },
     promiseAllViodeoAndImg() {
       this.loading = true;
       Promise.all([this.getLoadDataImg(), this.getLoadDataVideo()])
@@ -881,6 +899,9 @@ export default {
         .then(e => {
           if (e.data.code == 200) {
             this[listName].splice(index, 1);
+            this.$store.commit("updateFile", {
+              [listName]: this[listName]
+            });
           }
         });
     },
@@ -899,10 +920,9 @@ export default {
           qs: true
         })
         .then(e => {
-          console.log("del视频","------------========")
           if (e.data.code == 200) {
             this.houseVideo = {};
-            this.$store.commit("updateStep3", {
+            this.$store.commit("updateFile", {
               houseVideo: this.houseVideo
             });
             this.$refs.houseVideoList.value = null;
@@ -977,7 +997,6 @@ export default {
           // }
         })
         .then(json => {
-          console.log(fileListName,"video上传成功------------------------");
           if (json.data.code == 200) {
             if (picClass != undefined) {
               this[fileListName].push(json.data.data);
@@ -985,10 +1004,9 @@ export default {
               this[fileListName] = json.data.data;
             }
 
-            this.$store.commit("updateStep3", {
+            this.$store.commit("updateFile", {
               [fileListName]: this[fileListName]
             });
-            console.log(this.$store.state.addHouse.formData, "--------------============success!!!")
           }
         })
         .catch(e => {

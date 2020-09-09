@@ -157,7 +157,6 @@ export default {
   },
   methods: {
     getQr() {
-      console.log(this.formData,"11111111111111111");
       let that = this;
       if (!that.btnSubmitVerify) {
         return;
@@ -188,59 +187,47 @@ export default {
       //     that.loading = false;
       //   });
       let audioList = [];
-      console.log(this.$store.state.addHouse.formData, "--------------============success!!!")
-      if (this.$store.state.addHouse.formData.step2.audioFile.id) {
-        audioList.push(this.$store.state.addHouse.formData.step2.audioFile.id);
+      if (this.$store.state.addHouse.formData.file.audioFile.id) {
+        audioList.push(this.$store.state.addHouse.formData.file.audioFile.id);
       }
       let videoList = [];
-      if (this.$store.state.addHouse.formData.step3.houseVideo.id) {
-        videoList.push(this.$store.state.addHouse.formData.step3.houseVideo.id);
+      if (this.$store.state.addHouse.formData.file.houseVideo.id) {
+        videoList.push(this.$store.state.addHouse.formData.file.houseVideo.id);
       }
       let imageList = [];
-      for (let item of this.$store.state.addHouse.formData.step3.outdoorImgList) {
+      for (let item of this.$store.state.addHouse.formData.file.outdoorImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.step3.livingRoomImgList) {
+      for (let item of this.$store.state.addHouse.formData.file.livingRoomImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.step3.bedroomImgList) {
+      for (let item of this.$store.state.addHouse.formData.file.bedroomImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.step3.kitchenImgList) {
+      for (let item of this.$store.state.addHouse.formData.file.kitchenImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.step3.toiletImgList) {
+      for (let item of this.$store.state.addHouse.formData.file.toiletImgList) {
         imageList.push(item.id);
       }
-      for (let item of this.$store.state.addHouse.formData.step3.layoutImgList) {
+      for (let item of this.$store.state.addHouse.formData.file.layoutImgList) {
         imageList.push(item.id);
       }
+      let params = {};
+      for(let item in this.$store.state.addHouse.formData.step1) {
+        params[item] = this.$store.state.addHouse.formData.step1[item];
+      }
+      for(let item in this.$store.state.addHouse.formData.step2) {
+        params[item] = this.$store.state.addHouse.formData.step2[item];
+      }
+      params.imageList = imageList;
+      params.audioList = audioList;
+      params.videoList = videoList;
       this.$api
         .post({
           url: "/verifyHouse",
           headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: {
-            communityId: this.$store.state.addHouse.formData.step1.communityId,
-            communityName: this.$store.state.addHouse.formData.step1.communityName,
-            buildingId: this.$store.state.addHouse.formData.step1.buildingId,
-            buildingNo: this.$store.state.addHouse.formData.step1.buildingNo,
-            roomId: this.$store.state.addHouse.formData.step1.roomId,
-            roomNo: this.$store.state.addHouse.formData.step1.roomNo,
-            customerName: this.$store.state.addHouse.formData.step1.customerName,
-            sex: this.$store.state.addHouse.formData.step1.sex,
-            customerType: this.$store.state.addHouse.formData.step1.customerType,
-            tel: this.$store.state.addHouse.formData.step1.tel,
-            tel1: this.$store.state.addHouse.formData.step1.tel1,
-            tel2: this.$store.state.addHouse.formData.step1.tel2,
-            tel3: this.$store.state.addHouse.formData.step1.tel3,
-            price: this.$store.state.addHouse.formData.step1.price,
-            bottomPrice: this.$store.state.addHouse.formData.step1.bottomPrice,
-            certificateType: this.$store.state.addHouse.formData.step1.certificateType,
-            certificateNo: this.$store.state.addHouse.formData.step1.certificateNo,
-            imageList: imageList,
-            audioList: audioList,
-            videoList: videoList
-          }
+          data: params
         })
         .then(e => {
           let result = e.data;

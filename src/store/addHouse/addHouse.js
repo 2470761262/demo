@@ -68,10 +68,12 @@ function getData() {
       saleDesc: "", //核心卖点
       followWay: "", //跟进的类型
       followMemo: "", //跟进的内容
-      audioFile: {} // 音频集合
     },
     step3: {
       //saleReson: "", //卖房原因
+    },
+    file: {
+      audioFile: {}, // 音频集合
       outdoorImgList: [], //外景图
       livingRoomImgList: [], //客厅
       bedroomImgList: [], //卧室
@@ -95,7 +97,9 @@ function forSetStep(state, val, stepName) {
 export default {
   state: {
     isformDataNoCommit: false, //是否有些表单但是没有提交 false不提示 true 提示
-    formData: getData() // JSON.parse(JSON.stringify(formDataJson))
+    formData: getData(), // JSON.parse(JSON.stringify(formDataJson))
+    isAfresh: false, // 是否重新录入
+    undateDate: null // 重新验真请求保存数据
   },
   mutations: {
     updateIsformDataNoCommit(state, val) {
@@ -120,8 +124,17 @@ export default {
     updateStep3(state, val) {
       forSetStep(state, val, "step3");
     },
+    updateFile(state, val) {
+      forSetStep(state, val, "file");
+    },
     resetKey(state, key) {
       state.formData[key] = getData()[key];
+    },
+    setIsfreshValMutation(state, val) {
+      state.isAfresh = val;
+    },
+    setUndateDateMutation(state, val) {
+      state.updateDate = val;
     }
   },
   actions: {

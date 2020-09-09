@@ -1041,6 +1041,10 @@ export default {
           this.loading = false;
         });
     }
+    // 重新验真情况设置数据
+    if (this.$store.state.addHouse.isAfresh) {
+      this.setAfreshData();
+    }
     if (this.audioList != null && this.audioList.length > 0) {
       this.audioFile = this.audioList[0];
     }
@@ -1064,7 +1068,6 @@ export default {
     // });
     // console.log("nextSaveButton", this.nextSaveData);
     // console.log("wxUploadFile", this.uploadFile);
-    console.log("isFromHouseTask", that.isFromHouseTask);
   },
   beforeRouteLeave(to, from, next) {
     console.log("离开了供给页面，不需要执行任何请求回调");
@@ -1157,6 +1160,9 @@ export default {
           if (e.data.code == 200) {
             this.audioFile = {};
             Object.assign(this.$data.audioPlay, this.$options.data().audioPlay);
+            this.$store.commit("updateFile", {
+              audioFile: this.audioFile
+            });
           }
         });
     },
@@ -1276,7 +1282,6 @@ export default {
         this.$message.error("上传的音频只能是MP3格式!");
         return;
       }
-      console.log(this.$store.state.addHouse.formData, "=cccccccccccccccccccccccccccc")
       if (Object.keys(this.audioFile).length != 0) {
         this.$message.error("只能上传一个音频");
         return;
@@ -1327,10 +1332,9 @@ export default {
         .then(json => {
           if (json.data.code == 200) {
             this.audioFile = json.data.data;
-            this.$store.commit("updateStep2", {
+            this.$store.commit("updateFile", {
               audioFile: this.audioFile
             });
-            console.log(this.$store.state.addHouse.formData, "--------------============success!")
           }
         })
         .catch(e => {
@@ -1342,6 +1346,28 @@ export default {
         .finally(() => {
           this.audioFileLoading = false;
         });
+    },
+    setAfreshData() {
+      let afreshData = this.$store.state.addHouse.updateDate;
+      // let afreshData = this.$store.state.addHouse.formData.step2;
+      
+      if (afreshData.middleSchoolUse === 0) {
+        this.middleRadio = 0;
+      } else if (afreshData.middleSchoolUse >= 1) {
+        this.middleRadio = 1;
+      } else {
+        this.middleRadio = 0;
+      }
+      if (afreshData.primarySchoolUse === 0) {
+        this.primaryRadio = 0;
+      } else if (afreshData.primarySchoolUse >= 1) {
+        this.primaryRadio = 1;
+      } else {
+        this.primaryRadio = 0;
+      }
+      console.log(afreshData,"加载几次111111111111111111111111111111111111111");
+      this.audioFile = afreshData.saleUploadAudios[0];
+      //this.audioFile = afreshData.audioFile[0];
     },
     getLoadData() {
       this.loading = true;
@@ -1391,7 +1417,6 @@ export default {
             } else {
               this.primaryRadio = 0;
             }
-            console.log(e.data.data, "e.data.data");
             this.$store.dispatch("InitFormData", {
               commitName: "updateStep2",
               json: e.data.data
@@ -1484,7 +1509,6 @@ export default {
     },
     //修改数据到接口
     setDataToUpdate() {
-      console.log("----------------------")
       let that = this;
       let sendData = {
         id: that.$store.state.addHouse.formData.id,
@@ -1523,33 +1547,37 @@ export default {
           }
         });
       }
-      return this.$api
-        .put({
-          url: url,
-          headers: { "Content-Type": "application/json;charset=UTF-8" },
-          data: sendData
-        })
-        .then(e => {
-          console.log(e);
-          if (e.data.code == 200) {
-            if (this.paramsObj.editUrl) {
-              //更新成功,同步更新外网
-              sendData.houseNo = this.$store.state.addHouse.formData.houseNo;
-              releaseHouse.updateOutsideHouse(sendData);
+      if (this.paramsObj.editUrl) { // 编辑
+        return this.$api
+          .put({
+            url: url,
+            headers: { "Content-Type": "application/json;charset=UTF-8" },
+            data: sendData
+          })
+          .then(e => {
+            if (e.data.code == 200) {
+              if (this.paramsObj.editUrl) {
+                //更新成功,同步更新外网
+                sendData.houseNo = this.$store.state.addHouse.formData.houseNo;
+                releaseHouse.updateOutsideHouse(sendData);
+              }
+              //存入Vuex;
+              that.$store.commit("updateStep2", that.deffData);
+              return true;
+            } else {
+              return false;
             }
-            //存入Vuex;
-            that.$store.commit("updateStep2", that.deffData);
-            return true;
-          } else {
+          })
+          .catch(() => {
             return false;
-          }
-        })
-        .catch(() => {
-          return false;
-        });
+          });
+      } else { // 录入
+        // 数据只保存到本地
+        that.$store.commit("updateStep2", that.deffData);
+        return true;
+      }
     },
     changeOnly() {
-      console.log("触发...");
       if (
         this.formData.isOwnerOnly === 1 &&
         this.formData.lastSale != null &&

@@ -206,8 +206,14 @@ export default {
       params = this.$route.query;
     }
     let { method, id, paramsObj } = params;
-    console.log(method, id);
-    if (method && id) {
+
+    this.$store.commit("setIsfreshValMutation", false);
+    this.$store.commit("setUndateDateMutation", null);
+    if (method == "afresh" && id) { // 重新录入
+      this.$store.commit("updateId", id);
+      this.$store.commit("setIsfreshValMutation", true);
+      this.disabled = true;
+    } else if (method && id) {
       this.$store.commit("updateId", id);
       this.formDataGet = true;
       this.disabled = true;
