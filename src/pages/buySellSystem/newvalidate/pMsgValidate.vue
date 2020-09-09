@@ -462,12 +462,6 @@
       </div>
       <div class="content-right" v-loading="detailLoading">
         <div class="pro-content">
-          <div class="pro-img">
-            <img
-              src="https://dss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2034740944,4251903193&fm=26&gp=0.jpg"
-              alt=""
-            />
-          </div>
           <div class="pro-minddle">
             <div class="minddel-top">
               <div class="per-name">{{ detail.Customers }}</div>
