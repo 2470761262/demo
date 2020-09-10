@@ -10,7 +10,7 @@
               <el-form-item label="房源编号">
                 <el-input
                   v-model="conditions.houseNo"
-                  placeholder="请输入合同编号"
+                  placeholder="请输入房源编号"
                   @change="query(1)"
                   clearable
                   class="anchor-point"
@@ -114,7 +114,7 @@
                 </el-form-item>
               </el-row>
             </el-col>
-            <el-col :span="colChunks[3]">
+            <el-col :span="colChunks[2]">
               <el-form-item label="所属门店">
                 <el-select
                   class="width100 anchor-point"
@@ -145,7 +145,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="colChunks[2]">
+            <el-col :span="colChunks[3]">
               <el-form-item label="录入人">
                 <el-select
                   class="width100 anchor-point"
@@ -153,7 +153,7 @@
                   data-anchor="信息员验真列表录入人 => select"
                   @click.native="log_socket.sendUserActionData"
                   v-model="agent.value"
-                  placeholder="请输入经纪人姓名"
+                  placeholder="请输入录入人姓名"
                   clearable
                   filterable
                   @change="agentChange"
@@ -282,18 +282,18 @@
               show-overflow-tooltip
             >
               <template v-slot="scope">
-                <span v-if="scope.row.checkStatus == 1" class="span_warning"
-                  >{{scope.row.checkStatusStr}}</span
-                >
-                <span v-if="scope.row.checkStatus == 2" class="span_success"
-                  >{{scope.row.checkStatusStr}}</span
-                >
-                <span v-if="scope.row.checkStatus == 3" class="span_danger"
-                  >{{scope.row.checkStatusStr}}</span
-                >
-                <span v-if="scope.row.checkStatus == 4" class="span_info"
-                  >{{scope.row.checkStatusStr}}</span
-                >
+                <span v-if="scope.row.checkStatus == 1" class="span_warning">{{
+                  scope.row.checkStatusStr
+                }}</span>
+                <span v-if="scope.row.checkStatus == 2" class="span_success">{{
+                  scope.row.checkStatusStr
+                }}</span>
+                <span v-if="scope.row.checkStatus == 3" class="span_danger">{{
+                  scope.row.checkStatusStr
+                }}</span>
+                <span v-if="scope.row.checkStatus == 4" class="span_info">{{
+                  scope.row.checkStatusStr
+                }}</span>
               </template>
             </el-table-column>
             <el-table-column label="售价" align="right" show-overflow-tooltip>
