@@ -282,18 +282,26 @@
               show-overflow-tooltip
             >
               <template v-slot="scope">
-                <span v-if="scope.row.checkStatus == 1" class="span_warning">{{
-                  scope.row.checkStatusStr
-                }}</span>
-                <span v-if="scope.row.checkStatus == 2" class="span_success">{{
-                  scope.row.checkStatusStr
-                }}</span>
-                <span v-if="scope.row.checkStatus == 3" class="span_danger">{{
-                  scope.row.checkStatusStr
-                }}</span>
-                <span v-if="scope.row.checkStatus == 4" class="span_info">{{
-                  scope.row.checkStatusStr
-                }}</span>
+                <span
+                  v-if="scope.row.checkStatusStr == '待验真'"
+                  class="span_warning"
+                  >{{ scope.row.checkStatusStr }}</span
+                >
+                <span
+                  v-if="scope.row.checkStatusStr == '验真成功'"
+                  class="span_success"
+                  >{{ scope.row.checkStatusStr }}</span
+                >
+                <span
+                  v-if="scope.row.checkStatusStr == '验真失败'"
+                  class="span_danger"
+                  >{{ scope.row.checkStatusStr }}</span
+                >
+                <span
+                  v-if="scope.row.checkStatusStr == '无效'"
+                  class="span_info"
+                  >{{ scope.row.checkStatusStr }}</span
+                >
               </template>
             </el-table-column>
             <el-table-column label="售价" align="right" show-overflow-tooltip>
@@ -348,14 +356,14 @@
                   @click="handleCallClick(scope.row)"
                   type="text"
                   size="small"
-                  :disabled="scope.row.checkStatus != 1"
+                  :disabled="scope.row.checkStatusStr != '待验真'"
                   >一键拨号</el-button
                 >
                 <el-button
                   @click="handleTestClick(scope.row)"
                   type="text"
                   size="small"
-                  :disabled="scope.row.checkStatus != 1"
+                  :disabled="scope.row.checkStatusStr != '待验真'"
                   >房源验真</el-button
                 >
                 <el-button

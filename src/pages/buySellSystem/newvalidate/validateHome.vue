@@ -475,7 +475,7 @@
             <div class="head-minddle">
               <div class="head-minddle-title">短信验真</div>
               <div class="head-minddle-tips">
-                电话联系业主获取短信验证码，输入验证码进行验真
+                选择A或B均可完成验真
               </div>
             </div>
             <button class="btn" @click="openPage('pMsgValidate')">
@@ -484,7 +484,7 @@
           </div>
           <div class="foot-content">
             <div class="foot-content-item">
-              <h3>经纪人输入验证码-验真</h3>
+              <h3>A.经纪人输入验证码-验真</h3>
               <div class="foot-item-warp">
                 <div class="minddel-order" data-order="1">
                   电话联系，业主；沟通验真事宜
@@ -495,7 +495,7 @@
               </div>
             </div>
             <div class="foot-content-item">
-              <h3>业主回复验证码-验真</h3>
+              <h3>B.业主回复验证码-验真</h3>
               <div class="foot-item-warp">
                 <div class="minddel-order" data-order="1">
                   电话联系，业主；沟通验真事宜
