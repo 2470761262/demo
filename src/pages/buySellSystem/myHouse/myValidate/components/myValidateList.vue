@@ -709,10 +709,12 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      util.openPage.call(this, {
-        name: "validateHouseDetails",
-        params: { houseId: item.id, dept: item.perDept }
-      });
+      if (item.checkStatus && parseInt(item.checkStatus) == 2) {
+        util.openPage.call(this, {
+          name: "houseDetails",
+          params: { houseId: item.houseId }
+        });
+      }
     },
     /**
      * @example: 远程排序

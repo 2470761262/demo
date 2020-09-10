@@ -34,7 +34,7 @@
 }
 </style>
 <template>
-  <el-dialog :visible.sync="visible" class="pop" width="647px">
+  <el-dialog :visible.sync="visible" class="pop" width="647px" @close="cancel">
     <div slot="title">
       <span class="pop-title">抽检确认</span>
     </div>

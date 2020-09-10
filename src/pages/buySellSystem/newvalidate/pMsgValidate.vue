@@ -446,7 +446,10 @@
                 v-model="validateCall[index]"
               />
             </div>
-            <button @click="getMns">重新发送验证码</button>
+            <button @click="getMns" v-if="noteShow">
+              重新发送验证码,当套当天最多3次
+            </button>
+            <button v-if="!noteShow">{{ noteCountDown }}</button>
           </div>
 
           <div class="validate-tips">
@@ -584,10 +587,31 @@ export default {
       secondsTrans: "00",
       isCheckSign: -1,
       isCallLoading: false,
-      timeID: null
+      timeID: null,
+      noteSendTime: "",
+      noteCountDown: "",
+      timer: null,
+      noteShow: true
     };
   },
   methods: {
+    /**
+     * 获取短信倒计时
+     */
+    getNoteSentTime() {
+      let data = Date.parse(new Date());
+      let time = Date.parse(this.noteSendTime);
+      let second = time - data;
+      console.log("倒计时");
+      if (second > 0) {
+        this.noteCountDown = parseInt(second / 1000) + "秒后重发";
+      } else {
+        this.noteShow = true;
+        clearTimeout(this.timer);
+        return;
+      }
+      this.timer = setTimeout(this.getNoteSentTime, 1000);
+    },
     getMns() {
       this.validateCall = ["", "", "", "", "", ""];
       this.$api
@@ -601,6 +625,9 @@ export default {
         .then(({ data }) => {
           if (data.code == 200) {
             this.$message.success("短信下发成功");
+            this.noteSendTime = data.data;
+            this.noteShow = false;
+            this.getNoteSentTime();
           } else {
             this.$message.warning("短信下发成功");
           }
@@ -652,6 +679,12 @@ export default {
               return Promise.reject();
             } else {
               this.$message.success(data.message);
+              this.isCheckSign = 2;
+              clearTimeout(this.timeID);
+              util.openPage.call(this, {
+                name: "houseDetails",
+                params: { houseId: data.data.houseId }
+              });
             }
           }
         })
@@ -834,6 +867,7 @@ export default {
   },
   destroyed() {
     clearTimeout(this.timeID);
+    clearTimeout(this.timer);
   }
 };
 </script>
