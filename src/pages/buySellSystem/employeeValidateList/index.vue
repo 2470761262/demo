@@ -114,7 +114,7 @@
                 </el-form-item>
               </el-row>
             </el-col>
-            <el-col :span="colChunks[3]">
+            <el-col :span="colChunks[2]">
               <el-form-item label="所属门店">
                 <el-select
                   class="width100 anchor-point"
@@ -145,7 +145,7 @@
                 </el-select>
               </el-form-item>
             </el-col>
-            <el-col :span="colChunks[2]">
+            <el-col :span="colChunks[3]">
               <el-form-item label="录入人">
                 <el-select
                   class="width100 anchor-point"
