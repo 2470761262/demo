@@ -356,14 +356,14 @@
                   @click="handleCallClick(scope.row)"
                   type="text"
                   size="small"
-                  :disabled="scope.row.checkStatus != 1"
+                  :disabled="scope.row.checkStatusStr != '待验真'"
                   >一键拨号</el-button
                 >
                 <el-button
                   @click="handleTestClick(scope.row)"
                   type="text"
                   size="small"
-                  :disabled="scope.row.checkStatus != 1"
+                  :disabled="scope.row.checkStatusStr != '待验真'"
                   >房源验真</el-button
                 >
                 <el-button
