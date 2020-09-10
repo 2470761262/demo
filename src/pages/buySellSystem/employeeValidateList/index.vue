@@ -282,13 +282,13 @@
               show-overflow-tooltip
             >
               <template v-slot="scope">
-                <span v-if="scope.row.checkStatus == 1" class="span_success"
+                <span v-if="scope.row.checkStatus == 1" class="span_warning"
                   >待验真</span
                 >
-                <span v-if="scope.row.checkStatus == 2" class="span_danger"
+                <span v-if="scope.row.checkStatus == 2" class="span_success"
                   >验真成功</span
                 >
-                <span v-if="scope.row.checkStatus == 3" class="span_warning"
+                <span v-if="scope.row.checkStatus == 3" class="span_danger"
                   >验真失败</span
                 >
                 <span v-if="scope.row.checkStatus == 4" class="span_info"
@@ -435,7 +435,8 @@
           <validate-audio
             v-for="(item, index) in voiceList"
             :key="index"
-            :url="item">
+            :url="item"
+          >
           </validate-audio>
         </div>
       </div>
@@ -446,7 +447,7 @@
 import breadcrumb from "./components/breadcrumb.vue";
 import util from "@/util/util";
 import bus from "@/evenBus/but.js";
-import validateAudio from './components/validateAudio.vue';
+import validateAudio from "./components/validateAudio.vue";
 export default {
   components: {
     breadcrumb,

@@ -569,7 +569,7 @@
               <div class="per-type">{{ detail.customerType }}</div>
             </div>
             <div class="minddel-foot">
-              {{ detail.Tel }}
+              {{ detail.tel }}
             </div>
           </div>
           <button
