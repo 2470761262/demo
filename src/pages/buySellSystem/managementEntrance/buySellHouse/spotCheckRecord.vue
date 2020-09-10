@@ -15,7 +15,7 @@
                   class="anchor-point"
                   clearable
                   :data-anchor="'抽检记录搜索 房源编号:' + conditions.houseNo"
-                  ></el-input>
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="colChunks[1]">
@@ -40,7 +40,9 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="'抽检记录楼盘 => select => option:' + item.name"
+                        :data-anchor="
+                          '抽检记录楼盘 => select => option:' + item.name
+                        "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in buildForList"
                         :key="item.value"
@@ -67,7 +69,9 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="'抽检记录栋座 => select => option:' + item.name"
+                        :data-anchor="
+                          '抽检记录栋座 => select => option:' + item.name
+                        "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in towerForList"
                         :key="item.value"
@@ -94,7 +98,9 @@
                     >
                       <el-option
                         class="anchor-point"
-                        :data-anchor="'抽检记录房号 => select => option:' + item.name"
+                        :data-anchor="
+                          '抽检记录房号 => select => option:' + item.name
+                        "
                         @click.native="log_socket.sendUserActionData"
                         v-for="item in roomForList"
                         :key="item.value"
@@ -124,7 +130,9 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'抽检记录所属门店 => select => option:' + item.depName"
+                    :data-anchor="
+                      '抽检记录所属门店 => select => option:' + item.depName
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in department.list"
                     :key="item.depId"
@@ -142,7 +150,7 @@
                   data-anchor="抽检记录跟单人 => select"
                   @click.native="log_socket.sendUserActionData"
                   v-model="agent.value"
-                  placeholder="请输入经纪人姓名"
+                  placeholder="请输入跟单人姓名"
                   clearable
                   filterable
                   @change="agentChange"
@@ -151,7 +159,9 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'抽检记录跟单人 => select => option:' + item.perName"
+                    :data-anchor="
+                      '抽检记录跟单人 => select => option:' + item.perName
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in agent.list"
                     :key="item.accountId"
@@ -175,7 +185,9 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'抽检记录当前状态 => select => option:' + item.label"
+                    :data-anchor="
+                      '抽检记录当前状态 => select => option:' + item.label
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in currentStatusList"
                     :key="item.value"
@@ -200,7 +212,9 @@
                 >
                   <el-option
                     class="anchor-point"
-                    :data-anchor="'抽检记录抽检结果 => select => option:' + item.label"
+                    :data-anchor="
+                      '抽检记录抽检结果 => select => option:' + item.label
+                    "
                     @click.native="log_socket.sendUserActionData"
                     v-for="item in spotCheckResultList"
                     :key="item.value"
@@ -217,12 +231,16 @@
                   class="btn anchor-pointn"
                   @click="reset"
                   data-anchor="审核列表重置"
-                  >重置</div>
+                >
+                  重置
+                </div>
                 <div
                   class="btn active anchor-pointn"
                   @click="query(1)"
                   data-anchor="审核列表搜索"
-                >搜索</div>
+                >
+                  搜索
+                </div>
               </div>
             </el-col>
           </el-form>
@@ -244,47 +262,51 @@
               label="房屋信息"
               width="230"
               align="left"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
               <template v-slot="scope">
                 <div class="tab-house-box">
-                  <div class="tab-house-title">{{scope.row.communityName}}{{scope.row.buildingName?"-"+scope.row.buildingName:""}}{{scope.row.roomNo?"-"+scope.row.roomNo:""}}</div>
-                  <div class="tab-house-no">{{scope.row.houseNo}}</div>
+                  <div class="tab-house-title">
+                    {{ scope.row.communityName
+                    }}{{
+                      scope.row.buildingName
+                        ? "-" + scope.row.buildingName
+                        : ""
+                    }}{{ scope.row.roomNo ? "-" + scope.row.roomNo : "" }}
+                  </div>
+                  <div class="tab-house-no">{{ scope.row.houseNo }}</div>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column
-              label="售价"
-              align="right"
-              show-overflow-tooltip>
+            <el-table-column label="售价" align="right" show-overflow-tooltip>
               <template v-slot="scope">
-                <span>{{scope.row.price}}万</span>
+                <span>{{ scope.row.price }}万</span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="面积"
-              align="right"
-              show-overflow-tooltip>
+            <el-table-column label="面积" align="right" show-overflow-tooltip>
               <template v-slot="scope">
-                <span>{{scope.row.inArea}}㎡</span>
+                <span>{{ scope.row.inArea }}㎡</span>
               </template>
             </el-table-column>
-            <el-table-column
-              label="户型"
-              align="right"
-              show-overflow-tooltip>
+            <el-table-column label="户型" align="right" show-overflow-tooltip>
               <template v-slot="scope">
-                <span>{{scope.row.rooms || 0}}-{{scope.row.hall || 0}}-{{scope.row.toilet || 0}}-{{scope.row.balcony || 0}}</span>
+                <span
+                  >{{ scope.row.rooms || 0 }}-{{ scope.row.hall || 0 }}-{{
+                    scope.row.toilet || 0
+                  }}-{{ scope.row.balcony || 0 }}</span
+                >
               </template>
             </el-table-column>
             <el-table-column
               prop="addPerName"
               label="跟单人"
               align="right"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
               <template v-slot="scope">
                 <div class="tab-house-box">
-                  <div class="tab-house-title">{{scope.row.addPerName}}</div>
-                  <div class="tab-house-no">{{scope.row.deptName}}</div>
+                  <div class="tab-house-title">{{ scope.row.addPerName }}</div>
+                  <div class="tab-house-no">{{ scope.row.deptName }}</div>
                 </div>
               </template>
             </el-table-column>
@@ -295,7 +317,8 @@
               align="right"
               sortable="custom"
               :sort-orders="['ascending', 'descending']"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
             </el-table-column>
             <el-table-column
               min-width="100"
@@ -304,9 +327,10 @@
               align="right"
               :sortable="true"
               :sort-orders="['ascending', 'descending']"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
               <template v-slot="scope">
-                {{scope.row.lookNumber || 0}}
+                {{ scope.row.lookNumber || 0 }}
               </template>
             </el-table-column>
             <el-table-column
@@ -316,9 +340,10 @@
               align="right"
               :sortable="true"
               :sort-orders="['ascending', 'descending']"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
               <template v-slot="scope">
-                {{scope.row.callNumber || 0}}
+                {{ scope.row.callNumber || 0 }}
               </template>
             </el-table-column>
             <el-table-column
@@ -326,11 +351,24 @@
               prop="spotCheckStatus"
               label="当前状态"
               align="right"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
               <template v-slot="scope">
-                <span v-if="scope.row.spotCheckStatus=='任务已完结'" class="span_success">{{scope.row.spotCheckStatus}}</span>
-                <span v-if="scope.row.spotCheckStatus=='任务未完成'" class="span_danger">{{scope.row.spotCheckStatus}}</span>
-                <span v-if="scope.row.spotCheckStatus=='任务进行中'" class="span_warning">{{scope.row.spotCheckStatus}}</span>
+                <span
+                  v-if="scope.row.spotCheckStatus == '任务已完结'"
+                  class="span_success"
+                  >{{ scope.row.spotCheckStatus }}</span
+                >
+                <span
+                  v-if="scope.row.spotCheckStatus == '任务未完成'"
+                  class="span_danger"
+                  >{{ scope.row.spotCheckStatus }}</span
+                >
+                <span
+                  v-if="scope.row.spotCheckStatus == '任务进行中'"
+                  class="span_warning"
+                  >{{ scope.row.spotCheckStatus }}</span
+                >
               </template>
             </el-table-column>
             <el-table-column
@@ -338,11 +376,27 @@
               prop="spotCheckResult"
               label="抽检结果"
               align="right"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
               <template v-slot="scope">
-                <span v-if="scope.row.spotCheckResult=='业主验真通过'" class="span_success">{{scope.row.spotCheckResult}}</span>
-                <span v-if="scope.row.spotCheckResult=='业主验真过期'||scope.row.spotCheckResult=='在售转为暂不售'" class="span_danger">{{scope.row.spotCheckResult}}</span>
-                <span v-if="scope.row.spotCheckResult=='暂无结果'" class="span_warning">{{scope.row.spotCheckResult}}</span>
+                <span
+                  v-if="scope.row.spotCheckResult == '业主验真通过'"
+                  class="span_success"
+                  >{{ scope.row.spotCheckResult }}</span
+                >
+                <span
+                  v-if="
+                    scope.row.spotCheckResult == '业主验真过期' ||
+                      scope.row.spotCheckResult == '在售转为暂不售'
+                  "
+                  class="span_danger"
+                  >{{ scope.row.spotCheckResult }}</span
+                >
+                <span
+                  v-if="scope.row.spotCheckResult == '暂无结果'"
+                  class="span_warning"
+                  >{{ scope.row.spotCheckResult }}</span
+                >
               </template>
             </el-table-column>
             <el-table-column
@@ -350,7 +404,8 @@
               prop="spotCheckTime"
               label="抽检结束时间"
               align="right"
-              show-overflow-tooltip>
+              show-overflow-tooltip
+            >
             </el-table-column>
             <!-- <el-table-column
               v-for="(item, index) in tableColumns"
@@ -375,14 +430,15 @@
           :page-sizes="[5, 10, 15, 20]"
           :page-size="pageJson.limit"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="pageJson.total">
+          :total="pageJson.total"
+        >
         </el-pagination>
       </div>
     </div>
   </div>
 </template>
 <script>
-import tabs from './components/tabs.vue';
+import tabs from "./components/tabs.vue";
 import util from "@/util/util";
 import bus from "@/evenBus/but.js";
 export default {
@@ -398,10 +454,12 @@ export default {
         {
           value: 0,
           label: "任务进行中"
-        }, {
+        },
+        {
           value: 1,
           label: "任务已完结"
-        }, {
+        },
+        {
           value: 2,
           label: "任务未完成"
         }
@@ -411,16 +469,20 @@ export default {
         {
           value: 0,
           label: "暂无结果"
-        }, {
+        },
+        {
           value: 1,
           label: "业主验真通过"
-        }, {
+        },
+        {
           value: 2,
           label: "房源已售转入资源库"
-        }, {
+        },
+        {
           value: 3,
           label: "房源在售转为暂不售"
-        }, {
+        },
+        {
           value: 4,
           label: "业主验真过期"
         }
@@ -474,67 +536,70 @@ export default {
               </div>
             );
           }
-        }, {
+        },
+        {
           prop: "price",
           label: "售价",
           align: "left",
           formart: item => {
-            return (
-              <span>{item.price}万</span>
-            );
+            return <span>{item.price}万</span>;
           }
-        }, {
+        },
+        {
           prop: "inArea",
           label: "面积",
           align: "left",
           formart: item => {
-            return (
-              <span>{item.inArea}㎡</span>
-            );
+            return <span>{item.inArea}㎡</span>;
           }
-        }, {
+        },
+        {
           prop: "checkAddPerName",
           label: "户型",
           align: "left",
           formart: item => {
             return (
-              <span>{item.rooms || 0}-{item.hall || 0}-{item.toilet || 0}-{item.balcony || 0}</span>
+              <span>
+                {item.rooms || 0}-{item.hall || 0}-{item.toilet || 0}-
+                {item.balcony || 0}
+              </span>
             );
           }
-        }, {
+        },
+        {
           prop: "addPerName",
           label: "跟单人",
           align: "right",
           order: true
-        }, {
+        },
+        {
           prop: "listingStr",
           minWidth: "100",
           label: "挂牌时间",
           align: "right",
           order: true
-        }, {
+        },
+        {
           prop: "lookNumber",
           minWidth: "100",
           label: "30天带看",
           align: "right",
           order: true,
           formart: item => {
-            return (
-              <span>{item.lookNumber}次</span>
-            );
+            return <span>{item.lookNumber}次</span>;
           }
-        }, {
+        },
+        {
           prop: "callNumber",
           minWidth: "130",
           label: "30天电话回访",
           align: "right",
           order: true,
           formart: item => {
-            return (
-              <span>{item.callNumber}次</span>
-            );
+            return <span>{item.callNumber}次</span>;
           }
-        }, {
+        },
+        {
           prop: "spotCheckStatus",
           minWidth: "120",
           label: "当前状态",
@@ -542,51 +607,52 @@ export default {
           order: true,
           formart: item => {
             let className = "";
-            switch(item.spotCheckStatus) {
+            switch (item.spotCheckStatus) {
               case "任务已完结":
-                return (<span class="span_success">{item.spotCheckStatus}</span>);
+                return <span class="span_success">{item.spotCheckStatus}</span>;
                 break;
               case "任务未完成":
-                return (<span class="span_danger">{item.spotCheckStatus}</span>);
+                return <span class="span_danger">{item.spotCheckStatus}</span>;
                 break;
               case "任务进行中":
-                return (<span class="span_warning">{item.spotCheckStatus}</span>);
+                return <span class="span_warning">{item.spotCheckStatus}</span>;
                 break;
             }
           }
-        }, {
+        },
+        {
           prop: "spotCheckResult",
           minWidth: "140",
           label: "抽检结果",
           align: "right",
           order: true,
           formart: item => {
-            switch(item.spotCheckResult) {
+            switch (item.spotCheckResult) {
               case "业主验真通过":
-                return (<span class="span_success">{item.spotCheckResult}</span>);
+                return <span class="span_success">{item.spotCheckResult}</span>;
                 break;
               case "业主验真过期":
               case "在售转为暂不售":
-                return (<span class="span_danger">{item.spotCheckResult}</span>);
+                return <span class="span_danger">{item.spotCheckResult}</span>;
                 break;
               case "暂无结果":
-                return (<span class="span_warning">{item.spotCheckResult}</span>);
+                return <span class="span_warning">{item.spotCheckResult}</span>;
                 break;
             }
           }
         }
       ]
-    }
+    };
   },
   created() {
     // 切换管理入口nav
     bus.$emit("switchEntranceNav", 1);
     this.query();
     this.setConditionCol();
-    window.addEventListener('resize', this.setConditionCol);
+    window.addEventListener("resize", this.setConditionCol);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.setConditionCol);
+    window.removeEventListener("resize", this.setConditionCol);
   },
   methods: {
     /**
@@ -671,10 +737,10 @@ export default {
     /**
      * @example: 作业数据排序变化触发事件
      */
-    changeWorkSort({column, prop, order}) {
+    changeWorkSort({ column, prop, order }) {
       this.sortColumn = prop;
-      this.sortType = order=="ascending" ? 0 : 1;
-      this.sortColumn = prop == "listingStr"?"listingTime":prop;
+      this.sortType = order == "ascending" ? 0 : 1;
+      this.sortColumn = prop == "listingStr" ? "listingTime" : prop;
       Object.assign(this.pageJson, this.$options.data().pageJson);
       this.query();
     },
@@ -707,24 +773,24 @@ export default {
     buildRemoteMethod(query) {
       this.buildLoading = true;
       this.$api
-      .post({
-        url: "/spotCheck/spotCheckRecordList",
-        headers: { "Content-Type": "application/json;charset=UTF-8" },
-        data: {
-          communityType: "community",
-          communityName: query == undefined ? "" : query.trim(),
-          page: 1,
-          limit: 50
-        }
-      })
-      .then(e => {
-        if (e.data.code == 200) {
-          this.buildForList = e.data.data.list;
-        }
-      })
-      .finally(() => {
-        this.buildLoading = false;
-      });
+        .post({
+          url: "/spotCheck/spotCheckRecordList",
+          headers: { "Content-Type": "application/json;charset=UTF-8" },
+          data: {
+            communityType: "community",
+            communityName: query == undefined ? "" : query.trim(),
+            page: 1,
+            limit: 50
+          }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            this.buildForList = e.data.data.list;
+          }
+        })
+        .finally(() => {
+          this.buildLoading = false;
+        });
     },
     /**
      * @example: 楼盘选择更改触发事件
@@ -838,7 +904,7 @@ export default {
     /**
      * @example: 搜索
      */
-    query(currentPage=1) {
+    query(currentPage = 1) {
       this.pageJson.page = currentPage;
       this.loading = true;
       let params = { limit: this.pageJson.limit, page: currentPage };
@@ -889,10 +955,10 @@ export default {
       this.query();
     }
   }
-}
+};
 </script>
 <style lang="less" scoped>
-@import url('~@/assets/publicLess/houseConditionsItem.less');
+@import url("~@/assets/publicLess/houseConditionsItem.less");
 .el-select-dropdown__item {
   // prettier-ignore
   height: 40PX;
@@ -912,7 +978,6 @@ export default {
     border-bottom-left-radius: 8PX;
     // prettier-ignore
     border-bottom-right-radius: 8PX;
-
   }
   .main {
     flex: 1;
@@ -948,7 +1013,7 @@ export default {
           }
         }
         .has-gutter:not(.is-group) {
-          background: #F0F5F4;
+          background: #f0f5f4;
           tr:nth-child(1) {
             th:nth-child(1) {
               .cell {
@@ -992,7 +1057,7 @@ export default {
             // prettier-ignore
             height: 48PX;
             padding: 0;
-            background: #F0F5F4;
+            background: #f0f5f4;
             font-weight: normal;
             font-size: @font16;
             color: #303133;
@@ -1005,7 +1070,8 @@ export default {
           // prettier-ignore
           height: 86PX;
         }
-        .el-button--mini, .el-button--small {
+        .el-button--mini,
+        .el-button--small {
           // prettier-ignore
           min-width: 60PX;
           // prettier-ignore
@@ -1031,7 +1097,7 @@ export default {
         }
         .span_success,
         .span_danger,
-        .span_warning{
+        .span_warning {
           display: inline-block;
           // prettier-ignore
           padding: 6PX 13PX;
@@ -1041,18 +1107,18 @@ export default {
           font-size: @font14;
         }
         .span_success {
-          background: #0DA88B19;
-          color: #0DA88B;
+          background: #0da88b19;
+          color: #0da88b;
         }
         .span_danger {
-          background: #EF565619;
+          background: #ef565619;
           font-size: @font14;
-          color: #EF5656;
+          color: #ef5656;
         }
         .span_warning {
-          background: #F6A42019;
+          background: #f6a42019;
           font-size: @font14;
-          color: #F6A420;
+          color: #f6a420;
         }
       }
       .el-pagination {
@@ -1065,7 +1131,7 @@ export default {
         .btn-next .el-icon,
         .btn-prev .el-icon,
         button,
-        span:not([class*=suffix]) {
+        span:not([class*="suffix"]) {
           height: auto;
           line-height: 1;
           font-size: @font16;
@@ -1096,10 +1162,13 @@ export default {
           line-height: 1;
         }
       }
-      .el-table--border, .el-table--group {
+      .el-table--border,
+      .el-table--group {
         border: none;
       }
-      .el-table--border::after, .el-table--group::after, .el-table::before {
+      .el-table--border::after,
+      .el-table--group::after,
+      .el-table::before {
         background-color: transparent;
       }
       .el-table--border td {
@@ -1110,11 +1179,11 @@ export default {
           th:nth-child(2),
           th:nth-child(3),
           th:nth-child(4) {
-            border-bottom: 1px solid #C3DFD9;
+            border-bottom: 1px solid #c3dfd9;
             border-right: 1px solid #c3dfd9;
           }
           th:nth-child(5) {
-            border-bottom: 1px solid #C3DFD9;
+            border-bottom: 1px solid #c3dfd9;
           }
         }
         tr:nth-child(2) {
