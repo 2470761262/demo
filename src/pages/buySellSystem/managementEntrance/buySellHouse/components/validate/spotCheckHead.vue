@@ -1,4 +1,5 @@
 <style scoped lang="less">
+@import url('~@/assets/publicLess/houseConditionsItem.less');
 .conditions {
   // prettier-ignore
   padding: 0 24PX 20PX 24PX;
@@ -7,71 +8,6 @@
   border-bottom-left-radius: 8PX;
   // prettier-ignore
   border-bottom-right-radius: 8PX;
-  /deep/.conditions-box {
-    .el-form-item__label {
-      // prettier-ignore
-      line-height: 36PX;
-      font-weight: bold;
-      font-size: @font14;
-      color: #303133;
-    }
-    .el-input__inner {
-      // prettier-ignore
-      height: 36PX;
-      font-size: @font14;
-    }
-    .el-form-item {
-      // prettier-ignore
-      margin-bottom: 24PX;
-    }
-    .el-range-input {
-      text-align: left;
-      // prettier-ignore
-      text-indent: 10PX;
-      font-size: @font14;
-    }
-    .prefix-icon {
-      width: 0;
-    }
-    .el-date-editor {
-      width: 100%;
-      .el-range-separator {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: auto;
-        padding: 0;
-        line-height: 1;
-        text-indent: 0;
-        font-size: @font14;
-      }
-    }
-  }
-  .conditions-btn {
-    display: flex;
-    justify-content: flex-end;
-    .btn {
-      // prettier-ignore
-      width: 90PX;
-      // prettier-ignore
-      height: 36PX;
-      border: none;
-      border-radius: 4px;
-      background: #fff;
-      outline: none;
-      line-height: 1;
-      text-align: center;
-      font-size: @font12;
-      color: @backgroud;
-      cursor: pointer;
-      &.active {
-        // prettier-ignore
-        margin-left: 9PX;
-        background: @backgroud;
-        color: #fff;
-      }
-    }
-  }
 }
 </style>
 <template>
@@ -79,9 +15,10 @@
     <div class="conditions-box">
       <el-row :gutter="32">
         <el-form label-position="right" label-width="80px">
-          <el-col :span="6">
+          <el-col :span="colChunks[0]">
             <el-form-item label="房源编号">
               <el-input
+                class="width100"
                 v-model="form.houseNo"
                 placeholder="请输入房源编号"
                 @change="moreConditionChange"
@@ -89,7 +26,7 @@
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="colChunks[1]">
             <el-row :gutter="10">
               <el-form-item label="楼盘">
                 <el-col :span="8">
@@ -155,9 +92,10 @@
             </el-row>
           </el-col>
 
-          <el-col :span="6">
+          <el-col :span="colChunks[2]">
             <el-form-item label="所属门店">
               <el-select
+                class="width100"
                 v-model="department.value"
                 placeholder="所属门店"
                 clearable
@@ -176,9 +114,10 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col>
+          <el-col :span="colChunks[3]">
             <el-form-item label="跟单人">
               <el-select
+                class="width100"
                 v-model="agent.value"
                 placeholder="跟单人"
                 clearable
@@ -197,12 +136,14 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="colChunks[4]" class="fr">
+            <div class="conditions-btn">
+              <button class="btn" @click="rest">重置</button>
+              <button class="btn active" @click="moreConditionChange">查询</button>
+            </div>
+          </el-col>
         </el-form>
       </el-row>
-    </div>
-    <div class="conditions-btn">
-      <button class="btn" @click="rest">重置</button>
-      <button class="btn active" @click="moreConditionChange">查询</button>
     </div>
   </div>
 </template>
@@ -211,6 +152,7 @@
 export default {
   data() {
     return {
+      colChunks: [5, 9, 5, 5, 6], // 条件选项栅格布局
       form: {
         houseNo: "",
         comId: "",
@@ -246,7 +188,24 @@ export default {
       }
     };
   },
+  created() {
+    this.setConditionCol();
+    window.addEventListener('resize', this.setConditionCol);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.setConditionCol);
+  },
   methods: {
+    /**
+     * @example: 根据当前屏幕窗口宽度设置条件选项栅格布局
+     */
+    setConditionCol() {
+      if (document.body.offsetWidth >= 1440) {
+        this.colChunks = [5, 9, 5, 5, 6];
+      } else {
+        this.colChunks = [7, 10, 7, 8, 8];
+      }
+    },
     /**
      *@example:查询条件改变事件
      */

@@ -592,16 +592,15 @@ export default {
     pa.webSocketUser = that.webSocketUser;
     that.getQrCode2(pa, function(data) {
       that.qrCodeImg = data.url;
-      console.log(that.qrCodeImg, "图片二维码地址");
+      // console.log(that.qrCodeImg, "图片二维码地址");
       that.getQrCodeForVedio(function(data) {
         that.qrCodeImgVedio = data;
-        console.log(that.qrCodeImgVedio, "视频二维码地址");
+        // console.log(that.qrCodeImgVedio, "视频二维码地址");
       });
     });
     // but.$on("wxUploadFile", () => {
     //   that.uploadFile = true;
     // });
-    console.log("isFromHouseTask", that.isFromHouseTask);
   },
   data() {
     return {
@@ -652,16 +651,16 @@ export default {
     },
     websocketOpen() {
       let that = this;
-      console.log("websocket连接成功!!!!");
+      // console.log("websocket连接成功!!!!");
       that.websockStatus = true;
     },
     receiveMessagePic(r) {
       let that = this;
-      console.log(r, "接收到了消息");
+      // console.log(r, "接收到了消息");
       if (r.content.resourceType == "vedio") {
-        console.log(r.content, "视频消息内容，准备插入草稿箱");
+        // console.log(r.content, "视频消息内容，准备插入草稿箱");
         if (that.houseVideo && that.houseVideo.url) {
-          console.log("仅可以上传一个视频,请先手动删除！");
+          // console.log("仅可以上传一个视频,请先手动删除！");
           this.$message.error("仅可以上传一个视频,请先手动删除！");
           return;
         }
@@ -673,8 +672,8 @@ export default {
 
         //找到消息是发送给哪个二维码的
         let name = temp.picContainer;
-        console.log(that[name], "找到了指定用户");
-        console.log(r.content.picUrl, "接受到消息的图片地址");
+        // console.log(that[name], "找到了指定用户");
+        // console.log(r.content.picUrl, "接受到消息的图片地址");
         that.uploadFileInfo(r.content.picClass, r.content.picUrl, function(
           data
         ) {
@@ -683,14 +682,14 @@ export default {
       }
     },
     contactSocket(user) {
-      console.log("用户【" + user + "】开始接入");
+      // console.log("用户【" + user + "】开始接入");
       this.socketApi.initWebSocket(
         this.$api.baseUrl().replace("http", ""),
         user,
         this.websocketOpen
       );
       this.socketApi.initReceiveMessageCallBack(this.receiveMessagePic);
-      console.log("用户【" + user + "】接入完毕");
+      // console.log("用户【" + user + "】接入完毕");
     },
     getQrCodeForVedio(callback) {
       let that = this;
@@ -717,13 +716,12 @@ export default {
           if (result.code == 200) {
             callback(result.data.url);
           } else {
-            console.log("h获取视频二维码结果：" + result.message);
+            // console.log("h获取视频二维码结果：" + result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询视频二维码失败");
-          console.log(e);
+          console.log(e, "查询视频二维码失败");
         });
     },
     getQrCode2(data, callback) {
@@ -739,18 +737,15 @@ export default {
         })
         .then(e => {
           let result = e.data;
-          console.log("请求二维码成功");
           if (result.code == 200) {
             //that.qrCodeImg="data:image/png;base64,"+item.img;
             callback(result.data);
           } else {
-            console.log("h获取二维码结果：" + result.message);
             alert(result.message);
           }
         })
         .catch(e => {
-          console.log("查询二维码失败");
-          console.log(e);
+          console.log(e, "查询二维码失败");
         });
     },
     openVideo() {},
@@ -758,7 +753,6 @@ export default {
      * 重新验真情况设置数据
      */
     setAfreshData() {
-      // let afreshData = this.$store.state.addHouse.updateDate;
       let afreshData = this.$store.state.addHouse.formData.file;
       this.houseVideo = afreshData.houseVideo;
       this.outdoorImgList = afreshData.outdoorImgList;

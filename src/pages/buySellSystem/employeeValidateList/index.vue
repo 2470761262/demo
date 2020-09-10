@@ -184,7 +184,7 @@
                   filterable
                   v-model="validateStatus"
                   clearable
-                  @change="changeValidateStatus"
+                  @change="query(1)"
                   placeholder="请选择"
                 >
                   <el-option
@@ -283,16 +283,16 @@
             >
               <template v-slot="scope">
                 <span v-if="scope.row.checkStatus == 1" class="span_warning"
-                  >待验真</span
+                  >{{scope.row.checkStatusStr}}</span
                 >
                 <span v-if="scope.row.checkStatus == 2" class="span_success"
-                  >验真成功</span
+                  >{{scope.row.checkStatusStr}}</span
                 >
                 <span v-if="scope.row.checkStatus == 3" class="span_danger"
-                  >验真失败</span
+                  >{{scope.row.checkStatusStr}}</span
                 >
                 <span v-if="scope.row.checkStatus == 4" class="span_info"
-                  >无效</span
+                  >{{scope.row.checkStatusStr}}</span
                 >
               </template>
             </el-table-column>
@@ -722,10 +722,6 @@ export default {
         .finally(() => {});
     },
     /**
-     * 验真状态change
-     */
-    changeValidateStatus() {},
-    /**
      * @example: 改变每页请求数据数量
      * @param {val} 请求数
      * @param {type} 分页类型
@@ -912,7 +908,7 @@ export default {
       params.bhId = this.conditions.bhId;
       params.storeId = this.department.value;
       params.verifyPer = this.agent.value;
-
+      params.checkStatus = this.validateStatus;
       params.beginTime = this.conditions.timeSelect[0];
       params.endTime = this.conditions.timeSelect[1];
       params.houseNo = this.conditions.houseNo;
@@ -1096,7 +1092,8 @@ export default {
         }
         .span_success,
         .span_danger,
-        .span_warning {
+        .span_warning,
+        .span_info {
           display: inline-block;
           // prettier-ignore
           padding: 6PX 13PX;
@@ -1120,7 +1117,7 @@ export default {
           color: #f6a420;
         }
         .span_info {
-          background: #cacaca;
+          background: #e4e4e4;
           font-size: @font14;
           color: #909399;
         }

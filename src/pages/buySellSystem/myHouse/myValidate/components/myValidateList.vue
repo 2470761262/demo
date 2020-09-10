@@ -433,7 +433,7 @@ export default {
     operation(row) {
       let array = [
         {
-          name: "邀请验真",
+          name: "进入验真",
           isType: "待验真",
           methodName: "getVerifyImg"
         },
@@ -460,10 +460,13 @@ export default {
           } else {
             item.disabled = true;
           }
-          if (!this.showValidityBtn && item.name == "邀请验真") {
+          if (!this.showValidityBtn && item.name == "进入验真") {
             item.disabled = true;
           }
-          if (item.name == "重新验真" && parseInt(row.source) != 1) {
+          if (
+            item.name == "重新验真" &&
+            (parseInt(row.source) != 1 || parseInt(row.checkStatus) == 4)
+          ) {
             item.disabled = true;
           }
           return item;

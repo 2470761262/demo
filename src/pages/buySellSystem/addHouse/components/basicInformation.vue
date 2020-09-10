@@ -342,27 +342,27 @@
           data-vv-as="电话号码"
           v-validate="'required|phoneLen|phone'"
           data-anchor="添加房源业主手机号 => input"
-          :disabled="vidatePhoneInputEnable"
+          :disabled="validatePhoneInputEnable"
           clearable
         >
           <div slot="prepend" class="item-before" data-before="*">验真手机号</div>
           <div slot="append"
            class="item-after item-before-col anchor-point vidate-feature"
-           :class="{'vidate-feature-loading':vidatePhoneLoading}">{{vidatePhoneText}}</div>
+           :class="{'vidate-feature-loading':validatePhoneLoading}">{{validatePhoneText}}</div>
         </el-input>
         <div class="modify-phone-box" v-if="paramsObj.editUrl">
-          <span class="modify" v-show="vidateBtnFlag" @click="modifyVidatePhone">修改验真号码</span>
-          <div class="modify-show" v-show="!vidateBtnFlag">
+          <span class="modify" v-show="validateBtnFlag" @click="modifyValidatePhone">修改验真号码</span>
+          <div class="modify-show" v-show="!validateBtnFlag">
             <span class="btn1" @click="modifyComfirm">确认修改</span>
             <span class="btn2" @click="modifyCancel">取消</span>
-            <div class="phone-show">旧号码：{{vidatePostPhone}}</div>
+            <div class="phone-show">旧号码：{{validatePhoneNumber}}</div>
           </div>
         </div>
       </div>
     </div>
     <div class="phone-tip margin-bot_20">
       <i class="el-icon-warning-outline"></i>
-      <span>请填写正确的业主号码，并确认该号码可以正常接收短信且号码与微信同号</span>
+      <span>{{validateTip}}</span>
     </div>
     <!-- 备用手机号 -->
     <div
@@ -737,30 +737,6 @@
         <div class="cell-tabs-item-data">{{ formData.middleSchool }}</div>
       </div>
     </div>
-    <!-- 验真手机号确认弹窗 -->
-    <el-dialog title="温馨提示" :visible.sync="dialogModifyPhoneVisible" width="320px">
-      <div class="modify-phone-dialog">
-        <p class="top">修改验真号码后，需进行业主号码验真，请在下方点击选择开始验真的时间</p>
-        <div class="column">
-          <div class="title">即刻验真</div>
-          <div class="content">
-            <p class="text">
-              点击“确认现在验真”，直接提交号码并直接进入验真流程。
-            </p>
-            <div class="btn" @click="nowVidate">确认，现在验真</div>
-          </div>
-        </div>
-        <div class="column">
-          <div class="title">稍后验真</div>
-          <div class="content">
-            <p class="text">
-              点击“稍后验真”，等待编辑的房源信息保存后，进入验真流程。
-            </p>
-            <div class="btn" @click="laterVidate">稍后验真</div>
-          </div>
-        </div>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -905,7 +881,6 @@ export default {
         }
         //把修改的过的值给与deffData用于传送后台，如果在一次进入也可以顺便把这个值清空
         this.deffData = deffData;
-        console.log("添加更改属性---------", this.deffData)
       }
     }
   },
@@ -947,7 +922,6 @@ export default {
       // this.formData.tel1 = this.$route.query.tel1;
       // this.addTel.push(1);
     }
-    console.log(this.$route.query.flag);
     // this.getNextSaveButton();
   },
   destroyed() {
@@ -958,95 +932,35 @@ export default {
   },
   methods: {
     /**
-     * 稍后验真手机号
-     */
-    laterVidate() {
-      this.dialogModifyPhoneVisible = false;
-      this.vidateBtnFlag = true;
-      this.vidatePhoneInputEnable = true;
-    },
-    /**
-     * 现在验真手机号
-     */
-    nowVidate() {
-      this.dialogModifyPhoneVisible = false;
-      this.vidatePhoneLoading = true;
-      this.vidatePhoneText = "号码验真中";
-
-      let data = {
-        price: this.formData.price,
-        area: this.formData.area,
-        id: this.$store.state.addHouse.formData.id,
-        saleHouseUpdateRecordList: [
-          {
-            houseId: this.$store.state.addHouse.formData.id,
-            updateFiled: "手机号",
-            oldValue: "***********",
-            newValue: "***********"
-          }
-        ],
-        tel: this.formData.tel
-      };
-      let method = "put";
-      let url = this.paramsObj.editUrl;
-      this.$api[method]({
-        url: url,
-        data: data,
-        headers: { "Content-Type": "application/json;charset=UTF-8" }
-      })
-        .then(e => {
-          console.log(e, "555555555555551")
-          if (e.data.code == 200) {
-            if (this.paramsObj.editUrl) {
-              //更新成功,同步更新外网
-              data.houseNo = this.$store.state.addHouse.formData.houseNo;
-              releaseHouse.updateOutsideHouse(data);
-            }
-          }
-          if (e.data.data == 1) {
-            this.$store.state.addHouse.isformDataNoCommit = false;
-            this.$router.push({
-              path: "/buySellSystem/validateHome",
-              query: {
-                id: data.id,
-              }
-            });
-          } else if (e.data.data == 2) {
-            // 修改号码失败
-            this.$message.error('手机号修改失败，该房源已存在验真');
-            this.formData.tel = this.vidatePostPhone;
-          }
-        })
-        .catch(e => {})
-        .finally(e => {
-          this.vidatePhoneLoading = false;
-          this.vidatePhoneText = "验真专用";
-          this.vidatePhoneInputEnable = true;
-          this.vidateBtnFlag = true;
-        })
-    },
-    /**
      * 修改手机号码
      */
-    modifyVidatePhone() {
-      this.vidateBtnFlag = false;
-      this.vidatePhoneInputEnable = false;
-      this.vidatePostPhone = this.formData.tel;
+    modifyValidatePhone() {
+      this.validateBtnFlag = false;
+      this.validatePhoneInputEnable = false;
+      this.validatePhoneNumber = this.formData.tel;
       this.formData.tel = "";
     },
     /**
      * 确认修改
      */
     modifyComfirm() {
-      this.dialogModifyPhoneVisible = true;
+      if (this.errorBags.has('tel')) {
+        this.$message.error('您输入的手机号码有误');
+        return;
+      }
+      this.validateBtnFlag = true;
+      this.validatePhoneInputEnable = true;
+      this.validatePhoneLoading = true;
+      this.validatePhoneText = "号码待验真";
+      this.validateTip = "您修改了验真号码，系统将在您编辑房源保存后，要求您进行房源验真";
     },
     /**
      * 取消
      */
     modifyCancel() {
-      this.vidateBtnFlag = true;
-      this.formData.tel = this.vidatePostPhone;
-      this.vidatePhoneInputEnable = true;
+      this.validateBtnFlag = true;
+      this.formData.tel = this.validatePhoneNumber;
+      this.validatePhoneInputEnable = true;
     },
     /**
      * 解析转在售电话号码
@@ -1203,7 +1117,6 @@ export default {
     },
     //楼盘选择更改事件
     remoteCommunityNameChange(e) {
-      console.log(e);
       let findResultIndex = this.selectPageCommunit.list.findIndex(item => {
         return item.value == e;
       });
@@ -1352,7 +1265,6 @@ export default {
                 token: false
               })
               .then(e => {
-                console.log(e.data, "fffffffffffffffffffff")
                 let data = e.data;
                 if (data.code == 200) {
                   that.selectPageRoomNo.list = data.data.list;
@@ -1465,9 +1377,7 @@ export default {
           })
           .finally(e => {})
 
-          this.$store.commit("setUndateDateMutation", e.data.data);
-          let afreshData = this.$store.state.addHouse.updateDate;
-          console.log("updateDate---", afreshData,this.$store.state.addHouse.isAfresh);
+          let afreshData = e.data.data;
           this.$store
             .dispatch("InitFormData", {
               commitName: "updateStep1",
@@ -1497,9 +1407,8 @@ export default {
           });
           
           // 存储step2、音频、图片
-
           this.$store.commit("updateFile", {
-            houseVideo: afreshData.saleUploadVideos[0]
+            houseVideo: afreshData.saleUploadVideos.length>0?afreshData.saleUploadVideos[0]:{}
           });
           let imgList = afreshData.saleUploadPics;
           let listName = "",
@@ -1564,12 +1473,10 @@ export default {
             commitName: "updateStep2",
             json: afreshData
           });
-
           this.$store.commit("updateFile", {
-            audioFile: afreshData.saleUploadAudios[0]
+            audioFile: afreshData.saleUploadAudios.length>0?afreshData.saleUploadAudios[0]:{}
           });
           
-          //console.log(this.$store.state.addHouse.formData, "--------------============success!!!")
         }
       })
       .finally(() => {
@@ -1649,7 +1556,7 @@ export default {
       }
       if (Object.keys(this.deffData).length == 0 || !this.nextSaveButton) {
         //没有做出修改 或者 没有下一步保存的按钮权限
-        console.log("跳过保存，当前权限：", this.nextSaveButton);
+        // console.log("跳过保存，当前权限：", this.nextSaveButton);
         return true;
       }
       if (this.paramsObj.editUrl) {
@@ -1681,7 +1588,6 @@ export default {
 
       data.price = this.formData.price;
       data.area = this.formData.area;
-      //console.log(this.formData, "this.formData", this.deffData);
       if (this.paramsObj.editUrl) { // 编辑
         return this.$api[method]({
             url: url,
@@ -1696,14 +1602,14 @@ export default {
                 releaseHouse.updateOutsideHouse(data);
               }
               //存入Vuex;
-              if (e.data.data != null) {
-                that.$store.commit("updateId", e.data.data);
-              }
+              // if (e.data.data != null) {
+              //   that.$store.commit("updateId", e.data.data);
+              // }
               that.$store.commit("updateStep1", that.deffData);
             }
 
             // 保存后逻辑
-            if (e.data.data == 1) {
+            if (e.data.data == 0) {
               return true;
             } else if(e.data.data == 1) {
               this.$store.state.addHouse.isformDataNoCommit = false;
@@ -1716,7 +1622,7 @@ export default {
             } else if (e.data.data == 2) {
               // 修改号码失败
               this.$message.error('手机号修改失败，该房源已存在验真');
-              this.formData.tel = this.vidatePostPhone;
+              this.formData.tel = this.validatePhoneNumber;
               return true;
             }
 
@@ -1756,12 +1662,12 @@ export default {
   },
   data() {
     return {
-      vidatePostPhone: "", // 旧号码
-      vidatePhoneInputEnable: !!this.paramsObj.editUrl,
-      vidateBtnFlag: true,
-      dialogModifyPhoneVisible: false,
-      vidatePhoneLoading: false,
-      vidatePhoneText: "验真专用",
+      validatePhoneNumber: "", // 旧号码
+      validatePhoneInputEnable: !!this.paramsObj.editUrl,
+      validateBtnFlag: true,
+      validatePhoneLoading: false,
+      validatePhoneText: "验真专用",
+      validateTip: "请填写正确的业主号码，并确认该号码可以正常接收短信且号码与微信同号",
       addHouseType: this.houseType,
       step: {},
       addTel: [],

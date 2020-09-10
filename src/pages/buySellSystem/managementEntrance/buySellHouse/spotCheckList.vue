@@ -19,14 +19,16 @@
       display: flex;
       flex-direction: column;
       .batch-button {
-        width: 90px;
-        height: 36px;
+        // prettier-ignore
+        width: 90PX;
+        // prettier-ignore
+        height: 36PX;
         border: none;
         border-radius: 4px;
         outline: none;
         line-height: 1;
         text-align: center;
-        font-size: @font12;
+        font-size: @font14;
         cursor: pointer;
         background: @backgroud;
         color: #fff;
@@ -232,6 +234,7 @@
               v-for="(item, index) in workColumn"
               :key="index"
               :prop="item.prop"
+              :fixed="item.fixed"
               :label="item.label"
               :width="item.width"
               :min-width="item.minWidth"
@@ -300,8 +303,9 @@ export default {
       workColumn: [
         {
           prop: "houseNo",
+          fixed: "left",
           label: "房屋信息",
-          minWidth: "180",
+          minWidth: "250",
           align: "left",
           formart: item => {
             return (
@@ -315,7 +319,7 @@ export default {
         {
           prop: "price",
           label: "售价",
-          minWidth: "60",
+          minWidth: "150",
           align: "right",
           formart: item => {
             return `${item.price}万`;
@@ -324,7 +328,7 @@ export default {
         {
           prop: "inArea",
           label: "面积",
-          minWidth: "60",
+          minWidth: "100",
           align: "right",
           formart: item => {
             return `${item.inArea}m²`;
@@ -333,7 +337,7 @@ export default {
         {
           prop: "rooms",
           label: "户型",
-          minWidth: "60",
+          minWidth: "100",
           align: "right",
           formart: item => {
             return `${item.rooms || 0}-${item.hall || 0}-${item.toilet ||
@@ -343,7 +347,7 @@ export default {
         {
           prop: "agentName",
           label: "跟单人",
-          minWidth: "60",
+          minWidth: "120",
           align: "right",
           sortable: true,
           formart: item => {
@@ -358,7 +362,7 @@ export default {
         {
           prop: "addTime",
           label: "挂牌时间",
-          minWidth: "80",
+          minWidth: "100",
           align: "right",
           sortable: true,
           formart: item => {
@@ -368,20 +372,21 @@ export default {
         {
           prop: "seenNumRecent",
           label: "30天带看",
-          minWidth: "80",
+          minWidth: "100",
           align: "right",
           sortable: true
         },
         {
           prop: "callNum",
           label: "30天电话回访",
-          minWidth: "100",
+          minWidth: "130",
           align: "right",
           sortable: true
         },
         {
           prop: "spotCheckNum",
           label: "抽检次数",
+          minWidth: "100",
           align: "right",
           sortable: true
         }
