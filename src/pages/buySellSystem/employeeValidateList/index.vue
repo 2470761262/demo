@@ -114,35 +114,6 @@
                 </el-form-item>
               </el-row>
             </el-col>
-            <el-col :span="colChunks[2]">
-              <el-form-item label="录入人">
-                <el-select
-                  class="width100 anchor-point"
-                  popper-class="anchor-point"
-                  data-anchor="信息员验真列表录入人 => select"
-                  @click.native="log_socket.sendUserActionData"
-                  v-model="agent.value"
-                  placeholder="请输入经纪人姓名"
-                  clearable
-                  filterable
-                  @change="agentChange"
-                  :loading="agent.loading"
-                  value-key="value"
-                >
-                  <el-option
-                    class="anchor-point"
-                    :data-anchor="
-                      '信息员验真列表录入人 => select => option:' + item.perName
-                    "
-                    @click.native="log_socket.sendUserActionData"
-                    v-for="item in agent.list"
-                    :key="item.accountId"
-                    :label="item.perName"
-                    :value="item.accountId"
-                  ></el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
             <el-col :span="colChunks[3]">
               <el-form-item label="所属门店">
                 <el-select
@@ -170,6 +141,35 @@
                     :key="item.depId"
                     :label="item.depName"
                     :value="item.depId"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="colChunks[2]">
+              <el-form-item label="录入人">
+                <el-select
+                  class="width100 anchor-point"
+                  popper-class="anchor-point"
+                  data-anchor="信息员验真列表录入人 => select"
+                  @click.native="log_socket.sendUserActionData"
+                  v-model="agent.value"
+                  placeholder="请输入经纪人姓名"
+                  clearable
+                  filterable
+                  @change="agentChange"
+                  :loading="agent.loading"
+                  value-key="value"
+                >
+                  <el-option
+                    class="anchor-point"
+                    :data-anchor="
+                      '信息员验真列表录入人 => select => option:' + item.perName
+                    "
+                    @click.native="log_socket.sendUserActionData"
+                    v-for="item in agent.list"
+                    :key="item.accountId"
+                    :label="item.perName"
+                    :value="item.accountId"
                   ></el-option>
                 </el-select>
               </el-form-item>
