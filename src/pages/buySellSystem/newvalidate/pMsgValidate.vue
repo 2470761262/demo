@@ -596,7 +596,6 @@ export default {
       let data = Date.parse(new Date());
       let time = Date.parse(this.noteSendTime);
       let second = time - data;
-      console.log("倒计时");
       if (second > 0) {
         this.noteCountDown = parseInt(second / 1000) + "秒后重发";
       } else {
