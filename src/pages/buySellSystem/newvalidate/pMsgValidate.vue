@@ -655,6 +655,7 @@ export default {
       }
     },
     isValidateMns() {
+      this.$message.info("处理中，请稍后...");
       this.$api
         .post({
           url: "/verifyHouse/verify/mns",
