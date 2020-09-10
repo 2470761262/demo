@@ -20,7 +20,7 @@
   margin-top: 8px;
   margin-left: 70px;
   padding: 10px;
-  background: #EA9D42;
+  background: #ea9d42;
   // prettier-ignore
   border-radius: 4PX;
   line-height: 1;
@@ -42,7 +42,7 @@
   font-size: 14px;
   color: #fff !important;
   &.vidate-feature-loading {
-    background: #EA9D42;
+    background: #ea9d42;
   }
 }
 .modify-phone-box {
@@ -70,7 +70,7 @@
     .phone-show {
       margin-left: 15px;
       padding: 8px 15px;
-      background: #EFEFEF;
+      background: #efefef;
       border-radius: 4px;
       box-shadow: 0 0 5px #a7a7a7;
     }
@@ -94,7 +94,7 @@
       .content {
         position: relative;
         height: 60px;
-        background: #F2F2F2;
+        background: #f2f2f2;
         border-radius: 4px;
         .text {
           padding: 4px 8px;
@@ -126,7 +126,7 @@
     v-scrollError="errorBags.items"
   >
     <div class="form-error-tips" id="addHouseType">
-      <div class="page-cell-item">
+      <div class="page-cell-item" style="display:none">
         <div class="item-before" data-before="*"></div>
         <el-radio-group
           class="input-group anchor-point"
@@ -254,7 +254,8 @@
               :key="item.value"
               :label="item.name"
               :value="item.value"
-            ></el-option><!-- :disabled="item.disabled" -->
+            ></el-option
+            ><!-- :disabled="item.disabled" -->
           </el-select>
         </div>
       </div>
@@ -345,24 +346,35 @@
           :disabled="validatePhoneInputEnable"
           clearable
         >
-          <div slot="prepend" class="item-before" data-before="*">验真手机号</div>
-          <div slot="append"
-           class="item-after item-before-col anchor-point vidate-feature"
-           :class="{'vidate-feature-loading':validatePhoneLoading}">{{validatePhoneText}}</div>
+          <div slot="prepend" class="item-before" data-before="*">
+            验真手机号
+          </div>
+          <div
+            slot="append"
+            class="item-after item-before-col anchor-point vidate-feature"
+            :class="{ 'vidate-feature-loading': validatePhoneLoading }"
+          >
+            {{ validatePhoneText }}
+          </div>
         </el-input>
         <div class="modify-phone-box" v-if="paramsObj.editUrl">
-          <span class="modify" v-show="validateBtnFlag" @click="modifyValidatePhone">修改验真号码</span>
+          <span
+            class="modify"
+            v-show="validateBtnFlag"
+            @click="modifyValidatePhone"
+            >修改验真号码</span
+          >
           <div class="modify-show" v-show="!validateBtnFlag">
             <span class="btn1" @click="modifyComfirm">确认修改</span>
             <span class="btn2" @click="modifyCancel">取消</span>
-            <div class="phone-show">旧号码：{{validatePhoneNumber}}</div>
+            <div class="phone-show">旧号码：{{ validatePhoneNumber }}</div>
           </div>
         </div>
       </div>
     </div>
     <div class="phone-tip margin-bot_20">
       <i class="el-icon-warning-outline"></i>
-      <span>{{validateTip}}</span>
+      <span>{{ validateTip }}</span>
     </div>
     <!-- 备用手机号 -->
     <div
@@ -785,12 +797,12 @@ import but from "@/evenBus/but.js";
 import releaseHouse from "@/pages/buySellSystem/houseDetails/common/releaseHouse.js";
 /**
  * 手机号码脱敏
- * @param number 
+ * @param number
  */
 function phoneNuberConvert(number) {
   if (!number) return "";
-  let pat = /(\d{3})\d*(\d{4})/
-  let result = number.replace(pat,'$1****$2');
+  let pat = /(\d{3})\d*(\d{4})/;
+  let result = number.replace(pat, "$1****$2");
   return result;
 }
 export default {
@@ -944,15 +956,16 @@ export default {
      * 确认修改
      */
     modifyComfirm() {
-      if (this.errorBags.has('tel')) {
-        this.$message.error('您输入的手机号码有误');
+      if (this.errorBags.has("tel")) {
+        this.$message.error("您输入的手机号码有误");
         return;
       }
       this.validateBtnFlag = true;
       this.validatePhoneInputEnable = true;
       this.validatePhoneLoading = true;
       this.validatePhoneText = "号码待验真";
-      this.validateTip = "您修改了验真号码，系统将在您编辑房源保存后，要求您进行房源验真";
+      this.validateTip =
+        "您修改了验真号码，系统将在您编辑房源保存后，要求您进行房源验真";
     },
     /**
      * 取消
@@ -1294,26 +1307,28 @@ export default {
     //获取房间号数据
     getRoomData(id) {
       // `/draft-house/room/${id}`
-      this.$api.get({ url: `/verifyHouse/room/${id}` }).then(e => {
-        let data = e.data.data;
-        if (e.data.code == 200) {
-          this.formData.valuation = data.valuation;
-          this.formData.area = data.outArea;
-          this.formData.face = data.orientation;
-          this.formData.room = data.rooms || 0;
-          this.formData.hall = data.hall || 0;
-          this.formData.toilet = data.toilet || 0;
-          this.formData.balcony = data.balcony || 0;
-          this.formData.roomType = data.roomType;
-        } else {
+      this.$api
+        .get({ url: `/verifyHouse/room/${id}` })
+        .then(e => {
+          let data = e.data.data;
+          if (e.data.code == 200) {
+            this.formData.valuation = data.valuation;
+            this.formData.area = data.outArea;
+            this.formData.face = data.orientation;
+            this.formData.room = data.rooms || 0;
+            this.formData.hall = data.hall || 0;
+            this.formData.toilet = data.toilet || 0;
+            this.formData.balcony = data.balcony || 0;
+            this.formData.roomType = data.roomType;
+          } else {
+            this.formData.roomId = "";
+            this.$message.error(e.data.message);
+          }
+        })
+        .catch(e => {
           this.formData.roomId = "";
-          this.$message.error(e.data.message);
-        }
-      })
-      .catch(e => {
-        this.formData.roomId = "";
-      })
-      .finally(e => {})
+        })
+        .finally(e => {});
     },
     removeTelToList(index, item) {
       this.addTel.splice(index, 1);
@@ -1321,7 +1336,7 @@ export default {
     },
     //添加电话号码123
     addTelToList() {
-      let defaultList = [ 2, 3];
+      let defaultList = [2, 3];
       if (this.addTel.length < 3) {
         for (let index = 0; index < defaultList.length; index++) {
           if (!this.addTel.includes(defaultList[index])) {
@@ -1357,131 +1372,150 @@ export default {
     setAfreshData() {
       this.loading = true;
       this.$api
-      .post({
-        url: `/verifyHouse/afreshVerifyInfo/${this.$store.state.addHouse.formData.id}`,
-        headers: { "Content-Type": "application/json;charset=UTF-8" }
-      })
-      .then(e => {
-        if (e.data.code == 200) {
-          // 测试房间号是否能录入
-          this.$api.get({ url: `/verifyHouse/room/${e.data.data.roomId}` }).then(e => {
-            let data = e.data.data;
-            if (e.data.code != 200) {
-              this.$router.go(-1);
-              this.$message.error(e.data.message);
-            }
-          })
-          .catch(e => {
-            this.$router.go(-1);
-            this.formData.roomId = "";
-          })
-          .finally(e => {})
+        .post({
+          url: `/verifyHouse/afreshVerifyInfo/${this.$store.state.addHouse.formData.id}`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          if (e.data.code == 200) {
+            // 测试房间号是否能录入
+            this.$api
+              .get({ url: `/verifyHouse/room/${e.data.data.roomId}` })
+              .then(e => {
+                let data = e.data.data;
+                if (e.data.code != 200) {
+                  this.$router.go(-1);
+                  this.$message.error(e.data.message);
+                }
+              })
+              .catch(e => {
+                this.$router.go(-1);
+                this.formData.roomId = "";
+              })
+              .finally(e => {});
 
-          let afreshData = e.data.data;
-          this.$store
-            .dispatch("InitFormData", {
-              commitName: "updateStep1",
-              json: afreshData
-            })
-            .then(() => {
-              this.selectPageCommunit.list.push({
-                value: this.formData.communityId,
-                name: this.formData.communityName
+            let afreshData = e.data.data;
+            this.$store
+              .dispatch("InitFormData", {
+                commitName: "updateStep1",
+                json: afreshData
+              })
+              .then(() => {
+                this.selectPageCommunit.list.push({
+                  value: this.formData.communityId,
+                  name: this.formData.communityName
+                });
+                this.selectPageeBuildingNo.list.push({
+                  value: this.formData.buildingId,
+                  name: this.formData.buildingNo
+                });
+                this.selectPageRoomNo.list.push({
+                  value: this.formData.roomId,
+                  name: this.formData.roomNo,
+                  disabled: this.formData.disabled
+                });
               });
-              this.selectPageeBuildingNo.list.push({
-                value: this.formData.buildingId,
-                name: this.formData.buildingNo
-              });
-              this.selectPageRoomNo.list.push({
-                value: this.formData.roomId,
-                name: this.formData.roomNo,
-                disabled: this.formData.disabled
-              });
+            //添加tel 2 3
+            let tel = ["tel2", "tel3"];
+            tel.forEach((item, index) => {
+              if (util.isNotNull(e.data.data[item])) {
+                this.addTel.push(parseInt(item.replace(/[a-zA-Z]*/g, "")));
+              }
             });
-          //添加tel 2 3
-          let tel = ["tel2", "tel3"];
-          tel.forEach((item, index) => {
-            if (util.isNotNull(e.data.data[item])) {
-              this.addTel.push(parseInt(item.replace(/[a-zA-Z]*/g, "")));
+
+            // 存储step2、音频、图片
+            this.$store.commit("updateFile", {
+              houseVideo:
+                afreshData.saleUploadVideos.length > 0
+                  ? afreshData.saleUploadVideos[0]
+                  : {}
+            });
+            let imgList = afreshData.saleUploadPics;
+            let listName = "",
+              outdoorImgList = [],
+              livingRoomImgList = [],
+              bedroomImgList = [],
+              kitchenImgList = [],
+              toiletImgList = [],
+              layoutImgList = [];
+            imgList.forEach(item => {
+              let type = item.picClass ? item.picClass : item.PicClass;
+              switch (type) {
+                case 1:
+                  listName = "outdoorImgList";
+                  outdoorImgList.push(item);
+                  break;
+                case 2:
+                  listName = "livingRoomImgList";
+                  livingRoomImgList.push(item);
+                  break;
+                case 3:
+                  listName = "bedroomImgList";
+                  bedroomImgList.push(item);
+                  break;
+                case 4:
+                  listName = "kitchenImgList";
+                  kitchenImgList.push(item);
+                  break;
+                case 5:
+                  listName = "toiletImgList";
+                  toiletImgList.push(item);
+                  break;
+                case 6:
+                  listName = "layoutImgList";
+                  layoutImgList.push(item);
+                  break;
+              }
+            });
+            this.$store.commit("updateFile", {
+              outdoorImgList: outdoorImgList
+            });
+            this.$store.commit("updateFile", {
+              livingRoomImgList: livingRoomImgList
+            });
+            this.$store.commit("updateFile", {
+              bedroomImgList: bedroomImgList
+            });
+            this.$store.commit("updateFile", {
+              kitchenImgList: kitchenImgList
+            });
+            this.$store.commit("updateFile", { toiletImgList: toiletImgList });
+            this.$store.commit("updateFile", { layoutImgList: layoutImgList });
+
+            //需要显示长的属性不能是null 如果是null则删除不覆盖store的默认值
+            let isNullforStr = [
+              "title",
+              "communityDesc",
+              "roomDesc",
+              "taxDesc",
+              "saleDesc"
+            ];
+            isNullforStr.forEach(item => {
+              if (afreshData[item] == null) {
+                delete afreshData[item];
+              }
+            });
+            if (afreshData.mortgageBank) {
+              afreshData.mortgageBank = parseInt(afreshData.mortgageBank);
             }
-          });
-          
-          // 存储step2、音频、图片
-          this.$store.commit("updateFile", {
-            houseVideo: afreshData.saleUploadVideos.length>0?afreshData.saleUploadVideos[0]:{}
-          });
-          let imgList = afreshData.saleUploadPics;
-          let listName = "",
-            outdoorImgList=[],livingRoomImgList=[],bedroomImgList=[],
-            kitchenImgList=[],toiletImgList=[],layoutImgList = [];
-          imgList.forEach(item => {
-            let type = item.picClass ? item.picClass : item.PicClass;
-            switch (type) {
-              case 1:
-                listName = "outdoorImgList";
-                outdoorImgList.push(item);
-                break;
-              case 2:
-                listName = "livingRoomImgList";
-                livingRoomImgList.push(item);
-                break;
-              case 3:
-                listName = "bedroomImgList";
-                bedroomImgList.push(item);
-                break;
-              case 4:
-                listName = "kitchenImgList";
-                kitchenImgList.push(item);
-                break;
-              case 5:
-                listName = "toiletImgList";
-                toiletImgList.push(item);
-                break;
-              case 6:
-                listName = "layoutImgList";
-                layoutImgList.push(item);
-                break;
+            if (afreshData.houseNow) {
+              afreshData.houseNow = parseInt(afreshData.houseNow);
             }
-          });
-          this.$store.commit("updateFile", { outdoorImgList: outdoorImgList });
-          this.$store.commit("updateFile", { livingRoomImgList: livingRoomImgList });
-          this.$store.commit("updateFile", { bedroomImgList: bedroomImgList });
-          this.$store.commit("updateFile", { kitchenImgList: kitchenImgList });
-          this.$store.commit("updateFile", { toiletImgList: toiletImgList });
-          this.$store.commit("updateFile", { layoutImgList: layoutImgList });
-            
-          //需要显示长的属性不能是null 如果是null则删除不覆盖store的默认值
-          let isNullforStr = [
-            "title",
-            "communityDesc",
-            "roomDesc",
-            "taxDesc",
-            "saleDesc"
-          ];
-          isNullforStr.forEach(item => {
-            if (afreshData[item] == null) {
-              delete afreshData[item];
-            }
-          });
-          if (afreshData.mortgageBank) {
-            afreshData.mortgageBank = parseInt(afreshData.mortgageBank);
+            this.$store.dispatch("InitFormData", {
+              commitName: "updateStep2",
+              json: afreshData
+            });
+            this.$store.commit("updateFile", {
+              audioFile:
+                afreshData.saleUploadAudios.length > 0
+                  ? afreshData.saleUploadAudios[0]
+                  : {}
+            });
           }
-          if (afreshData.houseNow) {
-            afreshData.houseNow = parseInt(afreshData.houseNow);
-          }
-          this.$store.dispatch("InitFormData", {
-            commitName: "updateStep2",
-            json: afreshData
-          });
-          this.$store.commit("updateFile", {
-            audioFile: afreshData.saleUploadAudios.length>0?afreshData.saleUploadAudios[0]:{}
-          });
-          
-        }
-      })
-      .finally(() => {
-        this.loading = false;
-      });
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     //编辑获取数据
     getLoadData() {
@@ -1505,7 +1539,7 @@ export default {
             step1.tel1 = phoneNuberConvert(step1.tel1);
             step1.tel2 = phoneNuberConvert(step1.tel2);
             step1.tel3 = phoneNuberConvert(step1.tel3);
-            
+
             this.$store
               .dispatch("InitFormData", {
                 commitName: "updateStep1",
@@ -1588,12 +1622,13 @@ export default {
 
       data.price = this.formData.price;
       data.area = this.formData.area;
-      if (this.paramsObj.editUrl) { // 编辑
+      if (this.paramsObj.editUrl) {
+        // 编辑
         return this.$api[method]({
-            url: url,
-            data: data,
-            headers: { "Content-Type": "application/json;charset=UTF-8" }
-          })
+          url: url,
+          data: data,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
           .then(e => {
             if (e.data.code == 200) {
               if (this.paramsObj.editUrl) {
@@ -1611,26 +1646,26 @@ export default {
             // 保存后逻辑
             if (e.data.data == 0) {
               return true;
-            } else if(e.data.data == 1) {
+            } else if (e.data.data == 1) {
               this.$store.state.addHouse.isformDataNoCommit = false;
               this.$router.push({
                 path: "/buySellSystem/validateHome",
                 query: {
-                  id: data.id,
+                  id: data.id
                 }
               });
             } else if (e.data.data == 2) {
               // 修改号码失败
-              this.$message.error('手机号修改失败，该房源已存在验真');
+              this.$message.error("手机号修改失败，该房源已存在验真");
               this.formData.tel = this.validatePhoneNumber;
               return true;
             }
-
           })
           .catch(e => {
             return false;
           });
-      } else { // 录入
+      } else {
+        // 录入
         // 数据只保存到本地
         that.$store.commit("updateStep1", that.deffData);
         return true;
@@ -1667,7 +1702,8 @@ export default {
       validateBtnFlag: true,
       validatePhoneLoading: false,
       validatePhoneText: "验真专用",
-      validateTip: "请填写正确的业主号码，并确认该号码可以正常接收短信且号码与微信同号",
+      validateTip:
+        "请填写正确的业主号码，并确认该号码可以正常接收短信且号码与微信同号",
       addHouseType: this.houseType,
       step: {},
       addTel: [],
