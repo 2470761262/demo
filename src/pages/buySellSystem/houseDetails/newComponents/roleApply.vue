@@ -82,9 +82,9 @@
           border-radius: 50%;
           display: flex;
           background: @backgroud;
-          width: 29PX;
-          height: 29PX;
-          line-height: 29PX;
+          width: 29px;
+          height: 29px;
+          line-height: 29px;
           margin-left: 25px;
           text-align: center;
           justify-content: center;
@@ -218,7 +218,9 @@
         </div>
         <div class="role-type">
           <div class="role-type-top">委托人</div>
-          <div class="role-type-center">{{ houseData.isOnly==2?'普通':'独家' }}</div>
+          <div class="role-type-center">
+            {{ houseData.isOnly == 2 ? "普通" : "独家" }}
+          </div>
           <div
             class="role-type-bottom"
             @click="openPop('entrustPopFlag', 4, 'entrustType', 2)"
@@ -328,36 +330,10 @@
         <button class="role-btn" disabled>申请实勘人</button>
       </div>
       <!-- 跟单人弹框 -->
-      <fixedPopup
-        :visible.sync="applyAgentFlag"
-        title="请填写完这些信息才能申请为跟单人"
-        v-if="applyAgentFlag"
-        width="960px"
-      >
-        <supplement
-          ref="com"
-          :required="true"
-          :middleRadioTo="middleRadio"
-          :primaryRadioTo="primaryRadio"
-          :showFollow="showFollow"
-          :paramsObj="supplementObj"
-          :audioList="audioList"
-          :isFromHouseTask="true"
-        ></supplement>
-        <template v-slot:floot>
-          <div class="text-middle">
-            <button
-              class="role-btn"
-              v-if="reloData.submitApplyAgent"
-              :disabled="agentApply"
-              @click="applyAgent"
-            >
-              提交
-            </button>
-            <button v-else size="mini" disabled>提交</button>
-          </div>
-        </template>
-      </fixedPopup>
+      <applyAgentPop
+        :showFlag.sync="applyAgentFlag"
+        @applyAgent="applyAgent"
+      ></applyAgentPop>
       <!-- 上传 -->
       <fixedPopup
         :visible.sync="houseUploadflag"
@@ -426,8 +402,7 @@ export default {
     //委托人
     entrustPop: () => import("../newDidLog/entrustPop"),
     //选填信息
-    supplement: () =>
-      import("@/pages/buySellSystem/addHouse/components/supplement")
+    applyAgentPop: () => import("../newDidLog/applyAgentPop")
   },
   data() {
     return {
@@ -489,7 +464,9 @@ export default {
      * @param {type}
      */
     isAgentPerApply() {
-      return this.reloData.applyAgent && this.houseData.plate < 6 && !this.agentApply ;
+      return (
+        this.reloData.applyAgent && this.houseData.plate < 6 && !this.agentApply
+      );
     },
     /**
      * @example: 判断是否存在委托人
@@ -622,42 +599,11 @@ export default {
     /**
      * 申请跟单人
      */
-    applyAgent() {
-      let params = this.$refs.com.formData;
-      this.$refs.com.validateAllNotUpdata().then(e => {
-        if (e) {
-          params.houseId = this.houseId;
-          if (this.$refs.com.audioFile.id) {
-            params.audioId = this.$refs.com.audioFile.id;
-          }
-          console.log(params, "params");
-          this.applyAgentFlag = false;
-          this.$api
-            .post({
-              url: "/agentHouse/propertyCheck/applyAgent",
-              headers: { "Content-Type": "application/json;charset=UTF-8" },
-              data: params
-            })
-            .then(e => {
-              let result = e.data;
-              if (result.code == 200) {
-                this.houseData.plate = 0;
-                this.houseData.agentPerName = util.localStorageGet(
-                  "logindata"
-                ).userName;
-                this.houseData.agentPerHeadImg = util
-                  .localStorageGet("logindata")
-                  .headImgUrl.includes("http")
-                  ? util.localStorageGet("logindata").headImgUrl
-                  : null;
-                this.houseData.agentPerDepartmentName = util.localStorageGet(
-                  "logindata"
-                ).deptName;
-              } else {
-                this.$message(result.message);
-              }
-            })
-            .catch(e => {});
+    applyAgent(item) {
+      this.$router.push({
+        path: "/buySellSystem/validateHome",
+        query: {
+          id: item
         }
       });
     },
@@ -665,21 +611,20 @@ export default {
      * 申请跟单人打开弹窗
      */
     openAgentPop() {
-      if (this.houseData.applyAgentVo != null) {
-        this.$store.commit("updateStep2", this.houseData.applyAgentVo);
-        this.audioList = this.houseData.applyAgentVo.saleUploadAudioList;
-        if (this.houseData.applyAgentVo.middleSchoolUse) {
-          this.middleRadio = 1;
-        } else {
-          this.middleRadio = 0;
-        }
-        if (this.houseData.applyAgentVo.primarySchoolUse) {
-          this.primaryRadio = 1;
-        } else {
-          this.middleRadio = 0;
-        }
-      }
-      this.applyAgentFlag = true;
+      this.$api
+        .post({
+          url: `/agentHouse/propertyCheck/apply/agent/can/${this.houseId}`,
+          headers: { "Content-Type": "application/json;charset=UTF-8" }
+        })
+        .then(e => {
+          let result = e.data;
+          if (result.code == 200) {
+            this.applyAgentFlag = true;
+          } else {
+            this.$message(result.message);
+          }
+        })
+        .catch(e => {});
     }
   }
 };

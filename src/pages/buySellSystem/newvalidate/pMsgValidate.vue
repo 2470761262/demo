@@ -610,7 +610,7 @@ export default {
       this.validateCall = ["", "", "", "", "", ""];
       this.$api
         .post({
-          url: `/verifyHouse/mode/mns`,
+          url: `/verifyHouse/mns/send`,
           qs: true,
           data: {
             id: this.id

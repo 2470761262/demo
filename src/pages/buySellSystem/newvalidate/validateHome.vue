@@ -695,7 +695,7 @@ export default {
           id: this.id
         }
       });
-      if (pageName == "pMsgValidate")
+      if (pageName == "pMsgValidate") {
         this.$api
           .post({
             url: `/verifyHouse/mode/mns`,
@@ -704,14 +704,31 @@ export default {
               id: this.id
             }
           })
-          .then(({ data }) => {
-            if (data.code == 200) {
-              this.$message.success("短信下发成功");
-            } else {
-              this.$message.warning("短信下发成功");
-            }
-          })
+          .then(({ data }) => {})
           .finally(() => {});
+        this.sendNote();
+      }
+    },
+    /**
+     * @example:发送短信
+     */
+    sendNote() {
+      this.$api
+        .post({
+          url: `/verifyHouse/mns/send`,
+          qs: true,
+          data: {
+            id: this.id
+          }
+        })
+        .then(({ data }) => {
+          if (data.code == 200) {
+            this.$message.success("短信下发成功");
+          } else {
+            this.$message.warning("短信下发成功");
+          }
+        })
+        .finally(() => {});
     },
     getDetail() {
       return this.$api
