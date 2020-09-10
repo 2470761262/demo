@@ -53,21 +53,7 @@
 </style>
 <template>
   <div class="content-child">
-    <!-- <div class="nav-map">当前页面:</div> -->
-    <div class="content-warp">
-      <!--  -->
-      <div class="implant-nav">
-        <div
-          class="implant-nav-item"
-          :class="{ active: index == 0 }"
-          v-for="(item, index) in implantList"
-          :key="index"
-          @click="goPage(index, 0)"
-        >
-          {{ item.title }}
-        </div>
-      </div>
-    </div>
+    <tabs :navActiveIndex="0"></tabs>
     <div class="search-content">
       <!-- 楼盘 栋座 房间号 联级 -->
       <div class="search-item">
@@ -303,24 +289,18 @@
 </template>
 
 <script>
-const IMPLANTLIST = [
-  { title: "房源调配", url: "/managementEntrance/houseDeploy" },
-  { title: "3天新增", url: "/managementEntrance/3day" },
-  { title: "7天内被看房源", url: "/managementEntrance/7day" },
-  { title: "锁定房源", url: "/managementEntrance/houseLockingList" },
-  { title: "审核列表", url: "/managementEntrance/houseExamineHouse" }
-];
+import tabs from '../buySellHouse/components/tabs.vue';
 //楼盘 楼栋 房间号 级联 mixins
 import cascadeHouse from "@/minxi/cascadeHouse";
 export default {
   inject: ["form"],
   mixins: [cascadeHouse],
+  components: { tabs },
   $_veeValidate: {
     validator: "new" // give me my own validator scope.
   },
   data() {
     return {
-      implantList: IMPLANTLIST,
       houseNo: "", //房源编号
       cusName: "", //业主姓名
       cusPhone: "", //业主号码
@@ -333,10 +313,6 @@ export default {
     };
   },
   methods: {
-    goPage(index, nowIndex) {
-      if (index != nowIndex)
-        this.$router.push({ path: this.implantList[index].url });
-    },
     /**
      * @example: 失去焦点
      * @param {string} formField 失去交单的属性名称

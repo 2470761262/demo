@@ -432,28 +432,11 @@
         <span class="title">详细说明：</span>
         <div class="detail">
           <p class="text">{{ recordIntroduction || "暂无" }}</p>
-          <div class="audio-box">
-            <audio
-              src="https://www.runoob.com/try/demo_source/horse.mp3"
-            ></audio>
-            <div class="audio-fl">
-              <img
-                class="sound"
-                src="@/assets/images/employeeValidate_sound.png"
-                alt=""
-              />
-              <span class="duration">08:20</span>
-            </div>
-            <img
-              class="play"
-              :src="
-                true
-                  ? require('@/assets/images/employeeValidate_play.png')
-                  : require('@/assets/images/employeeValidate_pause.svg')
-              "
-              alt=""
-            />
-          </div>
+          <validate-audio
+            v-for="(item, index) in voiceList"
+            :key="index"
+            :url="item">
+          </validate-audio>
         </div>
       </div>
     </el-dialog>
@@ -463,9 +446,11 @@
 import breadcrumb from "./components/breadcrumb.vue";
 import util from "@/util/util";
 import bus from "@/evenBus/but.js";
+import validateAudio from './components/validateAudio.vue';
 export default {
   components: {
-    breadcrumb
+    breadcrumb,
+    validateAudio
   },
   data() {
     return {
@@ -531,7 +516,8 @@ export default {
       houseStatus: 5, // 房源状态
       testExplain: "", // 房源验真说明
       recordStatus: "", // 房源记录房源状态
-      recordIntroduction: "" // 房源记录详细说明
+      recordIntroduction: "", // 房源记录详细说明
+      voiceList: []
     };
   },
   created() {
@@ -727,6 +713,7 @@ export default {
           if (e.data.code == 200) {
             this.recordStatus = e.data.data.houseState;
             this.recordIntroduction = e.data.data.remark;
+            this.voiceList = e.data.data.voiceList;
           } else {
             this.$message.error(e.data.message);
           }
@@ -1110,7 +1097,8 @@ export default {
         .span_danger,
         .span_warning {
           display: inline-block;
-          padding: 6px 13px;
+          // prettier-ignore
+          padding: 6PX 13PX;
           border-radius: 2px;
           line-height: 1;
           text-align: center;
@@ -1356,43 +1344,12 @@ export default {
         background: #f8f8f8;
         // prettier-ignore
         border-radius: 4PX;
+        max-height: 300px;
+        overflow: auto;
         .text {
           line-height: 1.5;
           font-size: @font16;
           color: #606166;
-        }
-        .audio-box {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          // prettier-ignore
-          width: 227PX;
-          // prettier-ignore
-          height: 36PX;
-          // prettier-ignore
-          margin-top: 22PX;
-          // prettier-ignore
-          padding: 0 10PX;
-          // prettier-ignore
-          border-radius: 4PX;
-          background: #fff;
-          box-sizing: border-box;
-          .audio-fl {
-            .sound {
-              // prettier-ignore
-              width: 12PX;
-              // prettier-ignore
-              margin-right: 6PX;
-            }
-            .duration {
-              font-size: @font12;
-              color: #303133;
-            }
-          }
-          .play {
-            // prettier-ignore
-            width: 16PX;
-          }
         }
       }
     }

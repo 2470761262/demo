@@ -22,6 +22,7 @@
     text-align: center;
     .cell {
       white-space: nowrap;
+      color: #606266;
     }
   }
 }
@@ -64,11 +65,10 @@
   }
 }
 .operation-btn {
-  background: @backgroud;
-  color: #fff;
+  color: @backgroud;
   // prettier-ignore
-  margin-right: 10PX;
-  font-size: @font14;
+  margin-right: 24PX;
+  font-size: @font16;
   // prettier-ignore
   width: 66PX;
   // prettier-ignore
@@ -78,7 +78,7 @@
   border: none;
   cursor: pointer;
   &[disabled] {
-    background: @opacityBackground;
+    color: #909399;
     cursor: no-drop;
   }
   &:last-child {
@@ -98,7 +98,8 @@
 .span_danger,
 .span_warning {
   display: inline-block;
-  padding: 6px 13px;
+  // prettier-ignore
+  padding: 6PX 13PX;
   border-radius: 2px;
   line-height: 1;
   text-align: center;
@@ -394,7 +395,7 @@ export default {
         {
           label: "操作",
           formart: row => this.operation(row),
-          width: "380"
+          width: "272"
           //  fixed: "right"
         }
       ],
@@ -469,13 +470,13 @@ export default {
         })
         .map(btnDataItem => {
           return (
-            <button
+            <span
               class="operation-btn"
               onClick={this[btnDataItem.methodName].bind(this, row)}
               disabled={btnDataItem.disabled}
             >
               {btnDataItem.name}
-            </button>
+            </span>
           );
         });
     },
