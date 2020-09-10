@@ -301,7 +301,7 @@ export default {
         {
           prop: "houseNo",
           label: "房屋信息",
-          minWidth: "250",
+          minWidth: "180",
           align: "left",
           formart: item => {
             return (
@@ -315,7 +315,7 @@ export default {
         {
           prop: "price",
           label: "售价",
-          minWidth: "150",
+          minWidth: "60",
           align: "right",
           formart: item => {
             return `${item.price}万`;
@@ -324,7 +324,7 @@ export default {
         {
           prop: "inArea",
           label: "面积",
-          minWidth: "100",
+          minWidth: "60",
           align: "right",
           formart: item => {
             return `${item.inArea}m²`;
@@ -333,7 +333,7 @@ export default {
         {
           prop: "rooms",
           label: "户型",
-          minWidth: "100",
+          minWidth: "60",
           align: "right",
           formart: item => {
             return `${item.rooms || 0}-${item.hall || 0}-${item.toilet ||
@@ -343,7 +343,7 @@ export default {
         {
           prop: "agentName",
           label: "跟单人",
-          minWidth: "120",
+          minWidth: "60",
           align: "right",
           sortable: true,
           formart: item => {
@@ -368,14 +368,14 @@ export default {
         {
           prop: "seenNumRecent",
           label: "30天带看",
-          minWidth: "100",
+          minWidth: "80",
           align: "right",
           sortable: true
         },
         {
           prop: "callNum",
           label: "30天电话回访",
-          minWidth: "110",
+          minWidth: "100",
           align: "right",
           sortable: true
         },
