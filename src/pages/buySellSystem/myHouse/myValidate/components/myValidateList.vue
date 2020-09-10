@@ -433,7 +433,7 @@ export default {
     operation(row) {
       let array = [
         {
-          name: "邀请验真",
+          name: "进入验真",
           isType: "待验真",
           methodName: "getVerifyImg"
         },
@@ -460,10 +460,13 @@ export default {
           } else {
             item.disabled = true;
           }
-          if (!this.showValidityBtn && item.name == "邀请验真") {
+          if (!this.showValidityBtn && item.name == "进入验真") {
             item.disabled = true;
           }
-          if (item.name == "重新验真" && parseInt(row.source) != 1) {
+          if (
+            item.name == "重新验真" &&
+            (parseInt(row.source) != 1 || parseInt(row.checkStatus) == 4)
+          ) {
             item.disabled = true;
           }
           return item;
@@ -710,10 +713,12 @@ export default {
      * @example: 双击前往详情
      */
     navDetailt(item) {
-      util.openPage.call(this, {
-        name: "validateHouseDetails",
-        params: { houseId: item.id, dept: item.perDept }
-      });
+      if (item.checkStatus && parseInt(item.checkStatus) == 2) {
+        util.openPage.call(this, {
+          name: "houseDetails",
+          params: { houseId: item.houseId }
+        });
+      }
     },
     /**
      * @example: 远程排序

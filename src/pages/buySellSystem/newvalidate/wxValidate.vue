@@ -569,7 +569,7 @@
               <div class="per-type">{{ detail.customerType }}</div>
             </div>
             <div class="minddel-foot">
-              {{ detail.Tel }}
+              {{ detail.tel }}
             </div>
           </div>
           <button
@@ -607,7 +607,7 @@
         <div class="house-content">
           <h3 class="house-title">{{ detail.communityName | emptyRead }}</h3>
           <h4 class="buing-title">
-            {{ detail.buildingName | emptyRead("栋") }}-{{ detail.roomNo }}
+            {{ detail.buildingNo | emptyRead("栋") }}-{{ detail.roomNo }}
           </h4>
           <div class="split-line"></div>
           <ul class="deteil-content">
