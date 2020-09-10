@@ -1033,6 +1033,7 @@ export default {
         .span_danger,
         .span_warning{
           display: inline-block;
+          // prettier-ignore
           padding: 6PX 13PX;
           border-radius: 2px;
           line-height: 1;

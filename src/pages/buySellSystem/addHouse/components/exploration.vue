@@ -759,7 +759,7 @@ export default {
      */
     setAfreshData() {
       // let afreshData = this.$store.state.addHouse.updateDate;
-      let afreshData = this.$store.state.addHouse.formData.step3;
+      let afreshData = this.$store.state.addHouse.formData.file;
       this.houseVideo = afreshData.houseVideo;
       this.outdoorImgList = afreshData.outdoorImgList;
       this.livingRoomImgList = afreshData.livingRoomImgList;

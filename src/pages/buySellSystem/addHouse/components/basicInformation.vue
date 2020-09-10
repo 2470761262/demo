@@ -1450,7 +1450,6 @@ export default {
         headers: { "Content-Type": "application/json;charset=UTF-8" }
       })
       .then(e => {
-        console.log(e.data, "========------")
         if (e.data.code == 200) {
           // 测试房间号是否能录入
           this.$api.get({ url: `/verifyHouse/room/${e.data.data.roomId}` }).then(e => {
@@ -1570,7 +1569,7 @@ export default {
             audioFile: afreshData.saleUploadAudios[0]
           });
           
-          console.log(this.$store.state.addHouse.formData, "--------------============success!!!")
+          //console.log(this.$store.state.addHouse.formData, "--------------============success!!!")
         }
       })
       .finally(() => {
